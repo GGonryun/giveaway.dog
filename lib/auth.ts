@@ -17,8 +17,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      // const isApp = nextUrl.pathname.startsWith('/');
-      // if (isApp) return isLoggedIn;
+      const isApp = nextUrl.pathname.startsWith('/host');
+      if (isApp) return isLoggedIn;
       const isLogout = nextUrl.pathname.startsWith('/logout');
       if (isLogout && !isLoggedIn)
         return Response.redirect(new URL('/', nextUrl));

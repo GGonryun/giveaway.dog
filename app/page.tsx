@@ -1,14 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { auth } from '@/lib/auth';
 import { LogInIcon, LogOutIcon, PlusIcon } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default async function Page() {
   const session = await auth();
+
   return (
-    <div className="flex flex-col gap-2">
-      <h1 className="text-xl font-bold">Welcome to Giveaway Dog</h1>
-      <div>{session ? <SessionMenu /> : <NoSession />}</div>
+    <div className="flex flex-col gap-4">
+      {/* <div>{session ? <SessionMenu /> : <NoSession />}</div> */}
+      <Image src="/dog.png" alt="The Giveaway Dog" width="222" height="198" />
     </div>
   );
 }
