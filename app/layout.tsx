@@ -6,7 +6,7 @@ import { SessionProvider } from '@/components/providers/auth-session-provider';
 
 export const metadata = {
   title: 'GiveawayDog',
-  description: 'Build powerful interactive bots with ease'
+  description: 'Build better giveaways and contests'
 };
 
 export default async function RootLayout({
