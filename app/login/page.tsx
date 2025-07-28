@@ -1,5 +1,4 @@
 import { auth, signIn } from '@/lib/auth';
-import { GalleryVerticalEnd } from 'lucide-react';
 import { LoginForm } from './login-form';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import { redirect } from 'next/navigation';
@@ -8,10 +7,9 @@ import Link from 'next/link';
 export default async function LoginPage({
   searchParams
 }: {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 }) {
-  const callbackUrl = (await Promise.resolve(searchParams))
-    .callbackUrl as string;
+  const callbackUrl = (await searchParams).callbackUrl as string;
   const redirectTo = callbackUrl ?? '/';
   const session = await auth();
 

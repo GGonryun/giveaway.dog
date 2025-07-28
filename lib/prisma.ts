@@ -9,18 +9,14 @@ declare global {
   var prisma: PrismaClient;
 }
 
-let client: PrismaClient;
-
-if (process.env['NODE_ENV'] === 'production') {
-  client = new PrismaClient();
-} else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient();
-  }
-  client = global.prisma;
-}
 export type PrismaTransactionalClient = Parameters<
   Parameters<PrismaClient['$transaction']>[0]
 >[0];
 
-export { prisma };
+const globalForPrisma = global;
+
+const prisma = globalForPrisma.prisma || new PrismaClient();
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+
+export default prisma;
