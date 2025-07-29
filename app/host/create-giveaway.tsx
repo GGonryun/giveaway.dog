@@ -17,6 +17,8 @@ import { timezone } from '@/lib/time';
 
 import { CampaignSetup } from './form/campaign-setup';
 import { Audience } from './form/audience/audience';
+import { EntryMethods } from './form/tasks/entry-methods';
+import { Prizes } from './form/prizes/prizes';
 
 export const GiveawayForm: React.FC = () => {
   const [isPending, startTransition] = useTransition();
@@ -67,7 +69,10 @@ export const GiveawayForm: React.FC = () => {
         <br />
         <Audience />
         <br />
-        <div className="space-x-2">
+        <EntryMethods />
+        <br />
+        <br />
+        <div className="flex gap-2 w-full justify-end">
           <Button type="submit" disabled={!form.formState.isValid || isPending}>
             <SaveIcon />
             Save

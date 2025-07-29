@@ -2,39 +2,38 @@ import z from 'zod';
 
 export const DEFAULT_MINIMUM_AGE = 13;
 
-const taskIntervalSchema = z.union([
-  z.literal('daily'),
-  z.literal('weekly'),
-  z.literal('monthly')
-]);
 const baseTaskSchema = z.object({
-  id: z.string(),
-  icon: z.string(),
+  type: z.string(),
   title: z.string(),
-  value: z.number(),
+  value: z.number().min(1, 'Minimum value is 1'),
   mandatory: z.boolean(),
-  actionsRequired: z.number().nullable()
+  tasksRequired: z.number()
 });
 
 const bonusTaskSchema = baseTaskSchema.extend({
-  id: z.literal('bonus-task'),
-  interval: taskIntervalSchema
+  type: z.literal('bonus-task')
 });
 
-const submitUrlSchema = baseTaskSchema.extend({
-  id: z.literal('submit-url'),
-  instructions: z.string().nullable(),
-  domain: z.string().url().nullable(),
-  unique: z.boolean(),
-  interval: taskIntervalSchema
+const visitUrlSchema = baseTaskSchema.extend({
+  type: z.literal('visit-url'),
+  href: z.string().url()
 });
 
-const taskSchema = z.discriminatedUnion('id', [
+const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
-  submitUrlSchema
+  visitUrlSchema
 ]);
 
-export type TaskSchema = z.infer<typeof taskSchema>;
+export type TaskType = z.infer<typeof taskSchema>['type'];
+
+export const TASK_GROUP: Record<TaskType, string> = {
+  'bonus-task': 'Bonus Tasks',
+  'visit-url': 'Visit URL Tasks'
+};
+
+export type Task = z.infer<typeof taskSchema>;
+
+export type TaskOf<T extends TaskType> = Extract<Task, { type: T }>;
 
 const prizeSchema = z.object({
   name: z.string(),
@@ -93,9 +92,9 @@ export const giveawaySchema = z.object({
         required: z.boolean()
       })
       .nullable()
-  })
-  // tasks: z.array(taskSchema),
-  // prizes: z.array(prizeSchema),
+  }),
+  tasks: z.array(taskSchema)
+  // prizes: z.array(prizeSchema)
   // design: z.object({}),
   // automation: z.object({
   //   postEntryWebhook: z.string()
@@ -119,9 +118,9 @@ export const giveawayFormDefaultValues: DeepPartial<GiveawayFormSchema> = {
     regionalRestriction: null,
     minimumAgeRestriction: null,
     requireEmail: true
-  }
-  // tasks: [],
-  // prizes: [],
+  },
+  tasks: []
+  // prizes: []
   // design: {},
   // automation: {}
 };
