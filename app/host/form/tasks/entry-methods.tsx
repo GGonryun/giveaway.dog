@@ -49,7 +49,7 @@ export const EntryMethods = () => {
       <div
         className={cn(
           'grid  gap-2 items-end',
-          // hardcoded cols according to button text width
+          // NOTE: hardcoded cols according to button text width
           open.length ? 'grid-cols-[1fr_104px]' : 'grid-cols-[1fr_95px]'
         )}
       >
@@ -78,8 +78,7 @@ export const EntryMethods = () => {
             <ArrayContext.Provider key={field.id} value={{ index }}>
               <EntryMethod
                 {...field}
-                // TODO: due to layout shifts we're only allowing re-ordering when all entry methods are closed
-
+                // NOTE: due to layout shifts we're only allowing re-ordering when all entry methods are closed
                 draggable={!open.length}
                 open={open.includes(field.id)}
                 setOpen={(open) => {
