@@ -19,7 +19,8 @@ export const text = {
   },
   color: {
     primary: 'text-primary',
-    muted: 'text-muted-foreground'
+    muted: 'text-muted-foreground',
+    white: 'text-white'
   },
   leading: {
     none: 'leading-none',
