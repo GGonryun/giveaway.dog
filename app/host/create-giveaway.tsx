@@ -72,6 +72,9 @@ export const GiveawayForm: React.FC = () => {
         <EntryMethods />
         <br />
         <br />
+        <Prizes />
+        <br />
+        <br />
         <div className="flex gap-2 w-full justify-end">
           <Button type="submit" disabled={!form.formState.isValid || isPending}>
             <SaveIcon />

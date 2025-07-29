@@ -93,8 +93,8 @@ export const giveawaySchema = z.object({
       })
       .nullable()
   }),
-  tasks: z.array(taskSchema)
-  // prizes: z.array(prizeSchema)
+  tasks: z.array(taskSchema),
+  prizes: z.array(prizeSchema)
   // design: z.object({}),
   // automation: z.object({
   //   postEntryWebhook: z.string()
@@ -119,8 +119,8 @@ export const giveawayFormDefaultValues: DeepPartial<GiveawayFormSchema> = {
     minimumAgeRestriction: null,
     requireEmail: true
   },
-  tasks: []
-  // prizes: []
+  tasks: [],
+  prizes: []
   // design: {},
   // automation: {}
 };
