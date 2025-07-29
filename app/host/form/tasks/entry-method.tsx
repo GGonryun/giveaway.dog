@@ -47,14 +47,16 @@ export const EntryMethod: React.FC<
       style={style}
       className="relative flex items-center group"
     >
-      <GripVerticalIcon
+      <div
         {...attributes}
         {...listeners}
         className={cn(
-          'absolute -left-4 text-muted-foreground size-4 opacity-0 transition-opacity',
+          'absolute -left-8 text-muted-foreground w-8 h-10 flex items-center justify-end opacity-0 transition-opacity',
           !draggable ? 'hidden' : 'group-hover:opacity-100'
         )}
-      />
+      >
+        <GripVerticalIcon className="size-5" />
+      </div>
       <div className="flex items-center gap-2 border shadow-sm rounded-lg overflow-hidden w-full">
         <Collapsible className="flex-grow" open={open} onOpenChange={setOpen}>
           <CollapsibleTrigger asChild>
