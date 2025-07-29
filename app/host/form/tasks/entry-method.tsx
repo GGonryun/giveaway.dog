@@ -20,18 +20,41 @@ import {
 } from '@/components/ui/collapsible';
 import { AdditionalSettings } from './additional-settings';
 import { AdvancedSettings } from './advanced-settings';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 export const EntryMethod: React.FC<
   FieldArrayWithId<GiveawayFormSchema, 'tasks'> & {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    draggable: boolean;
     onRemove: () => void;
     onCopy: () => void;
   }
-> = ({ onRemove, onCopy, ...field }) => {
-  const [open, setOpen] = React.useState(true);
+> = ({ onRemove, onCopy, open, setOpen, draggable, ...field }) => {
   const theme = useMemo(() => toTheme(field.type), [field.type]);
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: field.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition
+  };
+
   return (
-    <div className="relative flex items-center group">
-      <GripVerticalIcon className="absolute -left-4 text-muted-foreground size-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="relative flex items-center group"
+    >
+      <GripVerticalIcon
+        {...attributes}
+        {...listeners}
+        className={cn(
+          'absolute -left-4 text-muted-foreground size-4 opacity-0 transition-opacity',
+          !draggable ? 'hidden' : 'group-hover:opacity-100'
+        )}
+      />
       <div className="flex items-center gap-2 border shadow-sm rounded-lg overflow-hidden w-full">
         <Collapsible className="flex-grow" open={open} onOpenChange={setOpen}>
           <CollapsibleTrigger asChild>
