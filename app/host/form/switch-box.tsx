@@ -1,4 +1,4 @@
-import { HelpTooltip } from '@/components/patterns/help-tooltip';
+import { HelpDialog, HelpDialogProps } from '@/components/patterns/help-dialog';
 import { FormDescription, FormLabel } from '@/components/ui/form';
 
 export const SwitchBox: React.PC = ({ children }) => {
@@ -8,13 +8,13 @@ export const SwitchBox: React.PC = ({ children }) => {
 export const SwitchFormHeader: React.FC<{
   label: string;
   description?: string;
-  help?: React.ReactNode;
+  help?: HelpDialogProps;
 }> = ({ label, description, help }) => {
   return (
     <div className="space-y-0.5">
       <div className="flex gap-2 items-center">
         <FormLabel>{label}</FormLabel>
-        {help && <HelpTooltip content={help} />}
+        {help && <HelpDialog {...help} />}
       </div>
       {description && <FormDescription>{description}</FormDescription>}
     </div>

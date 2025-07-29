@@ -18,13 +18,16 @@ export const RequirePreEntryLogin = () => {
               label="Pre-Entry Login"
               description="Force the user to login before they
                   can see entry methods."
-              help={
-                <p>
-                  Force the user to login or provide details first before they
-                  see how to enter. This can help ensure that only engaged users
-                  participate.
-                </p>
-              }
+              help={{
+                title: 'Help: Pre-Entry Login',
+                content: (
+                  <p>
+                    Force the user to login or provide details first before they
+                    see how to enter. This can help ensure that only engaged
+                    users participate.
+                  </p>
+                )
+              }}
             />
             <FormControl>
               <Switch checked={field.value} onCheckedChange={field.onChange} />

@@ -21,7 +21,6 @@ import {
 } from '@/components/ui/select';
 import { strings } from '@/lib/strings';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Separator } from '@/components/ui/separator';
 
 export const MinimumAgeRestriction = () => {
   const form = useFormContext<GiveawayFormSchema>();
@@ -38,13 +37,16 @@ export const MinimumAgeRestriction = () => {
             <SwitchFormHeader
               label="Minimum Age Restriction"
               description="Set a minimum age requirement for participants."
-              help={
-                <p>
-                  Ask users to confirm their age before they can enter the
-                  giveaway. This is useful for giveaways that have age
-                  restrictions due to legal or content reasons.
-                </p>
-              }
+              help={{
+                title: 'Help: Minimum Age Restriction',
+                content: (
+                  <p>
+                    Ask users to confirm their age before they can enter the
+                    giveaway. This is useful for giveaways that have age
+                    restrictions due to legal or content reasons.
+                  </p>
+                )
+              }}
             />
 
             <FormControl>
@@ -93,7 +95,7 @@ const AgeField = () => {
       name="audience.minimumAgeRestriction.value"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Name</FormLabel>
+          <FormLabel>Age</FormLabel>
           <FormControl>
             <Input
               placeholder="13"
@@ -135,7 +137,7 @@ const FormatField = () => {
       name="audience.minimumAgeRestriction.format"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Name</FormLabel>
+          <FormLabel>Format</FormLabel>
           <FormControl>
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger>

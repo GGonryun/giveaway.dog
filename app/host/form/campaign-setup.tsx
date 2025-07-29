@@ -45,8 +45,8 @@ export const CampaignSetup = () => {
   return (
     <>
       <SectionTitle
-        label="Campaign Setup"
-        description="Choose the name, dates, terms and conditions of your campaign"
+        label="Setup"
+        description="Choose the dates, terms, and conditions of your giveaway."
       />
       <FormField
         control={form.control}

@@ -12,7 +12,7 @@ export const Audience = () => {
     <>
       <SectionTitle
         label="Audience"
-        description="Select the information users must provide, and requirements for their participation."
+        description="Select the requirements for user participation."
       />
 
       <RequireEmail />

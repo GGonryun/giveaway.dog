@@ -65,13 +65,16 @@ export const regionalRestrictionRender: ControllerProps<
       <SwitchFormHeader
         label="Regional Restrictions"
         description="Restrict access to users from certain regions or countries."
-        help={
-          <p>
-            Restrict access to users from certain regions or countries. This is
-            useful if your prize is only available in certain areas or if you
-            need to comply with local laws and regulations.
-          </p>
-        }
+        help={{
+          title: 'Help: Regional Restrictions',
+          content: (
+            <p>
+              Restrict access to users from certain regions or countries. This
+              is useful if your prize is only available in certain areas or if
+              you need to comply with local laws and regulations.
+            </p>
+          )
+        }}
       />
       <FormControl>
         <Switch
