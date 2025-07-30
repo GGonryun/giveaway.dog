@@ -3,14 +3,14 @@ import { LucideIcon } from 'lucide-react';
 import { useCallback } from 'react';
 
 export const IconButton: React.FC<{
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   icon: LucideIcon;
 }> = ({ onClick, icon: LucideIcon }) => {
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       if (onClick) {
         e.stopPropagation();
-        onClick();
+        onClick(e);
       }
     },
     [onClick]

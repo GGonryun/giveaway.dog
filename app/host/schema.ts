@@ -36,9 +36,11 @@ export type Task = z.infer<typeof taskSchema>;
 export type TaskOf<T extends TaskType> = Extract<Task, { type: T }>;
 
 const prizeSchema = z.object({
-  name: z.string(),
-  winners: z.number(),
-  value: z.number().nullable()
+  name: z.string().min(3).max(100),
+  winners: z
+    .number()
+    .min(1, 'Minimum value is 1')
+    .max(10, 'Maximum value is 10')
 });
 
 export const regionalRestrictionFilterSchema = z.union([
@@ -51,7 +53,8 @@ export type RegionalRestrictionFilter = z.infer<
 
 export const giveawaySchema = z.object({
   setup: z.object({
-    name: z.string().min(1),
+    name: z.string().min(3),
+    description: z.string(),
     terms: z.string()
   }),
   timing: z
@@ -93,12 +96,14 @@ export const giveawaySchema = z.object({
       })
       .nullable()
   }),
-  tasks: z.array(taskSchema),
-  prizes: z.array(prizeSchema)
-  // design: z.object({}),
-  // automation: z.object({
-  //   postEntryWebhook: z.string()
-  // })
+  tasks: z
+    .array(taskSchema)
+    .min(1, 'At least one entry method is required')
+    .max(25, 'Maximum of 25 entry methods are allowed'),
+  prizes: z
+    .array(prizeSchema)
+    .min(1, 'At least one prize is required')
+    .max(10, 'Maximum of 10 prizes are allowed')
 });
 
 export type GiveawayFormSchema = z.infer<typeof giveawaySchema>;
@@ -121,6 +126,4 @@ export const giveawayFormDefaultValues: DeepPartial<GiveawayFormSchema> = {
   },
   tasks: [],
   prizes: []
-  // design: {},
-  // automation: {}
 };

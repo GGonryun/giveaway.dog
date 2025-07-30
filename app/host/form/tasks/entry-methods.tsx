@@ -1,9 +1,7 @@
-import { SectionTitle } from '../section-title';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema, TaskType } from '../../schema';
 import React, { useState } from 'react';
 import { EntryMethod } from './entry-method';
-import { ArrayContext } from '@/components/hooks/use-array-context';
 import { toDefaultValues } from './task-defaults';
 import { SelectTaskDialog } from './select-task-dialog';
 import {
@@ -12,17 +10,28 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent
 } from '@dnd-kit/core';
 import {
   SortableContext,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import { Section } from '../section';
+
+type ActiveEntry = { id: string; type: TaskType; index: number };
 
 export const EntryMethods = () => {
-  const [open, setOpen] = React.useState<string[]>([]);
+  const [active, setActive] = useState<ActiveEntry | null>(null);
+  const [open, setOpen] = useState<string[]>([]);
   const form = useFormContext<GiveawayFormSchema>();
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
@@ -34,6 +43,7 @@ export const EntryMethods = () => {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    setActive(null);
     const { active, over } = event;
     if (over && active.id !== over.id) {
       const oldIndex = fields.findIndex((f) => f.id === active.id);
@@ -42,61 +52,87 @@ export const EntryMethods = () => {
     }
   };
 
+  const handleDragStart = (event: DragStartEvent) => {
+    const index = fields.findIndex((f) => f.id === event.active.id);
+    const field = fields[index];
+    if (field) {
+      setActive({
+        id: field.id,
+        type: field.type,
+        index
+      });
+    }
+  };
+
+  const handleOpenChange = (id: string) => {
+    return (open: boolean) => {
+      if (open) {
+        setOpen((prev) => [...prev, id]);
+      } else {
+        setOpen((prev) => prev.filter((id) => id !== id));
+      }
+    };
+  };
+
   const sensors = useSensors(useSensor(PointerSensor));
 
   return (
-    <>
-      <div
-        className={cn(
-          'grid  gap-2 items-end',
-          // NOTE: hardcoded cols according to button text width
-          open.length ? 'grid-cols-[1fr_104px]' : 'grid-cols-[1fr_95px]'
+    <Section
+      label="Entry Methods"
+      description="Select how users can enter the giveaway."
+      fields={['tasks']}
+    >
+      <FormField
+        control={form.control}
+        name="tasks"
+        render={() => (
+          <FormItem>
+            <FormControl>
+              <div className="flex flex-col gap-y-2">
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                  onDragStart={handleDragStart}
+                >
+                  <SortableContext
+                    items={fields}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {fields.map((field, index) => (
+                      <EntryMethod
+                        {...field}
+                        key={field.id}
+                        index={index}
+                        open={open.includes(field.id)}
+                        onOpenChange={handleOpenChange(field.id)}
+                        onRemove={() => remove(index)}
+                        onCopy={() => append(field)}
+                      />
+                    ))}
+                  </SortableContext>
+                  <DragOverlay>
+                    {active ? (
+                      <EntryMethod
+                        id={active.id}
+                        index={active.index}
+                        type={active.type}
+                        open={open.includes(active.id)}
+                        // no-op for overlay
+                        onOpenChange={() => {}}
+                        onRemove={() => {}}
+                        onCopy={() => {}}
+                      />
+                    ) : null}
+                  </DragOverlay>
+                </DndContext>
+                <SelectTaskDialog onSelect={handleSelection} />
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
-      >
-        <SectionTitle
-          label="Entry Methods"
-          description="Select how users can enter the giveaway."
-        />
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() =>
-            open.length ? setOpen([]) : setOpen(fields.map((f) => f.id))
-          }
-        >
-          {open.length ? 'Collapse All' : 'Expand All'}
-        </Button>
-      </div>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={fields} strategy={verticalListSortingStrategy}>
-          {fields.map((field, index) => (
-            <ArrayContext.Provider key={field.id} value={{ index }}>
-              <EntryMethod
-                {...field}
-                // NOTE: due to layout shifts we're only allowing re-ordering when all entry methods are closed
-                draggable={!open.length}
-                open={open.includes(field.id)}
-                setOpen={(open) => {
-                  if (open) {
-                    setOpen((prev) => [...prev, field.id]);
-                  } else {
-                    setOpen((prev) => prev.filter((id) => id !== field.id));
-                  }
-                }}
-                key={field.id}
-                onRemove={() => remove(index)}
-                onCopy={() => append(field)}
-              />
-            </ArrayContext.Provider>
-          ))}
-        </SortableContext>
-      </DndContext>
-      <SelectTaskDialog onSelect={handleSelection} />
-    </>
+      />
+    </Section>
   );
 };

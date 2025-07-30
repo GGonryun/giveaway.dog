@@ -1,16 +1,14 @@
 import React from 'react';
 
-export type ArrayContextValue = {
-  index: number;
-};
+export type ArrayContextValue = number;
 
 export const ArrayContext = React.createContext<ArrayContextValue>(
-  {} as ArrayContextValue
+  -1 as ArrayContextValue
 );
 
 export const useArrayContext = () => {
   const context = React.useContext(ArrayContext);
-  if (!context) {
+  if (context == null) {
     throw new Error(
       'useArrayContext must be used within a ArrayContext.Provider'
     );

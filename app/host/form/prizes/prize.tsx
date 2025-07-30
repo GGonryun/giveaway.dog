@@ -1,38 +1,45 @@
-import { Typography } from '@/components/ui/typography';
-import { cn } from '@/lib/utils';
-import { TaskType } from '../../schema';
 import {
-  Trash2Icon,
-  CopyIcon,
-  ChevronUpIcon,
   ChevronDownIcon,
-  GripVerticalIcon
+  ChevronUpIcon,
+  CopyIcon,
+  GiftIcon,
+  GripVerticalIcon,
+  Trash2Icon
 } from 'lucide-react';
-import React, { useMemo } from 'react';
-import { BaseSettings } from './base-settings';
+import React from 'react';
+import {
+  ArrayContext,
+  useArrayContext
+} from '@/components/hooks/use-array-context';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { cn } from '@/lib/utils';
 import { IconButton } from '../icon-button';
-import { toTheme } from './task-theme';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
 } from '@/components/ui/collapsible';
-import { AdditionalSettings } from './additional-settings';
-import { AdvancedSettings } from './advanced-settings';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { ArrayContext } from '@/components/hooks/use-array-context';
+import { Typography } from '@/components/ui/typography';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import { useFormContext } from 'react-hook-form';
+import { GiveawayFormSchema } from 'app/host/schema';
+import { Input } from '@/components/ui/input';
 
-export const EntryMethod: React.FC<{
+export const Prize: React.FC<{
   id: string;
   index: number;
-  type: TaskType;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   onRemove: () => void;
+  onOpenChange: (open: boolean) => void;
   onCopy: () => void;
-}> = ({ onRemove, onCopy, open, onOpenChange, type, id, index }) => {
-  const theme = useMemo(() => toTheme(type), [type]);
+  open: boolean;
+}> = ({ id, onRemove, onOpenChange, onCopy, index, open }) => {
   const {
     attributes,
     listeners,
@@ -81,15 +88,15 @@ export const EntryMethod: React.FC<{
             >
               <div className="flex gap-2 items-center">
                 <div
-                  className={cn(
-                    'flex items-center justify-center w-6 h-6 p-0.5 rounded-md border',
-                    theme.symbol
-                  )}
+                  className={
+                    'flex items-center justify-center w-6 h-6 p-0.5 rounded-md border bg-green-100 text-green-700'
+                  }
                 >
-                  <theme.icon />
+                  <GiftIcon />
                 </div>
+
                 <Typography.Paragraph weight="medium">
-                  {theme.label}
+                  Prize {index + 1}
                 </Typography.Paragraph>
               </div>
               <div className="flex items-center gap-1">
@@ -110,12 +117,60 @@ export const EntryMethod: React.FC<{
             </div>
           </CollapsibleTrigger>
           <CollapsibleContent className="p-3 pt-1.5 border-t space-y-2">
-            <BaseSettings />
-            <AdditionalSettings type={type} />
-            <AdvancedSettings type={type} />
+            <div className="grid grid-cols-[1fr_96px] gap-2">
+              <PrizeNameField />
+              <PrizeWinnersField />
+            </div>
           </CollapsibleContent>
         </Collapsible>
       </div>
     </ArrayContext.Provider>
+  );
+};
+
+const PrizeNameField = () => {
+  const form = useFormContext<GiveawayFormSchema>();
+  const index = useArrayContext();
+  return (
+    <FormField
+      control={form.control}
+      name={`prizes.${index}.name`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Prize name</FormLabel>
+          <FormControl>
+            <Input {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+const PrizeWinnersField = () => {
+  const form = useFormContext<GiveawayFormSchema>();
+  const index = useArrayContext();
+  return (
+    <FormField
+      control={form.control}
+      name={`prizes.${index}.winners`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Winners</FormLabel>
+          <FormControl>
+            <Input
+              type="number"
+              value={Number(field.value)}
+              onChange={(e) => {
+                const value = e.target.value ? Number(e.target.value) : 0;
+                field.onChange(isNaN(value) || value < 0 ? 0 : value);
+              }}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 };

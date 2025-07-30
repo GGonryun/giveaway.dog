@@ -20,7 +20,8 @@ export const text = {
   color: {
     primary: 'text-primary',
     muted: 'text-muted-foreground',
-    white: 'text-white'
+    white: 'text-white',
+    destructive: 'text-red-500'
   },
   leading: {
     none: 'leading-none',

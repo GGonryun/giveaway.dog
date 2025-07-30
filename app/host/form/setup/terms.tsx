@@ -8,26 +8,15 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ChevronRightIcon, Settings2 } from 'lucide-react';
-import { GiveawayFormSchema } from '../schema';
-import { memo, useMemo, useState } from 'react';
-import { DateTimePicker } from '@/components/ui/date-time-picker';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import { timezone } from '@/lib/time';
+import { Settings2 } from 'lucide-react';
+import { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Typography } from '@/components/ui/typography';
 import { widetype } from '@/lib/widetype';
 import { cn } from '@/lib/utils';
 
-import { stringifyTerms } from './terms';
+import { stringifyTerms } from '../terms';
 import {
   Dialog,
   DialogContent,
@@ -36,103 +25,13 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { SectionTitle } from './section-title';
-import React from 'react';
-
-export const CampaignSetup = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-
-  return (
-    <>
-      <SectionTitle
-        label="Setup"
-        description="Choose the dates, terms, and conditions of your giveaway."
-      />
-      <FormField
-        control={form.control}
-        name="setup.name"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Name</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter a name" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <div className="flex gap-2 flex-col md:flex-row">
-        <FormField
-          control={form.control}
-          name="timing.startDate"
-          render={({ field }) => (
-            <FormItem className="flex-grow">
-              <FormLabel>Start Date</FormLabel>
-              <FormControl>
-                <DateTimePicker hourCycle={12} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <ChevronRightIcon className="mt-8 hidden md:block" />
-        <FormField
-          control={form.control}
-          name="timing.endDate"
-          render={({ field }) => (
-            <FormItem className="flex-grow">
-              <FormLabel>End Date</FormLabel>
-              <FormControl>
-                <DateTimePicker hourCycle={12} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-      <FormField
-        control={form.control}
-        name="timing.timeZone"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Timezone</FormLabel>
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a timezone" />
-                  <MemoTimezone />
-                </SelectTrigger>
-              </Select>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <TermsAndConditions />
-    </>
-  );
-};
-
-const MemoTimezone = memo(() => {
-  const options = useMemo(() => timezone.options, []);
-
-  return (
-    <SelectContent>
-      {options.map(({ zone, label }) => (
-        <SelectItem key={zone} value={zone}>
-          {label}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  );
-});
 
 type TermsAndConditionsType = 'default' | 'custom';
 const OPTIONS: Record<TermsAndConditionsType, string> = {
   default: 'Default',
   custom: 'Custom'
 };
-const TermsAndConditions = () => {
+export const TermsAndConditions = () => {
   const [type, setType] = useState<TermsAndConditionsType>('default');
   const form = useFormContext();
 

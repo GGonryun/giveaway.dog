@@ -15,10 +15,11 @@ import { useEffect, useTransition } from 'react';
 import * as dates from 'date-fns';
 import { timezone } from '@/lib/time';
 
-import { CampaignSetup } from './form/campaign-setup';
+import { Setup } from './form/setup/setup';
 import { Audience } from './form/audience/audience';
 import { EntryMethods } from './form/tasks/entry-methods';
 import { Prizes } from './form/prizes/prizes';
+import { Timing } from './form/timing/timing';
 
 export const GiveawayForm: React.FC = () => {
   const [isPending, startTransition] = useTransition();
@@ -54,7 +55,7 @@ export const GiveawayForm: React.FC = () => {
           description: error.message,
           variant: 'destructive'
         });
-        form.setError('setup.name', {
+        form.setError('tasks', {
           type: 'manual',
           message: error.message
         });
@@ -65,26 +66,19 @@ export const GiveawayForm: React.FC = () => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
-        <CampaignSetup />
-        <br />
+        <Setup />
+        <Timing />
         <Audience />
-        <br />
         <EntryMethods />
-        <br />
-        <br />
         <Prizes />
-        <br />
-        <br />
-        <div className="flex gap-2 w-full justify-end">
-          <Button type="submit" disabled={!form.formState.isValid || isPending}>
-            <SaveIcon />
-            Save
-          </Button>
-          <Button type="button">
-            <SquarePenIcon />
-            Save Draft
-          </Button>
-        </div>
+        <Button
+          className="flex justify-self-end"
+          type="submit"
+          disabled={isPending}
+        >
+          <SaveIcon />
+          Save
+        </Button>
       </form>
     </FormProvider>
   );

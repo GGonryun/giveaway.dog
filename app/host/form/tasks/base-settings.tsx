@@ -11,7 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 
 export const BaseSettings: React.FC = () => {
-  const { index } = useArrayContext();
+  const index = useArrayContext();
   const form = useFormContext<GiveawayFormSchema>();
   return (
     <div>

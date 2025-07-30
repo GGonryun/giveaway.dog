@@ -44,7 +44,7 @@ const AdvancedLabel: React.FC = () => {
 };
 
 const MandatoryField: React.FC = () => {
-  const { index } = useArrayContext();
+  const index = useArrayContext();
   const form = useFormContext<GiveawayFormSchema>();
 
   return (
@@ -80,7 +80,7 @@ const MandatoryField: React.FC = () => {
 };
 
 const TasksRequiredField: React.FC = () => {
-  const { index } = useArrayContext();
+  const index = useArrayContext();
   const form = useFormContext<GiveawayFormSchema>();
 
   return (
@@ -89,7 +89,7 @@ const TasksRequiredField: React.FC = () => {
         control={form.control}
         name={`tasks.${index}.tasksRequired`}
         render={({ field }) => (
-          <FormItem className="grid grid-cols-[1fr_96px] gap-2 items-center">
+          <FormItem className="grid grid-cols-[1fr_80px] gap-2 items-center">
             <SwitchFormHeader
               label="Tasks Required"
               description="Locked until this many other tasks are completed"

@@ -27,7 +27,7 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
 };
 
 const HrefFormField: React.FC = () => {
-  const { index } = useArrayContext();
+  const index = useArrayContext();
   const form = useFormContext<GiveawayFormSchema>();
 
   return (
