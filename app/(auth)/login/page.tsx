@@ -1,25 +1,9 @@
-import { auth, signIn } from '@/lib/auth';
 import { LoginForm } from './login-form';
-import { SearchParams } from 'next/dist/server/request/search-params';
-import { redirect } from 'next/navigation';
-import Link from 'next/link';
-import { connect } from './actions';
-import { GalleryVerticalEnd } from 'lucide-react';
-import { Typography } from '@/components/ui/typography';
-// 🐶
-export default async function LoginPage({
-  searchParams
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
-  const callbackUrl = (await searchParams).callbackUrl as string;
-  const redirectTo = callbackUrl ?? '/';
-  const session = await auth();
+import { Suspense } from 'react';
 
-  if (session?.user) {
-    redirect(redirectTo);
-  }
+export const dynamic = 'force-dynamic';
 
+export default async function LoginPage() {
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -30,15 +14,14 @@ export default async function LoginPage({
           <span
             role="img"
             aria-label="dog face"
-            className="leading-none text-5xl"
+            className="leading-none text-7xl"
           >
             🐶
           </span>
-          <Typography weight="semibold" size="2xl">
-            Giveaway.Dog
-          </Typography>
         </a>
-        <LoginForm redirectTo={redirectTo} />
+        <Suspense>
+          <LoginForm />
+        </Suspense>
       </div>
     </div>
   );

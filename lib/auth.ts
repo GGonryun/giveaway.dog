@@ -1,41 +1,46 @@
 'server only';
 
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import prisma from '@/lib/prisma';
 import NextAuth from 'next-auth';
-import GitHub from 'next-auth/providers/github';
+import TwitterProvider from 'next-auth/providers/twitter';
+import GoogleProvider from 'next-auth/providers/google';
+import DiscordProvider from 'next-auth/providers/discord';
+import NodemailerProvider from 'next-auth/providers/nodemailer';
+import { authConfig } from './auth.config';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  pages: {
-    signIn: '/login',
-    signOut: '/logout'
-  },
-  session: {
-    strategy: 'jwt'
-  },
-  adapter: PrismaAdapter(prisma),
-  callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isApp = nextUrl.pathname.startsWith('/host');
-      if (isApp) return isLoggedIn;
-      const isLogout = nextUrl.pathname.startsWith('/logout');
-      if (isLogout && !isLoggedIn)
-        return Response.redirect(new URL('/', nextUrl));
-      return true;
-    },
-    jwt({ token, user }) {
-      if (user && user.id) {
-        token.id = user.id;
+  ...authConfig,
+  providers: [
+    TwitterProvider({
+      clientId: process.env.TWITTER_ID,
+      clientSecret: process.env.TWITTER_SECRET
+    }),
+    GoogleProvider({
+      // allowDangerousEmailAccountLinking: true,
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+      authorization: {
+        params: {
+          prompt: 'consent',
+          access_type: 'offline',
+          response_type: 'code'
+        }
       }
-      return token;
-    },
-    session({ token, session }) {
-      if (token?.id && session.user) {
-        session.user.id = token.id as string;
-      }
-      return session;
-    }
-  },
-  providers: [GitHub]
+    }),
+    DiscordProvider({
+      // allowDangerousEmailAccountLinking: true,
+      clientId: process.env.DISCORD_ID,
+      clientSecret: process.env.DISCORD_SECRET
+    }),
+    NodemailerProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD
+        }
+      },
+      from: process.env.EMAIL_FROM
+    })
+  ]
 });
