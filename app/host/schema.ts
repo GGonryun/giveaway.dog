@@ -79,7 +79,6 @@ export const giveawaySchema = z.object({
       }
     }),
   audience: z.object({
-    requirePreEntryLogin: z.boolean(),
     requireEmail: z.boolean(),
     regionalRestriction: z
       .object({
@@ -119,7 +118,6 @@ export const giveawayFormDefaultValues: DeepPartial<GiveawayFormSchema> = {
     timeZone: undefined
   },
   audience: {
-    requirePreEntryLogin: false,
     regionalRestriction: null,
     minimumAgeRestriction: null,
     requireEmail: true

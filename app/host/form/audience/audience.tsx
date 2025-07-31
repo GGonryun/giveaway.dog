@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { RegionalRestriction } from './regional-restriction';
-import { RequirePreEntryLogin } from './require-pre-entry-login';
 import { MinimumAgeRestriction } from './minimum-age-restriction';
 import { RequireEmail } from './require-email';
 import { Section } from '../section';
@@ -15,8 +14,6 @@ export const Audience = () => {
       fields={['audience']}
     >
       <RequireEmail />
-
-      <RequirePreEntryLogin />
 
       <RegionalRestriction />
 
