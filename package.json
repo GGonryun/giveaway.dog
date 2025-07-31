@@ -61,6 +61,7 @@
     "lucide-react": "^0.400.0",
     "next": "15.2.4",
     "next-auth": "5.0.0-beta.25",
+    "nodemailer": "^7.0.5",
     "pluralize": "^8.0.0",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
