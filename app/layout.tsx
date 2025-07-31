@@ -18,12 +18,9 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <SessionProvider>
-          <main className="flex min-h-screen w-full flex-col my-4 container">
-            {children}
-          </main>
+          <main className="flex min-h-screen w-full flex-col">{children}</main>
           <Toaster />
         </SessionProvider>
-
         <Analytics />
       </body>
     </html>
