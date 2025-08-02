@@ -36,10 +36,10 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<'div'>) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') ?? '/';
+  const callbackUrl = searchParams.get('callbackUrl');
   const error = searchParams.get('error');
   const verify = searchParams.get('verify');
-  const redirectTo = callbackUrl ?? '/';
+  const redirectTo = callbackUrl ?? '/app';
   const [errorMessage, formAction, isPending] = useActionState(
     connect,
     undefined
