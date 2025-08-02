@@ -11,6 +11,10 @@
     "prisma:push:local": "dotenv -e .env.local -- npx prisma db push",
     "prisma:generate:local": "dotenv -e .env.local -- npx prisma generate",
     "prisma:reset:local": "dotenv -e .env.local -- npx prisma db push --force-reset",
+    "prisma:studio:production": "dotenv -e .env.prod -- npx prisma studio",
+    "prisma:migrate:production": "dotenv -e .env.prod -- npx prisma migrate deploy",
+    "prisma:push:production": "dotenv -e .env.prod -- npx prisma db push",
+    "prisma:generate:production": "dotenv -e .env.prod -- npx prisma generate",
     "docker:psql:local": "docker run --name psql -e POSTGRES_PASSWORD=prisma -e POSTGRES_USER=prisma -e POSTGRES_DB=prisma -d -p 5432:5432 postgres",
     "docker:compose:up": "docker-compose up -d"
   },
