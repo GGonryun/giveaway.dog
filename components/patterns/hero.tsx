@@ -18,7 +18,7 @@ export const Hero = () => {
           </p>
           <div className="flex w-full flex-col justify-center gap-2 sm:flex-row">
             <Button asChild className="w-full sm:w-auto">
-              <a href={'/host'}>Run a giveaway</a>
+              <a href={'/app/host'}>Run a giveaway</a>
             </Button>
             <Button asChild variant="outline" className="w-full sm:w-auto">
               <a href={'/examples'}>

@@ -25,14 +25,14 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isApp = nextUrl.pathname.startsWith('/host');
+      const isApp = nextUrl.pathname.startsWith('/app');
       if (isApp) return isLoggedIn;
       const isLogout = nextUrl.pathname.startsWith('/logout');
       if (isLogout && !isLoggedIn)
         return Response.redirect(new URL('/', nextUrl));
       const isLogin = nextUrl.pathname.startsWith('/login');
       if (isLogin && isLoggedIn)
-        return Response.redirect(new URL('/', nextUrl));
+        return Response.redirect(new URL('/app', nextUrl));
       return true;
     },
     jwt({ token, user }) {
