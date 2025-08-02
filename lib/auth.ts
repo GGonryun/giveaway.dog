@@ -11,11 +11,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
   providers: [
     TwitterProvider({
+      allowDangerousEmailAccountLinking: true,
       clientId: process.env.TWITTER_ID,
       clientSecret: process.env.TWITTER_SECRET
     }),
     GoogleProvider({
-      // allowDangerousEmailAccountLinking: true,
+      allowDangerousEmailAccountLinking: true,
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
       authorization: {
@@ -27,7 +28,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     }),
     DiscordProvider({
-      // allowDangerousEmailAccountLinking: true,
+      allowDangerousEmailAccountLinking: true,
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET
     }),

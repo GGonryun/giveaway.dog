@@ -141,7 +141,7 @@ export function LoginForm({
                       <Input
                         name="email"
                         type="email"
-                        placeholder="m@example.com"
+                        placeholder="player@giveaway.dog"
                         required
                       />
                       <p className="text-xs text-muted-foreground -mt-1">
