@@ -1,3 +1,4 @@
+import { EmojiLogo } from '@/components/patterns/logo-button';
 import { LoginForm } from './login-form';
 import { Suspense } from 'react';
 
@@ -11,13 +12,7 @@ export default async function LoginPage() {
           href="/"
           className="flex flex-col items-center gap-0 self-center font-medium "
         >
-          <span
-            role="img"
-            aria-label="dog face"
-            className="leading-none text-7xl"
-          >
-            🐶
-          </span>
+          <EmojiLogo />
         </a>
         <Suspense>
           <LoginForm />
