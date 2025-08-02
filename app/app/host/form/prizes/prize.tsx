@@ -29,7 +29,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from 'app/host/schema';
+import { GiveawayFormSchema } from '../../schema';
 import { Input } from '@/components/ui/input';
 
 export const Prize: React.FC<{
@@ -74,11 +74,7 @@ export const Prize: React.FC<{
           <GripVerticalIcon className="size-5" />
         </div>
 
-        <Collapsible
-          className="grow"
-          open={open}
-          onOpenChange={onOpenChange}
-        >
+        <Collapsible className="grow" open={open} onOpenChange={onOpenChange}>
           <CollapsibleTrigger asChild>
             <div
               className={cn(

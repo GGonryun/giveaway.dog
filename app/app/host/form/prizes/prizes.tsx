@@ -2,7 +2,7 @@ import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from 'app/host/schema';
+import { GiveawayFormSchema } from '../../schema';
 import {
   closestCenter,
   DndContext,

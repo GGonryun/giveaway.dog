@@ -1,4 +1,4 @@
-import { TaskOf, TaskType } from 'app/host/schema';
+import { TaskOf, TaskType } from '../../schema';
 
 export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
   const defaults: { [key in TaskType]: TaskOf<key> } = {

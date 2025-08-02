@@ -304,12 +304,12 @@ function Calendar({
           caption_label: 'text-sm font-medium',
           nav: 'space-x-1 flex items-center ',
           button_previous: cn(
-            buttonVariants({ variant: 'outline-solid' }),
+            buttonVariants({ variant: 'outline' }),
             'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute left-5 top-5',
             disableLeftNavigation() && 'pointer-events-none'
           ),
           button_next: cn(
-            buttonVariants({ variant: 'outline-solid' }),
+            buttonVariants({ variant: 'outline' }),
             'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute right-5 top-5',
             disableRightNavigation() && 'pointer-events-none'
           ),

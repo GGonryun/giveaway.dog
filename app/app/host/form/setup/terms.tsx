@@ -50,7 +50,7 @@ export const TermsAndConditions = () => {
                   <Button
                     type="button"
                     className="flex flex-col justify-start items-start text-left grow"
-                    variant={key === type ? 'default' : 'outline-solid'}
+                    variant={key === type ? 'default' : 'outline'}
                     key={key}
                     onClick={() => {
                       console.log('clicked', key);
