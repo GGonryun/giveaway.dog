@@ -39,7 +39,7 @@ export function Section<
   return (
     <Collapsible
       className={cn(
-        'border shadow-sm overflow-hidden rounded-lg bg-background',
+        'border shadow-xs overflow-hidden rounded-lg bg-background',
         invalid ? 'border-red-500' : ''
       )}
       open={open}
@@ -80,7 +80,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
   description
 }) => {
   return (
-    <div className="flex justify-between items-center flex-grow">
+    <div className="flex justify-between items-center grow">
       <div className="flex flex-col">
         <Typography.H2>{label}</Typography.H2>
         <Typography.Paragraph color="muted">{description}</Typography.Paragraph>

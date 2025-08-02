@@ -37,7 +37,7 @@ export const Timing = () => {
           control={form.control}
           name="timing.startDate"
           render={({ field }) => (
-            <FormItem className="flex-grow">
+            <FormItem className="grow">
               <FormLabel>Start Date</FormLabel>
               <FormControl>
                 <DateTimePicker hourCycle={12} {...field} />
@@ -50,7 +50,7 @@ export const Timing = () => {
           control={form.control}
           name="timing.endDate"
           render={({ field }) => (
-            <FormItem className="flex-grow">
+            <FormItem className="grow">
               <FormLabel>End Date</FormLabel>
               <FormControl>
                 <DateTimePicker hourCycle={12} {...field} />

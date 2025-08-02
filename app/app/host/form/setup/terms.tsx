@@ -49,8 +49,8 @@ export const TermsAndConditions = () => {
                 {widetype.entries(OPTIONS).map(([key, label]) => (
                   <Button
                     type="button"
-                    className="flex flex-col justify-start items-start text-left flex-grow"
-                    variant={key === type ? 'default' : 'outline'}
+                    className="flex flex-col justify-start items-start text-left grow"
+                    variant={key === type ? 'default' : 'outline-solid'}
                     key={key}
                     onClick={() => {
                       console.log('clicked', key);
@@ -114,7 +114,7 @@ const ButtonTextarea = () => {
             </Button>
           </div>
         </DialogTrigger>
-        <DialogContent className="w-[100vw] md:w-[90vw] max-w-7xl h-[95vh]">
+        <DialogContent className="w-screen md:w-[90vw] max-w-7xl h-[95vh]">
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription>

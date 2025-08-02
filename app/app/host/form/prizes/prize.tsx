@@ -60,7 +60,7 @@ export const Prize: React.FC<{
         ref={setNodeRef}
         style={style}
         className={cn(
-          'bg-background relative border shadow-sm rounded-lg w-full group',
+          'bg-background relative border shadow-xs rounded-lg w-full group',
           isDragging ? 'opacity-50' : 'opacity-100'
         )}
       >
@@ -75,14 +75,14 @@ export const Prize: React.FC<{
         </div>
 
         <Collapsible
-          className="flex-grow"
+          className="grow"
           open={open}
           onOpenChange={onOpenChange}
         >
           <CollapsibleTrigger asChild>
             <div
               className={cn(
-                'relative  flex flex-grow py-1 pl-2 pr-1 w-full justify-between items-center cursor-pointer bg-primary text-primary-foreground',
+                'relative  flex grow py-1 pl-2 pr-1 w-full justify-between items-center cursor-pointer bg-primary text-primary-foreground',
                 !open ? 'rounded-lg' : 'rounded-lg rounded-b-none'
               )}
             >

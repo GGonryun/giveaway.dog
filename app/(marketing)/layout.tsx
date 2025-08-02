@@ -16,7 +16,7 @@ export default async function RootLayout({
       <div>
         <NavigationBar />
       </div>
-      <div className="flex flex-grow items-center justify-center">
+      <div className="flex grow items-center justify-center">
         {children}
       </div>
       <div>

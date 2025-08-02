@@ -65,7 +65,7 @@ const SelectTask: React.FC<{ type: TaskType; onClick: () => void }> = ({
   const theme = toTheme(type);
   return (
     <div
-      className="flex items-center justify-between gap-2 cursor-pointer border-1 rounded-lg p-2 hover:bg-primary/90 bg-primary text-primary-foreground"
+      className="flex items-center justify-between gap-2 cursor-pointer border rounded-lg p-2 hover:bg-primary/90 bg-primary text-primary-foreground"
       onClick={onClick}
     >
       <div className="flex items-center gap-2">
