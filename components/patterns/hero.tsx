@@ -2,12 +2,19 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '../ui/badge';
+import Link from 'next/link';
 
 export const Hero = () => {
   return (
     <section className="container">
       <div className="grid items-center gap-8">
         <div className="flex flex-col items-center text-center">
+          <Link href={'/support'} className="text-sm mb-2">
+            <Badge variant="outline">
+              🦮 Talk to a human
+              <ArrowUpRight className="ml-1 size-4" />
+            </Badge>
+          </Link>
           <h1 className="my-6 text-pretty text-4xl font-bold lg:text-6xl">
             How creators{' '}
             <span className="text-primary">build bigger communities</span>
@@ -23,12 +30,6 @@ export const Hero = () => {
               <a href={'/examples'}>Explore giveaways</a>
             </Button>
           </div>
-          <a href={'/examples'} className="text-sm mt-6">
-            <Badge variant="outline">
-              ✨ See examples
-              <ArrowUpRight className="ml-2 size-4" />
-            </Badge>
-          </a>
         </div>
       </div>
     </section>

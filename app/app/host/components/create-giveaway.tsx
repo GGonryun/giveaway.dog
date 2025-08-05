@@ -69,6 +69,7 @@ export const GiveawayForm: React.FC = () => {
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <Outline
           title="New Giveaway"
+          type="button"
           action={
             <div className="flex gap-2 justify-self-end">
               <Button type="button" variant="outline" size="sm">

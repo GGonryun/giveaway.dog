@@ -34,7 +34,7 @@ export const NavigationBar = () => {
           <Link href="/" className="flex items-center gap-2">
             <EmojiLogo className="text-3xl mb-1" />
             <span className="text-lg font-semibold tracking-tighter">
-              Giveaway.Dog
+              Giveaway.dog
             </span>
           </Link>
           <NavigationMenu className="hidden lg:block">
@@ -93,7 +93,7 @@ export const NavigationBar = () => {
                   <Link href="/" className="flex items-center gap-2">
                     <EmojiLogo className="text-3xl mb-1" />
                     <span className="text-lg font-semibold tracking-tighter">
-                      Giveaway.Dog
+                      Giveaway.dog
                     </span>
                   </Link>
                 </SheetTitle>
