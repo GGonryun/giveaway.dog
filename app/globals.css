@@ -115,119 +115,208 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--border, currentcolor);
   }
 }
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base colors - warm, welcoming dog park vibes */
+    --background: oklch(0.98 0.02 85); /* Warm cream */
+    --foreground: oklch(0.15 0.03 90); /* Dark bark brown */
+    --card: oklch(0.95 0.02 80); /* Slightly warmer cream for cards */
+    --card-foreground: var(--foreground);
+    --popover: oklch(0.96 0.02 75);
+    --popover-foreground: var(--foreground);
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Primary - vibrant grass green that pops */
+    --primary: oklch(0.65 0.18 142); /* Vibrant fresh grass green */
+    --primary-foreground: oklch(0.98 0.01 85);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Secondary - golden retriever warmth */
+    --secondary: oklch(0.78 0.15 65); /* Golden retriever orange */
+    --secondary-foreground: oklch(0.15 0.02 45);
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Muted - sandy playground */
+    --muted: oklch(0.9 0.03 75); /* Warm sand */
+    --muted-foreground: oklch(0.45 0.02 70);
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Accent - playful tennis ball yellow-green */
+    --accent: oklch(0.82 0.16 118); /* Tennis ball yellow-green */
+    --accent-foreground: oklch(0.15 0.02 90);
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Destructive - warning red */
+    --destructive: oklch(0.58 0.2 25); /* Vibrant warning red */
+    --destructive-foreground: oklch(0.98 0.01 85);
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Border and input - strong contrast for neobrutalism */
+    --border: oklch(0.12 0.03 90); /* Almost black bark */
+    --input: oklch(0.12 0.03 90);
+    --ring: var(--accent);
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Chart colors */
+    --chart-1: var(--primary);
+    --chart-2: var(--secondary);
+    --chart-3: oklch(0.62 0.25 235); /* Bright sky blue */
+    --chart-4: oklch(0.65 0.22 285); /* Playful purple */
+    --chart-5: oklch(0.72 0.18 340); /* Collar pink */
 
-    --error: 0 84.2% 60.2%;
-    --error-foreground: 210 40% 98%;
+    /* Sidebar */
+    --sidebar: oklch(0.92 0.03 80);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
 
-    --warning: 25 95% 53%;
-    --warning-foreground: 0 0% 100%;
+    /* Typography */
+    --font-sans: 'Inter Variable', 'DM Sans', sans-serif;
+    --font-serif: 'Crimson Pro Variable', 'Lora', Georgia, serif;
+    --font-mono: 'JetBrains Mono Variable', monospace;
 
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
+    /* Neobrutalist characteristics */
+    --radius: 6px;
 
-    --info: 221 83% 53%;
-    --info-foreground: 0 0% 100%;
+    /* Practical shadows - much more subtle for UI elements */
+    --shadow-2xs: 2px 2px 0px 0px hsl(0 0% 0% / 0.5);
+    --shadow-xs: 2px 2px 0px 0px hsl(0 0% 0% / 0.8);
+    --shadow-sm: 3px 3px 0px 0px hsl(0 0% 0% / 1);
+    --shadow: 4px 4px 0px 0px hsl(0 0% 0% / 1);
+    --shadow-md: 6px 6px 0px 0px hsl(0 0% 0% / 1);
+    --shadow-lg: 8px 8px 0px 0px hsl(0 0% 0% / 1);
+    --shadow-xl: 12px 12px 0px 0px hsl(0 0% 0% / 1);
+    --shadow-2xl: 16px 16px 0px 0px hsl(0 0% 0% / 1);
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark mode - cozy evening dog park */
+    --background: oklch(0.15 0.04 120); /* Deep forest evening */
+    --foreground: oklch(0.95 0.02 85); /* Warm cream */
+    --card: oklch(0.22 0.03 115); /* Darker forest floor */
+    --card-foreground: var(--foreground);
+    --popover: oklch(0.22 0.03 115);
+    --popover-foreground: var(--foreground);
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    /* Primary - glowing grass under moonlight */
+    --primary: oklch(0.72 0.16 142); /* Brighter grass for dark mode */
+    --primary-foreground: oklch(0.12 0.03 90);
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    /* Secondary - warm campfire glow */
+    --secondary: oklch(0.82 0.14 55); /* Warmer golden glow */
+    --secondary-foreground: oklch(0.12 0.02 45);
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Muted - moonlit sand */
+    --muted: oklch(0.28 0.03 110); /* Cool sand in moonlight */
+    --muted-foreground: oklch(0.85 0.02 85);
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Accent - glowing tennis ball */
+    --accent: oklch(0.85 0.18 118); /* Brighter tennis ball glow */
+    --accent-foreground: oklch(0.15 0.02 90);
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Destructive - warning beacon */
+    --destructive: oklch(0.68 0.22 25); /* Brighter warning red */
+    --destructive-foreground: oklch(0.95 0.01 85);
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Strong borders for contrast */
+    --border: oklch(0.95 0.02 85); /* Light cream borders */
+    --input: oklch(0.95 0.02 85);
+    --ring: var(--accent);
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Chart colors - enhanced for dark mode */
+    --chart-1: var(--primary);
+    --chart-2: var(--secondary);
+    --chart-3: oklch(0.72 0.22 235); /* Bright sky blue */
+    --chart-4: oklch(0.75 0.2 285); /* Playful purple */
+    --chart-5: oklch(0.82 0.16 340); /* Collar pink */
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar */
+    --sidebar: var(--background);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
+
+    /* Typography */
+    --font-sans: 'Inter Variable', 'DM Sans', sans-serif;
+    --font-serif: 'Crimson Pro Variable', 'Lora', Georgia, serif;
+    --font-mono: 'JetBrains Mono Variable', monospace;
+
+    --radius: 6px;
+
+    /* Practical shadows for dark mode */
+    --shadow-2xs: 2px 2px 0px 0px hsl(0 0% 100% / 0.4);
+    --shadow-xs: 2px 2px 0px 0px hsl(0 0% 100% / 0.6);
+    --shadow-sm: 3px 3px 0px 0px hsl(0 0% 100% / 0.8);
+    --shadow: 4px 4px 0px 0px hsl(0 0% 100% / 1);
+    --shadow-md: 6px 6px 0px 0px hsl(0 0% 100% / 1);
+    --shadow-lg: 8px 8px 0px 0px hsl(0 0% 100% / 1);
+    --shadow-xl: 12px 12px 0px 0px hsl(0 0% 100% / 1);
+    --shadow-2xl: 16px 16px 0px 0px hsl(0 0% 100% / 1);
+  }
+
+  @theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+    --font-serif: var(--font-serif);
+
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+
+    --shadow-2xs: var(--shadow-2xs);
+    --shadow-xs: var(--shadow-xs);
+    --shadow-sm: var(--shadow-sm);
+    --shadow: var(--shadow);
+    --shadow-md: var(--shadow-md);
+    --shadow-lg: var(--shadow-lg);
+    --shadow-xl: var(--shadow-xl);
+    --shadow-2xl: var(--shadow-2xl);
   }
 }
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
 /* Chrome, Safari, Edge, Opera */
 input[type='search']::-webkit-search-cancel-button {
   -webkit-appearance: none;
@@ -242,54 +331,4 @@ input[type='search']::-moz-search-cancel-button {
 /* Microsoft Edge */
 input[type='search']::-ms-clear {
   display: none;
-}
-/*
-  ---break---
-*/
-:root {
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-/*
-  ---break---
-*/
-.dark {
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.439 0 0);
-}
-/*
-  ---break---
-*/
-@theme inline {
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
-/*
-  ---break---
-*/
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
 }
