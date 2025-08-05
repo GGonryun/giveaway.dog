@@ -316,6 +316,11 @@
     --shadow-xl: var(--shadow-xl);
     --shadow-2xl: var(--shadow-2xl);
   }
+
+  html,
+  body {
+    background-color: var(--background);
+  }
 }
 /* Chrome, Safari, Edge, Opera */
 input[type='search']::-webkit-search-cancel-button {

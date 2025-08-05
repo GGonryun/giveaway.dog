@@ -167,8 +167,8 @@ export function LoginForm({
                 aria-live="polite"
                 aria-atomic="true"
               >
-                <AlertCircleIcon className="min-h-5 min-w-5 h-5 w-5 text-red-500" />
-                <p className="text-sm text-red-500">
+                <AlertCircleIcon className="min-h-5 min-w-5 h-5 w-5 text-destructive" />
+                <p className="text-sm text-destructive">
                   {parseError(errorMessage || error)}
                 </p>
               </div>

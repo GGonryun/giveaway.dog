@@ -21,7 +21,7 @@ export const text = {
     primary: 'text-primary',
     muted: 'text-muted-foreground',
     white: 'text-white',
-    destructive: 'text-red-500'
+    destructive: 'text-destructive'
   },
   leading: {
     none: 'leading-none',
