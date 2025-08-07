@@ -33,15 +33,14 @@ export const SelectTaskDialog: React.FC<{
           Add Entry Method
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:w-[600px]">
+      <SheetContent side="left" className="w-full sm:w-[600px]">
         <SheetHeader className="text-left">
           <SheetTitle>Entry Methods</SheetTitle>
           <SheetDescription>
             Select how users can enter the giveaway, here are some options:
           </SheetDescription>
         </SheetHeader>
-        <br />
-        <div className="space-y-2">
+        <div className="space-y-2 p-2">
           {widetype.keys(TASK_GROUP).map((t) => (
             <SelectTask
               key={t}
