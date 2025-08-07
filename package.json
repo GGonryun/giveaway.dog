@@ -76,6 +76,7 @@
     "react-dom": "19.0.0",
     "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.54.2",
+    "react-resizable-panels": "^3.0.4",
     "server-only": "^0.0.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^4.1.11",

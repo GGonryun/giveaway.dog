@@ -30,7 +30,7 @@ export const Timing = () => {
     <Section
       label="2. Timing"
       description="Choose the dates and timezone for your raffle."
-      fields={['timing']}
+      fields={['timing.startDate', 'timing.endDate', 'timing.timeZone']}
     >
       <div className="flex gap-2 flex-col ">
         <FormField

@@ -1,3 +1,4 @@
+import { DeepPartial } from '@/lib/types';
 import z from 'zod';
 
 export const DEFAULT_MINIMUM_AGE = 13;

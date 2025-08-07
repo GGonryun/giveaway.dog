@@ -39,9 +39,7 @@ export default async function RootLayout({
     >
       <body>
         <SessionProvider>
-          <main className="flex min-h-screen w-full flex-col bg-background">
-            {children}
-          </main>
+          <main>{children}</main>
           <Toaster />
         </SessionProvider>
         <Analytics />

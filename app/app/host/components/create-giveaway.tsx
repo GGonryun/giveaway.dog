@@ -3,15 +3,13 @@
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from '@/components/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { PlusIcon, SaveIcon, XIcon } from 'lucide-react';
 import {
   GiveawayFormSchema,
   giveawaySchema,
   giveawayFormDefaultValues
 } from '../schemas';
 import { onSubmitAction } from '../actions';
-import { useEffect, useTransition } from 'react';
+import { useEffect, useTransition, useRef } from 'react';
 import * as dates from 'date-fns';
 import { timezone } from '@/lib/time';
 
@@ -20,7 +18,28 @@ import { Audience } from './form/audience/audience';
 import { EntryMethods } from './form/tasks/entry-methods';
 import { Prizes } from './form/prizes/prizes';
 import { Timing } from './form/timing/timing';
-import { Outline } from '../../outline';
+import { TakiEasterEgg } from '@/components/patterns/taki-easter-egg';
+import { FormLayout } from './form-layout';
+import { useSearchParams } from 'next/navigation';
+
+const GiveawayFormContent: React.FC = () => {
+  const searchParams = useSearchParams();
+  const step = searchParams.get('step') ?? 'setup';
+
+  return (
+    <>
+      {step === 'setup' && <Setup />}
+      {step === 'timing' && <Timing />}
+      {step === 'audience' && <Audience />}
+      {step === 'tasks' && <EntryMethods />}
+      {step === 'prizes' && <Prizes />}
+    </>
+  );
+};
+
+const GiveawayPreview: React.FC = () => {
+  return <TakiEasterEgg />;
+};
 
 export const GiveawayForm: React.FC = () => {
   const [isPending, startTransition] = useTransition();
@@ -40,6 +59,11 @@ export const GiveawayForm: React.FC = () => {
   const startDate = useWatch({
     control: form.control,
     name: 'timing.startDate'
+  });
+
+  const name = useWatch({
+    control: form.control,
+    name: 'setup.name'
   });
 
   useEffect(() => {
@@ -66,32 +90,13 @@ export const GiveawayForm: React.FC = () => {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <Outline
-          title="New Giveaway"
-          type="button"
-          action={
-            <div className="flex gap-2 justify-self-end">
-              <Button type="button" variant="outline" size="sm">
-                <XIcon />
-                Cancel
-              </Button>
-              <Button type="submit" size="sm" disabled={isPending}>
-                <SaveIcon />
-                Publish
-              </Button>
-            </div>
-          }
-        >
-          <div className="max-w-lg space-y-2">
-            <Setup />
-            <Timing />
-            <Audience />
-            <EntryMethods />
-            <Prizes />
-          </div>
-        </Outline>
-      </form>
+      <FormLayout
+        title={name || 'New Sweepstakes'}
+        onSubmit={form.handleSubmit(handleSubmit)}
+        disabled={isPending}
+        leftSide={<GiveawayFormContent />}
+        rightSide={<GiveawayPreview />}
+      />
     </FormProvider>
   );
 };

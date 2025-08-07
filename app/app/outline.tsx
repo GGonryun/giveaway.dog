@@ -1,13 +1,18 @@
 import {
-  SiteHeader,
+  SiteHeaderWithTrigger,
   SiteHeaderProps
 } from '@/components/patterns/app-sidebar/site-header';
+import { cn } from '@/lib/utils';
 
-export const Outline: React.PC<SiteHeaderProps> = ({ children, ...props }) => {
+export const Outline: React.PC<
+  SiteHeaderProps & { container?: boolean; className?: string }
+> = ({ className, children, container = true, ...props }) => {
   return (
     <>
-      <SiteHeader {...props} />
-      <div className="container py-8">{children}</div>
+      <SiteHeaderWithTrigger {...props} />
+      <div className={cn('py-8', container && 'container', className)}>
+        {children}
+      </div>
     </>
   );
 };
