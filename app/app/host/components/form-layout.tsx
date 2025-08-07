@@ -63,11 +63,17 @@ export const FormLayout: React.FC<FormLayoutProps> = ({
               direction="horizontal"
               className="flex-1 min-h-0"
             >
-              <ResizablePanel defaultSize={30} className="min-w-[500px]">
+              <ResizablePanel
+                defaultSize={30}
+                className="min-w-[300px] xl:max-w-[800px]"
+              >
                 <div className="space-y-2 overflow-y-scroll h-full">{left}</div>
               </ResizablePanel>
               <ResizableHandle withHandle />
-              <ResizablePanel defaultSize={60} minSize={55}>
+              <ResizablePanel
+                defaultSize={60}
+                className="min-w-[500px] xl:min-w-[800px]"
+              >
                 <div className="overflow-hidden w-full h-full flex items-center justify-center bg-tertiary-10">
                   {right}
                 </div>
@@ -129,7 +135,9 @@ const FormHeader: React.FC<{
       <SiteHeader className="h-20">
         <div className="flex flex-col w-full gap-2 pt-1">
           <div className="flex items-center">
-            <div className="flex-1" />
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg sm:text-xl font-medium truncate">{title}</h1>
+            </div>
             <div className="flex gap-2">
               <Button
                 type="button"
