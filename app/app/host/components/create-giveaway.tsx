@@ -17,10 +17,10 @@ import { Setup } from './form/setup/setup';
 import { Audience } from './form/audience/audience';
 import { EntryMethods } from './form/tasks/entry-methods';
 import { Prizes } from './form/prizes/prizes';
-import { Timing } from './form/timing/timing';
 import { TakiEasterEgg } from '@/components/patterns/taki-easter-egg';
 import { FormLayout } from './form-layout';
 import { useSearchParams } from 'next/navigation';
+import { FormDefaultsProvider } from './form/form-defaults-context';
 
 const GiveawayFormContent: React.FC = () => {
   const searchParams = useSearchParams();
@@ -29,7 +29,6 @@ const GiveawayFormContent: React.FC = () => {
   return (
     <>
       {step === 'setup' && <Setup />}
-      {step === 'timing' && <Timing />}
       {step === 'audience' && <Audience />}
       {step === 'tasks' && <EntryMethods />}
       {step === 'prizes' && <Prizes />}
@@ -43,16 +42,19 @@ const GiveawayPreview: React.FC = () => {
 
 export const GiveawayForm: React.FC = () => {
   const [isPending, startTransition] = useTransition();
+  
+  const defaultValues = {
+    ...giveawayFormDefaultValues,
+    timing: {
+      startDate: dates.startOfDay(dates.add(Date.now(), { days: 1 })),
+      endDate: dates.startOfDay(dates.add(Date.now(), { days: 1, weeks: 1 })),
+      timeZone: timezone.current()
+    }
+  };
+  
   const form = useForm<GiveawayFormSchema>({
     resolver: zodResolver(giveawaySchema),
-    defaultValues: {
-      ...giveawayFormDefaultValues,
-      timing: {
-        startDate: dates.startOfDay(dates.add(Date.now(), { days: 1 })),
-        endDate: dates.startOfDay(dates.add(Date.now(), { days: 1, weeks: 1 })),
-        timeZone: timezone.current()
-      }
-    },
+    defaultValues,
     mode: 'onChange'
   });
 
@@ -90,13 +92,15 @@ export const GiveawayForm: React.FC = () => {
 
   return (
     <FormProvider {...form}>
-      <FormLayout
-        title={name || 'New Sweepstakes'}
-        onSubmit={form.handleSubmit(handleSubmit)}
-        disabled={isPending}
-        leftSide={<GiveawayFormContent />}
-        rightSide={<GiveawayPreview />}
-      />
+      <FormDefaultsProvider defaultValues={defaultValues}>
+        <FormLayout
+          title={name || 'New Sweepstakes'}
+          onSubmit={form.handleSubmit(handleSubmit)}
+          disabled={isPending}
+          leftSide={<GiveawayFormContent />}
+          rightSide={<GiveawayPreview />}
+        />
+      </FormDefaultsProvider>
     </FormProvider>
   );
 };

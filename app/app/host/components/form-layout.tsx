@@ -9,7 +9,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { XIcon, SaveIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 interface FormLayoutProps {
   title: string;
@@ -35,9 +35,7 @@ export const FormLayout: React.FC<FormLayoutProps> = ({
         <FormHeader title={title} disabled={disabled} />
         <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
           <ResizablePanel defaultSize={30} className="min-w-[500px]">
-            <div className="px-2 py-4 space-y-2 overflow-y-scroll pr-4 h-full">
-              {leftSide}
-            </div>
+            <div className="space-y-2 overflow-y-scroll h-full">{leftSide}</div>
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={60} minSize={55}>
@@ -74,9 +72,6 @@ const FormHeader: React.FC<{ title: string; disabled: boolean }> = ({
                   0
                 </Badge>
               </Link>
-            </TabsTrigger>
-            <TabsTrigger asChild value="timing">
-              <Link href="?step=timing">Timing</Link>
             </TabsTrigger>
             <TabsTrigger asChild value="audience">
               <Link href="?step=audience">Audience</Link>

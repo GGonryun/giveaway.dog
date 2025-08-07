@@ -24,9 +24,9 @@ export const SelectTaskDialog: React.FC<{
     <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild>
         <Button
-          variant="outline"
+          variant="secondary"
           type="button"
-          className="w-full border-dashed hover:border-gray-400 hover:bg-transparent"
+          className="w-full shadow-sm cursor-pointer"
           onClick={() => setOpen(true)}
         >
           <PlusIcon />

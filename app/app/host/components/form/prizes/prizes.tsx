@@ -123,9 +123,9 @@ export const Prizes = () => {
                   </DragOverlay>
                 </DndContext>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   type="button"
-                  className="w-full border-dashed hover:border-gray-400 hover:bg-transparent"
+                  className="w-full cursor-pointer shadow-sm"
                   onClick={() =>
                     append({ name: 'My Custom Prize', winners: 1 })
                   }

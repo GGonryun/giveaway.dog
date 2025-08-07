@@ -1,16 +1,6 @@
-import {
-  ErrorMessage,
-  useFormErrors
-} from '@/components/hooks/use-form-errors';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger
-} from '@/components/ui/collapsible';
 import { Typography } from '@/components/ui/typography';
-import { cn } from '@/lib/utils';
 import { CircleAlertIcon, CircleCheckIcon, CircleIcon } from 'lucide-react';
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { FieldPath, FieldValues, useFormContext } from 'react-hook-form';
 
 export function Section<
@@ -24,100 +14,33 @@ export function Section<
   fields?: TName[];
   children: React.ReactNode | React.ReactNode[];
 }) {
-  const [open, setOpen] = React.useState(true);
   const form = useFormContext<TFieldValues>();
-  const errors = useFormErrors(form.formState.errors, fields ?? []);
-
-  const incomplete = useMemo(() => {
-    return fields?.some((field) => {
-      const data = form.getValues(field);
-      return (
-        data == null || data === '' || (Array.isArray(data) && data.length < 1)
-      );
-    });
-  }, [errors, fields]);
-
-  const invalid = useMemo(() => errors.length > 0, [errors]);
-
-  useEffect(() => {
-    if (invalid) setOpen(true);
-  }, [invalid]);
 
   return (
-    <Collapsible
-      className={cn(
-        'border shadow-xs overflow-hidden rounded-lg bg-background',
-        invalid ? 'border-destructive' : ''
-      )}
-      open={open}
-      onOpenChange={setOpen}
-    >
-      <CollapsibleTrigger asChild>
-        <div
-          className={cn(
-            'flex items-center justify-between p-4 cursor-pointer bg-sidebar',
-            invalid
-              ? 'bg-destructive/15'
-              : incomplete
-                ? 'bg-sidebar'
-                : 'bg-primary/15'
-          )}
-        >
-          <div className="flex flex-col gap-2 w-full">
-            <SectionTitle
-              {...props}
-              icon={
-                invalid ? (
-                  <CircleAlertIcon className="text-destructive" />
-                ) : !incomplete ? (
-                  <CircleCheckIcon className="text-primary" />
-                ) : (
-                  <CircleIcon />
-                )
-              }
-            />
-            {!open && <ErrorMessages errors={errors} />}
-          </div>
+    <div>
+      <div className="sticky top-0 z-10 bg-background flex items-center justify-between p-2 sm:p-4 border-b">
+        <div className="flex flex-col gap-2 w-full">
+          <SectionTitle {...props} />
         </div>
-      </CollapsibleTrigger>
-      <CollapsibleContent asChild>
-        <div className="flex flex-col gap-2 p-4 border-t">{children}</div>
-      </CollapsibleContent>
-    </Collapsible>
+      </div>
+      <div className="flex flex-col gap-2 p-2 sm:p-4">{children}</div>
+    </div>
   );
 }
 
 type SectionTitleProps = {
   label: string;
   description: string;
-  icon: React.ReactNode;
 };
-const SectionTitle: React.FC<SectionTitleProps> = ({
-  icon,
-  label,
-  description
-}) => {
+const SectionTitle: React.FC<SectionTitleProps> = ({ label, description }) => {
   return (
     <div className="flex justify-between items-center grow">
       <div className="flex flex-col">
-        <Typography.H2>{label}</Typography.H2>
-        <Typography.Paragraph color="muted">{description}</Typography.Paragraph>
+        <h2 className="text-lg sm:text-xl font-semibold">{label}</h2>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          {description}
+        </p>
       </div>
-      {icon}
-    </div>
-  );
-};
-
-const ErrorMessages = ({ errors }: { errors: ErrorMessage[] }) => {
-  if (!errors.length) return null;
-
-  return (
-    <div className="space-y-1">
-      {errors.map((e) => (
-        <Typography.Paragraph key={e.path} color="destructive">
-          {e.message}
-        </Typography.Paragraph>
-      ))}
     </div>
   );
 };
