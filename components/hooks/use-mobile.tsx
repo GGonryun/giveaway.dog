@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 // https://tailwindcss.com/docs/responsive-design
-// --breakpoint-sm
-const MOBILE_BREAKPOINT = 640; // px
+// --breakpoint-md
+const MOBILE_BREAKPOINT = 768; // px
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
