@@ -70,8 +70,8 @@ export const MinimumAgeRestriction = () => {
         )}
       />
       <Collapsible open={minimumAgeRestriction !== null}>
-        <CollapsibleContent className="flex flex-col gap-2">
-          <div className="grid grid-cols-[159px_1fr] gap-2 items-start mt-2">
+        <CollapsibleContent className="flex flex-col gap-1">
+          <div className="grid grid-cols-1 sm:grid-cols-[159px_1fr] gap-2 items-start mt-2">
             <AgeField />
             <FormatField />
           </div>

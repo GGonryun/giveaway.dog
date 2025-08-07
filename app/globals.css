@@ -137,6 +137,16 @@
     --secondary: oklch(0.78 0.15 65); /* Golden retriever orange */
     --secondary-foreground: oklch(0.15 0.02 45);
 
+    --tertiary: oklch(0.68 0.15 220); /* Clear sky blue */
+    --tertiary-foreground: oklch(0.98 0.01 85);
+    --tertiary-10: oklch(0.95 0.02 220);
+
+    --quaternary: oklch(0.72 0.12 350); /* Soft coral pink */
+    --quaternary-foreground: oklch(0.15 0.02 90);
+
+    --quinary: oklch(0.7 0.13 280); /* Gentle lavender */
+    --quinary-foreground: oklch(0.15 0.02 90);
+
     /* Muted - sandy playground */
     --muted: oklch(0.9 0.03 75); /* Warm sand */
     --muted-foreground: oklch(0.45 0.02 70);
@@ -210,6 +220,16 @@
     --secondary: oklch(0.82 0.14 55); /* Warmer golden glow */
     --secondary-foreground: oklch(0.12 0.02 45);
 
+    --tertiary: oklch(0.68 0.15 220); /* Clear sky blue */
+    --tertiary-foreground: oklch(0.98 0.01 85);
+    --tertiary-10: oklch(0.95 0.02 220);
+
+    --quaternary: oklch(0.72 0.12 350); /* Soft coral pink */
+    --quaternary-foreground: oklch(0.15 0.02 90);
+
+    --quinary: oklch(0.7 0.13 280); /* Gentle lavender */
+    --quinary-foreground: oklch(0.15 0.02 90);
+
     /* Muted - moonlit sand */
     --muted: oklch(0.28 0.03 110); /* Cool sand in moonlight */
     --muted-foreground: oklch(0.85 0.02 85);
@@ -273,6 +293,13 @@
     --color-primary-foreground: var(--primary-foreground);
     --color-secondary: var(--secondary);
     --color-secondary-foreground: var(--secondary-foreground);
+    --color-tertiary: var(--tertiary);
+    --color-tertiary-10: var(--tertiary-10);
+    --color-tertiary-foreground: var(--tertiary-foreground);
+    --color-quaternary: var(--quaternary);
+    --color-quaternary-foreground: var(--quaternary-foreground);
+    --color-quinary: var(--quinary);
+    --color-quinary-foreground: var(--quinary-foreground);
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
     --color-accent: var(--accent);

@@ -1,21 +1,12 @@
-import { Typography } from '@/components/ui/typography';
-import { CircleAlertIcon, CircleCheckIcon, CircleIcon } from 'lucide-react';
 import React from 'react';
-import { FieldPath, FieldValues, useFormContext } from 'react-hook-form';
 
-export function Section<
-  TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues>
->({
+export function Section({
   children,
-  fields,
+
   ...props
 }: Omit<SectionTitleProps, 'icon'> & {
-  fields?: TName[];
   children: React.ReactNode | React.ReactNode[];
 }) {
-  const form = useFormContext<TFieldValues>();
-
   return (
     <div>
       <div className="sticky top-0 z-10 bg-background flex items-center justify-between p-2 sm:p-4 border-b">

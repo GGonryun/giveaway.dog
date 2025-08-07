@@ -42,7 +42,7 @@ const GiveawayPreview: React.FC = () => {
 
 export const GiveawayForm: React.FC = () => {
   const [isPending, startTransition] = useTransition();
-  
+
   const defaultValues = {
     ...giveawayFormDefaultValues,
     timing: {
@@ -51,7 +51,7 @@ export const GiveawayForm: React.FC = () => {
       timeZone: timezone.current()
     }
   };
-  
+
   const form = useForm<GiveawayFormSchema>({
     resolver: zodResolver(giveawaySchema),
     defaultValues,
@@ -97,8 +97,8 @@ export const GiveawayForm: React.FC = () => {
           title={name || 'New Sweepstakes'}
           onSubmit={form.handleSubmit(handleSubmit)}
           disabled={isPending}
-          leftSide={<GiveawayFormContent />}
-          rightSide={<GiveawayPreview />}
+          left={<GiveawayFormContent />}
+          right={<GiveawayPreview />}
         />
       </FormDefaultsProvider>
     </FormProvider>

@@ -51,10 +51,16 @@ export const SiteHeaderContent: React.FC<SiteHeaderContentProps> = ({
 
 export const SiteHeader: React.FC<{
   children: React.ReactNode | React.ReactNode[];
-}> = ({ children }) => {
+  className?: string;
+}> = ({ children, className }) => {
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b sticky top-0 z-10 bg-background">
-      <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
+    <header
+      className={cn(
+        'flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b sticky top-0 z-10 bg-background',
+        className
+      )}
+    >
+      <div className="flex w-full items-center gap-1 px-2 sm:px-4 lg:gap-2 lg:px-6">
         {children}
       </div>
     </header>

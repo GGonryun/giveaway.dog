@@ -1,10 +1,9 @@
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { Sora, DM_Sans, Space_Mono, Space_Grotesk } from 'next/font/google';
+import { Sora, DM_Sans, Space_Mono } from 'next/font/google';
 
 import { Analytics } from '@vercel/analytics/react';
 import { SessionProvider } from '@/components/providers/auth-session-provider';
-import { cn } from '@/lib/utils';
 
 const sora = Sora({
   subsets: ['latin'],
