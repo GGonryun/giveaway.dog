@@ -9,36 +9,15 @@ import {
   giveawayFormDefaultValues
 } from '../schemas';
 import { onSubmitAction } from '../actions';
-import { useEffect, useTransition, useRef } from 'react';
+import { useEffect, useTransition } from 'react';
 import * as dates from 'date-fns';
 import { timezone } from '@/lib/time';
 
-import { Setup } from './form/setup/setup';
-import { Audience } from './form/audience/audience';
-import { EntryMethods } from './form/tasks/entry-methods';
-import { Prizes } from './form/prizes/prizes';
-import { TakiEasterEgg } from '@/components/patterns/taki-easter-egg';
 import { FormLayout } from './form-layout';
-import { useSearchParams } from 'next/navigation';
 import { FormDefaultsProvider } from './form/form-defaults-context';
-
-const GiveawayFormContent: React.FC = () => {
-  const searchParams = useSearchParams();
-  const step = searchParams.get('step') ?? 'setup';
-
-  return (
-    <>
-      {step === 'setup' && <Setup />}
-      {step === 'audience' && <Audience />}
-      {step === 'tasks' && <EntryMethods />}
-      {step === 'prizes' && <Prizes />}
-    </>
-  );
-};
-
-const GiveawayPreview: React.FC = () => {
-  return <TakiEasterEgg />;
-};
+import { SweepstakesStepProvider } from '@/components/hooks/use-sweepstake-step';
+import { GiveawayFormContent } from './form-content';
+import { GiveawayPreview } from './preview';
 
 export const GiveawayForm: React.FC = () => {
   const [isPending, startTransition] = useTransition();
@@ -91,16 +70,18 @@ export const GiveawayForm: React.FC = () => {
   };
 
   return (
-    <FormProvider {...form}>
-      <FormDefaultsProvider defaultValues={defaultValues}>
-        <FormLayout
-          title={name || 'New Sweepstakes'}
-          onSubmit={form.handleSubmit(handleSubmit)}
-          disabled={isPending}
-          left={<GiveawayFormContent />}
-          right={<GiveawayPreview />}
-        />
-      </FormDefaultsProvider>
-    </FormProvider>
+    <SweepstakesStepProvider>
+      <FormProvider {...form}>
+        <FormDefaultsProvider defaultValues={defaultValues}>
+          <FormLayout
+            title={name || 'New Sweepstakes'}
+            onSubmit={form.handleSubmit(handleSubmit)}
+            disabled={isPending}
+            left={<GiveawayFormContent />}
+            right={<GiveawayPreview />}
+          />
+        </FormDefaultsProvider>
+      </FormProvider>
+    </SweepstakesStepProvider>
   );
 };

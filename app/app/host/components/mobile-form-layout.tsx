@@ -2,21 +2,15 @@ import { SiteHeader } from '@/components/patterns/app-sidebar/site-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
-} from '@/components/ui/dialog';
-import { XIcon, SaveIcon, EyeIcon, EditIcon, AlertCircleIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { XIcon, SaveIcon, EyeIcon, EditIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { useFormErrors } from '@/components/hooks/use-form-errors';
-import { useIncompleteFields } from '@/components/hooks/use-incomplete-fields';
+import { useCallback, useMemo, useState } from 'react';
+import { UnifiedFormFooter } from './unified-form-footer';
+import { useSweepstakesStep } from '@/components/hooks/use-sweepstake-step';
+import { SWEEPSTAKE_STEPS } from '@/components/data/form-steps';
+import { useFormIssues } from '@/components/hooks/use-form-issues';
+import { useRouter } from 'next/navigation';
 
 interface MobileFormLayoutProps {
   title: string;
@@ -27,15 +21,25 @@ interface MobileFormLayoutProps {
 }
 
 const MobileTabTrigger: React.FC<{
-  value: string;
+  step: string;
   label: string;
-  errors: number;
   mobileView: 'form' | 'preview';
-}> = ({ value, label, errors, mobileView }) => {
+}> = ({ step, label, mobileView }) => {
+  const { formErrors, trigger } = useFormIssues({ step });
+  const errors = useMemo(() => formErrors.length, [formErrors]);
+  const currentStep = useSweepstakesStep();
+
+  const handleJumpToField = useCallback(() => {
+    setTimeout(() => {
+      trigger(currentStep);
+    }, 100);
+  }, [currentStep]);
+
   return (
-    <TabsTrigger asChild value={value} className="flex-1">
+    <TabsTrigger asChild value={step} className="flex-1">
       <Link
-        href={`?step=${value}`}
+        href={`?step=${step}`}
+        onClick={handleJumpToField}
         className={cn(
           'flex gap-1 w-full data-[state=active]:border-l data-[state=active]:border-t data-[state=active]:border-r h-7 mt-1',
           mobileView === 'preview' && 'data-[state=active]:bg-tertiary-10'
@@ -60,8 +64,16 @@ const MobileFormHeader: React.FC<{
   disabled: boolean;
   mobileView: 'form' | 'preview';
 }> = ({ title, disabled, mobileView }) => {
-  const searchParams = useSearchParams();
-  const step = searchParams.get('step') ?? 'setup';
+  const step = useSweepstakesStep();
+  const router = useRouter();
+
+  const handleBack = useCallback(() => {
+    router.push('/app');
+  }, [router]);
+
+  const handleSubmit = useCallback(() => {
+    alert('Publish clicked');
+  }, []);
 
   return (
     <SiteHeader className="h-20">
@@ -76,7 +88,7 @@ const MobileFormHeader: React.FC<{
               variant="outline"
               size="icon"
               disabled={disabled}
-              onClick={() => alert('Cancel clicked')}
+              onClick={handleBack}
             >
               <XIcon />
             </Button>
@@ -84,7 +96,7 @@ const MobileFormHeader: React.FC<{
               type="submit"
               size="icon"
               disabled={disabled}
-              onClick={() => alert('Publish clicked')}
+              onClick={handleSubmit}
             >
               <SaveIcon />
             </Button>
@@ -93,186 +105,19 @@ const MobileFormHeader: React.FC<{
         <div className="w-full">
           <Tabs value={step}>
             <TabsList size="sm" className="w-full px-1 gap-1 m-0 h-8">
-              <MobileTabTrigger
-                value="setup"
-                label="Setup"
-                errors={0}
-                mobileView={mobileView}
-              />
-              <MobileTabTrigger
-                value="audience"
-                label="Audience"
-                errors={0}
-                mobileView={mobileView}
-              />
-              <MobileTabTrigger
-                value="tasks"
-                label="Tasks"
-                errors={0}
-                mobileView={mobileView}
-              />
-              <MobileTabTrigger
-                value="prizes"
-                label="Prizes"
-                errors={0}
-                mobileView={mobileView}
-              />
+              {SWEEPSTAKE_STEPS.map((step) => (
+                <MobileTabTrigger
+                  key={step.key}
+                  step={step.key}
+                  label={step.label}
+                  mobileView={mobileView}
+                />
+              ))}
             </TabsList>
           </Tabs>
         </div>
       </div>
     </SiteHeader>
-  );
-};
-
-const MobileFieldIssuesDialog: React.FC<{
-  errors: any[];
-  incompleteFields: any[];
-}> = ({ errors, incompleteFields }) => {
-  const router = useRouter();
-  
-  const handleJumpToField = (fieldPath: string) => {
-    // Extract the section from the field path
-    const section = fieldPath.split('.')[0];
-    const sectionMap: Record<string, string> = {
-      'setup': 'setup',
-      'audience': 'audience', 
-      'tasks': 'tasks',
-      'prizes': 'prizes'
-    };
-    
-    if (sectionMap[section]) {
-      router.push(`?step=${sectionMap[section]}`);
-    }
-  };
-
-  return (
-    <DialogContent className="max-w-sm mx-2">
-      <DialogHeader>
-        <DialogTitle>Field Issues</DialogTitle>
-      </DialogHeader>
-      <div className="space-y-4 max-h-80 overflow-y-auto">
-        {errors.length > 0 && (
-          <div>
-            <h4 className="font-medium text-destructive mb-2">Validation Errors</h4>
-            <div className="space-y-2">
-              {errors.map((error, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleJumpToField(error.path)}
-                  className="w-full text-left p-2 border rounded hover:bg-muted/50 transition-colors"
-                >
-                  <div className="font-medium text-sm">{error.path}</div>
-                  <div className="text-xs text-muted-foreground">{error.message}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {incompleteFields.length > 0 && (
-          <div>
-            <h4 className="font-medium text-amber-600 mb-2">Incomplete Fields</h4>
-            <div className="space-y-2">
-              {incompleteFields.map((field, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleJumpToField(field.path)}
-                  className="w-full text-left p-2 border rounded hover:bg-muted/50 transition-colors"
-                >
-                  <div className="font-medium text-sm">{field.path}</div>
-                  <div className="text-xs text-muted-foreground">This field is empty</div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {errors.length === 0 && incompleteFields.length === 0 && (
-          <div className="text-center py-4 text-muted-foreground">
-            All fields are complete and valid!
-          </div>
-        )}
-      </div>
-    </DialogContent>
-  );
-};
-
-const FormFooter: React.FC = () => {
-  const { formState, watch } = useFormContext();
-  const { errors } = formState;
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  
-  const currentStep = searchParams.get('step') ?? 'setup';
-  const steps = ['setup', 'audience', 'tasks', 'prizes'];
-  const currentStepIndex = steps.indexOf(currentStep);
-  
-  const currentStepField = currentStep === 'tasks' ? 'tasks' : currentStep === 'audience' ? 'audience' : currentStep === 'prizes' ? 'prizes' : 'setup';
-  const allFormValues = watch();
-  
-  const formErrors = useFormErrors(errors, [currentStepField]);
-  const incompleteFields = useIncompleteFields(allFormValues, [currentStepField]);
-  
-  const totalIssues = formErrors.length + incompleteFields.length;
-  const hasNextStep = currentStepIndex < steps.length - 1;
-  const hasPreviousStep = currentStepIndex > 0;
-  
-  const isCurrentStepValid = formErrors.length === 0;
-  
-  const handleNext = () => {
-    if (hasNextStep) {
-      router.push(`?step=${steps[currentStepIndex + 1]}`);
-    }
-  };
-  
-  const handlePrevious = () => {
-    if (hasPreviousStep) {
-      router.push(`?step=${steps[currentStepIndex - 1]}`);
-    }
-  };
-
-  return (
-    <div className="bg-background border-t p-3">
-      <div className="flex justify-between items-center">
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button 
-              type="button" 
-              variant="outline" 
-              size="sm"
-              className="flex items-center gap-1"
-            >
-              <AlertCircleIcon className="h-4 w-4" />
-              {totalIssues > 0 ? totalIssues : '✓'}
-            </Button>
-          </DialogTrigger>
-          <MobileFieldIssuesDialog errors={formErrors} incompleteFields={incompleteFields} />
-        </Dialog>
-        
-        <div className="flex gap-2">
-          <Button 
-            type="button" 
-            variant="outline" 
-            size="sm"
-            onClick={handlePrevious}
-            disabled={!hasPreviousStep}
-          >
-            <ChevronLeftIcon className="h-4 w-4" />
-          </Button>
-          <Button 
-            type="button"
-            variant={isCurrentStepValid ? "default" : "outline"}
-            size="sm"
-            onClick={handleNext}
-            disabled={!hasNextStep}
-          >
-            <ChevronRightIcon className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    </div>
   );
 };
 
@@ -351,7 +196,7 @@ export const MobileFormLayout: React.FC<MobileFormLayoutProps> = ({
           {mobileView === 'form' ? (
             <>
               <div className="overflow-y-scroll flex-1">{left}</div>
-              <FormFooter />
+              <UnifiedFormFooter mobile={true} />
             </>
           ) : (
             <>

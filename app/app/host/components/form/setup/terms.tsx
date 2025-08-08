@@ -103,7 +103,7 @@ const ButtonTextarea = () => {
       <Dialog>
         <DialogTrigger asChild>
           <div
-            className="absolute border inset-0 bg-white/60 backdrop-blur-[1px] opacity-0 hover:opacity-100 transition-opacity rounded-md flex items-center justify-center cursor-pointer"
+            className="absolute border inset-0 bg-white/60 backdrop-blur-[1px] opacity-100 lg:opacity-0 hover:opacity-100 transition-opacity rounded-md flex items-center justify-center cursor-pointer"
             onClick={() => {
               console.log('TODO');
             }}

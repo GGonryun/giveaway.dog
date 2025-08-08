@@ -1,8 +1,7 @@
-import { useIsMobile } from '@/components/hooks/use-mobile';
 import { MobileSuspense } from '@/components/ui/mobile-suspense';
-import { useState } from 'react';
 import { MobileFormLayout } from './mobile-form-layout';
 import { DesktopFormLayout } from './desktop-form-layout';
+import { useIsTablet } from '@/components/hooks/use-tablet';
 
 interface FormLayoutProps {
   title: string;
@@ -13,11 +12,11 @@ interface FormLayoutProps {
 }
 
 export const FormLayout: React.FC<FormLayoutProps> = (props) => {
-  const { isMobile } = useIsMobile();
+  const { isTablet } = useIsTablet();
 
   return (
     <MobileSuspense>
-      {isMobile ? (
+      {isTablet ? (
         <MobileFormLayout {...props} />
       ) : (
         <DesktopFormLayout {...props} />

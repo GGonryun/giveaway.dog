@@ -9,9 +9,8 @@ import { Section } from '../section';
 export const Audience = () => {
   return (
     <Section
-      label="3. Audience"
+      label="Audience"
       description="Select the requirements for user participation."
-      fields={['audience']}
     >
       <RequireEmail />
 

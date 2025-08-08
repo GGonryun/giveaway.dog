@@ -16,16 +16,60 @@ function isEmpty(value: any): boolean {
   return false;
 }
 
+function isNullableField(path: string): boolean {
+  // Define known nullable fields from the schema
+  const nullableFields = [
+    'audience.regionalRestriction',
+    'audience.minimumAgeRestriction'
+    // Add other nullable fields here as they're identified
+  ];
+
+  return nullableFields.includes(path);
+}
+
+function shouldSkipConditionalField(path: string, allValues: any): boolean {
+  // Handle regional restrictions - skip nested fields if regionalRestriction is null
+  if (path.includes('audience.regionalRestriction.')) {
+    const regionalRestriction = allValues?.audience?.regionalRestriction;
+    if (regionalRestriction == null) {
+      return true; // Skip nested fields when regional restriction is disabled
+    }
+  }
+
+  // Handle minimum age restrictions - skip nested fields if minimumAgeRestriction is null
+  if (path.includes('audience.minimumAgeRestriction.')) {
+    const minimumAgeRestriction = allValues?.audience?.minimumAgeRestriction;
+    if (minimumAgeRestriction == null) {
+      return true; // Skip nested fields when minimum age restriction is disabled
+    }
+  }
+
+  // Add other conditional field patterns here as needed
+  return false;
+}
+
 export function findIncompleteFields<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>
 >(currentValues: any, prefix?: TName): IncompleteField[] {
   const result: IncompleteField[] = [];
 
-  function traverseObject(current: any, path: string = '') {
+  function traverseObject(
+    current: any,
+    path: string = '',
+    allValues: any = currentValues
+  ) {
+    // Skip conditional fields that are disabled
+    if (shouldSkipConditionalField(path, allValues)) {
+      return;
+    }
+
     // Check if current value is empty
     if (isEmpty(current)) {
-      console.log('is empty', current, path);
+      // If this is a nullable field and it's null, don't consider it incomplete
+      if (isNullableField(path) && current === null) {
+        return;
+      }
       result.push({ path, reason: 'empty' });
       return;
     }
@@ -40,7 +84,7 @@ export function findIncompleteFields<
       // Traverse array items
       current.forEach((item, index) => {
         const itemPath = path ? `${path}.${index}` : `${index}`;
-        traverseObject(item, itemPath);
+        traverseObject(item, itemPath, allValues);
       });
       return;
     }
@@ -65,7 +109,7 @@ export function findIncompleteFields<
         const keyPath = path ? `${path}.${key}` : key;
         const currentValue = current[key];
 
-        traverseObject(currentValue, keyPath);
+        traverseObject(currentValue, keyPath, allValues);
       });
       return;
     }
@@ -88,7 +132,6 @@ export const useIncompleteFields = <
 ): IncompleteField[] => {
   return useMemo(() => {
     const allIncomplete = findIncompleteFields(currentValues);
-    console.log('allIncomplete', allIncomplete, fields);
 
     return allIncomplete.filter((incomplete) =>
       fields.some(

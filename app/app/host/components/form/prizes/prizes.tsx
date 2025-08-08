@@ -73,9 +73,8 @@ export const Prizes = () => {
 
   return (
     <Section
-      label="5. Prizes"
+      label="Prizes"
       description="Add prizes and number of winners to your giveaway."
-      fields={['prizes']}
     >
       <FormField
         control={form.control}

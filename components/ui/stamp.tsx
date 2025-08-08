@@ -16,7 +16,6 @@ const stampVariants = cva(
       ...shapes,
       variant: {
         check: 'bg-success',
-        warning: 'bg-warning',
         error: 'bg-error',
         info: 'bg-info/80'
       }
@@ -40,8 +39,6 @@ export const stampIcon = (variant: StampProps['variant']) => {
   switch (variant) {
     case 'check':
       return CheckIcon;
-    case 'warning':
-      return CircleAlertIcon;
     case 'error':
       return CircleXIcon;
     case 'info':

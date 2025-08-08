@@ -80,7 +80,6 @@ export const EntryMethods = () => {
     <Section
       label="Entry Methods"
       description="Select how users can enter the giveaway."
-      fields={['tasks']}
     >
       <FormField
         control={form.control}

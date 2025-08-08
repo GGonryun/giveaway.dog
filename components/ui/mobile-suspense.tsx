@@ -1,6 +1,6 @@
 import React from 'react';
-import { useIsMobile } from '../hooks/use-mobile';
 import { Loader2Icon } from 'lucide-react';
+import { useIsTablet } from '../hooks/use-tablet';
 
 interface MobileSuspenseProps {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ export const MobileSuspense: React.FC<MobileSuspenseProps> = ({
   children,
   fallback = <DefaultFallback />
 }) => {
-  const { isLoading } = useIsMobile();
+  const { isLoading } = useIsTablet();
 
   if (isLoading) {
     return <>{fallback}</>;

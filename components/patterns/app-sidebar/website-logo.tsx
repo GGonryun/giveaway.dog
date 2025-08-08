@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 export function WebsiteLogo() {
-  const { open, isMobile } = useSidebar();
+  const { isMobile } = useSidebar();
   return (
     <SidebarMenu>
       <div className={cn('flex  justify-between items-center w-full gap-2')}>

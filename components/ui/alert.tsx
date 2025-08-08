@@ -11,8 +11,6 @@ const alertVariants = cva(
         default: 'bg-card text-card-foreground',
         error:
           'text-error bg-card [&>svg]:text-current bg-error/10 border-error/50',
-        warning:
-          'text-warning bg-card [&>svg]:text-current bg-warning/10 border-warning/50',
         info: 'text-info bg-card [&>svg]:text-current bg-info/10 border-info/50',
         success:
           'text-success bg-card [&>svg]:text-current bg-success/10 border-success/50'
