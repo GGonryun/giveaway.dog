@@ -2,10 +2,21 @@ import { SiteHeader } from '@/components/patterns/app-sidebar/site-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { XIcon, SaveIcon, EyeIcon, EditIcon } from 'lucide-react';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger 
+} from '@/components/ui/dialog';
+import { XIcon, SaveIcon, EyeIcon, EditIcon, AlertCircleIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { useFormErrors } from '@/components/hooks/use-form-errors';
+import { useIncompleteFields } from '@/components/hooks/use-incomplete-fields';
 
 interface MobileFormLayoutProps {
   title: string;
@@ -13,8 +24,6 @@ interface MobileFormLayoutProps {
   disabled: boolean;
   left: React.ReactNode;
   right: React.ReactNode;
-  mobileView: 'form' | 'preview';
-  onMobileViewChange: (view: 'form' | 'preview') => void;
 }
 
 const MobileTabTrigger: React.FC<{
@@ -116,19 +125,150 @@ const MobileFormHeader: React.FC<{
   );
 };
 
+const MobileFieldIssuesDialog: React.FC<{
+  errors: any[];
+  incompleteFields: any[];
+}> = ({ errors, incompleteFields }) => {
+  const router = useRouter();
+  
+  const handleJumpToField = (fieldPath: string) => {
+    // Extract the section from the field path
+    const section = fieldPath.split('.')[0];
+    const sectionMap: Record<string, string> = {
+      'setup': 'setup',
+      'audience': 'audience', 
+      'tasks': 'tasks',
+      'prizes': 'prizes'
+    };
+    
+    if (sectionMap[section]) {
+      router.push(`?step=${sectionMap[section]}`);
+    }
+  };
+
+  return (
+    <DialogContent className="max-w-sm mx-2">
+      <DialogHeader>
+        <DialogTitle>Field Issues</DialogTitle>
+      </DialogHeader>
+      <div className="space-y-4 max-h-80 overflow-y-auto">
+        {errors.length > 0 && (
+          <div>
+            <h4 className="font-medium text-destructive mb-2">Validation Errors</h4>
+            <div className="space-y-2">
+              {errors.map((error, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleJumpToField(error.path)}
+                  className="w-full text-left p-2 border rounded hover:bg-muted/50 transition-colors"
+                >
+                  <div className="font-medium text-sm">{error.path}</div>
+                  <div className="text-xs text-muted-foreground">{error.message}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {incompleteFields.length > 0 && (
+          <div>
+            <h4 className="font-medium text-amber-600 mb-2">Incomplete Fields</h4>
+            <div className="space-y-2">
+              {incompleteFields.map((field, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleJumpToField(field.path)}
+                  className="w-full text-left p-2 border rounded hover:bg-muted/50 transition-colors"
+                >
+                  <div className="font-medium text-sm">{field.path}</div>
+                  <div className="text-xs text-muted-foreground">This field is empty</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {errors.length === 0 && incompleteFields.length === 0 && (
+          <div className="text-center py-4 text-muted-foreground">
+            All fields are complete and valid!
+          </div>
+        )}
+      </div>
+    </DialogContent>
+  );
+};
+
 const FormFooter: React.FC = () => {
+  const { formState, watch } = useFormContext();
+  const { errors } = formState;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  
+  const currentStep = searchParams.get('step') ?? 'setup';
+  const steps = ['setup', 'audience', 'tasks', 'prizes'];
+  const currentStepIndex = steps.indexOf(currentStep);
+  
+  const currentStepField = currentStep === 'tasks' ? 'tasks' : currentStep === 'audience' ? 'audience' : currentStep === 'prizes' ? 'prizes' : 'setup';
+  const allFormValues = watch();
+  
+  const formErrors = useFormErrors(errors, [currentStepField]);
+  const incompleteFields = useIncompleteFields(allFormValues, [currentStepField]);
+  
+  const totalIssues = formErrors.length + incompleteFields.length;
+  const hasNextStep = currentStepIndex < steps.length - 1;
+  const hasPreviousStep = currentStepIndex > 0;
+  
+  const isCurrentStepValid = formErrors.length === 0;
+  
+  const handleNext = () => {
+    if (hasNextStep) {
+      router.push(`?step=${steps[currentStepIndex + 1]}`);
+    }
+  };
+  
+  const handlePrevious = () => {
+    if (hasPreviousStep) {
+      router.push(`?step=${steps[currentStepIndex - 1]}`);
+    }
+  };
+
   return (
     <div className="bg-background border-t p-3">
       <div className="flex justify-between items-center">
-        <Button type="button" variant="outline" size="sm">
-          Save Draft
-        </Button>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm"
+              className="flex items-center gap-1"
+            >
+              <AlertCircleIcon className="h-4 w-4" />
+              {totalIssues > 0 ? totalIssues : '✓'}
+            </Button>
+          </DialogTrigger>
+          <MobileFieldIssuesDialog errors={formErrors} incompleteFields={incompleteFields} />
+        </Dialog>
+        
         <div className="flex gap-2">
-          <Button type="button" variant="outline" size="sm">
-            Cancel
+          <Button 
+            type="button" 
+            variant="outline" 
+            size="sm"
+            onClick={handlePrevious}
+            disabled={!hasPreviousStep}
+          >
+            <ChevronLeftIcon className="h-4 w-4" />
           </Button>
-          <Button type="submit" size="sm">
-            Publish
+          <Button 
+            type="button"
+            variant={isCurrentStepValid ? "default" : "outline"}
+            size="sm"
+            onClick={handleNext}
+            disabled={!hasNextStep}
+          >
+            <ChevronRightIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -140,9 +280,7 @@ const PreviewFooter: React.FC = () => {
   return (
     <div className="bg-background border-t p-3">
       <div className="flex justify-between items-center">
-        <div className="text-sm text-muted-foreground">
-          Preview Mode
-        </div>
+        <div className="text-sm text-muted-foreground">Preview Mode</div>
         <div className="flex gap-2">
           <Button type="button" variant="outline" size="sm">
             Share Preview
@@ -193,18 +331,22 @@ export const MobileFormLayout: React.FC<MobileFormLayoutProps> = ({
   onSubmit,
   disabled,
   left,
-  right,
-  mobileView,
-  onMobileViewChange
+  right
 }) => {
+  const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
+
   return (
     <div className="fixed inset-0 flex flex-col bg-background">
       <form
         onSubmit={onSubmit}
         className="flex-1 flex flex-col overflow-hidden"
       >
-        <MobileFormHeader title={title} disabled={disabled} mobileView={mobileView} />
-        
+        <MobileFormHeader
+          title={title}
+          disabled={disabled}
+          mobileView={mobileView}
+        />
+
         <div className="bg-background flex-1 min-h-0 overflow-hidden relative top-0 z-10 flex flex-col">
           {mobileView === 'form' ? (
             <>
@@ -219,9 +361,9 @@ export const MobileFormLayout: React.FC<MobileFormLayoutProps> = ({
               <PreviewFooter />
             </>
           )}
-          <MobileViewToggle 
+          <MobileViewToggle
             mobileView={mobileView}
-            onMobileViewChange={onMobileViewChange}
+            onMobileViewChange={setMobileView}
           />
         </div>
       </form>

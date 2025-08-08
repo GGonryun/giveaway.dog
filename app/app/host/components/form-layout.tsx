@@ -12,19 +12,13 @@ interface FormLayoutProps {
   right: React.ReactNode;
 }
 
-
 export const FormLayout: React.FC<FormLayoutProps> = (props) => {
   const { isMobile } = useIsMobile();
-  const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
 
   return (
     <MobileSuspense>
       {isMobile ? (
-        <MobileFormLayout 
-          {...props}
-          mobileView={mobileView}
-          onMobileViewChange={setMobileView}
-        />
+        <MobileFormLayout {...props} />
       ) : (
         <DesktopFormLayout {...props} />
       )}
