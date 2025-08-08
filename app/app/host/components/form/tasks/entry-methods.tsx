@@ -78,7 +78,7 @@ export const EntryMethods = () => {
 
   return (
     <Section
-      label="4. Entry Methods"
+      label="Entry Methods"
       description="Select how users can enter the giveaway."
       fields={['tasks']}
     >

@@ -47,45 +47,51 @@ export const FormLayout: React.FC<FormLayoutProps> = ({
           />
 
           {isMobile ? (
-            // Mobile layout: single panel with toggle
-            <div className="bg-background flex-1 min-h-0 overflow-hidden relative top-0 z-10">
+            // Mobile layout: single panel with toggle and footer
+            <div className="bg-background flex-1 min-h-0 overflow-hidden relative top-0 z-10 flex flex-col">
               {mobileView === 'form' ? (
-                <div className="overflow-y-scroll h-full">{left}</div>
+                <>
+                  <div className="overflow-y-scroll flex-1">{left}</div>
+                  <FormFooter />
+                </>
               ) : (
-                <div className="overflow-hidden w-full h-full flex items-center justify-center bg-tertiary-10">
-                  {right}
-                </div>
+                <>
+                  <div className="overflow-hidden w-full flex-1 flex items-center justify-center bg-tertiary-10">
+                    {right}
+                  </div>
+                  <PreviewFooter />
+                </>
               )}
+              <MobileViewToggle 
+                mobileView={mobileView}
+                onMobileViewChange={setMobileView}
+              />
             </div>
           ) : (
-            // Desktop layout: resizable panels
+            // Desktop layout: resizable panels with separate footers
             <ResizablePanelGroup
               direction="horizontal"
               className="flex-1 min-h-0"
             >
               <ResizablePanel
                 defaultSize={30}
-                className="min-w-[300px] xl:max-w-[800px]"
+                className="min-w-[300px] xl:max-w-[800px] flex flex-col"
               >
-                <div className="space-y-2 overflow-y-scroll h-full">{left}</div>
+                <div className="space-y-2 overflow-y-scroll flex-1">{left}</div>
+                <FormFooter />
               </ResizablePanel>
               <ResizableHandle withHandle />
               <ResizablePanel
                 defaultSize={60}
-                className="min-w-[500px] xl:min-w-[800px]"
+                className="min-w-[500px] xl:min-w-[800px] flex flex-col"
               >
-                <div className="overflow-hidden w-full h-full flex items-center justify-center bg-tertiary-10">
+                <div className="overflow-hidden w-full flex-1 flex items-center justify-center bg-tertiary-10">
                   {right}
                 </div>
+                <PreviewFooter />
               </ResizablePanel>
             </ResizablePanelGroup>
           )}
-
-          <FormFooter
-            isMobile={isMobile}
-            mobileView={mobileView}
-            onMobileViewChange={setMobileView}
-          />
         </form>
       </div>
     </MobileSuspense>
@@ -245,43 +251,74 @@ const FormHeader: React.FC<{
   );
 };
 
-const FormFooter: React.FC<{
-  isMobile?: boolean;
-  mobileView?: 'form' | 'preview';
-  onMobileViewChange?: (view: 'form' | 'preview') => void;
-}> = ({ isMobile, mobileView, onMobileViewChange }) => {
-  if (isMobile) {
-    return (
-      <div className="sticky bottom-0 bg-background border-t p-2">
-        <div className="flex bg-muted rounded-lg p-1 w-full gap-2">
-          <Button
-            type="button"
-            variant={mobileView === 'form' ? 'default' : 'ghost'}
-            size="sm"
-            onClick={() => onMobileViewChange?.('form')}
-            className="flex-1"
-          >
-            <EditIcon className="h-4 w-4 mr-2" />
-            Edit
+const FormFooter: React.FC = () => {
+  return (
+    <div className="bg-background border-t p-3">
+      <div className="flex justify-between items-center">
+        <Button type="button" variant="outline" size="sm">
+          Save Draft
+        </Button>
+        <div className="flex gap-2">
+          <Button type="button" variant="outline" size="sm">
+            Cancel
           </Button>
-          <Button
-            type="button"
-            variant={mobileView === 'preview' ? 'default' : 'ghost'}
-            size="sm"
-            onClick={() => onMobileViewChange?.('preview')}
-            className="flex-1"
-          >
-            <EyeIcon className="h-4 w-4 mr-2" />
-            Preview
+          <Button type="submit" size="sm">
+            Publish
           </Button>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+};
 
+const PreviewFooter: React.FC = () => {
   return (
-    <div className="sticky bottom-0 bg-background border-t p-2 sm:p-4">
-      {/* Desktop footer content if needed */}
+    <div className="bg-background border-t p-3">
+      <div className="flex justify-between items-center">
+        <div className="text-sm text-muted-foreground">
+          Preview Mode
+        </div>
+        <div className="flex gap-2">
+          <Button type="button" variant="outline" size="sm">
+            Share Preview
+          </Button>
+          <Button type="button" variant="outline" size="sm">
+            Test Giveaway
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MobileViewToggle: React.FC<{
+  mobileView: 'form' | 'preview';
+  onMobileViewChange: (view: 'form' | 'preview') => void;
+}> = ({ mobileView, onMobileViewChange }) => {
+  return (
+    <div className="bg-background border-t p-2">
+      <div className="flex bg-muted rounded-lg p-1 w-full gap-2">
+        <Button
+          type="button"
+          variant={mobileView === 'form' ? 'default' : 'ghost'}
+          size="sm"
+          onClick={() => onMobileViewChange('form')}
+          className="flex-1"
+        >
+          <EditIcon className="h-4 w-4 mr-2" />
+          Edit
+        </Button>
+        <Button
+          type="button"
+          variant={mobileView === 'preview' ? 'default' : 'ghost'}
+          size="sm"
+          onClick={() => onMobileViewChange('preview')}
+          className="flex-1"
+        >
+          <EyeIcon className="h-4 w-4 mr-2" />
+          Preview
+        </Button>
+      </div>
     </div>
   );
 };
