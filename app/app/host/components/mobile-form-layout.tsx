@@ -77,7 +77,7 @@ const MobileFormHeader: React.FC<{
 
   return (
     <SiteHeader className="h-20">
-      <div className="flex flex-col w-full gap-2 pt-1">
+      <div className="flex flex-col w-full gap-1.5 pt-1.5">
         <div className="flex items-center">
           <div className="flex-1 min-w-0">
             <h1 className="text-lg sm:text-xl font-medium truncate">{title}</h1>
@@ -104,7 +104,7 @@ const MobileFormHeader: React.FC<{
         </div>
         <div className="w-full">
           <Tabs value={step}>
-            <TabsList size="sm" className="w-full px-1 gap-1 m-0 h-8">
+            <TabsList size="sm" className="w-full px-1 gap-1 m-0 mt-[1px]  h-8">
               {SWEEPSTAKE_STEPS.map((step) => (
                 <MobileTabTrigger
                   key={step.key}
