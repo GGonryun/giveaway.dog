@@ -24,10 +24,10 @@ export const Hero = () => {
           </p>
           <div className="flex w-full flex-col justify-center gap-2 sm:flex-row">
             <Button asChild className="w-full sm:w-auto">
-              <a href={'/signup'}>Get started - free</a>
+              <Link href={'/signup'}>Get started - free</Link>
             </Button>
             <Button asChild variant="outline" className="w-full sm:w-auto">
-              <a href={'/examples'}>Explore giveaways</a>
+              <Link href={'/examples'}>Explore giveaways</Link>
             </Button>
           </div>
         </div>
