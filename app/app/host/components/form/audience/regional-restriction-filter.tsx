@@ -1,8 +1,8 @@
 import { useFormContext } from 'react-hook-form';
 import {
-  GiveawayFormSchema,
+  GiveawaySchema,
   RegionalRestrictionFilter as RegionalRestrictionFilterSchema
-} from '../../../schemas';
+} from '@/schemas/giveaway';
 import {
   FormControl,
   FormField,
@@ -24,7 +24,7 @@ const OPTIONS: Record<RegionalRestrictionFilterSchema, string> = {
 };
 
 export const RegionalRestrictionFilter: React.FC = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
   return (
     <FormField
       control={form.control}

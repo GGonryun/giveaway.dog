@@ -1,5 +1,5 @@
 import { assertNever } from '@/lib/errors';
-import { GiveawayFormSchema, TaskType } from '../../../schemas';
+import { GiveawaySchema, TaskType } from '@/schemas/giveaway';
 import { useCallback } from 'react';
 import { useArrayContext } from '@/components/hooks/use-array-context';
 import { useFormContext } from 'react-hook-form';
@@ -28,7 +28,7 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
 
 const HrefFormField: React.FC = () => {
   const index = useArrayContext();
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
 
   return (
     <FormField

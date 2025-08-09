@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '../../../schemas';
+import { GiveawaySchema } from '@/schemas/giveaway';
 import {
   FormControl,
   FormField,
@@ -25,7 +25,7 @@ const continents = {
 };
 
 export const RegionalRestrictionRegions: React.FC = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
   const countryOptions = useMemo(
     () =>
       Object.keys(countries.getAlpha3Codes())

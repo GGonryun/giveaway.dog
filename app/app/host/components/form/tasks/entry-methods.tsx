@@ -1,5 +1,5 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema, TaskType } from '../../../schemas';
+import { GiveawaySchema, TaskType } from '@/schemas/giveaway';
 import React, { useState } from 'react';
 import { EntryMethod } from './entry-method';
 import { toDefaultValues } from './task-defaults';
@@ -32,7 +32,7 @@ type ActiveEntry = { id: string; type: TaskType; index: number };
 export const EntryMethods = () => {
   const [active, setActive] = useState<ActiveEntry | null>(null);
   const [open, setOpen] = useState<string[]>([]);
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
     name: 'tasks'

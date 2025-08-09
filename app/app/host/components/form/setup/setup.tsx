@@ -9,7 +9,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { GiveawayFormSchema } from '../../../schemas';
+import { GiveawaySchema } from '@/schemas/giveaway';
 
 import React, { memo, useMemo } from 'react';
 import { Section } from '../section';
@@ -28,7 +28,7 @@ import { useFormErrors } from '@/components/hooks/use-form-errors';
 import { useIncompleteFields } from '@/components/hooks/use-incomplete-fields';
 
 export const Setup = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
   const errors = useFormErrors(form.formState.errors, [
     'setup.name',
     'setup.description',

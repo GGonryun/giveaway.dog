@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { DEFAULT_MINIMUM_AGE, GiveawayFormSchema } from '../../../schemas';
+import { DEFAULT_MINIMUM_AGE, GiveawaySchema } from '@/schemas/giveaway';
 import { SwitchBox, SwitchFormHeader } from '../switch-box';
 import {
   FormControl,
@@ -23,7 +23,7 @@ import { strings } from '@/lib/strings';
 import { Checkbox } from '@/components/ui/checkbox';
 
 export const MinimumAgeRestriction = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
 
   const minimumAgeRestriction = form.watch('audience.minimumAgeRestriction');
 
@@ -87,7 +87,7 @@ export const MinimumAgeRestriction = () => {
 };
 
 const AgeField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
 
   return (
     <FormField
@@ -130,7 +130,7 @@ const AgeField = () => {
 };
 
 const FormatField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
   return (
     <FormField
       control={form.control}
@@ -158,7 +158,7 @@ const FormatField = () => {
 };
 
 const LabelField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
 
   return (
     <FormField
@@ -178,7 +178,7 @@ const LabelField = () => {
 };
 
 const RequiredField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
 
   return (
     <FormField

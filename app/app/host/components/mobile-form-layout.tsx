@@ -11,6 +11,8 @@ import { useSweepstakesStep } from '@/components/hooks/use-sweepstake-step';
 import { SWEEPSTAKE_STEPS } from '@/components/data/form-steps';
 import { useFormIssues } from '@/components/hooks/use-form-issues';
 import { useRouter } from 'next/navigation';
+import { usePreviewState } from '../contexts/preview-state-context';
+import { getStateDisplayLabel } from '@/schemas/giveaway';
 
 interface MobileFormLayoutProps {
   title: string;
@@ -122,16 +124,17 @@ const MobileFormHeader: React.FC<{
 };
 
 const PreviewFooter: React.FC = () => {
+  const { previewState } = usePreviewState();
+
   return (
     <div className="bg-background border-t p-3">
       <div className="flex justify-between items-center">
-        <div className="text-sm text-muted-foreground">Preview Mode</div>
+        <div className="text-sm text-muted-foreground">
+          Preview Mode - {getStateDisplayLabel(previewState)}
+        </div>
         <div className="flex gap-2">
           <Button type="button" variant="outline" size="sm">
-            Share Preview
-          </Button>
-          <Button type="button" variant="outline" size="sm">
-            Test Giveaway
+            Share
           </Button>
         </div>
       </div>
@@ -200,8 +203,10 @@ export const MobileFormLayout: React.FC<MobileFormLayoutProps> = ({
             </>
           ) : (
             <>
-              <div className="overflow-hidden w-full flex-1 flex items-center justify-center bg-tertiary-10">
-                {right}
+              <div className="overflow-auto w-full flex-1 bg-tertiary-10 p-4 flex">
+                <div className="mx-auto my-auto w-full max-w-2xl min-w-fit">
+                  {right}
+                </div>
               </div>
               <PreviewFooter />
             </>

@@ -2,7 +2,7 @@ import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '../../../schemas';
+import { GiveawaySchema } from '@/schemas/giveaway';
 import {
   closestCenter,
   DndContext,
@@ -32,7 +32,7 @@ export const Prizes = () => {
   const [active, setActive] = useState<ActivePrize | null>(null);
   const [open, setOpen] = useState<string[]>([]);
 
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
     name: 'prizes'

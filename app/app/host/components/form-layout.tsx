@@ -2,6 +2,7 @@ import { MobileSuspense } from '@/components/ui/mobile-suspense';
 import { MobileFormLayout } from './mobile-form-layout';
 import { DesktopFormLayout } from './desktop-form-layout';
 import { useIsTablet } from '@/components/hooks/use-tablet';
+import { PreviewStateProvider } from '../contexts/preview-state-context';
 
 interface FormLayoutProps {
   title: string;
@@ -15,12 +16,14 @@ export const FormLayout: React.FC<FormLayoutProps> = (props) => {
   const { isTablet } = useIsTablet();
 
   return (
-    <MobileSuspense>
-      {isTablet ? (
-        <MobileFormLayout {...props} />
-      ) : (
-        <DesktopFormLayout {...props} />
-      )}
-    </MobileSuspense>
+    <PreviewStateProvider>
+      <MobileSuspense>
+        {isTablet ? (
+          <MobileFormLayout {...props} />
+        ) : (
+          <DesktopFormLayout {...props} />
+        )}
+      </MobileSuspense>
+    </PreviewStateProvider>
   );
 };

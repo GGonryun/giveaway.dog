@@ -1,10 +1,14 @@
 import { EarthIcon, LucideIcon, StarIcon } from 'lucide-react';
-import { TaskType } from '@/schemas/giveaway';
 import { assertNever } from '@/lib/errors';
+import { TaskType } from '@/schemas/giveaway';
 
-export const toTheme = (
-  type: TaskType
-): { symbol: string; icon: LucideIcon; label: string } => {
+export interface TaskTheme {
+  symbol: string;
+  icon: LucideIcon;
+  label: string;
+}
+
+export const getTaskTheme = (type: TaskType): TaskTheme => {
   switch (type) {
     case 'bonus-task':
       return {
@@ -22,3 +26,6 @@ export const toTheme = (
       throw assertNever(type);
   }
 };
+
+// Legacy alias for backward compatibility
+export const toTheme = getTaskTheme;

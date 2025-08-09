@@ -1,11 +1,11 @@
 import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '../../../schemas';
+import { GiveawaySchema } from '@/schemas/giveaway';
 import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { SwitchBox, SwitchFormHeader } from '../switch-box';
 
 export const RequireEmail = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
 
   return (
     <SwitchBox>

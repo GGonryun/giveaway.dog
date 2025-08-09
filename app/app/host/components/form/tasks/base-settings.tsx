@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '../../../schemas';
+import { GiveawaySchema } from '@/schemas/giveaway';
 import { useArrayContext } from '@/components/hooks/use-array-context';
 import {
   FormControl,
@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 
 export const BaseSettings: React.FC = () => {
   const index = useArrayContext();
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
   return (
     <div>
       <div className="grid grid-cols-[1fr_96px] gap-2">

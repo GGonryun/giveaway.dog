@@ -7,13 +7,21 @@ import {
   ResizableHandle
 } from '@/components/ui/resizable';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { XIcon, SaveIcon } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { XIcon, SaveIcon, ChevronDownIcon, ShareIcon } from 'lucide-react';
 import Link from 'next/link';
 import { UnifiedFormFooter } from './unified-form-footer';
 import React, { useCallback, useMemo } from 'react';
 import { SWEEPSTAKE_STEPS, SweepstakeStep } from '@/components/data/form-steps';
 import { useFormIssues } from '@/components/hooks/use-form-issues';
 import { useSweepstakesStep } from '@/components/hooks/use-sweepstake-step';
+import { usePreviewState } from '../contexts/preview-state-context';
+import { GIVEAWAY_STATES, getStateDisplayLabel } from '@/schemas/giveaway';
 
 interface DesktopFormLayoutProps {
   title: string;
@@ -122,16 +130,37 @@ const DesktopFormHeader: React.FC<{
 };
 
 const PreviewFooter: React.FC = () => {
+  const { previewState, setPreviewState } = usePreviewState();
+
   return (
     <div className="bg-background border-t p-3">
       <div className="flex justify-between items-center">
         <div className="text-sm text-muted-foreground">Preview Mode</div>
         <div className="flex gap-2">
+          {/* State Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                {getStateDisplayLabel(previewState)}
+                <ChevronDownIcon className="h-4 w-4 ml-1" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {GIVEAWAY_STATES.map((state) => (
+                <DropdownMenuItem
+                  key={state}
+                  onClick={() => setPreviewState(state)}
+                >
+                  {getStateDisplayLabel(state)}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Share Button */}
           <Button type="button" variant="outline" size="sm">
-            Share Preview
-          </Button>
-          <Button type="button" variant="outline" size="sm">
-            Test Giveaway
+            <ShareIcon className="h-4 w-4 mr-1" />
+            Share
           </Button>
         </div>
       </div>
@@ -167,8 +196,10 @@ export const DesktopFormLayout: React.FC<DesktopFormLayoutProps> = ({
             defaultSize={60}
             className="min-w-[500px] xl:min-w-[800px] flex flex-col"
           >
-            <div className="overflow-hidden w-full flex-1 flex items-center justify-center bg-tertiary-10">
-              {right}
+            <div className="overflow-auto w-full flex-1 bg-tertiary-10 p-4 flex">
+              <div className="mx-auto my-auto w-full max-w-2xl min-w-fit">
+                {right}
+              </div>
             </div>
             <PreviewFooter />
           </ResizablePanel>

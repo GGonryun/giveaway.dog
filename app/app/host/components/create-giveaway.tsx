@@ -4,10 +4,10 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from '@/components/hooks/use-toast';
 import {
-  GiveawayFormSchema,
+  GiveawaySchema,
   giveawaySchema,
-  giveawayFormDefaultValues
-} from '../schemas';
+  giveawayDefaultValues
+} from '@/schemas/giveaway';
 import { onSubmitAction } from '../actions';
 import { useEffect, useTransition } from 'react';
 import * as dates from 'date-fns';
@@ -23,7 +23,7 @@ export const GiveawayForm: React.FC = () => {
   const [isPending, startTransition] = useTransition();
 
   const defaultValues = {
-    ...giveawayFormDefaultValues,
+    ...giveawayDefaultValues,
     timing: {
       startDate: dates.startOfDay(dates.add(Date.now(), { days: 1 })),
       endDate: dates.startOfDay(dates.add(Date.now(), { days: 1, weeks: 1 })),
@@ -31,7 +31,7 @@ export const GiveawayForm: React.FC = () => {
     }
   };
 
-  const form = useForm<GiveawayFormSchema>({
+  const form = useForm<GiveawaySchema>({
     resolver: zodResolver(giveawaySchema),
     defaultValues,
     mode: 'onChange'
@@ -51,7 +51,7 @@ export const GiveawayForm: React.FC = () => {
     form.trigger('timing.endDate');
   }, [startDate, form.trigger]);
 
-  const handleSubmit = async (values: GiveawayFormSchema) => {
+  const handleSubmit = async (values: GiveawaySchema) => {
     startTransition(async () => {
       try {
         await onSubmitAction(values);

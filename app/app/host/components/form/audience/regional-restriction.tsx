@@ -1,5 +1,5 @@
 import { ControllerProps, useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '../../../schemas';
+import { GiveawaySchema } from '@/schemas/giveaway';
 import {
   FormControl,
   FormField,
@@ -15,7 +15,7 @@ import { RegionalRestrictionFilter } from './regional-restriction-filter';
 import { RegionalRestrictionRegions } from './regional-restriction-regions';
 
 export const RegionalRestriction = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
 
   const regionalRestriction = form.watch('audience.regionalRestriction');
   const filter = form.getFieldState('audience.regionalRestriction.filter');
@@ -43,7 +43,7 @@ export const RegionalRestriction = () => {
 };
 
 export const RegionalRestrictionFormField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+  const form = useFormContext<GiveawaySchema>();
 
   return (
     <FormField
@@ -55,7 +55,7 @@ export const RegionalRestrictionFormField = () => {
 };
 
 export const regionalRestrictionRender: ControllerProps<
-  GiveawayFormSchema,
+  GiveawaySchema,
   'audience.regionalRestriction'
 >['render'] = ({ field }) => {
   const isEnabled = useMemo(() => Boolean(field.value), [field.value]);
