@@ -107,7 +107,10 @@ export const ActiveParticipation: React.FC = () => {
                     {userProgress.completed}/{userProgress.total} completed
                   </Badge>
                 </div>
-                <Progress value={userProgress.percentage} className="w-full" />
+                <Progress
+                  value={userProgress.percentage}
+                  className="w-full h-2"
+                />
               </>
             )}
           </CardHeader>
