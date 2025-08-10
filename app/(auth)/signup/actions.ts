@@ -11,16 +11,14 @@ export const signup = async (
   const name = data.get('name')?.toString();
   const userType = data.get('userType')?.toString();
   
-  // Determine redirect URL based on user type
-  const baseRedirectTo = userType === 'host' ? '/app' : '/browse';
-  
   // Build query parameters for signup data
   const queryParams = new URLSearchParams();
   queryParams.append('signup', 'true');
   if (name) queryParams.append('name', name);
   if (userType) queryParams.append('userType', userType);
   
-  const redirectTo = `${baseRedirectTo}?${queryParams.toString()}`;
+  // Redirect to auth portal which will handle profile update and final redirect
+  const redirectTo = `/auth/portal?${queryParams.toString()}`;
 
   try {
     if (provider === 'twitter') {
