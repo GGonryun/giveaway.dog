@@ -27,7 +27,7 @@ export const Hero = () => {
               <Link href={'/signup'}>Get started - free</Link>
             </Button>
             <Button asChild variant="outline" className="w-full sm:w-auto">
-              <Link href={'/examples'}>Explore giveaways</Link>
+              <Link href={'/browse'}>Explore giveaways</Link>
             </Button>
           </div>
         </div>
