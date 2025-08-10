@@ -1,8 +1,5 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Carousel,
   CarouselContent,
@@ -10,19 +7,12 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
-import { Calendar, Trophy, Users } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { Typography } from '@/components/ui/typography';
+import { GiveawayItem, GiveawayItemProps } from './giveaway-item';
 
-interface FeaturedGiveaway {
-  id: string;
-  name: string;
-  description: string;
-  banner?: string;
-  endDate: Date;
-  prizesCount: number;
-  participantsCount: number;
-  featured: boolean;
-}
+type FeaturedGiveaway = GiveawayItemProps & {
+  featured: true;
+};
 
 // Mock data - replace with actual data fetching
 const featuredGiveaways: FeaturedGiveaway[] = [
@@ -36,6 +26,8 @@ const featuredGiveaways: FeaturedGiveaway[] = [
     endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
     prizesCount: 3,
     participantsCount: 1248,
+    region: 'Worldwide',
+    status: 'active',
     featured: true
   },
   {
@@ -45,9 +37,11 @@ const featuredGiveaways: FeaturedGiveaway[] = [
       'Latest MacBook Pro with M3 chip, perfect for creators and developers.',
     banner:
       'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=400&fit=crop',
-    endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
+    endDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // 1 day from now
     prizesCount: 1,
     participantsCount: 2156,
+    region: 'North America',
+    status: 'ending-soon',
     featured: true
   },
   {
@@ -60,86 +54,52 @@ const featuredGiveaways: FeaturedGiveaway[] = [
     endDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days from now
     prizesCount: 2,
     participantsCount: 856,
+    region: 'Europe',
+    status: 'new',
+    featured: true
+  },
+  {
+    id: '4',
+    name: 'Fitness Tracker Giveaway',
+    description:
+      'Win a top-of-the-line fitness tracker to help you achieve your health goals!',
+    banner:
+      'https://images.unsplash.com/photo-1754521059079-7da8b53872ac?w=800&h=400&fit=crop',
+    endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
+    prizesCount: 1,
+    participantsCount: 512,
+    region: 'North America',
+    status: 'active',
     featured: true
   }
 ];
 
 export function FeaturedGiveawaysCarousel() {
   return (
-    <div className="space-y-4">
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl md:text-4xl font-bold">Featured Giveaways</h1>
-        <p className="text-muted-foreground text-lg">
-          Don't miss out on these incredible prizes!
-        </p>
+    <Carousel
+      opts={{
+        align: 'start',
+        loop: false,
+        dragFree: true,
+        containScroll: 'trimSnaps'
+      }}
+    >
+      <CarouselContent className="py-2 -ml-2 mr-2">
+        {featuredGiveaways.map((giveaway) => (
+          <CarouselItem
+            key={giveaway.id}
+            className="basis-full sm:basis-1/2 min-w-0 max-w-[95vw] sm:max-w-none"
+          >
+            <GiveawayItem {...giveaway} />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+
+      {/* Navigation arrows below carousel */}
+      <div className="hidden md:flex justify-center gap-2 mt-4">
+        <CarouselPrevious className="relative left-0 top-0 translate-x-0 translate-y-0" />
+        <CarouselNext className="relative right-0 top-0 translate-x-0 translate-y-0" />
       </div>
-
-      <Carousel
-        opts={{
-          align: 'start',
-          loop: true
-        }}
-        className="w-full"
-      >
-        <CarouselContent>
-          {featuredGiveaways.map((giveaway) => (
-            <CarouselItem
-              key={giveaway.id}
-              className="md:basis-1/2 lg:basis-1/3"
-            >
-              <Card className="overflow-hidden group hover:shadow-lg transition-shadow">
-                <div className="relative">
-                  {giveaway.banner && (
-                    <img
-                      src={giveaway.banner}
-                      alt={giveaway.name}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  )}
-                  <Badge className="absolute top-4 left-4 bg-primary">
-                    Featured
-                  </Badge>
-                  <div className="absolute top-4 right-4 bg-black/70 text-white px-2 py-1 rounded text-sm">
-                    {formatDistanceToNow(giveaway.endDate, { addSuffix: true })}
-                  </div>
-                </div>
-                <CardContent className="p-6 space-y-4">
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2">
-                      {giveaway.name}
-                    </h3>
-                    <p className="text-muted-foreground text-sm line-clamp-2">
-                      {giveaway.description}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Trophy className="w-4 h-4" />
-                      <span>
-                        {giveaway.prizesCount} prize
-                        {giveaway.prizesCount > 1 ? 's' : ''}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4" />
-                      <span>
-                        {giveaway.participantsCount.toLocaleString()} entries
-                      </span>
-                    </div>
-                  </div>
-
-                  <Button className="w-full" size="lg">
-                    Join Giveaway
-                  </Button>
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-    </div>
+    </Carousel>
   );
 }
