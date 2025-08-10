@@ -24,29 +24,11 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { timezone } from '@/lib/time';
-import { useFormErrors } from '@/components/hooks/use-form-errors';
-import { useIncompleteFields } from '@/components/hooks/use-incomplete-fields';
+
+import { FileUpload } from '@/components/ui/file-upload';
 
 export const Setup = () => {
   const form = useFormContext<GiveawaySchema>();
-  const errors = useFormErrors(form.formState.errors, [
-    'setup.name',
-    'setup.description',
-    'timing.startDate',
-    'timing.endDate',
-    'timing.timeZone'
-  ]);
-
-  const empty = useIncompleteFields(form.getValues(), [
-    'setup.name',
-    'timing.startDate',
-    'timing.endDate',
-    'timing.timeZone'
-  ]);
-
-  const incomplete = useMemo(() => empty.length > 0, [empty]);
-
-  const invalid = useMemo(() => errors.length > 0, [errors]);
 
   return (
     <Section label="Setup" description="Choose the details of your giveaway.">
@@ -58,6 +40,22 @@ export const Setup = () => {
             <FormLabel>Name</FormLabel>
             <FormControl>
               <Input placeholder="Enter a name" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="setup.banner"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Banner Image</FormLabel>
+            <FormControl>
+              <FileUpload
+                initialUrl={field.value}
+                onUpload={(url) => field.onChange(url)}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
