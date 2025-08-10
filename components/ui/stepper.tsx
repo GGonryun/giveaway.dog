@@ -21,16 +21,13 @@ export function Stepper({ currentStep, totalSteps, className }: StepperProps) {
             <div
               className={cn(
                 'flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors',
-                isCompleted && 'bg-primary border-primary text-primary-foreground',
+                isCompleted &&
+                  'bg-primary border-primary text-primary-foreground',
                 isCurrent && 'border-primary text-primary bg-background',
                 isUpcoming && 'border-muted-foreground text-muted-foreground'
               )}
             >
-              {isCompleted ? (
-                <Check className="h-4 w-4" />
-              ) : (
-                stepNumber
-              )}
+              {isCompleted ? <Check className="h-4 w-4" /> : stepNumber}
             </div>
             {stepNumber < totalSteps && (
               <div

@@ -56,7 +56,7 @@ export function SignupForm({
   };
 
   const updateFormData = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -87,27 +87,36 @@ export function SignupForm({
               <form action={formAction}>
                 <input type="hidden" name="redirectTo" value={redirectTo} />
                 <input type="hidden" name="name" value={formData.name} />
-                <input type="hidden" name="userType" value={formData.userType} />
-                
+                <input
+                  type="hidden"
+                  name="userType"
+                  value={formData.userType}
+                />
+
                 <div className="grid gap-6">
                   {step === 1 && (
                     <div className="grid gap-4">
                       <div className="grid gap-3">
-                        <Label htmlFor="display-name">What should we call you?</Label>
+                        <Label htmlFor="display-name">
+                          What should we call you?
+                        </Label>
                         <Input
                           id="display-name"
                           type="text"
                           placeholder="Your name"
                           value={formData.name}
-                          onChange={(e) => updateFormData('name', e.target.value)}
+                          onChange={(e) =>
+                            updateFormData('name', e.target.value)
+                          }
                           required
                         />
                         <p className="text-xs text-muted-foreground -mt-1">
-                          This won't be public but helps us personalize your experience.
+                          This won't be public but helps us personalize your
+                          experience.
                         </p>
                       </div>
-                      <Button 
-                        type="button" 
+                      <Button
+                        type="button"
                         onClick={handleNext}
                         disabled={!formData.name.trim()}
                         className="w-full"
@@ -123,7 +132,9 @@ export function SignupForm({
                         <Label>What would you like to do?</Label>
                         <RadioGroup
                           value={formData.userType}
-                          onValueChange={(value) => updateFormData('userType', value)}
+                          onValueChange={(value) =>
+                            updateFormData('userType', value)
+                          }
                           className="flex flex-col gap-3"
                         >
                           <div className="flex items-center space-x-2">
@@ -133,24 +144,30 @@ export function SignupForm({
                             </Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="participate" id="participate" />
-                            <Label htmlFor="participate" className="cursor-pointer">
+                            <RadioGroupItem
+                              value="participate"
+                              id="participate"
+                            />
+                            <Label
+                              htmlFor="participate"
+                              className="cursor-pointer"
+                            >
                               Participate in giveaways
                             </Label>
                           </div>
                         </RadioGroup>
                       </div>
                       <div className="grid gap-2">
-                        <Button 
-                          type="button" 
+                        <Button
+                          type="button"
                           onClick={handleNext}
                           disabled={!formData.userType}
                           className="w-full"
                         >
                           Continue
                         </Button>
-                        <Button 
-                          type="button" 
+                        <Button
+                          type="button"
                           variant="outline"
                           onClick={handleBack}
                           className="w-full hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
@@ -229,8 +246,8 @@ export function SignupForm({
                           </Button>
                         </div>
                       </div>
-                      <Button 
-                        type="button" 
+                      <Button
+                        type="button"
                         variant="outline"
                         onClick={handleBack}
                         className="w-full hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"

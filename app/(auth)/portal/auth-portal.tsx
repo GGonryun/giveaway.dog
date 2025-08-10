@@ -3,7 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { updateUserProfile } from './actions';
 
@@ -17,7 +23,7 @@ export function AuthPortal() {
   const isSignup = searchParams.get('signup') === 'true';
   const name = searchParams.get('name');
   const userType = searchParams.get('userType');
-  
+
   // Determine final redirect URL based on userType
   const getFinalRedirect = () => {
     if (userType === 'host') return '/app';
@@ -29,7 +35,7 @@ export function AuthPortal() {
     const processAuth = async () => {
       // Wait for session to load
       if (status === 'loading') return;
-      
+
       // If not authenticated, redirect to login
       if (status === 'unauthenticated') {
         router.push('/login');
@@ -44,12 +50,12 @@ export function AuthPortal() {
             userId: session.user.id,
             name: name
           });
-          
+
           if (result.error) {
             setError(result.error);
             return;
           }
-          
+
           // Success - redirect to final destination
           router.push(getFinalRedirect());
         } catch (error) {

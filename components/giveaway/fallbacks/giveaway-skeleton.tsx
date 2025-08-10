@@ -14,7 +14,7 @@ export const GiveawayHeaderSkeleton: React.FC = () => {
         <div className="h-48 sm:h-64 bg-gray-200 rounded-t-lg flex items-center justify-center">
           <div className="text-gray-400 text-sm">Preview Banner</div>
         </div>
-        
+
         {/* Time Badge */}
         <div className="absolute top-4 right-4">
           <Badge variant="default" className="text-xs">
@@ -63,7 +63,10 @@ export const TaskListSkeleton: React.FC = () => {
       </CardHeader>
       <CardContent className="space-y-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
+          <div
+            key={i}
+            className="flex items-center justify-between p-3 border rounded-lg"
+          >
             <div className="flex items-center gap-3">
               <Skeleton className="w-8 h-8 rounded-full" />
               <div>
@@ -87,7 +90,10 @@ export const PrizeListSkeleton: React.FC = () => {
       </CardHeader>
       <CardContent className="space-y-3">
         {[1, 2].map((i) => (
-          <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
+          <div
+            key={i}
+            className="flex items-center justify-between p-3 border rounded-lg"
+          >
             <Skeleton className="h-4 w-40" />
             <Skeleton className="h-5 w-16" />
           </div>

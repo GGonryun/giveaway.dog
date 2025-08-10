@@ -17,7 +17,9 @@ export const EmptyTaskList: React.FC = () => {
       <CardContent>
         <div className="text-center py-8">
           <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-          <h4 className="text-lg font-medium text-gray-600 mb-2">No Entry Methods</h4>
+          <h4 className="text-lg font-medium text-gray-600 mb-2">
+            No Entry Methods
+          </h4>
           <p className="text-sm text-muted-foreground">
             Add entry methods in the Tasks step to see them here.
           </p>

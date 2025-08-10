@@ -3,20 +3,17 @@
 import { signIn } from '@/lib/auth';
 import { AuthError } from 'next-auth';
 
-export const signup = async (
-  prevState: string | undefined,
-  data: FormData
-) => {
+export const signup = async (prevState: string | undefined, data: FormData) => {
   const provider = data.get('provider')?.toString();
   const name = data.get('name')?.toString();
   const userType = data.get('userType')?.toString();
-  
+
   // Build query parameters for signup data
   const queryParams = new URLSearchParams();
   queryParams.append('signup', 'true');
   if (name) queryParams.append('name', name);
   if (userType) queryParams.append('userType', userType);
-  
+
   // Redirect to auth portal which will handle profile update and final redirect
   const redirectTo = `/auth/portal?${queryParams.toString()}`;
 

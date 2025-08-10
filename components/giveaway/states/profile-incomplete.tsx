@@ -15,8 +15,8 @@ export const ProfileIncomplete: React.FC = () => {
         <User className="h-12 w-12 mx-auto mb-4 text-orange-500" />
         <h3 className="text-lg font-semibold mb-2">Complete Your Profile</h3>
         <p className="text-muted-foreground mb-4">
-          Please complete your profile to participate in this giveaway.
-          You need to provide your birthday, email, and region.
+          Please complete your profile to participate in this giveaway. You need
+          to provide your birthday, email, and region.
         </p>
         <Button onClick={onCompleteProfile} className="w-full sm:w-auto">
           Complete Profile

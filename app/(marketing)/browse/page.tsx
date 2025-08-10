@@ -10,9 +10,11 @@ export default async function BrowsePage() {
       <div className="container mx-auto px-4 py-8">
         {/* Featured Giveaways Carousel */}
         <section className="mb-12">
-          <Suspense fallback={
-            <div className="h-64 bg-muted animate-pulse rounded-lg" />
-          }>
+          <Suspense
+            fallback={
+              <div className="h-64 bg-muted animate-pulse rounded-lg" />
+            }
+          >
             <FeaturedGiveawaysCarousel />
           </Suspense>
         </section>
@@ -28,14 +30,19 @@ export default async function BrowsePage() {
             <h2 className="text-2xl font-bold">Active Giveaways</h2>
             <GiveawayFilters />
           </div>
-          
-          <Suspense fallback={
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-64 bg-muted animate-pulse rounded-lg" />
-              ))}
-            </div>
-          }>
+
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-64 bg-muted animate-pulse rounded-lg"
+                  />
+                ))}
+              </div>
+            }
+          >
             <GiveawayGrid />
           </Suspense>
         </section>

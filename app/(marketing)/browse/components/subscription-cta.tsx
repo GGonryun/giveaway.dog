@@ -14,12 +14,12 @@ export function SubscriptionCTA() {
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
+
     setIsLoading(true);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     setIsSubscribed(true);
     setIsLoading(false);
     setEmail('');
@@ -34,8 +34,12 @@ export function SubscriptionCTA() {
               <Check className="w-5 h-5 text-green-600" />
             </div>
             <div className="text-center">
-              <h3 className="text-lg font-semibold text-green-900">You're all set!</h3>
-              <p className="text-green-700">We'll notify you about the latest giveaways.</p>
+              <h3 className="text-lg font-semibold text-green-900">
+                You're all set!
+              </h3>
+              <p className="text-green-700">
+                We'll notify you about the latest giveaways.
+              </p>
             </div>
           </div>
         </CardContent>
@@ -50,15 +54,19 @@ export function SubscriptionCTA() {
           <div className="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mx-auto">
             <Bell className="w-6 h-6 text-primary" />
           </div>
-          
+
           <div className="space-y-2">
             <h3 className="text-xl font-semibold">Never Miss a Giveaway!</h3>
             <p className="text-muted-foreground">
-              Get notified when new exciting giveaways go live. Join thousands of winners!
+              Get notified when new exciting giveaways go live. Join thousands
+              of winners!
             </p>
           </div>
-          
-          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+
+          <form
+            onSubmit={handleSubscribe}
+            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+          >
             <div className="relative flex-1">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -70,15 +78,15 @@ export function SubscriptionCTA() {
                 required
               />
             </div>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={isLoading || !email}
               className="whitespace-nowrap"
             >
               {isLoading ? 'Subscribing...' : 'Subscribe'}
             </Button>
           </form>
-          
+
           <p className="text-xs text-muted-foreground">
             No spam, unsubscribe anytime. We respect your privacy.
           </p>

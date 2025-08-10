@@ -14,7 +14,8 @@ export const NotEligible: React.FC = () => {
         <AlertCircle className="h-12 w-12 mx-auto mb-4 text-destructive" />
         <h3 className="text-lg font-semibold mb-2">Not Eligible</h3>
         <p className="text-muted-foreground mb-4">
-          You are not eligible to participate in this giveaway due to age or region restrictions.
+          You are not eligible to participate in this giveaway due to age or
+          region restrictions.
         </p>
         {giveaway.audience.minimumAgeRestriction && (
           <p className="text-sm text-muted-foreground">
