@@ -41,14 +41,6 @@ export const NavigationBar = () => {
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuLink
-                  href="/apps"
-                  className={navigationMenuTriggerStyle()}
-                >
-                  Apps
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
                   href="/support"
                   className={navigationMenuTriggerStyle()}
                 >
@@ -100,18 +92,15 @@ export const NavigationBar = () => {
               </SheetHeader>
               <div className="flex flex-col p-4">
                 <div className="flex flex-col gap-6">
-                  <a href="/apps" className="font-medium">
-                    Apps
-                  </a>
-                  <a href="/support" className="font-medium">
+                  <Link href="/support" className="font-medium">
                     Support
-                  </a>
-                  <a href="/browse" className="font-medium">
+                  </Link>
+                  <Link href="/browse" className="font-medium">
                     Browse Giveaways
-                  </a>
-                  <a href="/pricing" className="font-medium">
+                  </Link>
+                  <Link href="/pricing" className="font-medium">
                     Pricing
-                  </a>
+                  </Link>
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
                   <Button variant="outline" asChild>

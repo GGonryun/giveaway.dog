@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
-import { Sparkles, Users, Trophy, TrendingUp } from 'lucide-react';
+import { Sparkles, Users, Trophy, TrendingUp, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export function HostCTA() {
@@ -16,7 +16,10 @@ export function HostCTA() {
           </div>
 
           <div className="space-y-3">
-            <Typography.Header level={2} className="text-3xl font-bold tracking-tight">
+            <Typography.Header
+              level={2}
+              className="text-3xl font-bold tracking-tight"
+            >
               Ready to Host Your Own Giveaway?
             </Typography.Header>
             <Typography.Paragraph className="text-muted-foreground max-w-2xl mx-auto">
@@ -32,7 +35,9 @@ export function HostCTA() {
                 <Users className="h-5 w-5 text-primary" />
               </div>
               <div className="space-y-1">
-                <Typography.Header level={3} className="font-semibold">Grow Your Audience</Typography.Header>
+                <Typography.Header level={3} className="font-semibold">
+                  Grow Your Audience
+                </Typography.Header>
                 <Typography.Paragraph className="text-sm text-muted-foreground">
                   Reach new customers and engage existing ones
                 </Typography.Paragraph>
@@ -44,7 +49,9 @@ export function HostCTA() {
                 <Trophy className="h-5 w-5 text-primary" />
               </div>
               <div className="space-y-1">
-                <Typography.Header level={3} className="font-semibold">Easy Setup</Typography.Header>
+                <Typography.Header level={3} className="font-semibold">
+                  Easy Setup
+                </Typography.Header>
                 <Typography.Paragraph className="text-sm text-muted-foreground">
                   Launch your giveaway in minutes, not hours
                 </Typography.Paragraph>
@@ -56,7 +63,9 @@ export function HostCTA() {
                 <TrendingUp className="h-5 w-5 text-primary" />
               </div>
               <div className="space-y-1">
-                <Typography.Header level={3} className="font-semibold">Track Results</Typography.Header>
+                <Typography.Header level={3} className="font-semibold">
+                  Track Results
+                </Typography.Header>
                 <Typography.Paragraph className="text-sm text-muted-foreground">
                   Monitor engagement and measure success
                 </Typography.Paragraph>
@@ -69,7 +78,9 @@ export function HostCTA() {
               <Link href="/app">Start Your Giveaway</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/features">Learn More</Link>
+              <Link href="/demo">
+                Try The Demo <ArrowRight />
+              </Link>
             </Button>
           </div>
         </div>
