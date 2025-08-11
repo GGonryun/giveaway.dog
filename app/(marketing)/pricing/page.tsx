@@ -69,9 +69,9 @@ export default async function PricingPage() {
             <Star className="w-4 h-4 mr-1" />
             Revolutionary Pricing Model
           </Badge>
-          <Typography.H1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <Typography.Header level={1} className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             Pay Only When You Run Giveaways
-          </Typography.H1>
+          </Typography.Header>
           <Typography className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
             Unlike our competitors who charge monthly subscriptions even when
             you're not running campaigns, we believe you should only pay for
@@ -90,9 +90,9 @@ export default async function PricingPage() {
         {/* Our Pricing Model */}
         <section className="mb-20">
           <div className="text-center mb-12">
-            <Typography.H2 className="text-3xl md:text-4xl font-bold mb-4">
+            <Typography.Header level={2} className="text-3xl md:text-4xl font-bold mb-4">
               Simple, Fair Pricing
-            </Typography.H2>
+            </Typography.Header>
             <Typography className="text-lg text-muted-foreground">
               Every user gets 10 free giveaways to start, then pay only $1 per
               additional giveaway
@@ -170,30 +170,30 @@ export default async function PricingPage() {
 
           {/* Value Proposition */}
           <div className="mt-16 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl p-8 text-center">
-            <Typography.H3 className="text-2xl font-bold mb-4">
+            <Typography.Header level={3} className="text-2xl font-bold mb-4">
               Why Our Model Works Better
-            </Typography.H3>
+            </Typography.Header>
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <div className="space-y-2">
                 <DollarSign className="w-8 h-8 text-primary mx-auto" />
-                <h4 className="font-semibold">No Wasted Money</h4>
-                <p className="text-sm text-muted-foreground">
+                <Typography.Header level={4} className="font-semibold">No Wasted Money</Typography.Header>
+                <Typography.Paragraph className="text-sm text-muted-foreground">
                   Only pay when you're actually running a campaign
-                </p>
+                </Typography.Paragraph>
               </div>
               <div className="space-y-2">
                 <Zap className="w-8 h-8 text-primary mx-auto" />
-                <h4 className="font-semibold">All Features Included</h4>
-                <p className="text-sm text-muted-foreground">
+                <Typography.Header level={4} className="font-semibold">All Features Included</Typography.Header>
+                <Typography.Paragraph className="text-sm text-muted-foreground">
                   No feature tiers or premium lockouts
-                </p>
+                </Typography.Paragraph>
               </div>
               <div className="space-y-2">
                 <Heart className="w-8 h-8 text-primary mx-auto" />
-                <h4 className="font-semibold">Scale With You</h4>
-                <p className="text-sm text-muted-foreground">
+                <Typography.Header level={4} className="font-semibold">Scale With You</Typography.Header>
+                <Typography.Paragraph className="text-sm text-muted-foreground">
                   Perfect for businesses of all sizes
-                </p>
+                </Typography.Paragraph>
               </div>
             </div>
           </div>
@@ -202,9 +202,9 @@ export default async function PricingPage() {
         {/* Competitor Comparison */}
         <section className="mb-20">
           <div className="text-center mb-12">
-            <Typography.H2 className="text-3xl md:text-4xl font-bold mb-4">
+            <Typography.Header level={2} className="text-3xl md:text-4xl font-bold mb-4">
               Compare With Competitors
-            </Typography.H2>
+            </Typography.Header>
             <Typography className="text-lg text-muted-foreground">
               See how much you could save by switching to our pay-per-use model
             </Typography>
@@ -409,9 +409,9 @@ export default async function PricingPage() {
         {/* FAQ Section */}
         <section className="mb-16">
           <div className="text-center mb-12">
-            <Typography.H2 className="text-3xl md:text-4xl font-bold mb-4">
+            <Typography.Header level={2} className="text-3xl md:text-4xl font-bold mb-4">
               Frequently Asked Questions
-            </Typography.H2>
+            </Typography.Header>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-6">
@@ -480,9 +480,9 @@ export default async function PricingPage() {
 
         {/* Final CTA */}
         <section className="text-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-12">
-          <Typography.H2 className="text-3xl md:text-4xl font-bold mb-4">
+          <Typography.Header level={2} className="text-3xl md:text-4xl font-bold mb-4">
             Ready to Save Money on Giveaways?
-          </Typography.H2>
+          </Typography.Header>
           <Typography className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Join thousands of businesses who've switched from expensive
             subscriptions to our fair, pay-per-use model.

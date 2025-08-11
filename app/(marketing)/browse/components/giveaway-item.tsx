@@ -1,6 +1,7 @@
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Typography } from '@/components/ui/typography';
 import { Clock, Trophy, Users, MapPin } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -62,10 +63,10 @@ export function GiveawayItem({
 
       <CardContent className="p-4 space-y-3 flex-1">
         <div>
-          <h3 className="font-semibold text-lg mb-1 line-clamp-1">{name}</h3>
-          <p className="text-muted-foreground text-sm line-clamp-2">
+          <Typography.Header level={3} className="font-semibold text-lg mb-1 line-clamp-1">{name}</Typography.Header>
+          <Typography.Paragraph className="text-muted-foreground text-sm line-clamp-2">
             {description}
-          </p>
+          </Typography.Paragraph>
         </div>
 
         <div className="space-y-2">

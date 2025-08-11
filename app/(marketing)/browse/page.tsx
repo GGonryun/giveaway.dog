@@ -11,9 +11,9 @@ export default async function BrowsePage() {
     <div className="min-h-screen bg-background py-6 sm:py-8 lg:py-12 px-2 overflow-hidden space-y-8 sm:space-y-12">
       <section className="text-center sm:container">
         <div className="text-center space-y-1">
-          <Typography.H1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold">
+          <Typography.Header level={1} className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold">
             Featured Giveaways
-          </Typography.H1>
+          </Typography.Header>
           <Typography className="text-muted-foreground text-base md:text-lg">
             Don't miss out on these incredible prizes!
           </Typography>
@@ -35,7 +35,7 @@ export default async function BrowsePage() {
       {/* Filters and Giveaways Grid */}
       <section className="space-y-6 sm:container">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <h2 className="text-2xl font-bold">Active Giveaways</h2>
+          <Typography.Header level={2} className="text-2xl font-bold">Active Giveaways</Typography.Header>
           <GiveawayFilters />
         </div>
 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Typography } from '@/components/ui/typography';
 import { Bell, Check, Mail } from 'lucide-react';
 
 export function SubscriptionCTA() {
@@ -34,12 +35,12 @@ export function SubscriptionCTA() {
               <Check className="w-5 h-5 text-green-600" />
             </div>
             <div className="text-center">
-              <h3 className="text-lg font-semibold text-green-900">
+              <Typography.Header level={3} className="text-lg font-semibold text-green-900">
                 You're all set!
-              </h3>
-              <p className="text-green-700">
+              </Typography.Header>
+              <Typography.Paragraph className="text-green-700">
                 We'll notify you about the latest giveaways.
-              </p>
+              </Typography.Paragraph>
             </div>
           </div>
         </CardContent>
@@ -56,11 +57,11 @@ export function SubscriptionCTA() {
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-xl font-semibold">Never Miss a Giveaway!</h3>
-            <p className="text-muted-foreground">
+            <Typography.Header level={3} className="text-xl font-semibold">Never Miss a Giveaway!</Typography.Header>
+            <Typography.Paragraph className="text-muted-foreground">
               Get notified when new exciting giveaways go live. Join thousands
               of winners!
-            </p>
+            </Typography.Paragraph>
           </div>
 
           <form
@@ -87,9 +88,9 @@ export function SubscriptionCTA() {
             </Button>
           </form>
 
-          <p className="text-xs text-muted-foreground">
+          <Typography.Paragraph className="text-xs text-muted-foreground">
             No spam, unsubscribe anytime. We respect your privacy.
-          </p>
+          </Typography.Paragraph>
         </div>
       </CardContent>
     </Card>
