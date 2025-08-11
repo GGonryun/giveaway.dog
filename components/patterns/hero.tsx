@@ -10,9 +10,9 @@ export const Hero = () => {
       <div className="grid items-center gap-8">
         <div className="flex flex-col items-center text-center">
           <Link href={'/support'} className="text-sm mb-2">
-            <Badge variant="outline">
-              🦮 Talk to a human
-              <ArrowUpRight className="ml-1 size-4" />
+            <Badge className="bg-primary/10 text-primary border-primary/20">
+              🕺 Talk to a human
+              <ArrowRight className="w-4 h-4 mr-1" />
             </Badge>
           </Link>
           <h1 className="my-6 text-pretty text-4xl font-bold lg:text-6xl">
