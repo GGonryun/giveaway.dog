@@ -63,7 +63,12 @@ export function GiveawayItem({
 
       <CardContent className="p-4 space-y-3 flex-1">
         <div>
-          <Typography.Header level={3} className="font-semibold text-lg mb-1 line-clamp-1">{name}</Typography.Header>
+          <Typography.Header
+            level={3}
+            className="font-semibold text-lg mb-1 line-clamp-1"
+          >
+            {name}
+          </Typography.Header>
           <Typography.Paragraph className="text-muted-foreground text-sm line-clamp-2">
             {description}
           </Typography.Paragraph>

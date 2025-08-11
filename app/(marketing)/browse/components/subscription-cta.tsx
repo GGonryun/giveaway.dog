@@ -35,7 +35,10 @@ export function SubscriptionCTA() {
               <Check className="w-5 h-5 text-green-600" />
             </div>
             <div className="text-center">
-              <Typography.Header level={3} className="text-lg font-semibold text-green-900">
+              <Typography.Header
+                level={3}
+                className="text-lg font-semibold text-green-900"
+              >
                 You're all set!
               </Typography.Header>
               <Typography.Paragraph className="text-green-700">
@@ -57,7 +60,9 @@ export function SubscriptionCTA() {
           </div>
 
           <div className="space-y-2">
-            <Typography.Header level={3} className="text-xl font-semibold">Never Miss a Giveaway!</Typography.Header>
+            <Typography.Header level={3} className="text-xl font-semibold">
+              Never Miss a Giveaway!
+            </Typography.Header>
             <Typography.Paragraph className="text-muted-foreground">
               Get notified when new exciting giveaways go live. Join thousands
               of winners!

@@ -18,9 +18,10 @@ export function PricingHero() {
         Pay Only When You Run Giveaways
       </Typography.Header>
       <Typography.Paragraph className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6 md:mb-8">
-        Unlike our competitors who charge monthly subscriptions and lock features 
-        behind premium tiers, we give you ALL features for free and you only pay 
-        for the giveaways you actually run. No subscriptions, no feature restrictions, no surprises.
+        Unlike our competitors who charge monthly subscriptions and lock
+        features behind premium tiers, we give you ALL features for free and you
+        only pay for the giveaways you actually run. No subscriptions, no
+        feature restrictions, no surprises.
       </Typography.Paragraph>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Button size="lg" asChild>

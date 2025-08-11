@@ -4,19 +4,23 @@ import { Typography } from '@/components/ui/typography';
 const faqs = [
   {
     question: 'Do the 10 free giveaways expire?',
-    answer: 'No! Your 10 free giveaways never expire. Use them whenever you\'re ready, whether that\'s next month or next year.'
+    answer:
+      "No! Your 10 free giveaways never expire. Use them whenever you're ready, whether that's next month or next year."
   },
   {
     question: 'Are there any hidden fees?',
-    answer: 'Absolutely not. We believe in transparent pricing. The only cost is our value packs when you need more than your 10 free giveaways. No setup fees, no monthly charges, no surprises.'
+    answer:
+      'Absolutely not. We believe in transparent pricing. The only cost is our value packs when you need more than your 10 free giveaways. No setup fees, no monthly charges, no surprises.'
   },
   {
     question: 'What features are included?',
-    answer: 'Everything! Unlike competitors who gate features behind premium tiers, every user gets access to all features including analytics, integrations, custom branding, and priority support.'
+    answer:
+      'Everything! Unlike competitors who gate features behind premium tiers, every user gets access to all features including analytics, integrations, custom branding, and priority support.'
   },
   {
     question: 'Can I buy multiple packages?',
-    answer: 'Yes! You can purchase multiple packages as needed. Giveaway credits never expire, so you can stock up when convenient and use them whenever you\'re ready to launch campaigns.'
+    answer:
+      "Yes! You can purchase multiple packages as needed. Giveaway credits never expire, so you can stock up when convenient and use them whenever you're ready to launch campaigns."
   }
 ];
 

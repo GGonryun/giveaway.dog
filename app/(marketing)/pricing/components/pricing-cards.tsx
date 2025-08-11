@@ -72,7 +72,8 @@ export function PricingCards() {
         </Typography.Header>
         <Typography.Paragraph className="text-base md:text-lg text-muted-foreground">
           Every user gets 10 free giveaways with ALL premium features included.
-          No feature restrictions, no premium tiers - just choose your package size.
+          No feature restrictions, no premium tiers - just choose your package
+          size.
         </Typography.Paragraph>
       </div>
 
@@ -100,15 +101,19 @@ export function PricingCards() {
               <div className="bg-green-100/50 rounded-lg p-3 mb-4 md:h-20 flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-2">
                   <Check className="w-4 h-4 text-green-600" />
-                  <Typography.Header level={5} className="text-sm font-semibold text-green-800">
+                  <Typography.Header
+                    level={5}
+                    className="text-sm font-semibold text-green-800"
+                  >
                     ALL Premium Features Included!
                   </Typography.Header>
                 </div>
                 <Typography.Paragraph className="text-xs text-green-700">
-                  Unlike competitors, we don't lock features behind premium tiers
+                  Unlike competitors, we don't lock features behind premium
+                  tiers
                 </Typography.Paragraph>
               </div>
-              
+
               <div className="space-y-2 md:space-y-3 md:h-80 overflow-y-auto">
                 {features.map((feature) => (
                   <div key={feature} className="flex items-center gap-2">
@@ -134,7 +139,7 @@ export function PricingCards() {
               <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-8 h-8 text-primary" />
               </div>
-              
+
               {/* Package Selector */}
               <div className="mb-4 w-full max-w-xs mx-auto">
                 <Select
@@ -183,7 +188,10 @@ export function PricingCards() {
               <div className="bg-primary/10 rounded-lg p-3 mb-4 md:h-20 flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-2">
                   <Check className="w-4 h-4 text-primary" />
-                  <Typography.Header level={5} className="text-sm font-semibold text-primary">
+                  <Typography.Header
+                    level={5}
+                    className="text-sm font-semibold text-primary"
+                  >
                     Same Features as Free Tier
                   </Typography.Header>
                 </div>
@@ -191,7 +199,7 @@ export function PricingCards() {
                   Just more giveaways - no feature upgrades needed
                 </Typography.Paragraph>
               </div>
-              
+
               <div className="space-y-2 md:space-y-3 md:h-80 overflow-y-auto">
                 {features.map((feature) => (
                   <div key={feature} className="flex items-center gap-2">

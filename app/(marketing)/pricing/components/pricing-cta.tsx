@@ -24,8 +24,8 @@ export function PricingCTA() {
         </Button>
       </div>
       <Typography.Paragraph className="text-xs md:text-sm text-muted-foreground mt-4 md:mt-6">
-        No credit card required • 10 free giveaways forever • No
-        subscriptions ever!
+        No credit card required • 10 free giveaways forever • No subscriptions
+        ever!
       </Typography.Paragraph>
     </section>
   );
