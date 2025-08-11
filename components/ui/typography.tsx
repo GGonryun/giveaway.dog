@@ -35,6 +35,47 @@ const h2Variants = cva('', {
   }
 });
 
+const h3Variants = cva('', {
+  variants: text,
+  defaultVariants: {
+    size: 'xl',
+    weight: 'semibold'
+  }
+});
+
+const h4Variants = cva('', {
+  variants: text,
+  defaultVariants: {
+    size: 'lg',
+    weight: 'semibold'
+  }
+});
+
+const h5Variants = cva('', {
+  variants: text,
+  defaultVariants: {
+    size: 'base',
+    weight: 'semibold'
+  }
+});
+
+const h6Variants = cva('', {
+  variants: text,
+  defaultVariants: {
+    size: 'sm',
+    weight: 'semibold'
+  }
+});
+
+const headerVariantMap = {
+  1: h1Variants,
+  2: h2Variants,
+  3: h3Variants,
+  4: h4Variants,
+  5: h5Variants,
+  6: h6Variants
+} as const;
+
 const captionVariants = cva('text-xs font-normal text-muted-foreground', {
   variants: text,
   defaultVariants: {
@@ -42,6 +83,14 @@ const captionVariants = cva('text-xs font-normal text-muted-foreground', {
     weight: 'normal'
   }
 });
+
+type HeaderLevel = 1 | 2 | 3 | 4 | 5 | 6;
+
+type HeaderProps = {
+  level: HeaderLevel;
+  children: React.ReactNode;
+  className?: string;
+} & VariantProps<typeof h1Variants>;
 
 type TypographyComponent = IntrinsicTypographyComponent<
   'div',
@@ -52,6 +101,8 @@ type TypographyComponent = IntrinsicTypographyComponent<
   Paragraph: IntrinsicTypographyComponent<'p', typeof typographyVariants>;
   H1: IntrinsicTypographyComponent<'h1', typeof h1Variants>;
   H2: IntrinsicTypographyComponent<'h2', typeof h2Variants>;
+  H3: IntrinsicTypographyComponent<'h3', typeof h3Variants>;
+  Header: React.FC<HeaderProps>;
   Caption: IntrinsicTypographyComponent<'span', typeof typographyVariants>;
 };
 
@@ -94,7 +145,7 @@ type Props<TVariants extends (...args: any) => any> =
 
 type TypographyElement = Extract<
   keyof JSX.IntrinsicElements,
-  'h1' | 'h2' | 'p' | 'code' | 'div' | 'span'
+  'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'code' | 'div' | 'span'
 >;
 
 type IntrinsicTypographyComponent<
@@ -121,7 +172,22 @@ function IntrinsicElement<
 
 Typography.H1 = IntrinsicElement('h1', h1Variants);
 Typography.H2 = IntrinsicElement('h2', h2Variants);
+Typography.H3 = IntrinsicElement('h3', h3Variants);
 Typography.Paragraph = IntrinsicElement('p', typographyVariants);
 Typography.Code = IntrinsicElement('code', codeVariants);
 Typography.Text = IntrinsicElement('span', typographyVariants);
 Typography.Caption = IntrinsicElement('span', captionVariants);
+
+Typography.Header = ({ level, className, children, size, weight, color, leading, words, ...props }) => {
+  const Component = `h${level}` as const;
+  const variants = headerVariantMap[level];
+  
+  return (
+    <Component 
+      className={cn(variants({ size, weight, color, leading, words }), className)} 
+      {...props}
+    >
+      {children}
+    </Component>
+  );
+};

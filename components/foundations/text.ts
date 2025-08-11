@@ -2,7 +2,8 @@ export const text = {
   size: {
     xs: 'text-xs',
     sm: 'text-sm',
-    md: 'text-md',
+    md: 'text-base',
+    base: 'text-base',
     lg: 'text-lg',
     xl: 'text-xl',
     '2xl': 'text-2xl',

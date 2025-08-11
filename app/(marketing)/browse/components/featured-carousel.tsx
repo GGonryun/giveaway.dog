@@ -83,12 +83,13 @@ export function FeaturedGiveawaysCarousel() {
         dragFree: true,
         containScroll: 'trimSnaps'
       }}
+      className="flex flex-col justify-center items-center"
     >
-      <CarouselContent className="py-2 -ml-2 mr-2">
+      <CarouselContent className="px-2 py-2 -ml-2 mr-2 [@media(min-width:1800px)]:max-w-[2400px]">
         {featuredGiveaways.map((giveaway) => (
           <CarouselItem
             key={giveaway.id}
-            className="basis-full sm:basis-1/2 min-w-0 max-w-[95vw] sm:max-w-none"
+            className="basis-full md:basis-1/2 xl:basis-1/3 max-w-[95vw] sm:max-w-[600px]"
           >
             <GiveawayItem {...giveaway} />
           </CarouselItem>
