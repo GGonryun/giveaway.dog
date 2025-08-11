@@ -16,9 +16,22 @@ export interface GiveawayItemProps {
   region?: string;
   status: 'active' | 'ending-soon' | 'new';
   featured?: boolean;
+  isEnded?: boolean;
 }
 
-const getStatusBadge = (status: GiveawayItemProps['status'], endDate: Date) => {
+const getStatusBadge = (
+  status: GiveawayItemProps['status'],
+  endDate: Date,
+  isEnded?: boolean
+) => {
+  if (isEnded) {
+    return (
+      <Badge variant="outline" className="bg-muted text-muted-foreground">
+        Ended
+      </Badge>
+    );
+  }
+
   const daysLeft = Math.ceil(
     (endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
   );
@@ -41,10 +54,13 @@ export function GiveawayItem({
   participantsCount,
   region,
   status,
-  featured = false
+  featured = false,
+  isEnded = false
 }: GiveawayItemProps) {
   return (
-    <Card className="overflow-hidden pt-0 flex flex-col h-full">
+    <Card
+      className={`overflow-hidden pt-0 flex flex-col h-full ${isEnded ? 'opacity-75' : ''}`}
+    >
       <div className="relative overflow-hidden rounded-t-lg">
         {banner && (
           <img
@@ -54,7 +70,7 @@ export function GiveawayItem({
           />
         )}
         <div className="absolute top-3 left-3">
-          {getStatusBadge(status, endDate)}
+          {getStatusBadge(status, endDate, isEnded)}
         </div>
         {featured && (
           <Badge className="absolute top-3 right-3 bg-primary">Featured</Badge>
@@ -79,7 +95,9 @@ export function GiveawayItem({
             <div className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
               <span>
-                Ends {formatDistanceToNow(endDate, { addSuffix: true })}
+                {isEnded
+                  ? `Ended ${formatDistanceToNow(endDate, { addSuffix: true })}`
+                  : `Ends ${formatDistanceToNow(endDate, { addSuffix: true })}`}
               </span>
             </div>
           </div>
@@ -108,8 +126,12 @@ export function GiveawayItem({
       </CardContent>
 
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full" variant="default">
-          Join Giveaway
+        <Button
+          className="w-full"
+          variant={isEnded ? 'outline' : 'default'}
+          disabled={isEnded}
+        >
+          {isEnded ? 'Giveaway Ended' : 'Join Giveaway'}
         </Button>
       </CardFooter>
     </Card>
