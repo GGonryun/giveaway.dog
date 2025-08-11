@@ -8,7 +8,7 @@ import { Typography } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight, Gift, Star } from 'lucide-react';
+import { ArrowRight, Gift } from 'lucide-react';
 
 export default async function BrowsePage() {
   return (
