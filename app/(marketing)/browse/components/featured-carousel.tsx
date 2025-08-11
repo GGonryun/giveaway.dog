@@ -85,11 +85,11 @@ export function FeaturedGiveawaysCarousel() {
       }}
       className="flex flex-col justify-center items-center"
     >
-      <CarouselContent className="px-2 py-2 -ml-2 mr-2 [@media(min-width:1800px)]:max-w-[2400px]">
+      <CarouselContent className="px-2 py-2 -ml-2 mr-2">
         {featuredGiveaways.map((giveaway) => (
           <CarouselItem
             key={giveaway.id}
-            className="basis-full md:basis-1/2 xl:basis-1/3 max-w-[95vw] sm:max-w-[600px]"
+            className="basis-full lg:basis-1/2 max-w-[95vw] sm:max-w-[600px] min-w-[200px]"
           >
             <GiveawayItem {...giveaway} />
           </CarouselItem>
