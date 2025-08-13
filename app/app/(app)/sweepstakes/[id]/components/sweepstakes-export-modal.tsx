@@ -1,27 +1,42 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { 
-  Download, 
-  FileText, 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import {
+  Download,
+  FileText,
   Calendar,
   Clock,
   Database,
   Settings,
   CheckCircle
-} from "lucide-react";
-import { useState } from "react";
+} from 'lucide-react';
+import { useState } from 'react';
 
-export function SweepstakesExportModal() {
+export const SweepstakesExportModal = () => {
   const [selectedColumns, setSelectedColumns] = useState<string[]>([
-    'email', 'name', 'entry_date', 'source'
+    'email',
+    'name',
+    'entry_date',
+    'source'
   ]);
   const [exportFormat, setExportFormat] = useState('csv');
   const [dateRange, setDateRange] = useState('all');
@@ -37,27 +52,31 @@ export function SweepstakesExportModal() {
     { id: 'ip_address', label: 'IP Address', essential: false },
     { id: 'location', label: 'Location', essential: false },
     { id: 'sweepstakes', label: 'Sweepstakes Name', essential: false },
-    { id: 'verification_status', label: 'Email Verification', essential: false },
+    {
+      id: 'verification_status',
+      label: 'Email Verification',
+      essential: false
+    },
     { id: 'quality_score', label: 'Quality Score', essential: false },
     { id: 'referrer', label: 'Referrer URL', essential: false }
   ];
 
   const handleColumnToggle = (columnId: string) => {
-    setSelectedColumns(prev => 
-      prev.includes(columnId) 
-        ? prev.filter(id => id !== columnId)
+    setSelectedColumns((prev) =>
+      prev.includes(columnId)
+        ? prev.filter((id) => id !== columnId)
         : [...prev, columnId]
     );
   };
 
   const handleExport = async () => {
     setIsExporting(true);
-    
+
     // Simulate export process
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     setIsExporting(false);
-    
+
     // In real implementation, this would trigger the actual export
     console.log('Export configuration:', {
       columns: selectedColumns,
@@ -72,11 +91,16 @@ export function SweepstakesExportModal() {
   const getEstimatedRows = () => {
     // Mock estimation based on date range
     switch (dateRange) {
-      case 'today': return 156;
-      case 'week': return 1234;
-      case 'month': return 4567;
-      case 'all': return 15420;
-      default: return 0;
+      case 'today':
+        return 156;
+      case 'week':
+        return 1234;
+      case 'month':
+        return 4567;
+      case 'all':
+        return 15420;
+      default:
+        return 0;
     }
   };
 
@@ -91,7 +115,7 @@ export function SweepstakesExportModal() {
           Export entry data and schedule automated reports
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent className="p-3 sm:p-6">
         <div className="space-y-6">
           {/* Export Format */}
@@ -152,7 +176,10 @@ export function SweepstakesExportModal() {
                     checked={selectedColumns.includes(column.id)}
                     onCheckedChange={() => handleColumnToggle(column.id)}
                   />
-                  <Label htmlFor={column.id} className="text-sm flex-1 cursor-pointer">
+                  <Label
+                    htmlFor={column.id}
+                    className="text-sm flex-1 cursor-pointer"
+                  >
                     {column.label}
                     {column.essential && (
                       <Badge variant="outline" className="ml-2 text-xs">
@@ -164,17 +191,23 @@ export function SweepstakesExportModal() {
               ))}
             </div>
             <div className="flex space-x-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
-                onClick={() => setSelectedColumns(availableColumns.map(c => c.id))}
+                onClick={() =>
+                  setSelectedColumns(availableColumns.map((c) => c.id))
+                }
               >
                 Select All
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
-                onClick={() => setSelectedColumns(availableColumns.filter(c => c.essential).map(c => c.id))}
+                onClick={() =>
+                  setSelectedColumns(
+                    availableColumns.filter((c) => c.essential).map((c) => c.id)
+                  )
+                }
               >
                 Essential Only
               </Button>
@@ -184,7 +217,7 @@ export function SweepstakesExportModal() {
           {/* Export Options */}
           <div className="space-y-4">
             <Label className="text-sm font-medium">Export Options</Label>
-            
+
             <div className="flex items-center space-x-2">
               <Switch
                 id="headers"
@@ -195,7 +228,7 @@ export function SweepstakesExportModal() {
                 Include column headers
               </Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Switch
                 id="schedule"
@@ -214,7 +247,9 @@ export function SweepstakesExportModal() {
               <Label className="text-sm font-medium">Schedule Settings</Label>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-xs text-muted-foreground">Frequency</Label>
+                  <Label className="text-xs text-muted-foreground">
+                    Frequency
+                  </Label>
                   <Select defaultValue="weekly">
                     <SelectTrigger className="h-8">
                       <SelectValue />
@@ -227,9 +262,11 @@ export function SweepstakesExportModal() {
                   </Select>
                 </div>
                 <div>
-                  <Label className="text-xs text-muted-foreground">Email To</Label>
-                  <Input 
-                    placeholder="admin@example.com" 
+                  <Label className="text-xs text-muted-foreground">
+                    Email To
+                  </Label>
+                  <Input
+                    placeholder="admin@example.com"
                     className="h-8 text-sm"
                   />
                 </div>
@@ -241,19 +278,36 @@ export function SweepstakesExportModal() {
           <div className="p-3 border rounded-lg bg-blue-50">
             <div className="flex items-center space-x-2 mb-2">
               <Settings className="h-4 w-4 text-blue-600" />
-              <span className="font-medium text-blue-800 text-sm">Export Preview</span>
+              <span className="font-medium text-blue-800 text-sm">
+                Export Preview
+              </span>
             </div>
             <div className="text-sm text-blue-600 space-y-1">
-              <div>Format: <span className="font-medium uppercase">{exportFormat}</span></div>
-              <div>Columns: <span className="font-medium">{getColumnCount()}</span></div>
-              <div>Estimated rows: <span className="font-medium">{getEstimatedRows().toLocaleString()}</span></div>
-              <div>Date range: <span className="font-medium capitalize">{dateRange.replace('_', ' ')}</span></div>
+              <div>
+                Format:{' '}
+                <span className="font-medium uppercase">{exportFormat}</span>
+              </div>
+              <div>
+                Columns: <span className="font-medium">{getColumnCount()}</span>
+              </div>
+              <div>
+                Estimated rows:{' '}
+                <span className="font-medium">
+                  {getEstimatedRows().toLocaleString()}
+                </span>
+              </div>
+              <div>
+                Date range:{' '}
+                <span className="font-medium capitalize">
+                  {dateRange.replace('_', ' ')}
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Export Actions */}
           <div className="flex space-x-2">
-            <Button 
+            <Button
               onClick={handleExport}
               disabled={isExporting || getColumnCount() === 0}
               className="flex-1"
@@ -281,14 +335,31 @@ export function SweepstakesExportModal() {
             <Label className="text-sm font-medium">Recent Exports</Label>
             <div className="space-y-2">
               {[
-                { name: 'all-entries-january.csv', date: '2 hours ago', size: '2.4 MB' },
-                { name: 'verified-users-weekly.csv', date: '1 day ago', size: '1.8 MB' },
-                { name: 'sweepstakes-summary.json', date: '3 days ago', size: '847 KB' }
+                {
+                  name: 'all-entries-january.csv',
+                  date: '2 hours ago',
+                  size: '2.4 MB'
+                },
+                {
+                  name: 'verified-users-weekly.csv',
+                  date: '1 day ago',
+                  size: '1.8 MB'
+                },
+                {
+                  name: 'sweepstakes-summary.json',
+                  date: '3 days ago',
+                  size: '847 KB'
+                }
               ].map((export_, index) => (
-                <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-2 bg-muted rounded-lg"
+                >
                   <div className="space-y-1">
                     <div className="text-sm font-medium">{export_.name}</div>
-                    <div className="text-xs text-muted-foreground">{export_.date} • {export_.size}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {export_.date} • {export_.size}
+                    </div>
                   </div>
                   <div className="flex items-center space-x-1">
                     <CheckCircle className="h-3 w-3 text-green-500" />

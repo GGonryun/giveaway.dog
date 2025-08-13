@@ -1,19 +1,25 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { 
-  TrendingDown, 
-  Users, 
-  MousePointer, 
-  Edit, 
-  Mail, 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import {
+  TrendingDown,
+  Users,
+  MousePointer,
+  Edit,
+  Mail,
   CheckCircle,
   ExternalLink,
   AlertTriangle
-} from "lucide-react";
+} from 'lucide-react';
 
 interface ConversionFunnelData {
   stage: string;
@@ -26,7 +32,9 @@ interface SweepstakesConversionFunnelProps {
   data: ConversionFunnelData[];
 }
 
-export function SweepstakesConversionFunnel({ data }: SweepstakesConversionFunnelProps) {
+export const SweepstakesConversionFunnel = ({
+  data
+}: SweepstakesConversionFunnelProps) => {
   const getStageIcon = (stage: string) => {
     switch (stage.toLowerCase()) {
       case 'page visits':
@@ -50,9 +58,12 @@ export function SweepstakesConversionFunnel({ data }: SweepstakesConversionFunne
     return { color: 'text-green-500', severity: 'low' };
   };
 
-  const overallConversion = data.length > 0 ? ((data[data.length - 1].value / data[0].value) * 100).toFixed(1) : '0';
-  const biggestDrop = Math.max(...data.map(stage => stage.dropRate));
-  const biggestDropStage = data.find(stage => stage.dropRate === biggestDrop);
+  const overallConversion =
+    data.length > 0
+      ? ((data[data.length - 1].value / data[0].value) * 100).toFixed(1)
+      : '0';
+  const biggestDrop = Math.max(...data.map((stage) => stage.dropRate));
+  const biggestDropStage = data.find((stage) => stage.dropRate === biggestDrop);
 
   return (
     <Card>
@@ -64,12 +75,14 @@ export function SweepstakesConversionFunnel({ data }: SweepstakesConversionFunne
         <CardDescription>
           Track user journey from visit to qualified lead
         </CardDescription>
-        
+
         {/* Key Metrics */}
         <div className="flex items-center space-x-6 pt-2">
           <div className="text-sm">
             <span className="text-muted-foreground">Overall conversion:</span>
-            <Badge variant="default" className="ml-1">{overallConversion}%</Badge>
+            <Badge variant="default" className="ml-1">
+              {overallConversion}%
+            </Badge>
           </div>
           {biggestDropStage && (
             <div className="text-sm">
@@ -81,21 +94,25 @@ export function SweepstakesConversionFunnel({ data }: SweepstakesConversionFunne
           )}
         </div>
       </CardHeader>
-      
+
       <CardContent className="p-3 sm:p-6">
         <div className="space-y-4">
           {data.map((stage, index) => {
             const isFirst = index === 0;
             const dropSeverity = getDropSeverity(stage.dropRate);
-            
+
             return (
               <div key={stage.stage} className="relative">
                 {/* Stage Card */}
-                <div className={`border rounded-lg p-4 hover:bg-muted/50 transition-colors cursor-pointer ${
-                  stage.dropRate > 50 ? 'border-red-200 bg-red-50' : 
-                  stage.dropRate > 30 ? 'border-yellow-200 bg-yellow-50' : 
-                  'border-muted'
-                }`}>
+                <div
+                  className={`border rounded-lg p-4 hover:bg-muted/50 transition-colors cursor-pointer ${
+                    stage.dropRate > 50
+                      ? 'border-red-200 bg-red-50'
+                      : stage.dropRate > 30
+                        ? 'border-yellow-200 bg-yellow-50'
+                        : 'border-muted'
+                  }`}
+                >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-3">
                       {getStageIcon(stage.stage)}
@@ -104,18 +121,27 @@ export function SweepstakesConversionFunnel({ data }: SweepstakesConversionFunne
                         <div className="flex items-center space-x-2 text-xs text-muted-foreground">
                           <span>{stage.value.toLocaleString()} users</span>
                           <span>•</span>
-                          <span>{stage.percentage.toFixed(1)}% of previous</span>
+                          <span>
+                            {stage.percentage.toFixed(1)}% of previous
+                          </span>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-2">
                       {!isFirst && stage.dropRate > 0 && (
                         <div className="flex items-center space-x-1">
-                          <TrendingDown className={`h-3 w-3 ${dropSeverity.color}`} />
-                          <Badge 
-                            variant={dropSeverity.severity === 'high' ? 'destructive' : 
-                                   dropSeverity.severity === 'medium' ? 'secondary' : 'default'}
+                          <TrendingDown
+                            className={`h-3 w-3 ${dropSeverity.color}`}
+                          />
+                          <Badge
+                            variant={
+                              dropSeverity.severity === 'high'
+                                ? 'destructive'
+                                : dropSeverity.severity === 'medium'
+                                  ? 'secondary'
+                                  : 'default'
+                            }
                             className="text-xs"
                           >
                             -{stage.dropRate.toFixed(1)}%
@@ -127,13 +153,10 @@ export function SweepstakesConversionFunnel({ data }: SweepstakesConversionFunne
                       </Button>
                     </div>
                   </div>
-                  
+
                   {/* Progress Bar */}
                   <div className="space-y-2">
-                    <Progress 
-                      value={stage.percentage} 
-                      className="h-2"
-                    />
+                    <Progress value={stage.percentage} className="h-2" />
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>Conversion: {stage.percentage.toFixed(1)}%</span>
                       <span>{stage.value.toLocaleString()} users</span>
@@ -144,9 +167,13 @@ export function SweepstakesConversionFunnel({ data }: SweepstakesConversionFunne
                 {/* Drop Indicator */}
                 {!isFirst && stage.dropRate > 30 && (
                   <div className="absolute -top-2 right-4 z-10">
-                    <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
-                      stage.dropRate > 50 ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
-                    }`}>
+                    <div
+                      className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
+                        stage.dropRate > 50
+                          ? 'bg-red-100 text-red-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}
+                    >
                       <AlertTriangle className="h-3 w-3" />
                       <span>High Drop</span>
                     </div>
@@ -165,21 +192,31 @@ export function SweepstakesConversionFunnel({ data }: SweepstakesConversionFunne
               <div className="flex items-start space-x-2 p-3 bg-blue-50 rounded-lg">
                 <TrendingDown className="h-4 w-4 text-blue-600 mt-0.5" />
                 <div>
-                  <div className="font-medium text-blue-800">Address {biggestDropStage.stage} Drop</div>
+                  <div className="font-medium text-blue-800">
+                    Address {biggestDropStage.stage} Drop
+                  </div>
                   <div className="text-blue-600">
-                    {biggestDropStage.dropRate.toFixed(1)}% of users drop off here. Consider simplifying this step.
+                    {biggestDropStage.dropRate.toFixed(1)}% of users drop off
+                    here. Consider simplifying this step.
                   </div>
                 </div>
               </div>
             )}
-            
-            {data.some(stage => stage.stage.toLowerCase().includes('email') && stage.dropRate > 20) && (
+
+            {data.some(
+              (stage) =>
+                stage.stage.toLowerCase().includes('email') &&
+                stage.dropRate > 20
+            ) && (
               <div className="flex items-start space-x-2 p-3 bg-green-50 rounded-lg">
                 <Mail className="h-4 w-4 text-green-600 mt-0.5" />
                 <div>
-                  <div className="font-medium text-green-800">Improve Email Verification</div>
+                  <div className="font-medium text-green-800">
+                    Improve Email Verification
+                  </div>
                   <div className="text-green-600">
-                    Consider double opt-in confirmation or instant email verification to reduce drop-off.
+                    Consider double opt-in confirmation or instant email
+                    verification to reduce drop-off.
                   </div>
                 </div>
               </div>
@@ -191,7 +228,9 @@ export function SweepstakesConversionFunnel({ data }: SweepstakesConversionFunne
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t text-sm">
           <div>
             <div className="text-muted-foreground">Total Visitors</div>
-            <div className="font-medium">{data[0]?.value.toLocaleString() || '0'}</div>
+            <div className="font-medium">
+              {data[0]?.value.toLocaleString() || '0'}
+            </div>
           </div>
           <div>
             <div className="text-muted-foreground">Completed</div>
@@ -206,7 +245,11 @@ export function SweepstakesConversionFunnel({ data }: SweepstakesConversionFunne
           <div>
             <div className="text-muted-foreground">Avg. Drop per Step</div>
             <div className="font-medium text-orange-600">
-              {(data.reduce((sum, stage) => sum + stage.dropRate, 0) / data.length).toFixed(1)}%
+              {(
+                data.reduce((sum, stage) => sum + stage.dropRate, 0) /
+                data.length
+              ).toFixed(1)}
+              %
             </div>
           </div>
         </div>

@@ -1,10 +1,17 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Eye, ExternalLink, Smartphone, Monitor, Tablet, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Eye,
+  ExternalLink,
+  Smartphone,
+  Monitor,
+  Tablet,
+  RefreshCw
+} from 'lucide-react';
+import { useState } from 'react';
 
 interface SweepstakesDetails {
   id: string;
@@ -21,14 +28,16 @@ interface SweepstakesPreviewProps {
   sweepstakes: SweepstakesDetails;
 }
 
-export function SweepstakesPreview({ sweepstakes }: SweepstakesPreviewProps) {
-  const [previewDevice, setPreviewDevice] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
+export const SweepstakesPreview = ({ sweepstakes }: SweepstakesPreviewProps) => {
+  const [previewDevice, setPreviewDevice] = useState<
+    'mobile' | 'tablet' | 'desktop'
+  >('desktop');
   const [isLoading, setIsLoading] = useState(false);
 
   const refreshPreview = async () => {
     setIsLoading(true);
     // Simulate refresh
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsLoading(false);
   };
 
@@ -53,7 +62,7 @@ export function SweepstakesPreview({ sweepstakes }: SweepstakesPreviewProps) {
           <h2 className="text-lg font-semibold">Landing Page Preview</h2>
           <Badge variant="outline">Live Preview</Badge>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           {/* Device Selector */}
           <div className="flex items-center border rounded-lg">
@@ -82,12 +91,19 @@ export function SweepstakesPreview({ sweepstakes }: SweepstakesPreviewProps) {
               <Monitor className="h-4 w-4" />
             </Button>
           </div>
-          
-          <Button variant="outline" size="sm" onClick={refreshPreview} disabled={isLoading}>
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={refreshPreview}
+            disabled={isLoading}
+          >
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`}
+            />
             Refresh
           </Button>
-          
+
           <Button variant="outline" size="sm" asChild>
             <a href={sweepstakes.landingPageUrl} target="_blank">
               <ExternalLink className="h-4 w-4 mr-2" />
@@ -147,7 +163,7 @@ export function SweepstakesPreview({ sweepstakes }: SweepstakesPreviewProps) {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader>
             <CardTitle className="text-base">SEO Preview</CardTitle>

@@ -83,7 +83,6 @@ export function FeaturedGiveawaysCarousel() {
         dragFree: true,
         containScroll: 'trimSnaps'
       }}
-      className="flex flex-col justify-center items-center"
     >
       <CarouselContent className="px-2 py-2 -ml-2 mr-2">
         {featuredGiveaways.map((giveaway) => (

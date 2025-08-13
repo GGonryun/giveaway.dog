@@ -1,10 +1,20 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
-import { Badge } from "@/components/ui/badge";
-import { TrendingUp, ExternalLink } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent
+} from '@/components/ui/chart';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { Badge } from '@/components/ui/badge';
+import { TrendingUp, ExternalLink } from 'lucide-react';
 
 interface TopReferrerData {
   source: string;
@@ -19,18 +29,20 @@ interface SweepstakesTopReferrersProps {
 
 const chartConfig = {
   entries: {
-    label: "Entries",
-    color: "var(--color-chart-1)"
+    label: 'Entries',
+    color: 'var(--color-chart-1)'
   },
   visits: {
-    label: "Visits", 
-    color: "var(--color-chart-2)"
+    label: 'Visits',
+    color: 'var(--color-chart-2)'
   }
 };
 
-export function SweepstakesTopReferrers({ data }: SweepstakesTopReferrersProps) {
+export const SweepstakesTopReferrers = ({
+  data
+}: SweepstakesTopReferrersProps) => {
   const totalEntries = data.reduce((sum, item) => sum + item.entries, 0);
-  const bestConverter = data.reduce((best, current) => 
+  const bestConverter = data.reduce((best, current) =>
     current.conversionRate > best.conversionRate ? current : best
   );
 
@@ -44,18 +56,19 @@ export function SweepstakesTopReferrers({ data }: SweepstakesTopReferrersProps) 
         <CardDescription>
           Traffic sources and their conversion performance
         </CardDescription>
-        
+
         {/* Key Metrics */}
         <div className="flex items-center space-x-4 pt-2 text-sm">
           <div>
             <span className="text-muted-foreground">Best converter:</span>
             <Badge variant="default" className="ml-1">
-              {bestConverter.source} ({bestConverter.conversionRate.toFixed(1)}%)
+              {bestConverter.source} ({bestConverter.conversionRate.toFixed(1)}
+              %)
             </Badge>
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="p-3 sm:p-6">
         {/* Chart */}
         <div className="overflow-hidden mb-4">
@@ -96,7 +109,10 @@ export function SweepstakesTopReferrers({ data }: SweepstakesTopReferrersProps) 
           <h4 className="font-medium text-sm">Source Performance</h4>
           <div className="space-y-2">
             {data.map((item) => (
-              <div key={item.source} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+              <div
+                key={item.source}
+                className="flex items-center justify-between p-3 bg-muted rounded-lg"
+              >
                 <div className="flex items-center space-x-3">
                   <div className="w-3 h-3 bg-primary rounded-full"></div>
                   <div>
@@ -107,11 +123,18 @@ export function SweepstakesTopReferrers({ data }: SweepstakesTopReferrersProps) 
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-medium text-sm">{item.entries.toLocaleString()}</div>
-                  <div className={`text-xs ${
-                    item.conversionRate > 25 ? 'text-green-600' :
-                    item.conversionRate > 20 ? 'text-yellow-600' : 'text-red-600'
-                  }`}>
+                  <div className="font-medium text-sm">
+                    {item.entries.toLocaleString()}
+                  </div>
+                  <div
+                    className={`text-xs ${
+                      item.conversionRate > 25
+                        ? 'text-green-600'
+                        : item.conversionRate > 20
+                          ? 'text-yellow-600'
+                          : 'text-red-600'
+                    }`}
+                  >
                     {item.conversionRate.toFixed(1)}% conv
                   </div>
                 </div>

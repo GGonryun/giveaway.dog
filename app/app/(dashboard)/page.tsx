@@ -290,7 +290,7 @@ export default function DashboardPage() {
       <DashboardKPICards data={mockKPIData} />
 
       {/* Main Charts Row */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 xl:grid-cols-2">
         <DailyEngagementChart data={mockDailyEngagement} />
         <BotDetectionPieChart
           data={mockBotDetection}
@@ -302,13 +302,13 @@ export default function DashboardPage() {
       </div>
 
       {/* Secondary Charts Row */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 xl:grid-cols-2">
         <ConversionFunnelChart data={mockFunnelData} />
         <EntryVelocityHeatmap data={mockHeatmapData} />
       </div>
 
       {/* Analytics Deep Dive Row */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 xl:grid-cols-2">
         <TimeToEntryAnalytics
           distributionData={mockTimeToEntryDistribution}
           timelineData={mockTimeToEntryTimeline}
@@ -320,7 +320,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Additional Analytics Row */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 xl:grid-cols-2">
         <UserDistributionHistogram data={mockDistributionData} />
         <ReferrersBarChart data={mockReferrerData} />
       </div>

@@ -1,11 +1,24 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Check, X, Eye, Filter, ExternalLink } from "lucide-react";
-import { useState } from "react";
-import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  AlertTriangle,
+  Check,
+  X,
+  Eye,
+  Filter,
+  ExternalLink
+} from 'lucide-react';
+import { useState } from 'react';
+import Link from 'next/link';
 
 // Mock flagged entries data
 const mockFlaggedEntries = [
@@ -52,30 +65,34 @@ interface FlaggedEntry {
   status: 'pending' | 'approved' | 'rejected' | 'reviewed';
 }
 
-export function SweepstakesFlaggedEntries() {
+export const SweepstakesFlaggedEntries = () => {
   const [entries, setEntries] = useState<FlaggedEntry[]>(mockFlaggedEntries);
   const [loading, setLoading] = useState<string | null>(null);
 
-  const handleAction = async (entryId: string, action: 'approve' | 'reject') => {
+  const handleAction = async (
+    entryId: string,
+    action: 'approve' | 'reject'
+  ) => {
     setLoading(entryId);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setEntries(prev => 
-      prev.map(entry => 
-        entry.id === entryId 
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setEntries((prev) =>
+      prev.map((entry) =>
+        entry.id === entryId
           ? { ...entry, status: action === 'approve' ? 'approved' : 'rejected' }
           : entry
       )
     );
-    
+
     setLoading(null);
   };
 
   const getRiskBadge = (score: number) => {
     if (score >= 80) return <Badge variant="destructive">High Risk</Badge>;
-    if (score >= 60) return <Badge className="bg-yellow-500">Medium Risk</Badge>;
+    if (score >= 60)
+      return <Badge className="bg-yellow-500">Medium Risk</Badge>;
     return <Badge variant="secondary">Low Risk</Badge>;
   };
 
@@ -86,13 +103,13 @@ export function SweepstakesFlaggedEntries() {
       rejected: { variant: 'destructive' as const, label: 'Rejected' },
       reviewed: { variant: 'outline' as const, label: 'Reviewed' }
     };
-    
+
     const config = variants[status];
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
-  const pendingEntries = entries.filter(entry => entry.status === 'pending');
-  const reviewedEntries = entries.filter(entry => entry.status !== 'pending');
+  const pendingEntries = entries.filter((entry) => entry.status === 'pending');
+  const reviewedEntries = entries.filter((entry) => entry.status !== 'pending');
 
   return (
     <Card>
@@ -108,7 +125,7 @@ export function SweepstakesFlaggedEntries() {
           Review and moderate suspicious sweepstakes entries
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent className="p-3 sm:p-6">
         <div className="space-y-6">
           {/* Filter Bar */}
@@ -136,32 +153,42 @@ export function SweepstakesFlaggedEntries() {
               <h3 className="font-medium text-sm border-b pb-2">
                 Pending Review ({pendingEntries.length})
               </h3>
-              
+
               <div className="space-y-3">
                 {pendingEntries.map((entry) => (
-                  <div 
-                    key={entry.id} 
+                  <div
+                    key={entry.id}
                     className="border border-yellow-200 bg-yellow-50 p-4 rounded-lg"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
-                          <span className="font-medium text-sm">{entry.userEmail}</span>
+                          <span className="font-medium text-sm">
+                            {entry.userEmail}
+                          </span>
                           {getRiskBadge(entry.riskScore)}
                         </div>
                         <div className="text-xs text-muted-foreground space-y-1">
-                          <div><strong>Reason:</strong> {entry.flagReason}</div>
-                          <div><strong>Sweepstakes:</strong> {entry.sweepstakes}</div>
-                          <div><strong>Entry Count:</strong> {entry.entryCount}</div>
-                          <div><strong>Flagged:</strong> {entry.flaggedAt}</div>
+                          <div>
+                            <strong>Reason:</strong> {entry.flagReason}
+                          </div>
+                          <div>
+                            <strong>Sweepstakes:</strong> {entry.sweepstakes}
+                          </div>
+                          <div>
+                            <strong>Entry Count:</strong> {entry.entryCount}
+                          </div>
+                          <div>
+                            <strong>Flagged:</strong> {entry.flaggedAt}
+                          </div>
                         </div>
                       </div>
-                      
+
                       <Button variant="ghost" size="sm">
                         <Eye className="h-4 w-4" />
                       </Button>
                     </div>
-                    
+
                     <div className="flex items-center space-x-2">
                       <Button
                         size="sm"
@@ -198,15 +225,17 @@ export function SweepstakesFlaggedEntries() {
               <h3 className="font-medium text-sm border-b pb-2">
                 Recently Reviewed ({reviewedEntries.length})
               </h3>
-              
+
               <div className="space-y-2">
                 {reviewedEntries.slice(0, 3).map((entry) => (
-                  <div 
-                    key={entry.id} 
+                  <div
+                    key={entry.id}
                     className="flex items-center justify-between p-3 bg-muted rounded-lg"
                   >
                     <div className="space-y-1">
-                      <div className="font-medium text-sm">{entry.userEmail}</div>
+                      <div className="font-medium text-sm">
+                        {entry.userEmail}
+                      </div>
                       <div className="text-xs text-muted-foreground">
                         {entry.flagReason} • {entry.sweepstakes}
                       </div>
@@ -236,24 +265,26 @@ export function SweepstakesFlaggedEntries() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t text-sm">
             <div>
               <div className="text-muted-foreground">Pending</div>
-              <div className="font-medium text-yellow-600">{pendingEntries.length}</div>
+              <div className="font-medium text-yellow-600">
+                {pendingEntries.length}
+              </div>
             </div>
             <div>
               <div className="text-muted-foreground">Approved</div>
               <div className="font-medium text-green-600">
-                {entries.filter(e => e.status === 'approved').length}
+                {entries.filter((e) => e.status === 'approved').length}
               </div>
             </div>
             <div>
               <div className="text-muted-foreground">Rejected</div>
               <div className="font-medium text-red-600">
-                {entries.filter(e => e.status === 'rejected').length}
+                {entries.filter((e) => e.status === 'rejected').length}
               </div>
             </div>
             <div>
               <div className="text-muted-foreground">High Risk</div>
               <div className="font-medium text-red-600">
-                {entries.filter(e => e.riskScore >= 80).length}
+                {entries.filter((e) => e.riskScore >= 80).length}
               </div>
             </div>
           </div>

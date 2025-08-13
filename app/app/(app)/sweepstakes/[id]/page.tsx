@@ -1,20 +1,12 @@
-"use client";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SweepstakesDetailHeader } from "./components/sweepstakes-detail-header";
-import { SweepstakesPreview } from "./components/sweepstakes-preview";
-import { SweepstakesDetailAnalytics } from "./components/sweepstakes-detail-analytics";
-import { SweepstakesPromotion } from "./components/sweepstakes-promotion";
-import { SweepstakesEntries } from "./components/sweepstakes-entries";
-import { SweepstakesExport } from "./components/sweepstakes-export";
-import { SweepstakesSettings } from "./components/sweepstakes-settings";
-import { SweepstakesWinners } from "./components/sweepstakes-winners";
+import { SweepstakesDetailHeader } from './components/sweepstakes-detail-header';
+import { SweepstakesTabs } from './components/sweepstakes-tabs';
 
 // Mock data for individual sweepstakes
 const mockSweepstakesDetails = {
   id: '1',
   title: 'iPhone 15 Pro Max Giveaway',
-  description: 'Win the latest iPhone 15 Pro Max in Titanium Blue. Enter now for your chance to win this incredible device worth over $1,200!',
+  description:
+    'Win the latest iPhone 15 Pro Max in Titanium Blue. Enter now for your chance to win this incredible device worth over $1,200!',
   status: 'active' as const,
   prize: '$1,200 iPhone 15 Pro Max',
   entries: 5432,
@@ -38,6 +30,8 @@ const mockDetailedAnalytics = {
     uniqueEntrantsChange: 12.7,
     conversionRate: 7.8,
     conversionRateChange: -2.1,
+    newLeads30d: 3642,
+    newLeads30dChange: 18.5,
     avgTimeToEntry: 87,
     avgTimeToEntryChange: -8.3,
     botRate: 8.2,
@@ -68,10 +62,24 @@ const mockDetailedAnalytics = {
     { country: 'Australia', entries: 432, percentage: 8.0 },
     { country: 'Germany', entries: 321, percentage: 5.9 }
   ],
+  referrerData: [
+    { source: 'Instagram', visits: 28894, entries: 2456, conversionRate: 8.5, percentage: 45.2 },
+    { source: 'Twitter/X', visits: 14515, entries: 987, conversionRate: 6.8, percentage: 18.2 },
+    { source: 'Direct', visits: 5450, entries: 654, conversionRate: 12.0, percentage: 12.0 },
+    { source: 'Facebook', visits: 8308, entries: 432, conversionRate: 5.2, percentage: 8.0 },
+    { source: 'YouTube', visits: 3527, entries: 321, conversionRate: 9.1, percentage: 5.9 }
+  ],
   deviceData: [
     { device: 'Mobile', entries: 3789, percentage: 69.8 },
     { device: 'Desktop', entries: 1234, percentage: 22.7 },
     { device: 'Tablet', entries: 409, percentage: 7.5 }
+  ],
+  botDetectionData: [
+    { reason: 'Multiple IPs', count: 234, percentage: 4.3, severity: 'high' as const },
+    { reason: 'Fast Entry', count: 156, percentage: 2.9, severity: 'medium' as const },
+    { reason: 'Suspicious Email', count: 89, percentage: 1.6, severity: 'medium' as const },
+    { reason: 'VPN/Proxy', count: 67, percentage: 1.2, severity: 'low' as const },
+    { reason: 'Bot Pattern', count: 45, percentage: 0.8, severity: 'high' as const }
   ]
 };
 
@@ -79,64 +87,22 @@ interface SweepstakesDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function SweepstakesDetailPage({ params }: SweepstakesDetailPageProps) {
+export default async function SweepstakesDetailPage({
+  params
+}: SweepstakesDetailPageProps) {
   const { id: sweepstakesId } = await params;
-  
+
   return (
     <div className="space-y-6">
       {/* Header with key info and actions */}
       <SweepstakesDetailHeader sweepstakes={mockSweepstakesDetails} />
-      
+
       {/* Main Content with Tabs */}
-      <Tabs defaultValue="analytics" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7">
-          <TabsTrigger value="preview">Preview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="promotion">Promotion</TabsTrigger>
-          <TabsTrigger value="entries">Entries</TabsTrigger>
-          <TabsTrigger value="export">Export</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
-          <TabsTrigger value="winners">Winners</TabsTrigger>
-        </TabsList>
-
-        {/* Preview Tab */}
-        <TabsContent value="preview" className="space-y-6">
-          <SweepstakesPreview sweepstakes={mockSweepstakesDetails} />
-        </TabsContent>
-
-        {/* Analytics Tab */}
-        <TabsContent value="analytics" className="space-y-6">
-          <SweepstakesDetailAnalytics 
-            sweepstakesId={sweepstakesId}
-            data={mockDetailedAnalytics} 
-          />
-        </TabsContent>
-
-        {/* Promotion Tab */}
-        <TabsContent value="promotion" className="space-y-6">
-          <SweepstakesPromotion sweepstakes={mockSweepstakesDetails} />
-        </TabsContent>
-
-        {/* Entries Tab */}
-        <TabsContent value="entries" className="space-y-6">
-          <SweepstakesEntries sweepstakesId={sweepstakesId} />
-        </TabsContent>
-
-        {/* Export Tab */}
-        <TabsContent value="export" className="space-y-6">
-          <SweepstakesExport sweepstakesId={sweepstakesId} />
-        </TabsContent>
-
-        {/* Settings Tab */}
-        <TabsContent value="settings" className="space-y-6">
-          <SweepstakesSettings sweepstakes={mockSweepstakesDetails} />
-        </TabsContent>
-
-        {/* Winners Tab */}
-        <TabsContent value="winners" className="space-y-6">
-          <SweepstakesWinners sweepstakesId={sweepstakesId} />
-        </TabsContent>
-      </Tabs>
+      <SweepstakesTabs
+        sweepstakesId={sweepstakesId}
+        sweepstakes={mockSweepstakesDetails}
+        detailedAnalytics={mockDetailedAnalytics}
+      />
     </div>
   );
 }

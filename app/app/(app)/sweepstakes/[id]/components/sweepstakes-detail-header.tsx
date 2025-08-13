@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import {
   ArrowLeft,
   Play,
@@ -25,8 +25,8 @@ import {
   Target,
   Clock,
   Gift
-} from "lucide-react";
-import Link from "next/link";
+} from 'lucide-react';
+import Link from 'next/link';
 
 interface SweepstakesDetails {
   id: string;
@@ -51,7 +51,9 @@ interface SweepstakesDetailHeaderProps {
   sweepstakes: SweepstakesDetails;
 }
 
-export function SweepstakesDetailHeader({ sweepstakes }: SweepstakesDetailHeaderProps) {
+export const SweepstakesDetailHeader = ({
+  sweepstakes
+}: SweepstakesDetailHeaderProps) => {
   const getStatusBadge = (status: SweepstakesDetails['status']) => {
     const variants = {
       active: { variant: 'default' as const, label: 'Active' },
@@ -60,7 +62,7 @@ export function SweepstakesDetailHeader({ sweepstakes }: SweepstakesDetailHeader
       paused: { variant: 'outline' as const, label: 'Paused' },
       completed: { variant: 'secondary' as const, label: 'Completed' }
     };
-    
+
     const config = variants[status];
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
@@ -82,7 +84,7 @@ export function SweepstakesDetailHeader({ sweepstakes }: SweepstakesDetailHeader
                   Back to Sweepstakes
                 </Link>
               </Button>
-              
+
               <div className="space-y-2">
                 <div className="flex items-center space-x-3">
                   <h1 className="text-2xl font-bold">{sweepstakes.title}</h1>
@@ -98,7 +100,10 @@ export function SweepstakesDetailHeader({ sweepstakes }: SweepstakesDetailHeader
                   </div>
                   <div className="flex items-center space-x-1">
                     <Calendar className="h-4 w-4" />
-                    <span>Created {new Date(sweepstakes.createdAt).toLocaleDateString()}</span>
+                    <span>
+                      Created{' '}
+                      {new Date(sweepstakes.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <Clock className="h-4 w-4" />
@@ -108,56 +113,112 @@ export function SweepstakesDetailHeader({ sweepstakes }: SweepstakesDetailHeader
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Action Buttons - Responsive */}
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" asChild>
-                <Link href={sweepstakes.landingPageUrl} target="_blank">
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  View Live
-                </Link>
-              </Button>
-              
-              <Button variant="outline" size="sm" onClick={() => copyToClipboard(sweepstakes.shareUrl)}>
-                <Share className="h-4 w-4 mr-2" />
-                Share
-              </Button>
-              
-              {sweepstakes.status === 'active' && (
-                <Button variant="outline" size="sm">
-                  <Pause className="h-4 w-4 mr-2" />
-                  Pause
+              {/* Desktop Actions */}
+              <div className="hidden md:flex items-center space-x-2">
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={sweepstakes.landingPageUrl} target="_blank">
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    View Live
+                  </Link>
                 </Button>
-              )}
-              
-              {sweepstakes.status === 'paused' && (
-                <Button variant="default" size="sm">
-                  <Play className="h-4 w-4 mr-2" />
-                  Resume
-                </Button>
-              )}
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard(sweepstakes.shareUrl)}
+                >
+                  <Share className="h-4 w-4 mr-2" />
+                  Share
+                </Button>
+
+                {sweepstakes.status === 'active' && (
                   <Button variant="outline" size="sm">
-                    <MoreHorizontal className="h-4 w-4" />
+                    <Pause className="h-4 w-4 mr-2" />
+                    Pause
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit Details
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Copy className="h-4 w-4 mr-2" />
-                    Duplicate
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Advanced Settings
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                )}
+
+                {sweepstakes.status === 'paused' && (
+                  <Button variant="default" size="sm">
+                    <Play className="h-4 w-4 mr-2" />
+                    Resume
+                  </Button>
+                )}
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Details
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Copy className="h-4 w-4 mr-2" />
+                      Duplicate
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <Settings className="h-4 w-4 mr-2" />
+                      Advanced Settings
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {/* Mobile Actions - All in dropdown */}
+              <div className="md:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem asChild>
+                      <Link href={sweepstakes.landingPageUrl} target="_blank">
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        View Live
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => copyToClipboard(sweepstakes.shareUrl)}>
+                      <Share className="h-4 w-4 mr-2" />
+                      Share
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {sweepstakes.status === 'active' && (
+                      <DropdownMenuItem>
+                        <Pause className="h-4 w-4 mr-2" />
+                        Pause
+                      </DropdownMenuItem>
+                    )}
+                    {sweepstakes.status === 'paused' && (
+                      <DropdownMenuItem>
+                        <Play className="h-4 w-4 mr-2" />
+                        Resume
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Details
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Copy className="h-4 w-4 mr-2" />
+                      Duplicate
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <Settings className="h-4 w-4 mr-2" />
+                      Advanced Settings
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
 
@@ -168,27 +229,39 @@ export function SweepstakesDetailHeader({ sweepstakes }: SweepstakesDetailHeader
                 <Users className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm font-medium">Entries</span>
               </div>
-              <div className="text-2xl font-bold">{sweepstakes.entries.toLocaleString()}</div>
+              <div className="text-2xl font-bold">
+                {sweepstakes.entries.toLocaleString()}
+              </div>
               <div className="text-xs text-muted-foreground">
                 {sweepstakes.uniqueEntrants.toLocaleString()} unique
               </div>
             </div>
-            
+
             <div className="bg-muted rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-1">
                 <Target className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm font-medium">Conversion</span>
               </div>
-              <div className="text-2xl font-bold">{sweepstakes.conversionRate.toFixed(1)}%</div>
-              <div className={`text-xs ${
-                sweepstakes.conversionRate > 8 ? 'text-green-600' : 
-                sweepstakes.conversionRate > 5 ? 'text-yellow-600' : 'text-red-600'
-              }`}>
-                {sweepstakes.conversionRate > 8 ? 'Excellent' : 
-                 sweepstakes.conversionRate > 5 ? 'Good' : 'Needs work'}
+              <div className="text-2xl font-bold">
+                {sweepstakes.conversionRate.toFixed(1)}%
+              </div>
+              <div
+                className={`text-xs ${
+                  sweepstakes.conversionRate > 8
+                    ? 'text-green-600'
+                    : sweepstakes.conversionRate > 5
+                      ? 'text-yellow-600'
+                      : 'text-red-600'
+                }`}
+              >
+                {sweepstakes.conversionRate > 8
+                  ? 'Excellent'
+                  : sweepstakes.conversionRate > 5
+                    ? 'Good'
+                    : 'Needs work'}
               </div>
             </div>
-            
+
             <div className="bg-muted rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-1">
                 <Clock className="h-4 w-4 text-muted-foreground" />
@@ -199,7 +272,7 @@ export function SweepstakesDetailHeader({ sweepstakes }: SweepstakesDetailHeader
                 Ends {new Date(sweepstakes.endsAt).toLocaleDateString()}
               </div>
             </div>
-            
+
             <div className="bg-muted rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-1">
                 <Share className="h-4 w-4 text-muted-foreground" />

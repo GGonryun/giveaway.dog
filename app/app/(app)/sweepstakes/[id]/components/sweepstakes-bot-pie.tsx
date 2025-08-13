@@ -1,12 +1,22 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Shield, AlertTriangle, Eye, Filter } from "lucide-react";
-import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent
+} from '@/components/ui/chart';
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Shield, AlertTriangle, Eye, Filter } from 'lucide-react';
+import { useState } from 'react';
 
 interface BotDetectionData {
   reason: string;
@@ -20,23 +30,26 @@ interface SweepstakesBotPieProps {
 }
 
 const COLORS = {
-  high: '#ef4444',     // red-500
-  medium: '#f59e0b',   // amber-500  
-  low: '#10b981'       // emerald-500
+  high: '#ef4444', // red-500
+  medium: '#f59e0b', // amber-500
+  low: '#10b981' // emerald-500
 };
 
 const chartConfig = {
   count: {
-    label: "Flagged Entries"
+    label: 'Flagged Entries'
   }
 };
 
-export function SweepstakesBotPie({ data }: SweepstakesBotPieProps) {
+export const SweepstakesBotPie = ({ data }: SweepstakesBotPieProps) => {
   const [selectedSlice, setSelectedSlice] = useState<string | null>(null);
-  
+
   const totalFlagged = data.reduce((sum, item) => sum + item.count, 0);
-  const highRiskCount = data.filter(item => item.severity === 'high').reduce((sum, item) => sum + item.count, 0);
-  const highRiskPercentage = totalFlagged > 0 ? (highRiskCount / totalFlagged) * 100 : 0;
+  const highRiskCount = data
+    .filter((item) => item.severity === 'high')
+    .reduce((sum, item) => sum + item.count, 0);
+  const highRiskPercentage =
+    totalFlagged > 0 ? (highRiskCount / totalFlagged) * 100 : 0;
 
   const getSeverityBadge = (severity: BotDetectionData['severity']) => {
     const variants = {
@@ -44,9 +57,13 @@ export function SweepstakesBotPie({ data }: SweepstakesBotPieProps) {
       medium: { variant: 'secondary' as const, label: 'Medium Risk' },
       low: { variant: 'default' as const, label: 'Low Risk' }
     };
-    
+
     const config = variants[severity];
-    return <Badge variant={config.variant} className="text-xs">{config.label}</Badge>;
+    return (
+      <Badge variant={config.variant} className="text-xs">
+        {config.label}
+      </Badge>
+    );
   };
 
   const handleSliceClick = (entry: any, index: number) => {
@@ -70,10 +87,8 @@ export function SweepstakesBotPie({ data }: SweepstakesBotPieProps) {
             <Badge variant="destructive">{totalFlagged}</Badge>
           )}
         </CardTitle>
-        <CardDescription>
-          Flagged entries by detection reason
-        </CardDescription>
-        
+        <CardDescription>Flagged entries by detection reason</CardDescription>
+
         {/* Key Metrics */}
         <div className="flex items-center space-x-4 pt-2 text-sm">
           <div>
@@ -84,23 +99,30 @@ export function SweepstakesBotPie({ data }: SweepstakesBotPieProps) {
           </div>
           <div>
             <span className="text-muted-foreground">Total flagged:</span>
-            <span className="font-medium ml-1">{totalFlagged.toLocaleString()}</span>
+            <span className="font-medium ml-1">
+              {totalFlagged.toLocaleString()}
+            </span>
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="p-3 sm:p-6">
         {totalFlagged === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Shield className="h-8 w-8 mx-auto mb-2 opacity-50 text-green-500" />
-            <p className="text-green-600 font-medium">No suspicious entries detected</p>
+            <p className="text-green-600 font-medium">
+              No suspicious entries detected
+            </p>
             <p className="text-xs">All entries passed security checks</p>
           </div>
         ) : (
           <div className="space-y-4">
             {/* Pie Chart */}
             <div className="overflow-hidden">
-              <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+              <ChartContainer
+                config={chartConfig}
+                className="min-h-[200px] w-full"
+              >
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -116,15 +138,17 @@ export function SweepstakesBotPie({ data }: SweepstakesBotPieProps) {
                       className="cursor-pointer"
                     >
                       {data.map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
+                        <Cell
+                          key={`cell-${index}`}
                           fill={COLORS[entry.severity]}
-                          stroke={selectedSlice === entry.reason ? "#000" : "none"}
+                          stroke={
+                            selectedSlice === entry.reason ? '#000' : 'none'
+                          }
                           strokeWidth={selectedSlice === entry.reason ? 2 : 0}
                         />
                       ))}
                     </Pie>
-                    <ChartTooltip 
+                    <ChartTooltip
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
@@ -132,7 +156,8 @@ export function SweepstakesBotPie({ data }: SweepstakesBotPieProps) {
                             <div className="bg-background border rounded-lg p-2 shadow-md">
                               <div className="font-medium">{data.reason}</div>
                               <div className="text-sm text-muted-foreground">
-                                {data.count} entries ({data.percentage.toFixed(1)}%)
+                                {data.count} entries (
+                                {data.percentage.toFixed(1)}%)
                               </div>
                               <div className="mt-1">
                                 {getSeverityBadge(data.severity)}
@@ -157,21 +182,25 @@ export function SweepstakesBotPie({ data }: SweepstakesBotPieProps) {
                   Filter
                 </Button>
               </div>
-              
+
               <div className="space-y-2">
                 {data.map((item) => (
-                  <div 
-                    key={item.reason} 
+                  <div
+                    key={item.reason}
                     className={`flex items-center justify-between p-3 rounded-lg border transition-colors cursor-pointer ${
-                      selectedSlice === item.reason 
-                        ? 'border-primary bg-primary/5' 
+                      selectedSlice === item.reason
+                        ? 'border-primary bg-primary/5'
                         : 'border-muted hover:bg-muted/50'
                     }`}
-                    onClick={() => setSelectedSlice(selectedSlice === item.reason ? null : item.reason)}
+                    onClick={() =>
+                      setSelectedSlice(
+                        selectedSlice === item.reason ? null : item.reason
+                      )
+                    }
                   >
                     <div className="flex items-center space-x-3">
-                      <div 
-                        className="w-3 h-3 rounded-full" 
+                      <div
+                        className="w-3 h-3 rounded-full"
                         style={{ backgroundColor: COLORS[item.severity] }}
                       />
                       <div>
@@ -184,11 +213,13 @@ export function SweepstakesBotPie({ data }: SweepstakesBotPieProps) {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-2">
                       <div className="text-right">
                         <div className="font-medium">{item.count}</div>
-                        <div className="text-xs text-muted-foreground">entries</div>
+                        <div className="text-xs text-muted-foreground">
+                          entries
+                        </div>
                       </div>
                       <Button variant="ghost" size="sm">
                         <Eye className="h-3 w-3" />
@@ -205,9 +236,12 @@ export function SweepstakesBotPie({ data }: SweepstakesBotPieProps) {
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h5 className="font-medium text-blue-800">{selectedSlice}</h5>
+                      <h5 className="font-medium text-blue-800">
+                        {selectedSlice}
+                      </h5>
                       <p className="text-sm text-blue-600 mt-1">
-                        Click "View Entries" to see detailed information about flagged entries for this reason.
+                        Click "View Entries" to see detailed information about
+                        flagged entries for this reason.
                       </p>
                     </div>
                     <Button variant="outline" size="sm">

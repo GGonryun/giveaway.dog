@@ -1,11 +1,17 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Eye, Mail, MailCheck, MailX, Users, ExternalLink } from "lucide-react";
-import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Eye, Mail, MailCheck, MailX, Users, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 
 // Mock data for latest users
 const mockLatestUsers = [
@@ -77,7 +83,7 @@ interface NewUser {
   sweepstakes: string[];
 }
 
-export function SweepstakesLatestUsers() {
+export const SweepstakesLatestUsers = () => {
   const getEmailStatusIcon = (status: NewUser['emailStatus']) => {
     switch (status) {
       case 'verified':
@@ -95,7 +101,7 @@ export function SweepstakesLatestUsers() {
       pending: 'secondary' as const,
       bounced: 'destructive' as const
     };
-    
+
     return (
       <Badge variant={variants[status]} className="text-xs capitalize">
         {status}
@@ -104,13 +110,28 @@ export function SweepstakesLatestUsers() {
   };
 
   const getQualityScoreBadge = (score: number) => {
-    if (score >= 80) return <Badge className="text-xs bg-green-500">High</Badge>;
-    if (score >= 60) return <Badge variant="secondary" className="text-xs">Medium</Badge>;
-    return <Badge variant="destructive" className="text-xs">Low</Badge>;
+    if (score >= 80)
+      return <Badge className="text-xs bg-green-500">High</Badge>;
+    if (score >= 60)
+      return (
+        <Badge variant="secondary" className="text-xs">
+          Medium
+        </Badge>
+      );
+    return (
+      <Badge variant="destructive" className="text-xs">
+        Low
+      </Badge>
+    );
   };
 
   const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   return (
@@ -125,7 +146,7 @@ export function SweepstakesLatestUsers() {
           Recently registered users across all sweepstakes
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent className="p-3 sm:p-6">
         <div className="space-y-4">
           {mockLatestUsers.length === 0 ? (
@@ -135,8 +156,8 @@ export function SweepstakesLatestUsers() {
             </div>
           ) : (
             mockLatestUsers.map((user, index) => (
-              <div 
-                key={user.id} 
+              <div
+                key={user.id}
                 className={`border rounded-lg p-4 hover:bg-muted/30 transition-all duration-200 ${
                   index % 2 === 0 ? 'bg-card' : 'bg-muted/20'
                 } hover:shadow-sm`}
@@ -148,7 +169,7 @@ export function SweepstakesLatestUsers() {
                       {getInitials(user.name)}
                     </AvatarFallback>
                   </Avatar>
-                  
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-2">
                       <div className="space-y-1">
@@ -168,41 +189,55 @@ export function SweepstakesLatestUsers() {
                         </Link>
                       </Button>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                       <div>
-                        <span className="text-muted-foreground block">Source</span>
+                        <span className="text-muted-foreground block">
+                          Source
+                        </span>
                         <div className="font-medium bg-primary/10 px-2 py-1 rounded text-center">
                           {user.firstSource}
                         </div>
                       </div>
                       <div>
-                        <span className="text-muted-foreground block">Location</span>
+                        <span className="text-muted-foreground block">
+                          Location
+                        </span>
                         <div className="font-medium bg-secondary/50 px-2 py-1 rounded text-center">
                           {user.location || 'Unknown'}
                         </div>
                       </div>
                       <div>
-                        <span className="text-muted-foreground block">Entries</span>
+                        <span className="text-muted-foreground block">
+                          Entries
+                        </span>
                         <div className="font-bold text-lg text-center text-blue-600">
                           {user.entries}
                         </div>
                       </div>
                       <div>
-                        <span className="text-muted-foreground block">Signed up</span>
+                        <span className="text-muted-foreground block">
+                          Signed up
+                        </span>
                         <div className="font-medium text-center text-green-600">
                           {user.signupTime}
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Sweepstakes Participation */}
                     <div className="mt-2 pt-2 border-t">
                       <div className="flex items-center space-x-2 text-xs">
-                        <span className="text-muted-foreground">Participating in:</span>
+                        <span className="text-muted-foreground">
+                          Participating in:
+                        </span>
                         <div className="flex flex-wrap gap-1">
                           {user.sweepstakes.map((sweepstake, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
+                            <Badge
+                              key={idx}
+                              variant="outline"
+                              className="text-xs"
+                            >
                               {sweepstake}
                             </Badge>
                           ))}
@@ -226,19 +261,25 @@ export function SweepstakesLatestUsers() {
             <div>
               <div className="text-muted-foreground">Verified</div>
               <div className="font-medium text-green-600">
-                {mockLatestUsers.filter(u => u.emailStatus === 'verified').length}
+                {
+                  mockLatestUsers.filter((u) => u.emailStatus === 'verified')
+                    .length
+                }
               </div>
             </div>
             <div>
               <div className="text-muted-foreground">High Quality</div>
               <div className="font-medium text-blue-600">
-                {mockLatestUsers.filter(u => u.qualityScore >= 80).length}
+                {mockLatestUsers.filter((u) => u.qualityScore >= 80).length}
               </div>
             </div>
             <div>
               <div className="text-muted-foreground">Avg Entries</div>
               <div className="font-medium">
-                {(mockLatestUsers.reduce((sum, u) => sum + u.entries, 0) / mockLatestUsers.length).toFixed(1)}
+                {(
+                  mockLatestUsers.reduce((sum, u) => sum + u.entries, 0) /
+                  mockLatestUsers.length
+                ).toFixed(1)}
               </div>
             </div>
           </div>
