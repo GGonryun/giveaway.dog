@@ -1,13 +1,25 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { SweepstakesFilterBar } from './sweepstakes-simple-filter-bar';
 import { SweepstakesPagination } from './sweepstakes-pagination';
-import { DateRange } from 'react-day-picker';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
 import {
   Table,
   TableBody,
@@ -38,7 +50,12 @@ import {
   Clock,
   ArrowUpDown,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  Search,
+  Filter,
+  X,
+  RefreshCcw,
+  BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -61,16 +78,236 @@ interface SweepstakesTableProps {
   sortField?: SortField | null;
   sortDirection?: SortDirection;
   onSort?: (field: SortField) => void;
+  searchQuery?: string;
+  onSearchChange?: (value: string) => void;
+  filters?: {
+    status: string;
+    dateRange: string;
+    conversionRange: { min: number; max: number };
+  };
+  onFiltersChange?: (filters: any) => void;
 }
 
 interface SweepstakesTableWithFiltersProps {
   sweepstakes: SweepstakesItem[];
 }
 
-export function SweepstakesTable({ sweepstakes, sortField, sortDirection, onSort }: SweepstakesTableProps) {
+// Search and Filter Components
+function SweepstakesSearchBar({
+  value,
+  onChange,
+  placeholder = 'Search sweepstakes...'
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}) {
+  const [localValue, setLocalValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onChange(localValue);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [localValue, onChange]);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  const handleClear = () => {
+    setLocalValue('');
+    onChange('');
+  };
+
+  return (
+    <div className="relative flex-1">
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <Input
+        type="text"
+        placeholder={placeholder}
+        value={localValue}
+        onChange={(e) => setLocalValue(e.target.value)}
+        className="pl-9 pr-9"
+      />
+      {localValue && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleClear}
+          className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-muted rounded"
+        >
+          <X className="h-3 w-3" />
+        </Button>
+      )}
+    </div>
+  );
+}
+
+function SweepstakesFilterDialog({
+  filters,
+  onChange
+}: {
+  filters: {
+    status: string;
+    dateRange: string;
+    conversionRange: { min: number; max: number };
+  };
+  onChange: (filters: any) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [localFilters, setLocalFilters] = useState(filters);
+
+  useEffect(() => {
+    if (isOpen) {
+      setLocalFilters(filters);
+    }
+  }, [isOpen, filters]);
+
+  const updateLocalFilter = (key: string, value: any) => {
+    setLocalFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleApply = () => {
+    onChange(localFilters);
+    setIsOpen(false);
+  };
+
+  const handleCancel = () => {
+    setLocalFilters(filters);
+    setIsOpen(false);
+  };
+
+  const resetFilters = () => {
+    const defaultFilters = {
+      status: 'all',
+      dateRange: 'all',
+      conversionRange: { min: 0, max: 100 }
+    };
+    setLocalFilters(defaultFilters);
+  };
+
+  const getActiveFiltersCount = () => {
+    let count = 0;
+    if (filters.status !== 'all') count++;
+    if (filters.dateRange !== 'all') count++;
+    if (filters.conversionRange.min > 0 || filters.conversionRange.max < 100)
+      count++;
+    return count;
+  };
+
+  const activeFiltersCount = getActiveFiltersCount();
+
+  return (
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" className="relative">
+          <Filter className="h-4 w-4 mr-1" />
+          Filters
+          {activeFiltersCount > 0 && (
+            <Badge
+              variant="destructive"
+              className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs"
+            >
+              {activeFiltersCount}
+            </Badge>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 max-h-[80vh] overflow-y-auto" align="end">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="font-medium">Filters</h4>
+            <Button variant="ghost" size="sm" onClick={resetFilters}>
+              <RefreshCcw className="h-4 w-4 mr-1" />
+              Reset
+            </Button>
+          </div>
+
+          <Separator />
+
+          {/* Status Filter */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium flex items-center">
+              <BarChart3 className="h-4 w-4 mr-1" />
+              Status
+            </label>
+            <Select
+              value={localFilters.status}
+              onValueChange={(value) => updateLocalFilter('status', value)}
+            >
+              <SelectTrigger className="h-9">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="ending-soon">Ending Soon</SelectItem>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="paused">Paused</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Date Range Filter */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium flex items-center">
+              <Calendar className="h-4 w-4 mr-1" />
+              Date Range
+            </label>
+            <Select
+              value={localFilters.dateRange}
+              onValueChange={(value) => updateLocalFilter('dateRange', value)}
+            >
+              <SelectTrigger className="h-9">
+                <SelectValue placeholder="Select date range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Time</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="7d">Last 7 days</SelectItem>
+                <SelectItem value="30d">Last 30 days</SelectItem>
+                <SelectItem value="90d">Last 90 days</SelectItem>
+                <SelectItem value="1y">Last year</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Separator />
+
+          {/* Apply/Cancel Buttons */}
+          <div className="grid grid-cols-2 gap-2">
+            <Button variant="outline" size="sm" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button size="sm" onClick={handleApply}>
+              Apply
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+export function SweepstakesTable({
+  sweepstakes,
+  sortField,
+  sortDirection,
+  onSort,
+  searchQuery = '',
+  onSearchChange,
+  filters,
+  onFiltersChange
+}: SweepstakesTableProps) {
   // Helper component for sortable headers
-  const SortableHeader = ({ field, children, className = "" }: { 
-    field: SortField; 
+  const SortableHeader = ({
+    field,
+    children,
+    className = ''
+  }: {
+    field: SortField;
     children: React.ReactNode;
     className?: string;
   }) => {
@@ -86,7 +323,7 @@ export function SweepstakesTable({ sweepstakes, sortField, sortDirection, onSort
     };
 
     return (
-      <TableHead 
+      <TableHead
         className={`cursor-pointer hover:bg-muted/50 select-none ${className}`}
         onClick={() => onSort(field)}
       >
@@ -150,12 +387,31 @@ export function SweepstakesTable({ sweepstakes, sortField, sortDirection, onSort
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="space-y-4">
         <CardTitle className="flex items-center space-x-2">
           <Calendar className="h-5 w-5" />
           <span>All Sweepstakes</span>
           <Badge variant="secondary">{sweepstakes.length}</Badge>
         </CardTitle>
+
+        {/* Search and Filters */}
+        {(onSearchChange || onFiltersChange) && (
+          <div className="flex flex-col sm:flex-row gap-3">
+            {onSearchChange && (
+              <SweepstakesSearchBar
+                value={searchQuery}
+                onChange={onSearchChange}
+                placeholder="Search sweepstakes by title, prize, status..."
+              />
+            )}
+            {onFiltersChange && filters && (
+              <SweepstakesFilterDialog
+                filters={filters}
+                onChange={onFiltersChange}
+              />
+            )}
+          </div>
+        )}
       </CardHeader>
       <CardContent className="p-0">
         {/* Mobile Card View */}
@@ -295,11 +551,19 @@ export function SweepstakesTable({ sweepstakes, sortField, sortDirection, onSort
           <Table>
             <TableHeader>
               <TableRow>
-                <SortableHeader field="title" className="w-[300px]">Sweepstakes</SortableHeader>
+                <SortableHeader field="title" className="w-[300px]">
+                  Sweepstakes
+                </SortableHeader>
                 <SortableHeader field="status">Status</SortableHeader>
-                <SortableHeader field="entries" className="text-right">Entries</SortableHeader>
-                <SortableHeader field="conversionRate" className="text-right">Conversion</SortableHeader>
-                <SortableHeader field="botRate" className="text-right">Bot Rate</SortableHeader>
+                <SortableHeader field="entries" className="text-right">
+                  Entries
+                </SortableHeader>
+                <SortableHeader field="conversionRate" className="text-right">
+                  Conversion
+                </SortableHeader>
+                <SortableHeader field="botRate" className="text-right">
+                  Bot Rate
+                </SortableHeader>
                 <TableHead>Time Left</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -449,7 +713,13 @@ export function SweepstakesTable({ sweepstakes, sortField, sortDirection, onSort
   );
 }
 
-type SortField = 'title' | 'status' | 'entries' | 'conversionRate' | 'botRate' | 'createdAt';
+type SortField =
+  | 'title'
+  | 'status'
+  | 'entries'
+  | 'conversionRate'
+  | 'botRate'
+  | 'createdAt';
 type SortDirection = 'asc' | 'desc' | null;
 
 export function SweepstakesTableWithFilters({
@@ -460,9 +730,14 @@ export function SweepstakesTableWithFilters({
 
   // Initialize state from URL params
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [statusFilter, setStatusFilter] = useState(
-    searchParams.get('status') || 'all'
-  );
+  const [filters, setFilters] = useState({
+    status: searchParams.get('status') || 'all',
+    dateRange: searchParams.get('dateRange') || 'all',
+    conversionRange: {
+      min: Number(searchParams.get('conversionMin')) || 0,
+      max: Number(searchParams.get('conversionMax')) || 100
+    }
+  });
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get('page')) || 1
   );
@@ -476,38 +751,18 @@ export function SweepstakesTableWithFilters({
     (searchParams.get('sortDir') as SortDirection) || null
   );
 
-  // Initialize date range from URL params
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
-    const fromParam = searchParams.get('dateFrom');
-    const toParam = searchParams.get('dateTo');
-
-    if (fromParam) {
-      return {
-        from: new Date(fromParam),
-        to: toParam ? new Date(toParam) : undefined
-      };
-    }
-    return undefined;
-  });
-
   const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
-  const [isSearching, setIsSearching] = useState(false);
 
-  // Debounce search query with loading state
+  // Debounce search query
   useEffect(() => {
-    if (searchQuery !== debouncedQuery) {
-      setIsSearching(true);
-    }
-
     const handler = setTimeout(() => {
       setDebouncedQuery(searchQuery);
-      setIsSearching(false);
     }, 300);
 
     return () => {
       clearTimeout(handler);
     };
-  }, [searchQuery, debouncedQuery]);
+  }, [searchQuery]);
 
   // Update URL when filters change
   const updateURL = useCallback(
@@ -538,7 +793,7 @@ export function SweepstakesTableWithFilters({
   // Handle column sorting
   const handleSort = (field: SortField) => {
     let newDirection: SortDirection = 'asc';
-    
+
     if (sortField === field) {
       if (sortDirection === 'asc') {
         newDirection = 'desc';
@@ -548,7 +803,7 @@ export function SweepstakesTableWithFilters({
         newDirection = 'asc';
       }
     }
-    
+
     setSortField(newDirection ? field : null);
     setSortDirection(newDirection);
     setCurrentPage(1); // Reset to first page when sorting changes
@@ -558,26 +813,26 @@ export function SweepstakesTableWithFilters({
   useEffect(() => {
     updateURL({
       q: debouncedQuery,
-      status: statusFilter,
+      status: filters.status,
+      dateRange: filters.dateRange,
+      conversionMin: filters.conversionRange.min,
+      conversionMax: filters.conversionRange.max,
       page: currentPage,
       size: pageSize,
-      dateFrom: dateRange?.from?.toISOString().split('T')[0] || '',
-      dateTo: dateRange?.to?.toISOString().split('T')[0] || '',
       sortField: sortField || '',
       sortDir: sortDirection || ''
     });
   }, [
     debouncedQuery,
-    statusFilter,
+    filters,
     currentPage,
     pageSize,
-    dateRange,
     sortField,
     sortDirection,
     updateURL
   ]);
 
-  // Enhanced filtering with more searchable fields and date range
+  // Enhanced filtering with more searchable fields
   const filteredData = allSweepstakes.filter((sweepstakes) => {
     const query = debouncedQuery.toLowerCase().trim();
 
@@ -587,72 +842,108 @@ export function SweepstakesTableWithFilters({
       sweepstakes.prize.toLowerCase().includes(query) ||
       sweepstakes.topSource.toLowerCase().includes(query) ||
       sweepstakes.entries.toString().includes(query) ||
-      // Search by status
       sweepstakes.status.toLowerCase().includes(query) ||
-      // Search by date
       sweepstakes.createdAt.includes(query) ||
-      // Search by time left
       sweepstakes.timeLeft.toLowerCase().includes(query);
 
     const matchesStatus =
-      statusFilter === 'all' || sweepstakes.status === statusFilter;
+      filters.status === 'all' || sweepstakes.status === filters.status;
 
-    // Date range filtering
-    const matchesDateRange =
-      !dateRange?.from ||
-      (() => {
-        const sweepstakesDate = new Date(sweepstakes.createdAt);
-        const fromDate = dateRange.from;
-        const toDate = dateRange.to || new Date(); // If no end date, use today
+    // Date range filtering based on created date
+    const matchesDateRange = (() => {
+      if (filters.dateRange === 'all') return true;
 
-        return sweepstakesDate >= fromDate && sweepstakesDate <= toDate;
-      })();
+      const sweepstakesDate = new Date(sweepstakes.createdAt);
+      const now = new Date();
 
-    return matchesSearch && matchesStatus && matchesDateRange;
+      switch (filters.dateRange) {
+        case 'today':
+          return sweepstakesDate.toDateString() === now.toDateString();
+        case '7d':
+          return (
+            sweepstakesDate >= new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+          );
+        case '30d':
+          return (
+            sweepstakesDate >=
+            new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+          );
+        case '90d':
+          return (
+            sweepstakesDate >=
+            new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
+          );
+        case '1y':
+          return (
+            sweepstakesDate >=
+            new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000)
+          );
+        default:
+          return true;
+      }
+    })();
+
+    // Conversion rate filtering
+    const matchesConversion =
+      sweepstakes.conversionRate >= filters.conversionRange.min &&
+      sweepstakes.conversionRate <= filters.conversionRange.max;
+
+    return (
+      matchesSearch && matchesStatus && matchesDateRange && matchesConversion
+    );
   });
 
   // Apply sorting
-  const sortedData = sortField && sortDirection ? [...filteredData].sort((a, b) => {
-    let aValue: any;
-    let bValue: any;
+  const sortedData =
+    sortField && sortDirection
+      ? [...filteredData].sort((a, b) => {
+          let aValue: any;
+          let bValue: any;
 
-    switch (sortField) {
-      case 'title':
-        aValue = a.title.toLowerCase();
-        bValue = b.title.toLowerCase();
-        break;
-      case 'status':
-        // Sort by status priority: active > ending-soon > draft > paused > completed
-        const statusOrder = { 'active': 0, 'ending-soon': 1, 'draft': 2, 'paused': 3, 'completed': 4 };
-        aValue = statusOrder[a.status] ?? 5;
-        bValue = statusOrder[b.status] ?? 5;
-        break;
-      case 'entries':
-        aValue = a.entries;
-        bValue = b.entries;
-        break;
-      case 'conversionRate':
-        aValue = a.conversionRate;
-        bValue = b.conversionRate;
-        break;
-      case 'botRate':
-        aValue = a.botRate;
-        bValue = b.botRate;
-        break;
-      case 'createdAt':
-        aValue = new Date(a.createdAt).getTime();
-        bValue = new Date(b.createdAt).getTime();
-        break;
-      default:
-        return 0;
-    }
+          switch (sortField) {
+            case 'title':
+              aValue = a.title.toLowerCase();
+              bValue = b.title.toLowerCase();
+              break;
+            case 'status':
+              // Sort by status priority: active > ending-soon > draft > paused > completed
+              const statusOrder = {
+                active: 0,
+                'ending-soon': 1,
+                draft: 2,
+                paused: 3,
+                completed: 4
+              };
+              aValue = statusOrder[a.status] ?? 5;
+              bValue = statusOrder[b.status] ?? 5;
+              break;
+            case 'entries':
+              aValue = a.entries;
+              bValue = b.entries;
+              break;
+            case 'conversionRate':
+              aValue = a.conversionRate;
+              bValue = b.conversionRate;
+              break;
+            case 'botRate':
+              aValue = a.botRate;
+              bValue = b.botRate;
+              break;
+            case 'createdAt':
+              aValue = new Date(a.createdAt).getTime();
+              bValue = new Date(b.createdAt).getTime();
+              break;
+            default:
+              return 0;
+          }
 
-    if (sortDirection === 'asc') {
-      return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-    } else {
-      return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
-    }
-  }) : filteredData;
+          if (sortDirection === 'asc') {
+            return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+          } else {
+            return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+          }
+        })
+      : filteredData;
 
   const totalPages = Math.ceil(sortedData.length / pageSize);
 
@@ -671,30 +962,19 @@ export function SweepstakesTableWithFilters({
 
   return (
     <div className="space-y-6">
-      {/* Filter Bar */}
-      <SweepstakesFilterBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        statusFilter={statusFilter}
-        onStatusChange={(status) => {
-          setStatusFilter(status);
-          setCurrentPage(1); // Reset to first page when filter changes
-        }}
-        dateRange={dateRange}
-        onDateRangeChange={(range) => {
-          setDateRange(range);
-          setCurrentPage(1); // Reset to first page when date range changes
-        }}
-        totalResults={sortedData.length}
-        isSearching={isSearching}
-      />
-
       {/* Sweepstakes Table */}
-      <SweepstakesTable 
-        sweepstakes={paginatedData} 
+      <SweepstakesTable
+        sweepstakes={paginatedData}
         sortField={sortField}
         sortDirection={sortDirection}
         onSort={handleSort}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        filters={filters}
+        onFiltersChange={(newFilters) => {
+          setFilters(newFilters);
+          setCurrentPage(1);
+        }}
       />
 
       {/* Pagination */}

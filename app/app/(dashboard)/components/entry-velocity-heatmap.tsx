@@ -53,36 +53,86 @@ export function EntryVelocityHeatmap({ data }: EntryVelocityHeatmapProps) {
           </div>
           
           {/* Heatmap Grid */}
-          <div className="overflow-x-auto">
-            <div className="min-w-[600px]">
-              {/* Hour labels */}
-              <div className="grid grid-cols-25 gap-1 mb-2">
-                <div className="text-xs font-medium"></div> {/* Empty corner */}
-                {hours.map(hour => (
-                  <div key={hour} className="text-xs text-center text-muted-foreground">
-                    {hour === 0 ? '12a' : hour < 12 ? `${hour}a` : hour === 12 ? '12p' : `${hour-12}p`}
+          <div className="block sm:hidden">
+            {/* Mobile: Vertical layout by day */}
+            <div className="space-y-4">
+              {days.map(day => {
+                const dayData = hours.map(hour => getCellData(day, hour));
+                const dayTotal = dayData.reduce((sum, cell) => sum + cell.entries, 0);
+                const avgIntensity = dayData.reduce((sum, cell) => sum + cell.intensity, 0) / dayData.length;
+                
+                return (
+                  <div key={day} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium text-sm">{day}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {dayTotal} entries
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-6 gap-1">
+                      {[0, 4, 8, 12, 16, 20].map(startHour => {
+                        const blockData = hours.slice(startHour, startHour + 4);
+                        const blockIntensity = blockData.reduce((sum, hour) => {
+                          const cell = getCellData(day, hour);
+                          return sum + cell.intensity;
+                        }, 0) / blockData.length;
+                        const blockEntries = blockData.reduce((sum, hour) => {
+                          const cell = getCellData(day, hour);
+                          return sum + cell.entries;
+                        }, 0);
+                        
+                        return (
+                          <div
+                            key={startHour}
+                            className={`aspect-square rounded-sm cursor-pointer transition-all hover:scale-105 ${getIntensityColor(blockIntensity)} flex items-center justify-center`}
+                            title={`${day} ${startHour}:00-${startHour+3}:59 - ${blockEntries} entries`}
+                          >
+                            <span className="text-xs font-medium text-white">
+                              {startHour === 0 ? '12a' : startHour < 12 ? `${startHour}a` : startHour === 12 ? '12p' : `${startHour-12}p`}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          
+          {/* Desktop: Traditional horizontal heatmap */}
+          <div className="hidden sm:block">
+            <div className="overflow-x-auto">
+              <div className="min-w-[600px]">
+                {/* Hour labels */}
+                <div className="grid grid-cols-25 gap-1 mb-2">
+                  <div className="text-xs font-medium"></div> {/* Empty corner */}
+                  {hours.map(hour => (
+                    <div key={hour} className="text-xs text-center text-muted-foreground">
+                      {hour === 0 ? '12a' : hour < 12 ? `${hour}a` : hour === 12 ? '12p' : `${hour-12}p`}
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Heatmap rows */}
+                {days.map(day => (
+                  <div key={day} className="grid grid-cols-25 gap-1 mb-1">
+                    <div className="text-xs font-medium text-muted-foreground py-1">
+                      {day}
+                    </div>
+                    {hours.map(hour => {
+                      const cellData = getCellData(day, hour);
+                      return (
+                        <div
+                          key={`${day}-${hour}`}
+                          className={`aspect-square rounded-sm cursor-pointer transition-all hover:scale-110 hover:ring-2 hover:ring-blue-400 ${getIntensityColor(cellData.intensity)}`}
+                          title={`${day} ${hour}:00 - ${cellData.entries} entries`}
+                        />
+                      );
+                    })}
                   </div>
                 ))}
               </div>
-              
-              {/* Heatmap rows */}
-              {days.map(day => (
-                <div key={day} className="grid grid-cols-25 gap-1 mb-1">
-                  <div className="text-xs font-medium text-muted-foreground py-1">
-                    {day}
-                  </div>
-                  {hours.map(hour => {
-                    const cellData = getCellData(day, hour);
-                    return (
-                      <div
-                        key={`${day}-${hour}`}
-                        className={`aspect-square rounded-sm cursor-pointer transition-all hover:scale-110 hover:ring-2 hover:ring-blue-400 ${getIntensityColor(cellData.intensity)}`}
-                        title={`${day} ${hour}:00 - ${cellData.entries} entries`}
-                      />
-                    );
-                  })}
-                </div>
-              ))}
             </div>
           </div>
 
