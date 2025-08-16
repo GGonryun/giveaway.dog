@@ -19,24 +19,16 @@ import {
   ExternalLink
 } from 'lucide-react';
 import Link from 'next/link';
-
-interface ActiveSweepstakes {
-  id: string;
-  title: string;
-  entries: number;
-  entriesChange24h: number;
-  conversionRate: number;
-  botRate: number;
-  timeLeft: string;
-  status: 'active' | 'ending-soon' | 'draft';
-}
+import { ActiveSweepstakesData } from "@/schemas";
 
 interface ActiveSweepstakesListProps {
-  sweepstakes: ActiveSweepstakes[];
+  sweepstakes: ActiveSweepstakesData[];
 }
 
-export function ActiveSweepstakesList({ sweepstakes }: ActiveSweepstakesListProps) {
-  const getStatusBadge = (status: ActiveSweepstakes['status']) => {
+export function ActiveSweepstakesList({
+  sweepstakes
+}: ActiveSweepstakesListProps) {
+  const getStatusBadge = (status: ActiveSweepstakesData['status']) => {
     switch (status) {
       case 'active':
         return <Badge variant="default">Active</Badge>;
@@ -44,6 +36,10 @@ export function ActiveSweepstakesList({ sweepstakes }: ActiveSweepstakesListProp
         return <Badge variant="destructive">Ending Soon</Badge>;
       case 'draft':
         return <Badge variant="secondary">Draft</Badge>;
+      case 'completed':
+        return <Badge variant="outline">Completed</Badge>;
+      case 'paused':
+        return <Badge variant="secondary">Paused</Badge>;
       default:
         return null;
     }
@@ -84,7 +80,9 @@ export function ActiveSweepstakesList({ sweepstakes }: ActiveSweepstakesListProp
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="space-y-1">
-                    <h4 className="font-medium line-clamp-1">{sweepstakes.title}</h4>
+                    <h4 className="font-medium line-clamp-1">
+                      {sweepstakes.title}
+                    </h4>
                     <div className="flex items-center space-x-2">
                       {getStatusBadge(sweepstakes.status)}
                       {getStatusIcon(sweepstakes.botRate)}

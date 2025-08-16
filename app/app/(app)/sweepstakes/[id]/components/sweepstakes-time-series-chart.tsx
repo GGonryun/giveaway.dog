@@ -10,21 +10,13 @@ import {
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
+  ChartTooltipContent,
+  CustomTooltipProps
 } from '@/components/ui/chart';
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-  Legend
-} from 'recharts';
-import { Button } from '@/components/ui/button';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { TrendingUp, Calendar, BarChart3 } from 'lucide-react';
+import { TrendingUp, BarChart3 } from 'lucide-react';
 import { useState } from 'react';
 
 interface TimeSeriesData {
@@ -86,7 +78,10 @@ export const SweepstakesTimeSeriesChart = ({
     facebook: data.reduce((sum, day) => sum + day.facebook, 0)
   };
   const topSource = Object.entries(sourceTotals).reduce((a, b) =>
-    sourceTotals[a[0]] > sourceTotals[b[0]] ? a : b
+    sourceTotals[a[0] as keyof typeof sourceTotals] >
+    sourceTotals[b[0] as keyof typeof sourceTotals]
+      ? a
+      : b
   )[0];
 
   return (
@@ -170,7 +165,7 @@ export const SweepstakesTimeSeriesChart = ({
                 }}
               />
               <ChartTooltip
-                content={<ChartTooltipContent />}
+                content={ChartTooltipContent}
                 labelFormatter={(value) => {
                   const date = new Date(value);
                   return date.toLocaleDateString('en-US', {
@@ -264,4 +259,4 @@ export const SweepstakesTimeSeriesChart = ({
       </CardContent>
     </Card>
   );
-}
+};

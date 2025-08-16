@@ -55,24 +55,7 @@ import { ExportSheet } from './export-sheet';
 import { CRMSyncSheet } from './crm-sync-sheet';
 import { UserDetailSheet } from './user-detail-sheet';
 import { getUsers, searchUsers } from '../actions';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string | null;
-  region: string;
-  entries: number;
-  lastEntryAt: string;
-  firstEntryAt: string;
-  qualityScore: number;
-  status: 'active' | 'flagged' | 'blocked' | 'trusted';
-  engagement: number;
-  source: string;
-  deviceFingerprint: string;
-  emailVerified: boolean;
-  disposableEmail: boolean;
-}
+import { UserData } from "@/schemas";
 
 interface UsersTableProps {
   initialPage?: number;
@@ -126,7 +109,7 @@ export const UsersTable = ({ initialPage = DEFAULT_PAGE, initialPageSize = DEFAU
   }));
   const [showExportSheet, setShowExportSheet] = useState(false);
   const [showCRMSheet, setShowCRMSheet] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserData[]>([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);

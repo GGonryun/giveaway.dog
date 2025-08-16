@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Typography } from '@/components/ui/typography';
 import { Clock, Trophy, Users, MapPin } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { PublicGiveawayItem } from "@/schemas";
 
 export interface GiveawayItemProps {
   id: string;

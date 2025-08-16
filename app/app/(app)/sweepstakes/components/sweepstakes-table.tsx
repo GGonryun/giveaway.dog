@@ -58,23 +58,10 @@ import {
   BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
-
-interface SweepstakesItem {
-  id: string;
-  title: string;
-  status: 'active' | 'ending-soon' | 'draft' | 'paused' | 'completed';
-  entries: number;
-  uniqueEntrants: number;
-  conversionRate: number;
-  botRate: number;
-  timeLeft: string;
-  createdAt: string;
-  topSource: string;
-  prize: string;
-}
+import { SweepstakesData } from "@/schemas";
 
 interface SweepstakesTableProps {
-  sweepstakes: SweepstakesItem[];
+  sweepstakes: SweepstakesData[];
   sortField?: SortField | null;
   sortDirection?: SortDirection;
   onSort?: (field: SortField) => void;
@@ -89,7 +76,7 @@ interface SweepstakesTableProps {
 }
 
 interface SweepstakesTableWithFiltersProps {
-  sweepstakes: SweepstakesItem[];
+  sweepstakes: SweepstakesData[];
 }
 
 // Search and Filter Components
@@ -335,7 +322,7 @@ export function SweepstakesTable({
     );
   };
 
-  const getStatusBadge = (status: SweepstakesItem['status']) => {
+  const getStatusBadge = (status: SweepstakesData['status']) => {
     const variants = {
       active: {
         variant: 'default' as const,
@@ -368,7 +355,7 @@ export function SweepstakesTable({
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
-  const getStatusIcon = (status: SweepstakesItem['status']) => {
+  const getStatusIcon = (status: SweepstakesData['status']) => {
     switch (status) {
       case 'active':
         return <Play className="h-4 w-4 text-green-500" />;

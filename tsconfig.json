@@ -19,7 +19,8 @@
       "@/components/*": ["components/*"],
       "@/lib/*": ["lib/*"],
       "@/schemas/*": ["schemas/*"],
-      "@/app/*": ["app/*"]
+      "@/app/*": ["app/*"],
+      "@/actions/*": ["actions/*"]
     },
     "plugins": [
       {

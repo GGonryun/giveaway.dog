@@ -5,13 +5,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle } from "lucide-react";
-
-interface DistributionData {
-  entriesRange: string;
-  userCount: number;
-  percentage: number;
-  suspicious: boolean;
-}
+import { DistributionData } from "@/schemas";
 
 interface UserDistributionHistogramProps {
   data: DistributionData[];

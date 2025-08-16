@@ -10,7 +10,8 @@ import {
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
+  ChartTooltipContent,
+  CustomTooltipProps
 } from '@/components/ui/chart';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { Badge } from '@/components/ui/badge';
@@ -93,7 +94,7 @@ export const SweepstakesTopReferrers = ({
                   return value.toString();
                 }}
               />
-              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartTooltip content={ChartTooltipContent} />
               <Bar
                 dataKey="entries"
                 fill="var(--color-chart-1)"
@@ -157,4 +158,4 @@ export const SweepstakesTopReferrers = ({
       </CardContent>
     </Card>
   );
-}
+};

@@ -13,13 +13,7 @@ import {
   ChartTooltipContent
 } from '@/components/ui/chart';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
-
-interface DailyEngagementData {
-  date: string;
-  entries: number;
-  pageviews: number;
-  conversionRate: number;
-}
+import { DailyEngagementData } from '@/schemas/index';
 
 interface DailyEngagementChartProps {
   data: DailyEngagementData[];

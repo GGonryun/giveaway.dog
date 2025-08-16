@@ -6,26 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, Mail, MailCheck, MailX, ExternalLink } from "lucide-react";
 import Link from "next/link";
-
-interface NewUser {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  emailStatus: 'verified' | 'pending' | 'bounced';
-  signupTime: string;
-  firstSource: string;
-  location?: string;
-  qualityScore: number;
-  entries: number;
-}
+import { LatestUserData } from "@/schemas";
 
 interface LatestUsersFeedProps {
-  users: NewUser[];
+  users: LatestUserData[];
 }
 
 export function LatestUsersFeed({ users }: LatestUsersFeedProps) {
-  const getEmailStatusIcon = (status: NewUser['emailStatus']) => {
+  const getEmailStatusIcon = (status: LatestUserData['emailStatus']) => {
     switch (status) {
       case 'verified':
         return <MailCheck className="h-4 w-4 text-green-500" />;
@@ -36,7 +24,7 @@ export function LatestUsersFeed({ users }: LatestUsersFeedProps) {
     }
   };
 
-  const getEmailStatusBadge = (status: NewUser['emailStatus']) => {
+  const getEmailStatusBadge = (status: LatestUserData['emailStatus']) => {
     const variants = {
       verified: 'default',
       pending: 'secondary',

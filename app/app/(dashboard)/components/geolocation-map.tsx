@@ -2,15 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
-interface LocationData {
-  country: string;
-  state?: string;
-  city?: string;
-  entries: number;
-  percentage: number;
-  flag?: string;
-}
+import { LocationData } from "@/schemas";
 
 interface GeolocationMapProps {
   data: LocationData[];

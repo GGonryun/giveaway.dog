@@ -10,18 +10,10 @@ import {
   AlertTriangle,
   Calendar
 } from 'lucide-react';
-
-interface KPIData {
-  entriesTotal: number;
-  entriesChange: number;
-  newUsers: number;
-  newUsersChange: number;
-  activeSweepstakes: number;
-  botFilterRate: number;
-}
+import { DashboardKPIData } from "@/schemas";
 
 interface KPICardProps {
-  data: KPIData;
+  data: DashboardKPIData;
 }
 
 export function DashboardKPICards({ data }: KPICardProps) {

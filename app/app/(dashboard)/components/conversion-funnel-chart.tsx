@@ -7,15 +7,10 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-
-interface FunnelStage {
-  stage: string;
-  value: number;
-  percentage: number;
-}
+import { FunnelStageData } from "@/schemas";
 
 interface ConversionFunnelChartProps {
-  data: FunnelStage[];
+  data: FunnelStageData[];
 }
 
 export function ConversionFunnelChart({ data }: ConversionFunnelChartProps) {

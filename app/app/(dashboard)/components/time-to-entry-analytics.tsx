@@ -7,23 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Clock, TrendingDown, TrendingUp, AlertTriangle } from "lucide-react";
 import { useState } from "react";
-
-interface TimeToEntryData {
-  timeRange: string;
-  userCount: number;
-  percentage: number;
-  avgConversionRate: number;
-}
-
-interface TimeDistributionData {
-  time: string;
-  entries: number;
-  avgTime: number;
-}
+import { TimeToEntryDistribution, TimeToEntryTimeline } from "@/schemas";
 
 interface TimeToEntryAnalyticsProps {
-  distributionData: TimeToEntryData[];
-  timelineData: TimeDistributionData[];
+  distributionData: TimeToEntryDistribution[];
+  timelineData: TimeToEntryTimeline[];
   averageTime: number;
   medianTime: number;
   conversionByTime: number[];

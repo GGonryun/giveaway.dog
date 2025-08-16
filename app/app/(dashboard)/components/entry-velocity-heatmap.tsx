@@ -1,13 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-interface HeatmapData {
-  hour: number;
-  day: string;
-  entries: number;
-  intensity: number; // 0-100 for color intensity
-}
+import { HeatmapData } from "@/schemas";
 
 interface EntryVelocityHeatmapProps {
   data: HeatmapData[];

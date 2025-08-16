@@ -1,6 +1,7 @@
 export default {
   experimental: {
-    cacheComponents: true
+    cacheComponents: true,
+    useCache: true
   },
   images: {
     remotePatterns: [

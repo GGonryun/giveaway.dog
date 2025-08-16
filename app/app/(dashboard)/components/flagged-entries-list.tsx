@@ -7,31 +7,17 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, Check, X, Eye, RefreshCw, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
-
-interface FlaggedEntry {
-  id: string;
-  userName: string;
-  userEmail: string;
-  userAvatar?: string;
-  flaggedAt: string;
-  flagReason: string;
-  riskScore: number;
-  entryCount: number;
-  ipAddress: string;
-  location?: string;
-  sweepstakesName: string;
-  status: 'pending' | 'approved' | 'rejected';
-}
+import { FlaggedEntryData } from "@/schemas";
 
 interface FlaggedEntriesListProps {
-  entries: FlaggedEntry[];
+  entries: FlaggedEntryData[];
 }
 
 export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
   const [localEntries, setLocalEntries] = useState(entries);
   const [loading, setLoading] = useState<string | null>(null);
 
-  const handleAction = async (entryId: string, action: 'approve' | 'reject') => {
+  const handleAction = async (entryId: string, action: 'resolve' | 'block') => {
     setLoading(entryId);
     
     // Simulate API call
@@ -40,7 +26,7 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
     setLocalEntries(prev => 
       prev.map(entry => 
         entry.id === entryId 
-          ? { ...entry, status: action === 'approve' ? 'approved' : 'rejected' }
+          ? { ...entry, status: action === 'resolve' ? 'resolved' : 'blocked' }
           : entry
       )
     );
@@ -54,11 +40,11 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
     return <Badge variant="secondary">Low Risk</Badge>;
   };
 
-  const getStatusBadge = (status: FlaggedEntry['status']) => {
+  const getStatusBadge = (status: FlaggedEntryData['status']) => {
     const variants = {
       pending: 'secondary',
-      approved: 'default',
-      rejected: 'destructive'
+      resolved: 'default',
+      blocked: 'destructive'
     } as const;
     
     return <Badge variant={variants[status]}>{status}</Badge>;
@@ -154,7 +140,7 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
                         <Button
                           size="sm"
                           variant="default"
-                          onClick={() => handleAction(entry.id, 'approve')}
+                          onClick={() => handleAction(entry.id, 'resolve')}
                           disabled={loading === entry.id}
                         >
                           {loading === entry.id ? (
@@ -162,16 +148,16 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
                           ) : (
                             <Check className="h-4 w-4 mr-2" />
                           )}
-                          Approve
+                          Resolve
                         </Button>
                         <Button
                           size="sm"
                           variant="destructive"
-                          onClick={() => handleAction(entry.id, 'reject')}
+                          onClick={() => handleAction(entry.id, 'block')}
                           disabled={loading === entry.id}
                         >
                           <X className="h-4 w-4 mr-2" />
-                          Reject
+                          Block
                         </Button>
                       </div>
                     </div>
@@ -241,15 +227,15 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
               <div className="font-medium text-yellow-600">{pendingEntries.length}</div>
             </div>
             <div>
-              <div className="text-muted-foreground">Approved</div>
+              <div className="text-muted-foreground">Resolved</div>
               <div className="font-medium text-green-600">
-                {localEntries.filter(e => e.status === 'approved').length}
+                {localEntries.filter(e => e.status === 'resolved').length}
               </div>
             </div>
             <div>
-              <div className="text-muted-foreground">Rejected</div>
+              <div className="text-muted-foreground">Blocked</div>
               <div className="font-medium text-red-600">
-                {localEntries.filter(e => e.status === 'rejected').length}
+                {localEntries.filter(e => e.status === 'blocked').length}
               </div>
             </div>
             <div>
