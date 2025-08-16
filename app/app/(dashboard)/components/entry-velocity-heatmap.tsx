@@ -1,7 +1,13 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { HeatmapData } from "@/schemas";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import { HeatmapData } from '@/schemas/index';
 
 interface EntryVelocityHeatmapProps {
   data: HeatmapData[];
@@ -20,7 +26,14 @@ export function EntryVelocityHeatmap({ data }: EntryVelocityHeatmapProps) {
   };
 
   const getCellData = (day: string, hour: number) => {
-    return data.find(d => d.day === day && d.hour === hour) || { hour, day, entries: 0, intensity: 0 };
+    return (
+      data.find((d) => d.day === day && d.hour === hour) || {
+        hour,
+        day,
+        entries: 0,
+        intensity: 0
+      }
+    );
   };
 
   return (
@@ -45,16 +58,21 @@ export function EntryVelocityHeatmap({ data }: EntryVelocityHeatmapProps) {
             </div>
             <span>More activity</span>
           </div>
-          
+
           {/* Heatmap Grid */}
           <div className="block sm:hidden">
             {/* Mobile: Vertical layout by day */}
             <div className="space-y-4">
-              {days.map(day => {
-                const dayData = hours.map(hour => getCellData(day, hour));
-                const dayTotal = dayData.reduce((sum, cell) => sum + cell.entries, 0);
-                const avgIntensity = dayData.reduce((sum, cell) => sum + cell.intensity, 0) / dayData.length;
-                
+              {days.map((day) => {
+                const dayData = hours.map((hour) => getCellData(day, hour));
+                const dayTotal = dayData.reduce(
+                  (sum, cell) => sum + cell.entries,
+                  0
+                );
+                const avgIntensity =
+                  dayData.reduce((sum, cell) => sum + cell.intensity, 0) /
+                  dayData.length;
+
                 return (
                   <div key={day} className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -64,25 +82,32 @@ export function EntryVelocityHeatmap({ data }: EntryVelocityHeatmapProps) {
                       </div>
                     </div>
                     <div className="grid grid-cols-6 gap-1">
-                      {[0, 4, 8, 12, 16, 20].map(startHour => {
+                      {[0, 4, 8, 12, 16, 20].map((startHour) => {
                         const blockData = hours.slice(startHour, startHour + 4);
-                        const blockIntensity = blockData.reduce((sum, hour) => {
-                          const cell = getCellData(day, hour);
-                          return sum + cell.intensity;
-                        }, 0) / blockData.length;
+                        const blockIntensity =
+                          blockData.reduce((sum, hour) => {
+                            const cell = getCellData(day, hour);
+                            return sum + cell.intensity;
+                          }, 0) / blockData.length;
                         const blockEntries = blockData.reduce((sum, hour) => {
                           const cell = getCellData(day, hour);
                           return sum + cell.entries;
                         }, 0);
-                        
+
                         return (
                           <div
                             key={startHour}
                             className={`aspect-square rounded-sm cursor-pointer transition-all hover:scale-105 ${getIntensityColor(blockIntensity)} flex items-center justify-center`}
-                            title={`${day} ${startHour}:00-${startHour+3}:59 - ${blockEntries} entries`}
+                            title={`${day} ${startHour}:00-${startHour + 3}:59 - ${blockEntries} entries`}
                           >
                             <span className="text-xs font-medium text-white">
-                              {startHour === 0 ? '12a' : startHour < 12 ? `${startHour}a` : startHour === 12 ? '12p' : `${startHour-12}p`}
+                              {startHour === 0
+                                ? '12a'
+                                : startHour < 12
+                                  ? `${startHour}a`
+                                  : startHour === 12
+                                    ? '12p'
+                                    : `${startHour - 12}p`}
                             </span>
                           </div>
                         );
@@ -93,28 +118,38 @@ export function EntryVelocityHeatmap({ data }: EntryVelocityHeatmapProps) {
               })}
             </div>
           </div>
-          
+
           {/* Desktop: Traditional horizontal heatmap */}
           <div className="hidden sm:block">
             <div className="overflow-x-auto">
               <div className="min-w-[600px]">
                 {/* Hour labels */}
                 <div className="grid grid-cols-25 gap-1 mb-2">
-                  <div className="text-xs font-medium"></div> {/* Empty corner */}
-                  {hours.map(hour => (
-                    <div key={hour} className="text-xs text-center text-muted-foreground">
-                      {hour === 0 ? '12a' : hour < 12 ? `${hour}a` : hour === 12 ? '12p' : `${hour-12}p`}
+                  <div className="text-xs font-medium"></div>{' '}
+                  {/* Empty corner */}
+                  {hours.map((hour) => (
+                    <div
+                      key={hour}
+                      className="text-xs text-center text-muted-foreground"
+                    >
+                      {hour === 0
+                        ? '12a'
+                        : hour < 12
+                          ? `${hour}a`
+                          : hour === 12
+                            ? '12p'
+                            : `${hour - 12}p`}
                     </div>
                   ))}
                 </div>
-                
+
                 {/* Heatmap rows */}
-                {days.map(day => (
+                {days.map((day) => (
                   <div key={day} className="grid grid-cols-25 gap-1 mb-1">
                     <div className="text-xs font-medium text-muted-foreground py-1">
                       {day}
                     </div>
-                    {hours.map(hour => {
+                    {hours.map((hour) => {
                       const cellData = getCellData(day, hour);
                       return (
                         <div

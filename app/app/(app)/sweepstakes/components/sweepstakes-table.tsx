@@ -58,7 +58,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
-import { SweepstakesData } from "@/schemas";
+import { SweepstakesData } from '@/schemas/index';
 
 interface SweepstakesTableProps {
   sweepstakes: SweepstakesData[];

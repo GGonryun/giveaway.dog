@@ -19,7 +19,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import Link from 'next/link';
-import { ActiveSweepstakesData } from "@/schemas";
+import { ActiveSweepstakesData } from '@/schemas/index';
 
 interface ActiveSweepstakesListProps {
   sweepstakes: ActiveSweepstakesData[];

@@ -1,13 +1,37 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, BarChart, Bar } from "recharts";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Clock, TrendingDown, TrendingUp, AlertTriangle } from "lucide-react";
-import { useState } from "react";
-import { TimeToEntryDistribution, TimeToEntryTimeline } from "@/schemas";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent
+} from '@/components/ui/chart';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  BarChart,
+  Bar
+} from 'recharts';
+import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Clock, TrendingDown, TrendingUp, AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
+import { TimeToEntryDistribution, TimeToEntryTimeline } from '@/schemas/index';
 
 interface TimeToEntryAnalyticsProps {
   distributionData: TimeToEntryDistribution[];
@@ -19,28 +43,30 @@ interface TimeToEntryAnalyticsProps {
 
 const chartConfig = {
   userCount: {
-    label: "Users",
-    color: "var(--color-chart-1)"
+    label: 'Users',
+    color: 'var(--color-chart-1)'
   },
   entries: {
-    label: "Entries",
-    color: "var(--color-chart-2)"
+    label: 'Entries',
+    color: 'var(--color-chart-2)'
   },
   avgTime: {
-    label: "Avg Time",
-    color: "var(--color-chart-3)"
+    label: 'Avg Time',
+    color: 'var(--color-chart-3)'
   }
 };
 
-export function TimeToEntryAnalytics({ 
-  distributionData, 
-  timelineData, 
-  averageTime, 
+export function TimeToEntryAnalytics({
+  distributionData,
+  timelineData,
+  averageTime,
   medianTime,
-  conversionByTime 
+  conversionByTime
 }: TimeToEntryAnalyticsProps) {
-  const [selectedView, setSelectedView] = useState<'distribution' | 'timeline' | 'detailed'>('distribution');
-  
+  const [selectedView, setSelectedView] = useState<
+    'distribution' | 'timeline' | 'detailed'
+  >('distribution');
+
   const formatTime = (seconds: number) => {
     if (seconds < 60) return `${seconds}s`;
     if (seconds < 3600) return `${Math.round(seconds / 60)}m`;
@@ -48,14 +74,22 @@ export function TimeToEntryAnalytics({
   };
 
   const getFrictionLevel = (avgTime: number) => {
-    if (avgTime <= 30) return { level: 'Low', color: 'text-green-600', bg: 'bg-green-50' };
-    if (avgTime <= 120) return { level: 'Medium', color: 'text-yellow-600', bg: 'bg-yellow-50' };
+    if (avgTime <= 30)
+      return { level: 'Low', color: 'text-green-600', bg: 'bg-green-50' };
+    if (avgTime <= 120)
+      return { level: 'Medium', color: 'text-yellow-600', bg: 'bg-yellow-50' };
     return { level: 'High', color: 'text-red-600', bg: 'bg-red-50' };
   };
 
   const friction = getFrictionLevel(averageTime);
-  const quickEntries = distributionData.filter(d => d.timeRange.includes('0-30s') || d.timeRange.includes('30s-2m')).reduce((sum, d) => sum + d.percentage, 0);
-  const slowEntries = distributionData.filter(d => d.timeRange.includes('5m+') || d.timeRange.includes('10m+')).reduce((sum, d) => sum + d.percentage, 0);
+  const quickEntries = distributionData
+    .filter(
+      (d) => d.timeRange.includes('0-30s') || d.timeRange.includes('30s-2m')
+    )
+    .reduce((sum, d) => sum + d.percentage, 0);
+  const slowEntries = distributionData
+    .filter((d) => d.timeRange.includes('5m+') || d.timeRange.includes('10m+'))
+    .reduce((sum, d) => sum + d.percentage, 0);
 
   return (
     <Card>
@@ -80,26 +114,45 @@ export function TimeToEntryAnalytics({
               <div className={`text-2xl font-bold ${friction.color}`}>
                 {formatTime(averageTime)}
               </div>
-              <Badge variant={friction.level === 'Low' ? 'default' : friction.level === 'Medium' ? 'secondary' : 'destructive'} className="text-xs mt-1">
+              <Badge
+                variant={
+                  friction.level === 'Low'
+                    ? 'default'
+                    : friction.level === 'Medium'
+                      ? 'secondary'
+                      : 'destructive'
+                }
+                className="text-xs mt-1"
+              >
                 {friction.level} Friction
               </Badge>
             </div>
-            
+
             <div className="p-4 bg-muted rounded-lg">
               <div className="text-sm text-muted-foreground">Median Time</div>
               <div className="text-2xl font-bold">{formatTime(medianTime)}</div>
-              <div className="text-xs text-muted-foreground">50th percentile</div>
+              <div className="text-xs text-muted-foreground">
+                50th percentile
+              </div>
             </div>
-            
+
             <div className="p-4 bg-green-50 rounded-lg">
-              <div className="text-sm font-medium text-green-700">Quick Entries</div>
-              <div className="text-2xl font-bold text-green-600">{quickEntries.toFixed(1)}%</div>
+              <div className="text-sm font-medium text-green-700">
+                Quick Entries
+              </div>
+              <div className="text-2xl font-bold text-green-600">
+                {quickEntries.toFixed(1)}%
+              </div>
               <div className="text-xs text-green-600">Under 2 minutes</div>
             </div>
-            
+
             <div className="p-4 bg-red-50 rounded-lg">
-              <div className="text-sm font-medium text-red-700">Slow Entries</div>
-              <div className="text-2xl font-bold text-red-600">{slowEntries.toFixed(1)}%</div>
+              <div className="text-sm font-medium text-red-700">
+                Slow Entries
+              </div>
+              <div className="text-2xl font-bold text-red-600">
+                {slowEntries.toFixed(1)}%
+              </div>
               <div className="text-xs text-red-600">Over 5 minutes</div>
             </div>
           </div>
@@ -109,9 +162,12 @@ export function TimeToEntryAnalytics({
             <div className="flex items-start space-x-3 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
               <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
               <div>
-                <div className="font-medium text-yellow-800">High Form Friction Detected</div>
+                <div className="font-medium text-yellow-800">
+                  High Form Friction Detected
+                </div>
                 <div className="text-sm text-yellow-600">
-                  Average time-to-entry is {formatTime(averageTime)}. Consider simplifying your entry form to improve conversion rates.
+                  Average time-to-entry is {formatTime(averageTime)}. Consider
+                  simplifying your entry form to improve conversion rates.
                 </div>
               </div>
             </div>
@@ -121,12 +177,19 @@ export function TimeToEntryAnalytics({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-medium">Analytics View</h3>
-              <Select value={selectedView} onValueChange={(value: 'distribution' | 'timeline' | 'detailed') => setSelectedView(value)}>
+              <Select
+                value={selectedView}
+                onValueChange={(
+                  value: 'distribution' | 'timeline' | 'detailed'
+                ) => setSelectedView(value)}
+              >
                 <SelectTrigger className="w-48">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="distribution">Time Distribution</SelectItem>
+                  <SelectItem value="distribution">
+                    Time Distribution
+                  </SelectItem>
                   <SelectItem value="timeline">Trend Timeline</SelectItem>
                   <SelectItem value="detailed">Detailed Analysis</SelectItem>
                 </SelectContent>
@@ -136,24 +199,30 @@ export function TimeToEntryAnalytics({
             {/* Conditional Chart/Content Display */}
             {selectedView === 'distribution' && (
               <div className="overflow-hidden">
-                <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
-                  <BarChart data={distributionData} margin={{ top: 10, right: 10, bottom: 30, left: 10 }}>
+                <ChartContainer
+                  config={chartConfig}
+                  className="min-h-[250px] w-full"
+                >
+                  <BarChart
+                    data={distributionData}
+                    margin={{ top: 10, right: 10, bottom: 30, left: 10 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
-                      dataKey="timeRange" 
+                    <XAxis
+                      dataKey="timeRange"
                       tick={{ fontSize: 10 }}
                       angle={-45}
                       textAnchor="end"
                       height={50}
                     />
-                    <YAxis 
+                    <YAxis
                       tick={{ fontSize: 10 }}
                       tickFormatter={(value) => `${value}%`}
                     />
                     <ChartTooltip content={ChartTooltipContent} />
-                    <Bar 
-                      dataKey="percentage" 
-                      fill="var(--color-chart-1)" 
+                    <Bar
+                      dataKey="percentage"
+                      fill="var(--color-chart-1)"
                       name="percentage"
                       radius={[4, 4, 0, 0]}
                     />
@@ -164,23 +233,26 @@ export function TimeToEntryAnalytics({
 
             {selectedView === 'timeline' && (
               <div className="overflow-hidden">
-                <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
-                  <AreaChart data={timelineData} margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
+                <ChartContainer
+                  config={chartConfig}
+                  className="min-h-[250px] w-full"
+                >
+                  <AreaChart
+                    data={timelineData}
+                    margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
-                      dataKey="time" 
-                      tick={{ fontSize: 10 }}
-                    />
-                    <YAxis 
+                    <XAxis dataKey="time" tick={{ fontSize: 10 }} />
+                    <YAxis
                       tick={{ fontSize: 10 }}
                       tickFormatter={(value) => formatTime(value)}
                     />
                     <ChartTooltip content={ChartTooltipContent} />
-                    <Area 
-                      type="monotone" 
-                      dataKey="avgTime" 
-                      stroke="var(--color-chart-3)" 
-                      fill="var(--color-chart-3)" 
+                    <Area
+                      type="monotone"
+                      dataKey="avgTime"
+                      stroke="var(--color-chart-3)"
+                      fill="var(--color-chart-3)"
                       fillOpacity={0.3}
                       strokeWidth={2}
                     />
@@ -192,7 +264,10 @@ export function TimeToEntryAnalytics({
             {selectedView === 'detailed' && (
               <div className="space-y-2">
                 {distributionData.map((item, index) => (
-                  <div key={item.timeRange} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                  <div
+                    key={item.timeRange}
+                    className="flex items-center justify-between p-3 bg-muted rounded-lg"
+                  >
                     <div className="flex items-center space-x-3">
                       <div className="font-medium">{item.timeRange}</div>
                       {item.timeRange.includes('5m+') && (
@@ -203,15 +278,25 @@ export function TimeToEntryAnalytics({
                     </div>
                     <div className="flex items-center space-x-4 text-sm">
                       <div>
-                        <span className="font-medium">{item.userCount.toLocaleString()}</span>
-                        <span className="text-muted-foreground ml-1">users</span>
+                        <span className="font-medium">
+                          {item.userCount.toLocaleString()}
+                        </span>
+                        <span className="text-muted-foreground ml-1">
+                          users
+                        </span>
                       </div>
                       <div>
-                        <span className="font-medium">{item.percentage.toFixed(1)}%</span>
+                        <span className="font-medium">
+                          {item.percentage.toFixed(1)}%
+                        </span>
                       </div>
                       <div>
-                        <span className="font-medium">{item.avgConversionRate.toFixed(1)}%</span>
-                        <span className="text-muted-foreground ml-1">convert</span>
+                        <span className="font-medium">
+                          {item.avgConversionRate.toFixed(1)}%
+                        </span>
+                        <span className="text-muted-foreground ml-1">
+                          convert
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -228,8 +313,13 @@ export function TimeToEntryAnalytics({
                 <div className="flex items-start space-x-2 p-3 bg-blue-50 rounded-lg">
                   <TrendingDown className="h-4 w-4 text-blue-600 mt-0.5" />
                   <div>
-                    <div className="font-medium text-blue-800">Reduce Form Fields</div>
-                    <div className="text-blue-600">Consider removing non-essential fields to decrease average entry time</div>
+                    <div className="font-medium text-blue-800">
+                      Reduce Form Fields
+                    </div>
+                    <div className="text-blue-600">
+                      Consider removing non-essential fields to decrease average
+                      entry time
+                    </div>
                   </div>
                 </div>
               )}
@@ -237,16 +327,26 @@ export function TimeToEntryAnalytics({
                 <div className="flex items-start space-x-2 p-3 bg-green-50 rounded-lg">
                   <TrendingUp className="h-4 w-4 text-green-600 mt-0.5" />
                   <div>
-                    <div className="font-medium text-green-800">Improve UX Flow</div>
-                    <div className="text-green-600">Only {quickEntries.toFixed(1)}% of users enter quickly. Optimize form layout and copy</div>
+                    <div className="font-medium text-green-800">
+                      Improve UX Flow
+                    </div>
+                    <div className="text-green-600">
+                      Only {quickEntries.toFixed(1)}% of users enter quickly.
+                      Optimize form layout and copy
+                    </div>
                   </div>
                 </div>
               )}
               <div className="flex items-start space-x-2 p-3 bg-purple-50 rounded-lg">
                 <Clock className="h-4 w-4 text-purple-600 mt-0.5" />
                 <div>
-                  <div className="font-medium text-purple-800">Target: Under 60 seconds</div>
-                  <div className="text-purple-600">Best-performing giveaways typically have sub-60 second entry times</div>
+                  <div className="font-medium text-purple-800">
+                    Target: Under 60 seconds
+                  </div>
+                  <div className="text-purple-600">
+                    Best-performing giveaways typically have sub-60 second entry
+                    times
+                  </div>
                 </div>
               </div>
             </div>
@@ -269,7 +369,11 @@ export function TimeToEntryAnalytics({
             <div>
               <div className="text-muted-foreground">Form Abandonment</div>
               <div className="font-medium text-yellow-600">
-                {(100 - distributionData.reduce((sum, d) => sum + d.percentage, 0)).toFixed(1)}%
+                {(
+                  100 -
+                  distributionData.reduce((sum, d) => sum + d.percentage, 0)
+                ).toFixed(1)}
+                %
               </div>
             </div>
           </div>

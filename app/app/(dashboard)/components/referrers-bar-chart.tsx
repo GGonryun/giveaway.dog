@@ -13,7 +13,7 @@ import {
   ChartTooltipContent
 } from '@/components/ui/chart';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { ReferrerData } from "@/schemas";
+import { ReferrerData } from '@/schemas/index';
 
 interface ReferrersBarChartProps {
   data: ReferrerData[];

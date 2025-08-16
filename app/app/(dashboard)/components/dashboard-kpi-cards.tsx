@@ -10,7 +10,7 @@ import {
   AlertTriangle,
   Calendar
 } from 'lucide-react';
-import { DashboardKPIData } from "@/schemas";
+import { DashboardKPIData } from '@/schemas/index';
 
 interface KPICardProps {
   data: DashboardKPIData;

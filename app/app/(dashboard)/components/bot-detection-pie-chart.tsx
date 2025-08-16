@@ -13,7 +13,7 @@ import {
   ChartTooltipContent
 } from '@/components/ui/chart';
 import { PieChart, Pie, Cell } from 'recharts';
-import { BotDetectionData } from "@/schemas";
+import { BotDetectionData } from '@/schemas/index';
 
 interface BotDetectionPieChartProps {
   data: BotDetectionData[];

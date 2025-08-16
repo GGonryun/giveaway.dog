@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { FunnelStageData } from "@/schemas";
+import { FunnelStageData } from '@/schemas/index';
 
 interface ConversionFunnelChartProps {
   data: FunnelStageData[];
@@ -53,7 +53,9 @@ export function ConversionFunnelChart({ data }: ConversionFunnelChartProps) {
                       }`}
                       style={{ width: `${widthPercentage}%` }}
                     >
-                      <span className="px-1 truncate">{stage.value.toLocaleString()}</span>
+                      <span className="px-1 truncate">
+                        {stage.value.toLocaleString()}
+                      </span>
                     </div>
                   </div>
                   {!isLastStage && (

@@ -1,11 +1,21 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
-import { Badge } from "@/components/ui/badge";
-import { AlertTriangle } from "lucide-react";
-import { DistributionData } from "@/schemas";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent
+} from '@/components/ui/chart';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { Badge } from '@/components/ui/badge';
+import { AlertTriangle } from 'lucide-react';
+import { DistributionData } from '@/schemas/index';
 
 interface UserDistributionHistogramProps {
   data: DistributionData[];
@@ -13,13 +23,17 @@ interface UserDistributionHistogramProps {
 
 const chartConfig = {
   userCount: {
-    label: "Users",
-    color: "var(--color-chart-1)"
+    label: 'Users',
+    color: 'var(--color-chart-1)'
   }
 };
 
-export function UserDistributionHistogram({ data }: UserDistributionHistogramProps) {
-  const suspiciousUsers = data.filter(d => d.suspicious).reduce((sum, d) => sum + d.userCount, 0);
+export function UserDistributionHistogram({
+  data
+}: UserDistributionHistogramProps) {
+  const suspiciousUsers = data
+    .filter((d) => d.suspicious)
+    .reduce((sum, d) => sum + d.userCount, 0);
   const totalUsers = data.reduce((sum, d) => sum + d.userCount, 0);
   const suspiciousPercentage = (suspiciousUsers / totalUsers) * 100;
 
@@ -35,7 +49,10 @@ export function UserDistributionHistogram({ data }: UserDistributionHistogramPro
         <div className="space-y-4">
           {/* Histogram Chart */}
           <div className="overflow-hidden">
-            <ChartContainer config={chartConfig} className="min-h-[200px] sm:min-h-[300px] w-full">
+            <ChartContainer
+              config={chartConfig}
+              className="min-h-[200px] sm:min-h-[300px] w-full"
+            >
               <BarChart
                 data={data}
                 margin={{ top: 10, right: 10, bottom: 30, left: 10 }}
@@ -75,7 +92,9 @@ export function UserDistributionHistogram({ data }: UserDistributionHistogramPro
                   Suspicious Activity Detected
                 </div>
                 <div className="text-sm text-yellow-600">
-                  {suspiciousUsers.toLocaleString()} users ({suspiciousPercentage.toFixed(1)}%) have unusually high entry counts
+                  {suspiciousUsers.toLocaleString()} users (
+                  {suspiciousPercentage.toFixed(1)}%) have unusually high entry
+                  counts
                 </div>
               </div>
             </div>
@@ -86,10 +105,12 @@ export function UserDistributionHistogram({ data }: UserDistributionHistogramPro
             <div className="text-sm font-medium">Entry Pattern Analysis</div>
             <div className="grid gap-2">
               {data.map((item, index) => (
-                <div 
-                  key={item.entriesRange} 
+                <div
+                  key={item.entriesRange}
                   className={`flex items-center justify-between p-3 rounded-lg ${
-                    item.suspicious ? 'bg-red-50 border border-red-200' : 'bg-muted'
+                    item.suspicious
+                      ? 'bg-red-50 border border-red-200'
+                      : 'bg-muted'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
@@ -102,8 +123,12 @@ export function UserDistributionHistogram({ data }: UserDistributionHistogramPro
                     )}
                   </div>
                   <div className="flex items-center space-x-2 text-sm">
-                    <span className="font-medium">{item.userCount.toLocaleString()} users</span>
-                    <span className="text-muted-foreground">({item.percentage.toFixed(1)}%)</span>
+                    <span className="font-medium">
+                      {item.userCount.toLocaleString()} users
+                    </span>
+                    <span className="text-muted-foreground">
+                      ({item.percentage.toFixed(1)}%)
+                    </span>
                   </div>
                 </div>
               ))}
@@ -126,12 +151,20 @@ export function UserDistributionHistogram({ data }: UserDistributionHistogramPro
             </div>
             <div>
               <div className="text-muted-foreground">Risk Level</div>
-              <div className={`font-medium ${
-                suspiciousPercentage > 10 ? 'text-red-600' : 
-                suspiciousPercentage > 5 ? 'text-yellow-600' : 'text-green-600'
-              }`}>
-                {suspiciousPercentage > 10 ? 'High' : 
-                 suspiciousPercentage > 5 ? 'Medium' : 'Low'}
+              <div
+                className={`font-medium ${
+                  suspiciousPercentage > 10
+                    ? 'text-red-600'
+                    : suspiciousPercentage > 5
+                      ? 'text-yellow-600'
+                      : 'text-green-600'
+                }`}
+              >
+                {suspiciousPercentage > 10
+                  ? 'High'
+                  : suspiciousPercentage > 5
+                    ? 'Medium'
+                    : 'Low'}
               </div>
             </div>
             <div>

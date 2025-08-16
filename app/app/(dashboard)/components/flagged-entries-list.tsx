@@ -1,13 +1,26 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { AlertTriangle, Check, X, Eye, RefreshCw, ExternalLink } from "lucide-react";
-import { useState } from "react";
-import Link from "next/link";
-import { FlaggedEntryData } from "@/schemas";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  AlertTriangle,
+  Check,
+  X,
+  Eye,
+  RefreshCw,
+  ExternalLink
+} from 'lucide-react';
+import { useState } from 'react';
+import Link from 'next/link';
+import { FlaggedEntryData } from '@/schemas/index';
 
 interface FlaggedEntriesListProps {
   entries: FlaggedEntryData[];
@@ -19,24 +32,25 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
 
   const handleAction = async (entryId: string, action: 'resolve' | 'block') => {
     setLoading(entryId);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setLocalEntries(prev => 
-      prev.map(entry => 
-        entry.id === entryId 
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setLocalEntries((prev) =>
+      prev.map((entry) =>
+        entry.id === entryId
           ? { ...entry, status: action === 'resolve' ? 'resolved' : 'blocked' }
           : entry
       )
     );
-    
+
     setLoading(null);
   };
 
   const getRiskBadge = (score: number) => {
     if (score >= 80) return <Badge variant="destructive">High Risk</Badge>;
-    if (score >= 60) return <Badge className="bg-yellow-500">Medium Risk</Badge>;
+    if (score >= 60)
+      return <Badge className="bg-yellow-500">Medium Risk</Badge>;
     return <Badge variant="secondary">Low Risk</Badge>;
   };
 
@@ -46,16 +60,25 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
       resolved: 'default',
       blocked: 'destructive'
     } as const;
-    
+
     return <Badge variant={variants[status]}>{status}</Badge>;
   };
 
   const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   };
 
-  const pendingEntries = localEntries.filter(entry => entry.status === 'pending');
-  const reviewedEntries = localEntries.filter(entry => entry.status !== 'pending');
+  const pendingEntries = localEntries.filter(
+    (entry) => entry.status === 'pending'
+  );
+  const reviewedEntries = localEntries.filter(
+    (entry) => entry.status !== 'pending'
+  );
 
   return (
     <Card>
@@ -77,34 +100,43 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
           {pendingEntries.length > 0 && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-sm">Pending Review ({pendingEntries.length})</h3>
+                <h3 className="font-medium text-sm">
+                  Pending Review ({pendingEntries.length})
+                </h3>
                 <Button variant="outline" size="sm">
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Bulk Actions
                 </Button>
               </div>
-              
+
               <div className="space-y-3">
                 {pendingEntries.map((entry) => (
-                  <div 
-                    key={entry.id} 
+                  <div
+                    key={entry.id}
                     className="border border-yellow-200 bg-yellow-50 p-4 rounded-lg space-y-3"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-3">
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src={entry.userAvatar} alt={entry.userName} />
+                          <AvatarImage
+                            src={entry.userAvatar}
+                            alt={entry.userName}
+                          />
                           <AvatarFallback className="text-xs">
                             {getInitials(entry.userName)}
                           </AvatarFallback>
                         </Avatar>
-                        
+
                         <div className="space-y-1">
                           <div className="flex items-center space-x-2">
-                            <h4 className="font-medium text-sm">{entry.userName}</h4>
+                            <h4 className="font-medium text-sm">
+                              {entry.userName}
+                            </h4>
                             {getRiskBadge(entry.riskScore)}
                           </div>
-                          <p className="text-xs text-muted-foreground">{entry.userEmail}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {entry.userEmail}
+                          </p>
                           <div className="flex items-center space-x-4 text-xs text-muted-foreground">
                             <span>IP: {entry.ipAddress}</span>
                             {entry.location && <span>📍 {entry.location}</span>}
@@ -112,7 +144,7 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         <Button
                           variant="ghost"
@@ -123,7 +155,7 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
                         </Button>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div>
@@ -131,11 +163,12 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
                             Flag Reason: {entry.flagReason}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            Sweepstakes: {entry.sweepstakesName} • Flagged: {entry.flaggedAt}
+                            Sweepstakes: {entry.sweepstakesName} • Flagged:{' '}
+                            {entry.flaggedAt}
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2 pt-2">
                         <Button
                           size="sm"
@@ -173,23 +206,30 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
               <h3 className="font-medium text-sm border-t pt-4">
                 Recently Reviewed ({reviewedEntries.length})
               </h3>
-              
+
               <div className="space-y-2">
                 {reviewedEntries.slice(0, 5).map((entry) => (
-                  <div 
-                    key={entry.id} 
+                  <div
+                    key={entry.id}
                     className="flex items-center justify-between p-3 bg-muted rounded-lg"
                   >
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={entry.userAvatar} alt={entry.userName} />
+                        <AvatarImage
+                          src={entry.userAvatar}
+                          alt={entry.userName}
+                        />
                         <AvatarFallback className="text-xs">
                           {getInitials(entry.userName)}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="font-medium text-sm">{entry.userName}</div>
-                        <div className="text-xs text-muted-foreground">{entry.flagReason}</div>
+                        <div className="font-medium text-sm">
+                          {entry.userName}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {entry.flagReason}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -224,24 +264,26 @@ export function FlaggedEntriesList({ entries }: FlaggedEntriesListProps) {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t text-sm">
             <div>
               <div className="text-muted-foreground">Pending</div>
-              <div className="font-medium text-yellow-600">{pendingEntries.length}</div>
+              <div className="font-medium text-yellow-600">
+                {pendingEntries.length}
+              </div>
             </div>
             <div>
               <div className="text-muted-foreground">Resolved</div>
               <div className="font-medium text-green-600">
-                {localEntries.filter(e => e.status === 'resolved').length}
+                {localEntries.filter((e) => e.status === 'resolved').length}
               </div>
             </div>
             <div>
               <div className="text-muted-foreground">Blocked</div>
               <div className="font-medium text-red-600">
-                {localEntries.filter(e => e.status === 'blocked').length}
+                {localEntries.filter((e) => e.status === 'blocked').length}
               </div>
             </div>
             <div>
               <div className="text-muted-foreground">High Risk</div>
               <div className="font-medium text-red-600">
-                {localEntries.filter(e => e.riskScore >= 80).length}
+                {localEntries.filter((e) => e.riskScore >= 80).length}
               </div>
             </div>
           </div>
