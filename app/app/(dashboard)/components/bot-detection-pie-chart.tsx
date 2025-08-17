@@ -71,11 +71,11 @@ export function BotDetectionPieChart({
           Breakdown of legitimate vs filtered entries
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-3 sm:p-6">
+      <CardContent className="p-2 sm:p-3 md:p-6">
         <div className="overflow-hidden">
           <ChartContainer
             config={chartConfig}
-            className="min-h-[200px] sm:min-h-[300px] w-full"
+            className="min-h-[180px] sm:min-h-[250px] md:min-h-[300px] w-full min-w-0"
           >
             <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
               <Pie

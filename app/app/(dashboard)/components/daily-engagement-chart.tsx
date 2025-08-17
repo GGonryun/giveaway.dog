@@ -43,15 +43,15 @@ export function DailyEngagementChart({ data }: DailyEngagementChartProps) {
           Entries, page views, and conversion rates over time
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-3 sm:p-6">
-        <div className="overflow-hidden">
+      <CardContent className="p-2 sm:p-3 md:p-6">
+        <div className="overflow-x-auto overflow-y-hidden">
           <ChartContainer
             config={chartConfig}
-            className="min-h-[200px] sm:min-h-[300px] w-full"
+            className="min-h-[180px] sm:min-h-[250px] md:min-h-[300px] w-full min-w-0"
           >
             <LineChart
               data={data}
-              margin={{ top: 5, right: 8, left: 8, bottom: 5 }}
+              margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
@@ -66,11 +66,12 @@ export function DailyEngagementChart({ data }: DailyEngagementChartProps) {
                 tick={{ fontSize: 10 }}
                 interval="preserveStartEnd"
                 height={40}
+                hide={false}
               />
               <YAxis
                 yAxisId="left"
-                tick={{ fontSize: 9 }}
-                width={35}
+                tick={{ fontSize: 8 }}
+                width={30}
                 tickFormatter={(value) => {
                   if (value >= 1000) return `${(value / 1000).toFixed(0)}k`;
                   return value.toString();
@@ -79,8 +80,8 @@ export function DailyEngagementChart({ data }: DailyEngagementChartProps) {
               <YAxis
                 yAxisId="right"
                 orientation="right"
-                tick={{ fontSize: 9 }}
-                width={30}
+                tick={{ fontSize: 8 }}
+                width={25}
                 tickFormatter={(value) => `${value}%`}
               />
               <ChartTooltip content={ChartTooltipContent} />

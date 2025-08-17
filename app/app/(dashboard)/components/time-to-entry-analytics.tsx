@@ -102,11 +102,11 @@ export function TimeToEntryAnalytics({
           Measure form friction and user engagement patterns
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-3 sm:p-6">
-        <div className="space-y-6">
+      <CardContent className="p-2 sm:p-3 md:p-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Key Metrics */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className={`p-4 rounded-lg ${friction.bg}`}>
+            <div className={`p-3 sm:p-4 rounded-lg ${friction.bg}`}>
               <div className="flex items-center space-x-2">
                 <Clock className={`h-4 w-4 ${friction.color}`} />
                 <div className="text-sm font-medium">Avg Time</div>
@@ -128,7 +128,7 @@ export function TimeToEntryAnalytics({
               </Badge>
             </div>
 
-            <div className="p-4 bg-muted rounded-lg">
+            <div className="p-3 sm:p-4 bg-muted rounded-lg">
               <div className="text-sm text-muted-foreground">Median Time</div>
               <div className="text-2xl font-bold">{formatTime(medianTime)}</div>
               <div className="text-xs text-muted-foreground">
@@ -136,7 +136,7 @@ export function TimeToEntryAnalytics({
               </div>
             </div>
 
-            <div className="p-4 bg-green-50 rounded-lg">
+            <div className="p-3 sm:p-4 bg-green-50 rounded-lg">
               <div className="text-sm font-medium text-green-700">
                 Quick Entries
               </div>
@@ -146,7 +146,7 @@ export function TimeToEntryAnalytics({
               <div className="text-xs text-green-600">Under 2 minutes</div>
             </div>
 
-            <div className="p-4 bg-red-50 rounded-lg">
+            <div className="p-3 sm:p-4 bg-red-50 rounded-lg">
               <div className="text-sm font-medium text-red-700">
                 Slow Entries
               </div>
@@ -201,22 +201,23 @@ export function TimeToEntryAnalytics({
               <div className="overflow-hidden">
                 <ChartContainer
                   config={chartConfig}
-                  className="min-h-[250px] w-full"
+                  className="min-h-[180px] sm:min-h-[250px] md:min-h-[300px] w-full min-w-0"
                 >
                   <BarChart
                     data={distributionData}
-                    margin={{ top: 10, right: 10, bottom: 30, left: 10 }}
+                    margin={{ top: 5, right: 15, bottom: 25, left: 15 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="timeRange"
-                      tick={{ fontSize: 10 }}
+                      tick={{ fontSize: 8 }}
                       angle={-45}
                       textAnchor="end"
-                      height={50}
+                      height={45}
                     />
                     <YAxis
-                      tick={{ fontSize: 10 }}
+                      tick={{ fontSize: 8 }}
+                      width={25}
                       tickFormatter={(value) => `${value}%`}
                     />
                     <ChartTooltip content={ChartTooltipContent} />
@@ -235,16 +236,17 @@ export function TimeToEntryAnalytics({
               <div className="overflow-hidden">
                 <ChartContainer
                   config={chartConfig}
-                  className="min-h-[250px] w-full"
+                  className="min-h-[180px] sm:min-h-[250px] md:min-h-[300px] w-full min-w-0"
                 >
                   <AreaChart
                     data={timelineData}
-                    margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+                    margin={{ top: 5, right: 15, bottom: 10, left: 15 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="time" tick={{ fontSize: 10 }} />
+                    <XAxis dataKey="time" tick={{ fontSize: 8 }} />
                     <YAxis
-                      tick={{ fontSize: 10 }}
+                      tick={{ fontSize: 8 }}
+                      width={25}
                       tickFormatter={(value) => formatTime(value)}
                     />
                     <ChartTooltip content={ChartTooltipContent} />

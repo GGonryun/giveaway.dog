@@ -40,7 +40,7 @@ async function DashboardEngagementSection() {
   ]);
 
   return (
-    <div className="grid gap-6 xl:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2">
       <DailyEngagementChart data={dailyEngagementData} />
       <BotDetectionPieChart
         data={botDetectionData}
@@ -61,7 +61,7 @@ async function DashboardConversionSection() {
   ]);
 
   return (
-    <div className="grid gap-6 xl:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2">
       <ConversionFunnelChart data={funnelData} />
       <EntryVelocityHeatmap data={heatmapData} />
     </div>
@@ -76,7 +76,7 @@ async function DashboardGeographicSection() {
   ]);
 
   return (
-    <div className="grid gap-6 xl:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2">
       <TimeToEntryAnalytics
         distributionData={timeToEntryData.distribution}
         timelineData={timeToEntryData.timeline}
@@ -97,7 +97,7 @@ async function DashboardDistributionSection() {
   ]);
 
   return (
-    <div className="grid gap-6 xl:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2">
       <UserDistributionHistogram data={userDistributionData} />
       <ReferrersBarChart data={referrerData} />
     </div>
@@ -129,33 +129,28 @@ function DashboardSkeleton() {
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-none space-y-4 md:space-y-6">
       {/* KPI Cards */}
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardKPISection />
       </Suspense>
 
-      {/* Main Charts Row */}
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardEngagementSection />
       </Suspense>
 
-      {/* Secondary Charts Row */}
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardConversionSection />
       </Suspense>
 
-      {/* Analytics Deep Dive Row */}
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardGeographicSection />
       </Suspense>
 
-      {/* Additional Analytics Row */}
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardDistributionSection />
       </Suspense>
 
-      {/* Full Width Management Components */}
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardActivitySection />
       </Suspense>

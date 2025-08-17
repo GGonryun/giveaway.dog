@@ -122,7 +122,7 @@ export function EntryVelocityHeatmap({ data }: EntryVelocityHeatmapProps) {
           {/* Desktop: Traditional horizontal heatmap */}
           <div className="hidden sm:block">
             <div className="overflow-x-auto">
-              <div className="min-w-[600px]">
+              <div className="w-full min-w-0">
                 {/* Hour labels */}
                 <div className="grid grid-cols-25 gap-1 mb-2">
                   <div className="text-xs font-medium"></div>{' '}
