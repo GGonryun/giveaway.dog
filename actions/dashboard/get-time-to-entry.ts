@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { TimeToEntryDistribution, TimeToEntryTimeline } from '../shared/types';
+import { TimeToEntryDistribution, TimeToEntryTimeline } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 interface TimeToEntryData {

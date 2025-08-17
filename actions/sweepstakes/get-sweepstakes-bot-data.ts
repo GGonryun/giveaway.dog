@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { BotDetectionData } from '../shared/types';
+import { BotDetectionData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 interface BotAnalyticsData {

@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { SweepstakesData } from '../shared/types';
+import { SweepstakesData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 interface GetSweepstakesListParams {

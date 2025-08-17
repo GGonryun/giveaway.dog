@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { LocationData } from '../shared/types';
+import { LocationData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 interface GetGeolocationDataParams {

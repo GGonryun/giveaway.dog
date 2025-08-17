@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { FunnelStageData } from '../shared/types';
+import { FunnelStageData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 const getSweepstakesFunnel = async (

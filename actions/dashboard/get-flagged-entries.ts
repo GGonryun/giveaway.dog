@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { FlaggedEntryData } from '../shared/types';
+import { FlaggedEntryData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 const getFlaggedEntries = async (): Promise<FlaggedEntryData[]> => {

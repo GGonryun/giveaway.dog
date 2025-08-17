@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { OrganizationData } from '../shared/types';
+import { OrganizationData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 interface ExtendedOrganizationData extends OrganizationData {

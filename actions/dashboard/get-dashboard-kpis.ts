@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { DashboardKPIData } from '../shared/types';
+import { DashboardKPIData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 const getDashboardKPIs = async (): Promise<DashboardKPIData> => {

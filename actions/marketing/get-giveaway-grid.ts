@@ -2,7 +2,7 @@
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
 import { simulateNetworkDelay } from '../shared/utils';
-import { PublicGiveawayItem } from '../shared/types';
+import { PublicGiveawayItem } from '@/schemas/index';
 
 interface GetGiveawayGridParams {
   category?: string;

@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { LatestUserData } from '../shared/types';
+import { LatestUserData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 const getLatestUsers = async (): Promise<LatestUserData[]> => {

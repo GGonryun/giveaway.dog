@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { DistributionData } from '../shared/types';
+import { DistributionData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 const getUserDistribution = async (): Promise<DistributionData[]> => {

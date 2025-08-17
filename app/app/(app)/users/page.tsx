@@ -4,33 +4,50 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Users, UserCheck, AlertTriangle, TrendingUp, Clock, Shield, Zap, Target } from 'lucide-react';
 import { UsersTable } from './components/users-table';
+import { Skeleton } from '@/components/ui/skeleton';
+import getUserAnalytics from '@/actions/users/get-user-analytics';
 
 // Wrapper component to handle Suspense for useSearchParams
 const UsersTableWrapper = () => {
   return <UsersTable />;
 };
 
-// Mock KPI data - in real app this would come from database
-const mockKPIs = {
-  totalUsers: 127459,
-  totalUsersChange: 12.5,
-  activeUsers: 89234,
-  activeUsersChange: 8.3,
-  qualityScore: 92.4,
-  qualityScoreChange: 2.1,
-  flaggedUsers: 1247,
-  flaggedUsersChange: -15.2,
-  newUsers30d: 23456,
-  newUsers30dChange: 18.7,
-  avgEngagement: 67.8,
-  avgEngagementChange: 5.4,
-  conversionRate: 15.2,
-  conversionRateChange: 3.8,
-  crmSyncRate: 98.5,
-  crmSyncRateChange: 1.2
+// Loading skeleton for KPI cards
+const UsersKPISkeleton = () => {
+  return (
+    <div className="grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <Card key={i}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="h-3 w-3" />
+          </CardHeader>
+          <CardContent className="pt-0">
+            <Skeleton className="h-6 w-16 mb-1" />
+            <Skeleton className="h-3 w-24" />
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
 };
 
-const UsersKPICards = () => {
+// Server component for user count badge
+async function UserCountBadge() {
+  const kpiData = await getUserAnalytics();
+  return (
+    <div className="flex items-center space-x-2">
+      <Badge variant="secondary" className="text-xs">
+        {kpiData.totalUsers.toLocaleString()} total users
+      </Badge>
+    </div>
+  );
+}
+
+// Server component for KPI Cards
+async function UsersKPISection() {
+  const kpiData = await getUserAnalytics();
+  
   const formatChange = (change: number) => (
     <span className={`text-sm ${change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
       {change >= 0 ? '+' : ''}{change.toFixed(1)}%
@@ -45,9 +62,9 @@ const UsersKPICards = () => {
           <Users className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{mockKPIs.totalUsers.toLocaleString()}</div>
+          <div className="text-lg font-bold">{kpiData.totalUsers.toLocaleString()}</div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-            {formatChange(mockKPIs.totalUsersChange)}
+            {formatChange(kpiData.totalUsersChange)}
             <span className="hidden sm:inline">from last month</span>
           </div>
         </CardContent>
@@ -59,9 +76,9 @@ const UsersKPICards = () => {
           <UserCheck className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{mockKPIs.activeUsers.toLocaleString()}</div>
+          <div className="text-lg font-bold">{kpiData.activeUsers.toLocaleString()}</div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-            {formatChange(mockKPIs.activeUsersChange)}
+            {formatChange(kpiData.activeUsersChange)}
             <span className="hidden sm:inline">from last month</span>
           </div>
         </CardContent>
@@ -73,9 +90,9 @@ const UsersKPICards = () => {
           <Shield className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{mockKPIs.qualityScore.toFixed(1)}</div>
+          <div className="text-lg font-bold">{kpiData.qualityScore.toFixed(1)}</div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-            {formatChange(mockKPIs.qualityScoreChange)}
+            {formatChange(kpiData.qualityScoreChange)}
             <span className="hidden sm:inline">from last month</span>
           </div>
         </CardContent>
@@ -87,9 +104,9 @@ const UsersKPICards = () => {
           <AlertTriangle className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{mockKPIs.flaggedUsers.toLocaleString()}</div>
+          <div className="text-lg font-bold">{kpiData.flaggedUsers.toLocaleString()}</div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-            {formatChange(mockKPIs.flaggedUsersChange)}
+            {formatChange(kpiData.flaggedUsersChange)}
             <span className="hidden sm:inline">from last month</span>
           </div>
         </CardContent>
@@ -101,9 +118,9 @@ const UsersKPICards = () => {
           <TrendingUp className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{mockKPIs.newUsers30d.toLocaleString()}</div>
+          <div className="text-lg font-bold">{kpiData.newUsers30d.toLocaleString()}</div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-            {formatChange(mockKPIs.newUsers30dChange)}
+            {formatChange(kpiData.newUsers30dChange)}
             <span className="hidden sm:inline">from last month</span>
           </div>
         </CardContent>
@@ -115,9 +132,9 @@ const UsersKPICards = () => {
           <Zap className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{mockKPIs.avgEngagement.toFixed(1)}%</div>
+          <div className="text-lg font-bold">{kpiData.avgEngagement.toFixed(1)}%</div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-            {formatChange(mockKPIs.avgEngagementChange)}
+            {formatChange(kpiData.avgEngagementChange)}
             <span className="hidden sm:inline">from last month</span>
           </div>
         </CardContent>
@@ -129,9 +146,9 @@ const UsersKPICards = () => {
           <Target className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{mockKPIs.conversionRate.toFixed(1)}%</div>
+          <div className="text-lg font-bold">{kpiData.conversionRate.toFixed(1)}%</div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-            {formatChange(mockKPIs.conversionRateChange)}
+            {formatChange(kpiData.conversionRateChange)}
             <span className="hidden sm:inline">from last month</span>
           </div>
         </CardContent>
@@ -143,16 +160,16 @@ const UsersKPICards = () => {
           <Clock className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{mockKPIs.crmSyncRate.toFixed(1)}%</div>
+          <div className="text-lg font-bold">{kpiData.crmSyncRate.toFixed(1)}%</div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-            {formatChange(mockKPIs.crmSyncRateChange)}
+            {formatChange(kpiData.crmSyncRateChange)}
             <span className="hidden sm:inline">from last month</span>
           </div>
         </CardContent>
       </Card>
     </div>
   );
-};
+}
 
 export default async function UsersPage() {
   return (
@@ -166,15 +183,15 @@ export default async function UsersPage() {
               Manage and analyze your user base with comprehensive tools and insights.
             </p>
           </div>
-          <div className="flex items-center space-x-2">
-            <Badge variant="secondary" className="text-xs">
-              127,459 total users
-            </Badge>
-          </div>
+          <Suspense fallback={<Skeleton className="h-5 w-24" />}>
+            <UserCountBadge />
+          </Suspense>
         </div>
 
         {/* KPI Cards */}
-        <UsersKPICards />
+        <Suspense fallback={<UsersKPISkeleton />}>
+          <UsersKPISection />
+        </Suspense>
 
         {/* Main Users Table */}
         <Suspense fallback={<div>Loading users table...</div>}>

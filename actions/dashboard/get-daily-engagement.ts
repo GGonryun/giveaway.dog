@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { DailyEngagementData } from '../shared/types';
+import { DailyEngagementData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 interface GetDailyEngagementParams {

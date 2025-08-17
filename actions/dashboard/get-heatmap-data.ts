@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { HeatmapData } from '../shared/types';
+import { HeatmapData } from '@/schemas/index';
 import { simulateNetworkDelay } from '../shared/utils';
 
 interface GetHeatmapDataParams {
