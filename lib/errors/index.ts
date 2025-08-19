@@ -71,8 +71,8 @@ export class ApplicationError extends Error {
   }
 }
 
-export class UnauthorizedAccessError extends ApplicationError {
-  constructor(message: string) {
+export class UnauthorizedError extends ApplicationError {
+  constructor({ message }: { message: string }) {
     super({
       code: 'UNAUTHORIZED',
       message

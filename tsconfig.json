@@ -20,7 +20,8 @@
       "@/lib/*": ["lib/*"],
       "@/schemas/*": ["schemas/*"],
       "@/app/*": ["app/*"],
-      "@/actions/*": ["actions/*"]
+      "@/actions/*": ["actions/*"],
+      "@/types/*": ["types/*"]
     },
     "plugins": [
       {

@@ -1,30 +1,24 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url       = env("POSTGRES_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model User {
-  id            String              @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?             @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
-  installations SlackInstallation[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  giveaways     Giveaway[]
 }
 
 model Account {
@@ -66,42 +60,90 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
-model SlackInstallationState {
-  id        String   @id @default(cuid())
-  botId     String
-  userId    String
-  error     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+model Giveaway {
+  id     String         @id // takes nanoid's
+  status GiveawayStatus @default(DRAFT)
 
-enum BotType {
-  SLACK
-}
+  // TODO: move to organizations
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
-model SlackInstallation {
-  id          String   @id @default(cuid())
-  accessToken String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  botId       String
+  name        String?
+  description String?
+  terms       String?
+  banner      String?
 
-  teamId String
-  team   SlackTeam @relation(fields: [teamId], references: [id])
+  startDate DateTime?
+  endDate   DateTime?
+  timeZone  String?
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  requireEmail          Boolean?
+  regionalRestriction   RegionRestriction[]
+  minimumAgeRestriction MinimumAgeRestriction?
 
-  @@unique([botId, teamId])
-}
-
-model SlackTeam {
-  id     String @id @default(cuid())
-  name   String
-  domain String
+  prizes Prize[]
+  tasks  Task[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
-  installations SlackInstallation[]
+enum GiveawayStatus {
+  DRAFT
+  SCHEDULED
+  PAUSED
+  CANCELED
+  ACTIVE
+  ENDED
+}
+
+model RegionRestriction {
+  id         String   @id @default(cuid())
+  giveawayId String
+  giveaway   Giveaway @relation(fields: [giveawayId], references: [id], onDelete: Cascade)
+
+  filter RegionRestrictionFilter
+  code   String
+}
+
+enum RegionRestrictionFilter {
+  INCLUDE
+  EXCLUDE
+}
+
+model MinimumAgeRestriction {
+  id         String   @id @default(cuid())
+  giveawayId String   @unique
+  giveaway   Giveaway @relation(fields: [giveawayId], references: [id], onDelete: Cascade)
+
+  value    Int // e.g. 18
+  label    String // e.g. "Must be 18 or older"
+  required Boolean // true if checkbox is mandatory
+  format   String  @default("checkbox") // future proofing
+}
+
+model Prize {
+  id         String   @id @default(cuid())
+  giveawayId String
+  giveaway   Giveaway @relation(fields: [giveawayId], references: [id], onDelete: Cascade)
+
+  name    String? // allow null for draft
+  winners Int? // allow null for draft
+}
+
+model Task {
+  id         String   @id @default(cuid())
+  giveawayId String
+  giveaway   Giveaway @relation(fields: [giveawayId], references: [id], onDelete: Cascade)
+
+  type      TaskType
+  title     String? // nullable when draft
+  value     Int? // nullable when draft
+  mandatory Boolean? // nullable when draft
+  config    Json?
+}
+
+enum TaskType {
+  BONUS_TASK
+  VISIT_URL
 }

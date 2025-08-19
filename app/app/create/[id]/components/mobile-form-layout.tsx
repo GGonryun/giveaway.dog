@@ -13,14 +13,7 @@ import { useFormIssues } from '@/components/hooks/use-form-issues';
 import { useRouter } from 'next/navigation';
 import { usePreviewState } from '../contexts/preview-state-context';
 import { getStateDisplayLabel } from '@/schemas/giveaway';
-
-interface MobileFormLayoutProps {
-  title: string;
-  onSubmit: () => void;
-  disabled: boolean;
-  left: React.ReactNode;
-  right: React.ReactNode;
-}
+import { FormHeaderProps, FormLayoutProps } from './form-layout';
 
 const MobileTabTrigger: React.FC<{
   step: string;
@@ -61,21 +54,13 @@ const MobileTabTrigger: React.FC<{
   );
 };
 
-const MobileFormHeader: React.FC<{
-  title: string;
-  disabled: boolean;
-  mobileView: 'form' | 'preview';
-}> = ({ title, disabled, mobileView }) => {
+const MobileFormHeader: React.FC<
+  {
+    mobileView: 'form' | 'preview';
+  } & FormHeaderProps
+> = ({ title, disabled, mobileView, onCancel }) => {
   const step = useSweepstakesStep();
   const router = useRouter();
-
-  const handleBack = useCallback(() => {
-    router.push('/app');
-  }, [router]);
-
-  const handleSubmit = useCallback(() => {
-    alert('Publish clicked');
-  }, []);
 
   return (
     <SiteHeader className="h-20">
@@ -90,16 +75,11 @@ const MobileFormHeader: React.FC<{
               variant="outline"
               size="icon"
               disabled={disabled}
-              onClick={handleBack}
+              onClick={onCancel}
             >
               <XIcon />
             </Button>
-            <Button
-              type="submit"
-              size="icon"
-              disabled={disabled}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" size="icon" disabled={disabled}>
               <SaveIcon />
             </Button>
           </div>
@@ -174,9 +154,9 @@ const MobileViewToggle: React.FC<{
   );
 };
 
-export const MobileFormLayout: React.FC<MobileFormLayoutProps> = ({
+export const MobileFormLayout: React.FC<FormLayoutProps> = ({
   title,
-  onSubmit,
+  onCancel,
   disabled,
   left,
   right
@@ -185,13 +165,11 @@ export const MobileFormLayout: React.FC<MobileFormLayoutProps> = ({
 
   return (
     <div className="fixed inset-0 flex flex-col bg-background">
-      <form
-        onSubmit={onSubmit}
-        className="flex-1 flex flex-col overflow-hidden"
-      >
+      <div className="flex-1 flex flex-col overflow-hidden">
         <MobileFormHeader
           title={title}
           disabled={disabled}
+          onCancel={onCancel}
           mobileView={mobileView}
         />
 
@@ -216,7 +194,7 @@ export const MobileFormLayout: React.FC<MobileFormLayoutProps> = ({
             onMobileViewChange={setMobileView}
           />
         </div>
-      </form>
+      </div>
     </div>
   );
 };

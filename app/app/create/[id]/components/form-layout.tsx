@@ -4,12 +4,17 @@ import { DesktopFormLayout } from './desktop-form-layout';
 import { useIsTablet } from '@/components/hooks/use-tablet';
 import { PreviewStateProvider } from '../contexts/preview-state-context';
 
-interface FormLayoutProps {
+export interface FormLayoutProps {
   title: string;
-  onSubmit: () => void;
+  onCancel: () => void;
   disabled: boolean;
   left: React.ReactNode;
   right: React.ReactNode;
+}
+export interface FormHeaderProps {
+  title: string;
+  disabled: boolean;
+  onCancel: () => void;
 }
 
 export const FormLayout: React.FC<FormLayoutProps> = (props) => {

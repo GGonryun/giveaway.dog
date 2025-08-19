@@ -1,5 +1,5 @@
 import { auth } from './auth';
-import { UnauthorizedAccessError } from './errors';
+import { UnauthorizedError } from './errors';
 
 type InjectedContext = { userId: string };
 
@@ -12,7 +12,7 @@ export namespace action {
       const userId = session?.user?.id;
 
       if (!userId) {
-        throw new UnauthorizedAccessError('User not authenticated');
+        throw new UnauthorizedError({ message: 'User not authenticated' });
       }
 
       return fn({ userId }, payload);

@@ -2,14 +2,14 @@
 
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from '@/components/hooks/use-toast';
+import { toast } from 'sonner';
 import {
   GiveawaySchema,
   giveawaySchema,
   giveawayDefaultValues
 } from '@/schemas/giveaway';
 import { onSubmitAction } from '../actions';
-import { useEffect, useTransition } from 'react';
+import { useCallback, useEffect, useTransition } from 'react';
 import * as dates from 'date-fns';
 import { timezone } from '@/lib/time';
 
@@ -18,8 +18,10 @@ import { FormDefaultsProvider } from './form/form-defaults-context';
 import { SweepstakesStepProvider } from '@/components/hooks/use-sweepstake-step';
 import { GiveawayFormContent } from './form-content';
 import { GiveawayPreview } from './preview';
+import { useRouter } from 'next/navigation';
 
 export const GiveawayForm: React.FC = () => {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const defaultValues = {
@@ -56,10 +58,8 @@ export const GiveawayForm: React.FC = () => {
       try {
         await onSubmitAction(values);
       } catch (error: any) {
-        toast({
-          title: 'Error',
-          description: error.message,
-          variant: 'destructive'
+        toast('Error', {
+          description: error.message
         });
         form.setError('tasks', {
           type: 'manual',
@@ -69,17 +69,23 @@ export const GiveawayForm: React.FC = () => {
     });
   };
 
+  const handleCancel = useCallback(() => {
+    if (confirm('Are you sure?')) router.push('/app');
+  }, [router]);
+
   return (
     <SweepstakesStepProvider>
       <FormProvider {...form}>
         <FormDefaultsProvider defaultValues={defaultValues}>
-          <FormLayout
-            title={name || 'New Sweepstakes'}
-            onSubmit={form.handleSubmit(handleSubmit)}
-            disabled={isPending}
-            left={<GiveawayFormContent />}
-            right={<GiveawayPreview />}
-          />
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
+            <FormLayout
+              title={name || 'New Sweepstakes'}
+              onCancel={handleCancel}
+              disabled={isPending}
+              left={<GiveawayFormContent />}
+              right={<GiveawayPreview />}
+            />
+          </form>
         </FormDefaultsProvider>
       </FormProvider>
     </SweepstakesStepProvider>

@@ -22,14 +22,7 @@ import { useFormIssues } from '@/components/hooks/use-form-issues';
 import { useSweepstakesStep } from '@/components/hooks/use-sweepstake-step';
 import { usePreviewState } from '../contexts/preview-state-context';
 import { GIVEAWAY_STATES, getStateDisplayLabel } from '@/schemas/giveaway';
-
-interface DesktopFormLayoutProps {
-  title: string;
-  onSubmit: () => void;
-  disabled: boolean;
-  left: React.ReactNode;
-  right: React.ReactNode;
-}
+import { FormHeaderProps, FormLayoutProps } from './form-layout';
 
 export const DesktopTabTrigger: React.FC<{
   step: SweepstakeStep;
@@ -94,7 +87,10 @@ const DesktopTitle: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   );
 };
 
-const DesktopActions: React.FC<{ disabled: boolean }> = ({ disabled }) => {
+const DesktopActions: React.FC<Omit<FormHeaderProps, 'title'>> = ({
+  disabled,
+  onCancel
+}) => {
   return (
     <div className="flex-1 flex justify-end gap-2">
       <Button
@@ -102,6 +98,7 @@ const DesktopActions: React.FC<{ disabled: boolean }> = ({ disabled }) => {
         variant="outline"
         size="default"
         disabled={disabled}
+        onClick={onCancel}
       >
         <XIcon />
         Cancel
@@ -114,16 +111,17 @@ const DesktopActions: React.FC<{ disabled: boolean }> = ({ disabled }) => {
   );
 };
 
-const DesktopFormHeader: React.FC<{
-  title: string;
-  disabled: boolean;
-}> = ({ title, disabled }) => {
+const DesktopFormHeader: React.FC<FormHeaderProps> = ({
+  title,
+  disabled,
+  onCancel
+}) => {
   return (
     <SiteHeader>
       <div className="flex items-center w-full">
         <DesktopTitle title={title} />
         <DesktopTabs />
-        <DesktopActions disabled={disabled} />
+        <DesktopActions disabled={disabled} onCancel={onCancel} />
       </div>
     </SiteHeader>
   );
@@ -168,20 +166,21 @@ const PreviewFooter: React.FC = () => {
   );
 };
 
-export const DesktopFormLayout: React.FC<DesktopFormLayoutProps> = ({
+export const DesktopFormLayout: React.FC<FormLayoutProps> = ({
   title,
-  onSubmit,
+  onCancel,
   disabled,
   left,
   right
 }) => {
   return (
     <div className="fixed inset-0 flex flex-col bg-background">
-      <form
-        onSubmit={onSubmit}
-        className="flex-1 flex flex-col overflow-hidden"
-      >
-        <DesktopFormHeader title={title} disabled={disabled} />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <DesktopFormHeader
+          title={title}
+          disabled={disabled}
+          onCancel={onCancel}
+        />
 
         <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
           <ResizablePanel
@@ -204,7 +203,7 @@ export const DesktopFormLayout: React.FC<DesktopFormLayoutProps> = ({
             <PreviewFooter />
           </ResizablePanel>
         </ResizablePanelGroup>
-      </form>
+      </div>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Sora, DM_Sans, Space_Mono } from 'next/font/google';
 
 import { Analytics } from '@vercel/analytics/react';
-import { SessionProvider } from '@/components/providers/auth-session-provider';
+import { SessionProvider } from '@/components/context/auth-session-provider';
 
 const sora = Sora({
   subsets: ['latin'],
@@ -39,7 +39,7 @@ export default async function RootLayout({
       <body>
         <SessionProvider>
           <main>{children}</main>
-          <Toaster />
+          <Toaster position="top-center" />
         </SessionProvider>
         <Analytics />
       </body>

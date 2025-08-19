@@ -1,3 +1,4 @@
+import { upload } from '@vercel/blob/client';
 import { useState } from 'react';
 
 export interface FileUploadResult {
@@ -16,44 +17,19 @@ class VercelFileProvider implements FileProvider {
     file: File,
     onProgress?: (progress: number) => void
   ): Promise<FileUploadResult> {
-    if (onProgress) onProgress(0);
-    const res = await fetch('/api/upload', {
-      method: 'POST',
-      body: file
+    onProgress?.(0);
+    const result = await upload(file.name, file, {
+      access: 'public',
+      handleUploadUrl: '/api/upload',
+      onUploadProgress(e) {
+        onProgress?.(e.percentage);
+      }
     });
-    if (!res.ok) throw new Error('Upload failed');
-    if (onProgress) onProgress(100);
-    const { url } = await res.json();
-    return { url };
+    onProgress?.(100);
+    return result;
   }
 }
 
-class MockFileProvider implements FileProvider {
-  private counter = 0;
-  async upload(
-    file: File,
-    onProgress?: (progress: number) => void
-  ): Promise<FileUploadResult> {
-    if (onProgress) onProgress(0);
-    await new Promise((r) => setTimeout(r, 500));
-    if (onProgress) onProgress(100);
-    this.counter++;
-    return { url: URL.createObjectURL(file) };
-  }
-}
-
-export type FileProviderType = 'vercel' | 'mock';
-
-export function useFileProvider(
-  type: FileProviderType = 'vercel'
-): FileProvider {
-  // Could be extended to use context or env
-  const [mockInstance] = useState(() => new MockFileProvider());
-  switch (type) {
-    case 'mock':
-      return mockInstance;
-    case 'vercel':
-    default:
-      return new VercelFileProvider();
-  }
+export function useFileProvider(): FileProvider {
+  return new VercelFileProvider();
 }

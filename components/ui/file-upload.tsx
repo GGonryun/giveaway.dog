@@ -2,10 +2,7 @@
 
 import React, { useRef, useState } from 'react';
 import { UploadCloud, X } from 'lucide-react';
-import {
-  useFileProvider,
-  FileProviderType
-} from '@/components/hooks/use-file-provider';
+import { useFileProvider } from '@/components/hooks/use-file-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Typography } from '@/components/ui/typography';
@@ -13,20 +10,17 @@ import { Typography } from '@/components/ui/typography';
 export interface FileUploadProps {
   onUpload?: (url: string) => void;
   initialUrl?: string;
-  providerType?: FileProviderType;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
   onUpload,
-  initialUrl,
-  providerType = 'mock'
+  initialUrl
 }) => {
-  const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(initialUrl || null);
   const [progress, setProgress] = useState<number>(0);
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const fileProvider = useFileProvider(providerType);
+  const fileProvider = useFileProvider();
 
   const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -45,7 +39,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       alert('File size must be less than 2MB.');
       return;
     }
-    setFile(file);
     setPreview(URL.createObjectURL(file));
     await uploadFile(file);
   };
@@ -70,7 +63,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const handleRemove = () => {
-    setFile(null);
     setPreview(null);
     setProgress(0);
     if (onUpload) onUpload('');
