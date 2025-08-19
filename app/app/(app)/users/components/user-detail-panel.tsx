@@ -166,7 +166,7 @@ export const UserDetailPanel = ({ userId, onClose }: UserDetailPanelProps) => {
         {/* User Details Header and Basic Info */}
         <div className="space-y-3">
           <h4 className="text-sm font-medium border-b pb-2">User Details</h4>
-          
+
           {/* Basic Info */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm">

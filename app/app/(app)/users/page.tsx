@@ -1,8 +1,23 @@
 import { Suspense } from 'react';
 import { Outline } from '../../outline';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Users, UserCheck, AlertTriangle, TrendingUp, Clock, Shield, Zap, Target } from 'lucide-react';
+import {
+  Users,
+  UserCheck,
+  AlertTriangle,
+  TrendingUp,
+  Clock,
+  Shield,
+  Zap,
+  Target
+} from 'lucide-react';
 import { UsersTable } from './components/users-table';
 import { Skeleton } from '@/components/ui/skeleton';
 import getUserAnalytics from '@/actions/users/get-user-analytics';
@@ -47,10 +62,13 @@ async function UserCountBadge() {
 // Server component for KPI Cards
 async function UsersKPISection() {
   const kpiData = await getUserAnalytics();
-  
+
   const formatChange = (change: number) => (
-    <span className={`text-sm ${change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-      {change >= 0 ? '+' : ''}{change.toFixed(1)}%
+    <span
+      className={`text-sm ${change >= 0 ? 'text-green-600' : 'text-red-600'}`}
+    >
+      {change >= 0 ? '+' : ''}
+      {change.toFixed(1)}%
     </span>
   );
 
@@ -62,21 +80,25 @@ async function UsersKPISection() {
           <Users className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{kpiData.totalUsers.toLocaleString()}</div>
+          <div className="text-lg font-bold">
+            {kpiData.totalUsers.toLocaleString()}
+          </div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
             {formatChange(kpiData.totalUsersChange)}
             <span className="hidden sm:inline">from last month</span>
           </div>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
           <CardTitle className="text-xs font-medium">Active Users</CardTitle>
           <UserCheck className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{kpiData.activeUsers.toLocaleString()}</div>
+          <div className="text-lg font-bold">
+            {kpiData.activeUsers.toLocaleString()}
+          </div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
             {formatChange(kpiData.activeUsersChange)}
             <span className="hidden sm:inline">from last month</span>
@@ -90,7 +112,9 @@ async function UsersKPISection() {
           <Shield className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{kpiData.qualityScore.toFixed(1)}</div>
+          <div className="text-lg font-bold">
+            {kpiData.qualityScore.toFixed(1)}
+          </div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
             {formatChange(kpiData.qualityScoreChange)}
             <span className="hidden sm:inline">from last month</span>
@@ -104,7 +128,9 @@ async function UsersKPISection() {
           <AlertTriangle className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{kpiData.flaggedUsers.toLocaleString()}</div>
+          <div className="text-lg font-bold">
+            {kpiData.flaggedUsers.toLocaleString()}
+          </div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
             {formatChange(kpiData.flaggedUsersChange)}
             <span className="hidden sm:inline">from last month</span>
@@ -118,7 +144,9 @@ async function UsersKPISection() {
           <TrendingUp className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{kpiData.newUsers30d.toLocaleString()}</div>
+          <div className="text-lg font-bold">
+            {kpiData.newUsers30d.toLocaleString()}
+          </div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
             {formatChange(kpiData.newUsers30dChange)}
             <span className="hidden sm:inline">from last month</span>
@@ -132,7 +160,9 @@ async function UsersKPISection() {
           <Zap className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{kpiData.avgEngagement.toFixed(1)}%</div>
+          <div className="text-lg font-bold">
+            {kpiData.avgEngagement.toFixed(1)}%
+          </div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
             {formatChange(kpiData.avgEngagementChange)}
             <span className="hidden sm:inline">from last month</span>
@@ -146,7 +176,9 @@ async function UsersKPISection() {
           <Target className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{kpiData.conversionRate.toFixed(1)}%</div>
+          <div className="text-lg font-bold">
+            {kpiData.conversionRate.toFixed(1)}%
+          </div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
             {formatChange(kpiData.conversionRateChange)}
             <span className="hidden sm:inline">from last month</span>
@@ -160,7 +192,9 @@ async function UsersKPISection() {
           <Clock className="h-3 w-3 text-muted-foreground" />
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="text-lg font-bold">{kpiData.crmSyncRate.toFixed(1)}%</div>
+          <div className="text-lg font-bold">
+            {kpiData.crmSyncRate.toFixed(1)}%
+          </div>
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
             {formatChange(kpiData.crmSyncRateChange)}
             <span className="hidden sm:inline">from last month</span>
@@ -178,9 +212,12 @@ export default async function UsersPage() {
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Users Management</h1>
+            <h1 className="text-2xl font-bold tracking-tight">
+              Users Management
+            </h1>
             <p className="text-muted-foreground">
-              Manage and analyze your user base with comprehensive tools and insights.
+              Manage and analyze your user base with comprehensive tools and
+              insights.
             </p>
           </div>
           <Suspense fallback={<Skeleton className="h-5 w-24" />}>

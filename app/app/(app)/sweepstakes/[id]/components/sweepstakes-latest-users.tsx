@@ -297,4 +297,4 @@ export const SweepstakesLatestUsers = () => {
       </CardContent>
     </Card>
   );
-}
+};

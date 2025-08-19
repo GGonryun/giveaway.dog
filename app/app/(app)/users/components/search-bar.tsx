@@ -18,7 +18,7 @@ interface SearchBarProps {
 export const SearchBar = ({
   value,
   onChange,
-  placeholder = "Search users...",
+  placeholder = 'Search users...',
   debounceMs = 150,
   suggestions = [],
   onSuggestionSelect
@@ -46,11 +46,14 @@ export const SearchBar = ({
     setLocalValue(value);
   }, [value]);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setLocalValue(newValue);
-    setShowSuggestions(newValue.length > 0 && suggestions.length > 0);
-  }, [suggestions.length]);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
+      setLocalValue(newValue);
+      setShowSuggestions(newValue.length > 0 && suggestions.length > 0);
+    },
+    [suggestions.length]
+  );
 
   const handleClear = useCallback(() => {
     setLocalValue('');
@@ -59,18 +62,24 @@ export const SearchBar = ({
     setShowSuggestions(false);
   }, [onChange]);
 
-  const handleSuggestionClick = useCallback((suggestion: string) => {
-    setLocalValue(suggestion);
-    setDebouncedValue(suggestion);
-    onChange(suggestion);
-    setShowSuggestions(false);
-    onSuggestionSelect?.(suggestion);
-  }, [onChange, onSuggestionSelect]);
+  const handleSuggestionClick = useCallback(
+    (suggestion: string) => {
+      setLocalValue(suggestion);
+      setDebouncedValue(suggestion);
+      onChange(suggestion);
+      setShowSuggestions(false);
+      onSuggestionSelect?.(suggestion);
+    },
+    [onChange, onSuggestionSelect]
+  );
 
-  const filteredSuggestions = suggestions.filter(suggestion =>
-    suggestion.toLowerCase().includes(localValue.toLowerCase()) &&
-    suggestion.toLowerCase() !== localValue.toLowerCase()
-  ).slice(0, 5); // Limit to 5 suggestions
+  const filteredSuggestions = suggestions
+    .filter(
+      (suggestion) =>
+        suggestion.toLowerCase().includes(localValue.toLowerCase()) &&
+        suggestion.toLowerCase() !== localValue.toLowerCase()
+    )
+    .slice(0, 5); // Limit to 5 suggestions
 
   const isSearchActive = localValue.length > 0;
   const hasResults = debouncedValue === localValue && localValue.length > 0;
@@ -84,7 +93,11 @@ export const SearchBar = ({
           placeholder={placeholder}
           value={localValue}
           onChange={handleInputChange}
-          onFocus={() => setShowSuggestions(localValue.length > 0 && filteredSuggestions.length > 0)}
+          onFocus={() =>
+            setShowSuggestions(
+              localValue.length > 0 && filteredSuggestions.length > 0
+            )
+          }
           onBlur={() => setTimeout(() => setShowSuggestions(false), 150)} // Delay to allow suggestion clicks
           className="pl-9 pr-9"
         />
@@ -118,7 +131,9 @@ export const SearchBar = ({
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-background border rounded-md shadow-lg">
           <div className="p-2">
-            <div className="text-xs text-muted-foreground mb-2 px-2">Suggestions</div>
+            <div className="text-xs text-muted-foreground mb-2 px-2">
+              Suggestions
+            </div>
             <div className="space-y-1">
               {filteredSuggestions.map((suggestion, index) => (
                 <Button

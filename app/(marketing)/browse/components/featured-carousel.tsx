@@ -7,7 +7,6 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
-import { Typography } from '@/components/ui/typography';
 import { GiveawayItem, GiveawayItemProps } from './giveaway-item';
 
 type FeaturedGiveaway = GiveawayItemProps & {

@@ -375,4 +375,4 @@ export const SweepstakesExportModal = () => {
       </CardContent>
     </Card>
   );
-}
+};

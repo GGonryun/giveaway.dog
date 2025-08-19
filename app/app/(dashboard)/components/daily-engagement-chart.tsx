@@ -45,10 +45,7 @@ export function DailyEngagementChart({ data }: DailyEngagementChartProps) {
       </CardHeader>
       <CardContent className="p-2 sm:p-3 md:p-6">
         <div className="overflow-x-auto overflow-y-hidden">
-          <ChartContainer
-            config={chartConfig}
-            className="min-h-[180px] sm:min-h-[250px] md:min-h-[300px] w-full min-w-0"
-          >
+          <ChartContainer config={chartConfig} className="w-full min-w-0">
             <LineChart
               data={data}
               margin={{ top: 5, right: 20, left: 20, bottom: 5 }}

@@ -63,11 +63,41 @@ const mockDetailedAnalytics = {
     { country: 'Germany', entries: 321, percentage: 5.9 }
   ],
   referrerData: [
-    { source: 'Instagram', visits: 28894, entries: 2456, conversionRate: 8.5, percentage: 45.2 },
-    { source: 'Twitter/X', visits: 14515, entries: 987, conversionRate: 6.8, percentage: 18.2 },
-    { source: 'Direct', visits: 5450, entries: 654, conversionRate: 12.0, percentage: 12.0 },
-    { source: 'Facebook', visits: 8308, entries: 432, conversionRate: 5.2, percentage: 8.0 },
-    { source: 'YouTube', visits: 3527, entries: 321, conversionRate: 9.1, percentage: 5.9 }
+    {
+      source: 'Instagram',
+      visits: 28894,
+      entries: 2456,
+      conversionRate: 8.5,
+      percentage: 45.2
+    },
+    {
+      source: 'Twitter/X',
+      visits: 14515,
+      entries: 987,
+      conversionRate: 6.8,
+      percentage: 18.2
+    },
+    {
+      source: 'Direct',
+      visits: 5450,
+      entries: 654,
+      conversionRate: 12.0,
+      percentage: 12.0
+    },
+    {
+      source: 'Facebook',
+      visits: 8308,
+      entries: 432,
+      conversionRate: 5.2,
+      percentage: 8.0
+    },
+    {
+      source: 'YouTube',
+      visits: 3527,
+      entries: 321,
+      conversionRate: 9.1,
+      percentage: 5.9
+    }
   ],
   deviceData: [
     { device: 'Mobile', entries: 3789, percentage: 69.8 },
@@ -75,11 +105,36 @@ const mockDetailedAnalytics = {
     { device: 'Tablet', entries: 409, percentage: 7.5 }
   ],
   botDetectionData: [
-    { reason: 'Multiple IPs', count: 234, percentage: 4.3, severity: 'high' as const },
-    { reason: 'Fast Entry', count: 156, percentage: 2.9, severity: 'medium' as const },
-    { reason: 'Suspicious Email', count: 89, percentage: 1.6, severity: 'medium' as const },
-    { reason: 'VPN/Proxy', count: 67, percentage: 1.2, severity: 'low' as const },
-    { reason: 'Bot Pattern', count: 45, percentage: 0.8, severity: 'high' as const }
+    {
+      reason: 'Multiple IPs',
+      count: 234,
+      percentage: 4.3,
+      severity: 'high' as const
+    },
+    {
+      reason: 'Fast Entry',
+      count: 156,
+      percentage: 2.9,
+      severity: 'medium' as const
+    },
+    {
+      reason: 'Suspicious Email',
+      count: 89,
+      percentage: 1.6,
+      severity: 'medium' as const
+    },
+    {
+      reason: 'VPN/Proxy',
+      count: 67,
+      percentage: 1.2,
+      severity: 'low' as const
+    },
+    {
+      reason: 'Bot Pattern',
+      count: 45,
+      percentage: 0.8,
+      severity: 'high' as const
+    }
   ]
 };
 

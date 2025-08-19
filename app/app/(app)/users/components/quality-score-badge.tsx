@@ -9,31 +9,34 @@ interface QualityScoreBadgeProps {
   size?: 'sm' | 'default' | 'lg';
 }
 
-export const QualityScoreBadge = ({ 
-  score, 
-  breakdown = {}, 
-  showTooltip = true, 
-  size = 'default' 
+export const QualityScoreBadge = ({
+  score,
+  breakdown = {},
+  showTooltip = true,
+  size = 'default'
 }: QualityScoreBadgeProps) => {
   const getScoreInfo = (score: number) => {
-    if (score >= 80) return {
-      label: 'High',
-      color: 'text-green-600',
-      icon: CheckCircle,
-      bgColor: 'bg-green-600'
-    };
-    if (score >= 60) return {
-      label: 'Medium',
-      color: 'text-yellow-600', 
-      icon: AlertCircle,
-      bgColor: 'bg-yellow-600'
-    };
-    if (score >= 40) return {
-      label: 'Low',
-      color: 'text-orange-600',
-      icon: AlertTriangle,
-      bgColor: 'bg-orange-600'
-    };
+    if (score >= 80)
+      return {
+        label: 'High',
+        color: 'text-green-600',
+        icon: CheckCircle,
+        bgColor: 'bg-green-600'
+      };
+    if (score >= 60)
+      return {
+        label: 'Medium',
+        color: 'text-yellow-600',
+        icon: AlertCircle,
+        bgColor: 'bg-yellow-600'
+      };
+    if (score >= 40)
+      return {
+        label: 'Low',
+        color: 'text-orange-600',
+        icon: AlertTriangle,
+        bgColor: 'bg-orange-600'
+      };
     return {
       label: 'Very Low',
       color: 'text-red-600',
@@ -57,7 +60,7 @@ export const QualityScoreBadge = ({
         </div>
       </div>
       <div className="w-full bg-muted rounded-full h-2">
-        <div 
+        <div
           className={`h-2 rounded-full transition-all ${scoreInfo.bgColor}`}
           style={{ width: `${score}%` }}
         />

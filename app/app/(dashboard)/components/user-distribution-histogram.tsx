@@ -49,13 +49,10 @@ export function UserDistributionHistogram({
         <div className="space-y-4">
           {/* Histogram Chart */}
           <div className="overflow-hidden">
-            <ChartContainer
-              config={chartConfig}
-              className="min-h-[200px] sm:min-h-[300px] w-full"
-            >
+            <ChartContainer config={chartConfig} className="w-full">
               <BarChart
                 data={data}
-                margin={{ top: 10, right: 10, bottom: 30, left: 10 }}
+                margin={{ top: 10, right: 10, bottom: 30, left: -30 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis

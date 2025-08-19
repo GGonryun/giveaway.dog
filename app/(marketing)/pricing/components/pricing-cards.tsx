@@ -33,27 +33,27 @@ const features = [
 const packages = {
   starter: {
     id: 'starter',
-    name: 'Starter Pack',
+    name: 'Single Pack',
     price: 5,
-    giveaways: 3,
-    pricePerGiveaway: 1.67,
+    giveaways: 1,
+    pricePerGiveaway: 5.0,
     discount: '0%'
   },
   popular: {
     id: 'popular',
-    name: 'Popular Pack',
+    name: 'Small Business Pack',
     price: 20,
-    giveaways: 20,
-    pricePerGiveaway: 1.0,
-    discount: '40% off'
+    giveaways: 5,
+    pricePerGiveaway: 4.0,
+    discount: '20% off'
   },
   pro: {
     id: 'pro',
-    name: 'Pro Pack',
+    name: 'Growth Pack',
     price: 50,
-    giveaways: 50,
-    pricePerGiveaway: 1.0,
-    discount: '50% off'
+    giveaways: 15,
+    pricePerGiveaway: 3.33,
+    discount: '33% off'
   }
 };
 
@@ -211,6 +211,43 @@ export function PricingCards() {
               <Button className="w-full mt-4" asChild>
                 <Link href="/signup">Start Your Giveaways</Link>
               </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Enterprise/Bulk Pricing */}
+        <div className="mt-8 md:mt-12">
+          <Card className="border-2 border-purple-200 bg-purple-50/50">
+            <CardContent className="p-6 md:p-8 text-center">
+              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <DollarSign className="w-8 h-8 text-purple-600" />
+              </div>
+              <Typography.Header
+                level={3}
+                className="text-xl md:text-2xl font-bold mb-3"
+              >
+                Need More Than 50 Giveaways?
+              </Typography.Header>
+              <Typography.Paragraph className="text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+                For businesses and agencies running large-scale campaigns, we
+                offer custom bulk pricing with significant discounts and
+                dedicated support.
+              </Typography.Paragraph>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                  asChild
+                >
+                  <Link href="mailto:sales@giveaway.dog?subject=Bulk Pricing Inquiry">
+                    Contact Sales Team
+                  </Link>
+                </Button>
+                <Typography.Paragraph className="text-sm text-muted-foreground">
+                  Custom pricing • Volume discounts • Dedicated account manager
+                </Typography.Paragraph>
+              </div>
             </CardContent>
           </Card>
         </div>

@@ -256,4 +256,4 @@ export const SweepstakesConversionFunnel = ({
       </CardContent>
     </Card>
   );
-}
+};

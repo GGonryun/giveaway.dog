@@ -8,7 +8,7 @@ export const DashboardKPIDataSchema = z.object({
   newUsers: z.number(),
   newUsersChange: z.number(),
   activeSweepstakes: z.number(),
-  botFilterRate: z.number(),
+  botFilterRate: z.number()
 });
 
 export type DashboardKPIData = z.infer<typeof DashboardKPIDataSchema>;
@@ -18,7 +18,7 @@ export const DailyEngagementDataSchema = z.object({
   date: z.string(),
   entries: z.number(),
   pageviews: z.number(),
-  conversionRate: z.number(),
+  conversionRate: z.number()
 });
 
 export type DailyEngagementData = z.infer<typeof DailyEngagementDataSchema>;
@@ -27,7 +27,7 @@ export type DailyEngagementData = z.infer<typeof DailyEngagementDataSchema>;
 export const BotDetectionDataSchema = z.object({
   name: z.string(),
   value: z.number(),
-  fill: z.string(),
+  fill: z.string()
 });
 
 export type BotDetectionData = z.infer<typeof BotDetectionDataSchema>;
@@ -36,7 +36,7 @@ export type BotDetectionData = z.infer<typeof BotDetectionDataSchema>;
 export const FunnelStageDataSchema = z.object({
   stage: z.string(),
   value: z.number(),
-  percentage: z.number(),
+  percentage: z.number()
 });
 
 export type FunnelStageData = z.infer<typeof FunnelStageDataSchema>;
@@ -46,7 +46,7 @@ export const ReferrerDataSchema = z.object({
   source: z.string(),
   visits: z.number(),
   conversions: z.number(),
-  conversionRate: z.number(),
+  conversionRate: z.number()
 });
 
 export type ReferrerData = z.infer<typeof ReferrerDataSchema>;
@@ -60,7 +60,7 @@ export const ActiveSweepstakesDataSchema = z.object({
   conversionRate: z.number(),
   botRate: z.number(),
   timeLeft: z.string(),
-  status: z.enum(['active', 'ending-soon', 'draft', 'completed', 'paused']),
+  status: z.enum(['active', 'ending-soon', 'draft', 'completed', 'paused'])
 });
 
 export type ActiveSweepstakesData = z.infer<typeof ActiveSweepstakesDataSchema>;
@@ -70,7 +70,7 @@ export const HeatmapDataSchema = z.object({
   hour: z.number(),
   day: z.string(),
   entries: z.number(),
-  intensity: z.number(),
+  intensity: z.number()
 });
 
 export type HeatmapData = z.infer<typeof HeatmapDataSchema>;
@@ -82,7 +82,7 @@ export const LocationDataSchema = z.object({
   city: z.string().optional(),
   entries: z.number(),
   percentage: z.number(),
-  flag: z.string(),
+  flag: z.string()
 });
 
 export type LocationData = z.infer<typeof LocationDataSchema>;
@@ -92,7 +92,7 @@ export const DistributionDataSchema = z.object({
   entriesRange: z.string(),
   userCount: z.number(),
   percentage: z.number(),
-  suspicious: z.boolean(),
+  suspicious: z.boolean()
 });
 
 export type DistributionData = z.infer<typeof DistributionDataSchema>;
@@ -108,7 +108,7 @@ export const LatestUserDataSchema = z.object({
   firstSource: z.string(),
   location: z.string(),
   qualityScore: z.number(),
-  entries: z.number(),
+  entries: z.number()
 });
 
 export type LatestUserData = z.infer<typeof LatestUserDataSchema>;
@@ -126,7 +126,7 @@ export const FlaggedEntryDataSchema = z.object({
   ipAddress: z.string(),
   location: z.string(),
   sweepstakesName: z.string(),
-  status: z.enum(['pending', 'resolved', 'blocked']),
+  status: z.enum(['pending', 'resolved', 'blocked'])
 });
 
 export type FlaggedEntryData = z.infer<typeof FlaggedEntryDataSchema>;
@@ -136,16 +136,18 @@ export const TimeToEntryDistributionSchema = z.object({
   timeRange: z.string(),
   userCount: z.number(),
   percentage: z.number(),
-  avgConversionRate: z.number(),
+  avgConversionRate: z.number()
 });
 
-export type TimeToEntryDistribution = z.infer<typeof TimeToEntryDistributionSchema>;
+export type TimeToEntryDistribution = z.infer<
+  typeof TimeToEntryDistributionSchema
+>;
 
 // Time to Entry Timeline Schema
 export const TimeToEntryTimelineSchema = z.object({
   time: z.string(),
   entries: z.number(),
-  avgTime: z.number(),
+  avgTime: z.number()
 });
 
 export type TimeToEntryTimeline = z.infer<typeof TimeToEntryTimelineSchema>;
@@ -167,7 +169,7 @@ export const UserAnalyticsDataSchema = z.object({
   conversionRate: z.number(),
   conversionRateChange: z.number(),
   crmSyncRate: z.number(),
-  crmSyncRateChange: z.number(),
+  crmSyncRateChange: z.number()
 });
 
 export type UserAnalyticsData = z.infer<typeof UserAnalyticsDataSchema>;
@@ -181,10 +183,12 @@ export const SweepstakesOverviewDataSchema = z.object({
   totalEntries: z.number(),
   totalEntriesChange: z.number(),
   avgConversionRate: z.number(),
-  avgConversionRateChange: z.number(),
+  avgConversionRateChange: z.number()
 });
 
-export type SweepstakesOverviewData = z.infer<typeof SweepstakesOverviewDataSchema>;
+export type SweepstakesOverviewData = z.infer<
+  typeof SweepstakesOverviewDataSchema
+>;
 
 // Sweepstakes Data Schema
 export const SweepstakesDataSchema = z.object({
@@ -198,7 +202,7 @@ export const SweepstakesDataSchema = z.object({
   timeLeft: z.string(),
   createdAt: z.string(),
   topSource: z.string(),
-  prize: z.string(),
+  prize: z.string()
 });
 
 export type SweepstakesData = z.infer<typeof SweepstakesDataSchema>;
@@ -211,7 +215,7 @@ export const OrganizationDataSchema = z.object({
   timezone: z.string(),
   locale: z.string(),
   logo: z.string().optional(),
-  brandColor: z.string().optional(),
+  brandColor: z.string().optional()
 });
 
 export type OrganizationData = z.infer<typeof OrganizationDataSchema>;
@@ -220,14 +224,14 @@ export type OrganizationData = z.infer<typeof OrganizationDataSchema>;
 const PrizeSchema = z.object({
   title: z.string(),
   value: z.string(),
-  image: z.string(),
+  image: z.string()
 });
 
 const HostSchema = z.object({
   name: z.string(),
   avatar: z.string(),
   verified: z.boolean(),
-  rating: z.number().optional(),
+  rating: z.number().optional()
 });
 
 const StatsSchema = z.object({
@@ -235,19 +239,21 @@ const StatsSchema = z.object({
   timeLeft: z.string(),
   endDate: z.string(),
   daysLeft: z.number(),
-  successRate: z.number().optional(),
+  successRate: z.number().optional()
 });
 
 const EntryMethodsSchema = z.object({
   total: z.number(),
-  types: z.array(z.string()).optional(),
+  types: z.array(z.string()).optional()
 });
 
-const RequirementsSchema = z.object({
-  ageLimit: z.number(),
-  verificationRequired: z.boolean(),
-  premiumOnly: z.boolean(),
-}).optional();
+const RequirementsSchema = z
+  .object({
+    ageLimit: z.number(),
+    verificationRequired: z.boolean(),
+    premiumOnly: z.boolean()
+  })
+  .optional();
 
 export const PublicGiveawayItemSchema = z.object({
   id: z.string(),
@@ -267,7 +273,7 @@ export const PublicGiveawayItemSchema = z.object({
   requirements: RequirementsSchema,
   odds: z.string().optional(),
   featured: z.boolean(),
-  sponsored: z.boolean().optional(),
+  sponsored: z.boolean().optional()
 });
 
 export type PublicGiveawayItem = z.infer<typeof PublicGiveawayItemSchema>;
@@ -292,7 +298,7 @@ export const UserDataSchema = z.object({
   emailStatus: z.enum(['verified', 'pending', 'bounced']).optional(),
   signupTime: z.string().optional(),
   firstSource: z.string().optional(),
-  location: z.string().optional(),
+  location: z.string().optional()
 });
 
 export type UserData = z.infer<typeof UserDataSchema>;

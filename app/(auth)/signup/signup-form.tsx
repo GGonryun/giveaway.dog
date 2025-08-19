@@ -18,7 +18,6 @@ import { useActionState, useState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import { CheckCircle2Icon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ProviderButtons } from '@/components/auth/provider-buttons';
 import { AuthError } from '@/components/auth/auth-error';
 import { AuthFooter } from '@/components/auth/auth-footer';
 import { Stepper } from '@/components/ui/stepper';

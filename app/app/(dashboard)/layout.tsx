@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             >
               <Link href={'/app/host'}>
                 <PlusIcon />
-                New Sweepstakes
+                Create
               </Link>
             </Button>
           }

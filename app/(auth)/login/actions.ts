@@ -3,10 +3,7 @@
 import { signIn } from '@/lib/auth';
 import { AuthError } from 'next-auth';
 
-export const connect = async (
-  prevState: string | undefined,
-  data: FormData
-) => {
+export const connect = async (_: string | undefined, data: FormData) => {
   const redirectTo = data.get('redirectTo')?.toString();
   const login = data.get('login')?.toString();
 

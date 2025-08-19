@@ -41,13 +41,10 @@ export function ReferrersBarChart({ data }: ReferrersBarChartProps) {
       </CardHeader>
       <CardContent className="p-3 sm:p-6">
         <div className="overflow-hidden">
-          <ChartContainer
-            config={chartConfig}
-            className="min-h-[200px] sm:min-h-[300px] w-full"
-          >
+          <ChartContainer config={chartConfig} className="w-full">
             <BarChart
               data={data}
-              margin={{ top: 10, right: 10, bottom: 50, left: 10 }}
+              margin={{ top: 10, right: 1, bottom: 50, left: -40 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis

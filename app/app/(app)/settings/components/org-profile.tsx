@@ -1,7 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -28,7 +34,8 @@ import {
 const mockOrgData = {
   name: 'Giveaway.dog',
   slug: 'giveaway-dog',
-  description: 'The ultimate platform for running engaging giveaways and contests',
+  description:
+    'The ultimate platform for running engaging giveaways and contests',
   logo: null,
   brandColor: '#3b82f6',
   timezone: 'America/New_York',
@@ -38,7 +45,7 @@ const mockOrgData = {
 
 const timezones = [
   'America/New_York',
-  'America/Chicago', 
+  'America/Chicago',
   'America/Denver',
   'America/Los_Angeles',
   'Europe/London',
@@ -58,20 +65,25 @@ const locales = [
 export function OrgProfile() {
   const [formData, setFormData] = useState(mockOrgData);
   const [isLoading, setIsLoading] = useState(false);
-  const [slugStatus, setSlugStatus] = useState<'available' | 'taken' | 'checking' | null>(null);
+  const [slugStatus, setSlugStatus] = useState<
+    'available' | 'taken' | 'checking' | null
+  >(null);
 
   const handleSave = async () => {
     setIsLoading(true);
     // Mock API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsLoading(false);
     console.log('Saved org profile:', formData);
   };
 
   const handleSlugChange = (value: string) => {
-    const slug = value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/--+/g, '-');
-    setFormData(prev => ({ ...prev, slug }));
-    
+    const slug = value
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '-')
+      .replace(/--+/g, '-');
+    setFormData((prev) => ({ ...prev, slug }));
+
     // Mock slug validation
     if (slug && slug !== mockOrgData.slug) {
       setSlugStatus('checking');
@@ -140,7 +152,10 @@ export function OrgProfile() {
                 <Avatar className="h-16 w-16">
                   <AvatarImage src={formData.logo || undefined} />
                   <AvatarFallback className="text-lg">
-                    {formData.name.split(' ').map(n => n[0]).join('')}
+                    {formData.name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')}
                   </AvatarFallback>
                 </Avatar>
                 <div>
@@ -162,7 +177,9 @@ export function OrgProfile() {
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, name: e.target.value }))
+                  }
                   placeholder="Your organization name"
                 />
               </div>
@@ -193,7 +210,12 @@ export function OrgProfile() {
               <Textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    description: e.target.value
+                  }))
+                }
                 placeholder="Describe your organization..."
                 rows={3}
               />
@@ -218,7 +240,7 @@ export function OrgProfile() {
               <div className="space-y-2">
                 <Label htmlFor="brandColor">Brand Color</Label>
                 <div className="flex space-x-2">
-                  <div 
+                  <div
                     className="w-10 h-10 rounded border border-border"
                     style={{ backgroundColor: formData.brandColor }}
                   />
@@ -226,7 +248,12 @@ export function OrgProfile() {
                     id="brandColor"
                     type="color"
                     value={formData.brandColor}
-                    onChange={(e) => setFormData(prev => ({ ...prev, brandColor: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        brandColor: e.target.value
+                      }))
+                    }
                     className="w-20"
                   />
                 </div>
@@ -237,14 +264,18 @@ export function OrgProfile() {
                 <Label>Default Timezone</Label>
                 <Select
                   value={formData.timezone}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, timezone: value }))}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, timezone: value }))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {timezones.map(tz => (
-                      <SelectItem key={tz} value={tz}>{tz}</SelectItem>
+                    {timezones.map((tz) => (
+                      <SelectItem key={tz} value={tz}>
+                        {tz}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -255,13 +286,15 @@ export function OrgProfile() {
                 <Label>Default Locale</Label>
                 <Select
                   value={formData.locale}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, locale: value }))}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, locale: value }))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {locales.map(locale => (
+                    {locales.map((locale) => (
                       <SelectItem key={locale.value} value={locale.value}>
                         {locale.label}
                       </SelectItem>
@@ -272,7 +305,6 @@ export function OrgProfile() {
             </div>
           </CardContent>
         </Card>
-
       </div>
     </div>
   );

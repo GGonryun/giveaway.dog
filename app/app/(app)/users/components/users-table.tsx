@@ -54,7 +54,7 @@ import { BulkActionsBar } from './bulk-actions-bar';
 import { ExportSheet } from './export-sheet';
 import { CRMSyncSheet } from './crm-sync-sheet';
 import { UserDetailSheet } from './user-detail-sheet';
-import { getUsers, searchUsers } from '../actions';
+import { getUsers } from '../actions';
 import { UserData } from '@/schemas/index';
 
 interface UsersTableProps {
@@ -459,9 +459,9 @@ export const UsersTable = ({
               </CardDescription>
 
               {/* Filters moved here */}
-              <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4 pt-4">
+              <div className="flex flex-col space-y-4 pt-4">
                 {/* Search Bar */}
-                <div className="flex-1 max-w-md">
+                <div className="w-full max-w-md">
                   <SearchBar
                     value={filters.query}
                     onChange={handleSearch}
@@ -470,22 +470,36 @@ export const UsersTable = ({
                 </div>
 
                 {/* Filter and Action Buttons */}
-                <div className="flex items-center space-x-2">
-                  <FilterBar filters={filters} onChange={handleFilterChange} />
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                  <div className="flex-shrink-0">
+                    <FilterBar
+                      filters={filters}
+                      onChange={handleFilterChange}
+                    />
+                  </div>
 
-                  <Button size="sm" onClick={() => setShowExportSheet(true)}>
-                    <Download className="h-4 w-4 mr-1" />
-                    Export
-                  </Button>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => setShowExportSheet(true)}
+                      className="flex-1 sm:flex-none"
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      <span className="hidden sm:inline">Export</span>
+                      <span className="sm:hidden">Export Data</span>
+                    </Button>
 
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => setShowCRMSheet(true)}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-1" />
-                    CRM Sync
-                  </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setShowCRMSheet(true)}
+                      className="flex-1 sm:flex-none"
+                    >
+                      <RefreshCw className="h-4 w-4 mr-1" />
+                      <span className="hidden sm:inline">CRM Sync</span>
+                      <span className="sm:hidden">Sync CRM</span>
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardHeader>
@@ -508,9 +522,6 @@ export const UsersTable = ({
                         </TableHead>
                         <TableHead>User</TableHead>
                         <TableHead>
-                          <SortButton field="engagement">Engagement</SortButton>
-                        </TableHead>
-                        <TableHead>
                           <SortButton field="lastEntryAt">
                             Last Entry
                           </SortButton>
@@ -518,10 +529,13 @@ export const UsersTable = ({
                         <TableHead>
                           <SortButton field="qualityScore">Quality</SortButton>
                         </TableHead>
-                        <TableHead>
+                        <TableHead className="hidden lg:table-cell">
+                          <SortButton field="engagement">Engagement</SortButton>
+                        </TableHead>
+                        <TableHead className="hidden xl:table-cell">
                           <SortButton field="status">Status</SortButton>
                         </TableHead>
-                        <TableHead className="hidden lg:table-cell">
+                        <TableHead className="hidden xl:table-cell">
                           <SortButton field="source">Source</SortButton>
                         </TableHead>
                         <TableHead className="w-12"></TableHead>
@@ -577,27 +591,6 @@ export const UsersTable = ({
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center space-x-2">
-                              <div className="w-16 bg-muted rounded-full h-1.5">
-                                <div
-                                  className={`h-1.5 rounded-full transition-all ${
-                                    user.engagement >= 80
-                                      ? 'bg-green-500'
-                                      : user.engagement >= 60
-                                        ? 'bg-blue-500'
-                                        : user.engagement >= 40
-                                          ? 'bg-yellow-500'
-                                          : 'bg-red-500'
-                                  }`}
-                                  style={{ width: `${user.engagement}%` }}
-                                />
-                              </div>
-                              <span className="text-xs font-medium min-w-[2.5rem]">
-                                {user.engagement}%
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
                             <div className="text-sm">
                               {formatDate(user.lastEntryAt)}
                             </div>
@@ -623,8 +616,31 @@ export const UsersTable = ({
                               </span>
                             </div>
                           </TableCell>
-                          <TableCell>{getStatusBadge(user.status)}</TableCell>
                           <TableCell className="hidden lg:table-cell">
+                            <div className="flex items-center space-x-2">
+                              <div className="w-16 bg-muted rounded-full h-1.5">
+                                <div
+                                  className={`h-1.5 rounded-full transition-all ${
+                                    user.engagement >= 80
+                                      ? 'bg-green-500'
+                                      : user.engagement >= 60
+                                        ? 'bg-blue-500'
+                                        : user.engagement >= 40
+                                          ? 'bg-yellow-500'
+                                          : 'bg-red-500'
+                                  }`}
+                                  style={{ width: `${user.engagement}%` }}
+                                />
+                              </div>
+                              <span className="text-xs font-medium min-w-[2.5rem]">
+                                {user.engagement}%
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden xl:table-cell">
+                            {getStatusBadge(user.status)}
+                          </TableCell>
+                          <TableCell className="hidden xl:table-cell">
                             <Badge variant="secondary" className="text-xs">
                               {user.source}
                             </Badge>
@@ -691,23 +707,27 @@ export const UsersTable = ({
 
               {/* Pagination */}
               {!loading && (
-                <div className="flex items-center justify-between px-6 py-4 border-t">
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-3 sm:px-6 py-4 border-t">
+                  <div className="flex items-center justify-center sm:justify-start text-xs sm:text-sm text-muted-foreground">
                     <span>
-                      Showing {(currentPage - 1) * pageSize + 1} to{' '}
+                      <span className="hidden sm:inline">Showing </span>
+                      {(currentPage - 1) * pageSize + 1}-
                       {Math.min(currentPage * pageSize, totalUsers)} of{' '}
-                      {totalUsers.toLocaleString()} users
+                      {totalUsers.toLocaleString()}
+                      <span className="hidden sm:inline"> users</span>
                     </span>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center justify-center gap-1 sm:gap-2">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handlePageChange(1)}
                       disabled={currentPage === 1 || loading}
+                      className="p-2 sm:px-3"
                     >
                       <ChevronsLeft className="h-4 w-4" />
+                      <span className="sr-only">First page</span>
                     </Button>
 
                     <Button
@@ -717,14 +737,26 @@ export const UsersTable = ({
                         handlePageChange(Math.max(1, currentPage - 1))
                       }
                       disabled={currentPage === 1 || loading}
+                      className="p-2 sm:px-3"
                     >
                       <ChevronLeft className="h-4 w-4" />
+                      <span className="sr-only">Previous page</span>
                     </Button>
 
-                    <div className="flex items-center space-x-1">
-                      <span className="text-sm">Page</span>
-                      <Badge variant="outline">{currentPage}</Badge>
-                      <span className="text-sm">of {totalPages}</span>
+                    <div className="flex items-center gap-1 px-2 sm:px-3">
+                      <span className="text-xs sm:text-sm font-medium">
+                        Page
+                      </span>
+                      <Badge
+                        variant="outline"
+                        className="text-xs sm:text-sm px-2 py-1"
+                      >
+                        {currentPage}
+                      </Badge>
+                      <span className="text-xs sm:text-sm">of</span>
+                      <span className="text-xs sm:text-sm font-medium">
+                        {totalPages}
+                      </span>
                     </div>
 
                     <Button
@@ -734,8 +766,10 @@ export const UsersTable = ({
                         handlePageChange(Math.min(totalPages, currentPage + 1))
                       }
                       disabled={currentPage === totalPages || loading}
+                      className="p-2 sm:px-3"
                     >
                       <ChevronRight className="h-4 w-4" />
+                      <span className="sr-only">Next page</span>
                     </Button>
 
                     <Button
@@ -743,8 +777,10 @@ export const UsersTable = ({
                       size="sm"
                       onClick={() => handlePageChange(totalPages)}
                       disabled={currentPage === totalPages || loading}
+                      className="p-2 sm:px-3"
                     >
                       <ChevronsRight className="h-4 w-4" />
+                      <span className="sr-only">Last page</span>
                     </Button>
                   </div>
                 </div>

@@ -173,4 +173,4 @@ export const SweepstakesKPICards = ({ data }: SweepstakesKPICardsProps) => {
       })}
     </div>
   );
-}
+};

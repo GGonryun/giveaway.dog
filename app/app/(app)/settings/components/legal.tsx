@@ -1,6 +1,12 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { FileText } from 'lucide-react';
 
 export function Legal() {
@@ -24,7 +30,9 @@ export function Legal() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground">Legal document editor coming soon...</p>
+          <p className="text-muted-foreground">
+            Legal document editor coming soon...
+          </p>
         </CardContent>
       </Card>
     </div>

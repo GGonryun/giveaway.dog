@@ -10,15 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
 import {
   Facebook,
   Twitter,
@@ -28,7 +20,6 @@ import {
   ExternalLink,
   QrCode,
   Mail,
-  MessageSquare,
   Link,
   CheckCircle,
   Download
@@ -120,7 +111,11 @@ export const SweepstakesPromotion = ({
                   asChild
                   className="justify-start"
                 >
-                  <a href={platform.url} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={platform.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Icon className={`h-4 w-4 mr-2 ${platform.color}`} />
                     Share on {platform.name}
                   </a>
@@ -185,7 +180,9 @@ export const SweepstakesPromotion = ({
                   onClick={() => {
                     setUtmSource(template.source);
                     setUtmMedium(template.medium);
-                    setUtmCampaign(sweepstakes.title.toLowerCase().replace(/\s+/g, '-'));
+                    setUtmCampaign(
+                      sweepstakes.title.toLowerCase().replace(/\s+/g, '-')
+                    );
                   }}
                 >
                   {template.name}
@@ -199,11 +196,7 @@ export const SweepstakesPromotion = ({
             <div className="p-3 bg-muted rounded-lg">
               <Label className="text-sm font-medium">Generated URL</Label>
               <div className="flex items-center space-x-2 mt-1">
-                <Input
-                  value={buildUtmUrl()}
-                  readOnly
-                  className="text-sm"
-                />
+                <Input value={buildUtmUrl()} readOnly className="text-sm" />
                 <Button
                   size="sm"
                   onClick={() => copyToClipboard(buildUtmUrl(), 'utm')}
@@ -243,7 +236,9 @@ export const SweepstakesPromotion = ({
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => copyToClipboard(sweepstakes.landingPageUrl, 'landing')}
+                onClick={() =>
+                  copyToClipboard(sweepstakes.landingPageUrl, 'landing')
+                }
               >
                 {copiedUrl === 'landing' ? (
                   <CheckCircle className="h-4 w-4" />
@@ -316,10 +311,12 @@ Your Team`}
             <Button
               size="sm"
               variant="outline"
-              onClick={() => copyToClipboard(
-                `Subject: 🎉 Enter to Win: ${sweepstakes.title}\n\nHi there!\n\nWe're excited to announce our latest giveaway! You have a chance to win ${sweepstakes.title}.\n\n🎁 How to Enter:\n1. Click the link below\n2. Fill out the simple entry form\n3. That's it! You're entered to win\n\n👉 Enter Now: ${sweepstakes.shareUrl}\n\nGood luck!\n\nBest regards,\nYour Team`,
-                'email'
-              )}
+              onClick={() =>
+                copyToClipboard(
+                  `Subject: 🎉 Enter to Win: ${sweepstakes.title}\n\nHi there!\n\nWe're excited to announce our latest giveaway! You have a chance to win ${sweepstakes.title}.\n\n🎁 How to Enter:\n1. Click the link below\n2. Fill out the simple entry form\n3. That's it! You're entered to win\n\n👉 Enter Now: ${sweepstakes.shareUrl}\n\nGood luck!\n\nBest regards,\nYour Team`,
+                  'email'
+                )
+              }
             >
               {copiedUrl === 'email' ? (
                 <>

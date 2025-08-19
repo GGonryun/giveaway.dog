@@ -269,4 +269,4 @@ export const SweepstakesBotPie = ({ data }: SweepstakesBotPieProps) => {
       </CardContent>
     </Card>
   );
-}
+};

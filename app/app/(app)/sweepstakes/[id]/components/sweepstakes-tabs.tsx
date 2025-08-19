@@ -24,13 +24,27 @@ export const SweepstakesTabs = ({
     <Tabs defaultValue="analytics" className="space-y-6">
       <div className="w-full overflow-x-auto">
         <TabsList className="grid w-max grid-cols-7 lg:w-full">
-          <TabsTrigger value="preview" className="whitespace-nowrap">Preview</TabsTrigger>
-          <TabsTrigger value="analytics" className="whitespace-nowrap">Analytics</TabsTrigger>
-          <TabsTrigger value="promotion" className="whitespace-nowrap">Promotion</TabsTrigger>
-          <TabsTrigger value="entries" className="whitespace-nowrap">Entries</TabsTrigger>
-          <TabsTrigger value="export" className="whitespace-nowrap">Export</TabsTrigger>
-          <TabsTrigger value="settings" className="whitespace-nowrap">Settings</TabsTrigger>
-          <TabsTrigger value="winners" className="whitespace-nowrap">Winners</TabsTrigger>
+          <TabsTrigger value="preview" className="whitespace-nowrap">
+            Preview
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="whitespace-nowrap">
+            Analytics
+          </TabsTrigger>
+          <TabsTrigger value="promotion" className="whitespace-nowrap">
+            Promotion
+          </TabsTrigger>
+          <TabsTrigger value="entries" className="whitespace-nowrap">
+            Entries
+          </TabsTrigger>
+          <TabsTrigger value="export" className="whitespace-nowrap">
+            Export
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="whitespace-nowrap">
+            Settings
+          </TabsTrigger>
+          <TabsTrigger value="winners" className="whitespace-nowrap">
+            Winners
+          </TabsTrigger>
         </TabsList>
       </div>
 
@@ -73,4 +87,4 @@ export const SweepstakesTabs = ({
       </TabsContent>
     </Tabs>
   );
-}
+};

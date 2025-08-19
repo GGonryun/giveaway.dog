@@ -6,7 +6,7 @@ import {
   SheetContent,
   SheetDescription,
   SheetHeader,
-  SheetTitle,
+  SheetTitle
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -49,12 +49,12 @@ const getUserDetail = (userId: string) => ({
   totalEntries: 23,
   totalWins: 2,
   lifetimeValue: 1250,
-  
+
   // Risk signals
   flagged: false,
   flaggedReasons: [],
   riskScore: 22,
-  
+
   // Recent entries timeline
   recentEntries: [
     {
@@ -79,7 +79,7 @@ const getUserDetail = (userId: string) => ({
       status: 'flagged'
     }
   ],
-  
+
   // Quality score breakdown
   qualityBreakdown: {
     emailVerified: true,
@@ -93,7 +93,11 @@ const getUserDetail = (userId: string) => ({
   }
 });
 
-export const UserDetailSheet = ({ userId, open, onClose }: UserDetailSheetProps) => {
+export const UserDetailSheet = ({
+  userId,
+  open,
+  onClose
+}: UserDetailSheetProps) => {
   const router = useRouter();
   const user = userId ? getUserDetail(userId) : null;
 
@@ -114,7 +118,7 @@ export const UserDetailSheet = ({ userId, open, onClose }: UserDetailSheetProps)
       blocked: { variant: 'secondary' as const, label: 'Blocked' },
       trusted: { variant: 'default' as const, label: 'Trusted' }
     };
-    
+
     const config = variants[status as keyof typeof variants] || variants.active;
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
@@ -130,13 +134,19 @@ export const UserDetailSheet = ({ userId, open, onClose }: UserDetailSheetProps)
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="left" className="w-full sm:max-w-lg overflow-y-auto px-4 sm:px-6">
+      <SheetContent
+        side="left"
+        className="w-full sm:max-w-lg overflow-y-auto px-4 sm:px-6"
+      >
         <SheetHeader>
           <div className="flex items-center space-x-3">
             <Avatar className="h-12 w-12">
               <AvatarImage src={user.avatar || undefined} />
               <AvatarFallback className="text-sm">
-                {user.name.split(' ').map(n => n[0]).join('')}
+                {user.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1">
@@ -157,19 +167,25 @@ export const UserDetailSheet = ({ userId, open, onClose }: UserDetailSheetProps)
               <div className="text-sm text-muted-foreground">Total Entries</div>
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
-              <div className="text-xl font-bold text-green-600">{user.totalWins}</div>
+              <div className="text-xl font-bold text-green-600">
+                {user.totalWins}
+              </div>
               <div className="text-sm text-muted-foreground">Wins</div>
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
-              <div className="text-xl font-bold text-blue-600">${user.lifetimeValue}</div>
+              <div className="text-xl font-bold text-blue-600">
+                ${user.lifetimeValue}
+              </div>
               <div className="text-sm text-muted-foreground">LTV</div>
             </div>
           </div>
 
           {/* User Details Header and Basic Info */}
           <div className="space-y-4">
-            <h4 className="text-base font-medium border-b pb-2">User Details</h4>
-            
+            <h4 className="text-base font-medium border-b pb-2">
+              User Details
+            </h4>
+
             {/* Basic Info */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-3">
@@ -197,14 +213,14 @@ export const UserDetailSheet = ({ userId, open, onClose }: UserDetailSheetProps)
 
           {/* Quality Score */}
           <div className="space-y-3">
-            <QualityScoreBadge 
-              score={user.qualityScore} 
+            <QualityScoreBadge
+              score={user.qualityScore}
               breakdown={{
                 emailVerified: user.qualityBreakdown.emailVerified,
                 disposableEmail: user.qualityBreakdown.disposableEmail,
                 deviceFingerprint: user.qualityBreakdown.deviceFingerprint,
                 engagement: user.qualityBreakdown.engagement
-              }} 
+              }}
             />
           </div>
 
@@ -212,10 +228,14 @@ export const UserDetailSheet = ({ userId, open, onClose }: UserDetailSheetProps)
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="text-base font-medium">Recent Entries</h4>
-              <Button variant="ghost" size="sm" onClick={() => {
-                router.push(`/app/users/${userId}?tab=entries`);
-                onClose();
-              }}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  router.push(`/app/users/${userId}?tab=entries`);
+                  onClose();
+                }}
+              >
                 <Eye className="h-4 w-4 mr-2" />
                 View All
               </Button>
@@ -225,15 +245,19 @@ export const UserDetailSheet = ({ userId, open, onClose }: UserDetailSheetProps)
                 <div key={entry.id} className="p-3 bg-muted/30 rounded">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <div className="font-medium">{entry.sweepstakesTitle}</div>
+                      <div className="font-medium">
+                        {entry.sweepstakesTitle}
+                      </div>
                       <div className="text-sm text-muted-foreground flex items-center space-x-2">
                         <span>{formatDate(entry.enteredAt)}</span>
                         <span>•</span>
                         <span>{entry.source}</span>
                       </div>
                     </div>
-                    <Badge 
-                      variant={entry.status === 'valid' ? 'default' : 'destructive'} 
+                    <Badge
+                      variant={
+                        entry.status === 'valid' ? 'default' : 'destructive'
+                      }
                       className="text-xs"
                     >
                       {entry.status}
@@ -244,10 +268,13 @@ export const UserDetailSheet = ({ userId, open, onClose }: UserDetailSheetProps)
             </div>
           </div>
 
-
           {/* Action Buttons */}
           <div className="pt-4 border-t">
-            <Button size="sm" className="w-full" onClick={handleViewFullDetails}>
+            <Button
+              size="sm"
+              className="w-full"
+              onClick={handleViewFullDetails}
+            >
               <Eye className="h-4 w-4 mr-2" />
               View Full Details
               <ChevronRight className="h-4 w-4 ml-1" />

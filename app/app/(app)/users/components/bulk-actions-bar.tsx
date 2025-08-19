@@ -1,10 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Card,
-  CardContent
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -56,13 +53,13 @@ export const BulkActionsBar = ({
 
   const handleBulkAction = async (action: string) => {
     setIsLoading(true);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     setIsLoading(false);
     console.log(`Performing ${action} on ${selectedCount} users`);
-    
+
     // Clear selection after successful action
     onClearSelection();
   };
@@ -70,46 +67,46 @@ export const BulkActionsBar = ({
   const availableTags = [
     'VIP Customer',
     'High Value',
-    'Frequent Participant', 
+    'Frequent Participant',
     'Suspicious Activity',
     'Marketing Qualified',
     'Review Required'
   ];
 
   return (
-    <Card className="border-blue-200 bg-blue-50 shadow-lg max-w-4xl">
-      <CardContent className="px-3 py-2">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center space-x-2 min-w-0">
+    <Card className="border-blue-200 bg-blue-50 shadow-lg max-w-4xl mx-4">
+      <CardContent className="p-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center justify-center sm:justify-start space-x-2">
             <div className="flex items-center space-x-1">
-              <Users className="h-3 w-3 text-blue-600 flex-shrink-0" />
-              <span className="font-medium text-blue-800 text-xs sm:text-sm truncate">
-                {selectedCount} user{selectedCount !== 1 ? 's' : ''}
+              <Users className="h-4 w-4 text-blue-600 flex-shrink-0" />
+              <span className="font-medium text-blue-800 text-sm">
+                {selectedCount} user{selectedCount !== 1 ? 's' : ''} selected
               </span>
             </div>
-            
+
             <Button
               variant="ghost"
               size="sm"
               onClick={onClearSelection}
-              className="text-blue-600 hover:text-blue-800 h-6 px-1 sm:h-8 sm:px-2"
+              className="text-blue-600 hover:text-blue-800 h-8 px-2"
             >
-              <X className="h-3 w-3 sm:mr-1" />
-              <span className="hidden sm:inline">Clear</span>
+              <X className="h-4 w-4 mr-1" />
+              Clear
             </Button>
           </div>
 
-          <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             {/* Export Selected */}
             <Button
               variant="outline"
               size="sm"
               onClick={onExport}
               disabled={isLoading}
-              className="h-6 px-2 sm:h-8 sm:px-3 flex-shrink-0"
+              className="h-8 px-3"
             >
-              <Download className="h-3 w-3 sm:mr-1" />
-              <span className="hidden sm:inline">Export</span>
+              <Download className="h-4 w-4 mr-1" />
+              Export
             </Button>
 
             {/* CRM Sync */}
@@ -118,36 +115,36 @@ export const BulkActionsBar = ({
               size="sm"
               onClick={onCRMSync}
               disabled={isLoading}
-              className="h-6 px-2 sm:h-8 sm:px-3 flex-shrink-0"
+              className="h-8 px-3"
             >
-              <RefreshCw className="h-3 w-3 sm:mr-1" />
-              <span className="hidden sm:inline">CRM</span>
+              <RefreshCw className="h-4 w-4 mr-1" />
+              CRM Sync
             </Button>
 
             {/* Tag Users */}
-            <div className="hidden md:flex items-center space-x-1">
+            <div className="hidden lg:flex items-center space-x-2">
               <Select value={actionTag} onValueChange={setActionTag}>
-                <SelectTrigger className="w-32 h-6 sm:w-40 sm:h-8">
-                  <SelectValue placeholder="Tag..." />
+                <SelectTrigger className="w-40 h-8">
+                  <SelectValue placeholder="Add Tag..." />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableTags.map(tag => (
+                  {availableTags.map((tag) => (
                     <SelectItem key={tag} value={tag}>
                       {tag}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              
+
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleBulkAction(`tag:${actionTag}`)}
                 disabled={!actionTag || isLoading}
-                className="h-6 px-2 sm:h-8 sm:px-3 flex-shrink-0"
+                className="h-8 px-3"
               >
-                <Tag className="h-3 w-3 sm:mr-1" />
-                <span className="hidden sm:inline">Tag</span>
+                <Tag className="h-4 w-4 mr-1" />
+                Tag
               </Button>
             </div>
 
@@ -155,25 +152,26 @@ export const BulkActionsBar = ({
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
-                  variant="outline" 
+                  variant="outline"
                   size="sm"
-                  className="text-green-600 border-green-200 hover:bg-green-50 h-6 px-2 sm:h-8 sm:px-3 flex-shrink-0"
+                  className="text-green-600 border-green-200 hover:bg-green-50 h-8 px-3"
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <Clock className="h-3 w-3 sm:mr-1 animate-spin" />
+                    <Clock className="h-4 w-4 mr-1 animate-spin" />
                   ) : (
-                    <UserCheck className="h-3 w-3 sm:mr-1" />
+                    <UserCheck className="h-4 w-4 mr-1" />
                   )}
-                  <span className="hidden sm:inline">Trust</span>
+                  Trust
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Mark Users as Trusted</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to mark {selectedCount} selected user{selectedCount !== 1 ? 's' : ''} as trusted? 
-                    This action will:
+                    Are you sure you want to mark {selectedCount} selected user
+                    {selectedCount !== 1 ? 's' : ''} as trusted? This action
+                    will:
                     <ul className="mt-2 text-sm list-disc list-inside space-y-1">
                       <li>Remove any existing flags</li>
                       <li>Set quality score boost</li>
@@ -200,19 +198,19 @@ export const BulkActionsBar = ({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-red-600 border-red-200 hover:bg-red-50 h-6 px-2 sm:h-8 sm:px-3 flex-shrink-0"
+                  className="text-red-600 border-red-200 hover:bg-red-50 h-8 px-3"
                   disabled={isLoading}
                 >
-                  <UserX className="h-3 w-3 sm:mr-1" />
-                  <span className="hidden sm:inline">Block</span>
+                  <UserX className="h-4 w-4 mr-1" />
+                  Block
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Block Selected Users</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to block {selectedCount} selected user{selectedCount !== 1 ? 's' : ''}? 
-                    This action will:
+                    Are you sure you want to block {selectedCount} selected user
+                    {selectedCount !== 1 ? 's' : ''}? This action will:
                     <ul className="mt-2 text-sm list-disc list-inside space-y-1">
                       <li>Prevent future sweepstakes entries</li>
                       <li>Invalidate existing entries</li>
@@ -243,11 +241,11 @@ export const BulkActionsBar = ({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-red-600 border-red-200 hover:bg-red-50 h-6 px-2 sm:h-8 sm:px-3 flex-shrink-0"
+                  className="text-red-600 border-red-200 hover:bg-red-50 h-8 px-3"
                   disabled={isLoading}
                 >
-                  <Trash2 className="h-3 w-3 sm:mr-1" />
-                  <span className="hidden sm:inline">Delete</span>
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Delete
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -256,13 +254,17 @@ export const BulkActionsBar = ({
                   <AlertDialogDescription>
                     <div className="space-y-3">
                       <div className="p-3 bg-red-50 border border-red-200 rounded">
-                        <strong className="text-red-800">⚠️ DESTRUCTIVE ACTION</strong>
+                        <strong className="text-red-800">
+                          ⚠️ DESTRUCTIVE ACTION
+                        </strong>
                       </div>
-                      
+
                       <p>
-                        Are you sure you want to permanently delete {selectedCount} selected user{selectedCount !== 1 ? 's' : ''}?
+                        Are you sure you want to permanently delete{' '}
+                        {selectedCount} selected user
+                        {selectedCount !== 1 ? 's' : ''}?
                       </p>
-                      
+
                       <div className="text-sm space-y-1">
                         <strong>This will permanently:</strong>
                         <ul className="list-disc list-inside space-y-1">
@@ -272,9 +274,10 @@ export const BulkActionsBar = ({
                           <li>Create audit log entries</li>
                         </ul>
                       </div>
-                      
+
                       <div className="p-2 bg-red-100 border border-red-300 rounded text-sm">
-                        <strong>This action cannot be undone.</strong> Consider blocking users instead of deleting them.
+                        <strong>This action cannot be undone.</strong> Consider
+                        blocking users instead of deleting them.
                       </div>
                     </div>
                   </AlertDialogDescription>

@@ -98,7 +98,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         </div>
       ) : (
         <div
-          className={`flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg w-full h-40 cursor-pointer transition-colors hover:bg-gray-50 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+          className={`flex flex-col items-center justify-center border-1 rounded-lg w-full h-40 cursor-pointer transition-colors bg-white shadow-sm hover:bg-gray-50 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           onClick={() => inputRef.current?.click()}

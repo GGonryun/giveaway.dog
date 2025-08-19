@@ -839,7 +839,7 @@ const DateTimePicker = React.forwardRef<
           <Button
             variant="outline"
             className={cn(
-              'w-full justify-start text-left font-normal',
+              'w-full justify-start text-left font-normal bg-white',
               !displayDate && 'text-muted-foreground',
               className
             )}

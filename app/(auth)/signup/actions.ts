@@ -3,7 +3,7 @@
 import { signIn } from '@/lib/auth';
 import { AuthError } from 'next-auth';
 
-export const signup = async (prevState: string | undefined, data: FormData) => {
+export const signup = async (_: string | undefined, data: FormData) => {
   const provider = data.get('provider')?.toString();
   const name = data.get('name')?.toString();
   const userType = data.get('userType')?.toString();

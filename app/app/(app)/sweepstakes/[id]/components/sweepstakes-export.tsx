@@ -6,6 +6,8 @@ interface SweepstakesExportProps {
   sweepstakesId: string;
 }
 
-export const SweepstakesExport = ({ sweepstakesId }: SweepstakesExportProps) => {
+export const SweepstakesExport = ({
+  sweepstakesId
+}: SweepstakesExportProps) => {
   return <SweepstakesExportModal />;
 };

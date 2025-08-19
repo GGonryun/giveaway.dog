@@ -28,7 +28,9 @@ interface SweepstakesPreviewProps {
   sweepstakes: SweepstakesDetails;
 }
 
-export const SweepstakesPreview = ({ sweepstakes }: SweepstakesPreviewProps) => {
+export const SweepstakesPreview = ({
+  sweepstakes
+}: SweepstakesPreviewProps) => {
   const [previewDevice, setPreviewDevice] = useState<
     'mobile' | 'tablet' | 'desktop'
   >('desktop');
@@ -185,4 +187,4 @@ export const SweepstakesPreview = ({ sweepstakes }: SweepstakesPreviewProps) => 
       </div>
     </div>
   );
-}
+};

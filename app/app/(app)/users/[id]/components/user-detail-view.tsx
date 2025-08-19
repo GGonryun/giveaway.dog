@@ -13,12 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Table,
   TableBody,
@@ -83,7 +78,7 @@ const getUserDetailExtended = (userId: string) => ({
   totalWins: 3,
   lifetimeValue: 2450,
   tags: ['High Value', 'Frequent Participant', 'Social Influencer'],
-  
+
   // Enhanced analytics
   analyticsData: {
     totalRafflesEntered: 23,
@@ -99,12 +94,12 @@ const getUserDetailExtended = (userId: string) => ({
     revenueGenerated: 2450,
     winRate: 0.064
   },
-  
+
   // Risk signals
   flagged: false,
   flaggedReasons: [],
   riskScore: 22,
-  
+
   // All entries with detailed info
   allEntries: [
     {
@@ -164,7 +159,7 @@ const getUserDetailExtended = (userId: string) => ({
       referrals: 3
     }
   ],
-  
+
   // Wins history
   wins: [
     {
@@ -195,38 +190,38 @@ const getUserDetailExtended = (userId: string) => ({
       claimedAt: null
     }
   ],
-  
+
   // Device/browser info
   devices: [
-    { 
+    {
       id: 'dev_1',
-      type: 'Mobile', 
-      os: 'iOS 17.2', 
-      browser: 'Safari', 
+      type: 'Mobile',
+      os: 'iOS 17.2',
+      browser: 'Safari',
       lastUsed: '2025-01-13T14:22:00Z',
       sessions: 34,
       avgSessionTime: 280
     },
-    { 
+    {
       id: 'dev_2',
-      type: 'Desktop', 
-      os: 'macOS', 
-      browser: 'Chrome', 
+      type: 'Desktop',
+      os: 'macOS',
+      browser: 'Chrome',
       lastUsed: '2025-01-12T10:15:00Z',
       sessions: 12,
       avgSessionTime: 620
     },
-    { 
+    {
       id: 'dev_3',
-      type: 'Mobile', 
-      os: 'Android 13', 
-      browser: 'Chrome Mobile', 
+      type: 'Mobile',
+      os: 'Android 13',
+      browser: 'Chrome Mobile',
       lastUsed: '2025-01-09T19:30:00Z',
       sessions: 3,
       avgSessionTime: 150
     }
   ],
-  
+
   // Social engagement
   socialEngagement: {
     platform: 'Instagram',
@@ -239,7 +234,7 @@ const getUserDetailExtended = (userId: string) => ({
     influenceScore: 72,
     brandMentions: 23
   },
-  
+
   // Quality score breakdown
   qualityBreakdown: {
     emailVerified: true,
@@ -259,7 +254,7 @@ const getUserDetailExtended = (userId: string) => ({
 export const UserDetailView = ({ userId }: UserDetailViewProps) => {
   const router = useRouter();
   const user = useMemo(() => getUserDetailExtended(userId), [userId]);
-  
+
   // Get tab from URL parameters
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -308,53 +303,98 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
 
   const getStatusBadge = (status: string) => {
     const variants = {
-      active: { variant: 'default' as const, label: 'Active', color: 'text-green-600' },
-      flagged: { variant: 'destructive' as const, label: 'Flagged', color: 'text-red-600' },
-      blocked: { variant: 'secondary' as const, label: 'Blocked', color: 'text-gray-600' },
-      trusted: { variant: 'default' as const, label: 'Trusted', color: 'text-blue-600' },
-      winner: { variant: 'default' as const, label: 'Winner', color: 'text-yellow-600' },
-      valid: { variant: 'outline' as const, label: 'Valid', color: 'text-green-600' },
-      partial: { variant: 'secondary' as const, label: 'Partial', color: 'text-yellow-600' }
+      active: {
+        variant: 'default' as const,
+        label: 'Active',
+        color: 'text-green-600'
+      },
+      flagged: {
+        variant: 'destructive' as const,
+        label: 'Flagged',
+        color: 'text-red-600'
+      },
+      blocked: {
+        variant: 'secondary' as const,
+        label: 'Blocked',
+        color: 'text-gray-600'
+      },
+      trusted: {
+        variant: 'default' as const,
+        label: 'Trusted',
+        color: 'text-blue-600'
+      },
+      winner: {
+        variant: 'default' as const,
+        label: 'Winner',
+        color: 'text-yellow-600'
+      },
+      valid: {
+        variant: 'outline' as const,
+        label: 'Valid',
+        color: 'text-green-600'
+      },
+      partial: {
+        variant: 'secondary' as const,
+        label: 'Partial',
+        color: 'text-yellow-600'
+      }
     };
-    
+
     const config = variants[status as keyof typeof variants] || variants.active;
-    return <Badge variant={config.variant} className={config.color}>{config.label}</Badge>;
+    return (
+      <Badge variant={config.variant} className={config.color}>
+        {config.label}
+      </Badge>
+    );
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="sm" onClick={() => router.push('/app/users')}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Users
-          </Button>
-          <Separator orientation="vertical" className="h-6" />
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push('/app/users')}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Users
+            </Button>
+            <Separator orientation="vertical" className="h-6 hidden sm:block" />
+          </div>
           <div className="flex items-center space-x-3">
-            <Avatar className="h-12 w-12">
+            <Avatar className="h-12 w-12 flex-shrink-0">
               <AvatarImage src={user.avatar || undefined} />
               <AvatarFallback className="text-lg">
-                {user.name.split(' ').map(n => n[0]).join('')}
+                {user.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <h1 className="text-2xl font-bold">{user.name}</h1>
-              <div className="flex items-center space-x-2 text-muted-foreground">
-                <span>{user.email}</span>
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold truncate">
+                {user.name}
+              </h1>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm sm:text-base text-muted-foreground">
+                <span className="truncate">{user.email}</span>
                 {getStatusBadge(user.status)}
               </div>
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button size="sm">
+        <div className="flex items-center gap-2">
+          <Button size="sm" className="flex-1 sm:flex-none">
             <Download className="h-4 w-4 mr-2" />
-            Export Data
+            <span className="hidden sm:inline">Export Data</span>
+            <span className="sm:hidden">Export</span>
           </Button>
-          <Button variant="secondary" size="sm">
+          <Button variant="secondary" size="sm" className="flex-1 sm:flex-none">
             <ExternalLink className="h-4 w-4 mr-2" />
-            View in CRM
+            <span className="hidden sm:inline">View in CRM</span>
+            <span className="sm:hidden">CRM</span>
           </Button>
         </div>
       </div>
@@ -380,7 +420,9 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
             <Trophy className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{user.totalWins}</div>
+            <div className="text-2xl font-bold text-yellow-600">
+              {user.totalWins}
+            </div>
             <p className="text-xs text-muted-foreground">
               {(user.analyticsData.winRate * 100).toFixed(1)}% win rate
             </p>
@@ -389,14 +431,16 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Lifetime Value</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Lifetime Value
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{formatCurrency(user.lifetimeValue)}</div>
-            <p className="text-xs text-muted-foreground">
-              Generated revenue
-            </p>
+            <div className="text-2xl font-bold text-green-600">
+              {formatCurrency(user.lifetimeValue)}
+            </div>
+            <p className="text-xs text-muted-foreground">Generated revenue</p>
           </CardContent>
         </Card>
 
@@ -407,23 +451,39 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{user.qualityScore}</div>
-            <p className="text-xs text-muted-foreground">
-              Excellent quality
-            </p>
+            <p className="text-xs text-muted-foreground">Excellent quality</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Main Content Tabs */}
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="entries">Entries</TabsTrigger>
-          <TabsTrigger value="wins">Wins</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="devices">Devices</TabsTrigger>
-          <TabsTrigger value="risk">Risk</TabsTrigger>
-        </TabsList>
+      <Tabs
+        value={activeTab}
+        onValueChange={handleTabChange}
+        className="space-y-4"
+      >
+        <div className="overflow-x-auto">
+          <TabsList className="grid w-max min-w-full grid-cols-6 lg:w-full">
+            <TabsTrigger value="overview" className="whitespace-nowrap">
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="entries" className="whitespace-nowrap">
+              Entries
+            </TabsTrigger>
+            <TabsTrigger value="wins" className="whitespace-nowrap">
+              Wins
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="whitespace-nowrap">
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger value="devices" className="whitespace-nowrap">
+              Devices
+            </TabsTrigger>
+            <TabsTrigger value="risk" className="whitespace-nowrap">
+              Risk
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-6 md:grid-cols-2">
@@ -469,7 +529,7 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Tags</span>
                     <div className="flex flex-wrap gap-2">
-                      {user.tags.map(tag => (
+                      {user.tags.map((tag) => (
                         <Badge key={tag} variant="outline">
                           {tag}
                         </Badge>
@@ -484,20 +544,30 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
             <Card>
               <CardHeader>
                 <CardTitle>Social Engagement</CardTitle>
-                <CardDescription>Instagram activity and influence</CardDescription>
+                <CardDescription>
+                  Instagram activity and influence
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold">{user.socialEngagement.followers.toLocaleString()}</div>
-                    <div className="text-xs text-muted-foreground">Followers</div>
+                    <div className="text-2xl font-bold">
+                      {user.socialEngagement.followers.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Followers
+                    </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold">{user.socialEngagement.influenceScore}</div>
-                    <div className="text-xs text-muted-foreground">Influence Score</div>
+                    <div className="text-2xl font-bold">
+                      {user.socialEngagement.influenceScore}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Influence Score
+                    </div>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Avg. Likes</span>
@@ -516,11 +586,17 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
                 <div className="space-y-2">
                   <span className="text-sm font-medium">Popular Hashtags</span>
                   <div className="flex flex-wrap gap-1">
-                    {user.socialEngagement.hashtagsUsed.slice(0, 3).map(tag => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
+                    {user.socialEngagement.hashtagsUsed
+                      .slice(0, 3)
+                      .map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="text-xs"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
                   </div>
                 </div>
               </CardContent>
@@ -532,7 +608,9 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
           <Card>
             <CardHeader>
               <CardTitle>All Entries ({user.allEntries.length})</CardTitle>
-              <CardDescription>Complete history of sweepstakes entries</CardDescription>
+              <CardDescription>
+                Complete history of sweepstakes entries
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -551,20 +629,31 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
                   {user.allEntries.map((entry) => (
                     <TableRow key={entry.id}>
                       <TableCell>
-                        <div className="font-medium">{entry.sweepstakesTitle}</div>
+                        <div className="font-medium">
+                          {entry.sweepstakesTitle}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <div>{entry.prize}</div>
-                        <div className="text-sm text-muted-foreground">{formatCurrency(entry.prizeValue)}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {formatCurrency(entry.prizeValue)}
+                        </div>
                       </TableCell>
-                      <TableCell className="text-sm">{formatDate(entry.enteredAt)}</TableCell>
+                      <TableCell className="text-sm">
+                        {formatDate(entry.enteredAt)}
+                      </TableCell>
                       <TableCell>
                         <Badge variant="outline">{entry.source}</Badge>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
-                          <Progress value={entry.completionRate} className="w-16 h-2" />
-                          <span className="text-sm">{entry.completionRate}%</span>
+                          <Progress
+                            value={entry.completionRate}
+                            className="w-16 h-2"
+                          />
+                          <span className="text-sm">
+                            {entry.completionRate}%
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell>{getStatusBadge(entry.status)}</TableCell>
@@ -598,17 +687,25 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
                 <TableBody>
                   {user.wins.map((win) => (
                     <TableRow key={win.id}>
-                      <TableCell className="font-medium">{win.sweepstakesTitle}</TableCell>
+                      <TableCell className="font-medium">
+                        {win.sweepstakesTitle}
+                      </TableCell>
                       <TableCell>{win.prize}</TableCell>
-                      <TableCell className="text-sm">{formatDate(win.wonAt)}</TableCell>
-                      <TableCell className="font-medium text-green-600">{formatCurrency(win.prizeValue)}</TableCell>
+                      <TableCell className="text-sm">
+                        {formatDate(win.wonAt)}
+                      </TableCell>
+                      <TableCell className="font-medium text-green-600">
+                        {formatCurrency(win.prizeValue)}
+                      </TableCell>
                       <TableCell>
                         <Badge variant={win.claimed ? 'default' : 'secondary'}>
                           {win.claimed ? 'Claimed' : 'Unclaimed'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm">
-                        {win.claimedAt ? formatDate(win.claimedAt) : 'Not claimed'}
+                        {win.claimedAt
+                          ? formatDate(win.claimedAt)
+                          : 'Not claimed'}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -628,15 +725,22 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
                     <span>Avg. Session Duration</span>
-                    <span>{Math.floor(user.analyticsData.avgSessionDuration / 60)}m {user.analyticsData.avgSessionDuration % 60}s</span>
+                    <span>
+                      {Math.floor(user.analyticsData.avgSessionDuration / 60)}m{' '}
+                      {user.analyticsData.avgSessionDuration % 60}s
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Bounce Rate</span>
-                    <span>{(user.analyticsData.bounceRate * 100).toFixed(1)}%</span>
+                    <span>
+                      {(user.analyticsData.bounceRate * 100).toFixed(1)}%
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Conversion Rate</span>
-                    <span>{(user.analyticsData.conversionRate * 100).toFixed(1)}%</span>
+                    <span>
+                      {(user.analyticsData.conversionRate * 100).toFixed(1)}%
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Social Shares</span>
@@ -654,15 +758,23 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
                     <span>Completed Entries</span>
-                    <span>{user.analyticsData.completedEntries}/{user.analyticsData.completedEntries + user.analyticsData.partialEntries}</span>
+                    <span>
+                      {user.analyticsData.completedEntries}/
+                      {user.analyticsData.completedEntries +
+                        user.analyticsData.partialEntries}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Win Rate</span>
-                    <span>{(user.analyticsData.winRate * 100).toFixed(1)}%</span>
+                    <span>
+                      {(user.analyticsData.winRate * 100).toFixed(1)}%
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Revenue Generated</span>
-                    <span>{formatCurrency(user.analyticsData.revenueGenerated)}</span>
+                    <span>
+                      {formatCurrency(user.analyticsData.revenueGenerated)}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Referrals Made</span>
@@ -678,17 +790,23 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
           <Card>
             <CardHeader>
               <CardTitle>Device & Browser Information</CardTitle>
-              <CardDescription>Devices used to access the platform</CardDescription>
+              <CardDescription>
+                Devices used to access the platform
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {user.devices.map((device) => (
-                  <div key={device.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div
+                    key={device.id}
+                    className="flex items-center justify-between p-4 border rounded-lg"
+                  >
                     <div className="flex items-center space-x-3">
-                      {device.type === 'Mobile' ? 
-                        <Smartphone className="h-5 w-5 text-muted-foreground" /> :
+                      {device.type === 'Mobile' ? (
+                        <Smartphone className="h-5 w-5 text-muted-foreground" />
+                      ) : (
                         <Monitor className="h-5 w-5 text-muted-foreground" />
-                      }
+                      )}
                       <div>
                         <div className="font-medium">{device.type}</div>
                         <div className="text-sm text-muted-foreground">
@@ -697,9 +815,12 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-medium">{device.sessions} sessions</div>
+                      <div className="text-sm font-medium">
+                        {device.sessions} sessions
+                      </div>
                       <div className="text-sm text-muted-foreground">
-                        Avg: {Math.floor(device.avgSessionTime / 60)}m {device.avgSessionTime % 60}s
+                        Avg: {Math.floor(device.avgSessionTime / 60)}m{' '}
+                        {device.avgSessionTime % 60}s
                       </div>
                       <div className="text-xs text-muted-foreground">
                         Last: {formatDate(device.lastUsed)}
@@ -720,9 +841,23 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Overall Risk Score</span>
-                  <Badge variant={user.riskScore < 30 ? 'default' : user.riskScore < 60 ? 'secondary' : 'destructive'}>
-                    {user.riskScore < 30 ? 'Low Risk' : user.riskScore < 60 ? 'Medium Risk' : 'High Risk'}
+                  <span className="text-sm font-medium">
+                    Overall Risk Score
+                  </span>
+                  <Badge
+                    variant={
+                      user.riskScore < 30
+                        ? 'default'
+                        : user.riskScore < 60
+                          ? 'secondary'
+                          : 'destructive'
+                    }
+                  >
+                    {user.riskScore < 30
+                      ? 'Low Risk'
+                      : user.riskScore < 60
+                        ? 'Medium Risk'
+                        : 'High Risk'}
                   </Badge>
                 </div>
 
@@ -769,7 +904,9 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
             <Card>
               <CardHeader>
                 <CardTitle>Quality Score Breakdown</CardTitle>
-                <CardDescription>Detailed analysis of quality factors</CardDescription>
+                <CardDescription>
+                  Detailed analysis of quality factors
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -779,11 +916,15 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
                   </div>
                   <div className="relative">
                     <Progress value={user.qualityScore} className="h-2" />
-                    <div 
+                    <div
                       className={`absolute top-0 left-0 h-2 rounded-full transition-all ${
-                        user.qualityScore >= 80 ? 'bg-green-500' : 
-                        user.qualityScore >= 60 ? 'bg-yellow-500' : 
-                        user.qualityScore >= 40 ? 'bg-orange-500' : 'bg-red-500'
+                        user.qualityScore >= 80
+                          ? 'bg-green-500'
+                          : user.qualityScore >= 60
+                            ? 'bg-yellow-500'
+                            : user.qualityScore >= 40
+                              ? 'bg-orange-500'
+                              : 'bg-red-500'
                       }`}
                       style={{ width: `${user.qualityScore}%` }}
                     />
@@ -791,8 +932,10 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
                 </div>
 
                 <div className="space-y-3 pt-2 border-t">
-                  <div className="text-xs text-muted-foreground font-medium">Signal Breakdown</div>
-                  
+                  <div className="text-xs text-muted-foreground font-medium">
+                    Signal Breakdown
+                  </div>
+
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
@@ -800,52 +943,90 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
                         <span className="text-xs">Email Verification</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Progress value={user.qualityBreakdown.emailVerified ? 100 : 0} className="w-16 h-1.5" />
-                        <span className="text-xs w-8 text-right">{user.qualityBreakdown.emailVerified ? 25 : 0}/25</span>
+                        <Progress
+                          value={user.qualityBreakdown.emailVerified ? 100 : 0}
+                          className="w-16 h-1.5"
+                        />
+                        <span className="text-xs w-8 text-right">
+                          {user.qualityBreakdown.emailVerified ? 25 : 0}/25
+                        </span>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Shield className="h-3 w-3 text-muted-foreground" />
                         <span className="text-xs">Email Quality</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Progress value={user.qualityBreakdown.disposableEmail ? 0 : 100} className="w-16 h-1.5" />
-                        <span className="text-xs w-8 text-right">{user.qualityBreakdown.disposableEmail ? 0 : 20}/20</span>
+                        <Progress
+                          value={
+                            user.qualityBreakdown.disposableEmail ? 0 : 100
+                          }
+                          className="w-16 h-1.5"
+                        />
+                        <span className="text-xs w-8 text-right">
+                          {user.qualityBreakdown.disposableEmail ? 0 : 20}/20
+                        </span>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Smartphone className="h-3 w-3 text-muted-foreground" />
                         <span className="text-xs">Device Trust</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Progress value={user.qualityBreakdown.deviceFingerprint ? 100 : 50} className="w-16 h-1.5" />
-                        <span className="text-xs w-8 text-right">{user.qualityBreakdown.deviceFingerprint ? 20 : 10}/20</span>
+                        <Progress
+                          value={
+                            user.qualityBreakdown.deviceFingerprint ? 100 : 50
+                          }
+                          className="w-16 h-1.5"
+                        />
+                        <span className="text-xs w-8 text-right">
+                          {user.qualityBreakdown.deviceFingerprint ? 20 : 10}/20
+                        </span>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <TrendingUp className="h-3 w-3 text-muted-foreground" />
                         <span className="text-xs">Engagement</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Progress value={user.qualityBreakdown.engagement} className="w-16 h-1.5" />
-                        <span className="text-xs w-8 text-right">{Math.round(user.qualityBreakdown.engagement / 4)}/25</span>
+                        <Progress
+                          value={user.qualityBreakdown.engagement}
+                          className="w-16 h-1.5"
+                        />
+                        <span className="text-xs w-8 text-right">
+                          {Math.round(user.qualityBreakdown.engagement / 4)}/25
+                        </span>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Clock className="h-3 w-3 text-muted-foreground" />
                         <span className="text-xs">Account Age</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Progress value={Math.min((user.qualityBreakdown.accountAge || 0) * 10, 100)} className="w-16 h-1.5" />
-                        <span className="text-xs w-8 text-right">{Math.min(Math.round((user.qualityBreakdown.accountAge || 0) * 0.2), 10)}/10</span>
+                        <Progress
+                          value={Math.min(
+                            (user.qualityBreakdown.accountAge || 0) * 10,
+                            100
+                          )}
+                          className="w-16 h-1.5"
+                        />
+                        <span className="text-xs w-8 text-right">
+                          {Math.min(
+                            Math.round(
+                              (user.qualityBreakdown.accountAge || 0) * 0.2
+                            ),
+                            10
+                          )}
+                          /10
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -860,41 +1041,53 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Email Verified</span>
-                  {user.qualityBreakdown.emailVerified ? 
-                    <Badge variant="default">✓</Badge> : 
+                  {user.qualityBreakdown.emailVerified ? (
+                    <Badge variant="default">✓</Badge>
+                  ) : (
                     <Badge variant="secondary">✗</Badge>
-                  }
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Phone Verified</span>
-                  {user.qualityBreakdown.phoneVerified ? 
-                    <Badge variant="default">✓</Badge> : 
+                  {user.qualityBreakdown.phoneVerified ? (
+                    <Badge variant="default">✓</Badge>
+                  ) : (
                     <Badge variant="secondary">✗</Badge>
-                  }
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Social Verification</span>
-                  {user.qualityBreakdown.socialVerification ? 
-                    <Badge variant="default">✓</Badge> : 
+                  {user.qualityBreakdown.socialVerification ? (
+                    <Badge variant="default">✓</Badge>
+                  ) : (
                     <Badge variant="secondary">✗</Badge>
-                  }
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Disposable Email</span>
-                  {user.qualityBreakdown.disposableEmail ? 
-                    <Badge variant="destructive">Yes</Badge> : 
+                  {user.qualityBreakdown.disposableEmail ? (
+                    <Badge variant="destructive">Yes</Badge>
+                  ) : (
                     <Badge variant="default">No</Badge>
-                  }
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">IP Reputation</span>
-                  <Badge variant={user.qualityBreakdown.ipReputation === 'good' ? 'default' : 'destructive'}>
+                  <Badge
+                    variant={
+                      user.qualityBreakdown.ipReputation === 'good'
+                        ? 'default'
+                        : 'destructive'
+                    }
+                  >
                     {user.qualityBreakdown.ipReputation}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Account Age</span>
-                  <span className="text-sm">{user.qualityBreakdown.accountAge} days</span>
+                  <span className="text-sm">
+                    {user.qualityBreakdown.accountAge} days
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -905,29 +1098,34 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
       {/* Action Bar */}
       <Card>
         <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <Button size="sm" className="bg-green-600 hover:bg-green-700">
                 <UserCheck className="h-4 w-4 mr-2" />
-                Mark as Trusted
+                <span className="hidden sm:inline">Mark as Trusted</span>
+                <span className="sm:hidden">Trusted</span>
               </Button>
               <Button variant="destructive" size="sm">
                 <UserX className="h-4 w-4 mr-2" />
-                Block User
+                <span className="hidden sm:inline">Block User</span>
+                <span className="sm:hidden">Block</span>
               </Button>
               <Button variant="secondary" size="sm">
                 <Tag className="h-4 w-4 mr-2" />
-                Add Tags
+                <span className="hidden sm:inline">Add Tags</span>
+                <span className="sm:hidden">Tags</span>
               </Button>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <Button variant="secondary" size="sm">
                 <MessageCircle className="h-4 w-4 mr-2" />
-                Contact User
+                <span className="hidden sm:inline">Contact User</span>
+                <span className="sm:hidden">Contact</span>
               </Button>
               <Button size="sm">
                 <Download className="h-4 w-4 mr-2" />
-                Export Full Report
+                <span className="hidden lg:inline">Export Full Report</span>
+                <span className="lg:hidden">Export</span>
               </Button>
             </div>
           </div>

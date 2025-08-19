@@ -175,7 +175,7 @@ export function TimeToEntryAnalytics({
 
           {/* View Selector */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-1">
               <h3 className="font-medium">Analytics View</h3>
               <Select
                 value={selectedView}
@@ -201,7 +201,7 @@ export function TimeToEntryAnalytics({
               <div className="overflow-hidden">
                 <ChartContainer
                   config={chartConfig}
-                  className="min-h-[180px] sm:min-h-[250px] md:min-h-[300px] w-full min-w-0"
+                  className=" w-full min-w-0"
                 >
                   <BarChart
                     data={distributionData}
@@ -234,10 +234,7 @@ export function TimeToEntryAnalytics({
 
             {selectedView === 'timeline' && (
               <div className="overflow-hidden">
-                <ChartContainer
-                  config={chartConfig}
-                  className="min-h-[180px] sm:min-h-[250px] md:min-h-[300px] w-full min-w-0"
-                >
+                <ChartContainer config={chartConfig} className="w-full min-w-0">
                   <AreaChart
                     data={timelineData}
                     margin={{ top: 5, right: 15, bottom: 10, left: 15 }}
@@ -265,10 +262,10 @@ export function TimeToEntryAnalytics({
 
             {selectedView === 'detailed' && (
               <div className="space-y-2">
-                {distributionData.map((item, index) => (
+                {distributionData.map((item) => (
                   <div
                     key={item.timeRange}
-                    className="flex items-center justify-between p-3 bg-muted rounded-lg"
+                    className="flex items-center justify-between p-3 bg-muted rounded-lg flex-wrap"
                   >
                     <div className="flex items-center space-x-3">
                       <div className="font-medium">{item.timeRange}</div>

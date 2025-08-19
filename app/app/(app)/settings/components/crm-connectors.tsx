@@ -1,6 +1,12 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { RefreshCw } from 'lucide-react';
 
 export function CRMConnectors() {

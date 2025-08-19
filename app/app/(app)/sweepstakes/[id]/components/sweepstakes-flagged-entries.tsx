@@ -292,4 +292,4 @@ export const SweepstakesFlaggedEntries = () => {
       </CardContent>
     </Card>
   );
-}
+};

@@ -44,12 +44,15 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
   const [localFilters, setLocalFilters] = useState(filters);
   const scoreTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const updateLocalFilter = (key: keyof FilterBarProps['filters'], value: string | number) => {
-    setLocalFilters(prev => ({ ...prev, [key]: value }));
+  const updateLocalFilter = (
+    key: keyof FilterBarProps['filters'],
+    value: string | number
+  ) => {
+    setLocalFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const updateScoreRange = useCallback((min: number, max: number) => {
-    setLocalFilters(prev => ({ ...prev, minScore: min, maxScore: max }));
+    setLocalFilters((prev) => ({ ...prev, minScore: min, maxScore: max }));
   }, []);
 
   const handleApply = () => {
@@ -117,7 +120,10 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
           <Filter className="h-4 w-4 mr-1" />
           Filters
           {activeFiltersCount > 0 && (
-            <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs">
+            <Badge
+              variant="destructive"
+              className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs"
+            >
               {activeFiltersCount}
             </Badge>
           )}
@@ -127,11 +133,19 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="font-medium">Filters</h4>
-            <Button variant="ghost" size="sm" onClick={resetLocalFilters} className="relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={resetLocalFilters}
+              className="relative"
+            >
               <RefreshCcw className="h-4 w-4 mr-1" />
               Reset
               {getLocalActiveFiltersCount() > 0 && (
-                <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs">
+                <Badge
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs"
+                >
                   {getLocalActiveFiltersCount()}
                 </Badge>
               )}
@@ -151,7 +165,9 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
                 <label className="text-xs text-muted-foreground">Min</label>
                 <Slider
                   value={[localFilters.minScore]}
-                  onValueChange={([value]: number[]) => updateScoreRange(value, localFilters.maxScore)}
+                  onValueChange={([value]: number[]) =>
+                    updateScoreRange(value, localFilters.maxScore)
+                  }
                   min={0}
                   max={100}
                   step={5}
@@ -162,7 +178,9 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
                 <label className="text-xs text-muted-foreground">Max</label>
                 <Slider
                   value={[localFilters.maxScore]}
-                  onValueChange={([value]: number[]) => updateScoreRange(localFilters.minScore, value)}
+                  onValueChange={([value]: number[]) =>
+                    updateScoreRange(localFilters.minScore, value)
+                  }
                   min={0}
                   max={100}
                   step={5}
@@ -180,7 +198,10 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
                 <Users className="h-4 w-4 mr-1" />
                 Status
               </label>
-              <Select value={localFilters.status} onValueChange={(value) => updateLocalFilter('status', value)}>
+              <Select
+                value={localFilters.status}
+                onValueChange={(value) => updateLocalFilter('status', value)}
+              >
                 <SelectTrigger className="h-9">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
@@ -200,7 +221,10 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
                 <Calendar className="h-4 w-4 mr-1" />
                 Date Range
               </label>
-              <Select value={localFilters.dateRange} onValueChange={(value) => updateLocalFilter('dateRange', value)}>
+              <Select
+                value={localFilters.dateRange}
+                onValueChange={(value) => updateLocalFilter('dateRange', value)}
+              >
                 <SelectTrigger className="h-9">
                   <SelectValue placeholder="Select date range" />
                 </SelectTrigger>
@@ -221,7 +245,10 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
                 <MapPin className="h-4 w-4 mr-1" />
                 Source
               </label>
-              <Select value={localFilters.source} onValueChange={(value) => updateLocalFilter('source', value)}>
+              <Select
+                value={localFilters.source}
+                onValueChange={(value) => updateLocalFilter('source', value)}
+              >
                 <SelectTrigger className="h-9">
                   <SelectValue placeholder="Select source" />
                 </SelectTrigger>
@@ -247,7 +274,10 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
               Cancel
             </Button>
             <Button size="sm" onClick={handleApply}>
-              Apply {getLocalActiveFiltersCount() > 0 ? `(${getLocalActiveFiltersCount()})` : ''}
+              Apply{' '}
+              {getLocalActiveFiltersCount() > 0
+                ? `(${getLocalActiveFiltersCount()})`
+                : ''}
             </Button>
           </div>
         </div>

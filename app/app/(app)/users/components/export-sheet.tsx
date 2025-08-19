@@ -23,12 +23,7 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Download,
   FileText,
@@ -111,18 +106,31 @@ const availableColumns = [
   { id: 'riskScore', label: 'Risk Score', required: false }
 ];
 
-export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: ExportSheetProps) => {
+export const ExportSheet = ({
+  open,
+  onClose,
+  selectedUsers,
+  totalUsers
+}: ExportSheetProps) => {
   const [activeTab, setActiveTab] = useState('configure');
   const [format, setFormat] = useState('CSV');
   const [selectedColumns, setSelectedColumns] = useState<string[]>([
-    'id', 'name', 'email', 'status', 'qualityScore', 'totalEntries', 'joinedAt'
+    'id',
+    'name',
+    'email',
+    'status',
+    'qualityScore',
+    'totalEntries',
+    'joinedAt'
   ]);
-  const [exportType, setExportType] = useState<'selected' | 'filtered' | 'all'>('selected');
+  const [exportType, setExportType] = useState<'selected' | 'filtered' | 'all'>(
+    'selected'
+  );
   const [fileName, setFileName] = useState('');
   const [description, setDescription] = useState('');
   const [scheduleType, setScheduleType] = useState('immediate');
   const [exportJobs, setExportJobs] = useState<ExportJob[]>(mockExportJobs);
-  
+
   useEffect(() => {
     if (selectedUsers.length > 0) {
       setExportType('selected');
@@ -134,18 +142,22 @@ export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: Export
   useEffect(() => {
     const now = new Date();
     const timestamp = now.toISOString().split('T')[0]; // YYYY-MM-DD format
-    const baseFileName = exportType === 'selected' ? 'selected_users' : 
-                        exportType === 'filtered' ? 'filtered_users' : 'all_users';
+    const baseFileName =
+      exportType === 'selected'
+        ? 'selected_users'
+        : exportType === 'filtered'
+          ? 'filtered_users'
+          : 'all_users';
     setFileName(`${baseFileName}_${timestamp}`);
   }, [exportType]);
 
   const handleColumnToggle = (columnId: string) => {
-    const column = availableColumns.find(col => col.id === columnId);
+    const column = availableColumns.find((col) => col.id === columnId);
     if (column?.required) return; // Can't toggle required columns
-    
-    setSelectedColumns(prev => 
-      prev.includes(columnId) 
-        ? prev.filter(id => id !== columnId)
+
+    setSelectedColumns((prev) =>
+      prev.includes(columnId)
+        ? prev.filter((id) => id !== columnId)
         : [...prev, columnId]
     );
   };
@@ -157,56 +169,76 @@ export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: Export
       progress: 0,
       fileName: `${fileName}.${format.toLowerCase()}`,
       format,
-      recordCount: exportType === 'selected' ? selectedUsers.length : 
-                  exportType === 'filtered' ? 8934 : totalUsers,
+      recordCount:
+        exportType === 'selected'
+          ? selectedUsers.length
+          : exportType === 'filtered'
+            ? 8934
+            : totalUsers,
       createdAt: new Date().toISOString()
     };
 
-    setExportJobs(prev => [newJob, ...prev]);
+    setExportJobs((prev) => [newJob, ...prev]);
     setActiveTab('jobs');
 
     // Simulate job processing
     setTimeout(() => {
-      setExportJobs(prev => prev.map(job => 
-        job.id === newJob.id 
-          ? { ...job, status: 'processing', progress: 25 }
-          : job
-      ));
+      setExportJobs((prev) =>
+        prev.map((job) =>
+          job.id === newJob.id
+            ? { ...job, status: 'processing', progress: 25 }
+            : job
+        )
+      );
     }, 1000);
 
     setTimeout(() => {
-      setExportJobs(prev => prev.map(job => 
-        job.id === newJob.id 
-          ? { ...job, progress: 75 }
-          : job
-      ));
+      setExportJobs((prev) =>
+        prev.map((job) =>
+          job.id === newJob.id ? { ...job, progress: 75 } : job
+        )
+      );
     }, 3000);
 
     setTimeout(() => {
-      setExportJobs(prev => prev.map(job => 
-        job.id === newJob.id 
-          ? { 
-              ...job, 
-              status: 'completed', 
-              progress: 100,
-              downloadUrl: `/exports/${job.fileName}`
-            }
-          : job
-      ));
+      setExportJobs((prev) =>
+        prev.map((job) =>
+          job.id === newJob.id
+            ? {
+                ...job,
+                status: 'completed',
+                progress: 100,
+                downloadUrl: `/exports/${job.fileName}`
+              }
+            : job
+        )
+      );
     }, 5000);
   };
 
   const getJobStatusBadge = (status: ExportJob['status']) => {
     const variants = {
       queued: { variant: 'secondary' as const, label: 'Queued', icon: Clock },
-      processing: { variant: 'default' as const, label: 'Processing', icon: Download },
-      completed: { variant: 'default' as const, label: 'Completed', icon: CheckCircle },
-      failed: { variant: 'destructive' as const, label: 'Failed', icon: AlertTriangle }
+      processing: {
+        variant: 'default' as const,
+        label: 'Processing',
+        icon: Download
+      },
+      completed: {
+        variant: 'default' as const,
+        label: 'Completed',
+        icon: CheckCircle
+      },
+      failed: {
+        variant: 'destructive' as const,
+        label: 'Failed',
+        icon: AlertTriangle
+      }
     };
-    
+
     const config = variants[status];
     const IconComponent = config.icon;
-    
+
     return (
       <Badge variant={config.variant} className="text-xs">
         <IconComponent className="h-3 w-3 mr-1" />
@@ -239,7 +271,10 @@ export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: Export
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto px-4 sm:px-6">
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-2xl overflow-y-auto px-4 sm:px-6"
+      >
         <SheetHeader>
           <SheetTitle className="flex items-center space-x-2">
             <Download className="h-5 w-5" />
@@ -272,7 +307,9 @@ export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: Export
                     Selected Users ({selectedUsers.length})
                   </Label>
                   {selectedUsers.length === 0 && (
-                    <Badge variant="secondary" className="text-xs">No selection</Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      No selection
+                    </Badge>
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
@@ -338,26 +375,31 @@ export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: Export
                       onCheckedChange={() => handleColumnToggle(column.id)}
                       disabled={column.required}
                     />
-                    <Label 
-                      htmlFor={column.id} 
+                    <Label
+                      htmlFor={column.id}
                       className={`text-sm cursor-pointer ${column.required ? 'font-medium' : ''}`}
                     >
                       {column.label}
                       {column.required && (
-                        <Badge variant="secondary" className="ml-1 text-xs">Required</Badge>
+                        <Badge variant="secondary" className="ml-1 text-xs">
+                          Required
+                        </Badge>
                       )}
                     </Label>
                   </div>
                 ))}
               </div>
               <div className="text-xs text-muted-foreground">
-                {selectedColumns.length} of {availableColumns.length} columns selected
+                {selectedColumns.length} of {availableColumns.length} columns
+                selected
               </div>
             </div>
 
             {/* Description */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Description (Optional)</Label>
+              <Label className="text-sm font-medium">
+                Description (Optional)
+              </Label>
               <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -370,10 +412,25 @@ export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: Export
             <div className="bg-muted/50 p-3 rounded-lg">
               <div className="text-sm font-medium mb-2">Export Summary</div>
               <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>Records: <span className="font-medium">{getRecordCount().toLocaleString()}</span></div>
-                <div>Columns: <span className="font-medium">{selectedColumns.length}</span></div>
-                <div>Format: <span className="font-medium">{format}</span></div>
-                <div>Est. Size: <span className="font-medium">~{Math.ceil(getRecordCount() / 1000)}MB</span></div>
+                <div>
+                  Records:{' '}
+                  <span className="font-medium">
+                    {getRecordCount().toLocaleString()}
+                  </span>
+                </div>
+                <div>
+                  Columns:{' '}
+                  <span className="font-medium">{selectedColumns.length}</span>
+                </div>
+                <div>
+                  Format: <span className="font-medium">{format}</span>
+                </div>
+                <div>
+                  Est. Size:{' '}
+                  <span className="font-medium">
+                    ~{Math.ceil(getRecordCount() / 1000)}MB
+                  </span>
+                </div>
               </div>
             </div>
           </TabsContent>
@@ -386,7 +443,7 @@ export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: Export
                   {exportJobs.length} jobs
                 </Badge>
               </div>
-              
+
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {exportJobs.map((job) => (
                   <div key={job.id} className="border rounded-lg p-3">
@@ -394,25 +451,32 @@ export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: Export
                       <div className="font-medium text-sm">{job.fileName}</div>
                       {getJobStatusBadge(job.status)}
                     </div>
-                    
+
                     <div className="text-xs text-muted-foreground mb-2">
-                      {job.recordCount.toLocaleString()} records • {job.format} • {formatDate(job.createdAt)}
+                      {job.recordCount.toLocaleString()} records • {job.format}{' '}
+                      • {formatDate(job.createdAt)}
                     </div>
-                    
+
                     {job.status === 'processing' && (
                       <div className="space-y-1">
                         <Progress value={job.progress} className="h-2" />
-                        <div className="text-xs text-muted-foreground">{job.progress}% complete</div>
+                        <div className="text-xs text-muted-foreground">
+                          {job.progress}% complete
+                        </div>
                       </div>
                     )}
-                    
+
                     {job.status === 'completed' && job.downloadUrl && (
-                      <Button variant="outline" size="sm" className="w-full mt-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full mt-2"
+                      >
                         <Download className="h-3 w-3 mr-1" />
                         Download
                       </Button>
                     )}
-                    
+
                     {job.status === 'failed' && job.error && (
                       <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
                         Error: {job.error}
@@ -420,7 +484,7 @@ export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: Export
                     )}
                   </div>
                 ))}
-                
+
                 {exportJobs.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
@@ -437,7 +501,7 @@ export const ExportSheet = ({ open, onClose, selectedUsers, totalUsers }: Export
             Cancel
           </Button>
           {activeTab === 'configure' && (
-            <Button 
+            <Button
               onClick={handleExport}
               disabled={selectedColumns.length === 0 || !fileName.trim()}
             >

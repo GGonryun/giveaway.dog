@@ -186,7 +186,9 @@ export const SweepstakesDetailHeader = ({
                         View Live
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => copyToClipboard(sweepstakes.shareUrl)}>
+                    <DropdownMenuItem
+                      onClick={() => copyToClipboard(sweepstakes.shareUrl)}
+                    >
                       <Share className="h-4 w-4 mr-2" />
                       Share
                     </DropdownMenuItem>
@@ -288,4 +290,4 @@ export const SweepstakesDetailHeader = ({
       </CardContent>
     </Card>
   );
-}
+};

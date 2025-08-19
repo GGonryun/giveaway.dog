@@ -49,7 +49,9 @@ interface SweepstakesSettingsProps {
   sweepstakes: SweepstakesDetails;
 }
 
-export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) => {
+export const SweepstakesSettings = ({
+  sweepstakes
+}: SweepstakesSettingsProps) => {
   const [isPublic, setIsPublic] = useState(true);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [autoEnd, setAutoEnd] = useState(true);
@@ -63,7 +65,10 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
     console.log('Settings saved');
   };
 
-  const handleSettingChange = (setter: (value: boolean) => void, value: boolean) => {
+  const handleSettingChange = (
+    setter: (value: boolean) => void,
+    value: boolean
+  ) => {
     setter(value);
     setIsModified(true);
   };
@@ -91,7 +96,7 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
                 onChange={() => setIsModified(true)}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="status">Status</Label>
               <Select defaultValue={sweepstakes.status}>
@@ -107,7 +112,7 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
               </Select>
             </div>
           </div>
-          
+
           <div>
             <Label htmlFor="description">Description</Label>
             <Textarea
@@ -117,18 +122,22 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
               onChange={() => setIsModified(true)}
             />
           </div>
-          
+
           <div className="grid gap-4 md:grid-cols-2">
             <div>
               <Label htmlFor="end-date">End Date & Time</Label>
               <Input
                 id="end-date"
                 type="datetime-local"
-                defaultValue={sweepstakes.endsAt ? new Date(sweepstakes.endsAt).toISOString().slice(0, 16) : ''}
+                defaultValue={
+                  sweepstakes.endsAt
+                    ? new Date(sweepstakes.endsAt).toISOString().slice(0, 16)
+                    : ''
+                }
                 onChange={() => setIsModified(true)}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="timezone">Timezone</Label>
               <Select defaultValue="UTC">
@@ -138,7 +147,9 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
                 <SelectContent>
                   <SelectItem value="UTC">UTC</SelectItem>
                   <SelectItem value="America/New_York">Eastern Time</SelectItem>
-                  <SelectItem value="America/Los_Angeles">Pacific Time</SelectItem>
+                  <SelectItem value="America/Los_Angeles">
+                    Pacific Time
+                  </SelectItem>
                   <SelectItem value="Europe/London">London</SelectItem>
                 </SelectContent>
               </Select>
@@ -168,10 +179,12 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
             </div>
             <Switch
               checked={isPublic}
-              onCheckedChange={(checked) => handleSettingChange(setIsPublic, checked)}
+              onCheckedChange={(checked) =>
+                handleSettingChange(setIsPublic, checked)
+              }
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label className="text-base">Require Email Verification</Label>
@@ -181,10 +194,12 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
             </div>
             <Switch
               checked={requireVerification}
-              onCheckedChange={(checked) => handleSettingChange(setRequireVerification, checked)}
+              onCheckedChange={(checked) =>
+                handleSettingChange(setRequireVerification, checked)
+              }
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label className="text-base">Allow Multiple Entries</Label>
@@ -194,7 +209,9 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
             </div>
             <Switch
               checked={allowMultipleEntries}
-              onCheckedChange={(checked) => handleSettingChange(setAllowMultipleEntries, checked)}
+              onCheckedChange={(checked) =>
+                handleSettingChange(setAllowMultipleEntries, checked)
+              }
             />
           </div>
         </CardContent>
@@ -221,10 +238,12 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
             </div>
             <Switch
               checked={emailNotifications}
-              onCheckedChange={(checked) => handleSettingChange(setEmailNotifications, checked)}
+              onCheckedChange={(checked) =>
+                handleSettingChange(setEmailNotifications, checked)
+              }
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label className="text-base">Auto-end When Date Reached</Label>
@@ -234,7 +253,9 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
             </div>
             <Switch
               checked={autoEnd}
-              onCheckedChange={(checked) => handleSettingChange(setAutoEnd, checked)}
+              onCheckedChange={(checked) =>
+                handleSettingChange(setAutoEnd, checked)
+              }
             />
           </div>
         </CardContent>
@@ -262,9 +283,7 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
                 Permanently delete this sweepstakes and all associated data
               </p>
             </div>
-            <Button variant="destructive">
-              Delete
-            </Button>
+            <Button variant="destructive">Delete</Button>
           </div>
         </CardContent>
       </Card>
@@ -281,7 +300,11 @@ export const SweepstakesSettings = ({ sweepstakes }: SweepstakesSettingsProps) =
                 </span>
               </div>
               <div className="flex space-x-2">
-                <Button variant="outline" size="sm" onClick={() => setIsModified(false)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsModified(false)}
+                >
                   Discard
                 </Button>
                 <Button size="sm" onClick={handleSave}>

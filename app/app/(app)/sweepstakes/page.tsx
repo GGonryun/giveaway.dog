@@ -33,7 +33,7 @@ const SweepstakesTableSkeleton = () => (
 // Server component for overview KPIs
 async function SweepstakesOverviewSection() {
   const overviewData = await getSweepstakesOverview();
-  
+
   return (
     <>
       {/* Desktop Analytics */}
@@ -52,10 +52,8 @@ async function SweepstakesOverviewSection() {
 // Server component for sweepstakes table
 async function SweepstakesTableSection() {
   const sweepstakesData = await getSweepstakesList();
-  
-  return (
-    <SweepstakesTableWithFilters sweepstakes={sweepstakesData} />
-  );
+
+  return <SweepstakesTableWithFilters sweepstakes={sweepstakesData} />;
 }
 
 export default function SweepstakesPage() {

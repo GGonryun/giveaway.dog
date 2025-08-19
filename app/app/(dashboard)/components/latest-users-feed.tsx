@@ -88,46 +88,53 @@ export function LatestUsersFeed({ users }: LatestUsersFeedProps) {
             users.map((user, index) => (
               <div
                 key={user.id}
-                className={`border rounded-lg p-4 hover:bg-muted/30 transition-all duration-200 ${
+                className={`border rounded-lg p-3 sm:p-4 hover:bg-muted/30 transition-all duration-200 ${
                   index % 2 === 0 ? 'bg-card' : 'bg-muted/20'
                 } hover:shadow-sm`}
               >
-                <div className="flex items-start space-x-4">
-                  <Avatar className="h-12 w-12 border-2 border-muted">
+                <div className="flex items-start space-x-3 sm:space-x-4">
+                  <Avatar className="h-10 w-10 sm:h-12 sm:w-12 border-2 border-muted flex-shrink-0">
                     <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="text-sm font-semibold">
+                    <AvatarFallback className="text-xs sm:text-sm font-semibold">
                       {getInitials(user.name)}
                     </AvatarFallback>
                   </Avatar>
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="space-y-1">
-                        <div className="flex items-center space-x-3">
-                          <h4 className="font-semibold text-base">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 gap-2">
+                      <div className="space-y-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                          <h4 className="font-semibold text-sm sm:text-base truncate">
                             {user.name}
                           </h4>
                           {getQualityScoreBadge(user.qualityScore)}
                         </div>
-                        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                          {getEmailStatusIcon(user.emailStatus)}
-                          <span className="truncate">{user.email}</span>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground">
+                          <div className="flex items-center space-x-2">
+                            {getEmailStatusIcon(user.emailStatus)}
+                            <span className="truncate">{user.email}</span>
+                          </div>
                           {getEmailStatusBadge(user.emailStatus)}
                         </div>
                       </div>
-                      <Button variant="ghost" size="sm" asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        asChild
+                        className="self-start flex-shrink-0"
+                      >
                         <Link href={`/app/users/${user.id}`}>
                           <Eye className="h-4 w-4" />
                         </Link>
                       </Button>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
                       <div className="flex flex-col space-y-1">
                         <span className="text-muted-foreground text-xs uppercase tracking-wide">
                           Source
                         </span>
-                        <div className="font-medium bg-primary/10 px-2 py-1 rounded text-center">
+                        <div className="font-medium bg-primary/10 px-2 py-1 rounded text-center text-xs">
                           {user.firstSource}
                         </div>
                       </div>
@@ -135,7 +142,7 @@ export function LatestUsersFeed({ users }: LatestUsersFeedProps) {
                         <span className="text-muted-foreground text-xs uppercase tracking-wide">
                           Location
                         </span>
-                        <div className="font-medium bg-secondary/50 px-2 py-1 rounded text-center">
+                        <div className="font-medium bg-secondary/50 px-2 py-1 rounded text-center text-xs">
                           {user.location || 'Unknown'}
                         </div>
                       </div>
@@ -143,7 +150,7 @@ export function LatestUsersFeed({ users }: LatestUsersFeedProps) {
                         <span className="text-muted-foreground text-xs uppercase tracking-wide">
                           Entries
                         </span>
-                        <div className="font-bold text-lg text-center text-blue-600">
+                        <div className="font-bold text-base sm:text-lg text-center text-blue-600">
                           {user.entries}
                         </div>
                       </div>
@@ -151,7 +158,7 @@ export function LatestUsersFeed({ users }: LatestUsersFeedProps) {
                         <span className="text-muted-foreground text-xs uppercase tracking-wide">
                           Signed up
                         </span>
-                        <div className="font-medium text-center text-green-600">
+                        <div className="font-medium text-center text-green-600 text-xs">
                           {user.signupTime}
                         </div>
                       </div>
