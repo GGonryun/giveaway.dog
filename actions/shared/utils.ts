@@ -12,6 +12,7 @@ export const generateRandomInRange = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const simulateNetworkDelay = async (): Promise<void> => {
+export const simulateNetworkDelay = async (n?: number): Promise<void> => {
+  if (n) return await delay(n);
   await delay(generateRandomInRange(50, 200));
 };

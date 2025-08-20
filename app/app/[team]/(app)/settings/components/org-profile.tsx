@@ -74,7 +74,6 @@ export function OrgProfile() {
     // Mock API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsLoading(false);
-    console.log('Saved org profile:', formData);
   };
 
   const handleSlugChange = (value: string) => {

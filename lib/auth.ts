@@ -1,11 +1,12 @@
 'server only';
 
-import NextAuth from 'next-auth';
+import NextAuth, { Session } from 'next-auth';
 import TwitterProvider from 'next-auth/providers/twitter';
 import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
 import NodemailerProvider from 'next-auth/providers/nodemailer';
 import { authConfig } from './auth.config';
+import { RecursiveRequired } from '../types';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -45,3 +46,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     })
   ]
 });
+
+export const isValidSession = (
+  session: Session | null
+): session is RecursiveRequired<Session> => {
+  if (!session || !session.user || !session.user.id) return false;
+  const now = new Date();
+  const expiration = new Date(session.expires);
+  return now < expiration;
+};

@@ -62,7 +62,6 @@ export const SweepstakesSettings = ({
   const handleSave = () => {
     // Simulate save
     setIsModified(false);
-    console.log('Settings saved');
   };
 
   const handleSettingChange = (

@@ -132,15 +132,9 @@ export const GiveawayPreview: React.FC = () => {
           participation: mockUserParticipation
         }}
         state={previewState}
-        onTaskComplete={(taskId) => {
-          console.log('Preview: Task completed:', taskId);
-        }}
-        onLogin={() => {
-          console.log('Preview: Login clicked');
-        }}
-        onCompleteProfile={() => {
-          console.log('Preview: Complete profile clicked');
-        }}
+        onTaskComplete={(taskId) => {}}
+        onLogin={() => {}}
+        onCompleteProfile={() => {}}
       />
     </div>
   );

@@ -58,7 +58,6 @@ export const BulkActionsBar = ({
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     setIsLoading(false);
-    console.log(`Performing ${action} on ${selectedCount} users`);
 
     // Clear selection after successful action
     onClearSelection();

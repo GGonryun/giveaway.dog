@@ -76,15 +76,6 @@ export const SweepstakesExportModal = () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     setIsExporting(false);
-
-    // In real implementation, this would trigger the actual export
-    console.log('Export configuration:', {
-      columns: selectedColumns,
-      format: exportFormat,
-      dateRange,
-      includeHeaders,
-      scheduled: scheduleExport
-    });
   };
 
   const getColumnCount = () => selectedColumns.length;

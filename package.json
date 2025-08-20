@@ -17,6 +17,7 @@
     "prisma:reset:local": "dotenv -e .env.local -- npx prisma db push --force-reset",
     "prisma:studio:production": "dotenv -e .env.prod -- npx prisma studio",
     "prisma:migrate:production": "dotenv -e .env.prod -- npx prisma migrate deploy",
+    "rollback": "dotenv -e .env.prod -- npx prisma migrate resolve --rolled-back \"20250819075318_giveaway_clean_up\"",
     "prisma:push:production": "dotenv -e .env.prod -- npx prisma db push",
     "prisma:generate:production": "dotenv -e .env.prod -- npx prisma generate",
     "docker:psql:local": "docker run --name psql -e POSTGRES_PASSWORD=prisma -e POSTGRES_USER=prisma -e POSTGRES_DB=prisma -d -p 5432:5432 postgres",
@@ -29,7 +30,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^4.1.3",
-    "@prisma/client": "^6.13.0",
+    "@prisma/client": "^6.14.0",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",
     "@radix-ui/react-avatar": "^1.1.3",
@@ -109,6 +110,6 @@
   "devDependencies": {
     "@types/lodash": "^4.17.20",
     "@types/pluralize": "^0.0.33",
-    "prisma": "^6.13.0"
+    "prisma": "^6.14.0"
   }
 }
