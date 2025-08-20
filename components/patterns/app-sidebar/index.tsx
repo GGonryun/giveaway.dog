@@ -5,11 +5,9 @@ import {
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
-  GiftIcon,
   Home,
   SettingsIcon,
   TicketIcon,
-  TrophyIcon,
   UsersIcon
 } from 'lucide-react';
 
@@ -23,6 +21,7 @@ import {
 import { NavProjects } from './nav-projects';
 import { NavUser } from './nav-user';
 import { WebsiteLogo } from './website-logo';
+import { TeamSwitcher } from './team-switcher';
 
 // This is sample data.
 const data = {
@@ -84,7 +83,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <WebsiteLogo />
+        <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
         <NavProjects groups={data.groups} />
