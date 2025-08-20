@@ -13,12 +13,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from '../ui/dropdown-menu';
-import { useServerAction } from '@/lib/mrpc/hook';
+import { useProcedure } from '@/lib/mrpc/hook';
 
 export const CreateGiveawayButton = () => {
   const router = useRouter();
 
-  const [isPending, onClick] = useServerAction({
+  const [isPending, onClick] = useProcedure({
     action: createSweepstakes,
     onSuccess: (data) => {
       router.push(`/app/create/${data.id}`);

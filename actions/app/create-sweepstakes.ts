@@ -2,11 +2,11 @@
 
 import { nanoid } from 'nanoid';
 import prisma, { GiveawayStatus } from '@/lib/prisma';
-import { mRPC } from '@/lib/mrpc/procedures';
+import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 
-export const createSweepstakes = mRPC
-  .secure()
+export const createSweepstakes = procedure
+  .authorized()
   .output(
     z.object({
       id: z.string()

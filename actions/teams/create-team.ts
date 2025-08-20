@@ -1,11 +1,11 @@
 'use server';
 
 import { createTeamInputSchema } from '@/schemas/teams';
-import { mRPC } from '@/lib/mrpc/procedures';
+import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
 
-const createTeam = mRPC
-  .secure()
+const createTeam = procedure
+  .authorized()
   .input(createTeamInputSchema)
   .action(async ({ user, input }) => {
     throw new ApplicationError({

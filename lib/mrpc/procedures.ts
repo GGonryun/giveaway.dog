@@ -1,10 +1,10 @@
 import z from 'zod';
-import { ApplicationError, ApplicationErrorCode } from '../errors';
+import { ApplicationError } from '../errors';
 import { auth, isValidSession } from '../auth';
 import { User } from 'next-auth';
 import { Result, Success } from './types';
 
-export class ProtectBuilder<
+export class AuthorizedProcedureBuilder<
   TInputSchema extends z.ZodType<any> | undefined = undefined,
   TOutputSchema extends z.ZodType<any> | undefined = undefined
 > {
@@ -14,11 +14,17 @@ export class ProtectBuilder<
   ) {}
 
   input<S extends z.ZodType<any>>(schema: S) {
-    return new ProtectBuilder<S, TOutputSchema>(schema, this.outputSchema);
+    return new AuthorizedProcedureBuilder<S, TOutputSchema>(
+      schema,
+      this.outputSchema
+    );
   }
 
   output<S extends z.ZodType<any>>(schema: S) {
-    return new ProtectBuilder<TInputSchema, S>(this.inputSchema, schema);
+    return new AuthorizedProcedureBuilder<TInputSchema, S>(
+      this.inputSchema,
+      schema
+    );
   }
 
   action<
@@ -36,61 +42,41 @@ export class ProtectBuilder<
       TInputSchema extends z.ZodType<any> ? z.infer<TInputSchema> : void;
 
     return async (input: InputType): Promise<Result<SuccessType>> => {
-      // --- Authenticate ---
-      let session;
       try {
-        session = await auth();
-      } catch {
-        return {
-          ok: false,
-          data: {
+        // --- Authenticate ---
+        const session = await auth();
+        if (!isValidSession(session)) {
+          throw new ApplicationError({
             code: 'UNAUTHORIZED',
-            message: 'Authentication failed'
-          }
-        };
-      }
-      if (!isValidSession(session)) {
-        return {
-          ok: false,
-          data: { code: 'UNAUTHORIZED', message: 'Invalid session' }
-        };
-      }
+            message: 'Invalid session'
+          });
+        }
 
-      // --- Input validation ---
-      let inputData: any = undefined;
-      if (this.inputSchema) {
-        const parsed = this.inputSchema.safeParse(input);
-        if (!parsed.success) {
-          return {
-            ok: false,
-            data: {
+        // --- Input validation ---
+        let inputData: any = undefined;
+        if (this.inputSchema) {
+          const parsed = this.inputSchema.safeParse(input);
+          if (!parsed.success) {
+            throw new ApplicationError({
               code: 'UNPROCESSABLE_CONTENT',
               message: `Input validation failed: ${parsed.error.message}`
-            }
-          };
+            });
+          }
+          inputData = parsed.data;
         }
-        inputData = parsed.data;
-      }
 
-      // --- Run action ---
-      try {
-        const { user } = session;
-        const data = await fn({ user, input: inputData });
+        // --- Run action ---
+        const data = await fn({ user: session.user, input: inputData });
 
         if (this.outputSchema) {
           const parsed = this.outputSchema.safeParse(data);
           if (!parsed.success) {
-            return {
-              ok: false,
-              data: {
-                code: 'UNPROCESSABLE_CONTENT',
-                message: `Output validation failed: ${parsed.error.message}`
-              }
-            };
+            throw new ApplicationError({
+              code: 'UNPROCESSABLE_CONTENT',
+              message: `Output validation failed: ${parsed.error.message}`
+            });
           }
         }
-
-        console.log('mRPC action result', { userId: user.id, data });
 
         return { ok: true, data } as Success<SuccessType>;
       } catch (err: any) {
@@ -104,7 +90,6 @@ export class ProtectBuilder<
           };
         }
 
-        // fallback for unknown errors
         return {
           ok: false,
           data: {
@@ -117,6 +102,6 @@ export class ProtectBuilder<
   }
 }
 
-export namespace mRPC {
-  export const secure = () => new ProtectBuilder();
+export namespace procedure {
+  export const authorized = () => new AuthorizedProcedureBuilder();
 }

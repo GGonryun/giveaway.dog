@@ -44,7 +44,7 @@ import {
   detailedUserTeamSchema
 } from '@/schemas/teams';
 import { toast } from 'sonner';
-import { useServerAction } from '@/lib/mrpc/hook';
+import { useProcedure } from '@/lib/mrpc/hook';
 
 export function TeamPickerForm({
   className,
@@ -97,7 +97,7 @@ const CreateTeamForm: React.FC<{
 }> = ({ onBack }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  const [isLoading, handleCreateTeam] = useServerAction({
+  const [isLoading, handleCreateTeam] = useProcedure({
     action: createTeam,
     onFailure: (data) => {
       toast.error(data.message);
@@ -293,11 +293,11 @@ const SelectTeamForm: React.FC<{
 }> = ({ onCreateTeam }) => {
   const [teams, setTeams] = useState<DetailedUserTeam[]>([]);
 
-  const [isLoadingSelectTeam, handleSelectTeam] = useServerAction({
+  const [isLoadingSelectTeam, handleSelectTeam] = useProcedure({
     action: selectTeam
   });
 
-  const [, handleGetTeams] = useServerAction({
+  const [, handleGetTeams] = useProcedure({
     action: getUserTeams,
     onSuccess: setTeams
   });

@@ -8,18 +8,18 @@ const guard = (error: unknown) => {
 const parseError = (error: any) =>
   error?.message ?? 'An unexpected error occurred.';
 
-export function useServerAction<TSuccess>(args: {
+export function useProcedure<TSuccess>(args: {
   action: () => Promise<Result<TSuccess>>;
   onSuccess?: (data: TSuccess) => void;
   onFailure?: (error: Failure['data']) => void;
 }): [boolean, () => void];
-export function useServerAction<TInput, TSuccess>(args: {
+export function useProcedure<TInput, TSuccess>(args: {
   action: (input: TInput) => Promise<Result<TSuccess>>;
   onSuccess?: (data: TSuccess) => void;
   onFailure?: (error: Failure['data']) => void;
 }): [boolean, (input: TInput) => void];
 // --- Implementation ---
-export function useServerAction<TInput, TSuccess>({
+export function useProcedure<TInput, TSuccess>({
   action,
   onSuccess,
   onFailure = guard
@@ -37,7 +37,6 @@ export function useServerAction<TInput, TSuccess>({
       startTransition(async () => {
         try {
           const result = await action(input);
-          console.log('useServerAction result', result);
 
           if (result.ok) {
             onSuccess?.(result.data);

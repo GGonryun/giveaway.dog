@@ -2,12 +2,12 @@
 
 import { redirect } from 'next/navigation';
 import getUserTeams from './get-user-teams';
-import { mRPC } from '@/lib/mrpc/procedures';
+import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 
-const selectTeam = mRPC
-  .secure()
+const selectTeam = procedure
+  .authorized()
   .input(z.string())
   .action(async ({ input: teamId }) => {
     const teams = await getUserTeams();
