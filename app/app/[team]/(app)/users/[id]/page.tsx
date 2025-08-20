@@ -1,4 +1,4 @@
-import { Outline } from '../../../outline';
+import { Outline } from '@/components/app/outline';
 import { UserDetailView } from './components/user-detail-view';
 
 interface UserDetailPageProps {

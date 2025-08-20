@@ -11,12 +11,11 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AuthFooter } from '@/components/auth/auth-footer';
 import { Plus, Building, AlertTriangle, Upload, ArrowLeft, Smile } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import EmojiPicker from 'emoji-picker-react';
 import {
@@ -24,51 +23,18 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
+import getUserTeams, { type Team } from '@/actions/teams/get-user-teams';
+import selectTeam from '@/actions/teams/select-team';
+import createTeam from '@/actions/teams/create-team';
 
-interface Team {
-  id: string;
-  name: string;
-  slug: string;
-  logo?: string;
-  memberCount: number;
-  role: 'owner' | 'admin' | 'member';
-}
-
-// Mock data for existing teams
-const mockTeams: Team[] = [
-  {
-    id: '1',
-    name: 'Tech Startup Co',
-    slug: 'tech-startup',
-    logo: '🚀',
-    memberCount: 12,
-    role: 'owner'
-  },
-  {
-    id: '2',
-    name: 'Marketing Agency',
-    slug: 'marketing-agency',
-    logo: '📈',
-    memberCount: 8,
-    role: 'admin'
-  },
-  {
-    id: '3',
-    name: 'Gaming Community',
-    slug: 'gaming-hub',
-    logo: '🎮',
-    memberCount: 245,
-    role: 'member'
-  }
-];
 
 export function TeamPickerForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const router = useRouter();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [newTeamData, setNewTeamData] = useState({
     name: '',
@@ -76,16 +42,26 @@ export function TeamPickerForm({
     logo: ''
   });
 
+  useEffect(() => {
+    const loadTeams = async () => {
+      try {
+        const userTeams = await getUserTeams();
+        setTeams(userTeams);
+      } catch (error) {
+        console.error('Failed to load teams:', error);
+      }
+    };
+    
+    loadTeams();
+  }, []);
+
   const handleSelectTeam = async (teamId: string) => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsLoading(false);
-    
-    // Find the selected team to get its slug
-    const selectedTeam = mockTeams.find(team => team.id === teamId);
-    if (selectedTeam) {
-      router.push(`/app/${selectedTeam.slug}`);
+    try {
+      await selectTeam(teamId);
+    } catch (error) {
+      console.error('Failed to select team:', error);
+      setIsLoading(false);
     }
   };
 
@@ -110,12 +86,12 @@ export function TeamPickerForm({
 
   const handleCreateTeam = async () => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsLoading(false);
-    
-    // Redirect to the new team's slug
-    router.push(`/app/${newTeamData.slug}`);
+    try {
+      await createTeam(newTeamData);
+    } catch (error) {
+      console.error('Failed to create team:', error);
+      setIsLoading(false);
+    }
   };
 
   const handleEmojiSelect = (emojiData: any) => {
@@ -149,7 +125,7 @@ export function TeamPickerForm({
                     <Label>Your Teams</Label>
                     <div className="flex flex-col gap-3">
                       {/* Existing Teams */}
-                      {mockTeams.map((team) => (
+                      {teams.map((team) => (
                         <Button
                           key={team.id}
                           variant="outline"

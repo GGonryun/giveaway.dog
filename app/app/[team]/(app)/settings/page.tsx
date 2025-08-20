@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Outline } from '../../outline';
 import { OrgProfile } from './components/org-profile';
 import { CRMConnectors } from './components/crm-connectors';
 import { Billing } from './components/billing';
@@ -17,6 +16,7 @@ import {
   Zap,
   FileText
 } from 'lucide-react';
+import { Outline } from '@/components/app/outline';
 
 type SettingsSection =
   | 'profile'

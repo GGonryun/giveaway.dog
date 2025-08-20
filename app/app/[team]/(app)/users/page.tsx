@@ -1,12 +1,5 @@
 import { Suspense } from 'react';
-import { Outline } from '../../outline';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   Users,
@@ -21,6 +14,7 @@ import {
 import { UsersTable } from './components/users-table';
 import { Skeleton } from '@/components/ui/skeleton';
 import getUserAnalytics from '@/actions/users/get-user-analytics';
+import { Outline } from '@/components/app/outline';
 
 // Wrapper component to handle Suspense for useSearchParams
 const UsersTableWrapper = () => {
