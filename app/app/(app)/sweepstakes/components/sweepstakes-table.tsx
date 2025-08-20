@@ -1,11 +1,11 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SweepstakesPagination } from './sweepstakes-pagination';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   Popover,
@@ -19,6 +19,11 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger
+} from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import {
   Table,
@@ -46,7 +51,6 @@ import {
   Calendar,
   Users,
   Target,
-  Shield,
   Clock,
   ArrowUpDown,
   ArrowUp,
@@ -73,6 +77,8 @@ interface SweepstakesTableProps {
     conversionRange: { min: number; max: number };
   };
   onFiltersChange?: (filters: any) => void;
+  statusFilter?: string;
+  onStatusChange?: (status: string) => void;
 }
 
 interface SweepstakesTableWithFiltersProps {
@@ -167,7 +173,6 @@ function SweepstakesFilterDialog({
 
   const resetFilters = () => {
     const defaultFilters = {
-      status: 'all',
       dateRange: 'all',
       conversionRange: { min: 0, max: 100 }
     };
@@ -176,7 +181,6 @@ function SweepstakesFilterDialog({
 
   const getActiveFiltersCount = () => {
     let count = 0;
-    if (filters.status !== 'all') count++;
     if (filters.dateRange !== 'all') count++;
     if (filters.conversionRange.min > 0 || filters.conversionRange.max < 100)
       count++;
@@ -212,30 +216,6 @@ function SweepstakesFilterDialog({
           </div>
 
           <Separator />
-
-          {/* Status Filter */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center">
-              <BarChart3 className="h-4 w-4 mr-1" />
-              Status
-            </label>
-            <Select
-              value={localFilters.status}
-              onValueChange={(value) => updateLocalFilter('status', value)}
-            >
-              <SelectTrigger className="h-9">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="ending-soon">Ending Soon</SelectItem>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="paused">Paused</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
 
           {/* Date Range Filter */}
           <div className="space-y-2">
@@ -278,6 +258,21 @@ function SweepstakesFilterDialog({
   );
 }
 
+// Helper function to get the biggest time unit
+const getSimpleTimeLeft = (timeLeft: string): string => {
+  if (timeLeft === 'Not started' || timeLeft === 'Ended' || timeLeft === 'Paused') {
+    return timeLeft;
+  }
+  
+  // Extract the first time unit (biggest unit)
+  const parts = timeLeft.split(' ');
+  if (parts.length >= 2) {
+    return `${parts[0]} ${parts[1]}`;
+  }
+  
+  return timeLeft;
+};
+
 export function SweepstakesTable({
   sweepstakes,
   sortField,
@@ -286,7 +281,9 @@ export function SweepstakesTable({
   searchQuery = '',
   onSearchChange,
   filters,
-  onFiltersChange
+  onFiltersChange,
+  statusFilter = 'all',
+  onStatusChange
 }: SweepstakesTableProps) {
   // Helper component for sortable headers
   const SortableHeader = ({
@@ -299,7 +296,13 @@ export function SweepstakesTable({
     className?: string;
   }) => {
     if (!onSort) {
-      return <TableHead className={className}>{children}</TableHead>;
+      return (
+        <TableHead className={`py-2 ${className}`}>
+          <div className={`${className.includes('text-right') ? 'flex justify-end' : ''}`}>
+            {children}
+          </div>
+        </TableHead>
+      );
     }
 
     const getSortIcon = () => {
@@ -311,10 +314,10 @@ export function SweepstakesTable({
 
     return (
       <TableHead
-        className={`cursor-pointer hover:bg-muted/50 select-none ${className}`}
+        className={`cursor-pointer hover:bg-muted/50 select-none py-2 ${className}`}
         onClick={() => onSort(field)}
       >
-        <div className="flex items-center space-x-2">
+        <div className={`flex items-center space-x-2 ${className.includes('text-right') ? 'justify-end' : ''}`}>
           <span>{children}</span>
           {getSortIcon()}
         </div>
@@ -373,34 +376,51 @@ export function SweepstakesTable({
   };
 
   return (
-    <Card>
-      <CardHeader className="space-y-4">
-        <CardTitle className="flex items-center space-x-2">
-          <Calendar className="h-5 w-5" />
-          <span>All Sweepstakes</span>
-          <Badge variant="secondary">{sweepstakes.length}</Badge>
-        </CardTitle>
+    <div className="space-y-4">
+      {/* Status Tabs */}
+      {onStatusChange && (
+        <Tabs value={statusFilter} onValueChange={onStatusChange} className="w-full">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="active">Active</TabsTrigger>
+            <TabsTrigger value="ending-soon">Ending Soon</TabsTrigger>
+            <TabsTrigger value="draft">Draft</TabsTrigger>
+            <TabsTrigger value="paused">Paused</TabsTrigger>
+            <TabsTrigger value="completed">Completed</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      )}
 
-        {/* Search and Filters */}
-        {(onSearchChange || onFiltersChange) && (
-          <div className="flex flex-col sm:flex-row gap-3">
-            {onSearchChange && (
-              <SweepstakesSearchBar
-                value={searchQuery}
-                onChange={onSearchChange}
-                placeholder="Search sweepstakes by title, prize, status..."
-              />
-            )}
-            {onFiltersChange && filters && (
-              <SweepstakesFilterDialog
-                filters={filters}
-                onChange={onFiltersChange}
-              />
-            )}
-          </div>
-        )}
-      </CardHeader>
-      <CardContent className="p-0">
+      {/* Search and Filters */}
+      {(onSearchChange || onFiltersChange) && (
+        <div className="flex flex-col sm:flex-row gap-3">
+          {onSearchChange && (
+            <SweepstakesSearchBar
+              value={searchQuery}
+              onChange={onSearchChange}
+              placeholder="Search sweepstakes by title, prize, status..."
+            />
+          )}
+          {onFiltersChange && filters && (
+            <Select value={filters.dateRange} onValueChange={(value) => onFiltersChange({ ...filters, dateRange: value })}>
+              <SelectTrigger className="w-48">
+                <Calendar className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Date range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Time</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="7d">Last 7 days</SelectItem>
+                <SelectItem value="30d">Last 30 days</SelectItem>
+                <SelectItem value="90d">Last 90 days</SelectItem>
+                <SelectItem value="1y">Last year</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+      )}
+
+      <div>
         {/* Mobile Card View */}
         <div className="block lg:hidden">
           <div className="space-y-3 p-4">
@@ -418,9 +438,6 @@ export function SweepstakesTable({
                         >
                           {item.title}
                         </Link>
-                        <div className="text-xs text-muted-foreground truncate">
-                          {item.prize}
-                        </div>
                       </div>
                     </div>
                     {getStatusBadge(item.status)}
@@ -434,9 +451,6 @@ export function SweepstakesTable({
                       </div>
                       <div className="font-medium">
                         {item.entries.toLocaleString()}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {item.uniqueEntrants.toLocaleString()} unique
                       </div>
                     </div>
 
@@ -456,17 +470,6 @@ export function SweepstakesTable({
                         >
                           Conv: {item.conversionRate.toFixed(1)}%
                         </div>
-                        <div
-                          className={`text-xs font-medium ${
-                            item.botRate > 20
-                              ? 'text-red-500'
-                              : item.botRate > 10
-                                ? 'text-yellow-500'
-                                : 'text-green-500'
-                          }`}
-                        >
-                          Bot: {item.botRate.toFixed(1)}%
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -475,7 +478,7 @@ export function SweepstakesTable({
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <div className="flex items-center space-x-1">
                       <Clock className="h-3 w-3" />
-                      <span>{item.timeLeft}</span>
+                      <span>{getSimpleTimeLeft(item.timeLeft)}</span>
                     </div>
 
                     <div className="flex items-center space-x-1">
@@ -541,25 +544,21 @@ export function SweepstakesTable({
                 <SortableHeader field="title" className="w-[300px]">
                   Sweepstakes
                 </SortableHeader>
-                <SortableHeader field="status">Status</SortableHeader>
-                <SortableHeader field="entries" className="text-right">
+                <SortableHeader field="entries" className="text-right w-24">
                   Entries
                 </SortableHeader>
-                <SortableHeader field="conversionRate" className="text-right">
+                <SortableHeader field="conversionRate" className="text-right w-24">
                   Conversion
                 </SortableHeader>
-                <SortableHeader field="botRate" className="text-right">
-                  Bot Rate
-                </SortableHeader>
-                <TableHead>Time Left</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-right py-2 w-28">Time Left</TableHead>
+                <TableHead className="text-right py-2 w-24">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {sweepstakes.map((item) => (
-                <TableRow key={item.id} className="hover:bg-muted/50">
-                  <TableCell>
-                    <div className="space-y-1">
+                <TableRow key={item.id} className="hover:bg-muted/50 h-12">
+                  <TableCell className="py-2 w-[300px]">
+                    <div>
                       <div className="flex items-center space-x-2">
                         {getStatusIcon(item.status)}
                         <div>
@@ -569,29 +568,19 @@ export function SweepstakesTable({
                           >
                             {item.title}
                           </Link>
-                          <div className="text-xs text-muted-foreground">
-                            {item.prize}
-                          </div>
                         </div>
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Created: {new Date(item.createdAt).toLocaleDateString()}
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{getStatusBadge(item.status)}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="space-y-1">
+                  <TableCell className="text-right py-2 w-24">
+                    <div>
                       <div className="font-medium flex items-center justify-end space-x-1">
                         <Users className="h-3 w-3" />
                         <span>{item.entries.toLocaleString()}</span>
                       </div>
-                      <div className="text-xs text-muted-foreground">
-                        {item.uniqueEntrants.toLocaleString()} unique
-                      </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right py-2 w-24">
                     <div className="flex items-center justify-end space-x-1">
                       <Target className="h-3 w-3" />
                       <span
@@ -607,29 +596,13 @@ export function SweepstakesTable({
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end space-x-1">
-                      <Shield className="h-3 w-3" />
-                      <span
-                        className={`font-medium ${
-                          item.botRate > 20
-                            ? 'text-red-500'
-                            : item.botRate > 10
-                              ? 'text-yellow-500'
-                              : 'text-green-500'
-                        }`}
-                      >
-                        {item.botRate.toFixed(1)}%
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-1 text-sm">
+                  <TableCell className="py-2 text-right w-28">
+                    <div className="flex items-center justify-end space-x-1 text-sm">
                       <Clock className="h-3 w-3 text-muted-foreground" />
-                      <span>{item.timeLeft}</span>
+                      <span>{getSimpleTimeLeft(item.timeLeft)}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right py-2 w-24">
                     <div className="flex items-center justify-end space-x-1">
                       <Button variant="ghost" size="sm" asChild>
                         <Link href={`/app/sweepstakes/${item.id}`}>
@@ -695,8 +668,8 @@ export function SweepstakesTable({
             </Button>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
@@ -717,8 +690,9 @@ export function SweepstakesTableWithFilters({
 
   // Initialize state from URL params
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
+  const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'all');
   const [filters, setFilters] = useState({
-    status: searchParams.get('status') || 'all',
+    status: 'all', // Remove status from filters since we're using tabs
     dateRange: searchParams.get('dateRange') || 'all',
     conversionRange: {
       min: Number(searchParams.get('conversionMin')) || 0,
@@ -800,7 +774,7 @@ export function SweepstakesTableWithFilters({
   useEffect(() => {
     updateURL({
       q: debouncedQuery,
-      status: filters.status,
+      status: statusFilter,
       dateRange: filters.dateRange,
       conversionMin: filters.conversionRange.min,
       conversionMax: filters.conversionRange.max,
@@ -811,6 +785,7 @@ export function SweepstakesTableWithFilters({
     });
   }, [
     debouncedQuery,
+    statusFilter,
     filters,
     currentPage,
     pageSize,
@@ -834,7 +809,7 @@ export function SweepstakesTableWithFilters({
       sweepstakes.timeLeft.toLowerCase().includes(query);
 
     const matchesStatus =
-      filters.status === 'all' || sweepstakes.status === filters.status;
+      statusFilter === 'all' || sweepstakes.status === statusFilter;
 
     // Date range filtering based on created date
     const matchesDateRange = (() => {
@@ -948,7 +923,7 @@ export function SweepstakesTableWithFilters({
   const paginatedData = sortedData.slice(startIndex, startIndex + pageSize);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Sweepstakes Table */}
       <SweepstakesTable
         sweepstakes={paginatedData}
@@ -960,6 +935,11 @@ export function SweepstakesTableWithFilters({
         filters={filters}
         onFiltersChange={(newFilters) => {
           setFilters(newFilters);
+          setCurrentPage(1);
+        }}
+        statusFilter={statusFilter}
+        onStatusChange={(status) => {
+          setStatusFilter(status);
           setCurrentPage(1);
         }}
       />

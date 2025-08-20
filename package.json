@@ -67,6 +67,7 @@
     "date-fns": "^4.1.0",
     "embla-carousel-auto-scroll": "^8.5.2",
     "embla-carousel-react": "^8.5.2",
+    "emoji-picker-react": "^4.13.2",
     "i18n-iso-countries": "^7.14.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.400.0",
