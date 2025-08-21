@@ -2,7 +2,7 @@
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
 import { SweepstakesData } from '@/schemas/index';
-import { simulateNetworkDelay } from '../shared/utils';
+import { simulateNetworkDelay } from '@/lib/simulate';
 
 interface GetSweepstakesListParams {
   statusFilter?: string;

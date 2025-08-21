@@ -2,7 +2,7 @@
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
 import { DailyEngagementData } from '@/schemas/index';
-import { simulateNetworkDelay } from '../shared/utils';
+import { simulateNetworkDelay } from '@/lib/simulate';
 
 interface GetDailyEngagementParams {
   startDate?: string;

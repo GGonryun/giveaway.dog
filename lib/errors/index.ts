@@ -1,6 +1,5 @@
 import z, { ZodError } from 'zod';
 import { widetype } from '../widetype';
-import { is } from 'date-fns/locale';
 
 export type ApplicationErrorCode =
   | 'BAD_REQUEST'
@@ -59,28 +58,16 @@ export type ApplicationErrorArgs = {
 };
 
 export class ApplicationError extends Error {
-  _tag: 'ApplicationError';
   code: ApplicationErrorCode;
   data?: unknown;
 
   constructor(error: ApplicationErrorArgs) {
     super(error.message);
-    this._tag = 'ApplicationError';
     this.name = error.code;
     this.code = error.code;
     this.message = error.message;
     this.cause = error.cause;
     this.data = error.data;
-  }
-
-  toJSON() {
-    return {
-      name: this.name,
-      message: this.message,
-      stack: this.stack,
-      _tag: this._tag,
-      code: this.code
-    };
   }
 }
 
@@ -179,14 +166,4 @@ export function toZodErrorContext(error: ZodError): ZodErrorContext {
 
 export const assertNever = (value: never): never => {
   throw new Error(`Unexpected value: ${value}`);
-};
-
-// when you throw an error from a server action (or API route), it gets serialized into a plain object and then re-hydrated on the client.
-export const isApplicationError = (
-  error: unknown
-): error is ApplicationError => {
-  if (typeof error === 'object' && error !== null && '_tag' in error) {
-    return (error as ApplicationError)._tag === 'ApplicationError';
-  }
-  return false;
 };

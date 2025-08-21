@@ -34,14 +34,13 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import getUserTeams from '@/actions/teams/get-user-teams';
-import selectTeam from '@/actions/teams/select-team';
-import createTeam from '@/actions/teams/create-team';
+import getUserTeamsAction from '@/actions/teams/get-user-teams';
+import selectTeamAction from '@/actions/teams/select-team';
+import createTeamAction from '@/actions/teams/create-team';
 import {
   DetailedUserTeam,
   createTeamInputSchema,
-  type CreateTeamInput,
-  detailedUserTeamSchema
+  type CreateTeamInput
 } from '@/schemas/teams';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
@@ -97,8 +96,8 @@ const CreateTeamForm: React.FC<{
 }> = ({ onBack }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  const [isLoading, handleCreateTeam] = useProcedure({
-    action: createTeam,
+  const [isLoading, createTeam] = useProcedure({
+    action: createTeamAction,
     onFailure: (data) => {
       toast.error(data.message);
 
@@ -143,10 +142,7 @@ const CreateTeamForm: React.FC<{
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleCreateTeam)}
-        className="grid gap-4"
-      >
+      <form onSubmit={form.handleSubmit(createTeam)} className="grid gap-4">
         <Alert className="border-orange-200 bg-orange-50">
           <AlertTriangle className="h-4 w-4 text-orange-600" />
           <AlertDescription className="text-orange-800">
@@ -293,20 +289,21 @@ const SelectTeamForm: React.FC<{
 }> = ({ onCreateTeam }) => {
   const [teams, setTeams] = useState<DetailedUserTeam[]>([]);
 
-  const [isLoadingSelectTeam, handleSelectTeam] = useProcedure({
-    action: selectTeam
+  const [isLoadingSelectTeam, selectTeam] = useProcedure({
+    action: selectTeamAction
   });
 
-  const [, handleGetTeams] = useProcedure({
-    action: getUserTeams,
+  const [isLoadingTeams, getTeams] = useProcedure({
+    action: getUserTeamsAction,
     onSuccess: setTeams
   });
 
   useEffect(() => {
-    handleGetTeams();
+    getTeams();
   }, []);
 
   if (isLoadingSelectTeam) return <LoadingState text="Switching to team..." />;
+  if (isLoadingTeams) return <LoadingState text="Loading teams..." />;
 
   return (
     <div className="grid gap-4">
@@ -319,7 +316,7 @@ const SelectTeamForm: React.FC<{
                 key={team.id}
                 variant="outline"
                 className="p-4 h-auto justify-start hover:bg-muted/50"
-                onClick={() => handleSelectTeam(team.id)}
+                onClick={() => selectTeam(team.id)}
               >
                 <div className="flex items-center space-x-3 w-full">
                   <div className="text-2xl">{team.logo || '🏢'}</div>

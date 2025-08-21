@@ -2,9 +2,9 @@ import { TeamRole } from '@/lib/prisma';
 import z from 'zod';
 
 export const detailedUserTeamSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(2).max(100),
-  slug: z.string().min(2).max(100),
+  id: z.string(),
+  name: z.string(),
+  slug: z.string(),
   logo: z.string(), // emoji
   memberCount: z.number().min(0),
   role: z.nativeEnum(TeamRole)

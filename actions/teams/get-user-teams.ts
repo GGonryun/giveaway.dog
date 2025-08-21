@@ -1,6 +1,5 @@
 'use server';
 
-import { unstable_cacheTag as cacheTag } from 'next/cache';
 import { detailedUserTeamSchema } from '@/schemas/teams';
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
@@ -9,9 +8,6 @@ const getUserTeams = procedure
   .authorized()
   .output(detailedUserTeamSchema.array())
   .action(async ({ user }) => {
-    'use cache';
-    cacheTag('user-teams');
-
     const query = await prisma.team.findMany({
       select: {
         id: true,

@@ -1,6 +1,7 @@
 import { Failure, Result } from '@/lib/mrpc/types';
 import { useCallback, useTransition } from 'react';
 import { toast } from 'sonner';
+import { isNextRedirect } from './errors';
 
 const guard = (error: unknown) => {
   toast.error(parseError(error));
@@ -44,7 +45,9 @@ export function useProcedure<TInput, TSuccess>({
             onFailure?.(result.data);
           }
         } catch (error: any) {
-          // normalize unexpected errors
+          if (isNextRedirect(error)) {
+            throw error;
+          }
           onFailure({
             code: 'UNKNOWN_HTTP_ERROR',
             message: parseError(error)

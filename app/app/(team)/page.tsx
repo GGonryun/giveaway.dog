@@ -1,5 +1,5 @@
 import { EmojiLogo } from '@/components/patterns/logo-button';
-import { TeamPickerForm } from './team-picker-form';
+import { TeamPickerForm } from '@/components/team/team-picker-form';
 import { Suspense } from 'react';
 
 export const dynamic = 'force-dynamic';

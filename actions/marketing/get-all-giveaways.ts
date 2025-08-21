@@ -1,8 +1,8 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { simulateNetworkDelay } from '@/actions/shared/utils';
 import { PublicGiveawayItem } from '@/schemas/index';
+import { simulateNetworkDelay } from '@/lib/simulate';
 
 interface GetAllGiveawaysParams {
   page?: number;

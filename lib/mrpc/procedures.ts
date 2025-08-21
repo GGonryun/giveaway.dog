@@ -3,6 +3,11 @@ import { ApplicationError } from '../errors';
 import { auth, isValidSession } from '../auth';
 import { User } from 'next-auth';
 import { Result, Success } from './types';
+import prisma from '../prisma';
+import { PrismaClient } from '@prisma/client';
+import { isNextRedirect } from './errors';
+import { environment } from '../environment';
+import { simulateNetworkDelay } from '../simulate';
 
 export class AuthorizedProcedureBuilder<
   TInputSchema extends z.ZodType<any> | undefined = undefined,
@@ -29,6 +34,7 @@ export class AuthorizedProcedureBuilder<
 
   action<
     F extends (args: {
+      db: PrismaClient;
       user: Required<User>;
       input: TInputSchema extends z.ZodType<any> ? z.infer<TInputSchema> : void;
     }) => Promise<
@@ -43,6 +49,11 @@ export class AuthorizedProcedureBuilder<
 
     return async (input: InputType): Promise<Result<SuccessType>> => {
       try {
+        if (environment.is('development')) {
+          // Simulate network delay in development for better UX
+          await simulateNetworkDelay();
+        }
+
         // --- Authenticate ---
         const session = await auth();
         if (!isValidSession(session)) {
@@ -66,7 +77,11 @@ export class AuthorizedProcedureBuilder<
         }
 
         // --- Run action ---
-        const data = await fn({ user: session.user, input: inputData });
+        const data = await fn({
+          db: prisma,
+          user: session.user,
+          input: inputData
+        });
 
         if (this.outputSchema) {
           const parsed = this.outputSchema.safeParse(data);
@@ -80,6 +95,10 @@ export class AuthorizedProcedureBuilder<
 
         return { ok: true, data } as Success<SuccessType>;
       } catch (err: any) {
+        if (isNextRedirect(err)) {
+          throw err; // Re-throw Next.js redirect errors
+        }
+
         if (err instanceof ApplicationError) {
           return {
             ok: false,

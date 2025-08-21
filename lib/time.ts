@@ -1,4 +1,5 @@
 import { getTimeZones } from '@vvo/tzdb';
+import { rng } from './rng';
 
 export namespace time {
   export const wait = async (ms: number) =>
