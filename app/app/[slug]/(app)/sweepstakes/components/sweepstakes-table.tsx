@@ -8,23 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger
-} from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Table,
   TableBody,
@@ -56,13 +46,14 @@ import {
   ArrowUp,
   ArrowDown,
   Search,
-  Filter,
-  X,
-  RefreshCcw,
-  BarChart3
+  X
 } from 'lucide-react';
 import Link from 'next/link';
 import { SweepstakesData } from '@/schemas/index';
+import { SweepstakesStatus } from '@prisma/client';
+import { useProcedure } from '@/lib/mrpc/hook';
+import getSweepstakesList from '@/actions/sweepstakes/get-sweepstakes-list';
+import { CreateGiveawayButton } from '@/components/giveaway/create-giveaway-button';
 
 interface SweepstakesTableProps {
   sweepstakes: SweepstakesData[];
@@ -79,10 +70,6 @@ interface SweepstakesTableProps {
   onFiltersChange?: (filters: any) => void;
   statusFilter?: string;
   onStatusChange?: (status: string) => void;
-}
-
-interface SweepstakesTableWithFiltersProps {
-  sweepstakes: SweepstakesData[];
 }
 
 // Search and Filter Components
@@ -137,142 +124,6 @@ function SweepstakesSearchBar({
   );
 }
 
-function SweepstakesFilterDialog({
-  filters,
-  onChange
-}: {
-  filters: {
-    status: string;
-    dateRange: string;
-    conversionRange: { min: number; max: number };
-  };
-  onChange: (filters: any) => void;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [localFilters, setLocalFilters] = useState(filters);
-
-  useEffect(() => {
-    if (isOpen) {
-      setLocalFilters(filters);
-    }
-  }, [isOpen, filters]);
-
-  const updateLocalFilter = (key: string, value: any) => {
-    setLocalFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handleApply = () => {
-    onChange(localFilters);
-    setIsOpen(false);
-  };
-
-  const handleCancel = () => {
-    setLocalFilters(filters);
-    setIsOpen(false);
-  };
-
-  const resetFilters = () => {
-    const defaultFilters = {
-      dateRange: 'all',
-      conversionRange: { min: 0, max: 100 }
-    };
-    setLocalFilters(defaultFilters);
-  };
-
-  const getActiveFiltersCount = () => {
-    let count = 0;
-    if (filters.dateRange !== 'all') count++;
-    if (filters.conversionRange.min > 0 || filters.conversionRange.max < 100)
-      count++;
-    return count;
-  };
-
-  const activeFiltersCount = getActiveFiltersCount();
-
-  return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="relative">
-          <Filter className="h-4 w-4 mr-1" />
-          Filters
-          {activeFiltersCount > 0 && (
-            <Badge
-              variant="destructive"
-              className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs"
-            >
-              {activeFiltersCount}
-            </Badge>
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80 max-h-[80vh] overflow-y-auto" align="end">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h4 className="font-medium">Filters</h4>
-            <Button variant="ghost" size="sm" onClick={resetFilters}>
-              <RefreshCcw className="h-4 w-4 mr-1" />
-              Reset
-            </Button>
-          </div>
-
-          <Separator />
-
-          {/* Date Range Filter */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center">
-              <Calendar className="h-4 w-4 mr-1" />
-              Date Range
-            </label>
-            <Select
-              value={localFilters.dateRange}
-              onValueChange={(value) => updateLocalFilter('dateRange', value)}
-            >
-              <SelectTrigger className="h-9">
-                <SelectValue placeholder="Select date range" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Time</SelectItem>
-                <SelectItem value="today">Today</SelectItem>
-                <SelectItem value="7d">Last 7 days</SelectItem>
-                <SelectItem value="30d">Last 30 days</SelectItem>
-                <SelectItem value="90d">Last 90 days</SelectItem>
-                <SelectItem value="1y">Last year</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <Separator />
-
-          {/* Apply/Cancel Buttons */}
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" size="sm" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button size="sm" onClick={handleApply}>
-              Apply
-            </Button>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-// Helper function to get the biggest time unit
-const getSimpleTimeLeft = (timeLeft: string): string => {
-  if (timeLeft === 'Not started' || timeLeft === 'Ended' || timeLeft === 'Paused') {
-    return timeLeft;
-  }
-  
-  // Extract the first time unit (biggest unit)
-  const parts = timeLeft.split(' ');
-  if (parts.length >= 2) {
-    return `${parts[0]} ${parts[1]}`;
-  }
-  
-  return timeLeft;
-};
-
 export function SweepstakesTable({
   sweepstakes,
   sortField,
@@ -298,7 +149,9 @@ export function SweepstakesTable({
     if (!onSort) {
       return (
         <TableHead className={`py-2 ${className}`}>
-          <div className={`${className.includes('text-right') ? 'flex justify-end' : ''}`}>
+          <div
+            className={`${className.includes('text-right') ? 'flex justify-end' : ''}`}
+          >
             {children}
           </div>
         </TableHead>
@@ -317,7 +170,9 @@ export function SweepstakesTable({
         className={`cursor-pointer hover:bg-muted/50 select-none py-2 ${className}`}
         onClick={() => onSort(field)}
       >
-        <div className={`flex items-center space-x-2 ${className.includes('text-right') ? 'justify-end' : ''}`}>
+        <div
+          className={`flex items-center space-x-2 ${className.includes('text-right') ? 'justify-end' : ''}`}
+        >
           <span>{children}</span>
           {getSortIcon()}
         </div>
@@ -327,27 +182,27 @@ export function SweepstakesTable({
 
   const getStatusBadge = (status: SweepstakesData['status']) => {
     const variants = {
-      active: {
+      ACTIVE: {
         variant: 'default' as const,
         label: 'Active',
         color: 'text-green-600'
       },
-      'ending-soon': {
+      CANCELED: {
         variant: 'destructive' as const,
         label: 'Ending Soon',
         color: 'text-red-600'
       },
-      draft: {
+      DRAFT: {
         variant: 'secondary' as const,
         label: 'Draft',
         color: 'text-gray-600'
       },
-      paused: {
+      PAUSED: {
         variant: 'outline' as const,
         label: 'Paused',
         color: 'text-yellow-600'
       },
-      completed: {
+      COMPLETED: {
         variant: 'secondary' as const,
         label: 'Completed',
         color: 'text-blue-600'
@@ -360,15 +215,15 @@ export function SweepstakesTable({
 
   const getStatusIcon = (status: SweepstakesData['status']) => {
     switch (status) {
-      case 'active':
+      case 'ACTIVE':
         return <Play className="h-4 w-4 text-green-500" />;
-      case 'paused':
+      case 'PAUSED':
         return <Pause className="h-4 w-4 text-yellow-500" />;
-      case 'ending-soon':
+      case 'CANCELED':
         return <Clock className="h-4 w-4 text-red-500" />;
-      case 'draft':
+      case 'DRAFT':
         return <Edit className="h-4 w-4 text-gray-500" />;
-      case 'completed':
+      case 'COMPLETED':
         return <Calendar className="h-4 w-4 text-blue-500" />;
       default:
         return null;
@@ -379,7 +234,11 @@ export function SweepstakesTable({
     <div className="space-y-4">
       {/* Status Tabs */}
       {onStatusChange && (
-        <Tabs value={statusFilter} onValueChange={onStatusChange} className="w-full">
+        <Tabs
+          value={statusFilter}
+          onValueChange={onStatusChange}
+          className="w-full"
+        >
           <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="active">Active</TabsTrigger>
@@ -402,7 +261,12 @@ export function SweepstakesTable({
             />
           )}
           {onFiltersChange && filters && (
-            <Select value={filters.dateRange} onValueChange={(value) => onFiltersChange({ ...filters, dateRange: value })}>
+            <Select
+              value={filters.dateRange}
+              onValueChange={(value) =>
+                onFiltersChange({ ...filters, dateRange: value })
+              }
+            >
               <SelectTrigger className="w-48">
                 <Calendar className="h-4 w-4 mr-2" />
                 <SelectValue placeholder="Date range" />
@@ -478,7 +342,7 @@ export function SweepstakesTable({
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <div className="flex items-center space-x-1">
                       <Clock className="h-3 w-3" />
-                      <span>{getSimpleTimeLeft(item.timeLeft)}</span>
+                      <span>{item.timeLeft}</span>
                     </div>
 
                     <div className="flex items-center space-x-1">
@@ -510,12 +374,12 @@ export function SweepstakesTable({
                             Duplicate
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          {item.status === 'active' ? (
+                          {item.status === SweepstakesStatus.ACTIVE ? (
                             <DropdownMenuItem className="text-yellow-600">
                               <Pause className="h-4 w-4 mr-2" />
                               Pause
                             </DropdownMenuItem>
-                          ) : item.status === 'paused' ? (
+                          ) : item.status === SweepstakesStatus.PAUSED ? (
                             <DropdownMenuItem className="text-green-600">
                               <Play className="h-4 w-4 mr-2" />
                               Resume
@@ -547,10 +411,15 @@ export function SweepstakesTable({
                 <SortableHeader field="entries" className="text-right w-24">
                   Entries
                 </SortableHeader>
-                <SortableHeader field="conversionRate" className="text-right w-24">
+                <SortableHeader
+                  field="conversionRate"
+                  className="text-right w-24"
+                >
                   Conversion
                 </SortableHeader>
-                <TableHead className="text-right py-2 w-28">Time Left</TableHead>
+                <TableHead className="text-right py-2 w-28">
+                  Time Left
+                </TableHead>
                 <TableHead className="text-right py-2 w-24">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -599,7 +468,7 @@ export function SweepstakesTable({
                   <TableCell className="py-2 text-right w-28">
                     <div className="flex items-center justify-end space-x-1 text-sm">
                       <Clock className="h-3 w-3 text-muted-foreground" />
-                      <span>{getSimpleTimeLeft(item.timeLeft)}</span>
+                      <span>{item.timeLeft}</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-right py-2 w-24">
@@ -632,12 +501,12 @@ export function SweepstakesTable({
                             Duplicate
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          {item.status === 'active' ? (
+                          {item.status === SweepstakesStatus.ACTIVE ? (
                             <DropdownMenuItem className="text-yellow-600">
                               <Pause className="h-4 w-4 mr-2" />
                               Pause
                             </DropdownMenuItem>
-                          ) : item.status === 'paused' ? (
+                          ) : item.status === SweepstakesStatus.PAUSED ? (
                             <DropdownMenuItem className="text-green-600">
                               <Play className="h-4 w-4 mr-2" />
                               Resume
@@ -660,12 +529,14 @@ export function SweepstakesTable({
 
         {/* Empty State */}
         {sweepstakes.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
-            <Calendar className="h-8 w-8 mx-auto mb-2 opacity-50" />
+          <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-4">
+            <Calendar className="h-8 w-8  opacity-50" />
             <p>No sweepstakes found</p>
-            <Button asChild className="mt-2" size="sm">
-              <Link href="/app/host">Create Your First Sweepstakes</Link>
-            </Button>
+            <CreateGiveawayButton
+              showDropdown={false}
+              text="Create Your First Giveaway"
+              variant="default"
+            />
           </div>
         )}
       </div>
@@ -682,15 +553,17 @@ type SortField =
   | 'createdAt';
 type SortDirection = 'asc' | 'desc' | null;
 
-export function SweepstakesTableWithFilters({
-  sweepstakes: allSweepstakes
-}: SweepstakesTableWithFiltersProps) {
+export function SweepstakesTableWithFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [sweepstakes, setSweepstakes] = useState<SweepstakesData[]>([]);
+
   // Initialize state from URL params
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'all');
+  const [statusFilter, setStatusFilter] = useState(
+    searchParams.get('status') || 'all'
+  );
   const [filters, setFilters] = useState({
     status: 'all', // Remove status from filters since we're using tabs
     dateRange: searchParams.get('dateRange') || 'all',
@@ -794,8 +667,17 @@ export function SweepstakesTableWithFilters({
     updateURL
   ]);
 
+  const procedure = useProcedure({
+    action: getSweepstakesList,
+    onSuccess: setSweepstakes
+  });
+
+  useEffect(() => {
+    procedure.run({});
+  }, [procedure.run]);
+
   // Enhanced filtering with more searchable fields
-  const filteredData = allSweepstakes.filter((sweepstakes) => {
+  const filteredData = sweepstakes.filter((sweepstakes) => {
     const query = debouncedQuery.toLowerCase().trim();
 
     const matchesSearch =
@@ -870,11 +752,11 @@ export function SweepstakesTableWithFilters({
             case 'status':
               // Sort by status priority: active > ending-soon > draft > paused > completed
               const statusOrder = {
-                active: 0,
-                'ending-soon': 1,
-                draft: 2,
-                paused: 3,
-                completed: 4
+                ACTIVE: 0,
+                CANCELED: 1,
+                DRAFT: 2,
+                PAUSED: 3,
+                COMPLETED: 4
               };
               aValue = statusOrder[a.status] ?? 5;
               bValue = statusOrder[b.status] ?? 5;

@@ -56,6 +56,7 @@ import { CRMSyncSheet } from './crm-sync-sheet';
 import { UserDetailSheet } from './user-detail-sheet';
 import { getUsers } from '../actions';
 import { UserData } from '@/schemas/index';
+import { useUser } from '@/components/context/user-provider';
 
 interface UsersTableProps {
   initialPage?: number;
@@ -80,6 +81,7 @@ export const UsersTable = ({
   initialPage = DEFAULT_PAGE,
   initialPageSize = DEFAULT_PAGE_SIZE
 }: UsersTableProps) => {
+  const { activeTeam } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -223,7 +225,9 @@ export const UsersTable = ({
       });
 
       const newUrl = params.toString() ? `?${params.toString()}` : '';
-      router.replace(`/app/users${newUrl}`, { scroll: false });
+      router.replace(`/app/${activeTeam.slug}/users${newUrl}`, {
+        scroll: false
+      });
     },
     [searchParams, router]
   );

@@ -18,22 +18,28 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar';
+import { toast } from 'sonner';
+import { useUser } from '@/components/context/user-provider';
+import { DetailedUserTeam } from '@/schemas/teams';
+import { useTeamsPage } from '@/components/team/use-teams-page';
+import { useTeamPage } from '@/components/team/use-team-page';
 
-export function TeamSwitcher({
-  teams
-}: {
-  teams: {
-    name: string;
-    logo: React.ElementType;
-    plan: string;
-  }[];
-}) {
+export function TeamSwitcher() {
+  const user = useUser();
+  const { navigateToCreate } = useTeamsPage();
+  const { navigateToTeam } = useTeamPage();
   const { isMobile } = useSidebar();
-  const [activeTeam, setActiveTeam] = React.useState(teams[0]);
 
-  if (!activeTeam) {
-    return null;
-  }
+  const handleAddTeam = () => {
+    navigateToCreate();
+  };
+
+  const handleSelectTeam = (team: DetailedUserTeam) => {
+    if (team.slug !== user.activeTeam.slug) {
+      navigateToTeam(team);
+      toast.success(`Switched to team: ${team.name}`);
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -45,11 +51,12 @@ export function TeamSwitcher({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <activeTeam.logo className="size-4" />
+                <div className="size-4">{user.activeTeam.logo}</div>
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{activeTeam.name}</span>
-                <span className="truncate text-xs">{activeTeam.plan}</span>
+                <span className="truncate font-semibold">
+                  {user.activeTeam.name}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -63,21 +70,21 @@ export function TeamSwitcher({
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Teams
             </DropdownMenuLabel>
-            {teams.map((team, index) => (
+            {user.teams.map((team, index) => (
               <DropdownMenuItem
                 key={team.name}
-                onClick={() => setActiveTeam(team)}
+                onClick={() => handleSelectTeam(team)}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-md border">
-                  <team.logo className="size-3.5 shrink-0" />
+                  <div className="size-4">{team.logo}</div>
                 </div>
                 {team.name}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
+            <DropdownMenuItem className="gap-2 p-2" onClick={handleAddTeam}>
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>

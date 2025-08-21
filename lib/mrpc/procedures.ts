@@ -32,7 +32,7 @@ export class AuthorizedProcedureBuilder<
     );
   }
 
-  action<
+  handler<
     F extends (args: {
       db: PrismaClient;
       user: Required<User>;

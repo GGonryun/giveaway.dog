@@ -3,7 +3,11 @@ import { AppSidebar } from '@/components/patterns/app-sidebar';
 import { CreateGiveawayButton } from '@/components/giveaway/create-giveaway-button';
 import { Outline } from '@/components/app/outline';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <SidebarProvider>
       <AppSidebar />

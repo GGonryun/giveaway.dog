@@ -1,5 +1,23 @@
-// Shared Zod schemas for runtime validation and type inference
+import { SweepstakesStatus } from '@prisma/client';
 import { z } from 'zod';
+
+export const sweepstakesDataSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  status: z.nativeEnum(SweepstakesStatus),
+  entries: z.number(),
+  uniqueEntrants: z.number(),
+  conversionRate: z.number(),
+  botRate: z.number(),
+  timeLeft: z.string(),
+  createdAt: z.string(),
+  topSource: z.string(),
+  prize: z.string()
+});
+
+export type SweepstakesData = z.infer<typeof sweepstakesDataSchema>;
+
+// ----- TODO -----
 
 // Dashboard KPI Schema
 export const DashboardKPIDataSchema = z.object({
@@ -189,23 +207,6 @@ export const SweepstakesOverviewDataSchema = z.object({
 export type SweepstakesOverviewData = z.infer<
   typeof SweepstakesOverviewDataSchema
 >;
-
-// Sweepstakes Data Schema
-export const SweepstakesDataSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  status: z.enum(['active', 'ending-soon', 'draft', 'completed', 'paused']),
-  entries: z.number(),
-  uniqueEntrants: z.number(),
-  conversionRate: z.number(),
-  botRate: z.number(),
-  timeLeft: z.string(),
-  createdAt: z.string(),
-  topSource: z.string(),
-  prize: z.string()
-});
-
-export type SweepstakesData = z.infer<typeof SweepstakesDataSchema>;
 
 // Organization Data Schema
 export const OrganizationDataSchema = z.object({

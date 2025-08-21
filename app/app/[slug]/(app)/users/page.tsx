@@ -11,15 +11,11 @@ import {
   Zap,
   Target
 } from 'lucide-react';
-import { UsersTable } from './components/users-table';
+
 import { Skeleton } from '@/components/ui/skeleton';
 import getUserAnalytics from '@/actions/users/get-user-analytics';
 import { Outline } from '@/components/app/outline';
-
-// Wrapper component to handle Suspense for useSearchParams
-const UsersTableWrapper = () => {
-  return <UsersTable />;
-};
+import { UsersTable } from './components/users-table';
 
 // Loading skeleton for KPI cards
 const UsersKPISkeleton = () => {
@@ -219,14 +215,12 @@ export default async function UsersPage() {
           </Suspense>
         </div>
 
-        {/* KPI Cards */}
         <Suspense fallback={<UsersKPISkeleton />}>
           <UsersKPISection />
         </Suspense>
 
-        {/* Main Users Table */}
         <Suspense fallback={<div>Loading users table...</div>}>
-          <UsersTableWrapper />
+          <UsersTable />
         </Suspense>
       </div>
     </Outline>

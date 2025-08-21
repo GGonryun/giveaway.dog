@@ -1,23 +1,19 @@
 'use server';
 
-import { detailedUserTeamSchema } from '@/schemas/teams';
+import {
+  detailedUserTeamSchema,
+  selectUserDetails,
+  toDetailedUserTeam
+} from '@/schemas/teams';
 import { procedure } from '@/lib/mrpc/procedures';
-import { ApplicationError } from '@/lib/errors';
+import { TeamRole } from '@prisma/client';
 
 const getUserTeams = procedure
   .authorized()
   .output(detailedUserTeamSchema.array())
-  .action(async ({ user }) => {
+  .handler(async ({ user }) => {
     const query = await prisma.team.findMany({
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        logo: true,
-        members: {
-          select: { id: true, role: true, userId: true }
-        }
-      },
+      ...selectUserDetails,
       where: {
         members: {
           some: {
@@ -26,29 +22,10 @@ const getUserTeams = procedure
         }
       }
     });
-    const teams = query.map((t) => {
-      const role = t.members.find((m) => m.userId === user.id)?.role;
 
-      if (!role) {
-        // this should never happen because we queried for teams that this user
-        // belongs to supposedly.
-        throw new ApplicationError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: `User ${user.id} is not a member of team ${t.id}`
-        });
-      }
-
-      return {
-        id: t.id,
-        name: t.name,
-        slug: t.slug,
-        logo: t.logo,
-        memberCount: t.members.length,
-        role
-      };
-    });
-
-    return teams;
+    return query
+      .map((team) => toDetailedUserTeam(user, team))
+      .filter((team) => team.role !== TeamRole.BLOCKED);
   });
 
 export default getUserTeams;

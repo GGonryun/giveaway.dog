@@ -18,7 +18,6 @@ model User {
   sessions      Session[]
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  giveaways     Giveaway[]
   teams         Membership[]
 }
 
@@ -61,13 +60,12 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
-model Giveaway {
-  id     String         @id // takes nanoid's
-  status GiveawayStatus @default(DRAFT)
+model Sweepstakes {
+  id     String            @id // takes nanoid's
+  status SweepstakesStatus @default(DRAFT)
 
-  // TODO: move to organizations
-  creatorId String
-  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  teamId String?
+  team   Team?   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   name        String?
   description String?
@@ -89,19 +87,18 @@ model Giveaway {
   updatedAt DateTime @updatedAt
 }
 
-enum GiveawayStatus {
+enum SweepstakesStatus {
   DRAFT
-  SCHEDULED
   PAUSED
   CANCELED
   ACTIVE
-  ENDED
+  COMPLETED
 }
 
 model RegionRestriction {
-  id         String   @id @default(cuid())
-  giveawayId String
-  giveaway   Giveaway @relation(fields: [giveawayId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())
+  sweepstakesId String
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
   filter RegionRestrictionFilter
   code   String
@@ -113,9 +110,9 @@ enum RegionRestrictionFilter {
 }
 
 model MinimumAgeRestriction {
-  id         String   @id @default(cuid())
-  giveawayId String   @unique
-  giveaway   Giveaway @relation(fields: [giveawayId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())
+  sweepstakesId String      @unique
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
   value    Int // e.g. 18
   label    String // e.g. "Must be 18 or older"
@@ -124,18 +121,18 @@ model MinimumAgeRestriction {
 }
 
 model Prize {
-  id         String   @id @default(cuid())
-  giveawayId String
-  giveaway   Giveaway @relation(fields: [giveawayId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())
+  sweepstakesId String
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
   name    String? // allow null for draft
   winners Int? // allow null for draft
 }
 
 model Task {
-  id         String   @id @default(cuid())
-  giveawayId String
-  giveaway   Giveaway @relation(fields: [giveawayId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())
+  sweepstakesId String
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
   type      TaskType
   title     String? // nullable when draft
@@ -157,7 +154,8 @@ model Team {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  members Membership[]
+  members     Membership[]
+  sweepstakes Sweepstakes[]
 }
 
 enum TeamRole {
@@ -165,6 +163,7 @@ enum TeamRole {
   ADMIN
   MEMBER
   GUEST
+  BLOCKED
 }
 
 model Membership {

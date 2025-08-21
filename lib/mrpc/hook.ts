@@ -1,5 +1,5 @@
 import { Failure, Result } from '@/lib/mrpc/types';
-import { useCallback, useTransition } from 'react';
+import { useCallback, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { isNextRedirect } from './errors';
 
@@ -13,12 +13,20 @@ export function useProcedure<TSuccess>(args: {
   action: () => Promise<Result<TSuccess>>;
   onSuccess?: (data: TSuccess) => void;
   onFailure?: (error: Failure['data']) => void;
-}): [boolean, () => void];
+}): {
+  isLoading: boolean;
+  isPending: boolean;
+  run: () => void;
+};
 export function useProcedure<TInput, TSuccess>(args: {
   action: (input: TInput) => Promise<Result<TSuccess>>;
   onSuccess?: (data: TSuccess) => void;
   onFailure?: (error: Failure['data']) => void;
-}): [boolean, (input: TInput) => void];
+}): {
+  isLoading: boolean;
+  isPending: boolean;
+  run: (input: TInput) => void;
+};
 // --- Implementation ---
 export function useProcedure<TInput, TSuccess>({
   action,
@@ -30,8 +38,13 @@ export function useProcedure<TInput, TSuccess>({
     | (() => Promise<Result<TSuccess>>);
   onSuccess?: (data: TSuccess) => void;
   onFailure?: (error: Failure['data']) => void;
-}): [boolean, ((input: TInput) => void) | (() => void)] {
-  const [isPending, startTransition] = useTransition();
+}): {
+  isLoading: boolean;
+  isPending: boolean;
+  run: ((input: TInput) => void) | (() => void);
+} {
+  const [isPending, setIsPending] = useState(true);
+  const [isLoading, startTransition] = useTransition();
 
   const handleAction = useCallback(
     (input: any) => {
@@ -52,11 +65,13 @@ export function useProcedure<TInput, TSuccess>({
             code: 'UNKNOWN_HTTP_ERROR',
             message: parseError(error)
           });
+        } finally {
+          setIsPending(false);
         }
       });
     },
     [action, onSuccess, onFailure, startTransition]
   );
 
-  return [isPending, handleAction];
+  return { isLoading, isPending, run: handleAction };
 }

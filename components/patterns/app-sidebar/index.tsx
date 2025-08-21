@@ -1,15 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import {
-  AudioWaveform,
-  Command,
-  GalleryVerticalEnd,
-  Home,
-  SettingsIcon,
-  TicketIcon,
-  UsersIcon
-} from 'lucide-react';
+import { Home, SettingsIcon, TicketIcon, UsersIcon } from 'lucide-react';
 
 import {
   Sidebar,
@@ -20,8 +12,8 @@ import {
 } from '@/components/ui/sidebar';
 import { NavProjects } from './nav-projects';
 import { NavUser } from './nav-user';
-import { WebsiteLogo } from './website-logo';
 import { TeamSwitcher } from './team-switcher';
+import { useUser } from '@/components/context/user-provider';
 
 // This is sample data.
 const data = {
@@ -29,30 +21,16 @@ const data = {
     name: 'shadcn',
     email: 'player@giveaway.dog',
     avatar: '/avatars/shadcn.jpg'
-  },
-  teams: [
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise'
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup'
-    },
-    {
-      name: 'Evil Corp.',
-      logo: Command,
-      plan: 'Free'
-    }
-  ],
-  groups: [
+  }
+};
+
+const groups = ({ slug }: { slug: string }) => {
+  return [
     {
       items: [
         {
           name: 'Dashboard',
-          url: '/app',
+          url: `/app/${slug}`,
           icon: Home
         }
       ]
@@ -61,32 +39,33 @@ const data = {
       items: [
         {
           name: 'Sweepstakes',
-          url: '/app/sweepstakes',
+          url: `/app/${slug}/sweepstakes`,
           icon: TicketIcon
         },
         {
           name: 'Users',
-          url: '/app/users',
+          url: `/app/${slug}/users`,
           icon: UsersIcon
         },
         {
           name: 'Settings',
-          url: '/app/settings',
+          url: `/app/${slug}/settings`,
           icon: SettingsIcon
         }
       ]
     }
-  ]
+  ];
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { activeTeam } = useUser();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects groups={data.groups} />
+        <NavProjects groups={groups(activeTeam)} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

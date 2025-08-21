@@ -19,10 +19,14 @@ import { SweepstakesStepProvider } from '@/components/hooks/use-sweepstake-step'
 import { GiveawayFormContent } from './form-content';
 import { GiveawayPreview } from './preview';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/components/context/user-provider';
+import { useTeamPage } from '@/components/team/use-team-page';
 
 export const GiveawayForm: React.FC = () => {
   const router = useRouter();
+  const { navigateToTeam } = useTeamPage();
   const [isPending, startTransition] = useTransition();
+  const { activeTeam } = useUser();
 
   const defaultValues = {
     ...giveawayDefaultValues,
@@ -70,8 +74,8 @@ export const GiveawayForm: React.FC = () => {
   };
 
   const handleCancel = useCallback(() => {
-    if (confirm('Are you sure?')) router.push('/app');
-  }, [router]);
+    if (confirm('Are you sure?')) navigateToTeam(activeTeam);
+  }, [router, activeTeam.slug]);
 
   return (
     <SweepstakesStepProvider>

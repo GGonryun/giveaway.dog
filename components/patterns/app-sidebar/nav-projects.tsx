@@ -8,9 +8,9 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar
+  SidebarMenuItem
 } from '@/components/ui/sidebar';
+import { usePathname } from 'next/navigation';
 
 export function NavProjects({
   groups
@@ -24,6 +24,7 @@ export function NavProjects({
     }[];
   }[];
 }) {
+  const path = usePathname();
   return (
     <div>
       {groups.map((g, i) => (
@@ -33,7 +34,7 @@ export function NavProjects({
             <SidebarMenu>
               {g.items.map((item) => (
                 <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild isActive={path === item.url}>
                     <a href={item.url}>
                       <item.icon />
                       <span>{item.name}</span>

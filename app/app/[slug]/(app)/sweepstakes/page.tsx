@@ -1,7 +1,6 @@
 import { SweepstakesTableWithFilters } from './components/sweepstakes-table';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import getSweepstakesList from '@/actions/sweepstakes/get-sweepstakes-list';
 
 // Loading skeleton components
 const SweepstakesTableSkeleton = () => (
@@ -15,20 +14,12 @@ const SweepstakesTableSkeleton = () => (
   </div>
 );
 
-// Server component for sweepstakes table
-async function SweepstakesTableSection() {
-  const sweepstakesData = await getSweepstakesList();
-
-  return <SweepstakesTableWithFilters sweepstakes={sweepstakesData} />;
-}
-
-
 export default function SweepstakesPage() {
   return (
     <div>
       {/* Sweepstakes Table with Filters */}
       <Suspense fallback={<SweepstakesTableSkeleton />}>
-        <SweepstakesTableSection />
+        <SweepstakesTableWithFilters />
       </Suspense>
     </div>
   );
