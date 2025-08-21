@@ -1,6 +1,5 @@
 export default {
   experimental: {
-    cacheComponents: true,
     useCache: true
   },
   images: {
