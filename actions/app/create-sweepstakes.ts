@@ -1,10 +1,9 @@
 'use server';
 
 import { nanoid } from 'nanoid';
-import prisma, { SweepstakesStatus } from '@/lib/prisma';
+import { SweepstakesStatus } from '@/lib/prisma';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import getUserTeam from '../teams/get-user-team';
 
 export const createSweepstakes = procedure
   .authorized()
@@ -18,8 +17,8 @@ export const createSweepstakes = procedure
       id: z.string()
     })
   )
-  .handler(async ({ user, input }) => {
-    const created = await prisma.sweepstakes.create({
+  .handler(async ({ db, input }) => {
+    const created = await db.sweepstakes.create({
       data: {
         id: nanoid(6),
         status: SweepstakesStatus.DRAFT,

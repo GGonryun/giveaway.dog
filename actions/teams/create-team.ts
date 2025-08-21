@@ -3,7 +3,6 @@
 import { createTeamInputSchema } from '@/schemas/teams';
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
-import prisma from '@/lib/prisma';
 import z from 'zod';
 
 import { DEFAULT_TEAM_LOGO, MAX_USER_TEAMS } from '@/lib/settings';
@@ -16,8 +15,8 @@ const createTeam = procedure
       slug: z.string()
     })
   )
-  .handler(async ({ user, input }) => {
-    const userTeamCount = await prisma.membership.count({
+  .handler(async ({ db, user, input }) => {
+    const userTeamCount = await db.membership.count({
       where: {
         userId: user.id
       }
@@ -30,7 +29,7 @@ const createTeam = procedure
       });
     }
 
-    const findExisting = await prisma.team.findFirst({
+    const findExisting = await db.team.findFirst({
       where: {
         slug: input.slug
       }
@@ -43,7 +42,7 @@ const createTeam = procedure
       });
     }
 
-    return await prisma.team.create({
+    return await db.team.create({
       data: {
         name: input.name,
         slug: input.slug,

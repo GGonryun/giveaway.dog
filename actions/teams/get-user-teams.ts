@@ -11,8 +11,8 @@ import { TeamRole } from '@prisma/client';
 const getUserTeams = procedure
   .authorized()
   .output(detailedUserTeamSchema.array())
-  .handler(async ({ user }) => {
-    const query = await prisma.team.findMany({
+  .handler(async ({ db, user }) => {
+    const query = await db.team.findMany({
       ...selectUserDetails,
       where: {
         members: {
