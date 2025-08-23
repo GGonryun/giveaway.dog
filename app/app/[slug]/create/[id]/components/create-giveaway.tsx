@@ -19,14 +19,14 @@ import { SweepstakesStepProvider } from '@/components/hooks/use-sweepstake-step'
 import { GiveawayFormContent } from './form-content';
 import { GiveawayPreview } from './preview';
 import { useRouter } from 'next/navigation';
-import { useUser } from '@/components/context/user-provider';
 import { useTeamPage } from '@/components/team/use-team-page';
+import { useTeams } from '@/components/context/team-provider';
 
 export const GiveawayForm: React.FC = () => {
   const router = useRouter();
   const { navigateToTeam } = useTeamPage();
   const [isPending, startTransition] = useTransition();
-  const { activeTeam } = useUser();
+  const { activeTeam } = useTeams();
 
   const defaultValues = {
     ...giveawayDefaultValues,

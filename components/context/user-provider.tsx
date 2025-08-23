@@ -1,16 +1,10 @@
 // app/team-context.tsx
 'use client';
 
-import { User } from '@/lib/prisma';
-import { DetailedUserTeam } from '@/schemas/teams';
+import { UserProfile } from '@/schemas/user';
 import { createContext, useContext } from 'react';
 
-type UserContextType = {
-  id: string;
-  email: string | null;
-  activeTeam: DetailedUserTeam;
-  teams: DetailedUserTeam[];
-};
+type UserContextType = UserProfile;
 
 const UserContext = createContext<UserContextType | null>(null);
 

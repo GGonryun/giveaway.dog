@@ -1,20 +1,23 @@
 import { procedure } from '@/lib/mrpc/procedures';
-import z from 'zod';
+import { parseProviders, userProfileSchema } from '@/schemas/user';
 
-export const getUser = procedure
+const getUser = procedure
   .authorized()
-  .output(
-    z.object({
-      id: z.string(),
-      email: z.string().nullable()
-    })
-  )
+  .output(userProfileSchema)
   .handler(async ({ user, db }) => {
     const userData = await db.user.findUnique({
       where: { id: user.id },
       select: {
         id: true,
-        email: true
+        email: true,
+        name: true,
+        emoji: true,
+        emailVerified: true,
+        country: true,
+        type: true,
+        accounts: {
+          select: { provider: true }
+        }
       }
     });
 
@@ -22,5 +25,17 @@ export const getUser = procedure
       throw new Error('User not found');
     }
 
-    return userData;
+    return {
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      emoji: userData.emoji,
+      emailVerified: userData.emailVerified,
+      country: userData.country,
+      type: userData.type,
+      providers: parseProviders(
+        userData.accounts.map((account) => account.provider)
+      )
+    };
   });
+export default getUser;

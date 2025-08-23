@@ -11,8 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { signup } from './actions';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useSearchParams } from 'next/navigation';
 import { useActionState, useState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
@@ -20,7 +19,9 @@ import { CheckCircle2Icon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AuthError } from '@/components/auth/auth-error';
 import { AuthFooter } from '@/components/auth/auth-footer';
+import { EmojiPickerComponent } from '@/components/patterns/emoji-picker';
 import { Stepper } from '@/components/ui/stepper';
+import signup from '@/actions/auth/signup';
 
 export function SignupForm({
   className,
@@ -38,14 +39,15 @@ export function SignupForm({
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
-    userType: '',
+    emoji: '🐶',
+    userTypes: [] as string[],
     provider: ''
   });
 
   const handleNext = () => {
     if (step === 1 && formData.name.trim()) {
       setStep(2);
-    } else if (step === 2 && formData.userType) {
+    } else if (step === 2 && formData.userTypes.length > 0) {
       setStep(3);
     }
   };
@@ -56,6 +58,15 @@ export function SignupForm({
 
   const updateFormData = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const toggleUserType = (userType: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      userTypes: prev.userTypes.includes(userType)
+        ? prev.userTypes.filter((type) => type !== userType)
+        : [...prev.userTypes, userType]
+    }));
   };
 
   return (
@@ -86,10 +97,11 @@ export function SignupForm({
               <form action={formAction}>
                 <input type="hidden" name="redirectTo" value={redirectTo} />
                 <input type="hidden" name="name" value={formData.name} />
+                <input type="hidden" name="emoji" value={formData.emoji} />
                 <input
                   type="hidden"
                   name="userType"
-                  value={formData.userType}
+                  value={formData.userTypes.join(',')}
                 />
 
                 <div className="grid gap-6">
@@ -114,6 +126,18 @@ export function SignupForm({
                           experience.
                         </p>
                       </div>
+
+                      <div className="grid gap-3">
+                        <EmojiPickerComponent
+                          value={formData.emoji}
+                          onEmojiSelect={(emoji) =>
+                            updateFormData('emoji', emoji)
+                          }
+                          title="Pick your avatar"
+                          description="This will be used as your avatar in the app"
+                        />
+                      </div>
+
                       <Button
                         type="button"
                         onClick={handleNext}
@@ -129,23 +153,26 @@ export function SignupForm({
                     <div className="grid gap-4">
                       <div className="grid gap-3">
                         <Label>What would you like to do?</Label>
-                        <RadioGroup
-                          value={formData.userType}
-                          onValueChange={(value) =>
-                            updateFormData('userType', value)
-                          }
-                          className="flex flex-col gap-3"
-                        >
+                        <div className="flex flex-col gap-3">
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="host" id="host" />
+                            <Checkbox
+                              id="host"
+                              checked={formData.userTypes.includes('HOST')}
+                              onCheckedChange={() => toggleUserType('HOST')}
+                            />
                             <Label htmlFor="host" className="cursor-pointer">
                               Host giveaways
                             </Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="participate"
+                            <Checkbox
                               id="participate"
+                              checked={formData.userTypes.includes(
+                                'PARTICIPATE'
+                              )}
+                              onCheckedChange={() =>
+                                toggleUserType('PARTICIPATE')
+                              }
                             />
                             <Label
                               htmlFor="participate"
@@ -154,13 +181,23 @@ export function SignupForm({
                               Participate in giveaways
                             </Label>
                           </div>
-                        </RadioGroup>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="learn"
+                              checked={formData.userTypes.includes('LEARN')}
+                              onCheckedChange={() => toggleUserType('LEARN')}
+                            />
+                            <Label htmlFor="learn" className="cursor-pointer">
+                              Just browsing
+                            </Label>
+                          </div>
+                        </div>
                       </div>
                       <div className="grid gap-2">
                         <Button
                           type="button"
                           onClick={handleNext}
-                          disabled={!formData.userType}
+                          disabled={formData.userTypes.length === 0}
                           className="w-full"
                         >
                           Continue

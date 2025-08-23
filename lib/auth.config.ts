@@ -17,6 +17,7 @@ export const authConfig = {
   adapter: {
     ...PrismaAdapter(prisma),
     async getUserByEmail(email) {
+      if (!email) return null;
       const user = await prisma.user.findFirst({ where: { email } });
       if (user?.email) return { ...user, email: user.email };
       return null;
@@ -24,15 +25,24 @@ export const authConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
+      const connectionRoutes = ['/login', '/signup'];
+      const sensitiveRoutes = ['/app', '/user'];
       const isLoggedIn = !!auth?.user;
-      const isApp = nextUrl.pathname.startsWith('/app');
-      if (isApp) return isLoggedIn;
+
       const isLogout = nextUrl.pathname.startsWith('/logout');
       if (isLogout && !isLoggedIn)
         return Response.redirect(new URL('/', nextUrl));
-      const isLogin = nextUrl.pathname.startsWith('/login');
-      if (isLogin && isLoggedIn)
+
+      const isConnection = connectionRoutes.some((r) =>
+        nextUrl.pathname.startsWith(r)
+      );
+      if (isConnection && isLoggedIn)
         return Response.redirect(new URL('/app', nextUrl));
+
+      const isSensitive = sensitiveRoutes.some((r) =>
+        nextUrl.pathname.startsWith(r)
+      );
+      if (isSensitive) return isLoggedIn;
       return true;
     },
     jwt({ token, user }) {

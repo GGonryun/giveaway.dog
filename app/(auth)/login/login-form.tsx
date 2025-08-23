@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { connect } from './actions';
 import { useSearchParams } from 'next/navigation';
 import { useActionState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
@@ -20,6 +19,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { ProviderButtons } from '@/components/auth/provider-buttons';
 import { AuthError } from '@/components/auth/auth-error';
 import { AuthFooter } from '@/components/auth/auth-footer';
+import Link from 'next/link';
+import login from '@/actions/auth/login';
 
 export function LoginForm({
   className,
@@ -31,7 +32,7 @@ export function LoginForm({
   const verify = searchParams.get('verify');
   const redirectTo = callbackUrl ?? '/app';
   const [errorMessage, formAction, isPending] = useActionState(
-    connect,
+    login,
     undefined
   );
 
@@ -93,9 +94,18 @@ export function LoginForm({
               </form>
             )}
             <AuthError error={errorMessage || error} />
+            <div className="text-center pt-4 border-t mt-6">
+              <p className="text-sm text-muted-foreground">
+                Don't have an account?{' '}
+                <Link href="/signup" className="text-primary hover:underline">
+                  Sign up
+                </Link>
+              </p>
+            </div>
           </CardContent>
         )}
       </Card>
+      
       <AuthFooter />
     </div>
   );

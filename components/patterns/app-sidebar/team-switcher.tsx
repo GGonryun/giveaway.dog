@@ -19,13 +19,13 @@ import {
   useSidebar
 } from '@/components/ui/sidebar';
 import { toast } from 'sonner';
-import { useUser } from '@/components/context/user-provider';
 import { DetailedUserTeam } from '@/schemas/teams';
 import { useTeamsPage } from '@/components/team/use-teams-page';
 import { useTeamPage } from '@/components/team/use-team-page';
+import { useTeams } from '@/components/context/team-provider';
 
 export function TeamSwitcher() {
-  const user = useUser();
+  const { activeTeam, teams } = useTeams();
   const { navigateToCreate } = useTeamsPage();
   const { navigateToTeam } = useTeamPage();
   const { isMobile } = useSidebar();
@@ -35,7 +35,7 @@ export function TeamSwitcher() {
   };
 
   const handleSelectTeam = (team: DetailedUserTeam) => {
-    if (team.slug !== user.activeTeam.slug) {
+    if (team.slug !== activeTeam.slug) {
       navigateToTeam(team);
       toast.success(`Switched to team: ${team.name}`);
     }
@@ -51,11 +51,11 @@ export function TeamSwitcher() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <div className="size-4">{user.activeTeam.logo}</div>
+                <div className="size-4">{activeTeam.logo}</div>
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {user.activeTeam.name}
+                  {activeTeam.name}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto" />
@@ -70,7 +70,7 @@ export function TeamSwitcher() {
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Teams
             </DropdownMenuLabel>
-            {user.teams.map((team, index) => (
+            {teams.map((team, index) => (
               <DropdownMenuItem
                 key={team.name}
                 onClick={() => handleSelectTeam(team)}

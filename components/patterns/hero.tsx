@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export const Hero = () => {
   return (
-    <section className="container">
+    <section className="container flex items-center justify-center">
       <div className="grid items-center gap-8">
         <div className="flex flex-col items-center text-center">
           <Link href={'/support'} className="text-sm mb-2">

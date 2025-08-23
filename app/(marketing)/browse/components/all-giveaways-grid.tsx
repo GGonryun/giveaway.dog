@@ -1,6 +1,6 @@
 'use client';
 
-import { GiveawayItem } from '../../components/giveaway-item';
+import { GiveawayItem } from './giveaway-item';
 import { Typography } from '@/components/ui/typography';
 
 // Local interface definition for giveaways with start date

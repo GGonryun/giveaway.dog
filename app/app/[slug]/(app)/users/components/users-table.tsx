@@ -28,8 +28,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import {
-  Search,
-  Filter,
   Download,
   RefreshCw,
   MoreVertical,
@@ -56,7 +54,7 @@ import { CRMSyncSheet } from './crm-sync-sheet';
 import { UserDetailSheet } from './user-detail-sheet';
 import { getUsers } from '../actions';
 import { UserData } from '@/schemas/index';
-import { useUser } from '@/components/context/user-provider';
+import { useTeams } from '@/components/context/team-provider';
 
 interface UsersTableProps {
   initialPage?: number;
@@ -81,7 +79,7 @@ export const UsersTable = ({
   initialPage = DEFAULT_PAGE,
   initialPageSize = DEFAULT_PAGE_SIZE
 }: UsersTableProps) => {
-  const { activeTeam } = useUser();
+  const { activeTeam } = useTeams();
   const router = useRouter();
   const searchParams = useSearchParams();
 

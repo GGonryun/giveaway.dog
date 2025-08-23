@@ -1,6 +1,7 @@
 'use client';
 
 import { MenuIcon } from 'lucide-react';
+import { useMemo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -19,8 +20,11 @@ import {
 } from '@/components/ui/sheet';
 import { EmojiLogo } from './logo-button';
 import Link from 'next/link';
+import { User } from 'next-auth';
 
-export const NavigationBar = () => {
+export const NavigationBar: React.FC<{ user?: User }> = ({ user }) => {
+  const isLoggedIn = useMemo(() => !!user?.id, [user?.id]);
+
   return (
     <section className="py-4">
       <div className="container">
@@ -60,12 +64,25 @@ export const NavigationBar = () => {
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-4 lg:flex">
-            <Button variant="outline" asChild>
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/login">Start Now</Link>
-            </Button>
+            {!isLoggedIn ? (
+              <>
+                <Button variant="outline" asChild>
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/signup">Start Now</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" asChild>
+                  <Link href="/user">Account</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/app">Dashboard</Link>
+                </Button>
+              </>
+            )}
           </div>
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
@@ -97,12 +114,25 @@ export const NavigationBar = () => {
                   </Link>
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
-                  <Button variant="outline" asChild>
-                    <Link href="/login">Login</Link>
-                  </Button>
-                  <Button asChild>
-                    <Link href="/login">Start Now</Link>
-                  </Button>
+                  {!isLoggedIn ? (
+                    <>
+                      <Button variant="outline" asChild>
+                        <Link href="/login">Login</Link>
+                      </Button>
+                      <Button asChild>
+                        <Link href="/signup">Start Now</Link>
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="outline" asChild>
+                        <Link href="/user">Account</Link>
+                      </Button>
+                      <Button asChild>
+                        <Link href="/app">Dashboard</Link>
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </SheetContent>

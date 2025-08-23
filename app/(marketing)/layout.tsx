@@ -1,5 +1,6 @@
 import { Footer } from '@/components/patterns/footer';
 import { NavigationBar } from '@/components/patterns/navigation-bar';
+import { auth } from '@/lib/auth';
 
 export const metadata = {
   title: 'GiveawayDog',
@@ -11,12 +12,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
   return (
     <div className="min-h-screen flex flex-col h-screen">
       <div>
-        <NavigationBar />
+        <NavigationBar user={session?.user} />
       </div>
-      <div className="flex grow items-center justify-center">{children}</div>
+      <div className="flex grow">{children}</div>
       <div>
         <Footer />
       </div>

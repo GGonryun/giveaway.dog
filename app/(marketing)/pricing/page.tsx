@@ -6,8 +6,8 @@ import { PricingCTA } from './components/pricing-cta';
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 md:py-16">
+    <div className="bg-background container mx-auto">
+      <div className="px-4 py-8 md:py-16">
         <PricingHero />
         <PricingCards />
         <CompetitorComparison />

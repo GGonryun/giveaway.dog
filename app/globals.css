@@ -170,6 +170,8 @@
     /* Destructive - warning red */
     --destructive: oklch(0.58 0.2 25); /* Vibrant warning red */
     --destructive-foreground: oklch(0.98 0.01 85);
+    --error: oklch(0.58 0.2 25); /* Vibrant warning red */
+    --error-foreground: oklch(0.98 0.01 85);
 
     /* Border and input - strong contrast for neobrutalism */
     --border: oklch(0.12 0.03 90); /* Almost black bark */
@@ -253,6 +255,8 @@
     /* Destructive - warning beacon */
     --destructive: oklch(0.68 0.22 25); /* Brighter warning red */
     --destructive-foreground: oklch(0.95 0.01 85);
+    --error: oklch(0.68 0.22 25); /* Brighter warning red */
+    --error-foreground: oklch(0.95 0.01 85);
 
     /* Strong borders for contrast */
     --border: oklch(0.95 0.02 85); /* Light cream borders */
@@ -318,6 +322,8 @@
     --color-accent-foreground: var(--accent-foreground);
     --color-destructive: var(--destructive);
     --color-destructive-foreground: var(--destructive-foreground);
+    --color-error: var(--error);
+    --color-error-foreground: var(--error-foreground);
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);

@@ -3,7 +3,7 @@
 import { signIn } from '@/lib/auth';
 import { AuthError } from 'next-auth';
 
-export const connect = async (_: string | undefined, data: FormData) => {
+const login = async (_: string | undefined, data: FormData) => {
   const redirectTo = data.get('redirectTo')?.toString();
   const login = data.get('login')?.toString();
 
@@ -42,3 +42,5 @@ export const connect = async (_: string | undefined, data: FormData) => {
     throw error;
   }
 };
+
+export default login;

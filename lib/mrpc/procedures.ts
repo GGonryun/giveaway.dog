@@ -9,7 +9,8 @@ import { isNextRedirect } from './errors';
 import { environment } from '../environment';
 import { simulateNetworkDelay } from '../simulate';
 
-export class AuthorizedProcedureBuilder<
+// TODO: there's lots of duplication between AuthorizedProcedureBuilder and UnauthorizedProcedureBuilder
+class AuthorizedProcedureBuilder<
   TInputSchema extends z.ZodType<any> | undefined = undefined,
   TOutputSchema extends z.ZodType<any> | undefined = undefined
 > {
@@ -121,6 +122,107 @@ export class AuthorizedProcedureBuilder<
   }
 }
 
+class UnauthorizedProcedureBuilder<
+  TInputSchema extends z.ZodType<any> | undefined = undefined,
+  TOutputSchema extends z.ZodType<any> | undefined = undefined
+> {
+  constructor(
+    private inputSchema?: TInputSchema,
+    private outputSchema?: TOutputSchema
+  ) {}
+
+  input<S extends z.ZodType<any>>(schema: S) {
+    return new AuthorizedProcedureBuilder<S, TOutputSchema>(
+      schema,
+      this.outputSchema
+    );
+  }
+
+  output<S extends z.ZodType<any>>(schema: S) {
+    return new AuthorizedProcedureBuilder<TInputSchema, S>(
+      this.inputSchema,
+      schema
+    );
+  }
+
+  handler<
+    F extends (args: {
+      db: PrismaClient;
+      input: TInputSchema extends z.ZodType<any> ? z.infer<TInputSchema> : void;
+    }) => Promise<
+      TOutputSchema extends z.ZodType<any> ? z.infer<TOutputSchema> : unknown
+    >
+  >(fn: F) {
+    type SuccessType =
+      TOutputSchema extends z.ZodType<any> ? z.infer<TOutputSchema> : unknown;
+
+    type InputType =
+      TInputSchema extends z.ZodType<any> ? z.infer<TInputSchema> : void;
+
+    return async (input: InputType): Promise<Result<SuccessType>> => {
+      try {
+        if (environment.is('development')) {
+          // Simulate network delay in development for better UX
+          await simulateNetworkDelay();
+        }
+
+        // --- Input validation ---
+        let inputData: any = undefined;
+        if (this.inputSchema) {
+          const parsed = this.inputSchema.safeParse(input);
+          if (!parsed.success) {
+            throw new ApplicationError({
+              code: 'UNPROCESSABLE_CONTENT',
+              message: `Input validation failed: ${parsed.error.message}`
+            });
+          }
+          inputData = parsed.data;
+        }
+
+        // --- Run action ---
+        const data = await fn({
+          db: prisma,
+          input: inputData
+        });
+
+        if (this.outputSchema) {
+          const parsed = this.outputSchema.safeParse(data);
+          if (!parsed.success) {
+            throw new ApplicationError({
+              code: 'UNPROCESSABLE_CONTENT',
+              message: `Output validation failed: ${parsed.error.message}`
+            });
+          }
+        }
+
+        return { ok: true, data } as Success<SuccessType>;
+      } catch (err: any) {
+        if (isNextRedirect(err)) {
+          throw err; // Re-throw Next.js redirect errors
+        }
+
+        if (err instanceof ApplicationError) {
+          return {
+            ok: false,
+            data: {
+              code: err.code,
+              message: err.message
+            }
+          };
+        }
+
+        return {
+          ok: false,
+          data: {
+            code: 'INTERNAL_SERVER_ERROR',
+            message: err?.message ?? 'An unexpected error occurred'
+          }
+        };
+      }
+    };
+  }
+}
 export namespace procedure {
   export const authorized = () => new AuthorizedProcedureBuilder();
+  export const unauthorized = () => new UnauthorizedProcedureBuilder();
 }

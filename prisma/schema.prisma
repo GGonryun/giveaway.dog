@@ -8,12 +8,21 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+enum UserType {
+  HOST
+  PARTICIPATE
+  LEARN
+}
+
 model User {
   id            String       @id @default(cuid())
   name          String?
   email         String?      @unique
   emailVerified DateTime?
   image         String?
+  emoji         String?
+  country       String?
+  type          UserType[]   @default([LEARN])
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime     @default(now())

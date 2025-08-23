@@ -2,15 +2,9 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Building, AlertTriangle, ArrowLeft, Smile } from 'lucide-react';
-import EmojiPicker from 'emoji-picker-react';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
+import { Building, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { EmojiPickerComponent } from '@/components/patterns/emoji-picker';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -33,8 +27,6 @@ import { useTeamPage } from './use-team-page';
 export const CreateTeamForm: React.FC = () => {
   const { navigateToSelect } = useTeamsPage();
   const { navigateToTeam } = useTeamPage();
-
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const procedure = useProcedure({
     action: createTeam,
@@ -78,9 +70,8 @@ export const CreateTeamForm: React.FC = () => {
       .trim();
   };
 
-  const handleEmojiSelect = (emojiData: any) => {
-    form.setValue('logo', emojiData.emoji);
-    setShowEmojiPicker(false);
+  const handleEmojiSelect = (emoji: string) => {
+    form.setValue('logo', emoji);
   };
 
   if (procedure.isLoading) return <LoadingState text="Creating your team..." />;
@@ -151,44 +142,12 @@ export const CreateTeamForm: React.FC = () => {
               <FormItem>
                 <FormLabel>Team Logo (Optional)</FormLabel>
                 <FormControl>
-                  <div className="flex items-center space-x-3">
-                    <Popover
-                      open={showEmojiPicker}
-                      onOpenChange={setShowEmojiPicker}
-                    >
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-12 h-12 p-0 border-2 border-dashed border-muted-foreground/25"
-                        >
-                          {field.value ? (
-                            <span className="text-3xl">{field.value}</span>
-                          ) : (
-                            <Smile className="h-8 w-8 text-muted-foreground" />
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <EmojiPicker
-                          onEmojiClick={handleEmojiSelect}
-                          autoFocusSearch={false}
-                          previewConfig={{
-                            showPreview: false
-                          }}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <div className="flex-1">
-                      <div className="text-sm font-medium">
-                        Choose an emoji for your team
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Click the button to pick an emoji that represents your
-                        team
-                      </p>
-                    </div>
-                  </div>
+                  <EmojiPickerComponent
+                    value={field.value || '🐶'}
+                    onEmojiSelect={handleEmojiSelect}
+                    title="Choose an emoji for your team"
+                    description="Click the button to pick an emoji that represents your team"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

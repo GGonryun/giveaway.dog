@@ -14,6 +14,7 @@ import {
 } from '../ui/dropdown-menu';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { useUser } from '../context/user-provider';
+import { useTeams } from '../context/team-provider';
 
 export const CreateGiveawayButton: React.FC<{
   text?: string;
@@ -27,7 +28,7 @@ export const CreateGiveawayButton: React.FC<{
   variant = 'secondary'
 }) => {
   const router = useRouter();
-  const { activeTeam } = useUser();
+  const { activeTeam } = useTeams();
 
   const procedure = useProcedure({
     action: createSweepstakes,
