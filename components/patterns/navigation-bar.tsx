@@ -76,7 +76,7 @@ export const NavigationBar: React.FC<{ user?: User }> = ({ user }) => {
             ) : (
               <>
                 <Button variant="outline" asChild>
-                  <Link href="/user">Account</Link>
+                  <Link href="/account">Account</Link>
                 </Button>
                 <Button asChild>
                   <Link href="/app">Dashboard</Link>
@@ -126,7 +126,7 @@ export const NavigationBar: React.FC<{ user?: User }> = ({ user }) => {
                   ) : (
                     <>
                       <Button variant="outline" asChild>
-                        <Link href="/user">Account</Link>
+                        <Link href="/account">Account</Link>
                       </Button>
                       <Button asChild>
                         <Link href="/app">Dashboard</Link>

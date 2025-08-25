@@ -38,9 +38,11 @@ import {
   Calendar,
   AlertTriangle,
   ShieldAlert,
-  CheckCircle
+  CheckCircle,
+  LogOut
 } from 'lucide-react';
 import { useUser } from '@/components/context/user-provider';
+import logout from '@/actions/auth/logout';
 
 export function UserSettings() {
   const [formData, setFormData] = useState({
@@ -94,6 +96,10 @@ export function UserSettings() {
   const handleDeleteAccount = async () => {
     // Handle account deletion
     console.log('Account deletion requested');
+  };
+
+  const handleLogout = async () => {
+    await logout();
   };
 
   const canChangeEmail = provider === 'twitter' || provider === 'magic-link';
@@ -307,6 +313,14 @@ export function UserSettings() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Logout
+          </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" className="w-full sm:w-auto">
