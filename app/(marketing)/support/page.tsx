@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export default function SupportPage() {
   return (
-    <div className="container flex flex-col items-center justify-center grow mx-auto px-4 py-8 md:py-16 max-w-4xl">
+    <div className="container py-8 md:py-16">
       {/* Status Badge */}
       <div className="flex justify-center mb-6">
         <Link href="/status">

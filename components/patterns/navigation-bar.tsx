@@ -21,9 +21,17 @@ import {
 import { EmojiLogo } from './logo-button';
 import Link from 'next/link';
 import { User } from 'next-auth';
+import { UserProfile } from '@/schemas/user';
+import { UserType } from '@prisma/client';
 
-export const NavigationBar: React.FC<{ user?: User }> = ({ user }) => {
+export const NavigationBar: React.FC<{ user: UserProfile | null }> = ({
+  user
+}) => {
   const isLoggedIn = useMemo(() => !!user?.id, [user?.id]);
+  const isHost = useMemo(
+    () => isLoggedIn && user?.type.includes(UserType.HOST),
+    [isLoggedIn, user?.type]
+  );
 
   return (
     <section className="py-4">
@@ -78,9 +86,15 @@ export const NavigationBar: React.FC<{ user?: User }> = ({ user }) => {
                 <Button variant="outline" asChild>
                   <Link href="/account">Account</Link>
                 </Button>
-                <Button asChild>
-                  <Link href="/app">Dashboard</Link>
-                </Button>
+                {isHost ? (
+                  <Button asChild>
+                    <Link href="/app">Dashboard</Link>
+                  </Button>
+                ) : (
+                  <Button asChild>
+                    <Link href="/browse">Giveaways</Link>
+                  </Button>
+                )}
               </>
             )}
           </div>
@@ -128,9 +142,15 @@ export const NavigationBar: React.FC<{ user?: User }> = ({ user }) => {
                       <Button variant="outline" asChild>
                         <Link href="/account">Account</Link>
                       </Button>
-                      <Button asChild>
-                        <Link href="/app">Dashboard</Link>
-                      </Button>
+                      {isHost ? (
+                        <Button asChild>
+                          <Link href="/app">Dashboard</Link>
+                        </Button>
+                      ) : (
+                        <Button asChild>
+                          <Link href="/browse">Giveaways</Link>
+                        </Button>
+                      )}
                     </>
                   )}
                 </div>

@@ -11,13 +11,14 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
-import updateProfile from '@/actions/user/update-profile';
+import createProfile from '@/actions/user/create-profile';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { UserType } from '@prisma/client';
+import { useAccountPage } from '@/components/account/use-account-page';
 
 const parseUserTypes = (userTypeParam: string | null): UserType[] => {
-  if (!userTypeParam) return ['LEARN'];
+  if (!userTypeParam) return ['PARTICIPATE'];
 
   return userTypeParam
     .split(',')
@@ -25,6 +26,7 @@ const parseUserTypes = (userTypeParam: string | null): UserType[] => {
 };
 
 export const AuthPortal = () => {
+  const { navigateToAccountOverview } = useAccountPage();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -32,11 +34,11 @@ export const AuthPortal = () => {
   const [error, setError] = useState<string | null>(null);
 
   const { isLoading, isPending, run } = useProcedure({
-    action: updateProfile,
+    action: createProfile,
     onFailure(error) {
       if (error.code === 'CONFLICT') {
         toast.message('Redirecting to your existing profile...');
-        router.push('/user');
+        navigateToAccountOverview();
       } else {
         setError(error.message);
         toast.error(error.message);
@@ -55,13 +57,11 @@ export const AuthPortal = () => {
 
   // Determine final redirect URL based on userTypes
   const getFinalRedirect = useMemo(() => {
-    // Prioritize hosting if selected (they can also browse and learn)
+    // Prioritize hosting if selected (they can also browse)
     if (type.includes('HOST')) return '/app';
     // If only participating, go to browse page
     if (type.includes('PARTICIPATE')) return '/browse';
-    // If only learning or default, go to browse page to explore giveaways
-    if (type.includes('LEARN')) return '/browse';
-    return '/browse'; // default fallback for learning
+    return '/browse'; // default fallback for participating
   }, [type]);
 
   useEffect(() => {
@@ -79,9 +79,11 @@ export const AuthPortal = () => {
       // If this is a signup with name to update
       if (isSignup && session?.user?.id && name) {
         run({
-          userId: session.user.id,
+          id: session.user.id,
           name,
           emoji,
+          age: null,
+          region: null,
           type
         });
       } else {

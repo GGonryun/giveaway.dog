@@ -12,8 +12,9 @@ const getUser = procedure
         email: true,
         name: true,
         emoji: true,
+        region: true,
+        age: true,
         emailVerified: true,
-        country: true,
         type: true,
         accounts: {
           select: { provider: true }
@@ -30,8 +31,9 @@ const getUser = procedure
       name: userData.name,
       email: userData.email,
       emoji: userData.emoji,
-      emailVerified: userData.emailVerified,
-      country: userData.country,
+      region: userData.region,
+      age: userData.age,
+      emailVerified: !!userData.emailVerified,
       type: userData.type,
       providers: parseProviders(
         userData.accounts.map((account) => account.provider)

@@ -39,7 +39,7 @@ export default async function RootLayout({
       <body>
         <SessionProvider>
           <main>{children}</main>
-          <Toaster position="top-center" />
+          <Toaster />
         </SessionProvider>
         <Analytics />
       </body>

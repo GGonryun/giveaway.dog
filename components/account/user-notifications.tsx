@@ -1,12 +1,26 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Bell, Mail, Smartphone, Trophy, Gift, Calendar, Trash2 } from 'lucide-react';
+import {
+  Bell,
+  Mail,
+  Smartphone,
+  Trophy,
+  Gift,
+  Calendar,
+  Trash2
+} from 'lucide-react';
 
 export function UserNotifications() {
   const [notificationSettings, setNotificationSettings] = useState({
@@ -33,7 +47,8 @@ export function UserNotifications() {
       id: 2,
       type: 'giveaway_end',
       title: 'Giveaway ended',
-      message: 'The iPhone 15 Pro Giveaway has ended. Winners will be announced soon.',
+      message:
+        'The iPhone 15 Pro Giveaway has ended. Winners will be announced soon.',
       timestamp: '2024-01-19T15:45:00Z',
       read: true
     },
@@ -41,7 +56,7 @@ export function UserNotifications() {
       id: 3,
       type: 'reminder',
       title: 'Giveaway ending soon',
-      message: 'The Gaming Setup Contest ends in 24 hours. Don\'t miss out!',
+      message: "The Gaming Setup Contest ends in 24 hours. Don't miss out!",
       timestamp: '2024-01-18T12:00:00Z',
       read: true
     },
@@ -56,7 +71,7 @@ export function UserNotifications() {
   ];
 
   const handleSettingChange = (key: keyof typeof notificationSettings) => {
-    setNotificationSettings(prev => ({
+    setNotificationSettings((prev) => ({
       ...prev,
       [key]: !prev[key]
     }));
@@ -64,7 +79,7 @@ export function UserNotifications() {
 
   const handleSaveSettings = async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsLoading(false);
   };
 
@@ -86,8 +101,10 @@ export function UserNotifications() {
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
+    const diffInHours = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+    );
+
     if (diffInHours < 24) {
       return `${diffInHours}h ago`;
     }
@@ -113,7 +130,7 @@ export function UserNotifications() {
                 </Label>
               </div>
             </div>
-            
+
             <div className="ml-6 space-y-3">
               <div className="flex items-center justify-between">
                 <Label htmlFor="email-giveaway-updates" className="text-sm">
@@ -122,10 +139,12 @@ export function UserNotifications() {
                 <Switch
                   id="email-giveaway-updates"
                   checked={notificationSettings.emailGiveawayUpdates}
-                  onCheckedChange={() => handleSettingChange('emailGiveawayUpdates')}
+                  onCheckedChange={() =>
+                    handleSettingChange('emailGiveawayUpdates')
+                  }
                 />
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <Label htmlFor="email-winner-announcements" className="text-sm">
                   Winner announcements
@@ -133,10 +152,12 @@ export function UserNotifications() {
                 <Switch
                   id="email-winner-announcements"
                   checked={notificationSettings.emailWinnerAnnouncements}
-                  onCheckedChange={() => handleSettingChange('emailWinnerAnnouncements')}
+                  onCheckedChange={() =>
+                    handleSettingChange('emailWinnerAnnouncements')
+                  }
                 />
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <Label htmlFor="email-new-giveaways" className="text-sm">
                   New giveaway alerts
@@ -144,7 +165,9 @@ export function UserNotifications() {
                 <Switch
                   id="email-new-giveaways"
                   checked={notificationSettings.emailNewGiveaways}
-                  onCheckedChange={() => handleSettingChange('emailNewGiveaways')}
+                  onCheckedChange={() =>
+                    handleSettingChange('emailNewGiveaways')
+                  }
                 />
               </div>
             </div>
@@ -159,7 +182,7 @@ export function UserNotifications() {
                 </Label>
               </div>
             </div>
-            
+
             <div className="ml-6 space-y-3">
               <div className="flex items-center justify-between">
                 <Label htmlFor="push-giveaway-reminders" className="text-sm">
@@ -168,10 +191,12 @@ export function UserNotifications() {
                 <Switch
                   id="push-giveaway-reminders"
                   checked={notificationSettings.pushGiveawayReminders}
-                  onCheckedChange={() => handleSettingChange('pushGiveawayReminders')}
+                  onCheckedChange={() =>
+                    handleSettingChange('pushGiveawayReminders')
+                  }
                 />
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <Label htmlFor="push-winner-announcements" className="text-sm">
                   Winner announcements
@@ -179,10 +204,12 @@ export function UserNotifications() {
                 <Switch
                   id="push-winner-announcements"
                   checked={notificationSettings.pushWinnerAnnouncements}
-                  onCheckedChange={() => handleSettingChange('pushWinnerAnnouncements')}
+                  onCheckedChange={() =>
+                    handleSettingChange('pushWinnerAnnouncements')
+                  }
                 />
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <Label htmlFor="push-new-giveaways" className="text-sm">
                   New giveaway alerts
@@ -190,13 +217,15 @@ export function UserNotifications() {
                 <Switch
                   id="push-new-giveaways"
                   checked={notificationSettings.pushNewGiveaways}
-                  onCheckedChange={() => handleSettingChange('pushNewGiveaways')}
+                  onCheckedChange={() =>
+                    handleSettingChange('pushNewGiveaways')
+                  }
                 />
               </div>
             </div>
           </div>
 
-          <Button 
+          <Button
             onClick={handleSaveSettings}
             disabled={isLoading}
             className="w-full sm:w-auto"
@@ -222,8 +251,8 @@ export function UserNotifications() {
         <CardContent>
           <div className="space-y-3">
             {mockNotifications.map((notification) => (
-              <div 
-                key={notification.id} 
+              <div
+                key={notification.id}
                 className={`flex items-start space-x-3 p-3 rounded-lg border ${
                   !notification.read ? 'bg-muted/50' : ''
                 }`}
@@ -233,12 +262,18 @@ export function UserNotifications() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-medium">{notification.title}</h4>
+                    <h4 className="text-sm font-medium">
+                      {notification.title}
+                    </h4>
                     {!notification.read && (
-                      <Badge variant="default" className="h-5 text-xs">New</Badge>
+                      <Badge variant="default" className="h-5 text-xs">
+                        New
+                      </Badge>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground">{notification.message}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {notification.message}
+                  </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {formatTimestamp(notification.timestamp)}
                   </p>

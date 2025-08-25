@@ -181,16 +181,6 @@ export function SignupForm({
                               Participate in giveaways
                             </Label>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="learn"
-                              checked={formData.userTypes.includes('LEARN')}
-                              onCheckedChange={() => toggleUserType('LEARN')}
-                            />
-                            <Label htmlFor="learn" className="cursor-pointer">
-                              Just browsing
-                            </Label>
-                          </div>
                         </div>
                       </div>
                       <div className="grid gap-2">

@@ -17,7 +17,6 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar';
 import { usePathname } from 'next/navigation';
-import { useUser } from '@/components/context/user-provider';
 import { useMemo } from 'react';
 import { useTeams } from '@/components/context/team-provider';
 

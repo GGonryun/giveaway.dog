@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -11,13 +11,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,52 +26,94 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { EmojiPickerComponent } from '@/components/patterns/emoji-picker';
+import { CountrySelector } from '@/components/ui/country-selector';
 import {
   User,
   Mail,
-  MapPin,
   Calendar,
   AlertTriangle,
   ShieldAlert,
   CheckCircle,
-  LogOut
+  Info
 } from 'lucide-react';
 import { useUser } from '@/components/context/user-provider';
-import logout from '@/actions/auth/logout';
+import { useProcedure } from '@/lib/mrpc/hook';
+import updateProfile from '@/actions/user/update-profile';
+import { UpdateUserProfile } from '@/schemas/user';
+import { toast } from 'sonner';
+import { UserType } from '@prisma/client';
 
 export function UserSettings() {
-  const [formData, setFormData] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    emoji: '🐶',
-    region: 'US',
-    age: '25'
-  });
-
   const user = useUser();
-  const [isLoading, setIsLoading] = useState(false);
   const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const updateProfileProcedure = useProcedure({
+    action: updateProfile,
+    onSuccess() {
+      toast.success('Profile updated successfully');
+    }
+  });
   // TODO: don't rely on the first provider.
   const provider = useMemo(() => user.providers[0], [user.providers]);
 
+  const [formData, setFormData] = useState<UpdateUserProfile>({
+    id: user.id,
+    name: user.name,
+    emoji: user.emoji,
+    region: user.region,
+    age: user.age,
+    type: user.type // Default to participate, can be ['HOST', 'PARTICIPATE']
+  });
+
+  // Debounced auto-save for text inputs
+  const debouncedSave = useCallback(
+    (() => {
+      let timeoutId: NodeJS.Timeout;
+      return (data: typeof formData) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          updateProfileProcedure.run(data);
+        }, 500); // 500ms debounce
+      };
+    })(),
+    []
+  );
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    const newData = { ...formData, [name]: value };
+    setFormData(newData);
 
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    // Debounced auto-save for text inputs (name, age)
+    if (name === 'name' || name === 'age') {
+      debouncedSave(newData);
+    } else {
+      // Immediate save for other inputs
+      updateProfileProcedure.run(newData);
+    }
   };
 
   const handleEmojiSelect = (emoji: string) => {
-    setFormData((prev) => ({ ...prev, emoji }));
+    const newData = { ...formData, emoji };
+    setFormData(newData);
+    // Immediate save for emoji changes
+    updateProfileProcedure.run(newData);
   };
 
-  const handleSaveProfile = async () => {
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsLoading(false);
+  const handleUserTypeChange = (userType: UserType, checked: boolean) => {
+    const newUserTypes = checked
+      ? [...(formData.type ?? []), userType]
+      : (formData.type?.filter((type) => type !== userType) ?? []);
+
+    const newData = { ...formData, type: newUserTypes };
+    setFormData(newData);
+    // Immediate save for user type changes
+    updateProfileProcedure.run(newData);
+  };
+
+  const handleCountryChange = (countryCode: string) => {
+    const newData = { ...formData, region: countryCode };
+    setFormData(newData);
+    updateProfileProcedure.run(newData);
   };
 
   const handleSaveEmail = async () => {
@@ -98,52 +135,84 @@ export function UserSettings() {
     console.log('Account deletion requested');
   };
 
-  const handleLogout = async () => {
-    await logout();
-  };
-
   const canChangeEmail = provider === 'twitter' || provider === 'magic-link';
   const needsEmail = provider === 'twitter' && !user.email;
   const needsVerification = user.email && !user.emailVerified;
-
-  const regions = [
-    { value: 'US', label: 'United States' },
-    { value: 'CA', label: 'Canada' },
-    { value: 'GB', label: 'United Kingdom' },
-    { value: 'AU', label: 'Australia' },
-    { value: 'DE', label: 'Germany' },
-    { value: 'FR', label: 'France' },
-    { value: 'JP', label: 'Japan' },
-    { value: 'BR', label: 'Brazil' },
-    { value: 'IN', label: 'India' },
-    { value: 'MX', label: 'Mexico' }
-  ];
 
   return (
     <div className="space-y-6">
       {/* Profile Information Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Profile Information</CardTitle>
-          <CardDescription>
-            Update your personal information, avatar, and preferences
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Profile Information</CardTitle>
+              <CardDescription>
+                Update your personal information, avatar, and preferences
+              </CardDescription>
+            </div>
+            {updateProfileProcedure.isLoading && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                Saving...
+              </div>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Emoji Avatar Picker */}
-          <div>
-            <Label className="text-sm font-medium">Avatar</Label>
-            <div className="mt-2">
-              <EmojiPickerComponent
-                value={formData.emoji}
-                onEmojiSelect={handleEmojiSelect}
-                title="Choose your avatar emoji"
-                description="This emoji will represent you in the app"
-              />
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+            <div>
+              <Label className="text-sm font-medium">Avatar</Label>
+              <div>
+                <EmojiPickerComponent
+                  value={formData.emoji ?? '🐶'}
+                  onEmojiSelect={handleEmojiSelect}
+                  title="Choose your avatar emoji"
+                  description="This emoji will represent you in the app"
+                />
+              </div>
+            </div>
+            {/* User Types */}
+            <div className="col-span-1 lg:col-span-2">
+              <Label className="text-sm font-medium">Account Type</Label>
+              <div className="space-y-3 mt-0.5">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="host"
+                    checked={formData.type?.includes(UserType.HOST) ?? false}
+                    onCheckedChange={(checked) =>
+                      handleUserTypeChange(UserType.HOST, checked as boolean)
+                    }
+                  />
+                  <Label htmlFor="host" className="text-sm cursor-pointer">
+                    Host Giveaways
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="participate"
+                    checked={
+                      formData.type?.includes(UserType.PARTICIPATE) ?? false
+                    }
+                    onCheckedChange={(checked) =>
+                      handleUserTypeChange(
+                        UserType.PARTICIPATE,
+                        checked as boolean
+                      )
+                    }
+                  />
+                  <Label
+                    htmlFor="participate"
+                    className="text-sm cursor-pointer"
+                  >
+                    Participate in Giveaways
+                  </Label>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {/* Display Name */}
             <div className="space-y-2">
               <Label htmlFor="name">Display Name</Label>
@@ -153,7 +222,7 @@ export function UserSettings() {
                   id="name"
                   name="name"
                   type="text"
-                  value={formData.name}
+                  value={formData.name ?? ''}
                   onChange={handleInputChange}
                   className="pl-10"
                   placeholder="Enter your display name"
@@ -161,28 +230,11 @@ export function UserSettings() {
               </div>
             </div>
 
-            {/* Region Selection */}
-            <div className="space-y-2">
-              <Label htmlFor="region">Region</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
-                <Select
-                  value={formData.region}
-                  onValueChange={(value) => handleSelectChange('region', value)}
-                >
-                  <SelectTrigger className="pl-10">
-                    <SelectValue placeholder="Select your region" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {regions.map((region) => (
-                      <SelectItem key={region.value} value={region.value}>
-                        {region.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            {/* Country Selection */}
+            <CountrySelector
+              value={formData.region ?? ''}
+              onValueChange={handleCountryChange}
+            />
 
             {/* Age */}
             <div className="space-y-2">
@@ -195,7 +247,7 @@ export function UserSettings() {
                   type="number"
                   min="13"
                   max="120"
-                  value={formData.age}
+                  value={formData.age ?? 18}
                   onChange={handleInputChange}
                   className="pl-10"
                   placeholder="Enter your age"
@@ -203,14 +255,6 @@ export function UserSettings() {
               </div>
             </div>
           </div>
-
-          <Button
-            onClick={handleSaveProfile}
-            disabled={isLoading}
-            className="w-full"
-          >
-            {isLoading ? 'Saving...' : 'Save Profile'}
-          </Button>
         </CardContent>
       </Card>
 
@@ -265,9 +309,9 @@ export function UserSettings() {
                 id="email"
                 name="email"
                 type="email"
-                value={formData.email}
+                value={user.email ?? ''}
                 onChange={handleInputChange}
-                className="pl-10"
+                className="pl-10 pr-10 truncate"
                 placeholder="Enter your email address"
                 disabled={!canChangeEmail}
               />
@@ -313,14 +357,6 @@ export function UserSettings() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="w-full sm:w-auto"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" className="w-full sm:w-auto">
@@ -333,15 +369,13 @@ export function UserSettings() {
                   Are you sure you want to delete your account?
                 </AlertDialogTitle>
                 <AlertDialogDescription className="space-y-2">
-                  <p>
-                    This action cannot be undone. Your account will be
-                    permanently deleted.
-                  </p>
-                  <p className="font-medium text-amber-600">
-                    ⚠️ Your account deletion will be fully processed after any
-                    giveaways you've entered have completed.
-                  </p>
+                  This action cannot be undone. Your account will be permanently
+                  deleted.
                 </AlertDialogDescription>
+                <p className="text-sm font-medium text-destructive">
+                  ⚠️ Your account deletion will be fully processed after any
+                  giveaways you've entered have completed.
+                </p>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>

@@ -1,9 +1,10 @@
 'use server';
 
 import { signOut } from '@/lib/auth';
+import { procedure } from '@/lib/mrpc/procedures';
 
-const logout = async () => {
-  await signOut({ redirectTo: '/' });
-};
+const logout = procedure
+  .authorized()
+  .handler(async () => await signOut({ redirectTo: '/' }));
 
 export default logout;

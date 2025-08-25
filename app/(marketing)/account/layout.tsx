@@ -14,5 +14,9 @@ export default async function Layout({
     redirect(`/`);
   }
 
-  return <UserProvider value={user.data}>{children}</UserProvider>;
+  return (
+    <div className="container mx-auto py-8 px-4">
+      <UserProvider value={user.data}>{children}</UserProvider>
+    </div>
+  );
 }

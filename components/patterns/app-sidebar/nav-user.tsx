@@ -1,14 +1,8 @@
 'use client';
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  LogOut,
-  Sparkles
-} from 'lucide-react';
+import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,11 +19,15 @@ import {
   useSidebar
 } from '@/components/ui/sidebar';
 import { useUser } from '@/components/context/user-provider';
-import logout from '@/actions/auth/logout';
+import Link from 'next/link';
+import { useAccountPage } from '@/components/account/use-account-page';
+import { useLogout } from '../../auth/use-logout';
 
 export const NavUser = () => {
   const { isMobile } = useSidebar();
+  const { routes } = useAccountPage();
   const { email, name, emoji } = useUser();
+  const logout = useLogout();
 
   return (
     <SidebarMenu>
@@ -41,11 +39,9 @@ export const NavUser = () => {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={emoji ?? undefined}
-                  alt={name ?? email ?? 'Giveaway Dog User'}
-                />
-                <AvatarFallback className="rounded-lg">🐶</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {emoji ?? '🐶'}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{name}</span>
@@ -63,11 +59,9 @@ export const NavUser = () => {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={emoji ?? undefined}
-                    alt={name ?? email ?? 'Giveaway Dog User'}
-                  />
-                  <AvatarFallback className="rounded-lg">🐶</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {emoji ?? '🐶'}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{name}</span>
@@ -77,24 +71,21 @@ export const NavUser = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
+              <DropdownMenuItem asChild>
+                <Link href={routes.base}>
+                  <BadgeCheck />
+                  Account
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={routes.notifications}>
+                  <Bell />
+                  Notifications
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout}>
+            <DropdownMenuItem onClick={logout.run}>
               <LogOut />
               Log out
             </DropdownMenuItem>

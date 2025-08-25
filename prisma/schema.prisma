@@ -11,7 +11,6 @@ datasource db {
 enum UserType {
   HOST
   PARTICIPATE
-  LEARN
 }
 
 model User {
@@ -20,9 +19,10 @@ model User {
   email         String?      @unique
   emailVerified DateTime?
   image         String?
+  age           Int?
   emoji         String?
-  country       String?
-  type          UserType[]   @default([LEARN])
+  region        String?
+  type          UserType[]   @default([PARTICIPATE])
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime     @default(now())

@@ -95,7 +95,7 @@ export const Footer = ({
 }: FooterProps) => {
   return (
     <div className="container">
-      <div className="text-muted-foreground mt-8 flex flex-col justify-between gap-4 border-t py-8 text-xs font-medium md:flex-row md:items-center md:text-left">
+      <div className="text-muted-foreground flex flex-col justify-between gap-4 py-8 text-xs font-medium md:flex-row md:items-center md:text-left">
         <p className="order-2 lg:order-1">{copyright}</p>
 
         <ul className="text-muted-foreground flex items-center space-x-6">

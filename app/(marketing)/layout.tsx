@@ -1,6 +1,6 @@
+import findUser from '@/actions/app/find-user';
 import { Footer } from '@/components/patterns/footer';
 import { NavigationBar } from '@/components/patterns/navigation-bar';
-import { auth } from '@/lib/auth';
 
 export const metadata = {
   title: 'GiveawayDog',
@@ -12,14 +12,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  const user = await findUser();
+
   return (
     <div className="min-h-screen flex flex-col h-screen">
-      <div>
-        <NavigationBar user={session?.user} />
+      <div className="border-b">
+        <NavigationBar user={user.ok ? user.data : null} />
       </div>
       <div className="flex grow">{children}</div>
-      <div>
+      <div className="border-t">
         <Footer />
       </div>
     </div>
