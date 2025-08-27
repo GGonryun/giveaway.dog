@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 
 const selectTeam = procedure
-  .authorized()
+  .authorization({ required: true })
   .input(z.object({ id: z.string() }))
   .output(z.object({ name: z.string(), slug: z.string() }))
   .handler(async ({ input }) => {

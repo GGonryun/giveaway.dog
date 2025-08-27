@@ -9,7 +9,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { TeamRole } from '@prisma/client';
 
 const getUserTeams = procedure
-  .authorized()
+  .authorization({ required: true })
   .output(detailedUserTeamSchema.array())
   .handler(async ({ db, user }) => {
     const query = await db.team.findMany({

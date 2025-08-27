@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { User, Settings, Bell, LogOut } from 'lucide-react';
+import { User, Settings, Bell, LogOut, LoaderCircle } from 'lucide-react';
 import { UserOverview } from '@/components/account/user-overview';
 import { UserSettings } from '@/components/account/user-settings';
 import { UserNotifications } from '@/components/account/user-notifications';
@@ -101,10 +101,15 @@ export default function UserPage() {
       <div className="flex justify-end">
         <Button
           onClick={logout.run}
+          disabled={logout.isLoading}
           variant="outline"
           className="w-full sm:w-auto"
         >
-          <LogOut className="h-4 w-4 mr-2" />
+          {logout.isLoading ? (
+            <LoaderCircle className="animate-spin h-4 w-4 mr-2" />
+          ) : (
+            <LogOut className="h-4 w-4 mr-2" />
+          )}
           Logout
         </Button>
       </div>

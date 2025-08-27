@@ -2,24 +2,29 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import prisma from '@/lib/prisma';
 import { updateUserProfileSchema } from '@/schemas/user';
-import { revalidateTag } from 'next/cache';
 import z from 'zod';
 
 export const updateProfile = procedure
-  .unauthorized()
+  .authorization({ required: true })
   .input(updateUserProfileSchema)
   .output(
     z.object({
       id: z.string()
     })
   )
-  .handler(async ({ input }) => {
+  .invalidate(async ({ output }) => [`user-${output.id}`, 'user-profile'])
+  .handler(async ({ input, user, db }) => {
     const { id, name, age, region, emoji, type } = input;
+    if (id !== user.id) {
+      throw new ApplicationError({
+        code: 'FORBIDDEN',
+        message: 'You can only update your own profile'
+      });
+    }
 
     //if the user already exists do nothing.
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await db.user.findUnique({
       where: { id }
     });
 
@@ -31,7 +36,7 @@ export const updateProfile = procedure
     }
 
     try {
-      const updatedUser = await prisma.user.update({
+      const updatedUser = await db.user.update({
         where: { id },
         data: {
           ...(name && { name }),
@@ -41,10 +46,6 @@ export const updateProfile = procedure
           ...(type && { type })
         }
       });
-
-      // Invalidate user cache to ensure fresh data is fetched
-      revalidateTag(`user-${id}`);
-      revalidateTag('user-profile');
 
       return updatedUser;
     } catch (error) {

@@ -6,7 +6,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 
 export const createSweepstakes = procedure
-  .authorized()
+  .authorization({ required: true })
   .input(
     z.object({
       id: z.string()

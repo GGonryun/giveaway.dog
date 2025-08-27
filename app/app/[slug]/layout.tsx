@@ -1,4 +1,4 @@
-import getUser from '@/procedures/app/get-user';
+import getUser from '@/procedures/user/get-user';
 import getUserTeam from '@/procedures/teams/get-user-team';
 import getUserTeams from '@/procedures/teams/get-user-teams';
 import { TeamsProvider } from '@/components/context/team-provider';

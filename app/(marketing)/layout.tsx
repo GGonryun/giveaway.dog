@@ -1,11 +1,6 @@
-import findUser from '@/procedures/app/find-user';
+import findUser from '@/procedures/user/find-user';
 import { Footer } from '@/components/patterns/footer';
 import { NavigationBar } from '@/components/patterns/navigation-bar';
-
-export const metadata = {
-  title: 'GiveawayDog',
-  description: 'Build better giveaways and contests'
-};
 
 export default async function RootLayout({
   children

@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import z from 'zod';
 
 const getUserTeam = procedure
-  .authorized()
+  .authorization({ required: true })
   .input(
     z.object({
       slug: z.string()

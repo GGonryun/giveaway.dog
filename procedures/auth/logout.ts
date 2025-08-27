@@ -4,7 +4,7 @@ import { signOut } from '@/lib/auth';
 import { procedure } from '@/lib/mrpc/procedures';
 
 const logout = procedure
-  .authorized()
+  .authorization({ required: true })
   .handler(async () => await signOut({ redirectTo: '/' }));
 
 export default logout;

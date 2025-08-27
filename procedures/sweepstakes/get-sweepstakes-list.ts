@@ -1,18 +1,10 @@
 'use server';
 
-import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { SweepstakesData, sweepstakesDataSchema } from '@/schemas/index';
-import { simulateNetworkDelay } from '@/lib/simulate';
+import { sweepstakesDataSchema } from '@/schemas/index';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { Prisma, SweepstakesStatus } from '@prisma/client';
-import {
-  formatDistance,
-  formatDuration,
-  intervalToDuration,
-  isAfter,
-  isBefore
-} from 'date-fns';
+import { formatDistance, isAfter } from 'date-fns';
 
 const listParamsSchema = z
   .object({
@@ -24,7 +16,7 @@ const listParamsSchema = z
   .partial();
 
 const getSweepstakesList = procedure
-  .authorized()
+  .authorization({ required: true })
   .input(listParamsSchema)
   .output(sweepstakesDataSchema.array())
   .handler(async ({ input, db }) => {
@@ -72,12 +64,5 @@ const getTimeLeft = (sweepstake: Prisma.SweepstakesGetPayload<{}>): string => {
     return `Starts ${formatDistance(new Date(), sweepstake.startDate, { addSuffix: true })}`;
   return formatDistance(now, sweepstake.endDate, { addSuffix: true });
 };
-
-interface GetSweepstakesListParams {
-  statusFilter?: string;
-  search?: string;
-  sortField?: string;
-  sortDirection?: 'asc' | 'desc';
-}
 
 export default getSweepstakesList;
