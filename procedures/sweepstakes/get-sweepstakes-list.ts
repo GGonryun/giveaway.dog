@@ -1,31 +1,51 @@
 'use server';
 
-import { sweepstakesDataSchema } from '@/schemas/index';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { Prisma, SweepstakesStatus } from '@prisma/client';
-import { formatDistance, isAfter } from 'date-fns';
-
-const listParamsSchema = z
-  .object({
-    statusFilter: z.nativeEnum(SweepstakesStatus),
-    search: z.string(),
-    sortField: z.string(),
-    sortDirection: z.enum(['asc', 'desc'])
-  })
-  .partial();
+import { formatDistance, isAfter, minutesToSeconds } from 'date-fns';
+import {
+  sweepstakesDataSchema,
+  listSweepstakesFiltersSchema
+} from '@/schemas/sweepstakes';
 
 const getSweepstakesList = procedure
   .authorization({ required: true })
-  .input(listParamsSchema)
+  .input(
+    listSweepstakesFiltersSchema.extend({
+      slug: z.string()
+    })
+  )
   .output(sweepstakesDataSchema.array())
-  .handler(async ({ input, db }) => {
+  .cache(({ user, input }) => {
+    return {
+      tags: [
+        'sweepstakes',
+        'sweepstakes-list',
+        `sweepstakes-list-${user.id}`,
+        `sweepstakes-list-${input.slug}`,
+        `user-${user.id}`,
+        `team-${input.slug}`
+      ],
+      revalidate: minutesToSeconds(5)
+    };
+  })
+  .handler(async ({ input, user, db }) => {
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
-        status: input.statusFilter,
+        status:
+          input.status && input.status !== 'ALL' ? input.status : undefined,
         name: {
           contains: input.search,
           mode: 'insensitive'
+        },
+        team: {
+          slug: input.slug,
+          members: {
+            some: {
+              userId: user.id
+            }
+          }
         }
       },
       orderBy: input.sortField
@@ -45,9 +65,7 @@ const getSweepstakesList = procedure
         conversionRate: 0,
         botRate: 0,
         timeLeft,
-        createdAt: s.createdAt.toISOString(),
-        topSource: 'TODO',
-        prize: 'TODO'
+        createdAt: s.createdAt.toISOString()
       };
     });
   });

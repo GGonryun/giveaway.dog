@@ -1,22 +1,6 @@
 import { SweepstakesStatus } from '@prisma/client';
 import { z } from 'zod';
 
-export const sweepstakesDataSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  status: z.nativeEnum(SweepstakesStatus),
-  entries: z.number(),
-  uniqueEntrants: z.number(),
-  conversionRate: z.number(),
-  botRate: z.number(),
-  timeLeft: z.string(),
-  createdAt: z.string(),
-  topSource: z.string(),
-  prize: z.string()
-});
-
-export type SweepstakesData = z.infer<typeof sweepstakesDataSchema>;
-
 // ----- TODO -----
 
 // Dashboard KPI Schema

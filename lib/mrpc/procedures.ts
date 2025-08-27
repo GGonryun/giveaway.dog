@@ -32,11 +32,13 @@ type CacheConfig<TInputSchema, TAuthRequired extends boolean> =
     }) => CacheOptions | undefined);
 
 type InvalidateConfig<
+  TInputSchema,
   TOutputSchema,
   TAuthRequired extends boolean
 > = (context: {
   user: TAuthRequired extends true ? Required<User> : User | null;
   db: PrismaClient;
+  input: TInputSchema extends z.ZodType<any> ? z.infer<TInputSchema> : void;
   output: TOutputSchema extends z.ZodType<any>
     ? z.infer<TOutputSchema>
     : unknown;
@@ -52,7 +54,11 @@ class ProcedureBuilder<
     private inputSchema?: TInputSchema,
     private outputSchema?: TOutputSchema,
     private cacheConfig?: CacheConfig<TInputSchema, TAuthRequired>,
-    private invalidateConfig?: InvalidateConfig<TOutputSchema, TAuthRequired>
+    private invalidateConfig?: InvalidateConfig<
+      TInputSchema,
+      TOutputSchema,
+      TAuthRequired
+    >
   ) {}
 
   input<S extends z.ZodType<any>>(schema: S) {
@@ -61,7 +67,7 @@ class ProcedureBuilder<
       schema,
       this.outputSchema,
       this.cacheConfig as CacheConfig<S, TAuthRequired>,
-      this.invalidateConfig
+      undefined // Reset invalidate config when input schema changes
     );
   }
 
@@ -85,7 +91,9 @@ class ProcedureBuilder<
     );
   }
 
-  invalidate(config: InvalidateConfig<TOutputSchema, TAuthRequired>) {
+  invalidate(
+    config: InvalidateConfig<TInputSchema, TOutputSchema, TAuthRequired>
+  ) {
     return new ProcedureBuilder<TInputSchema, TOutputSchema, TAuthRequired>(
       this.authConfig,
       this.inputSchema,
@@ -159,11 +167,11 @@ class ProcedureBuilder<
           if (cacheOptions) {
             // Create cached function
             const cachedFn = unstable_cache(
-              async () => {
+              async (input: any) => {
                 return await fn({
                   db: prisma,
                   user,
-                  input: inputData
+                  input
                 });
               },
               cacheOptions.keyParts || [],
@@ -173,7 +181,7 @@ class ProcedureBuilder<
               }
             );
 
-            data = await cachedFn();
+            data = await cachedFn(inputData);
           } else {
             // Cache function returned undefined, skip caching
             data = await fn({
@@ -205,6 +213,7 @@ class ProcedureBuilder<
           const tagsToInvalidate = await this.invalidateConfig({
             user,
             db: prisma,
+            input: inputData,
             output: data
           });
           for (const tag of tagsToInvalidate) {

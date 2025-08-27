@@ -9,7 +9,8 @@ export const createSweepstakes = procedure
   .authorization({ required: true })
   .input(
     z.object({
-      id: z.string()
+      id: z.string(),
+      slug: z.string()
     })
   )
   .output(
@@ -17,13 +18,14 @@ export const createSweepstakes = procedure
       id: z.string()
     })
   )
+  .invalidate(async ({ input }) => [`sweepstakes-list-${input.slug}`])
   .handler(async ({ db, input }) => {
     const created = await db.sweepstakes.create({
       data: {
         id: nanoid(6),
         status: SweepstakesStatus.DRAFT,
         teamId: input.id,
-        name: 'New Sweepstakes',
+        name: 'My Sweepstakes',
         description: 'Enter to win a prize!',
         requireEmail: true
       }

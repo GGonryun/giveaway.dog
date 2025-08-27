@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <Outline
       title="Sweepstakes"
-      className="space-y-4"
+      className="space-y-4 pt-0 sm:pt-8"
       action={<CreateGiveawayButton />}
     >
       {children}
