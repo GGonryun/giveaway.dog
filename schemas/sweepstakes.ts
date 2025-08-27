@@ -3,7 +3,7 @@ import z from 'zod';
 
 export const sweepstakesDataSchema = z.object({
   id: z.string(),
-  title: z.string(),
+  name: z.string(),
   status: z.nativeEnum(SweepstakesStatus),
   entries: z.number(),
   uniqueEntrants: z.number(),

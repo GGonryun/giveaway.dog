@@ -4,8 +4,12 @@ import { auth, isValidSession } from '../auth';
 import { User } from 'next-auth';
 import { Result, Success } from './types';
 import prisma from '../prisma';
-import { PrismaClient } from '@prisma/client';
-import { isNextRedirect } from './errors';
+import { Prisma, PrismaClient } from '@prisma/client';
+import {
+  isNextRedirect,
+  isPrismaKnownError,
+  prismaErrorBoundary
+} from './errors';
 import { environment } from '../environment';
 import { simulateNetworkDelay } from '../simulate';
 import { unstable_cache, revalidateTag } from 'next/cache';
@@ -225,6 +229,10 @@ class ProcedureBuilder<
       } catch (err: any) {
         if (isNextRedirect(err)) {
           throw err; // Re-throw Next.js redirect errors
+        }
+
+        if (isPrismaKnownError(err)) {
+          return prismaErrorBoundary(err);
         }
 
         if (err instanceof ApplicationError) {

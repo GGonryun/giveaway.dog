@@ -9,7 +9,7 @@ import {
   giveawayDefaultValues
 } from '@/schemas/giveaway';
 import { onSubmitAction } from '../actions';
-import { useCallback, useEffect, useTransition } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 import * as dates from 'date-fns';
 import { timezone } from '@/lib/time';
 
@@ -18,15 +18,16 @@ import { FormDefaultsProvider } from './form/form-defaults-context';
 import { SweepstakesStepProvider } from '@/components/hooks/use-sweepstake-step';
 import { GiveawayFormContent } from './form-content';
 import { GiveawayPreview } from './preview';
-import { useRouter } from 'next/navigation';
 import { useTeamPage } from '@/components/team/use-team-page';
 import { useTeams } from '@/components/context/team-provider';
+import { CancelConfirmationModal } from '@/components/giveaway/cancel-confirmation-modal';
+import { useParams } from 'next/navigation';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 
 export const GiveawayForm: React.FC = () => {
-  const router = useRouter();
-  const { navigateToTeam } = useTeamPage();
+  const params = useParams();
   const [isPending, startTransition] = useTransition();
-  const { activeTeam } = useTeams();
+  const [cancelId, setCancelId] = useState<string | null>(null);
 
   const defaultValues = {
     ...giveawayDefaultValues,
@@ -74,8 +75,8 @@ export const GiveawayForm: React.FC = () => {
   };
 
   const handleCancel = useCallback(() => {
-    if (confirm('Are you sure?')) navigateToTeam(activeTeam);
-  }, [router, activeTeam.slug]);
+    setCancelId(params.id as string | null);
+  }, []);
 
   return (
     <SweepstakesStepProvider>
@@ -83,13 +84,19 @@ export const GiveawayForm: React.FC = () => {
         <FormDefaultsProvider defaultValues={defaultValues}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <FormLayout
-              title={name || 'New Sweepstakes'}
+              title={name || DEFAULT_SWEEPSTAKES_NAME}
               onCancel={handleCancel}
               disabled={isPending}
               left={<GiveawayFormContent />}
               right={<GiveawayPreview />}
             />
           </form>
+
+          <CancelConfirmationModal
+            onClose={() => setCancelId(null)}
+            sweepstakesName={name || DEFAULT_SWEEPSTAKES_NAME}
+            sweepstakesId={cancelId}
+          />
         </FormDefaultsProvider>
       </FormProvider>
     </SweepstakesStepProvider>

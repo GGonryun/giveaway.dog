@@ -47,6 +47,10 @@ import {
 import { CreateGiveawayButton } from '@/components/giveaway/create-giveaway-button';
 import { SweepstakesStatus } from '@prisma/client';
 import { useSweepstakesPage } from './use-sweepstakes-page';
+import { DeleteConfirmationModal } from '@/components/giveaway/delete-confirmation-modal';
+import { toast } from 'sonner';
+import { useProcedure } from '@/lib/mrpc/hook';
+import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
 
 interface SweepstakesTableProps {
   sweepstakes: SweepstakesData[];
@@ -96,18 +100,16 @@ export function SweepstakesTable({
 }: SweepstakesTableProps) {
   const page = useSweepstakesPage();
 
-  const [sortDirection, setSortDirection] = useState<SortDirection | undefined>(
-    filters.sortDirection || undefined
-  );
+  const [deleteModal, setDeleteModal] = useState<SweepstakesData | null>(null);
 
   // Handle column sorting
   const handleSort = (field: SortField) => {
     let newDirection: SortDirection | undefined = 'asc';
 
     if (filters.sortField === field) {
-      if (sortDirection === 'asc') {
+      if (filters.sortDirection === 'asc') {
         newDirection = 'desc';
-      } else if (sortDirection === 'desc') {
+      } else if (filters.sortDirection === 'desc') {
         newDirection = undefined;
       } else {
         newDirection = 'asc';
@@ -123,6 +125,10 @@ export function SweepstakesTable({
       }
       params.set('page', '1'); // Reset to first page when sorting changes
     });
+  };
+
+  const handleDeleteModalClose = () => {
+    setDeleteModal(null);
   };
 
   const getStatusBadge = (status: SweepstakesData['status']) => {
@@ -193,7 +199,7 @@ export function SweepstakesTable({
                           href={`/app/sweepstakes/${item.id}`}
                           className="font-medium hover:text-primary hover:underline block truncate"
                         >
-                          {item.title}
+                          {item.name}
                         </Link>
                       </div>
                     </div>
@@ -279,7 +285,10 @@ export function SweepstakesTable({
                             </DropdownMenuItem>
                           ) : null}
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => setDeleteModal(item)}
+                          >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Delete
                           </DropdownMenuItem>
@@ -303,7 +312,7 @@ export function SweepstakesTable({
                   className="w-[300px]"
                   onSort={handleSort}
                   sortField={filters.sortField}
-                  sortDirection={sortDirection}
+                  sortDirection={filters.sortDirection}
                 >
                   Sweepstakes
                 </SortableHeader>
@@ -327,7 +336,7 @@ export function SweepstakesTable({
                             href={`/app/sweepstakes/${item.id}`}
                             className="font-medium hover:text-primary hover:underline line-clamp-1"
                           >
-                            {item.title}
+                            {item.name}
                           </Link>
                         </div>
                       </div>
@@ -405,7 +414,10 @@ export function SweepstakesTable({
                             </DropdownMenuItem>
                           ) : null}
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => setDeleteModal(item)}
+                          >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Delete
                           </DropdownMenuItem>
@@ -447,6 +459,11 @@ export function SweepstakesTable({
             params.set('page', '1'); // Reset to first page when page size changes
           });
         }}
+      />
+
+      <DeleteConfirmationModal
+        onClose={handleDeleteModalClose}
+        sweepstakes={deleteModal}
       />
     </div>
   );

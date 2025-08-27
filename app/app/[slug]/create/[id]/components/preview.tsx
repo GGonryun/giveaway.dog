@@ -16,6 +16,7 @@ import {
   UserProfile
 } from '@/schemas/giveaway';
 import { usePreviewState } from '../contexts/preview-state-context';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 
 const mockHost = {
   id: 'preview-host-id',
@@ -65,7 +66,7 @@ export const GiveawayPreview: React.FC = () => {
 
       return {
         setup: {
-          name: formValues.setup?.name || 'New Giveaway',
+          name: formValues.setup?.name || DEFAULT_SWEEPSTAKES_NAME,
           description: formValues.setup?.description || '',
           banner: formValues.setup?.banner || undefined, // Only show banner if provided
           terms: formValues.setup?.terms || ''

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -33,8 +33,7 @@ import {
   Calendar,
   AlertTriangle,
   ShieldAlert,
-  CheckCircle,
-  Info
+  CheckCircle
 } from 'lucide-react';
 import { useUser } from '@/components/context/user-provider';
 import { useProcedure } from '@/lib/mrpc/hook';
@@ -43,7 +42,7 @@ import { UpdateUserProfile } from '@/schemas/user';
 import { toast } from 'sonner';
 import { UserType } from '@prisma/client';
 
-export function UserSettings() {
+export const UserSettings = () => {
   const user = useUser();
   const [isEmailLoading, setIsEmailLoading] = useState(false);
   const updateProfileProcedure = useProcedure({
@@ -395,4 +394,4 @@ export function UserSettings() {
       </Card>
     </div>
   );
-}
+};

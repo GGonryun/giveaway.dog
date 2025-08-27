@@ -8,6 +8,7 @@ import {
   sweepstakesDataSchema,
   listSweepstakesFiltersSchema
 } from '@/schemas/sweepstakes';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 
 const getSweepstakesList = procedure
   .authorization({ required: true })
@@ -27,7 +28,7 @@ const getSweepstakesList = procedure
         `user-${user.id}`,
         `team-${input.slug}`
       ],
-      revalidate: minutesToSeconds(5)
+      revalidate: minutesToSeconds(10)
     };
   })
   .handler(async ({ input, user, db }) => {
@@ -58,7 +59,7 @@ const getSweepstakesList = procedure
       const timeLeft = getTimeLeft(s);
       return {
         id: s.id,
-        title: s.name ?? 'New Giveaway',
+        name: s.name ?? DEFAULT_SWEEPSTAKES_NAME,
         status: s.status,
         entries: 0,
         uniqueEntrants: 0,
