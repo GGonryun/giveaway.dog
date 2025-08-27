@@ -11,7 +11,7 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
-import createProfile from '@/actions/user/create-profile';
+import createProfile from '@/procedures/user/create-profile';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { UserType } from '@prisma/client';

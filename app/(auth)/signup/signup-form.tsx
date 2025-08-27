@@ -21,7 +21,7 @@ import { AuthError } from '@/components/auth/auth-error';
 import { AuthFooter } from '@/components/auth/auth-footer';
 import { EmojiPickerComponent } from '@/components/patterns/emoji-picker';
 import { Stepper } from '@/components/ui/stepper';
-import signup from '@/actions/auth/signup';
+import signup from '@/procedures/auth/signup';
 
 export function SignupForm({
   className,

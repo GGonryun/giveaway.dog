@@ -1,4 +1,4 @@
-import getUser from '@/actions/app/get-user';
+import getUser from '@/procedures/app/get-user';
 import { UserProvider } from '@/components/context/user-provider';
 import { redirect } from 'next/navigation';
 

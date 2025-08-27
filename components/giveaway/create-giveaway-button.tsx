@@ -2,7 +2,7 @@
 
 import { Button } from '../ui/button';
 import { PlusIcon, ChevronDown, FileText, Sparkles } from 'lucide-react';
-import { createSweepstakes } from '@/actions/app/create-sweepstakes';
+import { createSweepstakes } from '@/procedures/app/create-sweepstakes';
 import { Spinner } from '../ui/spinner';
 import { useRouter } from 'next/navigation';
 import {

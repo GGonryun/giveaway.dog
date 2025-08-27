@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/sheet';
 import { EmojiLogo } from './logo-button';
 import Link from 'next/link';
-import { User } from 'next-auth';
 import { UserProfile } from '@/schemas/user';
 import { UserType } from '@prisma/client';
 

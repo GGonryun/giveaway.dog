@@ -1,6 +1,6 @@
-import getUser from '@/actions/app/get-user';
-import getUserTeam from '@/actions/teams/get-user-team';
-import getUserTeams from '@/actions/teams/get-user-teams';
+import getUser from '@/procedures/app/get-user';
+import getUserTeam from '@/procedures/teams/get-user-team';
+import getUserTeams from '@/procedures/teams/get-user-teams';
 import { TeamsProvider } from '@/components/context/team-provider';
 import { UserProvider } from '@/components/context/user-provider';
 import { redirect } from 'next/navigation';

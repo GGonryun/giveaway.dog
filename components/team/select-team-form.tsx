@@ -1,6 +1,6 @@
 import { useProcedure } from '@/lib/mrpc/hook';
 import { Label } from 'recharts';
-import selectTeam from '@/actions/teams/select-team';
+import selectTeam from '@/procedures/teams/select-team';
 import { Button } from '../ui/button';
 import { PlusIcon } from 'lucide-react';
 import { Badge } from '../ui/badge';

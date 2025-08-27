@@ -16,7 +16,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import createTeam from '@/actions/teams/create-team';
+import createTeam from '@/procedures/teams/create-team';
 import { createTeamInputSchema, type CreateTeamInput } from '@/schemas/teams';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';

@@ -52,7 +52,7 @@ import Link from 'next/link';
 import { SweepstakesData } from '@/schemas/index';
 import { SweepstakesStatus } from '@prisma/client';
 import { useProcedure } from '@/lib/mrpc/hook';
-import getSweepstakesList from '@/actions/sweepstakes/get-sweepstakes-list';
+import getSweepstakesList from '@/procedures/sweepstakes/get-sweepstakes-list';
 import { CreateGiveawayButton } from '@/components/giveaway/create-giveaway-button';
 
 interface SweepstakesTableProps {

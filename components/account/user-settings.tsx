@@ -38,7 +38,7 @@ import {
 } from 'lucide-react';
 import { useUser } from '@/components/context/user-provider';
 import { useProcedure } from '@/lib/mrpc/hook';
-import updateProfile from '@/actions/user/update-profile';
+import updateProfile from '@/procedures/user/update-profile';
 import { UpdateUserProfile } from '@/schemas/user';
 import { toast } from 'sonner';
 import { UserType } from '@prisma/client';

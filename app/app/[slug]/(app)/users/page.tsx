@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import getUserAnalytics from '@/actions/users/get-user-analytics';
+import getUserAnalytics from '@/procedures/users/get-user-analytics';
 import { Outline } from '@/components/app/outline';
 import { UsersTable } from './components/users-table';
 

@@ -12,19 +12,18 @@ import { LatestUsersFeed } from './components/latest-users-feed';
 import { FlaggedEntriesList } from './components/flagged-entries-list';
 import { TimeToEntryAnalytics } from './components/time-to-entry-analytics';
 
-// Server Actions
-import getDashboardKPIs from '@/actions/dashboard/get-dashboard-kpis';
-import getDailyEngagement from '@/actions/dashboard/get-daily-engagement';
-import getBotDetection from '@/actions/dashboard/get-bot-detection';
-import getConversionFunnel from '@/actions/dashboard/get-conversion-funnel';
-import getReferrerData from '@/actions/dashboard/get-referrer-data';
-import getActiveSweepstakes from '@/actions/dashboard/get-active-sweepstakes';
-import getHeatmapData from '@/actions/dashboard/get-heatmap-data';
-import getGeolocationData from '@/actions/dashboard/get-geolocation-data';
-import getUserDistribution from '@/actions/dashboard/get-user-distribution';
-import getLatestUsers from '@/actions/dashboard/get-latest-users';
-import getFlaggedEntries from '@/actions/dashboard/get-flagged-entries';
-import getTimeToEntry from '@/actions/dashboard/get-time-to-entry';
+import getDashboardKPIs from '@/procedures/dashboard/get-dashboard-kpis';
+import getDailyEngagement from '@/procedures/dashboard/get-daily-engagement';
+import getBotDetection from '@/procedures/dashboard/get-bot-detection';
+import getConversionFunnel from '@/procedures/dashboard/get-conversion-funnel';
+import getReferrerData from '@/procedures/dashboard/get-referrer-data';
+import getActiveSweepstakes from '@/procedures/dashboard/get-active-sweepstakes';
+import getHeatmapData from '@/procedures/dashboard/get-heatmap-data';
+import getGeolocationData from '@/procedures/dashboard/get-geolocation-data';
+import getUserDistribution from '@/procedures/dashboard/get-user-distribution';
+import getLatestUsers from '@/procedures/dashboard/get-latest-users';
+import getFlaggedEntries from '@/procedures/dashboard/get-flagged-entries';
+import getTimeToEntry from '@/procedures/dashboard/get-time-to-entry';
 
 // Server component for KPI Cards
 async function DashboardKPISection() {

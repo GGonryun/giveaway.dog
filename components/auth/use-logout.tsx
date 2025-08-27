@@ -1,4 +1,4 @@
-import logout from '@/actions/auth/logout';
+import logout from '@/procedures/auth/logout';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 

@@ -20,7 +20,7 @@ import { ProviderButtons } from '@/components/auth/provider-buttons';
 import { AuthError } from '@/components/auth/auth-error';
 import { AuthFooter } from '@/components/auth/auth-footer';
 import Link from 'next/link';
-import login from '@/actions/auth/login';
+import login from '@/procedures/auth/login';
 
 export function LoginForm({
   className,
@@ -105,7 +105,7 @@ export function LoginForm({
           </CardContent>
         )}
       </Card>
-      
+
       <AuthFooter />
     </div>
   );
