@@ -1,4 +1,4 @@
-import { UserType } from '@/lib/prisma';
+import { UserType } from '@prisma/client';
 import z from 'zod';
 
 export const userProfileSchema = z.object({

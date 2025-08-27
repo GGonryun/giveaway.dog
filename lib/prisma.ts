@@ -2,8 +2,6 @@
 
 import { PrismaClient } from '@prisma/client';
 
-export * from '@prisma/client';
-
 declare global {
   // eslint-disable-next-line no-var
   var prisma: PrismaClient;
@@ -13,7 +11,7 @@ export type PrismaTransactionalClient = Parameters<
   Parameters<PrismaClient['$transaction']>[0]
 >[0];
 
-const globalForPrisma = global;
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
 const prisma = globalForPrisma.prisma || new PrismaClient();
 

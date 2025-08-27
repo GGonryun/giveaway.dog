@@ -1,7 +1,7 @@
 'use server';
 
 import { nanoid } from 'nanoid';
-import { SweepstakesStatus } from '@/lib/prisma';
+import { SweepstakesStatus } from '@prisma/client';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 

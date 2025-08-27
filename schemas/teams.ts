@@ -1,4 +1,4 @@
-import { Prisma, TeamRole } from '@/lib/prisma';
+import { Prisma, TeamRole } from '@prisma/client';
 import z from 'zod';
 
 export const selectUserDetails = {
