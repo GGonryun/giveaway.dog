@@ -1,10 +1,13 @@
+import { RegionRestrictionFilter } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import { DeepPartial } from '@/lib/types';
 import z from 'zod';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 
 export const DEFAULT_MINIMUM_AGE = 13;
 
 export const baseTaskSchema = z.object({
+  id: z.string(),
   type: z.string(),
   title: z.string().min(1, 'Title is required'),
   value: z.number().min(1, 'Minimum value is 1'),
@@ -13,11 +16,11 @@ export const baseTaskSchema = z.object({
 });
 
 export const bonusTaskSchema = baseTaskSchema.extend({
-  type: z.literal('bonus-task')
+  type: z.literal('BONUS_TASK')
 });
 
 export const visitUrlSchema = baseTaskSchema.extend({
-  type: z.literal('visit-url'),
+  type: z.literal('VISIT_URL'),
   href: z.string().url()
 });
 
@@ -29,15 +32,16 @@ export const taskSchema = z.discriminatedUnion('type', [
 export type TaskType = z.infer<typeof taskSchema>['type'];
 
 export const TASK_GROUP: Record<TaskType, string> = {
-  'bonus-task': 'Bonus Tasks',
-  'visit-url': 'Visit URL Tasks'
+  BONUS_TASK: 'Bonus Tasks',
+  VISIT_URL: 'Visit URL Tasks'
 };
 
-export type Task = z.infer<typeof taskSchema>;
+export type TaskSchema = z.infer<typeof taskSchema>;
 
-export type TaskOf<T extends TaskType> = Extract<Task, { type: T }>;
+export type TaskOf<T extends TaskType> = Extract<TaskSchema, { type: T }>;
 
 export const prizeSchema = z.object({
+  id: z.string(),
   name: z.string().min(3).max(100),
   winners: z
     .number()
@@ -47,89 +51,85 @@ export const prizeSchema = z.object({
 
 export type Prize = z.infer<typeof prizeSchema>;
 
-export const regionalRestrictionFilterSchema = z.union([
-  z.literal('include'),
-  z.literal('exclude')
-]);
+export const regionalRestrictionFilterSchema = z.nativeEnum(
+  RegionRestrictionFilter
+);
 export type RegionalRestrictionFilter = z.infer<
   typeof regionalRestrictionFilterSchema
 >;
 
-export const giveawaySchema = z.object({
-  setup: z.object({
-    name: z.string().min(3),
-    description: z.string(),
-    terms: z.string(),
-    banner: z.string().optional()
+const giveawaySetupSchema = z.object({
+  name: z.string().min(3),
+  description: z.string(),
+  terms: z.string(),
+  banner: z.string().nullable()
+});
+
+const giveawayTimingSchema = z.object({
+  startDate: z.date().refine((date) => date > new Date(), {
+    message: 'Start date must be in the future'
   }),
-  timing: z
+  endDate: z.date().refine((date) => date > new Date(), {
+    message: 'End date must be in the future'
+  }),
+  timeZone: z.string()
+});
+const giveawayAudienceSchema = z.object({
+  requireEmail: z.boolean(),
+  regionalRestriction: z
     .object({
-      startDate: z.date().refine((date) => date > new Date(), {
-        message: 'Start date must be in the future'
-      }),
-      endDate: z.date().refine((date) => date > new Date(), {
-        message: 'End date must be in the future'
-      }),
-      timeZone: z.string()
+      regions: z.string().array().min(1),
+      filter: regionalRestrictionFilterSchema
     })
-    .superRefine((data, ctx) => {
-      const startDate = data.startDate;
-      const endDate = data.endDate;
-      if (startDate && endDate <= startDate) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'End date must be after start date',
-          path: ['endDate']
-        });
-      }
-    }),
-  audience: z.object({
-    requireEmail: z.boolean(),
-    regionalRestriction: z
-      .object({
-        regions: z.string().array().min(1),
-        filter: regionalRestrictionFilterSchema
-      })
-      .nullable(),
-    minimumAgeRestriction: z
-      .object({
-        format: z.literal('checkbox'),
-        value: z.number(),
-        label: z.string(),
-        required: z.boolean()
-      })
-      .nullable()
+    .nullable(),
+  minimumAgeRestriction: z
+    .object({
+      format: z.literal('checkbox'),
+      value: z.number(),
+      label: z.string(),
+      required: z.boolean()
+    })
+    .nullable()
+});
+
+const giveawayTaskSchema = z.array(taskSchema);
+const giveawayPrizeSchema = z.array(prizeSchema);
+
+export const giveawaySchema = z.object({
+  setup: giveawaySetupSchema,
+  timing: giveawayTimingSchema.superRefine((data, ctx) => {
+    const startDate = data.startDate;
+    const endDate = data.endDate;
+    if (startDate && endDate <= startDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'End date must be after start date',
+        path: ['endDate']
+      });
+    }
   }),
-  tasks: z
-    .array(taskSchema)
+  audience: giveawayAudienceSchema,
+  tasks: giveawayTaskSchema
     .min(1, 'At least one entry method is required')
     .max(25, 'Maximum of 25 entry methods are allowed'),
-  prizes: z
-    .array(prizeSchema)
+  prizes: giveawayPrizeSchema
     .min(1, 'At least one prize is required')
     .max(10, 'Maximum of 10 prizes are allowed')
 });
 
 export type GiveawaySchema = z.infer<typeof giveawaySchema>;
 
-export const giveawayDefaultValues: DeepPartial<GiveawaySchema> = {
-  setup: {
-    name: '',
-    terms: ''
-  },
-  timing: {
-    startDate: undefined,
-    endDate: undefined,
-    timeZone: undefined
-  },
-  audience: {
-    regionalRestriction: null,
-    minimumAgeRestriction: null,
-    requireEmail: true
-  },
-  tasks: [],
-  prizes: []
-};
+export const giveawayFormSchema = z
+  .object({
+    setup: giveawaySetupSchema.partial(),
+    timing: giveawayTimingSchema.partial(),
+    audience: giveawayAudienceSchema.partial(),
+    tasks: giveawayTaskSchema,
+    prizes: giveawayPrizeSchema
+  })
+  .partial();
+
+export type GiveawayFormSchema = z.infer<typeof giveawayFormSchema>;
 
 // User Profile Schema
 export const userProfileSchema = z.object({

@@ -45,7 +45,8 @@ const mockTemplates: Template[] = [
   {
     id: '1',
     title: 'Tech Product Launch',
-    description: 'Perfect for launching new tech products with social media engagement',
+    description:
+      'Perfect for launching new tech products with social media engagement',
     category: 'Tech',
     popularity: 95,
     estimatedConversion: '12-15%',
@@ -69,7 +70,8 @@ const mockTemplates: Template[] = [
   {
     id: '3',
     title: 'Fitness Challenge',
-    description: 'Motivate your audience with health and wellness focused giveaways',
+    description:
+      'Motivate your audience with health and wellness focused giveaways',
     category: 'Health',
     popularity: 76,
     estimatedConversion: '10-14%',
@@ -121,16 +123,30 @@ export default function TemplatesPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('popularity');
 
-  const categories = ['all', 'Tech', 'Seasonal', 'Health', 'Gaming', 'Beauty', 'Luxury'];
+  const categories = [
+    'all',
+    'Tech',
+    'Seasonal',
+    'Health',
+    'Gaming',
+    'Beauty',
+    'Luxury'
+  ];
 
   const filteredTemplates = mockTemplates
-    .filter(template => {
-      const matchesSearch = template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          template.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          template.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-      
-      const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
-      
+    .filter((template) => {
+      const matchesSearch =
+        template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        template.description
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        template.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+      const matchesCategory =
+        selectedCategory === 'all' || template.category === selectedCategory;
+
       return matchesSearch && matchesCategory;
     })
     .sort((a, b) => {
@@ -145,7 +161,8 @@ export default function TemplatesPage() {
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">Giveaway Templates</h1>
         <p className="text-muted-foreground">
-          Choose from our collection of proven templates to boost your campaign performance
+          Choose from our collection of proven templates to boost your campaign
+          performance
         </p>
       </div>
 
@@ -163,16 +180,21 @@ export default function TemplatesPage() {
                 className="pl-9"
               />
             </div>
-            
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+
+            <Select
+              value={selectedCategory}
+              onValueChange={setSelectedCategory}
+            >
               <SelectTrigger className="w-48">
                 <Filter className="h-4 w-4 mr-2" />
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                {categories.slice(1).map(category => (
-                  <SelectItem key={category} value={category}>{category}</SelectItem>
+                {categories.slice(1).map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -194,9 +216,14 @@ export default function TemplatesPage() {
       {/* Templates Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredTemplates.map((template) => (
-          <Card key={template.id} className="group hover:shadow-lg transition-all duration-200 cursor-pointer overflow-hidden p-0">
+          <Card
+            key={template.id}
+            className="group hover:shadow-lg transition-all duration-200 cursor-pointer overflow-hidden p-0"
+          >
             {/* Banner Image */}
-            <div className={`h-32 bg-gradient-to-r ${template.bannerGradient} relative`}>
+            <div
+              className={`h-32 bg-gradient-to-r ${template.bannerGradient} relative`}
+            >
               <div className="absolute inset-0 bg-black/20"></div>
               <div className="absolute bottom-3 left-3">
                 <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg text-white">
@@ -212,7 +239,7 @@ export default function TemplatesPage() {
                 </div>
               </div>
             </div>
-            
+
             <CardHeader className="pb-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -223,18 +250,22 @@ export default function TemplatesPage() {
                 </div>
               </div>
             </CardHeader>
-            
+
             <CardContent className="space-y-4 p-6 pt-0">
               <p className="text-sm text-muted-foreground">
                 {template.description}
               </p>
-              
+
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Est. Conversion:</span>
-                  <span className="font-medium text-green-600">{template.estimatedConversion}</span>
+                  <span className="text-muted-foreground">
+                    Est. Conversion:
+                  </span>
+                  <span className="font-medium text-green-600">
+                    {template.estimatedConversion}
+                  </span>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-1">
                   {template.tags.map((tag) => (
                     <Badge key={tag} variant="outline" className="text-xs">
@@ -243,10 +274,10 @@ export default function TemplatesPage() {
                   ))}
                 </div>
               </div>
-              
+
               <div className="flex space-x-2 pt-2">
                 <Button asChild className="flex-1" size="sm">
-                  <Link href={`/app/create/new?template=${template.id}`}>
+                  <Link href={`/app/edit/new?template=${template.id}`}>
                     Use Template
                   </Link>
                 </Button>
@@ -263,10 +294,12 @@ export default function TemplatesPage() {
       {filteredTemplates.length === 0 && (
         <div className="text-center py-12">
           <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
-          <p className="text-muted-foreground">No templates found matching your criteria</p>
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <p className="text-muted-foreground">
+            No templates found matching your criteria
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
             className="mt-2"
             onClick={() => {
               setSearchQuery('');
@@ -290,15 +323,21 @@ export default function TemplatesPage() {
           <div className="grid gap-4 md:grid-cols-3">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">50+</div>
-              <div className="text-sm text-muted-foreground">Available Templates</div>
+              <div className="text-sm text-muted-foreground">
+                Available Templates
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">2.3x</div>
-              <div className="text-sm text-muted-foreground">Avg Conversion Boost</div>
+              <div className="text-sm text-muted-foreground">
+                Avg Conversion Boost
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">10M+</div>
-              <div className="text-sm text-muted-foreground">Total Entries Generated</div>
+              <div className="text-sm text-muted-foreground">
+                Total Entries Generated
+              </div>
             </div>
           </div>
         </CardContent>

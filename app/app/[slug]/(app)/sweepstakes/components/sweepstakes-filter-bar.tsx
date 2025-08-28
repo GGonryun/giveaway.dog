@@ -1,5 +1,6 @@
 'use client';
 
+import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,7 +13,6 @@ import {
 import { ListSweepstakesFilters } from '@/schemas/sweepstakes';
 import { CalendarIcon, SearchIcon, XIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { useSweepstakesPage } from './use-sweepstakes-page';
 
 // Search and Filter Components
 export const SweepstakesFilterBar: React.FC<{

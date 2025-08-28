@@ -2,36 +2,43 @@
 
 import React from 'react';
 import { isSweepstakeStepKey, SweepstakeStep } from '../data/form-steps';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 
-export type SweepstakesStepContext = SweepstakeStep;
+export type SweepstakesContext = { step: SweepstakeStep; id: string };
 
-export const SweepstakesStepContext =
-  React.createContext<SweepstakesStepContext>(
-    'setup' as SweepstakesStepContext
-  );
+export const SweepstakesContext = React.createContext<SweepstakesContext>({
+  step: 'setup',
+  id: ''
+});
 
-export const useSweepstakesStep = () => {
-  const context = React.useContext(SweepstakesStepContext);
+export const useSweepstakes = () => {
+  const context = React.useContext(SweepstakesContext);
   if (context == null) {
     throw new Error(
-      'useSweepstakesStepContext must be used within a SweepstakesStepContext.Provider'
+      'useSweepstakesContext must be used within a SweepstakesContext.Provider'
     );
   }
   return context;
 };
 
-export const SweepstakesStepProvider: React.FC<{
+export const SweepstakesProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  const params = useParams();
   const searchParams = useSearchParams();
   const step = searchParams.get('step') ?? 'setup';
+  const id = params.id;
+
+  if (!id || typeof id !== 'string') return <div>Invalid ID: {id}</div>;
 
   return (
-    <SweepstakesStepContext.Provider
-      value={isSweepstakeStepKey(step) ? step : 'setup'}
+    <SweepstakesContext.Provider
+      value={{
+        step: isSweepstakeStepKey(step) ? step : 'setup',
+        id
+      }}
     >
       {children}
-    </SweepstakesStepContext.Provider>
+    </SweepstakesContext.Provider>
   );
 };

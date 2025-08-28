@@ -8,7 +8,6 @@ import {
 } from '@/schemas/sweepstakes';
 import { SweepstakesFilterBar } from './components/sweepstakes-filter-bar';
 import { SweepstakesTabs } from './components/sweepstakes-tabs';
-import { SweepstakesPagination } from './components/sweepstakes-pagination';
 
 type SweepstakesPageParams = Promise<{ slug: string }>;
 type SweepstakesPageSearchParams = Promise<ListSweepstakesFilters>;

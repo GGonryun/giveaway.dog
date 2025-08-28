@@ -1,14 +1,11 @@
 import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { useFormErrors } from '@/components/hooks/use-form-errors';
-import { useIncompleteFields } from '@/components/hooks/use-incomplete-fields';
 import { SWEEPSTAKE_STEPS } from '../data/form-steps';
-import { useSweepstakesStep } from './use-sweepstake-step';
+import { useSweepstakes } from './use-sweepstake-step';
 import { useFormIssues } from './use-form-issues';
 
 export const useFormFooterNavigation = () => {
-  const currentStep = useSweepstakesStep();
+  const { step: currentStep } = useSweepstakes();
   const {
     trigger,
     watch,

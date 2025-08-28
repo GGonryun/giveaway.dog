@@ -86,7 +86,7 @@ model Sweepstakes {
   timeZone  String?
 
   requireEmail          Boolean?
-  regionalRestriction   RegionRestriction[]
+  regionRestriction     RegionRestriction?
   minimumAgeRestriction MinimumAgeRestriction?
 
   prizes Prize[]
@@ -106,11 +106,11 @@ enum SweepstakesStatus {
 
 model RegionRestriction {
   id            String      @id @default(cuid())
-  sweepstakesId String
+  sweepstakesId String      @unique
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
-  filter RegionRestrictionFilter
-  code   String
+  filter  RegionRestrictionFilter
+  regions String[]
 }
 
 enum RegionRestrictionFilter {
@@ -130,24 +130,26 @@ model MinimumAgeRestriction {
 }
 
 model Prize {
-  id            String      @id @default(cuid())
+  id            String      @id
   sweepstakesId String
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
-  name    String? // allow null for draft
-  winners Int? // allow null for draft
+  name    String?
+  index   Int?
+  winners Int?
 }
 
 model Task {
-  id            String      @id @default(cuid())
+  id     String    @id
+  index  Int?
+  type   TaskType?
+  title  String?
+  config Json?
+
   sweepstakesId String
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
-  type      TaskType
-  title     String? // nullable when draft
-  value     Int? // nullable when draft
-  mandatory Boolean? // nullable when draft
-  config    Json?
+  @@unique([sweepstakesId, index])
 }
 
 enum TaskType {

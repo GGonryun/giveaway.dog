@@ -1,11 +1,11 @@
 'use client';
 
+import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   ListSweepstakesFilters,
   SWEEPSTAKES_FILTER_STATUS_OPTIONS
 } from '@/schemas/sweepstakes';
-import { useSweepstakesPage } from './use-sweepstakes-page';
 import { useState } from 'react';
 
 export const SweepstakesTabs: React.FC<{

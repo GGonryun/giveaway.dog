@@ -44,13 +44,15 @@ import {
   SweepstakesData
 } from '@/schemas/sweepstakes';
 
-import { CreateGiveawayButton } from '@/components/giveaway/create-giveaway-button';
+import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
 import { SweepstakesStatus } from '@prisma/client';
-import { useSweepstakesPage } from './use-sweepstakes-page';
-import { DeleteConfirmationModal } from '@/components/giveaway/delete-confirmation-modal';
+import { DeleteConfirmationModal } from '@/components/sweepstakes/delete-confirmation-modal';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
 import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
+import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
+import { useEditSweepstakesPage } from '@/components/sweepstakes/use-edit-sweepstakes-page';
+import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepstakes-details-page';
 
 interface SweepstakesTableProps {
   sweepstakes: SweepstakesData[];
@@ -98,7 +100,9 @@ export function SweepstakesTable({
   sweepstakes,
   filters
 }: SweepstakesTableProps) {
-  const page = useSweepstakesPage();
+  const basePage = useSweepstakesPage();
+  const createPage = useEditSweepstakesPage();
+  const detailsPage = useSweepstakesDetailsPage();
 
   const [deleteModal, setDeleteModal] = useState<SweepstakesData | null>(null);
 
@@ -115,7 +119,7 @@ export function SweepstakesTable({
         newDirection = 'asc';
       }
     }
-    page.updateParams((params) => {
+    basePage.updateParams((params) => {
       if (newDirection) {
         params.set('sortField', field);
         params.set('sortDirection', newDirection);
@@ -333,7 +337,7 @@ export function SweepstakesTable({
                         {getStatusIcon(item.status)}
                         <div>
                           <Link
-                            href={`/app/sweepstakes/${item.id}`}
+                            href={detailsPage.route(item.id)}
                             className="font-medium hover:text-primary hover:underline line-clamp-1"
                           >
                             {item.name}
@@ -375,7 +379,7 @@ export function SweepstakesTable({
                   <TableCell className="text-right py-2 w-24">
                     <div className="flex items-center justify-end space-x-1">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/app/sweepstakes/${item.id}`}>
+                        <Link href={detailsPage.route(item.id)}>
                           <Eye className="h-4 w-4" />
                         </Link>
                       </Button>
@@ -388,31 +392,17 @@ export function SweepstakesTable({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem asChild>
-                            <Link href={`/app/sweepstakes/${item.id}`}>
+                            <Link href={detailsPage.route(item.id)}>
                               <Eye className="h-4 w-4 mr-2" />
                               View Details
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
+                          <DropdownMenuItem asChild>
+                            <Link href={createPage.route(item.id)}>
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit
+                            </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Copy className="h-4 w-4 mr-2" />
-                            Duplicate
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          {item.status === SweepstakesStatus.ACTIVE ? (
-                            <DropdownMenuItem className="text-yellow-600">
-                              <Pause className="h-4 w-4 mr-2" />
-                              Pause
-                            </DropdownMenuItem>
-                          ) : item.status === SweepstakesStatus.PAUSED ? (
-                            <DropdownMenuItem className="text-green-600">
-                              <Play className="h-4 w-4 mr-2" />
-                              Resume
-                            </DropdownMenuItem>
-                          ) : null}
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-red-600"
@@ -443,23 +433,24 @@ export function SweepstakesTable({
             />
           </div>
         )}
+        <SweepstakesPagination
+          totalResults={sweepstakes.length}
+          currentPage={filters.page ?? 1}
+          totalPages={Math.ceil(sweepstakes.length / (filters.size ?? 10))}
+          onPageChange={(value) =>
+            basePage.updateParams((params) =>
+              params.set('page', value.toString())
+            )
+          }
+          pageSize={filters.size ?? 10}
+          onPageSizeChange={(size) => {
+            basePage.updateParams((params) => {
+              params.set('size', size.toString());
+              params.set('page', '1'); // Reset to first page when page size changes
+            });
+          }}
+        />
       </div>
-
-      <SweepstakesPagination
-        totalResults={sweepstakes.length}
-        currentPage={filters.page ?? 1}
-        totalPages={Math.ceil(sweepstakes.length / (filters.size ?? 10))}
-        onPageChange={(value) =>
-          page.updateParams((params) => params.set('page', value.toString()))
-        }
-        pageSize={filters.size ?? 10}
-        onPageSizeChange={(size) => {
-          page.updateParams((params) => {
-            params.set('size', size.toString());
-            params.set('page', '1'); // Reset to first page when page size changes
-          });
-        }}
-      />
 
       <DeleteConfirmationModal
         onClose={handleDeleteModalClose}
