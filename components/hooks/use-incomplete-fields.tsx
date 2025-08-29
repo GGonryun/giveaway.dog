@@ -20,7 +20,8 @@ function isNullableField(path: string): boolean {
   // Define known nullable fields from the schema
   const nullableFields = [
     'audience.regionalRestriction',
-    'audience.minimumAgeRestriction'
+    'audience.minimumAgeRestriction',
+    'setup.banner'
     // Add other nullable fields here as they're identified
   ];
 

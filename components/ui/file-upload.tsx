@@ -63,6 +63,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const handleRemove = () => {
+    // TODO: save a delete event for files on remove
     setPreview(null);
     setProgress(0);
     if (onUpload) onUpload('');

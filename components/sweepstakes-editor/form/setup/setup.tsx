@@ -54,7 +54,7 @@ export const Setup = () => {
             <FormControl>
               <FileUpload
                 initialUrl={field.value ?? undefined}
-                onUpload={(url) => field.onChange(url)}
+                onUpload={(url) => field.onChange(url || null)}
               />
             </FormControl>
             <FormMessage />

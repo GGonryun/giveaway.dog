@@ -7,7 +7,6 @@ import { GiveawayParticipationSkeleton } from '@/components/sweepstakes/fallback
 import { IncompleteGiveawaySetup } from '@/components/sweepstakes/fallbacks/empty-states';
 
 import {
-  GiveawayFormSchema,
   GiveawayParticipationData,
   GiveawaySchema,
   GiveawayWinner,
@@ -18,7 +17,11 @@ import {
 } from '@/schemas/giveaway';
 import { usePreviewState } from './contexts/preview-state-context';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
-import { RegionRestrictionFilter } from '@prisma/client';
+import {
+  RegionRestrictionFilter,
+  TermsAndConditionsType
+} from '@prisma/client';
+import { defaultTermInputOptions } from './form/terms';
 
 const mockHost = {
   id: 'preview-host-id',
@@ -70,9 +73,24 @@ export const GiveawayPreview: React.FC = () => {
         setup: {
           name: formValues.setup?.name ?? DEFAULT_SWEEPSTAKES_NAME,
           description: formValues.setup?.description ?? '',
-          banner: formValues.setup?.banner ?? null, // Only show banner if provided
-          terms: formValues.setup?.terms ?? ''
+          banner: formValues.setup?.banner ?? null // Only show banner if provided
         },
+        terms:
+          formValues?.terms?.type === TermsAndConditionsType.TEMPLATE
+            ? {
+                type: TermsAndConditionsType.TEMPLATE,
+                ...formValues?.terms,
+                ...defaultTermInputOptions
+              }
+            : formValues?.terms?.type === TermsAndConditionsType.CUSTOM
+              ? {
+                  type: TermsAndConditionsType.CUSTOM,
+                  text: formValues?.terms?.text || ''
+                }
+              : {
+                  type: TermsAndConditionsType.CUSTOM,
+                  text: ''
+                },
         timing: {
           startDate: formValues.timing?.startDate || new Date(),
           endDate:

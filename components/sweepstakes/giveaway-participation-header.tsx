@@ -145,16 +145,8 @@ export const GiveawayParticipationHeader: React.FC = () => {
 
         {/* Host Info */}
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-sm">
-            {host.avatar?.startsWith('http') ? (
-              <img
-                src={host.avatar}
-                alt={host.name}
-                className="w-6 h-6 rounded-full"
-              />
-            ) : (
-              <span>{host.avatar || '🐕'}</span>
-            )}
+          <div className="rounded-full flex items-center justify-center text-sm">
+            <span className="text-xl">{host.avatar || '🐕'}</span>
           </div>
           <span className="text-sm text-muted-foreground">
             Hosted by{' '}

@@ -1,4 +1,12 @@
+import { toBrowsePageUrl } from '@/components/sweepstakes/util';
 import { widetype } from '@/lib/widetype';
+import {
+  GiveawayTerms,
+  GiveawayTermsForm,
+  GiveawayTermsTemplateInputSchema
+} from '@/schemas/giveaway';
+import pluralize from 'pluralize';
+import { z } from 'zod';
 
 type GiveawaySection =
   | 'sponsor'
@@ -8,6 +16,7 @@ type GiveawaySection =
   | 'howToEnter'
   | 'prizes'
   | 'winnerSelection'
+  | 'odds'
   | 'rights'
   | 'termsAndConditions'
   | 'liability'
@@ -28,6 +37,7 @@ const giveawayOrder: GiveawaySection[] = [
   'entryPeriod',
   'howToEnter',
   'prizes',
+  'odds',
   'winnerSelection',
   'rights',
   'termsAndConditions',
@@ -41,76 +51,98 @@ const giveawayOrder: GiveawaySection[] = [
 
 const omitSections: GiveawaySection[] = ['heading'];
 
-type GiveawayTermOptions = {
-  sponsorName: string;
-  sponsorAddress: string;
-  winnerSelectionMethod: string;
-  winnerContactTimeframe: string;
-  winnerClaimPeriod: string;
-  governingLawCountry: string;
-  privacyPolicyUrl: string;
-  additionalTerms: string;
-};
+export type SweepstakesTermOptions = {
+  sweepstakesName: string;
+  eligibilityRegions: string;
+  startDate: string;
+  entryUrl: string;
+  endDate: string;
+  eligibilityAge?: string;
+  prizes: {
+    name: string;
+    winners: number;
+  }[];
+} & GiveawayTermsTemplateInputSchema;
 
 export const giveawayTerms = (
-  configuration: GiveawayTermOptions
+  configuration: SweepstakesTermOptions
 ): { [key in GiveawaySection]: string } => ({
-  sponsor: `The sponsor of this giveaway ("Sweepstakes") is ${configuration.sponsorName}, located at ${configuration.sponsorAddress} ("Sponsor").`,
+  heading: `OFFICIAL RULES - ${configuration.sweepstakesName}`,
 
-  eligibility: `This Sweepstakes is open worldwide and is void where prohibited by law. Entrants must sign up at the designated website and comply with all terms herein. Employees and affiliates of the Sponsor and their family members or anyone residing in the same household are not eligible.
+  noPurchaseNotice: `NO PURCHASE IS NECESSARY TO ENTER OR WIN. A PURCHASE DOES NOT INCREASE YOUR CHANCES OF WINNING.`,
 
-Entrants under the age of 18 must obtain the permission of a parent or legal guardian to enter. By entering, minors affirm that such consent has been granted.`,
+  sponsor: `The Sweepstakes (“Promotion”) is sponsored by ${configuration.sponsorName}${
+    configuration.sponsorAddress
+      ? `, located at ${configuration.sponsorAddress}`
+      : ''
+  } (“Sponsor”). For inquiries or winner requests, contact the Sponsor.`,
 
-  agreementToRules: `By entering the Sweepstakes, you agree to be bound by these terms, meet eligibility requirements, and accept Sponsor decisions as final.`,
+  eligibility: `The Promotion is open ${configuration.eligibilityRegions} to ${configuration.eligibilityAge ? `individuals ${configuration.eligibilityAge}+ years of age` : 'all individuals'}, unless restricted by local law. 
+Employees, contractors, and affiliates of the Sponsor, as well as household or immediate family members, are not eligible to participate.
+Entrants under the legal age of majority must have permission from a parent or legal guardian.`,
 
-  entryPeriod: `The Sweepstakes starts and ends during the period specified on the campaign page. Entries outside this period will not be considered.`,
+  entryPeriod: `The Promotion begins on ${configuration.startDate} and ends on ${configuration.endDate}. Entries received outside this period will not be accepted.`,
 
-  howToEnter: `You must complete the form on the designated entry platform. Verification (e.g., email confirmation or fraud detection) may be required. Multiple entries or attempts to game the system using bots, scripts, or fake accounts may lead to disqualification.`,
+  howToEnter: `Enter via ${configuration.entryUrl}.${configuration.maxEntriesPerUser ? ` Limit ${configuration.maxEntriesPerUser} entries per person.` : ''} Automated, fraudulent, or multiple entries through bots, scripts, or fake accounts are prohibited and may result in disqualification.`,
 
-  prizes: `Winners will receive the prize(s) described on the campaign page. Prizes are non-transferable and non-redeemable for cash unless permitted by the Sponsor. All taxes and expenses are the responsibility of the Winner.`,
+  prizes: `
+${configuration.prizes.map((p) => `- ${p.winners} ${pluralize('winner', p.winners)} will receive ${p}`).join('\n')}
 
-  winnerSelection: `Winners will be selected ${configuration.winnerSelectionMethod} and contacted ${configuration.winnerContactTimeframe} via the contact information provided. Winners have ${configuration.winnerClaimPeriod} to claim their prize. Failure to do so may result in forfeiture and selection of an alternate winner.`,
+Prizes are non-transferable and non-redeemable for cash unless permitted by the Sponsor. All taxes and expenses related to the prize are the responsibility of the Winner.`,
 
-  rights: `By entering, you grant the Sponsor the right to use your name, likeness, and content in any promotional materials, in any medium, without further compensation, unless prohibited by law.
+  winnerSelection: `Winner(s) will be selected ${configuration.winnerSelectionMethod}. Winners will be notified within ${configuration.notificationTimeframeDays} ${pluralize('day', configuration.notificationTimeframeDays)} using the contact information provided. Winners must claim their prize within ${configuration.claimDeadlineDays} ${pluralize('day', configuration.claimDeadlineDays)} or an alternate winner may be chosen.`,
 
-You affirm that your entry is your original work and does not infringe on the rights of others. You agree to indemnify the Sponsor for any claims resulting from your entry.`,
+  odds: `The odds of winning depend on the number of eligible entries received.`,
 
-  termsAndConditions: `Sponsor may cancel, modify, or suspend the Sweepstakes due to fraud, technical issues, or other factors outside its control. Sponsor reserves the right to disqualify anyone violating these terms.`,
+  rights: `By entering, participants grant the Sponsor rights to use their name, likeness, and submitted content for promotional purposes in any medium, without further compensation, unless prohibited by law.
+Participants affirm that their entry is their own original work and does not infringe on the rights of others.`,
 
-  liability: `By participating, you release the Sponsor and its affiliates from liability related to:
-- Participation or inability to participate
-- Technical or human errors
-- Prize use or misuse
-- Disruption or corruption of the campaign`,
+  liability: `Sponsor is not responsible for:
+- Technical malfunctions, network failures, or lost entries
+- Unauthorized human or automated intervention
+- Errors in administration or prize delivery
+- Circumstances beyond Sponsor's control
 
-  disputes: `The Sweepstakes is governed by the laws of ${configuration.governingLawCountry}. Disputes will be resolved individually (not as part of a class) in a court of competent jurisdiction in ${configuration.governingLawCountry}.`,
+By entering, participants release and hold harmless the Sponsor and its affiliates from liability arising from participation or prize use.`,
 
-  winnersList: `To obtain a list of winners, contact the Sponsor within four (4) weeks of the campaign's end.`,
+  disputes: `This Promotion is governed by the laws of ${configuration.governingLawCountry}. All disputes shall be resolved individually (not as part of a class action) and exclusively in the courts located in ${configuration.governingLawCountry}.`,
 
-  platformDisclaimer: `This Sweepstakes is not sponsored, endorsed, administered by, or associated with any social media platform, including Facebook, Instagram, Twitter (X), YouTube, Reddit, or others. You are providing your information to the Sponsor.`,
+  platformDisclaimer: `This Promotion is not sponsored, endorsed, or administered by any social media platform, including but not limited to Facebook, Instagram, Twitter (X), YouTube, or Reddit. You are providing your information to the Sponsor.`,
 
-  privacy: `Your information is governed by our privacy policy: ${configuration.privacyPolicyUrl}`,
+  privacy: `Your information is governed by our privacy policy (https://giveaway.dog/privacy)${configuration.privacyPolicyUrl ? `, and the Sponsor privacy policy (${configuration.privacyPolicyUrl})` : '.'} `,
 
-  additionalTerms: `${configuration.additionalTerms}`,
+  winnersList: `To obtain a list of winners, contact the Sponsor within four (4) weeks of the campaign's end date.`,
 
-  heading: `Giveaway Terms & Conditions`,
+  additionalTerms: configuration.additionalTerms || '',
 
-  noPurchaseNotice: `NO PURCHASE IS NECESSARY TO ENTER OR WIN. A PURCHASE DOES NOT INCREASE THE CHANCES OF WINNING.`
+  agreementToRules: `By entering, you accept these Official Rules and agree to be bound by them, including all eligibility requirements and Sponsor decisions, which are final.`,
+
+  termsAndConditions: `Sponsor reserves the right to cancel, modify, or suspend the Promotion in the event of fraud, technical failure, or any other factor beyond its reasonable control. Sponsor may disqualify any participant found violating these terms.`
 });
 
-const sampleOptions: GiveawayTermOptions = {
-  sponsorName: 'My Company',
-  sponsorAddress: '123 Main St, Anytown, USA',
-  winnerSelectionMethod: 'random drawing',
-  winnerContactTimeframe: 'within 48 hours',
-  winnerClaimPeriod: '7 days',
+export const defaultTermInputOptions: GiveawayTermsTemplateInputSchema = {
+  sponsorName: '<Sponsor Name>',
+  sponsorAddress: '<Sponsor Address>',
+  winnerSelectionMethod: 'Randomly Draw',
+  notificationTimeframeDays: 7,
+  claimDeadlineDays: 7,
   governingLawCountry: 'USA',
-  privacyPolicyUrl: 'https://mycompany.com/privacy',
-  additionalTerms: 'No additional terms.'
+  privacyPolicyUrl: '',
+  additionalTerms: ''
+};
+
+export const defaultTermOptions: SweepstakesTermOptions = {
+  sweepstakesName: '<Sweepstakes Name>',
+  eligibilityRegions: '<Eligibility Regions>',
+  startDate: '<Tuesday>',
+  endDate: '<Thursday>',
+  entryUrl: toBrowsePageUrl(`abc123`),
+  prizes: [],
+  ...defaultTermInputOptions
 };
 
 export const stringifyTerms = (
-  options: GiveawayTermOptions = sampleOptions
+  options: SweepstakesTermOptions = defaultTermOptions
 ) => {
   const terms = giveawayTerms(options);
 

@@ -58,10 +58,52 @@ export type RegionalRestrictionFilter = z.infer<
   typeof regionalRestrictionFilterSchema
 >;
 
+export const termsTemplateInputSchema = z.object({
+  sponsorName: z.string().min(1, 'Sponsor name is required'),
+  sponsorAddress: z.string().optional(),
+  winnerSelectionMethod: z
+    .string()
+    .min(1, 'Winner selection method is required'),
+  notificationTimeframeDays: z
+    .number()
+    .int()
+    .positive('Notification timeframe must be a positive integer'),
+  claimDeadlineDays: z
+    .number()
+    .int()
+    .positive('Claim deadline must be a positive integer'),
+  maxEntriesPerUser: z.number().int().positive().optional(),
+  governingLawCountry: z.string().min(1, 'Governing law country is required'),
+  privacyPolicyUrl: z
+    .string()
+    .url('Privacy policy must be a valid URL')
+    .optional(),
+  additionalTerms: z.string().optional()
+});
+
+export type GiveawayTermsTemplateInputSchema = z.infer<
+  typeof termsTemplateInputSchema
+>;
+
+export const giveawayTermsFormSchema = termsTemplateInputSchema.extend({
+  type: z.union([z.literal('TEMPLATE'), z.literal('CUSTOM')]).optional(),
+  text: z.string().optional()
+});
+export type GiveawayTermsForm = z.infer<typeof giveawayTermsFormSchema>;
+
+// un-validated user input for saving drafts
+export const giveawayTermsSchema = z.discriminatedUnion('type', [
+  termsTemplateInputSchema.extend({ type: z.literal('TEMPLATE') }),
+  z.object({
+    type: z.literal('CUSTOM'),
+    text: z.string()
+  })
+]);
+export type GiveawayTerms = z.infer<typeof giveawayTermsSchema>;
+
 const giveawaySetupSchema = z.object({
   name: z.string().min(3),
   description: z.string(),
-  terms: z.string(),
   banner: z.string().nullable()
 });
 
@@ -74,6 +116,7 @@ const giveawayTimingSchema = z.object({
   }),
   timeZone: z.string()
 });
+
 const giveawayAudienceSchema = z.object({
   requireEmail: z.boolean(),
   regionalRestriction: z
@@ -97,6 +140,7 @@ const giveawayPrizeSchema = z.array(prizeSchema);
 
 export const giveawaySchema = z.object({
   setup: giveawaySetupSchema,
+  terms: giveawayTermsSchema,
   timing: giveawayTimingSchema.superRefine((data, ctx) => {
     const startDate = data.startDate;
     const endDate = data.endDate;
@@ -123,6 +167,7 @@ export const giveawayFormSchema = z
   .object({
     setup: giveawaySetupSchema.partial(),
     timing: giveawayTimingSchema.partial(),
+    terms: giveawayTermsFormSchema.partial(),
     audience: giveawayAudienceSchema.partial(),
     tasks: giveawayTaskSchema,
     prizes: giveawayPrizeSchema

@@ -18,11 +18,20 @@ import { GiveawayFormContent } from './form-content';
 import { GiveawayPreview } from './preview';
 import { CancelConfirmationModal } from '@/components/sweepstakes/cancel-confirmation-modal';
 import { PrePublishValidationModal } from '@/components/sweepstakes/pre-publish-validation-modal';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
+import {
+  DEFAULT_SWEEPSTAKES_DESCRIPTION,
+  DEFAULT_SWEEPSTAKES_NAME
+} from '@/lib/settings';
+import { TermsAndConditionsType } from '@prisma/client';
+import { useTeams } from '../context/team-provider';
+import { defaultTermInputOptions } from './form/terms';
+import { RequireEmail } from './form/audience/require-email';
 
 export const GiveawayForm: React.FC<{ giveaway: GiveawayFormSchema }> = ({
   giveaway
 }) => {
+  const { activeTeam } = useTeams();
+
   const [isPending, startTransition] = useTransition();
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
@@ -31,12 +40,40 @@ export const GiveawayForm: React.FC<{ giveaway: GiveawayFormSchema }> = ({
   );
 
   const defaultValues = {
-    ...giveaway,
+    setup: {
+      name: giveaway.setup?.name || DEFAULT_SWEEPSTAKES_NAME,
+      banner: giveaway.setup?.banner || null,
+      description:
+        giveaway.setup?.description || DEFAULT_SWEEPSTAKES_DESCRIPTION
+    },
+    terms: {
+      type: TermsAndConditionsType.TEMPLATE,
+      sponsorName: giveaway.terms?.sponsorName || activeTeam.name,
+      winnerSelectionMethod:
+        giveaway.terms?.winnerSelectionMethod ||
+        defaultTermInputOptions.winnerSelectionMethod,
+      notificationTimeframeDays:
+        giveaway.terms?.notificationTimeframeDays ||
+        defaultTermInputOptions.notificationTimeframeDays,
+      claimDeadlineDays:
+        giveaway.terms?.claimDeadlineDays ||
+        defaultTermInputOptions.claimDeadlineDays,
+      governingLawCountry:
+        giveaway.terms?.governingLawCountry ||
+        defaultTermInputOptions.governingLawCountry
+    },
+    audience: {
+      requireEmail: giveaway.audience?.requireEmail || false,
+      regionalRestriction: giveaway.audience?.regionalRestriction || null,
+      minimumAgeRestriction: giveaway.audience?.minimumAgeRestriction || null
+    },
     timing: {
       startDate: dates.startOfDay(dates.add(Date.now(), { days: 1 })),
       endDate: dates.startOfDay(dates.add(Date.now(), { days: 1, weeks: 1 })),
       timeZone: timezone.current()
-    }
+    },
+    prizes: giveaway.prizes ?? [],
+    tasks: giveaway.tasks ?? []
   };
 
   const form = useForm<GiveawaySchema>({

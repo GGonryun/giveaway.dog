@@ -20,7 +20,8 @@ const getSweepstakesForm = procedure
         tasks: true,
         prizes: true,
         regionRestriction: true,
-        minimumAgeRestriction: true
+        minimumAgeRestriction: true,
+        terms: true
       }
     });
 
@@ -36,9 +37,27 @@ const getSweepstakesForm = procedure
       setup: {
         name: data.name ?? undefined,
         description: data.description ?? undefined,
-        terms: data.terms ?? undefined,
         banner: data.banner ?? undefined
       },
+      terms:
+        data.terms && data.terms.type
+          ? {
+              ...data.terms,
+              type: data.terms.type,
+              sponsorName: data.terms.sponsorName ?? undefined,
+              sponsorAddress: data.terms.sponsorAddress ?? undefined,
+              winnerSelectionMethod:
+                data.terms.winnerSelectionMethod ?? undefined,
+              notificationTimeframeDays:
+                data.terms.notificationTimeframeDays ?? undefined,
+              claimDeadlineDays: data.terms.claimDeadlineDays ?? undefined,
+              maxEntriesPerUser: data.terms.maxEntriesPerUser ?? undefined,
+              governingLawCountry: data.terms.governingLawCountry ?? undefined,
+              privacyPolicyUrl: data.terms.privacyPolicyUrl ?? undefined,
+              additionalTerms: data.terms.additionalTerms ?? undefined,
+              text: data.terms.text ?? undefined
+            }
+          : undefined,
       timing: {
         startDate: data.startDate ?? undefined,
         endDate: data.endDate ?? undefined,

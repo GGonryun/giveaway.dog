@@ -4,6 +4,10 @@ import { nanoid } from 'nanoid';
 import { SweepstakesStatus } from '@prisma/client';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
+import {
+  DEFAULT_SWEEPSTAKES_DESCRIPTION,
+  DEFAULT_SWEEPSTAKES_NAME
+} from '@/lib/settings';
 
 export const createSweepstakes = procedure
   .authorization({ required: true })
@@ -25,8 +29,8 @@ export const createSweepstakes = procedure
         id: nanoid(6),
         status: SweepstakesStatus.DRAFT,
         teamId: input.id,
-        name: 'My Sweepstakes',
-        description: 'Enter to win a prize!',
+        name: DEFAULT_SWEEPSTAKES_NAME,
+        description: DEFAULT_SWEEPSTAKES_DESCRIPTION,
         requireEmail: true
       }
     });

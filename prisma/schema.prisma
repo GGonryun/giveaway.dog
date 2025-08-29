@@ -78,7 +78,6 @@ model Sweepstakes {
 
   name        String?
   description String?
-  terms       String?
   banner      String?
 
   startDate DateTime?
@@ -86,6 +85,7 @@ model Sweepstakes {
   timeZone  String?
 
   requireEmail          Boolean?
+  terms                 TermsAndConditions?
   regionRestriction     RegionRestriction?
   minimumAgeRestriction MinimumAgeRestriction?
 
@@ -102,6 +102,29 @@ enum SweepstakesStatus {
   CANCELED
   ACTIVE
   COMPLETED
+}
+
+enum TermsAndConditionsType {
+  TEMPLATE
+  CUSTOM
+}
+
+model TermsAndConditions {
+  id            String      @id @default(cuid())
+  sweepstakesId String      @unique
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+
+  type                      TermsAndConditionsType?
+  sponsorName               String?
+  sponsorAddress            String?
+  winnerSelectionMethod     String?
+  notificationTimeframeDays Int?
+  maxEntriesPerUser         Int?
+  claimDeadlineDays         Int?
+  governingLawCountry       String?
+  privacyPolicyUrl          String?
+  additionalTerms           String?
+  text                      String?
 }
 
 model RegionRestriction {

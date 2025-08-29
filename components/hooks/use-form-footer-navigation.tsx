@@ -6,17 +6,8 @@ import { useFormIssues } from './use-form-issues';
 
 export const useFormFooterNavigation = () => {
   const { step: currentStep } = useSweepstakes();
-  const {
-    trigger,
-    watch,
-    values,
-    errors,
-    formState,
-    formErrors,
-    incompleteFields,
-    totalIssues,
-    isValid
-  } = useFormIssues({ step: currentStep });
+  const { trigger, formErrors, incompleteFields, totalIssues, isValid } =
+    useFormIssues({ step: currentStep });
 
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);

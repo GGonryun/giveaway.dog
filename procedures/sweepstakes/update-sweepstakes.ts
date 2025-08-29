@@ -32,7 +32,6 @@ const updateSweepstakes = procedure
         message: 'Sweepstakes not found'
       });
     }
-    console.log('update', input);
 
     await db.$transaction(async (tx) => {
       await tx.sweepstakes.update({
@@ -40,7 +39,6 @@ const updateSweepstakes = procedure
         data: {
           name: input?.setup?.name,
           description: input?.setup?.description,
-          terms: input?.setup?.terms,
           banner: input?.setup?.banner,
           startDate: input?.timing?.startDate,
           endDate: input?.timing?.endDate,
@@ -48,6 +46,19 @@ const updateSweepstakes = procedure
           requireEmail: input?.audience?.requireEmail
         }
       });
+      // delete any existing terms
+      if (input?.terms) {
+        await tx.termsAndConditions.delete({
+          where: { sweepstakesId: input.id }
+        });
+
+        await tx.termsAndConditions.create({
+          data: {
+            sweepstakesId: input.id,
+            ...input.terms
+          }
+        });
+      }
 
       //delete any existing regional restrictions
       if (input?.audience?.regionalRestriction) {

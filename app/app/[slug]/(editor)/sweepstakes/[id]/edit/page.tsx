@@ -14,7 +14,6 @@ export default async function Page({
     return <div>Unexpected Error...</div>;
   }
 
-  console.log('sweepstakes', sweepstakes);
   return (
     <Suspense>
       <GiveawayForm giveaway={sweepstakes.data} />
