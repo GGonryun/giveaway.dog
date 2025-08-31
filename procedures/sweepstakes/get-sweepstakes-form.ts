@@ -1,10 +1,27 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { giveawayFormSchema } from '@/schemas/giveaway';
+import {
+  GiveawayAudience,
+  giveawayFormSchema,
+  minimumAgeRestrictionSchema,
+  regionalRestrictionSchema
+} from '@/schemas/giveaway';
 import z from 'zod';
 import { findUserSweepstakesQuery } from './shared';
 import { ApplicationError } from '@/lib/errors';
+import { Prisma } from '@prisma/client';
+
+const include = {
+  tasks: true,
+  prizes: true,
+  regionRestriction: true,
+  minimumAgeRestriction: true,
+  terms: true
+} as const;
+type SweepstakesPayload = Prisma.SweepstakesGetPayload<{
+  include: typeof include;
+}>;
 
 const getSweepstakesForm = procedure
   .authorization({ required: true })
@@ -16,13 +33,7 @@ const getSweepstakesForm = procedure
         id: input.id,
         userId: user.id
       }),
-      include: {
-        tasks: true,
-        prizes: true,
-        regionRestriction: true,
-        minimumAgeRestriction: true,
-        terms: true
-      }
+      include
     });
 
     if (!data) {
@@ -31,6 +42,8 @@ const getSweepstakesForm = procedure
         message: `Sweepstakes with ID ${input.id} not found`
       });
     }
+
+    console.log('findUserSweepstakes', data);
 
     return {
       id: input.id,
@@ -63,14 +76,38 @@ const getSweepstakesForm = procedure
         endDate: data.endDate ?? undefined,
         timeZone: data.timeZone ?? undefined
       },
-      audience: {
-        regionalRestriction: undefined,
-        minimumAgeRestriction: undefined,
-        requireEmail: data.requireEmail ?? undefined
-      },
+      audience: parseAudience(data),
       tasks: [],
       prizes: []
     };
   });
+
+const parseAudience = (data: SweepstakesPayload): GiveawayAudience => {
+  return {
+    regionalRestriction: parseRegionalRestriction(data.regionRestriction),
+    minimumAgeRestriction: parseMinimumAgeRestriction(
+      data.minimumAgeRestriction
+    ),
+    requireEmail: data.requireEmail ?? false
+  };
+};
+
+const parseRegionalRestriction = (
+  data: SweepstakesPayload['regionRestriction']
+): GiveawayAudience['regionalRestriction'] => {
+  if (!data) {
+    return null;
+  }
+  return regionalRestrictionSchema.parse(data);
+};
+
+const parseMinimumAgeRestriction = (
+  data: SweepstakesPayload['minimumAgeRestriction']
+): GiveawayAudience['minimumAgeRestriction'] => {
+  if (!data) {
+    return null;
+  }
+  return minimumAgeRestrictionSchema.parse(data);
+};
 
 export default getSweepstakesForm;

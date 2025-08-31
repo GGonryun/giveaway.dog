@@ -25,7 +25,6 @@ import {
 import { TermsAndConditionsType } from '@prisma/client';
 import { useTeams } from '../context/team-provider';
 import { defaultTermInputOptions } from './form/terms';
-import { RequireEmail } from './form/audience/require-email';
 
 export const GiveawayForm: React.FC<{ giveaway: GiveawayFormSchema }> = ({
   giveaway

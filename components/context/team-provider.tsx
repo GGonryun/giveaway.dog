@@ -25,7 +25,7 @@ export function TeamsProvider({
 export function useTeams() {
   const ctx = useContext(TeamsContext);
   if (!ctx) {
-    throw new Error('useUser must be used within <UserProvider>');
+    throw new Error('useTeams must be used within <TeamsProvider>');
   }
   return ctx;
 }

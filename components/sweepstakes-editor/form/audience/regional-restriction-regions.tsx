@@ -19,6 +19,7 @@ export const RegionalRestrictionRegions: React.FC = () => {
           <FormControl>
             <MultiSelect
               options={[...continents, ...countries]}
+              defaultValue={field.value}
               value={field.value}
               onValueChange={(value) => {
                 field.onChange(value);

@@ -51,7 +51,7 @@ export const TermsAndConditions = () => {
   const { id } = useSweepstakes();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [showDiscardDialog, setShowDiscardDialog] = useState(false);
-  
+
   // Store initial form values to rollback to on discard
   const initialTermsValues = useRef<GiveawayTerms | null>(null);
 
@@ -71,14 +71,15 @@ export const TermsAndConditions = () => {
   }, [errors.terms]);
 
   const termsDirtyFields = useMemo(() => {
-    return dirtyFields.terms ? Object.keys(dirtyFields.terms).length > 0 : false;
+    return dirtyFields.terms
+      ? Object.keys(dirtyFields.terms).length > 0
+      : false;
   }, [dirtyFields.terms]);
 
   const canSave = useMemo(() => !termsErrors, [termsErrors]);
   const hasUnsavedChanges = useMemo(() => termsDirtyFields, [termsDirtyFields]);
 
   const livePreview = useMemo(() => {
-    console.log('change');
     const data = form.getValues();
     if (terms.type === TermsAndConditionsType.TEMPLATE) {
       return stringifyTerms({
@@ -125,28 +126,31 @@ export const TermsAndConditions = () => {
     if (initialTermsValues.current) {
       // Get current form values
       const currentValues = form.getValues();
-      
+
       // Create new form state with initial terms values restored
       const restoredValues = {
         ...currentValues,
         terms: initialTermsValues.current
       };
-      
+
       // Reset the entire form with restored values to clear dirty state
       form.reset(restoredValues);
     }
-    
+
     setShowDiscardDialog(false);
     setIsSheetOpen(false);
   }, [form]);
 
-  const handleSheetOpenChange = useCallback((open: boolean) => {
-    if (!open) {
-      handleCloseAttempt();
-    } else {
-      setIsSheetOpen(true);
-    }
-  }, [handleCloseAttempt]);
+  const handleSheetOpenChange = useCallback(
+    (open: boolean) => {
+      if (!open) {
+        handleCloseAttempt();
+      } else {
+        setIsSheetOpen(true);
+      }
+    },
+    [handleCloseAttempt]
+  );
 
   // Memoize button handlers to prevent re-renders
   const handleOpenSheet = useCallback(() => {
@@ -155,17 +159,27 @@ export const TermsAndConditions = () => {
     setIsSheetOpen(true);
   }, [form]);
 
-  const handleTermsTypeChange = useCallback((key: TermsAndConditionsType) => {
-    form.setValue('terms.type', key);
-  }, [form]);
+  const handleTermsTypeChange = useCallback(
+    (key: TermsAndConditionsType) => {
+      form.setValue('terms.type', key);
+    },
+    [form]
+  );
 
   // Memoize button props to prevent re-renders
-  const saveButtonProps = useMemo(() => ({
-    onClick: handleSave,
-    className: "w-full",
-    disabled: !canSave,
-    title: !canSave ? (termsErrors ? 'Please fix validation errors before saving' : 'Please save or discard your changes before closing') : undefined
-  }), [handleSave, canSave, termsErrors]);
+  const saveButtonProps = useMemo(
+    () => ({
+      onClick: handleSave,
+      className: 'w-full',
+      disabled: !canSave,
+      title: !canSave
+        ? termsErrors
+          ? 'Please fix validation errors before saving'
+          : 'Please save or discard your changes before closing'
+        : undefined
+    }),
+    [handleSave, canSave, termsErrors]
+  );
 
   return (
     <FormField
@@ -383,9 +397,7 @@ export const TermsAndConditions = () => {
               </div>
 
               <SheetFooter className="border-t sticky bottom-0 bg-background z-10 flex-shrink-0">
-                <Button {...saveButtonProps}>
-                  Save Terms & Conditions
-                </Button>
+                <Button {...saveButtonProps}>Save Terms & Conditions</Button>
               </SheetFooter>
             </SheetContent>
           </Sheet>
@@ -459,12 +471,13 @@ const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Discard all changes?</AlertDialogTitle>
           <AlertDialogDescription>
-            You have unsaved changes to your terms and conditions. If you close now, you will lose all your changes.
+            You have unsaved changes to your terms and conditions. If you close
+            now, you will lose all your changes.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Keep editing</AlertDialogCancel>
-          <AlertDialogAction 
+          <AlertDialogAction
             onClick={onDiscard}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >

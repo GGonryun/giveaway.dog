@@ -2,7 +2,6 @@ import { RegionRestrictionFilter } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import { DeepPartial } from '@/lib/types';
 import z from 'zod';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 
 export const DEFAULT_MINIMUM_AGE = 13;
 
@@ -107,7 +106,7 @@ const giveawaySetupSchema = z.object({
   banner: z.string().nullable()
 });
 
-const giveawayTimingSchema = z.object({
+export const giveawayTimingSchema = z.object({
   startDate: z.date().refine((date) => date > new Date(), {
     message: 'Start date must be in the future'
   }),
@@ -117,23 +116,37 @@ const giveawayTimingSchema = z.object({
   timeZone: z.string()
 });
 
+export const regionalRestrictionSchema = z
+  .object({
+    regions: z.string().array().min(1),
+    filter: regionalRestrictionFilterSchema
+  })
+  .nullable();
+
+export type RegionalRestrictionSchema = z.infer<
+  typeof regionalRestrictionSchema
+>;
+
+export const minimumAgeRestrictionSchema = z
+  .object({
+    format: z.literal('checkbox'),
+    value: z.number(),
+    label: z.string(),
+    required: z.boolean()
+  })
+  .nullable();
+
+export type MinimumAgeREstrictionSchema = z.infer<
+  typeof minimumAgeRestrictionSchema
+>;
+
 const giveawayAudienceSchema = z.object({
   requireEmail: z.boolean(),
-  regionalRestriction: z
-    .object({
-      regions: z.string().array().min(1),
-      filter: regionalRestrictionFilterSchema
-    })
-    .nullable(),
-  minimumAgeRestriction: z
-    .object({
-      format: z.literal('checkbox'),
-      value: z.number(),
-      label: z.string(),
-      required: z.boolean()
-    })
-    .nullable()
+  regionalRestriction: regionalRestrictionSchema,
+  minimumAgeRestriction: minimumAgeRestrictionSchema
 });
+
+export type GiveawayAudience = z.infer<typeof giveawayAudienceSchema>;
 
 const giveawayTaskSchema = z.array(taskSchema);
 const giveawayPrizeSchema = z.array(prizeSchema);

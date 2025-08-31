@@ -46,9 +46,10 @@ const updateSweepstakes = procedure
           requireEmail: input?.audience?.requireEmail
         }
       });
+
       // delete any existing terms
       if (input?.terms) {
-        await tx.termsAndConditions.delete({
+        await tx.termsAndConditions.deleteMany({
           where: { sweepstakesId: input.id }
         });
 
@@ -62,7 +63,7 @@ const updateSweepstakes = procedure
 
       //delete any existing regional restrictions
       if (input?.audience?.regionalRestriction) {
-        await tx.regionRestriction.delete({
+        await tx.regionRestriction.deleteMany({
           where: { sweepstakesId: input.id }
         });
 
@@ -76,7 +77,7 @@ const updateSweepstakes = procedure
 
       // find and delete existing minimum age restrictions
       if (input?.audience?.minimumAgeRestriction) {
-        await tx.minimumAgeRestriction.delete({
+        await tx.minimumAgeRestriction.deleteMany({
           where: { sweepstakesId: input.id }
         });
 

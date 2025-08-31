@@ -13,6 +13,7 @@ import { SwitchBox, SwitchFormHeader } from '../switch-box';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { RegionalRestrictionFilter } from './regional-restriction-filter';
 import { RegionalRestrictionRegions } from './regional-restriction-regions';
+import { RegionRestrictionFilter } from '@prisma/client';
 
 export const RegionalRestriction = () => {
   const form = useFormContext<GiveawaySchema>();
@@ -85,7 +86,7 @@ export const regionalRestrictionRender: ControllerProps<
             } else {
               field.onChange({
                 regions: [],
-                filter: 'include'
+                filter: RegionRestrictionFilter.INCLUDE
               });
             }
           }}
