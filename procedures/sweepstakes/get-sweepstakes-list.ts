@@ -8,7 +8,7 @@ import {
   sweepstakesDataSchema,
   listSweepstakesFiltersSchema
 } from '@/schemas/sweepstakes';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 const getSweepstakesList = procedure
   .authorization({ required: true })
@@ -36,9 +36,11 @@ const getSweepstakesList = procedure
       where: {
         status:
           input.status && input.status !== 'ALL' ? input.status : undefined,
-        name: {
-          contains: input.search,
-          mode: 'insensitive'
+        details: {
+          name: {
+            contains: input.search,
+            mode: 'insensitive'
+          }
         },
         team: {
           slug: input.slug,
@@ -49,17 +51,22 @@ const getSweepstakesList = procedure
           }
         }
       },
+      include: {
+        details: true,
+        timing: true
+      },
       orderBy: input.sortField
         ? {
             [input.sortField]: input.sortDirection
           }
         : undefined
     });
+
     return sweepstakes.map((s) => {
       const timeLeft = getTimeLeft(s);
       return {
         id: s.id,
-        name: s.name ?? DEFAULT_SWEEPSTAKES_NAME,
+        name: s.details?.name ?? DEFAULT_SWEEPSTAKES_NAME,
         status: s.status,
         entries: 0,
         uniqueEntrants: 0,
@@ -71,17 +78,24 @@ const getSweepstakesList = procedure
     });
   });
 
-const getTimeLeft = (sweepstake: Prisma.SweepstakesGetPayload<{}>): string => {
+const getTimeLeft = (
+  sweepstake: Prisma.SweepstakesGetPayload<{
+    include: {
+      timing: true;
+    };
+  }>
+): string => {
   const now = new Date();
   if (sweepstake.status === SweepstakesStatus.PAUSED) return 'Paused';
   if (sweepstake.status === SweepstakesStatus.COMPLETED) return 'Completed';
   if (sweepstake.status === SweepstakesStatus.CANCELED) return 'Canceled';
   if (sweepstake.status === SweepstakesStatus.DRAFT) return 'Not started';
-  if (!sweepstake.endDate || !sweepstake.startDate) return 'Not started';
-  if (isAfter(sweepstake.endDate, now)) return 'Completed';
-  if (isAfter(sweepstake.startDate, now))
-    return `Starts ${formatDistance(new Date(), sweepstake.startDate, { addSuffix: true })}`;
-  return formatDistance(now, sweepstake.endDate, { addSuffix: true });
+  if (!sweepstake.timing?.endDate || !sweepstake.timing?.startDate)
+    return 'Not started';
+  if (isAfter(sweepstake.timing?.endDate, now)) return 'Completed';
+  if (isAfter(sweepstake.timing?.startDate, now))
+    return `Starts ${formatDistance(new Date(), sweepstake.timing?.startDate, { addSuffix: true })}`;
+  return formatDistance(now, sweepstake.timing?.endDate, { addSuffix: true });
 };
 
 export default getSweepstakesList;

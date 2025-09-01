@@ -27,7 +27,6 @@ export const CreateGiveawayButton: React.FC<{
   showDropdown = true,
   variant = 'secondary'
 }) => {
-  const router = useRouter();
   const { activeTeam } = useTeams();
   const { navigateTo } = useEditSweepstakesPage();
 
@@ -39,7 +38,7 @@ export const CreateGiveawayButton: React.FC<{
   });
 
   const handleFromTemplate = () => {
-    router.push('/app/templates');
+    alert('TODO: support templates');
   };
 
   return (

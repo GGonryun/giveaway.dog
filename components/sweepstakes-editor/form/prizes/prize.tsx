@@ -29,7 +29,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { useFormContext } from 'react-hook-form';
-import { GiveawaySchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway';
 import { Input } from '@/components/ui/input';
 
 export const Prize: React.FC<{
@@ -125,7 +125,7 @@ export const Prize: React.FC<{
 };
 
 const PrizeNameField = () => {
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
   const index = useArrayContext();
   return (
     <FormField
@@ -145,7 +145,7 @@ const PrizeNameField = () => {
 };
 
 const PrizeWinnersField = () => {
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
   const index = useArrayContext();
   return (
     <FormField

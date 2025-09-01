@@ -9,7 +9,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { GiveawaySchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway';
 
 import React, { memo, useMemo } from 'react';
 import { Section } from '../section';
@@ -28,7 +28,7 @@ import { timezone } from '@/lib/time';
 import { FileUpload } from '@/components/ui/file-upload';
 
 export const Setup = () => {
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
 
   return (
     <Section label="Setup" description="Choose the details of your giveaway.">

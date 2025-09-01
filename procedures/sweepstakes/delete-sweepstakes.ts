@@ -16,7 +16,10 @@ const deleteSweepstakes = procedure
       slug: z.string()
     })
   )
-  .invalidate(async ({ output }) => [`sweepstakes-list-${output.slug}`])
+  .invalidate(async ({ input, output }) => [
+    `sweepstakes-list-${output.slug}`,
+    `sweepstakes-${input.id}`
+  ])
   .handler(async ({ input, db, user }) => {
     // TODO: when deleting a draft there may be extra resources such as images that need to get removed from vercel storage.
     const deleted = await db.sweepstakes.delete({

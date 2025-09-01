@@ -14,14 +14,14 @@ import { useCallback, useMemo } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useDeleteSweepstakes } from './use-delete-sweepstakes';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { GiveawaySchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway';
 import { toast } from 'sonner';
 
 import { useUpdateSweepstakes } from './use-update-sweepstakes';
 import { useSweepstakes } from '../hooks/use-sweepstake-step';
 import Link from 'next/link';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 import { useSweepstakesPage } from './use-sweepstakes-page';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 interface CancelConfirmationModalProps {
   onClose: () => void;
@@ -33,7 +33,7 @@ export const CancelConfirmationModal: React.FC<
 > = ({ onClose, open }) => {
   const { id } = useSweepstakes();
 
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
 
   const nameField = useWatch({
     control: form.control,

@@ -8,7 +8,7 @@ import { IncompleteGiveawaySetup } from '@/components/sweepstakes/fallbacks/empt
 
 import {
   GiveawayParticipationData,
-  GiveawaySchema,
+  GiveawayFormSchema,
   GiveawayWinner,
   Prize,
   TaskSchema,
@@ -16,12 +16,13 @@ import {
   UserProfile
 } from '@/schemas/giveaway';
 import { usePreviewState } from './contexts/preview-state-context';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 import {
-  RegionRestrictionFilter,
-  TermsAndConditionsType
+  MinimumAgeRestrictionFormat,
+  RegionalRestrictionFilter,
+  SweepstakesTermsType
 } from '@prisma/client';
 import { defaultTermInputOptions } from './form/terms';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 const mockHost = {
   id: 'preview-host-id',
@@ -52,13 +53,13 @@ const mockUserParticipation: UserParticipation = {
 const mockWinners: GiveawayWinner[] = [];
 
 export const GiveawayPreview: React.FC = () => {
-  const { control } = useFormContext<GiveawaySchema>();
+  const { control } = useFormContext<GiveawayFormSchema>();
   const { previewState } = usePreviewState();
 
   // Watch all form values for live preview
   const formValues = useWatch({ control });
 
-  const giveawayData: GiveawaySchema | null = useMemo(() => {
+  const giveawayData: GiveawayFormSchema | null = useMemo(() => {
     try {
       // Check if we have minimum required data
       if (
@@ -76,19 +77,19 @@ export const GiveawayPreview: React.FC = () => {
           banner: formValues.setup?.banner ?? null // Only show banner if provided
         },
         terms:
-          formValues?.terms?.type === TermsAndConditionsType.TEMPLATE
+          formValues?.terms?.type === SweepstakesTermsType.TEMPLATE
             ? {
-                type: TermsAndConditionsType.TEMPLATE,
+                type: SweepstakesTermsType.TEMPLATE,
                 ...formValues?.terms,
                 ...defaultTermInputOptions
               }
-            : formValues?.terms?.type === TermsAndConditionsType.CUSTOM
+            : formValues?.terms?.type === SweepstakesTermsType.CUSTOM
               ? {
-                  type: TermsAndConditionsType.CUSTOM,
+                  type: SweepstakesTermsType.CUSTOM,
                   text: formValues?.terms?.text || ''
                 }
               : {
-                  type: TermsAndConditionsType.CUSTOM,
+                  type: SweepstakesTermsType.CUSTOM,
                   text: ''
                 },
         timing: {
@@ -105,12 +106,12 @@ export const GiveawayPreview: React.FC = () => {
                 regions: formValues.audience.regionalRestriction.regions || [],
                 filter:
                   formValues.audience.regionalRestriction.filter ||
-                  RegionRestrictionFilter.INCLUDE
+                  RegionalRestrictionFilter.INCLUDE
               }
             : null,
           minimumAgeRestriction: formValues.audience?.minimumAgeRestriction
             ? {
-                format: 'checkbox' as const,
+                format: MinimumAgeRestrictionFormat.CHECKBOX,
                 value: formValues.audience.minimumAgeRestriction.value || 13,
                 label: formValues.audience.minimumAgeRestriction.label || '',
                 required:

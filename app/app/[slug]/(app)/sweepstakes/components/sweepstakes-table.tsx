@@ -101,7 +101,7 @@ export function SweepstakesTable({
   filters
 }: SweepstakesTableProps) {
   const basePage = useSweepstakesPage();
-  const createPage = useEditSweepstakesPage();
+  const editPage = useEditSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
 
   const [deleteModal, setDeleteModal] = useState<SweepstakesData | null>(null);
@@ -398,7 +398,7 @@ export function SweepstakesTable({
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
-                            <Link href={createPage.route(item.id)}>
+                            <Link href={editPage.route(item.id)}>
                               <Edit className="h-4 w-4 mr-2" />
                               Edit
                             </Link>

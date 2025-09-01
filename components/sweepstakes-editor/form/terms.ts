@@ -1,12 +1,7 @@
 import { toBrowsePageUrl } from '@/components/sweepstakes/util';
 import { widetype } from '@/lib/widetype';
-import {
-  GiveawayTerms,
-  GiveawayTermsForm,
-  GiveawayTermsTemplateInputSchema
-} from '@/schemas/giveaway';
+import { TermsTemplateSchema } from '@/schemas/giveaway';
 import pluralize from 'pluralize';
-import { z } from 'zod';
 
 type GiveawaySection =
   | 'sponsor'
@@ -62,7 +57,7 @@ export type SweepstakesTermOptions = {
     name: string;
     winners: number;
   }[];
-} & GiveawayTermsTemplateInputSchema;
+} & TermsTemplateSchema;
 
 export const giveawayTerms = (
   configuration: SweepstakesTermOptions
@@ -120,7 +115,7 @@ By entering, participants release and hold harmless the Sponsor and its affiliat
   termsAndConditions: `Sponsor reserves the right to cancel, modify, or suspend the Promotion in the event of fraud, technical failure, or any other factor beyond its reasonable control. Sponsor may disqualify any participant found violating these terms.`
 });
 
-export const defaultTermInputOptions: GiveawayTermsTemplateInputSchema = {
+export const defaultTermInputOptions: TermsTemplateSchema = {
   sponsorName: '<Sponsor Name>',
   sponsorAddress: '<Sponsor Address>',
   winnerSelectionMethod: 'Randomly Draw',

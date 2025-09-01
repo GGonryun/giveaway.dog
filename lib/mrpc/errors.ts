@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { Failure, Result } from './types';
+import { assertNever } from '../errors';
 
 export const isNextRedirect = (err: any): err is Error => {
   const isDigest =
@@ -14,16 +15,42 @@ export const isNextRedirect = (err: any): err is Error => {
   return isDigest && isMessage;
 };
 
-export const isPrismaKnownError = (
+export const isPrismaError = (
+  err: any
+): err is
+  | Prisma.PrismaClientKnownRequestError
+  | Prisma.PrismaClientValidationError => {
+  return (
+    err instanceof Prisma.PrismaClientKnownRequestError ||
+    err instanceof Prisma.PrismaClientValidationError
+  );
+};
+
+export const prismaErrorBoundary = (
+  err: Prisma.PrismaClientKnownRequestError | Prisma.PrismaClientValidationError
+): Failure => {
+  console.error(`Encountered prisma error`, err);
+
+  if (isPrismaValidationError(err)) {
+    return prismaValidationErrorBoundary(err);
+  }
+
+  if (isPrismaKnownClientError(err)) {
+    return prismaKnownClientErrorBoundary(err);
+  }
+
+  throw assertNever(err);
+};
+
+const isPrismaKnownClientError = (
   err: any
 ): err is Prisma.PrismaClientKnownRequestError => {
   return err instanceof Prisma.PrismaClientKnownRequestError;
 };
 
-export const prismaErrorBoundary = (
+const prismaKnownClientErrorBoundary = (
   err: Prisma.PrismaClientKnownRequestError
 ): Failure => {
-  console.error(err);
   switch (err.code) {
     case 'P2025':
       return {
@@ -43,4 +70,22 @@ export const prismaErrorBoundary = (
         }
       };
   }
+};
+
+const isPrismaValidationError = (
+  err: any
+): err is Prisma.PrismaClientValidationError => {
+  return err instanceof Prisma.PrismaClientValidationError;
+};
+
+const prismaValidationErrorBoundary = (
+  err: Prisma.PrismaClientValidationError
+): Failure => {
+  return {
+    ok: false,
+    data: {
+      code: 'BAD_REQUEST',
+      message: `Invalid data provided. Please check your input and try again. If the problem persists, contact support.`
+    }
+  };
 };

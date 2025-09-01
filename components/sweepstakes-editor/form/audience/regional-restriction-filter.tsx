@@ -1,7 +1,7 @@
 import { useFormContext } from 'react-hook-form';
 import {
-  GiveawaySchema,
-  RegionalRestrictionFilter as RegionalRestrictionFilterSchema
+  GiveawayFormSchema,
+  RegionalRestrictionFilterSchema as RegionalRestrictionFilterSchema
 } from '@/schemas/giveaway';
 import {
   FormControl,
@@ -17,15 +17,15 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { widetype } from '@/lib/widetype';
-import { RegionRestrictionFilter } from '@prisma/client';
+import { RegionalRestrictionFilter } from '@prisma/client';
 
-const OPTIONS: Record<RegionRestrictionFilter, string> = {
-  [RegionRestrictionFilter.INCLUDE]: 'Include',
-  [RegionRestrictionFilter.EXCLUDE]: 'Exclude'
+const OPTIONS: Record<RegionalRestrictionFilter, string> = {
+  [RegionalRestrictionFilter.INCLUDE]: 'Include',
+  [RegionalRestrictionFilter.EXCLUDE]: 'Exclude'
 };
 
-export const RegionalRestrictionFilter: React.FC = () => {
-  const form = useFormContext<GiveawaySchema>();
+export const RegionalRestrictionFilterField: React.FC = () => {
+  const form = useFormContext<GiveawayFormSchema>();
   return (
     <FormField
       control={form.control}

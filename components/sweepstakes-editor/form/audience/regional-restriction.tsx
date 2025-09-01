@@ -1,5 +1,5 @@
 import { ControllerProps, useFormContext } from 'react-hook-form';
-import { GiveawaySchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway';
 import {
   FormControl,
   FormField,
@@ -11,12 +11,12 @@ import { useMemo } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { SwitchBox, SwitchFormHeader } from '../switch-box';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
-import { RegionalRestrictionFilter } from './regional-restriction-filter';
+import { RegionalRestrictionFilterField } from './regional-restriction-filter';
 import { RegionalRestrictionRegions } from './regional-restriction-regions';
-import { RegionRestrictionFilter } from '@prisma/client';
+import { RegionalRestrictionFilter } from '@prisma/client';
 
 export const RegionalRestriction = () => {
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
 
   const regionalRestriction = form.watch('audience.regionalRestriction');
   const filter = form.getFieldState('audience.regionalRestriction.filter');
@@ -26,10 +26,10 @@ export const RegionalRestriction = () => {
     <SwitchBox>
       <RegionalRestrictionFormField />
 
-      <Collapsible open={regionalRestriction !== null}>
+      <Collapsible open={regionalRestriction != null}>
         <CollapsibleContent className="flex flex-col gap-2">
           <div className="grid grid-cols-1 sm:grid-cols-[128px_1fr] gap-2 items-start mt-2">
-            <RegionalRestrictionFilter />
+            <RegionalRestrictionFilterField />
             <RegionalRestrictionRegions />
           </div>
 
@@ -44,7 +44,7 @@ export const RegionalRestriction = () => {
 };
 
 export const RegionalRestrictionFormField = () => {
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
 
   return (
     <FormField
@@ -56,7 +56,7 @@ export const RegionalRestrictionFormField = () => {
 };
 
 export const regionalRestrictionRender: ControllerProps<
-  GiveawaySchema,
+  GiveawayFormSchema,
   'audience.regionalRestriction'
 >['render'] = ({ field }) => {
   const isEnabled = useMemo(() => Boolean(field.value), [field.value]);
@@ -82,11 +82,11 @@ export const regionalRestrictionRender: ControllerProps<
           checked={isEnabled}
           onClick={() => {
             if (isEnabled) {
-              field.onChange(null);
+              field.onChange(undefined);
             } else {
               field.onChange({
                 regions: [],
-                filter: RegionRestrictionFilter.INCLUDE
+                filter: RegionalRestrictionFilter.INCLUDE
               });
             }
           }}

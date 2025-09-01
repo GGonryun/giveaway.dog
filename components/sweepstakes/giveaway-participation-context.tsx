@@ -8,12 +8,12 @@ import {
   GiveawayState,
   GiveawayHost,
   GiveawayWinner,
-  GiveawaySchema
+  GiveawayFormSchema
 } from '@/schemas/giveaway';
 
 export interface GiveawayParticipationProps {
   participation: GiveawayParticipationData;
-  giveaway: GiveawaySchema;
+  giveaway: GiveawayFormSchema;
   host: GiveawayHost;
   winners: GiveawayWinner[];
   user?: { profile: UserProfile; participation: UserParticipation };

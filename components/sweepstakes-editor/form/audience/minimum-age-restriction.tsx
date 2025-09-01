@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { DEFAULT_MINIMUM_AGE, GiveawaySchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway';
 import { SwitchBox, SwitchFormHeader } from '../switch-box';
 import {
   FormControl,
@@ -21,9 +21,14 @@ import {
 } from '@/components/ui/select';
 import { strings } from '@/lib/strings';
 import { Checkbox } from '@/components/ui/checkbox';
+import { MinimumAgeRestrictionFormat } from '@prisma/client';
+import {
+  DEFAULT_MINIMUM_AGE,
+  DEFAULT_MINIMUM_AGE_RESTRICTION
+} from '@/schemas/giveaway/defaults';
 
 export const MinimumAgeRestriction = () => {
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
 
   const minimumAgeRestriction = form.watch('audience.minimumAgeRestriction');
 
@@ -54,14 +59,9 @@ export const MinimumAgeRestriction = () => {
                 checked={Boolean(field.value)}
                 onCheckedChange={() => {
                   if (Boolean(field.value)) {
-                    return field.onChange(null);
+                    return field.onChange(undefined);
                   } else {
-                    return field.onChange({
-                      value: DEFAULT_MINIMUM_AGE,
-                      format: 'checkbox',
-                      label: `I am at least ${DEFAULT_MINIMUM_AGE} years of age (required)`,
-                      required: true
-                    });
+                    return field.onChange(DEFAULT_MINIMUM_AGE_RESTRICTION);
                   }
                 }}
               />
@@ -69,7 +69,7 @@ export const MinimumAgeRestriction = () => {
           </FormItem>
         )}
       />
-      <Collapsible open={minimumAgeRestriction !== null}>
+      <Collapsible open={minimumAgeRestriction != null}>
         <CollapsibleContent className="flex flex-col gap-1">
           <div className="grid grid-cols-1 sm:grid-cols-[159px_1fr] gap-2 items-start mt-2">
             <AgeField />
@@ -87,7 +87,7 @@ export const MinimumAgeRestriction = () => {
 };
 
 const AgeField = () => {
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
 
   return (
     <FormField
@@ -130,7 +130,7 @@ const AgeField = () => {
 };
 
 const FormatField = () => {
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
   return (
     <FormField
       control={form.control}
@@ -145,7 +145,9 @@ const FormatField = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="checkbox">Checkbox</SelectItem>
+                  <SelectItem value={MinimumAgeRestrictionFormat.CHECKBOX}>
+                    Checkbox
+                  </SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -158,7 +160,7 @@ const FormatField = () => {
 };
 
 const LabelField = () => {
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
 
   return (
     <FormField
@@ -178,7 +180,7 @@ const LabelField = () => {
 };
 
 const RequiredField = () => {
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
 
   return (
     <FormField

@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import getSweepstakesForm from '@/procedures/sweepstakes/get-sweepstakes-form';
-import { GiveawayForm } from '@/components/sweepstakes-editor/create-giveaway';
+import { GiveawayForm } from '@/components/sweepstakes-editor/giveaway-form';
+import { GiveawayFormSchema } from '@/schemas/giveaway';
 
 export default async function Page({
   params
@@ -16,7 +17,12 @@ export default async function Page({
 
   return (
     <Suspense>
-      <GiveawayForm giveaway={sweepstakes.data} />
+      {/* 
+      WARNING: It would be nice to remove the explicit type assertion here but we want to allow
+      users to save drafts with potentially incomplete or broken data, this allows the
+      form to properly render errors when they come back to edit or make changes
+       */}
+      <GiveawayForm sweepstakes={sweepstakes.data as GiveawayFormSchema} />
     </Suspense>
   );
 }

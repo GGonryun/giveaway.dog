@@ -2,14 +2,17 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import { giveawayFormSchema, TaskSchema } from '@/schemas/giveaway';
-import { Prisma } from '@prisma/client';
 import { findUserSweepstakesQuery } from './shared';
 import z from 'zod';
+import {
+  sweepstakesInputSchema,
+  TEAM_SWEEPSTAKES_PAYLOAD
+} from '@/schemas/giveaway/db';
+import { toStorableSweepstakes } from '@/schemas/giveaway/storable';
 
 const updateSweepstakes = procedure
   .authorization({ required: true })
-  .input(giveawayFormSchema.extend({ id: z.string() }))
+  .input(sweepstakesInputSchema)
   .output(z.object({ slug: z.string() }))
   .invalidate(async ({ output }) => [`sweepstakes-list-${output.slug}`])
   .handler(async ({ db, user, input }) => {
@@ -18,161 +21,38 @@ const updateSweepstakes = procedure
         id: input.id,
         userId: user.id
       }),
-      include: {
-        team: true
-      }
+      include: TEAM_SWEEPSTAKES_PAYLOAD
     });
 
     if (!existingSweepstakes || !existingSweepstakes.team) {
       console.error(
         `Sweepstakes with ID ${input.id} not found for user ${user.id}`
       );
+
       throw new ApplicationError({
         code: 'NOT_FOUND',
         message: 'Sweepstakes not found'
       });
     }
 
+    // WARNING: sweepstakes objects are too complex to update directly, instead we delete
+    // the individual nested properties and recreate them. While it would be easier to
+    // delete the sweepstakes this might have catastrophic effects on down-stream data.
+    //
+    // This would leave a potential foot-gun for future developers who might unknowingly
+    // trigger cascade deletes. For example, if we are to cascade on delete remove task
+    // participation, then changing the name would accidentally reset participation data.
     await db.$transaction(async (tx) => {
-      await tx.sweepstakes.update({
-        where: { id: input.id },
-        data: {
-          name: input?.setup?.name,
-          description: input?.setup?.description,
-          banner: input?.setup?.banner,
-          startDate: input?.timing?.startDate,
-          endDate: input?.timing?.endDate,
-          timeZone: input?.timing?.timeZone,
-          requireEmail: input?.audience?.requireEmail
-        }
+      await tx.sweepstakes.delete({
+        where: { id: existingSweepstakes.id }
       });
 
-      // delete any existing terms
-      if (input?.terms) {
-        await tx.termsAndConditions.deleteMany({
-          where: { sweepstakesId: input.id }
-        });
-
-        await tx.termsAndConditions.create({
-          data: {
-            sweepstakesId: input.id,
-            ...input.terms
-          }
-        });
-      }
-
-      //delete any existing regional restrictions
-      if (input?.audience?.regionalRestriction) {
-        await tx.regionRestriction.deleteMany({
-          where: { sweepstakesId: input.id }
-        });
-
-        await tx.regionRestriction.create({
-          data: {
-            sweepstakesId: input.id,
-            ...input.audience.regionalRestriction
-          }
-        });
-      }
-
-      // find and delete existing minimum age restrictions
-      if (input?.audience?.minimumAgeRestriction) {
-        await tx.minimumAgeRestriction.deleteMany({
-          where: { sweepstakesId: input.id }
-        });
-
-        await tx.minimumAgeRestriction.create({
-          data: {
-            sweepstakesId: input.id,
-            ...input.audience.minimumAgeRestriction
-          }
-        });
-      }
-
-      if (input?.tasks?.length) {
-        // Delete existing tasks
-        await tx.task.deleteMany({
-          where: { sweepstakesId: input.id }
-        });
-
-        // Create new tasks
-        await tx.task.createMany({
-          data: input.tasks.map(toStorableTask(input.id))
-        });
-      }
-
-      if (input?.prizes?.length) {
-        // Delete existing prizes
-        await tx.prize.deleteMany({
-          where: { sweepstakesId: input.id }
-        });
-
-        // Create new prizes
-        await tx.prize.createMany({
-          data: input.prizes.map((prize, index) => ({
-            id: prize.id,
-            sweepstakesId: input.id,
-            index,
-            name: prize.name,
-            winners: prize.winners
-          }))
-        });
-      }
+      await tx.sweepstakes.create({
+        data: toStorableSweepstakes(existingSweepstakes, input)
+      });
     });
 
     return { slug: existingSweepstakes.team.slug };
   });
 
-const toStorableTask =
-  (sweepstakesId: string) =>
-  (task: TaskSchema, index: number): Prisma.TaskCreateManyInput => {
-    const { id, type, title, ...config } = task;
-    return {
-      id,
-      sweepstakesId,
-      index,
-      type,
-      title,
-      config
-    };
-  };
-
 export default updateSweepstakes;
-
-const data = [
-  {
-    code: 'invalid_type',
-    expected: 'object',
-    received: 'undefined',
-    path: ['setup'],
-    message: 'Required'
-  },
-  {
-    code: 'invalid_type',
-    expected: 'object',
-    received: 'undefined',
-    path: ['timing'],
-    message: 'Required'
-  },
-  {
-    code: 'invalid_type',
-    expected: 'object',
-    received: 'undefined',
-    path: ['audience'],
-    message: 'Required'
-  },
-  {
-    code: 'invalid_type',
-    expected: 'array',
-    received: 'undefined',
-    path: ['tasks'],
-    message: 'Required'
-  },
-  {
-    code: 'invalid_type',
-    expected: 'array',
-    received: 'undefined',
-    path: ['prizes'],
-    message: 'Required'
-  }
-];

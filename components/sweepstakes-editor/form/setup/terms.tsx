@@ -37,14 +37,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
-import { GiveawaySchema, GiveawayTerms } from '@/schemas/giveaway';
-import { TermsAndConditionsType } from '@prisma/client';
+import { GiveawayFormSchema, GiveawayTerms } from '@/schemas/giveaway';
+import { SweepstakesTermsType } from '@prisma/client';
 import { toBrowsePageUrl } from '@/components/sweepstakes/util';
 import { useSweepstakes } from '@/components/hooks/use-sweepstake-step';
+import {
+  DEFAULT_WINNER_SELECTION_METHOD,
+  DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
+  DEFAULT_CLAIM_DEADLINE_DAYS
+} from '@/schemas/giveaway/defaults';
 
-const OPTIONS: Record<TermsAndConditionsType, string> = {
-  [TermsAndConditionsType.TEMPLATE]: 'Default',
-  [TermsAndConditionsType.CUSTOM]: 'Custom'
+const OPTIONS: Record<SweepstakesTermsType, string> = {
+  [SweepstakesTermsType.TEMPLATE]: 'Default',
+  [SweepstakesTermsType.CUSTOM]: 'Custom'
 };
 
 export const TermsAndConditions = () => {
@@ -55,7 +60,7 @@ export const TermsAndConditions = () => {
   // Store initial form values to rollback to on discard
   const initialTermsValues = useRef<GiveawayTerms | null>(null);
 
-  const form = useFormContext<GiveawaySchema>();
+  const form = useFormContext<GiveawayFormSchema>();
 
   const terms = useWatch({
     name: 'terms',
@@ -81,7 +86,7 @@ export const TermsAndConditions = () => {
 
   const livePreview = useMemo(() => {
     const data = form.getValues();
-    if (terms.type === TermsAndConditionsType.TEMPLATE) {
+    if (terms.type === SweepstakesTermsType.TEMPLATE) {
       return stringifyTerms({
         prizes: data.prizes,
         sweepstakesName: data.setup.name,
@@ -160,7 +165,7 @@ export const TermsAndConditions = () => {
   }, [form]);
 
   const handleTermsTypeChange = useCallback(
-    (key: TermsAndConditionsType) => {
+    (key: SweepstakesTermsType) => {
       form.setValue('terms.type', key);
     },
     [form]
@@ -209,7 +214,7 @@ export const TermsAndConditions = () => {
                   </Button>
                 ))}
               </div>
-              {field.value.type === TermsAndConditionsType.TEMPLATE ? (
+              {field.value.type === SweepstakesTermsType.TEMPLATE ? (
                 <ButtonTextarea
                   onOpenSheet={handleOpenSheet}
                   defaultValue={livePreview}
@@ -282,7 +287,10 @@ export const TermsAndConditions = () => {
                         <FormItem>
                           <FormLabel>Winner Selection Method</FormLabel>
                           <FormControl>
-                            <Input placeholder="Random Drawing" {...field} />
+                            <Input
+                              placeholder={DEFAULT_WINNER_SELECTION_METHOD}
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -302,7 +310,7 @@ export const TermsAndConditions = () => {
                               type="number"
                               min="1"
                               max="30"
-                              placeholder="2"
+                              placeholder={DEFAULT_NOTIFICATION_TIMEFRAME_DAYS.toString()}
                               {...field}
                               onChange={(e) =>
                                 field.onChange(parseInt(e.target.value) || 1)
@@ -325,7 +333,7 @@ export const TermsAndConditions = () => {
                               type="number"
                               min="1"
                               max="90"
-                              placeholder="7"
+                              placeholder={DEFAULT_CLAIM_DEADLINE_DAYS.toString()}
                               {...field}
                               onChange={(e) =>
                                 field.onChange(parseInt(e.target.value) || 1)

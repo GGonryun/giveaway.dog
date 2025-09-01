@@ -16,3 +16,18 @@ export const findUserSweepstakesQuery = ({
     }
   }
 });
+
+export const findUserTeamQuery = ({
+  slug,
+  userId
+}: {
+  slug: string;
+  userId: string;
+}): Prisma.TeamWhereUniqueInput => ({
+  slug,
+  members: {
+    some: {
+      userId
+    }
+  }
+});

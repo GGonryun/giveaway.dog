@@ -23,6 +23,7 @@ import { DetailedUserTeam } from '@/schemas/teams';
 import { useTeamsPage } from '@/components/team/use-teams-page';
 import { useTeamPage } from '@/components/team/use-team-page';
 import { useTeams } from '@/components/context/team-provider';
+import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
 
 export function TeamSwitcher() {
   const { activeTeam, teams } = useTeams();
@@ -51,7 +52,9 @@ export function TeamSwitcher() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <div className="size-4">{activeTeam.logo}</div>
+                <div className="size-4">
+                  {activeTeam.logo ?? DEFAULT_TEAM_LOGO}
+                </div>
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">

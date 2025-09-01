@@ -68,7 +68,7 @@ export function findIncompleteFields<
     // Check if current value is empty
     if (isEmpty(current)) {
       // If this is a nullable field and it's null, don't consider it incomplete
-      if (isNullableField(path) && current === null) {
+      if (isNullableField(path) && current == null) {
         return;
       }
       result.push({ path, reason: 'empty' });

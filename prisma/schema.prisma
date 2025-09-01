@@ -69,6 +69,13 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
+// WARNING: sweepstakes objects are too complex to update directly, instead we delete
+// the whole sweepstake and recreate it. This may have catastrophic effects on nested,
+// child, or down-stream data.
+//
+// Do not cascade data off deletes unless it's directly tied to the Sweepstakes object.
+// For example, if we are to cascade on delete remove task participation, then changing
+// the name would accidentally reset participation data.
 model Sweepstakes {
   id     String            @id // takes nanoid's
   status SweepstakesStatus @default(DRAFT)
@@ -76,24 +83,45 @@ model Sweepstakes {
   teamId String?
   team   Team?   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
-  name        String?
-  description String?
-  banner      String?
+  details  SweepstakesDetails?
+  timing   SweepstakesTiming?
+  terms    SweepstakesTerms?
+  audience SweepstakesAudience?
+  prizes   Prize[]
+  tasks    Task[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SweepstakesTiming {
+  id            String      @id @default(cuid())
+  sweepstakesId String      @unique
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
   startDate DateTime?
   endDate   DateTime?
   timeZone  String?
+}
+
+model SweepstakesDetails {
+  id            String      @id @default(cuid())
+  sweepstakesId String      @unique
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+
+  name        String?
+  description String?
+  banner      String?
+}
+
+model SweepstakesAudience {
+  id            String      @id @default(cuid())
+  sweepstakesId String      @unique
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
   requireEmail          Boolean?
-  terms                 TermsAndConditions?
-  regionRestriction     RegionRestriction?
+  regionalRestriction   RegionalRestriction?
   minimumAgeRestriction MinimumAgeRestriction?
-
-  prizes Prize[]
-  tasks  Task[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 enum SweepstakesStatus {
@@ -104,17 +132,17 @@ enum SweepstakesStatus {
   COMPLETED
 }
 
-enum TermsAndConditionsType {
+enum SweepstakesTermsType {
   TEMPLATE
   CUSTOM
 }
 
-model TermsAndConditions {
+model SweepstakesTerms {
   id            String      @id @default(cuid())
   sweepstakesId String      @unique
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
-  type                      TermsAndConditionsType?
+  type                      SweepstakesTermsType?
   sponsorName               String?
   sponsorAddress            String?
   winnerSelectionMethod     String?
@@ -127,29 +155,33 @@ model TermsAndConditions {
   text                      String?
 }
 
-model RegionRestriction {
-  id            String      @id @default(cuid())
-  sweepstakesId String      @unique
-  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+model RegionalRestriction {
+  id         String              @id @default(cuid())
+  audienceId String              @unique
+  audience   SweepstakesAudience @relation(fields: [audienceId], references: [id], onDelete: Cascade)
 
-  filter  RegionRestrictionFilter
-  regions String[]
+  filter  RegionalRestrictionFilter?
+  regions String[]                   @default([])
 }
 
-enum RegionRestrictionFilter {
+enum RegionalRestrictionFilter {
   INCLUDE
   EXCLUDE
 }
 
-model MinimumAgeRestriction {
-  id            String      @id @default(cuid())
-  sweepstakesId String      @unique
-  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+enum MinimumAgeRestrictionFormat {
+  CHECKBOX
+}
 
-  value    Int // e.g. 18
-  label    String // e.g. "Must be 18 or older"
-  required Boolean // true if checkbox is mandatory
-  format   String  @default("checkbox") // future proofing
+model MinimumAgeRestriction {
+  id         String              @id @default(cuid())
+  audienceId String              @unique
+  audience   SweepstakesAudience @relation(fields: [audienceId], references: [id], onDelete: Cascade)
+
+  value    Int? // e.g. 18
+  label    String? // e.g. "Must be 18 or older"
+  required Boolean? // true if checkbox is mandatory
+  format   MinimumAgeRestrictionFormat? @default(CHECKBOX) // future proofing
 }
 
 model Prize {
@@ -163,11 +195,10 @@ model Prize {
 }
 
 model Task {
-  id     String    @id
-  index  Int?
-  type   TaskType?
-  title  String?
-  config Json?
+  id    String @id
+  index Int?
+
+  config Json? // tasks are very complex objects, so we simply store them as json objects for now.
 
   sweepstakesId String
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
@@ -211,4 +242,14 @@ model Membership {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Metadata for uploaded images. 
+// Maps to the PutBlobResult of Vercel Blob API
+model ImageMetadata {
+  id          String @id @default(cuid())
+  url         String
+  downloadUrl String
+  pathname    String
+  contentType String
 }

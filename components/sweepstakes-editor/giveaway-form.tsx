@@ -3,14 +3,8 @@
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import {
-  GiveawaySchema,
-  giveawaySchema,
-  GiveawayFormSchema
-} from '@/schemas/giveaway';
+import { GiveawayFormSchema, giveawayFormSchema } from '@/schemas/giveaway';
 import { useCallback, useEffect, useState, useTransition } from 'react';
-import * as dates from 'date-fns';
-import { timezone } from '@/lib/time';
 
 import { FormLayout } from './form-layout';
 import { SweepstakesProvider } from '@/components/hooks/use-sweepstake-step';
@@ -18,68 +12,27 @@ import { GiveawayFormContent } from './form-content';
 import { GiveawayPreview } from './preview';
 import { CancelConfirmationModal } from '@/components/sweepstakes/cancel-confirmation-modal';
 import { PrePublishValidationModal } from '@/components/sweepstakes/pre-publish-validation-modal';
-import {
-  DEFAULT_SWEEPSTAKES_DESCRIPTION,
-  DEFAULT_SWEEPSTAKES_NAME
-} from '@/lib/settings';
-import { TermsAndConditionsType } from '@prisma/client';
-import { useTeams } from '../context/team-provider';
-import { defaultTermInputOptions } from './form/terms';
 
-export const GiveawayForm: React.FC<{ giveaway: GiveawayFormSchema }> = ({
-  giveaway
+export const GiveawayForm: React.FC<{ sweepstakes: GiveawayFormSchema }> = ({
+  sweepstakes: defaultValues
 }) => {
-  const { activeTeam } = useTeams();
-
   const [isPending, startTransition] = useTransition();
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
-  const [pendingValues, setPendingValues] = useState<GiveawaySchema | null>(
+  const [pendingValues, setPendingValues] = useState<GiveawayFormSchema | null>(
     null
   );
 
-  const defaultValues = {
-    setup: {
-      name: giveaway.setup?.name || DEFAULT_SWEEPSTAKES_NAME,
-      banner: giveaway.setup?.banner || null,
-      description:
-        giveaway.setup?.description || DEFAULT_SWEEPSTAKES_DESCRIPTION
-    },
-    terms: {
-      type: TermsAndConditionsType.TEMPLATE,
-      sponsorName: giveaway.terms?.sponsorName || activeTeam.name,
-      winnerSelectionMethod:
-        giveaway.terms?.winnerSelectionMethod ||
-        defaultTermInputOptions.winnerSelectionMethod,
-      notificationTimeframeDays:
-        giveaway.terms?.notificationTimeframeDays ||
-        defaultTermInputOptions.notificationTimeframeDays,
-      claimDeadlineDays:
-        giveaway.terms?.claimDeadlineDays ||
-        defaultTermInputOptions.claimDeadlineDays,
-      governingLawCountry:
-        giveaway.terms?.governingLawCountry ||
-        defaultTermInputOptions.governingLawCountry
-    },
-    audience: {
-      requireEmail: giveaway.audience?.requireEmail || false,
-      regionalRestriction: giveaway.audience?.regionalRestriction || null,
-      minimumAgeRestriction: giveaway.audience?.minimumAgeRestriction || null
-    },
-    timing: {
-      startDate: dates.startOfDay(dates.add(Date.now(), { days: 1 })),
-      endDate: dates.startOfDay(dates.add(Date.now(), { days: 1, weeks: 1 })),
-      timeZone: timezone.current()
-    },
-    prizes: giveaway.prizes ?? [],
-    tasks: giveaway.tasks ?? []
-  };
-
-  const form = useForm<GiveawaySchema>({
-    resolver: zodResolver(giveawaySchema),
+  const form = useForm<GiveawayFormSchema>({
+    resolver: zodResolver(giveawayFormSchema),
     defaultValues,
     mode: 'onChange'
   });
+
+  useEffect(() => {
+    // runs after defaultValues are applied
+    form.trigger();
+  }, [defaultValues, form]);
 
   const startDate = useWatch({
     control: form.control,
@@ -127,7 +80,7 @@ export const GiveawayForm: React.FC<{ giveaway: GiveawayFormSchema }> = ({
     return errors;
   }, [form.formState.errors]);
 
-  const handleSubmit = async (values: GiveawaySchema) => {
+  const handleSubmit = async (values: GiveawayFormSchema) => {
     // First, trigger validation to ensure we have the latest error state
     const isValid = await form.trigger();
 
@@ -188,7 +141,7 @@ export const GiveawayForm: React.FC<{ giveaway: GiveawayFormSchema }> = ({
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <FormLayout
-            title={name || DEFAULT_SWEEPSTAKES_NAME}
+            title={name}
             onCancel={() => setShowCancelModal(true)}
             disabled={isPending}
             left={<GiveawayFormContent />}
@@ -209,7 +162,7 @@ export const GiveawayForm: React.FC<{ giveaway: GiveawayFormSchema }> = ({
           onPublishConfirm={handlePublishConfirm}
           errors={getFormErrors()}
           isLoading={isPending}
-          giveawayName={name || DEFAULT_SWEEPSTAKES_NAME}
+          giveawayName={name}
         />
       </FormProvider>
     </SweepstakesProvider>

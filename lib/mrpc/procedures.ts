@@ -5,11 +5,7 @@ import { User } from 'next-auth';
 import { Result, Success } from './types';
 import prisma from '../prisma';
 import { Prisma, PrismaClient } from '@prisma/client';
-import {
-  isNextRedirect,
-  isPrismaKnownError,
-  prismaErrorBoundary
-} from './errors';
+import { isNextRedirect, isPrismaError, prismaErrorBoundary } from './errors';
 import { environment } from '../environment';
 import { simulateNetworkDelay } from '../simulate';
 import { unstable_cache, revalidateTag } from 'next/cache';
@@ -231,7 +227,7 @@ class ProcedureBuilder<
           throw err; // Re-throw Next.js redirect errors
         }
 
-        if (isPrismaKnownError(err)) {
+        if (isPrismaError(err)) {
           return prismaErrorBoundary(err);
         }
 

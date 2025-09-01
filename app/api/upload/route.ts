@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
 export async function POST(request: Request): Promise<NextResponse> {
   const session = await auth();
@@ -20,8 +21,10 @@ export async function POST(request: Request): Promise<NextResponse> {
           addRandomSuffix: true
         };
       },
-      onUploadCompleted: async () => {
-        // no-op
+      onUploadCompleted: async ({ blob }) => {
+        await prisma.imageMetadata.create({
+          data: blob
+        });
       }
     });
 
