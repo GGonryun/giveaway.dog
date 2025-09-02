@@ -32,16 +32,19 @@ const getSweepstakesList = procedure
     };
   })
   .handler(async ({ input, user, db }) => {
+    const query = input.search
+      ? ({
+          details: {
+            name: {
+              contains: input.search,
+              mode: 'insensitive'
+            }
+          }
+        } as const)
+      : {};
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
-        status:
-          input.status && input.status !== 'ALL' ? input.status : undefined,
-        details: {
-          name: {
-            contains: input.search,
-            mode: 'insensitive'
-          }
-        },
+        ...query,
         team: {
           slug: input.slug,
           members: {
@@ -61,6 +64,8 @@ const getSweepstakesList = procedure
           }
         : undefined
     });
+
+    console.log('found sweepstakes', sweepstakes);
 
     return sweepstakes.map((s) => {
       const timeLeft = getTimeLeft(s);
@@ -92,9 +97,9 @@ const getTimeLeft = (
   if (sweepstake.status === SweepstakesStatus.DRAFT) return 'Not started';
   if (!sweepstake.timing?.endDate || !sweepstake.timing?.startDate)
     return 'Not started';
-  if (isAfter(sweepstake.timing?.endDate, now)) return 'Completed';
+  if (isAfter(now, sweepstake.timing?.endDate)) return 'Completed';
   if (isAfter(sweepstake.timing?.startDate, now))
-    return `Starts ${formatDistance(new Date(), sweepstake.timing?.startDate, { addSuffix: true })}`;
+    return `Starts ${formatDistance(sweepstake.timing?.startDate, now, { addSuffix: true })}`;
   return formatDistance(now, sweepstake.timing?.endDate, { addSuffix: true });
 };
 

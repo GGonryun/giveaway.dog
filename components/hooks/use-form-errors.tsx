@@ -1,5 +1,10 @@
 import { useMemo } from 'react';
-import { FieldErrors, FieldPath, FieldValues } from 'react-hook-form';
+import {
+  FieldErrors,
+  FieldPath,
+  FieldValues,
+  useFormState
+} from 'react-hook-form';
 
 export type ErrorMessage = { path: string; message: string };
 
@@ -40,14 +45,11 @@ export const useFormErrors = <
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>
 >(
-  errors: FieldErrors<TFieldValues>,
-  fields: TName[]
+  // if no fields are provider, consider all errors.
+  fields?: TName[]
 ): ErrorMessage[] => {
-  return useMemo(
-    () =>
-      flattenErrors(errors).filter((err) =>
-        fields.some((field) => err.path.startsWith(field))
-      ),
-    [errors, fields]
+  const formState = useFormState();
+  return flattenErrors(formState.errors).filter((err) =>
+    fields?.length ? fields.some((field) => err.path.startsWith(field)) : true
   );
 };

@@ -9,165 +9,127 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { AlertTriangleIcon, InfoIcon, CheckIcon, SaveIcon, ExternalLinkIcon } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { FieldError } from 'react-hook-form';
-
-interface FormError {
-  field: string;
-  message: string;
-  section?: string;
-}
+import { InfoIcon, CheckIcon, SaveIcon, TrashIcon } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { formatDistance } from 'date-fns';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { useMemo } from 'react';
+import { Spinner } from '../ui/spinner';
+import { useSweepstakes } from '../sweepstakes-editor/hooks/use-sweepstake-step';
 
 interface PrePublishValidationModalProps {
   open: boolean;
   onClose: () => void;
   onContinueEditing: (fieldName?: string) => void;
-  onSaveDraft: () => void;
-  onPublishConfirm: () => void;
-  errors: FormError[];
-  isLoading?: boolean;
+  onCancel: () => void;
+  onSave: () => void;
+  onPublish: () => void;
+  isSaving: boolean;
+  isPublishing: boolean;
   giveawayName: string;
 }
 
-export const PrePublishValidationModal: React.FC<PrePublishValidationModalProps> = ({
+export const PrePublishValidationModal: React.FC<
+  PrePublishValidationModalProps
+> = ({
   open,
   onClose,
-  onContinueEditing,
-  onSaveDraft,
-  onPublishConfirm,
-  errors,
-  isLoading = false,
+  onCancel,
+  onSave,
+  onPublish,
+  isSaving,
+  isPublishing,
   giveawayName
 }) => {
-  const hasErrors = errors.length > 0;
+  const { status } = useSweepstakes();
+  const form = useFormContext<GiveawayFormSchema>();
 
-  const handleFixError = (error: FormError) => {
-    onContinueEditing(error.field);
-    onClose();
-  };
+  const isDraft = status === 'DRAFT';
+
+  const startDate = useWatch({
+    name: 'timing.startDate',
+    control: form.control
+  });
+
+  const isLoading = useMemo(
+    () => isSaving || isPublishing,
+    [isSaving, isPublishing]
+  );
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] ">
         <DialogHeader>
-          <DialogTitle className={hasErrors ? "text-destructive" : "text-foreground"}>
-            {hasErrors ? (
-              <div className="flex items-center gap-2">
-                <AlertTriangleIcon className="h-5 w-5" />
-                Can't Publish Yet
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <CheckIcon className="h-5 w-5" />
-                Ready to Publish?
-              </div>
-            )}
+          <DialogTitle>
+            <div className="flex items-center gap-2">
+              {isDraft ? 'Ready to Publish?' : 'Save Changes?'}
+            </div>
           </DialogTitle>
-          <DialogDescription>
-            {hasErrors 
-              ? `${errors.length} issue${errors.length > 1 ? 's' : ''} need to be fixed before "${giveawayName}" can be published`
-              : `Your giveaway "${giveawayName}" will be published and go live immediately`
-            }
+          <DialogDescription className="text-left">
+            Your sweepstakes "{giveawayName}" will be{' '}
+            {isDraft
+              ? `published and go live ${formatDistance(startDate, Date.now(), { addSuffix: true })}`
+              : 'updated and changes will go live immediately'}
+            !
           </DialogDescription>
         </DialogHeader>
 
-        {hasErrors ? (
-          <>
-            <Alert>
-              <AlertTriangleIcon className="h-4 w-4" />
-              <AlertDescription>
-                <div className="space-y-3">
-                  <div className="font-medium">Issues to fix:</div>
-                  <div className="space-y-2">
-                    {errors.map((error, index) => (
-                      <div key={index} className="flex items-start justify-between gap-3 p-2 bg-muted/50 rounded">
-                        <div className="min-w-0 flex-1">
-                          <div className="text-sm font-medium">{error.message}</div>
-                          {error.section && (
-                            <div className="text-xs text-muted-foreground">in {error.section}</div>
-                          )}
-                        </div>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => handleFixError(error)}
-                          className="flex-shrink-0"
-                        >
-                          <ExternalLinkIcon className="h-3 w-3 mr-1" />
-                          Fix
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
+        {isDraft && (
+          <Alert variant="success">
+            <InfoIcon className="h-4 w-4" />
+            <AlertTitle>
+              <strong>Free during beta!</strong>
+            </AlertTitle>
+            <AlertDescription>
+              <div className="space-y-2">
+                <div>
+                  Publishing normally consumes 1 token, but you have unlimited
+                  tokens while we're in beta.
                 </div>
-              </AlertDescription>
-            </Alert>
-
-            <DialogFooter className="flex-col sm:flex-row gap-2">
-              <Button 
-                variant="outline" 
-                onClick={() => onContinueEditing()}
-                disabled={isLoading}
-              >
-                Continue Editing
-              </Button>
-              <Button 
-                onClick={onSaveDraft}
-                disabled={isLoading}
-                className="sm:ml-auto"
-              >
-                <SaveIcon className="h-4 w-4 mr-2" />
-                Save Draft
-              </Button>
-            </DialogFooter>
-          </>
-        ) : (
-          <>
-            <Alert>
-              <InfoIcon className="h-4 w-4" />
-              <AlertDescription>
-                <div className="space-y-2">
-                  <div>
-                    <strong>Free during beta!</strong> Publishing normally consumes 1 token, 
-                    but you have unlimited tokens while we're in beta.
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Once published, your giveaway will be live and participants can start entering.
-                  </div>
-                </div>
-              </AlertDescription>
-            </Alert>
-
-            <DialogFooter className="flex-col sm:flex-row gap-2">
-              <Button 
-                variant="outline" 
-                onClick={onSaveDraft}
-                disabled={isLoading}
-              >
-                <SaveIcon className="h-4 w-4 mr-2" />
-                Save as Draft
-              </Button>
-              <Button 
-                onClick={onPublishConfirm}
-                disabled={isLoading}
-                className="sm:ml-auto"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                    Publishing...
-                  </>
-                ) : (
-                  <>
-                    <CheckIcon className="h-4 w-4 mr-2" />
-                    Publish Now
-                  </>
-                )}
-              </Button>
-            </DialogFooter>
-          </>
+              </div>
+            </AlertDescription>
+          </Alert>
         )}
+
+        <DialogFooter className="flex-col sm:flex-row gap-2">
+          {isDraft ? (
+            <Button variant="outline" onClick={onSave} disabled={isLoading}>
+              {isSaving ? (
+                <>
+                  <Spinner size="sm" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <SaveIcon className="h-4 w-4 mr-2" />
+                  Save & Exit
+                </>
+              )}
+            </Button>
+          ) : (
+            <Button variant="outline" onClick={onCancel} disabled={isLoading}>
+              Continue Editing
+            </Button>
+          )}
+          <Button
+            onClick={isDraft ? onPublish : onSave}
+            disabled={isLoading}
+            className="sm:ml-auto"
+          >
+            {isPublishing ? (
+              <>
+                <Spinner size="sm" />
+                {isDraft ? 'Publishing...' : 'Saving...'}
+              </>
+            ) : (
+              <>
+                <CheckIcon className="h-4 w-4 mr-2" />
+                {isDraft ? 'Publish Now' : 'Confirm'}
+              </>
+            )}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

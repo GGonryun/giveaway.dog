@@ -27,6 +27,7 @@ import {
   Gift
 } from 'lucide-react';
 import Link from 'next/link';
+import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
 
 interface SweepstakesDetails {
   id: string;
@@ -54,6 +55,7 @@ interface SweepstakesDetailHeaderProps {
 export const SweepstakesDetailHeader = ({
   sweepstakes
 }: SweepstakesDetailHeaderProps) => {
+  const page = useSweepstakesPage();
   const getStatusBadge = (status: SweepstakesDetails['status']) => {
     const variants = {
       active: { variant: 'default' as const, label: 'Active' },
@@ -79,7 +81,7 @@ export const SweepstakesDetailHeader = ({
           <div className="flex items-start justify-between">
             <div className="space-y-4">
               <Button variant="ghost" size="sm" asChild className="pl-0">
-                <Link href="/app/sweepstakes">
+                <Link href={page.path}>
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Sweepstakes
                 </Link>

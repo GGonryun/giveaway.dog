@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { SwitchBox, SwitchFormHeader } from '../switch-box';

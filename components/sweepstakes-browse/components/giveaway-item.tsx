@@ -2,27 +2,20 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Typography } from '@/components/ui/typography';
-import { Clock, Trophy, Users, MapPin } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-
-export interface GiveawayItemProps {
-  id: string;
-  name: string;
-  description: string;
-  banner?: string;
-  endDate: Date;
-  prizesCount: number;
-  participantsCount: number;
-  region?: string;
-  status: 'active' | 'ending-soon' | 'new';
-  featured?: boolean;
-  isEnded?: boolean;
-}
+import { differenceInDays, formatDistanceToNow, isBefore } from 'date-fns';
+import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
+import {
+  ENDING_SOON_SWEEPSTAKE_THRESHOLD,
+  NEW_SWEEPSTAKE_THRESHOLD
+} from '@/lib/settings';
+import React from 'react';
+import { ClockIcon, MapPinIcon, Trophy, UsersIcon } from 'lucide-react';
+import pluralize from 'pluralize';
+import Link from 'next/link';
 
 const getStatusBadge = (
-  status: GiveawayItemProps['status'],
-  endDate: Date,
-  isEnded?: boolean
+  { startDate, endDate }: Pick<PublicSweepstakeSchema, 'endDate' | 'startDate'>,
+  isEnded: boolean
 ) => {
   if (isEnded) {
     return (
@@ -32,31 +25,36 @@ const getStatusBadge = (
     );
   }
 
-  const daysLeft = Math.ceil(
-    (endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-  );
+  const daysLeft = differenceInDays(endDate, new Date());
+  const isEndingSoon = daysLeft <= ENDING_SOON_SWEEPSTAKE_THRESHOLD;
+  const isNew =
+    differenceInDays(new Date(), startDate) <= NEW_SWEEPSTAKE_THRESHOLD;
 
-  if (daysLeft <= 2) {
+  if (isEndingSoon) {
     return <Badge variant="destructive">Ending Soon</Badge>;
-  } else if (status === 'new') {
+  } else if (isNew) {
     return <Badge variant="secondary">New</Badge>;
   } else {
     return <Badge variant="default">{daysLeft} days left</Badge>;
   }
 };
 
-export function GiveawayItem({
-  name,
-  description,
-  banner,
-  endDate,
-  prizesCount,
-  participantsCount,
-  region,
-  status,
-  featured = false,
-  isEnded = false
-}: GiveawayItemProps) {
+export const GiveawayItem: React.FC<{
+  sweepstakes: PublicSweepstakeSchema;
+}> = ({ sweepstakes }) => {
+  const {
+    name,
+    description,
+    banner,
+    prizes,
+    endDate,
+    region,
+    featured,
+    participants
+  } = sweepstakes;
+
+  const isEnded = isBefore(endDate, new Date());
+
   return (
     <Card
       className={`overflow-hidden pt-0 flex flex-col h-full ${isEnded ? 'opacity-75' : ''}`}
@@ -70,7 +68,7 @@ export function GiveawayItem({
           />
         )}
         <div className="absolute top-3 left-3">
-          {getStatusBadge(status, endDate, isEnded)}
+          {getStatusBadge(sweepstakes, isEnded)}
         </div>
         {featured && (
           <Badge className="absolute top-3 right-3 bg-primary">Featured</Badge>
@@ -89,11 +87,10 @@ export function GiveawayItem({
             {description}
           </Typography.Paragraph>
         </div>
-
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
+              <ClockIcon className="w-3 h-3" />
               <span>
                 {isEnded
                   ? `Ended ${formatDistanceToNow(endDate, { addSuffix: true })}`
@@ -106,19 +103,18 @@ export function GiveawayItem({
             <div className="flex items-center gap-1">
               <Trophy className="w-3 h-3" />
               <span>
-                {prizesCount} prize
-                {prizesCount > 1 ? 's' : ''}
+                {prizes} {pluralize('prize', prizes)}
               </span>
             </div>
             <div className="flex items-center gap-1">
-              <Users className="w-3 h-3" />
-              <span>{participantsCount.toLocaleString()}</span>
+              <UsersIcon className="w-3 h-3" />
+              <span>{participants.toLocaleString()}</span>
             </div>
           </div>
 
           {region && (
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPin className="w-3 h-3" />
+              <MapPinIcon className="w-3 h-3" />
               <span>{region}</span>
             </div>
           )}
@@ -127,13 +123,16 @@ export function GiveawayItem({
 
       <CardFooter className="p-4 pt-0">
         <Button
+          asChild
           className="w-full"
           variant={isEnded ? 'outline' : 'default'}
           disabled={isEnded}
         >
-          {isEnded ? 'Giveaway Ended' : 'Join Giveaway'}
+          <Link href={`/browse/${sweepstakes.id}`} className="w-full">
+            {isEnded ? 'Giveaway Ended' : 'Join Giveaway'}
+          </Link>
         </Button>
       </CardFooter>
     </Card>
   );
-}
+};

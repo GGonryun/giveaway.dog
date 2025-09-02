@@ -1,4 +1,8 @@
-import { Prisma, SweepstakesTermsType } from '@prisma/client';
+import {
+  Prisma,
+  SweepstakesStatus,
+  SweepstakesTermsType
+} from '@prisma/client';
 import { SweepstakesInputSchema, TeamSweepstakesGetPayload } from './db';
 import { compact } from 'lodash';
 import { assertNever } from '@/lib/errors';
@@ -136,11 +140,11 @@ const toStorableTasks = (
 
 export const toStorableSweepstakes = (
   sweepstakes: TeamSweepstakesGetPayload,
-  input: SweepstakesInputSchema
+  input: SweepstakesInputSchema & { status?: SweepstakesStatus }
 ): Prisma.SweepstakesUncheckedCreateInput => {
   return {
     id: sweepstakes.id,
-    status: sweepstakes.status,
+    status: input.status ?? sweepstakes.status,
     teamId: sweepstakes.teamId,
     details: toStorableDetails(input.setup),
     timing: toStorableTiming(input.timing),

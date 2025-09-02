@@ -1,5 +1,5 @@
 import { DeepPartial } from '@/lib/types';
-import { GiveawayFormSchema as SweepstakesFormSchema } from '../giveaway';
+import { GiveawayFormSchema as SweepstakesFormSchema } from './schemas';
 import z from 'zod';
 import { Prisma } from '@prisma/client';
 
@@ -30,10 +30,10 @@ export type TeamSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
 }>;
 
 // input schema doesn't need validation as users are allowed to provide invalid or partial data.
-export type SweepstakesInputSchema = DeepPartial<SweepstakesFormSchema>;
-export const sweepstakesInputSchema = z.custom<
-  SweepstakesInputSchema & { id: string }
->(
+export type SweepstakesInputSchema = DeepPartial<SweepstakesFormSchema> & {
+  id: string;
+};
+export const sweepstakesInputSchema = z.custom<SweepstakesInputSchema>(
   (data): data is SweepstakesInputSchema =>
     typeof data === 'object' &&
     data !== null &&

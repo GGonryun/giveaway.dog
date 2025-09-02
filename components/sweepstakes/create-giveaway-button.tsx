@@ -4,7 +4,6 @@ import { Button } from '../ui/button';
 import { PlusIcon, ChevronDown, FileText, Sparkles } from 'lucide-react';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { Spinner } from '../ui/spinner';
-import { useRouter } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +13,7 @@ import {
 } from '../ui/dropdown-menu';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { useTeams } from '../context/team-provider';
-import { useEditSweepstakesPage } from './use-edit-sweepstakes-page';
+import { useCreateSweepstakesPage } from './use-create-sweepstakes-page';
 
 export const CreateGiveawayButton: React.FC<{
   text?: string;
@@ -28,7 +27,7 @@ export const CreateGiveawayButton: React.FC<{
   variant = 'secondary'
 }) => {
   const { activeTeam } = useTeams();
-  const { navigateTo } = useEditSweepstakesPage();
+  const { navigateTo } = useCreateSweepstakesPage();
 
   const procedure = useProcedure({
     action: createSweepstakes,

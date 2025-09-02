@@ -1,4 +1,4 @@
-import { useSweepstakes } from '@/components/hooks/use-sweepstake-step';
+import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
 import { Audience } from './form/audience/audience';
 import { Prizes } from './form/prizes/prizes';
 import { Setup } from './form/setup/setup';

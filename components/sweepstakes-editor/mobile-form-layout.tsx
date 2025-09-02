@@ -7,20 +7,19 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useCallback, useMemo, useState } from 'react';
 import { UnifiedFormFooter } from './unified-form-footer';
-import { useSweepstakes } from '@/components/hooks/use-sweepstake-step';
-import { SWEEPSTAKE_STEPS } from '@/components/data/form-steps';
-import { useFormIssues } from '@/components/hooks/use-form-issues';
-import { useRouter } from 'next/navigation';
+import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
+import { useFormIssues } from '@/components/sweepstakes-editor/hooks/use-form-issues';
 import { usePreviewState } from './contexts/preview-state-context';
-import { getStateDisplayLabel } from '@/schemas/giveaway';
+import { getStateDisplayLabel } from '@/schemas/giveaway/schemas';
 import { FormHeaderProps, FormLayoutProps } from './form-layout';
+import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';
 
 const MobileTabTrigger: React.FC<{
-  step: string;
+  step: SweepstakeStep;
   label: string;
   mobileView: 'form' | 'preview';
 }> = ({ step, label, mobileView }) => {
-  const { formErrors, trigger } = useFormIssues({ step });
+  const { formErrors, trigger } = useFormIssues(step);
   const errors = useMemo(() => formErrors.length, [formErrors]);
   const { step: currentStep } = useSweepstakes();
 
@@ -176,7 +175,7 @@ export const MobileFormLayout: React.FC<FormLayoutProps> = ({
           {mobileView === 'form' ? (
             <>
               <div className="overflow-y-scroll flex-1">{left}</div>
-              <UnifiedFormFooter mobile={true} />
+              <UnifiedFormFooter />
             </>
           ) : (
             <>

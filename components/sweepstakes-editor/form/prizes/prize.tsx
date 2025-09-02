@@ -29,7 +29,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { Input } from '@/components/ui/input';
 
 export const Prize: React.FC<{

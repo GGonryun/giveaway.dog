@@ -1,7 +1,7 @@
 import { RegionalRestrictionFilter } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import z from 'zod';
-import { DEFAULT_MINIMUM_AGE } from './giveaway/defaults';
+import { DEFAULT_MINIMUM_AGE } from './defaults';
 
 export const baseTaskSchema = z.object({
   id: z.string(),
@@ -74,6 +74,7 @@ export const termsTemplateSchema = z.object({
   privacyPolicyUrl: z
     .string()
     .url('Privacy policy must be a valid URL')
+    .or(z.literal(''))
     .optional(),
   additionalTerms: z.string().optional()
 });
@@ -91,7 +92,7 @@ export type GiveawayTerms = z.infer<typeof giveawayFormTermsSchema>;
 
 const giveawayFormSetupSchema = z.object({
   name: z.string().min(3),
-  description: z.string(),
+  description: z.string().min(3),
   banner: z.string().optional()
 });
 

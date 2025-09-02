@@ -12,6 +12,7 @@ import { useMemo, useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
 import { useDeleteSweepstakes } from './use-delete-sweepstakes';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 interface DeleteConfirmationModalProps {
   onClose: () => void;
@@ -32,8 +33,9 @@ export const DeleteConfirmationModal: React.FC<
   });
 
   const isConfirmDisabled = useMemo(() => {
+    const name = sweepstakes?.name || DEFAULT_SWEEPSTAKES_NAME;
     return (
-      confirmText.toLowerCase() !== sweepstakes?.name.toLowerCase() ||
+      confirmText.toLowerCase() !== name.toLowerCase() ||
       deleteSweepstakes.isLoading
     );
   }, [confirmText, sweepstakes?.name, deleteSweepstakes.isLoading]);
@@ -63,7 +65,7 @@ export const DeleteConfirmationModal: React.FC<
           </DialogTitle>
           <DialogDescription>
             You are about to permanently delete the sweepstakes "
-            {sweepstakes?.name}".
+            {sweepstakes?.name || DEFAULT_SWEEPSTAKES_NAME}".
           </DialogDescription>
         </DialogHeader>
 
@@ -78,14 +80,15 @@ export const DeleteConfirmationModal: React.FC<
         <div className="space-y-4">
           <div>
             <label htmlFor="confirm-name" className="text-sm font-medium">
-              Type '{sweepstakes.name}' to confirm deletion:
+              Type '{sweepstakes.name || DEFAULT_SWEEPSTAKES_NAME}' to confirm
+              deletion:
             </label>
             <input
               id="confirm-name"
               type="text"
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}
-              placeholder={sweepstakes.name}
+              placeholder={sweepstakes.name || DEFAULT_SWEEPSTAKES_NAME}
               disabled={deleteSweepstakes.isLoading}
               className="w-full mt-2 px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
             />

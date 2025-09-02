@@ -9,7 +9,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { GiveawayFormSchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
 import React, { memo, useMemo } from 'react';
 import { Section } from '../section';

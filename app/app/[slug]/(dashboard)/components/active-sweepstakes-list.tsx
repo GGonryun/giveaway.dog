@@ -81,7 +81,7 @@ export function ActiveSweepstakesList({
                 <div className="flex items-start justify-between mb-3">
                   <div className="space-y-1">
                     <h4 className="font-medium line-clamp-1">
-                      {sweepstakes.title}
+                      {sweepstakes.title || '(Untitled Sweepstakes)'}
                     </h4>
                     <div className="flex items-center space-x-2">
                       {getStatusBadge(sweepstakes.status)}

@@ -2,7 +2,7 @@ import { useFormContext } from 'react-hook-form';
 import {
   GiveawayFormSchema,
   RegionalRestrictionFilterSchema as RegionalRestrictionFilterSchema
-} from '@/schemas/giveaway';
+} from '@/schemas/giveaway/schemas';
 import {
   FormControl,
   FormField,

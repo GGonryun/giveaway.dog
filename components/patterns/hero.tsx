@@ -20,7 +20,8 @@ export const Hero = () => {
             <span className="text-primary">build bigger communities</span>
           </h1>
           <p className="text-muted-foreground mb-8 max-w-xl lg:text-xl">
-            The easiest giveaway platform for growing your community.
+            The easiest giveaway platform for growing your community. No
+            subscriptions, no restrictions, no surprises.
           </p>
           <div className="flex w-full flex-col justify-center gap-2 sm:flex-row">
             <Button asChild className="w-full sm:w-auto">

@@ -13,22 +13,32 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { XIcon, SaveIcon, ChevronDownIcon, ShareIcon } from 'lucide-react';
+import {
+  XIcon,
+  SaveIcon,
+  ChevronDownIcon,
+  ShareIcon,
+  AlertCircleIcon
+} from 'lucide-react';
 import Link from 'next/link';
 import { UnifiedFormFooter } from './unified-form-footer';
 import React, { useCallback, useMemo } from 'react';
-import { SWEEPSTAKE_STEPS, SweepstakeStep } from '@/components/data/form-steps';
-import { useFormIssues } from '@/components/hooks/use-form-issues';
-import { useSweepstakes } from '@/components/hooks/use-sweepstake-step';
+import { useFormIssues } from '@/components/sweepstakes-editor/hooks/use-form-issues';
+import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
 import { usePreviewState } from './contexts/preview-state-context';
-import { GIVEAWAY_STATES, getStateDisplayLabel } from '@/schemas/giveaway';
+import {
+  GIVEAWAY_STATES,
+  getStateDisplayLabel
+} from '@/schemas/giveaway/schemas';
 import { FormHeaderProps, FormLayoutProps } from './form-layout';
+import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';
+import { useFormErrors } from '../hooks/use-form-errors';
 
 export const DesktopTabTrigger: React.FC<{
   step: SweepstakeStep;
   label: string;
 }> = ({ step, label }) => {
-  const { formErrors, trigger } = useFormIssues({ step });
+  const { formErrors, trigger } = useFormIssues(step);
   const errors = useMemo(() => formErrors.length, [formErrors]);
   const { step: currentStep } = useSweepstakes();
 
@@ -91,6 +101,9 @@ const DesktopActions: React.FC<Omit<FormHeaderProps, 'title'>> = ({
   disabled,
   onCancel
 }) => {
+  const { status } = useSweepstakes();
+  const formErrors = useFormErrors(); // check's all errors.
+  const hasErrors = formErrors.length > 0;
   return (
     <div className="flex-1 flex justify-end gap-2">
       <Button
@@ -103,9 +116,26 @@ const DesktopActions: React.FC<Omit<FormHeaderProps, 'title'>> = ({
         <XIcon />
         Cancel
       </Button>
-      <Button type="submit" size="default" disabled={disabled}>
-        <SaveIcon />
-        Publish
+      <Button
+        type="submit"
+        variant={
+          status === 'DRAFT' ? 'default' : hasErrors ? 'destructive' : 'default'
+        }
+        size="default"
+        disabled={disabled}
+      >
+        {status === 'DRAFT' ? (
+          <SaveIcon />
+        ) : hasErrors ? (
+          <AlertCircleIcon />
+        ) : (
+          <SaveIcon />
+        )}
+        {status === 'DRAFT'
+          ? 'Publish'
+          : hasErrors
+            ? 'Save Changes'
+            : 'Save Changes'}
       </Button>
     </div>
   );
@@ -154,12 +184,6 @@ const PreviewFooter: React.FC = () => {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* Share Button */}
-          <Button type="button" variant="outline" size="sm">
-            <ShareIcon className="h-4 w-4 mr-1" />
-            Share
-          </Button>
         </div>
       </div>
     </div>
@@ -185,10 +209,10 @@ export const DesktopFormLayout: React.FC<FormLayoutProps> = ({
         <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
           <ResizablePanel
             defaultSize={30}
-            className="min-w-[350px] xl:max-w-[800px] flex flex-col"
+            className="min-w-[450px] xl:max-w-[800px] flex flex-col"
           >
             <div className="space-y-2 overflow-y-scroll flex-1">{left}</div>
-            <UnifiedFormFooter mobile={false} />
+            <UnifiedFormFooter />
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel

@@ -32,8 +32,9 @@ const getSweepstakesForm = procedure
 
     const parsed = toSweepstakesInput(data);
     return {
+      ...parsed,
       id: data.id,
-      ...parsed
+      status: data.status
     };
   });
 

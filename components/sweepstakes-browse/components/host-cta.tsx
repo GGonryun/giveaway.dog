@@ -53,7 +53,7 @@ export function HostCTA() {
                   Easy Setup
                 </Typography.Header>
                 <Typography.Paragraph className="text-sm text-muted-foreground">
-                  Launch your giveaway in minutes, not hours
+                  Launch giveaways in minutes, not hours
                 </Typography.Paragraph>
               </div>
             </div>

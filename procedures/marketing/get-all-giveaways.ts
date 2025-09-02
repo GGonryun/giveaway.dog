@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { PublicGiveawayItem } from '@/schemas/index';
+import { PublicGiveawayItemSchema } from '@/schemas/index';
 import { simulateNetworkDelay } from '@/lib/simulate';
 
 interface GetAllGiveawaysParams {
@@ -25,7 +25,7 @@ interface GetAllGiveawaysParams {
 }
 
 interface AllGiveawaysResponse {
-  giveaways: PublicGiveawayItem[];
+  giveaways: PublicGiveawayItemSchema[];
   totalGiveaways: number;
   totalPages: number;
   categories: { name: string; count: number }[];
@@ -50,7 +50,7 @@ const getAllGiveaways = async (
   } = params;
 
   // Mock comprehensive giveaways data
-  const mockAllGiveaways: PublicGiveawayItem[] = [
+  const mockAllGiveaways: PublicGiveawayItemSchema[] = [
     {
       id: 'all_giveaway_1',
       title: 'Ultimate Gaming Setup Giveaway',

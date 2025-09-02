@@ -1,5 +1,5 @@
 import { assertNever } from '@/lib/errors';
-import { GiveawayFormSchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useCallback } from 'react';
 import { useArrayContext } from '@/components/hooks/use-array-context';
 import { useFormContext } from 'react-hook-form';
@@ -7,7 +7,8 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormControl
+  FormControl,
+  FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { TaskType } from '@prisma/client';
@@ -15,9 +16,9 @@ import { TaskType } from '@prisma/client';
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
-      case TaskType.BONUS_TASK:
+      case 'BONUS_TASK':
         return <></>;
-      case TaskType.VISIT_URL:
+      case 'VISIT_URL':
         return <HrefFormField />;
       default:
         throw assertNever(type);
@@ -41,6 +42,7 @@ const HrefFormField: React.FC = () => {
           <FormControl>
             <Input type="url" {...field} />
           </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />

@@ -7,7 +7,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { TASK_GROUP, TaskType } from '@/schemas/giveaway';
+import { TASK_GROUP, TaskType } from '@/schemas/giveaway/schemas';
 import React from 'react';
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';

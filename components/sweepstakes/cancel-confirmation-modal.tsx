@@ -10,28 +10,27 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { InfoIcon, SaveIcon, TrashIcon } from 'lucide-react';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useDeleteSweepstakes } from './use-delete-sweepstakes';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway';
-import { toast } from 'sonner';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
-import { useUpdateSweepstakes } from './use-update-sweepstakes';
-import { useSweepstakes } from '../hooks/use-sweepstake-step';
+import { useSweepstakes } from '../sweepstakes-editor/hooks/use-sweepstake-step';
 import Link from 'next/link';
-import { useSweepstakesPage } from './use-sweepstakes-page';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 interface CancelConfirmationModalProps {
   onClose: () => void;
   open: boolean;
+  isLoading: boolean;
+  onDiscard: () => void;
+  onSave: () => void;
 }
 
 export const CancelConfirmationModal: React.FC<
   CancelConfirmationModalProps
-> = ({ onClose, open }) => {
-  const { id } = useSweepstakes();
+> = ({ onClose, open, isLoading, onDiscard, onSave }) => {
+  const { action, status } = useSweepstakes();
 
   const form = useFormContext<GiveawayFormSchema>();
 
@@ -45,32 +44,11 @@ export const CancelConfirmationModal: React.FC<
     [nameField]
   );
 
-  const page = useSweepstakesPage();
-
-  const deleteSweepstakes = useDeleteSweepstakes(() => {
-    toast.success('Draft deleted');
-    page.navigateTo();
-  });
-
-  const updateSweepstakes = useUpdateSweepstakes(() => {
-    toast.success('Draft saved successfully!');
-    page.navigateTo();
-  });
-
-  const handleSaveDraft = async () => {
-    const currentValues = form.getValues();
-    updateSweepstakes.run({ id, ...currentValues });
-  };
-
-  const handleDeleteDraft = useCallback(async () => {
-    deleteSweepstakes.run({ id });
-  }, [deleteSweepstakes.run]);
-
   return (
     <Dialog open={Boolean(open)} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[550px]">
         <DialogHeader>
-          <DialogTitle>Cancel Giveaway Creation</DialogTitle>
+          <DialogTitle>You're exiting the Sweepstakes Editor</DialogTitle>
           <DialogDescription>
             You have unsaved changes to "{sweepstakesName}". What would you like
             to do?
@@ -94,33 +72,31 @@ export const CancelConfirmationModal: React.FC<
         </Alert>
 
         <DialogFooter className="flex-col sm:flex-row gap-2">
-          <Button
-            variant="outline"
-            onClick={onClose}
-            disabled={deleteSweepstakes.isLoading}
-          >
+          <Button variant="outline" onClick={onClose} disabled={isLoading}>
             Continue Editing
           </Button>
 
           <div className="flex gap-2 sm:ml-auto">
             <Button
               variant="destructive"
-              onClick={handleDeleteDraft}
-              disabled={deleteSweepstakes.isLoading}
+              onClick={onDiscard}
+              disabled={isLoading}
               className="flex-1 sm:flex-none"
             >
               <TrashIcon className="h-4 w-4 mr-2" />
-              Delete Draft
+              {action === 'edit' ? 'Discard Changes' : 'Delete Draft'}
             </Button>
 
-            <Button
-              onClick={handleSaveDraft}
-              disabled={deleteSweepstakes.isLoading}
-              className="flex-1 sm:flex-none"
-            >
-              <SaveIcon className="h-4 w-4 mr-2" />
-              Save Draft
-            </Button>
+            {status === 'DRAFT' && (
+              <Button
+                onClick={onSave}
+                disabled={isLoading}
+                className="flex-1 sm:flex-none"
+              >
+                <SaveIcon className="h-4 w-4 mr-2" />
+                Save & Exit
+              </Button>
+            )}
           </div>
         </DialogFooter>
       </DialogContent>

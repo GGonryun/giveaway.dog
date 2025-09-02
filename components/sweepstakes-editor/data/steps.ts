@@ -12,3 +12,19 @@ export const isSweepstakeStepKey = (key: string): key is SweepstakeStep => {
     SWEEPSTAKE_STEPS.map((step) => step.key) as ReadonlyArray<string>
   ).includes(key);
 };
+
+export const FIELD_TO_STEP_MAP: Record<string, SweepstakeStep> = {
+  setup: 'setup',
+  terms: 'setup',
+  timing: 'setup',
+  audience: 'audience',
+  tasks: 'tasks',
+  prizes: 'prizes'
+};
+
+export const STEP_TO_FIELD_MAP: Record<SweepstakeStep, string[]> = {
+  setup: ['setup', 'terms', 'timing'],
+  audience: ['audience'],
+  tasks: ['tasks'],
+  prizes: ['prizes']
+};

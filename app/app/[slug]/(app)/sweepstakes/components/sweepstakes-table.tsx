@@ -47,12 +47,10 @@ import {
 import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
 import { SweepstakesStatus } from '@prisma/client';
 import { DeleteConfirmationModal } from '@/components/sweepstakes/delete-confirmation-modal';
-import { toast } from 'sonner';
-import { useProcedure } from '@/lib/mrpc/hook';
-import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
 import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
 import { useEditSweepstakesPage } from '@/components/sweepstakes/use-edit-sweepstakes-page';
 import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepstakes-details-page';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 interface SweepstakesTableProps {
   sweepstakes: SweepstakesData[];
@@ -203,7 +201,7 @@ export function SweepstakesTable({
                           href={`/app/sweepstakes/${item.id}`}
                           className="font-medium hover:text-primary hover:underline block truncate"
                         >
-                          {item.name}
+                          {item.name || DEFAULT_SWEEPSTAKES_NAME}
                         </Link>
                       </div>
                     </div>
@@ -340,7 +338,7 @@ export function SweepstakesTable({
                             href={detailsPage.route(item.id)}
                             className="font-medium hover:text-primary hover:underline line-clamp-1"
                           >
-                            {item.name}
+                            {item.name || DEFAULT_SWEEPSTAKES_NAME}
                           </Link>
                         </div>
                       </div>

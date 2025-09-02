@@ -14,7 +14,7 @@ import {
   TaskSchema,
   UserParticipation,
   UserProfile
-} from '@/schemas/giveaway';
+} from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
 import {
   MinimumAgeRestrictionFormat,
@@ -59,7 +59,7 @@ export const GiveawayPreview: React.FC = () => {
   // Watch all form values for live preview
   const formValues = useWatch({ control });
 
-  const giveawayData: GiveawayFormSchema | null = useMemo(() => {
+  const giveawayData: GiveawayFormSchema | undefined = useMemo(() => {
     try {
       // Check if we have minimum required data
       if (
@@ -67,14 +67,14 @@ export const GiveawayPreview: React.FC = () => {
         !formValues.tasks?.length &&
         !formValues?.prizes?.length
       ) {
-        return null;
+        return undefined;
       }
 
       return {
         setup: {
           name: formValues.setup?.name ?? DEFAULT_SWEEPSTAKES_NAME,
           description: formValues.setup?.description ?? '',
-          banner: formValues.setup?.banner ?? null // Only show banner if provided
+          banner: formValues.setup?.banner ?? undefined // Only show banner if provided
         },
         terms:
           formValues?.terms?.type === SweepstakesTermsType.TEMPLATE
@@ -108,7 +108,7 @@ export const GiveawayPreview: React.FC = () => {
                   formValues.audience.regionalRestriction.filter ||
                   RegionalRestrictionFilter.INCLUDE
               }
-            : null,
+            : undefined,
           minimumAgeRestriction: formValues.audience?.minimumAgeRestriction
             ? {
                 format: MinimumAgeRestrictionFormat.CHECKBOX,
@@ -117,14 +117,14 @@ export const GiveawayPreview: React.FC = () => {
                 required:
                   formValues.audience.minimumAgeRestriction.required || false
               }
-            : null
+            : undefined
         },
         tasks: (formValues.tasks || []) as TaskSchema[],
         prizes: (formValues.prizes || []) as Prize[]
       };
     } catch (error) {
       console.warn('Error creating preview data:', error);
-      return null;
+      return undefined;
     }
   }, [formValues]);
 

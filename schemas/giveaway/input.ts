@@ -123,7 +123,7 @@ function toJsonObject(value: Prisma.JsonValue | null): Record<string, any> {
 
 export const toSweepstakesInput = (
   giveaway: FullSweepstakesGetPayload
-): SweepstakesInputSchema => {
+): Omit<SweepstakesInputSchema, 'id'> => {
   return {
     setup: toSetup(giveaway.details),
     terms: toTermsInput(giveaway.terms),

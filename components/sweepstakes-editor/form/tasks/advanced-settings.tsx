@@ -2,7 +2,7 @@ import { useArrayContext } from '@/components/hooks/use-array-context';
 import { FormField, FormItem, FormControl } from '@/components/ui/form';
 import { Typography } from '@/components/ui/typography';
 import { assertNever } from '@/lib/errors';
-import { GiveawayFormSchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { SwitchBox, SwitchFormHeader } from '../switch-box';
@@ -13,14 +13,14 @@ import { TaskType } from '@prisma/client';
 export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
-      case TaskType.BONUS_TASK:
+      case 'BONUS_TASK':
         return (
           <>
             <MandatoryField />
             <TasksRequiredField />
           </>
         );
-      case TaskType.VISIT_URL:
+      case 'VISIT_URL':
         return (
           <>
             <MandatoryField />

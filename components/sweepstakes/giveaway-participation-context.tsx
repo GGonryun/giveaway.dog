@@ -9,7 +9,7 @@ import {
   GiveawayHost,
   GiveawayWinner,
   GiveawayFormSchema
-} from '@/schemas/giveaway';
+} from '@/schemas/giveaway/schemas';
 
 export interface GiveawayParticipationProps {
   participation: GiveawayParticipationData;

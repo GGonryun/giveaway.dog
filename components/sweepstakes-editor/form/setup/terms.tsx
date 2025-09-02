@@ -37,10 +37,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
-import { GiveawayFormSchema, GiveawayTerms } from '@/schemas/giveaway';
+import { GiveawayFormSchema, GiveawayTerms } from '@/schemas/giveaway/schemas';
 import { SweepstakesTermsType } from '@prisma/client';
 import { toBrowsePageUrl } from '@/components/sweepstakes/util';
-import { useSweepstakes } from '@/components/hooks/use-sweepstake-step';
+import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
 import {
   DEFAULT_WINNER_SELECTION_METHOD,
   DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
@@ -371,6 +371,7 @@ export const TermsAndConditions = () => {
                               {...field}
                             />
                           </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />

@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { Calendar, Clock, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useGiveawayParticipation } from './giveaway-participation-context';
+import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
 
 // Utility function to calculate time remaining
 function calculateTimeRemaining(endDate: Date) {
@@ -146,7 +147,7 @@ export const GiveawayParticipationHeader: React.FC = () => {
         {/* Host Info */}
         <div className="flex items-center gap-2 mb-4">
           <div className="rounded-full flex items-center justify-center text-sm">
-            <span className="text-xl">{host.avatar || '🐕'}</span>
+            <span className="text-xl">{host.avatar || DEFAULT_TEAM_LOGO}</span>
           </div>
           <span className="text-sm text-muted-foreground">
             Hosted by{' '}

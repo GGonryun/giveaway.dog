@@ -21,8 +21,10 @@ type SweepstakesPageComponent = React.FC<SweepstakesPageProps>;
 
 const SweepstakesPage: SweepstakesPageComponent = async (props) => {
   const { slug } = await props.params;
+
   const resolvedSearchParams = await props.searchParams;
   const filters = toSweepstakesFilter(resolvedSearchParams);
+
   return (
     <div className="space-y-4">
       <SweepstakesTabs filters={filters} />

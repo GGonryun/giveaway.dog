@@ -5,7 +5,7 @@ import {
   SweepstakesTermsType
 } from '@prisma/client';
 import * as dates from 'date-fns';
-import { MinimumAgeRestrictionSchema } from '../giveaway';
+import { MinimumAgeRestrictionSchema } from './schemas';
 
 export const DEFAULT_MINIMUM_AGE = 13;
 
@@ -41,11 +41,13 @@ export const DEFAULT_SWEEPSTAKES_TIMING: Prisma.SweepstakesTimingUncheckedCreate
 export const DEFAULT_SWEEPSTAKES_TERMS: Prisma.SweepstakesTermsUncheckedCreateWithoutSweepstakesInput =
   {
     type: SweepstakesTermsType.TEMPLATE,
-    sponsorName: DEFAULT_SWEEPSTAKES_DESCRIPTION,
+    sponsorAddress: '',
+    sponsorName: DEFAULT_SPONSOR_NAME,
     winnerSelectionMethod: DEFAULT_WINNER_SELECTION_METHOD,
     notificationTimeframeDays: DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
     claimDeadlineDays: DEFAULT_CLAIM_DEADLINE_DAYS,
-    governingLawCountry: DEFAULT_GOVERNING_LAW_COUNTRY_CODE
+    governingLawCountry: DEFAULT_GOVERNING_LAW_COUNTRY_CODE,
+    privacyPolicyUrl: ''
   };
 
 export const DEFAULT_SWEEPSTAKES_AUDIENCE: Prisma.SweepstakesAudienceUncheckedCreateWithoutSweepstakesInput =

@@ -1,5 +1,5 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema, TaskType } from '@/schemas/giveaway';
+import { GiveawayFormSchema, TaskType } from '@/schemas/giveaway/schemas';
 import React, { useState } from 'react';
 import { EntryMethod } from './entry-method';
 import { toDefaultValues } from './task-defaults';

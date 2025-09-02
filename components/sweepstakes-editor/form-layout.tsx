@@ -1,8 +1,6 @@
-import { MobileSuspense } from '@/components/ui/mobile-suspense';
 import { MobileFormLayout } from './mobile-form-layout';
 import { DesktopFormLayout } from './desktop-form-layout';
-import { useIsTablet } from '@/components/hooks/use-tablet';
-import { PreviewStateProvider } from './contexts/preview-state-context';
+import { useSweepstakes } from './hooks/use-sweepstake-step';
 
 export interface FormLayoutProps {
   title: string;
@@ -18,17 +16,11 @@ export interface FormHeaderProps {
 }
 
 export const FormLayout: React.FC<FormLayoutProps> = (props) => {
-  const { isTablet } = useIsTablet();
+  const { mobile } = useSweepstakes();
 
-  return (
-    <PreviewStateProvider>
-      <MobileSuspense>
-        {isTablet ? (
-          <MobileFormLayout {...props} />
-        ) : (
-          <DesktopFormLayout {...props} />
-        )}
-      </MobileSuspense>
-    </PreviewStateProvider>
+  return mobile ? (
+    <MobileFormLayout {...props} />
+  ) : (
+    <DesktopFormLayout {...props} />
   );
 };

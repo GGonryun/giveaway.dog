@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { FormControl, FormField, FormItem } from '@/components/ui/form';
 
 import { isValidOption, MultiSelect } from '@/components/ui/multi-select';

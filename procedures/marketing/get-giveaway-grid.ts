@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cacheTag as cacheTag } from 'next/cache';
-import { PublicGiveawayItem } from '@/schemas/index';
+import { PublicGiveawayItemSchema } from '@/schemas/index';
 import { simulateNetworkDelay } from '@/lib/simulate';
 
 interface GetGiveawayGridParams {
@@ -12,7 +12,7 @@ interface GetGiveawayGridParams {
 
 const getGiveawayGrid = async (
   params: GetGiveawayGridParams = {}
-): Promise<PublicGiveawayItem[]> => {
+): Promise<PublicGiveawayItemSchema[]> => {
   'use cache';
   cacheTag('giveaway-grid');
 
@@ -21,7 +21,7 @@ const getGiveawayGrid = async (
   const { category = 'all', sortBy = 'newest', limit = 12 } = params;
 
   // Mock giveaway grid data for public listings
-  const mockGiveaways: PublicGiveawayItem[] = [
+  const mockGiveaways: PublicGiveawayItemSchema[] = [
     {
       id: 'giveaway_1',
       title: 'iPhone 15 Pro Max Giveaway',

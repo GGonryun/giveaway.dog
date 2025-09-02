@@ -58,7 +58,7 @@ export const createSweepstakes = procedure
           create: DEFAULT_SWEEPSTAKES_AUDIENCE
         },
         terms: {
-          create: DEFAULT_SWEEPSTAKES_TERMS
+          create: { ...DEFAULT_SWEEPSTAKES_TERMS, sponsorName: team.name }
         },
         prizes: {
           createMany: { data: DEFAULT_SWEEPSTAKES_PRIZES }
