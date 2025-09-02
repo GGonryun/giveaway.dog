@@ -196,6 +196,7 @@ export type UserParticipation = z.infer<typeof userParticipationSchema>;
 // Host Schema
 export const giveawayHostSchema = z.object({
   id: z.string().optional(),
+  slug: z.string(),
   name: z.string().min(1, 'Host name is required'),
   avatar: z.string().optional()
 });

@@ -1,4 +1,4 @@
-import { SweepstakesPageContent } from '@/components/sweepstakes-browse/page';
+import { SweepstakesPageContent } from '@/components/sweepstakes-browse/sweepstakes-page-content';
 import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes-list';
 
 export const revalidate = 60; // 1 minutes in seconds, must be statically analyzable

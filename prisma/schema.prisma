@@ -14,20 +14,22 @@ enum UserType {
 }
 
 model User {
-  id            String       @id @default(cuid())
-  name          String?
-  email         String?      @unique
-  emailVerified DateTime?
-  image         String?
-  age           Int?
-  emoji         String?
-  region        String?
-  type          UserType[]   @default([PARTICIPATE])
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  teams         Membership[]
+  id             String           @id @default(cuid())
+  name           String?
+  email          String?          @unique
+  emailVerified  DateTime?
+  image          String?
+  age            Int?
+  emoji          String?
+  region         String?
+  type           UserType[]       @default([PARTICIPATE])
+  accounts       Account[]
+  sessions       Session[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  teams          Membership[]
+  TaskCompletion TaskCompletion[]
+  TaskProgress   TaskProgress[]
 }
 
 model Account {
@@ -195,13 +197,16 @@ model Prize {
 }
 
 model Task {
-  id    String @id
+  id            String      @id
+  sweepstakesId String
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+
   index Int?
 
   config Json? // tasks are very complex objects, so we simply store them as json objects for now.
 
-  sweepstakesId String
-  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+  completions TaskCompletion[]
+  progress    TaskProgress[]
 
   @@unique([sweepstakesId, index])
 }
@@ -209,6 +214,42 @@ model Task {
 enum TaskType {
   BONUS_TASK
   VISIT_URL
+}
+
+model TaskCompletion {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  taskId String
+  // do not cascade delete on tasks, because when we update a giveaway we recreate the whole thing by deleting it first.
+  task   Task   @relation(fields: [taskId], references: [id])
+
+  completedAt DateTime         @default(now())
+  proof       Json?
+  status      CompletionStatus @default(COMPLETED)
+}
+
+model TaskProgress {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  count     Int      @default(0) // how many times completed
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, taskId])
+}
+
+enum CompletionStatus {
+  PENDING
+  COMPLETED
+  REJECTED
 }
 
 model Team {
