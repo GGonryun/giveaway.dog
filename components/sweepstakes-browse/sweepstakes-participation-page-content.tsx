@@ -1,14 +1,12 @@
 'use client';
 
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
+import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
 import { useRouter } from 'next/navigation';
 
-
-interface SweepstakesParticipationPageContentProps {
-  data: any; // Using any for now to avoid complex type issues
-}
-
-export const SweepstakesParticipationPageContent = ({ data }: SweepstakesParticipationPageContentProps) => {
+export const SweepstakesParticipationPageContent: React.FC<
+  ParticipantSweepstakeSchema
+> = ({ giveaway, host }: ParticipantSweepstakeSchema) => {
   const router = useRouter();
 
   const handleLogin = () => {
@@ -26,12 +24,18 @@ export const SweepstakesParticipationPageContent = ({ data }: SweepstakesPartici
 
   return (
     <GiveawayParticipation
-      giveaway={data.giveaway}
-      host={data.host}
-      participation={data.participation}
-      winners={data.winners}
-      user={data.user}
-      state={data.state}
+      giveaway={giveaway}
+      host={host}
+      // TODO: support user participation
+      participation={{
+        id: 'TODO',
+        totalEntries: 1
+      }}
+      // TODO: support winners
+      winners={[]}
+      // TODO: support user
+      user={undefined}
+      state={'not-logged-in'}
       onTaskComplete={handleTaskComplete}
       onLogin={handleLogin}
       onCompleteProfile={handleCompleteProfile}

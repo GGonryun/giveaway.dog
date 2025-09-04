@@ -26,6 +26,7 @@ import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 const mockHost = {
   id: 'preview-host-id',
+  slug: 'preview-host',
   name: 'Preview Host',
   avatar: '🐶' // Fallback to giveaway dog emoji
 };

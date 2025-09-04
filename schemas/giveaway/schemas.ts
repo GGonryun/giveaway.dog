@@ -1,4 +1,4 @@
-import { RegionalRestrictionFilter } from '@prisma/client';
+import { RegionalRestrictionFilter, SweepstakesStatus } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';
@@ -142,9 +142,7 @@ const giveawayFormPrizeSchema = z
 
 const giveawayFormTimingSchema = z
   .object({
-    startDate: z.date().refine((date) => date > new Date(), {
-      message: 'Start date must be in the future'
-    }),
+    startDate: z.date(),
     endDate: z.date().refine((date) => date > new Date(), {
       message: 'End date must be in the future'
     }),
@@ -173,6 +171,13 @@ export const giveawayFormSchema = z.object({
 
 export type GiveawayFormSchema = z.infer<typeof giveawayFormSchema>;
 
+export const giveawaySchema = giveawayFormSchema.extend({
+  status: z.nativeEnum(SweepstakesStatus),
+  id: z.string()
+});
+
+export type GiveawaySchema = z.infer<typeof giveawaySchema>;
+
 // User Profile Schema
 export const userProfileSchema = z.object({
   id: z.string(),
@@ -197,11 +202,11 @@ export type UserParticipation = z.infer<typeof userParticipationSchema>;
 export const giveawayHostSchema = z.object({
   id: z.string().optional(),
   slug: z.string(),
-  name: z.string().min(1, 'Host name is required'),
+  name: z.string(),
   avatar: z.string().optional()
 });
 
-export type GiveawayHost = z.infer<typeof giveawayHostSchema>;
+export type GiveawayHostSchema = z.infer<typeof giveawayHostSchema>;
 
 // Winner Information Schema
 const giveawayWinnerSchema = z.object({
@@ -254,3 +259,12 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
       throw assertNever(state);
   }
 };
+
+export const participantSweepstakeSchema = z.object({
+  giveaway: giveawaySchema,
+  host: giveawayHostSchema
+});
+
+export type ParticipantSweepstakeSchema = z.infer<
+  typeof participantSweepstakeSchema
+>;

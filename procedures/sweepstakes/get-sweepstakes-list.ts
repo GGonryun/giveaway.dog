@@ -65,8 +65,6 @@ const getSweepstakesList = procedure
         : undefined
     });
 
-    console.log('found sweepstakes', sweepstakes);
-
     return sweepstakes.map((s) => {
       const timeLeft = getTimeLeft(s);
       return {

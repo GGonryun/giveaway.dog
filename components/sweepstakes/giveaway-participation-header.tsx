@@ -33,7 +33,7 @@ export const GiveawayParticipationHeader: React.FC<{
   return (
     <Card className="relative p-0 m-0 gap-0 overflow-hidden w-full">
       {/* Time Remaining Banner */}
-      <CardContent className="pt-4 pb-2 px-4">
+      <CardContent className="mt-2 pt-2 pb-2 px-4">
         <div className="flex flex-row  gap-x-4 gap-y-2 mb-2">
           <div className="hidden sm:flex items-center gap-1">
             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
@@ -156,12 +156,7 @@ export const GiveawayParticipationHeader: React.FC<{
                 >
                   <span className="text-muted-foreground text-sm">•</span>
                   <span className="text text-muted-foreground flex-1">
-                    {prize.name || `Prize ${index + 1}`}
-                    {prize.winners && prize.winners > 1 && (
-                      <span className="text-xs ml-1 text-gray-500">
-                        ({prize.winners} winners)
-                      </span>
-                    )}
+                    {prize.winners} x {prize.name || `Prize ${index + 1}`}
                   </span>
                 </li>
               ))}

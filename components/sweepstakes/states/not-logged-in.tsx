@@ -2,15 +2,15 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { LogIn } from 'lucide-react';
+import { LogInIcon } from 'lucide-react';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
 
 export const NotLoggedIn: React.FC = () => {
   const { onLogin } = useGiveawayParticipation();
 
   return (
-    <div className="text-center">
-      <LogIn className="h-12 w-12 mx-auto mb-4 text-blue-500" />
+    <div className="text-center my-4">
+      <LogInIcon className="h-12 w-12 mx-auto mb-4 text-blue-500" />
       <h3 className="text-lg font-semibold mb-2">Login Required</h3>
       <p className="text-muted-foreground mb-4">
         You need to log in to participate in this giveaway.
