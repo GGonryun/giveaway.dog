@@ -75,23 +75,23 @@ const TaskItem: React.FC<{
 };
 
 export const ActiveParticipation: React.FC = () => {
-  const { giveaway, user } = useGiveawayParticipation();
+  const { sweepstakes, user } = useGiveawayParticipation();
 
   const userProgress = useMemo(() => {
     if (!user?.participation)
-      return { completed: 0, total: giveaway.tasks.length, percentage: 0 };
+      return { completed: 0, total: sweepstakes.tasks.length, percentage: 0 };
 
-    const completed = giveaway.tasks.filter((_, index) =>
+    const completed = sweepstakes.tasks.filter((_, index) =>
       user.participation.completedTasks.includes(`task-${index}`)
     ).length;
-    const total = giveaway.tasks.length;
+    const total = sweepstakes.tasks.length;
     const percentage = total > 0 ? (completed / total) * 100 : 0;
 
     return { completed, total, percentage };
-  }, [user?.participation, giveaway.tasks]);
+  }, [user?.participation, sweepstakes.tasks]);
 
-  const hasTasks = giveaway.tasks && giveaway.tasks.length > 0;
-  const hasPrizes = giveaway.prizes && giveaway.prizes.length > 0;
+  const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
+  const hasPrizes = sweepstakes.prizes && sweepstakes.prizes.length > 0;
   const hasContent = hasTasks || hasPrizes;
 
   return (
@@ -118,17 +118,17 @@ export const ActiveParticipation: React.FC = () => {
           <Tabs defaultValue={hasTasks ? 'tasks' : 'prizes'} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="tasks">
-                Entry Methods {hasTasks && `(${giveaway.tasks.length})`}
+                Entry Methods {hasTasks && `(${sweepstakes.tasks.length})`}
               </TabsTrigger>
               <TabsTrigger value="prizes">
-                Prizes {hasPrizes && `(${giveaway.prizes.length})`}
+                Prizes {hasPrizes && `(${sweepstakes.prizes.length})`}
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="tasks" className="mt-4">
               {hasTasks ? (
                 <div className="space-y-3">
-                  {giveaway.tasks.map((task, index) => {
+                  {sweepstakes.tasks.map((task, index) => {
                     const taskId = `task-${index}`;
                     const completed =
                       user?.participation?.completedTasks.includes(taskId) ??
@@ -160,7 +160,7 @@ export const ActiveParticipation: React.FC = () => {
             <TabsContent value="prizes" className="mt-4">
               {hasPrizes ? (
                 <div className="space-y-3">
-                  {giveaway.prizes.map((prize, index) => (
+                  {sweepstakes.prizes.map((prize, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-3 border rounded-lg transition-colors text-left"
@@ -169,8 +169,7 @@ export const ActiveParticipation: React.FC = () => {
                         <h4 className="font-medium">{prize.name}</h4>
                       </div>
                       <Badge variant="secondary">
-                        {prize.winners}{' '}
-                        {prize.winners === 1 ? 'winner' : 'winners'}
+                        {prize.quota} {prize.quota === 1 ? 'winner' : 'winners'}
                       </Badge>
                     </div>
                   ))}

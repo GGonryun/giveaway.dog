@@ -55,7 +55,7 @@ export type SweepstakesTermOptions = {
   eligibilityAge?: string;
   prizes: {
     name: string;
-    winners: number;
+    quota: number;
   }[];
 } & TermsTemplateSchema;
 
@@ -80,7 +80,7 @@ Entrants under the legal age of majority must have permission from a parent or l
 
   howToEnter: `Enter via ${configuration.entryUrl}.${configuration.maxEntriesPerUser ? ` Limit ${configuration.maxEntriesPerUser} entries per person.` : ''} Automated, fraudulent, or multiple entries through bots, scripts, or fake accounts are prohibited and may result in disqualification.`,
 
-  prizes: `Prizes:\n${configuration.prizes.map((p) => `\t- ${p.winners} ${pluralize('winner', p.winners)} will receive '${p.name}'`).join('\n')}\n\nPrizes are non-transferable and non-redeemable for cash unless permitted by the Sponsor. All taxes and expenses related to the prize are the responsibility of the Winner.`,
+  prizes: `Prizes:\n${configuration.prizes.map((p) => `\t- ${p.quota} ${pluralize('winner', p.quota)} will receive '${p.name}'`).join('\n')}\n\nPrizes are non-transferable and non-redeemable for cash unless permitted by the Sponsor. All taxes and expenses related to the prize are the responsibility of the Winner.`,
 
   winnerSelection: `Winner(s) will be selected by ${configuration.winnerSelectionMethod}. Winners will be notified within ${configuration.notificationTimeframeDays} ${pluralize('day', configuration.notificationTimeframeDays)} using the contact information provided. Winners must claim their prize within ${configuration.claimDeadlineDays} ${pluralize('day', configuration.claimDeadlineDays)} or an alternate winner may be chosen.`,
 

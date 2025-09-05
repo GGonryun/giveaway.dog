@@ -4,10 +4,15 @@ import z from 'zod';
 export const userProfileSchema = z.object({
   id: z.string(),
   name: z.string().nullable(),
-  email: z.string().nullable(),
-  age: z.number().nullable(),
-  region: z.string().nullable(),
+  email: z.string().email().nullable(),
   emoji: z.string().nullable(),
+  region: z.string().nullable(),
+  age: z.number().int().min(1).max(120).nullable()
+});
+
+export type UserProfileSchema = z.infer<typeof userProfileSchema>;
+
+export const userSchema = userProfileSchema.extend({
   emailVerified: z.boolean().nullable(),
   type: z.nativeEnum(UserType).array(),
   providers: z.array(
@@ -20,7 +25,7 @@ export const userProfileSchema = z.object({
   )
 });
 
-export type UserProfile = z.infer<typeof userProfileSchema>;
+export type UserSchema = z.infer<typeof userSchema>;
 
 export const parseProviders = (providers: unknown) => {
   if (!Array.isArray(providers)) {

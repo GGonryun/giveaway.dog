@@ -20,10 +20,10 @@ import {
 } from '@/components/ui/sheet';
 import { EmojiLogo } from './logo-button';
 import Link from 'next/link';
-import { UserProfile } from '@/schemas/user';
+import { UserSchema } from '@/schemas/user';
 import { UserType } from '@prisma/client';
 
-export const NavigationBar: React.FC<{ user: UserProfile | null }> = ({
+export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
   user
 }) => {
   const isLoggedIn = useMemo(() => !!user?.id, [user?.id]);

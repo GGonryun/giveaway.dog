@@ -106,11 +106,11 @@ const toStorablePrizes = (
 
   return {
     createMany: {
-      data: compactPrizes.map(({ id, name, winners }, index) => ({
+      data: compactPrizes.map(({ id, name, quota }, index) => ({
         id,
         index,
         name,
-        winners
+        quota
       }))
     }
   };

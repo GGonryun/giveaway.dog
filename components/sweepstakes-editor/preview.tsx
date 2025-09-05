@@ -7,13 +7,12 @@ import { GiveawayParticipationSkeleton } from '@/components/sweepstakes/fallback
 import { IncompleteGiveawaySetup } from '@/components/sweepstakes/fallbacks/empty-states';
 
 import {
-  GiveawayParticipationData,
+  GiveawayParticipationSchema,
   GiveawayFormSchema,
-  GiveawayWinner,
+  GiveawayWinnerSchema,
   Prize,
   TaskSchema,
-  UserParticipation,
-  UserProfile
+  UserParticipation
 } from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
 import {
@@ -23,6 +22,8 @@ import {
 } from '@prisma/client';
 import { defaultTermInputOptions } from './form/terms';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
+import { noop } from 'lodash';
+import { UserProfileSchema } from '@/schemas/user';
 
 const mockHost = {
   id: 'preview-host-id',
@@ -32,18 +33,18 @@ const mockHost = {
 };
 
 // Mock user data for preview
-const mockUserProfile: UserProfile = {
+const mockUserProfile: UserProfileSchema = {
   id: 'preview-user',
   name: 'Preview User',
   email: 'user@example.com',
-  avatar: '/api/placeholder/32/32',
+  emoji: '🐶',
   region: 'US',
   age: 25
 };
 
-const mockParticipation: GiveawayParticipationData = {
-  id: 'preview-giveaway',
-  totalEntries: 1247
+const mockParticipation: GiveawayParticipationSchema = {
+  totalEntries: 1247,
+  totalUsers: 357
 };
 
 const mockUserParticipation: UserParticipation = {
@@ -51,7 +52,7 @@ const mockUserParticipation: UserParticipation = {
   completedTasks: ['task-0'] // First task completed for demo
 };
 
-const mockWinners: GiveawayWinner[] = [];
+const mockWinners: GiveawayWinnerSchema[] = [];
 
 export const GiveawayPreview: React.FC = () => {
   const { control } = useFormContext<GiveawayFormSchema>();
@@ -60,7 +61,7 @@ export const GiveawayPreview: React.FC = () => {
   // Watch all form values for live preview
   const formValues = useWatch({ control });
 
-  const giveawayData: GiveawayFormSchema | undefined = useMemo(() => {
+  const mockSweepstakes: GiveawayFormSchema | undefined = useMemo(() => {
     try {
       // Check if we have minimum required data
       if (
@@ -130,7 +131,7 @@ export const GiveawayPreview: React.FC = () => {
   }, [formValues]);
 
   // Handle different states of data availability
-  if (!giveawayData) {
+  if (!mockSweepstakes) {
     // Check if we have any form data at all
     if (!formValues || Object.keys(formValues).length === 0) {
       return <GiveawayParticipationSkeleton />;
@@ -147,18 +148,15 @@ export const GiveawayPreview: React.FC = () => {
   return (
     <div className="w-full max-w-2xl mx-auto">
       <GiveawayParticipation
-        giveaway={giveawayData}
+        sweepstakes={mockSweepstakes}
         host={mockHost}
         participation={mockParticipation}
         winners={mockWinners}
-        user={{
-          profile: mockUserProfile,
-          participation: mockUserParticipation
-        }}
+        user={mockUserProfile}
         state={previewState}
-        onTaskComplete={(taskId) => {}}
-        onLogin={() => {}}
-        onCompleteProfile={() => {}}
+        onTaskComplete={noop}
+        onLogin={noop}
+        onCompleteProfile={noop}
       />
     </div>
   );

@@ -198,7 +198,7 @@ export function SweepstakesTable({
                       {getStatusIcon(item.status)}
                       <div className="min-w-0 flex-1">
                         <Link
-                          href={`/app/sweepstakes/${item.id}`}
+                          href={detailsPage.route(item.id)}
                           className="font-medium hover:text-primary hover:underline block truncate"
                         >
                           {item.name || DEFAULT_SWEEPSTAKES_NAME}
@@ -248,7 +248,7 @@ export function SweepstakesTable({
 
                     <div className="flex items-center space-x-1">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/app/sweepstakes/${item.id}`}>
+                        <Link href={detailsPage.route(item.id)}>
                           <Eye className="h-4 w-4" />
                         </Link>
                       </Button>
@@ -261,31 +261,17 @@ export function SweepstakesTable({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem asChild>
-                            <Link href={`/app/sweepstakes/${item.id}`}>
+                            <Link href={detailsPage.route(item.id)}>
                               <Eye className="h-4 w-4 mr-2" />
                               View Details
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
+                          <DropdownMenuItem asChild>
+                            <Link href={editPage.route(item.id)}>
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit
+                            </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Copy className="h-4 w-4 mr-2" />
-                            Duplicate
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          {item.status === SweepstakesStatus.ACTIVE ? (
-                            <DropdownMenuItem className="text-yellow-600">
-                              <Pause className="h-4 w-4 mr-2" />
-                              Pause
-                            </DropdownMenuItem>
-                          ) : item.status === SweepstakesStatus.PAUSED ? (
-                            <DropdownMenuItem className="text-green-600">
-                              <Play className="h-4 w-4 mr-2" />
-                              Resume
-                            </DropdownMenuItem>
-                          ) : null}
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-red-600"

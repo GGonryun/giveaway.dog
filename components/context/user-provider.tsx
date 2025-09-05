@@ -1,10 +1,10 @@
 // app/team-context.tsx
 'use client';
 
-import { UserProfile } from '@/schemas/user';
+import { UserSchema } from '@/schemas/user';
 import { createContext, useContext } from 'react';
 
-type UserContextType = UserProfile;
+type UserContextType = UserSchema;
 
 const UserContext = createContext<UserContextType | null>(null);
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FullSweepstakesGetPayload } from './db';
+import { FormSweepstakesGetPayload } from './db';
 
 export const publicSweepstakesSchema = z.object({
   id: z.string(),
@@ -17,7 +17,7 @@ export const publicSweepstakesSchema = z.object({
 export type PublicSweepstakeSchema = z.infer<typeof publicSweepstakesSchema>;
 
 export const tryToPublicSweepstakes = (
-  sweepstakes: FullSweepstakesGetPayload
+  sweepstakes: FormSweepstakesGetPayload
 ): PublicSweepstakeSchema | undefined => {
   const organized = {
     id: sweepstakes.id,

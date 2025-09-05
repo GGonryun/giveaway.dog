@@ -3,7 +3,7 @@ import { GiveawayFormSchema as SweepstakesFormSchema } from './schemas';
 import z from 'zod';
 import { Prisma } from '@prisma/client';
 
-export const FULL_SWEEPSTAKES_PAYLOAD = {
+export const FORM_SWEEPSTAKES_PAYLOAD = {
   tasks: true,
   prizes: true,
   audience: {
@@ -17,8 +17,35 @@ export const FULL_SWEEPSTAKES_PAYLOAD = {
   details: true
 } satisfies Prisma.SweepstakesInclude;
 
-export type FullSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
-  include: typeof FULL_SWEEPSTAKES_PAYLOAD;
+export const PARTICIPANT_SWEEPSTAKES_PAYLOAD = {
+  tasks: true,
+  prizes: {
+    include: {
+      winners: {
+        include: {
+          user: true
+        }
+      }
+    }
+  },
+  audience: {
+    include: {
+      regionalRestriction: true,
+      minimumAgeRestriction: true
+    }
+  },
+  terms: true,
+  timing: true,
+  details: true,
+  team: true
+} satisfies Prisma.SweepstakesInclude;
+
+export type ParticipantSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
+  include: typeof PARTICIPANT_SWEEPSTAKES_PAYLOAD;
+}>;
+
+export type FormSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
+  include: typeof FORM_SWEEPSTAKES_PAYLOAD;
 }>;
 
 export const TEAM_SWEEPSTAKES_PAYLOAD: Prisma.SweepstakesInclude = {

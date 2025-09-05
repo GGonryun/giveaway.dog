@@ -5,7 +5,7 @@ import { AlertCircle } from 'lucide-react';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
 
 export const NotEligible: React.FC = () => {
-  const { giveaway } = useGiveawayParticipation();
+  const { sweepstakes } = useGiveawayParticipation();
 
   return (
     <div className="text-center">
@@ -15,12 +15,12 @@ export const NotEligible: React.FC = () => {
         You are not eligible to participate in this giveaway due to age or
         region restrictions.
       </p>
-      {giveaway.audience.minimumAgeRestriction && (
+      {sweepstakes.audience.minimumAgeRestriction && (
         <p className="text-sm text-muted-foreground">
-          Minimum age: {giveaway.audience.minimumAgeRestriction.value} years
+          Minimum age: {sweepstakes.audience.minimumAgeRestriction.value} years
         </p>
       )}
-      {giveaway.audience.regionalRestriction && (
+      {sweepstakes.audience.regionalRestriction && (
         <p className="text-sm text-muted-foreground">
           Region restrictions apply
         </p>

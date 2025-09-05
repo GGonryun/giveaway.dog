@@ -18,15 +18,12 @@ import { useGiveawayParticipation } from './giveaway-participation-context';
 import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
 import { format, formatDistanceToNow, isBefore, isAfter } from 'date-fns';
 
-export const GiveawayParticipationHeader: React.FC<{
-  children: React.ReactNode;
-}> = ({ children }) => {
-  const { giveaway, host, participation } = useGiveawayParticipation();
+export const GiveawayParticipationHeader: React.PC = ({ children }) => {
+  const { sweepstakes, host, participation } = useGiveawayParticipation();
 
   const now = new Date();
-  const startDate = giveaway.timing.startDate;
-  const endDate = giveaway.timing.endDate;
-
+  const startDate = format(sweepstakes.timing.startDate, 'MMM d, yyyy');
+  const endDate = format(sweepstakes.timing.endDate, 'MMM d, yyyy');
   const hasEnded = isAfter(now, endDate);
   const isUpcoming = isBefore(now, startDate);
 
@@ -38,8 +35,7 @@ export const GiveawayParticipationHeader: React.FC<{
           <div className="hidden sm:flex items-center gap-1">
             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
             <div className="text-xs text-muted-foreground font-semibold">
-              {format(startDate, 'MMM d, yyyy')} -{' '}
-              {format(endDate, 'MMM d, yyyy')}
+              {startDate} - {endDate}
             </div>
           </div>
           <Separator
@@ -70,7 +66,7 @@ export const GiveawayParticipationHeader: React.FC<{
 
         {/* Title */}
         <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">
-          {giveaway.setup.name}
+          {sweepstakes.setup.name}
         </h1>
       </CardContent>
 
@@ -94,13 +90,13 @@ export const GiveawayParticipationHeader: React.FC<{
           </Badge>
         </div>
 
-        {giveaway.setup.banner && (
+        {sweepstakes.setup.banner && (
           <div className="relative">
             {/* Banner Image */}
             <div className="overflow-hidden rounded-lg aspect-video flex w-full">
               <img
-                src={giveaway.setup.banner}
-                alt={giveaway.setup.name}
+                src={sweepstakes.setup.banner}
+                alt={sweepstakes.setup.name}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -111,9 +107,7 @@ export const GiveawayParticipationHeader: React.FC<{
         <div className="mt-4 p-2 bg-sidebar border rounded-lg">
           <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 sm:items-center justify-between">
             <div className="flex gap-3">
-              <span className="text-4xl">
-                {host.avatar || DEFAULT_TEAM_LOGO}
-              </span>
+              <span className="text-4xl">{host.logo || DEFAULT_TEAM_LOGO}</span>
               <div className="flex flex-col">
                 <div className="text-md text-muted-foreground">
                   Hosted by <span className="font-semibold">{host.name}</span>
@@ -145,18 +139,18 @@ export const GiveawayParticipationHeader: React.FC<{
 
       {/* Prizes Section */}
       <CardContent className="p-4 border-b">
-        {giveaway.prizes && giveaway.prizes.length > 0 && (
+        {sweepstakes.prizes && sweepstakes.prizes.length > 0 && (
           <div className="flex flex-col items-start gap-0 mb-4">
             <h3 className="font-semibold text-gray-900">Prizes:</h3>
             <ul className="space-y-1">
-              {giveaway.prizes.map((prize, index) => (
+              {sweepstakes.prizes.map((prize, index) => (
                 <li
                   key={prize.id || index}
                   className="flex items-start gap-2 ml-4 text-sm"
                 >
                   <span className="text-muted-foreground text-sm">•</span>
                   <span className="text text-muted-foreground flex-1">
-                    {prize.winners} x {prize.name || `Prize ${index + 1}`}
+                    {prize.quota} x {prize.name || `Prize ${index + 1}`}
                   </span>
                 </li>
               ))}
@@ -165,8 +159,10 @@ export const GiveawayParticipationHeader: React.FC<{
         )}
 
         {/* Description Section */}
-        {giveaway.setup.description && (
-          <p className="text">{giveaway.setup.description}</p>
+        {sweepstakes.setup.description && (
+          <p className="text-sm sm:text-base">
+            {sweepstakes.setup.description}
+          </p>
         )}
       </CardContent>
 

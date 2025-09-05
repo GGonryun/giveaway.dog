@@ -1,14 +1,13 @@
 import { procedure } from '@/lib/mrpc/procedures';
-import { userProfileSchema } from '@/schemas/user';
-import { getUserQuery, userProfileCache } from './shared';
+import { userSchema } from '@/schemas/user';
+import { getUserQuery, userCache } from './shared';
 
 const findUser = procedure
   .authorization({ required: false })
-  .output(userProfileSchema.nullable())
-  .cache(userProfileCache.fn)
+  .output(userSchema.nullable())
+  .cache(userCache.fn)
   .handler(async ({ db, user }) => {
     if (!user?.id) return null;
-
     return await getUserQuery(db, user.id);
   });
 

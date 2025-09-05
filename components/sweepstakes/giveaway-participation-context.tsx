@@ -2,21 +2,20 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
 import {
-  UserProfile,
-  UserParticipation,
-  GiveawayParticipationData,
+  GiveawayParticipationSchema,
   GiveawayState,
   GiveawayHostSchema,
-  GiveawayWinner,
+  GiveawayWinnerSchema,
   GiveawayFormSchema
 } from '@/schemas/giveaway/schemas';
+import { UserProfileSchema } from '@/schemas/user';
 
 export interface GiveawayParticipationProps {
-  giveaway: GiveawayFormSchema;
+  sweepstakes: GiveawayFormSchema;
   host: GiveawayHostSchema;
-  participation: GiveawayParticipationData;
-  winners: GiveawayWinner[];
-  user?: { profile: UserProfile; participation: UserParticipation };
+  participation: GiveawayParticipationSchema;
+  winners: GiveawayWinnerSchema[];
+  user?: UserProfileSchema;
   state?: GiveawayState;
 
   onTaskComplete?: (taskId: string) => void;
@@ -40,7 +39,7 @@ export const GiveawayParticipationProvider: React.FC<
 > = ({
   children,
   participation,
-  giveaway,
+  sweepstakes,
   host,
   winners,
   user,
@@ -51,7 +50,7 @@ export const GiveawayParticipationProvider: React.FC<
 }) => {
   const value: GiveawayParticipationContextValue = {
     participation,
-    giveaway,
+    sweepstakes,
     host,
     winners,
     user,

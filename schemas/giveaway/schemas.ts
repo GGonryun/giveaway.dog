@@ -2,6 +2,7 @@ import { RegionalRestrictionFilter, SweepstakesStatus } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';
+import { userProfileSchema } from '../user';
 
 export const baseTaskSchema = z.object({
   id: z.string(),
@@ -40,10 +41,7 @@ export type TaskOf<T extends TaskType> = Extract<TaskSchema, { type: T }>;
 export const prizeSchema = z.object({
   id: z.string(),
   name: z.string().min(3).max(100),
-  winners: z
-    .number()
-    .min(1, 'Minimum value is 1')
-    .max(10, 'Maximum value is 10')
+  quota: z.number().min(1, 'Minimum value is 1').max(10, 'Maximum value is 10')
 });
 
 export type Prize = z.infer<typeof prizeSchema>;
@@ -178,18 +176,6 @@ export const giveawaySchema = giveawayFormSchema.extend({
 
 export type GiveawaySchema = z.infer<typeof giveawaySchema>;
 
-// User Profile Schema
-export const userProfileSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email().optional(),
-  avatar: z.string().optional(),
-  region: z.string().optional(),
-  age: z.number().int().min(1).max(120).optional()
-});
-
-export type UserProfile = z.infer<typeof userProfileSchema>;
-
 // User Participation Schema
 export const userParticipationSchema = z.object({
   entries: z.number().int().min(0),
@@ -203,7 +189,7 @@ export const giveawayHostSchema = z.object({
   id: z.string().optional(),
   slug: z.string(),
   name: z.string(),
-  avatar: z.string().optional()
+  logo: z.string().optional()
 });
 
 export type GiveawayHostSchema = z.infer<typeof giveawayHostSchema>;
@@ -211,20 +197,19 @@ export type GiveawayHostSchema = z.infer<typeof giveawayHostSchema>;
 // Winner Information Schema
 const giveawayWinnerSchema = z.object({
   prizeId: z.string(),
-  prizeName: z.string().min(1, 'Prize name is required'),
-  winners: z.array(userProfileSchema).min(1, 'At least one winner is required')
+  prizeName: z.string(),
+  winners: z.array(userProfileSchema)
 });
 
-export type GiveawayWinner = z.infer<typeof giveawayWinnerSchema>;
+export type GiveawayWinnerSchema = z.infer<typeof giveawayWinnerSchema>;
 
-// Giveaway Participation Data Schema
-export const giveawayParticipationDataSchema = z.object({
-  id: z.string(),
-  totalEntries: z.number().int().min(0)
+export const giveawayParticipationSchema = z.object({
+  totalEntries: z.number().int().min(0),
+  totalUsers: z.number().int().min(0)
 });
 
-export type GiveawayParticipationData = z.infer<
-  typeof giveawayParticipationDataSchema
+export type GiveawayParticipationSchema = z.infer<
+  typeof giveawayParticipationSchema
 >;
 
 export type GiveawayState =
@@ -261,8 +246,10 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
 };
 
 export const participantSweepstakeSchema = z.object({
-  giveaway: giveawaySchema,
-  host: giveawayHostSchema
+  sweepstakes: giveawaySchema,
+  host: giveawayHostSchema,
+  winners: giveawayWinnerSchema.array(),
+  participation: giveawayParticipationSchema
 });
 
 export type ParticipantSweepstakeSchema = z.infer<

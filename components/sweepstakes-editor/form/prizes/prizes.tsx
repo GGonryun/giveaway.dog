@@ -129,7 +129,7 @@ export const Prizes = () => {
                   onClick={() =>
                     append({
                       name: 'My Custom Prize',
-                      winners: 1,
+                      quota: 1,
                       id: nanoid()
                     })
                   }

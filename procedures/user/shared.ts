@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { hoursToSeconds } from 'date-fns';
 import { User } from 'next-auth';
 
-export const userProfileCache = {
+export const userCache = {
   fn: ({ user }: { user: Required<User> | User | null }) => {
     // Skip caching for unauthenticated requests
     if (!user?.id) return undefined;

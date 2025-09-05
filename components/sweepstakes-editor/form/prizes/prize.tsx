@@ -150,7 +150,7 @@ const PrizeWinnersField = () => {
   return (
     <FormField
       control={form.control}
-      name={`prizes.${index}.winners`}
+      name={`prizes.${index}.quota`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Winners</FormLabel>

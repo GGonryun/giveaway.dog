@@ -3,7 +3,7 @@ import {
   publicSweepstakesSchema,
   tryToPublicSweepstakes
 } from '@/schemas/giveaway/public';
-import { FULL_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { FORM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { compact } from 'lodash';
 
 const getPublicSweepstakesList = procedure
@@ -17,7 +17,7 @@ const getPublicSweepstakesList = procedure
       where: {
         status: 'ACTIVE'
       },
-      include: FULL_SWEEPSTAKES_PAYLOAD
+      include: FORM_SWEEPSTAKES_PAYLOAD
     });
 
     return compact(sweepstakes.map(tryToPublicSweepstakes));

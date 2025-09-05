@@ -3,14 +3,14 @@ import { Prisma } from '@prisma/client';
 import { timezone } from '@/lib/time';
 import * as dates from 'date-fns';
 import {
-  FullSweepstakesGetPayload,
+  FormSweepstakesGetPayload,
   SweepstakesInputSchema,
   SweepstakesInputTaskSchema
 } from './db';
 import { compact } from 'lodash';
 
 const toSetup = (
-  data: FullSweepstakesGetPayload['details']
+  data: FormSweepstakesGetPayload['details']
 ): SweepstakesInputSchema['setup'] => {
   return {
     name: data?.name ?? undefined,
@@ -20,7 +20,7 @@ const toSetup = (
 };
 
 const toTermsInput = (
-  terms: FullSweepstakesGetPayload['terms']
+  terms: FormSweepstakesGetPayload['terms']
 ): SweepstakesInputSchema['terms'] => {
   return {
     type: terms?.type ?? undefined,
@@ -38,7 +38,7 @@ const toTermsInput = (
 };
 
 const toAudienceInput = (
-  data: FullSweepstakesGetPayload['audience']
+  data: FormSweepstakesGetPayload['audience']
 ): SweepstakesInputSchema['audience'] => {
   return {
     requireEmail: data?.requireEmail || false,
@@ -60,7 +60,7 @@ const toAudienceInput = (
 };
 
 const toTimingInput = (
-  data: FullSweepstakesGetPayload['timing']
+  data: FormSweepstakesGetPayload['timing']
 ): SweepstakesInputSchema['timing'] => {
   return {
     startDate: data?.startDate
@@ -74,19 +74,19 @@ const toTimingInput = (
 };
 
 const toPrizesInput = (
-  data: FullSweepstakesGetPayload['prizes']
+  data: FormSweepstakesGetPayload['prizes']
 ): SweepstakesInputSchema['prizes'] => {
   if (!data) return [];
 
   return data.map((prize) => ({
     id: prize.id ?? undefined,
     name: prize.name ?? undefined,
-    winners: prize.winners ?? undefined
+    quota: prize.quota ?? undefined
   }));
 };
 
 const toTasksInput = (
-  data: FullSweepstakesGetPayload['tasks']
+  data: FormSweepstakesGetPayload['tasks']
 ): SweepstakesInputSchema['tasks'] => {
   if (!data) return [];
 
@@ -94,7 +94,7 @@ const toTasksInput = (
 };
 
 const toTaskInput = (
-  data: FullSweepstakesGetPayload['tasks'][number]
+  data: FormSweepstakesGetPayload['tasks'][number]
 ): SweepstakesInputTaskSchema | undefined => {
   if (!data) return undefined;
 
@@ -122,7 +122,7 @@ function toJsonObject(value: Prisma.JsonValue | null): Record<string, any> {
 }
 
 export const toSweepstakesInput = (
-  giveaway: FullSweepstakesGetPayload
+  giveaway: FormSweepstakesGetPayload
 ): Omit<SweepstakesInputSchema, 'id'> => {
   return {
     setup: toSetup(giveaway.details),

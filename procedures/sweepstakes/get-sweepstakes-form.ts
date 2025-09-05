@@ -6,7 +6,7 @@ import { findUserSweepstakesQuery } from './shared';
 import { ApplicationError } from '@/lib/errors';
 import { toSweepstakesInput } from '@/schemas/giveaway/input';
 import {
-  FULL_SWEEPSTAKES_PAYLOAD,
+  FORM_SWEEPSTAKES_PAYLOAD,
   sweepstakesInputSchema
 } from '@/schemas/giveaway/db';
 
@@ -20,7 +20,7 @@ const getSweepstakesForm = procedure
         id: input.id,
         userId: user.id
       }),
-      include: FULL_SWEEPSTAKES_PAYLOAD
+      include: FORM_SWEEPSTAKES_PAYLOAD
     });
 
     if (!data) {
