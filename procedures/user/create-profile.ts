@@ -33,7 +33,7 @@ export const createProfile = procedure
         where: { id },
         data: {
           name,
-          ...(age && { age }),
+          ...(age && { age: Number(age) }),
           ...(emoji && { emoji }),
           ...(type && { type })
         }

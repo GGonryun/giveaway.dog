@@ -27,7 +27,7 @@ import { useFormIssues } from '@/components/sweepstakes-editor/hooks/use-form-is
 import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
 import { usePreviewState } from './contexts/preview-state-context';
 import {
-  GIVEAWAY_STATES,
+  PREVIEW_GIVEAWAY_STATES,
   getStateDisplayLabel
 } from '@/schemas/giveaway/schemas';
 import { FormHeaderProps, FormLayoutProps } from './form-layout';
@@ -174,7 +174,7 @@ const PreviewFooter: React.FC = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {GIVEAWAY_STATES.map((state) => (
+              {PREVIEW_GIVEAWAY_STATES.map((state) => (
                 <DropdownMenuItem
                   key={state}
                   onClick={() => setPreviewState(state)}

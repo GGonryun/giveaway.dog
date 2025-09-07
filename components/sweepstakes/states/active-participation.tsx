@@ -17,7 +17,8 @@ const TaskItem: React.FC<{
   taskId: string;
   completed: boolean;
 }> = ({ task, taskId, completed }) => {
-  const { onTaskComplete, user } = useGiveawayParticipation();
+  const { onTaskComplete, userProfile, userParticipation } =
+    useGiveawayParticipation();
   const theme = toTaskTheme(task.type);
   const IconComponent = theme.icon;
 
@@ -26,7 +27,7 @@ const TaskItem: React.FC<{
       className={cn(
         'flex items-center justify-between p-3 border rounded-lg transition-colors',
         completed ? 'bg-green-50 border-green-200' : 'hover:bg-gray-50',
-        !user?.profile && 'opacity-50 cursor-not-allowed'
+        !userProfile && 'opacity-50 cursor-not-allowed'
       )}
     >
       <div className="flex items-center gap-3">
@@ -56,7 +57,7 @@ const TaskItem: React.FC<{
             Required
           </Badge>
         )}
-        {!completed && user?.profile && (
+        {!completed && userProfile && (
           <Button size="sm" onClick={() => onTaskComplete?.(taskId)}>
             Complete
           </Button>
@@ -75,20 +76,21 @@ const TaskItem: React.FC<{
 };
 
 export const ActiveParticipation: React.FC = () => {
-  const { sweepstakes, user } = useGiveawayParticipation();
+  const { sweepstakes, userProfile, userParticipation } =
+    useGiveawayParticipation();
 
   const userProgress = useMemo(() => {
-    if (!user?.participation)
+    if (!userParticipation)
       return { completed: 0, total: sweepstakes.tasks.length, percentage: 0 };
 
     const completed = sweepstakes.tasks.filter((_, index) =>
-      user.participation.completedTasks.includes(`task-${index}`)
+      userParticipation.completedTasks.includes(`task-${index}`)
     ).length;
     const total = sweepstakes.tasks.length;
     const percentage = total > 0 ? (completed / total) * 100 : 0;
 
     return { completed, total, percentage };
-  }, [user?.participation, sweepstakes.tasks]);
+  }, [userParticipation, sweepstakes.tasks]);
 
   const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
   const hasPrizes = sweepstakes.prizes && sweepstakes.prizes.length > 0;
@@ -99,7 +101,7 @@ export const ActiveParticipation: React.FC = () => {
       {hasContent ? (
         <>
           <div>
-            {user?.profile && hasTasks && (
+            {userProfile && hasTasks && (
               <>
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-sm text-muted-foreground">Progress</div>
@@ -131,7 +133,7 @@ export const ActiveParticipation: React.FC = () => {
                   {sweepstakes.tasks.map((task, index) => {
                     const taskId = `task-${index}`;
                     const completed =
-                      user?.participation?.completedTasks.includes(taskId) ??
+                      userParticipation?.completedTasks.includes(taskId) ??
                       false;
 
                     return (

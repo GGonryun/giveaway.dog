@@ -3,16 +3,25 @@
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
 import {
   GiveawayState,
-  ParticipantSweepstakeSchema
+  ParticipantSweepstakeSchema,
+  UserParticipationSchema
 } from '@/schemas/giveaway/schemas';
-import { UserSchema } from '@/schemas/user';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Button } from '../ui/button';
+import Link from 'next/link';
+import { ArrowLeftIcon, ShareIcon, CircleAlertIcon } from 'lucide-react';
+import { UserProfileSchema } from '@/schemas/user';
 
-export const SweepstakesParticipationPageContent: React.FC<{
-  sweepstake: ParticipantSweepstakeSchema;
-  user: UserSchema | undefined;
-}> = ({ sweepstake, user }) => {
+type SweepstakesParticipationPageContentProps = ParticipantSweepstakeSchema & {
+  userProfile?: UserProfileSchema;
+  userParticipation?: UserParticipationSchema;
+  state: GiveawayState;
+};
+
+export const SweepstakesParticipationPage: React.FC<
+  SweepstakesParticipationPageContentProps
+> = (props) => {
+  const { userProfile, userParticipation, ...sweepstake } = props;
   const router = useRouter();
 
   const handleLogin = () => {
@@ -28,18 +37,32 @@ export const SweepstakesParticipationPageContent: React.FC<{
     console.log('Task completed:', taskId);
   };
 
-  // TODO: compute the state based off the ParticipantSweepstakesSchema
-  const [participantState, setParticipantState] =
-    useState<GiveawayState>('not-logged-in');
-
   return (
-    <GiveawayParticipation
-      {...sweepstake}
-      user={user}
-      state={participantState}
-      onTaskComplete={handleTaskComplete}
-      onLogin={handleLogin}
-      onCompleteProfile={handleCompleteProfile}
-    />
+    <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-6 sm:container sm:max-w-3xl">
+      <div className="flex flex-col sm:flex-row gap-2 w-full justify-between">
+        <Button asChild className="w-full sm:w-fit self-start">
+          <Link href="/browse">
+            <ArrowLeftIcon />
+            Browse More Giveaways
+          </Link>
+        </Button>
+        <div className="flex flex-row gap-2">
+          <Button variant="outline" className="grow sm:grow-0">
+            <ShareIcon />
+            Share
+          </Button>
+          <Button variant="destructive">
+            <CircleAlertIcon />
+            Report
+          </Button>
+        </div>
+      </div>
+      <GiveawayParticipation
+        {...props}
+        onTaskComplete={handleTaskComplete}
+        onLogin={handleLogin}
+        onCompleteProfile={handleCompleteProfile}
+      />
+    </div>
   );
 };

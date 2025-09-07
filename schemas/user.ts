@@ -5,6 +5,7 @@ export const userProfileSchema = z.object({
   id: z.string(),
   name: z.string().nullable(),
   email: z.string().email().nullable(),
+  emailVerified: z.boolean().nullable(),
   emoji: z.string().nullable(),
   region: z.string().nullable(),
   age: z.number().int().min(1).max(120).nullable()
@@ -47,7 +48,7 @@ export const parseProviders = (providers: unknown) => {
 export const updateUserProfileSchema = z.object({
   id: z.string(),
   name: z.string().nullable(),
-  age: z.number().nullable(),
+  age: z.string().nullable(),
   region: z.string().nullable(),
   emoji: z.string().nullable(),
   type: z.array(z.nativeEnum(UserType)).nullable()

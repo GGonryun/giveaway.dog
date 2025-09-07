@@ -1,10 +1,15 @@
-import { SweepstakesParticipationPageContent } from '@/components/sweepstakes-browse/sweepstakes-participation-page-content';
+import { SweepstakesParticipationPage } from '@/components/sweepstakes-browse/sweepstakes-participation-page-content';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import { notFound } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { ArrowLeftIcon, CircleAlertIcon, ShareIcon } from 'lucide-react';
-import Link from 'next/link';
+import getUserSweepstakesParticipation from '@/procedures/browse/get-user-sweepstakes-participation';
 import findUser from '@/procedures/user/find-user';
+import {
+  GiveawayState,
+  ParticipantSweepstakeSchema
+} from '@/schemas/giveaway/schemas';
+import { UserProfileSchema } from '@/schemas/user';
+import { assertNever } from '@/lib/errors';
+import { dates } from '@/lib/date';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -15,34 +20,52 @@ export default async function Page({ params }: PageProps) {
 
   const result = await getParticipantSweepstake({ id });
   const user = await findUser();
-  if (!result.ok || !user.ok) {
+  const participation = await getUserSweepstakesParticipation({ id });
+  if (!result.ok || !participation.ok || !user.ok) {
     notFound();
   }
+  const userProfile = user.data ?? undefined;
+  const sweepstakes = result.data.sweepstakes;
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-6 sm:container sm:max-w-3xl">
-      <div className="flex flex-col sm:flex-row gap-2 w-full justify-between">
-        <Button asChild className="w-full sm:w-fit self-start">
-          <Link href="/browse">
-            <ArrowLeftIcon />
-            Browse More Giveaways
-          </Link>
-        </Button>
-        <div className="flex flex-row gap-2">
-          <Button variant="outline" className="grow sm:grow-0">
-            <ShareIcon />
-            Share
-          </Button>
-          <Button variant="destructive">
-            <CircleAlertIcon />
-            Report
-          </Button>
-        </div>
-      </div>
-      <SweepstakesParticipationPageContent
-        sweepstake={result.data}
-        user={user.data ?? undefined}
-      />
-    </div>
+    <SweepstakesParticipationPage
+      {...result.data}
+      state={computeState({ sweepstakes, userProfile })}
+      userProfile={userProfile}
+      userParticipation={participation.data}
+    />
   );
 }
+
+const computeState = ({
+  sweepstakes,
+  userProfile
+}: {
+  sweepstakes: ParticipantSweepstakeSchema['sweepstakes'];
+  userProfile?: UserProfileSchema;
+}): GiveawayState => {
+  if (!userProfile) return 'not-logged-in';
+  if (
+    sweepstakes.audience.requireEmail &&
+    (!userProfile.email || !userProfile.emailVerified)
+  )
+    return 'profile-incomplete';
+
+  switch (sweepstakes.status) {
+    case 'DRAFT':
+      return 'closed';
+    case 'PAUSED':
+      return 'closed';
+    case 'CANCELED':
+      return 'canceled';
+    case 'ACTIVE': {
+      if (dates.hasExpired(sweepstakes.timing.endDate))
+        return 'winners-pending';
+      return 'active';
+    }
+    case 'COMPLETED':
+      return 'winners-announced';
+    default:
+      throw assertNever(sweepstakes.status);
+  }
+};

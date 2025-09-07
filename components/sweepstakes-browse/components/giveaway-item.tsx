@@ -12,6 +12,7 @@ import React from 'react';
 import { ClockIcon, MapPinIcon, Trophy, UsersIcon } from 'lucide-react';
 import pluralize from 'pluralize';
 import Link from 'next/link';
+import { dates } from '@/lib/date';
 
 const getStatusBadge = (
   { startDate, endDate }: Pick<PublicSweepstakeSchema, 'endDate' | 'startDate'>,
@@ -53,7 +54,7 @@ export const GiveawayItem: React.FC<{
     participants
   } = sweepstakes;
 
-  const isEnded = isBefore(endDate, new Date());
+  const isEnded = dates.hasExpired(endDate);
 
   return (
     <Card

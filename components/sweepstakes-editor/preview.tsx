@@ -12,7 +12,7 @@ import {
   GiveawayWinnerSchema,
   Prize,
   TaskSchema,
-  UserParticipation
+  UserParticipationSchema
 } from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
 import {
@@ -37,6 +37,7 @@ const mockUserProfile: UserProfileSchema = {
   id: 'preview-user',
   name: 'Preview User',
   email: 'user@example.com',
+  emailVerified: true,
   emoji: '🐶',
   region: 'US',
   age: 25
@@ -47,7 +48,7 @@ const mockParticipation: GiveawayParticipationSchema = {
   totalUsers: 357
 };
 
-const mockUserParticipation: UserParticipation = {
+const mockUserParticipation: UserParticipationSchema = {
   entries: 12,
   completedTasks: ['task-0'] // First task completed for demo
 };
@@ -152,7 +153,8 @@ export const GiveawayPreview: React.FC = () => {
         host={mockHost}
         participation={mockParticipation}
         winners={mockWinners}
-        user={mockUserProfile}
+        userProfile={mockUserProfile}
+        userParticipation={mockUserParticipation}
         state={previewState}
         onTaskComplete={noop}
         onLogin={noop}

@@ -1,7 +1,7 @@
 'use client';
 
 import { MenuIcon } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -31,6 +31,9 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
     () => isLoggedIn && user?.type.includes(UserType.HOST),
     [isLoggedIn, user?.type]
   );
+  const [open, setOpen] = useState(false);
+
+  const closeSheet = () => setOpen(false);
 
   return (
     <section className="py-4">
@@ -97,7 +100,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
               </>
             )}
           </div>
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild className="lg:hidden">
               <Button variant="outline" size="icon">
                 <MenuIcon className="h-4 w-4" />
@@ -106,7 +109,11 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
             <SheetContent side="top" className="max-h-screen overflow-auto">
               <SheetHeader>
                 <SheetTitle>
-                  <Link href="/" className="flex items-center gap-2">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2"
+                    onClick={closeSheet}
+                  >
                     <EmojiLogo className="text-3xl mb-1" />
                     <span className="text-lg font-semibold tracking-tighter">
                       Giveaway.dog
@@ -116,13 +123,25 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
               </SheetHeader>
               <div className="flex flex-col p-4">
                 <div className="flex flex-col gap-6">
-                  <Link href="/support" className="font-medium">
+                  <Link
+                    href="/support"
+                    className="font-medium"
+                    onClick={closeSheet}
+                  >
                     Support
                   </Link>
-                  <Link href="/browse" className="font-medium">
+                  <Link
+                    href="/browse"
+                    className="font-medium"
+                    onClick={closeSheet}
+                  >
                     Browse Giveaways
                   </Link>
-                  <Link href="/pricing" className="font-medium">
+                  <Link
+                    href="/pricing"
+                    className="font-medium"
+                    onClick={closeSheet}
+                  >
                     Pricing
                   </Link>
                 </div>
@@ -130,24 +149,34 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                   {!isLoggedIn ? (
                     <>
                       <Button variant="outline" asChild>
-                        <Link href="/login">Login</Link>
+                        <Link href="/login" onClick={closeSheet}>
+                          Login
+                        </Link>
                       </Button>
                       <Button asChild>
-                        <Link href="/signup">Start Now</Link>
+                        <Link href="/signup" onClick={closeSheet}>
+                          Start Now
+                        </Link>
                       </Button>
                     </>
                   ) : (
                     <>
                       <Button variant="outline" asChild>
-                        <Link href="/account">Account</Link>
+                        <Link href="/account" onClick={closeSheet}>
+                          Account
+                        </Link>
                       </Button>
                       {isHost ? (
                         <Button asChild>
-                          <Link href="/app">Dashboard</Link>
+                          <Link href="/app" onClick={closeSheet}>
+                            Dashboard
+                          </Link>
                         </Button>
                       ) : (
                         <Button asChild>
-                          <Link href="/browse">Giveaways</Link>
+                          <Link href="/browse" onClick={closeSheet}>
+                            Giveaways
+                          </Link>
                         </Button>
                       )}
                     </>

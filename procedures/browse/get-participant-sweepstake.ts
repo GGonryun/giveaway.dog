@@ -1,8 +1,5 @@
 import { procedure } from '@/lib/mrpc/procedures';
-import {
-  FORM_SWEEPSTAKES_PAYLOAD,
-  PARTICIPANT_SWEEPSTAKES_PAYLOAD
-} from '@/schemas/giveaway/db';
+import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 import { toSweepstakesInput } from '@/schemas/giveaway/input';

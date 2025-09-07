@@ -11,7 +11,12 @@ import { ProfileIncomplete } from './states/profile-incomplete';
 import { NotEligible } from './states/not-eligible';
 import { WinnersAnnounced } from './states/winners-announced';
 import { ActiveParticipation } from './states/active-participation';
+import { Cancelled } from './states/cancelled';
+import { Closed } from './states/closed';
+import { Error } from './states/error';
+import { WinnersPending } from './states/winners-pending';
 import { useGiveawayParticipation } from './giveaway-participation-context';
+import { assertNever } from '@/lib/errors';
 
 const GiveawayParticipationContent = () => {
   const { state } = useGiveawayParticipation();
@@ -27,8 +32,16 @@ const GiveawayParticipationContent = () => {
       return <WinnersAnnounced />;
     case 'active':
       return <ActiveParticipation />;
+    case 'canceled':
+      return <Cancelled />;
+    case 'closed':
+      return <Closed />;
+    case 'error':
+      return <Error />;
+    case 'winners-pending':
+      return <WinnersPending />;
     default:
-      return <div>Error, unknown participation state</div>;
+      throw assertNever(state);
   }
 };
 
@@ -42,29 +55,11 @@ const GiveawayParticipationContainer = () => {
   );
 };
 
-export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = ({
-  participation,
-  sweepstakes,
-  host,
-  winners,
-  user,
-  state = 'active',
-  onTaskComplete,
-  onLogin,
-  onCompleteProfile
-}) => {
+export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = (
+  props
+) => {
   return (
-    <GiveawayParticipationProvider
-      sweepstakes={sweepstakes}
-      participation={participation}
-      winners={winners}
-      host={host}
-      user={user}
-      state={state}
-      onTaskComplete={onTaskComplete}
-      onLogin={onLogin}
-      onCompleteProfile={onCompleteProfile}
-    >
+    <GiveawayParticipationProvider {...props}>
       <GiveawayParticipationContainer />
     </GiveawayParticipationProvider>
   );

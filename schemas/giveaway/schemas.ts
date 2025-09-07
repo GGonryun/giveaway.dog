@@ -176,13 +176,12 @@ export const giveawaySchema = giveawayFormSchema.extend({
 
 export type GiveawaySchema = z.infer<typeof giveawaySchema>;
 
-// User Participation Schema
 export const userParticipationSchema = z.object({
   entries: z.number().int().min(0),
-  completedTasks: z.array(z.string()) // Task IDs that user has completed
+  completedTasks: z.array(z.string())
 });
 
-export type UserParticipation = z.infer<typeof userParticipationSchema>;
+export type UserParticipationSchema = z.infer<typeof userParticipationSchema>;
 
 // Host Schema
 export const giveawayHostSchema = z.object({
@@ -217,9 +216,13 @@ export type GiveawayState =
   | 'not-logged-in' // User needs to log in
   | 'profile-incomplete' // User needs to complete profile
   | 'not-eligible' // User not eligible (age/region restrictions)
-  | 'winners-announced'; // Winners have been announced
+  | 'winners-announced' // Winners have been announced
+  | 'winners-pending' // Winners are pending announcement
+  | 'closed' // Giveaway is closed
+  | 'canceled' // Giveaway is cancelled
+  | 'error'; // An error state
 
-export const GIVEAWAY_STATES: GiveawayState[] = [
+export const PREVIEW_GIVEAWAY_STATES: GiveawayState[] = [
   'active',
   'not-logged-in',
   'profile-incomplete',
@@ -240,6 +243,14 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
       return 'Not Eligible';
     case 'winners-announced':
       return 'Winners Announced';
+    case 'winners-pending':
+      return 'Winners Pending';
+    case 'closed':
+      return 'Closed';
+    case 'canceled':
+      return 'Canceled';
+    case 'error':
+      return 'Error';
     default:
       throw assertNever(state);
   }

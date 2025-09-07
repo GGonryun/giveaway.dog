@@ -40,7 +40,7 @@ export const updateProfile = procedure
         where: { id },
         data: {
           ...(name && { name }),
-          ...(age && { age }),
+          ...(age && { age: Number(age) }),
           ...(region && { region }),
           ...(emoji && { emoji }),
           ...(type && { type })

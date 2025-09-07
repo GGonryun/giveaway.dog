@@ -41,6 +41,9 @@ import updateProfile from '@/procedures/user/update-profile';
 import { UpdateUserProfile } from '@/schemas/user';
 import { toast } from 'sonner';
 import { UserType } from '@prisma/client';
+import { DEFAULT_MINIMUM_AGE } from '@/schemas/giveaway/defaults';
+
+const SAVE_DELAY = 600;
 
 export const UserSettings = () => {
   const user = useUser();
@@ -59,11 +62,10 @@ export const UserSettings = () => {
     name: user.name,
     emoji: user.emoji,
     region: user.region,
-    age: user.age,
-    type: user.type // Default to participate, can be ['HOST', 'PARTICIPATE']
+    age: (user.age ?? DEFAULT_MINIMUM_AGE).toString(),
+    type: user.type // Default to PARTICIPATE, can be ['HOST', 'PARTICIPATE']
   });
 
-  // Debounced auto-save for text inputs
   const debouncedSave = useCallback(
     (() => {
       let timeoutId: NodeJS.Timeout;
@@ -71,7 +73,7 @@ export const UserSettings = () => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
           updateProfileProcedure.run(data);
-        }, 500); // 500ms debounce
+        }, SAVE_DELAY);
       };
     })(),
     []
