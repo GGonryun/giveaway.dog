@@ -62,7 +62,7 @@ const MobileFormHeader: React.FC<
 
   return (
     <SiteHeader className="h-20">
-      <div className="flex flex-col w-full gap-1.5 pt-1.5">
+      <div className="flex flex-col w-full gap-1.5 pt-2.5">
         <div className="flex items-center">
           <div className="flex-1 min-w-0">
             <h1 className="text-lg sm:text-xl font-medium truncate">{title}</h1>

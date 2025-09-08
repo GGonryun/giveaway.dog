@@ -10,7 +10,7 @@ import { NotLoggedIn } from './states/not-logged-in';
 import { ProfileIncomplete } from './states/profile-incomplete';
 import { NotEligible } from './states/not-eligible';
 import { WinnersAnnounced } from './states/winners-announced';
-import { ActiveParticipation } from './states/active-participation';
+import { ActiveParticipation } from './states/active/active-participation';
 import { Cancelled } from './states/cancelled';
 import { Closed } from './states/closed';
 import { Error } from './states/error';

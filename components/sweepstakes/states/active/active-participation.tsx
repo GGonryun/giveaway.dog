@@ -1,135 +1,43 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Gift, CheckCircle, Plus } from 'lucide-react';
+import { Gift, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useGiveawayParticipation } from '../giveaway-participation-context';
-import { toTaskTheme } from '@/components/tasks/theme';
-
-// Task completion component
-const TaskItem: React.FC<{
-  task: any;
-  taskId: string;
-  completed: boolean;
-}> = ({ task, taskId, completed }) => {
-  const { onTaskComplete, userProfile, userParticipation } =
-    useGiveawayParticipation();
-  const theme = toTaskTheme(task.type);
-  const IconComponent = theme.icon;
-
-  return (
-    <div
-      className={cn(
-        'flex items-center justify-between p-3 border rounded-lg transition-colors',
-        completed ? 'bg-green-50 border-green-200' : 'hover:bg-gray-50',
-        !userProfile && 'opacity-50 cursor-not-allowed'
-      )}
-    >
-      <div className="flex items-center gap-3">
-        <div
-          className={cn(
-            'flex items-center justify-center w-8 h-8 rounded-full',
-            completed ? 'bg-green-100 text-green-600' : theme.symbol
-          )}
-        >
-          {completed ? (
-            <CheckCircle className="h-4 w-4" />
-          ) : (
-            <IconComponent className="h-4 w-4" />
-          )}
-        </div>
-        <div>
-          <h4 className="font-medium text-sm">{task.title}</h4>
-          <p className="text-xs text-muted-foreground">
-            {task.value} {task.value === 1 ? 'entry' : 'entries'}
-          </p>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        {task.mandatory && (
-          <Badge variant="destructive" className="text-xs">
-            Required
-          </Badge>
-        )}
-        {!completed && userProfile && (
-          <Button size="sm" onClick={() => onTaskComplete?.(taskId)}>
-            Complete
-          </Button>
-        )}
-        {completed && (
-          <Badge
-            variant="secondary"
-            className="text-xs bg-green-100 text-green-700"
-          >
-            ✓ Done
-          </Badge>
-        )}
-      </div>
-    </div>
-  );
-};
+import { useGiveawayParticipation } from '../../giveaway-participation-context';
+import { UserInfoSection } from '../../user-info-section';
+import { Typography } from '@/components/ui/typography';
+import { TaskItem } from './task-item';
 
 export const ActiveParticipation: React.FC = () => {
-  const { sweepstakes, userProfile, userParticipation } =
-    useGiveawayParticipation();
-
-  const userProgress = useMemo(() => {
-    if (!userParticipation)
-      return { completed: 0, total: sweepstakes.tasks.length, percentage: 0 };
-
-    const completed = sweepstakes.tasks.filter((_, index) =>
-      userParticipation.completedTasks.includes(`task-${index}`)
-    ).length;
-    const total = sweepstakes.tasks.length;
-    const percentage = total > 0 ? (completed / total) * 100 : 0;
-
-    return { completed, total, percentage };
-  }, [userParticipation, sweepstakes.tasks]);
+  const [open, setOpen] = React.useState<string | null>(null);
+  const { sweepstakes, userParticipation } = useGiveawayParticipation();
 
   const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
   const hasPrizes = sweepstakes.prizes && sweepstakes.prizes.length > 0;
   const hasContent = hasTasks || hasPrizes;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-1">
       {hasContent ? (
         <>
-          <div>
-            {userProfile && hasTasks && (
-              <>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="text-sm text-muted-foreground">Progress</div>
-                  <Badge variant="outline">
-                    {userProgress.completed}/{userProgress.total} completed
-                  </Badge>
-                </div>
-                <Progress
-                  value={userProgress.percentage}
-                  className="w-full h-2"
-                />
-              </>
-            )}
-          </div>
-
+          <UserInfoSection />
           <Tabs defaultValue={hasTasks ? 'tasks' : 'prizes'} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="tasks">
-                Entry Methods {hasTasks && `(${sweepstakes.tasks.length})`}
+                Tasks {hasTasks && `(${sweepstakes.tasks.length})`}
               </TabsTrigger>
               <TabsTrigger value="prizes">
                 Prizes {hasPrizes && `(${sweepstakes.prizes.length})`}
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="tasks" className="mt-4">
+            <TabsContent value="tasks" className="mt-2">
+              <UserProgressSection className="mb-1" />
+
               {hasTasks ? (
-                <div className="space-y-3">
+                <div className="space-y-1">
                   {sweepstakes.tasks.map((task, index) => {
                     const taskId = `task-${index}`;
                     const completed =
@@ -138,6 +46,8 @@ export const ActiveParticipation: React.FC = () => {
 
                     return (
                       <TaskItem
+                        open={open === taskId}
+                        setOpen={(status) => setOpen(status ? taskId : null)}
                         key={index}
                         task={task}
                         taskId={taskId}
@@ -204,6 +114,47 @@ export const ActiveParticipation: React.FC = () => {
           </p>
         </div>
       )}
+    </div>
+  );
+};
+
+const UserProgressSection: React.FC<{ className?: string }> = ({
+  className
+}) => {
+  const { sweepstakes, userProfile, userParticipation } =
+    useGiveawayParticipation();
+
+  const userProgress = useMemo(() => {
+    if (!userParticipation)
+      return {
+        completed: 0,
+        total: sweepstakes.tasks.length,
+        percentage: 0,
+        entries: 0
+      };
+
+    const completed = sweepstakes.tasks.filter((_, index) =>
+      userParticipation.completedTasks.includes(`task-${index}`)
+    ).length;
+    const total = sweepstakes.tasks.length;
+    const percentage = total > 0 ? (completed / total) * 100 : 0;
+
+    return { completed, total, percentage, entries: userParticipation.entries };
+  }, [userParticipation, sweepstakes.tasks]);
+
+  const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
+
+  if (!userProfile && !hasTasks) return null;
+  return (
+    <div className={cn('space-y-1', className)}>
+      <div className="flex items-end justify-between">
+        <Typography leading="none" className="text-xs text-muted-foreground">
+          Your entries: {userProgress.entries}
+        </Typography>
+        <Typography leading="none" className="text-xs text-muted-foreground">
+          {userProgress.completed}/{userProgress.total} completed
+        </Typography>
+      </div>
     </div>
   );
 };

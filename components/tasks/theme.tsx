@@ -14,13 +14,13 @@ export const toTaskTheme = (
   switch (type) {
     case 'BONUS_TASK':
       return {
-        symbol: 'bg-yellow-100 text-yellow-800',
+        symbol: 'bg-red-500 text-red-100',
         icon: StarIcon,
         label: 'Bonus Task'
       };
     case 'VISIT_URL':
       return {
-        symbol: 'bg-blue-100 text-blue-800',
+        symbol: 'bg-blue-500 text-blue-100',
         icon: EarthIcon,
         label: 'Visit URL'
       };
