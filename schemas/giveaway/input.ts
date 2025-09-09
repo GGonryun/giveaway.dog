@@ -8,6 +8,7 @@ import {
   SweepstakesInputTaskSchema
 } from './db';
 import { compact } from 'lodash';
+import { toJsonObject } from '@/lib/json';
 
 const toSetup = (
   data: FormSweepstakesGetPayload['details']
@@ -104,22 +105,9 @@ const toTaskInput = (
     ...config
   };
 
-  // TODO: do we need some proper parsing here?
+  // TODO: we need better parsing here.
   return base;
 };
-
-// Prisma.JsonValue can be string, number, boolean, array, object, or null.
-function toJsonObject(value: Prisma.JsonValue | null): Record<string, any> {
-  if (!value) {
-    return {};
-  }
-
-  if (typeof value === 'object' && !Array.isArray(value)) {
-    return value as Record<string, any>;
-  }
-
-  return {};
-}
 
 export const toSweepstakesInput = (
   giveaway: FormSweepstakesGetPayload

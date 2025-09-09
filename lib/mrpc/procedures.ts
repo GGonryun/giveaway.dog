@@ -165,7 +165,6 @@ class ProcedureBuilder<
               : this.cacheConfig;
 
           if (cacheOptions) {
-            // Create cached function
             const cachedFn = unstable_cache(
               async (input: any) => {
                 return await fn({
@@ -174,11 +173,13 @@ class ProcedureBuilder<
                   input
                 });
               },
-              cacheOptions.keyParts || [],
-              {
-                tags: cacheOptions.tags,
-                revalidate: cacheOptions.revalidate
-              }
+              cacheOptions.keyParts || undefined,
+              cacheOptions.tags || cacheOptions.keyParts
+                ? {
+                    tags: cacheOptions.tags,
+                    revalidate: cacheOptions.revalidate
+                  }
+                : undefined
             );
 
             data = await cachedFn(inputData);

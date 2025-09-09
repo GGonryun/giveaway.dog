@@ -1,5 +1,5 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema, TaskType } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import React, { useState } from 'react';
 import { EntryMethod } from './entry-method';
 import { toDefaultValues } from './task-defaults';
@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/form';
 import { Section } from '../section';
 import { nanoid } from 'nanoid';
+import { TaskType } from '@/schemas/tasks/schemas';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };
 

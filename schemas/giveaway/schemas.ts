@@ -3,40 +3,7 @@ import { assertNever } from '@/lib/errors';
 import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';
 import { userProfileSchema } from '../user';
-
-export const baseTaskSchema = z.object({
-  id: z.string(),
-  type: z.string(),
-  title: z.string().min(1, 'Title is required'),
-  value: z.number().min(1, 'Minimum value is 1'),
-  mandatory: z.boolean(),
-  tasksRequired: z.number()
-});
-
-export const bonusTaskSchema = baseTaskSchema.extend({
-  type: z.literal('BONUS_TASK')
-});
-
-export const visitUrlSchema = baseTaskSchema.extend({
-  type: z.literal('VISIT_URL'),
-  href: z.string().url()
-});
-
-export const taskSchema = z.discriminatedUnion('type', [
-  bonusTaskSchema,
-  visitUrlSchema
-]);
-
-export type TaskType = z.infer<typeof taskSchema>['type'];
-
-export const TASK_GROUP: Record<TaskType, string> = {
-  BONUS_TASK: 'Bonus Tasks',
-  VISIT_URL: 'Visit URL Tasks'
-};
-
-export type TaskSchema = z.infer<typeof taskSchema>;
-
-export type TaskOf<T extends TaskType> = Extract<TaskSchema, { type: T }>;
+import { taskSchema } from '../tasks/schemas';
 
 export const prizeSchema = z.object({
   id: z.string(),

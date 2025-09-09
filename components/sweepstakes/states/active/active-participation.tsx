@@ -19,7 +19,13 @@ export const ActiveParticipation: React.FC = () => {
   const hasContent = hasTasks || hasPrizes;
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 relative">
+      {open && (
+        <div
+          className="fixed inset-0 h-full bg-black/30 z-50"
+          onClick={() => setOpen(null)}
+        />
+      )}
       {hasContent ? (
         <>
           <UserInfoSection />
@@ -33,24 +39,22 @@ export const ActiveParticipation: React.FC = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="tasks" className="mt-2">
+            <TabsContent value="tasks" className="my-2">
               <UserProgressSection className="mb-1" />
 
               {hasTasks ? (
-                <div className="space-y-1">
+                <div className="space-y-2">
                   {sweepstakes.tasks.map((task, index) => {
-                    const taskId = `task-${index}`;
                     const completed =
-                      userParticipation?.completedTasks.includes(taskId) ??
+                      userParticipation?.completedTasks.includes(task.id) ??
                       false;
 
                     return (
                       <TaskItem
-                        open={open === taskId}
-                        setOpen={(status) => setOpen(status ? taskId : null)}
+                        open={open === task.id}
+                        setOpen={(status) => setOpen(status ? task.id : null)}
                         key={index}
                         task={task}
-                        taskId={taskId}
                         completed={completed}
                       />
                     );
@@ -133,8 +137,8 @@ const UserProgressSection: React.FC<{ className?: string }> = ({
         entries: 0
       };
 
-    const completed = sweepstakes.tasks.filter((_, index) =>
-      userParticipation.completedTasks.includes(`task-${index}`)
+    const completed = sweepstakes.tasks.filter((t) =>
+      userParticipation.completedTasks.includes(t.id)
     ).length;
     const total = sweepstakes.tasks.length;
     const percentage = total > 0 ? (completed / total) * 100 : 0;

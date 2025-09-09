@@ -11,6 +11,9 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import { ArrowLeftIcon, ShareIcon, CircleAlertIcon } from 'lucide-react';
 import { UserProfileSchema } from '@/schemas/user';
+import { useProcedure } from '@/lib/mrpc/hook';
+import submitTask from '@/procedures/tasks/submit-task';
+import { toast } from 'sonner';
 
 type SweepstakesParticipationPageContentProps = ParticipantSweepstakeSchema & {
   userProfile?: UserProfileSchema;
@@ -25,6 +28,18 @@ export const SweepstakesParticipationPage: React.FC<
   const router = useRouter();
   const pathname = usePathname();
 
+  const submitTaskProcedure = useProcedure({
+    action: submitTask,
+    onSuccess() {
+      toast.success('Task completed!');
+    },
+    onFailure() {
+      toast.error(
+        'Failed to complete task. Please try again, if the issue persists contact support.'
+      );
+    }
+  });
+
   const handleLogin = () => {
     const search = new URLSearchParams([['callbackUrl', pathname]]);
     router.push(`/login?${search.toString()}`);
@@ -35,12 +50,11 @@ export const SweepstakesParticipationPage: React.FC<
   };
 
   const handleTaskComplete = (taskId: string) => {
-    // TODO: Implement task completion logic
-    console.log('Task completed:', taskId);
+    submitTaskProcedure.run({ taskId });
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-6 sm:container sm:max-w-2xl">
+    <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-2 pb-4 sm:p-4 sm:pb-6 sm:container sm:max-w-2xl">
       <div className="flex flex-col sm:flex-row gap-2 w-full justify-between">
         <Button asChild className="w-full sm:w-fit self-start">
           <Link href="/browse">
@@ -61,6 +75,7 @@ export const SweepstakesParticipationPage: React.FC<
       </div>
       <GiveawayParticipation
         {...props}
+        isLoading={submitTaskProcedure.isLoading}
         onTaskComplete={handleTaskComplete}
         onLogin={handleLogin}
         onCompleteProfile={handleCompleteProfile}

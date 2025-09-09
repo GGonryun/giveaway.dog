@@ -45,22 +45,16 @@ const GiveawayParticipationContent = () => {
   }
 };
 
-const GiveawayParticipationContainer = () => {
-  return (
-    <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 *:w-full">
-      <GiveawayParticipationHeader>
-        <GiveawayParticipationContent />
-      </GiveawayParticipationHeader>
-    </div>
-  );
-};
-
 export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = (
   props
 ) => {
   return (
     <GiveawayParticipationProvider {...props}>
-      <GiveawayParticipationContainer />
+      <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 *:w-full">
+        <GiveawayParticipationHeader>
+          <GiveawayParticipationContent />
+        </GiveawayParticipationHeader>
+      </div>
     </GiveawayParticipationProvider>
   );
 };

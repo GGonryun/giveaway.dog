@@ -19,7 +19,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'BONUS_TASK':
         return <></>;
       case 'VISIT_URL':
-        return <HrefFormField />;
+        return (
+          <>
+            <HrefFormField />
+            <LabelFormField />
+          </>
+        );
       default:
         throw assertNever(type);
     }
@@ -39,6 +44,26 @@ const HrefFormField: React.FC = () => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Link URL</FormLabel>
+          <FormControl>
+            <Input type="url" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+const LabelFormField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.label`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Link Label</FormLabel>
           <FormControl>
             <Input type="url" {...field} />
           </FormControl>

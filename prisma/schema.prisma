@@ -237,8 +237,7 @@ model TaskCompletion {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   taskId String
-  // do not cascade delete on tasks, because when we update a giveaway we recreate the whole thing by deleting it first.
-  task   Task   @relation(fields: [taskId], references: [id])
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   completedAt DateTime         @default(now())
   proof       Json?

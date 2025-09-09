@@ -96,7 +96,7 @@
     --chart-5: oklch(0.72 0.18 340); /* Collar pink */
 
     /* Sidebar */
-    --sidebar: oklch(0.87 0.03 80);
+    --sidebar: oklch(0.89 0.03 80);
     --sidebar-foreground: var(--foreground);
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);

@@ -1,4 +1,4 @@
-import { TaskOf } from '@/schemas/giveaway/schemas';
+import { TaskOf } from '@/schemas/tasks/schemas';
 import { TaskType } from '@prisma/client';
 
 export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
@@ -15,6 +15,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'VISIT_URL',
       title: 'Visit our website',
+      label: 'Click Here!',
       href: 'https://example.com',
       value: 1,
       mandatory: false,

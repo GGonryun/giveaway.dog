@@ -84,20 +84,32 @@ export const applySweepstakesChanges = async ({
     id: input.id
   });
 
-  // WARNING: sweepstakes objects are too complex to update directly, instead we delete
-  // the individual nested properties and recreate them. While it would be easier to
-  // delete the sweepstakes this might have catastrophic effects on down-stream data.
+  // WARNING: sweepstakes objects are too complex to update directly, instead we
+  // delete all nested properties and recreate them. This has catastrophic effects
+  // on down-stream data.
   //
-  // This would leave a potential foot-gun for future developers who might unknowingly
-  // trigger cascade deletes. For example, if we are to cascade on delete remove task
-  // participation, then changing the name would accidentally reset participation data.
+  // TODO: optimize this.
+  // Therefore we need to fetch any data we need to retain before deleting and recreate
+  // it. This works fine with smaller sets of data but we will need a more comprehensive
+  // update method for massive giveaways with potentially hundreds of thousands of entries
   await db.$transaction(async (tx) => {
+    const data = await tx.taskCompletion.findMany({
+      where: {
+        task: {
+          sweepstakesId: sweepstakes.id
+        }
+      }
+    });
     await tx.sweepstakes.delete({
       where: { id: sweepstakes.id }
     });
 
     await tx.sweepstakes.create({
       data: toStorableSweepstakes(sweepstakes, input)
+    });
+
+    await tx.taskCompletion.createMany({
+      data: data.map((d) => ({ ...d, proof: d.proof ?? undefined }))
     });
   });
 

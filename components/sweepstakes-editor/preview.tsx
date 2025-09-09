@@ -11,7 +11,6 @@ import {
   GiveawayFormSchema,
   GiveawayWinnerSchema,
   Prize,
-  TaskSchema,
   UserParticipationSchema
 } from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
@@ -24,6 +23,7 @@ import { defaultTermInputOptions } from './form/terms';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { noop } from 'lodash';
 import { UserProfileSchema } from '@/schemas/user';
+import { TaskSchema } from '@/schemas/tasks/schemas';
 
 const mockHost = {
   id: 'preview-host-id',
@@ -131,14 +131,11 @@ export const GiveawayPreview: React.FC = () => {
     }
   }, [formValues]);
 
-  // Handle different states of data availability
   if (!mockSweepstakes) {
-    // Check if we have any form data at all
     if (!formValues || Object.keys(formValues).length === 0) {
       return <GiveawayParticipationSkeleton />;
     }
 
-    // We have some data but not enough for a preview
     return (
       <div className="w-full">
         <IncompleteGiveawaySetup />
@@ -149,6 +146,7 @@ export const GiveawayPreview: React.FC = () => {
   return (
     <div className="w-full max-w-2xl mx-auto">
       <GiveawayParticipation
+        isLoading={false}
         sweepstakes={mockSweepstakes}
         host={mockHost}
         participation={mockParticipation}

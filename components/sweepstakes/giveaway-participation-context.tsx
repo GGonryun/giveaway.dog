@@ -19,7 +19,7 @@ export interface GiveawayParticipationProps {
   userProfile?: UserProfileSchema;
   userParticipation?: UserParticipationSchema;
   state: GiveawayState;
-
+  isLoading: boolean;
   onTaskComplete: (taskId: string) => void;
   onLogin: () => void;
   onCompleteProfile: () => void;
@@ -47,6 +47,7 @@ export const GiveawayParticipationProvider: React.FC<
   userProfile,
   userParticipation,
   state = 'active',
+  isLoading,
   onTaskComplete,
   onLogin,
   onCompleteProfile
@@ -59,6 +60,7 @@ export const GiveawayParticipationProvider: React.FC<
     userProfile,
     userParticipation,
     state,
+    isLoading,
     onTaskComplete,
     onLogin,
     onCompleteProfile

@@ -1,6 +1,6 @@
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
-import { TaskType } from '@/schemas/giveaway/schemas';
+import { TaskType } from '@/schemas/tasks/schemas';
 import {
   Trash2Icon,
   CopyIcon,
