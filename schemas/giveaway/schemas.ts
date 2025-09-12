@@ -58,7 +58,7 @@ export type GiveawayTerms = z.infer<typeof giveawayFormTermsSchema>;
 const giveawayFormSetupSchema = z.object({
   name: z.string().min(3),
   description: z.string().min(3),
-  banner: z.string().optional()
+  banner: z.string().url()
 });
 
 export const regionalRestrictionSchema = z

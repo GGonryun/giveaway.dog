@@ -2,16 +2,21 @@ import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { userParticipationSchema } from '@/schemas/giveaway/schemas';
 import { toTaskSchema } from '@/schemas/tasks/parse';
-import { minutesToSeconds } from 'date-fns';
 import z from 'zod';
 
 const getUserSweepstakesParticipation = procedure
   .authorization({ required: false })
   .input(z.object({ id: z.string() }))
   .cache(({ user, input }) => {
+    if (!user) {
+      return undefined;
+    }
     return {
-      tags: [`sweepstakes-${input.id}-user-${user.id}-participation`],
-      revalidate: minutesToSeconds(1)
+      tags: [
+        `sweepstakes-${input.id}-user-${user.id}-participation`,
+        `sweepstakes-user-${user.id}-participation`
+      ],
+      revalidate: 1 // low revalidation so that task completions are up to date.
     };
   })
   .output(userParticipationSchema.optional())
@@ -43,19 +48,14 @@ const getUserSweepstakesParticipation = procedure
       }
     });
 
-    const entries = taskCompletions
-      .map((c) => toTaskSchema(c.task))
-      .reduce((acc, c) => {
-        return acc + c.value;
-      }, 0);
-
-    const completedTasks = taskCompletions.map((t) => t.taskId);
-    const out = {
-      entries,
-      completedTasks
+    return {
+      entries: taskCompletions
+        .map((c) => toTaskSchema(c.task))
+        .reduce((acc, c) => {
+          return acc + c.value;
+        }, 0),
+      completedTasks: taskCompletions.map((t) => t.taskId)
     };
-    console.log('refreshing user sweepstakes participation', out);
-    return out;
   });
 
 export default getUserSweepstakesParticipation;

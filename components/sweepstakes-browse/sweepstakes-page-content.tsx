@@ -23,7 +23,7 @@ export const SweepstakesPageContent: React.FC<{
   };
 
   return (
-    <div className="w-full bg-background py-6 sm:py-8 lg:py-12 px-2 space-y-8 sm:space-y-12 sm:container">
+    <div className="w-full bg-background py-6 sm:py-8 lg:py-12 px-4 space-y-8 sm:space-y-12 sm:container">
       <div className="text-center space-y-1 mb-8">
         <Typography.Header
           level={1}

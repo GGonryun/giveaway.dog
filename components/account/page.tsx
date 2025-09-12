@@ -83,7 +83,7 @@ export const UserPage: React.FC<{ tab: UserSection }> = ({ tab }) => {
       {/* Logout Button */}
       <div className="flex justify-end">
         <Button
-          onClick={logout.run}
+          onClick={() => logout.run('/')}
           disabled={logout.isLoading}
           variant="outline"
           className="w-full sm:w-auto"

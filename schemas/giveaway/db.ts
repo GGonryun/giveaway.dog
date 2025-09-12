@@ -17,6 +17,10 @@ export const FORM_SWEEPSTAKES_PAYLOAD = {
   details: true
 } satisfies Prisma.SweepstakesInclude;
 
+export type FormSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
+  include: typeof FORM_SWEEPSTAKES_PAYLOAD;
+}>;
+
 export const PARTICIPANT_SWEEPSTAKES_PAYLOAD = {
   tasks: true,
   prizes: {
@@ -44,8 +48,40 @@ export type ParticipantSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
   include: typeof PARTICIPANT_SWEEPSTAKES_PAYLOAD;
 }>;
 
-export type FormSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
-  include: typeof FORM_SWEEPSTAKES_PAYLOAD;
+export const PUBLIC_SWEEPSTAKES_PAYLOAD = {
+  tasks: {
+    include: {
+      completions: {
+        select: {
+          userId: true
+        },
+        distinct: ['userId']
+      }
+    }
+  },
+  prizes: {
+    include: {
+      winners: {
+        include: {
+          user: true
+        }
+      }
+    }
+  },
+  audience: {
+    include: {
+      regionalRestriction: true,
+      minimumAgeRestriction: true
+    }
+  },
+  terms: true,
+  timing: true,
+  details: true,
+  team: true
+} satisfies Prisma.SweepstakesInclude;
+
+export type PublicSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
+  include: typeof PUBLIC_SWEEPSTAKES_PAYLOAD;
 }>;
 
 export const TEAM_SWEEPSTAKES_PAYLOAD: Prisma.SweepstakesInclude = {

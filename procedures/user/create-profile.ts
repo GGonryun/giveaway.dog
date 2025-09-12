@@ -14,11 +14,11 @@ export const createProfile = procedure
     })
   )
   .handler(async ({ input, user, db }) => {
-    const { id, name, age, emoji, type } = input;
+    const { name, age, emoji, type } = input;
 
     //if the user already exists do nothing.
     const existingUser = await db.user.findUnique({
-      where: { id }
+      where: { id: user.id }
     });
 
     if (existingUser) {
@@ -30,9 +30,10 @@ export const createProfile = procedure
 
     try {
       const updatedUser = await db.user.update({
-        where: { id },
+        where: { id: user.id },
         data: {
           name,
+          provisioned: true,
           ...(age && { age: Number(age) }),
           ...(emoji && { emoji }),
           ...(type && { type })

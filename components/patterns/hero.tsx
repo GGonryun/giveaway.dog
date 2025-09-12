@@ -1,10 +1,15 @@
+'use server';
+
 import { ArrowRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
+import findUser from '@/procedures/user/find-user';
 
-export const Hero = () => {
+export const Hero = async () => {
+  const user = await findUser();
+
   return (
     <section className="container flex items-center justify-center">
       <div className="grid items-center gap-8">
@@ -24,11 +29,17 @@ export const Hero = () => {
             subscriptions, no restrictions, no surprises.
           </p>
           <div className="flex w-full flex-col justify-center gap-2 sm:flex-row">
-            <Button asChild className="w-full sm:w-auto">
-              <Link href={'/signup'}>Get started - free</Link>
-            </Button>
+            {!user.ok || !user.data?.type ? (
+              <Button asChild className="w-full sm:w-auto">
+                <Link href={'/signup'}>Get started - free</Link>
+              </Button>
+            ) : user.data.type.includes('HOST') ? (
+              <Button asChild className="w-full sm:w-auto">
+                <Link href={'/app'}>Go to your dashboard</Link>
+              </Button>
+            ) : null}
             <Button asChild variant="outline" className="w-full sm:w-auto">
-              <Link href={'/browse'}>Explore giveaways</Link>
+              <Link href={'/browse'}>Browse giveaways</Link>
             </Button>
           </div>
         </div>

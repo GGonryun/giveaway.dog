@@ -16,8 +16,8 @@ export const GiveawayParticipationHeader: React.PC = ({ children }) => {
       <TimeRemainingSection />
       <TitleSection />
       <BannerSection />
-      <DescriptionSection />
       <HostSection />
+      <DescriptionSection />
       <Separator className="my-2" />
       <CardContent>{children}</CardContent>
       <Separator />
@@ -87,31 +87,8 @@ const TitleSection = () => {
 const BannerSection = () => {
   const { sweepstakes } = useGiveawayParticipation();
 
-  const now = new Date();
-  const startDate = format(sweepstakes.timing.startDate, 'MMM d, yyyy');
-  const endDate = format(sweepstakes.timing.endDate, 'MMM d, yyyy');
-  const hasEnded = isAfter(now, endDate);
-  const isUpcoming = isBefore(now, startDate);
   return (
     <CardContent className="relative">
-      <div className="absolute z-10 right-6 top-2">
-        <Badge
-          variant={
-            isUpcoming ? 'secondary' : hasEnded ? 'destructive' : 'default'
-          }
-          className={`text-xs ${
-            isUpcoming ? 'bg-blue-100 text-blue-800 border-blue-200' : ''
-          }`}
-        >
-          <Clock className="h-3 w-3 mr-1" />
-          {isUpcoming
-            ? `Starts in ${formatDistanceToNow(startDate)}`
-            : hasEnded
-              ? 'Ended'
-              : `${formatDistanceToNow(endDate)} left`}
-        </Badge>
-      </div>
-
       {sweepstakes.setup.banner && (
         <div className="relative">
           <div className="overflow-hidden rounded-lg aspect-video flex w-full">
@@ -154,7 +131,7 @@ const FooterSection = () => {
   return (
     <CardContent>
       <div className="flex flex-row items-center justify-center gap-x-4 gap-y-2">
-        <Link className="text-xs" href="/policy">
+        <Link className="text-xs" href="?terms=true">
           Terms & Conditions
         </Link>
         <Separator

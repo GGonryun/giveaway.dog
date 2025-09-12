@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import {
   Card,
@@ -16,22 +16,25 @@ import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { UserType } from '@prisma/client';
 import { useAccountPage } from '@/components/account/use-account-page';
+import { getUserAuthRedirect } from '@/lib/redirect';
 
-const parseUserTypes = (userTypeParam: string | null): UserType[] => {
-  if (!userTypeParam) return ['PARTICIPATE'];
-
-  return userTypeParam
-    .split(',')
-    .map((type) => UserType[type as keyof typeof UserType]);
-};
-
-export const AuthPortal = () => {
+export const AuthPortal: React.FC<{
+  signup: string;
+  name: string;
+  emoji: string;
+  userTypes: UserType[];
+  redirectTo: string;
+}> = ({ signup, name, emoji, userTypes, redirectTo }) => {
   const { navigateToAccountOverview } = useAccountPage();
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   const { data: session, status } = useSession();
   const [error, setError] = useState<string | null>(null);
+
+  const redirect = useMemo(
+    () => getUserAuthRedirect({ redirectTo, userTypes }),
+    [redirectTo, userTypes]
+  );
 
   const { isLoading, isPending, run } = useProcedure({
     action: createProfile,
@@ -45,55 +48,44 @@ export const AuthPortal = () => {
       }
     },
     onSuccess() {
-      router.push(getFinalRedirect);
+      router.push(redirect);
     }
   });
 
-  const isSignup = searchParams.get('signup') === 'true';
-  const name = searchParams.get('name');
-  const emoji = searchParams.get('emoji');
-  const userTypeParam = searchParams.get('userType');
-  const type = parseUserTypes(userTypeParam);
-
-  // Determine final redirect URL based on userTypes
-  const getFinalRedirect = useMemo(() => {
-    // Prioritize hosting if selected (they can also browse)
-    if (type.includes('HOST')) return '/app';
-    // If only participating, go to browse page
-    if (type.includes('PARTICIPATE')) return '/browse';
-    return '/browse'; // default fallback for participating
-  }, [type]);
-
   useEffect(() => {
-    const processAuth = async () => {
-      if (isLoading) return;
-      // Wait for session to load
-      if (status === 'loading') return;
+    if (isLoading) return;
 
-      // If not authenticated, redirect to login
-      if (status === 'unauthenticated') {
-        router.push('/login');
-        return;
-      }
+    // Wait for session to load
+    if (status === 'loading') return;
 
-      // If this is a signup with name to update
-      if (isSignup && session?.user?.id && name) {
-        run({
-          id: session.user.id,
-          name,
-          emoji,
-          age: null,
-          region: null,
-          type
-        });
-      } else {
-        // No profile update needed, redirect immediately
-        router.push(getFinalRedirect);
-      }
-    };
+    // If not authenticated, redirect to login
+    if (status === 'unauthenticated') {
+      router.push('/login');
+      return;
+    }
 
-    processAuth();
-  }, [session, status, isLoading, isSignup, name, emoji, type, router]);
+    // If no session or user ID, show error
+    if (!session?.user?.id) {
+      setError('No session found. Please try logging in again.');
+      return;
+    }
+
+    // If not signing up, redirect to final destination
+    if (!signup) {
+      router.push(redirect);
+      return;
+    }
+
+    // Run the profile creation procedure
+    run({
+      id: session.user.id,
+      name,
+      emoji,
+      age: null,
+      region: null,
+      type: userTypes
+    });
+  }, [session, status, isLoading, signup, name, emoji, userTypes, router]);
 
   if (error) {
     return (
@@ -118,10 +110,10 @@ export const AuthPortal = () => {
     return (
       <Card>
         <CardHeader className="text-center">
-          <CardTitle>Setting up your account...</CardTitle>
-          <CardDescription>
-            {isSignup ? 'Creating your profile' : 'Signing you in'}
-          </CardDescription>
+          <CardTitle>
+            {signup ? 'Setting up your account...' : 'Signing you in...'}
+          </CardTitle>
+          <CardDescription>We're getting things ready for you.</CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center py-8">
           <Spinner size="xl" />

@@ -77,7 +77,7 @@ export const GiveawayPreview: React.FC = () => {
         setup: {
           name: formValues.setup?.name ?? DEFAULT_SWEEPSTAKES_NAME,
           description: formValues.setup?.description ?? '',
-          banner: formValues.setup?.banner ?? undefined // Only show banner if provided
+          banner: formValues.setup?.banner ?? ''
         },
         terms:
           formValues?.terms?.type === SweepstakesTermsType.TEMPLATE

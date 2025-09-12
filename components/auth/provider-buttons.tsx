@@ -12,7 +12,7 @@ export function ProviderButtons({ mode, onSubmit }: ProviderButtonsProps) {
     <div className="flex flex-col gap-3">
       <Button
         variant="outline"
-        name={mode === 'login' ? 'login' : 'provider'}
+        name="provider"
         value="twitter"
         formNoValidate
         className="w-full justify-start"
@@ -35,7 +35,7 @@ export function ProviderButtons({ mode, onSubmit }: ProviderButtonsProps) {
       </Button>
       <Button
         variant="outline"
-        name={mode === 'login' ? 'login' : 'provider'}
+        name="provider"
         value="google"
         formNoValidate
         className="w-full justify-start"
@@ -55,7 +55,7 @@ export function ProviderButtons({ mode, onSubmit }: ProviderButtonsProps) {
       </Button>
       <Button
         variant="outline"
-        name={mode === 'login' ? 'login' : 'provider'}
+        name="provider"
         value="discord"
         formNoValidate
         className="w-full justify-start"

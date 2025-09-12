@@ -4,7 +4,7 @@ import { auth, isValidSession } from '../auth';
 import { User } from 'next-auth';
 import { Result, Success } from './types';
 import prisma from '../prisma';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { isNextRedirect, isPrismaError, prismaErrorBoundary } from './errors';
 import { environment } from '../environment';
 import { simulateNetworkDelay } from '../simulate';
@@ -15,11 +15,15 @@ interface AuthConfig {
 }
 
 interface CacheOptions {
-  // Key parts to identify the cache entry
+  // This is an extra array of keys that further adds identification to
+  // the cache. By default, unstable_cache already uses the arguments
+  // and the stringified version of your function as the cache key.
   keyParts?: string[];
-  // Tags to associate with the cache entry
+  // An array of tags that can be used to control cache invalidation.
+  // Next.js will not use this to uniquely identify the function.
   tags?: string[];
-  // Revalidate cache after this many seconds
+  // The number of seconds after which the cache should be revalidated.
+  // Omit or pass false to cache indefinitely or until matching
   revalidate?: number;
 }
 
@@ -254,6 +258,6 @@ class ProcedureBuilder<
   }
 }
 export namespace procedure {
-  export const authorization = (config: AuthConfig) =>
-    new ProcedureBuilder(config, undefined, undefined, undefined, undefined);
+  export const authorization = <T extends boolean>(config: AuthConfig & { required: T }) =>
+    new ProcedureBuilder<undefined, undefined, T>(config, undefined, undefined, undefined, undefined);
 }

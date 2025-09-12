@@ -41,7 +41,7 @@ export const SweepstakesParticipationPage: React.FC<
   });
 
   const handleLogin = () => {
-    const search = new URLSearchParams([['callbackUrl', pathname]]);
+    const search = new URLSearchParams([['redirectTo', pathname]]);
     router.push(`/login?${search.toString()}`);
   };
 
@@ -55,24 +55,13 @@ export const SweepstakesParticipationPage: React.FC<
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-2 pb-4 sm:p-4 sm:pb-6 sm:container sm:max-w-2xl">
-      <div className="flex flex-col sm:flex-row gap-2 w-full justify-between">
-        <Button asChild className="w-full sm:w-fit self-start">
-          <Link href="/browse">
-            <ArrowLeftIcon />
-            Browse More Giveaways
-          </Link>
-        </Button>
-        <div className="flex flex-row gap-2">
-          <Button variant="outline" className="grow sm:grow-0">
-            <ShareIcon />
-            Share
-          </Button>
-          <Button variant="destructive">
-            <CircleAlertIcon />
-            Report
-          </Button>
-        </div>
-      </div>
+      <Button asChild className="w-full sm:w-fit self-start">
+        <Link href="/browse">
+          <ArrowLeftIcon />
+          Browse More Giveaways
+        </Link>
+      </Button>
+
       <GiveawayParticipation
         {...props}
         isLoading={submitTaskProcedure.isLoading}

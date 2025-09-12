@@ -43,6 +43,7 @@ const getParticipantSweepstake = procedure
         }
       }
     });
+
     const totalUsers = await db.taskCompletion.findMany({
       select: {
         userId: true
@@ -54,6 +55,7 @@ const getParticipantSweepstake = procedure
         }
       }
     });
+
     const unparsed = {
       sweepstakes: {
         id: sweepstakes.id,

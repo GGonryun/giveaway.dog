@@ -3,6 +3,7 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import { NextAuthConfig } from 'next-auth';
+import { getUserAuthRedirect } from './redirect';
 
 export const authConfig = {
   pages: {
@@ -37,7 +38,7 @@ export const authConfig = {
         nextUrl.pathname.startsWith(r)
       );
       if (isConnection && isLoggedIn)
-        return Response.redirect(new URL('/app', nextUrl));
+        return Response.redirect(new URL('/', nextUrl));
 
       const isSensitive = sensitiveRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)

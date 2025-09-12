@@ -54,6 +54,7 @@ export const UserSettings = () => {
       toast.success('Profile updated successfully');
     }
   });
+
   // TODO: don't rely on the first provider.
   const provider = useMemo(() => user.providers[0], [user.providers]);
 

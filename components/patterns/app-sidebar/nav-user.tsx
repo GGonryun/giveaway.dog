@@ -85,7 +85,7 @@ export const NavUser = () => {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout.run}>
+            <DropdownMenuItem onClick={() => logout.run('/')}>
               <LogOut />
               Log out
             </DropdownMenuItem>

@@ -3,9 +3,13 @@
 import React from 'react';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import Link from 'next/link';
+import { useLogout } from '../auth/use-logout';
+import { usePathname } from 'next/navigation';
 
 export const UserInfoSection: React.FC = () => {
   const { userProfile } = useGiveawayParticipation();
+  const logout = useLogout();
+  const pathname = usePathname();
 
   if (!userProfile) return null;
 
@@ -20,8 +24,17 @@ export const UserInfoSection: React.FC = () => {
             </Link>
           </div>
           <div className="gap-1.5 flex">
-            <Link href="/account">Edit</Link>
-            <Link href="/logout">Logout</Link>
+            <Link href="/account" className="hover:underline">
+              Edit
+            </Link>
+            <span
+              className="cursor-pointer hover:underline"
+              onClick={() => {
+                logout.run(pathname);
+              }}
+            >
+              Logout
+            </span>
           </div>
         </div>
       ) : (

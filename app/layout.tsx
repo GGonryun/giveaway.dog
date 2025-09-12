@@ -4,6 +4,7 @@ import { Sora, DM_Sans, Space_Mono } from 'next/font/google';
 
 import { Analytics } from '@vercel/analytics/react';
 import { SessionProvider } from '@/components/context/auth-session-provider';
+import { Metadata } from 'next';
 
 const sora = Sora({
   subsets: ['latin'],
@@ -18,10 +19,10 @@ const dmSans = DM_Sans({
 const spaceMono = Space_Mono({
   subsets: ['latin'],
   weight: ['400', '700'],
-  variable: '--font-spacemon'
+  variable: '--font-spacemono'
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'GiveawayDog',
   description: 'Build better giveaways and contests'
 };

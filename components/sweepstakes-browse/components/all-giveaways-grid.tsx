@@ -3,6 +3,7 @@
 import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
 import { GiveawayItem } from './giveaway-item';
 import { Typography } from '@/components/ui/typography';
+import pluralize from 'pluralize';
 
 interface AllGiveawaysGridProps {
   sweepstakes: PublicSweepstakeSchema[];
@@ -13,9 +14,7 @@ export function AllGiveawaysGrid({
   searchQuery = '',
   sweepstakes = []
 }: AllGiveawaysGridProps) {
-  const isEnded = (endDate: Date) => endDate.getTime() < Date.now();
-
-  let filteredGiveaways = sweepstakes.filter((giveaway) => {
+  const filteredGiveaways = sweepstakes.filter((giveaway) => {
     const matchesSearch =
       searchQuery === '' ||
       giveaway.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -41,11 +40,12 @@ export function AllGiveawaysGrid({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Typography.Paragraph className="text-sm text-muted-foreground">
-          Showing {filteredGiveaways.length} giveaways
+          Showing {filteredGiveaways.length}{' '}
+          {pluralize('giveaway', filteredGiveaways.length)}
         </Typography.Paragraph>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {sweepstakes.map((sweepstake) => {
           return (
             <div key={sweepstake.id}>

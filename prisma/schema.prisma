@@ -22,6 +22,7 @@ model User {
   age             Int?
   emoji           String?
   region          String?
+  provisioned     Boolean          @default(false)
   type            UserType[]       @default([PARTICIPATE])
   accounts        Account[]
   sessions        Session[]

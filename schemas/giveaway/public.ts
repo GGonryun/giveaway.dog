@@ -1,15 +1,33 @@
 import { z } from 'zod';
-import { FormSweepstakesGetPayload } from './db';
+import { FormSweepstakesGetPayload, PublicSweepstakesGetPayload } from './db';
+import { SweepstakesStatus } from '@prisma/client';
+
+export const enteredSweepstakesSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  status: z.nativeEnum(SweepstakesStatus),
+  participants: z.number().int().min(0),
+  mostRecentEntry: z.date().optional(),
+  host: z.object({
+    id: z.string().optional(),
+    slug: z.string(),
+    name: z.string()
+  })
+});
 
 export const publicSweepstakesSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string(),
   banner: z.string().optional(),
-  startDate: z.date(),
-  endDate: z.date(),
-  region: z.string().optional(),
+  startDate: z.string(),
+  endDate: z.string(),
   prizes: z.number(),
+  host: z.object({
+    id: z.string(),
+    slug: z.string(),
+    name: z.string()
+  }),
   participants: z.number(),
   featured: z.boolean().optional()
 });
@@ -17,19 +35,25 @@ export const publicSweepstakesSchema = z.object({
 export type PublicSweepstakeSchema = z.infer<typeof publicSweepstakesSchema>;
 
 export const tryToPublicSweepstakes = (
-  sweepstakes: FormSweepstakesGetPayload
+  sweepstakes: PublicSweepstakesGetPayload
 ): PublicSweepstakeSchema | undefined => {
   const organized = {
     id: sweepstakes.id,
     name: sweepstakes.details?.name,
     description: sweepstakes.details?.description,
     banner: sweepstakes.details?.banner ?? undefined,
-    startDate: sweepstakes.timing?.startDate,
-    endDate: sweepstakes.timing?.endDate,
-    region: 'Worldwide', // TODO: support rendering region selection
+    startDate: sweepstakes.timing?.startDate?.toISOString(),
+    endDate: sweepstakes.timing?.endDate?.toISOString(),
+    host: {
+      id: sweepstakes.team?.id,
+      slug: sweepstakes.team?.slug,
+      name: sweepstakes.team?.name
+    },
     prizes: sweepstakes.prizes.length ?? 0,
-    participants: 0, // TODO: support showing participants
-    featured: false
+    participants: new Set(
+      sweepstakes.tasks.flatMap((t) => t.completions.map((c) => c.userId))
+    ).size,
+    featured: false // TODO: support featured sweepstakes.
   };
 
   const parsed = publicSweepstakesSchema.safeParse(organized);
