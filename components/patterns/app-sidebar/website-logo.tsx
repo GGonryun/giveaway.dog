@@ -9,7 +9,7 @@ import {
   SidebarTrigger,
   useSidebar
 } from '@/components/ui/sidebar';
-import { EmojiLogo } from '../logo-button';
+import { EmojiLogo } from '../emoji-logo';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 

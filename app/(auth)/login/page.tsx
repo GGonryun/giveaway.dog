@@ -1,4 +1,4 @@
-import { EmojiLogo } from '@/components/patterns/logo-button';
+import { EmojiLogo } from '@/components/patterns/emoji-logo';
 import { LoginForm } from './login-form';
 import { Suspense } from 'react';
 

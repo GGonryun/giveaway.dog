@@ -9,6 +9,5 @@ declare module 'next-auth' {
     emoji: string | null;
     region: string | null;
     type: UserType[] | null;
-    provisioned: boolean; 
   }
 }

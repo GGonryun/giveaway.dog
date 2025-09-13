@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Badge, BadgeVariants } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,46 +23,36 @@ import {
   Calendar,
   Users,
   Target,
-  Clock,
-  Gift
+  Clock
 } from 'lucide-react';
 import Link from 'next/link';
 import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
+import { SweepstakesDetailsSchema } from '@/schemas/giveaway/public';
+import { useBrowseSweepstakesPage } from '@/components/sweepstakes/use-browse-sweepstakes-page';
+import { useMemo } from 'react';
+import { useUrl } from '@/components/hooks/use-url';
+import { toast } from 'sonner';
 
-interface SweepstakesDetails {
-  id: string;
-  title: string;
-  description: string;
-  status: 'active' | 'ending-soon' | 'draft' | 'paused' | 'completed';
-  prize: string;
-  entries: number;
-  uniqueEntrants: number;
-  conversionRate: number;
-  botRate: number;
-  timeLeft: string;
-  createdAt: string;
-  endsAt: string;
-  topSource: string;
-  landingPageUrl: string;
-  shareUrl: string;
-  thumbnailUrl?: string;
-}
-
-interface SweepstakesDetailHeaderProps {
-  sweepstakes: SweepstakesDetails;
-}
-
-export const SweepstakesDetailHeader = ({
-  sweepstakes
-}: SweepstakesDetailHeaderProps) => {
+export const SweepstakesDetailHeader: React.FC<{
+  sweepstakes: SweepstakesDetailsSchema;
+}> = ({ sweepstakes }) => {
+  const sweepstakesId = useMemo(() => sweepstakes.id, [sweepstakes.id]);
   const page = useSweepstakesPage();
-  const getStatusBadge = (status: SweepstakesDetails['status']) => {
-    const variants = {
-      active: { variant: 'default' as const, label: 'Active' },
-      'ending-soon': { variant: 'destructive' as const, label: 'Ending Soon' },
-      draft: { variant: 'secondary' as const, label: 'Draft' },
-      paused: { variant: 'outline' as const, label: 'Paused' },
-      completed: { variant: 'secondary' as const, label: 'Completed' }
+  const browse = useBrowseSweepstakesPage();
+
+  const livePath = browse.path({ sweepstakesId });
+  const shareUrl = useUrl({ pathname: livePath });
+
+  const getStatusBadge = (status: SweepstakesDetailsSchema['status']) => {
+    const variants: Record<
+      SweepstakesDetailsSchema['status'],
+      { variant: BadgeVariants; label: string }
+    > = {
+      ACTIVE: { variant: 'default', label: 'Active' },
+      DRAFT: { variant: 'secondary', label: 'Draft' },
+      PAUSED: { variant: 'outline', label: 'Paused' },
+      COMPLETED: { variant: 'secondary', label: 'Completed' },
+      CANCELED: { variant: 'destructive', label: 'Canceled' }
     };
 
     const config = variants[status];
@@ -71,6 +61,11 @@ export const SweepstakesDetailHeader = ({
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
+  };
+
+  const handleShare = () => {
+    copyToClipboard(shareUrl);
+    toast.success('Link copied to clipboard');
   };
 
   return (
@@ -89,17 +84,13 @@ export const SweepstakesDetailHeader = ({
 
               <div className="space-y-2">
                 <div className="flex items-center space-x-3">
-                  <h1 className="text-2xl font-bold">{sweepstakes.title}</h1>
+                  <h1 className="text-2xl font-bold">{sweepstakes.name}</h1>
                   {getStatusBadge(sweepstakes.status)}
                 </div>
                 <p className="text-muted-foreground max-w-2xl">
                   {sweepstakes.description}
                 </p>
                 <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                  <div className="flex items-center space-x-1">
-                    <Gift className="h-4 w-4" />
-                    <span>{sweepstakes.prize}</span>
-                  </div>
                   <div className="flex items-center space-x-1">
                     <Calendar className="h-4 w-4" />
                     <span>
@@ -120,29 +111,25 @@ export const SweepstakesDetailHeader = ({
               {/* Desktop Actions */}
               <div className="hidden md:flex items-center space-x-2">
                 <Button variant="outline" size="sm" asChild>
-                  <Link href={sweepstakes.landingPageUrl} target="_blank">
+                  <Link href={livePath} target="_blank">
                     <ExternalLink className="h-4 w-4 mr-2" />
                     View Live
                   </Link>
                 </Button>
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => copyToClipboard(sweepstakes.shareUrl)}
-                >
+                <Button variant="outline" size="sm" onClick={handleShare}>
                   <Share className="h-4 w-4 mr-2" />
                   Share
                 </Button>
 
-                {sweepstakes.status === 'active' && (
+                {sweepstakes.status === 'ACTIVE' && (
                   <Button variant="outline" size="sm">
                     <Pause className="h-4 w-4 mr-2" />
                     Pause
                   </Button>
                 )}
 
-                {sweepstakes.status === 'paused' && (
+                {sweepstakes.status === 'PAUSED' && (
                   <Button variant="default" size="sm">
                     <Play className="h-4 w-4 mr-2" />
                     Resume
@@ -183,25 +170,23 @@ export const SweepstakesDetailHeader = ({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem asChild>
-                      <Link href={sweepstakes.landingPageUrl} target="_blank">
+                      <Link href={livePath} target="_blank">
                         <ExternalLink className="h-4 w-4 mr-2" />
                         View Live
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => copyToClipboard(sweepstakes.shareUrl)}
-                    >
+                    <DropdownMenuItem onClick={() => copyToClipboard(shareUrl)}>
                       <Share className="h-4 w-4 mr-2" />
                       Share
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {sweepstakes.status === 'active' && (
+                    {sweepstakes.status === 'ACTIVE' && (
                       <DropdownMenuItem>
                         <Pause className="h-4 w-4 mr-2" />
                         Pause
                       </DropdownMenuItem>
                     )}
-                    {sweepstakes.status === 'paused' && (
+                    {sweepstakes.status === 'PAUSED' && (
                       <DropdownMenuItem>
                         <Play className="h-4 w-4 mr-2" />
                         Resume
@@ -234,10 +219,10 @@ export const SweepstakesDetailHeader = ({
                 <span className="text-sm font-medium">Entries</span>
               </div>
               <div className="text-2xl font-bold">
-                {sweepstakes.entries.toLocaleString()}
+                {sweepstakes.totalEntries.toLocaleString()}
               </div>
               <div className="text-xs text-muted-foreground">
-                {sweepstakes.uniqueEntrants.toLocaleString()} unique
+                {sweepstakes.totalUsers.toLocaleString()} unique
               </div>
             </div>
 

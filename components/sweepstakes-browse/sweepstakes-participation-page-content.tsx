@@ -7,9 +7,6 @@ import {
   UserParticipationSchema
 } from '@/schemas/giveaway/schemas';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button } from '../ui/button';
-import Link from 'next/link';
-import { ArrowLeftIcon, ShareIcon, CircleAlertIcon } from 'lucide-react';
 import { UserProfileSchema } from '@/schemas/user';
 import { useProcedure } from '@/lib/mrpc/hook';
 import submitTask from '@/procedures/tasks/submit-task';
@@ -24,7 +21,6 @@ type SweepstakesParticipationPageContentProps = ParticipantSweepstakeSchema & {
 export const SweepstakesParticipationPage: React.FC<
   SweepstakesParticipationPageContentProps
 > = (props) => {
-  const { userProfile, userParticipation, ...sweepstake } = props;
   const router = useRouter();
   const pathname = usePathname();
 
@@ -54,21 +50,12 @@ export const SweepstakesParticipationPage: React.FC<
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-2 pb-4 sm:p-4 sm:pb-6 sm:container sm:max-w-2xl">
-      <Button asChild className="w-full sm:w-fit self-start">
-        <Link href="/browse">
-          <ArrowLeftIcon />
-          Browse More Giveaways
-        </Link>
-      </Button>
-
-      <GiveawayParticipation
-        {...props}
-        isLoading={submitTaskProcedure.isLoading}
-        onTaskComplete={handleTaskComplete}
-        onLogin={handleLogin}
-        onCompleteProfile={handleCompleteProfile}
-      />
-    </div>
+    <GiveawayParticipation
+      {...props}
+      isLoading={submitTaskProcedure.isLoading}
+      onTaskComplete={handleTaskComplete}
+      onLogin={handleLogin}
+      onCompleteProfile={handleCompleteProfile}
+    />
   );
 };

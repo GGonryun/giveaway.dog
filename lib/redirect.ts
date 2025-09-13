@@ -9,7 +9,7 @@ export const getUserAuthRedirect = ({
   userTypes?: UserType[] | null;
 }) => {
   // If a specific redirect was requested, honor that first
-  if (redirectTo) return redirectTo;
+  if (redirectTo && redirectTo.trim() !== '') return redirectTo;
   // If no user types, default to browse
   if (!userTypes || userTypes.length === 0) return '/browse';
   // Prioritize hosting if selected (they can also browse)

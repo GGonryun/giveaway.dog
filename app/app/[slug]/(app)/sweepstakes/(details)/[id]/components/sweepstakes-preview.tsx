@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Eye,
   ExternalLink,
@@ -12,25 +11,12 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { useState } from 'react';
+import { useSweepstakesDetailsContext } from './use-sweepstakes-details-context';
+import Link from 'next/link';
 
-interface SweepstakesDetails {
-  id: string;
-  title: string;
-  description: string;
-  status: string;
-  prize: string;
-  landingPageUrl: string;
-  shareUrl: string;
-  thumbnailUrl?: string;
-}
+export const SweepstakesPreview: React.FC = () => {
+  const { sweepstakes, liveUrl, livePath } = useSweepstakesDetailsContext();
 
-interface SweepstakesPreviewProps {
-  sweepstakes: SweepstakesDetails;
-}
-
-export const SweepstakesPreview = ({
-  sweepstakes
-}: SweepstakesPreviewProps) => {
   const [previewDevice, setPreviewDevice] = useState<
     'mobile' | 'tablet' | 'desktop'
   >('desktop');
@@ -59,13 +45,8 @@ export const SweepstakesPreview = ({
   return (
     <div className="space-y-6">
       {/* Preview Controls */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <h2 className="text-lg font-semibold">Landing Page Preview</h2>
-          <Badge variant="outline">Live Preview</Badge>
-        </div>
-
-        <div className="flex items-center space-x-2">
+      <div className="space-y-4 mt-4">
+        <div className="flex items-center justify-center space-x-2">
           {/* Device Selector */}
           <div className="flex items-center border rounded-lg">
             <Button
@@ -107,42 +88,42 @@ export const SweepstakesPreview = ({
           </Button>
 
           <Button variant="outline" size="sm" asChild>
-            <a href={sweepstakes.landingPageUrl} target="_blank">
+            <Link href={livePath} target="_blank">
               <ExternalLink className="h-4 w-4 mr-2" />
               Open in New Tab
-            </a>
+            </Link>
           </Button>
         </div>
-      </div>
 
-      {/* Preview Frame */}
-      <Card>
-        <CardContent className="p-0">
-          <div className={`transition-all duration-300 ${getDeviceStyles()}`}>
-            <div className="aspect-[4/5] bg-muted rounded-lg overflow-hidden">
-              {sweepstakes.landingPageUrl ? (
-                <iframe
-                  src={sweepstakes.landingPageUrl}
-                  className="w-full h-full border-0"
-                  title={`Preview of ${sweepstakes.title}`}
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-center space-y-4">
-                    <Eye className="h-12 w-12 mx-auto text-muted-foreground" />
-                    <div>
-                      <h3 className="font-medium">No Preview Available</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Landing page URL not configured
-                      </p>
+        {/* Preview Frame */}
+        <Card>
+          <CardContent className="p-0">
+            <div className={`transition-all duration-300 ${getDeviceStyles()}`}>
+              <div className="aspect-[4/5] bg-muted rounded-lg overflow-hidden">
+                {liveUrl ? (
+                  <iframe
+                    src={liveUrl}
+                    className="w-full h-full border-0"
+                    title={`Preview of ${sweepstakes.name}`}
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-center space-y-4">
+                      <Eye className="h-12 w-12 mx-auto text-muted-foreground" />
+                      <div>
+                        <h3 className="font-medium">No Preview Available</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Landing page URL not configured
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Preview Info */}
       <div className="grid gap-4 md:grid-cols-2">
@@ -154,13 +135,13 @@ export const SweepstakesPreview = ({
             <div>
               <label className="text-sm font-medium">URL</label>
               <div className="text-sm text-muted-foreground break-all">
-                {sweepstakes.landingPageUrl}
+                {liveUrl}
               </div>
             </div>
             <div>
               <label className="text-sm font-medium">Share URL</label>
               <div className="text-sm text-muted-foreground break-all">
-                {sweepstakes.shareUrl}
+                {liveUrl}
               </div>
             </div>
           </CardContent>
@@ -173,11 +154,9 @@ export const SweepstakesPreview = ({
           <CardContent className="space-y-3">
             <div className="border rounded p-3 space-y-2">
               <div className="text-blue-600 text-sm font-medium hover:underline cursor-pointer">
-                {sweepstakes.title}
+                {sweepstakes.name}
               </div>
-              <div className="text-xs text-green-600">
-                {sweepstakes.landingPageUrl}
-              </div>
+              <div className="text-xs text-green-600">{liveUrl}</div>
               <div className="text-sm text-gray-600">
                 {sweepstakes.description}
               </div>

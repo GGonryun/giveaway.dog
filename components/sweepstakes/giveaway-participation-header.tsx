@@ -2,9 +2,8 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Clock, Users, ClockIcon, CalendarIcon } from 'lucide-react';
+import { Users, ClockIcon, CalendarIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { format, formatDistanceToNow, isBefore, isAfter } from 'date-fns';
@@ -12,7 +11,7 @@ import { HostInfoCard } from './participation-header/host-info-card';
 
 export const GiveawayParticipationHeader: React.PC = ({ children }) => {
   return (
-    <Card className="relative p-0 m-0 gap-0 overflow-hidden w-full space-y-2 pt-4 pb-2">
+    <Card className="relative p-0 m-0 gap-0 overflow-hidden w-full space-y-2 pt-6 pb-2">
       <TimeRemainingSection />
       <TitleSection />
       <BannerSection />
@@ -36,7 +35,7 @@ const TimeRemainingSection = () => {
 
   return (
     <CardContent>
-      <div className="flex flex-row  gap-x-4 gap-y-2">
+      <div className="flex flex-row gap-x-4 gap-y-2">
         <div className="hidden sm:flex items-center gap-1">
           <CalendarIcon className="h-4 w-4 text-muted-foreground" />
           <div className="text-xs text-muted-foreground font-semibold">

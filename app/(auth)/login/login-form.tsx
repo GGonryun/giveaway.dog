@@ -29,7 +29,7 @@ export function LoginForm({
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
   const verify = searchParams.get('verify');
-  const redirectTo = searchParams.get('redirectTo') ?? '/';
+  const redirectTo = searchParams.get('redirectTo') ?? '';
   const [errorMessage, formAction, isPending] = useActionState(
     login,
     undefined

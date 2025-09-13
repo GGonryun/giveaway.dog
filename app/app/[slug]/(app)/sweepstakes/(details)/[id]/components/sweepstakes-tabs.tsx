@@ -1,5 +1,18 @@
-import { SweepstakesDetailHeader } from './components/sweepstakes-detail-header';
-import { SweepstakesTabs } from './components/sweepstakes-tabs';
+'use client';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { SweepstakesPreview } from './sweepstakes-preview';
+import { SweepstakesDetailAnalytics } from './sweepstakes-detail-analytics';
+import { SweepstakesPromotion } from './sweepstakes-promotion';
+import { SweepstakesEntries } from './sweepstakes-entries';
+import { SweepstakesExport } from './sweepstakes-export';
+import { SweepstakesSettings } from './sweepstakes-settings';
+import { SweepstakesWinners } from './sweepstakes-winners';
+import { SweepstakesDetailsSchema } from '@/schemas/giveaway/public';
+import {
+  SweepstakesDetailsProvider,
+  useSweepstakesDetailsContext
+} from './use-sweepstakes-details-context';
 
 // Mock data for individual sweepstakes
 const mockSweepstakesDetails = {
@@ -138,26 +151,86 @@ const mockDetailedAnalytics = {
   ]
 };
 
-interface SweepstakesDetailPageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default async function SweepstakesDetailPage({
-  params
-}: SweepstakesDetailPageProps) {
-  const { id: sweepstakesId } = await params;
+const SweepstakesTabs = () => {
+  const { sweepstakes, sweepstakesId } = useSweepstakesDetailsContext();
 
   return (
-    <div className="space-y-6">
-      {/* Header with key info and actions */}
-      <SweepstakesDetailHeader sweepstakes={mockSweepstakesDetails} />
+    <Tabs defaultValue="analytics">
+      <div className="overflow-hidden -mx-2 sticky sm:relative top-16 sm:top-0 z-10 sm:z-0 bg-background">
+        <div className="overflow-x-auto">
+          <TabsList className="border-l-0 border-r-0 border-t-0 sm:border-l sm:border-r sm:border-t inline-flex h-auto p-1 min-w-full">
+            <TabsTrigger value="preview" className="whitespace-nowrap">
+              Preview
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="whitespace-nowrap">
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger value="promotion" className="whitespace-nowrap">
+              Promotion
+            </TabsTrigger>
+            <TabsTrigger value="entries" className="whitespace-nowrap">
+              Entries
+            </TabsTrigger>
+            <TabsTrigger value="export" className="whitespace-nowrap">
+              Export
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="whitespace-nowrap">
+              Settings
+            </TabsTrigger>
+            <TabsTrigger value="winners" className="whitespace-nowrap">
+              Winners
+            </TabsTrigger>
+          </TabsList>
+        </div>
+      </div>
 
-      {/* Main Content with Tabs */}
-      <SweepstakesTabs
-        sweepstakesId={sweepstakesId}
-        sweepstakes={mockSweepstakesDetails}
-        detailedAnalytics={mockDetailedAnalytics}
-      />
-    </div>
+      {/* Preview Tab */}
+      <TabsContent value="preview" className="space-y-6">
+        <SweepstakesPreview />
+      </TabsContent>
+
+      {/* Analytics Tab */}
+      <TabsContent value="analytics" className="space-y-6">
+        <SweepstakesDetailAnalytics
+          sweepstakesId={sweepstakesId}
+          data={mockDetailedAnalytics}
+        />
+      </TabsContent>
+
+      {/* Promotion Tab */}
+      <TabsContent value="promotion" className="space-y-6">
+        <SweepstakesPromotion sweepstakes={mockSweepstakesDetails} />
+      </TabsContent>
+
+      {/* Entries Tab */}
+      <TabsContent value="entries" className="space-y-6">
+        <SweepstakesEntries sweepstakesId={sweepstakesId} />
+      </TabsContent>
+
+      {/* Export Tab */}
+      <TabsContent value="export" className="space-y-6">
+        <SweepstakesExport sweepstakesId={sweepstakesId} />
+      </TabsContent>
+
+      {/* Settings Tab */}
+      <TabsContent value="settings" className="space-y-6">
+        <SweepstakesSettings sweepstakes={mockSweepstakesDetails} />
+      </TabsContent>
+
+      {/* Winners Tab */}
+      <TabsContent value="winners" className="space-y-6">
+        <SweepstakesWinners sweepstakesId={sweepstakesId} />
+      </TabsContent>
+    </Tabs>
   );
-}
+};
+
+export const SweepstakesTabsWrapper: React.FC<{
+  sweepstakes: SweepstakesDetailsSchema;
+}> = ({ sweepstakes }) => {
+  return (
+    <SweepstakesDetailsProvider sweepstakes={sweepstakes}>
+      <SweepstakesTabs />
+    </SweepstakesDetailsProvider>
+  );
+};

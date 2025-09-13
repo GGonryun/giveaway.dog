@@ -72,12 +72,10 @@ export const TaskItem: React.FC<{
           className={cn(
             'group flex items-stretch justify-between w-full',
             isLoading ? 'cursor-progress' : 'cursor-pointer',
-            completed
-              ? 'bg-green-50 border-green-200'
-              : 'hover:bg-accent/80 hover:text-success'
+            completed ? 'bg-green-50 border-green-200' : 'hover:bg-accent/80'
           )}
         >
-          <div className="flex items-center gap-2 flex-1">
+          <div className="flex items-center gap-3 flex-1">
             <div
               className={cn(
                 'flex items-center justify-center min-w-8 w-12 h-full group-hover:opacity-50',
@@ -91,7 +89,9 @@ export const TaskItem: React.FC<{
               )}
             </div>
             <div className="text-left">
-              <h4 className="font-medium text-base sm:text-lg">{task.title}</h4>
+              <h4 className="font-medium text-sm sm:text-base group-hover:underline">
+                {task.title}
+              </h4>
             </div>
           </div>
 
@@ -106,7 +106,7 @@ export const TaskItem: React.FC<{
                 <Button
                   size="icon"
                   variant={completed ? 'default' : 'outline'}
-                  className="sm:px-6"
+                  className="h-7 sm:px-6 cursor-pointer"
                 >
                   {isLoading ? (
                     <Spinner />

@@ -18,7 +18,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { EmojiLogo } from './logo-button';
+import { EmojiLogo } from './emoji-logo';
 import Link from 'next/link';
 import { UserSchema } from '@/schemas/user';
 import { UserType } from '@prisma/client';

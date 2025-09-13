@@ -1,4 +1,4 @@
-import { EmojiLogo } from '@/components/patterns/logo-button';
+import { EmojiLogo } from '@/components/patterns/emoji-logo';
 import { TeamPickerForm } from '@/components/team/team-picker-form';
 import { Suspense } from 'react';
 

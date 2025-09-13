@@ -287,6 +287,19 @@
     background-color: var(--background);
   }
 }
+
+@layer utilities {
+  .bg-giveaway {
+    @apply bg-gradient-to-br from-[oklch(0.98_0.02_85)] via-[oklch(0.82_0.16_118)] to-[oklch(0.68_0.15_220)];
+  }
+  .bg-giveaway-soft {
+    @apply bg-gradient-to-br from-[oklch(0.98_0.02_85)] via-[oklch(0.72_0.12_350)] to-[oklch(0.7_0.13_280)];
+  }
+  .bg-giveaway-bold {
+    @apply bg-gradient-to-r from-[oklch(0.65_0.18_142)] via-[oklch(0.78_0.15_65)] to-[oklch(0.72_0.12_350)];
+  }
+}
+
 /* Chrome, Safari, Edge, Opera */
 input[type='search']::-webkit-search-cancel-button {
   -webkit-appearance: none;

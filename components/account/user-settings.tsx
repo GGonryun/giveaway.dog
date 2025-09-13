@@ -42,6 +42,7 @@ import { UpdateUserProfile } from '@/schemas/user';
 import { toast } from 'sonner';
 import { UserType } from '@prisma/client';
 import { DEFAULT_MINIMUM_AGE } from '@/schemas/giveaway/defaults';
+import deleteUser from '@/procedures/user/delete-user';
 
 const SAVE_DELAY = 600;
 
@@ -52,6 +53,13 @@ export const UserSettings = () => {
     action: updateProfile,
     onSuccess() {
       toast.success('Profile updated successfully');
+    }
+  });
+
+  const deleteUserProcedure = useProcedure({
+    action: deleteUser,
+    onSuccess() {
+      toast.success('Account deleted successfully');
     }
   });
 
@@ -133,8 +141,7 @@ export const UserSettings = () => {
   };
 
   const handleDeleteAccount = async () => {
-    // Handle account deletion
-    console.log('Account deletion requested');
+    deleteUserProcedure.run();
   };
 
   const canChangeEmail = provider === 'twitter' || provider === 'magic-link';

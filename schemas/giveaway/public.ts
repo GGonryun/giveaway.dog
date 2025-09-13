@@ -1,6 +1,24 @@
 import { z } from 'zod';
-import { FormSweepstakesGetPayload, PublicSweepstakesGetPayload } from './db';
+import { PublicSweepstakesGetPayload } from './db';
 import { SweepstakesStatus } from '@prisma/client';
+
+export const sweepstakesDetailsSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  status: z.nativeEnum(SweepstakesStatus),
+  description: z.string(),
+  createdAt: z.string(),
+  endsAt: z.string(),
+  timeLeft: z.string(),
+  totalEntries: z.number(),
+  totalUsers: z.number(),
+  banner: z.string().url(),
+  conversionRate: z.number(),
+  botRate: z.number(),
+  topSource: z.string()
+});
+
+export type SweepstakesDetailsSchema = z.infer<typeof sweepstakesDetailsSchema>;
 
 export const enteredSweepstakesSchema = z.object({
   id: z.string(),
