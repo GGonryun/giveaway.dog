@@ -7,7 +7,7 @@ import {
 } from './giveaway-participation-context';
 import { GiveawayParticipationHeader } from './giveaway-participation-header';
 import { NotLoggedIn } from './states/not-logged-in';
-import { ProfileIncomplete } from './states/profile-incomplete';
+import { EmailRequired } from './states/email-required';
 import { NotEligible } from './states/not-eligible';
 import { WinnersAnnounced } from './states/winners-announced';
 import { ActiveParticipation } from './states/active/active-participation';
@@ -24,8 +24,8 @@ const GiveawayParticipationContent = () => {
   switch (state) {
     case 'not-logged-in':
       return <NotLoggedIn />;
-    case 'profile-incomplete':
-      return <ProfileIncomplete />;
+    case 'email-required':
+      return <EmailRequired />;
     case 'not-eligible':
       return <NotEligible />;
     case 'winners-announced':

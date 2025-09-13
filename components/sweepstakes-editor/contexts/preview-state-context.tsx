@@ -1,7 +1,7 @@
 'use client';
 
 import { GiveawayState } from '@/schemas/giveaway/schemas';
-import React, { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
 
 export type PreviewStateContextValue = {
   previewState: GiveawayState;

@@ -11,6 +11,7 @@ export function ProviderButtons({ mode, onSubmit }: ProviderButtonsProps) {
   return (
     <div className="flex flex-col gap-3">
       <Button
+        type="submit"
         variant="outline"
         name="provider"
         value="twitter"
@@ -34,6 +35,7 @@ export function ProviderButtons({ mode, onSubmit }: ProviderButtonsProps) {
         {actionText} with X
       </Button>
       <Button
+        type="submit"
         variant="outline"
         name="provider"
         value="google"
@@ -54,6 +56,7 @@ export function ProviderButtons({ mode, onSubmit }: ProviderButtonsProps) {
         {actionText} with Google
       </Button>
       <Button
+        type="submit"
         variant="outline"
         name="provider"
         value="discord"

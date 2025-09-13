@@ -49,7 +49,7 @@ const computeState = ({
     sweepstakes.audience.requireEmail &&
     (!userProfile.email || !userProfile.emailVerified)
   )
-    return 'profile-incomplete';
+    return 'email-required';
 
   switch (sweepstakes.status) {
     case 'DRAFT':

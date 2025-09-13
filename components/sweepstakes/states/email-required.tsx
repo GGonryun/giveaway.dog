@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { User } from 'lucide-react';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
 
-export const ProfileIncomplete: React.FC = () => {
+export const EmailRequired: React.FC = () => {
   const { onCompleteProfile } = useGiveawayParticipation();
 
   return (

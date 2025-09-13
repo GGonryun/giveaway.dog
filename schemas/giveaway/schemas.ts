@@ -181,7 +181,7 @@ export type GiveawayParticipationSchema = z.infer<
 export type GiveawayState =
   | 'active' // Default participation view
   | 'not-logged-in' // User needs to log in
-  | 'profile-incomplete' // User needs to complete profile
+  | 'email-required' // User needs to set an email
   | 'not-eligible' // User not eligible (age/region restrictions)
   | 'winners-announced' // Winners have been announced
   | 'winners-pending' // Winners are pending announcement
@@ -192,7 +192,7 @@ export type GiveawayState =
 export const PREVIEW_GIVEAWAY_STATES: GiveawayState[] = [
   'active',
   'not-logged-in',
-  'profile-incomplete',
+  'email-required',
   'not-eligible',
   'winners-announced'
 ];
@@ -204,8 +204,8 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
       return 'Active State';
     case 'not-logged-in':
       return 'Not Logged In';
-    case 'profile-incomplete':
-      return 'Profile Incomplete';
+    case 'email-required':
+      return 'Email Required';
     case 'not-eligible':
       return 'Not Eligible';
     case 'winners-announced':
