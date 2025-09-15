@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { format, formatDistanceToNow, isBefore, isAfter } from 'date-fns';
 import { HostInfoCard } from './participation-header/host-info-card';
+import { TermsModal } from './terms-modal';
 
 export const GiveawayParticipationHeader: React.PC = ({ children }) => {
   return (
@@ -130,16 +131,16 @@ const FooterSection = () => {
   return (
     <CardContent>
       <div className="flex flex-row items-center justify-center gap-x-4 gap-y-2">
-        <Link className="text-xs" href="?terms=true">
-          Terms & Conditions
-        </Link>
+        <TermsModal>
+          <button className="text-xs cursor-pointer underline hover:text-primary transition-colors">
+            Terms & Conditions
+          </button>
+        </TermsModal>
         <Separator
           orientation="vertical"
           className="data-[orientation=vertical]:h-4 bg-muted-foreground"
         />
-        <Link className="text-xs" href="/policy">
-          © {host.name}
-        </Link>
+        <div className="text-xs">© {host.name}</div>
       </div>
     </CardContent>
   );

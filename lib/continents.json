@@ -1,0 +1,30 @@
+[
+    {
+        "a": "AFR",
+        "n": "Africa"
+    },
+    {
+        "a": "ATA",
+        "n": "Antarctica"
+    },
+    {
+        "a": "ASI",
+        "n": "Asia"
+    },
+    {
+        "a": "EUR",
+        "n": "Europe"
+    },
+    {
+        "a": "NAM",
+        "n": "North America"
+    },
+    {
+        "a": "OCE",
+        "n": "Oceania"
+    },
+    {
+        "a": "SOA",
+        "n": "South America"
+    }
+]

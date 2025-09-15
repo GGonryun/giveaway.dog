@@ -28,10 +28,7 @@ import { EmojiPickerComponent } from '@/components/patterns/emoji-picker';
 import { CountrySelector } from '@/components/ui/country-selector';
 import { EmailVerification } from '@/components/auth/email-verification';
 import { SocialProviders } from './social-providers';
-import {
-  User,
-  Calendar
-} from 'lucide-react';
+import { User, Calendar } from 'lucide-react';
 import { useUser } from '@/components/context/user-provider';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateProfile from '@/procedures/user/update-profile';
@@ -119,11 +116,9 @@ export const UserSettings = () => {
     updateProfileProcedure.run(newData);
   };
 
-
   const handleDeleteAccount = async () => {
     deleteUserProcedure.run();
   };
-
 
   return (
     <div className="space-y-6">
@@ -245,7 +240,7 @@ export const UserSettings = () => {
       </Card>
 
       {/* Email Management Section */}
-      <EmailVerification user={user} />
+      <EmailVerification user={user} redirectTo="/account" />
 
       {/* Social Providers Section */}
       <SocialProviders />

@@ -21,12 +21,14 @@ interface CountrySelectorProps {
   value?: string;
   onValueChange: (value: string) => void;
   label?: string;
+  hideLabel?: boolean;
   placeholder?: string;
   className?: string;
 }
 
 export function CountrySelector({
   value,
+  hideLabel,
   onValueChange,
   label = 'Country',
   placeholder = 'Search for your country...',
@@ -88,7 +90,7 @@ export function CountrySelector({
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <Label>{label}</Label>
+      {!hideLabel && <Label>{label}</Label>}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

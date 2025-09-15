@@ -41,7 +41,10 @@ export const sendEmailVerification = procedure
       });
 
       // Create verification URL using portal
-      const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+      const baseUrl =
+        process.env.NEXTAUTH_URL ||
+        process.env.VERCEL_URL ||
+        'http://localhost:3000';
       const params = new URLSearchParams({
         token,
         email,
@@ -61,7 +64,8 @@ export const sendEmailVerification = procedure
 
       // Send verification email
       await transporter.sendMail({
-        from: process.env.EMAIL_FROM,
+        from: `"Giveaway Dog" <${process.env.EMAIL_FROM}>`,
+        sender: process.env.EMAIL_FROM,
         to: email,
         subject: 'Verify your email address',
         html: `

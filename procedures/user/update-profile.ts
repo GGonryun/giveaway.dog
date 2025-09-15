@@ -13,7 +13,7 @@ export const updateProfile = procedure
       id: z.string()
     })
   )
-  .invalidate(async ({ output }) => [`user-${output.id}`, 'user-profile'])
+  .invalidate(async ({ output }) => [`user-${output.id}`])
   .handler(async ({ input, user, db }) => {
     const { id, name, age, region, emoji, type } = input;
     if (id !== user.id) {

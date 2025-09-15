@@ -12,7 +12,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Mail, AlertTriangle, ShieldAlert, CheckCircle, MailCheck } from 'lucide-react';
+import {
+  Mail,
+  AlertTriangle,
+  ShieldAlert,
+  CheckCircle,
+  MailCheck
+} from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import sendEmailVerification from '@/procedures/user/send-email-verification';
 import updateEmail from '@/procedures/user/update-email';
@@ -43,7 +49,7 @@ export function EmailVerification({
   const [emailInput, setEmailInput] = useState(user.email || '');
   const [emailSent, setEmailSent] = useState(false);
   const [sentToEmail, setSentToEmail] = useState('');
-  
+
   const sendVerificationProcedure = useProcedure({
     action: sendEmailVerification,
     onSuccess() {
@@ -73,7 +79,8 @@ export function EmailVerification({
 
   const needsEmail = !user.email;
   const needsVerification = user.email && !user.emailVerified;
-  const isLoading = sendVerificationProcedure.isLoading || updateEmailProcedure.isLoading;
+  const isLoading =
+    sendVerificationProcedure.isLoading || updateEmailProcedure.isLoading;
 
   const handleSaveEmail = async () => {
     if (!emailInput) {
@@ -105,7 +112,7 @@ export function EmailVerification({
 
   // Show email sent confirmation
   if (emailSent) {
-    return (
+    const content = (
       <div className="space-y-4">
         <div className="text-center">
           <MailCheck className="h-12 w-12 mx-auto mb-4 text-green-500" />
@@ -115,8 +122,8 @@ export function EmailVerification({
           </p>
           <p className="font-medium text-foreground mb-4">{sentToEmail}</p>
           <p className="text-sm text-muted-foreground mb-6">
-            Click the verification link in the email to complete your email verification. 
-            The link will expire in 15 minutes.
+            Click the verification link in the email to complete your email
+            verification. The link will expire in 15 minutes.
           </p>
           <div className="flex flex-col gap-2">
             <Button
@@ -137,6 +144,16 @@ export function EmailVerification({
           </div>
         </div>
       </div>
+    );
+
+    if (!showCard) {
+      return content;
+    }
+
+    return (
+      <Card>
+        <CardContent>{content}</CardContent>
+      </Card>
     );
   }
 

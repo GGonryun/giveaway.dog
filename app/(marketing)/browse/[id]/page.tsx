@@ -10,6 +10,7 @@ import {
 import { UserProfileSchema } from '@/schemas/user';
 import { assertNever } from '@/lib/errors';
 import { dates } from '@/lib/date';
+import { RequiredFields } from '@/lib/types';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -37,19 +38,20 @@ export default async function Page({ params }: PageProps) {
   );
 }
 
+type ComputeStateOptions = {
+  sweepstakes: ParticipantSweepstakeSchema['sweepstakes'];
+  userProfile?: UserProfileSchema;
+};
+
 const computeState = ({
   sweepstakes,
   userProfile
-}: {
-  sweepstakes: ParticipantSweepstakeSchema['sweepstakes'];
-  userProfile?: UserProfileSchema;
-}): GiveawayState => {
+}: ComputeStateOptions): GiveawayState => {
   if (!userProfile) return 'not-logged-in';
-  if (
-    sweepstakes.audience.requireEmail &&
-    (!userProfile.email || !userProfile.emailVerified)
-  )
-    return 'email-required';
+  if (requiresEmail({ sweepstakes, userProfile })) return 'email-required';
+  if (!isProfileComplete({ sweepstakes, userProfile }))
+    return 'profile-incomplete';
+  if (!isEligible({ sweepstakes, userProfile })) return 'not-eligible';
 
   switch (sweepstakes.status) {
     case 'DRAFT':
@@ -68,4 +70,52 @@ const computeState = ({
     default:
       throw assertNever(sweepstakes.status);
   }
+};
+
+const requiresEmail = ({ sweepstakes, userProfile }: ComputeStateOptions) => {
+  return (
+    sweepstakes.audience.requireEmail &&
+    (!userProfile?.email || !userProfile?.emailVerified)
+  );
+};
+
+const isProfileComplete = ({
+  sweepstakes,
+  userProfile
+}: RequiredFields<ComputeStateOptions, 'userProfile'>) => {
+  if (!sweepstakes.audience.minimumAgeRestriction) return true;
+  if (!userProfile.age) return false;
+
+  if (!sweepstakes.audience.regionalRestriction) return true;
+  if (!userProfile.region) return false;
+
+  return true;
+};
+
+const isEligible = ({
+  sweepstakes,
+  userProfile
+}: RequiredFields<ComputeStateOptions, 'userProfile'>) => {
+  if (sweepstakes.audience.minimumAgeRestriction) {
+    if (!userProfile.age) return false;
+    if (userProfile.age < sweepstakes.audience.minimumAgeRestriction.value)
+      return false;
+  }
+
+  // check if region requirement is met
+  if (sweepstakes.audience.regionalRestriction) {
+    if (!userProfile.region) return false;
+    const hasRegion = sweepstakes.audience.regionalRestriction.regions.includes(
+      userProfile.region
+    );
+    switch (sweepstakes.audience.regionalRestriction.filter) {
+      case 'INCLUDE':
+        return hasRegion;
+      case 'EXCLUDE':
+        return !hasRegion;
+      default:
+        throw assertNever(sweepstakes.audience.regionalRestriction.filter);
+    }
+  }
+  return true;
 };

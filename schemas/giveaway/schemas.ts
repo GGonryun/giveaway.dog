@@ -183,6 +183,7 @@ export type GiveawayState =
   | 'not-logged-in' // User needs to log in
   | 'email-required' // User needs to set an email
   | 'not-eligible' // User not eligible (age/region restrictions)
+  | 'profile-incomplete'
   | 'winners-announced' // Winners have been announced
   | 'winners-pending' // Winners are pending announcement
   | 'closed' // Giveaway is closed
@@ -212,6 +213,8 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
       return 'Winners Announced';
     case 'winners-pending':
       return 'Winners Pending';
+    case 'profile-incomplete':
+      return 'Profile Incomplete';
     case 'closed':
       return 'Closed';
     case 'canceled':

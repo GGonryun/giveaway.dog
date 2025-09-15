@@ -15,6 +15,7 @@ import { Cancelled } from './states/cancelled';
 import { Closed } from './states/closed';
 import { Error } from './states/error';
 import { WinnersPending } from './states/winners-pending';
+import { ProfileIncomplete } from './states/profile-incomplete';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { assertNever } from '@/lib/errors';
 
@@ -40,6 +41,8 @@ const GiveawayParticipationContent = () => {
       return <Error />;
     case 'winners-pending':
       return <WinnersPending />;
+    case 'profile-incomplete':
+      return <ProfileIncomplete />;
     default:
       throw assertNever(state);
   }
