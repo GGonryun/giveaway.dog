@@ -40,7 +40,8 @@ const mockUserProfile: UserProfileSchema = {
   emailVerified: true,
   emoji: '🐶',
   region: 'US',
-  age: 25
+  age: 25,
+  providers: ['twitter', 'google']
 };
 
 const mockParticipation: GiveawayParticipationSchema = {

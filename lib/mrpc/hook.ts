@@ -52,6 +52,11 @@ export function useProcedure<TInput, TSuccess>({
         try {
           const result = await action(input);
 
+          if (!result) {
+            // this should only ever happen on redirects
+            return;
+          }
+
           if (result.ok) {
             onSuccess?.(result.data);
           } else {

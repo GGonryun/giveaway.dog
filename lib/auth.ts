@@ -14,7 +14,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     TwitterProvider({
       allowDangerousEmailAccountLinking: true,
       clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET
+      clientSecret: process.env.TWITTER_SECRET,
+      profile(profile) {
+        return {
+          id: profile.data?.id ?? profile.id,
+          name: profile.data?.name ?? profile.name,
+          email: profile.data?.email ?? profile.email,
+          image: profile.data?.profile_image_url ?? profile.profile_image_url
+        } as any;
+      }
     }),
     GoogleProvider({
       allowDangerousEmailAccountLinking: true,
@@ -36,7 +44,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     NodemailerProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
+        port: Number(process.env.EMAIL_SERVER_PORT),
         auth: {
           user: process.env.EMAIL_SERVER_USER,
           pass: process.env.EMAIL_SERVER_PASSWORD

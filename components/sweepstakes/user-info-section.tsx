@@ -5,6 +5,7 @@ import { useGiveawayParticipation } from './giveaway-participation-context';
 import Link from 'next/link';
 import { useLogout } from '../auth/use-logout';
 import { usePathname } from 'next/navigation';
+import { ProviderIcon } from '@/components/ui/patterns/provider-icon';
 
 export const UserInfoSection: React.FC = () => {
   const { userProfile } = useGiveawayParticipation();
@@ -17,11 +18,36 @@ export const UserInfoSection: React.FC = () => {
     <div className="text-xs text-muted-foreground">
       {userProfile ? (
         <div className="flex justify-between">
-          <div>
-            Signed in as{' '}
-            <Link href="/account" className="font-semibold">
-              {userProfile.name}
-            </Link>
+          <div className="flex items-center gap-1.5">
+            <span>
+              Signed in as{' '}
+              <Link href="/account" className="font-semibold">
+                {userProfile.name}
+              </Link>
+            </span>
+            <div className="flex items-center gap-1">
+              {/* Social provider icons */}
+              {userProfile.providers?.map((provider) => (
+                <div
+                  key={provider}
+                  className="w-4 h-4 rounded bg-white border border-border flex items-center justify-center"
+                >
+                  <ProviderIcon
+                    type={provider as any}
+                    className="w-2.5 h-2.5 text-foreground"
+                  />
+                </div>
+              ))}
+              {/* Email icon for verified email */}
+              {userProfile.email && userProfile.emailVerified && (
+                <div className="w-4 h-4 rounded bg-white border border-border flex items-center justify-center">
+                  <ProviderIcon
+                    type="email"
+                    className="w-2.5 h-2.5 text-foreground"
+                  />
+                </div>
+              )}
+            </div>
           </div>
           <div className="gap-1.5 flex">
             <Link href="/account" className="hover:underline">

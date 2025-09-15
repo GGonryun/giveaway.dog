@@ -12,31 +12,77 @@ import {
 } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import createProfile from '@/procedures/user/create-profile';
+import verifyEmail from '@/procedures/user/verify-email';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { UserType } from '@prisma/client';
 import { useAccountPage } from '@/components/account/use-account-page';
 import { getUserAuthRedirect } from '@/lib/redirect';
+import { CheckCircle } from 'lucide-react';
+import invalidateUser from '@/procedures/user/invalidate-user';
 
-export const AuthPortal: React.FC<{
-  signup: string;
-  name: string;
-  emoji: string;
-  userTypes: UserType[];
-  redirectTo: string;
-}> = ({ signup, name, emoji, userTypes, redirectTo }) => {
+interface AuthPortalProps {
+  // Email verification props
+  token?: string;
+  email?: string;
+
+  // Signup props
+  signup?: string;
+  name?: string;
+  emoji?: string;
+  userTypes?: UserType[];
+
+  // Common props
+  redirectTo?: string;
+  revalidate?: string;
+}
+
+export const AuthPortal: React.FC<AuthPortalProps> = ({
+  token,
+  email,
+  signup,
+  name,
+  emoji,
+  userTypes,
+  redirectTo,
+  revalidate
+}) => {
   const { navigateToAccountOverview } = useAccountPage();
   const router = useRouter();
 
   const { data: session, status } = useSession();
   const [error, setError] = useState<string | null>(null);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
 
   const redirect = useMemo(
-    () => getUserAuthRedirect({ redirectTo, userTypes }),
+    () =>
+      getUserAuthRedirect({
+        redirectTo: redirectTo || '',
+        userTypes: userTypes || []
+      }),
     [redirectTo, userTypes]
   );
 
-  const { isLoading, isPending, run } = useProcedure({
+  // Email verification procedure
+  const { isLoading: isVerifying, run: runVerification } = useProcedure({
+    action: verifyEmail,
+    onSuccess() {
+      setVerificationSuccess(true);
+      toast.success('Email verified successfully!');
+      router.push(redirectTo || '/');
+    },
+    onFailure(error) {
+      console.error('Email verification failed:', error);
+      setError(error.message || 'Email verification failed');
+      toast.error('Email verification failed');
+    }
+  });
+
+  const {
+    isLoading: isCreating,
+    isPending,
+    run: runCreate
+  } = useProcedure({
     action: createProfile,
     onFailure(error) {
       if (error.code === 'CONFLICT') {
@@ -52,12 +98,22 @@ export const AuthPortal: React.FC<{
     }
   });
 
-  useEffect(() => {
-    if (isLoading) return;
+  const { isLoading: isRevalidating, run: runRevalidation } = useProcedure({
+    action: invalidateUser,
+    onSuccess() {
+      router.push(redirect);
+    }
+  });
 
+  useEffect(() => {
+    // If there's an existing error, don't proceed
+    if (error) return;
+    // If verification already succeeded, don't proceed
+    if (verificationSuccess) return;
+    // Handle signup flow
+    if (isCreating || isVerifying || isRevalidating) return;
     // Wait for session to load
     if (status === 'loading') return;
-
     // If not authenticated, redirect to login
     if (status === 'unauthenticated') {
       router.push('/login');
@@ -70,6 +126,17 @@ export const AuthPortal: React.FC<{
       return;
     }
 
+    if (revalidate) {
+      runRevalidation();
+      return;
+    }
+
+    // Handle email verification flow
+    if (token && email) {
+      runVerification({ token, email });
+      return;
+    }
+
     // If not signing up, redirect to final destination
     if (!signup) {
       router.push(redirect);
@@ -77,43 +144,104 @@ export const AuthPortal: React.FC<{
     }
 
     // Run the profile creation procedure
-    run({
+    runCreate({
       id: session.user.id,
-      name,
-      emoji,
+      name: name || '',
+      emoji: emoji || '',
       age: null,
       region: null,
-      type: userTypes
+      type: userTypes || []
     });
-  }, [session, status, isLoading, signup, name, emoji, userTypes, router]);
+  }, [
+    session,
+    status,
+    isCreating,
+    isVerifying,
+    error,
+    verificationSuccess,
+    signup,
+    name,
+    emoji,
+    userTypes,
+    router,
+    token,
+    email,
+    revalidate,
+    isRevalidating,
+    runVerification
+  ]);
+
+  if (revalidate) {
+    return (
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle>Revalidating Session</CardTitle>
+          <CardDescription>
+            Please wait while we revalidate your session. Redirecting you now...
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-center py-4">
+          <Spinner />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Show email verification success
+  if (verificationSuccess) {
+    return (
+      <Card>
+        <CardHeader className="text-center">
+          <CheckCircle className="h-12 w-12 mx-auto mb-4 text-green-500" />
+          <CardTitle className="text-green-600">Email Verified!</CardTitle>
+          <CardDescription>
+            Your email has been successfully verified. Redirecting you now...
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-center py-4">
+          <Spinner />
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (error) {
     return (
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-destructive">Setup Error</CardTitle>
+          <CardTitle className="text-destructive">
+            {token && email ? 'Verification Error' : 'Setup Error'}
+          </CardTitle>
           <CardDescription>{error}</CardDescription>
         </CardHeader>
         <CardContent className="text-center">
           <button
-            onClick={() => router.push('/login')}
+            onClick={() => router.push(redirectTo || '/login')}
             className="text-primary hover:underline"
           >
-            Try signing in again
+            {token && email ? 'Continue to site' : 'Try signing in again'}
           </button>
         </CardContent>
       </Card>
     );
   }
 
-  if (status === 'loading' || isLoading || isPending) {
+  if (status === 'loading' || isCreating || isPending || isVerifying) {
     return (
       <Card>
         <CardHeader className="text-center">
           <CardTitle>
-            {signup ? 'Setting up your account...' : 'Signing you in...'}
+            {isVerifying
+              ? 'Verifying your email...'
+              : signup
+                ? 'Setting up your account...'
+                : 'Signing you in...'}
           </CardTitle>
-          <CardDescription>We're getting things ready for you.</CardDescription>
+          <CardDescription>
+            {isVerifying
+              ? 'Please wait while we verify your email address.'
+              : "We're getting things ready for you."}
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center py-8">
           <Spinner size="xl" />

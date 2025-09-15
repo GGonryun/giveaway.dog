@@ -1,24 +1,30 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { User } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { EmailVerification } from '@/components/auth/email-verification';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
 
 export const EmailRequired: React.FC = () => {
-  const { onCompleteProfile } = useGiveawayParticipation();
+  const { userProfile } = useGiveawayParticipation();
+  const pathname = usePathname();
+
+  if (!userProfile) {
+    return (
+      <div className="my-4">
+        <div className="text-center">
+          <h3 className="text-lg font-semibold">Email Verification Required</h3>
+          <p className="text-muted-foreground">
+            Please log in to verify your email for this giveaway.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="text-center">
-      <User className="h-12 w-12 mx-auto mb-4 text-orange-500" />
-      <h3 className="text-lg font-semibold mb-2">Complete Your Profile</h3>
-      <p className="text-muted-foreground mb-4">
-        Please complete your profile to participate in this giveaway. You need
-        to provide your birthday, email, and region.
-      </p>
-      <Button onClick={onCompleteProfile} className="w-full sm:w-auto">
-        Complete Profile
-      </Button>
+    <div className="my-4">
+      <EmailVerification showCard={false} user={userProfile} redirectTo={pathname} />
     </div>
   );
 };

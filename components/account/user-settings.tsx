@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -24,16 +24,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { EmojiPickerComponent } from '@/components/patterns/emoji-picker';
 import { CountrySelector } from '@/components/ui/country-selector';
+import { EmailVerification } from '@/components/auth/email-verification';
+import { SocialProviders } from './social-providers';
 import {
   User,
-  Mail,
-  Calendar,
-  AlertTriangle,
-  ShieldAlert,
-  CheckCircle
+  Calendar
 } from 'lucide-react';
 import { useUser } from '@/components/context/user-provider';
 import { useProcedure } from '@/lib/mrpc/hook';
@@ -48,7 +45,6 @@ const SAVE_DELAY = 600;
 
 export const UserSettings = () => {
   const user = useUser();
-  const [isEmailLoading, setIsEmailLoading] = useState(false);
   const updateProfileProcedure = useProcedure({
     action: updateProfile,
     onSuccess() {
@@ -62,9 +58,6 @@ export const UserSettings = () => {
       toast.success('Account deleted successfully');
     }
   });
-
-  // TODO: don't rely on the first provider.
-  const provider = useMemo(() => user.providers[0], [user.providers]);
 
   const [formData, setFormData] = useState<UpdateUserProfile>({
     id: user.id,
@@ -126,27 +119,11 @@ export const UserSettings = () => {
     updateProfileProcedure.run(newData);
   };
 
-  const handleSaveEmail = async () => {
-    setIsEmailLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsEmailLoading(false);
-  };
-
-  const handleSendVerification = async () => {
-    setIsEmailLoading(true);
-    // Simulate sending verification email
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsEmailLoading(false);
-  };
 
   const handleDeleteAccount = async () => {
     deleteUserProcedure.run();
   };
 
-  const canChangeEmail = provider === 'twitter' || provider === 'magic-link';
-  const needsEmail = provider === 'twitter' && !user.email;
-  const needsVerification = user.email && !user.emailVerified;
 
   return (
     <div className="space-y-6">
@@ -268,94 +245,10 @@ export const UserSettings = () => {
       </Card>
 
       {/* Email Management Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Email Management</CardTitle>
-          <CardDescription>
-            Manage your email address and verification status
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Email Verification Warning */}
-          {needsVerification && (
-            <Alert variant="error">
-              <ShieldAlert className="h-4 w-4" />
-              <AlertTitle>Email Verification Required</AlertTitle>
-              <AlertDescription className="flex items-center justify-between">
-                <span>
-                  Please verify your email address to access all features.
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSendVerification}
-                  disabled={isEmailLoading}
-                >
-                  {isEmailLoading ? 'Sending...' : 'Send Verification'}
-                </Button>
-              </AlertDescription>
-            </Alert>
-          )}
+      <EmailVerification user={user} />
 
-          {/* Twitter No Email Warning */}
-          {needsEmail && (
-            <Alert variant="error">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Email Required</AlertTitle>
-              <AlertDescription>
-                Please add and verify an email address for advanced
-                functionality and security.
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {/* Email Address Field */}
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={user.email ?? ''}
-                onChange={handleInputChange}
-                className="pl-10 pr-10 truncate"
-                placeholder="Enter your email address"
-                disabled={!canChangeEmail}
-              />
-              {user.emailVerified && (
-                <CheckCircle className="absolute right-3 top-3 h-4 w-4 text-green-500" />
-              )}
-            </div>
-            {!canChangeEmail && (
-              <p className="text-xs text-muted-foreground">
-                <AlertTriangle className="inline h-3 w-3 mr-1" />
-                This email cannot be changed as it's linked to your {
-                  provider
-                }{' '}
-                account.
-              </p>
-            )}
-          </div>
-
-          {canChangeEmail && (
-            <>
-              <Button
-                onClick={handleSaveEmail}
-                disabled={isEmailLoading}
-                className="w-full"
-                variant="outline"
-              >
-                {isEmailLoading ? 'Updating...' : 'Update Email'}
-              </Button>
-              <p className="text-xs text-muted-foreground">
-                A verification email will be sent to your new email address.
-              </p>
-            </>
-          )}
-        </CardContent>
-      </Card>
+      {/* Social Providers Section */}
+      <SocialProviders />
 
       {/* Account Actions Section */}
       <Card>

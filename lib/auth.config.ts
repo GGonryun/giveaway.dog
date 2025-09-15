@@ -3,7 +3,6 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import { NextAuthConfig } from 'next-auth';
-import { getUserAuthRedirect } from './redirect';
 
 export const authConfig = {
   pages: {
