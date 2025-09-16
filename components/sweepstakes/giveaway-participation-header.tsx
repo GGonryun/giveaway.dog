@@ -3,12 +3,20 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Users, ClockIcon, CalendarIcon } from 'lucide-react';
-import Link from 'next/link';
+import {
+  Users,
+  ClockIcon,
+  CalendarIcon,
+  Gift,
+  FileText,
+  BuildingIcon
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { format, formatDistanceToNow, isBefore, isAfter } from 'date-fns';
 import { HostInfoCard } from './participation-header/host-info-card';
 import { TermsModal } from './terms-modal';
+import { Typography } from '../ui/typography';
 
 export const GiveawayParticipationHeader: React.PC = ({ children }) => {
   return (
@@ -17,6 +25,7 @@ export const GiveawayParticipationHeader: React.PC = ({ children }) => {
       <TitleSection />
       <BannerSection />
       <HostSection />
+      <PrizesSection />
       <DescriptionSection />
       <Separator className="my-2" />
       <CardContent>{children}</CardContent>
@@ -107,7 +116,7 @@ const BannerSection = () => {
 const HostSection = () => {
   const { host } = useGiveawayParticipation();
   return (
-    <CardContent>
+    <CardContent className="mt-2">
       <HostInfoCard host={host} />
     </CardContent>
   );
@@ -116,11 +125,47 @@ const HostSection = () => {
 const DescriptionSection = () => {
   const { sweepstakes } = useGiveawayParticipation();
 
+  if (!sweepstakes.setup.description) return null;
+
   return (
     <CardContent>
-      {sweepstakes.setup.description && (
-        <p className="text-sm sm:text-base">{sweepstakes.setup.description}</p>
-      )}
+      <div className="mt-2 space-y-1">
+        <div className="flex items-center gap-2">
+          <FileText className="h-5 w-5 text-primary" />
+          <h3 className="text-lg font-semibold">Description</h3>
+        </div>
+        <p className="text-sm sm:text-base leading-relaxed">
+          {sweepstakes.setup.description}
+        </p>
+      </div>
+    </CardContent>
+  );
+};
+
+const PrizesSection = () => {
+  const { sweepstakes } = useGiveawayParticipation();
+  const hasPrizes = sweepstakes.prizes && sweepstakes.prizes.length > 0;
+
+  if (!hasPrizes) return null;
+
+  return (
+    <CardContent className="mt-2">
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <Gift className="h-5 w-5 text-primary" />
+          <h3 className="text-lg font-semibold">Prizes</h3>
+        </div>
+        <ul className="space-y-2">
+          {sweepstakes.prizes.map((prize, index) => (
+            <li key={index} className="flex items-center justify-between">
+              <span className="text-sm sm:text-base">• {prize.name}</span>
+              <Badge variant="secondary" className="ml-2">
+                {prize.quota} {prize.quota === 1 ? 'winner' : 'winners'}
+              </Badge>
+            </li>
+          ))}
+        </ul>
+      </div>
     </CardContent>
   );
 };
