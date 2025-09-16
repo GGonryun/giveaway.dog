@@ -28,10 +28,11 @@ const getSweepstakesList = procedure
         `user-${user.id}`,
         `team-${input.slug}`
       ],
-      revalidate: minutesToSeconds(10)
+      revalidate: minutesToSeconds(1)
     };
   })
   .handler(async ({ input, user, db }) => {
+    console.log('Fetching sweepstakes list with input:', input);
     const query = input.search
       ? ({
           details: {
@@ -45,6 +46,8 @@ const getSweepstakesList = procedure
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
         ...query,
+        status:
+          input.status && input.status !== 'ALL' ? input.status : undefined,
         team: {
           slug: input.slug,
           members: {

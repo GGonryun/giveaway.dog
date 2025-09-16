@@ -26,28 +26,21 @@ const groups = ({ slug }: { slug: string }) => {
       label: undefined,
       items: [
         {
-          name: 'Dashboard',
-          url: `/app/${slug}`,
-          icon: Home
-        }
-      ]
-    },
-    {
-      label: undefined,
-      items: [
-        {
           name: 'Sweepstakes',
-          url: `/app/${slug}/sweepstakes`,
+          url: `/app/${slug}`,
+          alias: `/app/${slug}/sweepstakes`,
           icon: TicketIcon
         },
         {
           name: 'Users',
           url: `/app/${slug}/users`,
+          alias: undefined,
           icon: UsersIcon
         },
         {
           name: 'Settings',
           url: `/app/${slug}/settings`,
+          alias: undefined,
           icon: SettingsIcon
         }
       ]
@@ -68,7 +61,13 @@ export const NavGroups = () => {
             <SidebarMenu>
               {g.items.map((item) => (
                 <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild isActive={path === item.url}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={
+                      item.url === path ||
+                      (item.alias ? path.startsWith(item.alias) : false)
+                    }
+                  >
                     <a href={item.url}>
                       <item.icon />
                       <span>{item.name}</span>
