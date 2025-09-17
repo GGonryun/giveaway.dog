@@ -21,7 +21,8 @@ export type ApplicationErrorCode =
   | 'BAD_GATEWAY'
   | 'SERVICE_UNAVAILABLE'
   | 'GATEWAY_TIMEOUT'
-  | 'UNKNOWN_HTTP_ERROR';
+  | 'UNKNOWN_HTTP_ERROR'
+  | 'VALIDATION_ERROR';
 
 export const statusToCode: Record<number, ApplicationErrorCode> = {
   400: 'BAD_REQUEST',

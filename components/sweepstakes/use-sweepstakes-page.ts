@@ -8,10 +8,7 @@ export const useSweepstakesPage = () => {
   const router = useRouter();
   const { activeTeam } = useTeams();
 
-  const path = useMemo(
-    () => `/app/${activeTeam.slug}/sweepstakes`,
-    [activeTeam]
-  );
+  const path = useMemo(() => `/app/${activeTeam.slug}`, [activeTeam]);
 
   const computeSearchParams = (updater: (params: URLSearchParams) => void) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());

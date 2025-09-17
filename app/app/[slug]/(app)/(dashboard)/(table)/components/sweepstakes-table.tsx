@@ -23,7 +23,6 @@ import {
 import {
   Eye,
   Edit,
-  Copy,
   Pause,
   Play,
   Trash2,
@@ -133,6 +132,7 @@ export function SweepstakesTable({
     setDeleteModal(null);
   };
 
+  // TODO: move out of component
   const getStatusBadge = (status: SweepstakesData['status']) => {
     const variants = {
       ACTIVE: {
@@ -166,6 +166,7 @@ export function SweepstakesTable({
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
+  // TODO: move out of component
   const getStatusIcon = (status: SweepstakesData['status']) => {
     switch (status) {
       case 'ACTIVE':
@@ -180,6 +181,14 @@ export function SweepstakesTable({
         return <Calendar className="h-4 w-4 text-blue-500" />;
       default:
         return null;
+    }
+  };
+
+  const handleRowClick = (item: SweepstakesData) => () => {
+    if (item.status === SweepstakesStatus.DRAFT) {
+      editPage.navigateTo(item.id);
+    } else {
+      detailsPage.navigateTo(item.id);
     }
   };
 
@@ -291,7 +300,7 @@ export function SweepstakesTable({
         </div>
 
         {/* Desktop Table View */}
-        <div className="hidden lg:block overflow-x-auto">
+        <div className="hidden lg:block overflow-x-auto ">
           <Table>
             <TableHeader>
               <TableRow>
@@ -314,18 +323,17 @@ export function SweepstakesTable({
             </TableHeader>
             <TableBody>
               {sweepstakes.map((item) => (
-                <TableRow key={item.id} className="hover:bg-muted/50 h-12">
+                <TableRow
+                  key={item.id}
+                  className="hover:bg-muted/50 h-12 group cursor-pointer"
+                  onClick={handleRowClick(item)}
+                >
                   <TableCell className="py-2 w-[300px]">
                     <div>
                       <div className="flex items-center space-x-2">
                         {getStatusIcon(item.status)}
-                        <div>
-                          <Link
-                            href={detailsPage.route(item.id)}
-                            className="font-medium hover:text-primary hover:underline line-clamp-1"
-                          >
-                            {item.name || DEFAULT_SWEEPSTAKES_NAME}
-                          </Link>
+                        <div className="font-medium group-hover:text-primary group-hover:underline line-clamp-1">
+                          {item.name || DEFAULT_SWEEPSTAKES_NAME}
                         </div>
                       </div>
                     </div>
@@ -362,12 +370,6 @@ export function SweepstakesTable({
                   </TableCell>
                   <TableCell className="text-right py-2 w-24">
                     <div className="flex items-center justify-end space-x-1">
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link href={detailsPage.route(item.id)}>
-                          <Eye className="h-4 w-4" />
-                        </Link>
-                      </Button>
-
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm">
@@ -375,12 +377,14 @@ export function SweepstakesTable({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={detailsPage.route(item.id)}>
-                              <Eye className="h-4 w-4 mr-2" />
-                              View Details
-                            </Link>
-                          </DropdownMenuItem>
+                          {item.status !== SweepstakesStatus.DRAFT && (
+                            <DropdownMenuItem asChild>
+                              <Link href={detailsPage.route(item.id)}>
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </Link>
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem asChild>
                             <Link href={editPage.route(item.id)}>
                               <Edit className="h-4 w-4 mr-2" />

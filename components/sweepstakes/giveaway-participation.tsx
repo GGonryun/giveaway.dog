@@ -54,7 +54,7 @@ export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = (
   return (
     <GiveawayParticipationProvider {...props}>
       <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 *:w-full">
-        <GiveawayParticipationHeader>
+        <GiveawayParticipationHeader device={props.device}>
           <GiveawayParticipationContent />
         </GiveawayParticipationHeader>
       </div>

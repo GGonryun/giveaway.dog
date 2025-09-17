@@ -5,6 +5,8 @@ import { DEFAULT_MINIMUM_AGE } from './defaults';
 import { userProfileSchema } from '../user';
 import { taskSchema } from '../tasks/schemas';
 
+export type DeviceType = 'mobile' | 'desktop';
+
 export const prizeSchema = z.object({
   id: z.string(),
   name: z.string().min(3).max(100),

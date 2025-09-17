@@ -79,7 +79,7 @@ const getParticipantSweepstake = procedure
     if (!parsed.success) {
       console.error(`Failed to parse sweepstakes:`, parsed.error);
       throw new ApplicationError({
-        code: 'INTERNAL_SERVER_ERROR',
+        code: 'VALIDATION_ERROR',
         message: 'Sweepstakes data is invalid'
       });
     }

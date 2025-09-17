@@ -41,6 +41,7 @@ export const DeleteConfirmationModal: React.FC<
   }, [confirmText, sweepstakes?.name, deleteSweepstakes.isLoading]);
 
   const handleConfirm = () => {
+    setConfirmText('');
     if (!isConfirmDisabled && sweepstakes) {
       deleteSweepstakes.run(sweepstakes);
     }

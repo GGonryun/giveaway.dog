@@ -1,3 +1,5 @@
+'use server';
+
 import { SweepstakesTable } from './components/sweepstakes-table';
 import { Suspense } from 'react';
 import { LoaderCircle, Trophy } from 'lucide-react';

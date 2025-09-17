@@ -16,12 +16,15 @@ import { useGiveawayParticipation } from './giveaway-participation-context';
 import { format, formatDistanceToNow, isBefore, isAfter } from 'date-fns';
 import { HostInfoCard } from './participation-header/host-info-card';
 import { TermsModal } from './terms-modal';
-import { Typography } from '../ui/typography';
+import { DeviceType } from '@/schemas/giveaway/schemas';
+import { cn } from '@/lib/utils';
 
-export const GiveawayParticipationHeader: React.PC = ({ children }) => {
+export const GiveawayParticipationHeader: React.PC<{
+  device?: DeviceType;
+}> = ({ children, device }) => {
   return (
     <Card className="relative p-0 m-0 gap-0 overflow-hidden w-full space-y-2 pt-6 pb-2">
-      <TimeRemainingSection />
+      <TimeRemainingSection device={device} />
       <TitleSection />
       <BannerSection />
       <HostSection />
@@ -35,7 +38,9 @@ export const GiveawayParticipationHeader: React.PC = ({ children }) => {
   );
 };
 
-const TimeRemainingSection = () => {
+const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
+  device
+}) => {
   const { sweepstakes, participation } = useGiveawayParticipation();
   const now = new Date();
   const startDate = format(sweepstakes.timing.startDate, 'MMM d, yyyy');
@@ -46,7 +51,12 @@ const TimeRemainingSection = () => {
   return (
     <CardContent>
       <div className="flex flex-row gap-x-4 gap-y-2">
-        <div className="hidden sm:flex items-center gap-1">
+        <div
+          className={cn(
+            'hidden sm:flex items-center gap-1',
+            device === 'mobile' && 'hidden sm:hidden'
+          )}
+        >
           <CalendarIcon className="h-4 w-4 text-muted-foreground" />
           <div className="text-xs text-muted-foreground font-semibold">
             {startDate} - {endDate}
@@ -54,7 +64,10 @@ const TimeRemainingSection = () => {
         </div>
         <Separator
           orientation="vertical"
-          className="data-[orientation=vertical]:h-4 bg-muted-foreground hidden sm:block"
+          className={cn(
+            'data-[orientation=vertical]:h-4 bg-muted-foreground hidden sm:block',
+            device === 'mobile' && 'hidden sm:hidden'
+          )}
         />
         <div className="flex gap-1">
           <ClockIcon className="h-4 w-4 text-muted-foreground" />
@@ -68,7 +81,10 @@ const TimeRemainingSection = () => {
         </div>
         <Separator
           orientation="vertical"
-          className="data-[orientation=vertical]:h-4 bg-muted-foreground hidden sm:block"
+          className={cn(
+            'data-[orientation=vertical]:h-4 bg-muted-foreground hidden sm:block',
+            device === 'mobile' && 'hidden sm:hidden'
+          )}
         />
         <div className="flex gap-1">
           <Users className="h-4 w-4 text-muted-foreground" />

@@ -6,13 +6,7 @@ import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-partici
 import { GiveawayParticipationSkeleton } from '@/components/sweepstakes/fallbacks/giveaway-skeleton';
 import { IncompleteGiveawaySetup } from '@/components/sweepstakes/fallbacks/empty-states';
 
-import {
-  GiveawayParticipationSchema,
-  GiveawayFormSchema,
-  GiveawayWinnerSchema,
-  Prize,
-  UserParticipationSchema
-} from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema, Prize } from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
 import {
   MinimumAgeRestrictionFormat,
@@ -22,39 +16,14 @@ import {
 import { defaultTermInputOptions } from './form/terms';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { noop } from 'lodash';
-import { UserProfileSchema } from '@/schemas/user';
 import { TaskSchema } from '@/schemas/tasks/schemas';
-
-const mockHost = {
-  id: 'preview-host-id',
-  slug: 'preview-host',
-  name: 'Preview Host',
-  avatar: '🐶' // Fallback to giveaway dog emoji
-};
-
-// Mock user data for preview
-const mockUserProfile: UserProfileSchema = {
-  id: 'preview-user',
-  name: 'Preview User',
-  email: 'user@example.com',
-  emailVerified: true,
-  emoji: '🐶',
-  region: 'US',
-  age: 25,
-  providers: ['twitter', 'google']
-};
-
-const mockParticipation: GiveawayParticipationSchema = {
-  totalEntries: 1247,
-  totalUsers: 357
-};
-
-const mockUserParticipation: UserParticipationSchema = {
-  entries: 12,
-  completedTasks: ['task-0'] // First task completed for demo
-};
-
-const mockWinners: GiveawayWinnerSchema[] = [];
+import {
+  mockHost,
+  mockParticipation,
+  mockWinners,
+  mockUserProfile,
+  mockUserParticipation
+} from './data/mocks';
 
 export const GiveawayPreview: React.FC = () => {
   const { control } = useFormContext<GiveawayFormSchema>();

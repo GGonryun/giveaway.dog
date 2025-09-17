@@ -8,11 +8,14 @@ import { SweepstakesEntries } from './sweepstakes-entries';
 import { SweepstakesExport } from './sweepstakes-export';
 import { SweepstakesSettings } from './sweepstakes-settings';
 import { SweepstakesWinners } from './sweepstakes-winners';
-import { SweepstakesDetailsSchema } from '@/schemas/giveaway/public';
 import {
   SweepstakesDetailsProvider,
   useSweepstakesDetailsContext
 } from './use-sweepstakes-details-context';
+import {
+  GiveawayFormSchema,
+  ParticipantSweepstakeSchema
+} from '@/schemas/giveaway/schemas';
 
 // Mock data for individual sweepstakes
 const mockSweepstakesDetails = {
@@ -226,10 +229,11 @@ const SweepstakesTabs = () => {
 };
 
 export const SweepstakesTabsWrapper: React.FC<{
-  sweepstakes: SweepstakesDetailsSchema;
-}> = ({ sweepstakes }) => {
+  data?: ParticipantSweepstakeSchema;
+  sweepstakesId: string;
+}> = ({ data, sweepstakesId }) => {
   return (
-    <SweepstakesDetailsProvider sweepstakes={sweepstakes}>
+    <SweepstakesDetailsProvider data={data} sweepstakesId={sweepstakesId}>
       <SweepstakesTabs />
     </SweepstakesDetailsProvider>
   );

@@ -3,7 +3,12 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { Prisma, SweepstakesStatus } from '@prisma/client';
-import { formatDistance, isAfter, minutesToSeconds } from 'date-fns';
+import {
+  formatDistance,
+  formatDistanceToNow,
+  isAfter,
+  minutesToSeconds
+} from 'date-fns';
 import {
   sweepstakesDataSchema,
   listSweepstakesFiltersSchema
@@ -100,8 +105,8 @@ const getTimeLeft = (
     return 'Not started';
   if (isAfter(now, sweepstake.timing?.endDate)) return 'Completed';
   if (isAfter(sweepstake.timing?.startDate, now))
-    return `Starts ${formatDistance(sweepstake.timing?.startDate, now, { addSuffix: true })}`;
-  return formatDistance(now, sweepstake.timing?.endDate, { addSuffix: true });
+    return `Starts ${formatDistanceToNow(sweepstake.timing?.startDate, { addSuffix: true })}`;
+  return `Ends ${formatDistance(sweepstake.timing?.endDate, now, { addSuffix: true })}`;
 };
 
 export default getSweepstakesList;
