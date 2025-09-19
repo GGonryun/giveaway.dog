@@ -21,7 +21,7 @@ model User {
   image           String?
   age             Int?
   emoji           String?
-  region          String?
+  countryCode     String?
   type            UserType[]       @default([PARTICIPATE])
   accounts        Account[]
   sessions        Session[]
@@ -31,6 +31,22 @@ model User {
   taskCompletions TaskCompletion[]
   taskProgresses  TaskProgress[]
   winners         PrizeWinners[]
+  events          UserEvent[]
+}
+
+enum UserEventType {
+  LOGIN
+}
+
+model UserEvent {
+  id        String        @id @default(cuid())
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  type      UserEventType
+  geo       Json?
+  ip        String
+  userAgent String
+  timestamp DateTime      @default(now())
 }
 
 model Account {

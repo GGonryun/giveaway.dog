@@ -30,6 +30,7 @@ interface AuthPortalProps {
   signup?: string;
   name?: string;
   emoji?: string;
+  countryCode?: string;
   userTypes?: UserType[];
 
   // Common props
@@ -43,6 +44,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   signup,
   name,
   emoji,
+  countryCode,
   userTypes,
   redirectTo,
   revalidate
@@ -149,7 +151,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
       name: name || '',
       emoji: emoji || '',
       age: null,
-      region: null,
+      countryCode: countryCode || '',
       type: userTypes || []
     });
   }, [

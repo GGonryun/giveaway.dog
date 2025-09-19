@@ -1,30 +1,30 @@
 [
     {
-        "a": "AFR",
-        "n": "Africa"
+        "alpha-2": "AF",
+        "name": "Africa"
     },
     {
-        "a": "ATA",
-        "n": "Antarctica"
+        "alpha-2": "AN",
+        "name": "Antarctica"
     },
     {
-        "a": "ASI",
-        "n": "Asia"
+        "alpha-2": "AS",
+        "name": "Asia"
     },
     {
-        "a": "EUR",
-        "n": "Europe"
+        "alpha-2": "EU",
+        "name": "Europe"
     },
     {
-        "a": "NAM",
-        "n": "North America"
+        "alpha-2": "NA",
+        "name": "North America"
     },
     {
-        "a": "OCE",
-        "n": "Oceania"
+        "alpha-2": "OC",
+        "name": "Oceania"
     },
     {
-        "a": "SOA",
-        "n": "South America"
+        "alpha-2": "SA",
+        "name": "South America"
     }
 ]

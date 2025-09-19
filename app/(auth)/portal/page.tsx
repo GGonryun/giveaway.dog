@@ -1,8 +1,9 @@
 import { Suspense } from 'react';
 import { AuthPortal } from './auth-portal';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { parseUserTypes } from './util';
 import { getUserAuthRedirect } from '@/lib/redirect';
+import trackUser from '@/procedures/user/track-user';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,6 +49,12 @@ const PortalPage: React.FC<{
         </div>
       </div>
     );
+  }
+
+  const result = await trackUser();
+
+  if (!result.ok) {
+    notFound();
   }
 
   if (!signup && !revalidate) {

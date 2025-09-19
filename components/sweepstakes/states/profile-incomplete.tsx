@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CountrySelector } from '@/components/ui/country-selector';
 import { Calendar } from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateProfile from '@/procedures/user/update-profile';
@@ -21,40 +20,33 @@ export const ProfileIncomplete = () => {
     onSuccess() {
       toast.success('Profile updated successfully');
       // Refresh the page to re-evaluate the state
+      // TODO: do we need this?
       window.location.reload();
     }
   });
 
   const [formData, setFormData] = useState<
-    Pick<UpdateUserProfile, 'id' | 'age' | 'region'>
+    Pick<UpdateUserProfile, 'id' | 'age'>
   >({
     id: userProfile?.id ?? '',
-    age: userProfile?.age?.toString() ?? '',
-    region: userProfile?.region ?? ''
+    age: userProfile?.age?.toString() ?? ''
   });
 
   // Determine which fields are required based on sweepstakes restrictions
   const requiresAge = sweepstakes.audience.minimumAgeRestriction;
-  const requiresRegion = sweepstakes.audience.regionalRestriction;
 
   // Validation
   const isAgeValid =
     !requiresAge ||
     (formData.age && parseInt(formData.age) >= (requiresAge.value || 13));
-  const isRegionValid = !requiresRegion || !!formData.region;
-  const isFormValid = isAgeValid && isRegionValid;
+  const isFormValid = isAgeValid;
 
   // Determine which fields actually need to be displayed
   const shouldShowAge = requiresAge && !userProfile?.age;
-  const shouldShowRegion = requiresRegion && !userProfile?.region;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCountryChange = (countryCode: string) => {
-    setFormData((prev) => ({ ...prev, region: countryCode }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,9 +58,9 @@ export const ProfileIncomplete = () => {
       id: userProfile?.id ?? '',
       name: userProfile?.name ?? '',
       emoji: userProfile?.emoji ?? '',
+      countryCode: null, // Not updating country here
       type: null, // Not updating type here
-      age: requiresAge ? formData.age : userProfile?.age?.toString() || null,
-      region: requiresRegion ? formData.region : userProfile?.region || null
+      age: requiresAge ? formData.age : userProfile?.age?.toString() || null
     };
 
     updateProfileProcedure.run(updateData);
@@ -118,24 +110,6 @@ export const ProfileIncomplete = () => {
               <p className="text-sm text-red-600">
                 You must be at least {requiresAge?.value} years old to
                 participate
-              </p>
-            )}
-          </div>
-        )}
-
-        {shouldShowRegion && (
-          <div className="space-y-2">
-            <Label className={cn(!isRegionValid && 'text-red-600')}>
-              Country/Region *
-            </Label>
-            <CountrySelector
-              hideLabel
-              value={formData.region || ''}
-              onValueChange={handleCountryChange}
-            />
-            {!isRegionValid && (
-              <p className="text-sm text-red-600">
-                Please select your country/region
               </p>
             )}
           </div>

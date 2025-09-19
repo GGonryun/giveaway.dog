@@ -19,7 +19,7 @@ export const mockUserProfile: UserProfileSchema = {
   email: 'user@example.com',
   emailVerified: true,
   emoji: '🐶',
-  region: 'US',
+  countryCode: 'US',
   age: 25,
   providers: ['twitter', 'google']
 };

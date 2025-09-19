@@ -60,7 +60,7 @@ export const UserSettings = () => {
     id: user.id,
     name: user.name,
     emoji: user.emoji,
-    region: user.region,
+    countryCode: user.countryCode || '',
     age: (user.age ?? DEFAULT_MINIMUM_AGE).toString(),
     type: user.type // Default to PARTICIPATE, can be ['HOST', 'PARTICIPATE']
   });
@@ -210,12 +210,6 @@ export const UserSettings = () => {
                 />
               </div>
             </div>
-
-            {/* Country Selection */}
-            <CountrySelector
-              value={formData.region ?? ''}
-              onValueChange={handleCountryChange}
-            />
 
             {/* Age */}
             <div className="space-y-2">

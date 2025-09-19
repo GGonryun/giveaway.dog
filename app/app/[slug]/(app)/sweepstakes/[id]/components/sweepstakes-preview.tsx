@@ -31,13 +31,13 @@ export const SweepstakesPreview: React.FC = () => {
           timeZone={sweepstakes.timing.timeZone}
           sweepstakesUrl={liveUrl}
           onPickWinners={() => {
-            console.log('Pick winners clicked');
+            alert('Pick winners clicked');
           }}
           onAnnounceWinners={() => {
-            console.log('Announce winners clicked');
+            alert('Announce winners clicked');
           }}
           onGenerateQR={() => {
-            console.log('Generate QR code clicked');
+            alert('Generate QR code clicked');
           }}
         />
       )}
@@ -54,7 +54,6 @@ const ScreenPreview: React.FC = () => {
   const [previewDevice, setPreviewDevice] = useState<DeviceType>('desktop');
 
   useEffect(() => {
-    console.log({ isMobile });
     if (isMobile) {
       setPreviewDevice('mobile');
     }

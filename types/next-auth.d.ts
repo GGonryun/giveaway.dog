@@ -7,7 +7,7 @@ declare module 'next-auth' {
     id: string | null;
     age: number | null;
     emoji: string | null;
-    region: string | null;
+    countryCode: string | null;
     type: UserType[] | null;
   }
 }

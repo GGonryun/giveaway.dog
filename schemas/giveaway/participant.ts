@@ -20,7 +20,7 @@ const toWinners = (
     name: w.user.name ?? undefined,
     email: w.user.email ?? undefined,
     emoji: w.user.emoji ?? undefined,
-    region: w.user.region ?? undefined,
+    countryCode: w.user.countryCode ?? undefined,
     age: w.user.age ?? undefined
   }));
 };

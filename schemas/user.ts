@@ -36,7 +36,7 @@ export const userProfileSchema = z.object({
   email: z.string().email().nullable(),
   emailVerified: z.boolean().nullable(),
   emoji: z.string().nullable(),
-  region: z.string().nullable(),
+  countryCode: z.string().nullable(),
   age: z.number().int().min(1).max(120).nullable(),
   providers: providerSchema.array()
 });
@@ -84,7 +84,7 @@ export const updateUserProfileSchema = z.object({
   id: z.string(),
   name: z.string().nullable(),
   age: z.string().nullable(),
-  region: z.string().nullable(),
+  countryCode: z.string().nullable(),
   emoji: z.string().nullable(),
   type: z.array(z.nativeEnum(UserType)).nullable()
 });

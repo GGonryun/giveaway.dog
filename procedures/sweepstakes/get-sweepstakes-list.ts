@@ -37,7 +37,6 @@ const getSweepstakesList = procedure
     };
   })
   .handler(async ({ input, user, db }) => {
-    console.log('Fetching sweepstakes list with input:', input);
     const query = input.search
       ? ({
           details: {

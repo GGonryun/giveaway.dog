@@ -11,6 +11,7 @@ import { UserProfileSchema } from '@/schemas/user';
 import { assertNever } from '@/lib/errors';
 import { dates } from '@/lib/date';
 import { RequiredFields } from '@/lib/types';
+import { expandCountries, includesCountryCode } from '@/lib/countries';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -87,7 +88,7 @@ const isProfileComplete = ({
   if (!userProfile.age) return false;
 
   if (!sweepstakes.audience.regionalRestriction) return true;
-  if (!userProfile.region) return false;
+  if (!userProfile.countryCode) return false;
 
   return true;
 };
@@ -104,10 +105,13 @@ const isEligible = ({
 
   // check if region requirement is met
   if (sweepstakes.audience.regionalRestriction) {
-    if (!userProfile.region) return false;
-    const hasRegion = sweepstakes.audience.regionalRestriction.regions.includes(
-      userProfile.region
+    if (!userProfile.countryCode) return false;
+
+    const countries = expandCountries(
+      sweepstakes.audience.regionalRestriction.regions
     );
+    const hasRegion = includesCountryCode(countries, userProfile.countryCode);
+
     switch (sweepstakes.audience.regionalRestriction.filter) {
       case 'INCLUDE':
         return hasRegion;
