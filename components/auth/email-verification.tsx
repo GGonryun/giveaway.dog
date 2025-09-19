@@ -49,6 +49,7 @@ export function EmailVerification({
   const [emailInput, setEmailInput] = useState(user.email || '');
   const [emailSent, setEmailSent] = useState(false);
   const [sentToEmail, setSentToEmail] = useState('');
+  const [isChangingEmail, setIsChangingEmail] = useState(false);
 
   const sendVerificationProcedure = useProcedure({
     action: sendEmailVerification,
@@ -108,6 +109,17 @@ export function EmailVerification({
     setEmailSent(false);
     setSentToEmail('');
     setEmailInput('');
+    setIsChangingEmail(true);
+  };
+
+  const handleChangeEmail = () => {
+    setIsChangingEmail(true);
+    setEmailInput(user.email || '');
+  };
+
+  const handleCancelChangeEmail = () => {
+    setIsChangingEmail(false);
+    setEmailInput(user.email || '');
   };
 
   // Show email sent confirmation
@@ -160,7 +172,7 @@ export function EmailVerification({
   const content = (
     <div className="space-y-4">
       {/* Email Verification Warning */}
-      {needsVerification && (
+      {needsVerification && !isChangingEmail && (
         <Alert variant="error">
           <ShieldAlert className="h-4 w-4" />
           <AlertTitle>Email Verification Required</AlertTitle>
@@ -192,37 +204,80 @@ export function EmailVerification({
         </Alert>
       )}
 
-      {/* Email Address Field */}
-      <div className="space-y-2">
-        <Label htmlFor="email">Email Address</Label>
-        <div className="relative">
-          <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={emailInput}
-            onChange={(e) => setEmailInput(e.target.value)}
-            className="pl-10 pr-10 truncate"
-            placeholder="Enter your email address"
-          />
-          {user.emailVerified && (
-            <CheckCircle className="absolute right-3 top-3 h-4 w-4 text-green-500" />
-          )}
+      {/* Current Email Status - Show when email is verified and not changing */}
+      {user.emailVerified && user.email && !isChangingEmail && (
+        <div className="flex items-center justify-between p-4 border rounded-lg">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded bg-white border border-border flex items-center justify-center">
+              <Mail className="w-5 h-5 text-foreground" />
+            </div>
+            <div>
+              <div className="font-medium">Email</div>
+              <div className="text-sm text-muted-foreground">
+                Connected • {user.email}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle className="w-4 h-4 text-green-500" />
+            <Button variant="outline" size="sm" onClick={handleChangeEmail}>
+              Change
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
-      <Button
-        onClick={handleSaveEmail}
-        disabled={isLoading}
-        className="w-full"
-        variant="outline"
-      >
-        {isLoading ? 'Updating...' : 'Update Email'}
-      </Button>
-      <p className="text-xs text-muted-foreground">
-        A verification email will be sent to your new email address.
-      </p>
+      {/* Email Address Field - Show when changing email or no email/unverified */}
+      {(isChangingEmail || needsEmail || needsVerification) && (
+        <div className="space-y-2">
+          <Label htmlFor="email">Email Address</Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              value={emailInput}
+              onChange={(e) => setEmailInput(e.target.value)}
+              className="pl-10 pr-10 truncate"
+              placeholder="Enter your email address"
+            />
+            {user.emailVerified && !isChangingEmail && (
+              <CheckCircle className="absolute right-3 top-3 h-4 w-4 text-green-500" />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Action Buttons */}
+      {(isChangingEmail || needsEmail || needsVerification) && (
+        <div className="space-y-2">
+          <Button
+            onClick={handleSaveEmail}
+            disabled={isLoading}
+            className="w-full"
+            variant="outline"
+          >
+            {isLoading
+              ? 'Updating...'
+              : needsEmail
+                ? 'Add Email'
+                : 'Update Email'}
+          </Button>
+          {isChangingEmail && (
+            <Button
+              onClick={handleCancelChangeEmail}
+              variant="ghost"
+              className="w-full"
+            >
+              Cancel
+            </Button>
+          )}
+          <p className="text-xs text-muted-foreground">
+            A verification email will be sent to your new email address.
+          </p>
+        </div>
+      )}
     </div>
   );
 

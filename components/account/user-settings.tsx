@@ -26,7 +26,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import { EmojiPickerComponent } from '@/components/patterns/emoji-picker';
 import { CountrySelector } from '@/components/ui/country-selector';
-import { EmailVerification } from '@/components/auth/email-verification';
 import { SocialProviders } from './social-providers';
 import { User, Calendar } from 'lucide-react';
 import { useUser } from '@/components/context/user-provider';
@@ -233,10 +232,7 @@ export const UserSettings = () => {
         </CardContent>
       </Card>
 
-      {/* Email Management Section */}
-      <EmailVerification user={user} redirectTo="/account" />
-
-      {/* Social Providers Section */}
+      {/* Connected Accounts Section */}
       <SocialProviders />
 
       {/* Account Actions Section */}

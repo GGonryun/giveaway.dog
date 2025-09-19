@@ -109,7 +109,7 @@ export function SignupForm({
             <Stepper currentStep={step} totalSteps={3} />
           </div>
         </CardHeader>
-        {loginProcedure.isPending ? (
+        {loginProcedure.isLoading ? (
           <Spinner size="xl" className="mx-auto my-16" />
         ) : (
           <CardContent>
