@@ -37,7 +37,7 @@ export const userProfileSchema = z.object({
   emailVerified: z.boolean().nullable(),
   emoji: z.string().nullable(),
   countryCode: z.string().nullable(),
-  age: z.number().int().min(1).max(120).nullable(),
+  ageVerified: z.boolean().nullable(),
   providers: providerSchema.array()
 });
 
@@ -45,6 +45,7 @@ export type UserProfileSchema = z.infer<typeof userProfileSchema>;
 
 export const userSchema = userProfileSchema.extend({
   emailVerified: z.boolean().nullable(),
+  ageVerified: z.boolean().nullable(),
   type: z.nativeEnum(UserType).array()
 });
 
@@ -83,7 +84,16 @@ export const parseProvider = (provider: unknown) => {
 export const updateUserProfileSchema = z.object({
   id: z.string(),
   name: z.string().nullable(),
-  type: z.array(z.nativeEnum(UserType)).nullable()
+  type: z.array(z.nativeEnum(UserType)).nullable(),
+  ageVerified: z.boolean().nullable().optional()
 });
+
+export const ageVerificationSchema = z.object({
+  userId: z.string(),
+  sweepstakesId: z.string(),
+  verified: z.boolean()
+});
+
+export type AgeVerificationSchema = z.infer<typeof ageVerificationSchema>;
 
 export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;

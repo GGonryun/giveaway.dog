@@ -6,7 +6,7 @@ import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-partici
 import { GiveawayParticipationSkeleton } from '@/components/sweepstakes/fallbacks/giveaway-skeleton';
 import { IncompleteGiveawaySetup } from '@/components/sweepstakes/fallbacks/empty-states';
 
-import { GiveawayFormSchema, Prize } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema, GiveawaySchema, Prize } from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
 import {
   MinimumAgeRestrictionFormat,
@@ -32,7 +32,7 @@ export const GiveawayPreview: React.FC = () => {
   // Watch all form values for live preview
   const formValues = useWatch({ control });
 
-  const mockSweepstakes: GiveawayFormSchema | undefined = useMemo(() => {
+  const mockSweepstakes: GiveawaySchema | undefined = useMemo(() => {
     try {
       // Check if we have minimum required data
       if (
@@ -44,6 +44,8 @@ export const GiveawayPreview: React.FC = () => {
       }
 
       return {
+        id: 'preview-sweepstakes-id',
+        status: 'ACTIVE' as const,
         setup: {
           name: formValues.setup?.name ?? DEFAULT_SWEEPSTAKES_NAME,
           description: formValues.setup?.description ?? '',

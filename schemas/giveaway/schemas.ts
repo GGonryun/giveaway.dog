@@ -184,6 +184,7 @@ export type GiveawayState =
   | 'active' // Default participation view
   | 'not-logged-in' // User needs to log in
   | 'email-required' // User needs to set an email
+  | 'age-verification-required' // User needs to verify age for this sweepstakes
   | 'not-eligible' // User not eligible (age/region restrictions)
   | 'profile-incomplete'
   | 'winners-announced' // Winners have been announced
@@ -196,6 +197,7 @@ export const PREVIEW_GIVEAWAY_STATES: GiveawayState[] = [
   'active',
   'not-logged-in',
   'email-required',
+  'age-verification-required',
   'not-eligible',
   'winners-announced'
 ];
@@ -209,6 +211,8 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
       return 'Not Logged In';
     case 'email-required':
       return 'Email Required';
+    case 'age-verification-required':
+      return 'Age Verification Required';
     case 'not-eligible':
       return 'Not Eligible';
     case 'winners-announced':

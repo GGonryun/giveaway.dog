@@ -6,7 +6,7 @@ import {
   GiveawayState,
   GiveawayHostSchema,
   GiveawayWinnerSchema,
-  GiveawayFormSchema,
+  GiveawaySchema,
   UserParticipationSchema,
   DeviceType
 } from '@/schemas/giveaway/schemas';
@@ -14,7 +14,7 @@ import { UserProfileSchema } from '@/schemas/user';
 
 export interface GiveawayParticipationProps {
   device?: DeviceType;
-  sweepstakes: GiveawayFormSchema;
+  sweepstakes: GiveawaySchema;
   host: GiveawayHostSchema;
   participation: GiveawayParticipationSchema;
   winners: GiveawayWinnerSchema[];

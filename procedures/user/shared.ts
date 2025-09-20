@@ -25,7 +25,7 @@ export const getUserQuery = async (db: PrismaClient, userId: string) => {
       name: true,
       emoji: true,
       countryCode: true,
-      age: true,
+      ageVerified: true,
       emailVerified: true,
       type: true,
       accounts: {
@@ -44,7 +44,7 @@ export const getUserQuery = async (db: PrismaClient, userId: string) => {
     email: userData.email,
     emoji: userData.emoji,
     countryCode: userData.countryCode,
-    age: userData.age,
+    ageVerified: userData.ageVerified ?? false,
     emailVerified: !!userData.emailVerified,
     type: userData.type,
     providers: parseProviders(

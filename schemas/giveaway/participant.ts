@@ -21,6 +21,6 @@ const toWinners = (
     email: w.user.email ?? undefined,
     emoji: w.user.emoji ?? undefined,
     countryCode: w.user.countryCode ?? undefined,
-    age: w.user.age ?? undefined
+    ageVerified: w.user.ageVerified ?? undefined
   }));
 };

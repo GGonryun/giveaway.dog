@@ -16,6 +16,7 @@ import { Closed } from './states/closed';
 import { Error } from './states/error';
 import { WinnersPending } from './states/winners-pending';
 import { ProfileIncomplete } from './states/profile-incomplete';
+import { AgeVerificationRequired } from './states/age-verification-required';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { assertNever } from '@/lib/errors';
 
@@ -27,6 +28,8 @@ const GiveawayParticipationContent = () => {
       return <ActiveParticipation />;
     case 'email-required':
       return <EmailRequired />;
+    case 'age-verification-required':
+      return <AgeVerificationRequired />;
     case 'not-eligible':
       return <NotEligible />;
     case 'winners-announced':

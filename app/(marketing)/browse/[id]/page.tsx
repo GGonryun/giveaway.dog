@@ -3,6 +3,7 @@ import getParticipantSweepstake from '@/procedures/browse/get-participant-sweeps
 import { notFound } from 'next/navigation';
 import getUserSweepstakesParticipation from '@/procedures/browse/get-user-sweepstakes-participation';
 import findUser from '@/procedures/user/find-user';
+import getAgeVerification from '@/procedures/sweepstakes/get-age-verification';
 import {
   GiveawayState,
   ParticipantSweepstakeSchema
@@ -23,7 +24,10 @@ export default async function Page({ params }: PageProps) {
   const result = await getParticipantSweepstake({ id });
   const user = await findUser();
   const participation = await getUserSweepstakesParticipation({ id });
+  const ageVerification = await getAgeVerification(id);
+
   if (!result.ok || !participation.ok || !user.ok) {
+    console.log(result, participation, user);
     notFound();
   }
   const userProfile = user.data ?? undefined;
@@ -32,7 +36,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <SweepstakesParticipationPage
       {...result.data}
-      state={computeState({ sweepstakes, userProfile })}
+      state={computeState({ sweepstakes, userProfile, ageVerification })}
       userProfile={userProfile}
       userParticipation={participation.data}
     />
@@ -42,17 +46,20 @@ export default async function Page({ params }: PageProps) {
 type ComputeStateOptions = {
   sweepstakes: ParticipantSweepstakeSchema['sweepstakes'];
   userProfile?: UserProfileSchema;
+  ageVerification?: { verified: boolean } | null;
 };
 
 const computeState = ({
   sweepstakes,
-  userProfile
+  userProfile,
+  ageVerification
 }: ComputeStateOptions): GiveawayState => {
   if (!userProfile) return 'not-logged-in';
   if (requiresEmail({ sweepstakes, userProfile })) return 'email-required';
-  if (!isProfileComplete({ sweepstakes, userProfile }))
-    return 'profile-incomplete';
-  if (!isEligible({ sweepstakes, userProfile })) return 'not-eligible';
+  if (needsAgeVerification({ sweepstakes, userProfile, ageVerification }))
+    return 'age-verification-required';
+  if (!isEligible({ sweepstakes, userProfile, ageVerification }))
+    return 'not-eligible';
 
   switch (sweepstakes.status) {
     case 'DRAFT':
@@ -80,27 +87,23 @@ const requiresEmail = ({ sweepstakes, userProfile }: ComputeStateOptions) => {
   );
 };
 
-const isProfileComplete = ({
+const needsAgeVerification = ({
   sweepstakes,
-  userProfile
+  ageVerification
 }: RequiredFields<ComputeStateOptions, 'userProfile'>) => {
-  if (!sweepstakes.audience.minimumAgeRestriction) return true;
-  if (!userProfile.age) return false;
-
-  if (!sweepstakes.audience.regionalRestriction) return true;
-  if (!userProfile.countryCode) return false;
-
-  return true;
+  if (sweepstakes.audience.minimumAgeRestriction) {
+    return !ageVerification?.verified;
+  }
+  return false;
 };
 
 const isEligible = ({
   sweepstakes,
-  userProfile
+  userProfile,
+  ageVerification
 }: RequiredFields<ComputeStateOptions, 'userProfile'>) => {
   if (sweepstakes.audience.minimumAgeRestriction) {
-    if (!userProfile.age) return false;
-    if (userProfile.age < sweepstakes.audience.minimumAgeRestriction.value)
-      return false;
+    if (!ageVerification?.verified) return false;
   }
 
   // check if region requirement is met
