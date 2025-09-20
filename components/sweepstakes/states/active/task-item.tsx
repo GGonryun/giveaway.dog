@@ -21,6 +21,10 @@ import { TaskSchema } from '@/schemas/tasks/schemas';
 import { TaskActionForm } from './task-actions/form';
 import { TaskContent } from './task-actions/building-blocks';
 import { Spinner } from '@/components/ui/spinner';
+import { Flex } from '@/components/ui/flex';
+import { Typography } from '@/components/ui/typography';
+import { LoginOptions } from '@/components/auth/login-options';
+import { usePathname } from 'next/navigation';
 
 export const TaskItem: React.FC<{
   open: boolean;
@@ -28,6 +32,7 @@ export const TaskItem: React.FC<{
   task: TaskSchema;
   completed: boolean;
 }> = ({ open, setOpen, task, completed }) => {
+  const pathname = usePathname();
   const { isLoading, userProfile, onTaskComplete } = useGiveawayParticipation();
   const theme = toTaskTheme(task.type);
   const IconComponent = theme.icon;
@@ -63,7 +68,6 @@ export const TaskItem: React.FC<{
       onOpenChange={setOpen}
       className={cn(
         'border rounded-lg transition-colors bg-sidebar overflow-hidden relative',
-        !userProfile && 'opacity-75',
         open && 'z-50'
       )}
     >
@@ -134,7 +138,13 @@ export const TaskItem: React.FC<{
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent className="border-t bg-background">
-        {completed ? (
+        {!userProfile ? (
+          <div className="p-4 flex items-center justify-center">
+            <Flex center gap="sm">
+              <LoginOptions label={'Login with:'} redirectTo={pathname} icons />
+            </Flex>
+          </div>
+        ) : completed ? (
           <TaskContent className="text-sm sm:text-base">
             <p>
               Task completed for{' '}

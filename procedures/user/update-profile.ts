@@ -15,7 +15,7 @@ export const updateProfile = procedure
   )
   .invalidate(async ({ output }) => [`user-${output.id}`])
   .handler(async ({ input, user, db }) => {
-    const { id, name, age, countryCode, emoji, type } = input;
+    const { id, name, type } = input;
     if (id !== user.id) {
       throw new ApplicationError({
         code: 'FORBIDDEN',
@@ -40,9 +40,6 @@ export const updateProfile = procedure
         where: { id },
         data: {
           ...(name && { name }),
-          ...(age && { age: Number(age) }),
-          ...(countryCode && { countryCode }),
-          ...(emoji && { emoji }),
           ...(type && { type })
         }
       });

@@ -139,20 +139,11 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
       return;
     }
 
-    // If not signing up, redirect to final destination
-    if (!signup) {
-      router.push(redirect);
-      return;
-    }
-
-    // Run the profile creation procedure
+    // Always try to create a profile for new users, or redirect if profile exists
     runCreate({
       id: session.user.id,
-      name: name || '',
-      emoji: emoji || '',
-      age: null,
-      countryCode: countryCode || '',
-      type: userTypes || []
+      name: name || session.user.name || '',
+      type: [UserType.PARTICIPATE] // Default all new users to participant
     });
   }, [
     session,

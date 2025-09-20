@@ -24,10 +24,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { EmojiPickerComponent } from '@/components/patterns/emoji-picker';
-import { CountrySelector } from '@/components/ui/country-selector';
 import { SocialProviders } from './social-providers';
-import { User, Calendar } from 'lucide-react';
+import { User, Mail } from 'lucide-react';
 import { useUser } from '@/components/context/user-provider';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateProfile from '@/procedures/user/update-profile';
@@ -58,11 +56,10 @@ export const UserSettings = () => {
   const [formData, setFormData] = useState<UpdateUserProfile>({
     id: user.id,
     name: user.name,
-    emoji: user.emoji,
-    countryCode: user.countryCode || '',
-    age: (user.age ?? DEFAULT_MINIMUM_AGE).toString(),
-    type: user.type // Default to PARTICIPATE, can be ['HOST', 'PARTICIPATE']
+    type: user.type
   });
+
+  const [showHostAccessDialog, setShowHostAccessDialog] = useState(false);
 
   const debouncedSave = useCallback(
     (() => {
@@ -82,8 +79,8 @@ export const UserSettings = () => {
     const newData = { ...formData, [name]: value };
     setFormData(newData);
 
-    // Debounced auto-save for text inputs (name, age)
-    if (name === 'name' || name === 'age') {
+    // Debounced auto-save for text inputs (name)
+    if (name === 'name') {
       debouncedSave(newData);
     } else {
       // Immediate save for other inputs
@@ -91,28 +88,8 @@ export const UserSettings = () => {
     }
   };
 
-  const handleEmojiSelect = (emoji: string) => {
-    const newData = { ...formData, emoji };
-    setFormData(newData);
-    // Immediate save for emoji changes
-    updateProfileProcedure.run(newData);
-  };
-
-  const handleUserTypeChange = (userType: UserType, checked: boolean) => {
-    const newUserTypes = checked
-      ? [...(formData.type ?? []), userType]
-      : (formData.type?.filter((type) => type !== userType) ?? []);
-
-    const newData = { ...formData, type: newUserTypes };
-    setFormData(newData);
-    // Immediate save for user type changes
-    updateProfileProcedure.run(newData);
-  };
-
-  const handleCountryChange = (countryCode: string) => {
-    const newData = { ...formData, region: countryCode };
-    setFormData(newData);
-    updateProfileProcedure.run(newData);
+  const handleRequestHostAccess = () => {
+    setShowHostAccessDialog(true);
   };
 
   const handleDeleteAccount = async () => {
@@ -140,59 +117,7 @@ export const UserSettings = () => {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-            <div>
-              <Label className="text-sm font-medium">Avatar</Label>
-              <div>
-                <EmojiPickerComponent
-                  value={formData.emoji ?? '🐶'}
-                  onEmojiSelect={handleEmojiSelect}
-                  title="Choose your avatar emoji"
-                  description="This emoji will represent you in the app"
-                />
-              </div>
-            </div>
-            {/* User Types */}
-            <div className="col-span-1 lg:col-span-2">
-              <Label className="text-sm font-medium">Account Type</Label>
-              <div className="space-y-3 mt-0.5">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="host"
-                    checked={formData.type?.includes(UserType.HOST) ?? false}
-                    onCheckedChange={(checked) =>
-                      handleUserTypeChange(UserType.HOST, checked as boolean)
-                    }
-                  />
-                  <Label htmlFor="host" className="text-sm cursor-pointer">
-                    Host Giveaways
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="participate"
-                    checked={
-                      formData.type?.includes(UserType.PARTICIPATE) ?? false
-                    }
-                    onCheckedChange={(checked) =>
-                      handleUserTypeChange(
-                        UserType.PARTICIPATE,
-                        checked as boolean
-                      )
-                    }
-                  />
-                  <Label
-                    htmlFor="participate"
-                    className="text-sm cursor-pointer"
-                  >
-                    Participate in Giveaways
-                  </Label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
             {/* Display Name */}
             <div className="space-y-2">
               <Label htmlFor="name">Display Name</Label>
@@ -210,22 +135,39 @@ export const UserSettings = () => {
               </div>
             </div>
 
-            {/* Age */}
+            {/* Account Type - Read-only */}
             <div className="space-y-2">
-              <Label htmlFor="age">Age</Label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="age"
-                  name="age"
-                  type="number"
-                  min="13"
-                  max="120"
-                  value={formData.age ?? 18}
-                  onChange={handleInputChange}
-                  className="pl-10"
-                  placeholder="Enter your age"
-                />
+              <Label className="text-sm font-medium">Account Type</Label>
+              <div className="space-y-2">
+                {user.type?.includes(UserType.PARTICIPATE) && (
+                  <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                    <span className="text-sm">Participant</span>
+                    <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
+                      Active
+                    </span>
+                  </div>
+                )}
+                {user.type?.includes(UserType.HOST) ? (
+                  <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                    <span className="text-sm">Host</span>
+                    <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
+                      Active
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 border border-dashed rounded-lg">
+                    <span className="text-sm text-muted-foreground">
+                      Host Access
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRequestHostAccess}
+                    >
+                      Request Access
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -244,6 +186,40 @@ export const UserSettings = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <AlertDialog
+            open={showHostAccessDialog}
+            onOpenChange={setShowHostAccessDialog}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  🚀 Host Access - Beta Feature
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Host access is currently in <strong>beta</strong> and not yet
+                  available for public requests.
+                </AlertDialogDescription>
+
+                <AlertDialogDescription>
+                  We're working hard to bring you the ability to create and host
+                  your own giveaways. When beta hosting becomes available, we'll
+                  notify all interested users via email.
+                </AlertDialogDescription>
+
+                <AlertDialogDescription>
+                  Thank you for your patience as we perfect this feature!
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogAction
+                  onClick={() => setShowHostAccessDialog(false)}
+                >
+                  Got it
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" className="w-full sm:w-auto">

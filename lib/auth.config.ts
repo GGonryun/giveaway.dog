@@ -25,7 +25,7 @@ export const authConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      const connectionRoutes = ['/login', '/signup'];
+      const connectionRoutes = ['/login'];
       const sensitiveRoutes = ['/app', '/account'];
       const isLoggedIn = !!auth?.user;
 

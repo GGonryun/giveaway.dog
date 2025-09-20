@@ -23,7 +23,7 @@ export const ParticipationPageCTAs = () => {
           </Button>
 
           <Button asChild variant="outline" className="flex-1 sm:flex-none">
-            <Link href="/signup?userType=host">🚀 Create Your Own</Link>
+            <Link href="/login">🚀 Create Your Own</Link>
           </Button>
 
           <Button asChild variant="secondary" className="flex-1 sm:flex-none">

@@ -80,7 +80,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                   <Link href="/login">Login</Link>
                 </Button>
                 <Button asChild>
-                  <Link href="/signup">Start Now</Link>
+                  <Link href="/login">Get Started</Link>
                 </Button>
               </>
             ) : (
@@ -154,8 +154,8 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                         </Link>
                       </Button>
                       <Button asChild>
-                        <Link href="/signup" onClick={closeSheet}>
-                          Start Now
+                        <Link href="/login" onClick={closeSheet}>
+                          Get Started
                         </Link>
                       </Button>
                     </>

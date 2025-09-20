@@ -123,7 +123,7 @@ export function PricingCards() {
                 ))}
               </div>
               <Button className="w-full mt-4" asChild>
-                <Link href="/signup">Get Started Free</Link>
+                <Link href="/login">Get Started Free</Link>
               </Button>
             </CardContent>
           </Card>
@@ -209,7 +209,7 @@ export function PricingCards() {
                 ))}
               </div>
               <Button className="w-full mt-4" asChild>
-                <Link href="/signup">Start Your Giveaways</Link>
+                <Link href="/login">Start Your Giveaways</Link>
               </Button>
             </CardContent>
           </Card>

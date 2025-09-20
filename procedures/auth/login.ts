@@ -15,10 +15,6 @@ const login = procedure
     z.object({
       redirectTo: z.string().optional(),
       provider: z.string().optional(),
-      signup: z.string().optional(),
-      name: z.string().optional(),
-      emoji: z.string().optional(),
-      userType: z.string().optional(),
       email: z.string().optional(),
       revalidate: z.string().optional()
     })
@@ -28,25 +24,17 @@ const login = procedure
       input: {
         redirectTo,
         provider: rawProvider,
-        signup,
-        name,
-        emoji,
-        userType,
         email,
         revalidate
       }
     }) => {
-      // Build query parameters for signup data
+      // Build query parameters
       const queryParams = new URLSearchParams();
-      if (signup) queryParams.append('signup', 'true');
-      if (name) queryParams.append('name', name);
-      if (emoji) queryParams.append('emoji', emoji);
-      if (userType) queryParams.append('userType', userType);
       if (redirectTo) queryParams.append('redirectTo', redirectTo);
       if (email) queryParams.append('email', email);
       if (revalidate) queryParams.append('revalidate', revalidate);
 
-      // Redirect to auth portal which will handle profile update and final redirect
+      // Redirect to auth portal which will handle profile creation and final redirect
       const options = { redirectTo: `/portal?${queryParams.toString()}` };
 
       const provider = parseProvider(rawProvider);

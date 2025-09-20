@@ -6,8 +6,13 @@ import { CheckCircle2Icon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LoginOptions } from '@/components/auth/login-options';
 import { AuthFooter } from '@/components/auth/auth-footer';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import Link from 'next/link';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 
 export function LoginForm({
   className,
@@ -42,19 +47,11 @@ export function LoginForm({
         <CardHeader className="text-center mb-4">
           <CardTitle className="text-xl">Connect with us</CardTitle>
           <CardDescription>
-            Login or sign up with your social account
+            Sign in with your account to access Giveaway Dog
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="w-full">
           <LoginOptions redirectTo={redirectTo} />
-          <div className="text-center pt-4 border-t mt-6">
-            <p className="text-sm text-muted-foreground">
-              Don't have an account?{' '}
-              <Link href="/signup" className="text-primary hover:underline">
-                Sign up
-              </Link>
-            </p>
-          </div>
         </CardContent>
       </Card>
 

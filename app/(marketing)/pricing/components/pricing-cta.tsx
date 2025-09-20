@@ -17,7 +17,7 @@ export function PricingCTA() {
       </Typography.Paragraph>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Button size="lg" asChild>
-          <Link href="/signup">Start Your Free Giveaways</Link>
+          <Link href="/login">Start Your Free Giveaways</Link>
         </Button>
         <Button size="lg" variant="outline" asChild>
           <Link href="/demo/dashboard">See Dashboard Demo</Link>

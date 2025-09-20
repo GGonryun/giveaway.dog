@@ -1,18 +1,24 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import Link from 'next/link';
 import { useLogout } from '../auth/use-logout';
 import { usePathname } from 'next/navigation';
 import { ProviderIcon } from '@/components/ui/patterns/provider-icon';
+import { useBrowseSweepstakesPage } from './use-browse-sweepstakes-page';
 
 export const UserInfoSection: React.FC = () => {
   const { userProfile } = useGiveawayParticipation();
   const logout = useLogout();
   const pathname = usePathname();
 
-  if (!userProfile) return null;
+  const loginPath = useMemo(() => {
+    const path = '/login';
+    const params = new URLSearchParams();
+    params.append('redirectTo', pathname);
+    return `${path}?${params.toString()}`;
+  }, [pathname]);
 
   return (
     <div className="text-xs text-muted-foreground">
@@ -64,7 +70,12 @@ export const UserInfoSection: React.FC = () => {
           </div>
         </div>
       ) : (
-        'Not signed in'
+        <div className="flex justify-between">
+          <div>Not signed in</div>
+          <Link href={loginPath} className="hover:underline">
+            Sign In
+          </Link>
+        </div>
       )}
     </div>
   );

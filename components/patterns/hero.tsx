@@ -31,7 +31,7 @@ export const Hero = async () => {
           <div className="flex w-full flex-col justify-center gap-2 sm:flex-row">
             {!user.ok || !user.data?.type ? (
               <Button asChild className="w-full sm:w-auto">
-                <Link href={'/signup'}>Get started - free</Link>
+                <Link href={'/login'}>Get started - free</Link>
               </Button>
             ) : user.data.type.includes('HOST') ? (
               <Button asChild className="w-full sm:w-auto">

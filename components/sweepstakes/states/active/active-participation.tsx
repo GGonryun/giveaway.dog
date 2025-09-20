@@ -22,6 +22,7 @@ export const ActiveParticipation: React.FC = () => {
           onClick={() => setOpen(null)}
         />
       )}
+
       <div>
         <UserInfoSection />
         <UserProgressSection />
