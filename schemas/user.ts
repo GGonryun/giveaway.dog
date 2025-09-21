@@ -90,8 +90,7 @@ export const updateUserProfileSchema = z.object({
 
 export const ageVerificationSchema = z.object({
   userId: z.string(),
-  sweepstakesId: z.string(),
-  verified: z.boolean()
+  sweepstakesId: z.string()
 });
 
 export type AgeVerificationSchema = z.infer<typeof ageVerificationSchema>;

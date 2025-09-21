@@ -51,15 +51,14 @@ const verifyAge = procedure
         }
       },
       update: {
-        verified: input.verified,
-        verifiedAt: input.verified ? new Date() : null,
-        updatedAt: new Date()
+        verified: true,
+        verifiedAt: new Date()
       },
       create: {
         userId: input.userId,
         sweepstakesId: input.sweepstakesId,
-        verified: input.verified,
-        verifiedAt: input.verified ? new Date() : null
+        verified: true,
+        verifiedAt: new Date()
       }
     });
 

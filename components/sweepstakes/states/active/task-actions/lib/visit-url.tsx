@@ -26,7 +26,7 @@ export const VisitUrlTaskActionForm: React.FC<
   return (
     <>
       <TaskContent>
-        <Button className="text-base sm:text-lg " asChild onClick={handleVisit}>
+        <Button asChild onClick={handleVisit}>
           <Link href={task.href} target="_blank">
             {task.label}
             <ExternalLinkIcon />

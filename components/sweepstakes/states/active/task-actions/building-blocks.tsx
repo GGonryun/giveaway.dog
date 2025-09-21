@@ -23,7 +23,7 @@ export const TaskContent: React.PC<{ className?: string }> = ({
 }) => {
   return (
     <div
-      className={cn('p-2 flex items-center justify-center gap-2', className)}
+      className={cn('p-4 flex items-center justify-center gap-2', className)}
     >
       {children}
     </div>
@@ -41,13 +41,13 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
     <TaskContent className="bg-sidebar ">
       <Tooltip>
         <TooltipTrigger asChild={!disabled}>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={disabled}
-            onClick={onSubmit}
-          >
-            Continue
+          <Button asChild size="sm" variant="outline">
+            <div
+              onClick={disabled ? undefined : onSubmit}
+              className={cn(disabled && 'opacity-50 cursor-not-allowed')}
+            >
+              Complete Task
+            </div>
           </Button>
         </TooltipTrigger>
 

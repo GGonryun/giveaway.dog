@@ -6,7 +6,7 @@ export const BonusTaskActionForm: React.FC<
   TaskActionProps<BonusTaskSchema>
 > = ({ onSubmit }) => {
   return (
-    <TaskContent className="py-4">
+    <TaskContent>
       <Button onClick={onSubmit}>Continue</Button>
     </TaskContent>
   );

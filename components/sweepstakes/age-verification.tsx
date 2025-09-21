@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { AlertCircle, Calendar } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import verifyAge from '@/procedures/sweepstakes/verify-age';
@@ -53,8 +53,7 @@ export const AgeVerification = ({
 
     verifyAgeProcedure.run({
       userId,
-      sweepstakesId,
-      verified: true
+      sweepstakesId
     });
   };
 
@@ -71,24 +70,14 @@ export const AgeVerification = ({
 
   return (
     <div className="space-y-4 my-2">
-      <div className="flex items-center gap-3">
-        <AlertCircle className="h-6 w-6 text-orange-600" />
-        <div>
-          <h3 className="text-lg font-semibold text-orange-900">
-            Age Verification Required
-          </h3>
-          <p className="text-sm text-orange-700">
-            This giveaway requires participants to be at least {minimumAge}{' '}
-            years old
-          </p>
-        </div>
-      </div>
-
-      <Alert>
-        <AlertCircle className="h-4 w-4" />
+      <Alert variant="error" className="[&>svg]:size-6 has-[>svg]:gap-x-5">
+        <AlertCircle />
+        <AlertTitle className="text-lg font-semibold text-orange-800">
+          Age Verification Required
+        </AlertTitle>
         <AlertDescription>
-          You must verify your age to participate in this giveaway. This
-          verification is specific to this giveaway only.
+          This giveaway requires participants to be at least {minimumAge} years
+          old. This verification is specific to this giveaway only.
         </AlertDescription>
       </Alert>
 

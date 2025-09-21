@@ -201,9 +201,9 @@ export const UserSettings = () => {
                 </AlertDialogDescription>
 
                 <AlertDialogDescription>
+                  If you want early access, please contact us via our support page.
                   We're working hard to bring you the ability to create and host
-                  your own giveaways. When beta hosting becomes available, we'll
-                  notify all interested users via email.
+                  your own giveaways.
                 </AlertDialogDescription>
 
                 <AlertDialogDescription>
@@ -211,10 +211,15 @@ export const UserSettings = () => {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogAction
+                <AlertDialogCancel
                   onClick={() => setShowHostAccessDialog(false)}
                 >
-                  Got it
+                  Okay
+                </AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <a href="/support" className="inline-flex">
+                    Contact Support
+                  </a>
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
