@@ -17,9 +17,11 @@ import {
 import { cn } from '@/lib/utils';
 import { DeviceType } from '@/schemas/giveaway/schemas';
 import { useIsMobile } from '@/components/hooks/use-mobile';
+import { QRCodeModal } from '@/components/qr-code-modal';
 
 export const SweepstakesPreview: React.FC = () => {
   const { sweepstakes, liveUrl } = useSweepstakesDetailsContext();
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -37,12 +39,22 @@ export const SweepstakesPreview: React.FC = () => {
             alert('Announce winners clicked');
           }}
           onGenerateQR={() => {
-            alert('Generate QR code clicked');
+            setIsQRModalOpen(true);
           }}
         />
       )}
 
       <ScreenPreview />
+
+      {liveUrl && (
+        <QRCodeModal
+          isOpen={isQRModalOpen}
+          onClose={() => setIsQRModalOpen(false)}
+          value={liveUrl}
+          title="Share Sweepstakes QR Code"
+          size={256}
+        />
+      )}
     </div>
   );
 };

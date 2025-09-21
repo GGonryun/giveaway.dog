@@ -1,7 +1,7 @@
 'use client';
 
 import { SweepstakesPagination } from './sweepstakes-pagination';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -192,6 +192,14 @@ export function SweepstakesTable({
     }
   };
 
+  const handleRowHref = useCallback((item: SweepstakesData) => {
+    if (item.status === SweepstakesStatus.DRAFT) {
+      return editPage.route(item.id);
+    } else {
+      return detailsPage.route(item.id);
+    }
+  }, []);
+
   return (
     <div className="space-y-4">
       <div>
@@ -207,7 +215,7 @@ export function SweepstakesTable({
                       {getStatusIcon(item.status)}
                       <div className="min-w-0 flex-1">
                         <Link
-                          href={detailsPage.route(item.id)}
+                          href={handleRowHref(item)}
                           className="font-medium hover:text-primary hover:underline block truncate"
                         >
                           {item.name || DEFAULT_SWEEPSTAKES_NAME}
@@ -394,7 +402,10 @@ export function SweepstakesTable({
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-red-600"
-                            onClick={() => setDeleteModal(item)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              return setDeleteModal(item);
+                            }}
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Delete
