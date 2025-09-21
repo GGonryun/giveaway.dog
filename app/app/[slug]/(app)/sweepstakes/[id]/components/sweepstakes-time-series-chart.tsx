@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/chart';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, BarChart3 } from 'lucide-react';
+import { TrendingUp, BarChart3, Users, Gift } from 'lucide-react';
 
 interface TimeSeriesData {
   date: string;
@@ -23,6 +23,8 @@ interface TimeSeriesData {
 
 interface SweepstakesTimeSeriesChartProps {
   data: TimeSeriesData[];
+  totalUniqueUsers: number;
+  totalEntries: number;
 }
 
 const chartConfig = {
@@ -33,11 +35,13 @@ const chartConfig = {
 };
 
 export const SweepstakesTimeSeriesChart = ({
-  data
+  data,
+  totalUniqueUsers,
+  totalEntries
 }: SweepstakesTimeSeriesChartProps) => {
   // Calculate trend
-  const totalEntries = data.reduce((sum, day) => sum + day.entries, 0);
-  const avgEntries = totalEntries / data.length;
+  const timeSeriesTotal = data.reduce((sum, day) => sum + day.entries, 0);
+  const avgEntries = timeSeriesTotal / data.length;
   const lastEntry = data[data.length - 1]?.entries || 0;
   const trend = lastEntry > avgEntries ? 'up' : 'down';
   const trendPercentage = Math.abs(
@@ -72,10 +76,15 @@ export const SweepstakesTimeSeriesChart = ({
             </Badge>
             <span className="text-sm text-muted-foreground">vs avg</span>
           </div>
-          <div className="text-sm text-muted-foreground">
-            Total:{' '}
-            <span className="font-medium">{totalEntries.toLocaleString()}</span>{' '}
-            entries
+          <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+            <Gift className="h-4 w-4" />
+            <span>Total Entries:{' '}</span>
+            <span className="font-medium">{totalEntries.toLocaleString()}</span>
+          </div>
+          <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+            <Users className="h-4 w-4" />
+            <span>Unique Users:{' '}</span>
+            <span className="font-medium">{totalUniqueUsers.toLocaleString()}</span>
           </div>
         </div>
       </CardHeader>
