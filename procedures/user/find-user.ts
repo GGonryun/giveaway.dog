@@ -1,3 +1,5 @@
+'use server';
+
 import { procedure } from '@/lib/mrpc/procedures';
 import { userSchema } from '@/schemas/user';
 import { getUserQuery, userCache } from './shared';

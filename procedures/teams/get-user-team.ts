@@ -1,3 +1,5 @@
+'use server';
+
 import { procedure } from '@/lib/mrpc/procedures';
 import { detailedUserTeamSchema, toDetailedUserTeam } from '@/schemas/teams';
 import { TeamRole } from '@prisma/client';

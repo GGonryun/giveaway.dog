@@ -32,7 +32,6 @@ import updateProfile from '@/procedures/user/update-profile';
 import { UpdateUserProfile } from '@/schemas/user';
 import { toast } from 'sonner';
 import { UserType } from '@prisma/client';
-import { DEFAULT_MINIMUM_AGE } from '@/schemas/giveaway/defaults';
 import deleteUser from '@/procedures/user/delete-user';
 
 const SAVE_DELAY = 600;
@@ -201,9 +200,9 @@ export const UserSettings = () => {
                 </AlertDialogDescription>
 
                 <AlertDialogDescription>
-                  If you want early access, please contact us via our support page.
-                  We're working hard to bring you the ability to create and host
-                  your own giveaways.
+                  If you want early access, please contact us via our support
+                  page. We're working hard to bring you the ability to create
+                  and host your own giveaways.
                 </AlertDialogDescription>
 
                 <AlertDialogDescription>

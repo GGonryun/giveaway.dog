@@ -1,3 +1,5 @@
+'use server';
+
 import { procedure } from '@/lib/mrpc/procedures';
 import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import {
