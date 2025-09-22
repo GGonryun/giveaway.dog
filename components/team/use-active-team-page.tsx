@@ -16,6 +16,7 @@ export const useActiveTeam = () => {
   };
 
   return {
+    ...activeTeam,
     navigateToActiveTeam
   };
 };

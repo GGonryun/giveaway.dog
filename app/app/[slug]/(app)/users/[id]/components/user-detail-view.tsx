@@ -23,12 +23,10 @@ import {
   TableRow
 } from '@/components/ui/table';
 import {
-  User,
   Mail,
   MapPin,
   Calendar,
   Activity,
-  Award,
   AlertTriangle,
   Shield,
   ExternalLink,
@@ -38,23 +36,20 @@ import {
   Download,
   Clock,
   TrendingUp,
-  Eye,
   Globe,
   ArrowLeft,
-  Gift,
   Trophy,
   Target,
   BarChart3,
   Smartphone,
   Monitor,
-  ChevronRight,
   DollarSign,
   Users,
-  Star,
   MessageCircle
 } from 'lucide-react';
-import { QualityScoreBadge } from '../../components/quality-score-badge';
+import { StatusExplanationDialog } from '../../components/status-explanation-dialog';
 import { useRouter } from 'next/navigation';
+import { useActiveTeam } from '@/components/team/use-active-team-page';
 
 interface UserDetailViewProps {
   userId: string;
@@ -252,8 +247,10 @@ const getUserDetailExtended = (userId: string) => ({
 });
 
 export const UserDetailView = ({ userId }: UserDetailViewProps) => {
+  const { slug } = useActiveTeam();
   const router = useRouter();
   const user = useMemo(() => getUserDetailExtended(userId), [userId]);
+  const [showStatusDialog, setShowStatusDialog] = useState(false);
 
   // Get tab from URL parameters
   const [activeTab, setActiveTab] = useState(() => {
@@ -301,7 +298,7 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
     router.replace(url.pathname + url.search, { scroll: false });
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string, isUserStatus = false) => {
     const variants = {
       active: {
         variant: 'default' as const,
@@ -341,6 +338,22 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
     };
 
     const config = variants[status as keyof typeof variants] || variants.active;
+
+    if (isUserStatus && (status === 'active' || status === 'blocked')) {
+      return (
+        <Badge
+          variant={config.variant}
+          className={`${config.color} cursor-pointer hover:opacity-80 transition-opacity`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowStatusDialog(true);
+          }}
+        >
+          {config.label}
+        </Badge>
+      );
+    }
+
     return (
       <Badge variant={config.variant} className={config.color}>
         {config.label}
@@ -357,7 +370,7 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => router.push('/app/users')}
+              onClick={() => router.push(`/app/${slug}/users`)}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Users
@@ -380,7 +393,7 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
               </h1>
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm sm:text-base text-muted-foreground">
                 <span className="truncate">{user.email}</span>
-                {getStatusBadge(user.status)}
+                {getStatusBadge(user.status, true)}
               </div>
             </div>
           </div>
@@ -1131,6 +1144,13 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Status Explanation Dialog */}
+      <StatusExplanationDialog
+        open={showStatusDialog}
+        onClose={() => setShowStatusDialog(false)}
+        status={user.status as 'active' | 'blocked'}
+      />
     </div>
   );
 };

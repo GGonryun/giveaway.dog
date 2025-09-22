@@ -42,6 +42,7 @@ import {
 import { FilterBar } from './filter-bar';
 import { SearchBar } from './search-bar';
 import { UserDetailSheet } from './user-detail-sheet';
+import { StatusExplanationDialog } from './status-explanation-dialog';
 
 import { useTeams } from '@/components/context/team-provider';
 import {
@@ -77,9 +78,12 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   const { activeTeam } = useTeams();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedUser, setSelectedUser] = useState<ParticipatingUserSchema | null>(null);
+  const [selectedUser, setSelectedUser] =
+    useState<ParticipatingUserSchema | null>(null);
   const [isPending, startTransition] = useTransition();
   const [showUserSheet, setShowUserSheet] = useState(false);
+  const [showStatusDialog, setShowStatusDialog] = useState(false);
+  const [statusDialogUser, setStatusDialogUser] = useState<ParticipatingUserSchema | null>(null);
 
   // Update URL params whenever state changes - only include non-default values
   const updateURLParams = useCallback(
@@ -169,8 +173,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
     [updateURLParams]
   );
 
-
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string, user: ParticipatingUserSchema) => {
     const variants = {
       active: {
         variant: 'default' as const,
@@ -202,7 +205,15 @@ export const UsersTable: React.FC<UsersTableProps> = ({
     const IconComponent = config.icon;
 
     return (
-      <Badge variant={config.variant} className={`text-xs ${config.className}`}>
+      <Badge
+        variant={config.variant}
+        className={`text-xs cursor-pointer hover:opacity-80 transition-opacity ${config.className}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          setStatusDialogUser(user);
+          setShowStatusDialog(true);
+        }}
+      >
         <IconComponent className="h-3 w-3 mr-1" />
         {config.label}
       </Badge>
@@ -380,7 +391,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                           </div>
                         </TableCell>
                         <TableCell className="hidden xl:table-cell">
-                          {getStatusBadge(user.status)}
+                          {getStatusBadge(user.status, user)}
                         </TableCell>
                         <TableCell onClick={(e) => e.stopPropagation()}>
                           <DropdownMenu>
@@ -395,6 +406,17 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                               sideOffset={4}
                               avoidCollisions={true}
                             >
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  router.push(
+                                    `/app/${activeTeam.slug}/users/${user.id}`
+                                  );
+                                }}
+                              >
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Full Details
+                              </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -512,6 +534,16 @@ export const UsersTable: React.FC<UsersTableProps> = ({
           setShowUserSheet(false);
           setSelectedUser(null);
         }}
+      />
+
+      {/* Status Explanation Dialog */}
+      <StatusExplanationDialog
+        open={showStatusDialog}
+        onClose={() => {
+          setShowStatusDialog(false);
+          setStatusDialogUser(null);
+        }}
+        status={statusDialogUser?.status || 'active'}
       />
     </div>
   );
