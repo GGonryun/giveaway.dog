@@ -16,10 +16,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid } from 'recharts';
 import {} from '@/components/ui/badge';
 import { BarChart3, Users, Gift } from 'lucide-react';
 import { useSweepstakesDetailsContext } from './use-sweepstakes-details-context';
-import {
-  DEFAULT_TIME_SERIES_DURATION,
-  SWEEPSTAKES_TIME_SERIES_REFRESH_INTERVAL
-} from '@/lib/settings';
+import { DEFAULT_TIME_SERIES_DURATION } from '@/lib/settings';
 import { secondsToHours } from 'date-fns';
 import pluralize from 'pluralize';
 
@@ -37,8 +34,6 @@ export const SweepstakesTimeSeriesChart = () => {
   const totalEntries = participation?.totalEntries || 0;
   const totalUniqueUsers = participation?.totalUsers || 0;
 
-  const refreshUnit = secondsToHours(SWEEPSTAKES_TIME_SERIES_REFRESH_INTERVAL);
-
   return (
     <Card>
       <CardHeader>
@@ -51,9 +46,6 @@ export const SweepstakesTimeSeriesChart = () => {
             <CardDescription>
               Total entry volume over the last {DEFAULT_TIME_SERIES_DURATION}{' '}
               days
-            </CardDescription>
-            <CardDescription>
-              Refreshes every {refreshUnit} {pluralize('hour', refreshUnit)}
             </CardDescription>
           </div>
         </div>
