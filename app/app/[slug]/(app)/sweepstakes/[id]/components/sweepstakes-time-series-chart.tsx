@@ -17,8 +17,6 @@ import {} from '@/components/ui/badge';
 import { BarChart3, Users, Gift } from 'lucide-react';
 import { useSweepstakesDetailsContext } from './use-sweepstakes-details-context';
 import { DEFAULT_TIME_SERIES_DURATION } from '@/lib/settings';
-import { secondsToHours } from 'date-fns';
-import pluralize from 'pluralize';
 
 const chartConfig = {
   entries: {
