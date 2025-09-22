@@ -36,7 +36,7 @@ const getParticipantSweepstake = procedure
       throw new Error('Sweepstakes not found or not active');
     }
 
-    const totalTasks = await db.taskCompletion.count({
+    const totalEntries = await db.taskCompletion.count({
       where: {
         task: {
           sweepstakesId: input.id
@@ -71,13 +71,12 @@ const getParticipantSweepstake = procedure
       winners: toSweepstakesWinners(sweepstakes.prizes),
       participation: {
         totalUsers: totalUsers.length,
-        totalEntries: totalTasks
+        totalEntries: totalEntries
       }
     };
     const parsed = participantSweepstakeSchema.safeParse(unparsed);
 
     if (!parsed.success) {
-      console.error(`Failed to parse sweepstakes:`, parsed.error);
       throw new ApplicationError({
         code: 'VALIDATION_ERROR',
         message: 'Sweepstakes data is invalid'

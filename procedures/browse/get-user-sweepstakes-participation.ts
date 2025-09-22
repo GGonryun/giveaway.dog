@@ -1,3 +1,5 @@
+'use server';
+
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { userParticipationSchema } from '@/schemas/giveaway/schemas';

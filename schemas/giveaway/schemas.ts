@@ -242,3 +242,9 @@ export const participantSweepstakeSchema = z.object({
 export type ParticipantSweepstakeSchema = z.infer<
   typeof participantSweepstakeSchema
 >;
+
+export const timeSeriesDataSchema = z.object({
+  date: z.string(),
+  entries: z.number()
+});
+export type TimeSeriesDataSchema = z.infer<typeof timeSeriesDataSchema>;

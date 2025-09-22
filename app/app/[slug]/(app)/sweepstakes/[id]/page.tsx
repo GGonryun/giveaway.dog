@@ -3,6 +3,7 @@ import { SweepstakesTabsWrapper } from './components/sweepstakes-tabs';
 import { Outline } from '@/components/app/outline';
 import { EditGiveawayButton } from '@/components/sweepstakes/edit-giveaway-button';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
+import getSweepstakesEntryTimeSeries from '@/procedures/browse/get-sweepstakes-entry-time-series';
 
 interface SweepstakesDetailPageProps {
   params: Promise<{ id: string }>;
@@ -13,22 +14,33 @@ export default async function SweepstakesDetailPage({
 }: SweepstakesDetailPageProps) {
   const { id: sweepstakesId } = await params;
   const result = await getParticipantSweepstake({ id: sweepstakesId });
+  const timeseries = await getSweepstakesEntryTimeSeries({ id: sweepstakesId });
 
   if (!result.ok) {
     return <div>Failed to load sweepstakes details: {result.data.message}</div>;
   }
 
+  if (!timeseries.ok) {
+    return (
+      <div>
+        Failed to load sweepstakes entry time series: {timeseries.data.message}
+      </div>
+    );
+  }
+
   return (
     <Outline
       title={result.data.sweepstakes.setup.name}
-      className="space-y-4 pt-0 sm:pt-8"
+      className="space-y-4 pt-0 sm:pt-0 sm:pb-8"
+      container={false}
       action={<EditGiveawayButton sweepstakesId={sweepstakesId} />}
     >
       <div className="space-y-4">
         <Suspense>
           <SweepstakesTabsWrapper
-            data={result.data}
+            {...result.data}
             sweepstakesId={sweepstakesId}
+            timeSeries={timeseries.data}
           />
         </Suspense>
       </div>

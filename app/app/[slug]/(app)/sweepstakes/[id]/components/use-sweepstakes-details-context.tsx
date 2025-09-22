@@ -1,19 +1,18 @@
-import { useTeams } from '@/components/context/team-provider';
 import { useUrl } from '@/components/hooks/use-url';
 import { useBrowseSweepstakesPage } from '@/components/sweepstakes/use-browse-sweepstakes-page';
 import {
-  GiveawayFormSchema,
-  ParticipantSweepstakeSchema
+  ParticipantSweepstakeSchema,
+  TimeSeriesDataSchema
 } from '@/schemas/giveaway/schemas';
 import { createContext, useContext } from 'react';
 
-export type SweepstakesDetailsContextValue = {
-  sweepstakes?: ParticipantSweepstakeSchema['sweepstakes'];
-  host?: ParticipantSweepstakeSchema['host'];
-  sweepstakesId: string;
-  livePath: string;
-  liveUrl: string;
-};
+export type SweepstakesDetailsContextValue =
+  Partial<ParticipantSweepstakeSchema> & {
+    sweepstakesId: string;
+    livePath: string;
+    liveUrl: string;
+    timeSeries: TimeSeriesDataSchema[];
+  };
 
 export const SweepstakesDetailsContext =
   createContext<SweepstakesDetailsContextValue | null>(null);
@@ -28,23 +27,23 @@ export const useSweepstakesDetailsContext = () => {
   return context;
 };
 
-export type SweepstakesDetailsProviderProps = {
-  sweepstakesId: string;
-  data?: ParticipantSweepstakeSchema;
-};
+export type SweepstakesDetailsProviderProps =
+  Partial<ParticipantSweepstakeSchema> & {
+    timeSeries: TimeSeriesDataSchema[];
+    sweepstakesId: string;
+  };
+
 export const SweepstakesDetailsProvider: React.PC<
   SweepstakesDetailsProviderProps
-> = ({ children, data, sweepstakesId }) => {
+> = ({ children, ...props }) => {
   const browse = useBrowseSweepstakesPage();
 
-  const livePath = browse.path({ sweepstakesId });
+  const livePath = browse.path({ sweepstakesId: props.sweepstakesId });
   const liveUrl = useUrl({ pathname: livePath });
   return (
     <SweepstakesDetailsContext.Provider
       value={{
-        sweepstakesId,
-        sweepstakes: data?.sweepstakes,
-        host: data?.host,
+        ...props,
         livePath,
         liveUrl
       }}

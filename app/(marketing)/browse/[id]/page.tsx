@@ -27,7 +27,6 @@ export default async function Page({ params }: PageProps) {
   const ageVerification = await getAgeVerification(id);
 
   if (!result.ok || !participation.ok || !user.ok) {
-    console.log(result, participation, user);
     notFound();
   }
   const userProfile = user.data ?? undefined;
