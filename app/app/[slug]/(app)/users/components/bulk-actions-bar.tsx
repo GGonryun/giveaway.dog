@@ -39,14 +39,12 @@ interface BulkActionsBarProps {
   selectedCount: number;
   onClearSelection: () => void;
   onExport: () => void;
-  onCRMSync: () => void;
 }
 
 export const BulkActionsBar = ({
   selectedCount,
   onClearSelection,
-  onExport,
-  onCRMSync
+  onExport
 }: BulkActionsBarProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [actionTag, setActionTag] = useState<string>('');
@@ -106,18 +104,6 @@ export const BulkActionsBar = ({
             >
               <Download className="h-4 w-4 mr-1" />
               Export
-            </Button>
-
-            {/* CRM Sync */}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onCRMSync}
-              disabled={isLoading}
-              className="h-8 px-3"
-            >
-              <RefreshCw className="h-4 w-4 mr-1" />
-              CRM Sync
             </Button>
 
             {/* Tag Users */}

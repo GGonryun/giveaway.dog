@@ -61,3 +61,28 @@ export const createTeamInputSchema = z.object({
 });
 
 export type CreateTeamInput = z.infer<typeof createTeamInputSchema>;
+
+export const participantEntrySchema = z.object({
+  completedAt: z.date().nullable(),
+  taskId: z.string(),
+  name: z.string()
+});
+export type ParticipantEntrySchema = z.infer<typeof participantEntrySchema>;
+
+export const participatingUserSchema = z.object({
+  id: z.string(),
+  name: z.string().nullable(),
+  email: z.string().nullable(),
+  country: z.string(),
+  entries: participantEntrySchema.array(),
+  lastEntryAt: z.string(),
+  qualityScore: z.number(),
+  engagement: z.number(),
+  status: z.enum(['active', 'blocked']),
+  userAgent: z.string(),
+  emailVerified: z.boolean()
+});
+
+export type ParticipatingUserSchema = z.infer<typeof participatingUserSchema>;
+
+export const PARTICIPATING_USERS_PAGE_SIZE = 50;

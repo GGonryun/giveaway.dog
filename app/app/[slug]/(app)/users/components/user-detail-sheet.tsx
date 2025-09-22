@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import {
   Sheet,
   SheetContent,
@@ -15,91 +14,45 @@ import {
   MapPin,
   Calendar,
   Activity,
-  AlertTriangle,
-  Shield,
-  UserCheck,
-  UserX,
   Eye,
-  Globe,
   ChevronRight
 } from 'lucide-react';
 import { QualityScoreBadge } from './quality-score-badge';
 import { useRouter } from 'next/navigation';
+import { ParticipatingUserSchema } from '@/schemas/teams';
 
 interface UserDetailSheetProps {
-  userId: string | null;
+  user: ParticipatingUserSchema | null;
   open: boolean;
   onClose: () => void;
 }
 
-// Mock user detail data - in real app this would come from API
-const getUserDetail = (userId: string) => ({
-  id: userId,
-  name: `User ${userId.replace('user_', '')}`,
-  email: `user${userId.replace('user_', '')}@example.com`,
-  avatar: null,
-  status: 'active' as const,
-  qualityScore: 78,
-  engagement: 65,
-  joinedAt: '2024-03-15T10:30:00Z',
-  lastActive: '2025-01-13T14:22:00Z',
-  location: 'San Francisco, CA',
-  timezone: 'PST',
-  source: 'Instagram',
-  totalEntries: 23,
-  totalWins: 2,
-  lifetimeValue: 1250,
-
-  // Risk signals
-  flagged: false,
-  flaggedReasons: [],
-  riskScore: 22,
-
-  // Recent entries timeline
-  recentEntries: [
-    {
-      id: 'entry_1',
-      sweepstakesTitle: 'iPhone 15 Pro Giveaway',
-      enteredAt: '2025-01-13T09:15:00Z',
-      source: 'Instagram',
-      status: 'valid'
-    },
-    {
-      id: 'entry_2',
-      sweepstakesTitle: 'Gaming Setup Contest',
-      enteredAt: '2025-01-10T16:45:00Z',
-      source: 'Direct',
-      status: 'valid'
-    },
-    {
-      id: 'entry_3',
-      sweepstakesTitle: 'Travel Voucher Sweeps',
-      enteredAt: '2025-01-08T11:20:00Z',
-      source: 'Facebook',
-      status: 'flagged'
-    }
-  ],
-
-  // Quality score breakdown
-  qualityBreakdown: {
-    emailVerified: true,
-    disposableEmail: false,
-    deviceFingerprint: 'fp_abc123xyz',
-    engagement: 65,
-    accountAge: 304,
-    multipleEntries: false,
-    ipReputation: 'good' as const,
-    socialVerification: true
-  }
-});
-
 export const UserDetailSheet = ({
-  userId,
+  user,
   open,
   onClose
 }: UserDetailSheetProps) => {
   const router = useRouter();
-  const user = userId ? getUserDetail(userId) : null;
+
+  // Helper function to get additional details for display
+  const getDisplayData = (user: ParticipatingUserSchema) => ({
+    ...user,
+    avatar: null,
+    joinedAt: '2024-03-15T10:30:00Z', // TODO: Add to schema when available
+    location: user.country,
+    timezone: 'PST', // TODO: Add to schema when available
+    totalEntries: user.entries.length,
+    totalWins: 0, // TODO: Calculate from entries
+    lifetimeValue: 0, // TODO: Calculate when available
+
+    // Quality score breakdown
+    qualityBreakdown: {
+      emailVerified: user.emailVerified,
+      disposableEmail: false, // TODO: Add when available
+      deviceFingerprint: 'fp_abc123xyz', // TODO: Add when available
+      engagement: user.engagement
+    }
+  });
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('en-US', {
@@ -124,13 +77,15 @@ export const UserDetailSheet = ({
   };
 
   const handleViewFullDetails = () => {
-    if (userId) {
-      router.push(`/app/users/${userId}`);
+    if (user) {
+      router.push(`/app/users/${user.id}`);
       onClose();
     }
   };
 
   if (!user) return null;
+
+  const displayData = getDisplayData(user);
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -141,19 +96,19 @@ export const UserDetailSheet = ({
         <SheetHeader>
           <div className="flex items-center space-x-3">
             <Avatar className="h-12 w-12">
-              <AvatarImage src={user.avatar || undefined} />
+              <AvatarImage src={displayData.avatar || undefined} />
               <AvatarFallback className="text-sm">
-                {user.name
-                  .split(' ')
+                {displayData.name
+                  ?.split(' ')
                   .map((n) => n[0])
-                  .join('')}
+                  .join('') || '?'}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1">
-              <SheetTitle className="text-xl">{user.name}</SheetTitle>
+              <SheetTitle className="text-xl">{displayData.name}</SheetTitle>
               <SheetDescription className="flex items-center space-x-2">
-                <span>{user.email}</span>
-                {getStatusBadge(user.status)}
+                <span>{displayData.email}</span>
+                {getStatusBadge(displayData.status)}
               </SheetDescription>
             </div>
           </div>
@@ -163,18 +118,18 @@ export const UserDetailSheet = ({
           {/* Key Metrics */}
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center p-3 bg-muted/50 rounded-lg">
-              <div className="text-xl font-bold">{user.totalEntries}</div>
+              <div className="text-xl font-bold">{displayData.totalEntries}</div>
               <div className="text-sm text-muted-foreground">Total Entries</div>
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className="text-xl font-bold text-green-600">
-                {user.totalWins}
+                {displayData.totalWins}
               </div>
               <div className="text-sm text-muted-foreground">Wins</div>
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className="text-xl font-bold text-blue-600">
-                ${user.lifetimeValue}
+                ${displayData.lifetimeValue}
               </div>
               <div className="text-sm text-muted-foreground">LTV</div>
             </div>
@@ -191,21 +146,21 @@ export const UserDetailSheet = ({
               <div className="space-y-3">
                 <div className="flex items-center space-x-2 text-sm">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span>{user.location}</span>
+                  <span>{displayData.location}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>Joined {formatDate(user.joinedAt)}</span>
+                  <span>Joined {formatDate(displayData.joinedAt)}</span>
                 </div>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center space-x-2 text-sm">
                   <Activity className="h-4 w-4 text-muted-foreground" />
-                  <span>Last active {formatDate(user.lastActive)}</span>
+                  <span>Last entry {formatDate(displayData.lastEntryAt)}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm">
-                  <Globe className="h-4 w-4 text-muted-foreground" />
-                  <span>Source: {user.source}</span>
+                  <Activity className="h-4 w-4 text-muted-foreground" />
+                  <span>Engagement: {displayData.engagement}%</span>
                 </div>
               </div>
             </div>
@@ -214,12 +169,12 @@ export const UserDetailSheet = ({
           {/* Quality Score */}
           <div className="space-y-3">
             <QualityScoreBadge
-              score={user.qualityScore}
+              score={displayData.qualityScore}
               breakdown={{
-                emailVerified: user.qualityBreakdown.emailVerified,
-                disposableEmail: user.qualityBreakdown.disposableEmail,
-                deviceFingerprint: user.qualityBreakdown.deviceFingerprint,
-                engagement: user.qualityBreakdown.engagement
+                emailVerified: displayData.qualityBreakdown.emailVerified,
+                disposableEmail: displayData.qualityBreakdown.disposableEmail,
+                deviceFingerprint: displayData.qualityBreakdown.deviceFingerprint,
+                engagement: displayData.qualityBreakdown.engagement
               }}
             />
           </div>
@@ -232,7 +187,7 @@ export const UserDetailSheet = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => {
-                  router.push(`/app/users/${userId}?tab=entries`);
+                  router.push(`/app/users/${user.id}?tab=entries`);
                   onClose();
                 }}
               >
@@ -241,30 +196,31 @@ export const UserDetailSheet = ({
               </Button>
             </div>
             <div className="space-y-2">
-              {user.recentEntries.map((entry) => (
-                <div key={entry.id} className="p-3 bg-muted/30 rounded">
+              {displayData.entries.slice(0, 3).map((entry) => (
+                <div key={entry.taskId} className="p-3 bg-muted/30 rounded">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="font-medium">
-                        {entry.sweepstakesTitle}
+                        {entry.name}
                       </div>
-                      <div className="text-sm text-muted-foreground flex items-center space-x-2">
-                        <span>{formatDate(entry.enteredAt)}</span>
-                        <span>•</span>
-                        <span>{entry.source}</span>
+                      <div className="text-sm text-muted-foreground">
+                        {entry.completedAt ? formatDate(entry.completedAt.toISOString()) : 'No date'}
                       </div>
                     </div>
                     <Badge
-                      variant={
-                        entry.status === 'valid' ? 'default' : 'destructive'
-                      }
+                      variant="default"
                       className="text-xs"
                     >
-                      {entry.status}
+                      Completed
                     </Badge>
                   </div>
                 </div>
               ))}
+              {displayData.entries.length === 0 && (
+                <div className="p-3 bg-muted/30 rounded text-center text-muted-foreground">
+                  No entries yet
+                </div>
+              )}
             </div>
           </div>
 

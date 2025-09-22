@@ -5,12 +5,14 @@ import { TeamsProvider } from '@/components/context/team-provider';
 import { UserProvider } from '@/components/context/user-provider';
 import { redirect } from 'next/navigation';
 
+export type SlugPageParams = { slug: string };
+
 export default async function Layout({
   children,
   params
 }: {
   children: React.ReactNode;
-  params: Promise<{ slug: string }>;
+  params: Promise<SlugPageParams>;
 }) {
   const resolvedParams = await params;
   const [user, teams, team] = await Promise.all([

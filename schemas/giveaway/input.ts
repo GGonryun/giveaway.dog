@@ -94,7 +94,7 @@ const toTasksInput = (
   return compact(data.map((task) => toTaskInput(task)));
 };
 
-const toTaskInput = (
+export const toTaskInput = (
   data: FormSweepstakesGetPayload['tasks'][number]
 ): SweepstakesInputTaskSchema | undefined => {
   if (!data) return undefined;

@@ -262,28 +262,3 @@ export const PublicGiveawayItemSchema = z.object({
 });
 
 export type PublicGiveawayItem = z.infer<typeof PublicGiveawayItemSchema>;
-
-// Comprehensive User Data Schema
-export const UserDataSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string(),
-  avatar: z.string().nullable(),
-  region: z.string(),
-  entries: z.number(),
-  lastEntryAt: z.string(),
-  firstEntryAt: z.string(),
-  qualityScore: z.number(),
-  status: z.enum(['active', 'flagged', 'blocked', 'trusted']),
-  engagement: z.number(),
-  source: z.string(),
-  deviceFingerprint: z.string(),
-  emailVerified: z.boolean(),
-  disposableEmail: z.boolean(),
-  emailStatus: z.enum(['verified', 'pending', 'bounced']).optional(),
-  signupTime: z.string().optional(),
-  firstSource: z.string().optional(),
-  location: z.string().optional()
-});
-
-export type UserData = z.infer<typeof UserDataSchema>;

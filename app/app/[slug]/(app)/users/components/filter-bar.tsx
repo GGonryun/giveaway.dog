@@ -23,7 +23,6 @@ import {
   Calendar,
   BarChart3,
   Users,
-  MapPin,
   RefreshCcw
 } from 'lucide-react';
 
@@ -34,7 +33,6 @@ interface FilterBarProps {
     maxScore: number;
     status: string;
     dateRange: string;
-    source: string;
   };
   onChange: (filters: FilterBarProps['filters']) => void;
 }
@@ -44,26 +42,34 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
   const [localFilters, setLocalFilters] = useState(filters);
   const scoreTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Auto-save for non-score filters
   const updateLocalFilter = (
     key: keyof FilterBarProps['filters'],
     value: string | number
   ) => {
-    setLocalFilters((prev) => ({ ...prev, [key]: value }));
+    const newFilters = { ...localFilters, [key]: value };
+    setLocalFilters(newFilters);
+    onChange(newFilters);
   };
 
-  const updateScoreRange = useCallback((min: number, max: number) => {
-    setLocalFilters((prev) => ({ ...prev, minScore: min, maxScore: max }));
-  }, []);
+  // Debounced save for score range
+  const updateScoreRange = useCallback(
+    (min: number, max: number) => {
+      const newFilters = { ...localFilters, minScore: min, maxScore: max };
+      setLocalFilters(newFilters);
 
-  const handleApply = () => {
-    onChange(localFilters);
-    setIsOpen(false);
-  };
+      // Clear existing timeout
+      if (scoreTimeoutRef.current) {
+        clearTimeout(scoreTimeoutRef.current);
+      }
 
-  const handleCancel = () => {
-    setLocalFilters(filters); // Reset to original values
-    setIsOpen(false);
-  };
+      // Set new timeout for debounced save
+      scoreTimeoutRef.current = setTimeout(() => {
+        onChange(newFilters);
+      }, 500);
+    },
+    [localFilters, onChange]
+  );
 
   const resetLocalFilters = () => {
     const defaultFilters = {
@@ -71,18 +77,16 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
       minScore: 0,
       maxScore: 100,
       status: 'all',
-      dateRange: 'all',
-      source: 'all'
+      dateRange: 'all'
     };
     setLocalFilters(defaultFilters);
+    onChange(defaultFilters);
   };
 
-  // Sync local state when dialog opens or filters change externally
+  // Sync local state when filters change externally
   React.useEffect(() => {
-    if (isOpen) {
-      setLocalFilters(filters);
-    }
-  }, [isOpen, filters]);
+    setLocalFilters(filters);
+  }, [filters]);
 
   // Cleanup timeout on unmount
   React.useEffect(() => {
@@ -98,16 +102,6 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
     if (filters.minScore > 0 || filters.maxScore < 100) count++;
     if (filters.status !== 'all') count++;
     if (filters.dateRange !== 'all') count++;
-    if (filters.source !== 'all') count++;
-    return count;
-  };
-
-  const getLocalActiveFiltersCount = () => {
-    let count = 0;
-    if (localFilters.minScore > 0 || localFilters.maxScore < 100) count++;
-    if (localFilters.status !== 'all') count++;
-    if (localFilters.dateRange !== 'all') count++;
-    if (localFilters.source !== 'all') count++;
     return count;
   };
 
@@ -116,7 +110,7 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="relative">
+        <Button variant="outline" className="relative">
           <Filter className="h-4 w-4 mr-1" />
           Filters
           {activeFiltersCount > 0 && (
@@ -141,12 +135,12 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
             >
               <RefreshCcw className="h-4 w-4 mr-1" />
               Reset
-              {getLocalActiveFiltersCount() > 0 && (
+              {activeFiltersCount > 0 && (
                 <Badge
                   variant="destructive"
                   className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs"
                 >
-                  {getLocalActiveFiltersCount()}
+                  {activeFiltersCount}
                 </Badge>
               )}
             </Button>
@@ -208,9 +202,7 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
                 <SelectContent>
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="flagged">Flagged</SelectItem>
                   <SelectItem value="blocked">Blocked</SelectItem>
-                  <SelectItem value="trusted">Trusted</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -238,47 +230,6 @@ export const FilterBar = ({ filters, onChange }: FilterBarProps) => {
                 </SelectContent>
               </Select>
             </div>
-
-            {/* Source Filter */}
-            <div className="space-y-1">
-              <label className="text-sm font-medium flex items-center">
-                <MapPin className="h-4 w-4 mr-1" />
-                Source
-              </label>
-              <Select
-                value={localFilters.source}
-                onValueChange={(value) => updateLocalFilter('source', value)}
-              >
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="Select source" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sources</SelectItem>
-                  <SelectItem value="instagram">Instagram</SelectItem>
-                  <SelectItem value="twitter">Twitter/X</SelectItem>
-                  <SelectItem value="facebook">Facebook</SelectItem>
-                  <SelectItem value="direct">Direct</SelectItem>
-                  <SelectItem value="email">Email</SelectItem>
-                  <SelectItem value="youtube">YouTube</SelectItem>
-                  <SelectItem value="tiktok">TikTok</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <Separator className="my-3" />
-
-          {/* Apply/Cancel Buttons */}
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" size="sm" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button size="sm" onClick={handleApply}>
-              Apply{' '}
-              {getLocalActiveFiltersCount() > 0
-                ? `(${getLocalActiveFiltersCount()})`
-                : ''}
-            </Button>
           </div>
         </div>
       </PopoverContent>
