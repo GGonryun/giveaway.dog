@@ -1,4 +1,3 @@
-import z, { ZodError } from 'zod';
 import { widetype } from '../widetype';
 
 export type ApplicationErrorCode =

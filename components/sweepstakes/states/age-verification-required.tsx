@@ -1,6 +1,5 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AgeVerification } from '../age-verification';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
 import { useRouter } from 'next/navigation';

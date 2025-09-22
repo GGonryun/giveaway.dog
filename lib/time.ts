@@ -1,5 +1,4 @@
 import { getTimeZones } from '@vvo/tzdb';
-import { isBefore } from 'date-fns';
 
 export namespace time {
   export const wait = async (ms: number) =>

@@ -1,5 +1,4 @@
 import { upload } from '@vercel/blob/client';
-import { useState } from 'react';
 
 export interface FileUploadResult {
   url: string;
