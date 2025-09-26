@@ -64,7 +64,7 @@ const SweepstakesWrapper: React.FC<{
     return <div>There was an unexpected error loading sweepstakes...</div>;
   }
 
-  return <SweepstakesTable sweepstakes={list.data} filters={filters} />;
+  return <SweepstakesTable data={list.data} filters={filters} />;
 };
 
 const SweepstakesTableSkeleton = () => (

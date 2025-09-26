@@ -1,8 +1,7 @@
 'use client';
 
 import { TablePagination } from '@/components/ui/table-pagination';
-import { useCallback, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -38,6 +37,7 @@ import {
 import Link from 'next/link';
 import {
   ListSweepstakesFilters,
+  ListSweepstakesDataSchema,
   SortDirection,
   SortField,
   SweepstakesDataSchema
@@ -53,7 +53,7 @@ import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepsta
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 interface SweepstakesTableProps {
-  sweepstakes: SweepstakesDataSchema[];
+  data: ListSweepstakesDataSchema;
   filters: ListSweepstakesFilters;
 }
 
@@ -95,9 +95,10 @@ const SortableHeader: React.FC<{
 };
 
 export function SweepstakesTable({
-  sweepstakes,
+  data,
   filters
 }: SweepstakesTableProps) {
+  const { sweepstakes, totalCount, currentPage, totalPages } = data;
   const basePage = useSweepstakesPage();
   const editPage = useEditSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
@@ -287,9 +288,9 @@ export function SweepstakesTable({
             </div>
           )}
           <TablePagination
-            totalItems={sweepstakes.length}
-            currentPage={filters.page ?? 1}
-            totalPages={Math.ceil(sweepstakes.length / DEFAULT_PAGE_SIZE)}
+            totalItems={totalCount}
+            currentPage={currentPage}
+            totalPages={totalPages}
             pageSize={DEFAULT_PAGE_SIZE}
             onPageChange={(value) =>
               basePage.updateParams((params) =>

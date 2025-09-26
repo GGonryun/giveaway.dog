@@ -15,6 +15,17 @@ export const sweepstakesDataSchema = z.object({
 
 export type SweepstakesDataSchema = z.infer<typeof sweepstakesDataSchema>;
 
+export const listSweepstakesDataSchema = z.object({
+  sweepstakes: sweepstakesDataSchema.array(),
+  totalCount: z.number(),
+  currentPage: z.number(),
+  totalPages: z.number()
+});
+
+export type ListSweepstakesDataSchema = z.infer<
+  typeof listSweepstakesDataSchema
+>;
+
 export const sweepstakesFilterStatusSchema = z
   .nativeEnum(SweepstakesStatus)
   .or(z.literal('ALL'));
