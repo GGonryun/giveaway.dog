@@ -161,32 +161,26 @@ const SweepstakesTabs = () => {
 
   return (
     <Tabs defaultValue="analytics">
-      <div className="overflow-hidden sticky top-16 z-10 bg-background">
-        <div className="overflow-x-auto">
-          <TabsList className="border-l-0 border-r-0 border-t-0 inline-flex h-auto p-1 min-w-full">
-            <TabsTrigger value="preview" className="whitespace-nowrap">
-              Preview
+      <div className="overflow-x-auto sticky top-16 z-10 bg-background">
+        <TabsList className="border-l-0 border-r-0 border-t-0 inline-flex h-auto p-1 min-w-full">
+          {[
+            { label: 'Preview', value: 'preview' },
+            { label: 'Analytics', value: 'analytics' },
+            { label: 'Promotion', value: 'promotion' },
+            { label: 'Entries', value: 'entries' },
+            { label: 'Winners', value: 'winners' },
+            { label: 'Export', value: 'export' },
+            { label: 'Settings', value: 'settings' }
+          ].map(({ label, value }) => (
+            <TabsTrigger
+              key={value}
+              value={value}
+              className="whitespace-nowrap flex-shrink-0 px-3 py-2"
+            >
+              {label}
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="whitespace-nowrap">
-              Analytics
-            </TabsTrigger>
-            <TabsTrigger value="promotion" className="whitespace-nowrap">
-              Promotion
-            </TabsTrigger>
-            <TabsTrigger value="entries" className="whitespace-nowrap">
-              Entries
-            </TabsTrigger>
-            <TabsTrigger value="winners" className="whitespace-nowrap">
-              Winners
-            </TabsTrigger>
-            <TabsTrigger value="export" className="whitespace-nowrap">
-              Export
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="whitespace-nowrap">
-              Settings
-            </TabsTrigger>
-          </TabsList>
-        </div>
+          ))}
+        </TabsList>
       </div>
 
       <div className="p-2 sm:p-4 sm:mx-auto sm:container">

@@ -25,10 +25,9 @@ export const SweepstakesTabs: React.FC<{
           params.set('status', value);
         });
       }}
-      className="overflow-hidden -mx-2 sticky sm:relative top-16 sm:top-0 z-10 sm:z-0 bg-background"
     >
-      <div className="overflow-x-auto">
-        <TabsList className="border-l-0 border-r-0 border-t-0 sm:border-l sm:border-r sm:border-t inline-flex h-auto p-1 min-w-full">
+      <div className="overflow-x-auto sticky top-16 z-10 bg-background">
+        <TabsList className="border-l-0 border-r-0 border-t-0 inline-flex h-auto p-1 min-w-full">
           {Object.entries(SWEEPSTAKES_FILTER_STATUS_OPTIONS).map(
             ([key, label]) => (
               <TabsTrigger

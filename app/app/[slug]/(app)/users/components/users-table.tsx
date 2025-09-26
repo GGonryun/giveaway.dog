@@ -33,12 +33,9 @@ import {
   AlertTriangle,
   CheckCircle,
   Users,
-  ArrowUpDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight
+  ArrowUpDown
 } from 'lucide-react';
+import { TablePagination } from '@/components/ui/table-pagination';
 import { FilterBar } from './filter-bar';
 import { SearchBar } from './search-bar';
 import { UserDetailSheet } from './user-detail-sheet';
@@ -83,7 +80,8 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   const [isPending, startTransition] = useTransition();
   const [showUserSheet, setShowUserSheet] = useState(false);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
-  const [statusDialogUser, setStatusDialogUser] = useState<ParticipatingUserSchema | null>(null);
+  const [statusDialogUser, setStatusDialogUser] =
+    useState<ParticipatingUserSchema | null>(null);
 
   // Update URL params whenever state changes - only include non-default values
   const updateURLParams = useCallback(
@@ -248,7 +246,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   );
 
   return (
-    <div className="space-y-4">
+    <div>
       <div className="w-full space-y-4">
         <div className="flex items-start gap-2">
           {/* Search Bar */}
@@ -274,7 +272,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
           </div>
         </div>
         <div>
-          <Card className="p-0">
+          <Card className="p-0 overflow-hidden">
             <CardHeader hidden>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -445,82 +443,15 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                   </TableBody>
                 </Table>
               </div>
-              {/* Pagination */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-3 sm:px-6 py-4 border-t">
-                <div className="flex items-center justify-center sm:justify-start text-xs sm:text-sm text-muted-foreground">
-                  <span>
-                    <span className="hidden sm:inline">Showing </span>
-                    {(currentPage - 1) * filters.pageSize + 1}-
-                    {Math.min(currentPage * filters.pageSize, totalUsers)} of{' '}
-                    {totalUsers.toLocaleString()}
-                    <span className="hidden sm:inline"> users</span>
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-center gap-1 sm:gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(1)}
-                    disabled={currentPage === 1 || isPending}
-                    className="p-2 sm:px-3"
-                  >
-                    <ChevronsLeft className="h-4 w-4" />
-                    <span className="sr-only">First page</span>
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      handlePageChange(Math.max(1, currentPage - 1))
-                    }
-                    disabled={currentPage === 1 || isPending}
-                    className="p-2 sm:px-3"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    <span className="sr-only">Previous page</span>
-                  </Button>
-
-                  <div className="flex items-center gap-1 px-2 sm:px-3">
-                    <span className="text-xs sm:text-sm font-medium">Page</span>
-                    <Badge
-                      variant="outline"
-                      className="text-xs sm:text-sm px-2 py-1"
-                    >
-                      {currentPage}
-                    </Badge>
-                    <span className="text-xs sm:text-sm">of</span>
-                    <span className="text-xs sm:text-sm font-medium">
-                      {totalPages}
-                    </span>
-                  </div>
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      handlePageChange(Math.min(totalPages, currentPage + 1))
-                    }
-                    disabled={currentPage === totalPages || isPending}
-                    className="p-2 sm:px-3"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                    <span className="sr-only">Next page</span>
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(totalPages)}
-                    disabled={currentPage === totalPages || isPending}
-                    className="p-2 sm:px-3"
-                  >
-                    <ChevronsRight className="h-4 w-4" />
-                    <span className="sr-only">Last page</span>
-                  </Button>
-                </div>
-              </div>
+              <TablePagination
+                totalItems={totalUsers}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={filters.pageSize}
+                onPageChange={handlePageChange}
+                itemName="users"
+                isPending={isPending}
+              />
             </CardContent>
           </Card>
         </div>

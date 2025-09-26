@@ -60,15 +60,13 @@ const Page: React.FC<UsersPageParams> = async ({ params, searchParams }) => {
 
   return (
     <Outline title="Users" container={true}>
-      <div className="space-y-6">
-        <UsersTable
-          users={result.data.users}
-          totalUsers={result.data.totalUsers}
-          totalPages={result.data.totalPages}
-          currentPage={numericFilters.page}
-          filters={numericFilters}
-        />
-      </div>
+      <UsersTable
+        users={result.data.users}
+        totalUsers={result.data.totalUsers}
+        totalPages={result.data.totalPages}
+        currentPage={numericFilters.page}
+        filters={numericFilters}
+      />
     </Outline>
   );
 };

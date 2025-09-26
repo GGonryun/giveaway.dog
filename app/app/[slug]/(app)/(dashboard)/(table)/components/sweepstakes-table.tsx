@@ -1,6 +1,6 @@
 'use client';
 
-import { SweepstakesPagination } from './sweepstakes-pagination';
+import { TablePagination } from '@/components/ui/table-pagination';
 import { useCallback, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -40,7 +40,7 @@ import {
   ListSweepstakesFilters,
   SortDirection,
   SortField,
-  SweepstakesData
+  SweepstakesDataSchema
 } from '@/schemas/sweepstakes';
 
 import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
@@ -48,11 +48,12 @@ import { SweepstakesStatus } from '@prisma/client';
 import { DeleteConfirmationModal } from '@/components/sweepstakes/delete-confirmation-modal';
 import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
 import { useEditSweepstakesPage } from '@/components/sweepstakes/use-edit-sweepstakes-page';
+import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepstakes-details-page';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 interface SweepstakesTableProps {
-  sweepstakes: SweepstakesData[];
+  sweepstakes: SweepstakesDataSchema[];
   filters: ListSweepstakesFilters;
 }
 
@@ -101,7 +102,9 @@ export function SweepstakesTable({
   const editPage = useEditSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
 
-  const [deleteModal, setDeleteModal] = useState<SweepstakesData | null>(null);
+  const [deleteModal, setDeleteModal] = useState<SweepstakesDataSchema | null>(
+    null
+  );
 
   // Handle column sorting
   const handleSort = (field: SortField) => {
@@ -133,41 +136,7 @@ export function SweepstakesTable({
   };
 
   // TODO: move out of component
-  const getStatusBadge = (status: SweepstakesData['status']) => {
-    const variants = {
-      ACTIVE: {
-        variant: 'default' as const,
-        label: 'Active',
-        color: 'text-green-600'
-      },
-      CANCELED: {
-        variant: 'destructive' as const,
-        label: 'Ending Soon',
-        color: 'text-red-600'
-      },
-      DRAFT: {
-        variant: 'secondary' as const,
-        label: 'Draft',
-        color: 'text-gray-600'
-      },
-      PAUSED: {
-        variant: 'outline' as const,
-        label: 'Paused',
-        color: 'text-yellow-600'
-      },
-      COMPLETED: {
-        variant: 'secondary' as const,
-        label: 'Completed',
-        color: 'text-blue-600'
-      }
-    };
-
-    const config = variants[status];
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
-
-  // TODO: move out of component
-  const getStatusIcon = (status: SweepstakesData['status']) => {
+  const getStatusIcon = (status: SweepstakesDataSchema['status']) => {
     switch (status) {
       case 'ACTIVE':
         return <Play className="h-4 w-4 text-green-500" />;
@@ -184,7 +153,7 @@ export function SweepstakesTable({
     }
   };
 
-  const handleRowClick = (item: SweepstakesData) => () => {
+  const handleRowClick = (item: SweepstakesDataSchema) => () => {
     if (item.status === SweepstakesStatus.DRAFT) {
       editPage.navigateTo(item.id);
     } else {
@@ -192,123 +161,10 @@ export function SweepstakesTable({
     }
   };
 
-  const handleRowHref = useCallback((item: SweepstakesData) => {
-    if (item.status === SweepstakesStatus.DRAFT) {
-      return editPage.route(item.id);
-    } else {
-      return detailsPage.route(item.id);
-    }
-  }, []);
-
   return (
     <div className="space-y-4">
       <div>
-        {/* Mobile Card View */}
-        <div className="block lg:hidden">
-          <div className="space-y-3">
-            {sweepstakes.map((item) => (
-              <Card key={item.id} className="p-3">
-                <div className="space-y-3">
-                  {/* Header */}
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-2 flex-1 min-w-0">
-                      {getStatusIcon(item.status)}
-                      <div className="min-w-0 flex-1">
-                        <Link
-                          href={handleRowHref(item)}
-                          className="font-medium hover:text-primary hover:underline block truncate"
-                        >
-                          {item.name || DEFAULT_SWEEPSTAKES_NAME}
-                        </Link>
-                      </div>
-                    </div>
-                    {getStatusBadge(item.status)}
-                  </div>
-
-                  {/* Stats */}
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">
-                        Entries
-                      </div>
-                      <div className="font-medium">
-                        {item.entries.toLocaleString()}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">
-                        Performance
-                      </div>
-                      <div className="space-y-1">
-                        <div
-                          className={`text-xs font-medium ${
-                            item.conversionRate > 8
-                              ? 'text-green-600'
-                              : item.conversionRate > 5
-                                ? 'text-yellow-600'
-                                : 'text-red-600'
-                          }`}
-                        >
-                          Conv: {item.conversionRate.toFixed(1)}%
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Footer */}
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex items-center space-x-1">
-                      <Clock className="h-3 w-3" />
-                      <span>{item.timeLeft}</span>
-                    </div>
-
-                    <div className="flex items-center space-x-1">
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link href={detailsPage.route(item.id)}>
-                          <Eye className="h-4 w-4" />
-                        </Link>
-                      </Button>
-
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={detailsPage.route(item.id)}>
-                              <Eye className="h-4 w-4 mr-2" />
-                              View Details
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link href={editPage.route(item.id)}>
-                              <Edit className="h-4 w-4 mr-2" />
-                              Edit
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="text-red-600"
-                            onClick={() => setDeleteModal(item)}
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Desktop Table View */}
-        <div className="hidden lg:block overflow-x-auto ">
+        <Card className="overflow-hidden p-0 gap-0">
           <Table>
             <TableHeader>
               <TableRow>
@@ -418,37 +274,31 @@ export function SweepstakesTable({
               ))}
             </TableBody>
           </Table>
-        </div>
-
-        {/* Empty State */}
-        {sweepstakes.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-4">
-            <Calendar className="h-8 w-8  opacity-50" />
-            <p>No sweepstakes found</p>
-            <CreateGiveawayButton
-              showDropdown={false}
-              text="Create Your First Giveaway"
-              variant="default"
-            />
-          </div>
-        )}
-        <SweepstakesPagination
-          totalResults={sweepstakes.length}
-          currentPage={filters.page ?? 1}
-          totalPages={Math.ceil(sweepstakes.length / (filters.size ?? 10))}
-          onPageChange={(value) =>
-            basePage.updateParams((params) =>
-              params.set('page', value.toString())
-            )
-          }
-          pageSize={filters.size ?? 10}
-          onPageSizeChange={(size) => {
-            basePage.updateParams((params) => {
-              params.set('size', size.toString());
-              params.set('page', '1'); // Reset to first page when page size changes
-            });
-          }}
-        />
+          {/* Empty State */}
+          {sweepstakes.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-4">
+              <Calendar className="h-8 w-8  opacity-50" />
+              <p>No sweepstakes found</p>
+              <CreateGiveawayButton
+                showDropdown={false}
+                text="Create Your First Giveaway"
+                variant="default"
+              />
+            </div>
+          )}
+          <TablePagination
+            totalItems={sweepstakes.length}
+            currentPage={filters.page ?? 1}
+            totalPages={Math.ceil(sweepstakes.length / DEFAULT_PAGE_SIZE)}
+            pageSize={DEFAULT_PAGE_SIZE}
+            onPageChange={(value) =>
+              basePage.updateParams((params) =>
+                params.set('page', value.toString())
+              )
+            }
+            itemName="sweepstakes"
+          />
+        </Card>
       </div>
 
       <DeleteConfirmationModal

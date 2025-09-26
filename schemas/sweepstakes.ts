@@ -13,7 +13,7 @@ export const sweepstakesDataSchema = z.object({
   createdAt: z.string()
 });
 
-export type SweepstakesData = z.infer<typeof sweepstakesDataSchema>;
+export type SweepstakesDataSchema = z.infer<typeof sweepstakesDataSchema>;
 
 export const sweepstakesFilterStatusSchema = z
   .nativeEnum(SweepstakesStatus)
@@ -49,7 +49,6 @@ export const listSweepstakesFiltersSchema = z
     status: sweepstakesFilterStatusSchema,
     dateRange: z.string(),
     page: z.number(),
-    size: z.number(),
     sortField: sortFieldSchema,
     sortDirection: sortDirectionSchema
   })
@@ -65,7 +64,6 @@ export const toSweepstakesFilter = (s: unknown): ListSweepstakesFilters => {
     status: (obj.status as SweepstakesFilterStatus) || 'ALL',
     dateRange: obj.dateRange || '',
     page: obj.page ? parseInt(obj.page, 10) : 1,
-    size: obj.size ? parseInt(obj.size, 10) : 10,
     sortField: (obj.sortField as SortField) || 'createdAt',
     sortDirection: (obj.sortDirection as SortDirection) || 'desc'
   };
