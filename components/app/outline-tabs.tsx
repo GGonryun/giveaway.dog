@@ -16,18 +16,12 @@ export const OutlineTabsTrigger: React.PC<
 
 export const OutlineTabsList: React.PC = ({ children }) => {
   return (
-    <div className="transition-[width,height,top] ease-linear overflow-x-auto sticky top-16 group-has-data-[collapsible=icon]/sidebar-wrapper:top-12 z-10 bg-background">
-      <TabsList className="border-l-0 border-r-0 border-t-0 inline-flex h-auto p-1 min-w-full">
-        {children}
-      </TabsList>
-    </div>
+    <TabsList className="transition-[width,height,top] ease-linear overflow-x-auto sticky top-16 group-has-data-[collapsible=icon]/sidebar-wrapper:top-12 z-10 border-l-0 border-r-0 border-t-0 inline-flex h-auto min-w-full p-1 shadow-none">
+      {children}
+    </TabsList>
   );
 };
 
 export const OutlineTabsContent: React.PC = ({ children }) => {
-  return (
-    <div className="space-y-4 py-4 px-2 sm:mx-auto sm:container">
-      {children}
-    </div>
-  );
+  return <div className="space-y-4 py-4 container">{children}</div>;
 };

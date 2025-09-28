@@ -6,7 +6,7 @@ import {
   OutlineTabsTrigger
 } from '@/components/app/outline-tabs';
 import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
-import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { Tabs } from '@/components/ui/tabs';
 import {
   ListSweepstakesFilters,
   SWEEPSTAKES_FILTER_STATUS_OPTIONS

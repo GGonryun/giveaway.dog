@@ -60,9 +60,7 @@ export const SiteHeader: React.FC<{
         className
       )}
     >
-      <div className="flex w-full items-center gap-1 px-2 sm:px-4 lg:gap-2 lg:px-6">
-        {children}
-      </div>
+      <div className="flex w-full items-center gap-1 container">{children}</div>
     </header>
   );
 };

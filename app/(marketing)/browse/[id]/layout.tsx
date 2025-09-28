@@ -7,7 +7,7 @@ export default async function Layout({
 }) {
   return (
     <div className="flex grow bg-giveaway">
-      <div className="flex items-center justify-center gap-4 sm:gap-6 p-2 pb-4 sm:p-4 sm:pb-6 sm:container sm:max-w-2xl">
+      <div className="flex items-center justify-center py-3 sm:py-6 container sm:max-w-3xl">
         {children}
       </div>
     </div>

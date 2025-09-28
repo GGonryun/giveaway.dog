@@ -11,13 +11,13 @@ const TabsSizeContext = React.createContext<'sm' | 'default' | 'lg'>('default');
 const Tabs = TabsPrimitive.Root;
 
 const tabsListVariants = cva(
-  'inline-flex items-center justify-center bg-muted shadow-xs text-muted-foreground border px-2',
+  'inline-flex items-center justify-center bg-muted shadow-xs text-muted-foreground border',
   {
     variants: {
       size: {
-        sm: 'h-8 gap-1',
-        default: 'h-9 gap-2',
-        lg: 'h-10 gap-3'
+        sm: 'h-8 gap-1 p-1',
+        default: 'h-9 gap-2 p-2',
+        lg: 'h-10 gap-3 p-3'
       }
     },
     defaultVariants: {

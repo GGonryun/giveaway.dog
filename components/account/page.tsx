@@ -1,9 +1,6 @@
 'use client';
 
-import { LoaderCircleIcon, LogOutIcon } from 'lucide-react';
-import { useLogout } from '../auth/use-logout';
 import { UserSettings } from './user-profile';
-import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { useState } from 'react';
 import { LogoutButton } from './logout-button';
@@ -31,7 +28,7 @@ export const UserPage: React.FC = () => {
         value={activeSection}
         onValueChange={(value) => setActiveSection(value as AccountSections)}
       >
-        <div className="overflow-x-auto sticky top-[73px] z-10 bg-background">
+        <div className="overflow-x-auto sticky top-[73px] z-10">
           <TabsList className="border-l-0 border-r-0 border-t-0 inline-flex h-auto p-1 min-w-full">
             {tabItems.map((item) => {
               return (
@@ -47,7 +44,7 @@ export const UserPage: React.FC = () => {
           </TabsList>
         </div>
 
-        <div className="space-y-4 p-2 sm:p-4 sm:mx-auto sm:container">
+        <div className="space-y-4 py-3 sm:py-6 container">
           <TabsContent value="profile" className="mt-0">
             <UserSettings />
           </TabsContent>
