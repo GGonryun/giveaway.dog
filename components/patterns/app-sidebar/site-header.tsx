@@ -56,7 +56,7 @@ export const SiteHeader: React.FC<{
   return (
     <header
       className={cn(
-        'flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b sticky top-0 z-10 bg-background',
+        'flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b sticky top-0 z-50 bg-background',
         className
       )}
     >

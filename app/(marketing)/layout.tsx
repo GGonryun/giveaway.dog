@@ -10,8 +10,8 @@ export default async function RootLayout({
   const user = await findUser();
 
   return (
-    <div className="min-h-screen flex flex-col h-screen">
-      <div className="border-b">
+    <div className="min-h-screen flex flex-col">
+      <div className="sticky top-0 z-50 bg-background border-b">
         <NavigationBar user={user.ok ? user.data : null} />
       </div>
       <div className="flex grow">{children}</div>
