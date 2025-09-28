@@ -2,39 +2,78 @@
 
 import { LoaderCircleIcon, LogOutIcon } from 'lucide-react';
 import { useLogout } from '../auth/use-logout';
-import { UserSettings } from './user-settings';
+import { UserSettings } from './user-profile';
 import { Button } from '../ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { useState } from 'react';
+import { LogoutButton } from './logout-button';
+import { SocialProviders } from './social-providers';
+import { DangerZone } from './danger-zone';
+import { FeatureSettings } from './feature-settings';
+
+type AccountSections = 'profile' | 'linked-accounts';
+
+const tabItems = [
+  { id: 'profile', label: 'Profile' },
+  { id: 'security', label: 'Security' },
+  { id: 'activity', label: 'Activity' },
+  { id: 'notifications', label: 'Notifications' },
+  { id: 'danger-zone', label: 'Danger Zone' }
+];
 
 export const UserPage: React.FC = () => {
-  const logout = useLogout();
+  const [activeSection, setActiveSection] =
+    useState<AccountSections>('profile');
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">User Profile</h1>
-        <p className="text-muted-foreground">
-          Manage your profile and settings
-        </p>
-      </div>
+    <div className="space-y-6 w-full">
+      <Tabs
+        value={activeSection}
+        onValueChange={(value) => setActiveSection(value as AccountSections)}
+      >
+        <div className="overflow-x-auto sticky top-[73px] z-10 bg-background">
+          <TabsList className="border-l-0 border-r-0 border-t-0 inline-flex h-auto p-1 min-w-full">
+            {tabItems.map((item) => {
+              return (
+                <TabsTrigger
+                  key={item.id}
+                  value={item.id}
+                  className="whitespace-nowrap flex-shrink-0 px-3 py-2"
+                >
+                  {item.label}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+        </div>
 
-      <UserSettings />
+        <div className="space-y-4 p-2 sm:p-4 sm:mx-auto sm:container">
+          <TabsContent value="profile" className="mt-0">
+            <UserSettings />
+          </TabsContent>
+          <TabsContent value="security" className="mt-0">
+            <SocialProviders />
+          </TabsContent>
+          <TabsContent value="features" className="mt-0">
+            <FeatureSettings />
+          </TabsContent>
+          <TabsContent value="activity" className="mt-0">
+            <div className="p-4 border border-dashed rounded-lg text-center text-sm text-muted-foreground">
+              Activity section coming soon!
+            </div>
+          </TabsContent>
+          <TabsContent value="notifications" className="mt-0">
+            <div className="p-4 border border-dashed rounded-lg text-center text-sm text-muted-foreground">
+              Notification settings coming soon!
+            </div>
+          </TabsContent>
+          <TabsContent value="danger-zone" className="mt-0">
+            <DangerZone />
+          </TabsContent>
 
-      {/* Logout Button */}
-      <div className="flex justify-end">
-        <Button
-          onClick={() => logout.run('/')}
-          disabled={logout.isLoading}
-          variant="outline"
-          className="w-full sm:w-auto"
-        >
-          {logout.isLoading ? (
-            <LoaderCircleIcon className="animate-spin h-4 w-4 mr-2" />
-          ) : (
-            <LogOutIcon className="h-4 w-4 mr-2" />
-          )}
-          Logout
-        </Button>
-      </div>
+          <LogoutButton />
+        </div>
+      </Tabs>
     </div>
   );
 };

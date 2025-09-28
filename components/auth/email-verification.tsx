@@ -127,7 +127,7 @@ export function EmailVerification({
     const content = (
       <div className="space-y-4">
         <div className="text-center">
-          <MailCheck className="h-12 w-12 mx-auto mb-4 text-green-500" />
+          <MailCheck className="h-12 w-12 min-w-12 mx-auto mb-4 text-green-500" />
           <h3 className="text-lg font-semibold mb-2">Check Your Email</h3>
           <p className="text-muted-foreground mb-4">
             We've sent a verification email to:
@@ -208,13 +208,15 @@ export function EmailVerification({
       {user.emailVerified && user.email && !isChangingEmail && (
         <div className="flex items-center justify-between p-4 border rounded-lg">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded bg-white border border-border flex items-center justify-center">
+            <div className="w-8 h-8 min-w-8 rounded bg-white border border-border flex items-center justify-center">
               <Mail className="w-5 h-5 text-foreground" />
             </div>
             <div>
               <div className="font-medium">Email</div>
               <div className="text-sm text-muted-foreground">
-                Connected • {user.email}
+                <span className="hidden sm:inline">
+                  Connected • {user.email}
+                </span>
               </div>
             </div>
           </div>
