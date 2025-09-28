@@ -1,3 +1,5 @@
+'use server';
+
 import { Suspense } from 'react';
 import { SweepstakesTabsWrapper } from './components/sweepstakes-tabs';
 import { Outline } from '@/components/app/outline';
@@ -31,19 +33,17 @@ export default async function SweepstakesDetailPage({
   return (
     <Outline
       title={result.data.sweepstakes.setup.name}
-      className="space-y-4 pt-0 sm:pt-0 sm:pb-8"
+      className="pt-0 sm:pt-0 sm:pb-8"
       container={false}
       action={<EditGiveawayButton sweepstakesId={sweepstakesId} />}
     >
-      <div className="space-y-4">
-        <Suspense>
-          <SweepstakesTabsWrapper
-            {...result.data}
-            sweepstakesId={sweepstakesId}
-            timeSeries={timeseries.data}
-          />
-        </Suspense>
-      </div>
+      <Suspense>
+        <SweepstakesTabsWrapper
+          {...result.data}
+          sweepstakesId={sweepstakesId}
+          timeSeries={timeseries.data}
+        />
+      </Suspense>
     </Outline>
   );
 }

@@ -32,13 +32,11 @@ const SweepstakesPage: SweepstakesPageComponent = async (props) => {
   return (
     <Outline
       title="Sweepstakes"
-      container={false}
       className="pt-0 sm:pt-0 sm:pb-8"
+      container={false}
       action={<CreateGiveawayButton />}
     >
-      <SweepstakesTabs filters={filters} />
-
-      <div className="space-y-4 p-2 sm:p-4 sm:mx-auto sm:container">
+      <SweepstakesTabs filters={filters}>
         <SweepstakesFilterBar filters={filters} />
         <Suspense
           fallback={<SweepstakesTableSkeleton />}
@@ -46,7 +44,7 @@ const SweepstakesPage: SweepstakesPageComponent = async (props) => {
         >
           <SweepstakesWrapper filters={filters} slug={slug} />
         </Suspense>
-      </div>
+      </SweepstakesTabs>
     </Outline>
   );
 };
