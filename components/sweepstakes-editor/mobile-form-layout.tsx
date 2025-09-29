@@ -30,13 +30,16 @@ const MobileTabTrigger: React.FC<{
   }, [currentStep]);
 
   return (
-    <TabsTrigger asChild value={step} className="flex-1">
+    <TabsTrigger
+      asChild
+      value={step}
+      className="flex-1 data-[state=active]:shadow-none"
+    >
       <Link
         href={`?step=${step}`}
         onClick={handleJumpToField}
         className={cn(
-          'flex gap-1 w-full data-[state=active]:border-l data-[state=active]:border-t data-[state=active]:border-r h-7 mt-1',
-          mobileView === 'preview' && 'data-[state=active]:bg-tertiary-10'
+          'flex gap-1 w-full data-[state=active]:border-l data-[state=active]:border-t data-[state=active]:border-r h-7 mt-1 '
         )}
       >
         {label}
@@ -84,7 +87,10 @@ const MobileFormHeader: React.FC<
         </div>
         <div className="w-full">
           <Tabs value={step}>
-            <TabsList size="sm" className="w-full px-1 gap-1 m-0 mt-[1px] h-8">
+            <TabsList
+              size="sm"
+              className="w-full p-1 gap-1 m-0 mt-[0px] h-8 shadow-none"
+            >
               {SWEEPSTAKE_STEPS.map((step) => (
                 <MobileTabTrigger
                   key={step.key}
