@@ -12,7 +12,18 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Check, Zap, Heart, DollarSign } from 'lucide-react';
+import {
+  Check,
+  Zap,
+  Heart,
+  DollarSign,
+  Crown,
+  Settings,
+  Server,
+  Phone,
+  Sparkles,
+  BarChart3
+} from 'lucide-react';
 import Link from 'next/link';
 
 const features = [
@@ -215,6 +226,136 @@ export function PricingCards() {
           </Card>
         </div>
 
+        {/* Lifetime Subscription */}
+        <div className="mt-8 md:mt-12">
+          <Card className="border-2 border-yellow-400 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 relative">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+              <Badge className="bg-yellow-400 text-yellow-900 px-4 py-1 font-semibold">
+                🐕 Big Dogs Only
+              </Badge>
+            </div>
+
+            <CardContent className="p-6 md:p-8 relative z-10">
+              <div className="text-center mb-6">
+                <div className="bg-gradient-to-br from-yellow-100 to-orange-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-yellow-200">
+                  <Crown className="w-10 h-10 text-yellow-600" />
+                </div>
+                <Typography.Header
+                  level={3}
+                  className="text-2xl md:text-3xl font-bold mb-3"
+                >
+                  Lifetime Access
+                </Typography.Header>
+                <div className="mb-4">
+                  <div className="text-3xl md:text-4xl font-bold text-yellow-700">
+                    $2,499
+                  </div>
+                  <Typography.Paragraph className="text-base md:text-lg text-muted-foreground">
+                    One-time payment • Lifetime access
+                  </Typography.Paragraph>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                {/* Standard Features */}
+                <div>
+                  <Typography.Header
+                    level={4}
+                    className="font-semibold mb-3 flex items-center gap-2"
+                  >
+                    <Check className="w-5 h-5 text-green-600" />
+                    Everything in Free + Paid Tiers
+                  </Typography.Header>
+                  <div className="space-y-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
+                      <span>Unlimited giveaways forever</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
+                      <span>All premium features included</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
+                      <span>Priority support & dedicated contact</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <BarChart3 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                      <span>Advanced analytics & custom reporting</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Server className="w-4 h-4 text-green-600 flex-shrink-0" />
+                      <span>API access & custom integrations</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Exclusive Features */}
+                <div>
+                  <Typography.Header
+                    level={4}
+                    className="font-semibold mb-3 flex items-center gap-2"
+                  >
+                    <Crown className="w-5 h-5 text-yellow-600" />
+                    Exclusive Lifetime Benefits
+                  </Typography.Header>
+                  <div className="space-y-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Settings className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                      <span>Direct influence on feature roadmap</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Server className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                      <span>Self-hosting license included</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Crown className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                      <span>Lifetime feature updates</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                      <span>Private phone & video support</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                      <span>Early access to beta features & releases</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-yellow-100/50 rounded-lg p-4 mb-6 border border-yellow-200">
+                <Typography.Header
+                  level={5}
+                  className="font-semibold mb-2 text-yellow-800"
+                >
+                  🎯 Perfect for agencies, enterprises, and power users
+                </Typography.Header>
+                <Typography.Paragraph className="text-sm text-yellow-700">
+                  Shape the future of Giveaway.dog while running unlimited
+                  campaigns. Get your own self-hosted instance for complete
+                  control and data ownership.
+                </Typography.Paragraph>
+              </div>
+
+              <div className="flex flex-col gap-4 justify-center items-center">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-fit  bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white shadow font-semibold"
+                  asChild
+                >
+                  <Link href="mailto:admin@giveaway.dog?subject=Lifetime Subscription Inquiry">
+                    Get Lifetime Access
+                  </Link>
+                </Button>
+                <Typography.Paragraph className="text-sm text-muted-foreground text-center">
+                  Limited availability • Enterprise-grade support included
+                </Typography.Paragraph>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Enterprise/Bulk Pricing */}
         <div className="mt-8 md:mt-12">
           <Card className="border-2 border-purple-200 bg-purple-50/50">
@@ -226,21 +367,21 @@ export function PricingCards() {
                 level={3}
                 className="text-xl md:text-2xl font-bold mb-3"
               >
-                Need More Than 50 Giveaways?
+                Still Not Enough?
               </Typography.Header>
               <Typography.Paragraph className="text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
                 For businesses and agencies running large-scale campaigns, we
                 offer custom bulk pricing with significant discounts and
                 dedicated support.
               </Typography.Paragraph>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <div className="flex flex-col gap-4 justify-center items-center">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                  className="w-full sm:w-fit shadow border-purple-200 text-purple-600 hover:bg-purple-50"
                   asChild
                 >
-                  <Link href="mailto:sales@giveaway.dog?subject=Bulk Pricing Inquiry">
+                  <Link href="mailto:admin@giveaway.dog?subject=Bulk Pricing Inquiry">
                     Contact Sales Team
                   </Link>
                 </Button>
