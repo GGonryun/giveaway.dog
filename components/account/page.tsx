@@ -11,6 +11,7 @@ type AccountSections = 'profile' | 'linked-accounts';
 
 const tabItems = [
   { id: 'profile', label: 'Profile' },
+  { id: 'features', label: 'Features' },
   { id: 'activity', label: 'Activity' },
   { id: 'notifications', label: 'Notifications' },
   { id: 'danger-zone', label: 'Danger Zone' }

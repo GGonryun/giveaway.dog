@@ -8,7 +8,7 @@ import {
   AlertDialogDescription,
   AlertDialogCancel,
   AlertDialogAction
-} from '@radix-ui/react-alert-dialog';
+} from '@/components/ui/alert-dialog';
 import { AlertDialogHeader, AlertDialogFooter } from '../ui/alert-dialog';
 import { Card, CardContent } from '../ui/card';
 import { useUser } from '../context/user-provider';
