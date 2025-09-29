@@ -4,7 +4,6 @@ import { UserSettings } from './user-profile';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { useState } from 'react';
 import { LogoutButton } from './logout-button';
-import { SocialProviders } from './social-providers';
 import { DangerZone } from './danger-zone';
 import { FeatureSettings } from './feature-settings';
 
@@ -12,7 +11,6 @@ type AccountSections = 'profile' | 'linked-accounts';
 
 const tabItems = [
   { id: 'profile', label: 'Profile' },
-  { id: 'security', label: 'Security' },
   { id: 'activity', label: 'Activity' },
   { id: 'notifications', label: 'Notifications' },
   { id: 'danger-zone', label: 'Danger Zone' }
@@ -47,9 +45,6 @@ export const UserPage: React.FC = () => {
         <div className="space-y-4 py-3 sm:py-6 container">
           <TabsContent value="profile" className="mt-0">
             <UserSettings />
-          </TabsContent>
-          <TabsContent value="security" className="mt-0">
-            <SocialProviders />
           </TabsContent>
           <TabsContent value="features" className="mt-0">
             <FeatureSettings />

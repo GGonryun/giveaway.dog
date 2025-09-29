@@ -83,8 +83,8 @@ export const parseProvider = (provider: unknown) => {
 
 export const updateUserProfileSchema = z.object({
   id: z.string(),
-  name: z.string().nullable(),
-  type: z.array(z.nativeEnum(UserType)).nullable(),
+  name: z.string().optional(),
+  type: z.array(z.nativeEnum(UserType)).optional(),
   ageVerified: z.boolean().nullable().optional()
 });
 

@@ -17,12 +17,18 @@ import {
   AlertTriangle,
   ShieldAlert,
   CheckCircle,
-  MailCheck
+  MailCheck,
+  InfoIcon,
+  PlusIcon,
+  SaveIcon,
+  XIcon,
+  UnlinkIcon
 } from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import sendEmailVerification from '@/procedures/user/send-email-verification';
 import updateEmail from '@/procedures/user/update-email';
 import { toast } from 'sonner';
+import { Spinner } from '../ui/spinner';
 interface UserData {
   email?: string | null;
   emailVerified?: boolean | null;
@@ -36,11 +42,13 @@ interface EmailVerificationProps {
   onEmailVerified?: () => void;
   user: UserData;
   redirectTo?: string;
+  verificationText?: string;
 }
 
 export function EmailVerification({
   title = 'Email Verification',
   description = 'Manage your email address and verification status',
+  verificationText = 'Please add and verify an email address to participate in this giveaway.',
   showCard = true,
   onEmailVerified,
   user,
@@ -170,7 +178,7 @@ export function EmailVerification({
   }
 
   const content = (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {/* Email Verification Warning */}
       {needsVerification && !isChangingEmail && (
         <Alert variant="error">
@@ -197,42 +205,46 @@ export function EmailVerification({
         <Alert variant="error">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Email Required</AlertTitle>
-          <AlertDescription>
-            Please add and verify an email address to participate in this
-            giveaway.
-          </AlertDescription>
+          <AlertDescription>{verificationText}</AlertDescription>
         </Alert>
       )}
 
       {/* Current Email Status - Show when email is verified and not changing */}
       {user.emailVerified && user.email && !isChangingEmail && (
-        <div className="flex items-center justify-between p-4 border rounded-lg">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 min-w-8 rounded bg-white border border-border flex items-center justify-center">
-              <Mail className="w-5 h-5 text-foreground" />
+        <div className="w-full flex flex-col sm:flex-row gap-4 sm:gap-2 items-center justify-between p-4 border rounded-lg">
+          {/* LEFT: icon + text (this area must be allowed to shrink) */}
+          <div className="flex items-center gap-3 min-w-0 w-full sm:flex-1">
+            <div className="w-12 h-12 flex-shrink-0 rounded bg-white border border-border flex items-center justify-center">
+              <Mail className="w-8 h-8 text-foreground" />
             </div>
-            <div>
-              <div className="font-medium">Email</div>
-              <div className="text-sm text-muted-foreground">
-                <span className="hidden sm:inline">
-                  Connected • {user.email}
-                </span>
+
+            {/* text column: must have min-w-0 + flex-1 so it can shrink */}
+            <div className="flex flex-col min-w-0 flex-1">
+              <div className="font-medium truncate">Email</div>
+
+              <div className="text-sm text-muted-foreground truncate w-full overflow-hidden whitespace-nowrap">
+                <span className="hidden sm:inline">Connected • </span>
+                <span>{user.email}</span>
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            <Button variant="outline" size="sm" onClick={handleChangeEmail}>
-              Change
-            </Button>
-          </div>
+
+          <Button
+            variant="destructive"
+            size="sm"
+            className="w-full sm:w-[125px] flex-shrink-0"
+            onClick={handleChangeEmail}
+          >
+            <UnlinkIcon />
+            Change
+          </Button>
         </div>
       )}
 
       {/* Email Address Field - Show when changing email or no email/unverified */}
       {(isChangingEmail || needsEmail || needsVerification) && (
         <div className="space-y-2">
-          <Label htmlFor="email">Email Address</Label>
+          {!showCard && <Label htmlFor="email">Email Address</Label>}
           <div className="relative">
             <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
@@ -254,27 +266,38 @@ export function EmailVerification({
       {/* Action Buttons */}
       {(isChangingEmail || needsEmail || needsVerification) && (
         <div className="space-y-2">
-          <Button
-            onClick={handleSaveEmail}
-            disabled={isLoading}
-            className="w-full"
-            variant="outline"
-          >
-            {isLoading
-              ? 'Updating...'
-              : needsEmail
-                ? 'Add Email'
-                : 'Update Email'}
-          </Button>
-          {isChangingEmail && (
+          <div className="flex flex-col sm:flex-row gap-2">
             <Button
-              onClick={handleCancelChangeEmail}
-              variant="ghost"
-              className="w-full"
+              onClick={handleSaveEmail}
+              disabled={isLoading}
+              variant="default"
+              className="w-full sm:w-fit"
             >
-              Cancel
+              {isLoading ? (
+                <Spinner size="xs" />
+              ) : needsEmail ? (
+                <PlusIcon />
+              ) : (
+                <SaveIcon />
+              )}
+
+              {isLoading
+                ? 'Updating...'
+                : needsEmail
+                  ? 'Add Email'
+                  : 'Update Email'}
             </Button>
-          )}
+            {isChangingEmail && (
+              <Button
+                onClick={handleCancelChangeEmail}
+                variant="outline"
+                className="w-full sm:w-fit"
+              >
+                <XIcon />
+                Cancel
+              </Button>
+            )}
+          </div>
           <p className="text-xs text-muted-foreground">
             A verification email will be sent to your new email address.
           </p>
