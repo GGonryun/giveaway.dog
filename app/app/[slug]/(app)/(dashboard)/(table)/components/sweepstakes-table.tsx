@@ -94,10 +94,7 @@ const SortableHeader: React.FC<{
   );
 };
 
-export function SweepstakesTable({
-  data,
-  filters
-}: SweepstakesTableProps) {
+export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
   const { sweepstakes, totalCount, currentPage, totalPages } = data;
   const basePage = useSweepstakesPage();
   const editPage = useEditSweepstakesPage();
@@ -164,143 +161,139 @@ export function SweepstakesTable({
 
   return (
     <div className="space-y-4">
-      <div>
-        <Card className="overflow-hidden p-0 gap-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <SortableHeader
-                  field="name"
-                  className="w-[300px]"
-                  onSort={handleSort}
-                  sortField={filters.sortField}
-                  sortDirection={filters.sortDirection}
-                >
-                  Sweepstakes
-                </SortableHeader>
-                <TableHead className="text-right w-24">Entries</TableHead>
-                <TableHead className="text-right w-24">Conversion</TableHead>
-                <TableHead className="text-right py-2 w-28">
-                  Time Left
-                </TableHead>
-                <TableHead className="text-right py-2 w-24">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sweepstakes.map((item) => (
-                <TableRow
-                  key={item.id}
-                  className="hover:bg-muted/50 h-12 group cursor-pointer"
-                  onClick={handleRowClick(item)}
-                >
-                  <TableCell className="py-2 w-[300px]">
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(item.status)}
-                        <div className="font-medium group-hover:text-primary group-hover:underline line-clamp-1">
-                          {item.name || DEFAULT_SWEEPSTAKES_NAME}
-                        </div>
+      <Card className="overflow-hidden p-0 gap-0">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <SortableHeader
+                field="name"
+                className="w-[300px]"
+                onSort={handleSort}
+                sortField={filters.sortField}
+                sortDirection={filters.sortDirection}
+              >
+                Sweepstakes
+              </SortableHeader>
+              <TableHead className="text-right w-24">Entries</TableHead>
+              <TableHead className="text-right w-24">Conversion</TableHead>
+              <TableHead className="text-right py-2 w-28">Time Left</TableHead>
+              <TableHead className="text-right py-2 w-24">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sweepstakes.map((item) => (
+              <TableRow
+                key={item.id}
+                className="hover:bg-muted/50 h-12 group cursor-pointer"
+                onClick={handleRowClick(item)}
+              >
+                <TableCell className="py-2 w-[300px]">
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      {getStatusIcon(item.status)}
+                      <div className="font-medium group-hover:text-primary group-hover:underline line-clamp-1">
+                        {item.name || DEFAULT_SWEEPSTAKES_NAME}
                       </div>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right py-2 w-24">
-                    <div>
-                      <div className="font-medium flex items-center justify-end space-x-1">
-                        <Users className="h-3 w-3" />
-                        <span>{item.entries.toLocaleString()}</span>
-                      </div>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right py-2 w-24">
+                  <div>
+                    <div className="font-medium flex items-center justify-end space-x-1">
+                      <Users className="h-3 w-3" />
+                      <span>{item.entries.toLocaleString()}</span>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right py-2 w-24">
-                    <div className="flex items-center justify-end space-x-1">
-                      <Target className="h-3 w-3" />
-                      <span
-                        className={`font-medium ${
-                          item.conversionRate > 8
-                            ? 'text-green-600'
-                            : item.conversionRate > 5
-                              ? 'text-yellow-600'
-                              : 'text-red-600'
-                        }`}
-                      >
-                        {item.conversionRate.toFixed(1)}%
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-2 text-right w-28">
-                    <div className="flex items-center justify-end space-x-1 text-sm">
-                      <Clock className="h-3 w-3 text-muted-foreground" />
-                      <span>{item.timeLeft}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right py-2 w-24">
-                    <div className="flex items-center justify-end space-x-1">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          {item.status !== SweepstakesStatus.DRAFT && (
-                            <DropdownMenuItem asChild>
-                              <Link href={detailsPage.route(item.id)}>
-                                <Eye className="h-4 w-4 mr-2" />
-                                View Details
-                              </Link>
-                            </DropdownMenuItem>
-                          )}
+                  </div>
+                </TableCell>
+                <TableCell className="text-right py-2 w-24">
+                  <div className="flex items-center justify-end space-x-1">
+                    <Target className="h-3 w-3" />
+                    <span
+                      className={`font-medium ${
+                        item.conversionRate > 8
+                          ? 'text-green-600'
+                          : item.conversionRate > 5
+                            ? 'text-yellow-600'
+                            : 'text-red-600'
+                      }`}
+                    >
+                      {item.conversionRate.toFixed(1)}%
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell className="py-2 text-right w-28">
+                  <div className="flex items-center justify-end space-x-1 text-sm">
+                    <Clock className="h-3 w-3 text-muted-foreground" />
+                    <span>{item.timeLeft}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right py-2 w-24">
+                  <div className="flex items-center justify-end space-x-1">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        {item.status !== SweepstakesStatus.DRAFT && (
                           <DropdownMenuItem asChild>
-                            <Link href={editPage.route(item.id)}>
-                              <Edit className="h-4 w-4 mr-2" />
-                              Edit
+                            <Link href={detailsPage.route(item.id)}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Details
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="text-red-600"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              return setDeleteModal(item);
-                            }}
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {/* Empty State */}
-          {sweepstakes.length === 0 && (
-            <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-4">
-              <Calendar className="h-8 w-8  opacity-50" />
-              <p>No sweepstakes found</p>
-              <CreateGiveawayButton
-                showDropdown={false}
-                text="Create Your First Giveaway"
-                variant="default"
-              />
-            </div>
-          )}
-          <TablePagination
-            totalItems={totalCount}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageSize={DEFAULT_PAGE_SIZE}
-            onPageChange={(value) =>
-              basePage.updateParams((params) =>
-                params.set('page', value.toString())
-              )
-            }
-            itemName="sweepstakes"
-          />
-        </Card>
-      </div>
+                        )}
+                        <DropdownMenuItem asChild>
+                          <Link href={editPage.route(item.id)}>
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="text-red-600"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            return setDeleteModal(item);
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        {/* Empty State */}
+        {sweepstakes.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-4">
+            <Calendar className="h-8 w-8  opacity-50" />
+            <p>No sweepstakes found</p>
+            <CreateGiveawayButton
+              showDropdown={false}
+              text="Create Your First Giveaway"
+              variant="default"
+            />
+          </div>
+        )}
+        <TablePagination
+          totalItems={totalCount}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={DEFAULT_PAGE_SIZE}
+          onPageChange={(value) =>
+            basePage.updateParams((params) =>
+              params.set('page', value.toString())
+            )
+          }
+          itemName="sweepstakes"
+        />
+      </Card>
 
       <DeleteConfirmationModal
         onClose={handleDeleteModalClose}

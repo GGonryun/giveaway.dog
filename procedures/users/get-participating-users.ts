@@ -2,11 +2,11 @@
 
 import { ip } from '@/lib/ip';
 import { procedure } from '@/lib/mrpc/procedures';
+import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { toTaskInput } from '@/schemas/giveaway/input';
 import { taskSchema } from '@/schemas/tasks/schemas';
 import {
   ParticipantEntrySchema,
-  PARTICIPATING_USERS_PAGE_SIZE,
   participatingUserSchema
 } from '@/schemas/teams';
 import { Prisma } from '@prisma/client';
@@ -22,12 +22,7 @@ const getParticipatingUsers = procedure
       slug: z.string(),
       search: z.string().optional().default(''),
       page: z.number().min(1).optional().default(1),
-      pageSize: z
-        .number()
-        .min(1)
-        .max(100)
-        .optional()
-        .default(PARTICIPATING_USERS_PAGE_SIZE),
+
       sortField: z.string().optional().default('lastEntryAt'),
       sortDirection: z.enum(['asc', 'desc']).optional().default('desc'),
       status: z.string().optional().default('all'),
@@ -203,15 +198,15 @@ const getParticipatingUsers = procedure
       if (valueA > valueB) return input.sortDirection === 'asc' ? 1 : -1;
       return 0;
     });
-
+    const pageSize = DEFAULT_PAGE_SIZE;
     const totalUsers = processedUsers.length;
-    const totalPages = Math.ceil(totalUsers / input.pageSize);
+    const totalPages = Math.ceil(totalUsers / pageSize);
 
     // Apply pagination
-    const startIndex = (input.page - 1) * input.pageSize;
+    const startIndex = (input.page - 1) * pageSize;
     const paginatedUsers = processedUsers.slice(
       startIndex,
-      startIndex + input.pageSize
+      startIndex + pageSize
     );
 
     return {

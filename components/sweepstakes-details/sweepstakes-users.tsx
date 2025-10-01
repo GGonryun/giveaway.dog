@@ -36,21 +36,22 @@ import {
   ArrowUpDown
 } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
-import { FilterBar } from '../../../../../../components/users/filter-bar';
-import { SearchBar } from '../../../../../../components/users/search-bar';
-import { UserDetailSheet } from '../../../../../../components/users/user-detail-sheet';
-import { StatusExplanationDialog } from '../../../../../../components/users/status-explanation-dialog';
+import { FilterBar } from '../users/filter-bar';
+import { SearchBar } from '../users/search-bar';
+import { UserDetailSheet } from '../users/user-detail-sheet';
+import { StatusExplanationDialog } from '../users/status-explanation-dialog';
 
 import { useTeams } from '@/components/context/team-provider';
 import { ParticipatingUserSchema } from '@/schemas/teams';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 
-interface UsersTableProps {
-  users: ParticipatingUserSchema[];
-  totalUsers: number;
-  totalPages: number;
-  currentPage: number;
-  filters: {
+interface SweepstakesUsersTableProps {
+  sweepstakesId: string;
+  users?: ParticipatingUserSchema[];
+  totalUsers?: number;
+  totalPages?: number;
+  currentPage?: number;
+  filters?: {
     search: string;
     page: number;
     sortField: string;
@@ -62,16 +63,152 @@ interface UsersTableProps {
   };
 }
 
-export const UsersTable: React.FC<UsersTableProps> = ({
-  users,
-  totalUsers,
-  totalPages,
-  currentPage,
-  filters
+// Mock function to generate sweepstakes participants
+const generateMockSweepstakesUsers = (
+  sweepstakesId: string
+): ParticipatingUserSchema[] => {
+  const baseUsers = [
+    {
+      name: 'Sarah Johnson',
+      email: 's***@email.com',
+      country: 'US',
+      qualityScore: 85,
+      engagement: 78
+    },
+    {
+      name: 'Mike Chen',
+      email: 'm***@gmail.com',
+      country: 'CA',
+      qualityScore: 92,
+      engagement: 88
+    },
+    {
+      name: 'Emma Williams',
+      email: 'e***@outlook.com',
+      country: 'UK',
+      qualityScore: 78,
+      engagement: 65
+    },
+    {
+      name: 'Alex Rodriguez',
+      email: 'a***@proton.me',
+      country: 'US',
+      qualityScore: 45,
+      engagement: 42
+    },
+    {
+      name: 'Jessica Park',
+      email: 'j***@icloud.com',
+      country: 'KR',
+      qualityScore: 88,
+      engagement: 82
+    },
+    {
+      name: 'David Kim',
+      email: 'd***@hotmail.com',
+      country: 'CA',
+      qualityScore: 91,
+      engagement: 89
+    },
+    {
+      name: 'Lisa Zhang',
+      email: 'l***@outlook.com',
+      country: 'AU',
+      qualityScore: 76,
+      engagement: 71
+    },
+    {
+      name: 'Tom Wilson',
+      email: 't***@gmail.com',
+      country: 'US',
+      qualityScore: 83,
+      engagement: 79
+    },
+    {
+      name: 'Maria Garcia',
+      email: 'm***@yahoo.com',
+      country: 'ES',
+      qualityScore: 67,
+      engagement: 58
+    },
+    {
+      name: 'James Brown',
+      email: 'j***@gmail.com',
+      country: 'UK',
+      qualityScore: 94,
+      engagement: 91
+    }
+  ];
+
+  const statuses = ['active', 'blocked'] as const;
+
+  return Array.from({ length: 25 }, (_, i) => {
+    const baseUser = baseUsers[i % baseUsers.length];
+
+    // Generate mock entries for this user
+    const mockEntries = Array.from(
+      { length: Math.floor(Math.random() * 5) + 1 },
+      (_, entryIndex) => ({
+        taskId: `task-${entryIndex + 1}`,
+        name: `Task ${entryIndex + 1}`,
+        completedAt: new Date(
+          Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000
+        )
+      })
+    );
+
+    return {
+      id: `user-${sweepstakesId}-${i + 1}`,
+      name: baseUser.name,
+      email: baseUser.email,
+      country: baseUser.country,
+      qualityScore: baseUser.qualityScore,
+      engagement: baseUser.engagement,
+      lastEntryAt: new Date(
+        Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000
+      ).toISOString(),
+      status: statuses[i % statuses.length],
+      entries: mockEntries,
+      emailVerified: Math.random() > 0.2,
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    };
+  });
+};
+
+export const SweepstakesUsers: React.FC<SweepstakesUsersTableProps> = ({
+  sweepstakesId,
+  users: propUsers,
+  totalUsers: propTotalUsers,
+  totalPages: propTotalPages,
+  currentPage: propCurrentPage = 1,
+  filters: propFilters
 }) => {
   const { activeTeam } = useTeams();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // Use mock data if no props provided
+  const mockUsers = generateMockSweepstakesUsers(sweepstakesId);
+  const users = propUsers || mockUsers;
+  const totalUsers = propTotalUsers || users.length;
+  const totalPages =
+    propTotalPages || Math.ceil(users.length / DEFAULT_PAGE_SIZE);
+  const currentPage = propCurrentPage;
+
+  // Default filters
+  const defaultFilters = {
+    search: '',
+    page: 1,
+    sortField: 'lastEntryAt',
+    sortDirection: 'desc' as const,
+    status: 'all',
+    dateRange: 'all',
+    minScore: 0,
+    maxScore: 100
+  };
+
+  const filters = propFilters || defaultFilters;
+
   const [selectedUser, setSelectedUser] =
     useState<ParticipatingUserSchema | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -80,7 +217,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   const [statusDialogUser, setStatusDialogUser] =
     useState<ParticipatingUserSchema | null>(null);
 
-  // Update URL params whenever state changes - only include non-default values
+  // Update URL params for sweepstakes users tab
   const updateURLParams = useCallback(
     (updates: Record<string, string | number | null>) => {
       const params = new URLSearchParams(searchParams);
@@ -105,9 +242,11 @@ export const UsersTable: React.FC<UsersTableProps> = ({
       });
 
       const newUrl = params.toString() ? `?${params.toString()}` : '';
-      router.push(`/app/${activeTeam.slug}/users${newUrl}`);
+      router.push(
+        `/app/${activeTeam.slug}/sweepstakes/${sweepstakesId}/users${newUrl}`
+      );
     },
-    [router, activeTeam.slug]
+    [router, activeTeam.slug, sweepstakesId, searchParams]
   );
 
   const handleSort = useCallback(
@@ -175,22 +314,10 @@ export const UsersTable: React.FC<UsersTableProps> = ({
         icon: CheckCircle,
         className: 'bg-blue-500 hover:bg-blue-600 text-white'
       },
-      flagged: {
-        variant: 'destructive' as const,
-        label: 'Flagged',
-        icon: AlertTriangle,
-        className: ''
-      },
       blocked: {
         variant: 'secondary' as const,
         label: 'Blocked',
         icon: UserX,
-        className: ''
-      },
-      trusted: {
-        variant: 'default' as const,
-        label: 'Trusted',
-        icon: UserCheck,
         className: ''
       }
     };
@@ -241,6 +368,11 @@ export const UsersTable: React.FC<UsersTableProps> = ({
     </Button>
   );
 
+  // Calculate shown entries for pagination
+  const startEntry = (currentPage - 1) * DEFAULT_PAGE_SIZE + 1;
+  const endEntry = Math.min(currentPage * DEFAULT_PAGE_SIZE, totalUsers);
+  const paginatedUsers = users.slice(startEntry - 1, endEntry);
+
   return (
     <div>
       <div className="w-full space-y-4">
@@ -250,7 +382,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
             <SearchBar
               value={filters.search}
               onChange={handleSearch}
-              placeholder="Search by name, email, or ID..."
+              placeholder="Search participants by name, email, or ID..."
             />
           </div>
 
@@ -273,15 +405,14 @@ export const UsersTable: React.FC<UsersTableProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Users className="h-5 w-5" />
-                  <span className="text-lg font-semibold">Users</span>
+                  <span className="text-lg font-semibold">Participants</span>
                   <Badge variant="secondary">
                     {totalUsers.toLocaleString()} total
                   </Badge>
                 </div>
               </div>
               <CardDescription>
-                Manage and analyze your user base with comprehensive filtering
-                and bulk operations.
+                Users participating in this specific sweepstakes.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -306,7 +437,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {users.map((user) => (
+                    {paginatedUsers.map((user) => (
                       <TableRow
                         key={user.id}
                         className={`cursor-pointer hover:bg-muted/50 ${
@@ -445,7 +576,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                 totalPages={totalPages}
                 pageSize={DEFAULT_PAGE_SIZE}
                 onPageChange={handlePageChange}
-                itemName="users"
+                itemName="participants"
                 isPending={isPending}
               />
             </CardContent>
@@ -453,7 +584,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
         </div>
       </div>
 
-      {/* User Detail Sheet - Shown on lg and below */}
+      {/* User Detail Sheet */}
       <UserDetailSheet
         user={selectedUser}
         open={showUserSheet}

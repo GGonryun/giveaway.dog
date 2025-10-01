@@ -22,7 +22,6 @@ import { TaskActionForm } from './task-actions/form';
 import { TaskContent } from './task-actions/building-blocks';
 import { Spinner } from '@/components/ui/spinner';
 import { Flex } from '@/components/ui/flex';
-import { Typography } from '@/components/ui/typography';
 import { LoginOptions } from '@/components/auth/login-options';
 import { usePathname } from 'next/navigation';
 

@@ -1,4 +1,6 @@
 import z from 'zod';
+import { userProfileSchema, userSchema } from '../user';
+import { CompletionStatus } from '@prisma/client';
 
 export const baseTaskSchema = z.object({
   id: z.string(),
@@ -34,6 +36,45 @@ export const TASK_GROUP: Record<TaskType, string> = {
   VISIT_URL: 'Visit URL Tasks'
 };
 
+export const TASK_LABEL: Record<TaskType, string> = {
+  BONUS_TASK: 'Bonus',
+  VISIT_URL: 'Visit URL'
+};
+
 export type TaskSchema = z.infer<typeof taskSchema>;
 
 export type TaskOf<T extends TaskType> = Extract<TaskSchema, { type: T }>;
+
+export const taskPlatformSchema = z.enum(['website']);
+
+export type TaskPlatformSchema = z.infer<typeof taskPlatformSchema>;
+
+export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
+  BONUS_TASK: 'website',
+  VISIT_URL: 'website'
+};
+
+export const taskCategorySchema = z.enum(['social', 'engagement', 'community']);
+
+export type TaskCategorySchema = z.infer<typeof taskCategorySchema>;
+
+export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
+  BONUS_TASK: 'engagement',
+  VISIT_URL: 'engagement'
+};
+export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
+  social: 'Social',
+  engagement: 'Engagement',
+  community: 'Community'
+};
+
+export const taskCompletionSchema = z.object({
+  id: z.string(),
+  user: userSchema,
+  task: taskSchema,
+  status: z.nativeEnum(CompletionStatus),
+  proof: z.unknown(),
+  completedAt: z.number()
+});
+
+export type TaskCompletionSchema = z.infer<typeof taskCompletionSchema>;

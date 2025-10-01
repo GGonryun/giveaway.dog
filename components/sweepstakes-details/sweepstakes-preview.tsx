@@ -1,26 +1,34 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Eye, Smartphone, Monitor } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useSweepstakesDetailsContext } from './use-sweepstakes-details-context';
-import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
-import { SweepstakesStatusComponent } from '@/components/sweepstakes-editor/sweepstakes-status';
-import { noop } from 'lodash';
+import { cn } from '@/lib/utils';
 import {
+  ParticipantSweepstakeSchema,
+  DeviceType
+} from '@/schemas/giveaway/schemas';
+import { noop } from 'lodash';
+import { Eye, Smartphone, Monitor } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useIsMobile } from '../hooks/use-mobile';
+import { useUrl } from '../hooks/use-url';
+import { QRCodeModal } from '../patterns/qr-code-modal';
+import {
+  mockParticipation,
   mockWinners,
   mockUserProfile,
-  mockUserParticipation,
-  mockParticipation
-} from '@/components/sweepstakes-editor/data/mocks';
-import { cn } from '@/lib/utils';
-import { DeviceType } from '@/schemas/giveaway/schemas';
-import { useIsMobile } from '@/components/hooks/use-mobile';
-import { QRCodeModal } from '@/components/qr-code-modal';
+  mockUserParticipation
+} from '../sweepstakes-editor/data/mocks';
+import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
+import GiveawayParticipation from '../sweepstakes/giveaway-participation';
+import { useBrowseSweepstakesPage } from '../sweepstakes/use-browse-sweepstakes-page';
+import { Card, CardContent } from '../ui/card';
+import { Button } from '../ui/button';
 
-export const SweepstakesPreview: React.FC = () => {
-  const { sweepstakes, liveUrl } = useSweepstakesDetailsContext();
+export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
+  props
+) => {
+  const { sweepstakes } = props;
+  const browse = useBrowseSweepstakesPage();
+  const liveUrl = browse.url({ sweepstakesId: sweepstakes.id });
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
   return (
@@ -44,24 +52,23 @@ export const SweepstakesPreview: React.FC = () => {
         />
       )}
 
-      <ScreenPreview />
+      <ScreenPreview {...props} />
 
-      {liveUrl && (
-        <QRCodeModal
-          isOpen={isQRModalOpen}
-          onClose={() => setIsQRModalOpen(false)}
-          value={liveUrl}
-          title="Share Sweepstakes QR Code"
-          size={256}
-        />
-      )}
+      <QRCodeModal
+        isOpen={isQRModalOpen}
+        onClose={() => setIsQRModalOpen(false)}
+        value={liveUrl}
+        title="Share Sweepstakes QR Code"
+        size={256}
+      />
     </div>
   );
 };
 
-const ScreenPreview: React.FC = () => {
-  const { sweepstakes, host } = useSweepstakesDetailsContext();
-
+const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
+  sweepstakes,
+  host
+}) => {
   const { isMobile } = useIsMobile();
   const [previewDevice, setPreviewDevice] = useState<DeviceType>('desktop');
 

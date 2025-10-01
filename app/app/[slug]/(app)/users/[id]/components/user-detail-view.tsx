@@ -47,7 +47,7 @@ import {
   Users,
   MessageCircle
 } from 'lucide-react';
-import { StatusExplanationDialog } from '../../components/status-explanation-dialog';
+import { StatusExplanationDialog } from '../../../../../../../components/users/status-explanation-dialog';
 import { useRouter } from 'next/navigation';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
 

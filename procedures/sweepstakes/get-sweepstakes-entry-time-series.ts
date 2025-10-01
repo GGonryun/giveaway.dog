@@ -43,8 +43,6 @@ const getSweepstakesEntryTimeSeries = procedure
       })
     );
 
-    console.log(result); // --- IGNORE ---
-
     return result;
   });
 

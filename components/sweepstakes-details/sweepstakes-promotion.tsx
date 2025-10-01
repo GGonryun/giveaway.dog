@@ -22,31 +22,29 @@ import {
   Mail,
   Link,
   CheckCircle,
-  Download
+  SearchIcon
 } from 'lucide-react';
 import { useState } from 'react';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
+import { toast } from 'sonner';
+import { QRCodeModal } from '@/components/patterns/qr-code-modal';
+import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
+import { useBrowseSweepstakesPage } from '../sweepstakes/use-browse-sweepstakes-page';
 
-interface SweepstakesDetails {
-  id: string;
-  title: string;
-  landingPageUrl: string;
-  shareUrl: string;
-}
-
-interface SweepstakesPromotionProps {
-  sweepstakes: SweepstakesDetails;
-}
-
-export const SweepstakesPromotion = ({
+export const SweepstakesPromotion: React.FC<ParticipantSweepstakeSchema> = ({
   sweepstakes
-}: SweepstakesPromotionProps) => {
+}) => {
+  const browse = useBrowseSweepstakesPage();
+  const liveUrl = browse.url({ sweepstakesId: sweepstakes.id });
+
   const [utmSource, setUtmSource] = useState('');
   const [utmMedium, setUtmMedium] = useState('');
   const [utmCampaign, setUtmCampaign] = useState('');
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
   const buildUtmUrl = () => {
-    const url = new URL(sweepstakes.shareUrl);
+    const url = new URL(liveUrl);
     if (utmSource) url.searchParams.set('utm_source', utmSource);
     if (utmMedium) url.searchParams.set('utm_medium', utmMedium);
     if (utmCampaign) url.searchParams.set('utm_campaign', utmCampaign);
@@ -57,6 +55,7 @@ export const SweepstakesPromotion = ({
     await navigator.clipboard.writeText(text);
     setCopiedUrl(type);
     setTimeout(() => setCopiedUrl(null), 2000);
+    toast.success('Copied to clipboard');
   };
 
   const socialPlatforms = [
@@ -64,19 +63,19 @@ export const SweepstakesPromotion = ({
       name: 'Facebook',
       icon: Facebook,
       color: 'text-blue-600',
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sweepstakes.shareUrl)}`
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(liveUrl)}`
     },
     {
       name: 'Twitter',
       icon: Twitter,
       color: 'text-sky-500',
-      url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(sweepstakes.shareUrl)}&text=${encodeURIComponent(`Check out this giveaway: ${sweepstakes.title}`)}`
+      url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(liveUrl)}&text=${encodeURIComponent(`Check out this giveaway: ${sweepstakes?.setup.name ?? DEFAULT_SWEEPSTAKES_NAME}`)}`
     },
     {
       name: 'Instagram',
       icon: Instagram,
       color: 'text-pink-500',
-      url: '#'
+      url: `https://www.instagram.com`
     }
   ];
 
@@ -87,9 +86,12 @@ export const SweepstakesPromotion = ({
     { name: 'Influencer', source: 'influencer', medium: 'sponsored' }
   ];
 
+  if (!sweepstakes) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="space-y-6">
-      {/* Social Sharing */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
@@ -181,7 +183,7 @@ export const SweepstakesPromotion = ({
                     setUtmSource(template.source);
                     setUtmMedium(template.medium);
                     setUtmCampaign(
-                      sweepstakes.title.toLowerCase().replace(/\s+/g, '-')
+                      sweepstakes.setup.name.toLowerCase().replace(/\s+/g, '-')
                     );
                   }}
                 >
@@ -228,41 +230,13 @@ export const SweepstakesPromotion = ({
           <div>
             <Label className="text-sm font-medium">Landing Page URL</Label>
             <div className="flex items-center space-x-2 mt-1">
-              <Input
-                value={sweepstakes.landingPageUrl}
-                readOnly
-                className="text-sm"
-              />
+              <Input value={liveUrl} readOnly className="text-sm" />
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() =>
-                  copyToClipboard(sweepstakes.landingPageUrl, 'landing')
-                }
+                onClick={() => copyToClipboard(liveUrl, 'landing')}
               >
                 {copiedUrl === 'landing' ? (
-                  <CheckCircle className="h-4 w-4" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </div>
-
-          <div>
-            <Label className="text-sm font-medium">Share URL</Label>
-            <div className="flex items-center space-x-2 mt-1">
-              <Input
-                value={sweepstakes.shareUrl}
-                readOnly
-                className="text-sm"
-              />
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => copyToClipboard(sweepstakes.shareUrl, 'share')}
-              >
-                {copiedUrl === 'share' ? (
                   <CheckCircle className="h-4 w-4" />
                 ) : (
                   <Copy className="h-4 w-4" />
@@ -289,18 +263,17 @@ export const SweepstakesPromotion = ({
             readOnly
             rows={8}
             className="text-sm"
-            value={`Subject: 🎉 Enter to Win: ${sweepstakes.title}
+            value={`Subject: 🎉 Enter to Win: ${sweepstakes.setup.name}
 
 Hi there!
 
-We're excited to announce our latest giveaway! You have a chance to win ${sweepstakes.title}.
-
+We're excited to announce our latest giveaway! You have a chance to win ${sweepstakes.setup.name}.
 🎁 How to Enter:
 1. Click the link below
 2. Fill out the simple entry form
 3. That's it! You're entered to win
 
-👉 Enter Now: ${sweepstakes.shareUrl}
+👉 Enter Now: ${liveUrl}
 
 Good luck!
 
@@ -311,12 +284,12 @@ Your Team`}
             <Button
               size="sm"
               variant="outline"
-              onClick={() =>
+              onClick={() => {
                 copyToClipboard(
-                  `Subject: 🎉 Enter to Win: ${sweepstakes.title}\n\nHi there!\n\nWe're excited to announce our latest giveaway! You have a chance to win ${sweepstakes.title}.\n\n🎁 How to Enter:\n1. Click the link below\n2. Fill out the simple entry form\n3. That's it! You're entered to win\n\n👉 Enter Now: ${sweepstakes.shareUrl}\n\nGood luck!\n\nBest regards,\nYour Team`,
+                  `Subject: 🎉 Enter to Win: ${sweepstakes.setup.name}\n\nHi there!\n\nWe're excited to announce our latest giveaway! You have a chance to win ${sweepstakes.setup.name}.\n\n🎁 How to Enter:\n1. Click the link below\n2. Fill out the simple entry form\n3. That's it! You're entered to win\n\n👉 Enter Now: ${liveUrl}\n\nGood luck!\n\nBest regards,\nYour Team`,
                   'email'
-                )
-              }
+                );
+              }}
             >
               {copiedUrl === 'email' ? (
                 <>
@@ -351,9 +324,9 @@ Your Team`}
               <QrCode className="h-16 w-16 text-muted-foreground" />
             </div>
             <div className="space-y-2">
-              <Button>
-                <Download className="h-4 w-4 mr-2" />
-                Download QR Code
+              <Button onClick={() => setIsQRModalOpen(true)}>
+                <SearchIcon />
+                View QR Code
               </Button>
               <p className="text-xs text-muted-foreground">
                 High-resolution PNG format suitable for print
@@ -362,6 +335,14 @@ Your Team`}
           </div>
         </CardContent>
       </Card>
+
+      <QRCodeModal
+        isOpen={isQRModalOpen}
+        onClose={() => setIsQRModalOpen(false)}
+        value={liveUrl}
+        title="Share Sweepstakes QR Code"
+        size={256}
+      />
     </div>
   );
 };

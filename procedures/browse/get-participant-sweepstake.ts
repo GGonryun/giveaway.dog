@@ -27,16 +27,14 @@ const getParticipantSweepstake = procedure
       include: PARTICIPANT_SWEEPSTAKES_PAYLOAD
     });
 
-    if (!sweepstakes) {
+    if (!sweepstakes || !sweepstakes.team) {
       throw new ApplicationError({
         code: 'NOT_FOUND',
         message: `Sweepstakes with ID ${input.id} not found`
       });
     }
 
-    if (!sweepstakes || !sweepstakes.team) {
-      throw new Error('Sweepstakes not found or not active');
-    }
+   
 
     const totalEntries = await db.taskCompletion.count({
       where: {

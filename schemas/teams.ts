@@ -84,5 +84,3 @@ export const participatingUserSchema = z.object({
 });
 
 export type ParticipatingUserSchema = z.infer<typeof participatingUserSchema>;
-
-export const PARTICIPATING_USERS_PAGE_SIZE = 50;

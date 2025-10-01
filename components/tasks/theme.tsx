@@ -10,7 +10,11 @@ export interface TaskTheme {
 
 export const toTaskTheme = (
   type: TaskType
-): { symbol: string; icon: LucideIcon; label: string } => {
+): {
+  symbol: string;
+  icon: LucideIcon;
+  label: string;
+} => {
   switch (type) {
     case 'BONUS_TASK':
       return {

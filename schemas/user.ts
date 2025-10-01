@@ -1,4 +1,4 @@
-import { UserType } from '@prisma/client';
+import { Prisma, UserType } from '@prisma/client';
 import z from 'zod';
 
 export const providerSchema = z.union([
@@ -96,3 +96,33 @@ export const ageVerificationSchema = z.object({
 export type AgeVerificationSchema = z.infer<typeof ageVerificationSchema>;
 
 export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
+
+export const USER_SCHEMA_SELECT_QUERY = {
+  id: true,
+  email: true,
+  name: true,
+  emoji: true,
+  countryCode: true,
+  ageVerified: true,
+  emailVerified: true,
+  type: true,
+  accounts: {
+    select: { provider: true }
+  }
+} satisfies Prisma.UserSelect;
+
+export const toUserSchema = (
+  user: Prisma.UserGetPayload<{ select: typeof USER_SCHEMA_SELECT_QUERY }>
+): UserSchema => {
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    emoji: user.emoji,
+    countryCode: user.countryCode,
+    ageVerified: user.ageVerified ?? false,
+    emailVerified: !!user.emailVerified,
+    type: user.type,
+    providers: parseProviders(user.accounts.map((account) => account.provider))
+  };
+};

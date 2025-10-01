@@ -1,5 +1,10 @@
-import { parseProviders } from '@/schemas/user';
-import { PrismaClient } from '@prisma/client';
+import {
+  parseProviders,
+  toUserSchema,
+  USER_SCHEMA_SELECT_QUERY,
+  UserSchema
+} from '@/schemas/user';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { hoursToSeconds } from 'date-fns';
 import { User } from 'next-auth';
 
@@ -19,36 +24,12 @@ export const userCache = {
 export const getUserQuery = async (db: PrismaClient, userId: string) => {
   const userData = await db.user.findUnique({
     where: { id: userId },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      emoji: true,
-      countryCode: true,
-      ageVerified: true,
-      emailVerified: true,
-      type: true,
-      accounts: {
-        select: { provider: true }
-      }
-    }
+    select: USER_SCHEMA_SELECT_QUERY
   });
 
   if (!userData) {
     return null;
   }
 
-  return {
-    id: userData.id,
-    name: userData.name,
-    email: userData.email,
-    emoji: userData.emoji,
-    countryCode: userData.countryCode,
-    ageVerified: userData.ageVerified ?? false,
-    emailVerified: !!userData.emailVerified,
-    type: userData.type,
-    providers: parseProviders(
-      userData.accounts.map((account) => account.provider)
-    )
-  };
+  return toUserSchema(userData);
 };

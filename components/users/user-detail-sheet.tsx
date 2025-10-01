@@ -1,16 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle
-} from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 import {
   MapPin,
   Calendar,
@@ -24,8 +15,19 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { ParticipatingUserSchema } from '@/schemas/teams';
-import { useTeams } from '@/components/context/team-provider';
 import { StatusExplanationDialog } from './status-explanation-dialog';
+import { useTeams } from '../context/team-provider';
+import { Badge } from '../ui/badge';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle
+} from '../ui/sheet';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 interface UserDetailSheetProps {
   user: ParticipatingUserSchema | null;
@@ -63,10 +65,15 @@ export const UserDetailSheet = ({
   });
 
   // Helper function to parse user agent for cleaner display
-  const parseUserAgent = (userAgent: string) => {
+  const parseUserAgent = (userAgent: string | undefined) => {
     let deviceType = 'Desktop';
     let os = 'Unknown OS';
     let browser = 'Unknown Browser';
+
+    // Handle undefined or null userAgent
+    if (!userAgent) {
+      return { deviceType, os, browser };
+    }
 
     // Detect device type and OS
     if (userAgent.includes('iPhone')) {
@@ -147,13 +154,6 @@ export const UserDetailSheet = ({
     );
   };
 
-  const handleViewFullDetails = () => {
-    if (user) {
-      router.push(`/app/users/${user.id}`);
-      onClose();
-    }
-  };
-
   if (!user) return null;
 
   const displayData = getDisplayData(user);
@@ -186,7 +186,7 @@ export const UserDetailSheet = ({
         </SheetHeader>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto space-y-4 mt-4 pb-4">
+        <div className="flex-1 overflow-y-auto space-y-4 mt-4 pb-4 pr-1">
           {/* Key Metrics */}
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center p-3 bg-muted/50 rounded-lg">
@@ -210,7 +210,7 @@ export const UserDetailSheet = ({
           </div>
 
           {/* User Details Header and Basic Info */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h4 className="text-base font-medium border-b pb-2">
               User Details
             </h4>
@@ -246,7 +246,7 @@ export const UserDetailSheet = ({
                   onClose();
                 }}
               >
-                <Eye className="h-4 w-4 mr-1" />
+                <Eye />
                 View Details
               </Button>
             </div>
@@ -255,15 +255,19 @@ export const UserDetailSheet = ({
                 {(() => {
                   const deviceInfo = parseUserAgent(displayData.userAgent);
                   const DeviceIcon =
-                    deviceInfo.deviceType === 'Mobile' ? Smartphone :
-                    deviceInfo.deviceType === 'Tablet' ? Tablet :
-                    Monitor;
+                    deviceInfo.deviceType === 'Mobile'
+                      ? Smartphone
+                      : deviceInfo.deviceType === 'Tablet'
+                        ? Tablet
+                        : Monitor;
 
                   return (
                     <>
                       <DeviceIcon className="h-4 w-4 text-muted-foreground mt-0.5" />
                       <div>
-                        <div className="font-medium">{deviceInfo.deviceType}</div>
+                        <div className="font-medium">
+                          {deviceInfo.deviceType}
+                        </div>
                         <div className="text-muted-foreground text-xs">
                           {deviceInfo.os} • {deviceInfo.browser}
                         </div>
@@ -289,7 +293,7 @@ export const UserDetailSheet = ({
                   onClose();
                 }}
               >
-                <BarChart3 className="h-4 w-4 mr-1" />
+                <BarChart3 />
                 View Breakdown
               </Button>
             </div>
@@ -359,10 +363,17 @@ export const UserDetailSheet = ({
 
         {/* Fixed Action Button */}
         <div className="border-t pt-4 mt-4 flex-shrink-0">
-          <Button size="sm" className="w-full" onClick={handleViewFullDetails}>
-            <Eye className="h-4 w-4 mr-2" />
-            View Full Details
-            <ChevronRight className="h-4 w-4 ml-1" />
+          <Button
+            size="sm"
+            className="w-full"
+            asChild
+            onClick={() => onClose()}
+          >
+            <Link href={`/app/${activeTeam.slug}/users/${user.id}`}>
+              <Eye className="h-4 w-4 mr-2" />
+              View Full Details
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Link>
           </Button>
         </div>
       </SheetContent>

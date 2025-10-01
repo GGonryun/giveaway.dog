@@ -2,14 +2,12 @@
 
 import { Outline } from '@/components/app/outline';
 import { UsersTable } from './components/users-table';
-import getParticipatingUsers from '@/procedures/teams/get-participating-users';
+import getParticipatingUsers from '@/procedures/users/get-participating-users';
 import { SlugPageParams } from '../../layout';
-import { PARTICIPATING_USERS_PAGE_SIZE } from '@/schemas/teams';
 
 export type UsersPageSearchParams = {
   search?: string;
   page?: string;
-  pageSize?: string;
   sortField?: string;
   sortDirection?: string;
   status?: string;
@@ -30,8 +28,6 @@ const Page: React.FC<UsersPageParams> = async ({ params, searchParams }) => {
   const filters = {
     search: resolvedSearchParams.search || '',
     page: resolvedSearchParams.page || '1',
-    pageSize:
-      resolvedSearchParams.pageSize || `${PARTICIPATING_USERS_PAGE_SIZE}`,
     sortField: resolvedSearchParams.sortField || 'lastEntryAt',
     sortDirection: resolvedSearchParams.sortDirection || 'desc',
     status: resolvedSearchParams.status || 'all',
@@ -43,7 +39,6 @@ const Page: React.FC<UsersPageParams> = async ({ params, searchParams }) => {
   const numericFilters = {
     ...filters,
     page: parseInt(filters.page, 10),
-    pageSize: parseInt(filters.pageSize, 10),
     sortDirection: filters.sortDirection as 'asc' | 'desc',
     minScore: parseInt(filters.minScore, 10),
     maxScore: parseInt(filters.maxScore, 10)

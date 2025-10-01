@@ -1,4 +1,4 @@
-import { Prisma, Task } from '@prisma/client';
+import { Task } from '@prisma/client';
 import { taskSchema, TaskSchema } from './schemas';
 import { ApplicationError } from '@/lib/errors';
 import { toJsonObject } from '@/lib/json';

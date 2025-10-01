@@ -79,3 +79,27 @@ export const toSweepstakesFilter = (s: unknown): ListSweepstakesFilters => {
     sortDirection: (obj.sortDirection as SortDirection) || 'desc'
   };
 };
+
+export const sweepstakesTabSchema = z.union([
+  z.literal('preview'),
+  z.literal('analytics'),
+  z.literal('promotion'),
+  z.literal('entries'),
+  z.literal('users'),
+  z.literal('winners')
+]);
+
+export type SweepstakesTabSchema = z.infer<typeof sweepstakesTabSchema>;
+
+export const SWEEPSTAKES_TAB_OPTIONS: Record<SweepstakesTabSchema, string> = {
+  preview: 'Preview',
+  analytics: 'Analytics',
+  promotion: 'Promotion',
+  entries: 'Entries',
+  users: 'Users',
+  winners: 'Winners'
+};
+
+export const isSweepstakesTab = (tab: string): tab is SweepstakesTabSchema => {
+  return sweepstakesTabSchema.safeParse(tab).success;
+};

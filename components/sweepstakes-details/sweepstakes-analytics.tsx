@@ -1,22 +1,21 @@
 'use client';
 
+import React from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
+} from '../ui/card';
 import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent
-} from '@/components/ui/chart';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid } from 'recharts';
-import {} from '@/components/ui/badge';
-import { BarChart3, Users, Gift } from 'lucide-react';
-import { useSweepstakesDetailsContext } from './use-sweepstakes-details-context';
+  ParticipantSweepstakeSchema,
+  TimeSeriesDataSchema
+} from '@/schemas/giveaway/schemas';
+import { BarChart3, Gift, Users } from 'lucide-react';
 import { DEFAULT_TIME_SERIES_DURATION } from '@/lib/settings';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 const chartConfig = {
   entries: {
@@ -25,9 +24,9 @@ const chartConfig = {
   }
 };
 
-export const SweepstakesTimeSeriesChart = () => {
-  const { participation, timeSeries } = useSweepstakesDetailsContext();
-
+export const SweepstakesAnalytics: React.FC<
+  ParticipantSweepstakeSchema & { timeseries: TimeSeriesDataSchema[] }
+> = ({ participation, timeseries }) => {
   // Calculate trend
   const totalEntries = participation?.totalEntries || 0;
   const totalUniqueUsers = participation?.totalUsers || 0;
@@ -68,7 +67,7 @@ export const SweepstakesTimeSeriesChart = () => {
       <CardContent className="pt-2">
         <ChartContainer config={chartConfig}>
           <AreaChart
-            data={timeSeries}
+            data={timeseries}
             margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
