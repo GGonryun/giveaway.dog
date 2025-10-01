@@ -72,7 +72,7 @@
     "emoji-picker-react": "^4.13.2",
     "i18n-iso-countries": "^7.14.0",
     "lodash": "^4.17.21",
-    "lucide-react": "^0.400.0",
+    "lucide-react": "^0.426.0",
     "nanoid": "^5.1.5",
     "next": "15.5.2",
     "next-auth": "5.0.0-beta.25",
