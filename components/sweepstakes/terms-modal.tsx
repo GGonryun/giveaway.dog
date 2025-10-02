@@ -16,6 +16,7 @@ import {
   SweepstakesTermOptions
 } from '@/components/sweepstakes-editor/form/terms';
 import { useGiveawayParticipation } from './giveaway-participation-context';
+import { date } from '@/lib/date';
 
 interface TermsModalProps {
   children: React.ReactNode;
@@ -56,8 +57,8 @@ export const TermsModal: React.FC<TermsModalProps> = ({ children }) => {
       eligibilityAge: sweepstakes.audience.minimumAgeRestriction
         ? `${sweepstakes.audience.minimumAgeRestriction.value}`
         : undefined,
-      startDate: format(sweepstakes.timing.startDate, 'MMMM d, yyyy'),
-      endDate: format(sweepstakes.timing.endDate, 'MMMM d, yyyy'),
+      startDate: date.format(sweepstakes.timing.startDate, 'long'),
+      endDate: date.format(sweepstakes.timing.endDate, 'long'),
       entryUrl: typeof window !== 'undefined' ? window.location.href : '',
       prizes: sweepstakes.prizes.map((prize) => ({
         name: prize.name,

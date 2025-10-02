@@ -1,10 +1,5 @@
-import {
-  parseProviders,
-  toUserSchema,
-  USER_SCHEMA_SELECT_QUERY,
-  UserSchema
-} from '@/schemas/user';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
+import { PrismaClient } from '@prisma/client';
 import { hoursToSeconds } from 'date-fns';
 import { User } from 'next-auth';
 

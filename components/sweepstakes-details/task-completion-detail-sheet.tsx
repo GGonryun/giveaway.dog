@@ -1,7 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams
+} from 'next/navigation';
 import {
   Sheet,
   SheetContent,
@@ -314,15 +319,34 @@ export const TaskCompletionDetailSheetContent: React.FC<{
   );
 };
 
-export const TaskCompletionDetailSheet: React.PC = ({ children }) => {
-  const router = useRouter();
+const useTaskIdFromPath = () => {
+  const pathname = usePathname();
+  const match = pathname.match(/\/entries\/task\/([^/]+)/);
+  return match ? match[1] : undefined;
+};
 
-  const handleClose = () => {
-    router.back();
+export const TaskCompletionDetailSheet: React.PC<{
+  sweepstakesId: string;
+  slug: string;
+}> = ({ sweepstakesId, slug, children }) => {
+  const router = useRouter();
+  const taskId = useTaskIdFromPath();
+
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(!!taskId);
+  }, [taskId]);
+
+  const handleClose = (status: boolean) => {
+    if (!status) {
+      setOpen(false);
+      router.push(`/app/${slug}/sweepstakes/${sweepstakesId}/entries`);
+    }
   };
 
   return (
-    <Sheet open={true} onOpenChange={handleClose}>
+    <Sheet open={open} onOpenChange={handleClose}>
       <SheetContent
         side="left"
         className="w-full sm:max-w-lg flex flex-col px-4 sm:px-6 pb-4"

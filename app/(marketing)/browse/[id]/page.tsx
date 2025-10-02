@@ -10,7 +10,7 @@ import {
 } from '@/schemas/giveaway/schemas';
 import { UserProfileSchema } from '@/schemas/user';
 import { assertNever } from '@/lib/errors';
-import { dates } from '@/lib/date';
+import { date } from '@/lib/date';
 import { RequiredFields } from '@/lib/types';
 import { expandCountries, includesCountryCode } from '@/lib/countries';
 
@@ -26,9 +26,21 @@ export default async function Page({ params }: PageProps) {
   const participation = await getUserSweepstakesParticipation({ id });
   const ageVerification = await getAgeVerification(id);
 
-  if (!result.ok || !participation.ok || !user.ok) {
+  if (!result.ok) {
+    console.warn('Sweepstake not found:', result.data.message);
     notFound();
   }
+
+  if (!user.ok) {
+    console.warn('User not found:', user.data?.message);
+    notFound();
+  }
+
+  if (!participation.ok) {
+    console.warn('Participation fetch error:', participation.data?.message);
+    notFound();
+  }
+
   const userProfile = user.data ?? undefined;
   const sweepstakes = result.data.sweepstakes;
 
@@ -68,8 +80,7 @@ const computeState = ({
     case 'CANCELED':
       return 'canceled';
     case 'ACTIVE': {
-      if (dates.hasExpired(sweepstakes.timing.endDate))
-        return 'winners-pending';
+      if (date.hasExpired(sweepstakes.timing.endDate)) return 'winners-pending';
       return 'active';
     }
     case 'COMPLETED':

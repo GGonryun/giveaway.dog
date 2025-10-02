@@ -4,6 +4,7 @@ import { ApplicationError } from '@/lib/errors';
 import { ip } from '@/lib/ip';
 import { procedure } from '@/lib/mrpc/procedures';
 import { toTaskInput } from '@/schemas/giveaway/input';
+import { toParticipantEntry } from '@/schemas/tasks/parse';
 import { taskSchema } from '@/schemas/tasks/schemas';
 import {
   ParticipantEntrySchema,
@@ -18,37 +19,47 @@ const getParticipatingUser = procedure
   })
   .input(
     z.object({
-      sweepstakesId: z.string(),
+      // scope down participation of user to a specific sweepstake
+      sweepstakesId: z.string().optional(),
       userId: z.string()
     })
   )
   .output(participatingUserSchema)
   .handler(async ({ db, input, user }) => {
-    const sweepstakes = await db.sweepstakes.findUnique({
+    const tasks = await db.task.findMany({
       where: {
-        id: input.sweepstakesId,
-        team: {
-          members: {
-            some: { userId: user.id }
-          }
-        }
-      },
-      include: {
-        tasks: {
-          include: {
-            completions: true
+        sweepstakesId: input.sweepstakesId,
+        sweepstakes: {
+          team: {
+            members: {
+              some: { userId: user.id }
+            }
           }
         }
       }
     });
+
     const participant = await db.user.findFirst({
       where: {
         id: input.userId
       },
       include: {
         taskCompletions: {
+          where: {
+            task: {
+              sweepstakesId: input.sweepstakesId
+            }
+          },
           include: {
-            task: true
+            task: {
+              include: {
+                sweepstakes: {
+                  include: {
+                    details: true
+                  }
+                }
+              }
+            }
           }
         },
         events: {
@@ -67,7 +78,7 @@ const getParticipatingUser = procedure
       });
     }
 
-    const totalTasks = sweepstakes?.tasks.length || 0;
+    const totalTasks = new Set(tasks.map((t) => t.id)).size;
     // uses the most recent event
     const event = participant.events[0];
     const geo = ip.ipSchema.safeParse(event.geo);
@@ -88,7 +99,7 @@ const getParticipatingUser = procedure
       name: participant.name,
       email: participant.email,
       country,
-      entries: userTaskCompletions.map((tc) => parseEntry(tc)),
+      entries: userTaskCompletions.map((tc) => toParticipantEntry(tc)),
       lastEntryAt: entries[0].completedAt.toISOString(),
       engagement,
       userAgent,
@@ -97,22 +108,5 @@ const getParticipatingUser = procedure
       status
     };
   });
-
-const parseEntry = (
-  entry: Prisma.TaskCompletionGetPayload<{
-    include: { task: true };
-  }>
-): ParticipantEntrySchema => {
-  const raw = toTaskInput(entry.task);
-  const task = taskSchema.safeParse(raw);
-  if (!task.success) {
-    throw new Error('Invalid task config in entry');
-  }
-  return {
-    completedAt: entry.completedAt,
-    taskId: entry.taskId,
-    name: task.data.title
-  };
-};
 
 export default getParticipatingUser;

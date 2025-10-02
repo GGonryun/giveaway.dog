@@ -46,6 +46,7 @@ import {
   DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
   DEFAULT_CLAIM_DEADLINE_DAYS
 } from '@/schemas/giveaway/defaults';
+import { date } from '@/lib/date';
 
 const OPTIONS: Record<SweepstakesTermsType, string> = {
   [SweepstakesTermsType.TEMPLATE]: 'Default',
@@ -91,8 +92,8 @@ export const TermsAndConditions = () => {
         prizes: data.prizes,
         sweepstakesName: data.setup.name,
         eligibilityRegions: 'Global',
-        startDate: format(data.timing.startDate, 'MMMM d, yyyy'),
-        endDate: format(data.timing.endDate, 'MMMM d, yyyy'),
+        startDate: date.format(data.timing.startDate, 'long'),
+        endDate: date.format(data.timing.endDate, 'long'),
         entryUrl: toBrowsePageUrl(id),
         ...terms
       });

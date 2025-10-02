@@ -38,12 +38,17 @@ import {
 import { TablePagination } from '@/components/ui/table-pagination';
 import { FilterBar } from '../../../../../../components/users/filter-bar';
 import { SearchBar } from '../../../../../../components/users/search-bar';
-import { UserDetailSheet } from '../../../../../../components/users/user-detail-sheet';
+
 import { StatusExplanationDialog } from '../../../../../../components/users/status-explanation-dialog';
 
 import { useTeams } from '@/components/context/team-provider';
 import { ParticipatingUserSchema } from '@/schemas/teams';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
+import {
+  ParticipatingUserSheet,
+  ParticipatingUserSheetContent,
+  UserDetailSheet
+} from '@/components/sweepstakes-details/user-detail-sheet';
 
 interface UsersTableProps {
   users: ParticipatingUserSchema[];
@@ -457,9 +462,11 @@ export const UsersTable: React.FC<UsersTableProps> = ({
       <UserDetailSheet
         user={selectedUser}
         open={showUserSheet}
-        onClose={() => {
-          setShowUserSheet(false);
-          setSelectedUser(null);
+        onOpenChangeAction={(open) => {
+          if (!open) {
+            setShowUserSheet(false);
+            setSelectedUser(null);
+          }
         }}
       />
 

@@ -3,13 +3,8 @@
 import { ip } from '@/lib/ip';
 import { procedure } from '@/lib/mrpc/procedures';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
-import { toTaskInput } from '@/schemas/giveaway/input';
-import { taskSchema } from '@/schemas/tasks/schemas';
-import {
-  ParticipantEntrySchema,
-  participatingUserSchema
-} from '@/schemas/teams';
-import { Prisma } from '@prisma/client';
+import { toParticipantEntry } from '@/schemas/tasks/parse';
+import { participatingUserSchema } from '@/schemas/teams';
 import { groupBy, uniqBy } from 'lodash';
 import z from 'zod';
 
@@ -20,15 +15,13 @@ const getParticipatingUsers = procedure
   .input(
     z.object({
       slug: z.string(),
+      sweepstakesId: z.string().optional(),
       search: z.string().optional().default(''),
       page: z.number().min(1).optional().default(1),
-
       sortField: z.string().optional().default('lastEntryAt'),
       sortDirection: z.enum(['asc', 'desc']).optional().default('desc'),
       status: z.string().optional().default('all'),
-      dateRange: z.string().optional().default('all'),
-      minScore: z.number().min(0).max(100).optional().default(0),
-      maxScore: z.number().min(0).max(100).optional().default(100)
+      dateRange: z.string().optional().default('all')
     })
   )
   .output(
@@ -41,6 +34,7 @@ const getParticipatingUsers = procedure
   .handler(async ({ db, input, user }) => {
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
+        id: input.sweepstakesId,
         team: {
           slug: input.slug,
           members: {
@@ -53,7 +47,15 @@ const getParticipatingUsers = procedure
           include: {
             completions: {
               include: {
-                task: true,
+                task: {
+                  include: {
+                    sweepstakes: {
+                      include: {
+                        details: true
+                      }
+                    }
+                  }
+                },
                 user: {
                   include: {
                     events: {
@@ -102,7 +104,7 @@ const getParticipatingUsers = procedure
         name: user.name,
         email: user.email,
         country,
-        entries: userTaskCompletions.map((tc) => parseEntry(tc)),
+        entries: userTaskCompletions.map((tc) => toParticipantEntry(tc)),
         lastEntryAt: entries[0].completedAt.toISOString(),
         engagement,
         userAgent,
@@ -128,12 +130,6 @@ const getParticipatingUsers = procedure
         (user) => user.status === input.status
       );
     }
-
-    processedUsers = processedUsers.filter(
-      (user) =>
-        user.qualityScore >= input.minScore &&
-        user.qualityScore <= input.maxScore
-    );
 
     if (input.dateRange !== 'all') {
       const now = new Date();
@@ -215,22 +211,5 @@ const getParticipatingUsers = procedure
       totalPages
     };
   });
-
-const parseEntry = (
-  entry: Prisma.TaskCompletionGetPayload<{
-    include: { task: true };
-  }>
-): ParticipantEntrySchema => {
-  const raw = toTaskInput(entry.task);
-  const task = taskSchema.safeParse(raw);
-  if (!task.success) {
-    throw new Error('Invalid task config in entry');
-  }
-  return {
-    completedAt: entry.completedAt,
-    taskId: entry.taskId,
-    name: task.data.title
-  };
-};
 
 export default getParticipatingUsers;

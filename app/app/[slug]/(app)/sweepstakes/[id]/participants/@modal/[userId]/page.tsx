@@ -17,7 +17,7 @@ const Page: React.FC<{
   }
 
   return (
-    <ParticipatingUserSheet root="entries" slug={slug} sweepstakesId={id}>
+    <ParticipatingUserSheet sweepstakesId={id} slug={slug} root="participants">
       <Suspense fallback={<div>Loading...</div>}>
         <Wrapper sweepstakesId={id} userId={userId} />
       </Suspense>

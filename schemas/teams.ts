@@ -63,9 +63,12 @@ export const createTeamInputSchema = z.object({
 export type CreateTeamInput = z.infer<typeof createTeamInputSchema>;
 
 export const participantEntrySchema = z.object({
+  completionId: z.string(),
   completedAt: z.date().nullable(),
   taskId: z.string(),
-  name: z.string()
+  taskName: z.string(),
+  sweepstakeId: z.string(),
+  sweepstakeName: z.string()
 });
 export type ParticipantEntrySchema = z.infer<typeof participantEntrySchema>;
 

@@ -85,7 +85,7 @@ export const sweepstakesTabSchema = z.union([
   z.literal('analytics'),
   z.literal('promotion'),
   z.literal('entries'),
-  z.literal('users'),
+  z.literal('participants'),
   z.literal('winners')
 ]);
 
@@ -96,7 +96,7 @@ export const SWEEPSTAKES_TAB_OPTIONS: Record<SweepstakesTabSchema, string> = {
   analytics: 'Analytics',
   promotion: 'Promotion',
   entries: 'Entries',
-  users: 'Users',
+  participants: 'Participants',
   winners: 'Winners'
 };
 

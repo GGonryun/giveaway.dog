@@ -18,6 +18,7 @@ import { HostInfoCard } from './participation-header/host-info-card';
 import { TermsModal } from './terms-modal';
 import { DeviceType } from '@/schemas/giveaway/schemas';
 import { cn } from '@/lib/utils';
+import { date } from '@/lib/date';
 
 export const GiveawayParticipationHeader: React.PC<{
   device?: DeviceType;
@@ -43,8 +44,8 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
 }) => {
   const { sweepstakes, participation } = useGiveawayParticipation();
   const now = new Date();
-  const startDate = format(sweepstakes.timing.startDate, 'MMM d, yyyy');
-  const endDate = format(sweepstakes.timing.endDate, 'MMM d, yyyy');
+  const startDate = date.format(sweepstakes.timing.startDate);
+  const endDate = date.format(sweepstakes.timing.endDate);
   const hasEnded = isAfter(now, endDate);
   const isUpcoming = isBefore(now, startDate);
 

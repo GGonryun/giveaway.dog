@@ -20,16 +20,27 @@ import { DEFAULT_SWEEPSTAKES_DETAILS_TAB } from '@/lib/settings';
 
 export type SweepstakesDetailsFilters = { tab?: SweepstakesTabSchema };
 
+const tabRegex = new RegExp('^/app/[^/]+/sweepstakes/[^/]+(?:/([^/]+))?');
+const matchSweepstakesTab = (path: string): SweepstakesTabSchema | null => {
+  const data = tabRegex.exec(path)?.[1];
+
+  if (data && isSweepstakesTab(data)) {
+    return data;
+  }
+
+  return null;
+};
+
 export const SweepstakesDetailsTabs: React.PC<{ id: string }> = ({
   id,
   children
 }) => {
   const pathname = usePathname();
-  const specifiedTab = pathname.split('/').pop() as SweepstakesTabSchema;
+  const specifiedTab = matchSweepstakesTab(pathname);
   const page = useSweepstakesDetailsPage();
 
   const [tab, setTab] = useState<SweepstakesTabSchema>(
-    specifiedTab || DEFAULT_SWEEPSTAKES_DETAILS_TAB
+    specifiedTab ?? DEFAULT_SWEEPSTAKES_DETAILS_TAB
   );
 
   return (
@@ -51,7 +62,6 @@ export const SweepstakesDetailsTabs: React.PC<{ id: string }> = ({
           </OutlineTabsTrigger>
         ))}
       </OutlineTabsList>
-
       <OutlineTabsContent>{children}</OutlineTabsContent>
     </Tabs>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   MapPin,
@@ -11,9 +11,11 @@ import {
   Smartphone,
   BarChart3,
   Monitor,
-  Tablet
+  Tablet,
+  BookOpenTextIcon,
+  ExternalLinkIcon
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ParticipatingUserSchema } from '@/schemas/teams';
 import { useTeams } from '../context/team-provider';
 import { Badge } from '../ui/badge';
@@ -310,22 +312,49 @@ export const ParticipatingUserSheetContent: React.FC<{
         {/* Recent Entries */}
         <div className="space-y-3 pb-4">
           <h4 className="text-base font-medium">Recent Entries</h4>
-          <div className="space-y-2 max-h-64 overflow-y-auto">
+          <div className="space-y-2">
             {displayData.entries.slice(0, 8).map((entry) => (
-              <div key={entry.taskId} className="p-3 bg-muted/30 rounded">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="font-medium">{entry.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {entry.completedAt
-                        ? formatDate(entry.completedAt.toISOString())
-                        : 'No date'}
+              <div
+                key={entry.taskId}
+                className="p-3 bg-muted/30 rounded group hover:bg-muted/50 transition-colors"
+              >
+                <Link
+                  href={`/app/${activeTeam.slug}/sweepstakes/${entry.sweepstakeId}/entries/task/${entry.taskId}?active=${entry.completionId}`}
+                  target="_blank"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="text-sm font-medium group-hover:underline">
+                        {entry.taskName}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        <Link
+                          href={`/app/${activeTeam.slug}/sweepstakes/${entry.sweepstakeId}`}
+                          className="underline hover:opacity-80 transition-opacity"
+                        >
+                          {entry.sweepstakeName}
+                        </Link>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {entry.completedAt
+                          ? formatDate(entry.completedAt.toISOString())
+                          : 'No date'}
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <Badge variant="default" className="text-xs">
+                        Completed
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="group-hover:opacity-100 opacity-0 transition-opacity cursor-pointer"
+                      >
+                        <ExternalLinkIcon />
+                      </Button>
                     </div>
                   </div>
-                  <Badge variant="default" className="text-xs">
-                    Completed
-                  </Badge>
-                </div>
+                </Link>
               </div>
             ))}
             {displayData.entries.length === 0 && (
@@ -358,15 +387,49 @@ export const ParticipatingUserSheetContent: React.FC<{
   );
 };
 
-export const ParticipatingUserSheet: React.PC = ({ children }) => {
-  const router = useRouter();
+const useUserIdFromPath = (regex: RegExp) => {
+  const pathname = usePathname();
+  const match = pathname.match(regex);
+  return match ? match[1] : undefined;
+};
 
-  const handleClose = () => {
-    router.back();
+export const ParticipatingUserSheet: React.PC<{
+  slug: string;
+  sweepstakesId: string;
+  root: 'participants' | 'entries';
+}> = ({ slug, sweepstakesId, root, children }) => {
+  const router = useRouter();
+  const userId = useUserIdFromPath(
+    root === 'participants'
+      ? /\/participants\/([^/]+)/
+      : /\/entries\/user\/([^/]+)/
+  );
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(!!userId);
+  }, [userId]);
+
+  const handleClose = (status: boolean) => {
+    if (!status) {
+      setOpen(false);
+      router.push(`/app/${slug}/sweepstakes/${sweepstakesId}/${root}`);
+    }
   };
 
   return (
-    <Sheet open={true} onOpenChange={handleClose}>
+    <ParticipatingUserSheetLayout open={open} onOpenChange={handleClose}>
+      {children}
+    </ParticipatingUserSheetLayout>
+  );
+};
+
+const ParticipatingUserSheetLayout: React.PC<{
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}> = ({ open, onOpenChange, children }) => {
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="left"
         className="w-full sm:max-w-lg flex flex-col px-4 sm:px-6 pb-4"
@@ -374,5 +437,17 @@ export const ParticipatingUserSheet: React.PC = ({ children }) => {
         {children}
       </SheetContent>
     </Sheet>
+  );
+};
+
+export const UserDetailSheet: React.FC<{
+  user: ParticipatingUserSchema | null;
+  open: boolean;
+  onOpenChangeAction: (open: boolean) => void;
+}> = ({ user, open, onOpenChangeAction }) => {
+  return (
+    <ParticipatingUserSheetLayout open={open} onOpenChange={onOpenChangeAction}>
+      {user && <ParticipatingUserSheetContent user={user} />}
+    </ParticipatingUserSheetLayout>
   );
 };

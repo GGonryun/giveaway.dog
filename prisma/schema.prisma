@@ -14,25 +14,25 @@ enum UserType {
 }
 
 model User {
-  id                 String              @id @default(cuid())
-  name               String?
-  email              String?             @unique
-  emailVerified      DateTime?
-  image              String?
-  ageVerified        Boolean?            @default(false)
-  emoji              String?
-  countryCode        String?
-  type               UserType[]          @default([PARTICIPATE])
-  accounts           Account[]
-  sessions           Session[]
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  teams              Membership[]
-  taskCompletions    TaskCompletion[]
-  taskProgresses     TaskProgress[]
-  winners            PrizeWinners[]
-  events             UserEvent[]
-  ageVerifications   AgeVerification[]
+  id               String            @id @default(cuid())
+  name             String?
+  email            String?           @unique
+  emailVerified    DateTime?
+  image            String?
+  ageVerified      Boolean?          @default(false)
+  emoji            String?
+  countryCode      String?
+  type             UserType[]        @default([PARTICIPATE])
+  accounts         Account[]
+  sessions         Session[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  teams            Membership[]
+  taskCompletions  TaskCompletion[]
+  taskProgresses   TaskProgress[]
+  winners          PrizeWinners[]
+  events           UserEvent[]
+  ageVerifications AgeVerification[]
 }
 
 enum UserEventType {
@@ -107,9 +107,9 @@ model Sweepstakes {
   timing           SweepstakesTiming?
   terms            SweepstakesTerms?
   audience         SweepstakesAudience?
+  ageVerifications AgeVerification[]
   prizes           Prize[]
   tasks            Task[]
-  ageVerifications AgeVerification[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -322,14 +322,13 @@ model Membership {
 model AgeVerification {
   id            String      @id @default(cuid())
   userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   sweepstakesId String
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
   verified      Boolean     @default(false)
   verifiedAt    DateTime?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sweepstakes Sweepstakes  @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
   @@unique([userId, sweepstakesId])
 }

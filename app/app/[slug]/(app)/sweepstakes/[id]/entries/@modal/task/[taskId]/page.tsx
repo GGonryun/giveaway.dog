@@ -8,16 +8,16 @@ import getSweepstakeEntry from '@/procedures/sweepstakes/get-sweepstake-task-ent
 import { Suspense } from 'react';
 
 const Page: React.FC<{
-  params: Promise<{ id: string; taskId: string }>;
+  params: Promise<{ slug: string; id: string; taskId: string }>;
 }> = async ({ params }) => {
-  const { id, taskId } = await params;
+  const { id, taskId, slug } = await params;
 
   if (!id || !taskId) {
     return null;
   }
 
   return (
-    <TaskCompletionDetailSheet>
+    <TaskCompletionDetailSheet sweepstakesId={id} slug={slug}>
       <Suspense fallback={<div>Loading...</div>}>
         <Wrapper sweepstakesId={id} taskId={taskId} />
       </Suspense>

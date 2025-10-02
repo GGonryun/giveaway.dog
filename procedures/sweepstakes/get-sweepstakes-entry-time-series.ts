@@ -1,5 +1,6 @@
 'use server';
 
+import { date, datetime } from '@/lib/date';
 import { procedure } from '@/lib/mrpc/procedures';
 import { DEFAULT_TIME_SERIES_DURATION } from '@/lib/settings';
 import { timeSeriesDataSchema } from '@/schemas/giveaway/schemas';
@@ -35,7 +36,7 @@ const getSweepstakesEntryTimeSeries = procedure
 
     const result = map(
       groupBy(timeSeriesData, (entry) =>
-        format(entry.completedAt, 'yyyy-MM-dd')
+        date.format(entry.completedAt, 'dashed')
       ),
       (entries, date) => ({
         date,

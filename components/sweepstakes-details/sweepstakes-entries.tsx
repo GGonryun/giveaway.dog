@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import {
   Table,
@@ -13,8 +13,6 @@ import {
 } from '@/components/ui/table';
 import { Globe } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
-import { UserDetailSheet } from '../users/user-detail-sheet';
-import { useTeams } from '@/components/context/team-provider';
 import { TASK_LABEL, TaskCompletionSchema } from '@/schemas/tasks/schemas';
 import { formatDistanceToNowStrict } from 'date-fns';
 import {
@@ -25,26 +23,24 @@ import {
 } from './task-utils';
 import { UserSchema } from '@/schemas/user';
 import { Button } from '../ui/button';
-import { ParticipatingUserSchema } from '@/schemas/teams';
+import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 
 interface SweepstakesEntriesProps {
+  slug: string;
   sweepstakesId: string;
   entries: TaskCompletionSchema[];
 }
 
 export const SweepstakesEntries = ({
+  slug,
   sweepstakesId,
   entries
 }: SweepstakesEntriesProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const { activeTeam } = useTeams();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedUser, setSelectedUser] =
-    useState<ParticipatingUserSchema | null>(null);
-  const [showUserSheet, setShowUserSheet] = useState(false);
 
-  const pageSize = 25;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pageSize = DEFAULT_PAGE_SIZE;
   const totalEntries = entries.length;
   const totalPages = Math.ceil(totalEntries / pageSize);
 
@@ -59,13 +55,13 @@ export const SweepstakesEntries = ({
 
   const handleTaskClick = (taskCompletion: TaskCompletionSchema) => {
     router.push(
-      `/app/${activeTeam.slug}/sweepstakes/${sweepstakesId}/entries/task/${taskCompletion.task.id}?active=${taskCompletion.id}`
+      `/app/${slug}/sweepstakes/${sweepstakesId}/entries/task/${taskCompletion.task.id}?active=${taskCompletion.id}`
     );
   };
 
   const handleUserClick = (user: UserSchema) => {
     router.push(
-      `/app/${activeTeam.slug}/sweepstakes/${sweepstakesId}/entries/user/${user.id}`
+      `/app/${slug}/sweepstakes/${sweepstakesId}/entries/user/${user.id}`
     );
   };
 

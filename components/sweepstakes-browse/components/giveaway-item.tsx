@@ -10,7 +10,7 @@ import {
 } from '@/lib/settings';
 import React from 'react';
 import Link from 'next/link';
-import { dates } from '@/lib/date';
+import { date } from '@/lib/date';
 import { cn } from '@/lib/utils';
 
 const getStatusBadge = (
@@ -44,7 +44,7 @@ export const GiveawayItem: React.FC<{
 }> = ({ sweepstakes }) => {
   const { name, description, banner, endDate, featured } = sweepstakes;
 
-  const isEnded = dates.hasExpired(new Date(endDate));
+  const isEnded = date.hasExpired(new Date(endDate));
 
   return (
     <Link href={`/browse/${sweepstakes.id}`}>

@@ -1,8 +1,4 @@
-import {
-  CompletionStatus,
-  RegionalRestrictionFilter,
-  SweepstakesStatus
-} from '@prisma/client';
+import { RegionalRestrictionFilter, SweepstakesStatus } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';

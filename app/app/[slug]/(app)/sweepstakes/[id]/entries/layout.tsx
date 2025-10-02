@@ -2,16 +2,17 @@ import { SweepstakesEntries } from '@/components/sweepstakes-details/sweepstakes
 import getSweepstakeEntries from '@/procedures/sweepstakes/get-sweepstake-entries';
 import { Suspense } from 'react';
 
+type Params = { slug: string; id: string };
 interface EntriesLayoutProps {
   modal: React.ReactNode;
-  params: Promise<{ id: string }>;
+  params: Promise<Params>;
 }
 
 export default async function EntriesLayout({
   params,
   modal
 }: EntriesLayoutProps) {
-  const { id } = await params;
+  const props = await params;
 
   return (
     <div>
@@ -19,15 +20,14 @@ export default async function EntriesLayout({
       {modal}
 
       <Suspense fallback={<div>Loading entries...</div>}>
-        <Wrapper id={id} />
+        <Wrapper {...props} />
       </Suspense>
     </div>
   );
 }
 
-const Wrapper: React.FC<{ id: string }> = async ({ id }) => {
+const Wrapper: React.FC<Params> = async ({ id, slug }) => {
   const entries = await getSweepstakeEntries({ id });
-  console.log('Entries fetched');
 
   if (!entries.ok) {
     return (
@@ -35,5 +35,7 @@ const Wrapper: React.FC<{ id: string }> = async ({ id }) => {
     );
   }
 
-  return <SweepstakesEntries sweepstakesId={id} entries={entries.data} />;
+  return (
+    <SweepstakesEntries sweepstakesId={id} slug={slug} entries={entries.data} />
+  );
 };

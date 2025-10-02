@@ -34,8 +34,6 @@ const getParticipantSweepstake = procedure
       });
     }
 
-   
-
     const totalEntries = await db.taskCompletion.count({
       where: {
         task: {

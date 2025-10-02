@@ -20,6 +20,7 @@ import {
 import { format, formatDistanceToNow, isAfter } from 'date-fns';
 import { SweepstakesStatus } from '@prisma/client';
 import { cn } from '@/lib/utils';
+import { datetime } from '@/lib/date';
 
 interface SweepstakesStatusProps {
   status: SweepstakesStatus;
@@ -129,7 +130,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
       }).format(date);
     } catch (error) {
       // Fallback to basic format if timezone is invalid
-      return format(date, "MMM d, yyyy 'at' h:mm a");
+      return datetime.format(date, 'long');
     }
   };
 
@@ -207,7 +208,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
     }
     return null;
   };
-
 
   const timeInfo = getTimeInfo();
   const winnerStatus = getWinnerSelectionStatus();
