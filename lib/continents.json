@@ -1,30 +1,30 @@
 [
-    {
-        "alpha-2": "AF",
-        "name": "Africa"
-    },
-    {
-        "alpha-2": "AN",
-        "name": "Antarctica"
-    },
-    {
-        "alpha-2": "AS",
-        "name": "Asia"
-    },
-    {
-        "alpha-2": "EU",
-        "name": "Europe"
-    },
-    {
-        "alpha-2": "NA",
-        "name": "North America"
-    },
-    {
-        "alpha-2": "OC",
-        "name": "Oceania"
-    },
-    {
-        "alpha-2": "SA",
-        "name": "South America"
-    }
+  {
+    "alpha-2": "AF",
+    "name": "Africa"
+  },
+  {
+    "alpha-2": "AN",
+    "name": "Antarctica"
+  },
+  {
+    "alpha-2": "AS",
+    "name": "Asia"
+  },
+  {
+    "alpha-2": "EU",
+    "name": "Europe"
+  },
+  {
+    "alpha-2": "NA",
+    "name": "North America"
+  },
+  {
+    "alpha-2": "OC",
+    "name": "Oceania"
+  },
+  {
+    "alpha-2": "SA",
+    "name": "South America"
+  }
 ]

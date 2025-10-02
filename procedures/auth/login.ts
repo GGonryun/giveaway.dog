@@ -21,12 +21,7 @@ const login = procedure
   )
   .handler(
     async ({
-      input: {
-        redirectTo,
-        provider: rawProvider,
-        email,
-        revalidate
-      }
+      input: { redirectTo, provider: rawProvider, email, revalidate }
     }) => {
       // Build query parameters
       const queryParams = new URLSearchParams();

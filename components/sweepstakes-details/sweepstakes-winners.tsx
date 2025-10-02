@@ -17,9 +17,6 @@ export const SweepstakesWinners = ({
   ];
 
   return (
-    <SlotBasedWinnerSystem
-      sweepstakesId={sweepstakesId}
-      prizes={prizes}
-    />
+    <SlotBasedWinnerSystem sweepstakesId={sweepstakesId} prizes={prizes} />
   );
 };

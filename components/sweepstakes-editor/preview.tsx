@@ -6,7 +6,11 @@ import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-partici
 import { GiveawayParticipationSkeleton } from '@/components/sweepstakes/fallbacks/giveaway-skeleton';
 import { IncompleteGiveawaySetup } from '@/components/sweepstakes/fallbacks/empty-states';
 
-import { GiveawayFormSchema, GiveawaySchema, Prize } from '@/schemas/giveaway/schemas';
+import {
+  GiveawayFormSchema,
+  GiveawaySchema,
+  Prize
+} from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
 import {
   MinimumAgeRestrictionFormat,

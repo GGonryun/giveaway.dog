@@ -54,7 +54,7 @@ export const updateEmail = procedure
       if (error instanceof ApplicationError) {
         throw error;
       }
-      
+
       console.error('Email update error:', error);
       throw new ApplicationError({
         code: 'INTERNAL_SERVER_ERROR',

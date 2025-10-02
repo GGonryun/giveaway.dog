@@ -29,9 +29,7 @@ export const ProfileIncomplete = () => {
         </div>
 
         <Link href="/account">
-          <Button className="w-full">
-            Complete Profile
-          </Button>
+          <Button className="w-full">Complete Profile</Button>
         </Link>
       </div>
     </div>

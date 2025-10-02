@@ -20,7 +20,7 @@ export const verifyEmail = procedure
       userId: z.string().optional()
     })
   )
-  .invalidate(async ({ output }) => 
+  .invalidate(async ({ output }) =>
     output.userId ? [`user-${output.userId}`, 'user-profile'] : []
   )
   .handler(async ({ input, db }) => {
@@ -87,7 +87,7 @@ export const verifyEmail = procedure
       if (error instanceof ApplicationError) {
         throw error;
       }
-      
+
       console.error('Email verification error:', error);
       throw new ApplicationError({
         code: 'INTERNAL_SERVER_ERROR',

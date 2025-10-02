@@ -24,7 +24,11 @@ export const EmailRequired: React.FC = () => {
 
   return (
     <div className="my-4">
-      <EmailVerification showCard={false} user={userProfile} redirectTo={pathname} />
+      <EmailVerification
+        showCard={false}
+        user={userProfile}
+        redirectTo={pathname}
+      />
     </div>
   );
 };
