@@ -7,7 +7,7 @@ import z from 'zod';
 
 import { DEFAULT_TEAM_LOGO, MAX_USER_TEAMS } from '@/lib/settings';
 
-const createTeam = procedure
+const createTeam = procedure()
   .authorization({ required: true })
   .input(createTeamInputSchema)
   .output(

@@ -6,7 +6,7 @@ import { TeamRole } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import z from 'zod';
 
-const getUserTeam = procedure
+const getUserTeam = procedure()
   .authorization({ required: true })
   .input(
     z.object({

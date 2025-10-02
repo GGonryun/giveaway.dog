@@ -4,7 +4,7 @@ import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 
-const deleteSweepstakes = procedure
+const deleteSweepstakes = procedure()
   .authorization({ required: true })
   .input(
     z.object({

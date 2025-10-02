@@ -7,7 +7,7 @@ import { ApplicationError } from '@/lib/errors';
 
 import { SweepstakesStatus } from '@prisma/client';
 
-const getSweepstakesStatus = procedure
+const getSweepstakesStatus = procedure()
   .authorization({ required: true })
   .input(z.object({ id: z.string() }))
   .output(

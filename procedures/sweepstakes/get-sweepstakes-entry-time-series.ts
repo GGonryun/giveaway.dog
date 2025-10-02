@@ -8,7 +8,7 @@ import { format, subDays } from 'date-fns';
 import { groupBy, map } from 'lodash';
 import z from 'zod';
 
-const getSweepstakesEntryTimeSeries = procedure
+const getSweepstakesEntryTimeSeries = procedure()
   .authorization({
     required: false
   })

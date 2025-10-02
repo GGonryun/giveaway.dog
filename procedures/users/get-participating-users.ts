@@ -8,7 +8,7 @@ import { participatingUserSchema } from '@/schemas/teams';
 import { groupBy, uniqBy } from 'lodash';
 import z from 'zod';
 
-const getParticipatingUsers = procedure
+const getParticipatingUsers = procedure()
   .authorization({
     required: true
   })

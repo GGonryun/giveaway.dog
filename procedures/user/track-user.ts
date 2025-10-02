@@ -7,7 +7,7 @@ import { UserEventType } from '@prisma/client';
 import { UNKNOWN_USER_AGENT } from '@/lib/settings';
 import { userFingerprintSchema } from '@/schemas/fingerprint';
 
-const trackUser = procedure
+const trackUser = procedure()
   .authorization({ required: true })
   .output(userFingerprintSchema)
   .handler(async ({ user, db }) => {

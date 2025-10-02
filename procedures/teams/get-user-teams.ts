@@ -8,7 +8,7 @@ import {
 import { procedure } from '@/lib/mrpc/procedures';
 import { TeamRole } from '@prisma/client';
 
-const getUserTeams = procedure
+const getUserTeams = procedure()
   .authorization({ required: true })
   .output(detailedUserTeamSchema.array())
   .handler(async ({ db, user }) => {

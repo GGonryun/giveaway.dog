@@ -9,7 +9,7 @@ import { participantSweepstakeSchema } from '@/schemas/giveaway/schemas';
 import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
 import { toSweepstakesWinners } from '@/schemas/giveaway/participant';
 
-const getParticipantSweepstake = procedure
+const getParticipantSweepstake = procedure()
   .authorization({
     required: false
   })

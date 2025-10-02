@@ -11,7 +11,7 @@ import { toTaskSchema } from '@/schemas/tasks/parse';
 import { toJsonObject } from '@/lib/json';
 import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
 
-const getSweepstakeEntries = procedure
+const getSweepstakeEntries = procedure()
   .authorization({
     required: false
   })

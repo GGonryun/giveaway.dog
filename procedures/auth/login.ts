@@ -7,7 +7,7 @@ import { parseProvider } from '@/schemas/user';
 import { AuthError } from 'next-auth';
 import z from 'zod';
 
-const login = procedure
+const login = procedure()
   .authorization({
     required: false
   })

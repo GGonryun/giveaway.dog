@@ -16,7 +16,7 @@ import {
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 
-const getSweepstakesList = procedure
+const getSweepstakesList = procedure()
   .authorization({ required: true })
   .input(
     listSweepstakesFiltersSchema.extend({
@@ -26,6 +26,12 @@ const getSweepstakesList = procedure
   .output(listSweepstakesDataSchema)
   .cache(({ user, input }) => {
     return {
+      keyParts: [
+        `sweepstakes-list-${user.id}`,
+        `sweepstakes-list-${input.slug}`,
+        `user-${user.id}`,
+        `team-${input.slug}`
+      ],
       tags: [
         'sweepstakes',
         'sweepstakes-list',

@@ -5,7 +5,7 @@ import { userSchema } from '@/schemas/user';
 import { getUserQuery, userCache } from './shared';
 import { ApplicationError } from '@/lib/errors';
 
-const getUser = procedure
+const getUser = procedure()
   .authorization({ required: true })
   .output(userSchema)
   .cache(userCache.fn)

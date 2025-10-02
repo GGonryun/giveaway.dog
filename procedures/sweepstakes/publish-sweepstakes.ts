@@ -5,7 +5,7 @@ import { applySweepstakesChanges } from './shared';
 import z from 'zod';
 import { sweepstakesInputSchema } from '@/schemas/giveaway/db';
 
-const publishSweepstakes = procedure
+const publishSweepstakes = procedure()
   .authorization({ required: true })
   .input(sweepstakesInputSchema)
   .output(z.object({ slug: z.string() }))

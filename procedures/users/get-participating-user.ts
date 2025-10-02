@@ -13,7 +13,7 @@ import {
 import { Prisma } from '@prisma/client';
 import z from 'zod';
 
-const getParticipatingUser = procedure
+const getParticipatingUser = procedure()
   .authorization({
     required: true
   })

@@ -5,7 +5,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 
-const selectTeam = procedure
+const selectTeam = procedure()
   .authorization({ required: true })
   .input(z.object({ id: z.string() }))
   .output(z.object({ name: z.string(), slug: z.string() }))

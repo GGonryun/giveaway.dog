@@ -10,7 +10,7 @@ import { toJsonObject } from '@/lib/json';
 import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
 import { taskCompletionSchema } from '@/schemas/tasks/schemas';
 
-const getSweepstakeTaskEntries = procedure
+const getSweepstakeTaskEntries = procedure()
   .authorization({
     required: false
   })

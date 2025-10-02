@@ -5,7 +5,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { CompletionStatus } from '@prisma/client';
 import { z } from 'zod';
 
-const submitTask = procedure
+const submitTask = procedure()
   .authorization({ required: true })
   .input(
     z.object({

@@ -4,7 +4,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { userSchema } from '@/schemas/user';
 import { getUserQuery, userCache } from './shared';
 
-const findUser = procedure
+const findUser = procedure()
   .authorization({ required: false })
   .output(userSchema.nullable())
   .cache(userCache.fn)

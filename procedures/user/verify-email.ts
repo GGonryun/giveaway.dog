@@ -10,7 +10,7 @@ const verifyEmailSchema = z.object({
   email: z.string().email()
 });
 
-export const verifyEmail = procedure
+export const verifyEmail = procedure()
   .authorization({ required: false })
   .input(verifyEmailSchema)
   .output(

@@ -4,7 +4,7 @@ import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { ageVerificationSchema } from '@/schemas/user';
 
-const verifyAge = procedure
+const verifyAge = procedure()
   .authorization({ required: true })
   .input(ageVerificationSchema)
   .handler(async ({ db, user, input }) => {

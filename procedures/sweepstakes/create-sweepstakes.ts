@@ -16,7 +16,7 @@ import {
 } from '@/schemas/giveaway/defaults';
 import { findUserTeamQuery } from './shared';
 
-export const createSweepstakes = procedure
+export const createSweepstakes = procedure()
   .authorization({ required: true })
   .input(
     z.object({

@@ -8,7 +8,7 @@ import {
 } from '@/schemas/giveaway/public';
 import { compact } from 'lodash';
 
-const getSweepstakeParticipation = procedure
+const getSweepstakeParticipation = procedure()
   .authorization({
     required: true
   })

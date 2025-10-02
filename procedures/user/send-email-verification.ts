@@ -12,7 +12,7 @@ const emailVerificationSchema = z.object({
   redirectTo: z.string().optional()
 });
 
-export const sendEmailVerification = procedure
+export const sendEmailVerification = procedure()
   .authorization({ required: true })
   .input(emailVerificationSchema)
   .output(

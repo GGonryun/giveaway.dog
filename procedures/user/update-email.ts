@@ -8,7 +8,7 @@ const updateEmailSchema = z.object({
   email: z.string().email()
 });
 
-export const updateEmail = procedure
+export const updateEmail = procedure()
   .authorization({ required: true })
   .input(updateEmailSchema)
   .output(

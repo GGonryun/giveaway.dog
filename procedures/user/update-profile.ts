@@ -5,7 +5,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { updateUserProfileSchema } from '@/schemas/user';
 import z from 'zod';
 
-export const updateProfile = procedure
+export const updateProfile = procedure()
   .authorization({ required: true })
   .input(updateUserProfileSchema)
   .output(

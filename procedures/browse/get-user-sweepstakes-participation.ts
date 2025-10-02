@@ -6,7 +6,7 @@ import { userParticipationSchema } from '@/schemas/giveaway/schemas';
 import { toTaskSchema } from '@/schemas/tasks/parse';
 import z from 'zod';
 
-const getUserSweepstakesParticipation = procedure
+const getUserSweepstakesParticipation = procedure()
   .authorization({ required: false })
   .input(z.object({ id: z.string() }))
   .cache(({ user, input }) => {
@@ -14,11 +14,15 @@ const getUserSweepstakesParticipation = procedure
       return undefined;
     }
     return {
+      keyParts: [
+        `sweepstakes-${input.id}-user-${user.id}-participation`,
+        `sweepstakes-user-${user.id}-participation`
+      ],
       tags: [
         `sweepstakes-${input.id}-user-${user.id}-participation`,
         `sweepstakes-user-${user.id}-participation`
       ],
-      revalidate: 1 // low revalidation so that task completions are up to date.
+      revalidate: 30
     };
   })
   .output(userParticipationSchema.optional())

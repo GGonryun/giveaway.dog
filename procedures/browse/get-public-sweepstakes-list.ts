@@ -8,12 +8,16 @@ import {
 import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { compact } from 'lodash';
 
-const getPublicSweepstakesList = procedure
+const getPublicSweepstakesList = procedure()
   .authorization({
     required: false
   })
   .output(publicSweepstakesSchema.array())
-  .cache({ tags: ['public-sweepstakes-list'], revalidate: 300 })
+  .cache({
+    keyParts: ['public-sweepstakes-list'],
+    tags: ['public-sweepstakes-list'],
+    revalidate: 300
+  })
   .handler(async ({ db }) => {
     const sweepstakes = await db.sweepstakes.findMany({
       where: {

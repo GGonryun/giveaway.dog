@@ -10,7 +10,7 @@ import {
   sweepstakesInputSchema
 } from '@/schemas/giveaway/db';
 
-const getSweepstakesForm = procedure
+const getSweepstakesForm = procedure()
   .authorization({ required: true })
   .input(z.object({ id: z.string() }))
   .output(sweepstakesInputSchema)

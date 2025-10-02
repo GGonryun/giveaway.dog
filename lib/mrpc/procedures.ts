@@ -259,15 +259,13 @@ class ProcedureBuilder<
     };
   }
 }
-export namespace procedure {
-  export const authorization = <T extends boolean>(
-    config: AuthConfig & { required: T }
-  ) =>
+export const procedure = () => ({
+  authorization: <T extends boolean>(config: AuthConfig & { required: T }) =>
     new ProcedureBuilder<undefined, undefined, T>(
       config,
       undefined,
       undefined,
       undefined,
       undefined
-    );
-}
+    )
+});
