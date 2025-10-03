@@ -148,7 +148,6 @@ const DescriptionSection = () => {
     <CardContent>
       <div className="mt-2 space-y-1">
         <div className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-primary" />
           <h3 className="text-lg font-semibold">Description</h3>
         </div>
         <p className="text-sm sm:text-base leading-relaxed">
@@ -169,7 +168,6 @@ const PrizesSection = () => {
     <CardContent className="mt-2">
       <div className="space-y-1">
         <div className="flex items-center gap-2">
-          <Gift className="h-5 w-5 text-primary" />
           <h3 className="text-lg font-semibold">Prizes</h3>
         </div>
         <ul className="space-y-2">

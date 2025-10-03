@@ -91,9 +91,9 @@ const DesktopTabs: React.FC = () => {
 
 const DesktopTitle: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   return (
-    <div className="flex-1">
-      <h1 className="text-lg sm:text-xl font-medium">{title}</h1>
-    </div>
+    <h1 className="text-lg sm:text-xl font-medium text-ellipsis whitespace-nowrap overflow-hidden">
+      {title}
+    </h1>
   );
 };
 
@@ -147,8 +147,8 @@ const DesktopFormHeader: React.FC<FormHeaderProps> = ({
   onCancel
 }) => {
   return (
-    <SiteHeader>
-      <div className="flex items-center w-full">
+    <SiteHeader container={false}>
+      <div className="grid grid-cols-3 w-full items-center gap-4">
         <DesktopTitle title={title} />
         <DesktopTabs />
         <DesktopActions disabled={disabled} onCancel={onCancel} />

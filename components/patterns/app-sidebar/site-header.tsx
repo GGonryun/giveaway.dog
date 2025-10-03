@@ -51,8 +51,9 @@ export const SiteHeaderContent: React.FC<SiteHeaderContentProps> = ({
 
 export const SiteHeader: React.FC<{
   children: React.ReactNode | React.ReactNode[];
+  container?: boolean;
   className?: string;
-}> = ({ children, className }) => {
+}> = ({ children, className, container = true }) => {
   return (
     <header
       className={cn(
@@ -60,7 +61,14 @@ export const SiteHeader: React.FC<{
         className
       )}
     >
-      <div className="flex w-full items-center gap-1 container">{children}</div>
+      <div
+        className={cn(
+          'flex w-full items-center gap-1',
+          container ? 'container' : 'px-4'
+        )}
+      >
+        {children}
+      </div>
     </header>
   );
 };
