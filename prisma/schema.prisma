@@ -19,9 +19,10 @@ model User {
   email            String?           @unique
   emailVerified    DateTime?
   image            String?
-  ageVerified      Boolean?          @default(false)
   emoji            String?
   countryCode      String?
+  userAgent        String?
+  qualityScore     Int               @default(0)
   type             UserType[]        @default([PARTICIPATE])
   accounts         Account[]
   sessions         Session[]
@@ -30,7 +31,6 @@ model User {
   teams            Membership[]
   taskCompletions  TaskCompletion[]
   taskProgresses   TaskProgress[]
-  winners          PrizeWinners[]
   events           UserEvent[]
   ageVerifications AgeVerification[]
 }
@@ -219,13 +219,13 @@ model Prize {
 }
 
 model PrizeWinners {
-  id String @id
-
-  prizeId String
-  prize   Prize  @relation(fields: [prizeId], references: [id], onDelete: Cascade)
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               String         @id
+  prizeId          String
+  prize            Prize          @relation(fields: [prizeId], references: [id], onDelete: Cascade)
+  taskCompletionId String
+  taskCompletion   TaskCompletion @relation(fields: [taskCompletionId], references: [id], onDelete: Cascade)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 }
 
 model Task {
@@ -256,6 +256,8 @@ model TaskCompletion {
 
   taskId String
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  winners PrizeWinners[]
 
   completedAt DateTime         @default(now())
   proof       Json?

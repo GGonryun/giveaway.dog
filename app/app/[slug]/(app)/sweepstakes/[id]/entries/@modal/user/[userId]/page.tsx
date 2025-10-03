@@ -12,26 +12,28 @@ const Page: React.FC<{
 }> = async ({ params }) => {
   const { slug, id, userId } = await params;
 
-  if (!id || !userId) {
+  if (!id || !userId || !slug) {
     return null;
   }
 
   return (
     <ParticipatingUserSheet root="entries" slug={slug} sweepstakesId={id}>
       <Suspense fallback={<div>Loading...</div>}>
-        <Wrapper sweepstakesId={id} userId={userId} />
+        <Wrapper sweepstakesId={id} userId={userId} slug={slug} />
       </Suspense>
     </ParticipatingUserSheet>
   );
 };
 
-const Wrapper: React.FC<{ sweepstakesId: string; userId: string }> = async ({
-  sweepstakesId,
-  userId
-}) => {
+const Wrapper: React.FC<{
+  slug: string;
+  sweepstakesId: string;
+  userId: string;
+}> = async ({ slug, sweepstakesId, userId }) => {
   const details = await getParticipatingUser({
     sweepstakesId,
-    userId
+    userId,
+    slug
   });
 
   if (!details.ok) {

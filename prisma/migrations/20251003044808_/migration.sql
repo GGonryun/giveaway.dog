@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "public"."PrizeWinners" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

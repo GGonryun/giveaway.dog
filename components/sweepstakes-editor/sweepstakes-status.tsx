@@ -28,9 +28,12 @@ interface SweepstakesStatusProps {
   endDate: Date;
   timeZone: string;
   sweepstakesUrl?: string;
+  hasAllWinnersSelected?: boolean;
   onPickWinners?: () => void;
   onAnnounceWinners?: () => void;
   onGenerateQR?: () => void;
+  onCompleteSweepstakes?: () => void;
+  isCompleting?: boolean;
   className?: string;
 }
 
@@ -103,9 +106,12 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   endDate,
   timeZone,
   sweepstakesUrl = '',
+  hasAllWinnersSelected = false,
   onPickWinners,
   onAnnounceWinners,
   onGenerateQR,
+  onCompleteSweepstakes,
+  isCompleting = false,
   className
 }) => {
   const statusConfig = getStatusConfig(status, startDate, endDate);
@@ -204,7 +210,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
       (status === SweepstakesStatus.ACTIVE && hasEnded) ||
       status === SweepstakesStatus.COMPLETED
     ) {
-      return 'Pending winner selection';
+      return hasAllWinnersSelected ? null : 'Pending winner selection';
     }
     return null;
   };
@@ -235,7 +241,59 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
         </div>
 
         {/* Winner Selection Status */}
-        {winnerStatus && (
+        {winnerStatus && winnerStatus === 'Pending winner selection' && (
+          <div className="flex flex-col gap-3 p-4 bg-red-50 border-2 border-red-300 rounded-lg">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <Trophy className="h-5 w-5 text-red-600" />
+                <div>
+                  <div className="text-sm font-semibold text-red-900">
+                    Action Required: Winners Not Selected
+                  </div>
+                  <div className="text-xs text-red-700 mt-0.5">
+                    Your sweepstakes has ended. Select winners now to complete the process.
+                  </div>
+                </div>
+              </div>
+              {onPickWinners && (
+                <Button
+                  onClick={onPickWinners}
+                  variant="destructive"
+                  size="sm"
+                  className="shrink-0"
+                >
+                  Select Winners
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+        {hasAllWinnersSelected && status !== SweepstakesStatus.COMPLETED && (
+          <div className="flex flex-col gap-3 p-4 bg-green-50 border-2 border-green-300 rounded-lg">
+            <div className="flex items-center gap-3">
+              <Trophy className="h-5 w-5 text-green-600" />
+              <div>
+                <div className="text-sm font-semibold text-green-900">
+                  All Winners Selected
+                </div>
+                <div className="text-xs text-green-700 mt-0.5">
+                  All winners have been chosen for this sweepstakes. Click the button below to mark this sweepstakes as completed.
+                </div>
+              </div>
+            </div>
+            {onCompleteSweepstakes && (
+              <Button
+                onClick={onCompleteSweepstakes}
+                disabled={isCompleting}
+                className="bg-green-600 hover:bg-green-700"
+                size="sm"
+              >
+                {isCompleting ? 'Completing...' : 'Complete Sweepstakes'}
+              </Button>
+            )}
+          </div>
+        )}
+        {winnerStatus && winnerStatus !== 'Pending winner selection' && (
           <div className="flex items-center gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
             <Trophy className="h-5 w-5 text-yellow-600" />
             <div className="text-sm text-yellow-800">{winnerStatus}</div>
@@ -307,41 +365,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
           </>
         )}
 
-        {/* Winner Management */}
-        {showWinnerActions && (
-          <>
-            <Separator />
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Trophy className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium">Winner Management</span>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-2">
-                {onPickWinners && (
-                  <Button
-                    onClick={onPickWinners}
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-2"
-                  >
-                    <Users className="h-4 w-4" />
-                    Pick Winners
-                  </Button>
-                )}
-                {onAnnounceWinners && (
-                  <Button
-                    onClick={onAnnounceWinners}
-                    size="sm"
-                    className="flex items-center gap-2"
-                  >
-                    <Trophy className="h-4 w-4" />
-                    Announce Winners
-                  </Button>
-                )}
-              </div>
-            </div>
-          </>
-        )}
       </CardContent>
     </Card>
   );

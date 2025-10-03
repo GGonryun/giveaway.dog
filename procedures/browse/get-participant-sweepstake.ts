@@ -15,14 +15,14 @@ const getParticipantSweepstake = procedure()
   })
   .input(
     z.object({
-      id: z.string()
+      sweepstakesId: z.string()
     })
   )
   .output(participantSweepstakeSchema)
   .handler(async ({ input, db }) => {
     const sweepstakes = await db.sweepstakes.findUnique({
       where: {
-        id: input.id
+        id: input.sweepstakesId
       },
       include: PARTICIPANT_SWEEPSTAKES_PAYLOAD
     });
@@ -30,14 +30,14 @@ const getParticipantSweepstake = procedure()
     if (!sweepstakes || !sweepstakes.team) {
       throw new ApplicationError({
         code: 'NOT_FOUND',
-        message: `Sweepstakes with ID ${input.id} not found`
+        message: `Sweepstakes with ID ${input.sweepstakesId} not found`
       });
     }
 
     const totalEntries = await db.taskCompletion.count({
       where: {
         task: {
-          sweepstakesId: input.id
+          sweepstakesId: input.sweepstakesId
         }
       }
     });
@@ -49,7 +49,7 @@ const getParticipantSweepstake = procedure()
       distinct: ['userId'],
       where: {
         task: {
-          sweepstakesId: input.id
+          sweepstakesId: input.sweepstakesId
         }
       }
     });
@@ -77,7 +77,8 @@ const getParticipantSweepstake = procedure()
     if (!parsed.success) {
       throw new ApplicationError({
         code: 'VALIDATION_ERROR',
-        message: 'Sweepstakes data is invalid'
+        message: 'Sweepstakes data is invalid',
+        cause: parsed.error
       });
     }
 

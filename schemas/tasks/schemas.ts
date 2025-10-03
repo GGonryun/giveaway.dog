@@ -1,5 +1,5 @@
 import z from 'zod';
-import { userProfileSchema, userSchema } from '../user';
+import { userSchema } from '../user';
 import { CompletionStatus } from '@prisma/client';
 
 export const baseTaskSchema = z.object({

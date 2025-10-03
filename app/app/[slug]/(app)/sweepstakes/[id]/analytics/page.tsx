@@ -23,7 +23,7 @@ export default async function Page({ params }: SweepstakesDetailPageProps) {
 }
 
 const Wrapper: React.FC<{ id: string }> = async ({ id }) => {
-  const participant = await getParticipantSweepstake({ id });
+  const participant = await getParticipantSweepstake({ sweepstakesId: id });
   const timeseries = await getSweepstakesEntryTimeSeries({ id });
 
   if (!participant.ok) {

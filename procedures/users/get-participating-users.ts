@@ -1,11 +1,14 @@
 'use server';
 
-import { ip } from '@/lib/ip';
 import { procedure } from '@/lib/mrpc/procedures';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
-import { toParticipantEntry } from '@/schemas/tasks/parse';
-import { participatingUserSchema } from '@/schemas/teams';
-import { groupBy, uniqBy } from 'lodash';
+import { sweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+
+import {
+  SWEEPSTAKES_TASK_WHERE_QUERY,
+  toUserParticipationSchema,
+  USER_PARTICIPATION_INCLUDE_QUERY
+} from '@/schemas/participants';
 import z from 'zod';
 
 const getParticipatingUsers = procedure()
@@ -16,103 +19,45 @@ const getParticipatingUsers = procedure()
     z.object({
       slug: z.string(),
       sweepstakesId: z.string().optional(),
-      search: z.string().optional().default(''),
-      page: z.number().min(1).optional().default(1),
-      sortField: z.string().optional().default('lastEntryAt'),
-      sortDirection: z.enum(['asc', 'desc']).optional().default('desc'),
-      status: z.string().optional().default('all'),
-      dateRange: z.string().optional().default('all')
+      search: z.string().optional(),
+      page: z.number().min(1).optional(),
+      sortField: z.string().optional(),
+      sortDirection: z.enum(['asc', 'desc']).optional(),
+      status: z.string().optional(),
+      dateRange: z.string().optional()
     })
   )
   .output(
     z.object({
-      users: participatingUserSchema.array(),
+      users: sweepstakesParticipantSchema.array(),
       totalUsers: z.number(),
       totalPages: z.number()
     })
   )
   .handler(async ({ db, input, user }) => {
-    const sweepstakes = await db.sweepstakes.findMany({
+    const ownedBySweepstakes = SWEEPSTAKES_TASK_WHERE_QUERY({
+      ...input,
+      userId: user.id
+    });
+
+    const totalTasks = await db.task.count({
+      where: ownedBySweepstakes
+    });
+
+    const participants = await db.user.findMany({
       where: {
-        id: input.sweepstakesId,
-        team: {
-          slug: input.slug,
-          members: {
-            some: { userId: user.id }
+        taskCompletions: {
+          some: {
+            task: ownedBySweepstakes
           }
         }
       },
-      include: {
-        tasks: {
-          include: {
-            completions: {
-              include: {
-                task: {
-                  include: {
-                    sweepstakes: {
-                      include: {
-                        details: true
-                      }
-                    }
-                  }
-                },
-                user: {
-                  include: {
-                    events: {
-                      take: 1,
-                      orderBy: {
-                        timestamp: 'desc'
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      include: USER_PARTICIPATION_INCLUDE_QUERY(input.sweepstakesId)
     });
 
-    const users = sweepstakes.flatMap((s) =>
-      s.tasks.flatMap((t) => t.completions.map((c) => c.user))
+    let processedUsers = participants.map((user) =>
+      toUserParticipationSchema(user, totalTasks)
     );
-    const completions = sweepstakes.flatMap((s) =>
-      s.tasks.flatMap((t) => t.completions)
-    );
-    const uniqueUsers = uniqBy(users, (user) => user.id);
-    const completionsUserGroups = groupBy(completions, (tc) => tc.userId);
-    const totalTasks = sweepstakes.reduce((sum, s) => sum + s.tasks.length, 0);
-
-    let processedUsers = uniqueUsers.map((user) => {
-      // uses the most recent event
-      const event = user.events[0];
-      const geo = ip.ipSchema.safeParse(event.geo);
-      const country = geo.success ? geo.data.country : 'Unknown';
-      const userAgent = event.userAgent ? event.userAgent : 'Unknown';
-      const userTaskCompletions = completionsUserGroups[user.id] || [];
-      const entries = userTaskCompletions.sort(
-        (a, b) => b.completedAt.getTime() - a.completedAt.getTime()
-      );
-      const engagement = Math.round(
-        (userTaskCompletions.length / totalTasks) * 100
-      );
-      const qualityScore = 32; // TODO: compute quality score
-      const status: 'active' | 'blocked' = 'active'; // TODO: computer user status
-
-      return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        country,
-        entries: userTaskCompletions.map((tc) => toParticipantEntry(tc)),
-        lastEntryAt: entries[0].completedAt.toISOString(),
-        engagement,
-        userAgent,
-        emailVerified: Boolean(user.emailVerified),
-        qualityScore,
-        status
-      };
-    });
 
     // Apply filters
     if (input.search) {
@@ -125,13 +70,13 @@ const getParticipatingUsers = procedure()
       );
     }
 
-    if (input.status !== 'all') {
+    if (input.status) {
       processedUsers = processedUsers.filter(
         (user) => user.status === input.status
       );
     }
 
-    if (input.dateRange !== 'all') {
+    if (input.dateRange) {
       const now = new Date();
       let dateThreshold: Date;
 
@@ -165,48 +110,51 @@ const getParticipatingUsers = procedure()
     }
 
     // Apply sorting
-    processedUsers.sort((a, b) => {
-      let valueA: any, valueB: any;
+    if (input.sortField) {
+      processedUsers.sort((a, b) => {
+        let valueA: any, valueB: any;
 
-      switch (input.sortField) {
-        case 'lastEntryAt':
-          valueA = new Date(a.lastEntryAt);
-          valueB = new Date(b.lastEntryAt);
-          break;
-        case 'qualityScore':
-          valueA = a.qualityScore;
-          valueB = b.qualityScore;
-          break;
-        case 'engagement':
-          valueA = a.engagement;
-          valueB = b.engagement;
-          break;
-        case 'status':
-          valueA = a.status;
-          valueB = b.status;
-          break;
-        default:
-          valueA = new Date(a.lastEntryAt);
-          valueB = new Date(b.lastEntryAt);
-      }
+        switch (input.sortField) {
+          case 'lastEntryAt':
+            valueA = new Date(a.lastEntryAt);
+            valueB = new Date(b.lastEntryAt);
+            break;
+          case 'qualityScore':
+            valueA = a.qualityScore;
+            valueB = b.qualityScore;
+            break;
+          case 'engagement':
+            valueA = a.engagement;
+            valueB = b.engagement;
+            break;
+          case 'status':
+            valueA = a.status;
+            valueB = b.status;
+            break;
+          default:
+            valueA = new Date(a.lastEntryAt);
+            valueB = new Date(b.lastEntryAt);
+        }
 
-      if (valueA < valueB) return input.sortDirection === 'asc' ? -1 : 1;
-      if (valueA > valueB) return input.sortDirection === 'asc' ? 1 : -1;
-      return 0;
-    });
+        if (valueA < valueB) return input.sortDirection === 'asc' ? -1 : 1;
+        if (valueA > valueB) return input.sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    // Apply pagination
     const pageSize = DEFAULT_PAGE_SIZE;
+
+    if (input.page) {
+      const startIndex = (input.page - 1) * pageSize;
+      processedUsers = processedUsers.slice(startIndex, startIndex + pageSize);
+    }
+
     const totalUsers = processedUsers.length;
     const totalPages = Math.ceil(totalUsers / pageSize);
 
-    // Apply pagination
-    const startIndex = (input.page - 1) * pageSize;
-    const paginatedUsers = processedUsers.slice(
-      startIndex,
-      startIndex + pageSize
-    );
-
     return {
-      users: paginatedUsers,
+      users: processedUsers,
       totalUsers,
       totalPages
     };

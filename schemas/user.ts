@@ -1,3 +1,4 @@
+import { UNKNOWN_USER_AGENT, UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
 import { Prisma, UserType } from '@prisma/client';
 import z from 'zod';
 
@@ -37,7 +38,6 @@ export const userProfileSchema = z.object({
   emailVerified: z.boolean().nullable(),
   emoji: z.string().nullable(),
   countryCode: z.string().nullable(),
-  ageVerified: z.boolean().nullable(),
   providers: providerSchema.array()
 });
 
@@ -45,7 +45,6 @@ export type UserProfileSchema = z.infer<typeof userProfileSchema>;
 
 export const userSchema = userProfileSchema.extend({
   emailVerified: z.boolean().nullable(),
-  ageVerified: z.boolean().nullable(),
   type: z.nativeEnum(UserType).array()
 });
 
@@ -84,8 +83,7 @@ export const parseProvider = (provider: unknown) => {
 export const updateUserProfileSchema = z.object({
   id: z.string(),
   name: z.string().optional(),
-  type: z.array(z.nativeEnum(UserType)).optional(),
-  ageVerified: z.boolean().nullable().optional()
+  type: z.array(z.nativeEnum(UserType)).optional()
 });
 
 export const ageVerificationSchema = z.object({
@@ -103,7 +101,6 @@ export const USER_SCHEMA_SELECT_QUERY = {
   name: true,
   emoji: true,
   countryCode: true,
-  ageVerified: true,
   emailVerified: true,
   type: true,
   accounts: {
@@ -120,7 +117,6 @@ export const toUserSchema = (
     name: user.name,
     emoji: user.emoji,
     countryCode: user.countryCode,
-    ageVerified: user.ageVerified ?? false,
     emailVerified: !!user.emailVerified,
     type: user.type,
     providers: parseProviders(user.accounts.map((account) => account.provider))

@@ -2,6 +2,7 @@ import { DeepPartial } from '@/lib/types';
 import { GiveawayFormSchema as SweepstakesFormSchema } from './schemas';
 import z from 'zod';
 import { Prisma } from '@prisma/client';
+import { USER_SCHEMA_SELECT_QUERY } from '../user';
 
 export const FORM_SWEEPSTAKES_PAYLOAD = {
   tasks: true,
@@ -27,7 +28,11 @@ export const PARTICIPANT_SWEEPSTAKES_PAYLOAD = {
     include: {
       winners: {
         include: {
-          user: true
+          taskCompletion: {
+            include: {
+              user: { select: USER_SCHEMA_SELECT_QUERY }
+            }
+          }
         }
       }
     }
@@ -63,7 +68,7 @@ export const PUBLIC_SWEEPSTAKES_PAYLOAD = {
     include: {
       winners: {
         include: {
-          user: true
+          taskCompletion: true
         }
       }
     }

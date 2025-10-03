@@ -21,7 +21,7 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
 
-  const result = await getParticipantSweepstake({ id });
+  const result = await getParticipantSweepstake({ sweepstakesId: id });
   const user = await findUser();
   const participation = await getUserSweepstakesParticipation({ id });
   const ageVerification = await getAgeVerification(id);

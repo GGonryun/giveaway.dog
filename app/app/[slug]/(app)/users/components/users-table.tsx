@@ -42,16 +42,12 @@ import { SearchBar } from '../../../../../../components/users/search-bar';
 import { StatusExplanationDialog } from '../../../../../../components/users/status-explanation-dialog';
 
 import { useTeams } from '@/components/context/team-provider';
-import { ParticipatingUserSchema } from '@/schemas/teams';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
-import {
-  ParticipatingUserSheet,
-  ParticipatingUserSheetContent,
-  UserDetailSheet
-} from '@/components/sweepstakes-details/user-detail-sheet';
+import { UserDetailSheet } from '@/components/sweepstakes-details/user-detail-sheet';
+import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 
 interface UsersTableProps {
-  users: ParticipatingUserSchema[];
+  users: SweepstakesParticipantSchema[];
   totalUsers: number;
   totalPages: number;
   currentPage: number;
@@ -78,12 +74,12 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedUser, setSelectedUser] =
-    useState<ParticipatingUserSchema | null>(null);
+    useState<SweepstakesParticipantSchema | null>(null);
   const [isPending, startTransition] = useTransition();
   const [showUserSheet, setShowUserSheet] = useState(false);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
   const [statusDialogUser, setStatusDialogUser] =
-    useState<ParticipatingUserSchema | null>(null);
+    useState<SweepstakesParticipantSchema | null>(null);
 
   // Update URL params whenever state changes - only include non-default values
   const updateURLParams = useCallback(
@@ -172,7 +168,10 @@ export const UsersTable: React.FC<UsersTableProps> = ({
     [updateURLParams]
   );
 
-  const getStatusBadge = (status: string, user: ParticipatingUserSchema) => {
+  const getStatusBadge = (
+    status: string,
+    user: SweepstakesParticipantSchema
+  ) => {
     const variants = {
       active: {
         variant: 'default' as const,

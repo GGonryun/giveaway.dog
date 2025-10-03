@@ -6,7 +6,7 @@ import {
   DeviceType
 } from '@/schemas/giveaway/schemas';
 import { noop } from 'lodash';
-import { Eye, Smartphone, Monitor } from 'lucide-react';
+import { Eye, Smartphone, Monitor, CheckCircle2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useIsMobile } from '../hooks/use-mobile';
 import { useUrl } from '../hooks/use-url';
@@ -20,19 +20,58 @@ import {
 import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
 import { useBrowseSweepstakesPage } from '../sweepstakes/use-browse-sweepstakes-page';
+import { useSweepstakesDetailsPage } from '../sweepstakes/use-sweepstakes-details-page';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { SweepstakesStatus } from '@prisma/client';
+import { useProcedure } from '@/lib/mrpc/hook';
+import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
+import { useRouter } from 'next/navigation';
 
 export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   props
 ) => {
-  const { sweepstakes } = props;
+  const { sweepstakes, winners, host } = props;
+  const router = useRouter();
   const browse = useBrowseSweepstakesPage();
+  const detailsPage = useSweepstakesDetailsPage();
   const liveUrl = browse.url({ sweepstakesId: sweepstakes.id });
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
+  const { run: runCompleteSweepstakes, isLoading: isCompleting } =
+    useProcedure({
+      action: completeSweepstakes,
+      onSuccess: () => {
+        router.refresh();
+      }
+    });
+
+  const totalPrizeSlots = sweepstakes.prizes.reduce(
+    (sum, prize) => sum + prize.quota,
+    0
+  );
+  const selectedWinners = winners.reduce(
+    (sum, winner) => sum + winner.winners.length,
+    0
+  );
+  const hasAllWinnersSelected = selectedWinners >= totalPrizeSlots;
+
   return (
     <div className="space-y-6">
+      {/* Completed State Alert */}
+      {sweepstakes.status === SweepstakesStatus.COMPLETED && (
+        <Alert className="border-green-200 bg-green-50">
+          <CheckCircle2 className="h-5 w-5 text-green-600" />
+          <AlertTitle className="text-green-900">
+            Sweepstakes Completed
+          </AlertTitle>
+          <AlertDescription className="text-green-800">
+            This sweepstakes has been completed. No further updates can be made.
+          </AlertDescription>
+        </Alert>
+      )}
+
       {sweepstakes && (
         <SweepstakesStatusComponent
           status={sweepstakes.status}
@@ -40,8 +79,9 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
           endDate={sweepstakes.timing.endDate}
           timeZone={sweepstakes.timing.timeZone}
           sweepstakesUrl={liveUrl}
+          hasAllWinnersSelected={hasAllWinnersSelected}
           onPickWinners={() => {
-            alert('Pick winners clicked');
+            detailsPage.setTab(sweepstakes.id, 'winners');
           }}
           onAnnounceWinners={() => {
             alert('Announce winners clicked');
@@ -49,6 +89,13 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
           onGenerateQR={() => {
             setIsQRModalOpen(true);
           }}
+          onCompleteSweepstakes={() => {
+            runCompleteSweepstakes({
+              sweepstakesId: sweepstakes.id,
+              slug: host.slug
+            });
+          }}
+          isCompleting={isCompleting}
         />
       )}
 

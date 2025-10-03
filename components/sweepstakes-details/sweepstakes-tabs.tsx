@@ -1,7 +1,7 @@
 'use client';
 
 import { Tabs } from '@/components/ui/tabs';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   OutlineTabsContent,
   OutlineTabsList,
@@ -42,6 +42,12 @@ export const SweepstakesDetailsTabs: React.PC<{ id: string }> = ({
   const [tab, setTab] = useState<SweepstakesTabSchema>(
     specifiedTab ?? DEFAULT_SWEEPSTAKES_DETAILS_TAB
   );
+
+  useEffect(() => {
+    if (specifiedTab) {
+      setTab(specifiedTab);
+    }
+  }, [specifiedTab]);
 
   return (
     <Tabs

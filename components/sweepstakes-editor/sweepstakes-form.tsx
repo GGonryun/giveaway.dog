@@ -55,7 +55,7 @@ export const SweepstakesForm: React.FC<{
   const action = pathname.includes('/edit') ? 'edit' : 'create';
 
   const form = useForm<GiveawayFormSchema>({
-    resolver: zodResolver(giveawayFormSchema),
+    resolver: zodResolver(giveawayFormSchema(true)),
     defaultValues,
     mode: 'onChange'
   });

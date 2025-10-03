@@ -19,7 +19,7 @@ export default async function Page({ params }: SweepstakesDetailPageProps) {
 }
 
 const Wrapper: React.FC<{ id: string }> = async ({ id }) => {
-  const result = await getParticipantSweepstake({ id });
+  const result = await getParticipantSweepstake({ sweepstakesId: id });
 
   if (!result.ok) {
     return <div>Failed to load sweepstakes details: {result.data.message}</div>;

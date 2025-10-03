@@ -10,6 +10,8 @@ import { MinimumAgeRestrictionSchema } from './schemas';
 export const DEFAULT_MINIMUM_AGE = 13;
 
 export const DEFAULT_SWEEPSTAKES_NAME = 'Untitled Sweepstakes';
+export const DEFAULT_SWEEPSTAKES_PRIZE_NAME = 'My Custom Prize';
+export const DEFAULT_SWEEPSTAKES_PRIZE_QUOTA = 1;
 export const DEFAULT_SWEEPSTAKES_DESCRIPTION = 'Enter to win a prize!';
 export const DEFAULT_WINNER_SELECTION_METHOD = 'Random Drawing';
 export const DEFAULT_NOTIFICATION_TIMEFRAME_DAYS = 7;

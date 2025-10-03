@@ -30,7 +30,7 @@ export default async function Layout({
 }
 
 const Wrapper: React.FC<Params> = async ({ slug, id }) => {
-  const result = await getParticipantSweepstake({ id });
+  const result = await getParticipantSweepstake({ sweepstakesId: id });
   const participants = await getParticipatingUsers({
     slug,
     sweepstakesId: id,

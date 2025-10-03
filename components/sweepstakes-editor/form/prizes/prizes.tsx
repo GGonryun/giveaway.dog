@@ -26,6 +26,10 @@ import {
 } from '@/components/ui/form';
 import { Section } from '../section';
 import { nanoid } from 'nanoid';
+import {
+  DEFAULT_SWEEPSTAKES_PRIZE_NAME,
+  DEFAULT_SWEEPSTAKES_PRIZE_QUOTA
+} from '@/schemas/giveaway/defaults';
 
 type ActivePrize = { id: string; index: number };
 
@@ -128,8 +132,8 @@ export const Prizes = () => {
                   className="w-full cursor-pointer shadow-sm"
                   onClick={() =>
                     append({
-                      name: 'My Custom Prize',
-                      quota: 1,
+                      name: DEFAULT_SWEEPSTAKES_PRIZE_NAME,
+                      quota: DEFAULT_SWEEPSTAKES_PRIZE_QUOTA,
                       id: nanoid()
                     })
                   }

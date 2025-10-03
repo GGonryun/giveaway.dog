@@ -1,28 +1,53 @@
 'use server';
 
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import React, { Suspense } from 'react';
 import { SweepstakesWinners } from '@/components/sweepstakes-details/sweepstakes-winners';
+import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
+import getSweepstakePrizes from '@/procedures/sweepstakes/get-sweepstake-prizes';
+import getParticipatingUsers from '@/procedures/users/get-participating-users';
+import React, { Suspense } from 'react';
 
 interface SweepstakesDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string; id: string }>;
 }
 
 export default async function Page({ params }: SweepstakesDetailPageProps) {
-  const { id } = await params;
+  const { slug, id } = await params;
 
   return (
     <Suspense fallback={<div>Loading winners...</div>}>
-      <Wrapper id={id} />
+      <Wrapper slug={slug} sweepstakesId={id} />
     </Suspense>
   );
 }
 
-const Wrapper: React.FC<{ id: string }> = async ({ id }) => {
-  const result = await getParticipantSweepstake({ id });
+const Wrapper: React.FC<{ slug: string; sweepstakesId: string }> = async (
+  props
+) => {
+  const result = await getParticipantSweepstake(props);
+  const prizes = await getSweepstakePrizes(props);
+  const participants = await getParticipatingUsers({
+    slug: props.slug,
+    sweepstakesId: props.sweepstakesId
+  });
 
   if (!result.ok) {
     return <div>Failed to load sweepstakes winners: {result.data.message}</div>;
   }
-  return <SweepstakesWinners sweepstakesId={id} />;
+
+  if (!prizes.ok) {
+    return <div>Failed to load sweepstakes prizes: {prizes.data.message}</div>;
+  }
+
+  if (!participants.ok) {
+    return <div>Failed to load participants: {participants.data.message}</div>;
+  }
+
+  return (
+    <SweepstakesWinners
+      prizes={prizes.data}
+      participants={participants.data.users}
+      sweepstakesId={props.sweepstakesId}
+      slug={props.slug}
+    />
+  );
 };

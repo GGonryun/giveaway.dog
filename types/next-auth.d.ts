@@ -5,7 +5,6 @@ declare module 'next-auth' {
   interface Session {}
   interface User extends DefaultSession['user'] {
     id: string | null;
-    ageVerified: boolean | null;
     emoji: string | null;
     countryCode: string | null;
     type: UserType[] | null;

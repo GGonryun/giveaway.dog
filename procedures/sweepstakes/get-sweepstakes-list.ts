@@ -126,10 +126,12 @@ const getTimeLeft = (
   if (sweepstake.status === SweepstakesStatus.DRAFT) return 'Not started';
   if (!sweepstake.timing?.endDate || !sweepstake.timing?.startDate)
     return 'Not started';
-  if (isAfter(now, sweepstake.timing?.endDate)) return 'Completed';
-  if (isAfter(sweepstake.timing?.startDate, now))
-    return `Starts ${formatDistanceToNow(sweepstake.timing?.startDate, { addSuffix: true })}`;
-  return `Ends ${formatDistance(sweepstake.timing?.endDate, now, { addSuffix: true })}`;
+
+  if (isAfter(now, sweepstake.timing.endDate))
+    return `Ended ${formatDistanceToNow(sweepstake.timing.endDate)} ago`;
+  if (isAfter(sweepstake.timing.startDate, now))
+    return `Starts in ${formatDistanceToNow(sweepstake.timing.startDate)}`;
+  return `Ends in ${formatDistance(sweepstake.timing.endDate, now)}`;
 };
 
 export default getSweepstakesList;

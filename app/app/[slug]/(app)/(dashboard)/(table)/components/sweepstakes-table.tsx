@@ -176,7 +176,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
               </SortableHeader>
               <TableHead className="text-right w-24">Entries</TableHead>
               <TableHead className="text-right w-24">Conversion</TableHead>
-              <TableHead className="text-right py-2 w-28">Time Left</TableHead>
+              <TableHead className="text-right py-2 w-28">Status</TableHead>
               <TableHead className="text-right py-2 w-24">Actions</TableHead>
             </TableRow>
           </TableHeader>

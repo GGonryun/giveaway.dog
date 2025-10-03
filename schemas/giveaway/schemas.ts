@@ -4,6 +4,10 @@ import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';
 import { userProfileSchema } from '../user';
 import { taskSchema } from '../tasks/schemas';
+import {
+  taskCompletionSchema,
+  sweepstakesParticipantSchema
+} from './participant';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -107,15 +111,19 @@ const giveawayFormPrizeSchema = z
   .min(1, 'At least one prize is required')
   .max(10, 'Maximum of 10 prizes are allowed');
 
-const giveawayFormTimingSchema = z
-  .object({
+const giveawayFormTimingSchema = (validateEndDate: boolean) => {
+  const endDate = validateEndDate
+    ? z.date().refine((date) => date > new Date(), {
+        message: 'End date must be in the future'
+      })
+    : z.date();
+  const obj = z.object({
     startDate: z.date(),
-    endDate: z.date().refine((date) => date > new Date(), {
-      message: 'End date must be in the future'
-    }),
+    endDate,
     timeZone: z.string()
-  })
-  .superRefine((data, ctx) => {
+  });
+  if (!validateEndDate) return obj;
+  return obj.superRefine((data, ctx) => {
     const startDate = data.startDate;
     const endDate = data.endDate;
     if (startDate && endDate <= startDate) {
@@ -126,24 +134,27 @@ const giveawayFormTimingSchema = z
       });
     }
   });
+};
 
-export const giveawayFormSchema = z.object({
-  setup: giveawayFormSetupSchema,
-  terms: giveawayFormTermsSchema,
-  timing: giveawayFormTimingSchema,
-  audience: giveawayAudienceSchema,
-  tasks: giveawayFormTaskSchema,
-  prizes: giveawayFormPrizeSchema
-});
+export const giveawayFormSchema = (validateEndDate: boolean) =>
+  z.object({
+    setup: giveawayFormSetupSchema,
+    terms: giveawayFormTermsSchema,
+    timing: giveawayFormTimingSchema(validateEndDate),
+    audience: giveawayAudienceSchema,
+    tasks: giveawayFormTaskSchema,
+    prizes: giveawayFormPrizeSchema
+  });
 
-export type GiveawayFormSchema = z.infer<typeof giveawayFormSchema>;
+export type GiveawayFormSchema = z.infer<ReturnType<typeof giveawayFormSchema>>;
 
-export const giveawaySchema = giveawayFormSchema.extend({
-  status: z.nativeEnum(SweepstakesStatus),
-  id: z.string()
-});
+export const giveawaySchema = (validateEndDate: boolean) =>
+  giveawayFormSchema(validateEndDate).extend({
+    status: z.nativeEnum(SweepstakesStatus),
+    id: z.string()
+  });
 
-export type GiveawaySchema = z.infer<typeof giveawaySchema>;
+export type GiveawaySchema = z.infer<ReturnType<typeof giveawaySchema>>;
 
 export const userParticipationSchema = z.object({
   entries: z.number().int().min(0),
@@ -233,7 +244,7 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
 };
 
 export const participantSweepstakeSchema = z.object({
-  sweepstakes: giveawaySchema,
+  sweepstakes: giveawaySchema(false),
   host: giveawayHostSchema,
   winners: giveawayWinnerSchema.array(),
   participation: giveawayParticipationSchema
@@ -248,3 +259,20 @@ export const timeSeriesDataSchema = z.object({
   entries: z.number()
 });
 export type TimeSeriesDataSchema = z.infer<typeof timeSeriesDataSchema>;
+
+export const sweepstakesPrizeSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  position: z.number(),
+  winner: z
+    .object({
+      id: z.string(),
+      updatedAt: z.date(),
+      createdAt: z.date(),
+      participant: sweepstakesParticipantSchema,
+      taskCompletion: taskCompletionSchema
+    })
+    .optional()
+});
+
+export type SweepstakesPrizeSchema = z.infer<typeof sweepstakesPrizeSchema>;

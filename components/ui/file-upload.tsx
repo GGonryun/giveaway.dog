@@ -35,8 +35,8 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       alert('Only JPEG, PNG, and GIF files are allowed.');
       return;
     }
-    if (file.size > 2 * 1024 * 1024) {
-      alert('File size must be less than 2MB.');
+    if (file.size > 3 * 1024 * 1024) {
+      alert('File size must be less than 3MB.');
       return;
     }
     setPreview(URL.createObjectURL(file));

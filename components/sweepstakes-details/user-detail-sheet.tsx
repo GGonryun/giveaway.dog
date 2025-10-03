@@ -12,11 +12,9 @@ import {
   BarChart3,
   Monitor,
   Tablet,
-  BookOpenTextIcon,
   ExternalLinkIcon
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { ParticipatingUserSchema } from '@/schemas/teams';
 import { useTeams } from '../context/team-provider';
 import { Badge } from '../ui/badge';
 import {
@@ -30,16 +28,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import { StatusExplanationDialog } from '../users/status-explanation-dialog';
+import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 
 export const ParticipatingUserSheetContent: React.FC<{
-  user: ParticipatingUserSchema;
+  user: SweepstakesParticipantSchema;
 }> = ({ user }) => {
   const router = useRouter();
   const { activeTeam } = useTeams();
   const [showStatusDialog, setShowStatusDialog] = useState(false);
 
   // Helper function to get additional details for display
-  const getDisplayData = (user: ParticipatingUserSchema) => ({
+  const getDisplayData = (user: SweepstakesParticipantSchema) => ({
     ...user,
     avatar: null,
     joinedAt: '2024-03-15T10:30:00Z', // TODO: Add to schema when available
@@ -441,7 +440,7 @@ const ParticipatingUserSheetLayout: React.PC<{
 };
 
 export const UserDetailSheet: React.FC<{
-  user: ParticipatingUserSchema | null;
+  user: SweepstakesParticipantSchema | null;
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
 }> = ({ user, open, onOpenChangeAction }) => {

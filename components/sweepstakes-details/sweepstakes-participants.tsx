@@ -29,21 +29,21 @@ import { MoreVertical, Eye, UserX, CheckCircle, Users } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { StatusExplanationDialog } from '../users/status-explanation-dialog';
 
-import { ParticipatingUserSchema } from '@/schemas/teams';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { datetime } from '@/lib/date';
+import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 
 export const SweepstakesParticipants: React.FC<{
   slug: string;
   sweepstakesId: string;
-  users: ParticipatingUserSchema[];
+  users: SweepstakesParticipantSchema[];
 }> = ({ users, slug, sweepstakesId }) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [showStatusDialog, setShowStatusDialog] = useState(false);
   const [statusDialogUser, setStatusDialogUser] =
-    useState<ParticipatingUserSchema | null>(null);
+    useState<SweepstakesParticipantSchema | null>(null);
 
   const pageSize = DEFAULT_PAGE_SIZE;
   const totalUsers = users.length;
@@ -57,7 +57,10 @@ export const SweepstakesParticipants: React.FC<{
     setSearch(query);
   }, []);
 
-  const getStatusBadge = (status: string, user: ParticipatingUserSchema) => {
+  const getStatusBadge = (
+    status: string,
+    user: SweepstakesParticipantSchema
+  ) => {
     const variants = {
       active: {
         variant: 'default' as const,

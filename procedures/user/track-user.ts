@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { procedure } from '@/lib/mrpc/procedures';
 import { ip } from '@/lib/ip';
 import { UserEventType } from '@prisma/client';
-import { UNKNOWN_USER_AGENT } from '@/lib/settings';
+import { UNKNOWN_USER_AGENT, UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
 import { userFingerprintSchema } from '@/schemas/fingerprint';
 
 const trackUser = procedure()
@@ -12,7 +12,7 @@ const trackUser = procedure()
   .output(userFingerprintSchema)
   .handler(async ({ user, db }) => {
     const h = await headers();
-    const userAgent = h.get('user-agent');
+    const rawUserAgent = h.get('user-agent');
     const realIp =
       h.get('x-forwarded-for')?.split(',')[0].trim() || // first IP
       h.get('x-real-ip') || // fallback
@@ -20,13 +20,21 @@ const trackUser = procedure()
 
     const geo = await ip.geolocation(realIp);
 
-    console.info('User tracking data:', { userAgent, realIp, geo });
+    console.info('User tracking data:', {
+      userAgent: rawUserAgent,
+      realIp,
+      geo
+    });
 
-    await db.$transaction(async (tx) => {
+    return await db.$transaction(async (tx) => {
+      const countryCode = geo.country_code || UNKNOWN_USER_COUNTRY_CODE;
+      const userAgent = rawUserAgent || UNKNOWN_USER_AGENT;
+
       await tx.user.update({
         where: { id: user.id },
         data: {
-          countryCode: geo.country_code
+          countryCode,
+          userAgent
         }
       });
 
@@ -35,16 +43,16 @@ const trackUser = procedure()
           userId: user.id,
           type: UserEventType.LOGIN,
           ip: geo.ip,
-          userAgent: userAgent || UNKNOWN_USER_AGENT,
+          userAgent,
           geo
         }
       });
+      return {
+        ip: realIp,
+        userAgent,
+        countryCode
+      };
     });
-    return {
-      ip: realIp,
-      userAgent: userAgent || null,
-      countryCode: geo.country_code
-    };
   });
 
 export default trackUser;
