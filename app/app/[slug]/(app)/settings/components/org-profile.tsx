@@ -11,7 +11,7 @@ import { Building2, PaintbrushIcon } from 'lucide-react';
 
 export function OrgProfile() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">

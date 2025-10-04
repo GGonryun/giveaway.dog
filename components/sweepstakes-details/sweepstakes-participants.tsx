@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Card,
@@ -40,7 +40,6 @@ export const SweepstakesParticipants: React.FC<{
 }> = ({ users, slug, sweepstakesId }) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState('');
   const [showStatusDialog, setShowStatusDialog] = useState(false);
   const [statusDialogUser, setStatusDialogUser] =
     useState<SweepstakesParticipantSchema | null>(null);
@@ -52,10 +51,6 @@ export const SweepstakesParticipants: React.FC<{
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
-  const handleSearch = useCallback((query: string) => {
-    setSearch(query);
-  }, []);
 
   const getStatusBadge = (
     status: string,
@@ -220,8 +215,12 @@ export const SweepstakesParticipants: React.FC<{
                         <TableCell onClick={(e) => e.stopPropagation()}>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <MoreVertical className="h-4 w-4" />
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="size-7"
+                              >
+                                <MoreVertical />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
@@ -236,7 +235,7 @@ export const SweepstakesParticipants: React.FC<{
                                   router.push(`/app/${slug}/users/${user.id}`);
                                 }}
                               >
-                                <Eye className="h-4 w-4 mr-2" />
+                                <Eye />
                                 View Full Details
                               </DropdownMenuItem>
                               <DropdownMenuItem
@@ -247,7 +246,7 @@ export const SweepstakesParticipants: React.FC<{
                                   );
                                 }}
                               >
-                                <Eye className="h-4 w-4 mr-2" />
+                                <Eye />
                                 Quick View
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
@@ -257,7 +256,7 @@ export const SweepstakesParticipants: React.FC<{
                                   alert('Block user action');
                                 }}
                               >
-                                <UserX className="h-4 w-4 mr-2" />
+                                <UserX />
                                 Block User
                               </DropdownMenuItem>
                             </DropdownMenuContent>

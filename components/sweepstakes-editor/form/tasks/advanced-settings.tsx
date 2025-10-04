@@ -54,7 +54,7 @@ const MandatoryField: React.FC = () => {
         control={form.control}
         name={`tasks.${index}.mandatory`}
         render={({ field }) => (
-          <FormItem className="flex flex-row items-center justify-between">
+          <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader
               label="Mandatory"
               description="Users must complete this task to access non-mandatory tasks"

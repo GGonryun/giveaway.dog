@@ -9,7 +9,6 @@ import { noop } from 'lodash';
 import { Eye, Smartphone, Monitor, CheckCircle2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useIsMobile } from '../hooks/use-mobile';
-import { useUrl } from '../hooks/use-url';
 import { QRCodeModal } from '../patterns/qr-code-modal';
 import {
   mockParticipation,
@@ -29,8 +28,6 @@ import { SweepstakesStatus } from '@prisma/client';
 import { useProcedure } from '@/lib/mrpc/hook';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
-import { isAfter } from 'date-fns';
-import { GiveawayState } from '@/schemas/giveaway/schemas';
 import { computeState } from '@/lib/sweepstakes';
 
 export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
@@ -63,7 +60,7 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   const hasAllWinnersSelected = selectedWinners >= totalPrizeSlots;
 
   return (
-    <div className="space-y-6">
+    <>
       {/* Completed State Alert */}
       {sweepstakes.status === SweepstakesStatus.COMPLETED && (
         <Alert className="border-green-200 bg-green-50">
@@ -88,9 +85,6 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
           onPickWinners={() => {
             detailsPage.setTab(sweepstakes.id, 'winners');
           }}
-          onAnnounceWinners={() => {
-            alert('Announce winners clicked');
-          }}
           onGenerateQR={() => {
             setIsQRModalOpen(true);
           }}
@@ -113,7 +107,7 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
         title="Share Sweepstakes QR Code"
         size={256}
       />
-    </div>
+    </>
   );
 };
 
@@ -137,58 +131,55 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
   });
 
   return (
-    <div className="space-y-4 mt-4">
-      {/* Preview Frame */}
-      <Card className="p-0 overflow-hidden">
-        <CardContent className="p-4 bg-giveaway space-y-4">
-          <div className="flex items-center justify-center space-x-2">
-            {!isMobile && (
-              <DeviceSelector
-                previewDevice={previewDevice}
-                setPreviewDevice={setPreviewDevice}
+    <Card className="p-0 bg-giveaway">
+      <CardContent className="p-4 space-y-4">
+        <div className="flex items-center justify-center space-x-2">
+          {!isMobile && (
+            <DeviceSelector
+              previewDevice={previewDevice}
+              setPreviewDevice={setPreviewDevice}
+            />
+          )}
+        </div>
+        <div
+          className={cn(
+            `transition-all duration-300 mx-auto`,
+            previewDevice === 'mobile' ? 'max-w-sm' : 'max-w-2xl'
+          )}
+        >
+          <div className="rounded-lg overflow-hidden">
+            {sweepstakes && host ? (
+              <GiveawayParticipation
+                device={previewDevice}
+                isLoading={false}
+                sweepstakes={sweepstakes}
+                host={host}
+                participation={mockParticipation}
+                winners={mockWinners}
+                userProfile={mockUserProfile}
+                userParticipation={mockUserParticipation}
+                state={state}
+                onTaskComplete={noop}
+                onLogin={noop}
+                onCompleteProfile={noop}
               />
-            )}
-          </div>
-          <div
-            className={cn(
-              `transition-all duration-300 mx-auto`,
-              previewDevice === 'mobile' ? 'max-w-sm' : 'max-w-2xl'
-            )}
-          >
-            <div className="rounded-lg overflow-hidden">
-              {sweepstakes && host ? (
-                <GiveawayParticipation
-                  device={previewDevice}
-                  isLoading={false}
-                  sweepstakes={sweepstakes}
-                  host={host}
-                  participation={mockParticipation}
-                  winners={mockWinners}
-                  userProfile={mockUserProfile}
-                  userParticipation={mockUserParticipation}
-                  state={state}
-                  onTaskComplete={noop}
-                  onLogin={noop}
-                  onCompleteProfile={noop}
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-center space-y-4">
-                    <Eye className="h-12 w-12 mx-auto text-muted-foreground" />
-                    <div>
-                      <h3 className="font-medium">No Preview Available</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Landing page URL not configured
-                      </p>
-                    </div>
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center space-y-4">
+                  <Eye className="h-12 w-12 mx-auto text-muted-foreground" />
+                  <div>
+                    <h3 className="font-medium">No Preview Available</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Landing page URL not configured
+                    </p>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

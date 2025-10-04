@@ -22,50 +22,46 @@ export const UserPage: React.FC = () => {
     useState<AccountSections>('profile');
 
   return (
-    <div className="space-y-6 w-full">
+    <div className="py-4 space-y-4 container">
       <Tabs
         value={activeSection}
         onValueChange={(value) => setActiveSection(value as AccountSections)}
       >
-        <div className="overflow-x-auto sticky top-[73px] z-10">
-          <TabsList className="border-l-0 border-r-0 border-t-0 inline-flex h-auto p-1 min-w-full">
-            {tabItems.map((item) => {
-              return (
-                <TabsTrigger
-                  key={item.id}
-                  value={item.id}
-                  className="whitespace-nowrap flex-shrink-0 px-3 py-2"
-                >
-                  {item.label}
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
-        </div>
+        <TabsList>
+          {tabItems.map((item) => {
+            return (
+              <TabsTrigger
+                key={item.id}
+                value={item.id}
+                className="whitespace-nowrap flex-shrink-0 px-3 py-2"
+              >
+                {item.label}
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
 
-        <div className="space-y-4 py-3 sm:py-6 container">
-          <TabsContent value="profile" className="mt-0">
-            <UserSettings />
-          </TabsContent>
-          <TabsContent value="features" className="mt-0">
-            <FeatureSettings />
-          </TabsContent>
-          <TabsContent value="activity" className="mt-0">
-            <div className="p-4 border border-dashed rounded-lg text-center text-sm text-muted-foreground">
-              Activity section coming soon!
-            </div>
-          </TabsContent>
-          <TabsContent value="notifications" className="mt-0">
-            <div className="p-4 border border-dashed rounded-lg text-center text-sm text-muted-foreground">
-              Notification settings coming soon!
-            </div>
-          </TabsContent>
-          <TabsContent value="danger-zone" className="mt-0">
-            <DangerZone />
-          </TabsContent>
+        <TabsContent value="profile" className="mt-0">
+          <UserSettings />
+        </TabsContent>
+        <TabsContent value="features" className="mt-0">
+          <FeatureSettings />
+        </TabsContent>
+        <TabsContent value="activity" className="mt-0">
+          <div className="p-4 border border-dashed rounded-lg text-center text-sm text-muted-foreground">
+            Activity section coming soon!
+          </div>
+        </TabsContent>
+        <TabsContent value="notifications" className="mt-0">
+          <div className="p-4 border border-dashed rounded-lg text-center text-sm text-muted-foreground">
+            Notification settings coming soon!
+          </div>
+        </TabsContent>
+        <TabsContent value="danger-zone" className="mt-0">
+          <DangerZone />
+        </TabsContent>
 
-          <LogoutButton />
-        </div>
+        <LogoutButton />
       </Tabs>
     </div>
   );

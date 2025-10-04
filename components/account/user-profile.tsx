@@ -34,7 +34,7 @@ export const UserSettings = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Card>
         <SectionHeader
           title="Display Name"

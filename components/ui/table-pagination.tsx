@@ -32,7 +32,7 @@ export function TablePagination({
   const endItem = Math.min(currentPage * pageSize, totalItems);
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-3 sm:px-6 py-4 border-t">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-3 sm:px-6 py-2 border-t">
       <div className="flex items-center justify-center sm:justify-start text-xs sm:text-sm text-muted-foreground">
         <span>
           <span className="hidden sm:inline">Showing </span>
@@ -44,23 +44,23 @@ export function TablePagination({
       <div className="flex items-center justify-center gap-1 sm:gap-2">
         <Button
           variant="outline"
-          size="sm"
+          size="icon"
+          className="size-8"
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1 || isPending}
-          className="p-2 sm:px-3"
         >
-          <ChevronsLeft className="h-4 w-4" />
+          <ChevronsLeft />
           <span className="sr-only">First page</span>
         </Button>
 
         <Button
           variant="outline"
-          size="sm"
+          size="icon"
+          className="size-8"
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1 || isPending}
-          className="p-2 sm:px-3"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft />
           <span className="sr-only">Previous page</span>
         </Button>
 
@@ -75,23 +75,23 @@ export function TablePagination({
 
         <Button
           variant="outline"
-          size="sm"
+          size="icon"
+          className="size-8"
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages || isPending}
-          className="p-2 sm:px-3"
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight />
           <span className="sr-only">Next page</span>
         </Button>
 
         <Button
           variant="outline"
-          size="sm"
+          size="icon"
+          className="size-8"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages || isPending}
-          className="p-2 sm:px-3"
         >
-          <ChevronsRight className="h-4 w-4" />
+          <ChevronsRight />
           <span className="sr-only">Last page</span>
         </Button>
       </div>

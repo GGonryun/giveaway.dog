@@ -91,13 +91,10 @@ export const SweepstakesPromotion: React.FC<ParticipantSweepstakeSchema> = ({
   }
 
   return (
-    <div className="space-y-6">
+    <>
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Share2 className="h-5 w-5" />
-            <span>Social Sharing</span>
-          </CardTitle>
+          <CardTitle>Social Sharing</CardTitle>
           <CardDescription>
             Share your sweepstakes across social media platforms
           </CardDescription>
@@ -128,13 +125,9 @@ export const SweepstakesPromotion: React.FC<ParticipantSweepstakeSchema> = ({
         </CardContent>
       </Card>
 
-      {/* UTM Builder */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Link className="h-5 w-5" />
-            <span>UTM Link Builder</span>
-          </CardTitle>
+          <CardTitle>UTM Link Builder</CardTitle>
           <CardDescription>
             Create trackable links with UTM parameters for campaign analytics
           </CardDescription>
@@ -215,45 +208,33 @@ export const SweepstakesPromotion: React.FC<ParticipantSweepstakeSchema> = ({
         </CardContent>
       </Card>
 
-      {/* Direct Links */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <ExternalLink className="h-5 w-5" />
-            <span>Direct Links</span>
-          </CardTitle>
+          <CardTitle>Direct Links</CardTitle>
           <CardDescription>
             Copy and share direct links to your sweepstakes
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-2">
           <div>
             <Label className="text-sm font-medium">Landing Page URL</Label>
             <div className="flex items-center space-x-2 mt-1">
               <Input value={liveUrl} readOnly className="text-sm" />
               <Button
-                size="sm"
+                size="icon"
                 variant="outline"
                 onClick={() => copyToClipboard(liveUrl, 'landing')}
               >
-                {copiedUrl === 'landing' ? (
-                  <CheckCircle className="h-4 w-4" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )}
+                {copiedUrl === 'landing' ? <CheckCircle /> : <Copy />}
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Email Template */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Mail className="h-5 w-5" />
-            <span>Email Template</span>
-          </CardTitle>
+          <CardTitle>Email Template</CardTitle>
           <CardDescription>
             Ready-to-use email template for your campaigns
           </CardDescription>
@@ -307,13 +288,9 @@ Your Team`}
         </CardContent>
       </Card>
 
-      {/* QR Code */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <QrCode className="h-5 w-5" />
-            <span>QR Code</span>
-          </CardTitle>
+          <CardTitle>QR Code</CardTitle>
           <CardDescription>
             Generate QR codes for offline promotion
           </CardDescription>
@@ -343,6 +320,6 @@ Your Team`}
         title="Share Sweepstakes QR Code"
         size={256}
       />
-    </div>
+    </>
   );
 };

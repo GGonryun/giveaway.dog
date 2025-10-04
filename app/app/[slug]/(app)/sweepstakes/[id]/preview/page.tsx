@@ -1,8 +1,8 @@
 'use server';
 
+import { SweepstakesPreview } from '@/components/sweepstakes-details/sweepstakes-preview';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import React, { Suspense } from 'react';
-import { SweepstakesPreview } from '../../../../../../../components/sweepstakes-details/sweepstakes-preview';
 
 interface SweepstakesDetailPageProps {
   params: Promise<{ id: string }>;

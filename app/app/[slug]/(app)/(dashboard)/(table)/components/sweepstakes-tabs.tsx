@@ -1,12 +1,7 @@
 'use client';
 
-import {
-  OutlineTabsContent,
-  OutlineTabsList,
-  OutlineTabsTrigger
-} from '@/components/app/outline-tabs';
 import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
-import { Tabs } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   ListSweepstakesFilters,
   SWEEPSTAKES_FILTER_STATUS_OPTIONS
@@ -31,17 +26,17 @@ export const SweepstakesTabs: React.PC<{
         });
       }}
     >
-      <OutlineTabsList>
+      <TabsList>
         {Object.entries(SWEEPSTAKES_FILTER_STATUS_OPTIONS).map(
           ([key, label]) => (
-            <OutlineTabsTrigger key={key} value={key}>
+            <TabsTrigger key={key} value={key}>
               {label}
-            </OutlineTabsTrigger>
+            </TabsTrigger>
           )
         )}
-      </OutlineTabsList>
+      </TabsList>
 
-      <OutlineTabsContent>{children}</OutlineTabsContent>
+      <div className="space-y-4">{children}</div>
     </Tabs>
   );
 };

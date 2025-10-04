@@ -62,7 +62,7 @@ export const regionalRestrictionRender: ControllerProps<
   const isEnabled = useMemo(() => Boolean(field.value), [field.value]);
 
   return (
-    <FormItem className="flex flex-row items-center justify-between">
+    <FormItem className="flex flex-row items-start justify-between">
       <SwitchFormHeader
         label="Regional Restrictions"
         description="Restrict access to users from certain regions or countries."

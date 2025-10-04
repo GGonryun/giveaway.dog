@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { XIcon, SaveIcon, EyeIcon, EditIcon } from 'lucide-react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import { useCallback, useMemo, useState } from 'react';
 import { UnifiedFormFooter } from './unified-form-footer';
 import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
@@ -17,8 +16,7 @@ import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';
 const MobileTabTrigger: React.FC<{
   step: SweepstakeStep;
   label: string;
-  mobileView: 'form' | 'preview';
-}> = ({ step, label, mobileView }) => {
+}> = ({ step, label }) => {
   const { formErrors, trigger } = useFormIssues(step);
   const errors = useMemo(() => formErrors.length, [formErrors]);
   const { step: currentStep } = useSweepstakes();
@@ -30,18 +28,8 @@ const MobileTabTrigger: React.FC<{
   }, [currentStep]);
 
   return (
-    <TabsTrigger
-      asChild
-      value={step}
-      className="flex-1 data-[state=active]:shadow-none"
-    >
-      <Link
-        href={`?step=${step}`}
-        onClick={handleJumpToField}
-        className={cn(
-          'flex gap-1 w-full data-[state=active]:border-l data-[state=active]:border-t data-[state=active]:border-r h-7 mt-1 '
-        )}
-      >
+    <TabsTrigger asChild value={step} className="text-xs">
+      <Link href={`?step=${step}`} onClick={handleJumpToField}>
         {label}
         {Boolean(errors) && (
           <Badge
@@ -64,8 +52,8 @@ const MobileFormHeader: React.FC<
   const { step } = useSweepstakes();
 
   return (
-    <SiteHeader className="h-20">
-      <div className="flex flex-col w-full gap-1.5 pt-2.5">
+    <SiteHeader className="h-22">
+      <div className="flex flex-col w-full gap-1.5">
         <div className="flex items-center">
           <div className="flex-1 min-w-0">
             <h1 className="text-lg sm:text-xl font-medium truncate">{title}</h1>
@@ -87,16 +75,12 @@ const MobileFormHeader: React.FC<
         </div>
         <div className="w-full">
           <Tabs value={step}>
-            <TabsList
-              size="sm"
-              className="w-full p-1 gap-1 m-0 mt-[0px] h-8 shadow-none"
-            >
+            <TabsList className="w-full p-1 gap-1 h-8 shadow-none ">
               {SWEEPSTAKE_STEPS.map((step) => (
                 <MobileTabTrigger
                   key={step.key}
                   step={step.key}
                   label={step.label}
-                  mobileView={mobileView}
                 />
               ))}
             </TabsList>

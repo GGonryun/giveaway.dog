@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Settings2 } from 'lucide-react';
+import { Settings2, Square, SquareCheckBig } from 'lucide-react';
 import { useMemo, useState, useCallback, useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Typography } from '@/components/ui/typography';
@@ -424,18 +424,7 @@ export const TermsAndConditions = () => {
 };
 
 const RadioIcon: React.FC<{ checked: boolean }> = ({ checked }) => {
-  return (
-    <div
-      className={cn(
-        'w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center',
-        checked && 'border-primary-foreground '
-      )}
-    >
-      {checked && (
-        <div className="w-2.5 h-2.5 bg-primary-foreground rounded-full" />
-      )}
-    </div>
-  );
+  return checked ? <SquareCheckBig /> : <Square />;
 };
 
 type ButtonTextareaProps = {

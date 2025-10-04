@@ -33,8 +33,6 @@ export default async function Layout({
   return (
     <Outline
       title="Sweepstakes"
-      className="pt-0 sm:pt-0 sm:pb-8"
-      container={false}
       action={
         status !== SweepstakesStatus.COMPLETED ? (
           <EditGiveawayButton id={id} />

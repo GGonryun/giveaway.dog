@@ -98,7 +98,7 @@ export const TaskItem: React.FC<{
             </div>
           </div>
 
-          <div className="flex items-center gap-2 p-2">
+          <div className="flex items-center gap-2 p-1">
             {task.mandatory && (
               <Badge variant="destructive" className="text-xs">
                 Required
@@ -108,8 +108,9 @@ export const TaskItem: React.FC<{
               <TooltipTrigger asChild>
                 <Button
                   size="icon"
+                  type="button"
                   variant={completed ? 'default' : 'outline'}
-                  className="h-7 sm:px-6 cursor-pointer"
+                  className="h-7 sm:px-6 cursor-pointer group-hover:bg-primary hover:bg-primary group-hover:text-primary-foreground hover:text-primary-foreground transition-colors"
                 >
                   {isLoading ? (
                     <Spinner />

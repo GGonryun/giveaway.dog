@@ -66,7 +66,7 @@ export const SweepstakesEntries = ({
   };
 
   return (
-    <div className="space-y-6">
+    <>
       <Card className="overflow-hidden p-0 gap-0">
         <Table>
           <TableHeader>
@@ -74,6 +74,7 @@ export const SweepstakesEntries = ({
               <TableHead>Task</TableHead>
               <TableHead>Participant</TableHead>
               <TableHead>Completed</TableHead>
+              <TableHead>Country</TableHead>
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
@@ -85,21 +86,19 @@ export const SweepstakesEntries = ({
                 onClick={() => handleTaskClick(completion)}
               >
                 <TableCell>
-                  <div className="space-y-1">
+                  <div>
                     <div className="flex items-center space-x-2">
-                      <TaskPlatformIcon type={completion.task.type} />
                       <Button
                         variant="link"
-                        className="p-0 m-0 h-6 font-medium text-sm hover:text-primary transition-colors"
+                        className="p-0 m-0 h-6 font-medium hover:text-primary transition-colors cursor-pointer"
                       >
                         {completion.task.title}
                       </Button>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <TaskCategoryBadge type={completion.task.type} />
-                      <span className="text-xs text-muted-foreground">
+                      <div className="text-xs text-muted-foreground">
                         {TASK_LABEL[completion.task.type]}
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </TableCell>
@@ -118,12 +117,6 @@ export const SweepstakesEntries = ({
                     <div className="text-xs text-muted-foreground">
                       {completion.user.email}
                     </div>
-                    <div className="flex items-center space-x-1 mt-1">
-                      <Globe className="h-3 w-3 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">
-                        {completion.user.countryCode}
-                      </span>
-                    </div>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -132,6 +125,14 @@ export const SweepstakesEntries = ({
                       addSuffix: true
                     })}
                   </span>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center space-x-1">
+                    <Globe className="h-3 w-3 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">
+                      {completion.user.countryCode}
+                    </span>
+                  </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-2">
@@ -154,6 +155,6 @@ export const SweepstakesEntries = ({
           isPending={false}
         />
       </Card>
-    </div>
+    </>
   );
 };

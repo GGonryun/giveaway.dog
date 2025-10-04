@@ -13,7 +13,7 @@ export const RequireEmail = () => {
         control={form.control}
         name="audience.requireEmail"
         render={({ field }) => (
-          <FormItem className="flex flex-row items-center justify-between">
+          <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader
               label="Email Required"
               description="A valid email address is required to enter."

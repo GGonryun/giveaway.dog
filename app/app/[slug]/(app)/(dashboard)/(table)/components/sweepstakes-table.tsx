@@ -273,7 +273,6 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
             <CreateGiveawayButton
               showDropdown={false}
               text="Create Your First Giveaway"
-              variant="default"
             />
           </div>
         )}

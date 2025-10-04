@@ -30,12 +30,7 @@ const SweepstakesPage: SweepstakesPageComponent = async (props) => {
   const filters = toSweepstakesFilter(resolvedSearchParams);
 
   return (
-    <Outline
-      title="Sweepstakes"
-      className="pt-0 sm:pt-0 sm:pb-8"
-      container={false}
-      action={<CreateGiveawayButton />}
-    >
+    <Outline title="Sweepstakes" action={<CreateGiveawayButton />}>
       <SweepstakesTabs filters={filters}>
         <SweepstakesFilterBar filters={filters} />
         <Suspense

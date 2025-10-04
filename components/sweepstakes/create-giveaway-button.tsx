@@ -17,15 +17,9 @@ import { useCreateSweepstakesPage } from './use-create-sweepstakes-page';
 
 export const CreateGiveawayButton: React.FC<{
   text?: string;
-  variant?: 'default' | 'secondary';
   showIcon?: boolean;
   showDropdown?: boolean;
-}> = ({
-  text = 'Create',
-  showIcon = true,
-  showDropdown = true,
-  variant = 'secondary'
-}) => {
+}> = ({ text = 'Create', showIcon = true, showDropdown = true }) => {
   const { activeTeam } = useTeams();
   const { navigateTo } = useCreateSweepstakesPage();
 
@@ -43,7 +37,6 @@ export const CreateGiveawayButton: React.FC<{
   return (
     <div className="flex -mt-0.5 w-fit">
       <Button
-        variant={variant}
         size="sm"
         className="rounded-r-none"
         disabled={procedure.isLoading}
@@ -57,7 +50,6 @@ export const CreateGiveawayButton: React.FC<{
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              variant={variant}
               size="sm"
               className="rounded-l-none border-l px-2"
               disabled={procedure.isLoading}
@@ -70,12 +62,12 @@ export const CreateGiveawayButton: React.FC<{
               onClick={() => procedure.run(activeTeam)}
               disabled={procedure.isLoading}
             >
-              <FileText className="h-4 w-4 mr-2" />
+              <FileText />
               Start from scratch
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleFromTemplate}>
-              <Sparkles className="h-4 w-4 mr-2" />
+              <Sparkles />
               Use a template
             </DropdownMenuItem>
           </DropdownMenuContent>

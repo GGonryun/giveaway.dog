@@ -85,7 +85,7 @@ export const EntryMethod: React.FC<{
                 >
                   <theme.icon />
                 </div>
-                <Typography.Paragraph weight="medium">
+                <Typography.Paragraph size="md" weight="medium">
                   {theme.label}
                 </Typography.Paragraph>
               </div>

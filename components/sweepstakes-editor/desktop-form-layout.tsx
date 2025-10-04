@@ -75,7 +75,7 @@ const DesktopTabs: React.FC = () => {
   return (
     <div className="flex-1 flex justify-center">
       <Tabs value={step}>
-        <TabsList size="lg">
+        <TabsList>
           {SWEEPSTAKE_STEPS.map((step) => (
             <DesktopTabTrigger
               key={step.key}
@@ -147,7 +147,7 @@ const DesktopFormHeader: React.FC<FormHeaderProps> = ({
   onCancel
 }) => {
   return (
-    <SiteHeader container={false}>
+    <SiteHeader>
       <div className="grid grid-cols-3 w-full items-center gap-4">
         <DesktopTitle title={title} />
         <DesktopTabs />

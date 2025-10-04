@@ -6,11 +6,7 @@ import { Suspense } from 'react';
 
 export default async function SettingsPage() {
   return (
-    <Outline
-      title="Settings"
-      className="pt-0 sm:pt-0 sm:pb-8"
-      container={false}
-    >
+    <Outline title="Settings">
       <Suspense>
         <SettingsTabs />
       </Suspense>

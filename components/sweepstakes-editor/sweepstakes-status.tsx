@@ -30,7 +30,6 @@ interface SweepstakesStatusProps {
   sweepstakesUrl?: string;
   hasAllWinnersSelected?: boolean;
   onPickWinners?: () => void;
-  onAnnounceWinners?: () => void;
   onGenerateQR?: () => void;
   onCompleteSweepstakes?: () => void;
   isCompleting?: boolean;
@@ -96,7 +95,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   sweepstakesUrl = '',
   hasAllWinnersSelected = false,
   onPickWinners,
-  onAnnounceWinners,
   onGenerateQR,
   onCompleteSweepstakes,
   isCompleting = false,
@@ -106,9 +104,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   const now = new Date();
   const hasStarted = isAfter(now, startDate);
   const hasEnded = isAfter(now, endDate);
-  const showWinnerActions =
-    status === SweepstakesStatus.COMPLETED ||
-    (status === SweepstakesStatus.ACTIVE && hasEnded);
 
   const formatDateInTimeZone = (date: Date) => {
     try {
@@ -208,17 +203,15 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
 
   return (
     <Card className={cn('w-full', className)}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{statusConfig.description}</CardTitle>
-          <Badge variant={statusConfig.variant} className="text-sm">
-            {statusConfig.label}
-          </Badge>
-        </div>
+      <CardHeader className="flex items-center justify-between">
+        <CardTitle className="text-lg">{statusConfig.description}</CardTitle>
+        <Badge variant={statusConfig.variant} className="text-sm">
+          {statusConfig.label}
+        </Badge>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Time Information */}
-        <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
+        <div className="flex items-center gap-3">
           <timeInfo.icon className="h-5 w-5 text-primary" />
           <div>
             <div className="text-sm font-medium">{timeInfo.text}</div>
@@ -293,7 +286,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
         {/* Date Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center gap-3">
-            <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+            <CalendarIcon className="h-5 w-5 text-primary" />
             <div>
               <div className="text-sm font-medium">Start Date</div>
               <div className="text-sm text-muted-foreground">
@@ -302,7 +295,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+            <CalendarIcon className="h-5 w-5 text-primary" />
             <div>
               <div className="text-sm font-medium">End Date</div>
               <div className="text-sm text-muted-foreground">
@@ -317,10 +310,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
           <>
             <Separator />
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Share2 className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium">Share Sweepstakes</span>
-              </div>
+              <div className="font-medium">Share Sweepstakes</div>
               <div className="flex gap-2">
                 <CopyLinkInput
                   value={sweepstakesUrl || ''}
@@ -328,18 +318,14 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                   className="flex-1"
                 />
                 {onGenerateQR && (
-                  <Button
-                    onClick={onGenerateQR}
-                    variant="outline"
-                    className="shrink-0"
-                  >
-                    <QrCode className="h-4 w-4" />
+                  <Button onClick={onGenerateQR} variant="outline" size="icon">
+                    <QrCode />
                   </Button>
                 )}
                 <Button
                   asChild
                   variant="outline"
-                  className="shrink-0"
+                  size="icon"
                   disabled={!sweepstakesUrl}
                 >
                   <Link
@@ -347,7 +333,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <ExternalLink className="h-4 w-4" />
+                    <ExternalLink />
                   </Link>
                 </Button>
               </div>

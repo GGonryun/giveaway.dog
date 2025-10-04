@@ -54,7 +54,7 @@ const Page: React.FC<UsersPageParams> = async ({ params, searchParams }) => {
   }
 
   return (
-    <Outline title="Users" container={true}>
+    <Outline title="Users">
       <UsersTable
         users={result.data.users}
         totalUsers={result.data.totalUsers}

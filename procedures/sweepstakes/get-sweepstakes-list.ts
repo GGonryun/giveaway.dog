@@ -120,9 +120,7 @@ const getTimeLeft = (
   }>
 ): string => {
   const now = new Date();
-  if (sweepstake.status === SweepstakesStatus.PAUSED) return 'Paused';
   if (sweepstake.status === SweepstakesStatus.COMPLETED) return 'Completed';
-  if (sweepstake.status === SweepstakesStatus.CANCELED) return 'Canceled';
   if (sweepstake.status === SweepstakesStatus.DRAFT) return 'Not started';
   if (!sweepstake.timing?.endDate || !sweepstake.timing?.startDate)
     return 'Not started';

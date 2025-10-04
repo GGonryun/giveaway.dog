@@ -1,12 +1,8 @@
 'use client';
 
-import { Tabs } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import React, { useEffect, useState } from 'react';
-import {
-  OutlineTabsContent,
-  OutlineTabsList,
-  OutlineTabsTrigger
-} from '@/components/app/outline-tabs';
+
 import { widetype } from '@/lib/widetype';
 import {
   isSweepstakesTab,
@@ -61,14 +57,14 @@ export const SweepstakesDetailsTabs: React.PC<{ id: string }> = ({
         }
       }}
     >
-      <OutlineTabsList>
+      <TabsList>
         {widetype.entries(SWEEPSTAKES_TAB_OPTIONS).map(([key, label]) => (
-          <OutlineTabsTrigger key={key} value={key}>
+          <TabsTrigger key={key} value={key}>
             {label}
-          </OutlineTabsTrigger>
+          </TabsTrigger>
         ))}
-      </OutlineTabsList>
-      <OutlineTabsContent>{children}</OutlineTabsContent>
+      </TabsList>
+      <div className="space-y-4">{children}</div>
     </Tabs>
   );
 };

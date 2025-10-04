@@ -33,14 +33,7 @@ const Wrapper: React.FC<Params> = async ({ slug, id }) => {
   const result = await getParticipantSweepstake({ sweepstakesId: id });
   const participants = await getParticipatingUsers({
     slug,
-    sweepstakesId: id,
-    // TODO: implement from URL query params
-    search: '',
-    page: 1,
-    sortField: 'lastEntryAt',
-    sortDirection: 'desc',
-    status: 'all',
-    dateRange: 'all'
+    sweepstakesId: id
   });
 
   if (!result.ok) {

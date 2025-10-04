@@ -34,28 +34,18 @@ export const SweepstakesAnalytics: React.FC<
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="space-y-1">
-            <CardTitle className="flex items-center space-x-2">
-              <BarChart3 className="h-5 w-5" />
-              <span>Daily Entries Timeline</span>
-            </CardTitle>
-            <CardDescription>
-              Total entry volume over the last {DEFAULT_TIME_SERIES_DURATION}{' '}
-              days
-            </CardDescription>
-          </div>
-        </div>
+        <CardTitle>Daily Entries Timeline</CardTitle>
+        <CardDescription>
+          Total entry volume over the last {DEFAULT_TIME_SERIES_DURATION} days
+        </CardDescription>
 
         {/* Key Metrics */}
         <div className="flex items-center space-x-6 pt-2">
-          <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-            <Gift className="h-4 w-4" />
-            <span>Total Entries: </span>
+          <div className="text-sm text-muted-foreground">
+            Total Entries:{' '}
             <span className="font-medium">{totalEntries.toLocaleString()}</span>
           </div>
-          <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-            <Users className="h-4 w-4" />
+          <div className="text-sm text-muted-foreground">
             <span>Unique Users: </span>
             <span className="font-medium">
               {totalUniqueUsers.toLocaleString()}

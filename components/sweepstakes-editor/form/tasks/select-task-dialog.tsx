@@ -76,11 +76,11 @@ const SelectTask: React.FC<{ type: TaskType; onClick: () => void }> = ({
         >
           <theme.icon />
         </div>
-        <Typography.Paragraph size="sm" weight="medium">
+        <Typography.Paragraph size="md" weight="medium">
           {theme.label}
         </Typography.Paragraph>
       </div>
-      <Badge variant="secondary" className="pl-1 pr-1">
+      <Badge variant="secondary" className="px-0.5 mr-1">
         <ChevronRight strokeWidth={2.5} />
       </Badge>
     </div>

@@ -9,7 +9,7 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
   const { id } = await params;
 
   return (
-    <Outline title={`User ${id.replace('user_', '')}`} container={true}>
+    <Outline title={`User ${id.replace('user_', '')}`}>
       <UserDetailView userId={id} />
     </Outline>
   );
