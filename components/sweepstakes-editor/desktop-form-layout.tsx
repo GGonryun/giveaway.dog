@@ -33,6 +33,7 @@ import {
 import { FormHeaderProps, FormLayoutProps } from './form-layout';
 import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';
 import { useFormErrors } from '../hooks/use-form-errors';
+import { PreviewStateDropdown } from './preview-state-dropdown';
 
 export const DesktopTabTrigger: React.FC<{
   step: SweepstakeStep;
@@ -158,33 +159,11 @@ const DesktopFormHeader: React.FC<FormHeaderProps> = ({
 };
 
 const PreviewFooter: React.FC = () => {
-  const { previewState, setPreviewState } = usePreviewState();
-
   return (
     <div className="bg-background border-t p-3">
       <div className="flex justify-between items-center">
         <div className="text-sm text-muted-foreground">Preview Mode</div>
-        <div className="flex gap-2">
-          {/* State Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                {getStateDisplayLabel(previewState)}
-                <ChevronDownIcon className="h-4 w-4 ml-1" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {PREVIEW_GIVEAWAY_STATES.map((state) => (
-                <DropdownMenuItem
-                  key={state}
-                  onClick={() => setPreviewState(state)}
-                >
-                  {getStateDisplayLabel(state)}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        <PreviewStateDropdown />
       </div>
     </div>
   );

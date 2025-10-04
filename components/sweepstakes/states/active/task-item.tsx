@@ -66,8 +66,8 @@ export const TaskItem: React.FC<{
       open={open}
       onOpenChange={setOpen}
       className={cn(
-        'border rounded-lg transition-colors bg-sidebar overflow-hidden relative',
-        open && 'z-50'
+        'rounded-sm transition-colors bg-sidebar overflow-hidden relative',
+        open ? 'z-50' : 'border'
       )}
     >
       <CollapsibleTrigger disabled={isLoading} asChild>
@@ -81,7 +81,7 @@ export const TaskItem: React.FC<{
           <div className="flex items-center gap-3 flex-1">
             <div
               className={cn(
-                'flex items-center justify-center min-w-8 w-12 h-full group-hover:opacity-50',
+                'flex items-center justify-center min-w-8 w-11 h-full group-hover:opacity-50',
                 completed ? 'bg-green-100 text-green-600' : theme.symbol
               )}
             >
@@ -98,7 +98,7 @@ export const TaskItem: React.FC<{
             </div>
           </div>
 
-          <div className="flex items-center gap-2 p-1">
+          <div className="flex items-center gap-2 p-1.5">
             {task.mandatory && (
               <Badge variant="destructive" className="text-xs">
                 Required
@@ -109,8 +109,13 @@ export const TaskItem: React.FC<{
                 <Button
                   size="icon"
                   type="button"
-                  variant={completed ? 'default' : 'outline'}
-                  className="h-7 sm:px-6 cursor-pointer group-hover:bg-primary hover:bg-primary group-hover:text-primary-foreground hover:text-primary-foreground transition-colors"
+                  variant={completed ? 'success' : 'outline'}
+                  className={cn(
+                    'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-primary-foreground hover:text-primary-foreground',
+                    completed
+                      ? 'group-hover:bg-success/70 hover:bg-success/70'
+                      : 'group-hover:bg-primary hover:bg-primary'
+                  )}
                 >
                   {isLoading ? (
                     <Spinner />

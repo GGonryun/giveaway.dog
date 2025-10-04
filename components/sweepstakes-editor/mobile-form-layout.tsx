@@ -12,6 +12,7 @@ import { usePreviewState } from './contexts/preview-state-context';
 import { getStateDisplayLabel } from '@/schemas/giveaway/schemas';
 import { FormHeaderProps, FormLayoutProps } from './form-layout';
 import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';
+import { PreviewStateDropdown } from './preview-state-dropdown';
 
 const MobileTabTrigger: React.FC<{
   step: SweepstakeStep;
@@ -92,19 +93,11 @@ const MobileFormHeader: React.FC<
 };
 
 const PreviewFooter: React.FC = () => {
-  const { previewState } = usePreviewState();
-
   return (
     <div className="bg-background border-t p-3">
       <div className="flex justify-between items-center">
-        <div className="text-sm text-muted-foreground">
-          Preview Mode - {getStateDisplayLabel(previewState)}
-        </div>
-        <div className="flex gap-2">
-          <Button type="button" variant="outline" size="sm">
-            Share
-          </Button>
-        </div>
+        <div className="text-sm text-muted-foreground">Preview Mode</div>
+        <PreviewStateDropdown />
       </div>
     </div>
   );
