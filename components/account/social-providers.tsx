@@ -84,7 +84,7 @@ export const SocialProviders = () => {
                   </Button>
                 ) : (
                   <Button
-                    variant="default"
+                    variant="outline"
                     size="sm"
                     className="w-full sm:w-[125px]"
                     onClick={() => {

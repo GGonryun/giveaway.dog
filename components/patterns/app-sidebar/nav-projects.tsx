@@ -19,6 +19,7 @@ import {
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 import { useTeams } from '@/components/context/team-provider';
+import Link from 'next/link';
 
 const groups = ({ slug }: { slug: string }) => {
   return [
@@ -68,10 +69,10 @@ export const NavGroups = () => {
                       (item.alias ? path.startsWith(item.alias) : false)
                     }
                   >
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.name}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

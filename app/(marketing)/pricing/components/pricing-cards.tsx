@@ -133,7 +133,7 @@ export function PricingCards() {
                   </div>
                 ))}
               </div>
-              <Button className="w-full mt-4" asChild>
+              <Button variant="success" className="w-full mt-4" asChild>
                 <Link href="/login">Get Started Free</Link>
               </Button>
             </CardContent>
@@ -280,11 +280,11 @@ export function PricingCards() {
                       <span>Priority support & dedicated contact</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <BarChart3 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                      <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
                       <span>Advanced analytics & custom reporting</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Server className="w-4 h-4 text-green-600 flex-shrink-0" />
+                      <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
                       <span>API access & custom integrations</span>
                     </div>
                   </div>

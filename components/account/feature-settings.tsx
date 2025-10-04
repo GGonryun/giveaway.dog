@@ -13,6 +13,8 @@ import { AlertDialogHeader, AlertDialogFooter } from '../ui/alert-dialog';
 import { Card, CardContent } from '../ui/card';
 import { useUser } from '../context/user-provider';
 import { Button } from '../ui/button';
+import { PlusIcon } from 'lucide-react';
+import Link from 'next/link';
 
 export const FeatureSettings = () => {
   const user = useUser();
@@ -31,28 +33,27 @@ export const FeatureSettings = () => {
         />
         <CardContent className="flex flex-col w-full max-w-2xl gap-2 space-y-2">
           {user.type?.includes(UserType.PARTICIPATE) && (
-            <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+            <div className="flex items-center justify-between p-3  bg-muted rounded-lg">
               <span className="text-sm">Participant</span>
-              <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
-                Active
-              </span>
+              <Button size="badge">Active</Button>
             </div>
           )}
           {user.type?.includes(UserType.HOST) ? (
             <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
               <span className="text-sm">Host</span>
-              <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
+              <Button size="badge" variant="outline">
                 Active
-              </span>
+              </Button>
             </div>
           ) : (
-            <div className="flex items-center justify-between p-3 border border-dashed rounded-lg">
+            <div className="flex items-center justify-between p-3 border-1 border-dashed rounded-lg">
               <span className="text-sm text-muted-foreground">Host Access</span>
               <Button
+                size="badge"
                 variant="outline"
-                size="sm"
                 onClick={handleRequestHostAccess}
               >
+                <PlusIcon />
                 Request Access
               </Button>
             </div>
@@ -96,9 +97,9 @@ const HostAccessDialog: React.FC<{
             Okay
           </AlertDialogCancel>
           <AlertDialogAction asChild>
-            <a href="/support" className="inline-flex">
+            <Link href="/support" className="inline-flex">
               Contact Support
-            </a>
+            </Link>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

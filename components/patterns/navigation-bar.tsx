@@ -73,7 +73,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <div className="hidden items-center gap-4 lg:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             {!isLoggedIn ? (
               <>
                 <Button variant="outline" asChild>
@@ -145,7 +145,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                     Pricing
                   </Link>
                 </div>
-                <div className="mt-6 flex flex-col gap-4">
+                <div className="mt-6 flex flex-col gap-2">
                   {!isLoggedIn ? (
                     <>
                       <Button variant="outline" asChild>

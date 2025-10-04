@@ -53,6 +53,7 @@ export const UserSettings = () => {
           />
           <Button
             className="w-full sm:w-fit"
+            size="sm"
             disabled={updateProfileProcedure.isLoading}
             onClick={handleSaveDisplayName}
           >
