@@ -162,7 +162,7 @@ export const MobileFormLayout: React.FC<FormLayoutProps> = ({
             </>
           ) : (
             <>
-              <div className="overflow-auto w-full flex-1 bg-tertiary-10 p-4 flex">
+              <div className="overflow-auto w-full flex-1 bg-tertiary-10 p-2 sm:p-4 flex">
                 <div className="mx-auto my-auto w-full max-w-2xl min-w-fit">
                   {right}
                 </div>

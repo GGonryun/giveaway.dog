@@ -6,6 +6,8 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { TaskSchema } from '@/schemas/tasks/schemas';
+import { CheckIcon, CircleCheck } from 'lucide-react';
+import { useMemo } from 'react';
 
 export type TaskActionHandlers = {
   onSubmit: () => void;
@@ -30,34 +32,55 @@ export const TaskContent: React.PC<{ className?: string }> = ({
   );
 };
 
-export type TaskControlsProps = { disabled: boolean } & TaskActionHandlers;
+export type TaskControlsProps = {
+  disabled: boolean;
+} & TaskActionHandlers;
+
+const COMPLETE_TASK_LABEL = 'Complete Task';
 
 export const TaskControls: React.FC<TaskControlsProps> = ({
   disabled,
   onSubmit,
   onCancel
 }) => {
-  return (
-    <TaskContent className="bg-sidebar ">
-      <Tooltip>
-        <TooltipTrigger asChild={!disabled}>
-          <Button asChild size="sm" variant="outline">
-            <div
-              onClick={disabled ? undefined : onSubmit}
-              className={cn(disabled && 'opacity-50 cursor-not-allowed')}
+  const button = useMemo(
+    () =>
+      disabled ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={undefined}
+              className={'opacity-50 cursor-not-allowed'}
             >
-              Complete Task
-            </div>
-          </Button>
-        </TooltipTrigger>
+              {COMPLETE_TASK_LABEL}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Complete above to continue</TooltipContent>
+        </Tooltip>
+      ) : (
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={onSubmit}
+          className="cursor-pointer"
+        >
+          <CheckIcon />
+          {COMPLETE_TASK_LABEL}
+        </Button>
+      ),
+    [disabled, onSubmit]
+  );
 
-        <TooltipContent>Complete above to continue</TooltipContent>
-      </Tooltip>
+  return (
+    <TaskContent className="bg-sidebar">
+      {button}
 
       <Button
         size="sm"
         variant="link"
-        className="text-destructive"
+        className="text-black"
         onClick={onCancel}
       >
         Cancel

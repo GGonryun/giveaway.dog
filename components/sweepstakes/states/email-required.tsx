@@ -11,7 +11,7 @@ export const EmailRequired: React.FC = () => {
 
   if (!userProfile) {
     return (
-      <div className="my-4">
+      <div>
         <div className="text-center">
           <h3 className="text-lg font-semibold">Email Verification Required</h3>
           <p className="text-muted-foreground">
@@ -23,7 +23,7 @@ export const EmailRequired: React.FC = () => {
   }
 
   return (
-    <div className="my-4">
+    <div>
       <EmailVerification
         showCard={false}
         user={userProfile}

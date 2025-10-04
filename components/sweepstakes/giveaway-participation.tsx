@@ -5,7 +5,7 @@ import {
   GiveawayParticipationProvider,
   GiveawayParticipationProps
 } from './giveaway-participation-context';
-import { GiveawayParticipationCard } from './giveaway-participation-header';
+import { GiveawayParticipationCard } from './giveaway-participation-card';
 
 import { EmailRequired } from './states/email-required';
 import { NotEligible } from './states/not-eligible';
@@ -56,11 +56,9 @@ export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = (
 ) => {
   return (
     <GiveawayParticipationProvider {...props}>
-      <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 *:w-full">
-        <GiveawayParticipationCard device={props.device}>
-          <GiveawayParticipationContent />
-        </GiveawayParticipationCard>
-      </div>
+      <GiveawayParticipationCard device={props.device}>
+        <GiveawayParticipationContent />
+      </GiveawayParticipationCard>
     </GiveawayParticipationProvider>
   );
 };

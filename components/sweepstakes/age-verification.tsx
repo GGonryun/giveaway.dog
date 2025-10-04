@@ -59,7 +59,7 @@ export const AgeVerification = ({
 
   if (isVerified) {
     return (
-      <div className="p-4 border border-green-200 bg-green-50 rounded-lg">
+      <div className="border border-green-200 bg-green-50 rounded-lg">
         <div className="flex items-center gap-3 text-green-800">
           <Calendar className="h-5 w-5" />
           <span className="font-medium">Age verification completed</span>
@@ -69,10 +69,10 @@ export const AgeVerification = ({
   }
 
   return (
-    <div className="space-y-4 my-2">
-      <Alert variant="error" className="[&>svg]:size-6 has-[>svg]:gap-x-5">
+    <div className="space-y-4">
+      <Alert variant="primary" className="[&>svg]:size-6 has-[>svg]:gap-x-5">
         <AlertCircle />
-        <AlertTitle className="text-lg font-semibold text-orange-800">
+        <AlertTitle className="text-lg font-semibold">
           Age Verification Required
         </AlertTitle>
         <AlertDescription>

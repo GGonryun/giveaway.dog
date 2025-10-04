@@ -5,10 +5,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ExternalLinkIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useTaskTheme } from '@/components/tasks/theme';
 
 export const VisitUrlTaskActionForm: React.FC<
   TaskActionProps<VisitUrlTaskSchema>
 > = ({ onCancel, onSubmit, task }) => {
+  const theme = useTaskTheme();
   const [visited, setVisited] = useState(false);
 
   const handleVisit = () => setVisited(true);
@@ -26,7 +29,7 @@ export const VisitUrlTaskActionForm: React.FC<
   return (
     <>
       <TaskContent>
-        <Button asChild onClick={handleVisit}>
+        <Button className={cn(theme.action)} asChild onClick={handleVisit}>
           <Link href={task.href} target="_blank">
             {task.label}
             <ExternalLinkIcon />

@@ -7,6 +7,7 @@ import { useGiveawayParticipation } from '../../giveaway-participation-context';
 import { UserInfoSection } from '../../user-info-section';
 import { Typography } from '@/components/ui/typography';
 import { TaskItem } from './task-item';
+import { TaskThemeProvider } from '@/components/tasks/theme';
 
 export const ActiveParticipation: React.FC = () => {
   const [open, setOpen] = React.useState<string | null>(null);
@@ -15,7 +16,7 @@ export const ActiveParticipation: React.FC = () => {
   const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
 
   return (
-    <div className="space-y-2 relative mt-2 mb-4">
+    <div className="space-y-2 relative">
       {open && (
         <div
           className="fixed inset-0 h-full bg-black/30 z-50"
@@ -35,13 +36,14 @@ export const ActiveParticipation: React.FC = () => {
               userParticipation?.completedTasks.includes(task.id) ?? false;
 
             return (
-              <TaskItem
-                open={open === task.id}
-                setOpen={(status) => setOpen(status ? task.id : null)}
-                key={index}
-                task={task}
-                completed={completed}
-              />
+              <TaskThemeProvider type={task.type} key={index}>
+                <TaskItem
+                  open={open === task.id}
+                  setOpen={(status) => setOpen(status ? task.id : null)}
+                  task={task}
+                  completed={completed}
+                />
+              </TaskThemeProvider>
             );
           })}
         </div>

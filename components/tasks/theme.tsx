@@ -1,29 +1,29 @@
 import { EarthIcon, LucideIcon, StarIcon } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
+import React from 'react';
 
-export interface TaskTheme {
+export type TaskTheme = {
+  action: string;
   symbol: string;
   icon: LucideIcon;
   label: string;
-}
+};
 
-export const toTaskTheme = (
-  type: TaskType
-): {
-  symbol: string;
-  icon: LucideIcon;
-  label: string;
-} => {
+export const toTaskTheme = (type: TaskType): TaskTheme => {
   switch (type) {
     case 'BONUS_TASK':
       return {
+        action:
+          'bg-red-500 text-red-100 group-hover:bg-red-500 hover:bg-red-500 ',
         symbol: 'bg-red-500 text-red-100',
         icon: StarIcon,
         label: 'Bonus Task'
       };
     case 'VISIT_URL':
       return {
+        action:
+          'bg-blue-500 text-blue-100 group-hover:bg-blue-500 hover:bg-blue-500',
         symbol: 'bg-blue-500 text-blue-100',
         icon: EarthIcon,
         label: 'Visit URL'
@@ -31,4 +31,28 @@ export const toTaskTheme = (
     default:
       throw assertNever(type);
   }
+};
+
+const TaskThemeContext = React.createContext<{
+  theme: TaskTheme;
+} | null>(null);
+
+export const useTaskTheme = () => {
+  const context = React.useContext(TaskThemeContext);
+  if (!context) {
+    throw new Error('useTaskTheme must be used within a TaskThemeProvider');
+  }
+  return context.theme;
+};
+
+export const TaskThemeProvider: React.FC<{
+  type: TaskType;
+  children: React.ReactNode;
+}> = ({ type, children }) => {
+  const theme = toTaskTheme(type);
+  return (
+    <TaskThemeContext.Provider value={{ theme }}>
+      {children}
+    </TaskThemeContext.Provider>
+  );
 };

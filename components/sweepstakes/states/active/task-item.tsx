@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, ChevronDownIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGiveawayParticipation } from '../../giveaway-participation-context';
-import { toTaskTheme } from '@/components/tasks/theme';
+import { toTaskTheme, useTaskTheme } from '@/components/tasks/theme';
 import {
   Tooltip,
   TooltipContent,
@@ -32,9 +32,10 @@ export const TaskItem: React.FC<{
   completed: boolean;
 }> = ({ open, setOpen, task, completed }) => {
   const pathname = usePathname();
+
+  const theme = useTaskTheme();
+
   const { isLoading, userProfile, onTaskComplete } = useGiveawayParticipation();
-  const theme = toTaskTheme(task.type);
-  const IconComponent = theme.icon;
   const taskRef = useRef<HTMLDivElement>(null);
 
   const entriesText = useMemo(
@@ -88,7 +89,7 @@ export const TaskItem: React.FC<{
               {completed ? (
                 <CheckCircle className="h-6 w-6" />
               ) : (
-                <IconComponent className="h-6 w-6" />
+                <theme.icon className="h-6 w-6" />
               )}
             </div>
             <div className="text-left">
@@ -114,7 +115,7 @@ export const TaskItem: React.FC<{
                     'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-primary-foreground hover:text-primary-foreground',
                     completed
                       ? 'group-hover:bg-success/70 hover:bg-success/70'
-                      : 'group-hover:bg-primary hover:bg-primary'
+                      : theme.action
                   )}
                 >
                   {isLoading ? (

@@ -24,8 +24,8 @@ export const GiveawayParticipationCard: React.PC<{
       <HostSection />
       <PrizesSection />
       <DescriptionSection />
-      <Separator className="my-2" />
-      <CardContent>{children}</CardContent>
+      <Separator className="mb-0" />
+      <CardContent className="py-3 m-0">{children}</CardContent>
       <Separator />
       <FooterSection />
     </Card>
