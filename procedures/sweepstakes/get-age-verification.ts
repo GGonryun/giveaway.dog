@@ -6,7 +6,7 @@ import { ageVerificationSchema } from '@/schemas/user';
 import z from 'zod';
 
 const getAgeVerification = procedure()
-  .authorization({ required: true })
+  .authorization({ required: false })
   .input(
     z.object({
       sweepstakesId: z.string()
@@ -14,6 +14,8 @@ const getAgeVerification = procedure()
   )
   .output(ageVerificationSchema.nullable())
   .handler(async ({ input, user }) => {
+    if (!user?.id) return null;
+
     const ageVerification = await prisma.ageVerification.findUnique({
       where: {
         userId_sweepstakesId: {
