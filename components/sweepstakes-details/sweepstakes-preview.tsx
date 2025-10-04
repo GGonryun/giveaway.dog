@@ -15,7 +15,8 @@ import {
   mockParticipation,
   mockWinners,
   mockUserProfile,
-  mockUserParticipation
+  mockUserParticipation,
+  mockAgeVerification
 } from '../sweepstakes-editor/data/mocks';
 import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
@@ -28,6 +29,9 @@ import { SweepstakesStatus } from '@prisma/client';
 import { useProcedure } from '@/lib/mrpc/hook';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
+import { isAfter } from 'date-fns';
+import { GiveawayState } from '@/schemas/giveaway/schemas';
+import { computeState } from '@/lib/sweepstakes';
 
 export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   props
@@ -39,13 +43,14 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   const liveUrl = browse.url({ sweepstakesId: sweepstakes.id });
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
-  const { run: runCompleteSweepstakes, isLoading: isCompleting } =
-    useProcedure({
+  const { run: runCompleteSweepstakes, isLoading: isCompleting } = useProcedure(
+    {
       action: completeSweepstakes,
       onSuccess: () => {
         router.refresh();
       }
-    });
+    }
+  );
 
   const totalPrizeSlots = sweepstakes.prizes.reduce(
     (sum, prize) => sum + prize.quota,
@@ -125,6 +130,12 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
     }
   }, [isMobile]);
 
+  const state = computeState({
+    sweepstakes,
+    userProfile: mockUserProfile,
+    ageVerification: mockAgeVerification
+  });
+
   return (
     <div className="space-y-4 mt-4">
       {/* Preview Frame */}
@@ -155,7 +166,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                   winners={mockWinners}
                   userProfile={mockUserProfile}
                   userParticipation={mockUserParticipation}
-                  state={'active'}
+                  state={state}
                   onTaskComplete={noop}
                   onLogin={noop}
                   onCompleteProfile={noop}

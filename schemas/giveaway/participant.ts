@@ -3,6 +3,8 @@ import { ParticipantSweepstakesGetPayload } from './db';
 import { GiveawayWinnerSchema } from './schemas';
 import z from 'zod';
 import { toUserSchema } from '../user';
+import { toTaskInput } from './input';
+import { taskSchema } from '../tasks/schemas';
 
 export const taskCompletionSchema = z.object({
   completionId: z.string(),
@@ -45,5 +47,12 @@ export const toSweepstakesWinners = (
 const toWinners = (
   winners: ParticipantSweepstakesGetPayload['prizes'][number]['winners']
 ): GiveawayWinnerSchema['winners'] => {
-  return winners.map((w) => toUserSchema(w.taskCompletion.user));
+  return winners.map((w) => {
+    const raw = toTaskInput(w.taskCompletion.task);
+    const task = taskSchema.safeParse(raw);
+    return {
+      ...toUserSchema(w.taskCompletion.user),
+      winningTaskName: task.success ? task.data.title : undefined
+    };
+  });
 };

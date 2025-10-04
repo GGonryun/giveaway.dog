@@ -3,7 +3,7 @@ import {
   UserParticipationSchema,
   GiveawayWinnerSchema
 } from '@/schemas/giveaway/schemas';
-import { UserProfileSchema } from '@/schemas/user';
+import { AgeVerificationSchema, UserProfileSchema } from '@/schemas/user';
 
 export const mockHost = {
   id: 'preview-host-id',
@@ -21,6 +21,11 @@ export const mockUserProfile: UserProfileSchema = {
   emoji: '🐶',
   countryCode: 'US',
   providers: ['twitter', 'google']
+};
+
+export const mockAgeVerification: AgeVerificationSchema = {
+  userId: mockUserProfile.id,
+  sweepstakesId: 'preview-sweepstake'
 };
 
 export const mockParticipation: GiveawayParticipationSchema = {

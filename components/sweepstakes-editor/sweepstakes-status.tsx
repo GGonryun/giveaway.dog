@@ -53,18 +53,6 @@ const getStatusConfig = (
         variant: 'secondary' as const,
         description: 'Your sweepstakes is being prepared'
       };
-    case SweepstakesStatus.PAUSED:
-      return {
-        label: 'Paused',
-        variant: 'outline' as const,
-        description: 'Your sweepstakes is temporarily paused'
-      };
-    case SweepstakesStatus.CANCELED:
-      return {
-        label: 'Cancelled',
-        variant: 'destructive' as const,
-        description: 'Your sweepstakes has been cancelled'
-      };
     case SweepstakesStatus.ACTIVE:
       if (!hasStarted) {
         return {
@@ -251,7 +239,8 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                     Action Required: Winners Not Selected
                   </div>
                   <div className="text-xs text-red-700 mt-0.5">
-                    Your sweepstakes has ended. Select winners now to complete the process.
+                    Your sweepstakes has ended. Select winners now to complete
+                    the process.
                   </div>
                 </div>
               </div>
@@ -277,7 +266,8 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                   All Winners Selected
                 </div>
                 <div className="text-xs text-green-700 mt-0.5">
-                  All winners have been chosen for this sweepstakes. Click the button below to mark this sweepstakes as completed.
+                  All winners have been chosen for this sweepstakes. Click the
+                  button below to mark this sweepstakes as completed.
                 </div>
               </div>
             </div>
@@ -364,7 +354,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
             </div>
           </>
         )}
-
       </CardContent>
     </Card>
   );

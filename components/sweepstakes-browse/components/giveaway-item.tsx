@@ -2,7 +2,13 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Typography } from '@/components/ui/typography';
-import { differenceInDays, format, formatDistanceToNow } from 'date-fns';
+import {
+  differenceInDays,
+  format,
+  formatDistanceToNow,
+  formatDistanceToNowStrict,
+  isBefore
+} from 'date-fns';
 import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
 import {
   ENDING_SOON_SWEEPSTAKE_THRESHOLD,
@@ -81,7 +87,8 @@ export const GiveawayItem: React.FC<{
             {name}
           </Typography.Header>
           <Typography className="text-sm text-muted-foreground" leading="none">
-            {formatDistanceToNow(endDate)} left ‧ by {sweepstakes.host.name}
+            {formatDistanceToNowStrict(endDate)}{' '}
+            {isBefore(endDate, new Date()) ? 'ago' : 'left'}
           </Typography>
         </CardContent>
       </Card>

@@ -176,7 +176,17 @@ export const SweepstakesWinners = ({
 
       {!hasAnyWinners ? (
         <Card>
-          <CardContent className="flex flex-col items-center justify-center py-16">
+          <CardContent className="flex flex-col items-center justify-center py-16 space-y-6">
+            <Alert className="border-blue-200 bg-blue-50 max-w-2xl">
+              <Info className="h-5 w-5 text-blue-600" />
+              <AlertTitle className="text-blue-900">
+                Winners Can Only Be Selected After Giveaway Ends
+              </AlertTitle>
+              <AlertDescription className="text-blue-800">
+                Once your giveaway has ended, you will be able to select and
+                confirm winners. Until then, this section will remain locked.
+              </AlertDescription>
+            </Alert>
             <div className="flex flex-col items-center text-center space-y-4 max-w-md">
               <div className="rounded-full bg-muted p-6">
                 <Shuffle className="h-12 w-12 text-muted-foreground" />
@@ -185,18 +195,12 @@ export const SweepstakesWinners = ({
                 <h3 className="text-xl font-semibold">No Winners Selected</h3>
                 <p className="text-sm text-muted-foreground">
                   {emptySlots} prize {pluralize('slot', emptySlots)}{' '}
-                  {pluralize('is', emptySlots)} waiting for winners. Configure
-                  your selection criteria and draw winners for all empty slots.
+                  {pluralize('is', emptySlots)} waiting for winners.
                 </p>
               </div>
-              <Button
-                onClick={() => setShowWinnerDialog(true)}
-                size="lg"
-                className="mt-4"
-                disabled={isRolling}
-              >
+              <Button size="lg" className="mt-4" disabled>
                 <Shuffle className="h-4 w-4 mr-2" />
-                {isRolling ? 'Rolling...' : 'Pick Winners'}
+                Pick Winners
               </Button>
             </div>
           </CardContent>

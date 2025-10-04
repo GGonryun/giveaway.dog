@@ -9,7 +9,7 @@ export const Closed: React.FC = () => {
       <Clock className="h-12 w-12 mx-auto mb-4 text-gray-500" />
       <h3 className="text-lg font-semibold mb-2">Giveaway Closed</h3>
       <p className="text-muted-foreground">
-        This giveaway has ended and is no longer accepting entries.
+        This giveaway is not accepting entries.
       </p>
     </div>
   );

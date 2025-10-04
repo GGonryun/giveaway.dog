@@ -138,10 +138,6 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
     switch (status) {
       case 'ACTIVE':
         return <Play className="h-4 w-4 text-green-500" />;
-      case 'PAUSED':
-        return <Pause className="h-4 w-4 text-yellow-500" />;
-      case 'CANCELED':
-        return <Clock className="h-4 w-4 text-red-500" />;
       case 'DRAFT':
         return <Edit className="h-4 w-4 text-gray-500" />;
       case 'COMPLETED':

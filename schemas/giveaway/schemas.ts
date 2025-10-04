@@ -177,7 +177,11 @@ export type GiveawayHostSchema = z.infer<typeof giveawayHostSchema>;
 const giveawayWinnerSchema = z.object({
   prizeId: z.string(),
   prizeName: z.string(),
-  winners: z.array(userProfileSchema)
+  winners: z.array(
+    userProfileSchema.extend({
+      winningTaskName: z.string().optional()
+    })
+  )
 });
 
 export type GiveawayWinnerSchema = z.infer<typeof giveawayWinnerSchema>;

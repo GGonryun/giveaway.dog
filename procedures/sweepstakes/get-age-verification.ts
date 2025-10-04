@@ -1,28 +1,28 @@
 'use server';
 
-import { auth } from '@/lib/auth';
+import { procedure } from '@/lib/mrpc/procedures';
 import prisma from '@/lib/prisma';
+import { ageVerificationSchema } from '@/schemas/user';
+import z from 'zod';
 
-export default async function getAgeVerification(sweepstakesId: string) {
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    return null;
-  }
-
-  try {
+const getAgeVerification = procedure()
+  .authorization({ required: true })
+  .input(
+    z.object({
+      sweepstakesId: z.string()
+    })
+  )
+  .output(ageVerificationSchema.nullable())
+  .handler(async ({ input, user }) => {
     const ageVerification = await prisma.ageVerification.findUnique({
       where: {
         userId_sweepstakesId: {
-          userId: session.user.id,
-          sweepstakesId
+          userId: user.id,
+          sweepstakesId: input.sweepstakesId
         }
       }
     });
 
     return ageVerification;
-  } catch (error) {
-    console.error('Failed to get age verification:', error);
-    return null;
-  }
-}
+  });
+export default getAgeVerification;

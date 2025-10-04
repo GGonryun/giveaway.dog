@@ -147,8 +147,6 @@ model SweepstakesAudience {
 
 enum SweepstakesStatus {
   DRAFT
-  PAUSED
-  CANCELED
   ACTIVE
   COMPLETED
 }

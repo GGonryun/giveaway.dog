@@ -38,9 +38,7 @@ export const SWEEPSTAKES_FILTER_STATUS_OPTIONS: Record<
 > = {
   ALL: 'All',
   ACTIVE: 'Active',
-  CANCELED: 'Canceled',
   DRAFT: 'Draft',
-  PAUSED: 'Paused',
   COMPLETED: 'Completed'
 };
 
