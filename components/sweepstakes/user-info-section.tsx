@@ -24,14 +24,12 @@ export const UserInfoSection: React.FC = () => {
     <div className="text-xs text-muted-foreground">
       {userProfile ? (
         <div className="flex justify-between">
-          <div className="flex items-center gap-1.5">
-            <span>
-              Signed in as{' '}
-              <Link href="/account" className="font-semibold">
-                {userProfile.name}
-              </Link>
-            </span>
-            <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-wrap">
+            <span className="hidden sm:inline">Signed in as</span>
+            <Link href="/account" className="font-semibold">
+              {userProfile.name}
+            </Link>
+            <div className="flex items-center gap-1 ">
               {/* Social provider icons */}
               {userProfile.providers?.map((provider) => (
                 <div
