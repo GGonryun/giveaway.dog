@@ -24,7 +24,7 @@ export const GiveawayParticipationHeader: React.PC<{
   device?: DeviceType;
 }> = ({ children, device }) => {
   return (
-    <Card className="relative p-0 m-0 gap-0 overflow-hidden w-full space-y-2 pt-6 pb-2">
+    <Card className="relative gap-0 overflow-hidden w-full space-y-2 px-2 pt-6 pb-2">
       <TimeRemainingSection device={device} />
       <TitleSection />
       <BannerSection />
