@@ -3,17 +3,10 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import {
-  Users,
-  ClockIcon,
-  CalendarIcon,
-  Gift,
-  FileText,
-  BuildingIcon
-} from 'lucide-react';
+import { Users, ClockIcon, CalendarIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGiveawayParticipation } from './giveaway-participation-context';
-import { format, formatDistanceToNow, isBefore, isAfter } from 'date-fns';
+import { formatDistanceToNow, isBefore, isAfter } from 'date-fns';
 import { HostInfoCard } from './participation-header/host-info-card';
 import { TermsModal } from './terms-modal';
 import { DeviceType } from '@/schemas/giveaway/schemas';

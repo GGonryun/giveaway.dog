@@ -11,13 +11,11 @@ import {
   CalendarIcon,
   ClockIcon,
   Trophy,
-  Users,
   QrCode,
   ExternalLink,
-  Share2,
   Clock
 } from 'lucide-react';
-import { format, formatDistanceToNow, isAfter } from 'date-fns';
+import { formatDistanceToNow, isAfter } from 'date-fns';
 import { SweepstakesStatus } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { datetime } from '@/lib/date';

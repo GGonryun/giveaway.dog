@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Crown, Trophy, ChevronDown, ChevronUp } from 'lucide-react';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Table,
   TableBody,

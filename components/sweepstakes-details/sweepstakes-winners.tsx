@@ -19,7 +19,6 @@ import {
   ExternalLink,
   ChevronDown,
   ChevronUp,
-  CheckCircle2,
   Info
 } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
@@ -143,7 +142,6 @@ export const SweepstakesWinners = ({
 
   const isRerollMode = rerollWinnerId !== null;
 
-  const allWinnersPicked = emptySlots === 0;
   const hasAnyWinners = prizes.some((p) => p.winner);
 
   const toggleWinnerDetails = (winnerId: string) => {

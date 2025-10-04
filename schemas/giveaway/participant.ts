@@ -1,4 +1,4 @@
-import { DeepNullable, DeepPartial } from '@/lib/types';
+import { DeepNullable } from '@/lib/types';
 import { ParticipantSweepstakesGetPayload } from './db';
 import { GiveawayWinnerSchema } from './schemas';
 import z from 'zod';
