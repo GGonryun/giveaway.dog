@@ -71,7 +71,6 @@ export const WinnersAnnounced: React.FC = () => {
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src={winner.image || undefined} />
                           <AvatarFallback>
                             {winner.name
                               ?.split(' ')
