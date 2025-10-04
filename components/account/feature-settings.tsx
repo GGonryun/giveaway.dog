@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { SectionHeader } from './section-header';
 import { UserType } from '@prisma/client';
 import {
   AlertDialog,
@@ -12,57 +11,96 @@ import {
 import { AlertDialogHeader, AlertDialogFooter } from '../ui/alert-dialog';
 import { Card, CardContent } from '../ui/card';
 import { useUser } from '../context/user-provider';
-import { Button } from '../ui/button';
-import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+import { CheckCircle2, PlusCircle } from 'lucide-react';
 
 export const FeatureSettings = () => {
   const user = useUser();
 
   const [showHostAccessDialog, setShowHostAccessDialog] = useState(false);
+  const [showCannotDisableDialog, setShowCannotDisableDialog] = useState(false);
+
+  const hasParticipateAccess = user.type?.includes(UserType.PARTICIPATE);
+  const hasHostAccess = user.type?.includes(UserType.HOST);
 
   const handleRequestHostAccess = () => {
     setShowHostAccessDialog(true);
   };
+
+  const handleParticipateClick = () => {
+    setShowCannotDisableDialog(true);
+  };
+
   return (
     <>
-      <Card>
-        <SectionHeader
-          title="Account Type"
-          description="Manage your account type and access level."
-        />
-        <CardContent className="flex flex-col w-full max-w-2xl gap-2 space-y-2">
-          {user.type?.includes(UserType.PARTICIPATE) && (
-            <div className="flex items-center justify-between p-3  bg-muted rounded-lg">
-              <span className="text-sm">Participant</span>
-              <Button size="badge">Active</Button>
+      <div className="space-y-4">
+        {/* Participate Sweepstakes Card */}
+        <Card>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex-1 space-y-1">
+                <Label className="text-base font-semibold">
+                  Participate in Sweepstakes
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Join and enter sweepstakes hosted by others. Complete tasks to
+                  earn entries and increase your chances of winning prizes.
+                </p>
+              </div>
+              <div className="flex items-center sm:items-start">
+                <Button size="sm" onClick={handleParticipateClick}>
+                  <CheckCircle2 className="h-4 w-4 mr-2" />
+                  Enabled
+                </Button>
+              </div>
             </div>
-          )}
-          {user.type?.includes(UserType.HOST) ? (
-            <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-              <span className="text-sm">Host</span>
-              <Button size="badge" variant="outline">
-                Active
-              </Button>
+          </CardContent>
+        </Card>
+
+        {/* Host Sweepstakes Card */}
+        <Card>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex-1 space-y-1">
+                <Label className="text-base font-semibold">
+                  Host Sweepstakes
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Create and manage your own sweepstakes. Set up tasks, manage
+                  participants, and select winners for your giveaways.
+                </p>
+              </div>
+              <div className="flex items-center sm:items-start">
+                {hasHostAccess ? (
+                  <Button size="sm">
+                    <CheckCircle2 className="h-4 w-4 mr-2" />
+                    Enabled
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleRequestHostAccess}
+                  >
+                    <PlusCircle className="h-4 w-4 mr-2" />
+                    Request Access
+                  </Button>
+                )}
+              </div>
             </div>
-          ) : (
-            <div className="flex items-center justify-between p-3 border-1 border-dashed rounded-lg">
-              <span className="text-sm text-muted-foreground">Host Access</span>
-              <Button
-                size="badge"
-                variant="outline"
-                onClick={handleRequestHostAccess}
-              >
-                <PlusIcon />
-                Request Access
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
+
       <HostAccessDialog
         open={showHostAccessDialog}
         onOpenChange={setShowHostAccessDialog}
+      />
+      <CannotDisableDialog
+        open={showCannotDisableDialog}
+        onOpenChange={setShowCannotDisableDialog}
       />
     </>
   );
@@ -76,20 +114,11 @@ const HostAccessDialog: React.FC<{
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>🚀 Host Access - Beta Feature</AlertDialogTitle>
+          <AlertDialogTitle>Host Access - Beta Feature</AlertDialogTitle>
           <AlertDialogDescription>
             Host access is currently in <strong>beta</strong> and not yet
-            available for public requests.
-          </AlertDialogDescription>
-
-          <AlertDialogDescription>
-            If you want early access, please contact us via our support page.
-            We're working hard to bring you the ability to create and host your
-            own giveaways.
-          </AlertDialogDescription>
-
-          <AlertDialogDescription>
-            Thank you for your patience as we perfect this feature!
+            available for public requests. If you want early access, please
+            contact us via our support page.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -101,6 +130,30 @@ const HostAccessDialog: React.FC<{
               Contact Support
             </Link>
           </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+const CannotDisableDialog: React.FC<{
+  open: boolean;
+  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ open, onOpenChange }) => {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Feature Cannot Be Disabled</AlertDialogTitle>
+          <AlertDialogDescription>
+            This feature cannot be disabled. All users can participate in
+            sweepstakes by default.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => onOpenChange(false)}>
+            Okay
+          </AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
