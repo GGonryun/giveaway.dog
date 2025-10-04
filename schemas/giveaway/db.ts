@@ -30,6 +30,7 @@ export const PARTICIPANT_SWEEPSTAKES_PAYLOAD = {
         include: {
           taskCompletion: {
             include: {
+              task: true,
               user: { select: USER_SCHEMA_SELECT_QUERY }
             }
           }
