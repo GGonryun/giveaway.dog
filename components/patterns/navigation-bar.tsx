@@ -41,9 +41,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
         <nav className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <EmojiLogo className="text-3xl mb-1" />
-            <span className="text-lg font-semibold tracking-tighter">
-              Giveaway.dog
-            </span>
+            <span className="text-lg font-semibold">Giveaway.dog</span>
           </Link>
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>

@@ -1,4 +1,3 @@
-import { UNKNOWN_USER_AGENT, UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
 import { Prisma, UserType } from '@prisma/client';
 import z from 'zod';
 
