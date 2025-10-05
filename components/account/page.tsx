@@ -30,11 +30,7 @@ export const UserPage: React.FC = () => {
         <TabsList>
           {tabItems.map((item) => {
             return (
-              <TabsTrigger
-                key={item.id}
-                value={item.id}
-                className="whitespace-nowrap flex-shrink-0 px-3 py-2"
-              >
+              <TabsTrigger key={item.id} value={item.id}>
                 {item.label}
               </TabsTrigger>
             );
