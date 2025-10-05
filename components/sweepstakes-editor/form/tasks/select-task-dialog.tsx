@@ -24,7 +24,6 @@ export const SelectTaskDialog: React.FC<{
     <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild>
         <Button
-          variant="secondary"
           type="button"
           className="w-full shadow-sm cursor-pointer"
           onClick={() => setOpen(true)}

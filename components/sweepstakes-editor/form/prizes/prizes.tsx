@@ -127,7 +127,6 @@ export const Prizes = () => {
                   </DragOverlay>
                 </DndContext>
                 <Button
-                  variant="secondary"
                   type="button"
                   className="w-full cursor-pointer shadow-sm"
                   onClick={() =>

@@ -72,6 +72,7 @@ export const regionalRestrictionSchema = z
     regions: z.string().array().min(1),
     filter: regionalRestrictionFilterSchema
   })
+  .nullable()
   .optional();
 
 export type RegionalRestrictionSchema = z.infer<
@@ -87,7 +88,8 @@ export const minimumAgeRestrictionSchema = z
     label: z.string().min(1, 'Label is required'),
     required: z.boolean()
   })
-  .optional();
+  .optional()
+  .nullable();
 
 export type MinimumAgeRestrictionSchema = z.infer<
   typeof minimumAgeRestrictionSchema

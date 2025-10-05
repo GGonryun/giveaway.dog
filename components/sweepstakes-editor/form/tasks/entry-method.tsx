@@ -72,7 +72,7 @@ export const EntryMethod: React.FC<{
           <CollapsibleTrigger asChild>
             <div
               className={cn(
-                'relative  flex grow py-1 pl-2 pr-1 w-full justify-between items-center cursor-pointer bg-primary text-primary-foreground',
+                'relative  flex grow py-1 pl-2 pr-1 w-full justify-between items-center cursor-pointer ',
                 !open ? 'rounded-lg' : 'rounded-lg rounded-b-none'
               )}
             >

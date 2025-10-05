@@ -11,7 +11,7 @@ export const EditGiveawayButton: React.FC<{
   const { route } = useEditSweepstakesPage();
 
   return (
-    <Button variant="secondary" size="sm" asChild>
+    <Button size="sm" asChild>
       <Link href={route(id)} passHref>
         <EditIcon />
         Edit

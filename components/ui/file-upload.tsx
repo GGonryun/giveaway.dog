@@ -80,13 +80,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           />
           <Button
             type="button"
-            size="sm"
-            variant="secondary"
-            className="absolute top-1 right-1 p-1 h-7 w-7 min-w-0 min-h-0 rounded-full shadow"
+            variant="outline"
+            size="icon"
+            className="absolute top-1 right-1 h-7 w-7 border-2 border-black"
             onClick={handleRemove}
             aria-label="Remove file"
           >
-            <X className="w-4 h-4 text-gray-600" />
+            <X strokeWidth={3} />
           </Button>
         </div>
       ) : (

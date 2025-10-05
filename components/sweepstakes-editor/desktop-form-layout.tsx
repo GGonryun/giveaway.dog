@@ -148,7 +148,7 @@ const DesktopFormHeader: React.FC<FormHeaderProps> = ({
   onCancel
 }) => {
   return (
-    <SiteHeader>
+    <SiteHeader container={false}>
       <div className="grid grid-cols-3 w-full items-center gap-4">
         <DesktopTitle title={title} />
         <DesktopTabs />

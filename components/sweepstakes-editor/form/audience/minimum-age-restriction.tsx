@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { SwitchBox, SwitchFormHeader } from '../switch-box';
 import {
@@ -30,7 +30,10 @@ import {
 export const MinimumAgeRestriction = () => {
   const form = useFormContext<GiveawayFormSchema>();
 
-  const minimumAgeRestriction = form.watch('audience.minimumAgeRestriction');
+  const minimumAgeRestriction = useWatch({
+    control: form.control,
+    name: 'audience.minimumAgeRestriction'
+  });
 
   return (
     <SwitchBox>
@@ -59,7 +62,7 @@ export const MinimumAgeRestriction = () => {
                 checked={Boolean(field.value)}
                 onCheckedChange={() => {
                   if (Boolean(field.value)) {
-                    return field.onChange(undefined);
+                    return field.onChange(null);
                   } else {
                     return field.onChange(DEFAULT_MINIMUM_AGE_RESTRICTION);
                   }

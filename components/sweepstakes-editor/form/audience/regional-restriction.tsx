@@ -82,7 +82,7 @@ export const regionalRestrictionRender: ControllerProps<
           checked={isEnabled}
           onClick={() => {
             if (isEnabled) {
-              field.onChange(undefined);
+              field.onChange(null);
             } else {
               field.onChange({
                 regions: [],
