@@ -7,7 +7,6 @@ import { Users, ClockIcon, CalendarIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { formatDistanceToNow, isBefore, isAfter } from 'date-fns';
-import { HostInfoCard } from './participation-header/host-info-card';
 import { TermsModal } from './terms-modal';
 import { DeviceType } from '@/schemas/giveaway/schemas';
 import { cn } from '@/lib/utils';
@@ -19,9 +18,8 @@ export const GiveawayParticipationCard: React.PC<{
   return (
     <Card className="relative gap-0 overflow-hidden w-full space-y-2 sm:space-y-4 px-0 pb-2 pt-4">
       <TimeRemainingSection device={device} />
-      <TitleSection />
       <BannerSection />
-      <HostSection />
+      <TitleSection />
       <PrizesSection />
       <DescriptionSection />
       <Separator className="mb-0" />
@@ -92,13 +90,16 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
 };
 
 const TitleSection = () => {
-  const { sweepstakes } = useGiveawayParticipation();
+  const { sweepstakes, host } = useGiveawayParticipation();
 
   return (
-    <CardContent>
+    <CardContent className="space-y-0.5">
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
         {sweepstakes.setup.name}
       </h1>
+      <p className="text-sm sm:text-base text-muted-foreground">
+        by <span className="font-semibold">{host.name}</span>
+      </p>
     </CardContent>
   );
 };
@@ -119,15 +120,6 @@ const BannerSection = () => {
           </div>
         </div>
       )}
-    </CardContent>
-  );
-};
-
-const HostSection = () => {
-  const { host } = useGiveawayParticipation();
-  return (
-    <CardContent>
-      <HostInfoCard host={host} />
     </CardContent>
   );
 };
