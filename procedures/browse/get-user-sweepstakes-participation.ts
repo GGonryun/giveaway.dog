@@ -42,6 +42,7 @@ const getUserSweepstakesParticipation = procedure()
 
     const taskCompletions = await db.taskCompletion.findMany({
       where: {
+        userId: user.id,
         task: {
           sweepstakesId: input.id
         },
