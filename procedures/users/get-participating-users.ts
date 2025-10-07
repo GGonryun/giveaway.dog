@@ -60,7 +60,7 @@ const getParticipatingUsers = procedure()
     );
 
     // Apply filters
-    if (input.search) {
+    if (input.search && input.search.trim() !== '') {
       const searchLower = input.search.toLowerCase();
       processedUsers = processedUsers.filter(
         (user) =>
@@ -70,13 +70,13 @@ const getParticipatingUsers = procedure()
       );
     }
 
-    if (input.status) {
+    if (input.status && input.status !== 'all') {
       processedUsers = processedUsers.filter(
         (user) => user.status === input.status
       );
     }
 
-    if (input.dateRange) {
+    if (input.dateRange && input.dateRange !== 'all') {
       const now = new Date();
       let dateThreshold: Date;
 

@@ -28,11 +28,6 @@ export const SweepstakeFormPage = async ({
     return <div>Failed to load sweepstakes info: {info.data.code}</div>;
   }
 
-  console.log('Rendering form for sweepstakes:', {
-    id,
-    form: form.data.design?.background
-  });
-
   return (
     <Suspense>
       {/* 
