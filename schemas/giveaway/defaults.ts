@@ -5,7 +5,12 @@ import {
   SweepstakesTermsType
 } from '@prisma/client';
 import * as dates from 'date-fns';
-import { MinimumAgeRestrictionSchema } from './schemas';
+import {
+  GiveawayDesignSchema,
+  GradientBackgroundSchema,
+  MinimumAgeRestrictionSchema,
+  SolidColorBackgroundSchema
+} from './schemas';
 
 export const DEFAULT_MINIMUM_AGE = 13;
 
@@ -61,3 +66,33 @@ export const DEFAULT_SWEEPSTAKES_PRIZES: Prisma.PrizeCreateManySweepstakesInput[
   [];
 export const DEFAULT_SWEEPSTAKES_TASKS: Prisma.TaskCreateManySweepstakesInput[] =
   [];
+
+// TODO: same as --secondary in globals.css
+const DEFAULT_BACKGROUND_COLOR = '#edf0f4';
+
+export const DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND: SolidColorBackgroundSchema =
+  {
+    type: 'color',
+    color: DEFAULT_BACKGROUND_COLOR
+  };
+
+export const DEFAULT_GRADIENT_DESIGN_BACKGROUND: GradientBackgroundSchema = {
+  type: 'gradient',
+  format: 'linear',
+  angle: 135,
+  stops: [
+    { color: '#667eea', position: 0 },
+    { color: '#764ba2', position: 100 }
+  ]
+};
+
+const DEFAULT_DESIGN_DATA: GiveawayDesignSchema = {
+  displayName: true,
+  displayDescription: true,
+  background: DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND
+};
+
+export const DEFAULT_SWEEPSTAKES_DESIGN: Prisma.SweepstakesDesignUncheckedCreateWithoutSweepstakesInput =
+  {
+    data: DEFAULT_DESIGN_DATA
+  };

@@ -22,6 +22,7 @@ export type Prize = z.infer<typeof prizeSchema>;
 export const regionalRestrictionFilterSchema = z.nativeEnum(
   RegionalRestrictionFilter
 );
+
 export type RegionalRestrictionFilterSchema = z.infer<
   typeof regionalRestrictionFilterSchema
 >;
@@ -138,6 +139,50 @@ const giveawayFormTimingSchema = (validateEndDate: boolean) => {
   });
 };
 
+export const solidColorBackgroundSchema = z.object({
+  type: z.literal('color'),
+  color: z
+    .string()
+    .regex(/^#([0-9A-Fa-f]{3}){1,2}$/, 'Must be a valid hex color')
+});
+
+export type SolidColorBackgroundSchema = z.infer<
+  typeof solidColorBackgroundSchema
+>;
+
+export const gradientBackgroundSchema = z.object({
+  type: z.literal('gradient'),
+  format: z.union([z.literal('linear'), z.literal('radial')]),
+  angle: z.number().min(0).max(360),
+  stops: z
+    .object({
+      color: z
+        .string()
+        .regex(/^#([0-9A-Fa-f]{3}){1,2}$/, 'Must be a valid hex color'),
+      position: z.number().min(0).max(100)
+    })
+    .array()
+});
+
+export type GradientBackgroundSchema = z.infer<typeof gradientBackgroundSchema>;
+
+export const giveawayDesignBackgroundSchema = z.discriminatedUnion('type', [
+  solidColorBackgroundSchema,
+  gradientBackgroundSchema
+]);
+
+export type GiveawayDesignBackgroundSchema = z.infer<
+  typeof giveawayDesignBackgroundSchema
+>;
+
+export const giveawayDesignSchema = z.object({
+  displayName: z.boolean(),
+  displayDescription: z.boolean(),
+  background: giveawayDesignBackgroundSchema
+});
+
+export type GiveawayDesignSchema = z.infer<typeof giveawayDesignSchema>;
+
 export const giveawayFormSchema = (validateEndDate: boolean) =>
   z.object({
     setup: giveawayFormSetupSchema,
@@ -145,7 +190,8 @@ export const giveawayFormSchema = (validateEndDate: boolean) =>
     timing: giveawayFormTimingSchema(validateEndDate),
     audience: giveawayAudienceSchema,
     tasks: giveawayFormTaskSchema,
-    prizes: giveawayFormPrizeSchema
+    prizes: giveawayFormPrizeSchema,
+    design: giveawayDesignSchema
   });
 
 export type GiveawayFormSchema = z.infer<ReturnType<typeof giveawayFormSchema>>;

@@ -1,15 +1,24 @@
+import { cn } from '@/lib/utils';
 import React from 'react';
 
-export function Section({
-  children,
-
-  ...props
-}: Omit<SectionTitleProps, 'icon'> & {
+type SectionProps = Omit<SectionTitleProps, 'icon'> & {
   children: React.ReactNode | React.ReactNode[];
-}) {
+  className?: string;
+};
+
+export const Section: React.FC<SectionProps> = ({
+  children,
+  className,
+  ...props
+}) => {
   return (
     <div>
-      <div className="sticky top-0 z-10 bg-background flex items-center justify-between p-2 sm:p-4 border-b">
+      <div
+        className={cn(
+          'sticky top-0 z-10 bg-background flex items-center justify-between p-2 sm:p-4 border-b',
+          className
+        )}
+      >
         <div className="flex flex-col gap-2 w-full">
           <SectionTitle {...props} />
         </div>
@@ -17,7 +26,7 @@ export function Section({
       <div className="flex flex-col gap-2 p-2 sm:p-4">{children}</div>
     </div>
   );
-}
+};
 
 type SectionTitleProps = {
   label: string;

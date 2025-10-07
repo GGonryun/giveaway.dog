@@ -56,7 +56,6 @@
 
     --tertiary: oklch(0.72 0.15 280);
     --tertiary-foreground: oklch(1 0 0);
-    --tertiary-10: oklch(0.95 0.02 280);
 
     --quaternary: oklch(0.75 0.1 320);
     --quaternary-foreground: oklch(0.1 0 0);
@@ -156,7 +155,6 @@
 
     --tertiary: oklch(0.58 0.2 280);
     --tertiary-foreground: oklch(0.98 0.02 280);
-    --tertiary-10: oklch(0.25 0.03 280);
 
     --quaternary: oklch(0.4 0.15 320);
     --quaternary-foreground: oklch(0.98 0.01 320);
@@ -227,9 +225,7 @@
     --color-secondary: var(--secondary);
     --color-secondary-foreground: var(--secondary-foreground);
 
-    /* 🔥 Restored missing mappings */
     --color-tertiary: var(--tertiary);
-    --color-tertiary-10: var(--tertiary-10);
     --color-tertiary-foreground: var(--tertiary-foreground);
 
     --color-quaternary: var(--quaternary);

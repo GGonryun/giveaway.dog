@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   GiveawayParticipationProvider,
   GiveawayParticipationProps
@@ -19,6 +19,8 @@ import { ProfileIncomplete } from './states/profile-incomplete';
 import { AgeVerificationRequired } from './states/age-verification-required';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { assertNever } from '@/lib/errors';
+import { GiveawayDesignBackgroundSchema } from '@/schemas/giveaway/schemas';
+import { toBackgroundStyle } from '@/schemas/color';
 
 const GiveawayParticipationContent = () => {
   const { state } = useGiveawayParticipation();
@@ -54,12 +56,27 @@ const GiveawayParticipationContent = () => {
 export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = (
   props
 ) => {
+  const bg = useMemo(
+    () => toBackgroundStyle(props.sweepstakes.design.background),
+    [props.sweepstakes.design.background]
+  );
   return (
-    <GiveawayParticipationProvider {...props}>
-      <GiveawayParticipationCard device={props.device}>
-        <GiveawayParticipationContent />
-      </GiveawayParticipationCard>
-    </GiveawayParticipationProvider>
+    <div
+      className={'overflow-auto w-full flex-1 p-2 sm:p-4 flex'}
+      style={{
+        background: bg
+      }}
+    >
+      <div className="mx-auto my-auto w-full max-w-2xl min-w-fit">
+        <div className="w-full max-w-2xl mx-auto">
+          <GiveawayParticipationProvider {...props}>
+            <GiveawayParticipationCard device={props.device}>
+              <GiveawayParticipationContent />
+            </GiveawayParticipationCard>
+          </GiveawayParticipationProvider>
+        </div>
+      </div>
+    </div>
   );
 };
 

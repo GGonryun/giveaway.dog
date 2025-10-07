@@ -92,6 +92,8 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
 const TitleSection = () => {
   const { sweepstakes, host } = useGiveawayParticipation();
 
+  if (!sweepstakes.design.displayName) return null;
+
   return (
     <CardContent className="space-y-0.5">
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
@@ -128,6 +130,7 @@ const DescriptionSection = () => {
   const { sweepstakes } = useGiveawayParticipation();
 
   if (!sweepstakes.setup.description) return null;
+  if (!sweepstakes.design.displayDescription) return null;
 
   return (
     <CardContent>

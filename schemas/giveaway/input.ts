@@ -4,11 +4,13 @@ import { timezone } from '@/lib/time';
 import * as dates from 'date-fns';
 import {
   FormSweepstakesGetPayload,
+  SweepstakesInputDesignBackgroundSchema,
   SweepstakesInputSchema,
   SweepstakesInputTaskSchema
 } from './db';
 import { compact } from 'lodash';
 import { toJsonObject } from '@/lib/json';
+import { DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND } from './defaults';
 
 const toSetup = (
   data: FormSweepstakesGetPayload['details']
@@ -109,6 +111,46 @@ export const toTaskInput = (
   return base;
 };
 
+const toDesignBackgroundInput = (
+  data: any // TODO: fix type
+): SweepstakesInputDesignBackgroundSchema => {
+  switch (data?.type) {
+    case 'color':
+      return {
+        type: data.type,
+        color: data.color ?? DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND.color
+      };
+    case 'gradient':
+      return {
+        type: 'gradient',
+        format: data.format || 'linear',
+        stops: Array.isArray(data.stops)
+          ? data.stops.map((stop: any) => ({
+              color: stop.color || '#000000',
+              position: typeof stop.position === 'number' ? stop.position : 0
+            }))
+          : [],
+        angle: typeof data.angle === 'number' ? data.angle : 90
+      };
+    default:
+      return DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND;
+  }
+};
+
+export const toDesignInput = (
+  data: FormSweepstakesGetPayload['design']
+): SweepstakesInputSchema['design'] => {
+  if (!data) return undefined;
+
+  const config = toJsonObject(data.data);
+
+  return {
+    displayName: config.displayName ?? true,
+    displayDescription: config.displayDescription ?? true,
+    background: toDesignBackgroundInput(config.background)
+  };
+};
+
 export const toSweepstakesInput = (
   giveaway: FormSweepstakesGetPayload
 ): Omit<SweepstakesInputSchema, 'id'> => {
@@ -118,6 +160,7 @@ export const toSweepstakesInput = (
     audience: toAudienceInput(giveaway.audience),
     timing: toTimingInput(giveaway.timing),
     prizes: toPrizesInput(giveaway.prizes),
-    tasks: toTasksInput(giveaway.tasks)
+    tasks: toTasksInput(giveaway.tasks),
+    design: toDesignInput(giveaway.design)
   };
 };

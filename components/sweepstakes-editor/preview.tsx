@@ -7,8 +7,10 @@ import { GiveawayParticipationSkeleton } from '@/components/sweepstakes/fallback
 import { IncompleteGiveawaySetup } from '@/components/sweepstakes/fallbacks/empty-states';
 
 import {
+  GiveawayDesignBackgroundSchema,
   GiveawayFormSchema,
   GiveawaySchema,
+  GradientBackgroundSchema,
   Prize
 } from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
@@ -18,7 +20,10 @@ import {
   SweepstakesTermsType
 } from '@prisma/client';
 import { defaultTermInputOptions } from './form/terms';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
+import {
+  DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND,
+  DEFAULT_SWEEPSTAKES_NAME
+} from '@/schemas/giveaway/defaults';
 import { noop } from 'lodash';
 import { TaskSchema } from '@/schemas/tasks/schemas';
 import {
@@ -99,7 +104,13 @@ export const GiveawayPreview: React.FC = () => {
             : undefined
         },
         tasks: (formValues.tasks || []) as TaskSchema[],
-        prizes: (formValues.prizes || []) as Prize[]
+        prizes: (formValues.prizes || []) as Prize[],
+        design: {
+          displayName: formValues.design?.displayName !== false,
+          displayDescription: formValues.design?.displayDescription !== false,
+          background: (formValues.design?.background ||
+            DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND) as GiveawayDesignBackgroundSchema
+        }
       };
     } catch (error) {
       console.warn('Error creating preview data:', error);
@@ -120,20 +131,18 @@ export const GiveawayPreview: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      <GiveawayParticipation
-        isLoading={false}
-        sweepstakes={mockSweepstakes}
-        host={mockHost}
-        participation={mockParticipation}
-        winners={mockWinners}
-        userProfile={mockUserProfile}
-        userParticipation={mockUserParticipation}
-        state={previewState}
-        onTaskComplete={noop}
-        onLogin={noop}
-        onCompleteProfile={noop}
-      />
-    </div>
+    <GiveawayParticipation
+      isLoading={false}
+      sweepstakes={mockSweepstakes}
+      host={mockHost}
+      participation={mockParticipation}
+      winners={mockWinners}
+      userProfile={mockUserProfile}
+      userParticipation={mockUserParticipation}
+      state={previewState}
+      onTaskComplete={noop}
+      onLogin={noop}
+      onCompleteProfile={noop}
+    />
   );
 };

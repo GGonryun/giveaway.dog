@@ -8,6 +8,7 @@ import { ApplicationError } from '@/lib/errors';
 
 import {
   DEFAULT_SWEEPSTAKES_AUDIENCE,
+  DEFAULT_SWEEPSTAKES_DESIGN,
   DEFAULT_SWEEPSTAKES_DETAILS,
   DEFAULT_SWEEPSTAKES_PRIZES,
   DEFAULT_SWEEPSTAKES_TASKS,
@@ -65,6 +66,9 @@ export const createSweepstakes = procedure()
         },
         tasks: {
           createMany: { data: DEFAULT_SWEEPSTAKES_TASKS }
+        },
+        design: {
+          create: DEFAULT_SWEEPSTAKES_DESIGN
         }
       }
     });

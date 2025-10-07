@@ -198,11 +198,7 @@ export const DesktopFormLayout: React.FC<FormLayoutProps> = ({
             defaultSize={60}
             className="min-w-[500px] xl:min-w-[800px] flex flex-col"
           >
-            <div className="overflow-auto w-full flex-1 bg-tertiary-10 p-4 flex">
-              <div className="mx-auto my-auto w-full max-w-2xl min-w-fit">
-                {right}
-              </div>
-            </div>
+            {right}
             <PreviewFooter />
           </ResizablePanel>
         </ResizablePanelGroup>

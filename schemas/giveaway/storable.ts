@@ -138,6 +138,23 @@ const toStorableTasks = (
   };
 };
 
+const toStorableDesign = (
+  design: SweepstakesInputSchema['design']
+):
+  | Prisma.SweepstakesDesignUncheckedCreateNestedOneWithoutSweepstakesInput
+  | undefined => {
+  if (!design) return undefined;
+  return {
+    create: {
+      data: {
+        displayName: design.displayName ?? false,
+        displayDescription: design.displayDescription ?? false,
+        background: design.background
+      }
+    }
+  };
+};
+
 export const toStorableSweepstakes = (
   sweepstakes: TeamSweepstakesGetPayload,
   input: SweepstakesInputSchema & { status?: SweepstakesStatus }
@@ -151,6 +168,7 @@ export const toStorableSweepstakes = (
     terms: toStorableTerms(input.terms),
     audience: toStorableAudience(input.audience),
     prizes: toStorablePrizes(input.prizes),
-    tasks: toStorableTasks(input.tasks)
+    tasks: toStorableTasks(input.tasks),
+    design: toStorableDesign(input.design)
   };
 };

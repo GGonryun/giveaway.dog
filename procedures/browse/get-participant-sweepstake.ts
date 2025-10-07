@@ -74,6 +74,8 @@ const getParticipantSweepstake = procedure()
     };
     const parsed = participantSweepstakeSchema.safeParse(unparsed);
 
+    console.log('Parsed sweepstakes:', parsed);
+
     if (!parsed.success) {
       throw new ApplicationError({
         code: 'VALIDATION_ERROR',

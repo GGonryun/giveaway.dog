@@ -15,7 +15,8 @@ export const FORM_SWEEPSTAKES_PAYLOAD = {
   },
   terms: true,
   timing: true,
-  details: true
+  details: true,
+  design: true
 } satisfies Prisma.SweepstakesInclude;
 
 export type FormSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
@@ -47,7 +48,8 @@ export const PARTICIPANT_SWEEPSTAKES_PAYLOAD = {
   terms: true,
   timing: true,
   details: true,
-  team: true
+  team: true,
+  design: true
 } satisfies Prisma.SweepstakesInclude;
 
 export type ParticipantSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
@@ -115,4 +117,7 @@ export type SweepstakesInputTaskSchema = DeepPartial<
 >;
 export type SweepstakesInputPrizeSchema = DeepPartial<
   SweepstakesFormSchema['prizes'][number]
+>;
+export type SweepstakesInputDesignBackgroundSchema = DeepPartial<
+  SweepstakesFormSchema['design']['background']
 >;

@@ -7,7 +7,7 @@ import {
 } from '@/schemas/giveaway/schemas';
 import { noop } from 'lodash';
 import { Eye, Smartphone, Monitor, CheckCircle2 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useIsMobile } from '../hooks/use-mobile';
 import { QRCodeModal } from '../patterns/qr-code-modal';
 import {
@@ -29,6 +29,7 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { computeState } from '@/lib/sweepstakes';
+import { toBackgroundStyle } from '@/schemas/color';
 
 export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   props
@@ -130,8 +131,18 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
     ageVerification: mockAgeVerification
   });
 
+  const bg = useMemo(
+    () => toBackgroundStyle(sweepstakes.design.background),
+    [sweepstakes.design.background]
+  );
+
   return (
-    <Card className="p-0 bg-giveaway">
+    <Card
+      className="p-0"
+      style={{
+        background: bg
+      }}
+    >
       <CardContent className="p-4 space-y-4">
         <div className="flex items-center justify-center space-x-2">
           {!isMobile && (
@@ -147,36 +158,34 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
             previewDevice === 'mobile' ? 'max-w-sm' : 'max-w-2xl'
           )}
         >
-          <div className="rounded-lg overflow-hidden">
-            {sweepstakes && host ? (
-              <GiveawayParticipation
-                device={previewDevice}
-                isLoading={false}
-                sweepstakes={sweepstakes}
-                host={host}
-                participation={mockParticipation}
-                winners={mockWinners}
-                userProfile={mockUserProfile}
-                userParticipation={mockUserParticipation}
-                state={state}
-                onTaskComplete={noop}
-                onLogin={noop}
-                onCompleteProfile={noop}
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center space-y-4">
-                  <Eye className="h-12 w-12 mx-auto text-muted-foreground" />
-                  <div>
-                    <h3 className="font-medium">No Preview Available</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Landing page URL not configured
-                    </p>
-                  </div>
+          {sweepstakes && host ? (
+            <GiveawayParticipation
+              device={previewDevice}
+              isLoading={false}
+              sweepstakes={sweepstakes}
+              host={host}
+              participation={mockParticipation}
+              winners={mockWinners}
+              userProfile={mockUserProfile}
+              userParticipation={mockUserParticipation}
+              state={state}
+              onTaskComplete={noop}
+              onLogin={noop}
+              onCompleteProfile={noop}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center space-y-4">
+                <Eye className="h-12 w-12 mx-auto text-muted-foreground" />
+                <div>
+                  <h3 className="font-medium">No Preview Available</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Landing page URL not configured
+                  </p>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
