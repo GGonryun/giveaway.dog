@@ -14,6 +14,7 @@ import {
 import { useProcedure } from '@/lib/mrpc/hook';
 import { useTeams } from '../context/team-provider';
 import { useCreateSweepstakesPage } from './use-create-sweepstakes-page';
+import { cn } from '@/lib/utils';
 
 export const CreateGiveawayButton: React.FC<{
   text?: string;
@@ -38,7 +39,7 @@ export const CreateGiveawayButton: React.FC<{
     <div className="flex -mt-0.5 w-fit">
       <Button
         size="sm"
-        className="rounded-r-none"
+        className={cn(showDropdown ? 'rounded-r-none' : '')}
         disabled={procedure.isLoading}
         onClick={() => procedure.run(activeTeam)}
       >

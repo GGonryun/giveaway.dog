@@ -268,7 +268,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
         {/* Empty State */}
         {sweepstakes.length === 0 && (
           <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-4">
-            <Calendar className="h-8 w-8  opacity-50" />
+            <Calendar className="h-8 w-8 opacity-50" />
             <p>No sweepstakes found</p>
             <CreateGiveawayButton
               showDropdown={false}
