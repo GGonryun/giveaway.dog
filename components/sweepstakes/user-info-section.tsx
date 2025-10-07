@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useLogout } from '../auth/use-logout';
 import { usePathname } from 'next/navigation';
 import { ProviderIcon } from '@/components/ui/patterns/provider-icon';
-import { useBrowseSweepstakesPage } from './use-browse-sweepstakes-page';
 
 export const UserInfoSection: React.FC = () => {
   const { userProfile } = useGiveawayParticipation();

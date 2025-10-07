@@ -36,7 +36,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
   const closeSheet = () => setOpen(false);
 
   return (
-    <section className="py-4">
+    <section className="py-2 sm:py-4">
       <div className="container">
         <nav className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">

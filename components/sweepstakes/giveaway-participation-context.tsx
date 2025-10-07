@@ -14,6 +14,7 @@ import { UserProfileSchema } from '@/schemas/user';
 
 export interface GiveawayParticipationProps {
   device?: DeviceType;
+  className?: string;
   sweepstakes: GiveawaySchema;
   host: GiveawayHostSchema;
   participation: GiveawayParticipationSchema;

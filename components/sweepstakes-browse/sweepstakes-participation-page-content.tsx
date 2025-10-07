@@ -52,6 +52,7 @@ export const SweepstakesParticipationPage: React.FC<
   return (
     <GiveawayParticipation
       {...props}
+      className="p-4 py-8 sm:py-16"
       isLoading={submitTaskProcedure.isLoading}
       onTaskComplete={handleTaskComplete}
       onLogin={handleLogin}
