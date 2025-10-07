@@ -26,34 +26,45 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const connectionRoutes = ['/login'];
-      const sensitiveRoutes = ['/app', '/account'];
+      const hostRoutes = ['/app'];
+      const sensitiveRoutes = [...hostRoutes, '/account'];
       const isLoggedIn = !!auth?.user;
+      const isHost = auth?.user?.type?.includes('HOST');
 
-      const isLogout = nextUrl.pathname.startsWith('/logout');
-      if (isLogout && !isLoggedIn)
-        return Response.redirect(new URL('/', nextUrl));
-
-      const isConnection = connectionRoutes.some((r) =>
+      const isLogoutRoute = nextUrl.pathname.startsWith('/logout');
+      const isConnectionRoute = connectionRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)
       );
-      if (isConnection && isLoggedIn)
-        return Response.redirect(new URL('/', nextUrl));
-
-      const isSensitive = sensitiveRoutes.some((r) =>
+      const isHostRoute = hostRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)
       );
-      if (isSensitive) return isLoggedIn;
+      const isSensitiveRoute = sensitiveRoutes.some((r) =>
+        nextUrl.pathname.startsWith(r)
+      );
+      if (isLogoutRoute && !isLoggedIn)
+        return Response.redirect(new URL('/', nextUrl));
+
+      if (isConnectionRoute && isLoggedIn)
+        return Response.redirect(new URL('/', nextUrl));
+
+      if (isHostRoute && !isHost) return false;
+
+      if (isSensitiveRoute) return isLoggedIn;
+
       return true;
     },
     jwt({ token, user }) {
       if (user && user.id) {
         token.id = user.id;
+        token.type = (user.type as string[]) || null;
       }
       return token;
     },
     session({ token, session }) {
       if (token?.id && session.user) {
         session.user.id = token.id as string;
+        // TODO: fix any
+        session.user.type = (token.type as any[]) || null;
       }
       return session;
     }
