@@ -22,6 +22,7 @@ export interface GiveawayParticipationProps {
   userParticipation?: UserParticipationSchema;
   state: GiveawayState;
   isLoading: boolean;
+  hideBackground?: boolean;
   onTaskComplete: (taskId: string) => void;
   onLogin: () => void;
   onCompleteProfile: () => void;

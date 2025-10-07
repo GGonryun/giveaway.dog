@@ -160,6 +160,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
         >
           {sweepstakes && host ? (
             <GiveawayParticipation
+              hideBackground
               device={previewDevice}
               isLoading={false}
               sweepstakes={sweepstakes}

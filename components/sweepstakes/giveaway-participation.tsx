@@ -19,8 +19,8 @@ import { ProfileIncomplete } from './states/profile-incomplete';
 import { AgeVerificationRequired } from './states/age-verification-required';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { assertNever } from '@/lib/errors';
-import { GiveawayDesignBackgroundSchema } from '@/schemas/giveaway/schemas';
 import { toBackgroundStyle } from '@/schemas/color';
+import { cn } from '@/lib/utils';
 
 const GiveawayParticipationContent = () => {
   const { state } = useGiveawayParticipation();
@@ -53,19 +53,24 @@ const GiveawayParticipationContent = () => {
   }
 };
 
-export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = (
-  props
-) => {
+export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = ({
+  hideBackground: noBackground,
+  ...props
+}) => {
   const bg = useMemo(
     () => toBackgroundStyle(props.sweepstakes.design.background),
     [props.sweepstakes.design.background]
   );
   return (
     <div
-      className={'overflow-auto w-full flex-1 p-2 sm:p-4 flex'}
-      style={{
-        background: bg
-      }}
+      className={cn('overflow-auto w-full flex-1 p-2 sm:p-4 flex')}
+      style={
+        noBackground
+          ? {}
+          : {
+              background: bg
+            }
+      }
     >
       <div className="mx-auto my-auto w-full max-w-2xl min-w-fit">
         <div className="w-full max-w-2xl mx-auto">
