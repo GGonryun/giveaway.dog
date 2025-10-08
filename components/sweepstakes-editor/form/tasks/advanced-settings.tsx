@@ -13,20 +13,16 @@ import { TaskType } from '@prisma/client';
 export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
-      case 'BONUS_TASK':
-        return (
-          <>
-            <MandatoryField />
-            <TasksRequiredField />
-          </>
-        );
       case 'VISIT_URL':
+      case 'BONUS_TASK':
+      case 'TWITTER_CONNECT':
         return (
           <>
             <MandatoryField />
             <TasksRequiredField />
           </>
         );
+
       default:
         throw assertNever(type);
     }

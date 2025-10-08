@@ -20,7 +20,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           id: profile.data?.id ?? profile.id,
           name: profile.data?.name ?? profile.name,
           email: profile.data?.email ?? profile.email,
-          image: profile.data?.profile_image_url ?? profile.profile_image_url
+          image: profile.data?.profile_image_url ?? profile.profile_image_url,
+          username: profile.data?.username ?? profile.username
         } as any;
       }
     }),

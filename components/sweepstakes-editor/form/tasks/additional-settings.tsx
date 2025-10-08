@@ -16,6 +16,7 @@ import { TaskType } from '@prisma/client';
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
+      case 'TWITTER_CONNECT':
       case 'BONUS_TASK':
         return <></>;
       case 'VISIT_URL':

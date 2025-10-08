@@ -1,34 +1,52 @@
 import { Prisma, UserType } from '@prisma/client';
 import z from 'zod';
 
-export const providerSchema = z.union([
+export const providerTypeSchema = z.union([
   z.literal('twitter'),
   z.literal('google'),
   z.literal('discord'),
   z.literal('email')
 ]);
 
-export type ProviderSchemaType = z.infer<typeof providerSchema>;
+export type ProviderTypeSchema = z.infer<typeof providerTypeSchema>;
 
-export const PROVIDER_SCHEMA_LABELS: Record<ProviderSchemaType, string> = {
+export const isProviderType = (value: unknown): value is ProviderTypeSchema => {
+  return providerTypeSchema.safeParse(value).success;
+};
+
+export const providerSchema = z.object({
+  type: providerTypeSchema,
+  label: z.string()
+});
+
+export const includesProvider = (
+  providers: ProviderSchema[] | undefined,
+  providerId: string | ProviderTypeSchema | undefined
+) => {
+  if (!providers || !providerId) return false;
+  if (!isProviderType(providerId)) return false;
+  return providers.some((p) => p.type === providerId);
+};
+
+export type ProviderSchema = z.infer<typeof providerSchema>;
+
+export const PROVIDER_SCHEMA_LABELS: Record<ProviderTypeSchema, string> = {
   twitter: 'X (Twitter)',
   google: 'Google',
   discord: 'Discord',
   email: 'Email'
 };
 
-export const IS_SOCIAL_PROVIDER: Record<ProviderSchemaType, boolean> = {
+export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
   twitter: true,
   google: true,
   discord: true,
   email: false
 };
 
-export const SOCIAL_PROVIDERS: ProviderSchemaType[] = [
-  'twitter',
-  'google',
-  'discord'
-];
+export const SOCIAL_PROVIDERS = Object.entries(IS_SOCIAL_PROVIDER)
+  .filter(([, isSocial]) => isSocial)
+  .map(([providerId]) => providerId) as ProviderTypeSchema[];
 
 export const userProfileSchema = z.object({
   id: z.string(),
@@ -49,29 +67,18 @@ export const userSchema = userProfileSchema.extend({
 
 export type UserSchema = z.infer<typeof userSchema>;
 
-export const parseProviders = (providers: unknown) => {
-  if (!Array.isArray(providers)) {
-    return [];
-  }
-  if (providers.length === 0) {
-    return [];
-  }
-
-  if (providers.some((provider) => typeof provider !== 'string')) {
-    return [];
-  }
-
-  return providers.filter((provider) => {
-    return providerSchema.safeParse(provider).success;
-  });
-};
+export const parseProviders = (providers: UserAccounts[]): ProviderSchema[] =>
+  providers.map((provider) => ({
+    type: parseProvider(provider.provider) || 'email',
+    label: provider.label || 'N/A'
+  }));
 
 export const parseProvider = (provider: unknown) => {
   if (typeof provider !== 'string') {
     return null;
   }
 
-  const result = providerSchema.safeParse(provider);
+  const result = providerTypeSchema.safeParse(provider);
   if (result.success) {
     return result.data;
   }
@@ -94,6 +101,15 @@ export type AgeVerificationSchema = z.infer<typeof ageVerificationSchema>;
 
 export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
 
+const ACCOUNT_SELECT_QUERY = {
+  provider: true,
+  label: true
+} satisfies Prisma.AccountSelect;
+
+export type UserAccounts = Prisma.AccountGetPayload<{
+  select: typeof ACCOUNT_SELECT_QUERY;
+}>;
+
 export const USER_SCHEMA_SELECT_QUERY = {
   id: true,
   email: true,
@@ -103,21 +119,19 @@ export const USER_SCHEMA_SELECT_QUERY = {
   emailVerified: true,
   type: true,
   accounts: {
-    select: { provider: true }
+    select: ACCOUNT_SELECT_QUERY
   }
 } satisfies Prisma.UserSelect;
 
 export const toUserSchema = (
   user: Prisma.UserGetPayload<{ select: typeof USER_SCHEMA_SELECT_QUERY }>
-): UserSchema => {
-  return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    emoji: user.emoji,
-    countryCode: user.countryCode,
-    emailVerified: !!user.emailVerified,
-    type: user.type,
-    providers: parseProviders(user.accounts.map((account) => account.provider))
-  };
-};
+): UserSchema => ({
+  id: user.id,
+  email: user.email,
+  name: user.name,
+  emoji: user.emoji,
+  countryCode: user.countryCode,
+  emailVerified: !!user.emailVerified,
+  type: user.type,
+  providers: parseProviders(user.accounts)
+});

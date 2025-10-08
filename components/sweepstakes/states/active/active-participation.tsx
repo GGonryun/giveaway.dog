@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGiveawayParticipation } from '../../giveaway-participation-context';
@@ -8,10 +8,31 @@ import { UserInfoSection } from '../../user-info-section';
 import { Typography } from '@/components/ui/typography';
 import { TaskItem } from './task-item';
 import { TaskThemeProvider } from '@/components/tasks/theme';
+import { useSearchParams } from 'next/navigation';
+import { browser } from '@/lib/browser';
 
 export const ActiveParticipation: React.FC = () => {
-  const [open, setOpen] = React.useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const taskId = useMemo(() => {
+    if (searchParams.has('taskId')) return searchParams.get('taskId');
+    return null;
+  }, [searchParams]);
+
+  const [open, setOpen] = React.useState<string | null>(taskId);
   const { sweepstakes, userParticipation } = useGiveawayParticipation();
+
+  const handleOpen = useCallback(
+    (taskId: string | null) => {
+      if (taskId) {
+        browser.changeParams({ taskId });
+        setOpen((current) => (current === taskId ? null : taskId));
+      } else {
+        browser.changeParams({ taskId: null });
+        setOpen(null);
+      }
+    },
+    [setOpen]
+  );
 
   const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
 
@@ -20,7 +41,7 @@ export const ActiveParticipation: React.FC = () => {
       {open && (
         <div
           className="fixed inset-0 h-full bg-black/30 z-50"
-          onClick={() => setOpen(null)}
+          onClick={() => handleOpen(null)}
         />
       )}
 
@@ -39,7 +60,7 @@ export const ActiveParticipation: React.FC = () => {
               <TaskThemeProvider type={task.type} key={index}>
                 <TaskItem
                   open={open === task.id}
-                  setOpen={(status) => setOpen(status ? task.id : null)}
+                  setOpen={(status) => handleOpen(status ? task.id : null)}
                   task={task}
                   completed={completed}
                 />

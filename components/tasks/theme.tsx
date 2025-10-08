@@ -1,11 +1,13 @@
-import { EarthIcon, LucideIcon, StarIcon } from 'lucide-react';
+import { EarthIcon, LucideIcon, StarIcon, TwitterIcon } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
 import React from 'react';
+import { SocialXIcon } from '../ui/patterns/x-icon';
 
 export type TaskTheme = {
   action: string;
   symbol: string;
+  arrow: string;
   icon: LucideIcon;
   label: string;
 };
@@ -15,8 +17,9 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
     case 'BONUS_TASK':
       return {
         action:
-          'bg-red-500 text-red-100 group-hover:bg-red-500 hover:bg-red-500 ',
+          'bg-red-500 text-red-100 group-hover:bg-red-500  hover:bg-red-500',
         symbol: 'bg-red-500 text-red-100',
+        arrow: 'bg-red-500 text-red-100 fill-red-500',
         icon: StarIcon,
         label: 'Bonus Task'
       };
@@ -25,8 +28,17 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         action:
           'bg-blue-500 text-blue-100 group-hover:bg-blue-500 hover:bg-blue-500',
         symbol: 'bg-blue-500 text-blue-100',
+        arrow: 'bg-blue-500 text-blue-100 fill-blue-500',
         icon: EarthIcon,
         label: 'Visit URL'
+      };
+    case 'TWITTER_CONNECT':
+      return {
+        action: 'bg-black text-white group-hover:bg-black hover:bg-black',
+        symbol: 'bg-black text-white',
+        arrow: 'bg-black text-white fill-black',
+        icon: SocialXIcon,
+        label: 'Connect Twitter'
       };
     default:
       throw assertNever(type);

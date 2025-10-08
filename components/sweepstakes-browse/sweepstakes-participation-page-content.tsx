@@ -27,6 +27,7 @@ export const SweepstakesParticipationPage: React.FC<
   const submitTaskProcedure = useProcedure({
     action: submitTask,
     onSuccess() {
+      router.refresh();
       toast.success('Task completed!');
     },
     onFailure() {

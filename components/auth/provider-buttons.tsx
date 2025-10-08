@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { ProviderIcon } from '@/components/ui/patterns/provider-icon';
-import { PROVIDER_SCHEMA_LABELS, ProviderSchemaType } from '@/schemas/user';
+import { PROVIDER_SCHEMA_LABELS, ProviderTypeSchema } from '@/schemas/user';
 import React from 'react';
 
 type ProviderButtonsProps = {
   onSubmit: (provider: string) => void;
 };
 
-const PROVIDERS: ProviderSchemaType[] = [
+const PROVIDERS: ProviderTypeSchema[] = [
   'twitter',
   'google',
   'discord',

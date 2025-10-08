@@ -20,7 +20,10 @@ export const mockUserProfile: UserProfileSchema = {
   emailVerified: true,
   emoji: '🐶',
   countryCode: 'US',
-  providers: ['twitter', 'google']
+  providers: [
+    { type: 'twitter', label: 'Preview User' },
+    { type: 'google', label: 'preview.user@gmail.com' }
+  ]
 };
 
 export const mockAgeVerification: AgeVerificationSchema = {

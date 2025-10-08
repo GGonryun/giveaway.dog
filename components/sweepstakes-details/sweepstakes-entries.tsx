@@ -15,12 +15,7 @@ import { Globe } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { TASK_LABEL, TaskCompletionSchema } from '@/schemas/tasks/schemas';
 import { formatDistanceToNowStrict } from 'date-fns';
-import {
-  TaskCategoryBadge,
-  TaskPlatformIcon,
-  TaskStatusBadge,
-  TaskStatusIcon
-} from './task-utils';
+import { TaskStatusBadge, TaskStatusIcon } from './task-utils';
 import { UserSchema } from '@/schemas/user';
 import { Button } from '../ui/button';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';

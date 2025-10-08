@@ -29,18 +29,14 @@ import sendEmailVerification from '@/procedures/user/send-email-verification';
 import updateEmail from '@/procedures/user/update-email';
 import { toast } from 'sonner';
 import { Spinner } from '../ui/spinner';
-interface UserData {
-  email?: string | null;
-  emailVerified?: boolean | null;
-  providers: string[];
-}
+import { UserProfileSchema } from '@/schemas/user';
 
 interface EmailVerificationProps {
   title?: string;
   description?: string;
   showCard?: boolean;
   onEmailVerified?: () => void;
-  user: UserData;
+  user: UserProfileSchema;
   redirectTo?: string;
   verificationText?: string;
 }
@@ -211,10 +207,10 @@ export function EmailVerification({
 
       {/* Current Email Status - Show when email is verified and not changing */}
       {user.emailVerified && user.email && !isChangingEmail && (
-        <div className="w-full flex flex-col sm:flex-row gap-4 sm:gap-2 items-center justify-between p-4 border rounded-lg">
+        <div className="w-full flex flex-col sm:flex-row gap-4 sm:gap-2 items-center justify-between p-2 border rounded-lg">
           {/* LEFT: icon + text (this area must be allowed to shrink) */}
           <div className="flex items-center gap-3 min-w-0 w-full sm:flex-1">
-            <div className="w-12 h-12 flex-shrink-0 rounded bg-white border border-border flex items-center justify-center">
+            <div className="w-12 h-12 flex-shrink-0 bg-white flex items-center justify-center">
               <Mail className="w-8 h-8 text-foreground" />
             </div>
 

@@ -3,8 +3,10 @@ import {
   AlertTriangleIcon,
   CheckCircleIcon,
   ClockIcon,
+  Globe2Icon,
+  GlobeIcon,
   ShieldQuestionIcon,
-  SquareCheckBigIcon,
+  TwitterIcon,
   XCircleIcon
 } from 'lucide-react';
 import { Badge } from '../ui/badge';
@@ -14,6 +16,7 @@ import {
   TASK_PLATFORM,
   TaskCategorySchema
 } from '@/schemas/tasks/schemas';
+import { assertNever } from '@/lib/errors';
 
 export const TaskStatusIcon: React.FC<{ status: CompletionStatus }> = ({
   status
@@ -72,9 +75,11 @@ export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
 
   switch (platform) {
     case 'website':
-      return <SquareCheckBigIcon className="h-4 w-4 text-gray-500" />;
+      return <Globe2Icon className="h-4 w-4 text-gray-500" />;
+    case 'twitter':
+      return <TwitterIcon className="h-4 w-4 text-blue-500" />;
     default:
-      return <ShieldQuestionIcon className="h-4 w-4 text-gray-500" />;
+      throw assertNever(platform);
   }
 };
 

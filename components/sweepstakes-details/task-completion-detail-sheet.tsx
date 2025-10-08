@@ -1,12 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams
-} from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   Sheet,
   SheetContent,
@@ -94,14 +89,14 @@ export const TaskCompletionDetailSheetContent: React.FC<{
 
   return (
     <>
-      <SheetHeader>
+      <SheetHeader className="px-0">
         <div className="flex items-center space-x-3">
-          <TaskPlatformIcon type={selectedTaskCompletion.task.type} />
           <div className="flex-1">
             <SheetTitle className="text-lg">
               {selectedTaskCompletion.task.title}
             </SheetTitle>
-            <SheetDescription className="flex items-center space-x-2">
+            <SheetDescription className="flex items-center space-x-1">
+              <TaskPlatformIcon type={selectedTaskCompletion.task.type} />
               <TaskCategoryBadge type={selectedTaskCompletion.task.type} />
               <span className="text-xs text-muted-foreground">
                 {selectedTaskCompletion.task.type}
@@ -112,7 +107,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
       </SheetHeader>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto space-y-6 mt-4 pb-4 pr-1">
+      <div className="flex-1 overflow-y-auto space-y-6 pr-1">
         {/* Task Statistics */}
         <div className="space-y-4">
           <h4 className="text-base font-medium border-b pb-2">

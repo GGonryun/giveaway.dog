@@ -62,6 +62,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
+  label             String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -253,6 +254,7 @@ model Task {
 enum TaskType {
   BONUS_TASK
   VISIT_URL
+  TWITTER_CONNECT
 }
 
 model TaskCompletion {

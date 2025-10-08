@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, ChevronDownIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGiveawayParticipation } from '../../giveaway-participation-context';
-import { toTaskTheme, useTaskTheme } from '@/components/tasks/theme';
+import { useTaskTheme } from '@/components/tasks/theme';
 import {
   Tooltip,
   TooltipContent,
@@ -76,7 +76,7 @@ export const TaskItem: React.FC<{
           className={cn(
             'group flex items-stretch justify-between w-full',
             isLoading ? 'cursor-progress' : 'cursor-pointer',
-            completed ? 'bg-green-50 border-green-200' : 'hover:bg-accent/80'
+            completed ? 'bg-green-50 border-green-200' : 'hover:bg-gray-100'
           )}
         >
           <div className="flex items-center gap-3 flex-1">
@@ -112,10 +112,8 @@ export const TaskItem: React.FC<{
                   type="button"
                   variant={completed ? 'success' : 'outline'}
                   className={cn(
-                    'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-primary-foreground hover:text-primary-foreground',
-                    completed
-                      ? 'group-hover:bg-success/70 hover:bg-success/70'
-                      : theme.action
+                    'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-primary-foreground hover:text-primary-foreground group-hover:opacity-70 hover:opacity-70',
+                    completed ? '' : theme.action
                   )}
                 >
                   {isLoading ? (
@@ -130,7 +128,12 @@ export const TaskItem: React.FC<{
                 </Button>
               </TooltipTrigger>
 
-              <TooltipContent side="left" align="center">
+              <TooltipContent
+                side="left"
+                align="center"
+                className={cn(theme.arrow)}
+                arrowClassName={cn(theme.arrow)}
+              >
                 {completed ? (
                   <p>You earned {entriesText}.</p>
                 ) : open ? (

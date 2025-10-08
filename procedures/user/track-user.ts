@@ -20,12 +20,6 @@ const trackUser = procedure()
 
     const geo = await ip.geolocation(realIp);
 
-    console.info('User tracking data:', {
-      userAgent: rawUserAgent,
-      realIp,
-      geo
-    });
-
     return await db.$transaction(async (tx) => {
       const countryCode = geo.country_code || UNKNOWN_USER_COUNTRY_CODE;
       const userAgent = rawUserAgent || UNKNOWN_USER_AGENT;

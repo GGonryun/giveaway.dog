@@ -6,7 +6,7 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { TaskSchema } from '@/schemas/tasks/schemas';
-import { CheckIcon, CircleCheck } from 'lucide-react';
+import { CheckIcon } from 'lucide-react';
 import { useMemo } from 'react';
 
 export type TaskActionHandlers = {

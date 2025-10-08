@@ -7,7 +7,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { TASK_GROUP, TaskType } from '@/schemas/tasks/schemas';
+import { TASK_LABEL, TaskType } from '@/schemas/tasks/schemas';
 import React from 'react';
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
@@ -39,8 +39,8 @@ export const SelectTaskDialog: React.FC<{
             Select how users can enter the giveaway, here are some options:
           </SheetDescription>
         </SheetHeader>
-        <div className="space-y-2 p-2">
-          {widetype.keys(TASK_GROUP).map((t) => (
+        <div className="space-y-2 px-2 sm:px-4">
+          {widetype.keys(TASK_LABEL).map((t) => (
             <SelectTask
               key={t}
               type={t}
@@ -63,7 +63,7 @@ const SelectTask: React.FC<{ type: TaskType; onClick: () => void }> = ({
   const theme = toTaskTheme(type);
   return (
     <div
-      className="flex items-center justify-between gap-2 cursor-pointer border rounded-lg p-2 hover:bg-primary/90 bg-primary text-primary-foreground"
+      className="flex items-center justify-between gap-2 cursor-pointer border rounded-lg p-2 hover:bg-accent hover:border-accent/50"
       onClick={onClick}
     >
       <div className="flex items-center gap-2">

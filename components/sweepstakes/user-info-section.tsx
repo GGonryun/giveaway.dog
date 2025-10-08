@@ -32,11 +32,11 @@ export const UserInfoSection: React.FC = () => {
               {/* Social provider icons */}
               {userProfile.providers?.map((provider) => (
                 <div
-                  key={provider}
+                  key={provider.type}
                   className="w-4 h-4 rounded bg-white border border-border flex items-center justify-center"
                 >
                   <ProviderIcon
-                    type={provider as any}
+                    type={provider.type}
                     className="w-2.5 h-2.5 text-foreground"
                   />
                 </div>

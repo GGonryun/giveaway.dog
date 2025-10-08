@@ -20,6 +20,14 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0
+    },
+    ['TWITTER_CONNECT']: {
+      id: '',
+      type: 'TWITTER_CONNECT',
+      title: 'Connect to X (Twitter)',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
     }
   };
 

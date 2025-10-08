@@ -4,6 +4,28 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import { NextAuthConfig } from 'next-auth';
 
+// TODO: fix any
+const getAccountLabel = (account: any, profile: any): string | null => {
+  switch (account.provider) {
+    case 'google':
+    case 'nodemailer':
+      return profile?.email || null;
+    case 'discord': {
+      return (
+        profile?.username ||
+        profile?.global_name ||
+        profile?.name ||
+        profile?.email ||
+        null
+      );
+    }
+    case 'twitter':
+      return profile?.username ? `@${profile.username}` : null;
+    default:
+      return null;
+  }
+};
+
 export const authConfig = {
   pages: {
     signIn: '/login',
@@ -21,6 +43,22 @@ export const authConfig = {
       const user = await prisma.user.findFirst({ where: { email } });
       if (user?.email) return { ...user, email: user.email };
       return null;
+    }
+  },
+  events: {
+    async linkAccount({ account, profile }) {
+      const label = getAccountLabel(account, profile);
+      if (label) {
+        await prisma.account.update({
+          where: {
+            provider_providerAccountId: {
+              provider: account.provider,
+              providerAccountId: account.providerAccountId
+            }
+          },
+          data: { label }
+        });
+      }
     }
   },
   callbacks: {
