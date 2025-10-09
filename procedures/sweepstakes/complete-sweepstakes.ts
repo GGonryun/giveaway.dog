@@ -58,7 +58,8 @@ const completeSweepstakes = procedure()
     if (selectedWinners < totalSlots) {
       throw new ApplicationError({
         code: 'VALIDATION_ERROR',
-        message: 'Cannot complete sweepstakes: not all winners have been selected'
+        message:
+          'Cannot complete sweepstakes: not all winners have been selected'
       });
     }
 

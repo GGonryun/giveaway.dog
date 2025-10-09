@@ -90,6 +90,14 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
+// a very temporary model to capture emails for launch notifications
+model EmailSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // WARNING: sweepstakes objects are too complex to update directly, instead we delete
 // the whole sweepstake and recreate it. This may have catastrophic effects on nested,
 // child, or down-stream data.

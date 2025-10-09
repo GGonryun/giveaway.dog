@@ -337,8 +337,7 @@ export const SweepstakesWinners = ({
                                       {slot.winner.taskCompletion.completedAt
                                         ? format(
                                             new Date(
-                                              slot.winner.taskCompletion
-                                                .completedAt
+                                              slot.winner.taskCompletion.completedAt
                                             ),
                                             'MMM d, yyyy h:mm a'
                                           )
