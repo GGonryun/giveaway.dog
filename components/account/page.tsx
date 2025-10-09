@@ -6,13 +6,14 @@ import { useState } from 'react';
 import { LogoutButton } from './logout-button';
 import { DangerZone } from './danger-zone';
 import { FeatureSettings } from './feature-settings';
+import { HistorySettings } from './history-settings';
 
 type AccountSections = 'profile' | 'linked-accounts';
 
 const tabItems = [
   { id: 'profile', label: 'Profile' },
+  { id: 'history', label: 'History' },
   { id: 'features', label: 'Features' },
-  { id: 'activity', label: 'Activity' },
   { id: 'notifications', label: 'Notifications' },
   { id: 'danger-zone', label: 'Danger Zone' }
 ];
@@ -40,13 +41,11 @@ export const UserPage: React.FC = () => {
         <TabsContent value="profile" className="mt-0">
           <UserSettings />
         </TabsContent>
+        <TabsContent value="history" className="mt-0">
+          <HistorySettings />
+        </TabsContent>
         <TabsContent value="features" className="mt-0">
           <FeatureSettings />
-        </TabsContent>
-        <TabsContent value="activity" className="mt-0">
-          <div className="p-4 border border-dashed rounded-lg text-center text-sm text-muted-foreground">
-            Activity section coming soon!
-          </div>
         </TabsContent>
         <TabsContent value="notifications" className="mt-0">
           <div className="p-4 border border-dashed rounded-lg text-center text-sm text-muted-foreground">
