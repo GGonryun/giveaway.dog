@@ -40,11 +40,19 @@ import { PreviewStateContext } from './contexts/preview-state-context';
 import { DialogFooter } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { SaveIcon } from 'lucide-react';
+import { DemoModeProvider, useDemoMode } from './contexts/demo-mode-context';
 
 export const SweepstakesForm: React.FC<{
   sweepstakes: GiveawayFormSchema;
   status: SweepstakesStatus;
-}> = ({ sweepstakes: defaultValues, status }) => {
+  validateId?: boolean;
+  isDemo?: boolean;
+}> = ({
+  sweepstakes: defaultValues,
+  status,
+  validateId = true,
+  isDemo = false
+}) => {
   const { isTablet } = useIsTablet();
   const pathname = usePathname();
 
@@ -71,25 +79,30 @@ export const SweepstakesForm: React.FC<{
     form.trigger('timing.endDate');
   }, [startDate, form.trigger]);
 
-  if (!id || typeof id !== 'string') return <div>Invalid ID: {id}</div>;
+  if (validateId && (!id || typeof id !== 'string'))
+    return <div>Invalid ID: {id}</div>;
 
   return (
     <MobileSuspense>
-      <SweepstakesContext.Provider
-        value={{
-          mobile: isTablet,
-          step: isSweepstakeStepKey(step) ? step : 'setup',
-          id,
-          action,
-          status
-        }}
-      >
-        <PreviewStateContext.Provider value={{ previewState, setPreviewState }}>
-          <FormProvider {...form}>
-            <FormContent />
-          </FormProvider>
-        </PreviewStateContext.Provider>
-      </SweepstakesContext.Provider>
+      <DemoModeProvider isDemo={isDemo}>
+        <SweepstakesContext.Provider
+          value={{
+            mobile: isTablet,
+            step: isSweepstakeStepKey(step) ? step : 'setup',
+            id,
+            action,
+            status
+          }}
+        >
+          <PreviewStateContext.Provider
+            value={{ previewState, setPreviewState }}
+          >
+            <FormProvider {...form}>
+              <FormContent />
+            </FormProvider>
+          </PreviewStateContext.Provider>
+        </SweepstakesContext.Provider>
+      </DemoModeProvider>
     </MobileSuspense>
   );
 };
@@ -97,6 +110,7 @@ export const SweepstakesForm: React.FC<{
 const FormContent: React.FC = () => {
   const page = useSweepstakesPage();
   const { id, action, status } = useSweepstakes();
+  const { isDemo } = useDemoMode();
   const { open, errors, onOpenChange, onJumpToField } = useFormIssuesDialog();
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
@@ -143,34 +157,49 @@ const FormContent: React.FC = () => {
 
   const handleCancel = useCallback(() => {
     // check if form is dirty
-    if (form.formState.isDirty || action === 'create') {
+    if (form.formState.isDirty || action === 'create' || isDemo) {
       setShowCancelModal(true);
     } else {
       page.navigateTo();
     }
-  }, [form.formState.isDirty, page.navigateTo]);
+  }, [form.formState.isDirty, page.navigateTo, action, isDemo]);
 
   const handleSaveChanges = useCallback(async () => {
+    if (isDemo) {
+      toast.info('Demo Mode: Saving is disabled in the demo.');
+      return;
+    }
+
     const currentValues = form.getValues();
     updateSweepstakesProcedure.run({ id, ...currentValues });
-  }, [id, updateSweepstakesProcedure]);
+  }, [id, updateSweepstakesProcedure, isDemo]);
 
   const handleCancelSubmission = async () => {
     setShowPublishModal(false);
   };
 
   const handleDiscardChanges = useCallback(async () => {
+    if (isDemo) {
+      window.history.back();
+      return;
+    }
+
     if (action === 'create') {
       deleteSweepstakes.run({ id });
     } else {
       page.navigateTo();
     }
-  }, [deleteSweepstakes.run, action, id]);
+  }, [deleteSweepstakes.run, action, id, isDemo]);
 
   const handlePublish = useCallback(async () => {
+    if (isDemo) {
+      toast.info('Demo Mode: Publishing is disabled in the demo.');
+      return;
+    }
+
     const currentValues = form.getValues();
     publishSweepstakesProcedure.run({ id, ...currentValues });
-  }, [id, publishSweepstakesProcedure]);
+  }, [id, publishSweepstakesProcedure, isDemo]);
 
   const handleContinueEditing = useCallback(
     (fieldName?: string) => {

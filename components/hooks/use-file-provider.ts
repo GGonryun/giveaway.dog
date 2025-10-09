@@ -1,4 +1,7 @@
+'use client';
+
 import { upload } from '@vercel/blob/client';
+import { useDemoMode } from '@/components/sweepstakes-editor/contexts/demo-mode-context';
 
 export interface FileUploadResult {
   url: string;
@@ -29,6 +32,41 @@ class VercelFileProvider implements FileProvider {
   }
 }
 
+class DemoFileProvider implements FileProvider {
+  async upload(
+    file: File,
+    onProgress?: (progress: number) => void
+  ): Promise<FileUploadResult> {
+    onProgress?.(0);
+
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+
+      reader.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const progress = (e.loaded / e.total) * 100;
+          onProgress?.(progress);
+        }
+      };
+
+      reader.onload = () => {
+        onProgress?.(100);
+        resolve({
+          url: reader.result as string
+        });
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+}
+
 export function useFileProvider(): FileProvider {
+  const { isDemo } = useDemoMode();
+
+  if (isDemo) {
+    return new DemoFileProvider();
+  }
+
   return new VercelFileProvider();
 }

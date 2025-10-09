@@ -34,6 +34,7 @@ import { FormHeaderProps, FormLayoutProps } from './form-layout';
 import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';
 import { useFormErrors } from '../hooks/use-form-errors';
 import { PreviewStateDropdown } from './preview-state-dropdown';
+import { DemoBanner } from './demo-banner';
 
 export const DesktopTabTrigger: React.FC<{
   step: SweepstakeStep;
@@ -184,6 +185,7 @@ export const DesktopFormLayout: React.FC<FormLayoutProps> = ({
           disabled={disabled}
           onCancel={onCancel}
         />
+        <DemoBanner />
 
         <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
           <ResizablePanel

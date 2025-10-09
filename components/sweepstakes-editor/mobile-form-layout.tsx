@@ -13,6 +13,7 @@ import { getStateDisplayLabel } from '@/schemas/giveaway/schemas';
 import { FormHeaderProps, FormLayoutProps } from './form-layout';
 import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';
 import { PreviewStateDropdown } from './preview-state-dropdown';
+import { DemoBanner } from './demo-banner';
 
 const MobileTabTrigger: React.FC<{
   step: SweepstakeStep;
@@ -153,6 +154,7 @@ export const MobileFormLayout: React.FC<FormLayoutProps> = ({
           onCancel={onCancel}
           mobileView={mobileView}
         />
+        <DemoBanner />
 
         <div className="bg-background flex-1 min-h-0 overflow-hidden relative top-0 z-10 flex flex-col">
           {mobileView === 'form' ? (
