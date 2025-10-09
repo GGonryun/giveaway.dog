@@ -66,7 +66,9 @@ export const NavGroups = () => {
                     asChild
                     isActive={
                       item.url === path ||
-                      (item.alias ? path.startsWith(item.alias) : false)
+                      (item.alias
+                        ? path.startsWith(item.alias)
+                        : path.startsWith(item.url))
                     }
                   >
                     <Link href={item.url}>

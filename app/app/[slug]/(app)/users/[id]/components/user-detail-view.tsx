@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Card,
   CardContent,
@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TabsContent } from '@/components/ui/tabs';
 import {
   Table,
   TableBody,
@@ -44,15 +44,17 @@ import {
   Smartphone,
   Monitor,
   DollarSign,
-  Users,
-  MessageCircle
+  Users
 } from 'lucide-react';
 import { StatusExplanationDialog } from '../../../../../../../components/users/status-explanation-dialog';
+import { FeatureInDevelopmentDialog } from '../../../../../../../components/users/feature-in-development-dialog';
 import { useRouter } from 'next/navigation';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
+import { UserDetailsTabSchema } from '@/schemas/user';
 
 interface UserDetailViewProps {
   userId: string;
+  tab: UserDetailsTabSchema;
 }
 
 // Enhanced mock user data with additional analytics
@@ -246,29 +248,18 @@ const getUserDetailExtended = (userId: string) => ({
   }
 });
 
-export const UserDetailView = ({ userId }: UserDetailViewProps) => {
+export const UserDetailView = ({ userId, tab }: UserDetailViewProps) => {
   const { slug } = useActiveTeam();
   const router = useRouter();
   const user = useMemo(() => getUserDetailExtended(userId), [userId]);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
+  const [showFeatureDialog, setShowFeatureDialog] = useState(false);
+  const [featureName, setFeatureName] = useState('');
 
-  // Get tab from URL parameters
-  const [activeTab, setActiveTab] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      return params.get('tab') || 'overview';
-    }
-    return 'overview';
-  });
-
-  // Sync tab with URL parameters on mount and when URL changes
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const tabFromUrl = params.get('tab') || 'overview';
-    if (tabFromUrl !== activeTab) {
-      setActiveTab(tabFromUrl);
-    }
-  }, []);
+  const handleFeatureClick = (name: string) => {
+    setFeatureName(name);
+    setShowFeatureDialog(true);
+  };
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('en-US', {
@@ -285,17 +276,6 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
       style: 'currency',
       currency: 'USD'
     }).format(amount);
-  };
-
-  const handleTabChange = (tabValue: string) => {
-    setActiveTab(tabValue);
-    const url = new URL(window.location.href);
-    if (tabValue === 'overview') {
-      url.searchParams.delete('tab');
-    } else {
-      url.searchParams.set('tab', tabValue);
-    }
-    router.replace(url.pathname + url.search, { scroll: false });
   };
 
   const getStatusBadge = (status: string, isUserStatus = false) => {
@@ -363,149 +343,114 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
 
   return (
     <div className="space-y-4">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.push(`/app/${slug}/users`)}
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Users
-            </Button>
-            <Separator orientation="vertical" className="h-6 hidden sm:block" />
-          </div>
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-12 w-12 flex-shrink-0">
-              <AvatarImage src={user.avatar || undefined} />
-              <AvatarFallback className="text-lg">
-                {user.name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join('')}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0">
-              <h1 className="text-xl sm:text-2xl font-bold truncate">
-                {user.name}
-              </h1>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm sm:text-base text-muted-foreground">
-                <span className="truncate">{user.email}</span>
-                {getStatusBadge(user.status, true)}
-              </div>
+      {/* Main Content */}
+      <div className="space-y-4">
+        {tab === 'overview' && (
+          <TabsContent value="overview" className="space-y-4">
+            {/* Key Metrics Cards */}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Total Entries
+                  </CardTitle>
+                  <Target className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{user.totalEntries}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {user.analyticsData.avgCompletionRate.toFixed(1)}%
+                    completion rate
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Wins</CardTitle>
+                  <Trophy className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-yellow-600">
+                    {user.totalWins}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {(user.analyticsData.winRate * 100).toFixed(1)}% win rate
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Lifetime Value
+                  </CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">
+                    {formatCurrency(user.lifetimeValue)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Generated revenue
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Quality Score
+                  </CardTitle>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{user.qualityScore}</div>
+                  <p className="text-xs text-muted-foreground">
+                    Excellent quality
+                  </p>
+                </CardContent>
+              </Card>
             </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button size="sm" className="flex-1 sm:flex-none">
-            <Download className="h-4 w-4 mr-2" />
-            <span className="hidden sm:inline">Export Data</span>
-            <span className="sm:hidden">Export</span>
-          </Button>
-          <Button variant="secondary" size="sm" className="flex-1 sm:flex-none">
-            <ExternalLink className="h-4 w-4 mr-2" />
-            <span className="hidden sm:inline">View in CRM</span>
-            <span className="sm:hidden">CRM</span>
-          </Button>
-        </div>
-      </div>
 
-      {/* Key Metrics Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Entries</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{user.totalEntries}</div>
-            <p className="text-xs text-muted-foreground">
-              {user.analyticsData.avgCompletionRate.toFixed(1)}% completion rate
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Wins</CardTitle>
-            <Trophy className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">
-              {user.totalWins}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {(user.analyticsData.winRate * 100).toFixed(1)}% win rate
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Lifetime Value
-            </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {formatCurrency(user.lifetimeValue)}
-            </div>
-            <p className="text-xs text-muted-foreground">Generated revenue</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Quality Score</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{user.qualityScore}</div>
-            <p className="text-xs text-muted-foreground">Excellent quality</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Content Tabs */}
-      <Tabs
-        value={activeTab}
-        onValueChange={handleTabChange}
-        className="space-y-4"
-      >
-        <div className="overflow-x-auto">
-          <TabsList className="grid w-max min-w-full grid-cols-6 lg:w-full">
-            <TabsTrigger value="overview" className="whitespace-nowrap">
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="entries" className="whitespace-nowrap">
-              Entries
-            </TabsTrigger>
-            <TabsTrigger value="wins" className="whitespace-nowrap">
-              Wins
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="whitespace-nowrap">
-              Analytics
-            </TabsTrigger>
-            <TabsTrigger value="devices" className="whitespace-nowrap">
-              Devices
-            </TabsTrigger>
-            <TabsTrigger value="risk" className="whitespace-nowrap">
-              Risk
-            </TabsTrigger>
-          </TabsList>
-        </div>
-
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-6 md:grid-cols-2">
             {/* Profile Information */}
             <Card>
               <CardHeader>
                 <CardTitle>Profile Information</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
+                {/* User Header */}
+                <div className="flex items-start gap-4">
+                  <Avatar className="h-16 w-16">
+                    <AvatarImage src={user.avatar || undefined} />
+                    <AvatarFallback className="text-2xl">
+                      {user.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0 space-y-2">
+                    <h2 className="text-2xl font-bold">{user.name}</h2>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-sm text-muted-foreground">
+                        {user.email}
+                      </span>
+                      {user.qualityBreakdown.emailVerified && (
+                        <Badge variant="outline" className="text-green-600">
+                          Verified
+                        </Badge>
+                      )}
+                      {getStatusBadge(user.status, true)}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="outline">Twitter: @username</Badge>
+                      <Badge variant="outline">Google: email@gmail.com</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Grid Information */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2 text-sm">
@@ -553,603 +498,520 @@ export const UserDetailView = ({ userId }: UserDetailViewProps) => {
               </CardContent>
             </Card>
 
-            {/* Social Engagement */}
+            {/* Analytics Metrics */}
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Engagement Metrics</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span>Avg. Session Duration</span>
+                      <span>
+                        {Math.floor(user.analyticsData.avgSessionDuration / 60)}
+                        m {user.analyticsData.avgSessionDuration % 60}s
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Bounce Rate</span>
+                      <span>
+                        {(user.analyticsData.bounceRate * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Conversion Rate</span>
+                      <span>
+                        {(user.analyticsData.conversionRate * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Social Shares</span>
+                      <span>{user.analyticsData.socialShares}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Performance Stats</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span>Completed Entries</span>
+                      <span>
+                        {user.analyticsData.completedEntries}/
+                        {user.analyticsData.completedEntries +
+                          user.analyticsData.partialEntries}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Win Rate</span>
+                      <span>
+                        {(user.analyticsData.winRate * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Revenue Generated</span>
+                      <span>
+                        {formatCurrency(user.analyticsData.revenueGenerated)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Referrals Made</span>
+                      <span>{user.analyticsData.referralCount}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Action Bar */}
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <Button
+                      size="sm"
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      <span className="hidden sm:inline">Mark as Trusted</span>
+                      <span className="sm:hidden">Trusted</span>
+                    </Button>
+                    <Button variant="destructive" size="sm">
+                      <UserX className="h-4 w-4 mr-2" />
+                      <span className="hidden sm:inline">Block User</span>
+                      <span className="sm:hidden">Block</span>
+                    </Button>
+                    <Button variant="secondary" size="sm">
+                      <Tag className="h-4 w-4 mr-2" />
+                      <span className="hidden sm:inline">Add Tags</span>
+                      <span className="sm:hidden">Tags</span>
+                    </Button>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => handleFeatureClick('Export Data')}
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      <span className="hidden sm:inline">Export Data</span>
+                      <span className="sm:hidden">Export</span>
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleFeatureClick('View in CRM')}
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      <span className="hidden sm:inline">View in CRM</span>
+                      <span className="sm:hidden">CRM</span>
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
+        {tab === 'entries' && (
+          <TabsContent value="entries" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Social Engagement</CardTitle>
+                <CardTitle>All Entries ({user.allEntries.length})</CardTitle>
                 <CardDescription>
-                  Instagram activity and influence
+                  Complete history of sweepstakes entries
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold">
-                      {user.socialEngagement.followers.toLocaleString()}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Followers
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold">
-                      {user.socialEngagement.influenceScore}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Influence Score
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Avg. Likes</span>
-                    <span>{user.socialEngagement.avgLikes}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Avg. Comments</span>
-                    <span>{user.socialEngagement.avgComments}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Brand Mentions</span>
-                    <span>{user.socialEngagement.brandMentions}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <span className="text-sm font-medium">Popular Hashtags</span>
-                  <div className="flex flex-wrap gap-1">
-                    {user.socialEngagement.hashtagsUsed
-                      .slice(0, 3)
-                      .map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="entries" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>All Entries ({user.allEntries.length})</CardTitle>
-              <CardDescription>
-                Complete history of sweepstakes entries
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Sweepstakes</TableHead>
-                    <TableHead>Prize</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Source</TableHead>
-                    <TableHead>Completion</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Referrals</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {user.allEntries.map((entry) => (
-                    <TableRow key={entry.id}>
-                      <TableCell>
-                        <div className="font-medium">
-                          {entry.sweepstakesTitle}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>{entry.prize}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {formatCurrency(entry.prizeValue)}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-sm">
-                        {formatDate(entry.enteredAt)}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{entry.source}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Progress
-                            value={entry.completionRate}
-                            className="w-16 h-2"
-                          />
-                          <span className="text-sm">
-                            {entry.completionRate}%
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{getStatusBadge(entry.status)}</TableCell>
-                      <TableCell>{entry.referrals}</TableCell>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Sweepstakes</TableHead>
+                      <TableHead>Prize</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Source</TableHead>
+                      <TableHead>Completion</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Referrals</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="wins" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Win History ({user.wins.length})</CardTitle>
-              <CardDescription>All prizes won by this user</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Sweepstakes</TableHead>
-                    <TableHead>Prize</TableHead>
-                    <TableHead>Won Date</TableHead>
-                    <TableHead>Value</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Claimed</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {user.wins.map((win) => (
-                    <TableRow key={win.id}>
-                      <TableCell className="font-medium">
-                        {win.sweepstakesTitle}
-                      </TableCell>
-                      <TableCell>{win.prize}</TableCell>
-                      <TableCell className="text-sm">
-                        {formatDate(win.wonAt)}
-                      </TableCell>
-                      <TableCell className="font-medium text-green-600">
-                        {formatCurrency(win.prizeValue)}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={win.claimed ? 'default' : 'secondary'}>
-                          {win.claimed ? 'Claimed' : 'Unclaimed'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm">
-                        {win.claimedAt
-                          ? formatDate(win.claimedAt)
-                          : 'Not claimed'}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="analytics" className="space-y-4">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Engagement Metrics</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span>Avg. Session Duration</span>
-                    <span>
-                      {Math.floor(user.analyticsData.avgSessionDuration / 60)}m{' '}
-                      {user.analyticsData.avgSessionDuration % 60}s
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Bounce Rate</span>
-                    <span>
-                      {(user.analyticsData.bounceRate * 100).toFixed(1)}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Conversion Rate</span>
-                    <span>
-                      {(user.analyticsData.conversionRate * 100).toFixed(1)}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Social Shares</span>
-                    <span>{user.analyticsData.socialShares}</span>
-                  </div>
-                </div>
+                  </TableHeader>
+                  <TableBody>
+                    {user.allEntries.map((entry) => (
+                      <TableRow key={entry.id}>
+                        <TableCell>
+                          <div className="font-medium">
+                            {entry.sweepstakesTitle}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div>{entry.prize}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {formatCurrency(entry.prizeValue)}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {formatDate(entry.enteredAt)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{entry.source}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Progress
+                              value={entry.completionRate}
+                              className="w-16 h-2"
+                            />
+                            <span className="text-sm">
+                              {entry.completionRate}%
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{getStatusBadge(entry.status)}</TableCell>
+                        <TableCell>{entry.referrals}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </CardContent>
             </Card>
+          </TabsContent>
+        )}
 
+        {tab === 'devices' && (
+          <TabsContent value="devices" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Performance Stats</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span>Completed Entries</span>
-                    <span>
-                      {user.analyticsData.completedEntries}/
-                      {user.analyticsData.completedEntries +
-                        user.analyticsData.partialEntries}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Win Rate</span>
-                    <span>
-                      {(user.analyticsData.winRate * 100).toFixed(1)}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Revenue Generated</span>
-                    <span>
-                      {formatCurrency(user.analyticsData.revenueGenerated)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Referrals Made</span>
-                    <span>{user.analyticsData.referralCount}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="devices" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Device & Browser Information</CardTitle>
-              <CardDescription>
-                Devices used to access the platform
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {user.devices.map((device) => (
-                  <div
-                    key={device.id}
-                    className="flex items-center justify-between p-4 border rounded-lg"
-                  >
-                    <div className="flex items-center space-x-3">
-                      {device.type === 'Mobile' ? (
-                        <Smartphone className="h-5 w-5 text-muted-foreground" />
-                      ) : (
-                        <Monitor className="h-5 w-5 text-muted-foreground" />
-                      )}
-                      <div>
-                        <div className="font-medium">{device.type}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {device.os} • {device.browser}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-medium">
-                        {device.sessions} sessions
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Avg: {Math.floor(device.avgSessionTime / 60)}m{' '}
-                        {device.avgSessionTime % 60}s
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Last: {formatDate(device.lastUsed)}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="risk" className="space-y-4">
-          <div className="grid gap-6 md:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle>Risk Assessment</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">
-                    Overall Risk Score
-                  </span>
-                  <Badge
-                    variant={
-                      user.riskScore < 30
-                        ? 'default'
-                        : user.riskScore < 60
-                          ? 'secondary'
-                          : 'destructive'
-                    }
-                  >
-                    {user.riskScore < 30
-                      ? 'Low Risk'
-                      : user.riskScore < 60
-                        ? 'Medium Risk'
-                        : 'High Risk'}
-                  </Badge>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Risk Score</span>
-                    <span>{user.riskScore}/100</span>
-                  </div>
-                  <Progress value={user.riskScore} className="h-3" />
-                </div>
-
-                {user.flagged ? (
-                  <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <div className="flex items-center space-x-2 text-sm font-medium text-red-800 mb-2">
-                      <AlertTriangle className="h-4 w-4" />
-                      <span>User Flagged</span>
-                    </div>
-                    <div className="text-sm text-red-700">
-                      {user.flaggedReasons.length > 0 ? (
-                        <ul className="list-disc list-inside space-y-1">
-                          {user.flaggedReasons.map((reason, index) => (
-                            <li key={index}>{reason}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        'No specific reasons provided.'
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="flex items-center space-x-2 text-sm font-medium text-green-800">
-                      <Shield className="h-4 w-4" />
-                      <span>User in Good Standing</span>
-                    </div>
-                    <div className="text-sm text-green-700 mt-1">
-                      No risk factors detected.
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Quality Score Breakdown</CardTitle>
+                <CardTitle>Device & Browser Information</CardTitle>
                 <CardDescription>
-                  Detailed analysis of quality factors
+                  Devices used to access the platform
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Overall Quality Score</span>
-                    <span className="font-medium">{user.qualityScore}/100</span>
-                  </div>
-                  <div className="relative">
-                    <Progress value={user.qualityScore} className="h-2" />
+              <CardContent>
+                <div className="space-y-4">
+                  {user.devices.map((device) => (
                     <div
-                      className={`absolute top-0 left-0 h-2 rounded-full transition-all ${
-                        user.qualityScore >= 80
-                          ? 'bg-green-500'
-                          : user.qualityScore >= 60
-                            ? 'bg-yellow-500'
-                            : user.qualityScore >= 40
-                              ? 'bg-orange-500'
-                              : 'bg-red-500'
-                      }`}
-                      style={{ width: `${user.qualityScore}%` }}
-                    />
-                  </div>
+                      key={device.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
+                      <div className="flex items-center space-x-3">
+                        {device.type === 'Mobile' ? (
+                          <Smartphone className="h-5 w-5 text-muted-foreground" />
+                        ) : (
+                          <Monitor className="h-5 w-5 text-muted-foreground" />
+                        )}
+                        <div>
+                          <div className="font-medium">{device.type}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {device.os} • {device.browser}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-medium">
+                          {device.sessions} sessions
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Avg: {Math.floor(device.avgSessionTime / 60)}m{' '}
+                          {device.avgSessionTime % 60}s
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Last: {formatDate(device.lastUsed)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
 
-                <div className="space-y-3 pt-2 border-t">
-                  <div className="text-xs text-muted-foreground font-medium">
-                    Signal Breakdown
+        {tab === 'risk' && (
+          <TabsContent value="risk" className="space-y-4">
+            <div className="grid gap-6 md:grid-cols-3">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Risk Assessment</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">
+                      Overall Risk Score
+                    </span>
+                    <Badge
+                      variant={
+                        user.riskScore < 30
+                          ? 'default'
+                          : user.riskScore < 60
+                            ? 'secondary'
+                            : 'destructive'
+                      }
+                    >
+                      {user.riskScore < 30
+                        ? 'Low Risk'
+                        : user.riskScore < 60
+                          ? 'Medium Risk'
+                          : 'High Risk'}
+                    </Badge>
                   </div>
 
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Mail className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-xs">Email Verification</span>
+                    <div className="flex justify-between text-sm">
+                      <span>Risk Score</span>
+                      <span>{user.riskScore}/100</span>
+                    </div>
+                    <Progress value={user.riskScore} className="h-3" />
+                  </div>
+
+                  {user.flagged ? (
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                      <div className="flex items-center space-x-2 text-sm font-medium text-red-800 mb-2">
+                        <AlertTriangle className="h-4 w-4" />
+                        <span>User Flagged</span>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Progress
-                          value={user.qualityBreakdown.emailVerified ? 100 : 0}
-                          className="w-16 h-1.5"
-                        />
-                        <span className="text-xs w-8 text-right">
-                          {user.qualityBreakdown.emailVerified ? 25 : 0}/25
-                        </span>
+                      <div className="text-sm text-red-700">
+                        {user.flaggedReasons.length > 0 ? (
+                          <ul className="list-disc list-inside space-y-1">
+                            {user.flaggedReasons.map((reason, index) => (
+                              <li key={index}>{reason}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          'No specific reasons provided.'
+                        )}
                       </div>
                     </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Shield className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-xs">Email Quality</span>
+                  ) : (
+                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center space-x-2 text-sm font-medium text-green-800">
+                        <Shield className="h-4 w-4" />
+                        <span>User in Good Standing</span>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Progress
-                          value={
-                            user.qualityBreakdown.disposableEmail ? 0 : 100
-                          }
-                          className="w-16 h-1.5"
-                        />
-                        <span className="text-xs w-8 text-right">
-                          {user.qualityBreakdown.disposableEmail ? 0 : 20}/20
-                        </span>
+                      <div className="text-sm text-green-700 mt-1">
+                        No risk factors detected.
                       </div>
                     </div>
+                  )}
+                </CardContent>
+              </Card>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Smartphone className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-xs">Device Trust</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Progress
-                          value={
-                            user.qualityBreakdown.deviceFingerprint ? 100 : 50
-                          }
-                          className="w-16 h-1.5"
-                        />
-                        <span className="text-xs w-8 text-right">
-                          {user.qualityBreakdown.deviceFingerprint ? 20 : 10}/20
-                        </span>
-                      </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Quality Score Breakdown</CardTitle>
+                  <CardDescription>
+                    Detailed analysis of quality factors
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Overall Quality Score</span>
+                      <span className="font-medium">
+                        {user.qualityScore}/100
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <Progress value={user.qualityScore} className="h-2" />
+                      <div
+                        className={`absolute top-0 left-0 h-2 rounded-full transition-all ${
+                          user.qualityScore >= 80
+                            ? 'bg-green-500'
+                            : user.qualityScore >= 60
+                              ? 'bg-yellow-500'
+                              : user.qualityScore >= 40
+                                ? 'bg-orange-500'
+                                : 'bg-red-500'
+                        }`}
+                        style={{ width: `${user.qualityScore}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 pt-2 border-t">
+                    <div className="text-xs text-muted-foreground font-medium">
+                      Signal Breakdown
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <TrendingUp className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-xs">Engagement</span>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Mail className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs">Email Verification</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Progress
+                            value={
+                              user.qualityBreakdown.emailVerified ? 100 : 0
+                            }
+                            className="w-16 h-1.5"
+                          />
+                          <span className="text-xs w-8 text-right">
+                            {user.qualityBreakdown.emailVerified ? 25 : 0}/25
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Progress
-                          value={user.qualityBreakdown.engagement}
-                          className="w-16 h-1.5"
-                        />
-                        <span className="text-xs w-8 text-right">
-                          {Math.round(user.qualityBreakdown.engagement / 4)}/25
-                        </span>
-                      </div>
-                    </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-xs">Account Age</span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Shield className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs">Email Quality</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Progress
+                            value={
+                              user.qualityBreakdown.disposableEmail ? 0 : 100
+                            }
+                            className="w-16 h-1.5"
+                          />
+                          <span className="text-xs w-8 text-right">
+                            {user.qualityBreakdown.disposableEmail ? 0 : 20}/20
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Progress
-                          value={Math.min(
-                            (user.qualityBreakdown.accountAge || 0) * 10,
-                            100
-                          )}
-                          className="w-16 h-1.5"
-                        />
-                        <span className="text-xs w-8 text-right">
-                          {Math.min(
-                            Math.round(
-                              (user.qualityBreakdown.accountAge || 0) * 0.2
-                            ),
-                            10
-                          )}
-                          /10
-                        </span>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Smartphone className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs">Device Trust</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Progress
+                            value={
+                              user.qualityBreakdown.deviceFingerprint ? 100 : 50
+                            }
+                            className="w-16 h-1.5"
+                          />
+                          <span className="text-xs w-8 text-right">
+                            {user.qualityBreakdown.deviceFingerprint ? 20 : 10}
+                            /20
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <TrendingUp className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs">Engagement</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Progress
+                            value={user.qualityBreakdown.engagement}
+                            className="w-16 h-1.5"
+                          />
+                          <span className="text-xs w-8 text-right">
+                            {Math.round(user.qualityBreakdown.engagement / 4)}
+                            /25
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Clock className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs">Account Age</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Progress
+                            value={Math.min(
+                              (user.qualityBreakdown.accountAge || 0) * 10,
+                              100
+                            )}
+                            className="w-16 h-1.5"
+                          />
+                          <span className="text-xs w-8 text-right">
+                            {Math.min(
+                              Math.round(
+                                (user.qualityBreakdown.accountAge || 0) * 0.2
+                              ),
+                              10
+                            )}
+                            /10
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Quality Indicators</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Email Verified</span>
-                  {user.qualityBreakdown.emailVerified ? (
-                    <Badge variant="default">✓</Badge>
-                  ) : (
-                    <Badge variant="secondary">✗</Badge>
-                  )}
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Phone Verified</span>
-                  {user.qualityBreakdown.phoneVerified ? (
-                    <Badge variant="default">✓</Badge>
-                  ) : (
-                    <Badge variant="secondary">✗</Badge>
-                  )}
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Social Verification</span>
-                  {user.qualityBreakdown.socialVerification ? (
-                    <Badge variant="default">✓</Badge>
-                  ) : (
-                    <Badge variant="secondary">✗</Badge>
-                  )}
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Disposable Email</span>
-                  {user.qualityBreakdown.disposableEmail ? (
-                    <Badge variant="destructive">Yes</Badge>
-                  ) : (
-                    <Badge variant="default">No</Badge>
-                  )}
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">IP Reputation</span>
-                  <Badge
-                    variant={
-                      user.qualityBreakdown.ipReputation === 'good'
-                        ? 'default'
-                        : 'destructive'
-                    }
-                  >
-                    {user.qualityBreakdown.ipReputation}
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Account Age</span>
-                  <span className="text-sm">
-                    {user.qualityBreakdown.accountAge} days
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      {/* Action Bar */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                <UserCheck className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Mark as Trusted</span>
-                <span className="sm:hidden">Trusted</span>
-              </Button>
-              <Button variant="destructive" size="sm">
-                <UserX className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Block User</span>
-                <span className="sm:hidden">Block</span>
-              </Button>
-              <Button variant="secondary" size="sm">
-                <Tag className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Add Tags</span>
-                <span className="sm:hidden">Tags</span>
-              </Button>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Quality Indicators</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Email Verified</span>
+                    {user.qualityBreakdown.emailVerified ? (
+                      <Badge variant="default">✓</Badge>
+                    ) : (
+                      <Badge variant="secondary">✗</Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Phone Verified</span>
+                    {user.qualityBreakdown.phoneVerified ? (
+                      <Badge variant="default">✓</Badge>
+                    ) : (
+                      <Badge variant="secondary">✗</Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Social Verification</span>
+                    {user.qualityBreakdown.socialVerification ? (
+                      <Badge variant="default">✓</Badge>
+                    ) : (
+                      <Badge variant="secondary">✗</Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Disposable Email</span>
+                    {user.qualityBreakdown.disposableEmail ? (
+                      <Badge variant="destructive">Yes</Badge>
+                    ) : (
+                      <Badge variant="default">No</Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">IP Reputation</span>
+                    <Badge
+                      variant={
+                        user.qualityBreakdown.ipReputation === 'good'
+                          ? 'default'
+                          : 'destructive'
+                      }
+                    >
+                      {user.qualityBreakdown.ipReputation}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Account Age</span>
+                    <span className="text-sm">
+                      {user.qualityBreakdown.accountAge} days
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <Button variant="secondary" size="sm">
-                <MessageCircle className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Contact User</span>
-                <span className="sm:hidden">Contact</span>
-              </Button>
-              <Button size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                <span className="hidden lg:inline">Export Full Report</span>
-                <span className="lg:hidden">Export</span>
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </TabsContent>
+        )}
+      </div>
 
       {/* Status Explanation Dialog */}
       <StatusExplanationDialog
         open={showStatusDialog}
         onClose={() => setShowStatusDialog(false)}
         status={user.status as 'active' | 'blocked'}
+      />
+
+      {/* Feature In Development Dialog */}
+      <FeatureInDevelopmentDialog
+        open={showFeatureDialog}
+        onClose={() => setShowFeatureDialog(false)}
+        featureName={featureName}
       />
     </div>
   );

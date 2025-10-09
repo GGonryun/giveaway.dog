@@ -135,3 +135,23 @@ export const toUserSchema = (
   type: user.type,
   providers: parseProviders(user.accounts)
 });
+
+export const userDetailsTabSchema = z.union([
+  z.literal('overview'),
+  z.literal('entries'),
+  z.literal('devices'),
+  z.literal('risk')
+]);
+
+export type UserDetailsTabSchema = z.infer<typeof userDetailsTabSchema>;
+
+export const USER_DETAILS_TAB_OPTIONS: Record<UserDetailsTabSchema, string> = {
+  overview: 'Overview',
+  entries: 'Entries',
+  devices: 'Devices',
+  risk: 'Risk'
+};
+
+export const isUserDetailsTab = (tab: string): tab is UserDetailsTabSchema => {
+  return userDetailsTabSchema.safeParse(tab).success;
+};

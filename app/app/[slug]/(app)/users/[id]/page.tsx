@@ -1,16 +1,13 @@
-import { Outline } from '@/components/app/outline';
-import { UserDetailView } from './components/user-detail-view';
+'use server';
+
+import { redirect } from 'next/navigation';
+import { DEFAULT_USER_DETAILS_TAB } from '@/lib/settings';
 
 interface UserDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string; id: string }>;
 }
 
 export default async function UserDetailPage({ params }: UserDetailPageProps) {
-  const { id } = await params;
-
-  return (
-    <Outline title={`User ${id.replace('user_', '')}`}>
-      <UserDetailView userId={id} />
-    </Outline>
-  );
+  const { slug, id } = await params;
+  redirect(`/app/${slug}/users/${id}/${DEFAULT_USER_DETAILS_TAB}`);
 }
