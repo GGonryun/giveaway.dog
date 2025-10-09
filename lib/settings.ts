@@ -10,3 +10,5 @@ export const DEFAULT_TIME_SERIES_DURATION = 7;
 export const DEFAULT_PAGE_SIZE = 25;
 export const DEFAULT_SWEEPSTAKES_DETAILS_TAB: SweepstakesTabSchema = 'preview';
 export const UNKNOWN_USER_NAME = 'Unknown User';
+export const DISCORD_INVITE_LINK = 'https://discord.gg/Ys8wW5w2Yt';
+export const TWITTER_PROFILE_URL = 'https://x.com/TheGiveawayDog';

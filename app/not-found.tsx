@@ -1,6 +1,6 @@
+import { NotFoundLogo } from '@/components/patterns/not-found-logo';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
-import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
 import Link from 'next/link';
 
 export default function NotFound() {
@@ -8,7 +8,7 @@ export default function NotFound() {
     <div className="w-full h-full min-h-screen flex items-center justify-center bg-background">
       <div className="container max-w-md mx-auto text-center px-4">
         <div className="space-y-6">
-          <div className="text-8xl">{DEFAULT_TEAM_LOGO}</div>
+          <NotFoundLogo />
 
           <div className="space-y-2">
             <Typography.Header

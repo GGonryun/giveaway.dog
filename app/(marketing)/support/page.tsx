@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Mail, MessageCircle, CheckCircle, Activity } from 'lucide-react';
 import Link from 'next/link';
+import { DISCORD_INVITE_LINK } from '@/lib/settings';
 
 export default function SupportPage() {
   return (
@@ -54,7 +55,7 @@ export default function SupportPage() {
             <div className="text-center">
               <Button asChild>
                 <a
-                  href="https://discord.gg/giveawaydog"
+                  href={DISCORD_INVITE_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -119,8 +120,11 @@ export default function SupportPage() {
           Common Questions
         </Typography.Header>
         <Typography.Paragraph className="text-muted-foreground mb-6">
-          Before reaching out, you might find answers to common questions in our
-          Discord community or by checking our other help resources.
+          Before reaching out, you might find answers to common questions in our{' '}
+          <Link href={DISCORD_INVITE_LINK} className="text-primary underline">
+            Discord community
+          </Link>{' '}
+          or by checking our other help resources.
         </Typography.Paragraph>
       </div>
     </div>
