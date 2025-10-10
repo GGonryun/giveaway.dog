@@ -178,7 +178,7 @@ export const SweepstakesWinners = ({
 
       {!hasAnyWinners ? (
         <Card>
-          <CardContent className="flex flex-col items-center justify-center py-16 space-y-6">
+          <CardContent className="flex flex-col items-center justify-center space-y-6">
             {!hasEnded && (
               <Alert className="border-blue-200 bg-blue-50 max-w-2xl">
                 <Info className="h-5 w-5 text-blue-600" />

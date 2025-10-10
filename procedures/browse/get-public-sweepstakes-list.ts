@@ -16,7 +16,7 @@ const getPublicSweepstakesList = procedure()
   .cache({
     keyParts: ['public-sweepstakes-list'],
     tags: ['public-sweepstakes-list'],
-    revalidate: 300
+    revalidate: 30
   })
   .handler(async ({ db }) => {
     const now = new Date();
