@@ -30,7 +30,12 @@ export const computeState = ({
     case 'DRAFT':
       return 'closed';
     case 'ACTIVE': {
-      if (date.hasExpired(sweepstakes.timing.endDate)) return 'winners-pending';
+      const now = new Date();
+      const startDate = new Date(sweepstakes.timing.startDate);
+      const endDate = new Date(sweepstakes.timing.endDate);
+
+      if (now < startDate) return 'pending';
+      if (date.hasExpired(endDate)) return 'winners-pending';
       return 'active';
     }
     case 'COMPLETED':

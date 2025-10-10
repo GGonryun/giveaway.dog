@@ -53,7 +53,7 @@ export function TeamSwitcher() {
             >
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                 <div className="size-4">
-                  {activeTeam.logo ?? DEFAULT_TEAM_LOGO}
+                  {activeTeam.logo || DEFAULT_TEAM_LOGO}
                 </div>
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -80,7 +80,7 @@ export function TeamSwitcher() {
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-md border">
-                  <div className="size-4">{team.logo}</div>
+                  <div className="size-4">{team.logo || DEFAULT_TEAM_LOGO}</div>
                 </div>
                 {team.name}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>

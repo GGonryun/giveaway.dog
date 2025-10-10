@@ -17,6 +17,7 @@ import { Error } from './states/error';
 import { WinnersPending } from './states/winners-pending';
 import { ProfileIncomplete } from './states/profile-incomplete';
 import { AgeVerificationRequired } from './states/age-verification-required';
+import { Pending } from './states/pending';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { assertNever } from '@/lib/errors';
 import { toBackgroundStyle } from '@/schemas/color';
@@ -28,6 +29,8 @@ const GiveawayParticipationContent = () => {
   switch (state) {
     case 'not-logged-in':
       return <ActiveParticipation />;
+    case 'pending':
+      return <Pending />;
     case 'email-required':
       return <EmailRequired />;
     case 'age-verification-required':

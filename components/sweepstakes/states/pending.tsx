@@ -1,0 +1,62 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { Clock, RefreshCw } from 'lucide-react';
+import { useGiveawayParticipation } from '../giveaway-participation-context';
+import { formatDistanceToNow } from 'date-fns';
+import { Button } from '@/components/ui/button';
+
+export const Pending: React.FC = () => {
+  const { sweepstakes } = useGiveawayParticipation();
+  const [timeLeft, setTimeLeft] = useState('');
+  const [hasStarted, setHasStarted] = useState(false);
+
+  useEffect(() => {
+    const startDate = new Date(sweepstakes.timing.startDate);
+
+    const updateCountdown = () => {
+      const now = new Date();
+
+      if (now >= startDate) {
+        setHasStarted(true);
+        return;
+      }
+
+      const distance = formatDistanceToNow(startDate, { addSuffix: true });
+      setTimeLeft(distance);
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [sweepstakes.timing.startDate]);
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
+  return (
+    <div className="text-center my-4">
+      <Clock className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+      <h3 className="text-lg font-semibold mb-2">
+        {hasStarted ? 'Giveaway Has Started!' : 'Giveaway Starting Soon'}
+      </h3>
+      {hasStarted ? (
+        <>
+          <p className="text-muted-foreground mb-4">
+            This giveaway is now live. Refresh the page to participate.
+          </p>
+          <Button onClick={handleRefresh} size="lg">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh Page
+          </Button>
+        </>
+      ) : (
+        <p className="text-muted-foreground">
+          This giveaway will begin {timeLeft}
+        </p>
+      )}
+    </div>
+  );
+};

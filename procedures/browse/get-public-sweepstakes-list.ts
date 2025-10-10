@@ -19,9 +19,33 @@ const getPublicSweepstakesList = procedure()
     revalidate: 300
   })
   .handler(async ({ db }) => {
+    const now = new Date();
+    const twoDaysFromNow = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
+    const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
-        status: 'ACTIVE'
+        status: 'ACTIVE',
+        OR: [
+          {
+            timing: {
+              startDate: {
+                lte: now
+              },
+              endDate: {
+                gte: twoDaysAgo
+              }
+            }
+          },
+          {
+            timing: {
+              startDate: {
+                gt: now,
+                lte: twoDaysFromNow
+              }
+            }
+          }
+        ]
       },
       include: PUBLIC_SWEEPSTAKES_PAYLOAD
     });

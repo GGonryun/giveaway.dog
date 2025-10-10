@@ -245,6 +245,7 @@ export type GiveawayParticipationSchema = z.infer<
 
 export type GiveawayState =
   | 'active' // Default participation view
+  | 'pending' // Giveaway is not yet ready for participation
   | 'not-logged-in' // User needs to log in
   | 'email-required' // User needs to set an email
   | 'age-verification-required' // User needs to verify age for this sweepstakes
@@ -270,6 +271,8 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
   switch (state) {
     case 'active':
       return 'Active State';
+    case 'pending':
+      return 'Pending';
     case 'not-logged-in':
       return 'Not Logged In';
     case 'email-required':

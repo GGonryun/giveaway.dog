@@ -2,7 +2,9 @@ import { Button } from '@/components/ui/button';
 import {
   AlertCircleIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  Save,
+  Rocket
 } from 'lucide-react';
 import { useFormFooterNavigation } from '@/components/sweepstakes-editor/hooks/use-form-footer-navigation';
 import { cn } from '@/lib/utils';
@@ -13,7 +15,7 @@ import pluralize from 'pluralize';
 import { FormIssuesDialog } from './form-issues-dialog';
 
 export const UnifiedFormFooter: React.FC = () => {
-  const { step: currentStep, mobile } = useSweepstakes();
+  const { step: currentStep, mobile, action } = useSweepstakes();
   const { hasNextStep, hasPreviousStep, handleNext, handlePrevious } =
     useFormFooterNavigation();
   const { open, errors, onOpenChange, onJumpToField } =
@@ -21,6 +23,7 @@ export const UnifiedFormFooter: React.FC = () => {
 
   const totalErrors = useMemo(() => errors.length, [errors]);
   const isValid = useMemo(() => totalErrors === 0, [totalErrors]);
+  const isCreating = useMemo(() => action === 'create', [action]);
 
   return (
     <div className="bg-background border-t p-3">
@@ -63,16 +66,35 @@ export const UnifiedFormFooter: React.FC = () => {
             <ChevronLeftIcon className="h-4 w-4" />
             Back
           </Button>
-          <Button
-            type="button"
-            variant={isValid ? 'default' : 'outline'}
-            size="sm"
-            onClick={handleNext}
-            disabled={!hasNextStep}
-          >
-            Next
-            <ChevronRightIcon className="h-4 w-4" />
-          </Button>
+          {hasNextStep ? (
+            <Button
+              type="button"
+              variant={isValid ? 'default' : 'outline'}
+              size="sm"
+              onClick={handleNext}
+            >
+              Next
+              <ChevronRightIcon className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              variant={isValid ? 'default' : 'outline'}
+              size="sm"
+            >
+              {isCreating ? (
+                <>
+                  <Rocket className="h-4 w-4 mr-1" />
+                  Publish
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-1" />
+                  Save
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </div>

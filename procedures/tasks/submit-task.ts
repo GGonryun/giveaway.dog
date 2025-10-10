@@ -24,6 +24,13 @@ const submitTask = procedure()
     const task = await db.task.findUnique({
       where: {
         id: input.taskId
+      },
+      include: {
+        sweepstakes: {
+          include: {
+            timing: true
+          }
+        }
       }
     });
 
@@ -35,7 +42,48 @@ const submitTask = procedure()
       });
     }
 
-    // TODO: perform additional validation.
+    if (!task.sweepstakes.timing) {
+      throw new ApplicationError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Giveaway timing data is missing. Please contact support.'
+      });
+    }
+
+    if (
+      !task.sweepstakes.timing.startDate ||
+      !task.sweepstakes.timing.endDate
+    ) {
+      throw new ApplicationError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Giveaway timing data is incomplete. Please contact support.'
+      });
+    }
+
+    const now = new Date();
+    const startDate = new Date(task.sweepstakes.timing.startDate);
+    const endDate = new Date(task.sweepstakes.timing.endDate);
+
+    if (task.sweepstakes.status !== 'ACTIVE') {
+      throw new ApplicationError({
+        code: 'FORBIDDEN',
+        message: 'This giveaway is no longer accepting entries.'
+      });
+    }
+
+    if (now < startDate) {
+      throw new ApplicationError({
+        code: 'FORBIDDEN',
+        message: 'This giveaway has not started yet.'
+      });
+    }
+
+    if (now > endDate) {
+      throw new ApplicationError({
+        code: 'FORBIDDEN',
+        message: 'This giveaway has ended and is no longer accepting entries.'
+      });
+    }
+
     await db.taskCompletion.create({
       data: {
         userId: user.id,
