@@ -13,11 +13,6 @@ const getPublicSweepstakesList = procedure()
     required: false
   })
   .output(publicSweepstakesSchema.array())
-  .cache({
-    keyParts: ['public-sweepstakes-list'],
-    tags: ['public-sweepstakes-list'],
-    revalidate: 30
-  })
   .handler(async ({ db }) => {
     const now = new Date();
     const twoDaysFromNow = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
