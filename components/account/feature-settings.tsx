@@ -44,7 +44,7 @@ export const FeatureSettings = () => {
             key={key}
             label={FEATURE_FLAG_LABELS[key]}
             description={FEATURE_FLAG_DESCRIPTIONS[key]}
-            enabled={DEFAULT_FEATURE_FLAGS[key]}
+            enabled={user.featureFlags?.includes(key) ?? false}
             onDisable={handleDisableAction(key)}
             onRequest={handleRequestAction(key)}
           />
