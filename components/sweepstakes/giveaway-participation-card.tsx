@@ -11,6 +11,7 @@ import { TermsModal } from './terms-modal';
 import { DeviceType } from '@/schemas/giveaway/schemas';
 import { cn } from '@/lib/utils';
 import { date } from '@/lib/date';
+import { getSweepstakesTimingDescription } from './status-badge';
 
 export const GiveawayParticipationCard: React.PC<{
   device?: DeviceType;
@@ -34,11 +35,13 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
   device
 }) => {
   const { sweepstakes, participation } = useGiveawayParticipation();
-  const now = new Date();
+  const timing = getSweepstakesTimingDescription({
+    status: sweepstakes.status,
+    startDate: sweepstakes.timing.startDate,
+    endDate: sweepstakes.timing.endDate
+  });
   const startDate = date.format(sweepstakes.timing.startDate);
   const endDate = date.format(sweepstakes.timing.endDate);
-  const hasEnded = isAfter(now, endDate);
-  const isUpcoming = isBefore(now, startDate);
 
   return (
     <CardContent>
@@ -64,19 +67,12 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
         <div className="flex gap-1">
           <ClockIcon className="h-4 w-4 text-muted-foreground" />
           <div className="text-xs text-muted-foreground font-semibold">
-            {isUpcoming
-              ? `Starts in ${formatDistanceToNow(startDate)}`
-              : hasEnded
-                ? 'Giveaway Ended'
-                : `${formatDistanceToNow(endDate)} left`}
+            {timing}
           </div>
         </div>
         <Separator
           orientation="vertical"
-          className={cn(
-            'data-[orientation=vertical]:h-4 bg-muted-foreground hidden sm:block',
-            device === 'mobile' && 'hidden sm:hidden'
-          )}
+          className={cn('data-[orientation=vertical]:h-4 bg-muted-foreground')}
         />
         <div className="flex gap-1">
           <Users className="h-4 w-4 text-muted-foreground" />

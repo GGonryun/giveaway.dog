@@ -7,14 +7,7 @@ export namespace date {
     if (!date) return false;
     return isBefore(date, now());
   };
-  export const distanceToNow = (endDate: Date | null | undefined) => {
-    if (!endDate) return 'No end date';
-    const nowDate = now();
-    if (isBefore(endDate, nowDate)) {
-      return 'Ended';
-    }
-    return formatDistanceToNow(endDate, { addSuffix: true });
-  };
+
   export const format = (
     date: Date | number | string,
     format: 'short' | 'long' | 'dashed' = 'short'

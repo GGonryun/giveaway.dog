@@ -25,30 +25,17 @@ import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { SweepstakesStatus } from '@prisma/client';
-import { useProcedure } from '@/lib/mrpc/hook';
-import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
-import { useRouter } from 'next/navigation';
 import { computeState } from '@/lib/sweepstakes';
 import { toBackgroundStyle } from '@/schemas/color';
 
 export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   props
 ) => {
-  const { sweepstakes, winners, host } = props;
-  const router = useRouter();
+  const { sweepstakes, winners } = props;
   const browse = useBrowseSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
   const liveUrl = browse.url({ sweepstakesId: sweepstakes.id });
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
-
-  const { run: runCompleteSweepstakes, isLoading: isCompleting } = useProcedure(
-    {
-      action: completeSweepstakes,
-      onSuccess: () => {
-        router.refresh();
-      }
-    }
-  );
 
   const totalPrizeSlots = sweepstakes.prizes.reduce(
     (sum, prize) => sum + prize.quota,
@@ -89,13 +76,6 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
           onGenerateQR={() => {
             setIsQRModalOpen(true);
           }}
-          onCompleteSweepstakes={() => {
-            runCompleteSweepstakes({
-              sweepstakesId: sweepstakes.id,
-              slug: host.slug
-            });
-          }}
-          isCompleting={isCompleting}
         />
       )}
 
@@ -114,7 +94,8 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
 
 const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
   sweepstakes,
-  host
+  host,
+  winners
 }) => {
   const { isMobile } = useIsMobile();
   const [previewDevice, setPreviewDevice] = useState<DeviceType>('desktop');
@@ -127,6 +108,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
 
   const state = computeState({
     sweepstakes,
+    winners,
     userProfile: mockUserProfile,
     ageVerification: mockAgeVerification
   });
@@ -159,21 +141,23 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
           )}
         >
           {sweepstakes && host ? (
-            <GiveawayParticipation
-              hideBackground
-              device={previewDevice}
-              isLoading={false}
-              sweepstakes={sweepstakes}
-              host={host}
-              participation={mockParticipation}
-              winners={mockWinners}
-              userProfile={mockUserProfile}
-              userParticipation={mockUserParticipation}
-              state={state}
-              onTaskComplete={noop}
-              onLogin={noop}
-              onCompleteProfile={noop}
-            />
+            <>
+              <GiveawayParticipation
+                hideBackground
+                device={previewDevice}
+                isLoading={false}
+                sweepstakes={sweepstakes}
+                host={host}
+                participation={mockParticipation}
+                winners={winners}
+                userProfile={mockUserProfile}
+                userParticipation={mockUserParticipation}
+                state={state}
+                onTaskComplete={noop}
+                onLogin={noop}
+                onCompleteProfile={noop}
+              />
+            </>
           ) : (
             <div className="flex items-center justify-center h-full">
               <div className="text-center space-y-4">

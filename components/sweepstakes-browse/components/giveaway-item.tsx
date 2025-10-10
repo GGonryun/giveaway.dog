@@ -1,64 +1,18 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Typography } from '@/components/ui/typography';
-import {
-  differenceInDays,
-  formatDistanceToNowStrict,
-  isBefore
-} from 'date-fns';
+import { formatDistanceToNowStrict, isBefore } from 'date-fns';
 import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
-import {
-  ENDING_SOON_SWEEPSTAKE_THRESHOLD,
-  NEW_SWEEPSTAKE_THRESHOLD,
-  STARTING_SOON_SWEEPSTAKE_THRESHOLD
-} from '@/lib/settings';
 import React from 'react';
 import Link from 'next/link';
 import { date } from '@/lib/date';
 import { cn } from '@/lib/utils';
-
-const getStatusBadge = (
-  { startDate, endDate }: Pick<PublicSweepstakeSchema, 'endDate' | 'startDate'>,
-  isEnded: boolean
-) => {
-  const now = new Date();
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-
-  if (isEnded) {
-    return (
-      <Badge variant="outline" className="bg-muted text-muted-foreground">
-        Ended
-      </Badge>
-    );
-  }
-
-  const daysUntilStart = differenceInDays(start, now);
-  const isStartingSoon =
-    isBefore(now, start) &&
-    daysUntilStart <= STARTING_SOON_SWEEPSTAKE_THRESHOLD;
-
-  if (isStartingSoon) {
-    return <Badge variant="default">Starting Soon</Badge>;
-  }
-
-  const daysLeft = differenceInDays(end, now);
-  const isEndingSoon = daysLeft <= ENDING_SOON_SWEEPSTAKE_THRESHOLD;
-  const isNew = differenceInDays(now, start) <= NEW_SWEEPSTAKE_THRESHOLD;
-
-  if (isEndingSoon) {
-    return <Badge variant="destructive">Ending Soon</Badge>;
-  } else if (isNew) {
-    return <Badge variant="secondary">New</Badge>;
-  } else {
-    return null;
-  }
-};
+import { SweepstakesStatusSummaryBadge } from '@/components/sweepstakes/status-badge';
 
 export const GiveawayItem: React.FC<{
   sweepstakes: PublicSweepstakeSchema;
 }> = ({ sweepstakes }) => {
-  const { name, banner, endDate, startDate, featured } = sweepstakes;
+  const { name, banner, endDate, startDate, featured, status } = sweepstakes;
 
   const isEnded = date.hasExpired(new Date(endDate));
   const isPending = isBefore(new Date(), new Date(startDate));
@@ -80,7 +34,11 @@ export const GiveawayItem: React.FC<{
             />
           )}
           <div className="absolute top-3 left-3">
-            {getStatusBadge(sweepstakes, isEnded)}
+            <SweepstakesStatusSummaryBadge
+              startDate={startDate}
+              endDate={endDate}
+              status={status}
+            />
           </div>
           {featured && (
             <Badge className="absolute top-3 right-3 bg-primary">

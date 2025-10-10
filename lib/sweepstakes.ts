@@ -10,36 +10,39 @@ import { expandCountries, includesCountryCode } from './countries';
 
 type ComputeStateOptions = {
   sweepstakes: ParticipantSweepstakeSchema['sweepstakes'];
+  winners: ParticipantSweepstakeSchema['winners'];
   userProfile?: UserProfileSchema;
   ageVerification?: AgeVerificationSchema | null;
 };
 
-export const computeState = ({
-  sweepstakes,
-  userProfile,
-  ageVerification
-}: ComputeStateOptions): GiveawayState => {
+export const computeState = (args: ComputeStateOptions): GiveawayState => {
+  const { sweepstakes, winners, userProfile } = args;
+
   if (!userProfile) return 'not-logged-in';
-  if (requiresEmail({ sweepstakes, userProfile })) return 'email-required';
-  if (needsAgeVerification({ sweepstakes, userProfile, ageVerification }))
+  if (requiresEmail(args)) return 'email-required';
+  if (needsAgeVerification({ ...args, userProfile }))
     return 'age-verification-required';
-  if (!isEligible({ sweepstakes, userProfile, ageVerification }))
-    return 'not-eligible';
+  if (!isEligible({ ...args, userProfile })) return 'not-eligible';
 
   switch (sweepstakes.status) {
     case 'DRAFT':
       return 'closed';
+    case 'COMPLETED':
     case 'ACTIVE': {
       const now = new Date();
       const startDate = new Date(sweepstakes.timing.startDate);
       const endDate = new Date(sweepstakes.timing.endDate);
 
       if (now < startDate) return 'pending';
-      if (date.hasExpired(endDate)) return 'winners-pending';
+      if (date.hasExpired(endDate)) {
+        if (winners.length) {
+          return 'winners-announced';
+        } else {
+          return 'winners-pending';
+        }
+      }
       return 'active';
     }
-    case 'COMPLETED':
-      return 'winners-announced';
     default:
       throw assertNever(sweepstakes.status);
   }

@@ -13,7 +13,7 @@ const getSweepstakeParticipation = procedure()
     required: true
   })
   .output(publicSweepstakesSchema.array())
-  .handler(async ({ db, user, input }) => {
+  .handler(async ({ db, user }) => {
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
         status: 'ACTIVE',

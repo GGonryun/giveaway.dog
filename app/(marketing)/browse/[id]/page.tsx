@@ -40,12 +40,18 @@ export default async function Page({ params }: PageProps) {
 
   const userProfile = user.data ?? undefined;
   const sweepstakes = result.data.sweepstakes;
+  const winners = result.data.winners;
   const ageVerification = verification.data ?? null;
 
   return (
     <SweepstakesParticipationPage
       {...result.data}
-      state={computeState({ sweepstakes, userProfile, ageVerification })}
+      state={computeState({
+        sweepstakes,
+        winners,
+        userProfile,
+        ageVerification
+      })}
       userProfile={userProfile}
       userParticipation={participation.data}
     />

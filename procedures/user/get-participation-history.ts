@@ -33,6 +33,7 @@ const getParticipationHistory = procedure()
       },
       include: {
         details: true,
+        timing: true,
         tasks: {
           include: {
             completions: {
@@ -82,6 +83,8 @@ const getParticipationHistory = procedure()
           sweepstakesId: sweepstakes.id,
           sweepstakesName:
             sweepstakes.details?.name ?? DEFAULT_SWEEPSTAKES_NAME,
+          sweepstakesStartDate: sweepstakes.timing?.startDate ?? new Date(),
+          sweepstakesEndDate: sweepstakes.timing?.endDate ?? new Date(),
           engagement,
           totalTasks,
           completedTasks,

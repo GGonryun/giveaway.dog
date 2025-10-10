@@ -3,6 +3,8 @@ import { z } from 'zod';
 export const participationHistoryItemSchema = z.object({
   sweepstakesId: z.string(),
   sweepstakesName: z.string(),
+  sweepstakesStartDate: z.date(),
+  sweepstakesEndDate: z.date(),
   engagement: z.number(),
   totalTasks: z.number(),
   completedTasks: z.number(),

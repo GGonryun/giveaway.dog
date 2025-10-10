@@ -15,6 +15,7 @@ import {
 } from '@/schemas/sweepstakes';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
+import { getSweepstakesTimingDescription } from '@/components/sweepstakes/status-badge';
 
 const getSweepstakesList = procedure()
   .authorization({ required: true })
@@ -93,7 +94,11 @@ const getSweepstakesList = procedure()
 
     return {
       sweepstakes: sweepstakes.map((s) => {
-        const timeLeft = getTimeLeft(s);
+        const timeLeft = getSweepstakesTimingDescription({
+          status: s.status,
+          endDate: s.timing?.endDate,
+          startDate: s.timing?.startDate
+        });
         return {
           id: s.id,
           name: s.details?.name ?? DEFAULT_SWEEPSTAKES_NAME,
@@ -111,25 +116,5 @@ const getSweepstakesList = procedure()
       totalPages
     };
   });
-
-const getTimeLeft = (
-  sweepstake: Prisma.SweepstakesGetPayload<{
-    include: {
-      timing: true;
-    };
-  }>
-): string => {
-  const now = new Date();
-  if (sweepstake.status === SweepstakesStatus.COMPLETED) return 'Completed';
-  if (sweepstake.status === SweepstakesStatus.DRAFT) return 'Not started';
-  if (!sweepstake.timing?.endDate || !sweepstake.timing?.startDate)
-    return 'Not started';
-
-  if (isAfter(now, sweepstake.timing.endDate))
-    return `Ended ${formatDistanceToNow(sweepstake.timing.endDate)} ago`;
-  if (isAfter(sweepstake.timing.startDate, now))
-    return `Starts in ${formatDistanceToNow(sweepstake.timing.startDate)}`;
-  return `Ends in ${formatDistance(sweepstake.timing.endDate, now)}`;
-};
 
 export default getSweepstakesList;

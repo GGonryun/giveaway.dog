@@ -15,7 +15,6 @@ import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { CheckCircle2, PlusCircle } from 'lucide-react';
 import {
-  DEFAULT_FEATURE_FLAGS,
   FEATURE_FLAG_DESCRIPTIONS,
   FEATURE_FLAG_LABELS,
   FeatureFlagKeySchema

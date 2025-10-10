@@ -18,6 +18,7 @@ import { Clock, TrendingUp } from 'lucide-react';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { SweepstakesStatusBadge } from '../sweepstakes/status-badge';
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -55,17 +56,6 @@ export const ParticipationHistoryTable: React.FC = () => {
     if (engagement >= 60) return 'bg-blue-500';
     if (engagement >= 40) return 'bg-yellow-500';
     return 'bg-red-500';
-  };
-
-  const getStatusBadge = (status: 'ACTIVE' | 'DRAFT' | 'COMPLETED') => {
-    switch (status) {
-      case 'ACTIVE':
-        return <Badge variant="default">Active</Badge>;
-      case 'COMPLETED':
-        return <Badge variant="secondary">Completed</Badge>;
-      case 'DRAFT':
-        return <Badge variant="outline">Draft</Badge>;
-    }
   };
 
   if (procedure.isPending && !data) {
@@ -136,7 +126,13 @@ export const ParticipationHistoryTable: React.FC = () => {
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell>{getStatusBadge(item.sweepstakesStatus)}</TableCell>
+                  <TableCell>
+                    <SweepstakesStatusBadge
+                      status={item.sweepstakesStatus}
+                      startDate={new Date(item.sweepstakesStartDate)}
+                      endDate={new Date(item.sweepstakesEndDate)}
+                    />
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-1 text-sm">
                       <Clock className="h-3 w-3 text-muted-foreground" />

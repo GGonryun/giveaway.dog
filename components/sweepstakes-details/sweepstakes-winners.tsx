@@ -38,8 +38,10 @@ import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useProcedure } from '@/lib/mrpc/hook';
 import rollWinners from '@/procedures/sweepstakes/roll-winners';
+import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { format } from 'date-fns';
+import { Trophy } from 'lucide-react';
 
 interface WinnerCriteria {
   minQualityScore: number;
@@ -57,13 +59,15 @@ interface SlotBasedWinnerSystemProps {
   participants: SweepstakesParticipantSchema[];
   sweepstakesId: string;
   slug: string;
+  endDate: Date;
 }
 
 export const SweepstakesWinners = ({
   prizes,
   participants,
   sweepstakesId,
-  slug
+  slug,
+  endDate
 }: SlotBasedWinnerSystemProps) => {
   const router = useRouter();
   const { activeTeam } = useTeams();
@@ -101,6 +105,8 @@ export const SweepstakesWinners = ({
   }, [] as GroupedPrize[]);
 
   const emptySlots = prizes.filter((p) => !p.winner).length;
+
+  const hasEnded = new Date() > new Date(endDate);
 
   const getEligibleParticipants = () => {
     // Get already confirmed winner IDs to prevent duplicates if enabled
@@ -156,6 +162,8 @@ export const SweepstakesWinners = ({
     });
   };
 
+  const allWinnersSelected = emptySlots === 0 && prizes.length > 0;
+
   return (
     <div className="space-y-6">
       {/* Winner Contact Disclaimer */}
@@ -175,16 +183,18 @@ export const SweepstakesWinners = ({
       {!hasAnyWinners ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16 space-y-6">
-            <Alert className="border-blue-200 bg-blue-50 max-w-2xl">
-              <Info className="h-5 w-5 text-blue-600" />
-              <AlertTitle className="text-blue-900">
-                Winners Can Only Be Selected After Giveaway Ends
-              </AlertTitle>
-              <AlertDescription className="text-blue-800">
-                Once your giveaway has ended, you will be able to select and
-                confirm winners. Until then, this section will remain locked.
-              </AlertDescription>
-            </Alert>
+            {!hasEnded && (
+              <Alert className="border-blue-200 bg-blue-50 max-w-2xl">
+                <Info className="h-5 w-5 text-blue-600" />
+                <AlertTitle className="text-blue-900">
+                  Winners Can Only Be Selected After Giveaway Ends
+                </AlertTitle>
+                <AlertDescription className="text-blue-800">
+                  Once your giveaway has ended, you will be able to select and
+                  confirm winners. Until then, this section will remain locked.
+                </AlertDescription>
+              </Alert>
+            )}
             <div className="flex flex-col items-center text-center space-y-4 max-w-md">
               <div className="rounded-full bg-muted p-6">
                 <Shuffle className="h-12 w-12 text-muted-foreground" />
@@ -196,7 +206,12 @@ export const SweepstakesWinners = ({
                   {pluralize('is', emptySlots)} waiting for winners.
                 </p>
               </div>
-              <Button size="lg" className="mt-4" disabled>
+              <Button
+                size="lg"
+                className="mt-4"
+                disabled={!hasEnded}
+                onClick={() => setShowWinnerDialog(true)}
+              >
                 <Shuffle className="h-4 w-4 mr-2" />
                 Pick Winners
               </Button>
