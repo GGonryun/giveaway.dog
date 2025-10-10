@@ -21,15 +21,14 @@ import {
 import { EmojiLogo } from './emoji-logo';
 import Link from 'next/link';
 import { UserSchema } from '@/schemas/user';
-import { UserType } from '@prisma/client';
 
 export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
   user
 }) => {
   const isLoggedIn = useMemo(() => !!user?.id, [user?.id]);
   const isHost = useMemo(
-    () => isLoggedIn && user?.type.includes(UserType.HOST),
-    [isLoggedIn, user?.type]
+    () => isLoggedIn && user?.featureFlags?.includes('admin-user'),
+    [isLoggedIn, user?.featureFlags]
   );
   const [open, setOpen] = useState(false);
 

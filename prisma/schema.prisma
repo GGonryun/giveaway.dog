@@ -8,11 +8,6 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-enum UserType {
-  HOST
-  PARTICIPATE
-}
-
 model User {
   id               String            @id @default(cuid())
   name             String?
@@ -23,7 +18,6 @@ model User {
   countryCode      String?
   userAgent        String?
   qualityScore     Int               @default(0)
-  type             UserType[]        @default([PARTICIPATE])
   accounts         Account[]
   sessions         Session[]
   createdAt        DateTime          @default(now())
@@ -33,6 +27,7 @@ model User {
   taskProgresses   TaskProgress[]
   events           UserEvent[]
   ageVerifications AgeVerification[]
+  featureFlags     FeatureFlag[]
 }
 
 enum UserEventType {
@@ -96,6 +91,16 @@ model EmailSubscription {
   email     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model FeatureFlag {
+  key       String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([key, userId])
 }
 
 // WARNING: sweepstakes objects are too complex to update directly, instead we delete

@@ -1,5 +1,6 @@
-import { Prisma, UserType } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import z from 'zod';
+import { featureFlagKeySchema, parseFeatureFlags } from './feature-flags';
 
 export const providerTypeSchema = z.union([
   z.literal('twitter'),
@@ -62,7 +63,7 @@ export type UserProfileSchema = z.infer<typeof userProfileSchema>;
 
 export const userSchema = userProfileSchema.extend({
   emailVerified: z.boolean().nullable(),
-  type: z.nativeEnum(UserType).array()
+  featureFlags: featureFlagKeySchema.array().optional()
 });
 
 export type UserSchema = z.infer<typeof userSchema>;
@@ -88,8 +89,7 @@ export const parseProvider = (provider: unknown) => {
 
 export const updateUserProfileSchema = z.object({
   id: z.string(),
-  name: z.string().optional(),
-  type: z.array(z.nativeEnum(UserType)).optional()
+  name: z.string().optional()
 });
 
 export const ageVerificationSchema = z.object({
@@ -117,10 +117,10 @@ export const USER_SCHEMA_SELECT_QUERY = {
   emoji: true,
   countryCode: true,
   emailVerified: true,
-  type: true,
   accounts: {
     select: ACCOUNT_SELECT_QUERY
-  }
+  },
+  featureFlags: true
 } satisfies Prisma.UserSelect;
 
 export const toUserSchema = (
@@ -132,8 +132,8 @@ export const toUserSchema = (
   emoji: user.emoji,
   countryCode: user.countryCode,
   emailVerified: !!user.emailVerified,
-  type: user.type,
-  providers: parseProviders(user.accounts)
+  providers: parseProviders(user.accounts),
+  featureFlags: parseFeatureFlags(user.featureFlags)
 });
 
 export const userDetailsTabSchema = z.union([

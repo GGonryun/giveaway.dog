@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { UserType } from '@prisma/client';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -15,89 +14,44 @@ import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { CheckCircle2, PlusCircle } from 'lucide-react';
+import {
+  DEFAULT_FEATURE_FLAGS,
+  FEATURE_FLAG_DESCRIPTIONS,
+  FEATURE_FLAG_LABELS,
+  FeatureFlagKeySchema
+} from '@/schemas/feature-flags';
+import { widetype } from '@/lib/widetype';
 
 export const FeatureSettings = () => {
   const user = useUser();
 
-  const [showHostAccessDialog, setShowHostAccessDialog] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [showCannotDisableDialog, setShowCannotDisableDialog] = useState(false);
 
-  const hasParticipateAccess = user.type?.includes(UserType.PARTICIPATE);
-  const hasHostAccess = user.type?.includes(UserType.HOST);
-
-  const handleRequestHostAccess = () => {
-    setShowHostAccessDialog(true);
+  const handleDisableAction = (key: FeatureFlagKeySchema) => () => {
+    setShowCannotDisableDialog(true);
   };
 
-  const handleParticipateClick = () => {
-    setShowCannotDisableDialog(true);
+  const handleRequestAction = (key: FeatureFlagKeySchema) => () => {
+    setShowContact(true);
   };
 
   return (
     <>
       <div className="space-y-4">
-        {/* Participate Sweepstakes Card */}
-        <Card>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex-1 space-y-1">
-                <Label className="text-base font-semibold">
-                  Participate in Sweepstakes
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Join and enter sweepstakes hosted by others. Complete tasks to
-                  earn entries and increase your chances of winning prizes.
-                </p>
-              </div>
-              <div className="flex items-center sm:items-start">
-                <Button size="sm" onClick={handleParticipateClick}>
-                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                  Enabled
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Host Sweepstakes Card */}
-        <Card>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex-1 space-y-1">
-                <Label className="text-base font-semibold">
-                  Host Sweepstakes
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Create and manage your own sweepstakes. Set up tasks, manage
-                  participants, and select winners for your giveaways.
-                </p>
-              </div>
-              <div className="flex items-center sm:items-start">
-                {hasHostAccess ? (
-                  <Button size="sm">
-                    <CheckCircle2 className="h-4 w-4 mr-2" />
-                    Enabled
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleRequestHostAccess}
-                  >
-                    <PlusCircle className="h-4 w-4 mr-2" />
-                    Request Access
-                  </Button>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {widetype.keys(FEATURE_FLAG_LABELS).map((key) => (
+          <FeatureFlagCard
+            key={key}
+            label={FEATURE_FLAG_LABELS[key]}
+            description={FEATURE_FLAG_DESCRIPTIONS[key]}
+            enabled={DEFAULT_FEATURE_FLAGS[key]}
+            onDisable={handleDisableAction(key)}
+            onRequest={handleRequestAction(key)}
+          />
+        ))}
       </div>
 
-      <HostAccessDialog
-        open={showHostAccessDialog}
-        onOpenChange={setShowHostAccessDialog}
-      />
+      <ContactSupportDialog open={showContact} onOpenChange={setShowContact} />
       <CannotDisableDialog
         open={showCannotDisableDialog}
         onOpenChange={setShowCannotDisableDialog}
@@ -106,7 +60,41 @@ export const FeatureSettings = () => {
   );
 };
 
-const HostAccessDialog: React.FC<{
+const FeatureFlagCard: React.FC<{
+  label: string;
+  description: string;
+  enabled: boolean;
+  onRequest: () => void;
+  onDisable: () => void;
+}> = ({ label, description, enabled, onRequest, onDisable }) => {
+  return (
+    <Card>
+      <CardContent>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex-1 space-y-1">
+            <Label className="text-base font-semibold">{label}</Label>
+            <p className="text-sm text-muted-foreground">{description}</p>
+          </div>
+          <div className="flex items-center sm:items-start">
+            {enabled ? (
+              <Button size="sm" onClick={onDisable}>
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                Enabled
+              </Button>
+            ) : (
+              <Button size="sm" variant="outline" onClick={onRequest}>
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Request Access
+              </Button>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+const ContactSupportDialog: React.FC<{
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ open, onOpenChange }) => {
@@ -114,11 +102,11 @@ const HostAccessDialog: React.FC<{
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Host Access - Beta Feature</AlertDialogTitle>
+          <AlertDialogTitle>Contact Support</AlertDialogTitle>
           <AlertDialogDescription>
-            Host access is currently in <strong>beta</strong> and not yet
-            available for public requests. If you want early access, please
-            contact us via our support page.
+            In order to enable this feature, please contact our support team.
+            We&apos;d be happy to discuss your needs and see how we can assist
+            you.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -144,16 +132,22 @@ const CannotDisableDialog: React.FC<{
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Feature Cannot Be Disabled</AlertDialogTitle>
+          <AlertDialogTitle>Contact Support</AlertDialogTitle>
           <AlertDialogDescription>
-            This feature cannot be disabled. All users can participate in
-            sweepstakes by default.
+            In order to disable this feature, please contact our support team.
+            We&apos;d be happy to discuss your needs and see how we can assist
+            you.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={() => onOpenChange(false)}>
             Okay
           </AlertDialogCancel>
+          <AlertDialogAction asChild>
+            <Link href="/support" className="inline-flex">
+              Contact Support
+            </Link>
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

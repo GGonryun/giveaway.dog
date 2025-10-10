@@ -67,15 +67,12 @@ export const authConfig = {
       const hostRoutes = ['/app'];
       const sensitiveRoutes = [...hostRoutes, '/account'];
       const isLoggedIn = !!auth?.user;
-      const isHost = auth?.user?.type?.includes('HOST');
 
       const isLogoutRoute = nextUrl.pathname.startsWith('/logout');
       const isConnectionRoute = connectionRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)
       );
-      const isHostRoute = hostRoutes.some((r) =>
-        nextUrl.pathname.startsWith(r)
-      );
+
       const isSensitiveRoute = sensitiveRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)
       );
@@ -85,8 +82,6 @@ export const authConfig = {
       if (isConnectionRoute && isLoggedIn)
         return Response.redirect(new URL('/', nextUrl));
 
-      if (isHostRoute && !isHost) return false;
-
       if (isSensitiveRoute) return isLoggedIn;
 
       return true;
@@ -94,15 +89,12 @@ export const authConfig = {
     jwt({ token, user }) {
       if (user && user.id) {
         token.id = user.id;
-        token.type = (user.type as string[]) || null;
       }
       return token;
     },
     session({ token, session }) {
       if (token?.id && session.user) {
         session.user.id = token.id as string;
-        // TODO: fix any
-        session.user.type = (token.type as any[]) || null;
       }
       return session;
     }

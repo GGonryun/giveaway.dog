@@ -15,7 +15,6 @@ import createProfile from '@/procedures/user/create-profile';
 import verifyEmail from '@/procedures/user/verify-email';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
-import { UserType } from '@prisma/client';
 import { useAccountPage } from '@/components/account/use-account-page';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import { CheckCircle } from 'lucide-react';
@@ -30,8 +29,6 @@ interface AuthPortalProps {
   signup?: string;
   name?: string;
   emoji?: string;
-  countryCode?: string;
-  userTypes?: UserType[];
 
   // Common props
   redirectTo?: string;
@@ -44,8 +41,6 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   signup,
   name,
   emoji,
-  countryCode,
-  userTypes,
   redirectTo,
   revalidate
 }) => {
@@ -59,10 +54,9 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   const redirect = useMemo(
     () =>
       getUserAuthRedirect({
-        redirectTo: redirectTo || '',
-        userTypes: userTypes || []
+        redirectTo: redirectTo || ''
       }),
-    [redirectTo, userTypes]
+    [redirectTo]
   );
 
   // Email verification procedure
@@ -142,8 +136,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     // Always try to create a profile for new users, or redirect if profile exists
     runCreate({
       id: session.user.id,
-      name: name || session.user.name || '',
-      type: [UserType.PARTICIPATE] // Default all new users to participant
+      name: name || session.user.name || ''
     });
   }, [
     session,
@@ -155,7 +148,6 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     signup,
     name,
     emoji,
-    userTypes,
     router,
     token,
     email,

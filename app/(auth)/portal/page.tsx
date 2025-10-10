@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { AuthPortal } from './auth-portal';
 import { notFound, redirect } from 'next/navigation';
-import { parseUserTypes } from './util';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import trackUser from '@/procedures/user/track-user';
 
@@ -12,25 +11,14 @@ const PortalPage: React.FC<{
     signup: string;
     name: string;
     emoji: string;
-    userType: string;
     redirectTo: string;
     token: string;
     email: string;
     revalidate: string;
   }>;
 }> = async ({ searchParams }) => {
-  const {
-    signup,
-    name,
-    emoji,
-    userType,
-    redirectTo,
-    token,
-    email,
-    revalidate
-  } = await searchParams;
-
-  const userTypes = parseUserTypes(userType);
+  const { signup, name, emoji, redirectTo, token, email, revalidate } =
+    await searchParams;
 
   // If token and email are provided, this is an email verification request
   if (token && email) {
@@ -58,7 +46,7 @@ const PortalPage: React.FC<{
   }
 
   if (!signup && !revalidate) {
-    redirect(getUserAuthRedirect({ redirectTo, userTypes }));
+    redirect(getUserAuthRedirect({ redirectTo }));
   }
 
   return (
@@ -74,7 +62,6 @@ const PortalPage: React.FC<{
           <AuthPortal
             name={name}
             emoji={emoji}
-            userTypes={userTypes}
             redirectTo={redirectTo}
             signup={signup}
             revalidate={revalidate}

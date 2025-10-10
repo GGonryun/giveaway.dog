@@ -2,6 +2,7 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
+import { BASIC_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { updateUserProfileSchema } from '@/schemas/user';
 import z from 'zod';
 
@@ -14,7 +15,7 @@ export const createProfile = procedure()
     })
   )
   .handler(async ({ input, user, db }) => {
-    const { name, type } = input;
+    const { name } = input;
 
     //if the user already exists do nothing.
     const existingUser = await db.user.findUnique({
@@ -32,9 +33,20 @@ export const createProfile = procedure()
       const updatedUser = await db.user.update({
         where: { id: user.id },
         data: {
-          name,
-          ...(type && { type })
+          name
         }
+      });
+
+      await db.featureFlag.upsert({
+        where: {
+          key: BASIC_DASHBOARD_FEATURE_FLAG_KEY,
+          userId: user.id
+        },
+        create: {
+          userId: user.id,
+          key: BASIC_DASHBOARD_FEATURE_FLAG_KEY
+        },
+        update: {}
       });
 
       return updatedUser;

@@ -37,7 +37,6 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 - **Redirects**:
   - Host users → `/app`
   - Participants → `/browse`
-- **Query parameters**: Signup passes `signup=true&name=X&userType=X` to callback URL
 
 ### Component Guidelines
 
