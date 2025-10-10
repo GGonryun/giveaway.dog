@@ -2,7 +2,6 @@
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { InfoIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useDemoMode } from './contexts/demo-mode-context';
 

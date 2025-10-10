@@ -2,13 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import { Prisma, SweepstakesStatus } from '@prisma/client';
-import {
-  formatDistance,
-  formatDistanceToNow,
-  isAfter,
-  minutesToSeconds
-} from 'date-fns';
+import { minutesToSeconds } from 'date-fns';
 import {
   listSweepstakesDataSchema,
   listSweepstakesFiltersSchema

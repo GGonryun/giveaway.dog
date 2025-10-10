@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { text } from '../foundations/text';
 
 type StackProps = FlexProps;
 

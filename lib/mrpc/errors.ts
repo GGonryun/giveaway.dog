@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { nanoid } from 'nanoid';
-import { Failure, Result } from './types';
+import { Failure } from './types';
 import { assertNever } from '../errors';
 
 export const isNextRedirect = (err: any): err is Error => {
@@ -32,7 +32,7 @@ export const prismaErrorBoundary = (
   console.error(`Encountered prisma error`, err);
 
   if (isPrismaValidationError(err)) {
-    return prismaValidationErrorBoundary(err);
+    return prismaValidationErrorBoundary();
   }
 
   if (isPrismaKnownClientError(err)) {
@@ -78,9 +78,7 @@ const isPrismaValidationError = (
   return err instanceof Prisma.PrismaClientValidationError;
 };
 
-const prismaValidationErrorBoundary = (
-  err: Prisma.PrismaClientValidationError
-): Failure => {
+const prismaValidationErrorBoundary = (): Failure => {
   return {
     ok: false,
     data: {

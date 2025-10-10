@@ -38,10 +38,8 @@ import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useProcedure } from '@/lib/mrpc/hook';
 import rollWinners from '@/procedures/sweepstakes/roll-winners';
-import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { format } from 'date-fns';
-import { Trophy } from 'lucide-react';
 
 interface WinnerCriteria {
   minQualityScore: number;
@@ -161,8 +159,6 @@ export const SweepstakesWinners = ({
       return newSet;
     });
   };
-
-  const allWinnersSelected = emptySlots === 0 && prizes.length > 0;
 
   return (
     <div className="space-y-6">

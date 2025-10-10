@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
 import { TabsContent } from '@/components/ui/tabs';
 import {
   Table,
@@ -37,7 +36,6 @@ import {
   Clock,
   TrendingUp,
   Globe,
-  ArrowLeft,
   Trophy,
   Target,
   BarChart3,
@@ -46,11 +44,10 @@ import {
   DollarSign,
   Users
 } from 'lucide-react';
-import { StatusExplanationDialog } from '../../../../../../../components/users/status-explanation-dialog';
-import { FeatureInDevelopmentDialog } from '../../../../../../../components/users/feature-in-development-dialog';
-import { useRouter } from 'next/navigation';
-import { useActiveTeam } from '@/components/team/use-active-team-page';
+
 import { UserDetailsTabSchema } from '@/schemas/user';
+import { FeatureInDevelopmentDialog } from '@/components/users/feature-in-development-dialog';
+import { StatusExplanationDialog } from '@/components/users/status-explanation-dialog';
 
 interface UserDetailViewProps {
   userId: string;
@@ -249,8 +246,6 @@ const getUserDetailExtended = (userId: string) => ({
 });
 
 export const UserDetailView = ({ userId, tab }: UserDetailViewProps) => {
-  const { slug } = useActiveTeam();
-  const router = useRouter();
   const user = useMemo(() => getUserDetailExtended(userId), [userId]);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
   const [showFeatureDialog, setShowFeatureDialog] = useState(false);

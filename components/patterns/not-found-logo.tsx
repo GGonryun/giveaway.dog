@@ -1,6 +1,5 @@
 'use client';
 import Image from 'next/image';
-import { Button } from '../ui/button';
 import { useState } from 'react';
 import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
 

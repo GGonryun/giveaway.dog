@@ -35,8 +35,6 @@ import {
 import { toGradient } from '@/schemas/color';
 
 export const Design = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-
   return (
     <>
       <Section

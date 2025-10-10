@@ -7,29 +7,12 @@ import {
   ResizableHandle
 } from '@/components/ui/resizable';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import {
-  XIcon,
-  SaveIcon,
-  ChevronDownIcon,
-  ShareIcon,
-  AlertCircleIcon
-} from 'lucide-react';
+import { XIcon, SaveIcon, AlertCircleIcon } from 'lucide-react';
 import Link from 'next/link';
 import { UnifiedFormFooter } from './unified-form-footer';
 import React, { useCallback, useMemo } from 'react';
 import { useFormIssues } from '@/components/sweepstakes-editor/hooks/use-form-issues';
 import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
-import { usePreviewState } from './contexts/preview-state-context';
-import {
-  PREVIEW_GIVEAWAY_STATES,
-  getStateDisplayLabel
-} from '@/schemas/giveaway/schemas';
 import { FormHeaderProps, FormLayoutProps } from './form-layout';
 import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';
 import { useFormErrors } from '../hooks/use-form-errors';

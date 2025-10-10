@@ -21,8 +21,7 @@ import {
   Settings,
   Server,
   Phone,
-  Sparkles,
-  BarChart3
+  Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
 

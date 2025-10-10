@@ -12,7 +12,6 @@ import { useIsMobile } from '../hooks/use-mobile';
 import { QRCodeModal } from '../patterns/qr-code-modal';
 import {
   mockParticipation,
-  mockWinners,
   mockUserProfile,
   mockUserParticipation,
   mockAgeVerification

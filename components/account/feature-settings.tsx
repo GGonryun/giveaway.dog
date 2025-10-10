@@ -16,8 +16,7 @@ import { Label } from '../ui/label';
 import { CheckCircle2, PlusCircle } from 'lucide-react';
 import {
   FEATURE_FLAG_DESCRIPTIONS,
-  FEATURE_FLAG_LABELS,
-  FeatureFlagKeySchema
+  FEATURE_FLAG_LABELS
 } from '@/schemas/feature-flags';
 import { widetype } from '@/lib/widetype';
 
@@ -27,11 +26,11 @@ export const FeatureSettings = () => {
   const [showContact, setShowContact] = useState(false);
   const [showCannotDisableDialog, setShowCannotDisableDialog] = useState(false);
 
-  const handleDisableAction = (key: FeatureFlagKeySchema) => () => {
+  const handleDisableAction = () => {
     setShowCannotDisableDialog(true);
   };
 
-  const handleRequestAction = (key: FeatureFlagKeySchema) => () => {
+  const handleRequestAction = () => {
     setShowContact(true);
   };
 
@@ -44,8 +43,8 @@ export const FeatureSettings = () => {
             label={FEATURE_FLAG_LABELS[key]}
             description={FEATURE_FLAG_DESCRIPTIONS[key]}
             enabled={user.featureFlags?.includes(key) ?? false}
-            onDisable={handleDisableAction(key)}
-            onRequest={handleRequestAction(key)}
+            onDisable={handleDisableAction}
+            onRequest={handleRequestAction}
           />
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { isBefore, formatDistanceToNow, format as fnsFormat } from 'date-fns';
+import { isBefore, format as fnsFormat } from 'date-fns';
 import { assertNever } from './errors';
 
 export namespace date {

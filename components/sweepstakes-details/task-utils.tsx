@@ -4,8 +4,6 @@ import {
   CheckCircleIcon,
   ClockIcon,
   Globe2Icon,
-  GlobeIcon,
-  ShieldQuestionIcon,
   TwitterIcon,
   XCircleIcon
 } from 'lucide-react';

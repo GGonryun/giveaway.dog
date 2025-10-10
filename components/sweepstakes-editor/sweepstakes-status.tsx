@@ -13,7 +13,7 @@ import {
   QrCode,
   ExternalLink
 } from 'lucide-react';
-import { formatDistanceToNow, isAfter } from 'date-fns';
+import { isAfter } from 'date-fns';
 import { SweepstakesStatus } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { datetime } from '@/lib/date';

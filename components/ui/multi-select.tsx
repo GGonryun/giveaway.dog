@@ -126,7 +126,7 @@ export type MultiSelectOption = {
   icon?: React.ComponentType<{ className?: string }>;
 };
 
-export function isValidOption<T>(
+export function isValidOption(
   option: Partial<MultiSelectOption>
 ): option is Required<MultiSelectOption> {
   return Boolean(option.label) && Boolean(option.value);

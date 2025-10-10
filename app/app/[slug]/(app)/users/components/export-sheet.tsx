@@ -27,12 +27,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Download,
   FileText,
-  Calendar,
-  Users,
   CheckCircle,
   Clock,
-  AlertTriangle,
-  ExternalLink
+  AlertTriangle
 } from 'lucide-react';
 
 interface ExportSheetProps {
@@ -128,7 +125,6 @@ export const ExportSheet = ({
   );
   const [fileName, setFileName] = useState('');
   const [description, setDescription] = useState('');
-  const [scheduleType, setScheduleType] = useState('immediate');
   const [exportJobs, setExportJobs] = useState<ExportJob[]>(mockExportJobs);
 
   useEffect(() => {

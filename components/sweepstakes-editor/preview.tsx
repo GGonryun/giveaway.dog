@@ -10,7 +10,6 @@ import {
   GiveawayDesignBackgroundSchema,
   GiveawayFormSchema,
   GiveawaySchema,
-  GradientBackgroundSchema,
   Prize
 } from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';

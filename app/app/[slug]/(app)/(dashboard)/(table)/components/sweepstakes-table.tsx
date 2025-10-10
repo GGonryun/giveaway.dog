@@ -22,7 +22,6 @@ import {
 import {
   Eye,
   Edit,
-  Pause,
   Play,
   Trash2,
   MoreHorizontal,

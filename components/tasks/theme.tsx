@@ -1,4 +1,4 @@
-import { EarthIcon, LucideIcon, StarIcon, TwitterIcon } from 'lucide-react';
+import { EarthIcon, LucideIcon, StarIcon } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
 import React from 'react';
@@ -10,8 +10,6 @@ export type TaskTheme = {
   arrow: string;
   icon: LucideIcon;
 };
-
-const SHARED_TWITTER_STYLES = {};
 
 export const toTaskTheme = (type: TaskType): TaskTheme => {
   switch (type) {

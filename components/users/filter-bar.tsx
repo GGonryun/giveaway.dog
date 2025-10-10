@@ -17,14 +17,7 @@ import {
 } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
-import {
-  Filter,
-  X,
-  Calendar,
-  BarChart3,
-  Users,
-  RefreshCcw
-} from 'lucide-react';
+import { Filter, Calendar, BarChart3, Users, RefreshCcw } from 'lucide-react';
 
 interface FilterBarProps {
   filters: {

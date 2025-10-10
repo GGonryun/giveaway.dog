@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  Home,
-  SettingsIcon,
-  TicketIcon,
-  UsersIcon,
-  type LucideIcon
-} from 'lucide-react';
+import { SettingsIcon, TicketIcon, UsersIcon } from 'lucide-react';
 
 import {
   SidebarGroup,

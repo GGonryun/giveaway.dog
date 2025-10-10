@@ -17,7 +17,6 @@ import { ParticipationHistoryItem } from '@/schemas/participation-history';
 import { Clock, TrendingUp } from 'lucide-react';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Badge } from '@/components/ui/badge';
 import { SweepstakesStatusBadge } from '../sweepstakes/status-badge';
 
 const DEFAULT_PAGE_SIZE = 10;

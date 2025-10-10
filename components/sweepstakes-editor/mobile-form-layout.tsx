@@ -8,8 +8,6 @@ import { useCallback, useMemo, useState } from 'react';
 import { UnifiedFormFooter } from './unified-form-footer';
 import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
 import { useFormIssues } from '@/components/sweepstakes-editor/hooks/use-form-issues';
-import { usePreviewState } from './contexts/preview-state-context';
-import { getStateDisplayLabel } from '@/schemas/giveaway/schemas';
 import { FormHeaderProps, FormLayoutProps } from './form-layout';
 import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';
 import { PreviewStateDropdown } from './preview-state-dropdown';
@@ -46,11 +44,11 @@ const MobileTabTrigger: React.FC<{
   );
 };
 
-const MobileFormHeader: React.FC<
-  {
-    mobileView: 'form' | 'preview';
-  } & FormHeaderProps
-> = ({ title, disabled, mobileView, onCancel }) => {
+const MobileFormHeader: React.FC<FormHeaderProps> = ({
+  title,
+  disabled,
+  onCancel
+}) => {
   const { step } = useSweepstakes();
 
   return (
@@ -152,7 +150,6 @@ export const MobileFormLayout: React.FC<FormLayoutProps> = ({
           title={title}
           disabled={disabled}
           onCancel={onCancel}
-          mobileView={mobileView}
         />
         <DemoBanner />
 

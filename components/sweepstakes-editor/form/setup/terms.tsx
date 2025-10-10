@@ -15,8 +15,6 @@ import { useMemo, useState, useCallback, useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Typography } from '@/components/ui/typography';
 import { widetype } from '@/lib/widetype';
-import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
 
 import { stringifyTerms } from '../terms';
 import {

@@ -5,10 +5,6 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { providerTypeSchema } from '@/schemas/user';
 import z from 'zod';
 
-const updateEmailSchema = z.object({
-  email: z.string().email()
-});
-
 export const updateEmail = procedure()
   .authorization({ required: true })
   .input(z.object({ type: providerTypeSchema }))

@@ -1,5 +1,3 @@
-import { Prisma } from '@prisma/client';
-
 import { timezone } from '@/lib/time';
 import * as dates from 'date-fns';
 import {

@@ -9,7 +9,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { InfoIcon, CheckIcon, SaveIcon, TrashIcon } from 'lucide-react';
+import { InfoIcon, CheckIcon, SaveIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { formatDistance } from 'date-fns';

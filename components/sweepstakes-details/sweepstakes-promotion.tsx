@@ -15,12 +15,8 @@ import {
   Facebook,
   Twitter,
   Instagram,
-  Share2,
   Copy,
-  ExternalLink,
   QrCode,
-  Mail,
-  Link,
   CheckCircle,
   SearchIcon
 } from 'lucide-react';

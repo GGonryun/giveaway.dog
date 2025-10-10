@@ -2,12 +2,9 @@
 
 import { Button } from '@/components/ui/button';
 import { User } from 'lucide-react';
-import { useGiveawayParticipation } from '../giveaway-participation-context';
 import Link from 'next/link';
 
 export const ProfileIncomplete = () => {
-  const { userProfile } = useGiveawayParticipation();
-
   return (
     <div className="space-y-4 my-4 mb-6">
       <div>

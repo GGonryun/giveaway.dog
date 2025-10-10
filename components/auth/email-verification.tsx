@@ -18,7 +18,6 @@ import {
   ShieldAlert,
   CheckCircle,
   MailCheck,
-  InfoIcon,
   PlusIcon,
   SaveIcon,
   XIcon,

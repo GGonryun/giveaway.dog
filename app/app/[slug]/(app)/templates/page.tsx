@@ -15,7 +15,6 @@ import {
   Search,
   Filter,
   Star,
-  Users,
   TrendingUp,
   Gift,
   Zap,

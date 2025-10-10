@@ -2,12 +2,9 @@
 
 import React from 'react';
 import { AlertCircle } from 'lucide-react';
-import { useGiveawayParticipation } from '../giveaway-participation-context';
 import Link from 'next/link';
 
 export const NotEligible: React.FC = () => {
-  const { sweepstakes } = useGiveawayParticipation();
-
   return (
     <div className="text-center my-4">
       <AlertCircle className="h-12 w-12 mx-auto mb-4 text-destructive" />
