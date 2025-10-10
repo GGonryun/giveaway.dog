@@ -1,6 +1,8 @@
 import findUser from '@/procedures/user/find-user';
 import { Footer } from '@/components/patterns/footer';
 import { NavigationBar } from '@/components/patterns/navigation-bar';
+import { AnnouncementBanner } from '@/components/marketing/announcement-banner';
+import { currentAnnouncement } from '@/lib/announcements';
 
 export default async function RootLayout({
   children
@@ -11,6 +13,7 @@ export default async function RootLayout({
 
   return (
     <div className="min-h-screen flex flex-col">
+      <AnnouncementBanner announcement={currentAnnouncement} />
       <div className="sticky top-0 z-50 bg-background border-b">
         <NavigationBar user={user.ok ? user.data : null} />
       </div>
