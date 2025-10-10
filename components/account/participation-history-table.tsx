@@ -17,6 +17,7 @@ import { ParticipationHistoryItem } from '@/schemas/participation-history';
 import { Clock, TrendingUp } from 'lucide-react';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -56,6 +57,17 @@ export const ParticipationHistoryTable: React.FC = () => {
     return 'bg-red-500';
   };
 
+  const getStatusBadge = (status: 'ACTIVE' | 'DRAFT' | 'COMPLETED') => {
+    switch (status) {
+      case 'ACTIVE':
+        return <Badge variant="default">Active</Badge>;
+      case 'COMPLETED':
+        return <Badge variant="secondary">Completed</Badge>;
+      case 'DRAFT':
+        return <Badge variant="outline">Draft</Badge>;
+    }
+  };
+
   if (procedure.isPending && !data) {
     return (
       <Card>
@@ -92,7 +104,7 @@ export const ParticipationHistoryTable: React.FC = () => {
               <TableRow>
                 <TableHead>Giveaway</TableHead>
                 <TableHead>Progress</TableHead>
-                <TableHead>Engagement</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Last Activity</TableHead>
               </TableRow>
             </TableHeader>
@@ -112,11 +124,6 @@ export const ParticipationHistoryTable: React.FC = () => {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <div className="text-sm">
-                      {item.completedTasks} / {item.totalTasks} tasks
-                    </div>
-                  </TableCell>
-                  <TableCell>
                     <div className="flex items-center space-x-2">
                       <div className="w-16 bg-muted rounded-full h-1.5">
                         <div
@@ -129,6 +136,7 @@ export const ParticipationHistoryTable: React.FC = () => {
                       </span>
                     </div>
                   </TableCell>
+                  <TableCell>{getStatusBadge(item.sweepstakesStatus)}</TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-1 text-sm">
                       <Clock className="h-3 w-3 text-muted-foreground" />

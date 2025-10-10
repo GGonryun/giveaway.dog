@@ -87,6 +87,7 @@ const getParticipationHistory = procedure()
           completedTasks,
           lastParticipatedAt: lastParticipation.toISOString(),
           banner: sweepstakes.details?.banner ?? null,
+          sweepstakesStatus: sweepstakes.status,
           _sortDate: lastParticipation
         };
       })

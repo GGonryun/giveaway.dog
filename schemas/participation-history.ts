@@ -7,7 +7,8 @@ export const participationHistoryItemSchema = z.object({
   totalTasks: z.number(),
   completedTasks: z.number(),
   lastParticipatedAt: z.string(),
-  banner: z.string().nullable()
+  banner: z.string().nullable(),
+  sweepstakesStatus: z.enum(['ACTIVE', 'DRAFT', 'COMPLETED'])
 });
 
 export const participationHistorySchema = z.object({
