@@ -1,6 +1,6 @@
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
-import { TaskType } from '@/schemas/tasks/schemas';
+import { TASK_LABEL, TaskType } from '@/schemas/tasks/schemas';
 import {
   Trash2Icon,
   CopyIcon,
@@ -86,7 +86,7 @@ export const EntryMethod: React.FC<{
                   <theme.icon />
                 </div>
                 <Typography.Paragraph size="md" weight="medium">
-                  {theme.label}
+                  {TASK_LABEL[type]}
                 </Typography.Paragraph>
               </div>
               <div className="flex items-center gap-1">

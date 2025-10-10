@@ -28,6 +28,24 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0
+    },
+    ['TWITTER_FOLLOW']: {
+      id: '',
+      type: 'TWITTER_FOLLOW',
+      title: 'Follow us on X (Twitter)',
+      username: 'TheGiveawayDog',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
+    ['TWITTER_RETWEET']: {
+      id: '',
+      type: 'TWITTER_RETWEET',
+      title: 'Retweet our tweet',
+      tweetId: '1948654500698619966',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
     }
   };
 

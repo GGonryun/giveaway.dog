@@ -9,8 +9,9 @@ export type TaskTheme = {
   symbol: string;
   arrow: string;
   icon: LucideIcon;
-  label: string;
 };
+
+const SHARED_TWITTER_STYLES = {};
 
 export const toTaskTheme = (type: TaskType): TaskTheme => {
   switch (type) {
@@ -20,8 +21,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
           'bg-red-500 text-red-100 group-hover:bg-red-500  hover:bg-red-500',
         symbol: 'bg-red-500 text-red-100',
         arrow: 'bg-red-500 text-red-100 fill-red-500',
-        icon: StarIcon,
-        label: 'Bonus Task'
+        icon: StarIcon
       };
     case 'VISIT_URL':
       return {
@@ -29,16 +29,16 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
           'bg-blue-500 text-blue-100 group-hover:bg-blue-500 hover:bg-blue-500',
         symbol: 'bg-blue-500 text-blue-100',
         arrow: 'bg-blue-500 text-blue-100 fill-blue-500',
-        icon: EarthIcon,
-        label: 'Visit URL'
+        icon: EarthIcon
       };
+    case 'TWITTER_FOLLOW':
+    case 'TWITTER_RETWEET':
     case 'TWITTER_CONNECT':
       return {
         action: 'bg-black text-white group-hover:bg-black hover:bg-black',
         symbol: 'bg-black text-white',
         arrow: 'bg-black text-white fill-black',
-        icon: SocialXIcon,
-        label: 'Connect Twitter'
+        icon: SocialXIcon
       };
     default:
       throw assertNever(type);

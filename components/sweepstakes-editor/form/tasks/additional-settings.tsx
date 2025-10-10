@@ -26,6 +26,10 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <LabelFormField />
           </>
         );
+      case 'TWITTER_FOLLOW':
+        return <TwitterUsernameFormField />;
+      case 'TWITTER_RETWEET':
+        return <TweetIdFormField />;
       default:
         throw assertNever(type);
     }
@@ -67,6 +71,46 @@ const LabelFormField: React.FC = () => {
           <FormLabel>Link Label</FormLabel>
           <FormControl>
             <Input type="url" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+const TwitterUsernameFormField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.username`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Twitter Username</FormLabel>
+          <FormControl>
+            <Input type="text" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+const TweetIdFormField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.tweetId`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Tweet ID</FormLabel>
+          <FormControl>
+            <Input type="text" {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

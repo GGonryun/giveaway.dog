@@ -76,7 +76,7 @@ const SelectTask: React.FC<{ type: TaskType; onClick: () => void }> = ({
           <theme.icon />
         </div>
         <Typography.Paragraph size="md" weight="medium">
-          {theme.label}
+          {TASK_LABEL[type]}
         </Typography.Paragraph>
       </div>
       <Badge variant="secondary" className="px-0.5 mr-1">

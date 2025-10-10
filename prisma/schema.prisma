@@ -263,6 +263,8 @@ enum TaskType {
   BONUS_TASK
   VISIT_URL
   TWITTER_CONNECT
+  TWITTER_FOLLOW
+  TWITTER_RETWEET
 }
 
 model TaskCompletion {
