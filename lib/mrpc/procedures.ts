@@ -1,7 +1,7 @@
 import z from 'zod';
 import { ApplicationError } from '../errors';
-import { auth, isValidSession } from '../auth';
-import { User } from 'next-auth';
+import { noProviderAuth } from '../auth-no-providers';
+import { Session, User } from 'next-auth';
 import { Result, Success } from './types';
 import prisma from '../prisma';
 import { PrismaClient } from '@prisma/client';
@@ -9,6 +9,7 @@ import { isNextRedirect, isPrismaError, prismaErrorBoundary } from './errors';
 import { environment } from '../environment';
 import { simulateNetworkDelay } from '../simulate';
 import { unstable_cache, revalidateTag } from 'next/cache';
+import { RecursiveRequired } from '@/types/index';
 
 interface AuthConfig {
   required: boolean;
@@ -130,7 +131,7 @@ class ProcedureBuilder<
         }
 
         // --- Authenticate ---
-        const session = await auth();
+        const session = await noProviderAuth.auth();
         let user: any = null;
 
         if (this.authConfig.required) {
@@ -269,3 +270,12 @@ export const procedure = () => ({
       undefined
     )
 });
+
+const isValidSession = (
+  session: Session | null
+): session is RecursiveRequired<Session> => {
+  if (!session || !session.user || !session.user.id) return false;
+  const now = new Date();
+  const expiration = new Date(session.expires);
+  return now < expiration;
+};
