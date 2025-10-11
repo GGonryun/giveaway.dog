@@ -45,7 +45,7 @@ export async function generateMetadata({
       url: `https://giveaway.dog/browse/${id}`,
       images: [
         {
-          url: `/api/og/giveaway/${id}`,
+          url: sweepstakes.setup.banner,
           width: 1200,
           height: 630,
           alt: sweepstakes.setup.name
@@ -56,7 +56,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: `${sweepstakes.setup.name} | ${host.name}`,
       description: `Enter to win ${prizeNames}! Ends ${endDate}.`,
-      images: [`/api/og/giveaway/${id}`]
+      images: [sweepstakes.setup.banner]
     }
   };
 }
