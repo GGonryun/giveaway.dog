@@ -31,7 +31,7 @@ export const PrizeItem: React.FC<{
         </div>
 
         <div className="flex items-center gap-2 p-1.5">
-          <Badge variant="secondary" className="text-xs">
+          <Badge className="text-xs bg-amber-100 text-amber-600 border font-bold">
             {winnersText}
           </Badge>
         </div>
