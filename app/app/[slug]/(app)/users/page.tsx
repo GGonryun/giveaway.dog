@@ -6,14 +6,16 @@ import getParticipatingUsers from '@/procedures/users/get-participating-users';
 import { SlugPageParams } from '../../layout';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Users | Giveaway.dog',
-  description: 'Manage users and participants',
-  robots: {
-    index: false,
-    follow: false
-  }
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Users | Giveaway.dog',
+    description: 'Manage users and participants',
+    robots: {
+      index: false,
+      follow: false
+    }
+  };
+}
 
 export type UsersPageSearchParams = {
   search?: string;

@@ -5,14 +5,16 @@ import React, { Suspense } from 'react';
 import { SweepstakesPromotion } from '@/components/sweepstakes-details/sweepstakes-promotion';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Promotion | Giveaway.dog',
-  description: 'Promote your sweepstakes',
-  robots: {
-    index: false,
-    follow: false
-  }
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Promotion | Giveaway.dog',
+    description: 'Promote your sweepstakes',
+    robots: {
+      index: false,
+      follow: false
+    }
+  };
+}
 
 interface SweepstakesDetailPageProps {
   params: Promise<{ id: string }>;

@@ -14,14 +14,16 @@ import { Outline } from '@/components/app/outline';
 import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Sweepstakes Dashboard | Giveaway.dog',
-  description: 'View and manage all your sweepstakes',
-  robots: {
-    index: false,
-    follow: false
-  }
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Sweepstakes Dashboard | Giveaway.dog',
+    description: 'View and manage all your sweepstakes',
+    robots: {
+      index: false,
+      follow: false
+    }
+  };
+}
 
 type SweepstakesPageParams = Promise<{ slug: string }>;
 type SweepstakesPageSearchParams = Promise<ListSweepstakesFilters>;

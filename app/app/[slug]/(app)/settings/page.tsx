@@ -5,14 +5,16 @@ import { SettingsTabs } from './components/tabs';
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Settings | Giveaway.dog',
-  description: 'Manage your account and team settings',
-  robots: {
-    index: false,
-    follow: false
-  }
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Settings | Giveaway.dog',
+    description: 'Manage your account and team settings',
+    robots: {
+      index: false,
+      follow: false
+    }
+  };
+}
 
 export default async function SettingsPage() {
   return (

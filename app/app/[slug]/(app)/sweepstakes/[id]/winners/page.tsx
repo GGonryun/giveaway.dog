@@ -7,14 +7,16 @@ import getParticipatingUsers from '@/procedures/users/get-participating-users';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Winners | Giveaway.dog',
-  description: 'View and manage winners',
-  robots: {
-    index: false,
-    follow: false
-  }
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Winners | Giveaway.dog',
+    description: 'View and manage winners',
+    robots: {
+      index: false,
+      follow: false
+    }
+  };
+}
 
 interface SweepstakesDetailPageProps {
   params: Promise<{ slug: string; id: string }>;
