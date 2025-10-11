@@ -26,7 +26,7 @@ export const Hero = async () => (
         </p>
         <div className="flex w-full flex-col justify-center gap-2 sm:flex-row">
           <Button asChild className="w-full sm:w-auto">
-            <Link href={'/login'}>Get Started - Free</Link>
+            <Link href={'/demo'}>Try The Demo - Free</Link>
           </Button>
           <Button asChild variant="outline" className="w-full sm:w-auto">
             <Link href={'/browse'}>Browse Giveaways</Link>
