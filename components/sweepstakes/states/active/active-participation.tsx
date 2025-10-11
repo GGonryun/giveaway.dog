@@ -10,6 +10,8 @@ import { TaskItem } from './task-item';
 import { TaskThemeProvider } from '@/components/tasks/theme';
 import { useSearchParams } from 'next/navigation';
 import { browser } from '@/lib/browser';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PrizeItem } from './prize-item';
 
 export const ActiveParticipation: React.FC = () => {
   const searchParams = useSearchParams();
@@ -35,6 +37,7 @@ export const ActiveParticipation: React.FC = () => {
   );
 
   const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
+  const hasPrizes = sweepstakes.prizes && sweepstakes.prizes.length > 0;
 
   return (
     <div className="space-y-2 relative">
@@ -50,35 +53,64 @@ export const ActiveParticipation: React.FC = () => {
         <UserProgressSection />
       </div>
 
-      {hasTasks ? (
-        <div className="space-y-2">
-          {sweepstakes.tasks.map((task, index) => {
-            const completed =
-              userParticipation?.completedTasks.includes(task.id) ?? false;
+      <Tabs defaultValue="tasks" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="tasks">Tasks</TabsTrigger>
+          <TabsTrigger value="prizes">Prizes</TabsTrigger>
+        </TabsList>
 
-            return (
-              <TaskThemeProvider type={task.type} key={index}>
-                <TaskItem
-                  open={open === task.id}
-                  setOpen={(status) => handleOpen(status ? task.id : null)}
-                  task={task}
-                  completed={completed}
-                />
-              </TaskThemeProvider>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="text-center py-8">
-          <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-          <h4 className="text-lg font-medium text-gray-600 mb-2">
-            No Entry Methods
-          </h4>
-          <p className="text-sm text-muted-foreground">
-            Add entry methods in the Tasks step to see them here.
-          </p>
-        </div>
-      )}
+        <TabsContent value="tasks">
+          {hasTasks ? (
+            <div className="space-y-2">
+              {sweepstakes.tasks.map((task, index) => {
+                const completed =
+                  userParticipation?.completedTasks.includes(task.id) ?? false;
+
+                return (
+                  <TaskThemeProvider type={task.type} key={index}>
+                    <TaskItem
+                      open={open === task.id}
+                      setOpen={(status) => handleOpen(status ? task.id : null)}
+                      task={task}
+                      completed={completed}
+                    />
+                  </TaskThemeProvider>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+              <h4 className="text-lg font-medium text-gray-600 mb-2">
+                No Entry Methods
+              </h4>
+              <p className="text-sm text-muted-foreground">
+                Add entry methods in the Tasks step to see them here.
+              </p>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="prizes">
+          {hasPrizes ? (
+            <div className="space-y-2">
+              {sweepstakes.prizes.map((prize, index) => (
+                <PrizeItem key={index} prize={prize} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+              <h4 className="text-lg font-medium text-gray-600 mb-2">
+                No Prizes
+              </h4>
+              <p className="text-sm text-muted-foreground">
+                Add prizes to see them here.
+              </p>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

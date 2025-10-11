@@ -21,7 +21,6 @@ export const GiveawayParticipationCard: React.PC<{
       <TimeRemainingSection device={device} />
       <BannerSection />
       <TitleSection />
-      <PrizesSection />
       <DescriptionSection />
       <Separator className="mb-0" />
       <CardContent className="py-3 m-0">{children}</CardContent>
@@ -134,29 +133,6 @@ const DescriptionSection = () => {
         className={richTextPreviewStyles}
         dangerouslySetInnerHTML={{ __html: sweepstakes.setup.description }}
       />
-    </CardContent>
-  );
-};
-
-const PrizesSection = () => {
-  const { sweepstakes } = useGiveawayParticipation();
-  const hasPrizes = sweepstakes.prizes && sweepstakes.prizes.length > 0;
-
-  if (!hasPrizes) return null;
-
-  return (
-    <CardContent>
-      <h3 className="text-lg font-semibold">Prizes</h3>
-      <ul className="space-y-0.5">
-        {sweepstakes.prizes.map((prize, index) => (
-          <li key={index} className="flex items-center justify-between">
-            <span className="text-sm sm:text-base">• {prize.name}</span>
-            <Badge variant="secondary" className="ml-2">
-              {prize.quota} {prize.quota === 1 ? 'winner' : 'winners'}
-            </Badge>
-          </li>
-        ))}
-      </ul>
     </CardContent>
   );
 };
