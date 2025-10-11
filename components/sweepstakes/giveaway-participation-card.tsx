@@ -6,12 +6,12 @@ import { Separator } from '@/components/ui/separator';
 import { Users, ClockIcon, CalendarIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGiveawayParticipation } from './giveaway-participation-context';
-import { formatDistanceToNow, isBefore, isAfter } from 'date-fns';
 import { TermsModal } from './terms-modal';
 import { DeviceType } from '@/schemas/giveaway/schemas';
 import { cn } from '@/lib/utils';
 import { date } from '@/lib/date';
 import { getSweepstakesTimingDescription } from './status-badge';
+import { richTextPreviewStyles } from '@/lib/rich-text-styles';
 
 export const GiveawayParticipationCard: React.PC<{
   device?: DeviceType;
@@ -130,10 +130,10 @@ const DescriptionSection = () => {
 
   return (
     <CardContent>
-      <h3 className="text-lg font-semibold">Description</h3>
-      <p className="text-sm sm:text-base leading-relaxed">
-        {sweepstakes.setup.description}
-      </p>
+      <div
+        className={richTextPreviewStyles}
+        dangerouslySetInnerHTML={{ __html: sweepstakes.setup.description }}
+      />
     </CardContent>
   );
 };

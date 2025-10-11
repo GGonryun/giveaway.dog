@@ -13,7 +13,6 @@ import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
 import React, { memo, useMemo } from 'react';
 import { Section } from '../section';
-import { Textarea } from '@/components/ui/textarea';
 import { TermsAndConditions } from './terms';
 import { DateTimePicker } from '@/components/ui/date-time-picker';
 import {
@@ -26,6 +25,7 @@ import {
 import { timezone } from '@/lib/time';
 
 import { FileUpload } from '@/components/ui/file-upload';
+import { MinimalTiptap } from '@/components/ui/minimal-tiptap';
 
 export const Setup = () => {
   const form = useFormContext<GiveawayFormSchema>();
@@ -68,7 +68,11 @@ export const Setup = () => {
           <FormItem>
             <FormLabel>Description</FormLabel>
             <FormControl>
-              <Textarea rows={4} placeholder="Enter a description" {...field} />
+              <MinimalTiptap
+                content={field.value}
+                onChange={field.onChange}
+                placeholder="Enter a description"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

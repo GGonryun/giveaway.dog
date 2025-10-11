@@ -58,7 +58,8 @@ export const GiveawayItem: React.FC<{
           <Typography className="text-sm text-muted-foreground" leading="none">
             {isPending
               ? `Starts ${formatDistanceToNowStrict(startDate, { addSuffix: true })}`
-              : `${formatDistanceToNowStrict(endDate)} ${isBefore(endDate, new Date()) ? 'ago' : 'left'}`}
+              : `${formatDistanceToNowStrict(endDate)} ${isBefore(endDate, new Date()) ? 'ago' : 'left'}`}{' '}
+            • by {sweepstakes.host.name}
           </Typography>
         </CardContent>
       </Card>
