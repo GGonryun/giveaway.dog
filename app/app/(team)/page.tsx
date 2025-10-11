@@ -1,6 +1,16 @@
 import { EmojiLogo } from '@/components/patterns/emoji-logo';
 import { TeamPickerForm } from '@/components/team/team-picker-form';
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Dashboard | Giveaway.dog',
+  description: 'Manage your teams and giveaways',
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 export const dynamic = 'force-dynamic';
 

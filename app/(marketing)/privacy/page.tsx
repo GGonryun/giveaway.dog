@@ -1,4 +1,11 @@
 import { Typography } from '@/components/ui/typography';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy | Giveaway.dog',
+  description:
+    'Read our privacy policy to learn how Giveaway.dog collects, uses, and protects your personal information when you use our giveaway hosting platform.'
+};
 
 export default function PrivacyPage() {
   return (

@@ -1,8 +1,18 @@
 import { EmojiLogo } from '@/components/patterns/emoji-logo';
 import { LoginForm } from './login-form';
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Login | Giveaway.dog',
+  description: 'Log in to manage your giveaways',
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 export default async function LoginPage() {
   return (

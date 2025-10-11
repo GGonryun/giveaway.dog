@@ -12,6 +12,16 @@ import { SweepstakesFilterBar } from './components/sweepstakes-filter-bar';
 import { SweepstakesTabs } from './components/sweepstakes-tabs';
 import { Outline } from '@/components/app/outline';
 import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Sweepstakes Dashboard | Giveaway.dog',
+  description: 'View and manage all your sweepstakes',
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 type SweepstakesPageParams = Promise<{ slug: string }>;
 type SweepstakesPageSearchParams = Promise<ListSweepstakesFilters>;

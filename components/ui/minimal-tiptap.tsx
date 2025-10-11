@@ -21,7 +21,7 @@ import {
   LinkIcon,
   AlignLeft,
   AlignCenter,
-  AlignRight,
+  AlignRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { richTextEditorStyles } from '@/lib/rich-text-styles';
@@ -39,34 +39,34 @@ function MinimalTiptap({
   onChange,
   placeholder = 'Start typing...',
   editable = true,
-  className,
+  className
 }: MinimalTiptapProps) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         bulletList: {
           keepMarks: true,
-          keepAttributes: false,
+          keepAttributes: false
         },
         orderedList: {
           keepMarks: true,
-          keepAttributes: false,
+          keepAttributes: false
         },
         blockquote: false,
         horizontalRule: false,
         hardBreak: {
-          keepMarks: false,
-        },
+          keepMarks: false
+        }
       }),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-primary underline hover:text-primary/80',
-        },
+          class: 'text-primary underline hover:text-primary/80'
+        }
       }),
       TextAlign.configure({
-        types: ['heading', 'paragraph'],
-      }),
+        types: ['heading', 'paragraph']
+      })
     ],
     content,
     editable,
@@ -76,9 +76,9 @@ function MinimalTiptap({
     },
     editorProps: {
       attributes: {
-        class: richTextEditorStyles,
-      },
-    },
+        class: richTextEditorStyles
+      }
+    }
   });
 
   const setLink = React.useCallback(() => {
@@ -112,7 +112,7 @@ function MinimalTiptap({
         >
           <Bold className="h-4 w-4" />
         </Toggle>
-        
+
         <Toggle
           size="sm"
           pressed={editor.isActive('italic')}
@@ -121,7 +121,7 @@ function MinimalTiptap({
         >
           <Italic className="h-4 w-4" />
         </Toggle>
-        
+
         <Toggle
           size="sm"
           pressed={editor.isActive('strike')}
@@ -130,7 +130,7 @@ function MinimalTiptap({
         >
           <Strikethrough className="h-4 w-4" />
         </Toggle>
-        
+
         <Toggle
           size="sm"
           pressed={editor.isActive('code')}
@@ -145,23 +145,29 @@ function MinimalTiptap({
         <Toggle
           size="sm"
           pressed={editor.isActive('heading', { level: 1 })}
-          onPressedChange={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          onPressedChange={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
         >
           <Heading1 className="h-4 w-4" />
         </Toggle>
-        
+
         <Toggle
           size="sm"
           pressed={editor.isActive('heading', { level: 2 })}
-          onPressedChange={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          onPressedChange={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
         >
           <Heading2 className="h-4 w-4" />
         </Toggle>
-        
+
         <Toggle
           size="sm"
           pressed={editor.isActive('heading', { level: 3 })}
-          onPressedChange={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          onPressedChange={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
         >
           <Heading3 className="h-4 w-4" />
         </Toggle>
@@ -171,15 +177,19 @@ function MinimalTiptap({
         <Toggle
           size="sm"
           pressed={editor.isActive('bulletList')}
-          onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
+          onPressedChange={() =>
+            editor.chain().focus().toggleBulletList().run()
+          }
         >
           <List className="h-4 w-4" />
         </Toggle>
-        
+
         <Toggle
           size="sm"
           pressed={editor.isActive('orderedList')}
-          onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
+          onPressedChange={() =>
+            editor.chain().focus().toggleOrderedList().run()
+          }
         >
           <ListOrdered className="h-4 w-4" />
         </Toggle>
@@ -201,7 +211,9 @@ function MinimalTiptap({
         <Toggle
           size="sm"
           pressed={editor.isActive({ textAlign: 'left' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('left').run()}
+          onPressedChange={() =>
+            editor.chain().focus().setTextAlign('left').run()
+          }
         >
           <AlignLeft className="h-4 w-4" />
         </Toggle>
@@ -209,7 +221,9 @@ function MinimalTiptap({
         <Toggle
           size="sm"
           pressed={editor.isActive({ textAlign: 'center' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('center').run()}
+          onPressedChange={() =>
+            editor.chain().focus().setTextAlign('center').run()
+          }
         >
           <AlignCenter className="h-4 w-4" />
         </Toggle>
@@ -217,16 +231,15 @@ function MinimalTiptap({
         <Toggle
           size="sm"
           pressed={editor.isActive({ textAlign: 'right' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('right').run()}
+          onPressedChange={() =>
+            editor.chain().focus().setTextAlign('right').run()
+          }
         >
           <AlignRight className="h-4 w-4" />
         </Toggle>
       </div>
-      
-      <EditorContent 
-        editor={editor} 
-        placeholder={placeholder}
-      />
+
+      <EditorContent editor={editor} placeholder={placeholder} />
     </div>
   );
 }

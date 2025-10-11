@@ -3,6 +3,16 @@
 import { SweepstakesPreview } from '@/components/sweepstakes-details/sweepstakes-preview';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import React, { Suspense } from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Preview | Giveaway.dog',
+  description: 'Preview your sweepstakes',
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 interface SweepstakesDetailPageProps {
   params: Promise<{ id: string }>;

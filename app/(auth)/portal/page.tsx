@@ -3,6 +3,16 @@ import { AuthPortal } from './auth-portal';
 import { notFound, redirect } from 'next/navigation';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import trackUser from '@/procedures/user/track-user';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Portal | Giveaway.dog',
+  description: 'Complete your sign up',
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 export const dynamic = 'force-dynamic';
 

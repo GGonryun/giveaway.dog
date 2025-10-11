@@ -4,6 +4,16 @@ import { Outline } from '@/components/app/outline';
 import { UsersTable } from './components/users-table';
 import getParticipatingUsers from '@/procedures/users/get-participating-users';
 import { SlugPageParams } from '../../layout';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Users | Giveaway.dog',
+  description: 'Manage users and participants',
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 export type UsersPageSearchParams = {
   search?: string;

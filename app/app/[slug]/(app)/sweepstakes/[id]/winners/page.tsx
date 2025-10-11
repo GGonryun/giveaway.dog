@@ -5,6 +5,16 @@ import getParticipantSweepstake from '@/procedures/browse/get-participant-sweeps
 import getSweepstakePrizes from '@/procedures/sweepstakes/get-sweepstake-prizes';
 import getParticipatingUsers from '@/procedures/users/get-participating-users';
 import React, { Suspense } from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Winners | Giveaway.dog',
+  description: 'View and manage winners',
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 interface SweepstakesDetailPageProps {
   params: Promise<{ slug: string; id: string }>;

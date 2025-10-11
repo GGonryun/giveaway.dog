@@ -1,7 +1,44 @@
 import { SweepstakesPageContent } from '@/components/sweepstakes-browse/sweepstakes-page-content';
 import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes-list';
+import { Metadata } from 'next';
 
 export const revalidate = 60; // 1 minutes in seconds, must be statically analyzable
+
+export const metadata: Metadata = {
+  title: 'Browse Active Giveaways & Contests | Giveaway.dog',
+  description:
+    'Discover and enter active giveaways, contests, and sweepstakes. Win amazing prizes from brands and creators. Updated daily with new opportunities to win!',
+  keywords: [
+    'active giveaways',
+    'browse contests',
+    'enter sweepstakes',
+    'win prizes',
+    'free giveaways',
+    'daily giveaways'
+  ],
+  openGraph: {
+    title: 'Browse Active Giveaways & Contests | Giveaway.dog',
+    description:
+      'Discover and enter active giveaways, contests, and sweepstakes. Win amazing prizes from brands and creators.',
+    type: 'website',
+    url: 'https://giveaway.dog/browse',
+    images: [
+      {
+        url: '/api/og/browse',
+        width: 1200,
+        height: 630,
+        alt: 'Browse Active Giveaways'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Browse Active Giveaways & Contests | Giveaway.dog',
+    description:
+      'Discover and enter active giveaways, contests, and sweepstakes. Win amazing prizes from brands and creators.',
+    images: ['/api/og/browse']
+  }
+};
 
 export default async function Page() {
   const sweepstakes = await getPublicSweepstakesList();

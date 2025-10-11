@@ -2,6 +2,15 @@
 
 import { auth, signOut } from '@/lib/auth';
 import { LogoutScreen } from './logout-screen';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Logging Out | Giveaway.dog',
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 export default async function Page() {
   const session = await auth();

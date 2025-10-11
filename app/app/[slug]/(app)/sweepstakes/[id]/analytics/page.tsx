@@ -4,6 +4,16 @@ import { SweepstakesAnalytics } from '@/components/sweepstakes-details/sweepstak
 import getSweepstakesEntryTimeSeries from '@/procedures/sweepstakes/get-sweepstakes-entry-time-series';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import React, { Suspense } from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Analytics | Giveaway.dog',
+  description: 'View sweepstakes analytics and insights',
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 interface SweepstakesDetailPageProps {
   params: Promise<{ id: string }>;
