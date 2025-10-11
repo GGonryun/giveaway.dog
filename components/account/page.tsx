@@ -18,6 +18,8 @@ const tabItems = [
   { id: 'danger-zone', label: 'Danger Zone' }
 ];
 
+export const dynamic = 'force-dynamic';
+
 export const UserPage: React.FC = () => {
   const [activeSection, setActiveSection] =
     useState<AccountSections>('profile');
