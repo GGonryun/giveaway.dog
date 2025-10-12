@@ -87,10 +87,22 @@ export const parseProvider = (provider: unknown) => {
   return null;
 };
 
-export const updateUserProfileSchema = z.object({
-  id: z.string(),
-  name: z.string().optional()
+export const createUserProfileSchema = z.object({
+  name: z.string()
 });
+
+export const updateUserProfileSchema = z.object({
+  name: z
+    .string()
+    .min(5, 'Username must be at least 5 characters')
+    .regex(
+      /^[a-zA-Z0-9_\- ]+$/,
+      'Username can only contain letters, numbers, spaces, hyphens, and underscores'
+    )
+    .optional()
+});
+
+export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
 
 export const ageVerificationSchema = z.object({
   userId: z.string(),
@@ -98,8 +110,6 @@ export const ageVerificationSchema = z.object({
 });
 
 export type AgeVerificationSchema = z.infer<typeof ageVerificationSchema>;
-
-export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
 
 const ACCOUNT_SELECT_QUERY = {
   provider: true,

@@ -135,7 +135,6 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
 
     // Always try to create a profile for new users, or redirect if profile exists
     runCreate({
-      id: session.user.id,
       name: name || session.user.name || ''
     });
   }, [

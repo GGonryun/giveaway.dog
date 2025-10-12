@@ -15,29 +15,11 @@ export const updateProfile = procedure()
   )
   .invalidate(async ({ output }) => [`user-${output.id}`])
   .handler(async ({ input, user, db }) => {
-    const { id, name } = input;
-    if (id !== user.id) {
-      throw new ApplicationError({
-        code: 'FORBIDDEN',
-        message: 'You can only update your own profile'
-      });
-    }
-
-    //if the user already exists do nothing.
-    const existingUser = await db.user.findUnique({
-      where: { id }
-    });
-
-    if (!existingUser) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'User does not exist'
-      });
-    }
+    const { name } = input;
 
     try {
       const updatedUser = await db.user.update({
-        where: { id },
+        where: { id: user.id },
         data: {
           ...(name && { name })
         }

@@ -3,12 +3,12 @@
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { BASIC_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
-import { updateUserProfileSchema } from '@/schemas/user';
+import { createUserProfileSchema } from '@/schemas/user';
 import z from 'zod';
 
-export const createProfile = procedure()
+const createProfile = procedure()
   .authorization({ required: true })
-  .input(updateUserProfileSchema)
+  .input(createUserProfileSchema)
   .output(
     z.object({
       id: z.string()
