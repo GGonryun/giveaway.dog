@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import trackUser from '@/procedures/user/track-user';
 import { Metadata } from 'next';
+import { UserEventType } from '@prisma/client';
 
 export const metadata: Metadata = {
   title: 'Portal | Giveaway.dog',
@@ -49,7 +50,9 @@ const PortalPage: React.FC<{
     );
   }
 
-  const result = await trackUser();
+  const result = await trackUser({
+    type: UserEventType.LOGIN
+  });
 
   if (!result.ok) {
     notFound();

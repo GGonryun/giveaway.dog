@@ -2,12 +2,13 @@
 
 import { redirect } from 'next/navigation';
 import { DEFAULT_USER_DETAILS_TAB } from '@/lib/settings';
+import { UserParams } from './params';
 
 interface UserDetailPageProps {
-  params: Promise<{ slug: string; id: string }>;
+  params: Promise<UserParams>;
 }
 
 export default async function UserDetailPage({ params }: UserDetailPageProps) {
-  const { slug, id } = await params;
-  redirect(`/app/${slug}/users/${id}/${DEFAULT_USER_DETAILS_TAB}`);
+  const { slug, userId } = await params;
+  redirect(`/app/${slug}/users/${userId}/${DEFAULT_USER_DETAILS_TAB}`);
 }

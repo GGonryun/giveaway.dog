@@ -30,4 +30,11 @@ export namespace browser {
 
     window.history.replaceState({}, '', finalUrl);
   }
+
+  export function changePath(path: string) {
+    if (typeof window === 'undefined') return;
+
+    const url = new URL(path, window.location.origin);
+    window.history.replaceState({}, '', url.toString());
+  }
 }

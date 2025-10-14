@@ -1,6 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { useTeams } from '../context/team-provider';
 import { UserDetailsTabSchema } from '@/schemas/user';
+import { browser } from '@/lib/browser';
 
 export const useUserDetailsPage = () => {
   const { activeTeam } = useTeams();
@@ -12,6 +13,8 @@ export const useUserDetailsPage = () => {
   };
 
   const setTab = (id: string, tab: UserDetailsTabSchema) => {
+    // immediately changes the URL in the browser before navigation triggers
+    browser.changePath(`${route(id)}/${tab}`);
     const baseRoute = `${route(id)}/${tab}`;
     router.push(baseRoute);
   };

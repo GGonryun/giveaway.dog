@@ -7,7 +7,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await findUser();
+  const user = await findUser({ self: true });
 
   return (
     <div className="min-h-screen flex flex-col">

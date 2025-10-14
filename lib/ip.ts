@@ -2,6 +2,7 @@ import { isIP } from 'net';
 import { ApplicationError } from './errors';
 import z from 'zod';
 import { DEVELOPMENT_GEO } from '@/schemas/fingerprint';
+import { Prisma } from '@prisma/client';
 
 export namespace ip {
   export const ipSchema = z.object({
@@ -102,5 +103,14 @@ export namespace ip {
         message: "Couldn't determine your IP address"
       });
     }
+  };
+
+  export const parseGeo = (geo: Prisma.JsonValue) => {
+    const parsed = ipSchema.safeParse(geo);
+    if (!parsed.success) {
+      console.warn('Failed to parse stored IP geo data', parsed.error);
+      return null;
+    }
+    return parsed.data;
   };
 }

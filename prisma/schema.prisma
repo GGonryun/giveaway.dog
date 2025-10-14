@@ -15,34 +15,151 @@ model User {
   emailVerified    DateTime?
   image            String?
   emoji            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  // TODO: REMOVE THE BELOW
   countryCode      String?
   userAgent        String?
   qualityScore     Int               @default(0)
+  // TODO: REMOVE THE ABOVE
   accounts         Account[]
   sessions         Session[]
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
   teams            Membership[]
   taskCompletions  TaskCompletion[]
   taskProgresses   TaskProgress[]
   events           UserEvent[]
+  ips              UserIpAddress[]
+  agents           UserAgent[]
+  quality          UserQuality[]
+  fingerprints     UserFingerprint[]
   ageVerifications AgeVerification[]
   featureFlags     FeatureFlag[]
 }
 
 enum UserEventType {
   LOGIN
+  TRACKING
+}
+
+model UserScoringRequest {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserQuality {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  score     Int      @default(0)
+  metrics   Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model UserEvent {
-  id        String        @id @default(cuid())
-  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String        @id @default(cuid())
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  type           UserEventType
+  geo            Json?
+  acceptLanguage String?
+  timeZone       String?
+  screen         String?
+  userAgent      String?
+  timestamp      DateTime      @default(now())
+}
+
+model IpAddress {
+  id            String   @id @default(cuid())
+  ip            String   @unique
+  asn           Int?
+  isp           String?
+  org           String?
+  domain        String?
+  country       String?
+  countryCode   String?
+  continent     String?
+  continentCode String?
+  region        String?
+  regionCode    String?
+  city          String?
+  postal        String?
+  callingCode   String?
+  latitude      Float?
+  longitude     Float?
+  timezone      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  users UserIpAddress[]
+}
+
+model DeviceAgent {
+  id        String   @id @default(cuid())
+  agent     String   @unique
+  device    String?
+  os        String?
+  browser   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users UserAgent[]
+}
+
+model DeviceFingerprint {
+  id          String   @id @default(cuid())
+  fingerprint String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users UserFingerprint[]
+}
+
+model UserIpAddress {
+  id        String    @id @default(cuid())
   userId    String
-  type      UserEventType
-  geo       Json?
-  ip        String
-  userAgent String
-  timestamp DateTime      @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipId      String
+  ip        IpAddress @relation(fields: [ipId], references: [id], onDelete: Cascade)
+  count     Int       @default(1)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, ipId])
+  @@index([ipId])
+  @@index([userId])
+}
+
+model UserAgent {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agentId   String
+  agent     DeviceAgent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  count     Int         @default(1)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@unique([userId, agentId])
+  @@index([agentId])
+  @@index([userId])
+}
+
+model UserFingerprint {
+  id            String            @id @default(cuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fingerprintId String
+  fingerprint   DeviceFingerprint @relation(fields: [fingerprintId], references: [id], onDelete: Cascade)
+  count         Int               @default(1)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@unique([userId, fingerprintId])
+  @@index([fingerprintId])
+  @@index([userId])
 }
 
 model Account {
@@ -94,7 +211,7 @@ model EmailSubscription {
 }
 
 model FeatureFlag {
-  key       String   @unique
+  key       String   @unique // TODO: remove this constraint.
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())

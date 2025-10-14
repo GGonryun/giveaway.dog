@@ -12,27 +12,20 @@ interface ProviderIconProps {
   className?: string;
 }
 
+export const PROVIDER_ICON: Record<
+  ProviderTypeSchema,
+  React.FC<{ className?: string }>
+> = {
+  twitter: SocialXIcon,
+  google: SocialGoogleIcon,
+  discord: SocialDiscordIcon,
+  email: Mail
+};
+
 export const ProviderIcon: React.FC<ProviderIconProps> = ({
   type,
   className = 'w-4 h-4'
 }) => {
-  let IconComponent;
-  switch (type) {
-    case 'twitter':
-      IconComponent = SocialXIcon;
-      break;
-    case 'google':
-      IconComponent = SocialGoogleIcon;
-      break;
-    case 'discord':
-      IconComponent = SocialDiscordIcon;
-      break;
-    case 'email':
-      IconComponent = Mail;
-      break;
-    default:
-      throw assertNever(type);
-  }
-
+  const IconComponent = PROVIDER_ICON[type];
   return <IconComponent className={cn(className)} />;
 };

@@ -17,7 +17,7 @@ export default async function Layout({
 }) {
   const resolvedParams = await params;
   const [user, teams, team] = await Promise.all([
-    getUser(),
+    getUser({ self: true }),
     getUserTeams(),
     getUserTeam(resolvedParams)
   ]);

@@ -49,8 +49,8 @@ export const UserDetailsTabs: React.FC<{
       value={tab}
       onValueChange={(value) => {
         if (isUserDetailsTab(value)) {
-          page.setTab(id, value as UserDetailsTabSchema);
-          setTab(value as UserDetailsTabSchema);
+          page.setTab(id, value);
+          setTab(value);
         } else {
           toast.error('Something went wrong. Contact support. (Error: 002)');
         }

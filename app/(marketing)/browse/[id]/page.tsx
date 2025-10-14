@@ -65,7 +65,7 @@ export default async function Page({ params }: PageProps) {
   const { id } = await params;
 
   const result = await getParticipantSweepstake({ sweepstakesId: id });
-  const user = await findUser();
+  const user = await findUser({ self: true });
   const participation = await getUserSweepstakesParticipation({ id });
   const verification = await getAgeVerification({ sweepstakesId: id });
 

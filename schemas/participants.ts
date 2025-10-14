@@ -56,6 +56,7 @@ export const SWEEPSTAKES_TASK_WHERE_QUERY = (input: {
 
 export const USER_PARTICIPATION_INCLUDE_QUERY = (sweepstakesId?: string) =>
   ({
+    accounts: true,
     taskCompletions: {
       where: {
         task: {
@@ -94,6 +95,7 @@ export const toUserParticipationSchema = (
 
   return {
     id: participant.id,
+    createdAt: participant.createdAt,
     name: participant.name,
     email: participant.email,
     country: participant.countryCode ?? UNKNOWN_USER_COUNTRY_CODE,

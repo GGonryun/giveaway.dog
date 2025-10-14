@@ -8,7 +8,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
+  const user = await getUser({ self: true });
   if (!user.ok) {
     console.error(`Failed to get user context`);
     redirect(`/app`);

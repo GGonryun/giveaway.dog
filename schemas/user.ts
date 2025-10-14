@@ -157,9 +157,9 @@ export type UserDetailsTabSchema = z.infer<typeof userDetailsTabSchema>;
 
 export const USER_DETAILS_TAB_OPTIONS: Record<UserDetailsTabSchema, string> = {
   overview: 'Overview',
-  entries: 'Entries',
   devices: 'Devices',
-  risk: 'Risk'
+  risk: 'Risk',
+  entries: 'Entries'
 };
 
 export const isUserDetailsTab = (tab: string): tab is UserDetailsTabSchema => {

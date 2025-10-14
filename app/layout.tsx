@@ -6,6 +6,7 @@ import { SessionProvider } from '@/components/context/auth-session-provider';
 import { Metadata } from 'next';
 
 import { Figtree } from 'next/font/google';
+import { UserMetricsCollector } from '@/components/user-metrics-collector';
 
 const figtree = Figtree({
   subsets: ['latin'],
@@ -13,6 +14,9 @@ const figtree = Figtree({
   variable: '--font-sans'
 });
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  ),
   title: 'GiveawayDog',
   description: 'Build better giveaways and contests'
 };
@@ -26,6 +30,7 @@ export default async function RootLayout({
     <html lang="en" className={`${figtree.variable}`}>
       <body>
         <SessionProvider>
+          <UserMetricsCollector />
           <main>{children}</main>
           <Toaster />
         </SessionProvider>

@@ -1,18 +1,19 @@
 import { Suspense } from 'react';
 import { UserDetailView } from '../components/user-detail-view';
+import { UserParams } from '../params';
 
 interface UserDetailRiskPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<UserParams>;
 }
 
 export default async function UserDetailRiskPage({
   params
 }: UserDetailRiskPageProps) {
-  const { id } = await params;
+  const { userId } = await params;
 
   return (
     <Suspense fallback={<div>Loading Risk...</div>}>
-      <UserDetailView userId={id} tab="risk" />
+      <div>Risk details for user {userId} will be here.</div>
     </Suspense>
   );
 }

@@ -1,0 +1,2 @@
+- [ ] Finish the user details page.
+- [ ] Implement user quality heuristics (age of account, followers, etc).

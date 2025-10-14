@@ -16,8 +16,14 @@ export const taskCompletionSchema = z.object({
 });
 export type toTaskCompletionSchema = z.infer<typeof taskCompletionSchema>;
 
+export const winnerSchema = z.object({
+  prizeId: z.string(),
+  prizeName: z.string().nullable()
+});
+
 export const sweepstakesParticipantSchema = z.object({
   id: z.string(),
+  createdAt: z.date(),
   name: z.string().nullable(),
   email: z.string().nullable(),
   country: z.string(),
