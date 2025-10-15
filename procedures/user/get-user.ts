@@ -20,8 +20,11 @@ const getUser = procedure()
   )
   .output(userSchema)
   .cache(userCache.fn)
-  .handler(async ({ user, db }) => {
-    const data = await getUserQuery(db, user.id);
+  .handler(async ({ user, db, input }) => {
+    const data = await getUserQuery(
+      db,
+      'self' in input ? user.id : input.userId
+    );
     if (!data) {
       throw new ApplicationError({
         code: 'NOT_FOUND',
