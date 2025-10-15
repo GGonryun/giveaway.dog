@@ -11,8 +11,8 @@ const getUserQualityScore = procedure()
     })
   )
   .output(userQualitySchema)
-  .handler(async ({ input }) => {
-    const userQuality = await prisma.userQuality.findFirst({
+  .handler(async ({ input, db }) => {
+    const userQuality = await db.userQuality.findFirst({
       where: {
         userId: input.userId
       },
