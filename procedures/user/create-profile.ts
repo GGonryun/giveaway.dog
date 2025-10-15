@@ -2,7 +2,6 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import { BASIC_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { createUserProfileSchema } from '@/schemas/user';
 import z from 'zod';
 
@@ -35,18 +34,6 @@ const createProfile = procedure()
         data: {
           name
         }
-      });
-
-      await db.featureFlag.upsert({
-        where: {
-          key: BASIC_DASHBOARD_FEATURE_FLAG_KEY,
-          userId: user.id
-        },
-        create: {
-          userId: user.id,
-          key: BASIC_DASHBOARD_FEATURE_FLAG_KEY
-        },
-        update: {}
       });
 
       return updatedUser;
