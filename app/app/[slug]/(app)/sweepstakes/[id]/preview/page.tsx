@@ -1,6 +1,7 @@
 'use server';
 
 import { SweepstakesPreview } from '@/components/sweepstakes-details/sweepstakes-preview';
+import { SweepstakesLoadingSkeleton } from '@/components/sweepstakes-details/sweepstakes-loading-skeleton';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
@@ -24,7 +25,7 @@ export default async function Page({ params }: SweepstakesDetailPageProps) {
   const { id } = await params;
 
   return (
-    <Suspense fallback={<div>Loading preview...</div>}>
+    <Suspense fallback={<SweepstakesLoadingSkeleton />}>
       <Wrapper id={id} />
     </Suspense>
   );

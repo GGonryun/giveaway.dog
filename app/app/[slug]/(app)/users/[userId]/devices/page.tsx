@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { UserParams } from '../params';
 import { UserAgentActivity } from '../components/devices/user-detail-devices';
+import { UserDetailDevicesSkeleton } from '../components/devices/user-detail-devices-skeleton';
 import { NoDeviceActivity } from '../components/devices/no-device-activity';
 import getUserDeviceActivity from '@/procedures/user/get-user-device-activity';
 
@@ -12,7 +13,7 @@ export default async function Page({ params }: PageProps) {
   const awaited = await params;
 
   return (
-    <Suspense fallback={<div>Loading Devices...</div>}>
+    <Suspense fallback={<UserDetailDevicesSkeleton />}>
       <Wrapper {...awaited} />
     </Suspense>
   );

@@ -3,6 +3,7 @@
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import React, { Suspense } from 'react';
 import { SweepstakesPromotion } from '@/components/sweepstakes-details/sweepstakes-promotion';
+import { SweepstakesPromotionSkeleton } from '@/components/sweepstakes-details/sweepstakes-promotion-skeleton';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,7 +25,7 @@ export default async function Page({ params }: SweepstakesDetailPageProps) {
   const { id } = await params;
 
   return (
-    <Suspense fallback={<div>Loading promotion...</div>}>
+    <Suspense fallback={<SweepstakesPromotionSkeleton />}>
       <Wrapper id={id} />
     </Suspense>
   );

@@ -1,6 +1,7 @@
 'use server';
 
 import { SweepstakesParticipants } from '@/components/sweepstakes-details/sweepstakes-participants';
+import { SweepstakesParticipantsSkeleton } from '@/components/sweepstakes-details/sweepstakes-participants-skeleton';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import getParticipatingUsers from '@/procedures/users/get-participating-users';
 
@@ -22,7 +23,7 @@ export default async function Layout({
     <div>
       {/* Modal overlays */}
       {modal}
-      <Suspense fallback={<div>Loading users...</div>}>
+      <Suspense fallback={<SweepstakesParticipantsSkeleton />}>
         <Wrapper {...props} />
       </Suspense>
     </div>

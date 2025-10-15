@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { UserParams } from '../params';
 import { UserQualityBreakdown } from '../components/risk/user-quality-breakdown';
+import { UserQualityBreakdownSkeleton } from '../components/risk/user-quality-breakdown-skeleton';
 import { NoQualityScore } from '../components/risk/no-quality-score';
 import getUserQualityScore from '@/procedures/user/get-user-quality-score';
 
@@ -12,7 +13,7 @@ export default async function Page({ params }: PageProps) {
   const awaited = await params;
 
   return (
-    <Suspense fallback={<div>Loading Risk...</div>}>
+    <Suspense fallback={<UserQualityBreakdownSkeleton />}>
       <Wrapper {...awaited} />
     </Suspense>
   );

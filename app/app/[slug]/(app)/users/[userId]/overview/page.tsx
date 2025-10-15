@@ -2,6 +2,7 @@
 
 import { Suspense } from 'react';
 import { UserDetailsOverview } from '../components/overview/user-details-overview';
+import { UserDetailsOverviewSkeleton } from '../components/overview/user-details-overview-skeleton';
 import getParticipatingUser from '@/procedures/users/get-participating-user';
 import { UserParams } from '../params';
 import getUser from '@/procedures/user/get-user';
@@ -14,7 +15,7 @@ export default async function Page({ params }: PageProps) {
   const awaited = await params;
 
   return (
-    <Suspense fallback={<div>Loading Overview...</div>}>
+    <Suspense fallback={<UserDetailsOverviewSkeleton />}>
       <Wrapper {...awaited} />
     </Suspense>
   );

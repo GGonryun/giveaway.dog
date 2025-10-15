@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { UserParams } from '../params';
 import { UserEntries } from '../components/entries/user-entries';
+import { UserEntriesSkeleton } from '../components/entries/user-entries-skeleton';
 import { NoEntries } from '../components/entries/no-entries';
 import getUserEntries from '@/procedures/user/get-user-entries';
 
@@ -14,7 +15,7 @@ export default async function UserDetailEntriesPage({
   const awaited = await params;
 
   return (
-    <Suspense fallback={<div>Loading Entries...</div>}>
+    <Suspense fallback={<UserEntriesSkeleton />}>
       <Wrapper {...awaited} />
     </Suspense>
   );

@@ -1,6 +1,7 @@
 'use server';
 
 import { SweepstakesWinners } from '@/components/sweepstakes-details/sweepstakes-winners';
+import { SweepstakesWinnersSkeleton } from '@/components/sweepstakes-details/sweepstakes-winners-skeleton';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import getSweepstakePrizes from '@/procedures/sweepstakes/get-sweepstake-prizes';
 import getParticipatingUsers from '@/procedures/users/get-participating-users';
@@ -26,7 +27,7 @@ export default async function Page({ params }: SweepstakesDetailPageProps) {
   const { slug, id } = await params;
 
   return (
-    <Suspense fallback={<div>Loading winners...</div>}>
+    <Suspense fallback={<SweepstakesWinnersSkeleton />}>
       <Wrapper slug={slug} sweepstakesId={id} />
     </Suspense>
   );

@@ -1,4 +1,5 @@
 import { SweepstakesEntries } from '@/components/sweepstakes-details/sweepstakes-entries';
+import { SweepstakesEntriesSkeleton } from '@/components/sweepstakes-details/sweepstakes-entries-skeleton';
 import getSweepstakeEntries from '@/procedures/sweepstakes/get-sweepstake-entries';
 import { Suspense } from 'react';
 
@@ -19,7 +20,7 @@ export default async function EntriesLayout({
       {/* Modal overlays */}
       {modal}
 
-      <Suspense fallback={<div>Loading entries...</div>}>
+      <Suspense fallback={<SweepstakesEntriesSkeleton />}>
         <Wrapper {...props} />
       </Suspense>
     </div>
