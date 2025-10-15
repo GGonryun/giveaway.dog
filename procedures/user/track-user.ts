@@ -46,14 +46,6 @@ const trackUser = procedure()
         : UNKNOWN_SCREEN;
 
     return await db.$transaction(async (tx) => {
-      await tx.user.update({
-        where: { id: user.id },
-        data: {
-          countryCode,
-          userAgent
-        }
-      });
-
       await tx.userEvent.create({
         data: {
           userId: user.id,

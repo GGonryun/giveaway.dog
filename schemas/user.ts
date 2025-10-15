@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import z from 'zod';
 import { featureFlagKeySchema, parseFeatureFlags } from './feature-flags';
+import { UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
 
 export const providerTypeSchema = z.union([
   z.literal('twitter'),
@@ -56,6 +57,7 @@ export const userProfileSchema = z.object({
   emailVerified: z.boolean().nullable(),
   emoji: z.string().nullable(),
   countryCode: z.string().nullable(),
+  qualityScore: z.number(),
   providers: providerSchema.array()
 });
 
@@ -125,7 +127,23 @@ export const USER_SCHEMA_SELECT_QUERY = {
   email: true,
   name: true,
   emoji: true,
-  countryCode: true,
+  ips: {
+    include: {
+      ip: true
+    },
+    take: 1,
+    orderBy: {
+      // Get the latest IP
+      updatedAt: 'desc'
+    }
+  },
+  quality: {
+    take: 1,
+    orderBy: {
+      // Get the latest quality score
+      updatedAt: 'desc'
+    }
+  },
   emailVerified: true,
   accounts: {
     select: ACCOUNT_SELECT_QUERY
@@ -140,7 +158,8 @@ export const toUserSchema = (
   email: user.email,
   name: user.name,
   emoji: user.emoji,
-  countryCode: user.countryCode,
+  countryCode: user.ips[0]?.ip.countryCode || UNKNOWN_USER_COUNTRY_CODE,
+  qualityScore: user.quality[0]?.score ?? 0,
   emailVerified: !!user.emailVerified,
   providers: parseProviders(user.accounts),
   featureFlags: parseFeatureFlags(user.featureFlags)

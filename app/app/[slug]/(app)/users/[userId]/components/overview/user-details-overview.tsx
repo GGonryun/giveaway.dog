@@ -9,14 +9,15 @@ import { UserProviders } from './user-providers';
 export const UserDetailsOverview: React.FC<{
   participant: SweepstakesParticipantSchema;
   user: UserSchema;
-}> = ({ participant, user }) => {
+  slug: string;
+}> = ({ participant, user, slug }) => {
   return (
     <div className="space-y-2">
       <ProfileInformationCard
         participant={participant}
         providers={<UserProviders user={user} />}
       />
-      <KeyMetricsCard participant={participant} />
+      <KeyMetricsCard slug={slug} participant={participant} />
     </div>
   );
 };

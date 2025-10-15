@@ -17,11 +17,6 @@ model User {
   emoji            String?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-  // TODO: REMOVE THE BELOW
-  countryCode      String?
-  userAgent        String?
-  qualityScore     Int               @default(0)
-  // TODO: REMOVE THE ABOVE
   accounts         Account[]
   sessions         Session[]
   teams            Membership[]

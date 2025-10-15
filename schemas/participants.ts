@@ -58,6 +58,33 @@ export const SWEEPSTAKES_TASK_WHERE_QUERY = (input: {
 
 export const USER_PARTICIPATION_INCLUDE_QUERY = (sweepstakesId?: string) =>
   ({
+    ips: {
+      include: {
+        ip: true
+      },
+      take: 1,
+      orderBy: {
+        // Get the latest IP
+        updatedAt: 'desc'
+      }
+    },
+    agents: {
+      include: {
+        agent: true
+      },
+      take: 1,
+      orderBy: {
+        // Get the latest IP
+        updatedAt: 'desc'
+      }
+    },
+    quality: {
+      take: 1,
+      orderBy: {
+        // Get the latest quality score
+        updatedAt: 'desc'
+      }
+    },
     accounts: true,
     taskCompletions: {
       where: {
@@ -92,20 +119,20 @@ export const toUserParticipationSchema = (
   const engagement = Math.round(
     (userTaskCompletions.length / totalTasks) * 100
   );
-  const qualityScore = 32; // TODO: compute quality score
-  const status: 'active' | 'blocked' = 'active'; // TODO: computer user status
+  const qualityScore = participant.quality[0]?.score ?? 0;
+  const status: 'active' | 'blocked' = 'active'; // TODO: allow user status modification
 
   return {
     id: participant.id,
     createdAt: participant.createdAt,
     name: participant.name,
     email: participant.email,
-    country: participant.countryCode ?? UNKNOWN_USER_COUNTRY_CODE,
-    userAgent: participant.userAgent ?? UNKNOWN_USER_AGENT,
+    country: participant.ips[0]?.ip.countryCode ?? UNKNOWN_USER_COUNTRY_CODE,
+    userAgent: participant.agents[0]?.agent.id ?? UNKNOWN_USER_AGENT,
     entries: userTaskCompletions.map((tc) => toTaskCompletion(tc)),
     lastEntryAt: entries[0].completedAt.toISOString(),
-    engagement,
     emailVerified: Boolean(participant.emailVerified),
+    engagement,
     qualityScore,
     status
   };

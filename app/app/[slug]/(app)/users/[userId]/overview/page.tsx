@@ -34,6 +34,10 @@ const Wrapper: React.FC<UserParams> = async ({ userId, slug }) => {
   }
 
   return (
-    <UserDetailsOverview participant={participant.data} user={user.data} />
+    <UserDetailsOverview
+      slug={slug}
+      participant={participant.data}
+      user={user.data}
+    />
   );
 };

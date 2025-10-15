@@ -5,7 +5,8 @@ import {
   Shield,
   CircleAlert,
   TriangleAlert,
-  OctagonXIcon
+  OctagonXIcon,
+  ShieldCheck
 } from 'lucide-react';
 import z from 'zod';
 
@@ -38,6 +39,18 @@ export const toQualityType = (score: number): QualityType => {
     message: 'Failed to determine quality type',
     cause: new Error(`Score ${score} did not match any quality threshold`)
   });
+};
+
+export const toQualityProgressColor = (score: number): string => {
+  const quality = toQualityType(score);
+  const theme = QUALITY_THEME[quality];
+  return theme.base;
+};
+
+export const toQualityTextColor = (score: number): string => {
+  const quality = toQualityType(score);
+  const theme = QUALITY_THEME[quality];
+  return theme.text;
 };
 
 export type QualityColor = {
@@ -120,7 +133,7 @@ export const QUALITY_DESCRIPTION: Record<QualityType, string> = {
 };
 
 export const QUALITY_ICON: Record<QualityType, LucideIcon> = {
-  excellent: Shield,
+  excellent: ShieldCheck,
   good: Shield,
   fair: CircleAlert,
   weak: TriangleAlert,

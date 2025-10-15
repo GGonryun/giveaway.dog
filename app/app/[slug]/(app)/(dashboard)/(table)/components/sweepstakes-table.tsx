@@ -27,11 +27,10 @@ import {
   MoreHorizontal,
   Calendar,
   Users,
-  Target,
-  Clock,
   ArrowUpDown,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  FileCheck
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -159,30 +158,28 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
       <Card className="overflow-hidden p-0 gap-0">
         <Table>
           <TableHeader>
-            <TableRow>
-              <SortableHeader
-                field="name"
-                className="w-[300px]"
-                onSort={handleSort}
-                sortField={filters.sortField}
-                sortDirection={filters.sortDirection}
-              >
-                Sweepstakes
-              </SortableHeader>
-              <TableHead className="text-right w-24">Entries</TableHead>
-              <TableHead className="text-right w-24">Conversion</TableHead>
-              <TableHead className="text-right py-2 w-28">Status</TableHead>
-              <TableHead className="text-right py-2 w-24">Actions</TableHead>
-            </TableRow>
+            <SortableHeader
+              field="name"
+              className="w-[300px]"
+              onSort={handleSort}
+              sortField={filters.sortField}
+              sortDirection={filters.sortDirection}
+            >
+              Sweepstakes
+            </SortableHeader>
+            <TableHead className="text-right w-24">Entries</TableHead>
+            <TableHead className="text-right w-24">Users</TableHead>
+            <TableHead className="text-right w-28">Status</TableHead>
+            <TableHead className="text-right w-8">Actions</TableHead>
           </TableHeader>
           <TableBody>
             {sweepstakes.map((item) => (
               <TableRow
                 key={item.id}
-                className="hover:bg-muted/50 h-12 group cursor-pointer"
+                className="group hover:bg-muted/50 h-12  cursor-pointer"
                 onClick={handleRowClick(item)}
               >
-                <TableCell className="py-2 w-[300px]">
+                <TableCell className="py-2 min-w-[256px]">
                   <div>
                     <div className="flex items-center space-x-2">
                       {getStatusIcon(item.status)}
@@ -192,73 +189,58 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="text-right py-2 w-24">
-                  <div>
-                    <div className="font-medium flex items-center justify-end space-x-1">
-                      <Users className="h-3 w-3" />
-                      <span>{item.entries.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right py-2 w-24">
-                  <div className="flex items-center justify-end space-x-1">
-                    <Target className="h-3 w-3" />
-                    <span
-                      className={`font-medium ${
-                        item.conversionRate > 8
-                          ? 'text-green-600'
-                          : item.conversionRate > 5
-                            ? 'text-yellow-600'
-                            : 'text-red-600'
-                      }`}
-                    >
-                      {item.conversionRate.toFixed(1)}%
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell className="py-2 text-right w-28">
+                <TableCell className="text-right w-24">
                   <div className="flex items-center justify-end space-x-1 text-sm">
-                    <Clock className="h-3 w-3 text-muted-foreground" />
+                    <FileCheck className="h-3 w-3" />
+                    <span>{item.entries}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right w-24">
+                  <div className="flex items-center justify-end space-x-1 text-sm">
+                    <Users className="h-3 w-3" />
+                    <span>{item.participants}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right w-28">
+                  <div className="flex items-center justify-end text-sm">
                     <span>{item.timeLeft}</span>
                   </div>
                 </TableCell>
-                <TableCell className="text-right py-2 w-24">
-                  <div className="flex items-center justify-end space-x-1">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        {item.status !== SweepstakesStatus.DRAFT && (
-                          <DropdownMenuItem asChild>
-                            <Link href={detailsPage.route(item.id)}>
-                              <Eye className="h-4 w-4 mr-2" />
-                              View Details
-                            </Link>
-                          </DropdownMenuItem>
-                        )}
+                <TableCell className="text-right w-8">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {item.status !== SweepstakesStatus.DRAFT && (
                         <DropdownMenuItem asChild>
-                          <Link href={editPage.route(item.id)}>
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
+                          <Link href={detailsPage.route(item.id)}>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="text-red-600"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            return setDeleteModal(item);
-                          }}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                      )}
+                      <DropdownMenuItem asChild>
+                        <Link href={editPage.route(item.id)}>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="text-red-600"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          return setDeleteModal(item);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}

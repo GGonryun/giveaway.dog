@@ -6,9 +6,7 @@ export const sweepstakesDataSchema = z.object({
   name: z.string(),
   status: z.nativeEnum(SweepstakesStatus),
   entries: z.number(),
-  uniqueEntrants: z.number(),
-  conversionRate: z.number(),
-  botRate: z.number(),
+  participants: z.number(),
   timeLeft: z.string(),
   createdAt: z.string()
 });

@@ -8,7 +8,6 @@ import {
   Activity,
   Eye,
   ChevronRight,
-  BarChart3,
   ExternalLinkIcon
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -25,13 +24,16 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import { StatusExplanationDialog } from '../users/status-explanation-dialog';
 import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
-import { devices, userAgent } from '@/lib/devices';
+import { userAgent } from '@/lib/devices';
 import {
   USER_AGENT_DEVICE_ICON,
   USER_AGENT_DEVICE_LABEL
 } from '@/schemas/user-agent';
 import { Separator } from '../ui/separator';
 import { datetime } from '@/lib/date';
+import { cn } from '@/lib/utils';
+import { toQualityTextColor, toQualityProgressColor } from '@/schemas/quality';
+import { Progress } from '../ui/progress';
 
 export const ParticipatingUserSheetContent: React.FC<{
   user: SweepstakesParticipantSchema;
@@ -81,7 +83,6 @@ export const ParticipatingUserSheetContent: React.FC<{
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto space-y-4">
-        {/* Key Metrics */}
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center p-3 bg-muted/50 rounded-lg">
             <div className="text-xl font-bold">{user.entries.length}</div>
@@ -97,12 +98,62 @@ export const ParticipatingUserSheetContent: React.FC<{
 
         <Separator />
 
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <h4 className="text-base font-medium">Quality Score</h4>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="mr-1 w-32"
+              onClick={() => {
+                router.push(`/app/${activeTeam.slug}/users/${user.id}/risk`);
+              }}
+            >
+              <Eye />
+              See Report
+            </Button>
+          </div>
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-1">
+              <div
+                className={cn(
+                  'text-3xl font-bold',
+                  toQualityTextColor(user.qualityScore)
+                )}
+              >
+                {user.qualityScore}
+              </div>
+              <div className="text-muted-foreground">/100</div>
+            </div>
+            <Progress
+              value={user.qualityScore}
+              indicatorClassName={toQualityProgressColor(user.qualityScore)}
+              className="h-2"
+            />
+          </div>
+        </div>
+
         {/* User Details Header and Basic Info */}
-        <div className="space-y-3">
-          <h4 className="text-base font-medium">User Details</h4>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <h4 className="text-base font-medium">User Details</h4>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="mr-1 w-32"
+              onClick={() => {
+                router.push(
+                  `/app/${activeTeam.slug}/users/${user.id}/overview`
+                );
+              }}
+            >
+              <Eye />
+              See Profile
+            </Button>
+          </div>
 
           {/* Basic Info */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center space-x-2 text-sm">
               <MapPin className="h-4 w-4 text-muted-foreground" />
               <span>{user.country}</span>
@@ -120,21 +171,22 @@ export const ParticipatingUserSheetContent: React.FC<{
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="text-base font-medium">Device & Browser</h4>
+            <h4 className="text-base font-medium">Recent Devices</h4>
             <Button
               variant="ghost"
               size="sm"
+              className="mr-1 w-32"
               onClick={() => {
                 router.push(`/app/${activeTeam.slug}/users/${user.id}/devices`);
               }}
             >
               <Eye />
-              View Details
+              See Devices
             </Button>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-start space-x-2 text-sm">
               {(() => {
                 const deviceInfo = userAgent.parse(user.userAgent);
@@ -158,69 +210,34 @@ export const ParticipatingUserSheetContent: React.FC<{
           </div>
         </div>
 
-        {/* Quality Score */}
-        <div className="space-y-3">
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="text-base font-medium">Quality Score</h4>
+            <h4 className="text-base font-medium">Recent Entries</h4>
             <Button
               variant="ghost"
               size="sm"
+              className="mr-1 w-32"
               onClick={() => {
-                router.push(`/app/${activeTeam.slug}/users/${user.id}/risk`);
+                router.push(
+                  `/app/${activeTeam.slug}/users/${user.id}/overview`
+                );
               }}
             >
-              <BarChart3 />
-              View Breakdown
+              <Eye />
+              See Entries
             </Button>
           </div>
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2">
-              <div
-                className={`text-2xl font-bold ${
-                  user.qualityScore >= 80
-                    ? 'text-green-600'
-                    : user.qualityScore >= 60
-                      ? 'text-yellow-600'
-                      : user.qualityScore >= 40
-                        ? 'text-orange-600'
-                        : 'text-red-600'
-                }`}
-              >
-                {user.qualityScore}
-              </div>
-              <div className="text-muted-foreground">/100</div>
-            </div>
-            <div className="flex-1 bg-muted rounded-full h-2">
-              <div
-                className={`h-2 rounded-full transition-all ${
-                  user.qualityScore >= 80
-                    ? 'bg-green-500'
-                    : user.qualityScore >= 60
-                      ? 'bg-yellow-500'
-                      : user.qualityScore >= 40
-                        ? 'bg-orange-500'
-                        : 'bg-red-500'
-                }`}
-                style={{ width: `${user.qualityScore}%` }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Entries */}
-        <div className="space-y-3 pb-4">
-          <h4 className="text-base font-medium">Recent Entries</h4>
           <div className="space-y-2">
             {user.entries.slice(0, 8).map((entry) => (
               <div
                 key={entry.taskId}
-                className="p-3 bg-muted/30 rounded group hover:bg-muted/50 transition-colors"
+                className="rounded-lg border bg-muted hover:bg-accent/50 transition-colors overflow-hidden group"
               >
                 <Link
                   href={`/app/${activeTeam.slug}/sweepstakes/${entry.sweepstakeId}/entries/task/${entry.taskId}?active=${entry.completionId}`}
                   target="_blank"
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between p-3">
                     <div className="flex-1">
                       <div className="text-sm font-medium group-hover:underline">
                         {entry.taskName}
@@ -246,7 +263,7 @@ export const ParticipatingUserSheetContent: React.FC<{
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="group-hover:opacity-100 opacity-0 transition-opacity cursor-pointer"
+                        className="h-6 w-6 p-0 m-0 hover:bg-transparent group-hover:opacity-100 opacity-0 transition-opacity cursor-pointer"
                       >
                         <ExternalLinkIcon />
                       </Button>
@@ -256,7 +273,7 @@ export const ParticipatingUserSheetContent: React.FC<{
               </div>
             ))}
             {user.entries.length === 0 && (
-              <div className="p-3 bg-muted/30 rounded text-center text-muted-foreground">
+              <div className="rounded-lg border bg-card p-4 text-center text-muted-foreground">
                 No entries yet
               </div>
             )}

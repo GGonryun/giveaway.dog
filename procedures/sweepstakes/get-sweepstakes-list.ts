@@ -64,25 +64,27 @@ const getSweepstakesList = procedure()
       }
     };
 
-    const [sweepstakes, totalCount] = await Promise.all([
-      db.sweepstakes.findMany({
-        where: whereClause,
-        take: DEFAULT_PAGE_SIZE,
-        skip: (page - 1) * DEFAULT_PAGE_SIZE,
-        include: {
-          details: true,
-          timing: true
-        },
-        orderBy: input.sortField
-          ? {
-              [input.sortField]: input.sortDirection
-            }
-          : undefined
-      }),
-      db.sweepstakes.count({
-        where: whereClause
-      })
-    ]);
+    const sweepstakes = await db.sweepstakes.findMany({
+      where: whereClause,
+      take: DEFAULT_PAGE_SIZE,
+      skip: (page - 1) * DEFAULT_PAGE_SIZE,
+      include: {
+        details: true,
+        timing: true,
+        tasks: {
+          include: { completions: true }
+        }
+      },
+      orderBy: input.sortField
+        ? {
+            [input.sortField]: input.sortDirection
+          }
+        : undefined
+    });
+
+    const totalCount = await db.sweepstakes.count({
+      where: whereClause
+    });
 
     const totalPages = Math.ceil(totalCount / DEFAULT_PAGE_SIZE);
 
@@ -93,14 +95,21 @@ const getSweepstakesList = procedure()
           endDate: s.timing?.endDate,
           startDate: s.timing?.startDate
         });
+        const entries = s.tasks.reduce(
+          (acc, task) => acc + task.completions.length,
+          0
+        );
+        const participants = new Set(
+          s.tasks.flatMap((task) =>
+            task.completions.map((completion) => completion.userId)
+          )
+        ).size;
         return {
           id: s.id,
           name: s.details?.name ?? DEFAULT_SWEEPSTAKES_NAME,
           status: s.status,
-          entries: 0,
-          uniqueEntrants: 0,
-          conversionRate: 0,
-          botRate: 0,
+          entries,
+          participants,
           timeLeft,
           createdAt: s.createdAt.toISOString()
         };

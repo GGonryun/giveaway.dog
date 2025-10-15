@@ -18,7 +18,8 @@ import {
   Clock,
   XCircle,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  FileCheck
 } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
 import { UserEntriesSchema } from '@/schemas/tasks/schemas';
@@ -29,7 +30,6 @@ import {
   TaskStatusIcon
 } from './task-utils';
 import { formatDistanceToNowStrict } from 'date-fns';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
 import Link from 'next/link';
 
 export const TaskCompletionDetailSheetContent: React.FC<{
@@ -174,7 +174,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
             This Completion
           </h4>
 
-          <div className="p-4 bg-muted/30 rounded-lg space-y-3">
+          <div className="p-4 border bg-muted rounded-lg space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <TaskStatusIcon status={selectedTaskCompletion.status} />
@@ -188,33 +188,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="text-xs">
-                    {selectedTaskCompletion.user.name
-                      ?.split(' ')
-                      .map((n) => n[0])
-                      .join('') ?? UNKNOWN_USER_NAME}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-medium text-sm">
-                    {selectedTaskCompletion.user.name}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {selectedTaskCompletion.user.email}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                <Globe className="h-3 w-3" />
-                <span>{selectedTaskCompletion.user.countryCode}</span>
-                <span className="mx-2">•</span>
-                <span>
-                  Quality Score: TODO {/* Placeholder for future feature */}
-                </span>
-              </div>
+              <UserCompletion entry={selectedTaskCompletion} />
             </div>
 
             {selectedTaskCompletion.proof ? (
@@ -227,7 +201,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
                     variant="ghost"
                     size="sm"
                     className="h-6 px-2 text-xs"
-                    onClick={() => alert('TODO: View Proof')}
+                    onClick={() => alert('This feature is coming soon!')}
                   >
                     <ExternalLink className="h-3 w-3 mr-1" />
                     View
@@ -243,7 +217,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
           <div className="flex items-center justify-between border-b pb-2">
             <h4 className="text-base font-medium">Recent Completions</h4>
             <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-              <Users className="h-3 w-3" />
+              <FileCheck className="h-3 w-3" />
               <span>{recentCompletions.length} shown</span>
             </div>
           </div>
@@ -252,30 +226,13 @@ export const TaskCompletionDetailSheetContent: React.FC<{
             {recentCompletions.map((completion) => (
               <div
                 key={completion.id}
-                className="p-3 bg-muted/30 rounded hover:bg-muted/50 transition-colors cursor-pointer"
+                className="p-3 bg-muted rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
               >
                 <Link
                   href={`/app/${activeTeam.slug}/users/${completion.user.id}`}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Avatar className="h-6 w-6">
-                        <AvatarFallback className="text-xs">
-                          {completion.user.name
-                            ?.split(' ')
-                            .map((n) => n[0])
-                            .join('') ?? UNKNOWN_USER_NAME}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium text-sm hover:text-primary transition-colors">
-                          {completion.user.name}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {completion.user.countryCode}
-                        </div>
-                      </div>
-                    </div>
+                    <UserCompletion entry={completion} />
                     <div className="flex items-center space-x-2">
                       <TaskStatusIcon status={completion.status} />
                       <span className="text-xs text-muted-foreground">
@@ -311,6 +268,28 @@ export const TaskCompletionDetailSheetContent: React.FC<{
         </Button>
       </div>
     </>
+  );
+};
+
+const UserCompletion: React.FC<{ entry: UserEntriesSchema }> = ({ entry }) => {
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center space-x-2">
+        <div>
+          <div className="font-medium text-sm">{entry.user.name}</div>
+          <div className="text-xs text-muted-foreground">
+            {entry.user.email}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+        <Globe className="h-3 w-3" />
+        <span>{entry.user.countryCode}</span>
+        <span className="mx-2">•</span>
+        <span>Quality Score: {entry.user.qualityScore}</span>
+      </div>
+    </div>
   );
 };
 

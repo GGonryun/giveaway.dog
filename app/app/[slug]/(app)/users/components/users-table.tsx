@@ -45,6 +45,9 @@ import { useTeams } from '@/components/context/team-provider';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { UserDetailSheet } from '@/components/sweepstakes-details/user-detail-sheet';
 import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
+import { toQualityProgressColor } from '@/schemas/quality';
 
 interface UsersTableProps {
   users: SweepstakesParticipantSchema[];
@@ -348,20 +351,13 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">
-                            <div className="w-16 bg-muted rounded-full h-1.5">
-                              <div
-                                className={`h-1.5 rounded-full transition-all ${
-                                  user.qualityScore >= 80
-                                    ? 'bg-green-500'
-                                    : user.qualityScore >= 60
-                                      ? 'bg-yellow-500'
-                                      : user.qualityScore >= 40
-                                        ? 'bg-orange-500'
-                                        : 'bg-red-500'
-                                }`}
-                                style={{ width: `${user.qualityScore}%` }}
-                              />
-                            </div>
+                            <Progress
+                              value={user.qualityScore}
+                              className={`h-1.5 rounded-full transition-all`}
+                              indicatorClassName={cn(
+                                toQualityProgressColor(user.qualityScore)
+                              )}
+                            />
                             <span className="text-xs font-medium min-w-[2rem]">
                               {user.qualityScore}
                             </span>
@@ -394,7 +390,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                         <TableCell onClick={(e) => e.stopPropagation()}>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
+                              <Button variant="ghost" size="icon">
                                 <MoreVertical className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
@@ -429,7 +425,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                               <DropdownMenuItem
                                 className="text-red-600"
                                 onClick={() => {
-                                  alert('Block user action');
+                                  alert('This feature is coming soon!');
                                 }}
                               >
                                 <UserX className="h-4 w-4 mr-2" />

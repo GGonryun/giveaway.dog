@@ -68,8 +68,10 @@ const rollWinners = procedure()
         where: {
           task: taskQuery,
           user: {
-            qualityScore: {
-              gte: minQualityScore
+            quality: {
+              some: {
+                score: { gte: minQualityScore }
+              }
             },
             taskCompletions: {
               some: {
@@ -79,7 +81,16 @@ const rollWinners = procedure()
           }
         },
         include: {
-          user: true
+          user: {
+            include: {
+              quality: {
+                take: 1,
+                orderBy: {
+                  createdAt: 'desc'
+                }
+              }
+            }
+          }
         }
       });
 
