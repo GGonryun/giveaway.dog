@@ -206,13 +206,14 @@ model EmailSubscription {
 }
 
 model FeatureFlag {
-  key       String   @unique // TODO: remove this constraint.
+  id        String   @id @default(cuid())
+  key       String
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@id([key, userId])
+  @@unique([key, userId])
 }
 
 // WARNING: sweepstakes objects are too complex to update directly, instead we delete
