@@ -262,11 +262,6 @@ const computeUserQualityScore = async (tx: Tx, userId: string) => {
     select: SELECT_USER_IP_ADDRESS_QUERY
   });
 
-  const agents = await tx.userAgent.findMany({
-    where: { userId },
-    orderBy: { updatedAt: 'desc' }
-  });
-
   const fingerprints = await tx.userFingerprint.findMany({
     where: { userId },
     orderBy: { updatedAt: 'desc' },

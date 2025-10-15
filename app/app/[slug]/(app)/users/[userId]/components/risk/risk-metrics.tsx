@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import {
   USER_RISK_METRICS,
   USER_METRIC_LABELS,
@@ -17,19 +16,8 @@ import {
   UserScoreMetricKey,
   USER_METRIC_MAX
 } from '@/schemas/user-scoring';
-import { AlertTriangle, CheckCircle, XCircle, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger
-} from '@/components/ui/collapsible';
-import {
-  QUALITY_BADGE_RISK,
-  QUALITY_THEME,
-  toQualityType
-} from '@/schemas/quality';
-import { cn } from '@/lib/utils';
+import { QUALITY_BADGE_RISK, toQualityType } from '@/schemas/quality';
 import { QualityBadge } from './quality-badge';
 import { MetricIcon, MetricLayout } from './metric-layout';
 

@@ -7,12 +7,9 @@ import {
   Calendar,
   Activity,
   Mail,
-  CheckCheckIcon,
-  CircleCheckBigIcon,
   CircleXIcon,
   CircleCheckIcon
 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { datetime } from '@/lib/date';
 import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 

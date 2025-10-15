@@ -4,7 +4,6 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Users, ClockIcon, CalendarIcon } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { TermsModal } from './terms-modal';
 import { DeviceType } from '@/schemas/giveaway/schemas';

@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils';
 import { SocialXIcon } from './x-icon';
 import { SocialGoogleIcon } from './google-icon';
 import { SocialDiscordIcon } from './discord-icon';
-import { assertNever } from '@/lib/errors';
 
 interface ProviderIconProps {
   type: ProviderTypeSchema;

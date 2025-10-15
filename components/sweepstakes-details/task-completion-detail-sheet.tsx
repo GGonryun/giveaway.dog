@@ -10,10 +10,8 @@ import {
   SheetTitle
 } from '../ui/sheet';
 import { Button } from '../ui/button';
-import { Avatar, AvatarFallback } from '../ui/avatar';
 import {
   Globe,
-  Users,
   CheckCircle,
   Clock,
   XCircle,
