@@ -1,19 +1,28 @@
 import { Suspense } from 'react';
-import { UserDetailView } from '../components/user-detail-view';
 import { UserParams } from '../params';
+import { UserQualityBreakdown } from '../components/risk/user-quality-breakdown';
+import getUserQualityScore from '@/procedures/user/get-user-quality-score';
 
-interface UserDetailRiskPageProps {
+interface PageProps {
   params: Promise<UserParams>;
 }
 
-export default async function UserDetailRiskPage({
-  params
-}: UserDetailRiskPageProps) {
-  const { userId } = await params;
+export default async function Page({ params }: PageProps) {
+  const awaited = await params;
 
   return (
     <Suspense fallback={<div>Loading Risk...</div>}>
-      <div>Risk details for user {userId} will be here.</div>
+      <Wrapper {...awaited} />
     </Suspense>
   );
 }
+
+const Wrapper: React.FC<UserParams> = async ({ userId }) => {
+  const quality = await getUserQualityScore({ userId });
+
+  if (!quality.ok) {
+    return <div>Error loading quality score: {quality.data.message}</div>;
+  }
+
+  return <UserQualityBreakdown quality={quality.data} />;
+};

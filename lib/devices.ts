@@ -2,21 +2,24 @@ import { UserAgentSchema, DeviceTypeSchema } from '@/schemas/user-agent';
 import { UserEvent } from '@prisma/client';
 import {
   UNKNOWN_ACCEPTED_LANGUAGE as UNKNOWN_ACCEPT_LANGUAGE,
+  UNKNOWN_BROWSER,
   UNKNOWN_IP,
+  UNKNOWN_OS,
   UNKNOWN_SCREEN,
-  UNKNOWN_TIMEZONE
+  UNKNOWN_TIMEZONE,
+  UNKNOWN_USER_AGENT
 } from './settings';
 import { ip } from './ip';
 
 export namespace userAgent {
   export const parse = (agent: string | undefined | null): UserAgentSchema => {
     let device: DeviceTypeSchema = 'desktop';
-    let os = 'Unknown OS';
-    let browser = 'Unknown Browser';
+    let os = UNKNOWN_OS;
+    let browser = UNKNOWN_BROWSER;
 
     // Handle undefined or null userAgent
     if (!agent) {
-      return { agent: '', device: device, os, browser };
+      return { agent: UNKNOWN_USER_AGENT, device: device, os, browser };
     }
 
     // Detect device type and OS

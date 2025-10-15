@@ -11,14 +11,12 @@ export const UserDetailsOverview: React.FC<{
   user: UserSchema;
 }> = ({ participant, user }) => {
   return (
-    <>
-      <div className="space-y-2">
-        <ProfileInformationCard
-          participant={participant}
-          providers={<UserProviders user={user} />}
-        />
-        <KeyMetricsCard participant={participant} />
-      </div>
-    </>
+    <div className="space-y-2">
+      <ProfileInformationCard
+        participant={participant}
+        providers={<UserProviders user={user} />}
+      />
+      <KeyMetricsCard participant={participant} />
+    </div>
   );
 };

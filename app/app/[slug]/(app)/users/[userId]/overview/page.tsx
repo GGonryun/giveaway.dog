@@ -6,11 +6,11 @@ import getParticipatingUser from '@/procedures/users/get-participating-user';
 import { UserParams } from '../params';
 import getUser from '@/procedures/user/get-user';
 
-interface UserDetailOverviewPageProps {
+interface PageProps {
   params: Promise<UserParams>;
 }
 
-export default async function Page({ params }: UserDetailOverviewPageProps) {
+export default async function Page({ params }: PageProps) {
   const awaited = await params;
 
   return (

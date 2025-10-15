@@ -4,7 +4,7 @@ import getUserTeams from '@/procedures/teams/get-user-teams';
 import { TeamsProvider } from '@/components/context/team-provider';
 import { UserProvider } from '@/components/context/user-provider';
 import { redirect } from 'next/navigation';
-import { ADMIN_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
+import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 
 export type SlugPageParams = { slug: string };
 
@@ -28,7 +28,7 @@ export default async function Layout({
     redirect(`/app`);
   }
 
-  if (!user.data.featureFlags?.includes(ADMIN_DASHBOARD_FEATURE_FLAG_KEY)) {
+  if (!user.data.featureFlags?.includes(HOST_DASHBOARD_FEATURE_FLAG_KEY)) {
     redirect('/');
   }
 

@@ -1,3 +1,6 @@
+import { ApplicationError } from '@/lib/errors';
+import { UNKNOWN_BROWSER, UNKNOWN_OS } from '@/lib/settings';
+import { Prisma } from '@prisma/client';
 import { Eye, LucideIcon, Monitor, Smartphone, Tablet } from 'lucide-react';
 import { z } from 'zod';
 
@@ -34,9 +37,35 @@ export const USER_AGENT_DEVICE_ICON: Record<DeviceTypeSchema, LucideIcon> = {
 };
 
 export const userDeviceActivitySchema = userAgentSchema.extend({
-  id: z.string(),
-  sessions: z.number(),
+  count: z.number(),
   lastUsed: z.date()
 });
 
 export type UserDeviceActivitySchema = z.infer<typeof userDeviceActivitySchema>;
+
+export const INCLUDE_USER_DEVICE_AGENT_QUERY = {
+  agent: true
+} satisfies Prisma.UserAgentInclude;
+
+export const toUserDeviceActivity = (
+  data: Prisma.UserAgentGetPayload<{
+    include: typeof INCLUDE_USER_DEVICE_AGENT_QUERY;
+  }>
+): UserDeviceActivitySchema => {
+  const device = deviceTypeSchema.safeParse(data.agent.device);
+  if (!device.success)
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message: 'Invalid device type',
+      cause: device.error
+    });
+
+  return {
+    agent: data.agent.agent,
+    device: device.data,
+    os: data.agent.os ?? UNKNOWN_OS,
+    browser: data.agent.browser ?? UNKNOWN_BROWSER,
+    count: data.count,
+    lastUsed: data.updatedAt
+  };
+};

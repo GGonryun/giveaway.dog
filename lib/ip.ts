@@ -1,8 +1,8 @@
-import { isIP } from 'net';
 import { ApplicationError } from './errors';
 import z from 'zod';
 import { DEVELOPMENT_GEO } from '@/schemas/fingerprint';
 import { Prisma } from '@prisma/client';
+import { Nil } from './types';
 
 export namespace ip {
   export const ipSchema = z.object({
@@ -68,6 +68,22 @@ export namespace ip {
       .optional()
   });
   export type IpSchema = z.infer<typeof ipSchema>;
+
+  const isIP = (value: Nil<string>) => {
+    if (typeof value !== 'string') return 0;
+
+    // IPv4 regex: 4 octets, each 0–255
+    const ipv4Regex =
+      /^(25[0-5]|2[0-4]\d|1?\d?\d)(\.(25[0-5]|2[0-4]\d|1?\d?\d)){3}$/;
+
+    // IPv6 regex (covers shorthand, loopback, etc.)
+    const ipv6Regex =
+      /^(([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){1,7}:)|(([0-9A-Fa-f]{1,4}:){1,6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,5}(:[0-9A-Fa-f]{1,4}){1,2})|(([0-9A-Fa-f]{1,4}:){1,4}(:[0-9A-Fa-f]{1,4}){1,3})|(([0-9A-Fa-f]{1,4}:){1,3}(:[0-9A-Fa-f]{1,4}){1,4})|(([0-9A-Fa-f]{1,4}:){1,2}(:[0-9A-Fa-f]{1,4}){1,5})|([0-9A-Fa-f]{1,4}:((:[0-9A-Fa-f]{1,4}){1,6}))|(:((:[0-9A-Fa-f]{1,4}){1,7}|:))$/;
+
+    if (ipv4Regex.test(value)) return 4;
+    if (ipv6Regex.test(value)) return 6;
+    return 0;
+  };
 
   export const geolocation = async (ip: string | null) => {
     try {

@@ -21,13 +21,16 @@ import {
 import { EmojiLogo } from './emoji-logo';
 import Link from 'next/link';
 import { UserSchema } from '@/schemas/user';
+import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
+import { featureFlags } from '@/lib/feature-flags';
 
 export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
   user
 }) => {
   const isLoggedIn = useMemo(() => !!user?.id, [user?.id]);
   const isHost = useMemo(
-    () => isLoggedIn && user?.featureFlags?.includes('admin-user'),
+    () =>
+      isLoggedIn && featureFlags.parse(user, HOST_DASHBOARD_FEATURE_FLAG_KEY),
     [isLoggedIn, user?.featureFlags]
   );
   const [open, setOpen] = useState(false);

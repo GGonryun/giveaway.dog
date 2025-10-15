@@ -15,10 +15,12 @@ import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { CheckCircle2, PlusCircle } from 'lucide-react';
 import {
+  DEFAULT_FEATURE_FLAGS,
   FEATURE_FLAG_DESCRIPTIONS,
   FEATURE_FLAG_LABELS
 } from '@/schemas/feature-flags';
 import { widetype } from '@/lib/widetype';
+import { featureFlags } from '@/lib/feature-flags';
 
 export const FeatureSettings = () => {
   const user = useUser();
@@ -42,7 +44,9 @@ export const FeatureSettings = () => {
             key={key}
             label={FEATURE_FLAG_LABELS[key]}
             description={FEATURE_FLAG_DESCRIPTIONS[key]}
-            enabled={user.featureFlags?.includes(key) ?? false}
+            enabled={
+              DEFAULT_FEATURE_FLAGS[key] || featureFlags.parse(user, key)
+            }
             onDisable={handleDisableAction}
             onRequest={handleRequestAction}
           />

@@ -2,7 +2,6 @@ import prisma, { Tx } from '@/lib/prisma';
 import { devices, userAgent } from '@/lib/devices';
 import { NextRequest, NextResponse } from 'next/server';
 import { ip } from '@/lib/ip';
-import { Prisma } from '@prisma/client';
 import { UserAgentSchema } from '@/schemas/user-agent';
 import { Nil } from '@/lib/types';
 
