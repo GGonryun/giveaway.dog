@@ -1,6 +1,6 @@
 import { UNKNOWN_USER_COUNTRY_CODE, UNKNOWN_USER_AGENT } from '@/lib/settings';
 import { Prisma } from '@prisma/client';
-import { toTaskCompletionSchema } from './giveaway/participant';
+import { TaskCompletionSchema } from './giveaway/participant';
 import { toTaskInput } from './giveaway/input';
 import { taskSchema } from './tasks/schemas';
 import { DEFAULT_SWEEPSTAKES_NAME } from './giveaway/defaults';
@@ -21,17 +21,19 @@ export const toTaskCompletion = (
   entry: Prisma.TaskCompletionGetPayload<{
     include: typeof TASK_COMPLETION_INCLUDE_QUERY;
   }>
-): toTaskCompletionSchema => {
+): TaskCompletionSchema => {
   const raw = toTaskInput(entry.task);
   const task = taskSchema.safeParse(raw);
   if (!task.success) {
     throw new Error('Invalid task config in entry');
   }
   return {
+    status: entry.status,
     completionId: entry.id,
     completedAt: entry.completedAt,
     taskId: entry.taskId,
     taskName: task.data.title,
+    taskType: task.data.type,
     sweepstakeId: entry.task.sweepstakes.id,
     sweepstakeName:
       entry.task.sweepstakes.details?.name ?? DEFAULT_SWEEPSTAKES_NAME

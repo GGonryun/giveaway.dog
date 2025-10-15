@@ -21,7 +21,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
-import { TaskCompletionSchema } from '@/schemas/tasks/schemas';
+import { UserEntriesSchema } from '@/schemas/tasks/schemas';
 import {
   TaskCategoryBadge,
   TaskPlatformIcon,
@@ -33,14 +33,14 @@ import { UNKNOWN_USER_NAME } from '@/lib/settings';
 import Link from 'next/link';
 
 export const TaskCompletionDetailSheetContent: React.FC<{
-  entries: TaskCompletionSchema[];
+  entries: UserEntriesSchema[];
 }> = ({ entries }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const taskCompletionId = searchParams.get('active');
   const { activeTeam } = useTeams();
   const [selectedTaskCompletion, setSelectedTaskCompletion] =
-    useState<TaskCompletionSchema | null>(null);
+    useState<UserEntriesSchema | null>(null);
 
   useEffect(() => {
     if (taskCompletionId) {

@@ -1,13 +1,15 @@
 import { datetime } from '@/lib/date';
 import {
   UserDeviceActivitySchema,
-  USER_AGENT_DEVICE_ICON
+  USER_AGENT_DEVICE_ICON,
+  USER_AGENT_DEVICE_LABEL
 } from '@/schemas/user-agent';
 
 export const DeviceActivityInfo: React.FC<{
   activity: UserDeviceActivitySchema;
 }> = ({ activity }) => {
   const Icon = USER_AGENT_DEVICE_ICON[activity.device];
+  const label = USER_AGENT_DEVICE_LABEL[activity.device];
   return (
     <div
       key={activity.agent}
@@ -16,7 +18,7 @@ export const DeviceActivityInfo: React.FC<{
       <div className="flex items-center space-x-3">
         <Icon className="h-5 w-5 text-muted-foreground" />
         <div>
-          <div className="font-medium">{activity.device}</div>
+          <div className="font-medium">{label}</div>
           <div className="text-sm text-muted-foreground">
             {activity.os} • {activity.browser}
           </div>

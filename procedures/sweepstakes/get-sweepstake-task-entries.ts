@@ -8,7 +8,7 @@ import { ApplicationError } from '@/lib/errors';
 import { toTaskSchema } from '@/schemas/tasks/parse';
 import { toJsonObject } from '@/lib/json';
 import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
-import { taskCompletionSchema } from '@/schemas/tasks/schemas';
+import { userEntriesSchema } from '@/schemas/tasks/schemas';
 
 const getSweepstakeTaskEntries = procedure()
   .authorization({
@@ -20,7 +20,7 @@ const getSweepstakeTaskEntries = procedure()
       taskId: z.string()
     })
   )
-  .output(taskCompletionSchema.array())
+  .output(userEntriesSchema.array())
   .handler(async ({ input, db }) => {
     const sweepstakes = await db.sweepstakes.findUnique({
       where: {

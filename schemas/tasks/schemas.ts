@@ -96,7 +96,7 @@ export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   community: 'Community'
 };
 
-export const taskCompletionSchema = z.object({
+export const userEntriesSchema = z.object({
   id: z.string(),
   user: userSchema,
   task: taskSchema,
@@ -105,4 +105,4 @@ export const taskCompletionSchema = z.object({
   completedAt: z.number()
 });
 
-export type TaskCompletionSchema = z.infer<typeof taskCompletionSchema>;
+export type UserEntriesSchema = z.infer<typeof userEntriesSchema>;

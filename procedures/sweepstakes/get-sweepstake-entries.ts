@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
-import { taskCompletionSchema } from '@/schemas/tasks/schemas';
+import { userEntriesSchema } from '@/schemas/tasks/schemas';
 import { toTaskSchema } from '@/schemas/tasks/parse';
 import { toJsonObject } from '@/lib/json';
 import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
@@ -22,7 +22,7 @@ const getSweepstakeEntries = procedure()
     })
   )
   .cache({ revalidate: 60 })
-  .output(taskCompletionSchema.array())
+  .output(userEntriesSchema.array())
   .handler(async ({ input, db }) => {
     const page = input.page || 1;
     const sweepstakes = await db.sweepstakes.findUnique({

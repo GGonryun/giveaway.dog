@@ -11,26 +11,23 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Globe } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
-import { TASK_LABEL, UserEntriesSchema } from '@/schemas/tasks/schemas';
+import { TASK_LABEL } from '@/schemas/tasks/schemas';
 import { formatDistanceToNowStrict } from 'date-fns';
-import { TaskStatusBadge, TaskStatusIcon } from './task-utils';
-import { UserSchema } from '@/schemas/user';
-import { Button } from '../ui/button';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
+import {
+  TaskStatusIcon,
+  TaskStatusBadge
+} from '@/components/sweepstakes-details/task-utils';
+import { Button } from '@/components/ui/button';
+import { TaskCompletionSchema } from '@/schemas/giveaway/participant';
 
-interface SweepstakesEntriesProps {
+interface UserEntriesProps {
   slug: string;
-  sweepstakesId: string;
-  entries: UserEntriesSchema[];
+  entries: TaskCompletionSchema[];
 }
 
-export const SweepstakesEntries = ({
-  slug,
-  sweepstakesId,
-  entries
-}: SweepstakesEntriesProps) => {
+export const UserEntries = ({ slug, entries }: UserEntriesProps) => {
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,15 +45,15 @@ export const SweepstakesEntries = ({
     setCurrentPage(page);
   };
 
-  const handleTaskClick = (taskCompletion: UserEntriesSchema) => {
+  const handleTaskClick = (taskCompletion: TaskCompletionSchema) => {
     router.push(
-      `/app/${slug}/sweepstakes/${sweepstakesId}/entries/task/${taskCompletion.task.id}?active=${taskCompletion.id}`
+      `/app/${slug}/sweepstakes/${taskCompletion.sweepstakeId}/entries/task/${taskCompletion.taskId}?active=${taskCompletion.completionId}`
     );
   };
 
-  const handleUserClick = (user: UserSchema) => {
+  const handleSweepstakeClick = (taskCompletion: TaskCompletionSchema) => {
     router.push(
-      `/app/${slug}/sweepstakes/${sweepstakesId}/entries/user/${user.id}`
+      `/app/${slug}/sweepstakes/${taskCompletion.sweepstakeId}/preview`
     );
   };
 
@@ -66,20 +63,52 @@ export const SweepstakesEntries = ({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Status</TableHead>
               <TableHead>Task</TableHead>
-              <TableHead>Participant</TableHead>
-              <TableHead>Country</TableHead>
+              <TableHead>Sweepstake</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Updated</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {paginatedEntries.map((completion) => (
-              <TableRow
-                key={completion.id}
-                className="cursor-pointer hover:bg-muted/50"
-                onClick={() => handleTaskClick(completion)}
-              >
+              <TableRow key={completion.completionId}>
+                <TableCell>
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="link"
+                        className="p-0 m-0 h-6 font-medium hover:text-primary transition-colors cursor-pointer"
+                        onClick={() => handleTaskClick(completion)}
+                      >
+                        {completion.taskName}
+                      </Button>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="text-xs text-muted-foreground">
+                        {TASK_LABEL[completion.taskType]}
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="link"
+                        className="p-0 m-0 h-6 font-medium hover:text-primary transition-colors cursor-pointer"
+                        onClick={() => handleSweepstakeClick(completion)}
+                      >
+                        {completion.sweepstakeName}
+                      </Button>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="text-xs text-muted-foreground">
+                        ID: {completion.sweepstakeId}
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
+
                 <TableCell>
                   <div className="flex items-center space-x-2">
                     <TaskStatusIcon status={completion.status} />
@@ -88,55 +117,13 @@ export const SweepstakesEntries = ({
                 </TableCell>
 
                 <TableCell>
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        variant="link"
-                        className="p-0 m-0 h-6 font-medium hover:text-primary transition-colors cursor-pointer"
-                      >
-                        {completion.task.title}
-                      </Button>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="text-xs text-muted-foreground">
-                        {TASK_LABEL[completion.task.type]}
-                      </div>
-                    </div>
-                  </div>
-                </TableCell>
-
-                <TableCell>
-                  <div>
-                    <Button
-                      variant="link"
-                      className="p-0 m-0 h-6 font-medium hover:text-primary transition-colors cursor-pointer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleUserClick(completion.user);
-                      }}
-                    >
-                      {completion.user.name}
-                    </Button>
-                    <div className="text-xs text-muted-foreground">
-                      {completion.user.email}
-                    </div>
-                  </div>
-                </TableCell>
-
-                <TableCell>
-                  <div className="flex items-center space-x-1">
-                    <Globe className="h-3 w-3 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">
-                      {completion.user.countryCode}
-                    </span>
-                  </div>
-                </TableCell>
-
-                <TableCell>
                   <span className="text-xs text-muted-foreground">
-                    {formatDistanceToNowStrict(completion.completedAt, {
-                      addSuffix: true
-                    })}
+                    {formatDistanceToNowStrict(
+                      completion.completedAt ?? Date.now(),
+                      {
+                        addSuffix: true
+                      }
+                    )}
                   </span>
                 </TableCell>
               </TableRow>

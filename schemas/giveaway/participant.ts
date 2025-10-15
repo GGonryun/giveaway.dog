@@ -5,16 +5,19 @@ import z from 'zod';
 import { toUserSchema } from '../user';
 import { toTaskInput } from './input';
 import { taskSchema } from '../tasks/schemas';
+import { CompletionStatus, TaskType } from '@prisma/client';
 
 export const taskCompletionSchema = z.object({
   completionId: z.string(),
   completedAt: z.date().nullable(),
   taskId: z.string(),
   taskName: z.string(),
+  taskType: z.nativeEnum(TaskType),
   sweepstakeId: z.string(),
-  sweepstakeName: z.string()
+  sweepstakeName: z.string(),
+  status: z.nativeEnum(CompletionStatus)
 });
-export type toTaskCompletionSchema = z.infer<typeof taskCompletionSchema>;
+export type TaskCompletionSchema = z.infer<typeof taskCompletionSchema>;
 
 export const winnerSchema = z.object({
   prizeId: z.string(),

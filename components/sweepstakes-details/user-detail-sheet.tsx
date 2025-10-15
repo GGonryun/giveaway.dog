@@ -120,7 +120,6 @@ export const ParticipatingUserSheetContent: React.FC<{
           </div>
         </div>
 
-        {/* Device & Browser Information */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-base font-medium">Device & Browser</h4>
