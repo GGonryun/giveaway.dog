@@ -87,7 +87,46 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          7. Intellectual Property
+          7. User Quality Scoring and Eligibility
+        </Typography.Header>
+        <Typography.Paragraph className="mb-6">
+          To maintain the integrity of our platform and ensure fair giveaways,
+          Giveaway.dog employs an automated user quality scoring system that
+          monitors participant behavior and activity patterns. This system
+          evaluates various metrics including but not limited to: device usage
+          patterns, login frequency, account age, verification status, task
+          completion behavior, and potential fraud indicators.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          Users who exhibit suspicious tendencies, fraudulent behavior, or
+          patterns consistent with bot activity may receive a low quality score.
+          Based on this scoring system, giveaway hosts have the option to
+          automatically revoke eligibility from users with low quality scores,
+          disqualify suspicious entries, or exclude participants who fail to
+          meet minimum quality thresholds. This automated system operates
+          continuously and decisions may be made without prior notice.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          Quality scores are calculated using proprietary algorithms that
+          analyze user activity over time. Users agree that participation in
+          giveaways may be restricted or revoked based on these quality
+          assessments. While we strive for accuracy, the scoring system is
+          automated and may occasionally produce false positives. Users who
+          believe they have been incorrectly flagged may contact support for
+          review, though we reserve the right to make final determinations
+          regarding account quality and eligibility.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          By using our platform, you acknowledge and agree that: (a) your
+          activity is monitored and scored, (b) low quality scores may result in
+          automatic disqualification from giveaways, (c) giveaway hosts may set
+          minimum quality requirements for participation, and (d) Giveaway.dog
+          is not liable for any losses resulting from eligibility restrictions
+          based on quality scores.
+        </Typography.Paragraph>
+
+        <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
+          8. Intellectual Property
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           The Giveaway.dog platform, including its design, functionality, and
@@ -97,7 +136,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          8. Privacy and Data Protection
+          9. Privacy and Data Protection
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           Your privacy is important to us. Our collection and use of personal
@@ -108,7 +147,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          9. Limitation of Liability
+          10. Limitation of Liability
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           To the maximum extent permitted by law, Giveaway.dog shall not be
@@ -119,7 +158,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          10. Service Availability
+          11. Service Availability
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           While we strive to maintain high service availability, we do not
@@ -129,7 +168,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          11. Termination
+          12. Termination
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           Either party may terminate this agreement at any time. We may suspend
@@ -139,7 +178,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          12. Changes to Terms
+          13. Changes to Terms
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           We reserve the right to modify these Terms and Conditions at any time.
@@ -149,7 +188,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          13. Governing Law
+          14. Governing Law
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           These Terms and Conditions are governed by and construed in accordance
@@ -159,7 +198,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          14. Contact Information
+          15. Contact Information
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           If you have any questions about these Terms and Conditions, please
