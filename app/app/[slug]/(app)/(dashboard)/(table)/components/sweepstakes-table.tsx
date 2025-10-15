@@ -158,19 +158,21 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
       <Card className="overflow-hidden p-0 gap-0">
         <Table>
           <TableHeader>
-            <SortableHeader
-              field="name"
-              className="w-[300px]"
-              onSort={handleSort}
-              sortField={filters.sortField}
-              sortDirection={filters.sortDirection}
-            >
-              Sweepstakes
-            </SortableHeader>
-            <TableHead className="text-right w-24">Entries</TableHead>
-            <TableHead className="text-right w-24">Users</TableHead>
-            <TableHead className="text-right w-28">Status</TableHead>
-            <TableHead className="text-right w-8">Actions</TableHead>
+            <TableRow>
+              <SortableHeader
+                field="name"
+                className="w-[300px]"
+                onSort={handleSort}
+                sortField={filters.sortField}
+                sortDirection={filters.sortDirection}
+              >
+                Sweepstakes
+              </SortableHeader>
+              <TableHead className="text-right w-24">Entries</TableHead>
+              <TableHead className="text-right w-24">Users</TableHead>
+              <TableHead className="text-right w-28">Status</TableHead>
+              <TableHead className="text-right w-8">Actions</TableHead>
+            </TableRow>
           </TableHeader>
           <TableBody>
             {sweepstakes.map((item) => (
