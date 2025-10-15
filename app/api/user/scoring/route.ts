@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
       await prisma.userScoringRequest.delete({
         where: { id: request.id }
       });
+      console.log(`Processed scoring request for user ${request.userId}`);
     });
   }
 

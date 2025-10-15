@@ -34,11 +34,7 @@ export const toQualityType = (score: number): QualityType => {
       return quality;
     }
   }
-  throw new ApplicationError({
-    code: 'INTERNAL_SERVER_ERROR',
-    message: 'Failed to determine quality type',
-    cause: new Error(`Score ${score} did not match any quality threshold`)
-  });
+  return 'poor';
 };
 
 export const toQualityProgressColor = (score: number): string => {

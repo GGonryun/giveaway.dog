@@ -103,6 +103,8 @@ export async function GET(request: NextRequest) {
           await tx.userEvent.delete({
             where: { id: event.id }
           });
+
+          console.log(`Processed event ${event.id} for user ${event.userId}`);
         });
 
         processedCount++;
@@ -113,6 +115,8 @@ export async function GET(request: NextRequest) {
         // TODO: Send admin notification for processing failures
       }
     }
+
+    console.log(`Processed ${processedCount} events, ${errorCount} errors.`);
 
     return NextResponse.json({
       success: true,
