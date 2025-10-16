@@ -66,10 +66,12 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
 
       {sweepstakes && (
         <SweepstakesStatusComponent
+          sweepstakesId={sweepstakes.id}
           status={sweepstakes.status}
           startDate={sweepstakes.timing.startDate}
           endDate={sweepstakes.timing.endDate}
           timeZone={sweepstakes.timing.timeZone}
+          visibility={sweepstakes.visibility.visibility}
           sweepstakesUrl={liveUrl}
           hasAllWinnersSelected={hasAllWinnersSelected}
           onPickWinners={() => {

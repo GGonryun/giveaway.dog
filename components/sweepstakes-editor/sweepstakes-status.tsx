@@ -6,15 +6,26 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { CopyLinkInput } from '@/components/ui/copy-link-input';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import {
   CalendarIcon,
   ClockIcon,
   Trophy,
   QrCode,
-  ExternalLink
+  ExternalLink,
+  Eye,
+  EyeOff,
+  Info
 } from 'lucide-react';
 import { isAfter } from 'date-fns';
-import { SweepstakesStatus } from '@prisma/client';
+import { SweepstakesStatus, VisibilityType } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { datetime } from '@/lib/date';
 import {
@@ -22,12 +33,17 @@ import {
   SweepstakesStatusBadge,
   SweepstakesStatusDescription
 } from '../sweepstakes/status-badge';
+import { useProcedure } from '@/lib/mrpc/hook';
+import toggleVisibility from '@/procedures/sweepstakes/toggle-visibility';
+import { useRouter } from 'next/navigation';
 
 interface SweepstakesStatusProps {
+  sweepstakesId: string;
   status: SweepstakesStatus;
   startDate: Date;
   endDate: Date;
   timeZone: string;
+  visibility?: VisibilityType;
   sweepstakesUrl?: string;
   hasAllWinnersSelected?: boolean;
   onPickWinners?: () => void;
@@ -38,18 +54,36 @@ interface SweepstakesStatusProps {
 }
 
 export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
+  sweepstakesId,
   status,
   startDate,
   endDate,
   timeZone,
+  visibility = VisibilityType.PRIVATE,
   sweepstakesUrl = '',
   hasAllWinnersSelected = false,
   onPickWinners,
   onGenerateQR,
   className
 }) => {
+  const router = useRouter();
   const now = new Date();
   const hasEnded = isAfter(now, endDate);
+
+  const { run: runToggleVisibility, isLoading: isTogglingVisibility } =
+    useProcedure({
+      action: toggleVisibility,
+      onSuccess: () => {
+        router.refresh();
+      }
+    });
+
+  const handleVisibilityChange = (newVisibility: VisibilityType) => {
+    runToggleVisibility({
+      sweepstakesId,
+      visibility: newVisibility
+    });
+  };
 
   const getWinnerSelectionStatus = () => {
     if (status === SweepstakesStatus.ACTIVE && !hasEnded) {
@@ -121,6 +155,79 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
             <Trophy className="h-5 w-5 text-yellow-600" />
             <div className="text-sm text-yellow-800">{winnerStatus}</div>
           </div>
+        )}
+
+        {/* Visibility Section */}
+        {visibility === VisibilityType.PRIVATE ? (
+          <Alert variant="error" className="border-red-300 bg-red-50">
+            <EyeOff className="h-4 w-4 text-red-600" />
+            <div className="flex items-start justify-between gap-3 w-full">
+              <div className="flex-1">
+                <AlertTitle className="text-red-900">
+                  Sweepstakes is Private
+                </AlertTitle>
+                <AlertDescription className="text-red-800 mt-1">
+                  Your sweepstakes is currently private. Public sweepstakes can
+                  reach more users and appear in our browse page searches. You
+                  can keep it private if you want to only reach an internal
+                  audience, share with people you know, or your own customers to
+                  reduce the reach of your sweepstakes.
+                  <br />
+                  <br />
+                  <span className="text-xs">
+                    Note: Visibility changes can take up to an hour to fully
+                    propagate.
+                  </span>
+                </AlertDescription>
+              </div>
+              <Select
+                value={visibility}
+                onValueChange={handleVisibilityChange}
+                disabled={isTogglingVisibility}
+              >
+                <SelectTrigger className="w-32 shrink-0 bg-white border-red-300">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={VisibilityType.PUBLIC}>Public</SelectItem>
+                  <SelectItem value={VisibilityType.PRIVATE}>
+                    Private
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </Alert>
+        ) : (
+          <Alert variant="success" className="border-green-300 bg-green-50">
+            <Eye className="h-4 w-4 text-green-600" />
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-3 w-full">
+              <div className="flex-1">
+                <AlertTitle className="text-green-900">
+                  Sweepstakes is Public
+                </AlertTitle>
+                <AlertDescription className="text-green-800 mt-1">
+                  Your sweepstakes is visible on the browse page and can be
+                  discovered by anyone. Visibility changes can take up to an
+                  hour to fully propagate.
+                </AlertDescription>
+              </div>
+              <Select
+                value={visibility}
+                onValueChange={handleVisibilityChange}
+                disabled={isTogglingVisibility}
+              >
+                <SelectTrigger className="w-full sm:w-32 shrink-0 bg-white border-green-300">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={VisibilityType.PUBLIC}>Public</SelectItem>
+                  <SelectItem value={VisibilityType.PRIVATE}>
+                    Private
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </Alert>
         )}
 
         {/* Time Information */}
