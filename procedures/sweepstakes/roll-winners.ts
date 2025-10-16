@@ -16,6 +16,7 @@ const rollWinners = procedure()
       sweepstakesId: z.string(),
       slug: z.string(),
       minQualityScore: z.number().min(0).max(100),
+      minTasksCompleted: z.number().min(1).optional().default(1),
       preventDuplicateWinners: z.boolean(),
       rerollWinnerId: z.string().optional()
     })
@@ -27,6 +28,7 @@ const rollWinners = procedure()
         sweepstakesId,
         slug,
         minQualityScore,
+        minTasksCompleted,
         preventDuplicateWinners,
         rerollWinnerId
       },
@@ -64,21 +66,10 @@ const rollWinners = procedure()
         userId: user.id
       });
 
-      const eligibleTaskCompletions = await db.taskCompletion.findMany({
+      // Get all task completions for this sweepstakes
+      const allTaskCompletions = await db.taskCompletion.findMany({
         where: {
-          task: taskQuery,
-          user: {
-            quality: {
-              some: {
-                score: { gte: minQualityScore }
-              }
-            },
-            taskCompletions: {
-              some: {
-                task: taskQuery
-              }
-            }
-          }
+          task: taskQuery
         },
         include: {
           user: {
@@ -92,6 +83,35 @@ const rollWinners = procedure()
             }
           }
         }
+      });
+
+      // Group by user and count their task completions
+      const userCompletionCounts = new Map<string, number>();
+      const userCompletions = new Map<string, typeof allTaskCompletions[0][]>();
+
+      for (const completion of allTaskCompletions) {
+        const userId = completion.userId;
+        userCompletionCounts.set(userId, (userCompletionCounts.get(userId) || 0) + 1);
+
+        if (!userCompletions.has(userId)) {
+          userCompletions.set(userId, []);
+        }
+        userCompletions.get(userId)!.push(completion);
+      }
+
+      // Filter users by criteria
+      const eligibleTaskCompletions = allTaskCompletions.filter((completion) => {
+        const userId = completion.userId;
+        const userQuality = completion.user.quality[0]?.score ?? 0;
+        const userTaskCount = userCompletionCounts.get(userId) || 0;
+
+        // Check quality score
+        if (userQuality < minQualityScore) return false;
+
+        // Check minimum tasks completed
+        if (userTaskCount < minTasksCompleted) return false;
+
+        return true;
       });
 
       if (eligibleTaskCompletions.length === 0) {

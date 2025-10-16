@@ -6,20 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
-import {
   Shuffle,
-  AlertTriangle,
   ExternalLink,
   ChevronDown,
   ChevronUp,
-  Info
+  Info,
+  Pencil
 } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
 import { Label } from '@/components/ui/label';
@@ -30,21 +22,21 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { SweepstakesPrizeSchema } from '@/schemas/giveaway/schemas';
+import {
+  SweepstakesPrizeSchema,
+  SweepstakesWinnerCriteriaSchema
+} from '@/schemas/giveaway/schemas';
 import { DiceIcon } from './dice-icon';
 import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
-
 import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useProcedure } from '@/lib/mrpc/hook';
 import rollWinners from '@/procedures/sweepstakes/roll-winners';
+import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteria';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { format } from 'date-fns';
-
-interface WinnerCriteria {
-  minQualityScore: number;
-  preventDuplicateWinners: boolean;
-}
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 
 interface GroupedPrize {
   id: string;
@@ -58,6 +50,7 @@ interface SlotBasedWinnerSystemProps {
   sweepstakesId: string;
   slug: string;
   endDate: Date;
+  criteria: SweepstakesWinnerCriteriaSchema;
 }
 
 export const SweepstakesWinners = ({
@@ -65,16 +58,16 @@ export const SweepstakesWinners = ({
   participants,
   sweepstakesId,
   slug,
-  endDate
+  endDate,
+  criteria
 }: SlotBasedWinnerSystemProps) => {
   const router = useRouter();
   const { activeTeam } = useTeams();
-  const [showWinnerDialog, setShowWinnerDialog] = useState(false);
-  const [rerollWinnerId, setRerollWinnerId] = useState<string | null>(null);
-  const [winnerCriteria, setWinnerCriteria] = useState<WinnerCriteria>({
-    minQualityScore: 70,
-    preventDuplicateWinners: true
-  });
+  const [currentCriteria, setCurrentCriteria] =
+    useState<SweepstakesWinnerCriteriaSchema>(criteria);
+  const [isEditingCriteria, setIsEditingCriteria] = useState(false);
+  const [editedCriteria, setEditedCriteria] =
+    useState<SweepstakesWinnerCriteriaSchema>(criteria);
   const [expandedWinners, setExpandedWinners] = useState<Set<string>>(
     new Set()
   );
@@ -83,10 +76,19 @@ export const SweepstakesWinners = ({
     action: rollWinners,
     onSuccess: () => {
       router.refresh();
-      setShowWinnerDialog(false);
-      setRerollWinnerId(null);
     }
   });
+
+  const { run: runUpdateCriteria, isLoading: isUpdatingCriteria } =
+    useProcedure({
+      action: updateWinnerCriteria,
+      onSuccess: (data) => {
+        setCurrentCriteria(data);
+        setEditedCriteria(data);
+        setIsEditingCriteria(false);
+        router.refresh();
+      }
+    });
 
   const groupedPrizes: GroupedPrize[] = prizes.reduce((acc, prize) => {
     const existing = acc.find((g) => g.id === prize.id);
@@ -106,19 +108,23 @@ export const SweepstakesWinners = ({
 
   const hasEnded = new Date() > new Date(endDate);
 
-  const getEligibleParticipants = () => {
-    // Get already confirmed winner IDs to prevent duplicates if enabled
-    const confirmedWinnerIds = winnerCriteria.preventDuplicateWinners
+  const getEligibleParticipants = (
+    criteriaToUse: SweepstakesWinnerCriteriaSchema = currentCriteria
+  ) => {
+    const confirmedWinnerIds = !criteriaToUse.allowMultipleWins
       ? prizes.filter((s) => s.winner).map((s) => s.winner!.participant.id)
       : [];
 
     return participants.filter((p) => {
       // Check quality score
-      if (p.qualityScore < winnerCriteria.minQualityScore) return false;
+      if (p.qualityScore < criteriaToUse.minQualityScore) return false;
+
+      // Check minimum tasks completed
+      if (p.entries.length < criteriaToUse.minTasksCompleted) return false;
 
       // Check duplicate winners
       if (
-        winnerCriteria.preventDuplicateWinners &&
+        !criteriaToUse.allowMultipleWins &&
         confirmedWinnerIds.includes(p.id)
       )
         return false;
@@ -128,23 +134,40 @@ export const SweepstakesWinners = ({
   };
 
   const handleReroll = (winnerId: string) => {
-    setRerollWinnerId(winnerId);
-    setShowWinnerDialog(true);
-  };
-
-  const handleConfirmSelection = () => {
     runRollWinners({
       sweepstakesId,
       slug,
-      minQualityScore: winnerCriteria.minQualityScore,
-      preventDuplicateWinners: winnerCriteria.preventDuplicateWinners,
-      rerollWinnerId: rerollWinnerId ?? undefined
+      minQualityScore: currentCriteria.minQualityScore,
+      minTasksCompleted: currentCriteria.minTasksCompleted,
+      preventDuplicateWinners: !currentCriteria.allowMultipleWins,
+      rerollWinnerId: winnerId
     });
   };
 
-  const eligibleCount = getEligibleParticipants().length;
+  const handlePickWinners = () => {
+    runRollWinners({
+      sweepstakesId,
+      slug,
+      minQualityScore: currentCriteria.minQualityScore,
+      minTasksCompleted: currentCriteria.minTasksCompleted,
+      preventDuplicateWinners: !currentCriteria.allowMultipleWins
+    });
+  };
 
-  const isRerollMode = rerollWinnerId !== null;
+  const handleSaveCriteria = () => {
+    runUpdateCriteria({
+      sweepstakesId,
+      slug,
+      minTasksCompleted: editedCriteria.minTasksCompleted,
+      minQualityScore: editedCriteria.minQualityScore,
+      allowMultipleWins: editedCriteria.allowMultipleWins
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditedCriteria(currentCriteria);
+    setIsEditingCriteria(false);
+  };
 
   const hasAnyWinners = prizes.some((p) => p.winner);
 
@@ -162,7 +185,6 @@ export const SweepstakesWinners = ({
 
   return (
     <div className="space-y-6">
-      {/* Winner Contact Disclaimer */}
       {hasAnyWinners && (
         <Alert className="border-blue-200 bg-blue-50">
           <Info className="h-5 w-5 text-blue-600" />
@@ -175,6 +197,146 @@ export const SweepstakesWinners = ({
           </AlertDescription>
         </Alert>
       )}
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base">Winner Selection Criteria</CardTitle>
+            {!isEditingCriteria && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsEditingCriteria(true)}
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {isEditingCriteria ? (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="minTasksCompleted">
+                  Minimum Tasks Completed
+                </Label>
+                <Input
+                  id="minTasksCompleted"
+                  type="number"
+                  min={1}
+                  value={editedCriteria.minTasksCompleted}
+                  onChange={(e) =>
+                    setEditedCriteria((prev) => ({
+                      ...prev,
+                      minTasksCompleted: parseInt(e.target.value) || 1
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="minQualityScore">
+                  Minimum Quality Score (%)
+                </Label>
+                <Select
+                  value={editedCriteria.minQualityScore.toString()}
+                  onValueChange={(value) =>
+                    setEditedCriteria((prev) => ({
+                      ...prev,
+                      minQualityScore: parseInt(value)
+                    }))
+                  }
+                >
+                  <SelectTrigger id="minQualityScore">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">No minimum</SelectItem>
+                    <SelectItem value="50">50%</SelectItem>
+                    <SelectItem value="60">60%</SelectItem>
+                    <SelectItem value="70">70% (Recommended)</SelectItem>
+                    <SelectItem value="80">80%</SelectItem>
+                    <SelectItem value="90">90%</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="allowMultipleWins"
+                  checked={editedCriteria.allowMultipleWins}
+                  onCheckedChange={(checked) =>
+                    setEditedCriteria((prev) => ({
+                      ...prev,
+                      allowMultipleWins: checked
+                    }))
+                  }
+                />
+                <Label htmlFor="allowMultipleWins">
+                  Allow users to win multiple prizes
+                </Label>
+              </div>
+
+              <div className="pt-4 border-t">
+                <div className="text-sm text-muted-foreground">
+                  <strong>{getEligibleParticipants(editedCriteria).length}</strong> of{' '}
+                  {participants.length} participants meet these criteria
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-4">
+                <Button
+                  onClick={handleSaveCriteria}
+                  disabled={isUpdatingCriteria}
+                >
+                  {isUpdatingCriteria ? 'Saving...' : 'Save'}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleCancelEdit}
+                  disabled={isUpdatingCriteria}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  Minimum Tasks Completed:
+                </span>
+                <span className="font-medium">
+                  {currentCriteria.minTasksCompleted}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  Minimum Quality Score:
+                </span>
+                <span className="font-medium">
+                  {currentCriteria.minQualityScore}%
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  Multiple Wins Allowed:
+                </span>
+                <span className="font-medium">
+                  {currentCriteria.allowMultipleWins ? 'Yes' : 'No'}
+                </span>
+              </div>
+              <div className="flex justify-between pt-2 border-t">
+                <span className="text-muted-foreground">Eligible Participants:</span>
+                <span className="font-medium">
+                  {getEligibleParticipants().length} of {participants.length}
+                </span>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {!hasAnyWinners ? (
         <Card>
@@ -206,7 +368,7 @@ export const SweepstakesWinners = ({
                 size="lg"
                 className="mt-4"
                 disabled={!hasEnded}
-                onClick={() => setShowWinnerDialog(true)}
+                onClick={handlePickWinners}
               >
                 <Shuffle className="h-4 w-4 mr-2" />
                 Pick Winners
@@ -227,10 +389,7 @@ export const SweepstakesWinners = ({
                     Pick more winners to fill all empty slots
                   </p>
                 </div>
-                <Button
-                  onClick={() => setShowWinnerDialog(true)}
-                  disabled={isRolling}
-                >
+                <Button onClick={handlePickWinners} disabled={isRolling}>
                   <Shuffle className="h-4 w-4 mr-2" />
                   {isRolling ? 'Rolling...' : 'Pick Remaining'}
                 </Button>
@@ -267,7 +426,6 @@ export const SweepstakesWinners = ({
                         )}
                       </div>
 
-                      {/* Winner Display */}
                       <div className="flex flex-col items-center justify-center min-h-[80px] p-3 border-2 border-dashed border-muted rounded-lg">
                         {slot.winner ? (
                           <div className="space-y-2 w-full">
@@ -305,7 +463,6 @@ export const SweepstakesWinners = ({
                               </div>
                             </div>
 
-                            {/* Winning Task */}
                             <div className="pt-2 border-t">
                               <button
                                 onClick={() =>
@@ -381,7 +538,6 @@ export const SweepstakesWinners = ({
                               )}
                             </div>
 
-                            {/* Progress Bars */}
                             <div className="space-y-1.5 pt-2">
                               <div>
                                 <div className="flex justify-between text-xs mb-0.5">
@@ -446,7 +602,6 @@ export const SweepstakesWinners = ({
                         )}
                       </div>
 
-                      {/* Action Button */}
                       {slot.winner && (
                         <Button
                           variant="outline"
@@ -466,123 +621,6 @@ export const SweepstakesWinners = ({
           </div>
         </>
       )}
-
-      {/* Winner Selection Dialog */}
-      <Dialog open={showWinnerDialog} onOpenChange={setShowWinnerDialog}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
-              <Shuffle className="h-5 w-5" />
-              <span>{isRerollMode ? 'Re-roll Winner' : 'Pick Winners'}</span>
-            </DialogTitle>
-            <DialogDescription>
-              {isRerollMode
-                ? 'Configure the criteria for selecting a new winner to replace the current selection.'
-                : `Set eligibility criteria for selecting ${emptySlots} ${pluralize('winner', emptySlots)} for empty slots.`}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 py-4">
-            <div>
-              <Label>Minimum Quality Score (%)</Label>
-              <Select
-                value={winnerCriteria.minQualityScore.toString()}
-                onValueChange={(value) =>
-                  setWinnerCriteria((prev) => ({
-                    ...prev,
-                    minQualityScore: parseInt(value)
-                  }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">No minimum</SelectItem>
-                  <SelectItem value="50">50%</SelectItem>
-                  <SelectItem value="60">60%</SelectItem>
-                  <SelectItem value="70">70% (Recommended)</SelectItem>
-                  <SelectItem value="80">80%</SelectItem>
-                  <SelectItem value="90">90%</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="preventDuplicates"
-                checked={winnerCriteria.preventDuplicateWinners}
-                onChange={(e) =>
-                  setWinnerCriteria((prev) => ({
-                    ...prev,
-                    preventDuplicateWinners: e.target.checked
-                  }))
-                }
-                className="rounded"
-              />
-              <Label htmlFor="preventDuplicates">
-                Prevent duplicate winners across all prizes
-              </Label>
-            </div>
-
-            <div className="pt-4 border-t">
-              <div className="text-sm text-muted-foreground">
-                <strong>{eligibleCount}</strong> of {participants.length}{' '}
-                participants meet these criteria
-              </div>
-              {!isRerollMode &&
-                winnerCriteria.preventDuplicateWinners &&
-                eligibleCount < emptySlots && (
-                  <div className="flex items-center space-x-2 mt-2 text-sm text-orange-600">
-                    <AlertTriangle className="h-4 w-4" />
-                    <span>
-                      Not enough eligible participants ({eligibleCount}) for{' '}
-                      {emptySlots} empty {pluralize('slot', emptySlots)}.
-                    </span>
-                  </div>
-                )}
-              {eligibleCount === 0 && (
-                <div className="flex items-center space-x-2 mt-2 text-sm text-orange-600">
-                  <AlertTriangle className="h-4 w-4" />
-                  <span>No eligible participants match these criteria</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowWinnerDialog(false);
-                setRerollWinnerId(null);
-              }}
-              disabled={isRolling}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleConfirmSelection}
-              disabled={
-                isRolling ||
-                (isRerollMode
-                  ? eligibleCount === 0
-                  : winnerCriteria.preventDuplicateWinners
-                    ? eligibleCount < emptySlots
-                    : eligibleCount === 0)
-              }
-            >
-              <Shuffle className="h-4 w-4 mr-2" />
-              {isRolling
-                ? 'Rolling...'
-                : isRerollMode
-                  ? 'Re-roll Winner'
-                  : `Pick ${emptySlots} ${pluralize('Winner', emptySlots)}`}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

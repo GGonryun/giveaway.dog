@@ -62,6 +62,7 @@ const Wrapper: React.FC<{ slug: string; sweepstakesId: string }> = async (
       sweepstakesId={props.sweepstakesId}
       slug={props.slug}
       endDate={result.data.sweepstakes.timing.endDate}
+      criteria={result.data.sweepstakes.criteria}
     />
   );
 };
