@@ -57,28 +57,12 @@ export const CancelConfirmationModal: React.FC<
           </DialogDescription>
         </DialogHeader>
 
-        {isDemo ? (
+        {isDemo && (
           <Alert className="border-blue-200 bg-blue-50">
             <InfoIcon className="h-4 w-4 text-blue-600" />
             <AlertDescription className="text-blue-800">
               <strong>Demo Mode:</strong> Saving and deleting are not available
               in the demo. You can continue editing or exit to return.
-            </AlertDescription>
-          </Alert>
-        ) : (
-          <Alert variant="success">
-            <InfoIcon className="h-4 w-4" />
-            <AlertDescription>
-              <span>
-                Our product is{' '}
-                <strong>
-                  <Link href="/pricing">
-                    <u>completely free</u>
-                  </Link>
-                </strong>{' '}
-                during beta. Drafts don't consume any tokens and you can save as
-                many as you'd like.
-              </span>
             </AlertDescription>
           </Alert>
         )}

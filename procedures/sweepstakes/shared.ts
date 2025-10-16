@@ -4,8 +4,9 @@ import {
   TEAM_SWEEPSTAKES_PAYLOAD
 } from '@/schemas/giveaway/db';
 import { toStorableSweepstakes } from '@/schemas/giveaway/storable';
-import { Prisma, PrismaClient, SweepstakesStatus } from '@prisma/client';
+import { Prisma, PrismaClient, SweepstakesStatus, VisibilityType } from '@prisma/client';
 import { User } from 'next-auth';
+import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 
 export const findUserSweepstakesQuery = ({
   userId,
@@ -83,6 +84,26 @@ export const applySweepstakesChanges = async ({
     user,
     id: input.id
   });
+
+  // Check if user is trying to change visibility to PUBLIC
+  if (input.visibility?.visibility === VisibilityType.PUBLIC) {
+    const hasPublicSweepstakesFlag = await db.featureFlag.findUnique({
+      where: {
+        key_userId: {
+          key: PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY,
+          userId: user.id
+        }
+      }
+    });
+
+    if (!hasPublicSweepstakesFlag) {
+      throw new ApplicationError({
+        code: 'FORBIDDEN',
+        message:
+          'You do not have permission to make sweepstakes public. Please contact support at /support to enable this feature for your account.'
+      });
+    }
+  }
 
   // TODO: Optimize this process.
   // WARNING: sweepstakes objects are too complex to update directly, instead we

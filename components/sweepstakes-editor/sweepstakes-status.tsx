@@ -36,6 +36,11 @@ import {
 import { useProcedure } from '@/lib/mrpc/hook';
 import toggleVisibility from '@/procedures/sweepstakes/toggle-visibility';
 import { useRouter } from 'next/navigation';
+import {
+  FeatureFlagKeySchema,
+  PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
+} from '@/schemas/feature-flags';
+import { featureFlags } from '@/lib/feature-flags';
 
 interface SweepstakesStatusProps {
   sweepstakesId: string;
@@ -46,6 +51,7 @@ interface SweepstakesStatusProps {
   visibility?: VisibilityType;
   sweepstakesUrl?: string;
   hasAllWinnersSelected?: boolean;
+  userFeatureFlags?: FeatureFlagKeySchema[];
   onPickWinners?: () => void;
   onGenerateQR?: () => void;
   onCompleteSweepstakes?: () => void;
@@ -62,6 +68,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   visibility = VisibilityType.PRIVATE,
   sweepstakesUrl = '',
   hasAllWinnersSelected = false,
+  userFeatureFlags = [],
   onPickWinners,
   onGenerateQR,
   className
@@ -69,6 +76,10 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   const router = useRouter();
   const now = new Date();
   const hasEnded = isAfter(now, endDate);
+  const hasPublicSweepstakesAccess = featureFlags.parse(
+    userFeatureFlags,
+    PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
+  );
 
   const { run: runToggleVisibility, isLoading: isTogglingVisibility } =
     useProcedure({
@@ -167,34 +178,59 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                   Sweepstakes is Private
                 </AlertTitle>
                 <AlertDescription className="text-red-800 mt-1">
-                  Your sweepstakes is currently private. Public sweepstakes can
-                  reach more users and appear in our browse page searches. You
-                  can keep it private if you want to only reach an internal
-                  audience, share with people you know, or your own customers to
-                  reduce the reach of your sweepstakes.
-                  <br />
-                  <br />
-                  <span className="text-xs">
-                    Note: Visibility changes can take up to an hour to fully
-                    propagate.
-                  </span>
+                  {hasPublicSweepstakesAccess ? (
+                    <>
+                      Your sweepstakes is currently private. Public sweepstakes
+                      can reach more users and appear in our browse page
+                      searches. You can keep it private if you want to only
+                      reach an internal audience, share with people you know, or
+                      your own customers to reduce the reach of your
+                      sweepstakes.
+                      <br />
+                      <br />
+                      <span className="text-xs">
+                        Note: Visibility changes can take up to an hour to fully
+                        propagate.
+                      </span>
+                    </>
+                  ) : (
+                    <span>
+                      Your sweepstakes is currently{' '}
+                      <span className="font-bold">private</span>.
+                      <br />
+                      You <span className="font-bold">do not</span> have
+                      permission to make sweepstakes public.
+                      <br />
+                      <Link
+                        href="/support"
+                        className="font-bold underline hover:text-red-900"
+                      >
+                        Contact support
+                      </Link>{' '}
+                      to enable this feature for your account.
+                    </span>
+                  )}
                 </AlertDescription>
               </div>
-              <Select
-                value={visibility}
-                onValueChange={handleVisibilityChange}
-                disabled={isTogglingVisibility}
-              >
-                <SelectTrigger className="w-32 shrink-0 bg-white border-red-300">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={VisibilityType.PUBLIC}>Public</SelectItem>
-                  <SelectItem value={VisibilityType.PRIVATE}>
-                    Private
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              {hasPublicSweepstakesAccess && (
+                <Select
+                  value={visibility}
+                  onValueChange={handleVisibilityChange}
+                  disabled={isTogglingVisibility}
+                >
+                  <SelectTrigger className="w-32 shrink-0 bg-white border-red-300">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={VisibilityType.PUBLIC}>
+                      Public
+                    </SelectItem>
+                    <SelectItem value={VisibilityType.PRIVATE}>
+                      Private
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             </div>
           </Alert>
         ) : (
@@ -214,13 +250,18 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
               <Select
                 value={visibility}
                 onValueChange={handleVisibilityChange}
-                disabled={isTogglingVisibility}
+                disabled={isTogglingVisibility || !hasPublicSweepstakesAccess}
               >
                 <SelectTrigger className="w-full sm:w-32 shrink-0 bg-white border-green-300">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={VisibilityType.PUBLIC}>Public</SelectItem>
+                  <SelectItem
+                    value={VisibilityType.PUBLIC}
+                    disabled={!hasPublicSweepstakesAccess}
+                  >
+                    Public
+                  </SelectItem>
                   <SelectItem value={VisibilityType.PRIVATE}>
                     Private
                   </SelectItem>

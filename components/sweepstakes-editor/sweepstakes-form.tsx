@@ -41,15 +41,18 @@ import { DialogFooter } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { SaveIcon } from 'lucide-react';
 import { DemoModeProvider, useDemoMode } from './contexts/demo-mode-context';
+import { FeatureFlagKeySchema } from '@/schemas/feature-flags';
 
 export const SweepstakesForm: React.FC<{
   sweepstakes: GiveawayFormSchema;
   status: SweepstakesStatus;
+  featureFlags: FeatureFlagKeySchema[];
   validateId?: boolean;
   isDemo?: boolean;
 }> = ({
   sweepstakes: defaultValues,
   status,
+  featureFlags,
   validateId = true,
   isDemo = false
 }) => {
@@ -91,7 +94,8 @@ export const SweepstakesForm: React.FC<{
             step: isSweepstakeStepKey(step) ? step : 'setup',
             id,
             action,
-            status
+            status,
+            featureFlags
           }}
         >
           <PreviewStateContext.Provider

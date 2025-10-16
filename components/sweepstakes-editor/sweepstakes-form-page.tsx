@@ -6,6 +6,7 @@ import { SweepstakesForm } from '@/components/sweepstakes-editor/sweepstakes-for
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { notFound } from 'next/navigation';
 import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
+import getUserFeatureFlags from '@/procedures/users/get-user-feature-flags';
 
 export const SweepstakeFormPage = async ({
   params
@@ -13,9 +14,10 @@ export const SweepstakeFormPage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
-  const [form, info] = await Promise.all([
+  const [form, info, featureFlags] = await Promise.all([
     getSweepstakesForm({ id }),
-    getSweepstakesStatus({ id })
+    getSweepstakesStatus({ id }),
+    getUserFeatureFlags()
   ]);
 
   if (!form.ok) {
@@ -28,6 +30,12 @@ export const SweepstakeFormPage = async ({
     return <div>Failed to load sweepstakes info: {info.data.code}</div>;
   }
 
+  if (!featureFlags.ok) {
+    return (
+      <div>Failed to load user feature flags: {featureFlags.data.code}</div>
+    );
+  }
+
   return (
     <Suspense>
       {/* 
@@ -38,6 +46,7 @@ export const SweepstakeFormPage = async ({
       <SweepstakesForm
         sweepstakes={form.data as GiveawayFormSchema}
         status={info.data.status}
+        featureFlags={featureFlags.data}
       />
     </Suspense>
   );

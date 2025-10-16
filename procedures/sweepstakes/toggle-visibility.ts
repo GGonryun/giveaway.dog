@@ -3,6 +3,8 @@
 import { z } from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
 import { VisibilityType } from '@prisma/client';
+import { ApplicationError } from '@/lib/errors';
+import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 
 const toggleVisibilityInput = z.object({
   sweepstakesId: z.string(),
@@ -30,11 +32,37 @@ const toggleVisibility = procedure()
     });
 
     if (!sweepstakes || !sweepstakes.team) {
-      throw new Error('Sweepstakes not found');
+      throw new ApplicationError({
+        code: 'NOT_FOUND',
+        message: 'Sweepstakes not found'
+      });
     }
 
     if (sweepstakes.team.members.length === 0) {
-      throw new Error('You do not have permission to modify this sweepstakes');
+      throw new ApplicationError({
+        code: 'FORBIDDEN',
+        message: 'You do not have permission to modify this sweepstakes'
+      });
+    }
+
+    // Check if user is trying to set visibility to PUBLIC
+    if (input.visibility === VisibilityType.PUBLIC) {
+      const hasPublicSweepstakesFlag = await db.featureFlag.findUnique({
+        where: {
+          key_userId: {
+            key: PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY,
+            userId: user.id
+          }
+        }
+      });
+
+      if (!hasPublicSweepstakesFlag) {
+        throw new ApplicationError({
+          code: 'FORBIDDEN',
+          message:
+            'You do not have permission to make sweepstakes public. Please contact support at /support to enable this feature for your account.'
+        });
+      }
     }
 
     const existing = await db.sweepstakesVisibility.findUnique({

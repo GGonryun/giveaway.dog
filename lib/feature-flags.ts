@@ -3,10 +3,14 @@ import { Nil } from './types';
 
 export namespace featureFlags {
   export const parse = (
-    user: Nil<{ featureFlags?: FeatureFlagKeySchema[] }>,
+    input:
+      | Nil<{ featureFlags?: FeatureFlagKeySchema[] }>
+      | Nil<FeatureFlagKeySchema[]>,
     flag: FeatureFlagKeySchema
   ): boolean => {
-    if (!user?.featureFlags) return false;
-    return user.featureFlags.includes(flag);
+    if (!input) return false;
+    if (Array.isArray(input)) return input.includes(flag);
+    if (!input?.featureFlags) return false;
+    return input.featureFlags.includes(flag);
   };
 }

@@ -26,11 +26,12 @@ import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { SweepstakesStatus } from '@prisma/client';
 import { computeState } from '@/lib/sweepstakes';
 import { toBackgroundStyle } from '@/schemas/color';
+import { FeatureFlagKeySchema } from '@/schemas/feature-flags';
 
-export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
-  props
-) => {
-  const { sweepstakes, winners } = props;
+export const SweepstakesPreview: React.FC<
+  ParticipantSweepstakeSchema & { userFeatureFlags?: FeatureFlagKeySchema[] }
+> = (props) => {
+  const { sweepstakes, winners, userFeatureFlags = [] } = props;
   const browse = useBrowseSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
   const liveUrl = browse.url({
@@ -74,6 +75,7 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
           visibility={sweepstakes.visibility.visibility}
           sweepstakesUrl={liveUrl}
           hasAllWinnersSelected={hasAllWinnersSelected}
+          userFeatureFlags={userFeatureFlags}
           onPickWinners={() => {
             detailsPage.setTab(sweepstakes.id, 'winners');
           }}

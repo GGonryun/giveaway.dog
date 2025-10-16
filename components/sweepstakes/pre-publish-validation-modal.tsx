@@ -78,7 +78,7 @@ export const PrePublishValidationModal: React.FC<
           </DialogDescription>
         </DialogHeader>
 
-        {isDemo ? (
+        {isDemo && (
           <Alert className="border-blue-200 bg-blue-50">
             <InfoIcon className="h-4 w-4 text-blue-600" />
             <AlertDescription className="text-blue-800">
@@ -87,23 +87,6 @@ export const PrePublishValidationModal: React.FC<
               exit to learn more about pricing.
             </AlertDescription>
           </Alert>
-        ) : (
-          isDraft && (
-            <Alert variant="success">
-              <InfoIcon className="h-4 w-4" />
-              <AlertTitle>
-                <strong>Free during beta!</strong>
-              </AlertTitle>
-              <AlertDescription>
-                <div className="space-y-2">
-                  <div>
-                    Publishing normally consumes 1 token, but you have unlimited
-                    tokens while we're in beta.
-                  </div>
-                </div>
-              </AlertDescription>
-            </Alert>
-          )
         )}
 
         <DialogFooter className="flex-col sm:flex-row gap-2">

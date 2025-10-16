@@ -8,7 +8,8 @@ import {
   FormItem,
   FormLabel,
   FormControl,
-  FormMessage
+  FormMessage,
+  FormDescription
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
@@ -21,10 +22,17 @@ import {
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import Link from 'next/link';
 import { useSweepstakes } from '../../hooks/use-sweepstake-step';
+import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
+import { featureFlags } from '@/lib/feature-flags';
 
 const VisibilityTypeField = () => {
   const form = useFormContext<GiveawayFormSchema>();
+  const { featureFlags: flags } = useSweepstakes();
 
+  const hasPublicSweepstakesAccess = featureFlags.parse(
+    flags,
+    PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
+  );
   return (
     <FormField
       control={form.control}
@@ -74,12 +82,28 @@ const VisibilityTypeField = () => {
                 <SelectValue placeholder="Select visibility type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="PUBLIC">Public</SelectItem>
+                <SelectItem
+                  value="PUBLIC"
+                  disabled={!hasPublicSweepstakesAccess}
+                >
+                  Public
+                </SelectItem>
                 <SelectItem value="PRIVATE">Private</SelectItem>
               </SelectContent>
             </Select>
           </FormControl>
-
+          {!hasPublicSweepstakesAccess && (
+            <FormDescription className="text-red-600">
+              You do not have permission to make sweepstakes public.{' '}
+              <Link
+                href="/support"
+                className="font-semibold underline hover:text-red-800"
+              >
+                Contact support
+              </Link>{' '}
+              to enable this feature for your account.
+            </FormDescription>
+          )}
           <FormMessage />
         </FormItem>
       )}
