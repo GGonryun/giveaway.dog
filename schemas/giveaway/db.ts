@@ -89,7 +89,8 @@ export const PUBLIC_SWEEPSTAKES_PAYLOAD = {
   terms: true,
   timing: true,
   details: true,
-  team: true
+  team: true,
+  visibility: true
 } satisfies Prisma.SweepstakesInclude;
 
 export type PublicSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{

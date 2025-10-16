@@ -12,13 +12,14 @@ import { SweepstakesStatusSummaryBadge } from '@/components/sweepstakes/status-b
 export const GiveawayItem: React.FC<{
   sweepstakes: PublicSweepstakeSchema;
 }> = ({ sweepstakes }) => {
-  const { name, banner, endDate, startDate, featured, status } = sweepstakes;
+  const { id, name, slug, banner, endDate, startDate, featured, status, host } =
+    sweepstakes;
 
   const isEnded = date.hasExpired(new Date(endDate));
   const isPending = isBefore(new Date(), new Date(startDate));
 
   return (
-    <Link href={`/browse/${sweepstakes.id}`}>
+    <Link href={`/browse/${slug ?? id}`}>
       <Card
         className={cn(
           'group overflow-hidden pt-0  flex flex-col h-full hover:scale-[1.03] transition-transform duration-200',
@@ -59,7 +60,7 @@ export const GiveawayItem: React.FC<{
             {isPending
               ? `Starts ${formatDistanceToNowStrict(startDate, { addSuffix: true })}`
               : `${formatDistanceToNowStrict(endDate)} ${isBefore(endDate, new Date()) ? 'ago' : 'left'}`}{' '}
-            • by {sweepstakes.host.name}
+            • by {host.name}
           </Typography>
         </CardContent>
       </Card>

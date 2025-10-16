@@ -102,7 +102,7 @@ export type MinimumAgeRestrictionSchema = z.infer<
 
 const sweepstakesVisibilitySchema = z.object({
   visibility: z.nativeEnum(VisibilityType),
-  url: z
+  slug: z
     .string()
     .min(3, 'URL slug is required')
     .max(50, 'URL slug is too long')

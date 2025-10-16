@@ -43,4 +43,48 @@ export namespace datetime {
   export const daysAgo = (days: number) => {
     return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   };
+
+  export const toTimeZoneDisplay = (timeZone: string) => {
+    try {
+      const date = new Date();
+
+      // Calculate GMT offset manually
+      const utcDate = new Date(
+        date.toLocaleString('en-US', { timeZone: 'UTC' })
+      );
+      const tzDate = new Date(date.toLocaleString('en-US', { timeZone }));
+      const offsetMs = utcDate.getTime() - tzDate.getTime();
+      const offsetHours = Math.floor(Math.abs(offsetMs) / (1000 * 60 * 60));
+      const offsetMinutes = Math.floor(
+        (Math.abs(offsetMs) % (1000 * 60 * 60)) / (1000 * 60)
+      );
+      const offsetSign = offsetMs <= 0 ? '+' : '-';
+      const gmtOffset = `GMT${offsetSign}${offsetHours.toString().padStart(2, '0')}:${offsetMinutes.toString().padStart(2, '0')}`;
+
+      // Get the long timezone name
+      const longName = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        timeZoneName: 'long'
+      })
+        .formatToParts(date)
+        .find((part) => part.type === 'timeZoneName')?.value;
+
+      // Format as "(GMT-08:00) Pacific Standard Time"
+      if (longName) {
+        return `(${gmtOffset}) ${longName}`;
+      }
+
+      // Fallback to short format with offset
+      const shortName = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        timeZoneName: 'short'
+      })
+        .formatToParts(date)
+        .find((part) => part.type === 'timeZoneName')?.value;
+
+      return shortName ? `(${gmtOffset}) ${shortName}` : timeZone;
+    } catch (error) {
+      return timeZone;
+    }
+  };
 }

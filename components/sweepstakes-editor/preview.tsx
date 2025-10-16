@@ -112,7 +112,7 @@ export const GiveawayPreview: React.FC = () => {
         },
         visibility: {
           visibility: formValues.visibility?.visibility || 'PRIVATE',
-          url: formValues.visibility?.url || ''
+          slug: formValues.visibility?.slug || ''
         },
         criteria: {
           minTasksCompleted: formValues.criteria?.minTasksCompleted || 1,

@@ -9,22 +9,6 @@ import z from 'zod';
 const getUserSweepstakesParticipation = procedure()
   .authorization({ required: false })
   .input(z.object({ id: z.string() }))
-  .cache(({ user, input }) => {
-    if (!user) {
-      return undefined;
-    }
-    return {
-      keyParts: [
-        `sweepstakes-${input.id}-user-${user.id}-participation`,
-        `sweepstakes-user-${user.id}-participation`
-      ],
-      tags: [
-        `sweepstakes-${input.id}-user-${user.id}-participation`,
-        `sweepstakes-user-${user.id}-participation`
-      ],
-      revalidate: 30
-    };
-  })
   .output(userParticipationSchema.optional())
   .handler(async ({ db, user, input }) => {
     if (!user) return undefined;
@@ -44,7 +28,9 @@ const getUserSweepstakesParticipation = procedure()
       where: {
         userId: user.id,
         task: {
-          sweepstakesId: input.id
+          sweepstakes: {
+            OR: [{ id: input.id }, { visibility: { slug: input.id } }]
+          }
         },
         status: {
           in: ['COMPLETED']

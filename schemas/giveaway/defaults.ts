@@ -102,7 +102,7 @@ export const DEFAULT_SWEEPSTAKES_DESIGN: Prisma.SweepstakesDesignUncheckedCreate
 
 export const DEFAULT_SWEEPSTAKES_VISIBILITY: Prisma.SweepstakesVisibilityCreateWithoutSweepstakesInput =
   {
-    url: null,
+    slug: null,
     visibility: 'PRIVATE'
   };
 

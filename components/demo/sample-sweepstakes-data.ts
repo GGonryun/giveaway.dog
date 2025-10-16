@@ -67,7 +67,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   },
   visibility: {
     visibility: 'PUBLIC',
-    url: 'demo-giveaway'
+    slug: 'demo-giveaway'
   },
   criteria: {
     minTasksCompleted: 1,

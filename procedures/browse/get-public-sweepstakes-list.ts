@@ -21,6 +21,7 @@ const getPublicSweepstakesList = procedure()
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
         status: 'ACTIVE',
+        visibility: { visibility: 'PUBLIC' },
         OR: [
           {
             timing: {

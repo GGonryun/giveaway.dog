@@ -3,7 +3,7 @@ import getParticipantSweepstake from '@/procedures/browse/get-participant-sweeps
 import { notFound } from 'next/navigation';
 import getUserSweepstakesParticipation from '@/procedures/browse/get-user-sweepstakes-participation';
 import findUser from '@/procedures/user/find-user';
-import getAgeVerification from '@/procedures/sweepstakes/get-age-verification';
+import getAgeVerification from '@/procedures/browse/get-age-verification';
 import { computeState } from '@/lib/sweepstakes';
 import { Metadata } from 'next';
 import { date } from '@/lib/date';

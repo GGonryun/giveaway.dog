@@ -31,7 +31,10 @@ export const SweepstakesPromotion: React.FC<ParticipantSweepstakeSchema> = ({
   sweepstakes
 }) => {
   const browse = useBrowseSweepstakesPage();
-  const liveUrl = browse.url({ sweepstakesId: sweepstakes.id });
+  const liveUrl = browse.url({
+    sweepstakesId: sweepstakes.id,
+    slug: sweepstakes.visibility.slug
+  });
 
   const [utmSource, setUtmSource] = useState('');
   const [utmMedium, setUtmMedium] = useState('');

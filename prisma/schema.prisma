@@ -294,7 +294,7 @@ model SweepstakesVisibility {
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
   visibility VisibilityType @default(PRIVATE)
-  url        String?        @unique
+  slug       String?        @unique
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
 }

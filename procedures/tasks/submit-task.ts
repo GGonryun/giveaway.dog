@@ -14,12 +14,10 @@ const submitTask = procedure()
   )
   .output(
     z.object({
-      sweepstakesId: z.string()
+      sweepstakesId: z.string(),
+      sweepstakesSlug: z.string().nullable().optional()
     })
   )
-  .invalidate(async ({ output, user }) => [
-    `sweepstakes-${output.sweepstakesId}-user-${user.id}-participation`
-  ])
   .handler(async ({ db, user, input }) => {
     const task = await db.task.findUnique({
       where: {
@@ -28,7 +26,8 @@ const submitTask = procedure()
       include: {
         sweepstakes: {
           include: {
-            timing: true
+            timing: true,
+            visibility: true
           }
         }
       }
@@ -92,7 +91,10 @@ const submitTask = procedure()
       }
     });
 
-    return task;
+    return {
+      sweepstakesId: task.sweepstakes.id,
+      sweepstakesSlug: task.sweepstakes.visibility?.slug
+    };
   });
 
 export default submitTask;

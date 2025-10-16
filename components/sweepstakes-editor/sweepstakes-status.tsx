@@ -51,68 +51,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   const now = new Date();
   const hasEnded = isAfter(now, endDate);
 
-  const formatDateInTimeZone = (date: Date) => {
-    try {
-      // Use toLocaleString to format date with timezone
-      return new Intl.DateTimeFormat('en-US', {
-        timeZone,
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        timeZoneName: 'short'
-      }).format(date);
-    } catch (error) {
-      // Fallback to basic format if timezone is invalid
-      return datetime.format(date, 'long');
-    }
-  };
-
-  const getTimezoneDisplay = () => {
-    try {
-      const date = new Date();
-
-      // Calculate GMT offset manually
-      const utcDate = new Date(
-        date.toLocaleString('en-US', { timeZone: 'UTC' })
-      );
-      const tzDate = new Date(date.toLocaleString('en-US', { timeZone }));
-      const offsetMs = utcDate.getTime() - tzDate.getTime();
-      const offsetHours = Math.floor(Math.abs(offsetMs) / (1000 * 60 * 60));
-      const offsetMinutes = Math.floor(
-        (Math.abs(offsetMs) % (1000 * 60 * 60)) / (1000 * 60)
-      );
-      const offsetSign = offsetMs <= 0 ? '+' : '-';
-      const gmtOffset = `GMT${offsetSign}${offsetHours.toString().padStart(2, '0')}:${offsetMinutes.toString().padStart(2, '0')}`;
-
-      // Get the long timezone name
-      const longName = new Intl.DateTimeFormat('en-US', {
-        timeZone,
-        timeZoneName: 'long'
-      })
-        .formatToParts(date)
-        .find((part) => part.type === 'timeZoneName')?.value;
-
-      // Format as "(GMT-08:00) Pacific Standard Time"
-      if (longName) {
-        return `(${gmtOffset}) ${longName}`;
-      }
-
-      // Fallback to short format with offset
-      const shortName = new Intl.DateTimeFormat('en-US', {
-        timeZone,
-        timeZoneName: 'short'
-      })
-        .formatToParts(date)
-        .find((part) => part.type === 'timeZoneName')?.value;
-
-      return shortName ? `(${gmtOffset}) ${shortName}` : timeZone;
-    } catch (error) {
-      return timeZone;
-    }
-  };
-
   const getWinnerSelectionStatus = () => {
     if (status === SweepstakesStatus.ACTIVE && !hasEnded) {
       return 'Winners will need to be selected after sweepstakes ends';
@@ -191,7 +129,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
           <div>
             <div className="text-sm font-medium">{timeInfo}</div>
             <div className="text-xs text-muted-foreground">
-              {getTimezoneDisplay()}
+              {datetime.toTimeZoneDisplay(timeZone)}
             </div>
           </div>
         </div>
@@ -202,7 +140,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
             <div>
               <div className="text-sm font-medium">Start Date</div>
               <div className="text-sm text-muted-foreground">
-                {formatDateInTimeZone(startDate)}
+                {datetime.format(startDate, 'long')}
               </div>
             </div>
           </div>
@@ -211,7 +149,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
             <div>
               <div className="text-sm font-medium">End Date</div>
               <div className="text-sm text-muted-foreground">
-                {formatDateInTimeZone(endDate)}
+                {datetime.format(endDate, 'long')}
               </div>
             </div>
           </div>

@@ -4,6 +4,7 @@ import { SweepstakesStatus } from '@prisma/client';
 
 export const publicSweepstakesSchema = z.object({
   id: z.string(),
+  slug: z.string().optional(),
   name: z.string(),
   description: z.string(),
   banner: z.string().optional(),
@@ -27,6 +28,7 @@ export const tryToPublicSweepstakes = (
 ): PublicSweepstakeSchema | undefined => {
   const organized = {
     id: sweepstakes.id,
+    slug: sweepstakes.visibility?.slug ?? undefined,
     name: sweepstakes.details?.name,
     description: sweepstakes.details?.description,
     banner: sweepstakes.details?.banner ?? undefined,

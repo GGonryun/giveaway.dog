@@ -88,6 +88,7 @@ export const AgeVerification = ({
             checked={isChecked}
             onCheckedChange={(checked) => setIsChecked(checked as boolean)}
             required={required}
+            disabled={verifyAgeProcedure.isLoading}
           />
           <Label
             htmlFor="age-verification"

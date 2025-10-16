@@ -169,7 +169,7 @@ export const toStorableVisibility = (
   return {
     create: {
       visibility: visibility.visibility,
-      url: visibility.url || null
+      slug: visibility.slug || null
     }
   };
 };

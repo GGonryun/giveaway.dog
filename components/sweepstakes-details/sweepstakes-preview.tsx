@@ -33,7 +33,10 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   const { sweepstakes, winners } = props;
   const browse = useBrowseSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
-  const liveUrl = browse.url({ sweepstakesId: sweepstakes.id });
+  const liveUrl = browse.url({
+    sweepstakesId: sweepstakes.id,
+    slug: sweepstakes.visibility.slug
+  });
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
   const totalPrizeSlots = sweepstakes.prizes.reduce(

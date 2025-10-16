@@ -1,13 +1,14 @@
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { computeUrl } from '../hooks/use-url';
+import { Nil } from '@/lib/types';
 
-type BrowsePageArgs = { sweepstakesId: string };
+type BrowsePageArgs = { sweepstakesId: string; slug: Nil<string> };
 export const useBrowseSweepstakesPage = () => {
   const router = useRouter();
 
   const path = useCallback(
-    (args: BrowsePageArgs) => `/browse/${args.sweepstakesId}`,
+    (args: BrowsePageArgs) => `/browse/${args.slug ?? args.sweepstakesId}`,
     []
   );
 

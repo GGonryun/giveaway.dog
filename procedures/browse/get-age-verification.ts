@@ -16,12 +16,15 @@ const getAgeVerification = procedure()
   .handler(async ({ input, user }) => {
     if (!user?.id) return null;
 
-    const ageVerification = await prisma.ageVerification.findUnique({
+    const ageVerification = await prisma.ageVerification.findFirst({
       where: {
-        userId_sweepstakesId: {
-          userId: user.id,
-          sweepstakesId: input.sweepstakesId
-        }
+        userId: user.id,
+        OR: [
+          {
+            sweepstakesId: input.sweepstakesId
+          },
+          { sweepstakes: { visibility: { slug: input.sweepstakesId } } }
+        ]
       }
     });
 

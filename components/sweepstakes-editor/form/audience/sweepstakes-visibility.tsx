@@ -94,7 +94,7 @@ const UrlSlugField = () => {
   return (
     <FormField
       control={form.control}
-      name="visibility.url"
+      name="visibility.slug"
       render={({ field }) => (
         <FormItem>
           <div className="flex items-end gap-1">

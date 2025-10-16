@@ -20,9 +20,12 @@ const getParticipantSweepstake = procedure()
   )
   .output(participantSweepstakeSchema)
   .handler(async ({ input, db }) => {
-    const sweepstakes = await db.sweepstakes.findUnique({
+    const sweepstakes = await db.sweepstakes.findFirst({
       where: {
-        id: input.sweepstakesId
+        OR: [
+          { id: input.sweepstakesId },
+          { visibility: { slug: input.sweepstakesId } }
+        ]
       },
       include: PARTICIPANT_SWEEPSTAKES_PAYLOAD
     });
