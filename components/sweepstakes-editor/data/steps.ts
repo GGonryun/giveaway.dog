@@ -22,6 +22,8 @@ export const FIELD_TO_STEP_MAP: Record<FieldKey, SweepstakeStep> = {
   terms: 'setup',
   timing: 'setup',
   audience: 'audience',
+  visibility: 'audience',
+  criteria: 'audience',
   tasks: 'tasks',
   prizes: 'prizes',
   design: 'design'
@@ -29,7 +31,7 @@ export const FIELD_TO_STEP_MAP: Record<FieldKey, SweepstakeStep> = {
 
 export const STEP_TO_FIELD_MAP: Record<SweepstakeStep, FieldKey[]> = {
   setup: ['setup', 'terms', 'timing'],
-  audience: ['audience'],
+  audience: ['audience', 'visibility', 'criteria'],
   tasks: ['tasks'],
   prizes: ['prizes'],
   design: ['design']

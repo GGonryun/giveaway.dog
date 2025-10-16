@@ -1,6 +1,6 @@
 - [ ] Control sweepstake visibility.
-- [ ] Add a way to pause sweepstakes.
 - [ ] Set winner criteria in the sweepstakes edit/create form.
+- [ ] Add a way to pause sweepstakes.
 
 - [ ] Add limits to how many active sweepstakes an organization can have at once.
 - [ ] Add a 30 day limit to how long a sweepstake can be active.

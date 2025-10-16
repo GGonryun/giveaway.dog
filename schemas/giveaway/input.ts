@@ -8,7 +8,12 @@ import {
 } from './db';
 import { compact } from 'lodash';
 import { toJsonObject } from '@/lib/json';
-import { DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND } from './defaults';
+import {
+  DEFAULT_ALLOW_MULTIPLE_WINS,
+  DEFAULT_MIN_QUALITY_SCORE,
+  DEFAULT_MIN_TASK_COMPLETED,
+  DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND
+} from './defaults';
 
 const toSetup = (
   data: FormSweepstakesGetPayload['details']
@@ -149,16 +154,51 @@ export const toDesignInput = (
   };
 };
 
-export const toSweepstakesInput = (
-  giveaway: FormSweepstakesGetPayload
-): Omit<SweepstakesInputSchema, 'id'> => {
+const toVisibilityInput = (
+  data: FormSweepstakesGetPayload['visibility']
+): SweepstakesInputSchema['visibility'] => {
+  if (!data)
+    return {
+      visibility: 'PRIVATE',
+      url: undefined
+    };
+
   return {
-    setup: toSetup(giveaway.details),
-    terms: toTermsInput(giveaway.terms),
-    audience: toAudienceInput(giveaway.audience),
-    timing: toTimingInput(giveaway.timing),
-    prizes: toPrizesInput(giveaway.prizes),
-    tasks: toTasksInput(giveaway.tasks),
-    design: toDesignInput(giveaway.design)
+    visibility: data.visibility ?? 'PRIVATE',
+    url: data.url ?? undefined
   };
 };
+
+const toCriteriaInput = (
+  data: FormSweepstakesGetPayload['criteria']
+): SweepstakesInputSchema['criteria'] => {
+  if (!data)
+    return {
+      minQualityScore: DEFAULT_MIN_QUALITY_SCORE,
+      minTasksCompleted: DEFAULT_MIN_TASK_COMPLETED,
+      allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS
+    };
+
+  return {
+    minQualityScore:
+      typeof data.minQualityScore === 'number'
+        ? data.minQualityScore
+        : DEFAULT_MIN_QUALITY_SCORE,
+    minTasksCompleted: data.minTasksCompleted ?? DEFAULT_MIN_TASK_COMPLETED,
+    allowMultipleWins: data.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS
+  };
+};
+
+export const toSweepstakesInput = (
+  giveaway: FormSweepstakesGetPayload
+): Omit<SweepstakesInputSchema, 'id'> => ({
+  setup: toSetup(giveaway.details),
+  terms: toTermsInput(giveaway.terms),
+  audience: toAudienceInput(giveaway.audience),
+  timing: toTimingInput(giveaway.timing),
+  prizes: toPrizesInput(giveaway.prizes),
+  tasks: toTasksInput(giveaway.tasks),
+  design: toDesignInput(giveaway.design),
+  visibility: toVisibilityInput(giveaway.visibility),
+  criteria: toCriteriaInput(giveaway.criteria)
+});

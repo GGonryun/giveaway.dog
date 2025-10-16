@@ -235,6 +235,8 @@ model Sweepstakes {
   terms            SweepstakesTerms?
   audience         SweepstakesAudience?
   design           SweepstakesDesign?
+  visibility       SweepstakesVisibility?
+  criteria         SweepstakesWinnerCriteria?
   ageVerifications AgeVerification[]
   prizes           Prize[]
   tasks            Task[]
@@ -279,6 +281,32 @@ model SweepstakesAudience {
   requireEmail          Boolean?
   regionalRestriction   RegionalRestriction?
   minimumAgeRestriction MinimumAgeRestriction?
+}
+
+enum VisibilityType {
+  PUBLIC
+  PRIVATE
+}
+
+model SweepstakesVisibility {
+  id            String      @id @default(cuid())
+  sweepstakesId String      @unique
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+
+  visibility VisibilityType @default(PRIVATE)
+  url        String?        @unique
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+model SweepstakesWinnerCriteria {
+  id            String      @id @default(cuid())
+  sweepstakesId String      @unique
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+
+  minTasksCompleted Int?     @default(1)
+  minQualityScore   Int?     @default(70)
+  allowMultipleWins Boolean? @default(false)
 }
 
 enum SweepstakesStatus {

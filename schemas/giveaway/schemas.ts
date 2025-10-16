@@ -1,4 +1,8 @@
-import { RegionalRestrictionFilter, SweepstakesStatus } from '@prisma/client';
+import {
+  RegionalRestrictionFilter,
+  SweepstakesStatus,
+  VisibilityType
+} from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';
@@ -96,6 +100,39 @@ export type MinimumAgeRestrictionSchema = z.infer<
   typeof minimumAgeRestrictionSchema
 >;
 
+const sweepstakesVisibilitySchema = z.object({
+  visibility: z.nativeEnum(VisibilityType),
+  url: z
+    .string()
+    .min(3, 'URL slug is required')
+    .max(50, 'URL slug is too long')
+    .nullable()
+    .optional()
+});
+
+export type SweepstakesVisibilitySchema = z.infer<
+  typeof sweepstakesVisibilitySchema
+>;
+
+const sweepstakesWinnerCriteriaSchema = z.object({
+  minTasksCompleted: z
+    .number()
+    .int()
+    .min(1, 'Minimum tasks must be at least 1')
+    .default(1),
+  minQualityScore: z
+    .number()
+    .int()
+    .min(0, 'Quality score must be between 0-100')
+    .max(100, 'Quality score must be between 0-100')
+    .default(70),
+  allowMultipleWins: z.boolean().default(false)
+});
+
+export type SweepstakesWinnerCriteriaSchema = z.infer<
+  typeof sweepstakesWinnerCriteriaSchema
+>;
+
 const giveawayAudienceSchema = z.object({
   requireEmail: z.boolean(),
   regionalRestriction: regionalRestrictionSchema,
@@ -191,7 +228,9 @@ export const giveawayFormSchema = (validateEndDate: boolean) =>
     audience: giveawayAudienceSchema,
     tasks: giveawayFormTaskSchema,
     prizes: giveawayFormPrizeSchema,
-    design: giveawayDesignSchema
+    design: giveawayDesignSchema,
+    visibility: sweepstakesVisibilitySchema,
+    criteria: sweepstakesWinnerCriteriaSchema
   });
 
 export type GiveawayFormSchema = z.infer<ReturnType<typeof giveawayFormSchema>>;

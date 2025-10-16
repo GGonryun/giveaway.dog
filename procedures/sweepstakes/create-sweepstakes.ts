@@ -13,7 +13,9 @@ import {
   DEFAULT_SWEEPSTAKES_PRIZES,
   DEFAULT_SWEEPSTAKES_TASKS,
   DEFAULT_SWEEPSTAKES_TERMS,
-  DEFAULT_SWEEPSTAKES_TIMING
+  DEFAULT_SWEEPSTAKES_TIMING,
+  DEFAULT_SWEEPSTAKES_VISIBILITY,
+  DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
 } from '@/schemas/giveaway/defaults';
 import { findUserTeamQuery } from './shared';
 
@@ -69,6 +71,12 @@ export const createSweepstakes = procedure()
         },
         design: {
           create: DEFAULT_SWEEPSTAKES_DESIGN
+        },
+        visibility: {
+          create: DEFAULT_SWEEPSTAKES_VISIBILITY
+        },
+        criteria: {
+          create: DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
         }
       }
     });

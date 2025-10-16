@@ -23,6 +23,9 @@ export const DEFAULT_NOTIFICATION_TIMEFRAME_DAYS = 7;
 export const DEFAULT_CLAIM_DEADLINE_DAYS = 7;
 export const DEFAULT_GOVERNING_LAW_COUNTRY_CODE = 'USA';
 export const DEFAULT_SPONSOR_NAME = 'Giveaway Sponsor';
+export const DEFAULT_MIN_QUALITY_SCORE = 60;
+export const DEFAULT_MIN_TASK_COMPLETED = 1;
+export const DEFAULT_ALLOW_MULTIPLE_WINS = false;
 
 export const DEFAULT_MINIMUM_AGE_RESTRICTION: MinimumAgeRestrictionSchema = {
   value: DEFAULT_MINIMUM_AGE,
@@ -95,4 +98,17 @@ const DEFAULT_DESIGN_DATA: GiveawayDesignSchema = {
 export const DEFAULT_SWEEPSTAKES_DESIGN: Prisma.SweepstakesDesignUncheckedCreateWithoutSweepstakesInput =
   {
     data: DEFAULT_DESIGN_DATA
+  };
+
+export const DEFAULT_SWEEPSTAKES_VISIBILITY: Prisma.SweepstakesVisibilityCreateWithoutSweepstakesInput =
+  {
+    url: null,
+    visibility: 'PRIVATE'
+  };
+
+export const DEFAULT_SWEEPSTAKES_WINNER_CRITERIA: Prisma.SweepstakesWinnerCriteriaCreateWithoutSweepstakesInput =
+  {
+    minQualityScore: DEFAULT_MIN_QUALITY_SCORE,
+    minTasksCompleted: 1,
+    allowMultipleWins: false
   };

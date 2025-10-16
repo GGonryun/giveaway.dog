@@ -109,6 +109,15 @@ export const GiveawayPreview: React.FC = () => {
           displayDescription: formValues.design?.displayDescription !== false,
           background: (formValues.design?.background ||
             DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND) as GiveawayDesignBackgroundSchema
+        },
+        visibility: {
+          visibility: formValues.visibility?.visibility || 'PRIVATE',
+          url: formValues.visibility?.url || ''
+        },
+        criteria: {
+          minTasksCompleted: formValues.criteria?.minTasksCompleted || 1,
+          minQualityScore: formValues.criteria?.minQualityScore || 70,
+          allowMultipleWins: formValues.criteria?.allowMultipleWins || false
         }
       };
     } catch (error) {

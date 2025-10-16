@@ -64,5 +64,14 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       type: 'color',
       color: '#edf0f4'
     }
+  },
+  visibility: {
+    visibility: 'PUBLIC',
+    url: 'demo-giveaway'
+  },
+  criteria: {
+    minTasksCompleted: 1,
+    minQualityScore: 70,
+    allowMultipleWins: false
   }
 };

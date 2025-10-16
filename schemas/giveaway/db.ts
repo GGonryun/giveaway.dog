@@ -16,7 +16,9 @@ export const FORM_SWEEPSTAKES_PAYLOAD = {
   terms: true,
   timing: true,
   details: true,
-  design: true
+  design: true,
+  visibility: true,
+  criteria: true
 } satisfies Prisma.SweepstakesInclude;
 
 export type FormSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
@@ -49,7 +51,9 @@ export const PARTICIPANT_SWEEPSTAKES_PAYLOAD = {
   timing: true,
   details: true,
   team: true,
-  design: true
+  design: true,
+  visibility: true,
+  criteria: true
 } satisfies Prisma.SweepstakesInclude;
 
 export type ParticipantSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{

@@ -7,6 +7,11 @@ import { SweepstakesInputSchema, TeamSweepstakesGetPayload } from './db';
 import { compact } from 'lodash';
 import { assertNever } from '@/lib/errors';
 import { isStorablePrize, isStorableTask } from './is';
+import {
+  DEFAULT_ALLOW_MULTIPLE_WINS,
+  DEFAULT_MIN_QUALITY_SCORE,
+  DEFAULT_MIN_TASK_COMPLETED
+} from './defaults';
 
 const toStorableDetails = (setup: SweepstakesInputSchema['setup']) => {
   return {
@@ -155,6 +160,37 @@ const toStorableDesign = (
   };
 };
 
+export const toStorableVisibility = (
+  visibility: SweepstakesInputSchema['visibility']
+):
+  | Prisma.SweepstakesVisibilityUncheckedCreateNestedOneWithoutSweepstakesInput
+  | undefined => {
+  if (!visibility) return undefined;
+  return {
+    create: {
+      visibility: visibility.visibility,
+      url: visibility.url || null
+    }
+  };
+};
+
+export const toStorableCriteria = (
+  criteria: SweepstakesInputSchema['criteria']
+):
+  | Prisma.SweepstakesWinnerCriteriaUncheckedCreateNestedOneWithoutSweepstakesInput
+  | undefined => {
+  if (!criteria) return undefined;
+  return {
+    create: {
+      minTasksCompleted:
+        criteria.minTasksCompleted ?? DEFAULT_MIN_TASK_COMPLETED,
+      minQualityScore: criteria.minQualityScore ?? DEFAULT_MIN_QUALITY_SCORE,
+      allowMultipleWins:
+        criteria.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS
+    }
+  };
+};
+
 export const toStorableSweepstakes = (
   sweepstakes: TeamSweepstakesGetPayload,
   input: SweepstakesInputSchema & { status?: SweepstakesStatus }
@@ -169,6 +205,8 @@ export const toStorableSweepstakes = (
     audience: toStorableAudience(input.audience),
     prizes: toStorablePrizes(input.prizes),
     tasks: toStorableTasks(input.tasks),
-    design: toStorableDesign(input.design)
+    design: toStorableDesign(input.design),
+    visibility: toStorableVisibility(input.visibility),
+    criteria: toStorableCriteria(input.criteria)
   };
 };
