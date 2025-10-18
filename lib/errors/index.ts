@@ -71,6 +71,12 @@ export class ApplicationError extends Error {
   }
 }
 
+export const isApplicationError = (
+  error: unknown
+): error is ApplicationError => {
+  return error instanceof ApplicationError;
+};
+
 export const assertNever = (value: never): never => {
   throw new Error(`Unexpected value: ${value}`);
 };

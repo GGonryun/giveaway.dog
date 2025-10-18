@@ -7,7 +7,8 @@ export const providerTypeSchema = z.union([
   z.literal('twitter'),
   z.literal('google'),
   z.literal('discord'),
-  z.literal('email')
+  z.literal('email'),
+  z.literal('steam')
 ]);
 
 export type ProviderTypeSchema = z.infer<typeof providerTypeSchema>;
@@ -36,13 +37,15 @@ export const PROVIDER_SCHEMA_LABELS: Record<ProviderTypeSchema, string> = {
   twitter: 'X (Twitter)',
   google: 'Google',
   discord: 'Discord',
-  email: 'Email'
+  email: 'Email',
+  steam: 'Steam'
 };
 
 export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
   twitter: true,
   google: true,
   discord: true,
+  steam: true,
   email: false
 };
 

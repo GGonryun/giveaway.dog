@@ -8,9 +8,8 @@ import {
 } from '@/schemas/giveaway/schemas';
 import { usePathname, useRouter } from 'next/navigation';
 import { UserProfileSchema } from '@/schemas/user';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedureAsync } from '@/lib/mrpc/hook';
 import submitTask from '@/procedures/tasks/submit-task';
-import { toast } from 'sonner';
 
 type SweepstakesParticipationPageContentProps = ParticipantSweepstakeSchema & {
   userProfile?: UserProfileSchema;
@@ -24,17 +23,8 @@ export const SweepstakesParticipationPage: React.FC<
   const router = useRouter();
   const pathname = usePathname();
 
-  const submitTaskProcedure = useProcedure({
-    action: submitTask,
-    onSuccess() {
-      router.refresh();
-      toast.success('Task completed!');
-    },
-    onFailure() {
-      toast.error(
-        'Failed to complete task. Please try again, if the issue persists contact support.'
-      );
-    }
+  const submitTaskProcedure = useProcedureAsync({
+    action: submitTask
   });
 
   const handleLogin = () => {
@@ -46,16 +36,13 @@ export const SweepstakesParticipationPage: React.FC<
     router.push('/profile/complete');
   };
 
-  const handleTaskComplete = (taskId: string) => {
-    submitTaskProcedure.run({ taskId });
-  };
-
   return (
     <GiveawayParticipation
       {...props}
       className="p-4 py-8 sm:py-16"
-      isLoading={submitTaskProcedure.isLoading}
-      onTaskComplete={handleTaskComplete}
+      onTaskComplete={async (taskId) => {
+        return await submitTaskProcedure.run({ taskId });
+      }}
       onLogin={handleLogin}
       onCompleteProfile={handleCompleteProfile}
     />

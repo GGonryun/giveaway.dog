@@ -17,6 +17,7 @@ export function useProcedure<TSuccess>(args: {
   isLoading: boolean;
   isPending: boolean;
   run: () => void;
+  reset: () => void;
 };
 export function useProcedure<TInput, TSuccess>(args: {
   action: (input: TInput) => Promise<Result<TSuccess>>;
@@ -26,6 +27,7 @@ export function useProcedure<TInput, TSuccess>(args: {
   isLoading: boolean;
   isPending: boolean;
   run: (input: TInput) => void;
+  reset: () => void;
 };
 // --- Implementation ---
 export function useProcedure<TInput, TSuccess>({
@@ -42,6 +44,7 @@ export function useProcedure<TInput, TSuccess>({
   isLoading: boolean;
   isPending: boolean;
   run: ((input: TInput) => void) | (() => void);
+  reset: () => void;
 } {
   const [isPending, setIsPending] = useState(true);
   const [isLoading, startTransition] = useTransition();
@@ -78,5 +81,70 @@ export function useProcedure<TInput, TSuccess>({
     [action, onSuccess, onFailure, startTransition]
   );
 
-  return { isLoading, isPending, run: handleAction };
+  const reset = useCallback(() => {
+    setIsPending(true);
+  }, []);
+
+  return { isLoading, isPending, reset, run: handleAction };
+}
+
+export function useProcedureAsync<TSuccess>(args: {
+  action: () => Promise<Result<TSuccess>>;
+}): {
+  isLoading: boolean;
+  run: () => Promise<TSuccess>;
+};
+export function useProcedureAsync<TInput, TSuccess>(args: {
+  action: (input: TInput) => Promise<Result<TSuccess>>;
+}): {
+  isLoading: boolean;
+  run: (input: TInput) => Promise<TSuccess>;
+};
+// --- Implementation ---
+export function useProcedureAsync<TInput, TSuccess>({
+  action
+}: {
+  action:
+    | ((input: TInput) => Promise<Result<TSuccess>>)
+    | (() => Promise<Result<TSuccess>>);
+}): {
+  isLoading: boolean;
+  run: ((input: TInput) => Promise<TSuccess>) | (() => Promise<TSuccess>);
+} {
+  const [isLoading, startTransition] = useTransition();
+
+  const handleAction = useCallback(
+    async (input: any): Promise<TSuccess> => {
+      return new Promise((resolve, reject) => {
+        startTransition(async () => {
+          try {
+            const result = await action(input);
+
+            if (!result) {
+              // this should only ever happen on redirects
+
+              return;
+            }
+
+            if (result.ok) {
+              resolve(result.data);
+            } else {
+              reject(result.data);
+            }
+          } catch (error: any) {
+            if (isNextRedirect(error)) {
+              throw error;
+            }
+            reject({
+              code: 'UNKNOWN_HTTP_ERROR',
+              message: parseError(error)
+            });
+          }
+        });
+      });
+    },
+    [action, startTransition]
+  );
+
+  return { isLoading, run: handleAction };
 }

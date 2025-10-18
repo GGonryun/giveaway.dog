@@ -3,6 +3,8 @@ import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
 import React from 'react';
 import { SocialXIcon } from '../ui/patterns/x-icon';
+import { SocialSteamIcon } from '../ui/patterns/steam-icon';
+import { TaskSchema } from '@/schemas/tasks/schemas';
 
 export type TaskTheme = {
   action: string;
@@ -38,6 +40,13 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         arrow: 'bg-black text-white fill-black',
         icon: SocialXIcon
       };
+    case 'STEAM_WISHLIST':
+      return {
+        action: 'bg-steam-1 text-white group-hover:bg-steam-1 hover:bg-steam-1',
+        symbol: 'bg-white',
+        arrow: 'bg-steam-1 text-steam-5 fill-steam-1',
+        icon: SocialSteamIcon
+      };
     default:
       throw assertNever(type);
   }
@@ -52,11 +61,12 @@ export const useTaskTheme = () => {
   if (!context) {
     throw new Error('useTaskTheme must be used within a TaskThemeProvider');
   }
-  return context.theme;
+  return context;
 };
 
 export const TaskThemeProvider: React.FC<{
   type: TaskType;
+
   children: React.ReactNode;
 }> = ({ type, children }) => {
   const theme = toTaskTheme(type);

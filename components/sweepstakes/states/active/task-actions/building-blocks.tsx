@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
 } from '@/components/ui/tooltip';
+import { Failure } from '@/lib/mrpc/types';
 import { cn } from '@/lib/utils';
 import { TaskSchema } from '@/schemas/tasks/schemas';
 import { CheckIcon } from 'lucide-react';
@@ -12,6 +14,8 @@ import { useMemo } from 'react';
 export type TaskActionHandlers = {
   onSubmit: () => void;
   onCancel: () => void;
+  isLoading: boolean;
+  error?: Failure['data'];
 };
 
 export type TaskActionProps<T extends TaskSchema = TaskSchema> =
@@ -40,6 +44,7 @@ const COMPLETE_TASK_LABEL = 'Complete Task';
 
 export const TaskControls: React.FC<TaskControlsProps> = ({
   disabled,
+  isLoading,
   onSubmit,
   onCancel
 }) => {
@@ -65,9 +70,10 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
           variant="outline"
           onClick={onSubmit}
           className="cursor-pointer"
+          disabled={isLoading}
         >
-          <CheckIcon />
-          {COMPLETE_TASK_LABEL}
+          {isLoading ? <Spinner /> : <CheckIcon />}
+          {isLoading ? <span>Loading...</span> : COMPLETE_TASK_LABEL}
         </Button>
       ),
     [disabled, onSubmit]

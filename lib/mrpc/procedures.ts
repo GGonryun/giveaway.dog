@@ -1,6 +1,6 @@
 import z from 'zod';
 import { ApplicationError } from '../errors';
-import { noProviderAuth } from '../auth-no-providers';
+import { noProviderAuth } from '../auth/config-no-providers';
 import { Session, User } from 'next-auth';
 import { Result, Success } from './types';
 import prisma from '../prisma';
@@ -244,7 +244,9 @@ class ProcedureBuilder<
             ok: false,
             data: {
               code: err.code,
-              message: err.message
+              message: err.message,
+              cause: err.cause,
+              data: err.data
             }
           };
         }
@@ -253,7 +255,9 @@ class ProcedureBuilder<
           ok: false,
           data: {
             code: 'INTERNAL_SERVER_ERROR',
-            message: err?.message ?? 'An unexpected error occurred'
+            message: err?.message ?? 'An unexpected error occurred',
+            cause: err.cause,
+            data: err?.data
           }
         };
       }

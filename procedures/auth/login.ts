@@ -46,10 +46,12 @@ const login = procedure()
             email,
             ...options
           });
+        } else if (provider === 'steam') {
+          await signIn('steam', options);
         } else {
           throw new ApplicationError({
             code: 'BAD_REQUEST',
-            message: 'Unsupported login provider'
+            message: `Unsupported login provider ${rawProvider || 'unknown'}.`
           });
         }
       } catch (error) {

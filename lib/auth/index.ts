@@ -5,11 +5,17 @@ import TwitterProvider from 'next-auth/providers/twitter';
 import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
 import NodemailerProvider from 'next-auth/providers/nodemailer';
-import { authConfig } from './auth.config';
+import { authConfig } from './config';
+import { SteamProvider } from './providers/steam';
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
   ...authConfig,
   providers: [
+    SteamProvider({
+      request,
+      callbackUrl: `${process.env.NEXTAUTH_URL}/api/auth/steam-callback`,
+      clientSecret: process.env.STEAM_SECRET!
+    }),
     TwitterProvider({
       allowDangerousEmailAccountLinking: true,
       clientId: process.env.TWITTER_ID,
@@ -53,4 +59,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       from: process.env.EMAIL_FROM
     })
   ]
-});
+}));

@@ -46,6 +46,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0
+    },
+    ['STEAM_WISHLIST']: {
+      id: '',
+      type: 'STEAM_WISHLIST',
+      title: 'Add to your Steam Wishlist',
+      appId: 'https://store.steampowered.com/app/2457870/Sandys_Great_Escape/',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
     }
   };
 

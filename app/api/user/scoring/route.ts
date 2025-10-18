@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       createdAt: 'asc'
     }
   });
-  console.log('Scoring requests:', requests.length);
+  console.info('Scoring requests:', requests.length);
 
   // compute user quality scores for users who had an event published in the last 24 hours.
   for (const request of requests) {
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       await prisma.userScoringRequest.delete({
         where: { id: request.id }
       });
-      console.log(`Processed scoring request for user ${request.userId}`);
+      console.info(`Processed scoring request for user ${request.userId}`);
     });
   }
 

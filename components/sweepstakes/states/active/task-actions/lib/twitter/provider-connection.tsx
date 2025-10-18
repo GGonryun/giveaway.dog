@@ -4,11 +4,6 @@ import {
   TaskContent,
   TaskControls
 } from '../../building-blocks';
-import {
-  TwitterConnectTaskSchema,
-  TwitterFollowTaskSchema,
-  TwitterRetweetTaskSchema
-} from '@/schemas/tasks/schemas';
 import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -20,20 +15,33 @@ import login from '@/procedures/auth/login';
 import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
 import { ProviderSchema } from '@/schemas/user';
+import {
+  TASK_PLATFORM,
+  TASK_PLATFORM_LABEL,
+  TaskSchema
+} from '@/schemas/tasks/schemas';
 
-const useTwitterConnection = (taskId: string) => {
+const useProviderConnection = ({
+  taskId,
+  providerId,
+  providerLabel
+}: {
+  taskId: string;
+  providerId: string;
+  providerLabel: string;
+}) => {
   const pathname = usePathname();
 
   const loginProcedure = useProcedure({
     action: login,
     onSuccess: () => {
-      toast.success('Twitter connected');
+      toast.success(`${providerLabel} connected`);
     }
   });
 
   const { userProfile } = useGiveawayParticipation();
   const provider = useMemo(() => {
-    return userProfile?.providers.find((p) => p.type === 'twitter');
+    return userProfile?.providers.find((p) => p.type === providerId);
   }, [userProfile?.providers]);
 
   const connect = () => {
@@ -44,7 +52,7 @@ const useTwitterConnection = (taskId: string) => {
 
     // Redirect to login with twitter
     return loginProcedure.run({
-      provider: 'twitter',
+      provider: providerId,
       revalidate: 'true',
       redirectTo
     });
@@ -53,27 +61,28 @@ const useTwitterConnection = (taskId: string) => {
   return { connect, provider };
 };
 
-export const WithTwitterConnection: React.FC<
-  TaskActionProps<
-    | TwitterConnectTaskSchema
-    | TwitterFollowTaskSchema
-    | TwitterRetweetTaskSchema
-  > & {
+export const WithProviderConnection: React.FC<
+  TaskActionProps<TaskSchema> & {
     render: (ctx: {
       theme: TaskTheme;
       provider: ProviderSchema;
     }) => React.ReactNode;
     disabled?: boolean;
   }
-> = ({ render, onSubmit, onCancel, task, disabled }) => {
-  const { connect, provider } = useTwitterConnection(task.id);
-
-  const theme = useTaskTheme();
+> = ({ render, onSubmit, onCancel, task, disabled, isLoading }) => {
+  const { theme } = useTaskTheme();
+  const providerId = TASK_PLATFORM[task.type];
+  const providerLabel = TASK_PLATFORM_LABEL[providerId];
+  const { connect, provider } = useProviderConnection({
+    taskId: task.id,
+    providerId,
+    providerLabel
+  });
 
   const loginProcedure = useProcedure({
     action: login,
     onSuccess: () => {
-      toast.success('Twitter connected');
+      toast.success(`${providerLabel} connected`);
     }
   });
 
@@ -85,6 +94,7 @@ export const WithTwitterConnection: React.FC<
         ) : (
           <>
             <Button
+              type="button"
               className={cn(theme.action)}
               onClick={connect}
               disabled={!!provider || loginProcedure.isLoading}
@@ -93,7 +103,7 @@ export const WithTwitterConnection: React.FC<
               Connect
             </Button>
             <p className="text-sm text-muted-foreground mt-2">
-              Connect an account to complete this task.
+              Connect to {providerLabel} to continue.
             </p>
           </>
         )}
@@ -101,6 +111,7 @@ export const WithTwitterConnection: React.FC<
       <Separator />
       <TaskControls
         disabled={disabled || !provider || loginProcedure.isLoading}
+        isLoading={isLoading}
         onSubmit={onSubmit}
         onCancel={onCancel}
       />

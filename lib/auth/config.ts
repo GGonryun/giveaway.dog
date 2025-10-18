@@ -19,12 +19,29 @@ const getAccountLabel = (account: any, profile: any): string | null => {
     }
     case 'twitter':
       return profile?.username ? `@${profile.username}` : null;
+    case 'steam':
+      return profile?.personaname || null;
     default:
       return null;
   }
 };
 
 export const authConfig = {
+  logger: {
+    error(error: any) {
+      console.log(error?.cause?.provider, error?.cause?.err?.message);
+      // Suppress the "no authorization code" error for Steam provider
+      // This is expected because Steam uses OpenID 2.0, not OAuth
+      if (
+        error?.type === 'CallbackRouteError' &&
+        error?.cause?.provider === 'steam' &&
+        error?.cause?.err.message?.includes('no authorization code')
+      ) {
+        return;
+      }
+      console.error(error);
+    }
+  },
   pages: {
     signIn: '/login',
     signOut: '/logout',

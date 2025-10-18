@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { SocialXIcon } from './x-icon';
 import { SocialGoogleIcon } from './google-icon';
 import { SocialDiscordIcon } from './discord-icon';
+import { SocialSteamIcon } from './steam-icon';
 
 interface ProviderIconProps {
   type: ProviderTypeSchema;
@@ -18,6 +19,7 @@ export const PROVIDER_ICON: Record<
   twitter: SocialXIcon,
   google: SocialGoogleIcon,
   discord: SocialDiscordIcon,
+  steam: SocialSteamIcon,
   email: Mail
 };
 

@@ -10,8 +10,8 @@ import { useTaskTheme } from '@/components/tasks/theme';
 
 export const VisitUrlTaskActionForm: React.FC<
   TaskActionProps<VisitUrlTaskSchema>
-> = ({ onCancel, onSubmit, task }) => {
-  const theme = useTaskTheme();
+> = ({ onCancel, onSubmit, task, isLoading }) => {
+  const { theme } = useTaskTheme();
   const [visited, setVisited] = useState(false);
 
   const handleVisit = () => setVisited(true);
@@ -38,6 +38,7 @@ export const VisitUrlTaskActionForm: React.FC<
       </TaskContent>
       <Separator />
       <TaskControls
+        isLoading={isLoading}
         disabled={!visited}
         onSubmit={handleSubmit}
         onCancel={handleCancel}

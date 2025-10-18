@@ -45,12 +45,20 @@ export const twitterRetweetTaskSchema = baseTaskSchema.extend({
 
 export type TwitterRetweetTaskSchema = z.infer<typeof twitterRetweetTaskSchema>;
 
+export const steamWishlistTaskSchema = baseTaskSchema.extend({
+  type: z.literal('STEAM_WISHLIST'),
+  appId: z.string().url('Steam App ID is required')
+});
+
+export type SteamWishlistTaskSchema = z.infer<typeof steamWishlistTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   visitUrlTaskSchema,
   twitterConnectTaskSchema,
   twitterFollowTaskSchema,
-  twitterRetweetTaskSchema
+  twitterRetweetTaskSchema,
+  steamWishlistTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -60,14 +68,15 @@ export const TASK_LABEL: Record<TaskType, string> = {
   VISIT_URL: 'Visit URL',
   TWITTER_CONNECT: 'Connect Twitter',
   TWITTER_FOLLOW: 'Follow on Twitter',
-  TWITTER_RETWEET: 'Retweet on Twitter'
+  TWITTER_RETWEET: 'Retweet on Twitter',
+  STEAM_WISHLIST: 'Steam Wishlist'
 };
 
 export type TaskSchema = z.infer<typeof taskSchema>;
 
 export type TaskOf<T extends TaskType> = Extract<TaskSchema, { type: T }>;
 
-export const taskPlatformSchema = z.enum(['website', 'twitter']);
+export const taskPlatformSchema = z.enum(['website', 'twitter', 'steam']);
 
 export type TaskPlatformSchema = z.infer<typeof taskPlatformSchema>;
 
@@ -76,7 +85,14 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   VISIT_URL: 'website',
   TWITTER_CONNECT: 'twitter',
   TWITTER_FOLLOW: 'twitter',
-  TWITTER_RETWEET: 'twitter'
+  TWITTER_RETWEET: 'twitter',
+  STEAM_WISHLIST: 'steam'
+};
+
+export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
+  website: 'Website',
+  twitter: 'X (Twitter)',
+  steam: 'Steam'
 };
 
 export const taskCategorySchema = z.enum(['social', 'engagement', 'community']);
@@ -88,7 +104,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   VISIT_URL: 'engagement',
   TWITTER_CONNECT: 'social',
   TWITTER_FOLLOW: 'social',
-  TWITTER_RETWEET: 'social'
+  TWITTER_RETWEET: 'social',
+  STEAM_WISHLIST: 'community'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',

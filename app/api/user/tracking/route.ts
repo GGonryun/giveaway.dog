@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
             where: { id: event.id }
           });
 
-          console.log(`Processed event ${event.id} for user ${event.userId}`);
+          console.info(`Processed event ${event.id} for user ${event.userId}`);
         });
 
         processedCount++;
@@ -116,7 +116,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    console.log(`Processed ${processedCount} events, ${errorCount} errors.`);
+    console.info(`Processed ${processedCount} events, ${errorCount} errors.`);
 
     return NextResponse.json({
       success: true,

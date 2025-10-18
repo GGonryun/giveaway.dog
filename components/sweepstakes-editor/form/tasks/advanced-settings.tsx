@@ -18,13 +18,13 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'TWITTER_CONNECT':
       case 'TWITTER_FOLLOW':
       case 'TWITTER_RETWEET':
+      case 'STEAM_WISHLIST':
         return (
           <>
             <MandatoryField />
             <TasksRequiredField />
           </>
         );
-
       default:
         throw assertNever(type);
     }

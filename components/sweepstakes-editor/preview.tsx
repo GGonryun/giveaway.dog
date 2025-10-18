@@ -140,7 +140,6 @@ export const GiveawayPreview: React.FC = () => {
 
   return (
     <GiveawayParticipation
-      isLoading={false}
       sweepstakes={mockSweepstakes}
       host={mockHost}
       participation={mockParticipation}
@@ -148,7 +147,7 @@ export const GiveawayPreview: React.FC = () => {
       userProfile={mockUserProfile}
       userParticipation={mockUserParticipation}
       state={previewState}
-      onTaskComplete={noop}
+      onTaskComplete={() => Promise.resolve()}
       onLogin={noop}
       onCompleteProfile={noop}
     />

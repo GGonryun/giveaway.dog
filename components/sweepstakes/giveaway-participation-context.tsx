@@ -22,9 +22,8 @@ export interface GiveawayParticipationProps {
   userProfile?: UserProfileSchema;
   userParticipation?: UserParticipationSchema;
   state: GiveawayState;
-  isLoading: boolean;
   hideBackground?: boolean;
-  onTaskComplete: (taskId: string) => void;
+  onTaskComplete: (taskId: string) => Promise<unknown>;
   onLogin: () => void;
   onCompleteProfile: () => void;
 }
@@ -51,7 +50,6 @@ export const GiveawayParticipationProvider: React.FC<
   userProfile,
   userParticipation,
   state = 'active',
-  isLoading,
   onTaskComplete,
   onLogin,
   onCompleteProfile
@@ -64,7 +62,6 @@ export const GiveawayParticipationProvider: React.FC<
     userProfile,
     userParticipation,
     state,
-    isLoading,
     onTaskComplete,
     onLogin,
     onCompleteProfile

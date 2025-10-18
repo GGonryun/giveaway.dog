@@ -1,23 +1,24 @@
 import { TaskActionProps } from '../../building-blocks';
 import { TwitterFollowTaskSchema } from '@/schemas/tasks/schemas';
 import Link from 'next/link';
-import { WithTwitterConnection } from './shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DisqualificationWarning } from './disqualification-warning';
+import { WithProviderConnection } from './provider-connection';
 
 export const TwitterFollowTaskActionForm: React.FC<
   TaskActionProps<TwitterFollowTaskSchema>
-> = ({ onCancel, onSubmit, task }) => {
+> = ({ onCancel, onSubmit, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
   return (
-    <WithTwitterConnection
+    <WithProviderConnection
       task={task}
       disabled={!performedAction}
       onCancel={onCancel}
       onSubmit={onSubmit}
+      isLoading={isLoading}
       render={({ theme }) => (
         <div className="space-y-4">
           {performedAction ? (

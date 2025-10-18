@@ -1,5 +1,5 @@
 import NextAuth from 'next-auth';
-import { authConfig } from '@/lib/auth.config';
+import { authConfig } from '@/lib/auth/config';
 
 // Don't invoke Middleware on some paths
 export const config = {

@@ -85,6 +85,13 @@
     --input: oklch(0.9401 0 0);
     --ring: oklch(0 0 0);
 
+    /* Steam palette */
+    --steam-1: oklch(0.2178 0.0145 266.91);
+    --steam-2: oklch(0.7725 0.114 236.18);
+    --steam-3: oklch(0.2728 0.0349 254.06);
+    --steam-4: oklch(0.3856 0.0527 243.67);
+    --steam-5: oklch(0.8657 0.0215 241.39);
+
     /* Chart palette */
     --chart-1: oklch(0.7459 0.1483 156.4499);
     --chart-2: oklch(0.5393 0.2713 286.7462);
@@ -257,6 +264,12 @@
     --color-chart-3: var(--chart-3);
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
+
+    --color-steam-1: var(--steam-1);
+    --color-steam-2: var(--steam-2);
+    --color-steam-3: var(--steam-3);
+    --color-steam-4: var(--steam-4);
+    --color-steam-5: var(--steam-5);
 
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);

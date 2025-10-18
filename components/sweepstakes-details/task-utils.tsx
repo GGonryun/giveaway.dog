@@ -15,6 +15,8 @@ import {
   TaskCategorySchema
 } from '@/schemas/tasks/schemas';
 import { assertNever } from '@/lib/errors';
+import { SocialSteamIcon } from '../ui/patterns/steam-icon';
+import { SocialXIcon } from '../ui/patterns/x-icon';
 
 export const TaskStatusIcon: React.FC<{ status: CompletionStatus }> = ({
   status
@@ -75,7 +77,9 @@ export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'website':
       return <Globe2Icon className="h-4 w-4 text-gray-500" />;
     case 'twitter':
-      return <TwitterIcon className="h-4 w-4 text-blue-500" />;
+      return <SocialXIcon className="h-4 w-4 text-black" />;
+    case 'steam':
+      return <SocialSteamIcon className="h-4 w-4 text-steam-1" />;
     default:
       throw assertNever(platform);
   }

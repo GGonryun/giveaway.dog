@@ -2,6 +2,8 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
+import { validateTask } from '@/lib/task/validation';
+import { toTaskSchema } from '@/schemas/tasks/parse';
 import { CompletionStatus } from '@prisma/client';
 import { z } from 'zod';
 
@@ -82,6 +84,26 @@ const submitTask = procedure()
         message: 'This giveaway has ended and is no longer accepting entries.'
       });
     }
+
+    // Check if task has already been completed
+    const existingCompletion = await db.taskCompletion.findFirst({
+      where: {
+        userId: user.id,
+        taskId: input.taskId
+      }
+    });
+
+    if (existingCompletion) {
+      throw new ApplicationError({
+        code: 'VALIDATION_ERROR',
+        message: 'You have already completed this task.'
+      });
+    }
+
+    await validateTask(db, {
+      task: toTaskSchema(task),
+      userId: user.id
+    });
 
     await db.taskCompletion.create({
       data: {

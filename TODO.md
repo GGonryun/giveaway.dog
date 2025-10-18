@@ -1,22 +1,27 @@
+- [ ] Add Discord integration.
+- [ ] Add Twitch integration.
+
+- [ ] Twitter integration should use a full url instead of just usernames.
+
+- [ ] Add support for teamId based feature flags that affect all members in a team.
 - [ ] Add a way to pause sweepstakes.
 
 - [ ] Add limits to how many active sweepstakes an organization can have at once.
 - [ ] Add a 30 day limit to how long a sweepstake can be active.
 
-- [ ] Add Steam integrations (wishlist, games owned, game tracking, etc).
-- [ ] Add Discord integration.
-- [ ] Add Twitch integration.
-
-- [ ] As a host, I want to be able to notify users in-app about rewards and sweepstakes they have won.
-
 - [ ] Migrate all Charity Games giveaways to Giveaway Dog.
+- [ ] Add Facebook integration.
+- [ ] Add Instagram integration.
+- [ ] Add a Charity Games integration.
+- [ ] As a host, I want to use my own custom domain and url for my sweepstakes.
 
-- [ ] Add a customizable email template for winners.
+- [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
 
-- [ ] As a host, I want to be able to attach screenshots/proof that au ser has claimed a prize.
-
+- [ ] As a host, I want to be able to attach screenshots/proof that a user has claimed a prize.
 - [ ] As a host, I want to display my organization's logo and social media links on the sweepstake page.
 - [ ] As a host, I want to to have a host profile page that looks like link tree so people can navigate and go to my socials.
+- [ ] As a host, I want protection against malicious users and teams trying to mimic my profile or copy my name.
+
 - [ ] Add a way to report sweepstakes.
 - [ ] Add a way to report users.
 - [ ] Add a way to block users from sweepstakes.
@@ -30,4 +35,6 @@
 - [ ] Add YouTube integration.
 - [ ] Add a form integration.
 - [ ] Add a recurring tasks.
+- [ ] As a host, I want to be able to notify users in-app about rewards and sweepstakes they have won.
+- [ ] Add a customizable email template for winners.
 - [ ] Add a changelog to the marketing site and the main website.

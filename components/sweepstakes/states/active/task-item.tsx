@@ -23,25 +23,37 @@ import { TaskContent } from './task-actions/building-blocks';
 import { Spinner } from '@/components/ui/spinner';
 import { Flex } from '@/components/ui/flex';
 import { LoginOptions } from '@/components/auth/login-options';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { FailureData, isFailureData } from '@/lib/mrpc/types';
 
 export const TaskItem: React.FC<{
   open: boolean;
   setOpen: (open: boolean) => void;
   task: TaskSchema;
   completed: boolean;
-}> = ({ open, setOpen, task, completed }) => {
+}> = ({ open, setOpen, task, completed: initialCompleted }) => {
   const pathname = usePathname();
+  const router = useRouter();
+  const { theme } = useTaskTheme();
 
-  const theme = useTaskTheme();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<FailureData | undefined>(undefined);
+  const [completed, setCompleted] = React.useState(initialCompleted);
 
-  const { isLoading, userProfile, onTaskComplete } = useGiveawayParticipation();
+  const { userProfile, onTaskComplete } = useGiveawayParticipation();
+
   const taskRef = useRef<HTMLDivElement>(null);
 
   const entriesText = useMemo(
     () => `${task.value} ${pluralize('entry', task.value)}`,
     [task.value]
   );
+
+  // Sync with prop when it changes from server
+  useEffect(() => {
+    setCompleted(initialCompleted);
+  }, [initialCompleted]);
 
   useEffect(() => {
     if (open && taskRef.current) {
@@ -52,13 +64,33 @@ export const TaskItem: React.FC<{
     }
   }, [open]);
 
-  const handleTaskSubmit = () => {
-    onTaskComplete(task.id);
-    setOpen(false);
+  const handleTaskSubmit = async () => {
+    try {
+      setError(undefined);
+      setIsLoading(true);
+
+      await onTaskComplete(task.id);
+
+      setCompleted(true);
+      setOpen(false);
+      toast.success('Task completed!');
+      router.refresh();
+    } catch (error) {
+      isFailureData(error)
+        ? setError(error)
+        : setError({
+            message: 'An unexpected error occurred. Please try again later.',
+            code: 'UNKNOWN_HTTP_ERROR'
+          });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleTaskCancel = () => {
+    setIsLoading(false);
     setOpen(false);
+    setError(undefined);
   };
 
   return (
@@ -163,6 +195,8 @@ export const TaskItem: React.FC<{
         ) : (
           <TaskActionForm
             task={task}
+            error={error}
+            isLoading={isLoading}
             onSubmit={handleTaskSubmit}
             onCancel={handleTaskCancel}
           />

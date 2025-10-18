@@ -67,7 +67,7 @@ export const ActiveParticipation: React.FC = () => {
                   userParticipation?.completedTasks.includes(task.id) ?? false;
 
                 return (
-                  <TaskThemeProvider type={task.type} key={index}>
+                  <TaskThemeProvider key={index} type={task.type}>
                     <TaskItem
                       open={open === task.id}
                       setOpen={(status) => handleOpen(status ? task.id : null)}

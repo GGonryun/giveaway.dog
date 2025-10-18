@@ -30,6 +30,8 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return <TwitterUsernameFormField />;
       case 'TWITTER_RETWEET':
         return <TweetIdFormField />;
+      case 'STEAM_WISHLIST':
+        return <SteamAppIdFormField />;
       default:
         throw assertNever(type);
     }
@@ -109,6 +111,26 @@ const TweetIdFormField: React.FC = () => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Tweet ID</FormLabel>
+          <FormControl>
+            <Input type="text" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+const SteamAppIdFormField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.appId`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Steam App ID</FormLabel>
           <FormControl>
             <Input type="text" {...field} />
           </FormControl>

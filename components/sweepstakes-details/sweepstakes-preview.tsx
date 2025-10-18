@@ -151,7 +151,6 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
               <GiveawayParticipation
                 hideBackground
                 device={previewDevice}
-                isLoading={false}
                 sweepstakes={sweepstakes}
                 host={host}
                 participation={mockParticipation}
@@ -159,7 +158,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                 userProfile={mockUserProfile}
                 userParticipation={mockUserParticipation}
                 state={state}
-                onTaskComplete={noop}
+                onTaskComplete={async () => Promise.resolve()}
                 onLogin={noop}
                 onCompleteProfile={noop}
               />
