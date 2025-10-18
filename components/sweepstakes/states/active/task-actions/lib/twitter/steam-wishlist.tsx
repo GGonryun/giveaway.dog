@@ -124,6 +124,16 @@ export const PrivateSteamProfileDialog: React.FC<{
           </li>
         </ul>
 
+        <Button asChild className="w-full">
+          <Link
+            href="https://steamcommunity.com/my/edit/settings"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Edit Settings
+          </Link>
+        </Button>
+
         <Alert variant="info">
           <AlertCircleIcon className="h-4 w-4" />
           <AlertTitle>Important</AlertTitle>
