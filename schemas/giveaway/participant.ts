@@ -1,6 +1,6 @@
 import { DeepNullable } from '@/lib/types';
 import { ParticipantSweepstakesGetPayload } from './db';
-import { GiveawayWinnerSchema } from './schemas';
+import { GiveawayPrizeSchema } from './schemas';
 import z from 'zod';
 import { toUserSchema } from '../user';
 import { toTaskInput } from './input';
@@ -43,19 +43,20 @@ export type SweepstakesParticipantSchema = z.infer<
   typeof sweepstakesParticipantSchema
 >;
 
-export const toSweepstakesWinners = (
+export const toSweepstakesPrizes = (
   prizes: ParticipantSweepstakesGetPayload['prizes']
-): DeepNullable<GiveawayWinnerSchema>[] => {
+): DeepNullable<GiveawayPrizeSchema>[] => {
   return prizes.map((p) => ({
     prizeId: p.id,
     prizeName: p.name ?? null,
+    quota: p.quota,
     winners: toWinners(p.winners)
   }));
 };
 
 const toWinners = (
   winners: ParticipantSweepstakesGetPayload['prizes'][number]['winners']
-): GiveawayWinnerSchema['winners'] => {
+): GiveawayPrizeSchema['winners'] => {
   return winners.map((w) => {
     const raw = toTaskInput(w.taskCompletion.task);
     const task = taskSchema.safeParse(raw);

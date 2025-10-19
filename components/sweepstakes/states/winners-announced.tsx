@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/table';
 
 export const WinnersAnnounced: React.FC = () => {
-  const { winners } = useGiveawayParticipation();
+  const { prizes: winners } = useGiveawayParticipation();
 
   const allWinners = winners.flatMap((prize) =>
     prize.winners.map((winner) => ({

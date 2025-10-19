@@ -26,7 +26,6 @@ import { CancelConfirmationModal } from '@/components/sweepstakes/cancel-confirm
 import { PrePublishValidationModal } from '@/components/sweepstakes/pre-publish-validation-modal';
 import { useSweepstakesPage } from '../sweepstakes/use-sweepstakes-page';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
-import { SweepstakesStatus } from '@prisma/client';
 import { useDeleteSweepstakes } from '../sweepstakes/use-delete-sweepstakes';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
@@ -42,10 +41,11 @@ import { Button } from '../ui/button';
 import { SaveIcon } from 'lucide-react';
 import { DemoModeProvider, useDemoMode } from './contexts/demo-mode-context';
 import { FeatureFlagKeySchema } from '@/schemas/feature-flags';
+import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 
 export const SweepstakesForm: React.FC<{
   sweepstakes: GiveawayFormSchema;
-  status: SweepstakesStatus;
+  status: DerivedSweepstakeStatus;
   featureFlags: FeatureFlagKeySchema[];
   validateId?: boolean;
   isDemo?: boolean;

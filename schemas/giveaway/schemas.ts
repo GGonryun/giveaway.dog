@@ -12,6 +12,7 @@ import {
   taskCompletionSchema,
   sweepstakesParticipantSchema
 } from './participant';
+import { derivedSweepstakesStatusSchema } from '../sweepstakes';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -237,7 +238,7 @@ export type GiveawayFormSchema = z.infer<ReturnType<typeof giveawayFormSchema>>;
 
 export const giveawaySchema = (validateEndDate: boolean) =>
   giveawayFormSchema(validateEndDate).extend({
-    status: z.nativeEnum(SweepstakesStatus),
+    status: derivedSweepstakesStatusSchema,
     id: z.string()
   });
 
@@ -261,9 +262,10 @@ export const giveawayHostSchema = z.object({
 export type GiveawayHostSchema = z.infer<typeof giveawayHostSchema>;
 
 // Winner Information Schema
-const giveawayWinnerSchema = z.object({
+const giveawayPrizeSchema = z.object({
   prizeId: z.string(),
   prizeName: z.string(),
+  quota: z.number(),
   winners: z.array(
     userProfileSchema.extend({
       winningTaskName: z.string().optional()
@@ -271,7 +273,7 @@ const giveawayWinnerSchema = z.object({
   )
 });
 
-export type GiveawayWinnerSchema = z.infer<typeof giveawayWinnerSchema>;
+export type GiveawayPrizeSchema = z.infer<typeof giveawayPrizeSchema>;
 
 export const giveawayParticipationSchema = z.object({
   totalEntries: z.number().int().min(0),
@@ -340,7 +342,7 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
 export const participantSweepstakeSchema = z.object({
   sweepstakes: giveawaySchema(false),
   host: giveawayHostSchema,
-  winners: giveawayWinnerSchema.array(),
+  prizes: giveawayPrizeSchema.array(),
   participation: giveawayParticipationSchema
 });
 

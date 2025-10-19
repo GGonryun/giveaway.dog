@@ -3,9 +3,10 @@ import { assertNever } from './errors';
 
 export namespace date {
   export const now = () => new Date();
-  export const hasExpired = (date?: Date | null | undefined) => {
+  export const hasExpired = (date?: Date | string | null | undefined) => {
     if (!date) return false;
-    return isBefore(date, now());
+    const parsedDate = typeof date === 'string' ? new Date(date) : date;
+    return isBefore(parsedDate, now());
   };
 
   export const format = (

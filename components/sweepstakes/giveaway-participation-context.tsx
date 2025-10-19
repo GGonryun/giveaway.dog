@@ -5,7 +5,7 @@ import {
   GiveawayParticipationSchema,
   GiveawayState,
   GiveawayHostSchema,
-  GiveawayWinnerSchema,
+  GiveawayPrizeSchema,
   GiveawaySchema,
   UserParticipationSchema,
   DeviceType
@@ -18,7 +18,7 @@ export interface GiveawayParticipationProps {
   sweepstakes: GiveawaySchema;
   host: GiveawayHostSchema;
   participation: GiveawayParticipationSchema;
-  winners: GiveawayWinnerSchema[];
+  prizes: GiveawayPrizeSchema[];
   userProfile?: UserProfileSchema;
   userParticipation?: UserParticipationSchema;
   state: GiveawayState;
@@ -46,7 +46,7 @@ export const GiveawayParticipationProvider: React.FC<
   participation,
   sweepstakes,
   host,
-  winners,
+  prizes: winners,
   userProfile,
   userParticipation,
   state = 'active',
@@ -58,7 +58,7 @@ export const GiveawayParticipationProvider: React.FC<
     participation,
     sweepstakes,
     host,
-    winners,
+    prizes: winners,
     userProfile,
     userParticipation,
     state,

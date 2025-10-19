@@ -53,7 +53,7 @@ export const GiveawayPreview: React.FC = () => {
 
       return {
         id: 'preview-sweepstakes-id',
-        status: 'ACTIVE' as const,
+        status: 'RUNNING' as const,
         setup: {
           name: formValues.setup?.name ?? DEFAULT_SWEEPSTAKES_NAME,
           description: formValues.setup?.description ?? '',
@@ -143,7 +143,7 @@ export const GiveawayPreview: React.FC = () => {
       sweepstakes={mockSweepstakes}
       host={mockHost}
       participation={mockParticipation}
-      winners={mockWinners}
+      prizes={mockWinners}
       userProfile={mockUserProfile}
       userParticipation={mockUserParticipation}
       state={previewState}

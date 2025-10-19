@@ -4,6 +4,8 @@ import React from 'react';
 import { Outline } from '@/components/app/outline';
 import { EditGiveawayButton } from '@/components/sweepstakes/edit-giveaway-button';
 import { SweepstakesDetailsTabs } from '@/components/sweepstakes-details/sweepstakes-tabs';
+import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
+import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
 
 interface SweepstakesDetailPageProps {
   params: Promise<{ id: string; slug: string }>;
@@ -16,8 +18,18 @@ export default async function Layout({
 }: SweepstakesDetailPageProps) {
   const { id } = await params;
 
+  const status = await getSweepstakesStatus({ id });
+  if (!status.ok) {
+    return <div>Failed to load sweepstakes status: {status.data.code}</div>;
+  }
+
+  const isEditable = EDITABLE_DERIVED_STATUS[status.data.status];
+
   return (
-    <Outline title="Sweepstakes" action={<EditGiveawayButton id={id} />}>
+    <Outline
+      title="Sweepstakes"
+      action={isEditable && <EditGiveawayButton id={id} />}
+    >
       <SweepstakesDetailsTabs id={id}>{children}</SweepstakesDetailsTabs>
     </Outline>
   );

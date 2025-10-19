@@ -1,4 +1,3 @@
-import { SweepstakesStatus } from '@prisma/client';
 import { Badge } from '../ui/badge';
 import {
   differenceInDays,
@@ -13,6 +12,8 @@ import {
   STARTING_SOON_SWEEPSTAKE_THRESHOLD
 } from '@/lib/settings';
 import { Nullable } from '@/lib/types';
+import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+import { assertNever } from '@/lib/errors';
 
 const getStatusConfig = ({
   startDate,
@@ -24,49 +25,49 @@ const getStatusConfig = ({
   const hasEnded = isAfter(now, endDate);
 
   switch (status) {
-    case SweepstakesStatus.DRAFT:
+    case 'DRAFT':
       return {
         label: 'Draft',
         variant: 'secondary' as const,
         description: 'Your sweepstakes is being prepared'
       };
-    case SweepstakesStatus.ACTIVE:
-      if (!hasStarted) {
-        return {
-          label: 'Scheduled',
-          variant: 'outline' as const,
-          description: 'Your sweepstakes is scheduled to start'
-        };
-      } else if (hasEnded) {
-        return {
-          label: 'Finished',
-          variant: 'success' as const,
-          description: 'Your sweepstakes has finished'
-        };
-      } else {
-        return {
-          label: 'Active',
-          variant: 'default' as const,
-          description: 'Your sweepstakes is live'
-        };
-      }
-    case SweepstakesStatus.COMPLETED:
+    case 'RUNNING':
       return {
-        label: 'Finished',
+        label: 'Active',
+        variant: 'default' as const,
+        description: 'Your sweepstakes is live'
+      };
+    case 'SCHEDULED':
+      return {
+        label: 'Scheduled',
+        variant: 'outline' as const,
+        description: 'Your sweepstakes is scheduled to start'
+      };
+    case 'EXPIRED':
+      return {
+        label: 'Expired',
+        variant: 'destructive' as const,
+        description: 'Your sweepstakes has ended'
+      };
+    case 'COMPLETED':
+      return {
+        label: 'Completed',
         variant: 'success' as const,
-        description: 'Your sweepstakes has finished'
+        description: 'Your sweepstakes is complete'
+      };
+    case 'ERROR':
+      return {
+        label: 'Error',
+        variant: 'destructive' as const,
+        description: 'There is an issue with your sweepstakes timing'
       };
     default:
-      return {
-        label: 'Unknown',
-        variant: 'secondary' as const,
-        description: 'Status unknown'
-      };
+      throw assertNever(status);
   }
 };
 
 export type SweepstakeStatusBadgeProps = {
-  status: SweepstakesStatus;
+  status: DerivedSweepstakeStatus;
   startDate: Date;
   endDate: Date;
 };
@@ -90,7 +91,7 @@ export const SweepstakesStatusSummaryBadge: React.FC<
   const end = new Date(endDate);
   const isEnded = isAfter(now, end);
 
-  if (status === SweepstakesStatus.DRAFT) {
+  if (status === 'DRAFT') {
     return <Badge variant="secondary">Draft</Badge>;
   }
 
@@ -133,7 +134,7 @@ export const getSweepstakesTimingDescription = ({
   startDate
 }: Nullable<Partial<SweepstakeStatusBadgeProps>>): string => {
   const now = new Date();
-  if (!status || status === SweepstakesStatus.DRAFT) return 'Not started';
+  if (!status || status === 'DRAFT') return 'Not started';
   if (!startDate || !endDate) return 'Not started';
 
   if (isAfter(now, endDate))

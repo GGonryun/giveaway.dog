@@ -1,6 +1,10 @@
 import { z } from 'zod';
 import { PublicSweepstakesGetPayload } from './db';
 import { SweepstakesStatus } from '@prisma/client';
+import {
+  derivedSweepstakesStatusSchema,
+  toDerivedSweepstakeStatus
+} from '../sweepstakes';
 
 export const publicSweepstakesSchema = z.object({
   id: z.string(),
@@ -16,7 +20,7 @@ export const publicSweepstakesSchema = z.object({
     slug: z.string(),
     name: z.string()
   }),
-  status: z.nativeEnum(SweepstakesStatus),
+  status: derivedSweepstakesStatusSchema,
   participants: z.number(),
   featured: z.boolean().optional()
 });
@@ -34,7 +38,7 @@ export const tryToPublicSweepstakes = (
     banner: sweepstakes.details?.banner ?? undefined,
     startDate: sweepstakes.timing?.startDate,
     endDate: sweepstakes.timing?.endDate,
-    status: sweepstakes.status,
+    status: toDerivedSweepstakeStatus(sweepstakes),
     host: {
       id: sweepstakes.team?.id,
       slug: sweepstakes.team?.slug,

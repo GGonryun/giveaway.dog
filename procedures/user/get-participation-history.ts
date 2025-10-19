@@ -4,6 +4,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { participationHistorySchema } from '@/schemas/participation-history';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import z from 'zod';
+import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -90,7 +91,7 @@ const getParticipationHistory = procedure()
           completedTasks,
           lastParticipatedAt: lastParticipation.toISOString(),
           banner: sweepstakes.details?.banner ?? null,
-          sweepstakesStatus: sweepstakes.status,
+          sweepstakesStatus: toDerivedSweepstakeStatus(sweepstakes),
           _sortDate: lastParticipation
         };
       })

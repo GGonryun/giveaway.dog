@@ -7,6 +7,7 @@ import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { notFound } from 'next/navigation';
 import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
 import getUserFeatureFlags from '@/procedures/users/get-user-feature-flags';
+import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
 
 export const SweepstakeFormPage = async ({
   params
@@ -33,6 +34,13 @@ export const SweepstakeFormPage = async ({
   if (!featureFlags.ok) {
     return (
       <div>Failed to load user feature flags: {featureFlags.data.code}</div>
+    );
+  }
+
+  const isEditable = EDITABLE_DERIVED_STATUS[info.data.status];
+  if (!isEditable) {
+    return (
+      <div>Sweepstakes with status "{info.data.status}" cannot be edited.</div>
     );
   }
 

@@ -5,7 +5,10 @@ import z from 'zod';
 import { findUserSweepstakesQuery } from './shared';
 import { ApplicationError } from '@/lib/errors';
 
-import { SweepstakesStatus } from '@prisma/client';
+import {
+  derivedSweepstakesStatusSchema,
+  toDerivedSweepstakeStatus
+} from '@/schemas/sweepstakes';
 
 const getSweepstakesStatus = procedure()
   .authorization({ required: true })
@@ -13,7 +16,7 @@ const getSweepstakesStatus = procedure()
   .output(
     z.object({
       id: z.string(),
-      status: z.nativeEnum(SweepstakesStatus)
+      status: derivedSweepstakesStatusSchema
     })
   )
   .handler(async ({ db, user, input }) => {
@@ -21,10 +24,13 @@ const getSweepstakesStatus = procedure()
       where: findUserSweepstakesQuery({
         id: input.id,
         userId: user.id
-      })
+      }),
+      include: {
+        timing: true
+      }
     });
 
-    if (!data) {
+    if (!data || !data.timing) {
       throw new ApplicationError({
         code: 'NOT_FOUND',
         message: `Sweepstakes with ID ${input.id} not found`
@@ -33,7 +39,7 @@ const getSweepstakesStatus = procedure()
 
     return {
       id: data.id,
-      status: data.status
+      status: toDerivedSweepstakeStatus(data)
     };
   });
 

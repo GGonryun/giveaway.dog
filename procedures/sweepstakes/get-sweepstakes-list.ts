@@ -4,12 +4,15 @@ import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { minutesToSeconds } from 'date-fns';
 import {
+  DERIVED_TO_ACTUAL_STATUS_MAP,
   listSweepstakesDataSchema,
-  listSweepstakesFiltersSchema
+  listSweepstakesFiltersSchema,
+  toDerivedSweepstakeStatus
 } from '@/schemas/sweepstakes';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { getSweepstakesTimingDescription } from '@/components/sweepstakes/status-badge';
+import { Prisma } from '@prisma/client';
 
 const getSweepstakesList = procedure()
   .authorization({ required: true })
@@ -40,7 +43,7 @@ const getSweepstakesList = procedure()
   })
   .handler(async ({ input, user, db }) => {
     const page = input.page || 1;
-    const query = input.search
+    const searchQuery = input.search
       ? ({
           details: {
             name: {
@@ -51,18 +54,50 @@ const getSweepstakesList = procedure()
         } as const)
       : {};
 
-    const whereClause = {
-      ...query,
-      status: input.status && input.status !== 'ALL' ? input.status : undefined,
-      team: {
-        slug: input.slug,
-        members: {
-          some: {
-            userId: user.id
+    const timingQuery =
+      input.status === 'SCHEDULED'
+        ? {
+            startDate: {
+              gt: new Date()
+            }
           }
+        : input.status === 'RUNNING'
+          ? {
+              startDate: {
+                lte: new Date()
+              },
+              endDate: {
+                gte: new Date()
+              }
+            }
+          : input.status === 'EXPIRED'
+            ? {
+                endDate: {
+                  lt: new Date()
+                }
+              }
+            : undefined;
+
+    const statusQuery =
+      input.status && input.status !== 'ALL'
+        ? DERIVED_TO_ACTUAL_STATUS_MAP[input.status]
+        : undefined;
+
+    const teamQuery = {
+      slug: input.slug,
+      members: {
+        some: {
+          userId: user.id
         }
       }
     };
+
+    const whereClause = {
+      ...searchQuery,
+      status: statusQuery,
+      timing: timingQuery,
+      team: teamQuery
+    } satisfies Prisma.SweepstakesWhereInput;
 
     const sweepstakes = await db.sweepstakes.findMany({
       where: whereClause,
@@ -73,6 +108,11 @@ const getSweepstakesList = procedure()
         timing: true,
         tasks: {
           include: { completions: true }
+        },
+        prizes: {
+          include: {
+            winners: true
+          }
         }
       },
       orderBy: input.sortField
@@ -90,8 +130,9 @@ const getSweepstakesList = procedure()
 
     return {
       sweepstakes: sweepstakes.map((s) => {
+        const derivedStatus = toDerivedSweepstakeStatus(s);
         const timeLeft = getSweepstakesTimingDescription({
-          status: s.status,
+          status: derivedStatus,
           endDate: s.timing?.endDate,
           startDate: s.timing?.startDate
         });
@@ -104,13 +145,15 @@ const getSweepstakesList = procedure()
             task.completions.map((completion) => completion.userId)
           )
         ).size;
+
         return {
           id: s.id,
           name: s.details?.name ?? DEFAULT_SWEEPSTAKES_NAME,
-          status: s.status,
+          status: derivedStatus,
           entries,
           participants,
           timeLeft,
+          endsAt: s.timing?.endDate?.toISOString(),
           createdAt: s.createdAt.toISOString()
         };
       }),

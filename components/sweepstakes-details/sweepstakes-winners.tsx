@@ -4,14 +4,13 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Shuffle,
   ExternalLink,
-  ChevronDown,
-  ChevronUp,
   Info,
-  Pencil
+  Pencil,
+  Trash2,
+  CheckCircle2
 } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
 import { Label } from '@/components/ui/label';
@@ -33,10 +32,25 @@ import pluralize from 'pluralize';
 import { useProcedure } from '@/lib/mrpc/hook';
 import rollWinners from '@/procedures/sweepstakes/roll-winners';
 import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteria';
+import deleteWinner from '@/procedures/sweepstakes/delete-winner';
+import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from '@/components/ui/dialog';
+import { CompleteSweepstakesAlert } from '../sweepstakes-editor/complete-sweepstakes-alert';
+import {
+  DerivedSweepstakeStatus,
+  EDITABLE_DERIVED_STATUS
+} from '@/schemas/sweepstakes';
 
 interface GroupedPrize {
   id: string;
@@ -49,6 +63,7 @@ interface SlotBasedWinnerSystemProps {
   participants: SweepstakesParticipantSchema[];
   sweepstakesId: string;
   slug: string;
+  status: DerivedSweepstakeStatus;
   endDate: Date;
   criteria: SweepstakesWinnerCriteriaSchema;
 }
@@ -58,6 +73,7 @@ export const SweepstakesWinners = ({
   participants,
   sweepstakesId,
   slug,
+  status,
   endDate,
   criteria
 }: SlotBasedWinnerSystemProps) => {
@@ -68,9 +84,8 @@ export const SweepstakesWinners = ({
   const [isEditingCriteria, setIsEditingCriteria] = useState(false);
   const [editedCriteria, setEditedCriteria] =
     useState<SweepstakesWinnerCriteriaSchema>(criteria);
-  const [expandedWinners, setExpandedWinners] = useState<Set<string>>(
-    new Set()
-  );
+
+  const isEditable = EDITABLE_DERIVED_STATUS[status];
 
   const { run: runRollWinners, isLoading: isRolling } = useProcedure({
     action: rollWinners,
@@ -89,6 +104,22 @@ export const SweepstakesWinners = ({
         router.refresh();
       }
     });
+
+  const { run: runDeleteWinner, isLoading: isDeleting } = useProcedure({
+    action: deleteWinner,
+    onSuccess: () => {
+      router.refresh();
+    }
+  });
+
+  const { run: runCompleteSweepstakes, isLoading: isCompleting } = useProcedure(
+    {
+      action: completeSweepstakes,
+      onSuccess: () => {
+        router.push(`/app/${slug}`);
+      }
+    }
+  );
 
   const groupedPrizes: GroupedPrize[] = prizes.reduce((acc, prize) => {
     const existing = acc.find((g) => g.id === prize.id);
@@ -123,10 +154,7 @@ export const SweepstakesWinners = ({
       if (p.entries.length < criteriaToUse.minTasksCompleted) return false;
 
       // Check duplicate winners
-      if (
-        !criteriaToUse.allowMultipleWins &&
-        confirmedWinnerIds.includes(p.id)
-      )
+      if (!criteriaToUse.allowMultipleWins && confirmedWinnerIds.includes(p.id))
         return false;
 
       return true;
@@ -141,6 +169,29 @@ export const SweepstakesWinners = ({
       minTasksCompleted: currentCriteria.minTasksCompleted,
       preventDuplicateWinners: !currentCriteria.allowMultipleWins,
       rerollWinnerId: winnerId
+    });
+  };
+
+  const handleDeleteWinner = (winnerId: string) => {
+    if (
+      confirm(
+        'Are you sure you want to delete this winner? This action cannot be undone.'
+      )
+    ) {
+      runDeleteWinner({
+        winnerId,
+        sweepstakesId
+      });
+    }
+  };
+
+  const handlePickForSlot = () => {
+    runRollWinners({
+      sweepstakesId,
+      slug,
+      minQualityScore: currentCriteria.minQualityScore,
+      minTasksCompleted: currentCriteria.minTasksCompleted,
+      preventDuplicateWinners: !currentCriteria.allowMultipleWins
     });
   };
 
@@ -169,19 +220,14 @@ export const SweepstakesWinners = ({
     setIsEditingCriteria(false);
   };
 
-  const hasAnyWinners = prizes.some((p) => p.winner);
-
-  const toggleWinnerDetails = (winnerId: string) => {
-    setExpandedWinners((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(winnerId)) {
-        newSet.delete(winnerId);
-      } else {
-        newSet.add(winnerId);
-      }
-      return newSet;
+  const handleCompleteSweepstakes = () => {
+    runCompleteSweepstakes({
+      sweepstakesId,
+      slug
     });
   };
+
+  const hasAnyWinners = prizes.some((p) => p.winner);
 
   return (
     <div className="space-y-6">
@@ -199,144 +245,142 @@ export const SweepstakesWinners = ({
       )}
 
       <Card>
-        <CardHeader>
+        <CardHeader className="pb-1">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base">Winner Selection Criteria</CardTitle>
-            {!isEditingCriteria && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsEditingCriteria(true)}
-              >
-                <Pencil className="h-4 w-4 mr-2" />
-                Edit
-              </Button>
-            )}
+            <CardTitle className="text-lg">Winner Selection Criteria</CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsEditingCriteria(true)}
+              disabled={!isEditable}
+            >
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit
+            </Button>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {isEditingCriteria ? (
-            <>
-              <div className="space-y-2">
-                <Label htmlFor="minTasksCompleted">
-                  Minimum Tasks Completed
-                </Label>
-                <Input
-                  id="minTasksCompleted"
-                  type="number"
-                  min={1}
-                  value={editedCriteria.minTasksCompleted}
-                  onChange={(e) =>
-                    setEditedCriteria((prev) => ({
-                      ...prev,
-                      minTasksCompleted: parseInt(e.target.value) || 1
-                    }))
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="minQualityScore">
-                  Minimum Quality Score (%)
-                </Label>
-                <Select
-                  value={editedCriteria.minQualityScore.toString()}
-                  onValueChange={(value) =>
-                    setEditedCriteria((prev) => ({
-                      ...prev,
-                      minQualityScore: parseInt(value)
-                    }))
-                  }
-                >
-                  <SelectTrigger id="minQualityScore">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0">No minimum</SelectItem>
-                    <SelectItem value="50">50%</SelectItem>
-                    <SelectItem value="60">60%</SelectItem>
-                    <SelectItem value="70">70% (Recommended)</SelectItem>
-                    <SelectItem value="80">80%</SelectItem>
-                    <SelectItem value="90">90%</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="allowMultipleWins"
-                  checked={editedCriteria.allowMultipleWins}
-                  onCheckedChange={(checked) =>
-                    setEditedCriteria((prev) => ({
-                      ...prev,
-                      allowMultipleWins: checked
-                    }))
-                  }
-                />
-                <Label htmlFor="allowMultipleWins">
-                  Allow users to win multiple prizes
-                </Label>
-              </div>
-
-              <div className="pt-4 border-t">
-                <div className="text-sm text-muted-foreground">
-                  <strong>{getEligibleParticipants(editedCriteria).length}</strong> of{' '}
-                  {participants.length} participants meet these criteria
-                </div>
-              </div>
-
-              <div className="flex gap-2 pt-4">
-                <Button
-                  onClick={handleSaveCriteria}
-                  disabled={isUpdatingCriteria}
-                >
-                  {isUpdatingCriteria ? 'Saving...' : 'Save'}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleCancelEdit}
-                  disabled={isUpdatingCriteria}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </>
-          ) : (
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">
-                  Minimum Tasks Completed:
-                </span>
-                <span className="font-medium">
-                  {currentCriteria.minTasksCompleted}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">
-                  Minimum Quality Score:
-                </span>
-                <span className="font-medium">
-                  {currentCriteria.minQualityScore}%
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">
-                  Multiple Wins Allowed:
-                </span>
-                <span className="font-medium">
-                  {currentCriteria.allowMultipleWins ? 'Yes' : 'No'}
-                </span>
-              </div>
-              <div className="flex justify-between pt-2 border-t">
-                <span className="text-muted-foreground">Eligible Participants:</span>
-                <span className="font-medium">
-                  {getEligibleParticipants().length} of {participants.length}
-                </span>
-              </div>
+        <CardContent>
+          <div className="flex flex-wrap gap-4 text-sm">
+            <div className="flex items-center gap-1.5">
+              <span className="text-muted-foreground">Min Tasks:</span>
+              <Badge variant="secondary">
+                {currentCriteria.minTasksCompleted}
+              </Badge>
             </div>
-          )}
+            <div className="flex items-center gap-1.5">
+              <span className="text-muted-foreground">Min Quality:</span>
+              <Badge variant="secondary">
+                {currentCriteria.minQualityScore}%
+              </Badge>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-muted-foreground">Multiple Wins:</span>
+              <Badge variant="secondary">
+                {currentCriteria.allowMultipleWins ? 'Yes' : 'No'}
+              </Badge>
+            </div>
+            <div className="flex items-center gap-1.5 ml-auto">
+              <span className="text-muted-foreground">Eligible:</span>
+              <Badge variant="default">
+                {getEligibleParticipants().length} / {participants.length}
+              </Badge>
+            </div>
+          </div>
         </CardContent>
       </Card>
+
+      <Dialog open={isEditingCriteria} onOpenChange={setIsEditingCriteria}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Winner Selection Criteria</DialogTitle>
+            <DialogDescription>
+              Set requirements for participant eligibility when selecting
+              winners.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="minTasksCompleted">Minimum Tasks Completed</Label>
+              <Input
+                id="minTasksCompleted"
+                type="number"
+                min={1}
+                value={editedCriteria.minTasksCompleted}
+                onChange={(e) =>
+                  setEditedCriteria((prev) => ({
+                    ...prev,
+                    minTasksCompleted: parseInt(e.target.value) || 1
+                  }))
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="minQualityScore">Minimum Quality Score (%)</Label>
+              <Select
+                value={editedCriteria.minQualityScore.toString()}
+                onValueChange={(value) =>
+                  setEditedCriteria((prev) => ({
+                    ...prev,
+                    minQualityScore: parseInt(value)
+                  }))
+                }
+              >
+                <SelectTrigger id="minQualityScore">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">No minimum</SelectItem>
+                  <SelectItem value="50">50%</SelectItem>
+                  <SelectItem value="60">60%</SelectItem>
+                  <SelectItem value="70">70% (Recommended)</SelectItem>
+                  <SelectItem value="80">80%</SelectItem>
+                  <SelectItem value="90">90%</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="allowMultipleWins"
+                checked={editedCriteria.allowMultipleWins}
+                onCheckedChange={(checked) =>
+                  setEditedCriteria((prev) => ({
+                    ...prev,
+                    allowMultipleWins: checked
+                  }))
+                }
+              />
+              <Label htmlFor="allowMultipleWins">
+                Allow users to win multiple prizes
+              </Label>
+            </div>
+
+            <div className="pt-4 border-t">
+              <div className="text-sm text-muted-foreground">
+                <strong>
+                  {getEligibleParticipants(editedCriteria).length}
+                </strong>{' '}
+                of {participants.length} participants meet these criteria
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={handleCancelEdit}
+              disabled={isUpdatingCriteria}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleSaveCriteria} disabled={isUpdatingCriteria}>
+              {isUpdatingCriteria ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {!hasAnyWinners ? (
         <Card>
@@ -367,7 +411,7 @@ export const SweepstakesWinners = ({
               <Button
                 size="lg"
                 className="mt-4"
-                disabled={!hasEnded}
+                disabled={!hasEnded || !isEditable}
                 onClick={handlePickWinners}
               >
                 <Shuffle className="h-4 w-4 mr-2" />
@@ -378,7 +422,7 @@ export const SweepstakesWinners = ({
         </Card>
       ) : (
         <>
-          {emptySlots > 0 && (
+          {emptySlots > 0 ? (
             <Card>
               <CardContent className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
                 <div className="text-center sm:text-left">
@@ -389,12 +433,19 @@ export const SweepstakesWinners = ({
                     Pick more winners to fill all empty slots
                   </p>
                 </div>
-                <Button onClick={handlePickWinners} disabled={isRolling}>
+                <Button onClick={handlePickWinners} disabled={isRolling || !isEditable}>
                   <Shuffle className="h-4 w-4 mr-2" />
                   {isRolling ? 'Rolling...' : 'Pick Remaining'}
                 </Button>
               </CardContent>
             </Card>
+          ) : (
+            isEditable && (
+              <CompleteSweepstakesAlert
+                onComplete={handleCompleteSweepstakes}
+                isCompleting={isCompleting}
+              />
+            )
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {groupedPrizes.map((group) => (
@@ -430,14 +481,6 @@ export const SweepstakesWinners = ({
                         {slot.winner ? (
                           <div className="space-y-2 w-full">
                             <div className="flex items-center space-x-2">
-                              <Avatar className="h-8 w-8">
-                                <AvatarFallback className="text-xs">
-                                  {slot.winner.participant.name
-                                    ?.split(' ')
-                                    .map((n) => n[0])
-                                    .join('')}
-                                </AvatarFallback>
-                              </Avatar>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1">
                                   <div className="font-medium text-sm truncate">
@@ -464,78 +507,28 @@ export const SweepstakesWinners = ({
                             </div>
 
                             <div className="pt-2 border-t">
-                              <button
-                                onClick={() =>
-                                  toggleWinnerDetails(slot.winner!.id)
-                                }
-                                className="w-full text-left"
-                              >
-                                <div className="flex items-center justify-between">
-                                  <div className="flex-1">
-                                    <div className="text-xs text-muted-foreground">
-                                      Won via
-                                    </div>
-                                    <div className="text-xs font-medium truncate">
-                                      {slot.winner.taskCompletion.taskName}
-                                    </div>
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-xs text-muted-foreground">
+                                    Won via
                                   </div>
-                                  {expandedWinners.has(slot.winner.id) ? (
-                                    <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                                  ) : (
-                                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                                  )}
+                                  <div className="text-xs font-medium truncate">
+                                    {slot.winner.taskCompletion.taskName}
+                                  </div>
                                 </div>
-                              </button>
-
-                              {expandedWinners.has(slot.winner.id) && (
-                                <div className="mt-2 pt-2 border-t space-y-2 text-xs">
-                                  <div>
-                                    <span className="text-muted-foreground">
-                                      Completion ID:
-                                    </span>
-                                    <div className="font-mono text-xs break-all">
-                                      {slot.winner.taskCompletion.completionId}
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">
-                                      Completed At:
-                                    </span>
-                                    <div>
-                                      {slot.winner.taskCompletion.completedAt
-                                        ? format(
-                                            new Date(
-                                              slot.winner.taskCompletion.completedAt
-                                            ),
-                                            'MMM d, yyyy h:mm a'
-                                          )
-                                        : 'N/A'}
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">
-                                      Task ID:
-                                    </span>
-                                    <div className="font-mono text-xs break-all">
-                                      {slot.winner.taskCompletion.taskId}
-                                    </div>
-                                  </div>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="w-full mt-2"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      router.push(
-                                        `/app/${activeTeam.slug}/sweepstakes/${slot.winner!.taskCompletion.sweepstakeId}/entries`
-                                      );
-                                    }}
-                                  >
-                                    <ExternalLink className="h-3 w-3 mr-1" />
-                                    View in Entries Tab
-                                  </Button>
-                                </div>
-                              )}
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6"
+                                  onClick={() => {
+                                    router.push(
+                                      `/app/${activeTeam.slug}/sweepstakes/${slot.winner!.taskCompletion.sweepstakeId}/entries`
+                                    );
+                                  }}
+                                >
+                                  <ExternalLink className="h-3 w-3" />
+                                </Button>
+                              </div>
                             </div>
 
                             <div className="space-y-1.5 pt-2">
@@ -593,25 +586,57 @@ export const SweepstakesWinners = ({
                             </div>
                           </div>
                         ) : (
-                          <div className="text-center space-y-1">
+                          <div className="flex flex-col items-center text-center gap-y-2">
                             <DiceIcon isRolling={false} />
                             <p className="text-xs text-muted-foreground italic">
                               Waiting for draw...
                             </p>
+                            {hasEnded && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handlePickForSlot}
+                                disabled={isRolling || !isEditable}
+                                className="w-full"
+                              >
+                                <Shuffle className="h-4 w-4 mr-2" />
+                                {isRolling ? 'Rolling...' : 'Pick Winner'}
+                              </Button>
+                            )}
                           </div>
                         )}
                       </div>
 
-                      {slot.winner && (
-                        <Button
-                          variant="outline"
-                          onClick={() => handleReroll(slot.winner!.id)}
-                          disabled={isRolling}
-                          className="w-full"
-                        >
-                          <Shuffle className="h-4 w-4 mr-2" />
-                          {isRolling ? 'Rolling...' : 'Re-roll'}
-                        </Button>
+                      {slot.winner && isEditable && (
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              if (!slot.winner)
+                                return alert('No winner to re-roll');
+                              handleReroll(slot.winner.id);
+                            }}
+                            disabled={isRolling || isDeleting}
+                            className="flex-1"
+                          >
+                            <Shuffle className="h-4 w-4 mr-2" />
+                            {isRolling ? 'Rolling...' : 'Re-roll'}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => {
+                              if (!slot.winner)
+                                return alert('No winner to re-roll');
+
+                              return handleDeleteWinner(slot.winner.id);
+                            }}
+                            disabled={isRolling || isDeleting}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       )}
                     </div>
                   ))}

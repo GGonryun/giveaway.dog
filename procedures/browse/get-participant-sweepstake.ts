@@ -5,9 +5,14 @@ import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 import { toSweepstakesInput } from '@/schemas/giveaway/input';
-import { participantSweepstakeSchema } from '@/schemas/giveaway/schemas';
+import {
+  ParticipantSweepstakeSchema,
+  participantSweepstakeSchema
+} from '@/schemas/giveaway/schemas';
 import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
-import { toSweepstakesWinners } from '@/schemas/giveaway/participant';
+import { toSweepstakesPrizes } from '@/schemas/giveaway/participant';
+import { DeepNullable, DeepPartial } from '@/lib/types';
+import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 
 const getParticipantSweepstake = procedure()
   .authorization({
@@ -57,10 +62,10 @@ const getParticipantSweepstake = procedure()
       }
     });
 
-    const unparsed = {
+    const unparsed: DeepPartial<DeepNullable<ParticipantSweepstakeSchema>> = {
       sweepstakes: {
         id: sweepstakes.id,
-        status: sweepstakes.status,
+        status: toDerivedSweepstakeStatus(sweepstakes),
         ...toSweepstakesInput(sweepstakes)
       },
       host: {
@@ -69,7 +74,7 @@ const getParticipantSweepstake = procedure()
         name: sweepstakes.team.name,
         logo: sweepstakes.team.logo || DEFAULT_TEAM_LOGO
       },
-      winners: toSweepstakesWinners(sweepstakes.prizes),
+      prizes: toSweepstakesPrizes(sweepstakes.prizes),
       participation: {
         totalUsers: totalUsers.length,
         totalEntries: totalEntries

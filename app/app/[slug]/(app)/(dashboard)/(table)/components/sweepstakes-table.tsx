@@ -30,7 +30,8 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  FileCheck
+  FileCheck,
+  AlertTriangle
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -38,17 +39,20 @@ import {
   ListSweepstakesDataSchema,
   SortDirection,
   SortField,
-  SweepstakesDataSchema
+  SweepstakesDataSchema,
+  EDITABLE_DERIVED_STATUS
 } from '@/schemas/sweepstakes';
 
 import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
-import { SweepstakesStatus } from '@prisma/client';
 import { DeleteConfirmationModal } from '@/components/sweepstakes/delete-confirmation-modal';
 import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
 import { useEditSweepstakesPage } from '@/components/sweepstakes/use-edit-sweepstakes-page';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepstakes-details-page';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
+import { Badge } from '@/components/ui/badge';
+import { date } from '@/lib/date';
+import { DerivedStatusIcon } from '@/lib/sweepstake-status';
 
 interface SweepstakesTableProps {
   data: ListSweepstakesDataSchema;
@@ -131,22 +135,8 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
     setDeleteModal(null);
   };
 
-  // TODO: move out of component
-  const getStatusIcon = (status: SweepstakesDataSchema['status']) => {
-    switch (status) {
-      case 'ACTIVE':
-        return <Play className="h-4 w-4 text-green-500" />;
-      case 'DRAFT':
-        return <Edit className="h-4 w-4 text-gray-500" />;
-      case 'COMPLETED':
-        return <Calendar className="h-4 w-4 text-blue-500" />;
-      default:
-        return null;
-    }
-  };
-
   const handleRowClick = (item: SweepstakesDataSchema) => () => {
-    if (item.status === SweepstakesStatus.DRAFT) {
+    if (item.status === 'DRAFT') {
       editPage.navigateTo(item.id);
     } else {
       detailsPage.navigateTo(item.id);
@@ -170,82 +160,94 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
               </SortableHeader>
               <TableHead className="text-right w-24">Entries</TableHead>
               <TableHead className="text-right w-24">Users</TableHead>
+              <TableHead className="text-right w-32">Time Left</TableHead>
               <TableHead className="text-right w-28">Status</TableHead>
               <TableHead className="text-right w-8">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sweepstakes.map((item) => (
-              <TableRow
-                key={item.id}
-                className="group hover:bg-muted/50 h-12  cursor-pointer"
-                onClick={handleRowClick(item)}
-              >
-                <TableCell className="py-2 min-w-[256px]">
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      {getStatusIcon(item.status)}
-                      <div className="font-medium group-hover:text-primary group-hover:underline line-clamp-1">
-                        {item.name || DEFAULT_SWEEPSTAKES_NAME}
+            {sweepstakes.map((item) => {
+              const isEditable = EDITABLE_DERIVED_STATUS[item.status];
+              return (
+                <TableRow
+                  key={item.id}
+                  className="group hover:bg-muted/50 h-12  cursor-pointer"
+                  onClick={handleRowClick(item)}
+                >
+                  <TableCell className="py-2 min-w-[256px]">
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <DerivedStatusIcon status={item.status} size={4} />
+                        <div className="font-medium group-hover:text-primary group-hover:underline line-clamp-1">
+                          {item.name || DEFAULT_SWEEPSTAKES_NAME}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right w-24">
-                  <div className="flex items-center justify-end space-x-1 text-sm">
-                    <FileCheck className="h-3 w-3" />
-                    <span>{item.entries}</span>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right w-24">
-                  <div className="flex items-center justify-end space-x-1 text-sm">
-                    <Users className="h-3 w-3" />
-                    <span>{item.participants}</span>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right w-28">
-                  <div className="flex items-center justify-end text-sm">
+                  </TableCell>
+                  <TableCell className="text-right w-24">
+                    <div className="flex items-center justify-end space-x-1 text-sm">
+                      <FileCheck className="h-3 w-3" />
+                      <span>{item.entries}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right w-24">
+                    <div className="flex items-center justify-end space-x-1 text-sm">
+                      <Users className="h-3 w-3" />
+                      <span>{item.participants}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right w-32">
                     <span>{item.timeLeft}</span>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right w-8">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {item.status !== SweepstakesStatus.DRAFT && (
-                        <DropdownMenuItem asChild>
-                          <Link href={detailsPage.route(item.id)}>
-                            <Eye className="h-4 w-4 mr-2" />
-                            View Details
-                          </Link>
+                  </TableCell>
+                  <TableCell className="text-right w-28">
+                    <Badge variant="outline" className="gap-1.5">
+                      <DerivedStatusIcon status={item.status} size={3} />
+                      <span className="capitalize">
+                        {item.status.toLowerCase()}
+                      </span>
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right w-8">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        {item.status !== 'DRAFT' && (
+                          <DropdownMenuItem asChild>
+                            <Link href={detailsPage.route(item.id)}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Details
+                            </Link>
+                          </DropdownMenuItem>
+                        )}
+                        {isEditable && (
+                          <DropdownMenuItem asChild>
+                            <Link href={editPage.route(item.id)}>
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit
+                            </Link>
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="text-red-600"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            return setDeleteModal(item);
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
                         </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem asChild>
-                        <Link href={editPage.route(item.id)}>
-                          <Edit className="h-4 w-4 mr-2" />
-                          Edit
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="text-red-600"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          return setDeleteModal(item);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
         {/* Empty State */}

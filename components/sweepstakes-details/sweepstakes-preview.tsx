@@ -23,22 +23,36 @@ import { useSweepstakesDetailsPage } from '../sweepstakes/use-sweepstakes-detail
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-import { SweepstakesStatus } from '@prisma/client';
 import { computeState } from '@/lib/sweepstakes';
 import { toBackgroundStyle } from '@/schemas/color';
 import { FeatureFlagKeySchema } from '@/schemas/feature-flags';
+import { useProcedure } from '@/lib/mrpc/hook';
+import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
+import { useRouter } from 'next/navigation';
+import { useTeams } from '../context/team-provider';
 
 export const SweepstakesPreview: React.FC<
   ParticipantSweepstakeSchema & { userFeatureFlags?: FeatureFlagKeySchema[] }
 > = (props) => {
-  const { sweepstakes, winners, userFeatureFlags = [] } = props;
+  const { sweepstakes, prizes: winners, userFeatureFlags = [] } = props;
   const browse = useBrowseSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
+  const router = useRouter();
+  const { activeTeam } = useTeams();
   const liveUrl = browse.url({
     sweepstakesId: sweepstakes.id,
     slug: sweepstakes.visibility.slug
   });
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+
+  const { run: runCompleteSweepstakes, isLoading: isCompleting } = useProcedure(
+    {
+      action: completeSweepstakes,
+      onSuccess: () => {
+        router.push(`/app/${activeTeam.slug}`);
+      }
+    }
+  );
 
   const totalPrizeSlots = sweepstakes.prizes.reduce(
     (sum, prize) => sum + prize.quota,
@@ -50,21 +64,21 @@ export const SweepstakesPreview: React.FC<
   );
   const hasAllWinnersSelected = selectedWinners >= totalPrizeSlots;
 
+  const handleCompleteSweepstakes = () => {
+    if (
+      confirm(
+        'Are you sure you want to mark this sweepstakes as completed? This action will finalize the winners and move the sweepstakes to the completed status.'
+      )
+    ) {
+      runCompleteSweepstakes({
+        sweepstakesId: sweepstakes.id,
+        slug: activeTeam.slug
+      });
+    }
+  };
+
   return (
     <>
-      {/* Completed State Alert */}
-      {sweepstakes.status === SweepstakesStatus.COMPLETED && (
-        <Alert className="border-green-200 bg-green-50">
-          <CheckCircle2 className="h-5 w-5 text-green-600" />
-          <AlertTitle className="text-green-900">
-            Sweepstakes Completed
-          </AlertTitle>
-          <AlertDescription className="text-green-800">
-            This sweepstakes has been completed. No further updates can be made.
-          </AlertDescription>
-        </Alert>
-      )}
-
       {sweepstakes && (
         <SweepstakesStatusComponent
           sweepstakesId={sweepstakes.id}
@@ -82,6 +96,8 @@ export const SweepstakesPreview: React.FC<
           onGenerateQR={() => {
             setIsQRModalOpen(true);
           }}
+          onCompleteSweepstakes={handleCompleteSweepstakes}
+          isCompleting={isCompleting}
         />
       )}
 
@@ -101,7 +117,7 @@ export const SweepstakesPreview: React.FC<
 const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
   sweepstakes,
   host,
-  winners
+  prizes: winners
 }) => {
   const { isMobile } = useIsMobile();
   const [previewDevice, setPreviewDevice] = useState<DeviceType>('desktop');
@@ -114,7 +130,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
 
   const state = computeState({
     sweepstakes,
-    winners,
+    prizes: winners,
     userProfile: mockUserProfile,
     ageVerification: mockAgeVerification
   });
@@ -154,7 +170,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                 sweepstakes={sweepstakes}
                 host={host}
                 participation={mockParticipation}
-                winners={winners}
+                prizes={winners}
                 userProfile={mockUserProfile}
                 userParticipation={mockUserParticipation}
                 state={state}

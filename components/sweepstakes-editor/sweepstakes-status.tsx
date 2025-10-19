@@ -22,10 +22,11 @@ import {
   ExternalLink,
   Eye,
   EyeOff,
-  Info
+  CheckCircle2,
+  CircleCheck
 } from 'lucide-react';
 import { isAfter } from 'date-fns';
-import { SweepstakesStatus, VisibilityType } from '@prisma/client';
+import { VisibilityType } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { datetime } from '@/lib/date';
 import {
@@ -41,10 +42,16 @@ import {
   PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
 } from '@/schemas/feature-flags';
 import { featureFlags } from '@/lib/feature-flags';
+import { CompleteSweepstakesAlert } from './complete-sweepstakes-alert';
+import {
+  DerivedSweepstakeStatus,
+  EDITABLE_DERIVED_STATUS
+} from '@/schemas/sweepstakes';
+import { assertNever } from '@/lib/errors';
 
 interface SweepstakesStatusProps {
   sweepstakesId: string;
-  status: SweepstakesStatus;
+  status: DerivedSweepstakeStatus;
   startDate: Date;
   endDate: Date;
   timeZone: string;
@@ -54,8 +61,8 @@ interface SweepstakesStatusProps {
   userFeatureFlags?: FeatureFlagKeySchema[];
   onPickWinners?: () => void;
   onGenerateQR?: () => void;
-  onCompleteSweepstakes?: () => void;
-  isCompleting?: boolean;
+  onCompleteSweepstakes: () => void;
+  isCompleting: boolean;
   className?: string;
 }
 
@@ -67,19 +74,21 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   timeZone,
   visibility = VisibilityType.PRIVATE,
   sweepstakesUrl = '',
-  hasAllWinnersSelected = false,
   userFeatureFlags = [],
   onPickWinners,
   onGenerateQR,
+  onCompleteSweepstakes,
+  isCompleting = false,
+  hasAllWinnersSelected = false,
   className
 }) => {
   const router = useRouter();
-  const now = new Date();
-  const hasEnded = isAfter(now, endDate);
   const hasPublicSweepstakesAccess = featureFlags.parse(
     userFeatureFlags,
     PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
   );
+
+  const isEditable = EDITABLE_DERIVED_STATUS[status];
 
   const { run: runToggleVisibility, isLoading: isTogglingVisibility } =
     useProcedure({
@@ -96,24 +105,11 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
     });
   };
 
-  const getWinnerSelectionStatus = () => {
-    if (status === SweepstakesStatus.ACTIVE && !hasEnded) {
-      return 'Winners will need to be selected after sweepstakes ends';
-    } else if (
-      (status === SweepstakesStatus.ACTIVE && hasEnded) ||
-      status === SweepstakesStatus.COMPLETED
-    ) {
-      return hasAllWinnersSelected ? null : 'Pending winner selection';
-    }
-    return null;
-  };
-
   const timeInfo = getSweepstakesTimingDescription({
     status,
     startDate,
     endDate
   });
-  const winnerStatus = getWinnerSelectionStatus();
 
   return (
     <Card className={cn('w-full', className)}>
@@ -132,8 +128,24 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
         />
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Winner Selection Status */}
-        {winnerStatus && winnerStatus === 'Pending winner selection' && (
+        {status === 'COMPLETED' && (
+          <Alert variant="success">
+            <CircleCheck />
+            <AlertTitle>Sweepstakes Completed</AlertTitle>
+            <AlertDescription>
+              This sweepstakes is complete. It cannot be modified further.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {status === 'EXPIRED' && hasAllWinnersSelected && (
+          <CompleteSweepstakesAlert
+            onComplete={onCompleteSweepstakes}
+            isCompleting={isCompleting}
+          />
+        )}
+
+        {status === 'EXPIRED' && !hasAllWinnersSelected && (
           <div className="flex flex-col gap-3 p-4 bg-red-50 border border-red-300 rounded-lg">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
@@ -161,23 +173,14 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
             </div>
           </div>
         )}
-        {winnerStatus && winnerStatus !== 'Pending winner selection' && (
-          <div className="flex items-center gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <Trophy className="h-5 w-5 text-yellow-600" />
-            <div className="text-sm text-yellow-800">{winnerStatus}</div>
-          </div>
-        )}
 
-        {/* Visibility Section */}
-        {visibility === VisibilityType.PRIVATE ? (
-          <Alert variant="error" className="border-red-300 bg-red-50">
-            <EyeOff className="h-4 w-4 text-red-600" />
+        {isEditable && visibility === VisibilityType.PRIVATE && (
+          <Alert variant="info">
+            <EyeOff />
             <div className="flex items-start justify-between gap-3 w-full">
               <div className="flex-1">
-                <AlertTitle className="text-red-900">
-                  Sweepstakes is Private
-                </AlertTitle>
-                <AlertDescription className="text-red-800 mt-1">
+                <AlertTitle>Sweepstakes is Private</AlertTitle>
+                <AlertDescription>
                   {hasPublicSweepstakesAccess ? (
                     <>
                       Your sweepstakes is currently private. Public sweepstakes
@@ -188,7 +191,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                       sweepstakes.
                       <br />
                       <br />
-                      <span className="text-xs">
+                      <span className="text-xs font-semibold">
                         Note: Visibility changes can take up to an hour to fully
                         propagate.
                       </span>
@@ -201,13 +204,8 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                       You <span className="font-bold">do not</span> have
                       permission to make sweepstakes public.
                       <br />
-                      <Link
-                        href="/support"
-                        className="font-bold underline hover:text-red-900"
-                      >
-                        Contact support
-                      </Link>{' '}
-                      to enable this feature for your account.
+                      <Link href="/support">Contact support</Link> to enable
+                      this feature for your account.
                     </span>
                   )}
                 </AlertDescription>
@@ -218,7 +216,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                   onValueChange={handleVisibilityChange}
                   disabled={isTogglingVisibility}
                 >
-                  <SelectTrigger className="w-32 shrink-0 bg-white border-red-300">
+                  <SelectTrigger className="w-full sm:w-34">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -233,15 +231,15 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
               )}
             </div>
           </Alert>
-        ) : (
-          <Alert variant="success" className="border-green-300 bg-green-50">
-            <Eye className="h-4 w-4 text-green-600" />
+        )}
+
+        {isEditable && visibility === VisibilityType.PUBLIC && (
+          <Alert variant="info">
+            <Eye />
             <div className="flex flex-col sm:flex-row items-start justify-between gap-3 w-full">
               <div className="flex-1">
-                <AlertTitle className="text-green-900">
-                  Sweepstakes is Public
-                </AlertTitle>
-                <AlertDescription className="text-green-800 mt-1">
+                <AlertTitle>Sweepstakes is Public</AlertTitle>
+                <AlertDescription>
                   Your sweepstakes is visible on the browse page and can be
                   discovered by anyone. Visibility changes can take up to an
                   hour to fully propagate.
@@ -252,7 +250,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                 onValueChange={handleVisibilityChange}
                 disabled={isTogglingVisibility || !hasPublicSweepstakesAccess}
               >
-                <SelectTrigger className="w-full sm:w-32 shrink-0 bg-white border-green-300">
+                <SelectTrigger className="w-full sm:w-34 shrink-0 bg-white">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

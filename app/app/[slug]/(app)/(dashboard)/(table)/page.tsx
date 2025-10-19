@@ -2,7 +2,16 @@
 
 import { SweepstakesTable } from './components/sweepstakes-table';
 import { Suspense } from 'react';
-import { LoaderCircle, Trophy } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card } from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 import getSweepstakesList from '@/procedures/sweepstakes/get-sweepstakes-list';
 import {
   ListSweepstakesFilters,
@@ -73,14 +82,61 @@ const SweepstakesWrapper: React.FC<{
 };
 
 const SweepstakesTableSkeleton = () => (
-  <div className="space-y-6">
-    <div className="flex items-center justify-center py-8">
-      <div className="flex items-center space-x-3 text-muted-foreground">
-        <Trophy className="h-5 w-5" />
-        <LoaderCircle className="h-4 w-4 animate-spin" />
-        <span className="text-sm font-medium">Loading sweepstakes...</span>
-      </div>
-    </div>
+  <div className="space-y-4">
+    <Card>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[40%]">
+              <Skeleton className="h-4 w-24" />
+            </TableHead>
+            <TableHead className="w-[15%]">
+              <Skeleton className="h-4 w-16" />
+            </TableHead>
+            <TableHead className="w-[15%]">
+              <Skeleton className="h-4 w-20" />
+            </TableHead>
+            <TableHead className="w-[15%] text-right">
+              <Skeleton className="h-4 w-20 ml-auto" />
+            </TableHead>
+            <TableHead className="w-[15%] text-right">
+              <Skeleton className="h-4 w-16 ml-auto" />
+            </TableHead>
+            <TableHead className="w-[50px]"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <TableRow key={i}>
+              <TableCell>
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-48" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-16 rounded-full" />
+              </TableCell>
+              <TableCell>
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </TableCell>
+              <TableCell className="text-right">
+                <Skeleton className="h-4 w-8 ml-auto" />
+              </TableCell>
+              <TableCell className="text-right">
+                <Skeleton className="h-4 w-12 ml-auto" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-8 w-8 rounded-md" />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Card>
   </div>
 );
 

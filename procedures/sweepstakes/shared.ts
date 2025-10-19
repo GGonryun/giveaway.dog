@@ -4,9 +4,15 @@ import {
   TEAM_SWEEPSTAKES_PAYLOAD
 } from '@/schemas/giveaway/db';
 import { toStorableSweepstakes } from '@/schemas/giveaway/storable';
-import { Prisma, PrismaClient, SweepstakesStatus, VisibilityType } from '@prisma/client';
+import {
+  Prisma,
+  PrismaClient,
+  SweepstakesStatus,
+  VisibilityType
+} from '@prisma/client';
 import { User } from 'next-auth';
 import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
+import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
 
 export const findUserSweepstakesQuery = ({
   userId,
@@ -103,6 +109,13 @@ export const applySweepstakesChanges = async ({
           'You do not have permission to make sweepstakes public. Please contact support at /support to enable this feature for your account.'
       });
     }
+  }
+
+  if (sweepstakes.status === 'COMPLETED') {
+    throw new ApplicationError({
+      code: 'FORBIDDEN',
+      message: 'Completed sweepstakes cannot be modified.'
+    });
   }
 
   // TODO: Optimize this process.

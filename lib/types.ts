@@ -6,6 +6,14 @@ export type DeepPartial<T> = T extends Date
       ? { [K in keyof T]?: DeepPartial<T[K]> }
       : T;
 
+export type DeepNil<T> = T extends Date
+  ? T // don’t make Date nil
+  : T extends Array<infer U>
+    ? Array<DeepNil<U>> | null | undefined
+    : T extends object
+      ? { [K in keyof T]: DeepNil<T[K]> } | null | undefined
+      : T | null | undefined;
+
 export type RequiredFields<T, K extends keyof T> = Omit<T, K> &
   Required<Pick<T, K>>;
 

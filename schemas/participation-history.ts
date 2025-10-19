@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { derivedSweepstakesStatusSchema } from './sweepstakes';
 
 export const participationHistoryItemSchema = z.object({
   sweepstakesId: z.string(),
@@ -10,7 +11,7 @@ export const participationHistoryItemSchema = z.object({
   completedTasks: z.number(),
   lastParticipatedAt: z.string(),
   banner: z.string().nullable(),
-  sweepstakesStatus: z.enum(['ACTIVE', 'DRAFT', 'COMPLETED'])
+  sweepstakesStatus: derivedSweepstakesStatusSchema
 });
 
 export const participationHistorySchema = z.object({

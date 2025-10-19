@@ -1,16 +1,16 @@
 'use client';
 
 import React from 'react';
-import { SweepstakesStatus } from '@prisma/client';
 import { SweepstakeStep } from '../data/steps';
 import { FeatureFlagKeySchema } from '@/schemas/feature-flags';
+import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 
 export type SweepstakesContext = {
   step: SweepstakeStep;
   id: string;
   action: 'create' | 'edit';
   mobile: boolean;
-  status: SweepstakesStatus;
+  status: DerivedSweepstakeStatus;
   featureFlags: FeatureFlagKeySchema[];
 };
 
@@ -19,7 +19,7 @@ export const SweepstakesContext = React.createContext<SweepstakesContext>({
   id: '',
   action: 'create',
   mobile: false,
-  status: SweepstakesStatus.DRAFT,
+  status: 'DRAFT',
   featureFlags: []
 });
 

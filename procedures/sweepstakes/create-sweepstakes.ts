@@ -1,7 +1,6 @@
 'use server';
 
 import { nanoid } from 'nanoid';
-import { SweepstakesStatus } from '@prisma/client';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { ApplicationError } from '@/lib/errors';
@@ -50,7 +49,7 @@ export const createSweepstakes = procedure()
       data: {
         id: nanoid(6),
         teamId: team.id,
-        status: SweepstakesStatus.DRAFT,
+        status: 'DRAFT',
         details: {
           create: DEFAULT_SWEEPSTAKES_DETAILS
         },

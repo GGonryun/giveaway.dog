@@ -1,7 +1,7 @@
 import {
   GiveawayParticipationSchema,
   UserParticipationSchema,
-  GiveawayWinnerSchema
+  GiveawayPrizeSchema
 } from '@/schemas/giveaway/schemas';
 import { AgeVerificationSchema, UserProfileSchema } from '@/schemas/user';
 
@@ -42,4 +42,4 @@ export const mockUserParticipation: UserParticipationSchema = {
   completedTasks: [] // First task completed for demo
 };
 
-export const mockWinners: GiveawayWinnerSchema[] = [];
+export const mockWinners: GiveawayPrizeSchema[] = [];
