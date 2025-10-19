@@ -65,16 +65,10 @@ export const SweepstakesPreview: React.FC<
   const hasAllWinnersSelected = selectedWinners >= totalPrizeSlots;
 
   const handleCompleteSweepstakes = () => {
-    if (
-      confirm(
-        'Are you sure you want to mark this sweepstakes as completed? This action will finalize the winners and move the sweepstakes to the completed status.'
-      )
-    ) {
-      runCompleteSweepstakes({
-        sweepstakesId: sweepstakes.id,
-        slug: activeTeam.slug
-      });
-    }
+    runCompleteSweepstakes({
+      sweepstakesId: sweepstakes.id,
+      slug: activeTeam.slug
+    });
   };
 
   return (
