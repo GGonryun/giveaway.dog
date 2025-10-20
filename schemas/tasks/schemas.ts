@@ -33,14 +33,27 @@ export type TwitterConnectTaskSchema = z.infer<typeof twitterConnectTaskSchema>;
 
 export const twitterFollowTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_FOLLOW'),
-  username: z.string().min(1, 'Twitter username is required')
+  username: z
+    .string()
+    .url('Profile URL is required')
+    .refine((val) => {
+      const urlPattern = /^https?:\/\/(www\.)?x\.com\/[A-Za-z0-9_]{1,15}$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://x.com/username')
 });
 
 export type TwitterFollowTaskSchema = z.infer<typeof twitterFollowTaskSchema>;
 
 export const twitterRetweetTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_RETWEET'),
-  tweetId: z.string().min(1, 'Tweet ID is required')
+  tweetId: z
+    .string()
+    .url('Tweet URL is required')
+    .refine((val) => {
+      const urlPattern =
+        /^https?:\/\/(www\.)?x\.com\/[A-Za-z0-9_]{1,15}\/status\/\d+$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://x.com/username/status/1234567890')
 });
 
 export type TwitterRetweetTaskSchema = z.infer<typeof twitterRetweetTaskSchema>;
@@ -66,9 +79,9 @@ export type TaskType = z.infer<typeof taskSchema>['type'];
 export const TASK_LABEL: Record<TaskType, string> = {
   BONUS_TASK: 'Bonus',
   VISIT_URL: 'Visit URL',
-  TWITTER_CONNECT: 'Connect Twitter',
-  TWITTER_FOLLOW: 'Follow on Twitter',
-  TWITTER_RETWEET: 'Retweet on Twitter',
+  TWITTER_CONNECT: 'Connect X',
+  TWITTER_FOLLOW: 'Follow on X',
+  TWITTER_RETWEET: 'Repost on X',
   STEAM_WISHLIST: 'Steam Wishlist'
 };
 

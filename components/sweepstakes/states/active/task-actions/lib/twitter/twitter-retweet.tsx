@@ -12,6 +12,8 @@ export const TwitterRetweetTaskActionForm: React.FC<
   TaskActionProps<TwitterRetweetTaskSchema>
 > = ({ onCancel, onSubmit, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
+  const tweetIdMatch = task.tweetId.match(/status\/(\d+)/);
+  const tweetId = tweetIdMatch ? tweetIdMatch[1] : '';
   return (
     <WithProviderConnection
       task={task}
@@ -28,7 +30,7 @@ export const TwitterRetweetTaskActionForm: React.FC<
           ) : (
             <Button asChild className={cn(theme.action)}>
               <Link
-                href={`https://twitter.com/intent/retweet?tweet_id=${task.tweetId}`}
+                href={`https://x.com/intent/retweet?tweet_id=${tweetId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setPerformedAction(true)}

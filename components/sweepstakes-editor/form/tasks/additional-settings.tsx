@@ -90,7 +90,7 @@ const TwitterUsernameFormField: React.FC = () => {
       name={`tasks.${index}.username`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Twitter Username</FormLabel>
+          <FormLabel>Profile URL</FormLabel>
           <FormControl>
             <Input type="text" {...field} />
           </FormControl>
@@ -110,7 +110,7 @@ const TweetIdFormField: React.FC = () => {
       name={`tasks.${index}.tweetId`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Tweet ID</FormLabel>
+          <FormLabel>Post ID</FormLabel>
           <FormControl>
             <Input type="text" {...field} />
           </FormControl>

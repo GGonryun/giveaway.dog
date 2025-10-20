@@ -33,7 +33,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'TWITTER_FOLLOW',
       title: 'Follow us on X (Twitter)',
-      username: 'TheGiveawayDog',
+      username: 'https://x.com/TheGiveawayDog',
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -42,7 +42,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'TWITTER_RETWEET',
       title: 'Repost our sweepstakes',
-      tweetId: '1948654500698619966',
+      tweetId: 'https://x.com/TheGiveawayDog/status/1948654500698619966',
       value: 1,
       mandatory: false,
       tasksRequired: 0

@@ -12,6 +12,8 @@ export const TwitterFollowTaskActionForm: React.FC<
   TaskActionProps<TwitterFollowTaskSchema>
 > = ({ onCancel, onSubmit, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
+
+  const screenName = task.username.replace(/^https?:\/\/(www\.)?x\.com\//, '');
   return (
     <WithProviderConnection
       task={task}
@@ -28,13 +30,13 @@ export const TwitterFollowTaskActionForm: React.FC<
           ) : (
             <Button asChild className={cn(theme.action)}>
               <Link
-                href={`https://twitter.com/intent/follow?screen_name=${task.username}`}
+                href={`https://x.com/intent/follow?screen_name=${screenName}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setPerformedAction(true)}
               >
                 <UserPlus />
-                Follow @{task.username}
+                Follow @{screenName}
               </Link>
             </Button>
           )}
