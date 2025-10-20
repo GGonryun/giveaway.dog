@@ -13,6 +13,7 @@ import {
   sweepstakesParticipantSchema
 } from './participant';
 import { derivedSweepstakesStatusSchema } from '../sweepstakes';
+import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@/lib/settings';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -171,6 +172,16 @@ const giveawayFormTimingSchema = (validateEndDate: boolean) => {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'End date must be after start date',
+        path: ['endDate']
+      });
+    }
+    // do not allow giveaways longer than 30 days
+    const maxEndDate = new Date(startDate);
+    maxEndDate.setDate(maxEndDate.getDate() + MAX_SWEEPSTAKE_DURATION_DAYS);
+    if (endDate > maxEndDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Sweepstakes duration cannot exceed ${MAX_SWEEPSTAKE_DURATION_DAYS} days`,
         path: ['endDate']
       });
     }
