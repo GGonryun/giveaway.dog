@@ -105,8 +105,8 @@ const sweepstakesVisibilitySchema = z.object({
   visibility: z.nativeEnum(VisibilityType),
   slug: z
     .string()
-    .min(3, 'URL slug is required')
-    .max(50, 'URL slug is too long')
+    .min(3, 'URL slug must be at least 3 characters')
+    .max(50, 'URL slug must be at most 50 characters')
     .nullable()
     .optional()
 });
