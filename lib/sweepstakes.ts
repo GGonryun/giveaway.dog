@@ -3,11 +3,9 @@ import {
   ParticipantSweepstakeSchema
 } from '@/schemas/giveaway/schemas';
 import { AgeVerificationSchema, UserProfileSchema } from '@/schemas/user';
-import { date } from './date';
 import { assertNever } from './errors';
 import { RequiredFields } from './types';
 import { expandCountries, includesCountryCode } from './countries';
-import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 
 type ComputeStateOptions = {
   sweepstakes: ParticipantSweepstakeSchema['sweepstakes'];
@@ -17,7 +15,7 @@ type ComputeStateOptions = {
 };
 
 export const computeState = (args: ComputeStateOptions): GiveawayState => {
-  const { sweepstakes, prizes, userProfile } = args;
+  const { sweepstakes, userProfile } = args;
 
   if (!userProfile) return 'not-logged-in';
   if (requiresEmail(args)) return 'email-required';
@@ -42,9 +40,6 @@ export const computeState = (args: ComputeStateOptions): GiveawayState => {
       throw assertNever(sweepstakes.status);
   }
 };
-
-const hasAllWinners = (prizes: ParticipantSweepstakeSchema['prizes']) =>
-  prizes.every((prize) => prize.winners.length === prize.quota);
 
 const requiresEmail = ({ sweepstakes, userProfile }: ComputeStateOptions) => {
   return (

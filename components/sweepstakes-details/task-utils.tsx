@@ -4,7 +4,6 @@ import {
   CheckCircleIcon,
   ClockIcon,
   Globe2Icon,
-  TwitterIcon,
   XCircleIcon
 } from 'lucide-react';
 import { Badge } from '../ui/badge';

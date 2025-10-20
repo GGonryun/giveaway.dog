@@ -4,14 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  Shuffle,
-  ExternalLink,
-  Info,
-  Pencil,
-  Trash2,
-  CheckCircle2
-} from 'lucide-react';
+import { Shuffle, ExternalLink, Info, Pencil, Trash2 } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
 import { Label } from '@/components/ui/label';
 import {
@@ -35,7 +28,6 @@ import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteri
 import deleteWinner from '@/procedures/sweepstakes/delete-winner';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -433,7 +425,10 @@ export const SweepstakesWinners = ({
                     Pick more winners to fill all empty slots
                   </p>
                 </div>
-                <Button onClick={handlePickWinners} disabled={isRolling || !isEditable}>
+                <Button
+                  onClick={handlePickWinners}
+                  disabled={isRolling || !isEditable}
+                >
                   <Shuffle className="h-4 w-4 mr-2" />
                   {isRolling ? 'Rolling...' : 'Pick Remaining'}
                 </Button>

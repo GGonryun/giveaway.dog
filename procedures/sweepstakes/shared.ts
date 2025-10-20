@@ -12,7 +12,6 @@ import {
 } from '@prisma/client';
 import { User } from 'next-auth';
 import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
-import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
 
 export const findUserSweepstakesQuery = ({
   userId,

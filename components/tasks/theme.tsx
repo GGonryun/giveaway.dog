@@ -4,7 +4,6 @@ import { TaskType } from '@prisma/client';
 import React from 'react';
 import { SocialXIcon } from '../ui/patterns/x-icon';
 import { SocialSteamIcon } from '../ui/patterns/steam-icon';
-import { TaskSchema } from '@/schemas/tasks/schemas';
 
 export type TaskTheme = {
   action: string;

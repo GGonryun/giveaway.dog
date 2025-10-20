@@ -1,8 +1,4 @@
-import {
-  RegionalRestrictionFilter,
-  SweepstakesStatus,
-  VisibilityType
-} from '@prisma/client';
+import { RegionalRestrictionFilter, VisibilityType } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';

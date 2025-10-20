@@ -22,10 +22,8 @@ import {
   ExternalLink,
   Eye,
   EyeOff,
-  CheckCircle2,
   CircleCheck
 } from 'lucide-react';
-import { isAfter } from 'date-fns';
 import { VisibilityType } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { datetime } from '@/lib/date';
@@ -47,7 +45,6 @@ import {
   DerivedSweepstakeStatus,
   EDITABLE_DERIVED_STATUS
 } from '@/schemas/sweepstakes';
-import { assertNever } from '@/lib/errors';
 
 interface SweepstakesStatusProps {
   sweepstakesId: string;

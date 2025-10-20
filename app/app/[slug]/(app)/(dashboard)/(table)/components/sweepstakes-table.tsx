@@ -22,7 +22,6 @@ import {
 import {
   Eye,
   Edit,
-  Play,
   Trash2,
   MoreHorizontal,
   Calendar,
@@ -30,8 +29,7 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  FileCheck,
-  AlertTriangle
+  FileCheck
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -51,7 +49,6 @@ import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepstakes-details-page';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { Badge } from '@/components/ui/badge';
-import { date } from '@/lib/date';
 import { DerivedStatusIcon } from '@/lib/sweepstake-status';
 
 interface SweepstakesTableProps {

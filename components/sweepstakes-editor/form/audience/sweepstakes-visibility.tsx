@@ -1,12 +1,6 @@
 'use client';
 
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-  useMemo
-} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import {
@@ -32,7 +26,7 @@ import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { featureFlags } from '@/lib/feature-flags';
 import { debounce } from '@/lib/utils';
 import verifySlug from '@/procedures/sweepstakes/verify-slug';
-import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { Loader2, CheckCircle2 } from 'lucide-react';
 
 const VisibilityTypeField = () => {
   const form = useFormContext<GiveawayFormSchema>();

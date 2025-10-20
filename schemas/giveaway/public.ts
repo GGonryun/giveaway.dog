@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { PublicSweepstakesGetPayload } from './db';
-import { SweepstakesStatus } from '@prisma/client';
 import {
   derivedSweepstakesStatusSchema,
   toDerivedSweepstakeStatus

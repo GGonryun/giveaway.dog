@@ -1,4 +1,3 @@
-import { ApplicationError } from '@/lib/errors';
 import { widetype } from '@/lib/widetype';
 import {
   LucideIcon,

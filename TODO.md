@@ -29,9 +29,7 @@
 - [ ] Improve the marketing site, include more features and benefits and social proof and a blog.
 - [ ] Add a built in ticketing support system for sweepstakes.
 - [ ] Add an FAQ or knowledge base.
-- [ ] Add Instagram integration.
 - [ ] Add TikTok integration.
-- [ ] Add Facebook integration.
 - [ ] Add YouTube integration.
 - [ ] Add a form integration.
 - [ ] Add a recurring tasks.

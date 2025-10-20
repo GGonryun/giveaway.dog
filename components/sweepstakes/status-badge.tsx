@@ -15,15 +15,7 @@ import { Nullable } from '@/lib/types';
 import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 import { assertNever } from '@/lib/errors';
 
-const getStatusConfig = ({
-  startDate,
-  endDate,
-  status
-}: SweepstakeStatusBadgeProps) => {
-  const now = new Date();
-  const hasStarted = isAfter(now, startDate);
-  const hasEnded = isAfter(now, endDate);
-
+const getStatusConfig = ({ status }: SweepstakeStatusBadgeProps) => {
   switch (status) {
     case 'DRAFT':
       return {
