@@ -302,7 +302,7 @@ export const TermsAndConditions = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            Winners will be contacted in (days)
+                            Winners will be contacted within (days)
                           </FormLabel>
                           <FormControl>
                             <Input
