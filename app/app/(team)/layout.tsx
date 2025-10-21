@@ -10,7 +10,7 @@ export default async function Layout({
 }) {
   const user = await getUser({ self: true });
   if (!user.ok) {
-    console.error(`Failed to get user context`);
+    console.error(`Failed to get user`);
     redirect(`/app`);
   }
 
