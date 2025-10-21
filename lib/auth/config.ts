@@ -38,7 +38,7 @@ export const authConfig = {
       ) {
         return;
       }
-      console.error(error);
+      console.error(JSON.stringify(error));
     }
   },
   pages: {
