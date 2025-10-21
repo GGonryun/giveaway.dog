@@ -123,7 +123,6 @@ export function SteamProvider(
       }
     },
     profile(profile: SteamProfile) {
-      console.log(profile);
       return {
         id: profile.steamid,
         ...profile

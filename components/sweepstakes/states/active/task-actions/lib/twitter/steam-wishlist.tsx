@@ -28,7 +28,6 @@ export const SteamWishlistTaskActionForm: React.FC<
   useEffect(() => {
     if (error) {
       setPerformedAction(false);
-      console.log(error);
       if (
         error.code === 'VALIDATION_ERROR' &&
         error.cause === PRIVATE_STEAM_WISHLIST_ERROR
