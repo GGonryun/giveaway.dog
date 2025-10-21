@@ -1,7 +1,5 @@
 import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
 import { PrismaClient } from '@prisma/client';
-import { hoursToSeconds } from 'date-fns';
-import { User } from 'next-auth';
 
 export const getUserQuery = async (db: PrismaClient, userId: string) => {
   const userData = await db.user.findUnique({
