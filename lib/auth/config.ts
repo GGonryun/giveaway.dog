@@ -78,15 +78,19 @@ export const authConfig = {
   callbacks: {
     async signIn({ account }) {
       if (account?.provider && account?.providerAccountId && account?.scope) {
-        await prisma.account.update({
-          where: {
-            provider_providerAccountId: {
-              provider: account.provider,
-              providerAccountId: account.providerAccountId
-            }
-          },
-          data: { scope: account.scope }
-        });
+        try {
+          await prisma.account.update({
+            where: {
+              provider_providerAccountId: {
+                provider: account.provider,
+                providerAccountId: account.providerAccountId
+              }
+            },
+            data: { scope: account.scope }
+          });
+        } catch (error) {
+          // Account doesn't exist yet, will be created by linkAccount event
+        }
       }
       return true;
     },
