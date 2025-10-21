@@ -77,17 +77,31 @@ export const authConfig = {
   },
   callbacks: {
     async signIn({ account }) {
-      if (account?.provider && account?.providerAccountId && account?.scope) {
+      if (account?.provider && account?.providerAccountId) {
         try {
-          await prisma.account.update({
-            where: {
-              provider_providerAccountId: {
-                provider: account.provider,
-                providerAccountId: account.providerAccountId
-              }
-            },
-            data: { scope: account.scope }
-          });
+          const updateData: {
+            scope?: string;
+            access_token?: string;
+            refresh_token?: string;
+            expires_at?: number;
+          } = {};
+
+          if (account.scope) updateData.scope = account.scope;
+          if (account.access_token) updateData.access_token = account.access_token;
+          if (account.refresh_token) updateData.refresh_token = account.refresh_token;
+          if (account.expires_at) updateData.expires_at = account.expires_at;
+
+          if (Object.keys(updateData).length > 0) {
+            await prisma.account.update({
+              where: {
+                provider_providerAccountId: {
+                  provider: account.provider,
+                  providerAccountId: account.providerAccountId
+                }
+              },
+              data: updateData
+            });
+          }
         } catch (error) {
           // Account doesn't exist yet, will be created by linkAccount event
         }
