@@ -23,18 +23,20 @@ const getParticipatingUser = procedure()
   )
   .output(sweepstakesParticipantSchema)
   .handler(async ({ db, input, user }) => {
+    const query = {
+      ...input,
+      userId: user.id
+    };
+
     const totalTasks = await db.task.count({
-      where: SWEEPSTAKES_TASK_WHERE_QUERY({
-        ...input,
-        userId: user.id
-      })
+      where: SWEEPSTAKES_TASK_WHERE_QUERY(query)
     });
 
     const participant = await db.user.findFirst({
       where: {
         id: input.userId
       },
-      include: USER_PARTICIPATION_INCLUDE_QUERY(input.sweepstakesId)
+      include: USER_PARTICIPATION_INCLUDE_QUERY(query)
     });
 
     if (!participant) {

@@ -35,10 +35,12 @@ const getParticipatingUsers = procedure()
     })
   )
   .handler(async ({ db, input, user }) => {
-    const ownedBySweepstakes = SWEEPSTAKES_TASK_WHERE_QUERY({
+    const data = {
       ...input,
       userId: user.id
-    });
+    };
+    const ownedBySweepstakes = SWEEPSTAKES_TASK_WHERE_QUERY(data);
+    const sweepstakesInclude = USER_PARTICIPATION_INCLUDE_QUERY(data);
 
     const totalTasks = await db.task.count({
       where: ownedBySweepstakes
@@ -48,11 +50,17 @@ const getParticipatingUsers = procedure()
       where: {
         taskCompletions: {
           some: {
-            task: ownedBySweepstakes
+            task: {
+              sweepstakes: {
+                team: {
+                  slug: input.slug
+                }
+              }
+            }
           }
         }
       },
-      include: USER_PARTICIPATION_INCLUDE_QUERY(input.sweepstakesId)
+      include: sweepstakesInclude
     });
 
     let processedUsers = participants.map((user) =>

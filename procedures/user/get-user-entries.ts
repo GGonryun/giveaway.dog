@@ -16,10 +16,24 @@ const getUserEntries = procedure()
     })
   )
   .output(taskCompletionSchema.array())
-  .handler(async ({ input, db }) => {
+  .handler(async ({ input, db, user }) => {
+    const query = {
+      ...input,
+      userId: user.id
+    };
+
     const tasks = await db.taskCompletion.findMany({
       where: {
-        userId: input.userId
+        userId: input.userId,
+        task: {
+          sweepstakes: {
+            team: {
+              members: {
+                some: { userId: user.id }
+              }
+            }
+          }
+        }
       },
       include: TASK_COMPLETION_INCLUDE_QUERY
     });
