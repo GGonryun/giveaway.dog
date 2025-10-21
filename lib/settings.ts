@@ -20,4 +20,10 @@ export const DEFAULT_SWEEPSTAKES_DETAILS_TAB: SweepstakesTabSchema = 'preview';
 export const DEFAULT_USER_DETAILS_TAB: UserDetailsTabSchema = 'overview';
 export const UNKNOWN_USER_NAME = 'Unknown User';
 export const DISCORD_INVITE_LINK = 'https://discord.gg/Ys8wW5w2Yt';
+export const DISCORD_PUBLIC_CHANNEL_URL =
+  'https://discord.com/channels/1425715950988034130/1425715951906590732';
 export const TWITTER_PROFILE_URL = 'https://x.com/TheGiveawayDog';
+export const TWITTER_POST_URL =
+  'https://x.com/TheGiveawayDog/status/1948654500698619966';
+export const STEAM_APP_ID_URL =
+  'https://store.steampowered.com/app/2457870/Sandys_Great_Escape/';

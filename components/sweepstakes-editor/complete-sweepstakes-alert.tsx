@@ -16,14 +16,14 @@ import {
 } from '../ui/alert-dialog';
 
 export const CompleteSweepstakesAlert: React.FC<{
-  onComplete: () => void;
+  onCompleteAction: () => void;
   isCompleting: boolean;
-}> = ({ onComplete, isCompleting }) => {
+}> = ({ onCompleteAction, isCompleting }) => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const handleConfirm = () => {
     setShowConfirmDialog(false);
-    onComplete();
+    onCompleteAction();
   };
 
   return (

@@ -425,6 +425,7 @@ enum TaskType {
   TWITTER_FOLLOW
   TWITTER_RETWEET
   STEAM_WISHLIST
+  DISCORD_JOIN
 }
 
 model TaskCompletion {
@@ -498,8 +499,6 @@ model Membership {
   updatedAt DateTime @updatedAt
 }
 
-// Metadata for uploaded images. 
-// Maps to the PutBlobResult of Vercel Blob API
 // Age verification records for specific sweepstakes
 model AgeVerification {
   id            String      @id @default(cuid())
@@ -515,6 +514,8 @@ model AgeVerification {
   @@unique([userId, sweepstakesId])
 }
 
+// Metadata for uploaded images. 
+// Maps to the PutBlobResult of Vercel Blob API
 model ImageMetadata {
   id          String @id @default(cuid())
   url         String

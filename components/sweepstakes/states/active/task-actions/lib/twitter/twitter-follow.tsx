@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { DisqualificationWarning } from './disqualification-warning';
-import { WithProviderConnection } from './provider-connection';
+import { DisqualificationWarning } from '../disqualification-warning';
+import { WithProviderConnection } from '../provider-connection';
 
 export const TwitterFollowTaskActionForm: React.FC<
   TaskActionProps<TwitterFollowTaskSchema>

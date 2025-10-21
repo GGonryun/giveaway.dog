@@ -17,11 +17,6 @@ const getUserEntries = procedure()
   )
   .output(taskCompletionSchema.array())
   .handler(async ({ input, db, user }) => {
-    const query = {
-      ...input,
-      userId: user.id
-    };
-
     const tasks = await db.taskCompletion.findMany({
       where: {
         userId: input.userId,

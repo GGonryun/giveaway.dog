@@ -5,6 +5,13 @@ import {
   parseUserFeatureFlags
 } from './feature-flags';
 import { UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
+import {
+  REQUIRED_DISCORD_SCOPES,
+  REQUIRED_TWITTER_SCOPES,
+  REQUIRED_STEAM_SCOPES,
+  REQUIRED_GMAIL_SCOPES
+} from '@/lib/auth/scopes';
+import { Nil } from '@/lib/types';
 
 export const providerTypeSchema = z.union([
   z.literal('twitter'),
@@ -16,12 +23,32 @@ export const providerTypeSchema = z.union([
 
 export type ProviderTypeSchema = z.infer<typeof providerTypeSchema>;
 
+export const PROVIDER_REQUIRED_SCOPES: Record<ProviderTypeSchema, string[]> = {
+  email: [],
+  discord: REQUIRED_DISCORD_SCOPES,
+  twitter: REQUIRED_TWITTER_SCOPES,
+  steam: REQUIRED_STEAM_SCOPES,
+  google: REQUIRED_GMAIL_SCOPES
+};
+
+export const isMissingScopes = (
+  provider: Nil<ProviderSchema>,
+  requiredScopes: string[]
+) => {
+  return (
+    requiredScopes &&
+    requiredScopes.length > 0 &&
+    !requiredScopes.every((scope) => provider?.scopes.includes(scope))
+  );
+};
+
 export const isProviderType = (value: unknown): value is ProviderTypeSchema => {
   return providerTypeSchema.safeParse(value).success;
 };
 
 export const providerSchema = z.object({
   type: providerTypeSchema,
+  scopes: z.array(z.string()),
   label: z.string()
 });
 
@@ -79,6 +106,7 @@ export type UserSchema = z.infer<typeof userSchema>;
 export const parseProviders = (providers: UserAccounts[]): ProviderSchema[] =>
   providers.map((provider) => ({
     type: parseProvider(provider.provider) || 'email',
+    scopes: provider.scope?.split(' ') ?? [],
     label: provider.label || 'N/A'
   }));
 
@@ -121,6 +149,7 @@ export type AgeVerificationSchema = z.infer<typeof ageVerificationSchema>;
 
 const ACCOUNT_SELECT_QUERY = {
   provider: true,
+  scope: true,
   label: true
 } satisfies Prisma.AccountSelect;
 

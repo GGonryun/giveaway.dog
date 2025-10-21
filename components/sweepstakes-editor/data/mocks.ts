@@ -22,8 +22,8 @@ export const mockUserProfile: UserProfileSchema = {
   countryCode: 'US',
   qualityScore: 85,
   providers: [
-    { type: 'twitter', label: 'Preview User' },
-    { type: 'google', label: 'preview.user@gmail.com' }
+    { type: 'twitter', label: 'Preview User', scopes: [] },
+    { type: 'google', label: 'preview.user@gmail.com', scopes: [] }
   ]
 };
 

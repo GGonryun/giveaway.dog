@@ -92,6 +92,11 @@
     --steam-4: oklch(0.3856 0.0527 243.67);
     --steam-5: oklch(0.8657 0.0215 241.39);
 
+    /* Discord palette */
+    --discord-1: oklch(0.6474 0.1243 270.62);
+    --discord-2: oklch(0.7283 0.0249 236.13);
+    --discord-3: oklch(0.3038 0.0084 255.56);
+
     /* Chart palette */
     --chart-1: oklch(0.7459 0.1483 156.4499);
     --chart-2: oklch(0.5393 0.2713 286.7462);
@@ -270,6 +275,10 @@
     --color-steam-3: var(--steam-3);
     --color-steam-4: var(--steam-4);
     --color-steam-5: var(--steam-5);
+
+    --color-discord-1: var(--discord-1);
+    --color-discord-2: var(--discord-2);
+    --color-discord-3: var(--discord-3);
 
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);

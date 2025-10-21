@@ -1,5 +1,8 @@
-- [ ] Add Discord integration.
 - [ ] Add Twitch integration.
+
+- [ ] As a host, I want improved task and prize selection in form fields.
+  - [ ] When adding an entry method or prize it should automatically appear "open"
+  - [ ] When an entry method or prize has an error it should show an error triangle and outline it as red.
 
 - [ ] Add a way to pause sweepstakes.
 
@@ -15,11 +18,13 @@
 
 - [ ] Add a customizable email template for winners.
 - [ ] Allow users to copy and clone existing sweepstakes.
-- [ ] Add sweepstakes templates.
+- [ ] As a host, I want to create templates for sweepstakes so that i can easily create duplicates.
+- [ ] As a host, I want to automatically send a twitter post and then update my sweepstake with the tweet link.
 
 - [ ] Add a Charity Games integration.
 - [ ] As a host, I want to use my own custom domain and url for my sweepstakes.
 - [ ] Migrate all Charity Games giveaways to Giveaway Dog.
+- [ ] As a host I want to be able to create a subdomain for my giveaways such as: https://charitygames.giveaway.dog/12345
 
 - [ ] Add a built in ticketing support system for sweepstakes.
 - [ ] As a host, I want to be able to notify users in-app about rewards and sweepstakes they have won.
@@ -34,7 +39,6 @@
 - [ ] Add TikTok integration.
 - [ ] Add YouTube integration.
 - [ ] Add a form integration.
-
 - [ ] Add a changelog to the marketing site and the main website.
 - [ ] Add limits to how many active sweepstakes an organization can have at once.
 - [ ] Add Facebook integration.

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { WithProviderConnection } from './provider-connection';
+import { WithProviderConnection } from '../provider-connection';
 
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { AlertCircleIcon } from 'lucide-react';
@@ -17,7 +17,8 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { PRIVATE_STEAM_WISHLIST_ERROR } from '@/lib/task/validation';
+import { ErrorDisplay } from '../error-display';
+import { PRIVATE_STEAM_WISHLIST_ERROR } from '@/lib/task/validation/steam';
 
 export const SteamWishlistTaskActionForm: React.FC<
   TaskActionProps<SteamWishlistTaskSchema>
@@ -82,14 +83,6 @@ export const SteamWishlistTaskActionForm: React.FC<
     />
   );
 };
-
-export const ErrorDisplay: React.FC<{ message: string }> = ({ message }) => (
-  <Alert variant="error" className="text-left">
-    <AlertCircleIcon />
-    <AlertTitle>Verification Failed</AlertTitle>
-    <AlertDescription>{message}</AlertDescription>
-  </Alert>
-);
 
 export const PrivateSteamProfileDialog: React.FC<{
   open: boolean;

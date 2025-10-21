@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Users, ClockIcon, CalendarIcon } from 'lucide-react';
+import { ClockIcon, CalendarIcon, FileCheck } from 'lucide-react';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { TermsModal } from './terms-modal';
 import { DeviceType } from '@/schemas/giveaway/schemas';
@@ -73,7 +73,7 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
           className={cn('data-[orientation=vertical]:h-4 bg-muted-foreground')}
         />
         <div className="flex gap-1">
-          <Users className="h-4 w-4 text-muted-foreground" />
+          <FileCheck className="h-4 w-4 text-muted-foreground" />
           <span className="text-xs text-muted-foreground font-semibold">
             {participation.totalEntries} total entries
           </span>

@@ -12,6 +12,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { TaskType } from '@prisma/client';
+import { HelpDialog } from '@/components/patterns/help-dialog';
+import { DISCORD_PUBLIC_CHANNEL_URL } from '@/lib/settings';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -32,6 +36,13 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return <TweetIdFormField />;
       case 'STEAM_WISHLIST':
         return <SteamAppIdFormField />;
+      case 'DISCORD_JOIN':
+        return (
+          <>
+            <DiscordGuildIdFormField />
+            <DiscordInviteLinkFormField />
+          </>
+        );
       default:
         throw assertNever(type);
     }
@@ -131,6 +142,80 @@ const SteamAppIdFormField: React.FC = () => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Steam App ID</FormLabel>
+          <FormControl>
+            <Input type="text" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+const DiscordGuildIdFormField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.channel`}
+      render={({ field }) => (
+        <FormItem>
+          <div className="flex items-end gap-1">
+            <FormLabel>Channel Link</FormLabel>
+            <HelpDialog
+              title={'Help: Channel Link'}
+              content={
+                <div>
+                  <p>
+                    A discord channel link is used to verify that the user has
+                    joined the server. To get the channel link, right-click on
+                    any channel in the server and select "Copy Link".
+                  </p>
+                  <br />
+                  <div className="relative mx-auto w-full max-w-64 aspect-[359/500] border rounded-lg overflow-hidden">
+                    <Image
+                      src="/images/discord-channel-url.png"
+                      alt="Discord Channel URL"
+                      fill={true}
+                      className="object-contain"
+                    />
+                  </div>
+                  <br />
+                  <p>
+                    The URL will look something like this:{' '}
+                    <Link
+                      href={DISCORD_PUBLIC_CHANNEL_URL}
+                      target="_blank"
+                      className="hover:underline text-primary wrap-anywhere"
+                    >
+                      {DISCORD_PUBLIC_CHANNEL_URL}
+                    </Link>
+                  </p>
+                </div>
+              }
+            />
+          </div>
+          <FormControl>
+            <Input type="text" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+const DiscordInviteLinkFormField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.invite`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Invite Link</FormLabel>
           <FormControl>
             <Input type="text" {...field} />
           </FormControl>

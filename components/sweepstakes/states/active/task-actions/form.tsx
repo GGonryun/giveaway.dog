@@ -5,7 +5,8 @@ import { TaskActionProps } from './building-blocks';
 import { TwitterConnectTaskActionForm } from './lib/twitter/twitter-connect';
 import { TwitterFollowTaskActionForm } from './lib/twitter/twitter-follow';
 import { TwitterRetweetTaskActionForm } from './lib/twitter/twitter-retweet';
-import { SteamWishlistTaskActionForm } from './lib/twitter/steam-wishlist';
+import { SteamWishlistTaskActionForm } from './lib/steam/steam-wishlist';
+import { DiscordJoinTaskActionForm } from './lib/discord/discord-join';
 
 export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
   switch (props.task.type) {
@@ -21,6 +22,8 @@ export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
       return <TwitterRetweetTaskActionForm {...props} task={props.task} />;
     case 'STEAM_WISHLIST':
       return <SteamWishlistTaskActionForm {...props} task={props.task} />;
+    case 'DISCORD_JOIN':
+      return <DiscordJoinTaskActionForm {...props} task={props.task} />;
     default:
       throw assertNever(props.task);
   }

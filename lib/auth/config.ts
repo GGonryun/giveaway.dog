@@ -76,6 +76,20 @@ export const authConfig = {
     }
   },
   callbacks: {
+    async signIn({ account }) {
+      if (account?.provider && account?.providerAccountId && account?.scope) {
+        await prisma.account.update({
+          where: {
+            provider_providerAccountId: {
+              provider: account.provider,
+              providerAccountId: account.providerAccountId
+            }
+          },
+          data: { scope: account.scope }
+        });
+      }
+      return true;
+    },
     authorized({ auth, request: { nextUrl } }) {
       const connectionRoutes = ['/login'];
       const hostRoutes = ['/app'];

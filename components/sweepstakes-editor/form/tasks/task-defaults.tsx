@@ -1,3 +1,10 @@
+import {
+  DISCORD_INVITE_LINK,
+  DISCORD_PUBLIC_CHANNEL_URL,
+  STEAM_APP_ID_URL,
+  TWITTER_POST_URL,
+  TWITTER_PROFILE_URL
+} from '@/lib/settings';
 import { TaskOf } from '@/schemas/tasks/schemas';
 import { TaskType } from '@prisma/client';
 
@@ -33,7 +40,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'TWITTER_FOLLOW',
       title: 'Follow us on X (Twitter)',
-      username: 'https://x.com/TheGiveawayDog',
+      username: TWITTER_PROFILE_URL,
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -42,7 +49,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'TWITTER_RETWEET',
       title: 'Repost our sweepstakes',
-      tweetId: 'https://x.com/TheGiveawayDog/status/1948654500698619966',
+      tweetId: TWITTER_POST_URL,
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -51,7 +58,17 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'STEAM_WISHLIST',
       title: 'Add to your Steam Wishlist',
-      appId: 'https://store.steampowered.com/app/2457870/Sandys_Great_Escape/',
+      appId: STEAM_APP_ID_URL,
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
+    ['DISCORD_JOIN']: {
+      id: '',
+      type: 'DISCORD_JOIN',
+      title: 'Join our Discord server',
+      invite: DISCORD_INVITE_LINK,
+      channel: DISCORD_PUBLIC_CHANNEL_URL,
       value: 1,
       mandatory: false,
       tasksRequired: 0

@@ -4,6 +4,7 @@ import { TaskType } from '@prisma/client';
 import React from 'react';
 import { SocialXIcon } from '../ui/patterns/x-icon';
 import { SocialSteamIcon } from '../ui/patterns/steam-icon';
+import { SocialDiscordIcon } from '../ui/patterns/discord-icon';
 
 export type TaskTheme = {
   action: string;
@@ -45,6 +46,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-white',
         arrow: 'bg-steam-1 text-steam-5 fill-steam-1',
         icon: SocialSteamIcon
+      };
+    case 'DISCORD_JOIN':
+      return {
+        action:
+          'bg-discord-1 text-white group-hover:bg-discord-1 hover:bg-discord-1',
+        symbol: 'bg-discord-1 text-white',
+        arrow: 'bg-discord-1 text-discord-3 fill-discord-1',
+        icon: SocialDiscordIcon
       };
     default:
       throw assertNever(type);

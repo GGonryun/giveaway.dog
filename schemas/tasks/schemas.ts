@@ -1,6 +1,16 @@
 import z from 'zod';
-import { userSchema } from '../user';
+import {
+  PROVIDER_REQUIRED_SCOPES,
+  providerTypeSchema,
+  userSchema
+} from '../user';
 import { CompletionStatus } from '@prisma/client';
+import {
+  REQUIRED_DISCORD_SCOPES,
+  REQUIRED_GMAIL_SCOPES,
+  REQUIRED_STEAM_SCOPES,
+  REQUIRED_TWITTER_SCOPES
+} from '@/lib/auth/scopes';
 
 export const baseTaskSchema = z.object({
   id: z.string(),
@@ -48,7 +58,7 @@ export const twitterRetweetTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_RETWEET'),
   tweetId: z
     .string()
-    .url('Tweet URL is required')
+    .url('Post URL is required')
     .refine((val) => {
       const urlPattern =
         /^https?:\/\/(www\.)?x\.com\/[A-Za-z0-9_]{1,15}\/status\/\d+$/;
@@ -65,13 +75,36 @@ export const steamWishlistTaskSchema = baseTaskSchema.extend({
 
 export type SteamWishlistTaskSchema = z.infer<typeof steamWishlistTaskSchema>;
 
+export const discordJoinTaskSchema = baseTaskSchema.extend({
+  type: z.literal('DISCORD_JOIN'),
+  invite: z
+    .string()
+    .url('Discord Invite Link is required')
+    .refine((val) => {
+      const urlPattern =
+        /^(https?:\/\/)?(www\.)?(discord\.gg|discordapp\.com\/invite)\/[A-Za-z0-9]+$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://discord.gg/inviteCode'),
+  channel: z
+    .string()
+    .url('Public Channel URL is required')
+    .refine((val) => {
+      const urlPattern =
+        /^https?:\/\/(www\.)?discord\.com\/channels\/\d+\/\d+$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://discord.com/channels/guildId/channelId')
+});
+
+export type DiscordJoinTaskSchema = z.infer<typeof discordJoinTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   visitUrlTaskSchema,
   twitterConnectTaskSchema,
   twitterFollowTaskSchema,
   twitterRetweetTaskSchema,
-  steamWishlistTaskSchema
+  steamWishlistTaskSchema,
+  discordJoinTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -82,14 +115,15 @@ export const TASK_LABEL: Record<TaskType, string> = {
   TWITTER_CONNECT: 'Connect X',
   TWITTER_FOLLOW: 'Follow on X',
   TWITTER_RETWEET: 'Repost on X',
-  STEAM_WISHLIST: 'Steam Wishlist'
+  STEAM_WISHLIST: 'Steam Wishlist',
+  DISCORD_JOIN: 'Join Discord Server'
 };
 
 export type TaskSchema = z.infer<typeof taskSchema>;
 
 export type TaskOf<T extends TaskType> = Extract<TaskSchema, { type: T }>;
 
-export const taskPlatformSchema = z.enum(['website', 'twitter', 'steam']);
+export const taskPlatformSchema = providerTypeSchema.or(z.literal('website'));
 
 export type TaskPlatformSchema = z.infer<typeof taskPlatformSchema>;
 
@@ -99,13 +133,22 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   TWITTER_CONNECT: 'twitter',
   TWITTER_FOLLOW: 'twitter',
   TWITTER_RETWEET: 'twitter',
-  STEAM_WISHLIST: 'steam'
+  STEAM_WISHLIST: 'steam',
+  DISCORD_JOIN: 'discord'
+};
+
+export const TASK_REQUIRED_SCOPES: Record<TaskPlatformSchema, string[]> = {
+  ...PROVIDER_REQUIRED_SCOPES,
+  website: []
 };
 
 export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
   website: 'Website',
   twitter: 'X (Twitter)',
-  steam: 'Steam'
+  steam: 'Steam',
+  discord: 'Discord',
+  google: 'Google',
+  email: 'Email'
 };
 
 export const taskCategorySchema = z.enum(['social', 'engagement', 'community']);
@@ -118,6 +161,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   TWITTER_CONNECT: 'social',
   TWITTER_FOLLOW: 'social',
   TWITTER_RETWEET: 'social',
+  DISCORD_JOIN: 'social',
   STEAM_WISHLIST: 'community'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {

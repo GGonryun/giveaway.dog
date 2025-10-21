@@ -4,6 +4,7 @@ import {
   CheckCircleIcon,
   ClockIcon,
   Globe2Icon,
+  MailIcon,
   XCircleIcon
 } from 'lucide-react';
 import { Badge } from '../ui/badge';
@@ -16,6 +17,8 @@ import {
 import { assertNever } from '@/lib/errors';
 import { SocialSteamIcon } from '../ui/patterns/steam-icon';
 import { SocialXIcon } from '../ui/patterns/x-icon';
+import { SocialDiscordIcon } from '../ui/patterns/discord-icon';
+import { SocialGoogleIcon } from '../ui/patterns/google-icon';
 
 export const TaskStatusIcon: React.FC<{ status: CompletionStatus }> = ({
   status
@@ -79,6 +82,12 @@ export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
       return <SocialXIcon className="h-4 w-4 text-black" />;
     case 'steam':
       return <SocialSteamIcon className="h-4 w-4 text-steam-1" />;
+    case 'discord':
+      return <SocialDiscordIcon className="h-4 w-4 text-discord-1" />;
+    case 'google':
+      return <SocialGoogleIcon className="h-4 w-4 text-black" />;
+    case 'email':
+      return <MailIcon className="h-4 w-4 text-gray-500" />;
     default:
       throw assertNever(platform);
   }

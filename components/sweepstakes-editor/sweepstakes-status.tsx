@@ -138,7 +138,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
 
         {status === 'EXPIRED' && hasAllWinnersSelected && (
           <CompleteSweepstakesAlert
-            onComplete={onCompleteSweepstakes}
+            onCompleteAction={onCompleteSweepstakes}
             isCompleting={isCompleting}
           />
         )}

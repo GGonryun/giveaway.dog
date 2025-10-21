@@ -437,7 +437,7 @@ export const SweepstakesWinners = ({
           ) : (
             isEditable && (
               <CompleteSweepstakesAlert
-                onComplete={handleCompleteSweepstakes}
+                onCompleteAction={handleCompleteSweepstakes}
                 isCompleting={isCompleting}
               />
             )

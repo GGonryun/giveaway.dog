@@ -263,6 +263,7 @@ export function EmailVerification({
         <div className="space-y-2">
           <div className="flex flex-col sm:flex-row gap-2">
             <Button
+              size="sm"
               onClick={handleSaveEmail}
               disabled={isLoading}
               variant="default"
