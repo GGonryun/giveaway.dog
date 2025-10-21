@@ -4,7 +4,6 @@ import { Outline } from '@/components/app/outline';
 import { SettingsTabs } from './components/tabs';
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { auth } from '@/lib/auth';
 import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
 import { TeamPageProps } from '@/schemas/pages';
 
