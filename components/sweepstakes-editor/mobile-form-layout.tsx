@@ -6,7 +6,7 @@ import { XIcon, SaveIcon, EyeIcon, EditIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useMemo, useState } from 'react';
 import { UnifiedFormFooter } from './unified-form-footer';
-import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
+import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-context';
 import { useFormIssues } from '@/components/sweepstakes-editor/hooks/use-form-issues';
 import { FormHeaderProps, FormLayoutProps } from './form-layout';
 import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';

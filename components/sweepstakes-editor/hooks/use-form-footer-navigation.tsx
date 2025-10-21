@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { useSweepstakes } from './use-sweepstake-step';
+import { useSweepstakes } from './use-sweepstake-context';
 import { useFormContext } from 'react-hook-form';
 import { SWEEPSTAKE_STEPS } from '../data/steps';
 

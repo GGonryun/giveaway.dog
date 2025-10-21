@@ -38,7 +38,7 @@ import {
 import { GiveawayFormSchema, GiveawayTerms } from '@/schemas/giveaway/schemas';
 import { SweepstakesTermsType } from '@prisma/client';
 import { toBrowsePageUrl } from '@/components/sweepstakes/util';
-import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
+import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-context';
 import {
   DEFAULT_WINNER_SELECTION_METHOD,
   DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,

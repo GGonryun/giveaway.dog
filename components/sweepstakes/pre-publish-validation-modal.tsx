@@ -16,7 +16,7 @@ import { formatDistance } from 'date-fns';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useMemo } from 'react';
 import { Spinner } from '../ui/spinner';
-import { useSweepstakes } from '../sweepstakes-editor/hooks/use-sweepstake-step';
+import { useSweepstakes } from '../sweepstakes-editor/hooks/use-sweepstake-context';
 import { useDemoMode } from '../sweepstakes-editor/contexts/demo-mode-context';
 import Link from 'next/link';
 

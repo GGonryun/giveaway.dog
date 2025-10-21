@@ -15,7 +15,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
-import { useSweepstakes } from '../sweepstakes-editor/hooks/use-sweepstake-step';
+import { useSweepstakes } from '../sweepstakes-editor/hooks/use-sweepstake-context';
 import Link from 'next/link';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { useDemoMode } from '../sweepstakes-editor/contexts/demo-mode-context';

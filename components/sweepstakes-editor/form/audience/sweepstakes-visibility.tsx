@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/select';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import Link from 'next/link';
-import { useSweepstakes } from '../../hooks/use-sweepstake-step';
+import { useSweepstakes } from '../../hooks/use-sweepstake-context';
 import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { featureFlags } from '@/lib/feature-flags';
 import { debounce } from '@/lib/utils';

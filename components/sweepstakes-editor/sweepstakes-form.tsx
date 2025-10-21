@@ -19,7 +19,7 @@ import { FormLayout } from './form-layout';
 import {
   SweepstakesContext,
   useSweepstakes
-} from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
+} from '@/components/sweepstakes-editor/hooks/use-sweepstake-context';
 import { GiveawayFormContent } from './form-content';
 import { GiveawayPreview } from './preview';
 import { CancelConfirmationModal } from '@/components/sweepstakes/cancel-confirmation-modal';

@@ -1,6 +1,6 @@
 import { MobileFormLayout } from './mobile-form-layout';
 import { DesktopFormLayout } from './desktop-form-layout';
-import { useSweepstakes } from './hooks/use-sweepstake-step';
+import { useSweepstakes } from './hooks/use-sweepstake-context';
 
 export interface FormLayoutProps {
   title: string;

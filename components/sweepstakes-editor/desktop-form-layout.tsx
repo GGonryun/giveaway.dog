@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { UnifiedFormFooter } from './unified-form-footer';
 import React, { useCallback, useMemo } from 'react';
 import { useFormIssues } from '@/components/sweepstakes-editor/hooks/use-form-issues';
-import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-step';
+import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-context';
 import { FormHeaderProps, FormLayoutProps } from './form-layout';
 import { SWEEPSTAKE_STEPS, SweepstakeStep } from './data/steps';
 import { useFormErrors } from '../hooks/use-form-errors';

@@ -9,7 +9,7 @@ import {
 import { useFormFooterNavigation } from '@/components/sweepstakes-editor/hooks/use-form-footer-navigation';
 import { cn } from '@/lib/utils';
 import { useFormIssuesDialog } from './hooks/use-form-issues-dialog';
-import { useSweepstakes } from './hooks/use-sweepstake-step';
+import { useSweepstakes } from './hooks/use-sweepstake-context';
 import { useMemo } from 'react';
 import pluralize from 'pluralize';
 import { FormIssuesDialog } from './form-issues-dialog';

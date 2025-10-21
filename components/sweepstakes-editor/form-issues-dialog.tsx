@@ -10,7 +10,7 @@ import {
 } from '../ui/dialog';
 import { AlertTriangleIcon, SquareArrowOutUpRightIcon } from 'lucide-react';
 import { Button } from '../ui/button';
-import { useSweepstakes } from './hooks/use-sweepstake-step';
+import { useSweepstakes } from './hooks/use-sweepstake-context';
 
 export type FormIssuesDialogProps = {
   open: boolean;
