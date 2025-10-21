@@ -52,11 +52,11 @@ export const checkDiscordJoin = async (
   );
 
   if (!response.ok) {
-    console.log(await response.text());
     if (response.status === 404) {
       throw new ApplicationError({
         code: 'VALIDATION_ERROR',
-        message: 'You are not a member of the required Discord server.'
+        message: 'You are not a member of the required Discord server.',
+        cause: await response.text()
       });
     }
 
@@ -64,7 +64,8 @@ export const checkDiscordJoin = async (
       throw new ApplicationError({
         code: 'UNAUTHORIZED',
         message:
-          'Discord authorization is invalid. Please reconnect your Discord account.'
+          'Discord authorization is invalid. Please reconnect your Discord account.',
+        cause: await response.text()
       });
     }
 

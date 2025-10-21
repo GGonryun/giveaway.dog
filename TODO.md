@@ -4,12 +4,8 @@
   - [ ] When adding an entry method or prize it should automatically appear "open"
   - [ ] When an entry method or prize has an error it should show an error triangle and outline it as red.
 
-- [ ] Add a way to pause sweepstakes.
-
 - [ ] Add mandatory tasks that participants must complete to enter the rest of the sweepstake's tasks.
 - [ ] Add task requirements so that user's must complete a certain number of other tasks to unlock this one.
-
-- [ ] Add a recurring tasks.
 
 - [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
 - [ ] As a host, I want to be able to attach screenshots/proof that a user has claimed a prize.
@@ -36,10 +32,16 @@
 - [ ] Add multiple image support for sweepstakes.
 - [ ] Improve the marketing site, include more features and benefits and social proof and a blog.
 - [ ] Add an FAQ or knowledge base.
+- [ ] Add a changelog to the marketing site and the main website.
+- [ ] Add limits to how many active sweepstakes an organization can have at once.
+- [ ] Add a way to pause sweepstakes.
+
+- [ ] Add a recurring tasks.
 - [ ] Add TikTok integration.
 - [ ] Add YouTube integration.
 - [ ] Add a form integration.
-- [ ] Add a changelog to the marketing site and the main website.
-- [ ] Add limits to how many active sweepstakes an organization can have at once.
 - [ ] Add Facebook integration.
 - [ ] Add Instagram integration.
+- [ ] Add a Kick integration.
+- [ ] Add a Reddit integration.
+- [ ] Add a LinkedIn integration.
