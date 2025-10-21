@@ -2,7 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { userSchema } from '@/schemas/user';
-import { getUserQuery, userCache } from './shared';
+import { getUserQuery } from './shared';
 import { ApplicationError } from '@/lib/errors';
 import z from 'zod';
 
@@ -19,7 +19,6 @@ const getUser = procedure()
     ])
   )
   .output(userSchema)
-  .cache(userCache.fn)
   .handler(async ({ user, db, input }) => {
     const data = await getUserQuery(
       db,

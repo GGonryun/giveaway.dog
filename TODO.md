@@ -1,9 +1,10 @@
+- [ ] Add Discord integration.
+- [ ] Add Twitch integration.
+
 - [ ] Add a way to pause sweepstakes.
 
 - [ ] Add mandatory tasks that participants must complete to enter the rest of the sweepstake's tasks.
 - [ ] Add task requirements so that user's must complete a certain number of other tasks to unlock this one.
-- [ ] Add Discord integration.
-- [ ] Add Twitch integration.
 
 - [ ] Add a recurring tasks.
 
