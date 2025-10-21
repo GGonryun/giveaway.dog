@@ -44,7 +44,11 @@ const getParticipantSweepstake = procedure()
       where: {
         sweepstakesId
       },
-      include: PRIZE_WINNER_INCLUDE_QUERY(sweepstakesId)
+      include: PRIZE_WINNER_INCLUDE_QUERY({
+        sweepstakesId,
+        slug,
+        userId: user.id
+      })
     });
 
     const totalTasks = await db.task.count({

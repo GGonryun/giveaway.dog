@@ -8,7 +8,11 @@ import {
 import { SweepstakesPrizeSchema } from './giveaway/schemas';
 import { ApplicationError } from '@/lib/errors';
 
-export const PRIZE_WINNER_INCLUDE_QUERY = (sweepstakesId?: string) =>
+export const PRIZE_WINNER_INCLUDE_QUERY = (input: {
+  sweepstakesId?: string;
+  slug: string;
+  userId: string;
+}) =>
   ({
     winners: {
       include: {
@@ -16,7 +20,7 @@ export const PRIZE_WINNER_INCLUDE_QUERY = (sweepstakesId?: string) =>
           include: {
             ...TASK_COMPLETION_INCLUDE_QUERY,
             user: {
-              include: USER_PARTICIPATION_INCLUDE_QUERY(sweepstakesId)
+              include: USER_PARTICIPATION_INCLUDE_QUERY(input)
             }
           }
         }
