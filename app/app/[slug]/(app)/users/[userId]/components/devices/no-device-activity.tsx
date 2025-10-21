@@ -12,7 +12,8 @@ export function NoDeviceActivity() {
           icon: Monitor,
           iconColor: 'text-blue-600',
           title: 'Device Information',
-          description: 'Tracking browser type, operating system, and device details'
+          description:
+            'Tracking browser type, operating system, and device details'
         },
         {
           icon: Activity,
@@ -24,7 +25,8 @@ export function NoDeviceActivity() {
           icon: Clock,
           iconColor: 'text-orange-600',
           title: 'Access Times',
-          description: 'Recording when and how often the user accesses the platform'
+          description:
+            'Recording when and how often the user accesses the platform'
         }
       ]}
       footerMessage="Device and browser information will be displayed here once the user performs actions on the platform."

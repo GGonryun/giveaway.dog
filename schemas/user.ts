@@ -1,6 +1,9 @@
 import { Prisma } from '@prisma/client';
 import z from 'zod';
-import { featureFlagKeySchema, parseFeatureFlags } from './feature-flags';
+import {
+  userFeatureFlagKeySchema,
+  parseUserFeatureFlags
+} from './feature-flags';
 import { UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
 
 export const providerTypeSchema = z.union([
@@ -68,7 +71,7 @@ export type UserProfileSchema = z.infer<typeof userProfileSchema>;
 
 export const userSchema = userProfileSchema.extend({
   emailVerified: z.boolean().nullable(),
-  featureFlags: featureFlagKeySchema.array().optional()
+  featureFlags: userFeatureFlagKeySchema.array().optional()
 });
 
 export type UserSchema = z.infer<typeof userSchema>;
@@ -165,7 +168,7 @@ export const toUserSchema = (
   qualityScore: user.quality[0]?.score ?? 0,
   emailVerified: !!user.emailVerified,
   providers: parseProviders(user.accounts),
-  featureFlags: parseFeatureFlags(user.featureFlags)
+  featureFlags: parseUserFeatureFlags(user.featureFlags)
 });
 
 export const userDetailsTabSchema = z.union([

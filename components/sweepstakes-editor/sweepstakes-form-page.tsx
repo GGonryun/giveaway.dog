@@ -6,19 +6,20 @@ import { SweepstakesForm } from '@/components/sweepstakes-editor/sweepstakes-for
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { notFound } from 'next/navigation';
 import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
-import getUserFeatureFlags from '@/procedures/users/get-user-feature-flags';
 import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
+import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
+import { SweepstakesPageProps } from '@/schemas/pages';
 
 export const SweepstakeFormPage = async ({
   params
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<SweepstakesPageProps>;
 }) => {
-  const { id } = await params;
-  const [form, info, featureFlags] = await Promise.all([
+  const { id, slug } = await params;
+  const [form, info, teamFeatureFlags] = await Promise.all([
     getSweepstakesForm({ id }),
     getSweepstakesStatus({ id }),
-    getUserFeatureFlags()
+    getTeamFeatureFlags({ slug })
   ]);
 
   if (!form.ok) {
@@ -31,9 +32,9 @@ export const SweepstakeFormPage = async ({
     return <div>Failed to load sweepstakes info: {info.data.code}</div>;
   }
 
-  if (!featureFlags.ok) {
+  if (!teamFeatureFlags.ok) {
     return (
-      <div>Failed to load user feature flags: {featureFlags.data.code}</div>
+      <div>Failed to load team feature flags: {teamFeatureFlags.data.code}</div>
     );
   }
 
@@ -54,7 +55,7 @@ export const SweepstakeFormPage = async ({
       <SweepstakesForm
         sweepstakes={form.data as GiveawayFormSchema}
         status={info.data.status}
-        featureFlags={featureFlags.data}
+        teamFeatureFlags={teamFeatureFlags.data}
       />
     </Suspense>
   );

@@ -35,16 +35,17 @@ import {
 import { useProcedure } from '@/lib/mrpc/hook';
 import toggleVisibility from '@/procedures/sweepstakes/toggle-visibility';
 import { useRouter } from 'next/navigation';
-import {
-  FeatureFlagKeySchema,
-  PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
-} from '@/schemas/feature-flags';
-import { featureFlags } from '@/lib/feature-flags';
+
 import { CompleteSweepstakesAlert } from './complete-sweepstakes-alert';
 import {
   DerivedSweepstakeStatus,
   EDITABLE_DERIVED_STATUS
 } from '@/schemas/sweepstakes';
+import {
+  PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY,
+  TeamFeatureFlagKeySchema
+} from '@/schemas/feature-flags';
+import { featureFlags } from '@/lib/feature-flags';
 
 interface SweepstakesStatusProps {
   sweepstakesId: string;
@@ -55,7 +56,7 @@ interface SweepstakesStatusProps {
   visibility?: VisibilityType;
   sweepstakesUrl?: string;
   hasAllWinnersSelected?: boolean;
-  userFeatureFlags?: FeatureFlagKeySchema[];
+  teamFeatureFlags: TeamFeatureFlagKeySchema[];
   onPickWinners?: () => void;
   onGenerateQR?: () => void;
   onCompleteSweepstakes: () => void;
@@ -71,7 +72,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   timeZone,
   visibility = VisibilityType.PRIVATE,
   sweepstakesUrl = '',
-  userFeatureFlags = [],
+  teamFeatureFlags,
   onPickWinners,
   onGenerateQR,
   onCompleteSweepstakes,
@@ -80,8 +81,8 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   className
 }) => {
   const router = useRouter();
-  const hasPublicSweepstakesAccess = featureFlags.parse(
-    userFeatureFlags,
+  const hasPublicSweepstakesAccess = featureFlags.parseTeam(
+    teamFeatureFlags,
     PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
   );
 
@@ -182,10 +183,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                     <>
                       Your sweepstakes is currently private. Public sweepstakes
                       can reach more users and appear in our browse page
-                      searches. You can keep it private if you want to only
-                      reach an internal audience, share with people you know, or
-                      your own customers to reduce the reach of your
-                      sweepstakes.
+                      searches.
                       <br />
                       <br />
                       <span className="text-xs font-semibold">
@@ -196,13 +194,11 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                   ) : (
                     <span>
                       Your sweepstakes is currently{' '}
-                      <span className="font-bold">private</span>.
-                      <br />
-                      You <span className="font-bold">do not</span> have
-                      permission to make sweepstakes public.
-                      <br />
+                      <span className="font-bold">private</span>. You{' '}
+                      <span className="font-bold">do not</span> have permission
+                      to make sweepstakes public.{' '}
                       <Link href="/support">Contact support</Link> to enable
-                      this feature for your account.
+                      this feature for your team.
                     </span>
                   )}
                 </AlertDescription>

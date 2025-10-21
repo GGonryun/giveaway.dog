@@ -15,7 +15,7 @@ export default async function Page() {
           status="DRAFT"
           validateId={false}
           isDemo={true}
-          featureFlags={[PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY]}
+          teamFeatureFlags={[PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY]}
         />
       </MockTeamProvider>
     </Suspense>

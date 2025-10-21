@@ -6,9 +6,10 @@ import { EditGiveawayButton } from '@/components/sweepstakes/edit-giveaway-butto
 import { SweepstakesDetailsTabs } from '@/components/sweepstakes-details/sweepstakes-tabs';
 import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
 import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
+import { SweepstakesPageProps } from '@/schemas/pages';
 
 interface SweepstakesDetailPageProps {
-  params: Promise<{ id: string; slug: string }>;
+  params: Promise<SweepstakesPageProps>;
   children: React.ReactNode;
 }
 

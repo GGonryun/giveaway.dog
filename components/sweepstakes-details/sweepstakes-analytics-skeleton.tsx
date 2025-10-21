@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DEFAULT_TIME_SERIES_DURATION } from '@/lib/settings';
 

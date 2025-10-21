@@ -12,7 +12,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialogTitle
 } from '../ui/alert-dialog';
 
 export const CompleteSweepstakesAlert: React.FC<{
@@ -54,18 +54,17 @@ export const CompleteSweepstakesAlert: React.FC<{
           <AlertDialogHeader>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-green-600" />
-              <AlertDialogTitle>
-                Are you absolutely sure?
-              </AlertDialogTitle>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             </div>
             <AlertDialogDescription className="space-y-2">
               <p>
-                This action is <strong>irreversible</strong> and will permanently complete the
-                sweepstakes.
+                This action is <strong>irreversible</strong> and will
+                permanently complete the sweepstakes.
               </p>
               <p>
-                Once completed, the sweepstakes will be closed to all modifications. Any changes
-                after this point will require contacting customer support.
+                Once completed, the sweepstakes will be closed to all
+                modifications. Any changes after this point will require
+                contacting customer support.
               </p>
             </AlertDialogDescription>
           </AlertDialogHeader>

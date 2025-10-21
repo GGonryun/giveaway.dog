@@ -87,11 +87,17 @@ const rollWinners = procedure()
 
       // Group by user and count their task completions
       const userCompletionCounts = new Map<string, number>();
-      const userCompletions = new Map<string, typeof allTaskCompletions[0][]>();
+      const userCompletions = new Map<
+        string,
+        (typeof allTaskCompletions)[0][]
+      >();
 
       for (const completion of allTaskCompletions) {
         const userId = completion.userId;
-        userCompletionCounts.set(userId, (userCompletionCounts.get(userId) || 0) + 1);
+        userCompletionCounts.set(
+          userId,
+          (userCompletionCounts.get(userId) || 0) + 1
+        );
 
         if (!userCompletions.has(userId)) {
           userCompletions.set(userId, []);
@@ -100,19 +106,21 @@ const rollWinners = procedure()
       }
 
       // Filter users by criteria
-      const eligibleTaskCompletions = allTaskCompletions.filter((completion) => {
-        const userId = completion.userId;
-        const userQuality = completion.user.quality[0]?.score ?? 0;
-        const userTaskCount = userCompletionCounts.get(userId) || 0;
+      const eligibleTaskCompletions = allTaskCompletions.filter(
+        (completion) => {
+          const userId = completion.userId;
+          const userQuality = completion.user.quality[0]?.score ?? 0;
+          const userTaskCount = userCompletionCounts.get(userId) || 0;
 
-        // Check quality score
-        if (userQuality < minQualityScore) return false;
+          // Check quality score
+          if (userQuality < minQualityScore) return false;
 
-        // Check minimum tasks completed
-        if (userTaskCount < minTasksCompleted) return false;
+          // Check minimum tasks completed
+          if (userTaskCount < minTasksCompleted) return false;
 
-        return true;
-      });
+          return true;
+        }
+      );
 
       if (eligibleTaskCompletions.length === 0) {
         throw new ApplicationError({

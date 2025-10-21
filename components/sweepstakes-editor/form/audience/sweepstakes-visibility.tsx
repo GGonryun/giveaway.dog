@@ -30,9 +30,9 @@ import { Loader2, CheckCircle2 } from 'lucide-react';
 
 const VisibilityTypeField = () => {
   const form = useFormContext<GiveawayFormSchema>();
-  const { featureFlags: flags } = useSweepstakes();
+  const { teamFeatureFlags: flags } = useSweepstakes();
 
-  const hasPublicSweepstakesAccess = featureFlags.parse(
+  const hasPublicSweepstakesAccess = featureFlags.parseTeam(
     flags,
     PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
   );
@@ -104,7 +104,7 @@ const VisibilityTypeField = () => {
               >
                 Contact support
               </Link>{' '}
-              to enable this feature for your account.
+              to enable this feature for your team.
             </FormDescription>
           )}
           <FormMessage />

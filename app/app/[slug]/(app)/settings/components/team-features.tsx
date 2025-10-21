@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import {
   AlertDialog,
@@ -7,24 +9,28 @@ import {
   AlertDialogCancel,
   AlertDialogAction
 } from '@/components/ui/alert-dialog';
-import { AlertDialogHeader, AlertDialogFooter } from '../ui/alert-dialog';
-import { Card, CardContent } from '../ui/card';
-import { useUser } from '../context/user-provider';
+import { AlertDialogHeader, AlertDialogFooter } from '@/components/ui/alert-dialog';
+import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
-import { Button } from '../ui/button';
-import { Label } from '../ui/label';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { CheckCircle2, PlusCircle } from 'lucide-react';
 import {
-  DEFAULT_USER_FEATURE_FLAGS,
-  USER_FEATURE_FLAG_DESCRIPTIONS,
-  USER_FEATURE_FLAG_LABELS
+  DEFAULT_TEAM_FEATURE_FLAGS,
+  TEAM_FEATURE_FLAG_DESCRIPTIONS,
+  TEAM_FEATURE_FLAG_LABELS,
+  TeamFeatureFlagKeySchema
 } from '@/schemas/feature-flags';
 import { widetype } from '@/lib/widetype';
 import { featureFlags } from '@/lib/feature-flags';
 
-export const FeatureSettings = () => {
-  const user = useUser();
+interface TeamFeaturesProps {
+  teamFeatureFlags: TeamFeatureFlagKeySchema[];
+}
 
+export const TeamFeatures: React.FC<TeamFeaturesProps> = ({
+  teamFeatureFlags
+}) => {
   const [showContact, setShowContact] = useState(false);
   const [showCannotDisableDialog, setShowCannotDisableDialog] = useState(false);
 
@@ -39,14 +45,14 @@ export const FeatureSettings = () => {
   return (
     <>
       <div className="space-y-4">
-        {widetype.keys(USER_FEATURE_FLAG_LABELS).map((key) => (
+        {widetype.keys(TEAM_FEATURE_FLAG_LABELS).map((key) => (
           <FeatureFlagCard
             key={key}
-            label={USER_FEATURE_FLAG_LABELS[key]}
-            description={USER_FEATURE_FLAG_DESCRIPTIONS[key]}
+            label={TEAM_FEATURE_FLAG_LABELS[key]}
+            description={TEAM_FEATURE_FLAG_DESCRIPTIONS[key]}
             enabled={
-              DEFAULT_USER_FEATURE_FLAGS[key] ||
-              featureFlags.parseUser(user, key)
+              DEFAULT_TEAM_FEATURE_FLAGS[key] ||
+              featureFlags.parseTeam(teamFeatureFlags, key)
             }
             onDisable={handleDisableAction}
             onRequest={handleRequestAction}
@@ -107,9 +113,9 @@ const ContactSupportDialog: React.FC<{
         <AlertDialogHeader>
           <AlertDialogTitle>Contact Support</AlertDialogTitle>
           <AlertDialogDescription>
-            In order to enable this feature, please contact our support team.
-            We&apos;d be happy to discuss your needs and see how we can assist
-            you.
+            In order to enable this feature for your team, please contact our
+            support team. We&apos;d be happy to discuss your needs and see how
+            we can assist you.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -137,9 +143,9 @@ const CannotDisableDialog: React.FC<{
         <AlertDialogHeader>
           <AlertDialogTitle>Contact Support</AlertDialogTitle>
           <AlertDialogDescription>
-            In order to disable this feature, please contact our support team.
-            We&apos;d be happy to discuss your needs and see how we can assist
-            you.
+            In order to disable this feature for your team, please contact our
+            support team. We&apos;d be happy to discuss your needs and see how
+            we can assist you.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

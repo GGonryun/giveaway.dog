@@ -30,7 +30,8 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
   const isLoggedIn = useMemo(() => !!user?.id, [user?.id]);
   const isHost = useMemo(
     () =>
-      isLoggedIn && featureFlags.parse(user, HOST_DASHBOARD_FEATURE_FLAG_KEY),
+      isLoggedIn &&
+      featureFlags.parseUser(user, HOST_DASHBOARD_FEATURE_FLAG_KEY),
     [isLoggedIn, user?.featureFlags]
   );
   const [open, setOpen] = useState(false);

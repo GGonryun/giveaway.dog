@@ -3,9 +3,10 @@
 import { SweepstakesPreview } from '@/components/sweepstakes-details/sweepstakes-preview';
 import { SweepstakesLoadingSkeleton } from '@/components/sweepstakes-details/sweepstakes-loading-skeleton';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import getUserFeatureFlags from '@/procedures/users/get-user-feature-flags';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
+import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
+import { SweepstakesPageProps } from '@/schemas/pages';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -19,22 +20,23 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 interface SweepstakesDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<SweepstakesPageProps>;
 }
 
 export default async function Page({ params }: SweepstakesDetailPageProps) {
-  const { id } = await params;
-
   return (
     <Suspense fallback={<SweepstakesLoadingSkeleton />}>
-      <Wrapper id={id} />
+      <Wrapper params={params} />
     </Suspense>
   );
 }
 
-const Wrapper: React.FC<{ id: string }> = async ({ id }) => {
+const Wrapper: React.FC<{ params: Promise<SweepstakesPageProps> }> = async ({
+  params
+}) => {
+  const { id, slug } = await params;
   const result = await getParticipantSweepstake({ sweepstakesId: id });
-  const featureFlagsResult = await getUserFeatureFlags();
+  const featureFlagsResult = await getTeamFeatureFlags({ slug });
 
   const featureFlags = featureFlagsResult.ok ? featureFlagsResult.data : [];
 
@@ -42,6 +44,6 @@ const Wrapper: React.FC<{ id: string }> = async ({ id }) => {
     return <div>Failed to load sweepstakes details: {result.data.message}</div>;
   }
   return (
-    <SweepstakesPreview {...result.data} userFeatureFlags={featureFlags} />
+    <SweepstakesPreview {...result.data} teamFeatureFlags={featureFlags} />
   );
 };

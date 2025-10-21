@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { SweepstakeStep } from '../data/steps';
-import { FeatureFlagKeySchema } from '@/schemas/feature-flags';
 import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
 
 export type SweepstakesContext = {
   step: SweepstakeStep;
@@ -11,7 +11,7 @@ export type SweepstakesContext = {
   action: 'create' | 'edit';
   mobile: boolean;
   status: DerivedSweepstakeStatus;
-  featureFlags: FeatureFlagKeySchema[];
+  teamFeatureFlags: TeamFeatureFlagKeySchema[];
 };
 
 export const SweepstakesContext = React.createContext<SweepstakesContext>({
@@ -20,7 +20,7 @@ export const SweepstakesContext = React.createContext<SweepstakesContext>({
   action: 'create',
   mobile: false,
   status: 'DRAFT',
-  featureFlags: []
+  teamFeatureFlags: []
 });
 
 export const useSweepstakes = () => {

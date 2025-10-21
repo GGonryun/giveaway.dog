@@ -24,7 +24,8 @@ export function NoEntries() {
           icon: Clock,
           iconColor: 'text-orange-600',
           title: 'Activity Timeline',
-          description: 'Recording when and how the user participates in giveaways'
+          description:
+            'Recording when and how the user participates in giveaways'
         }
       ]}
       footerMessage="Entry history will be displayed here once the user starts participating in giveaways."

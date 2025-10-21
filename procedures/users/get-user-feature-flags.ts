@@ -3,19 +3,19 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
 import {
-  featureFlagKeySchema,
-  parseFeatureFlags
+  userFeatureFlagKeySchema,
+  parseUserFeatureFlags
 } from '@/schemas/feature-flags';
 
 const getUserFeatureFlags = procedure()
   .authorization({ required: true })
-  .output(z.array(featureFlagKeySchema))
+  .output(z.array(userFeatureFlagKeySchema))
   .handler(async ({ db, user }) => {
-    const flags = await db.featureFlag.findMany({
+    const flags = await db.userFeatureFlag.findMany({
       where: { userId: user.id }
     });
 
-    return parseFeatureFlags(flags);
+    return parseUserFeatureFlags(flags);
   });
 
 export default getUserFeatureFlags;

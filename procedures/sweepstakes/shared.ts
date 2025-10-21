@@ -92,11 +92,19 @@ export const applySweepstakesChanges = async ({
 
   // Check if user is trying to change visibility to PUBLIC
   if (input.visibility?.visibility === VisibilityType.PUBLIC) {
-    const hasPublicSweepstakesFlag = await db.featureFlag.findUnique({
+    if (!team?.id) {
+      throw new ApplicationError({
+        code: 'FORBIDDEN',
+        message:
+          'Sweepstakes must belong to a team to be made public. Please contact support at /support for assistance.'
+      });
+    }
+
+    const hasPublicSweepstakesFlag = await db.teamFeatureFlag.findUnique({
       where: {
-        key_userId: {
+        key_teamId: {
           key: PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY,
-          userId: user.id
+          teamId: team.id
         }
       }
     });
@@ -105,7 +113,7 @@ export const applySweepstakesChanges = async ({
       throw new ApplicationError({
         code: 'FORBIDDEN',
         message:
-          'You do not have permission to make sweepstakes public. Please contact support at /support to enable this feature for your account.'
+          'Your team does not have permission to make sweepstakes public. Please contact support at /support to enable this feature for your team.'
       });
     }
   }

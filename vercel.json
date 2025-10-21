@@ -1,17 +1,17 @@
 {
-    "crons": [
-        {
-            "path": "/api/user/tracking",
-            "schedule": "30 * * * *"
-        },
-        {
-            "path": "/api/user/scoring",
-            "schedule": "0 0 * * *"
-        }
-    ],
-    "functions": {
-        "app/api/user/tracking/route.ts": {
-            "maxDuration": 300
-        }
+  "crons": [
+    {
+      "path": "/api/user/tracking",
+      "schedule": "30 * * * *"
+    },
+    {
+      "path": "/api/user/scoring",
+      "schedule": "0 0 * * *"
     }
+  ],
+  "functions": {
+    "app/api/user/tracking/route.ts": {
+      "maxDuration": 300
+    }
+  }
 }

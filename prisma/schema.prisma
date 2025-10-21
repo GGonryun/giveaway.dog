@@ -30,7 +30,7 @@ model User {
   quality          UserQuality[]
   fingerprints     UserFingerprint[]
   ageVerifications AgeVerification[]
-  featureFlags     FeatureFlag[]
+  featureFlags     UserFeatureFlag[]
 }
 
 enum UserEventType {
@@ -207,7 +207,7 @@ model EmailSubscription {
   updatedAt DateTime @updatedAt
 }
 
-model FeatureFlag {
+model UserFeatureFlag {
   id        String   @id @default(cuid())
   key       String
   userId    String
@@ -216,6 +216,17 @@ model FeatureFlag {
   updatedAt DateTime @updatedAt
 
   @@unique([key, userId])
+}
+
+model TeamFeatureFlag {
+  id        String   @id @default(cuid())
+  key       String
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([key, teamId])
 }
 
 // WARNING: sweepstakes objects are too complex to update directly, instead we delete
@@ -461,8 +472,9 @@ model Team {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  members     Membership[]
-  sweepstakes Sweepstakes[]
+  members      Membership[]
+  sweepstakes  Sweepstakes[]
+  featureFlags TeamFeatureFlag[]
 }
 
 enum TeamRole {
