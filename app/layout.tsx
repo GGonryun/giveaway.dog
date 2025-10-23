@@ -18,7 +18,19 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
   ),
   title: 'GiveawayDog',
-  description: 'Build better giveaways and contests'
+  description: 'Build better giveaways and contests',
+  openGraph: {
+    title: 'GiveawayDog',
+    description: 'Build better giveaways and contests',
+    url: 'https://giveaway.dog',
+    siteName: 'GiveawayDog',
+    type: 'website'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GiveawayDog',
+    description: 'Build better giveaways and contests'
+  }
 };
 
 export default async function RootLayout({

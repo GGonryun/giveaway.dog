@@ -39,9 +39,6 @@
 - [ ] Add a recurring tasks.
 - [ ] Add TikTok integration.
 - [ ] Add YouTube integration.
-- [ ] Add a form integration.
 - [ ] Add Facebook integration.
 - [ ] Add Instagram integration.
-- [ ] Add a Kick integration.
-- [ ] Add a Reddit integration.
-- [ ] Add a LinkedIn integration.
+- [ ] Add a form integration.
