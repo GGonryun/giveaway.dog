@@ -13,10 +13,11 @@ const figtree = Figtree({
   weight: ['300', '400', '500', '600', '700', '800'],
   variable: '--font-sans'
 });
+
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-  ),
+  metadataBase: new URL(appUrl),
   title: 'GiveawayDog',
   description: 'Build better giveaways and contests',
   openGraph: {
@@ -24,12 +25,22 @@ export const metadata: Metadata = {
     description: 'Build better giveaways and contests',
     url: 'https://giveaway.dog',
     siteName: 'GiveawayDog',
-    type: 'website'
+    type: 'website',
+    locale: 'en',
+    images: [
+      {
+        url: `${appUrl}/api/og`,
+        width: 1200,
+        height: 630,
+        alt: 'GiveawayDog'
+      }
+    ]
   },
   twitter: {
     card: 'summary_large_image',
     title: 'GiveawayDog',
-    description: 'Build better giveaways and contests'
+    description: 'Build better giveaways and contests',
+    images: [`${appUrl}/api/og`]
   }
 };
 
