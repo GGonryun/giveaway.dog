@@ -106,8 +106,8 @@ export const toTaskInput = (
 
   const config = toJsonObject(data.config);
   const base = {
-    id: data.id,
-    ...config
+    ...config,
+    id: data.id
   };
 
   // TODO: we need better parsing here.

@@ -1,15 +1,12 @@
-- [ ] Add Twitch integration.
+- [ ] Add mandatory tasks that participants must complete to enter the rest of the sweepstake's tasks.
+- [ ] Add task requirements so that user's must complete a certain number of other tasks to unlock this one.
 
-- [ ] User's page needs deep links for modal
 - [ ] Add settings, and team rbac
 - [ ] Add a twitter picker tool
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
   - [ ] When an entry method or prize has an error it should show an error triangle and outline it as red.
-
-- [ ] Add mandatory tasks that participants must complete to enter the rest of the sweepstake's tasks.
-- [ ] Add task requirements so that user's must complete a certain number of other tasks to unlock this one.
 
 - [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
 - [ ] As a host, I want to be able to attach screenshots/proof that a user has claimed a prize.
@@ -29,6 +26,7 @@
 - [ ] Add a built in ticketing support system for sweepstakes.
 - [ ] As a host, I want to be able to notify users in-app about rewards and sweepstakes they have won.
 
+- [ ] User's page needs deep links for modal
 - [ ] As a host, I want to to have a host profile page that looks like link tree so people can navigate and go to my socials.
 - [ ] Add a way to report sweepstakes.
 - [ ] Add a way to report users.
@@ -40,9 +38,10 @@
 - [ ] Add limits to how many active sweepstakes an organization can have at once.
 - [ ] Add a way to pause sweepstakes.
 
-- [ ] Add a recurring tasks.
+- [ ] Add Twitch integration.
 - [ ] Add TikTok integration.
 - [ ] Add YouTube integration.
 - [ ] Add Facebook integration.
 - [ ] Add Instagram integration.
+- [ ] Add a recurring tasks.
 - [ ] Add a form integration.

@@ -566,7 +566,6 @@ function createTasks(sweepstakesId: string): Prisma.TaskCreateInput[] {
       },
       index: 0,
       config: {
-        id: nanoid(),
         type: 'BONUS_TASK',
         title: 'Join the Giveaway',
         value: 1,
@@ -581,7 +580,6 @@ function createTasks(sweepstakesId: string): Prisma.TaskCreateInput[] {
       },
       index: 1,
       config: {
-        id: nanoid(),
         type: 'TWITTER_CONNECT',
         title: 'Connect your X (Twitter) account',
         value: 5,
@@ -596,7 +594,6 @@ function createTasks(sweepstakesId: string): Prisma.TaskCreateInput[] {
       },
       index: 2,
       config: {
-        id: nanoid(),
         type: 'TWITTER_FOLLOW',
         title: 'Follow us on X',
         value: 10,
@@ -612,7 +609,6 @@ function createTasks(sweepstakesId: string): Prisma.TaskCreateInput[] {
       },
       index: 3,
       config: {
-        id: nanoid(),
         type: 'TWITTER_RETWEET',
         title: 'Repost our announcement',
         value: 15,
@@ -628,7 +624,6 @@ function createTasks(sweepstakesId: string): Prisma.TaskCreateInput[] {
       },
       index: 4,
       config: {
-        id: nanoid(),
         type: 'DISCORD_JOIN',
         title: 'Join our Discord server',
         value: 10,
@@ -645,7 +640,6 @@ function createTasks(sweepstakesId: string): Prisma.TaskCreateInput[] {
       },
       index: 5,
       config: {
-        id: nanoid(),
         type: 'VISIT_URL',
         title: 'Visit our website',
         value: 5,
