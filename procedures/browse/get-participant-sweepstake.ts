@@ -45,7 +45,7 @@ const getParticipantSweepstake = procedure()
     const totalEntries = await db.taskCompletion.count({
       where: {
         task: {
-          sweepstakesId: input.sweepstakesId
+          sweepstakesId: sweepstakes.id
         }
       }
     });
@@ -57,7 +57,7 @@ const getParticipantSweepstake = procedure()
       distinct: ['userId'],
       where: {
         task: {
-          sweepstakesId: input.sweepstakesId
+          sweepstakesId: sweepstakes.id
         }
       }
     });
@@ -83,6 +83,7 @@ const getParticipantSweepstake = procedure()
     const parsed = participantSweepstakeSchema.safeParse(unparsed);
 
     if (!parsed.success) {
+      console.error('Sweepstakes parse error:', parsed.error);
       throw new ApplicationError({
         code: 'VALIDATION_ERROR',
         message: 'Sweepstakes data is invalid',
