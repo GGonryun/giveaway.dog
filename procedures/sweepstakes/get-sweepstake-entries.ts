@@ -5,7 +5,6 @@ import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 
-import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { userEntriesSchema } from '@/schemas/tasks/schemas';
 import { toTaskSchema } from '@/schemas/tasks/parse';
 import { toJsonObject } from '@/lib/json';
@@ -50,9 +49,7 @@ const getSweepstakeEntries = procedure()
           select: USER_SCHEMA_SELECT_QUERY
         },
         task: true
-      },
-      skip: (page - 1) * 20,
-      take: DEFAULT_PAGE_SIZE
+      }
     });
 
     return completions.map((c) => {

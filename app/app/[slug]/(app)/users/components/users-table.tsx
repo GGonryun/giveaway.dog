@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useTransition } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Card,
@@ -8,6 +8,7 @@ import {
   CardDescription,
   CardHeader
 } from '@/components/ui/card';
+import { browser } from '@/lib/browser';
 import {
   Table,
   TableBody,
@@ -51,95 +52,210 @@ import { toQualityProgressColor } from '@/schemas/quality';
 
 interface UsersTableProps {
   users: SweepstakesParticipantSchema[];
-  totalUsers: number;
-  totalPages: number;
-  currentPage: number;
-  filters: {
-    search: string;
-    page: number;
-    sortField: string;
-    sortDirection: 'asc' | 'desc';
-    status: string;
-    dateRange: string;
-    minScore: number;
-    maxScore: number;
-  };
 }
 
 export const UsersTable: React.FC<UsersTableProps> = ({
-  users,
-  totalUsers,
-  totalPages,
-  currentPage,
-  filters
+  users: initialUsers
 }) => {
   const { activeTeam } = useTeams();
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const [selectedUser, setSelectedUser] =
     useState<SweepstakesParticipantSchema | null>(null);
-  const [isPending, startTransition] = useTransition();
   const [showUserSheet, setShowUserSheet] = useState(false);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
   const [statusDialogUser, setStatusDialogUser] =
     useState<SweepstakesParticipantSchema | null>(null);
 
-  // Update URL params whenever state changes - only include non-default values
-  const updateURLParams = useCallback(
-    (updates: Record<string, string | number | null>) => {
-      const params = new URLSearchParams(searchParams);
-
-      // Apply updates
-      Object.entries(updates).forEach(([key, value]) => {
-        if (
-          value === null ||
-          value === '' ||
-          (key === 'page' && value === 1) ||
-          (key === 'sortField' && value === 'lastEntryAt') ||
-          (key === 'sortDirection' && value === 'desc') ||
-          (key === 'status' && value === 'all') ||
-          (key === 'dateRange' && value === 'all') ||
-          (key === 'minScore' && value === 0) ||
-          (key === 'maxScore' && value === 100)
-        ) {
-          params.delete(key);
-        } else {
-          params.set(key, value.toString());
-        }
-      });
-
-      const newUrl = params.toString() ? `?${params.toString()}` : '';
-      router.push(`/app/${activeTeam.slug}/users${newUrl}`);
-    },
-    [router, activeTeam.slug]
+  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const [sortField, setSortField] = useState(
+    searchParams.get('sortField') || 'lastEntryAt'
   );
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(
+    (searchParams.get('sortDirection') as 'asc' | 'desc') || 'desc'
+  );
+  const [status, setStatus] = useState(searchParams.get('status') || 'all');
+  const [dateRange, setDateRange] = useState(
+    searchParams.get('dateRange') || 'all'
+  );
+  const [minScore, setMinScore] = useState(
+    Number(searchParams.get('minScore')) || 0
+  );
+  const [maxScore, setMaxScore] = useState(
+    Number(searchParams.get('maxScore')) || 100
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get('page')) || 1
+  );
+
+  useEffect(() => {
+    const params: Record<string, string | null> = {};
+
+    if (search && search.trim() !== '') params.search = search;
+    else params.search = null;
+
+    if (sortField !== 'lastEntryAt') params.sortField = sortField;
+    else params.sortField = null;
+
+    if (sortDirection !== 'desc') params.sortDirection = sortDirection;
+    else params.sortDirection = null;
+
+    if (status !== 'all') params.status = status;
+    else params.status = null;
+
+    if (dateRange !== 'all') params.dateRange = dateRange;
+    else params.dateRange = null;
+
+    if (minScore > 0) params.minScore = String(minScore);
+    else params.minScore = null;
+
+    if (maxScore < 100) params.maxScore = String(maxScore);
+    else params.maxScore = null;
+
+    if (currentPage > 1) params.page = String(currentPage);
+    else params.page = null;
+
+    browser.changeParams(params);
+  }, [
+    search,
+    sortField,
+    sortDirection,
+    status,
+    dateRange,
+    minScore,
+    maxScore,
+    currentPage
+  ]);
+
+  const filteredAndSortedUsers = useMemo(() => {
+    let filtered = [...initialUsers];
+
+    if (search && search.trim() !== '') {
+      const searchLower = search.toLowerCase();
+      filtered = filtered.filter(
+        (user) =>
+          user.name?.toLowerCase().includes(searchLower) ||
+          user.email?.toLowerCase().includes(searchLower) ||
+          user.id.toLowerCase().includes(searchLower)
+      );
+    }
+
+    if (status && status !== 'all') {
+      filtered = filtered.filter((user) => user.status === status);
+    }
+
+    if (dateRange && dateRange !== 'all') {
+      const now = new Date();
+      let dateThreshold: Date;
+
+      switch (dateRange) {
+        case 'today':
+          dateThreshold = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate()
+          );
+          break;
+        case '7d':
+          dateThreshold = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case '30d':
+          dateThreshold = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          break;
+        case '90d':
+          dateThreshold = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+          break;
+        case '1y':
+          dateThreshold = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+          break;
+        default:
+          dateThreshold = new Date(0);
+      }
+
+      filtered = filtered.filter(
+        (user) => new Date(user.lastEntryAt) >= dateThreshold
+      );
+    }
+
+    if (minScore !== undefined && minScore > 0) {
+      filtered = filtered.filter((user) => user.qualityScore >= minScore);
+    }
+
+    if (maxScore !== undefined && maxScore < 100) {
+      filtered = filtered.filter((user) => user.qualityScore <= maxScore);
+    }
+
+    if (sortField) {
+      filtered.sort((a, b) => {
+        let valueA: any, valueB: any;
+
+        switch (sortField) {
+          case 'lastEntryAt':
+            valueA = new Date(a.lastEntryAt);
+            valueB = new Date(b.lastEntryAt);
+            break;
+          case 'qualityScore':
+            valueA = a.qualityScore;
+            valueB = b.qualityScore;
+            break;
+          case 'engagement':
+            valueA = a.engagement;
+            valueB = b.engagement;
+            break;
+          case 'status':
+            valueA = a.status;
+            valueB = b.status;
+            break;
+          default:
+            valueA = new Date(a.lastEntryAt);
+            valueB = new Date(b.lastEntryAt);
+        }
+
+        if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
+        if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    return filtered;
+  }, [
+    initialUsers,
+    search,
+    status,
+    dateRange,
+    minScore,
+    maxScore,
+    sortField,
+    sortDirection
+  ]);
+
+  const paginatedUsers = useMemo(() => {
+    const startIndex = (currentPage - 1) * DEFAULT_PAGE_SIZE;
+    return filteredAndSortedUsers.slice(
+      startIndex,
+      startIndex + DEFAULT_PAGE_SIZE
+    );
+  }, [filteredAndSortedUsers, currentPage]);
+
+  const totalUsers = filteredAndSortedUsers.length;
+  const totalPages = Math.ceil(totalUsers / DEFAULT_PAGE_SIZE);
 
   const handleSort = useCallback(
     (field: string) => {
       const newDirection =
-        filters.sortField === field && filters.sortDirection === 'desc'
-          ? 'asc'
-          : 'desc';
-      updateURLParams({
-        sortField: field,
-        sortDirection: newDirection,
-        page: 1
-      });
+        sortField === field && sortDirection === 'desc' ? 'asc' : 'desc';
+      setSortField(field);
+      setSortDirection(newDirection);
+      setCurrentPage(1);
     },
-    [filters.sortField, filters.sortDirection, updateURLParams]
+    [sortField, sortDirection]
   );
 
-  const handleSearch = useCallback(
-    (query: string) => {
-      startTransition(() => {
-        updateURLParams({
-          search: query,
-          page: 1
-        });
-      });
-    },
-    [updateURLParams]
-  );
+  const handleSearch = useCallback((query: string) => {
+    setSearch(query);
+    setCurrentPage(1);
+  }, []);
 
   const handleFilterChange = useCallback(
     (newFilters: {
@@ -149,27 +265,18 @@ export const UsersTable: React.FC<UsersTableProps> = ({
       status: string;
       dateRange: string;
     }) => {
-      startTransition(() => {
-        updateURLParams({
-          status: newFilters.status,
-          dateRange: newFilters.dateRange,
-          minScore: newFilters.minScore,
-          maxScore: newFilters.maxScore,
-          page: 1
-        });
-      });
+      setStatus(newFilters.status);
+      setDateRange(newFilters.dateRange);
+      setMinScore(newFilters.minScore);
+      setMaxScore(newFilters.maxScore);
+      setCurrentPage(1);
     },
-    [updateURLParams]
+    []
   );
 
-  const handlePageChange = useCallback(
-    (page: number) => {
-      startTransition(() => {
-        updateURLParams({ page });
-      });
-    },
-    [updateURLParams]
-  );
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+  }, []);
 
   const getStatusBadge = (
     status: string,
@@ -252,10 +359,9 @@ export const UsersTable: React.FC<UsersTableProps> = ({
     <div>
       <div className="w-full space-y-4">
         <div className="flex items-start gap-2">
-          {/* Search Bar */}
           <div className="flex-grow">
             <SearchBar
-              value={filters.search}
+              value={search}
               onChange={handleSearch}
               placeholder="Search by name, email, or ID..."
             />
@@ -264,11 +370,11 @@ export const UsersTable: React.FC<UsersTableProps> = ({
           <div className="flex-shrink-0">
             <FilterBar
               filters={{
-                query: filters.search,
-                minScore: filters.minScore,
-                maxScore: filters.maxScore,
-                status: filters.status,
-                dateRange: filters.dateRange
+                query: search,
+                minScore: minScore,
+                maxScore: maxScore,
+                status: status,
+                dateRange: dateRange
               }}
               onChange={handleFilterChange}
             />
@@ -313,7 +419,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {users.map((user) => (
+                    {paginatedUsers.map((user) => (
                       <TableRow
                         key={user.id}
                         className={`cursor-pointer hover:bg-muted/50 ${
@@ -446,14 +552,13 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                 pageSize={DEFAULT_PAGE_SIZE}
                 onPageChange={handlePageChange}
                 itemName="users"
-                isPending={isPending}
+                isPending={false}
               />
             </CardContent>
           </Card>
         </div>
       </div>
 
-      {/* User Detail Sheet - Shown on lg and below */}
       <UserDetailSheet
         user={selectedUser}
         open={showUserSheet}
@@ -465,7 +570,6 @@ export const UsersTable: React.FC<UsersTableProps> = ({
         }}
       />
 
-      {/* Status Explanation Dialog */}
       <StatusExplanationDialog
         open={showStatusDialog}
         onClose={() => {

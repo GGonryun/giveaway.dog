@@ -44,22 +44,23 @@ export const SWEEPSTAKES_TASK_WHERE_QUERY = (input: {
   sweepstakesId?: string;
   slug: string;
   userId: string;
-}) =>
-  ({
-    OR: [
-      { sweepstakesId: input.sweepstakesId },
-      {
-        sweepstakes: {
-          team: {
-            slug: input.slug,
-            members: {
-              some: { userId: input.userId }
-            }
-          }
+}) => {
+  if (input.sweepstakesId) {
+    return {
+      sweepstakesId: input.sweepstakesId
+    };
+  }
+  return {
+    sweepstakes: {
+      team: {
+        slug: input.slug,
+        members: {
+          some: { userId: input.userId }
         }
       }
-    ]
-  }) satisfies Prisma.TaskWhereInput;
+    }
+  } satisfies Prisma.TaskWhereInput;
+};
 
 export const USER_PARTICIPATION_INCLUDE_QUERY = (input: {
   sweepstakesId?: string;
@@ -97,21 +98,7 @@ export const USER_PARTICIPATION_INCLUDE_QUERY = (input: {
     accounts: true,
     taskCompletions: {
       where: {
-        task: {
-          OR: [
-            { sweepstakesId: input.sweepstakesId },
-            {
-              sweepstakes: {
-                team: {
-                  slug: input.slug,
-                  members: {
-                    some: { userId: input.userId }
-                  }
-                }
-              }
-            }
-          ]
-        }
+        task: SWEEPSTAKES_TASK_WHERE_QUERY(input)
       },
       include: {
         task: {
