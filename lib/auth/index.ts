@@ -4,10 +4,10 @@ import NextAuth from 'next-auth';
 import TwitterProvider from 'next-auth/providers/twitter';
 import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
-import NodemailerProvider from 'next-auth/providers/nodemailer';
 import { authConfig } from './config';
 import { SteamProvider } from './providers/steam';
 import { REQUIRED_DISCORD_SCOPES } from './scopes';
+import { InboundEmailProvider } from './providers/inbound';
 
 export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
   ...authConfig,
@@ -49,16 +49,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       clientSecret: process.env.DISCORD_SECRET,
       authorization: `https://discord.com/api/oauth2/authorize?scope=${REQUIRED_DISCORD_SCOPES.join('+')}`
     }),
-    NodemailerProvider({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: Number(process.env.EMAIL_SERVER_PORT),
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD
-        }
-      },
-      from: process.env.EMAIL_FROM
+    InboundEmailProvider({
+      secret: process.env.INBOUND_SECRET
     })
   ]
 }));

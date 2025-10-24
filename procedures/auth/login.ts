@@ -42,7 +42,7 @@ const login = procedure()
         } else if (provider === 'discord') {
           await signIn('discord', options);
         } else if (provider === 'email') {
-          await signIn('nodemailer', {
+          await signIn('email', {
             email,
             ...options
           });

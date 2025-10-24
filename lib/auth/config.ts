@@ -6,7 +6,7 @@ import { NextAuthConfig } from 'next-auth';
 const getAccountLabel = (account: any, profile: any): string | null => {
   switch (account.provider) {
     case 'google':
-    case 'nodemailer':
+    case 'email':
       return profile?.email || null;
     case 'discord': {
       return (
@@ -87,8 +87,10 @@ export const authConfig = {
           } = {};
 
           if (account.scope) updateData.scope = account.scope;
-          if (account.access_token) updateData.access_token = account.access_token;
-          if (account.refresh_token) updateData.refresh_token = account.refresh_token;
+          if (account.access_token)
+            updateData.access_token = account.access_token;
+          if (account.refresh_token)
+            updateData.refresh_token = account.refresh_token;
           if (account.expires_at) updateData.expires_at = account.expires_at;
 
           if (Object.keys(updateData).length > 0) {

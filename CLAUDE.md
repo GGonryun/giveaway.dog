@@ -32,7 +32,7 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 
 ### Authentication
 
-- **Providers**: Supports X (Twitter), Google, Discord, and email (nodemailer)
+- **Providers**: Supports X (Twitter), Google, Discord, and email (Inbound.new)
 - **Login vs Signup**: Keep separate action files for login and signup
 - **Redirects**:
   - Host users → `/app`
