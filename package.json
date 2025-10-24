@@ -19,6 +19,7 @@
     "prisma:push:local": "dotenv -e .env.local -- npx prisma db push",
     "prisma:generate:local": "dotenv -e .env.local -- npx prisma generate",
     "prisma:reset:local": "dotenv -e .env.local -- npx prisma migrate reset",
+    "prisma:seed:local": "dotenv -e .env.local -- tsx prisma/seed.ts",
     "prisma:studio:production": "dotenv -e .env.prod -- npx prisma studio",
     "prisma:migrate:production": "dotenv -e .env.prod -- npx prisma migrate deploy",
     "prisma:push:production": "dotenv -e .env.prod -- npx prisma db push",
@@ -148,6 +149,8 @@
     "@types/nodemailer": "^7.0.1",
     "@types/openid": "^2.0.5",
     "@types/pluralize": "^0.0.33",
-    "prisma": "^6.17.1"
+    "dotenv-cli": "^10.0.0",
+    "prisma": "^6.17.1",
+    "tsx": "^4.20.6"
   }
 }

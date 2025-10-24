@@ -1,5 +1,11 @@
 - [ ] Add Twitch integration.
 
+- [ ] Use a real mail provider and not gmail.
+- [ ] User's page needs deep links for modal
+- [ ] Dashboard needs footer padding
+- [ ] Add settings, and team rbac
+- [ ] Add a twitter picker tool
+
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
   - [ ] When an entry method or prize has an error it should show an error triangle and outline it as red.
