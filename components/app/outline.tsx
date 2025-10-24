@@ -10,7 +10,13 @@ export const Outline: React.PC<
   return (
     <>
       <SiteHeaderWithTrigger {...props} />
-      <div className={cn('py-4', container && 'container', className)}>
+      <div
+        className={cn(
+          'pt-4 pb-16 sm:pb-4',
+          container && 'container',
+          className
+        )}
+      >
         {children}
       </div>
     </>

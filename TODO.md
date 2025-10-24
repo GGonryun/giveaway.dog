@@ -1,8 +1,6 @@
 - [ ] Add Twitch integration.
 
-- [ ] Use a real mail provider and not gmail.
 - [ ] User's page needs deep links for modal
-- [ ] Dashboard needs footer padding
 - [ ] Add settings, and team rbac
 - [ ] Add a twitter picker tool
 
