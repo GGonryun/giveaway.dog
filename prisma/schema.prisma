@@ -476,6 +476,7 @@ model Team {
   members      Membership[]
   sweepstakes  Sweepstakes[]
   featureFlags TeamFeatureFlag[]
+  pickers      Picker[]
 }
 
 enum TeamRole {
@@ -514,7 +515,7 @@ model AgeVerification {
   @@unique([userId, sweepstakesId])
 }
 
-// Metadata for uploaded images. 
+// Metadata for uploaded images.
 // Maps to the PutBlobResult of Vercel Blob API
 model ImageMetadata {
   id          String @id @default(cuid())
@@ -522,4 +523,36 @@ model ImageMetadata {
   downloadUrl String
   pathname    String
   contentType String
+}
+
+enum PickerStatus {
+  DRAFT // created, but not yet ready to start syncing
+  PROCESSING // actively syncing data
+  PROCESSED // finished syncing data
+  COMPLETE // all done
+  // unhappy paths
+  SUSPENDED // paused by user or system, can be retried
+  CANCELLED // cancelled by user, cannot be retried
+  FAILED // failed due to error
+}
+
+enum PickerType {
+  TWITTER
+}
+
+model Picker {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teamId String?
+  team   Team?   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  status PickerStatus @default(PROCESSING)
+  type   PickerType   @default(TWITTER)
+
+  config Json?
+  data   Json?
+  job    Json?
+  logs   Json?
 }

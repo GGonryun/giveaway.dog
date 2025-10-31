@@ -51,6 +51,9 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en" className={`${figtree.variable}`}>
+      <head>
+        <script async src="https://platform.twitter.com/widgets.js"></script>
+      </head>
       <body>
         <SessionProvider>
           <UserMetricsCollector />

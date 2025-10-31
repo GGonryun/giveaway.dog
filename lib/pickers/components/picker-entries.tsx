@@ -1,0 +1,199 @@
+'use client';
+
+import React, { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Settings } from 'lucide-react';
+import {
+  PickerEntry,
+  PickerActions,
+  PickerFilterSettings
+} from '@/lib/pickers/schemas/models';
+import { format } from 'date-fns';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { PickerFilterSettingsDialog } from './picker-filter-settings-dialog';
+
+interface PickerEntriesProps {
+  entries: PickerEntry[];
+  actions: PickerActions;
+  filters: PickerFilterSettings;
+  showFiltered: boolean;
+}
+
+const actionIcons = {
+  like: '❤️',
+  retweet: '🔁',
+  quote: '💬',
+  reply: '💭'
+};
+
+const actionLabels = {
+  like: 'Like',
+  retweet: 'Retweet',
+  quote: 'Quote',
+  reply: 'Reply'
+};
+
+export const PickerEntries: React.FC<PickerEntriesProps> = ({
+  entries,
+  actions,
+  filters,
+  showFiltered: initialShowFiltered
+}) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [showFiltered, setShowFiltered] = useState(initialShowFiltered);
+  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
+
+  const filteredEntries = showFiltered
+    ? entries
+    : entries.filter((entry) => !entry.filtered);
+
+  const handleToggleFiltered = (checked: boolean) => {
+    setShowFiltered(checked);
+    const params = new URLSearchParams(searchParams);
+    if (checked) {
+      params.set('showFiltered', 'true');
+    } else {
+      params.delete('showFiltered');
+    }
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const handleSaveFiltersAndActions = (
+    newFilters: PickerFilterSettings,
+    newActions: PickerActions
+  ) => {
+    // TODO: Call procedure to update filters and actions
+    console.log('Saving filters:', newFilters);
+    console.log('Saving actions:', newActions);
+    setFilterDialogOpen(false);
+  };
+
+  return (
+    <>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <div className="flex items-center gap-4">
+              <h3 className="text-lg font-semibold">Entries</h3>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="show-filtered"
+                  checked={showFiltered}
+                  onCheckedChange={handleToggleFiltered}
+                />
+                <Label
+                  htmlFor="show-filtered"
+                  className="text-sm cursor-pointer"
+                >
+                  Show Filtered Entries
+                </Label>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {filteredEntries.length} {showFiltered ? 'total' : 'valid'}{' '}
+              entries
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFilterDialogOpen(true)}
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Filter Settings & Requirements
+            </Button>
+          </div>
+        </div>
+
+        <Card className="overflow-hidden p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Timestamp</TableHead>
+                <TableHead>User</TableHead>
+                <TableHead>Action</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredEntries.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-8">
+                    <p className="text-sm text-muted-foreground">
+                      No entries found
+                    </p>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredEntries.map((entry) => (
+                  <TableRow key={entry.id}>
+                    <TableCell className="font-mono text-xs">
+                      {format(entry.timestamp, 'MMM d, yyyy h:mm a')}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        {entry.twitterProfileImage && (
+                          <img
+                            src={entry.twitterProfileImage}
+                            alt={entry.twitterDisplayName}
+                            className="h-8 w-8 rounded-full"
+                          />
+                        )}
+                        <div>
+                          <p className="text-sm font-medium">
+                            {entry.twitterDisplayName}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            @{entry.twitterUsername}
+                          </p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">
+                        <span className="mr-1">
+                          {actionIcons[entry.actionType]}
+                        </span>
+                        {actionLabels[entry.actionType]}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {entry.filtered ? (
+                        <Badge variant="secondary">Filtered</Badge>
+                      ) : (
+                        <Badge variant="default">Valid</Badge>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </Card>
+      </div>
+
+      <PickerFilterSettingsDialog
+        open={filterDialogOpen}
+        onOpenChange={setFilterDialogOpen}
+        filters={filters}
+        actions={actions}
+        onSave={handleSaveFiltersAndActions}
+      />
+    </>
+  );
+};

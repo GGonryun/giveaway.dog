@@ -1,16 +1,18 @@
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { nanoid } from 'nanoid';
+import { toDefaultValues } from '@/lib/task/defaults';
+import { STEAM_APP_ID_URL, TWITTER_PROFILE_URL } from '@/lib/settings';
 
 export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   setup: {
     name: 'Demo Giveaway - Win Amazing Prizes!',
     description:
       'Enter for a chance to win incredible prizes in our demo giveaway. Complete simple tasks to increase your chances of winning!',
-    banner: ''
+    banner: '/images/demo-sweepstakes-banner.png'
   },
   timing: {
     startDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    endDate: new Date(Date.now() + 128 * 24 * 60 * 60 * 1000),
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
   },
   prizes: [
@@ -27,14 +29,20 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   ],
   tasks: [
     {
-      id: nanoid(),
-      type: 'VISIT_URL',
-      value: 1,
-      label: 'Link Label',
-      title: 'Visit our website',
-      mandatory: false,
-      tasksRequired: 0,
-      href: 'https://example.com'
+      ...toDefaultValues('VISIT_URL'),
+      id: nanoid()
+    },
+    {
+      ...toDefaultValues('TWITTER_FOLLOW'),
+      id: nanoid()
+    },
+    {
+      ...toDefaultValues('TWITTER_RETWEET'),
+      id: nanoid()
+    },
+    {
+      ...toDefaultValues('STEAM_WISHLIST'),
+      id: nanoid()
     }
   ],
   terms: {

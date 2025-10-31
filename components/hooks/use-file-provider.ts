@@ -1,7 +1,6 @@
 'use client';
 
 import { upload } from '@vercel/blob/client';
-import { useDemoMode } from '@/components/sweepstakes-editor/contexts/demo-mode-context';
 
 export interface FileUploadResult {
   url: string;
@@ -61,9 +60,7 @@ class DemoFileProvider implements FileProvider {
   }
 }
 
-export function useFileProvider(): FileProvider {
-  const { isDemo } = useDemoMode();
-
+export function useFileProvider(isDemo?: boolean): FileProvider {
   if (isDemo) {
     return new DemoFileProvider();
   }

@@ -54,7 +54,6 @@ export const SweepstakeFormPage = async ({
        */}
       <SweepstakesForm
         sweepstakes={form.data as GiveawayFormSchema}
-        status={info.data.status}
         teamFeatureFlags={teamFeatureFlags.data}
       />
     </Suspense>

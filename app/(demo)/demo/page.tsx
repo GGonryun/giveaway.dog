@@ -12,8 +12,6 @@ export default async function Page() {
       <MockTeamProvider>
         <SweepstakesForm
           sweepstakes={SAMPLE_SWEEPSTAKES_DATA}
-          status="DRAFT"
-          validateId={false}
           isDemo={true}
           teamFeatureFlags={[PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY]}
         />

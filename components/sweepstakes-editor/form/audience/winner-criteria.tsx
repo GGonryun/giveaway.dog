@@ -12,7 +12,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { SwitchBox, SwitchFormHeader } from '../switch-box';
+import {
+  SwitchBox,
+  SwitchFormHeader
+} from '@/components/patterns/form-layout/switch-form-header';
 
 const MinTasksCompletedField = () => {
   const form = useFormContext<GiveawayFormSchema>();

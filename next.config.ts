@@ -13,6 +13,16 @@ export default {
         protocol: 'https',
         hostname: '*.public.blob.vercel-storage.com',
         search: ''
+      },
+      {
+        protocol: 'https',
+        hostname: 'pbs.twimg.com',
+        search: ''
+      },
+      {
+        protocol: 'https',
+        hostname: 'pic.twitter.com',
+        search: ''
       }
     ]
   }

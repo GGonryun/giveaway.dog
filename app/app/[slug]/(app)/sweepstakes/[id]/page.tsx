@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { DEFAULT_SWEEPSTAKES_DETAILS_TAB } from '@/lib/settings';
 import type { Metadata } from 'next';
+import { SweepstakesPageProps } from '@/schemas/pages';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -16,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 interface SweepstakesDetailPageProps {
-  params: Promise<{ slug: string; id: string }>;
+  params: Promise<SweepstakesPageProps>;
 }
 
 export default async function SweepstakesDetailPage({

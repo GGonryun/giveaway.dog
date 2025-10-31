@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
 import React, { memo, useMemo } from 'react';
-import { Section } from '../section';
+
 import { TermsAndConditions } from './terms';
 import { DateTimePicker } from '@/components/ui/date-time-picker';
 import {
@@ -26,12 +26,18 @@ import { timezone } from '@/lib/time';
 
 import { FileUpload } from '@/components/ui/file-upload';
 import { MinimalTiptap } from '@/components/ui/minimal-tiptap';
+import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
+import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 
 export const Setup = () => {
   const form = useFormContext<GiveawayFormSchema>();
+  const { action } = useUnifiedFormLayout();
 
   return (
-    <Section label="Setup" description="Choose the details of your giveaway.">
+    <UnifiedSectionHeader
+      label="Setup"
+      description="Choose the details of your giveaway."
+    >
       <FormField
         control={form.control}
         name="setup.name"
@@ -53,6 +59,7 @@ export const Setup = () => {
             <FormLabel>Banner Image</FormLabel>
             <FormControl>
               <FileUpload
+                isDemo={action === 'demo'}
                 initialUrl={field.value ?? undefined}
                 onUpload={(url) => field.onChange(url || null)}
               />
@@ -78,34 +85,32 @@ export const Setup = () => {
           </FormItem>
         )}
       />
-      <div className="flex gap-2 flex-col ">
-        <FormField
-          control={form.control}
-          name="timing.startDate"
-          render={({ field }) => (
-            <FormItem className="grow">
-              <FormLabel>Start Date</FormLabel>
-              <FormControl>
-                <DateTimePicker hourCycle={12} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="timing.endDate"
-          render={({ field }) => (
-            <FormItem className="grow">
-              <FormLabel>End Date</FormLabel>
-              <FormControl>
-                <DateTimePicker hourCycle={12} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="timing.startDate"
+        render={({ field }) => (
+          <FormItem className="grow">
+            <FormLabel>Start Date</FormLabel>
+            <FormControl>
+              <DateTimePicker hourCycle={12} {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="timing.endDate"
+        render={({ field }) => (
+          <FormItem className="grow">
+            <FormLabel>End Date</FormLabel>
+            <FormControl>
+              <DateTimePicker hourCycle={12} {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
       <FormField
         control={form.control}
         name="timing.timeZone"
@@ -125,7 +130,7 @@ export const Setup = () => {
         )}
       />
       <TermsAndConditions />
-    </Section>
+    </UnifiedSectionHeader>
   );
 };
 

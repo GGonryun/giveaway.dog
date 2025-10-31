@@ -38,13 +38,14 @@ import {
 import { GiveawayFormSchema, GiveawayTerms } from '@/schemas/giveaway/schemas';
 import { SweepstakesTermsType } from '@prisma/client';
 import { toBrowsePageUrl } from '@/components/sweepstakes/util';
-import { useSweepstakes } from '@/components/sweepstakes-editor/hooks/use-sweepstake-context';
+
 import {
   DEFAULT_WINNER_SELECTION_METHOD,
   DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
   DEFAULT_CLAIM_DEADLINE_DAYS
 } from '@/schemas/giveaway/defaults';
 import { date } from '@/lib/date';
+import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 
 const OPTIONS: Record<SweepstakesTermsType, string> = {
   [SweepstakesTermsType.TEMPLATE]: 'Default',
@@ -52,7 +53,7 @@ const OPTIONS: Record<SweepstakesTermsType, string> = {
 };
 
 export const TermsAndConditions = () => {
-  const { id } = useSweepstakes();
+  const { id } = useUnifiedFormLayout();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [showDiscardDialog, setShowDiscardDialog] = useState(false);
 

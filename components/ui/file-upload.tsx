@@ -9,18 +9,20 @@ import { Typography } from '@/components/ui/typography';
 
 export interface FileUploadProps {
   onUpload?: (url: string) => void;
+  isDemo?: boolean;
   initialUrl?: string;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
   onUpload,
+  isDemo,
   initialUrl
 }) => {
   const [preview, setPreview] = useState<string | null>(initialUrl || null);
   const [progress, setProgress] = useState<number>(0);
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const fileProvider = useFileProvider();
+  const fileProvider = useFileProvider(isDemo);
 
   const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();

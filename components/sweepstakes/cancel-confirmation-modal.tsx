@@ -15,25 +15,22 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
-import { useSweepstakes } from '../sweepstakes-editor/hooks/use-sweepstake-context';
 import Link from 'next/link';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
-import { useDemoMode } from '../sweepstakes-editor/contexts/demo-mode-context';
+import { UnifiedFormAction } from '../patterns/form-layout/types';
 
 interface CancelConfirmationModalProps {
   onClose: () => void;
   open: boolean;
   isLoading: boolean;
+  action: UnifiedFormAction;
   onDiscard: () => void;
   onSave: () => void;
 }
 
 export const CancelConfirmationModal: React.FC<
   CancelConfirmationModalProps
-> = ({ onClose, open, isLoading, onDiscard, onSave }) => {
-  const { action, status } = useSweepstakes();
-  const { isDemo } = useDemoMode();
-
+> = ({ action, onClose, open, isLoading, onDiscard, onSave }) => {
   const form = useFormContext<GiveawayFormSchema>();
 
   const nameField = useWatch({
@@ -57,7 +54,7 @@ export const CancelConfirmationModal: React.FC<
           </DialogDescription>
         </DialogHeader>
 
-        {isDemo && (
+        {action === 'demo' && (
           <Alert className="border-blue-200 bg-blue-50">
             <InfoIcon className="h-4 w-4 text-blue-600" />
             <AlertDescription className="text-blue-800">
@@ -72,7 +69,7 @@ export const CancelConfirmationModal: React.FC<
             Continue Editing
           </Button>
 
-          {!isDemo && (
+          {action !== 'demo' && (
             <div className="flex gap-2 sm:ml-auto">
               <Button
                 variant="destructive"
@@ -84,7 +81,7 @@ export const CancelConfirmationModal: React.FC<
                 {action === 'edit' ? 'Discard Changes' : 'Delete Draft'}
               </Button>
 
-              {status === 'DRAFT' && (
+              {action === 'create' && (
                 <Button
                   onClick={onSave}
                   disabled={isLoading}
@@ -97,7 +94,7 @@ export const CancelConfirmationModal: React.FC<
             </div>
           )}
 
-          {isDemo && (
+          {action === 'demo' && (
             <div className="flex gap-2 sm:ml-auto">
               <Link href="/pricing">
                 <Button variant="outline">Exit Demo</Button>

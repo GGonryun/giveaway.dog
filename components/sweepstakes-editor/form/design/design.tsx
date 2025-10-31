@@ -8,8 +8,11 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { Section } from '../section';
-import { SwitchBox, SwitchFormHeader } from '../switch-box';
+
+import {
+  SwitchBox,
+  SwitchFormHeader
+} from '@/components/patterns/form-layout/switch-form-header';
 import { Switch } from '@/components/ui/switch';
 import {
   Select,
@@ -33,25 +36,26 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { toGradient } from '@/schemas/color';
+import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 
 export const Design = () => {
   return (
     <>
-      <Section
+      <UnifiedSectionHeader
         label="Form Design"
         description="Customize the content and appearance of your sweepstakes form."
       >
         <DisplayNameField />
         <DisplayDescriptionField />
-      </Section>
-      <Section
+      </UnifiedSectionHeader>
+      <UnifiedSectionHeader
         label="Layout"
         description="Choose the layout and background style for your giveaway."
         className="border-t"
       >
         <BackgroundColor />
         <BackgroundFields />
-      </Section>
+      </UnifiedSectionHeader>
     </>
   );
 };

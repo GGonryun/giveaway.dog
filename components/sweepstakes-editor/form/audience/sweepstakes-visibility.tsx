@@ -21,19 +21,19 @@ import {
 } from '@/components/ui/select';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import Link from 'next/link';
-import { useSweepstakes } from '../../hooks/use-sweepstake-context';
 import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { featureFlags } from '@/lib/feature-flags';
 import { debounce } from '@/lib/utils';
 import verifySlug from '@/procedures/sweepstakes/verify-slug';
 import { Loader2, CheckCircle2 } from 'lucide-react';
+import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 
 const VisibilityTypeField = () => {
   const form = useFormContext<GiveawayFormSchema>();
-  const { teamFeatureFlags: flags } = useSweepstakes();
+  const { teamFeatureFlags } = useUnifiedFormLayout();
 
   const hasPublicSweepstakesAccess = featureFlags.parseTeam(
-    flags,
+    teamFeatureFlags,
     PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
   );
   return (
@@ -116,7 +116,7 @@ const VisibilityTypeField = () => {
 
 const UrlSlugField = () => {
   const form = useFormContext<GiveawayFormSchema>();
-  const { id } = useSweepstakes();
+  const { id } = useUnifiedFormLayout();
   const [slugStatus, setSlugStatus] = useState<
     'idle' | 'checking' | 'available' | 'unavailable'
   >('idle');

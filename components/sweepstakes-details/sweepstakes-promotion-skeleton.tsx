@@ -76,7 +76,7 @@ export function SweepstakesPromotionSkeleton() {
         <CardHeader>
           <CardTitle>Email Template</CardTitle>
           <CardDescription>
-            Ready-to-use email template for your campaigns
+            Ready-to-use email template for your sweepstakes
           </CardDescription>
         </CardHeader>
         <CardContent>

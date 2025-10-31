@@ -1,14 +1,24 @@
 'use client';
 
-import { MenuIcon } from 'lucide-react';
+import {
+  MenuIcon,
+  ChevronRight,
+  MousePointerClickIcon,
+  SparklesIcon,
+  UsersIcon
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
 import {
@@ -18,11 +28,13 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 import { EmojiLogo } from './emoji-logo';
 import Link from 'next/link';
 import { UserSchema } from '@/schemas/user';
 import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { featureFlags } from '@/lib/feature-flags';
+import { cn } from '@/lib/utils';
 
 export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
   user
@@ -35,8 +47,16 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
     [isLoggedIn, user?.featureFlags]
   );
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   const closeSheet = () => setOpen(false);
+
+  const isActiveRoute = (path: string) => {
+    if (path === '/tools') {
+      return pathname?.startsWith('/tools');
+    }
+    return pathname === path;
+  };
 
   return (
     <section className="py-2 sm:py-4">
@@ -49,25 +69,133 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="/support"
-                  className={navigationMenuTriggerStyle()}
+                <NavigationMenuTrigger
+                  onClick={(e) => {
+                    const isOpen =
+                      e.currentTarget.getAttribute('data-state') === 'open';
+                    if (isOpen) {
+                      e.preventDefault();
+                    }
+                  }}
+                  className={cn(isActiveRoute('/tools') && 'bg-accent')}
                 >
-                  Support
-                </NavigationMenuLink>
+                  Tools
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="w-[400px] p-4">
+                    <div className="mb-4">
+                      <div className="flex items-center gap-2 mb-2 px-3">
+                        <h4 className="text-xs font-semibold uppercase text-muted-foreground">
+                          Premium Tools
+                        </h4>
+                      </div>
+                      <ul className="space-y-1">
+                        <li>
+                          <Link
+                            href="/tools/sweepstakes"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          >
+                            <div className="flex items-center gap-2">
+                              <SparklesIcon className="h-4 w-4 text-primary" />
+                              <div className="text-sm font-medium leading-none">
+                                Sweepstakes Platform
+                              </div>
+                              <Badge className="text-[10px] px-1 py-0">
+                                Beta
+                              </Badge>
+                            </div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground mt-1">
+                              Professional sweepstakes with fraud detection
+                            </p>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/tools/pickers/social"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          >
+                            <div className="flex items-center gap-2">
+                              <MousePointerClickIcon className="h-4 w-4 text-primary" />
+                              <div className="text-sm font-medium leading-none">
+                                Social Pickers
+                              </div>
+                              <Badge className="text-[10px] px-1 py-0">
+                                Beta
+                              </Badge>
+                            </div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground mt-1">
+                              Randomly pick winners from social media posts
+                            </p>
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                    <Separator className="my-3" />
+                    <div>
+                      <div className="flex items-center gap-2 mb-2 px-3">
+                        <h4 className="text-xs font-semibold uppercase text-muted-foreground">
+                          Free Tools
+                        </h4>
+                      </div>
+                      <ul className="space-y-1">
+                        <li>
+                          <Link
+                            href="/tools/pickers/names"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          >
+                            <div className="flex items-center gap-2">
+                              <UsersIcon className="h-4 w-4 text-primary" />
+                              <div className="text-sm font-medium leading-none">
+                                Name Picker
+                              </div>
+                            </div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground mt-1">
+                              Spin the wheel to pick a random name
+                            </p>
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                    <Separator className="my-3" />
+                    <Link
+                      href="/tools"
+                      className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors px-3"
+                    >
+                      View all tools
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="/browse"
-                  className={navigationMenuTriggerStyle()}
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActiveRoute('/browse') && 'bg-accent'
+                  )}
                 >
                   Browse Giveaways
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink
+                  href="/support"
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActiveRoute('/support') && 'bg-accent'
+                  )}
+                >
+                  Support
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
                   href="/pricing"
-                  className={navigationMenuTriggerStyle()}
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActiveRoute('/pricing') && 'bg-accent'
+                  )}
                 >
                   Pricing
                 </NavigationMenuLink>
@@ -124,23 +252,81 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
               </SheetHeader>
               <div className="flex flex-col p-4">
                 <div className="flex flex-col gap-6">
-                  <Link
-                    href="/support"
-                    className="font-medium"
-                    onClick={closeSheet}
-                  >
-                    Support
-                  </Link>
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-semibold text-muted-foreground">
+                        TOOLS
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-3 pl-3">
+                      <Link
+                        href="/tools/sweepstakes"
+                        className="flex items-center gap-2 text-sm"
+                        onClick={closeSheet}
+                      >
+                        <SparklesIcon className="h-4 w-4 text-primary" />
+                        <span>Sweepstakes Platform</span>
+                      </Link>
+                      <Link
+                        href="/tools/pickers/social"
+                        className="flex items-center gap-2 text-sm"
+                        onClick={closeSheet}
+                      >
+                        <MousePointerClickIcon className="h-4 w-4 text-primary" />
+                        <span>Social Pickers</span>
+                      </Link>
+                      <Link
+                        href="/tools/pickers/names"
+                        className="flex items-center gap-2 text-sm"
+                        onClick={closeSheet}
+                      >
+                        <UsersIcon className="h-4 w-4 text-primary" />
+                        <span>Name Picker</span>
+                        <Badge
+                          variant="success"
+                          className="text-[10px] px-1.5 py-0"
+                        >
+                          Free
+                        </Badge>
+                      </Link>
+                      <Link
+                        href="/tools"
+                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                        onClick={closeSheet}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                        <span>View all tools</span>
+                      </Link>
+                    </div>
+                  </div>
+                  <Separator />
+
                   <Link
                     href="/browse"
-                    className="font-medium"
+                    className={cn(
+                      'font-medium',
+                      isActiveRoute('/browse') && 'text-primary'
+                    )}
                     onClick={closeSheet}
                   >
                     Browse Giveaways
                   </Link>
                   <Link
+                    href="/support"
+                    className={cn(
+                      'font-medium',
+                      isActiveRoute('/support') && 'text-primary'
+                    )}
+                    onClick={closeSheet}
+                  >
+                    Support
+                  </Link>
+                  <Link
                     href="/pricing"
-                    className="font-medium"
+                    className={cn(
+                      'font-medium',
+                      isActiveRoute('/pricing') && 'text-primary'
+                    )}
                     onClick={closeSheet}
                   >
                     Pricing

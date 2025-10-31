@@ -20,7 +20,7 @@ const faqs = [
   {
     question: 'Can I buy multiple packages?',
     answer:
-      "Yes! You can purchase multiple packages as needed. Giveaway credits never expire, so you can stock up when convenient and use them whenever you're ready to launch campaigns."
+      "Yes! You can purchase multiple packages as needed. Giveaway credits never expire, so you can stock up when convenient and use them whenever you're ready to launch pickers."
   }
 ];
 

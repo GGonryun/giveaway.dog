@@ -1,6 +1,9 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
-import { SwitchBox, SwitchFormHeader } from '../switch-box';
+import {
+  SwitchBox,
+  SwitchFormHeader
+} from '@/components/patterns/form-layout/switch-form-header';
 import {
   FormControl,
   FormField,

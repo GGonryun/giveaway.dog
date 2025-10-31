@@ -332,7 +332,7 @@ export function PricingCards() {
                 </Typography.Header>
                 <Typography.Paragraph className="text-sm text-yellow-700">
                   Shape the future of Giveaway.dog while running unlimited
-                  campaigns. Get your own self-hosted instance for complete
+                  pickers. Get your own self-hosted instance for complete
                   control and data ownership.
                 </Typography.Paragraph>
               </div>
@@ -369,7 +369,7 @@ export function PricingCards() {
                 Still Not Enough?
               </Typography.Header>
               <Typography.Paragraph className="text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
-                For businesses and agencies running large-scale campaigns, we
+                For businesses and agencies running large-scale pickers, we
                 offer custom bulk pricing with significant discounts and
                 dedicated support.
               </Typography.Paragraph>
@@ -407,7 +407,7 @@ export function PricingCards() {
                 No Wasted Money
               </Typography.Header>
               <Typography.Paragraph className="text-sm text-muted-foreground">
-                Only pay when you're actually running a campaign
+                Only pay when you're actually running a picker
               </Typography.Paragraph>
             </div>
             <div className="space-y-2">

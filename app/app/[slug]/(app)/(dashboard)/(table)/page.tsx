@@ -22,6 +22,7 @@ import { SweepstakesTabs } from './components/sweepstakes-tabs';
 import { Outline } from '@/components/app/outline';
 import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
 import type { Metadata } from 'next';
+import { TeamPageProps } from '@/schemas/pages';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -34,11 +35,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-type SweepstakesPageParams = Promise<{ slug: string }>;
 type SweepstakesPageSearchParams = Promise<ListSweepstakesFilters>;
 
 type SweepstakesPageProps = {
-  params: SweepstakesPageParams;
+  params: Promise<TeamPageProps>;
   searchParams: SweepstakesPageSearchParams;
 };
 

@@ -9,7 +9,10 @@ import {
 } from '@/components/ui/form';
 import { useMemo } from 'react';
 import { Switch } from '@/components/ui/switch';
-import { SwitchBox, SwitchFormHeader } from '../switch-box';
+import {
+  SwitchBox,
+  SwitchFormHeader
+} from '@/components/patterns/form-layout/switch-form-header';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { RegionalRestrictionFilterField } from './regional-restriction-filter';
 import { RegionalRestrictionRegions } from './regional-restriction-regions';

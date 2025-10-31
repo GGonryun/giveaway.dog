@@ -1,6 +1,11 @@
 'use client';
 
-import { SettingsIcon, TicketIcon, UsersIcon } from 'lucide-react';
+import {
+  MousePointerClickIcon,
+  SettingsIcon,
+  TicketIcon,
+  UsersIcon
+} from 'lucide-react';
 
 import {
   SidebarGroup,
@@ -25,6 +30,12 @@ const groups = ({ slug }: { slug: string }) => {
           url: `/app/${slug}`,
           alias: `/app/${slug}/sweepstakes`,
           icon: TicketIcon
+        },
+        {
+          name: 'Pickers',
+          url: `/app/${slug}/pickers`,
+          alias: undefined,
+          icon: MousePointerClickIcon
         },
         {
           name: 'Users',

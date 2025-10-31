@@ -31,6 +31,19 @@ export namespace browser {
     window.history.replaceState({}, '', finalUrl);
   }
 
+  export function appendParams(params: string) {
+    if (typeof window === 'undefined') return;
+
+    const url = new URL(window.location.href);
+    const newParams = new URLSearchParams(params);
+
+    newParams.forEach((value, key) => {
+      url.searchParams.set(key, value);
+    });
+
+    window.history.replaceState({}, '', url.toString());
+  }
+
   export function changePath(path: string) {
     if (typeof window === 'undefined') return;
 

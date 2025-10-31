@@ -5,12 +5,7 @@ import {
   userSchema
 } from '../user';
 import { CompletionStatus } from '@prisma/client';
-import {
-  REQUIRED_DISCORD_SCOPES,
-  REQUIRED_GMAIL_SCOPES,
-  REQUIRED_STEAM_SCOPES,
-  REQUIRED_TWITTER_SCOPES
-} from '@/lib/auth/scopes';
+import { xStatusRefineError, xStatusRefineUrl } from '@/lib/twitter/schemas';
 
 export const baseTaskSchema = z.object({
   id: z.string(),
@@ -59,18 +54,21 @@ export const twitterRetweetTaskSchema = baseTaskSchema.extend({
   tweetId: z
     .string()
     .url('Post URL is required')
-    .refine((val) => {
-      const urlPattern =
-        /^https?:\/\/(www\.)?x\.com\/[A-Za-z0-9_]{1,15}\/status\/\d+$/;
-      return urlPattern.test(val);
-    }, 'Unexpected URL, should be like https://x.com/username/status/1234567890')
+    .refine(xStatusRefineUrl, xStatusRefineError)
 });
 
 export type TwitterRetweetTaskSchema = z.infer<typeof twitterRetweetTaskSchema>;
 
 export const steamWishlistTaskSchema = baseTaskSchema.extend({
   type: z.literal('STEAM_WISHLIST'),
-  appId: z.string().url('Steam App ID is required')
+  appId: z
+    .string()
+    .url('Steam App URL is required')
+    .refine((val) => {
+      const urlPattern =
+        /^https?:\/\/store\.steampowered\.com\/app\/\d+\/[A-Za-z0-9_\-]+\/?$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://store.steampowered.com/app/APP_ID/app_name/')
 });
 
 export type SteamWishlistTaskSchema = z.infer<typeof steamWishlistTaskSchema>;

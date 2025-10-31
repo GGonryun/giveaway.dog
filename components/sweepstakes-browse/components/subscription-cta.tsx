@@ -70,7 +70,7 @@ export function SubscriptionCTA() {
   }
 
   return (
-    <Card className="bg-gradient-to-r from-primary/10 to-secondary/10">
+    <Card className="bg-gradient-to-r from-primary/10 to-primary/5">
       <CardContent className="p-6">
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mx-auto">

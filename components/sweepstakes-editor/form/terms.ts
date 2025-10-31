@@ -103,7 +103,7 @@ By entering, participants release and hold harmless the Sponsor and its affiliat
 
   privacy: `Your information is governed by our privacy policy (https://giveaway.dog/privacy)${configuration.privacyPolicyUrl ? `, and the Sponsor privacy policy (${configuration.privacyPolicyUrl})` : '.'} `,
 
-  winnersList: `To obtain a list of winners, contact the Sponsor within four (4) weeks of the campaign's end date.`,
+  winnersList: `To obtain a list of winners, contact the Sponsor within four (4) weeks of the sweepstakes' end date.`,
 
   additionalTerms: configuration.additionalTerms || '',
 

@@ -10,6 +10,7 @@ import {
 } from './participant';
 import { derivedSweepstakesStatusSchema } from '../sweepstakes';
 import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@/lib/settings';
+import { timingSchema } from '../timing';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -67,7 +68,7 @@ export type GiveawayTerms = z.infer<typeof giveawayFormTermsSchema>;
 const giveawayFormSetupSchema = z.object({
   name: z.string().min(3),
   description: z.string().min(3),
-  banner: z.string().url()
+  banner: z.string()
 });
 
 export const regionalRestrictionSchema = z
@@ -149,41 +150,6 @@ const giveawayFormPrizeSchema = z
   .min(1, 'At least one prize is required')
   .max(10, 'Maximum of 10 prizes are allowed');
 
-const giveawayFormTimingSchema = (validateEndDate: boolean) => {
-  const endDate = validateEndDate
-    ? z.date().refine((date) => date > new Date(), {
-        message: 'End date must be in the future'
-      })
-    : z.date();
-  const obj = z.object({
-    startDate: z.date(),
-    endDate,
-    timeZone: z.string()
-  });
-  if (!validateEndDate) return obj;
-  return obj.superRefine((data, ctx) => {
-    const startDate = data.startDate;
-    const endDate = data.endDate;
-    if (startDate && endDate <= startDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'End date must be after start date',
-        path: ['endDate']
-      });
-    }
-    // do not allow giveaways longer than 30 days
-    const maxEndDate = new Date(startDate);
-    maxEndDate.setDate(maxEndDate.getDate() + MAX_SWEEPSTAKE_DURATION_DAYS);
-    if (endDate > maxEndDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Sweepstakes duration cannot exceed ${MAX_SWEEPSTAKE_DURATION_DAYS} days`,
-        path: ['endDate']
-      });
-    }
-  });
-};
-
 export const solidColorBackgroundSchema = z.object({
   type: z.literal('color'),
   color: z
@@ -228,11 +194,18 @@ export const giveawayDesignSchema = z.object({
 
 export type GiveawayDesignSchema = z.infer<typeof giveawayDesignSchema>;
 
-export const giveawayFormSchema = (validateEndDate: boolean) =>
+export const giveawayFormSchema = ({
+  validateEndDate
+}: {
+  validateEndDate: boolean;
+}) =>
   z.object({
     setup: giveawayFormSetupSchema,
     terms: giveawayFormTermsSchema,
-    timing: giveawayFormTimingSchema(validateEndDate),
+    timing: timingSchema({
+      validateEndDate,
+      maxDurationDays: MAX_SWEEPSTAKE_DURATION_DAYS
+    }),
     audience: giveawayAudienceSchema,
     tasks: giveawayFormTaskSchema,
     prizes: giveawayFormPrizeSchema,
@@ -243,8 +216,12 @@ export const giveawayFormSchema = (validateEndDate: boolean) =>
 
 export type GiveawayFormSchema = z.infer<ReturnType<typeof giveawayFormSchema>>;
 
-export const giveawaySchema = (validateEndDate: boolean) =>
-  giveawayFormSchema(validateEndDate).extend({
+export const giveawaySchema = ({
+  validateEndDate
+}: {
+  validateEndDate: boolean;
+}) =>
+  giveawayFormSchema({ validateEndDate }).extend({
     status: derivedSweepstakesStatusSchema,
     id: z.string()
   });
@@ -347,7 +324,7 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
 };
 
 export const participantSweepstakeSchema = z.object({
-  sweepstakes: giveawaySchema(false),
+  sweepstakes: giveawaySchema({ validateEndDate: false }),
   host: giveawayHostSchema,
   prizes: giveawayPrizeSchema.array(),
   participation: giveawayParticipationSchema

@@ -2,8 +2,8 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import React, { useState } from 'react';
 import { EntryMethod } from './entry-method';
-import { toDefaultValues } from './task-defaults';
 import { SelectTaskDialog } from './select-task-dialog';
+import { toDefaultValues } from '@/lib/task/defaults';
 import {
   DndContext,
   closestCenter,
@@ -24,9 +24,9 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
-import { Section } from '../section';
 import { nanoid } from 'nanoid';
 import { TaskType } from '@/schemas/tasks/schemas';
+import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };
 
@@ -78,7 +78,7 @@ export const EntryMethods = () => {
   const sensors = useSensors(useSensor(PointerSensor));
 
   return (
-    <Section
+    <UnifiedSectionHeader
       label="Entry Methods"
       description="Select how users can enter the giveaway."
     >
@@ -133,6 +133,6 @@ export const EntryMethods = () => {
           </FormItem>
         )}
       />
-    </Section>
+    </UnifiedSectionHeader>
   );
 };

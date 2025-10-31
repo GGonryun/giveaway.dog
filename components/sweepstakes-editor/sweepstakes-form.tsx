@@ -15,58 +15,51 @@ import {
 } from '@/schemas/giveaway/schemas';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { FormLayout } from './form-layout';
-import {
-  SweepstakesContext,
-  useSweepstakes
-} from '@/components/sweepstakes-editor/hooks/use-sweepstake-context';
-import { GiveawayFormContent } from './form-content';
-import { GiveawayPreview } from './preview';
-import { CancelConfirmationModal } from '@/components/sweepstakes/cancel-confirmation-modal';
-import { PrePublishValidationModal } from '@/components/sweepstakes/pre-publish-validation-modal';
+import { SweepstakePreview } from './sweepstake-preview';
 import { useSweepstakesPage } from '../sweepstakes/use-sweepstakes-page';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { useDeleteSweepstakes } from '../sweepstakes/use-delete-sweepstakes';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
 import publishSweepstakes from '@/procedures/sweepstakes/publish-sweepstakes';
-import { isSweepstakeStepKey } from './data/steps';
-import { FormIssuesDialog } from './form-issues-dialog';
-import { useFormIssuesDialog } from './hooks/use-form-issues-dialog';
-import { MobileSuspense } from '../ui/mobile-suspense';
-import { useIsTablet } from '../hooks/use-tablet';
 import { PreviewStateContext } from './contexts/preview-state-context';
-import { DialogFooter } from '../ui/dialog';
-import { Button } from '../ui/button';
-import { SaveIcon } from 'lucide-react';
-import { DemoModeProvider, useDemoMode } from './contexts/demo-mode-context';
-import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+
 import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
+import { UnifiedFormLayoutContextProvider } from '../patterns/form-layout/use-unified-form-layout';
+import {
+  SWEEPSTAKE_FIELD_TO_STEP_MAP,
+  isSweepstakeStepKey,
+  SWEEPSTAKE_STEP_TO_FIELD_MAP,
+  SWEEPSTAKE_STEP_LABELS,
+  SWEEPSTAKE_STEP_ORDER,
+  SweepstakeStep
+} from './data/steps';
+import { SweepstakesPreviewFooter } from './sweepstakes-preview-footer';
+import { UnifiedFormAction } from '../patterns/form-layout/types';
+import { SweepstakeFormContent } from './sweepstake-form-content';
+import { CancelConfirmationModal } from '../sweepstakes/cancel-confirmation-modal';
+import { PublishConfirmationModal } from './publish-confirmation-modal';
 
 export const SweepstakesForm: React.FC<{
   sweepstakes: GiveawayFormSchema;
-  status: DerivedSweepstakeStatus;
   teamFeatureFlags: TeamFeatureFlagKeySchema[];
-  validateId?: boolean;
   isDemo?: boolean;
-}> = ({
-  sweepstakes: defaultValues,
-  status,
-  teamFeatureFlags,
-  validateId = true,
-  isDemo = false
-}) => {
-  const { isTablet } = useIsTablet();
+}> = ({ sweepstakes: defaultValues, teamFeatureFlags, isDemo = false }) => {
   const pathname = usePathname();
-
-  const params = useParams();
   const searchParams = useSearchParams();
-  const step = searchParams.get('step') ?? 'setup';
+  const params = useParams();
   const id = params.id as string;
-  const action = pathname.includes('/edit') ? 'edit' : 'create';
+  const rawStep = searchParams.get('step');
+  const step = isSweepstakeStepKey(rawStep) ? rawStep : 'setup';
+
+  const action = isDemo
+    ? 'demo'
+    : pathname.includes('/edit')
+      ? 'edit'
+      : 'create';
 
   const form = useForm<GiveawayFormSchema>({
-    resolver: zodResolver(giveawayFormSchema(true)),
+    resolver: zodResolver(giveawayFormSchema({ validateEndDate: !isDemo })),
     defaultValues,
     mode: 'onChange'
   });
@@ -82,40 +75,32 @@ export const SweepstakesForm: React.FC<{
     form.trigger('timing.endDate');
   }, [startDate, form.trigger]);
 
-  if (validateId && (!id || typeof id !== 'string'))
+  if (action !== 'demo' && (!id || typeof id !== 'string'))
     return <div>Invalid ID: {id}</div>;
 
   return (
-    <MobileSuspense>
-      <DemoModeProvider isDemo={isDemo}>
-        <SweepstakesContext.Provider
-          value={{
-            mobile: isTablet,
-            step: isSweepstakeStepKey(step) ? step : 'setup',
-            id,
-            action,
-            status,
-            teamFeatureFlags
-          }}
-        >
-          <PreviewStateContext.Provider
-            value={{ previewState, setPreviewState }}
-          >
-            <FormProvider {...form}>
-              <FormContent />
-            </FormProvider>
-          </PreviewStateContext.Provider>
-        </SweepstakesContext.Provider>
-      </DemoModeProvider>
-    </MobileSuspense>
+    <PreviewStateContext.Provider value={{ previewState, setPreviewState }}>
+      <FormProvider {...form}>
+        <FormContent
+          id={id}
+          step={step}
+          action={action}
+          teamFeatureFlags={teamFeatureFlags}
+        />
+      </FormProvider>
+    </PreviewStateContext.Provider>
   );
 };
 
-const FormContent: React.FC = () => {
+const FormContent: React.FC<{
+  id: string;
+  step: SweepstakeStep;
+  teamFeatureFlags: TeamFeatureFlagKeySchema[];
+  action: UnifiedFormAction;
+}> = ({ id, teamFeatureFlags, action, step }) => {
   const page = useSweepstakesPage();
-  const { id, action, status } = useSweepstakes();
-  const { isDemo } = useDemoMode();
-  const { open, errors, onOpenChange, onJumpToField } = useFormIssuesDialog();
+
+  const [showIssues, setShowIssues] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
 
@@ -156,34 +141,34 @@ const FormContent: React.FC = () => {
   const handleSubmitInvalid = useCallback(async () => {
     await form.trigger();
 
-    onOpenChange(true);
+    setShowIssues(true);
   }, [form.trigger, setShowPublishModal]);
 
   const handleCancel = useCallback(() => {
     // check if form is dirty
-    if (form.formState.isDirty || action === 'create' || isDemo) {
+    if (form.formState.isDirty || action === 'create' || action === 'demo') {
       setShowCancelModal(true);
     } else {
       page.navigateTo();
     }
-  }, [form.formState.isDirty, page.navigateTo, action, isDemo]);
+  }, [form.formState.isDirty, page.navigateTo, action]);
 
   const handleSaveChanges = useCallback(async () => {
-    if (isDemo) {
+    if (action === 'demo') {
       toast.info('Demo Mode: Saving is disabled in the demo.');
       return;
     }
 
     const currentValues = form.getValues();
     updateSweepstakesProcedure.run({ id, ...currentValues });
-  }, [id, updateSweepstakesProcedure, isDemo]);
+  }, [id, updateSweepstakesProcedure, action]);
 
   const handleCancelSubmission = async () => {
     setShowPublishModal(false);
   };
 
   const handleDiscardChanges = useCallback(async () => {
-    if (isDemo) {
+    if (action === 'demo') {
       window.history.back();
       return;
     }
@@ -193,17 +178,17 @@ const FormContent: React.FC = () => {
     } else {
       page.navigateTo();
     }
-  }, [deleteSweepstakes.run, action, id, isDemo]);
+  }, [deleteSweepstakes.run, action, id]);
 
   const handlePublish = useCallback(async () => {
-    if (isDemo) {
+    if (action === 'demo') {
       toast.info('Demo Mode: Publishing is disabled in the demo.');
       return;
     }
 
     const currentValues = form.getValues();
     publishSweepstakesProcedure.run({ id, ...currentValues });
-  }, [id, publishSweepstakesProcedure, isDemo]);
+  }, [id, publishSweepstakesProcedure, action]);
 
   const handleContinueEditing = useCallback(
     (fieldName?: string) => {
@@ -223,16 +208,29 @@ const FormContent: React.FC = () => {
       <form
         onSubmit={form.handleSubmit(handleSubmitValid, handleSubmitInvalid)}
       >
-        <FormLayout
+        <UnifiedFormLayoutContextProvider
+          id={id}
           title={name}
           disabled={
             deleteSweepstakes.isLoading ||
             updateSweepstakesProcedure.isLoading ||
             publishSweepstakesProcedure.isLoading
           }
+          showIssues={showIssues}
+          defaultStep={step}
+          setShowIssues={setShowIssues}
           onCancel={handleCancel}
-          left={<GiveawayFormContent />}
-          right={<GiveawayPreview />}
+          onSave={handleSaveChanges}
+          form={<SweepstakeFormContent />}
+          preview={<SweepstakePreview />}
+          teamFeatureFlags={teamFeatureFlags}
+          previewFooter={<SweepstakesPreviewFooter />}
+          type={'sweepstake'}
+          action={action}
+          stepOrder={SWEEPSTAKE_STEP_ORDER}
+          stepsToFields={SWEEPSTAKE_STEP_TO_FIELD_MAP}
+          fieldsToSteps={SWEEPSTAKE_FIELD_TO_STEP_MAP}
+          stepLabels={SWEEPSTAKE_STEP_LABELS}
         />
       </form>
 
@@ -242,11 +240,12 @@ const FormContent: React.FC = () => {
         isLoading={
           deleteSweepstakes.isLoading || updateSweepstakesProcedure.isLoading
         }
+        action={action}
         onDiscard={handleDiscardChanges}
         onSave={handleSaveChanges}
       />
 
-      <PrePublishValidationModal
+      <PublishConfirmationModal
         open={showPublishModal}
         onClose={handleClosePublishModal}
         onContinueEditing={handleContinueEditing}
@@ -255,35 +254,8 @@ const FormContent: React.FC = () => {
         onPublish={handlePublish}
         isPublishing={publishSweepstakesProcedure.isLoading}
         isSaving={updateSweepstakesProcedure.isLoading}
-        giveawayName={name}
-      />
-
-      <FormIssuesDialog
-        open={open}
-        errors={errors}
-        onOpenChange={onOpenChange}
-        onJumpToField={onJumpToField}
-        footer={
-          <DialogFooter className="flex-col sm:flex-row gap-2 sm:justify-between w-full">
-            <Button
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={updateSweepstakesProcedure.isLoading}
-            >
-              Continue Editing
-            </Button>
-            {status === 'DRAFT' && (
-              <Button
-                onClick={handleSaveChanges}
-                disabled={updateSweepstakesProcedure.isLoading}
-                className="flex-1 sm:flex-none"
-              >
-                <SaveIcon className="h-4 w-4 mr-2" />
-                Save & Exit
-              </Button>
-            )}
-          </DialogFooter>
-        }
+        action={action}
+        name={name}
       />
     </>
   );

@@ -9,7 +9,10 @@ import {
   AlertDialogCancel,
   AlertDialogAction
 } from '@/components/ui/alert-dialog';
-import { AlertDialogHeader, AlertDialogFooter } from '@/components/ui/alert-dialog';
+import {
+  AlertDialogHeader,
+  AlertDialogFooter
+} from '@/components/ui/alert-dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';

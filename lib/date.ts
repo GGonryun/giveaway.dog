@@ -29,9 +29,11 @@ export namespace date {
 export namespace datetime {
   export const format = (
     date: Date | number | string,
-    format: 'short' | 'long' = 'short'
+    format: 'tiny' | 'short' | 'long' = 'short'
   ) => {
     switch (format) {
+      case 'tiny':
+        return fnsFormat(date, 'MM/dd/yyyy, hh:mm a');
       case 'short':
         return fnsFormat(date, 'MMM d, yyyy, hh:mm a');
       case 'long':

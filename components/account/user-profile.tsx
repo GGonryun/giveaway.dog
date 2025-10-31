@@ -16,7 +16,7 @@ import { useUser } from '@/components/context/user-provider';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateProfile from '@/procedures/user/update-profile';
 import { toast } from 'sonner';
-import { SectionHeader } from './section-header';
+import { AccountSectionHeader } from './account-section-header';
 import { SaveIcon } from 'lucide-react';
 import { Spinner } from '../ui/spinner';
 import { SocialProviders } from './social-providers';
@@ -51,7 +51,7 @@ export const UserSettings = () => {
   return (
     <div className="space-y-4">
       <Card>
-        <SectionHeader
+        <AccountSectionHeader
           title="Display Name"
           description="This is the name that will be shown when you enter giveaways."
         />

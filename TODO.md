@@ -2,7 +2,6 @@
 - [ ] Add task requirements so that user's must complete a certain number of other tasks to unlock this one.
 
 - [ ] Add settings, and team rbac
-- [ ] Add a twitter picker tool
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
@@ -45,3 +44,10 @@
 - [ ] Add Instagram integration.
 - [ ] Add a recurring tasks.
 - [ ] Add a form integration.
+
+- [ ] Add a small banner that says "Thank you for completing all the tasks!"
+- [ ] Add "bot" integrations that automate sweepstake creation/notification via Discord, X
+
+## Tech Debt
+
+- [ ] Get rid of invalidate and cache methods on procedures

@@ -57,7 +57,7 @@ const mockTemplates: Template[] = [
   {
     id: '2',
     title: 'Holiday Gift Giveaway',
-    description: 'Seasonal template optimized for holiday marketing campaigns',
+    description: 'Seasonal template optimized for holiday marketing pickers',
     category: 'Seasonal',
     popularity: 88,
     estimatedConversion: '8-12%',
@@ -160,7 +160,7 @@ export default function TemplatesPage() {
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">Giveaway Templates</h1>
         <p className="text-muted-foreground">
-          Choose from our collection of proven templates to boost your campaign
+          Choose from our collection of proven templates to boost your picker
           performance
         </p>
       </div>

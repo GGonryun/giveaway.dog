@@ -16,14 +16,12 @@ const getSweepstakeEntries = procedure()
   })
   .input(
     z.object({
-      id: z.string(),
-      page: z.number().optional()
+      id: z.string()
     })
   )
   .cache({ revalidate: 60 })
   .output(userEntriesSchema.array())
   .handler(async ({ input, db }) => {
-    const page = input.page || 1;
     const sweepstakes = await db.sweepstakes.findUnique({
       where: {
         id: input.id

@@ -5,7 +5,10 @@ import { assertNever } from '@/lib/errors';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { SwitchBox, SwitchFormHeader } from '../switch-box';
+import {
+  SwitchBox,
+  SwitchFormHeader
+} from '@/components/patterns/form-layout/switch-form-header';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { TaskType } from '@prisma/client';

@@ -25,10 +25,7 @@ export const SweepstakesPageContent: React.FC<{
   return (
     <div className="w-full bg-background py-6 sm:py-12 container space-y-8 sm:space-y-12">
       <div className="text-center space-y-1 mb-8">
-        <Typography.Header
-          level={1}
-          className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold"
-        >
+        <Typography.Header level={1} className="text-4xl font-bold lg:text-6xl">
           All Giveaways
         </Typography.Header>
         <Typography className="text-muted-foreground text-base md:text-lg">

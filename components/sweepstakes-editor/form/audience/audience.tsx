@@ -6,33 +6,33 @@ import { MinimumAgeRestriction } from './minimum-age-restriction';
 import { RequireEmail } from './require-email';
 import { SweepstakesVisibility } from './sweepstakes-visibility';
 import { WinnerCriteria } from './winner-criteria';
-import { Section } from '../section';
+import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 
 export const Audience = () => {
   return (
     <>
-      <Section
+      <UnifiedSectionHeader
         label="Participation Requirements"
         description="Set the basic requirements for users to participate in your sweepstakes."
       >
         <RequireEmail />
         <RegionalRestriction />
         <MinimumAgeRestriction />
-      </Section>
-      <Section
+      </UnifiedSectionHeader>
+      <UnifiedSectionHeader
         label="Visibility"
         description="Configure the public URL for your sweepstakes."
         className="border-t"
       >
         <SweepstakesVisibility />
-      </Section>
-      <Section
+      </UnifiedSectionHeader>
+      <UnifiedSectionHeader
         label="Winner Selection Criteria"
         description="Set requirements for participant eligibility when selecting winners."
         className="border-t"
       >
         <WinnerCriteria />
-      </Section>
+      </UnifiedSectionHeader>
     </>
   );
 };

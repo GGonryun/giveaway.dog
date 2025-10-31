@@ -15,7 +15,7 @@ const competitors = [
     name: 'Gleam',
     monthlyPrice: '$99',
     yearlyTotal: '$1188',
-    limitations: ['Entry caps', 'Limited campaigns', 'Premium features locked'],
+    limitations: ['Entry caps', 'Limited pickers', 'Premium features locked'],
     isUs: false
   },
   {
@@ -30,7 +30,7 @@ const competitors = [
     monthlyPrice: '$59',
     yearlyTotal: '$708',
     limitations: [
-      'Campaign restrictions',
+      'Picker restrictions',
       'Limited integrations',
       'Basic support'
     ],

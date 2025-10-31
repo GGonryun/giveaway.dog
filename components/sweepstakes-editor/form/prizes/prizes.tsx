@@ -24,12 +24,14 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
-import { Section } from '../section';
+
 import { nanoid } from 'nanoid';
 import {
   DEFAULT_SWEEPSTAKES_PRIZE_NAME,
   DEFAULT_SWEEPSTAKES_PRIZE_QUOTA
 } from '@/schemas/giveaway/defaults';
+import { AccountSectionHeader } from '@/components/account/account-section-header';
+import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 
 type ActivePrize = { id: string; index: number };
 
@@ -77,7 +79,7 @@ export const Prizes = () => {
   const sensors = useSensors(useSensor(PointerSensor));
 
   return (
-    <Section
+    <UnifiedSectionHeader
       label="Prizes"
       description="Add prizes and number of winners to your giveaway."
     >
@@ -146,6 +148,6 @@ export const Prizes = () => {
           </FormItem>
         )}
       />
-    </Section>
+    </UnifiedSectionHeader>
   );
 };
