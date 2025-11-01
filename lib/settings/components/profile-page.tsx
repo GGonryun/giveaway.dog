@@ -1,4 +1,4 @@
-'use client';
+'use server';
 
 import {
   Card,
@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { Building2, PaintbrushIcon } from 'lucide-react';
 
-export function OrgProfile() {
+export const TeamProfileSettings: React.FC = async () => {
   return (
     <div className="space-y-3">
       <Card>
@@ -47,4 +47,4 @@ export function OrgProfile() {
       </Card>
     </div>
   );
-}
+};

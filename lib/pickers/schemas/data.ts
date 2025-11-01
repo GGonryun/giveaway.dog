@@ -1,3 +1,4 @@
+import { ApplicationError } from '@/lib/errors';
 import z from 'zod';
 
 export const twitterActionsSchema = z.enum([
@@ -38,3 +39,18 @@ export const pickerDataSchema = z.object({
 });
 
 export type PickerDataSchema = z.infer<typeof pickerDataSchema>;
+
+export const parsePickerDataSchema = (data: unknown): PickerDataSchema => {
+  const result = pickerDataSchema.safeParse(data);
+
+  if (!result.success) {
+    console.error('Picker data schema validation error:', result.error);
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      cause: result.error,
+      message: 'Invalid picker data schema'
+    });
+  }
+
+  return result.data;
+};

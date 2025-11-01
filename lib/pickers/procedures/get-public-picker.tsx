@@ -1,7 +1,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import { publicPickerSchema, toPublicPicker } from '../schemas/form';
 import { ApplicationError } from '@/lib/errors';
+import { publicPickerSchema, toPublicPicker } from '../schemas/public-picker';
 
 export const getPublicPicker = procedure()
   .authorization({

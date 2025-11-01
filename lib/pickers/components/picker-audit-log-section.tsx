@@ -9,26 +9,22 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, FileText, Calendar } from 'lucide-react';
-import { AuditLog } from '@/lib/pickers/schemas/audit-log';
-import { AUDIT_LOG_ACTION_LABELS } from '@/lib/pickers/schemas/audit-log';
+import { ChevronDown, FileText } from 'lucide-react';
+import {
+  AuditLog,
+  AUDIT_LOG_ACTION_LABEL,
+  AUDIT_LOG_ACTION_CATEGORY,
+  AUDIT_LOG_ACTION_DESCRIPTION,
+  AUDIT_LOG_CATEGORY_ICON,
+  AUDIT_LOG_CATEGORY_BADGE_VARIANT,
+  AUDIT_LOG_ACTION_CATEGORY_LABEL
+} from '@/lib/pickers/schemas/audit-log';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 
 interface PickerAuditLogSectionProps {
   logs: AuditLog[];
 }
-
-const CATEGORY_COLORS: Record<
-  string,
-  'default' | 'secondary' | 'destructive' | 'outline'
-> = {
-  picker: 'default',
-  sync: 'secondary',
-  draw: 'outline',
-  winner: 'default',
-  settings: 'secondary'
-};
 
 export const PickerAuditLogSection: React.FC<PickerAuditLogSectionProps> = ({
   logs
@@ -61,43 +57,61 @@ export const PickerAuditLogSection: React.FC<PickerAuditLogSectionProps> = ({
           </CollapsibleTrigger>
         </CardHeader>
         <CollapsibleContent>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-3 mt-2">
             {logs.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
                 No audit log entries yet
               </p>
             ) : (
               <div className="space-y-2">
-                {logs.map((log, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
-                  >
-                    <Calendar className="h-4 w-4 text-muted-foreground mt-0.5" />
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-medium">
-                          {AUDIT_LOG_ACTION_LABELS[log.action]}
-                        </span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {format(log.createdAt, 'MMM d, yyyy HH:mm:ss')}
-                      </p>
-                      {log.metadata && (
-                        <div className="mt-2">
-                          <details className="text-xs">
-                            <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
-                              View details
-                            </summary>
-                            <pre className="mt-2 p-2 rounded bg-muted overflow-x-auto">
-                              {JSON.stringify(log.metadata, null, 2)}
-                            </pre>
-                          </details>
+                {logs.map((log, index) => {
+                  const category = AUDIT_LOG_ACTION_CATEGORY[log.action];
+                  const CategoryIcon = AUDIT_LOG_CATEGORY_ICON[category];
+                  const badgeVariant =
+                    AUDIT_LOG_CATEGORY_BADGE_VARIANT[category];
+                  const description = AUDIT_LOG_ACTION_DESCRIPTION[log.action];
+
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                    >
+                      <CategoryIcon className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                      <div className="flex-1 space-y-1">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1 space-y-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-sm font-medium">
+                                {AUDIT_LOG_ACTION_LABEL[log.action]}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground font-mono">
+                              {format(
+                                new Date(log.createdAt),
+                                'MMM d, yyyy HH:mm:ss'
+                              )}
+                            </p>
+                          </div>
+                          <Badge variant={badgeVariant} className="text-xs">
+                            {AUDIT_LOG_ACTION_CATEGORY_LABEL[category]}
+                          </Badge>
                         </div>
-                      )}
+                        {log.metadata && (
+                          <div className="mt-2">
+                            <details className="text-xs">
+                              <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+                                View details
+                              </summary>
+                              <pre className="mt-2 p-2 rounded bg-muted overflow-x-auto">
+                                {JSON.stringify(log.metadata, null, 2)}
+                              </pre>
+                            </details>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>

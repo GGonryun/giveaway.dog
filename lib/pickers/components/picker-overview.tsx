@@ -12,7 +12,8 @@ import {
   CheckCircle2,
   XCircle,
   Activity,
-  Eye
+  Eye,
+  Pencil
 } from 'lucide-react';
 import {
   Dialog,
@@ -29,12 +30,17 @@ import {
 import { cn } from '@/lib/utils';
 import { PickerTwitterPreviewEmbed } from './picker-twitter-preview';
 import { STATUS_COLORS, STATUS_ICONS } from '../themes/status';
-import { PublicPickerSchema } from '../schemas/form';
 import { PickerTypeLogo } from './picker-type-logo';
 import { formatDistance } from 'date-fns';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
+import { PickerWinnerSection } from './picker-winner-section';
+import { PickerAuditLogSection } from './picker-audit-log-section';
+import { PublicPickerSchema } from '../schemas/public-picker';
+import { PickerRenameModal } from './picker-rename-modal';
+import { renamePicker } from '../procedures/rename-picker';
+import { useRouter } from 'next/navigation';
 
 interface PickerOverviewProps {
   picker: PublicPickerSchema;
@@ -83,27 +89,40 @@ const StatCard = ({
 );
 
 export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
+  const router = useRouter();
   const statusConfig = STATUS_COLORS[picker.status];
   const StatusIcon = STATUS_ICONS[picker.status];
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [renameOpen, setRenameOpen] = useState(false);
 
-  const activeActions = Object.entries(picker.actions)
+  const activeActions = Object.entries(picker.config.actions)
     .filter(([key, value]) => value && key !== 'pickerId')
     .map(([key]) => key);
 
-  const activeFilters = Object.entries(picker.filters)
+  const activeFilters = Object.entries(picker.config.filters)
     .filter(([_, value]) => value !== null && value !== undefined)
     .map(([key, value]) => ({ key, value }));
 
-  const activeRequirements = Object.entries(picker.requirements)
+  const activeRequirements = Object.entries(picker.config.requirements)
     .filter(([_, value]) => value)
     .map(([key]) => key);
 
-  const stats = picker.stats || {
-    totalEntries: 0,
-    uniqueParticipants: 0,
+  const stats = {
+    totalEntries: picker.data.actions.length,
+    uniqueParticipants: picker.data.users.length,
     filteredEntries: 0,
     validEntries: 0
+  };
+
+  const handleRename = async (newName: string) => {
+    const result = await renamePicker({
+      pickerId: picker.id,
+      name: newName
+    });
+
+    if (result.ok) {
+      router.refresh();
+    }
   };
 
   return (
@@ -113,7 +132,15 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
               <PickerTypeLogo type={picker.type} size={6} />
-              <h2 className="text-2xl font-bold">{picker.setup.name}</h2>
+              <h2 className="text-2xl font-bold">{picker.config.setup.name}</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setRenameOpen(true)}
+                className="h-8 w-8 p-0"
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
             </div>
             <div className="flex items-center gap-2">
               <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
@@ -129,7 +156,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
                   </DialogHeader>
                   <div className="px-6 pb-6">
                     <PickerTwitterPreviewEmbed
-                      postUrl={picker.setup.postUrl}
+                      postUrl={picker.config.setup.postUrl}
                       className="border rounded-lg px-2"
                     />
                   </div>
@@ -137,7 +164,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
               </Dialog>
               <Button variant="outline" size="sm" asChild>
                 <Link
-                  href={picker.setup.postUrl}
+                  href={picker.config.setup.postUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   prefetch={false}
@@ -220,7 +247,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
                   <InfoRow
                     icon={Trophy}
                     label="Winners"
-                    value={picker.winners.quota}
+                    value={picker.config.winners.quota}
                     valueClassName="text-primary"
                   />
                   <InfoRow
@@ -228,12 +255,12 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
                     label="Post URL"
                     value={
                       <a
-                        href={picker.setup.postUrl}
+                        href={picker.config.setup.postUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:underline text-xs truncate max-w-[200px] block"
                       >
-                        {new URL(picker.setup.postUrl).pathname}
+                        {new URL(picker.config.setup.postUrl).pathname}
                       </a>
                     }
                   />
@@ -251,7 +278,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
 
                 {activeFilters.length > 0 && (
                   <div>
-                    <h4 className="text-xs font-medium text-muted-foreground mb-2">
+                    <h4 className="text-xs font-semibold text-muted-foreground mb-2">
                       Account Filters
                     </h4>
                     <div className="space-y-1">
@@ -279,7 +306,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
 
                 {activeRequirements.length > 0 && (
                   <div>
-                    <h4 className="text-xs font-medium text-muted-foreground mb-2">
+                    <h4 className="text-xs font-semibold text-muted-foreground mb-2">
                       Profile Requirements
                     </h4>
                     <div className="flex flex-wrap gap-1.5">
@@ -331,6 +358,25 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
           </div>
         </CardContent>
       </Card>
+
+      <PickerWinnerSection
+        pickerId={picker.id}
+        pickerName={picker.config.setup.name}
+        status={picker.status}
+        numberOfWinners={picker.config.winners.quota}
+      />
+
+      {picker.logs && picker.logs.length > 0 && (
+        <PickerAuditLogSection logs={picker.logs} />
+      )}
+
+      <PickerRenameModal
+        open={renameOpen}
+        onOpenChange={setRenameOpen}
+        currentName={picker.config.setup.name}
+        pickerId={picker.id}
+        onRename={handleRename}
+      />
     </div>
   );
 };

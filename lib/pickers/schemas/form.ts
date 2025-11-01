@@ -1,7 +1,6 @@
 import { ApplicationError } from '@/lib/errors';
 import { xStatusRefineError, xStatusRefineUrl } from '@/lib/twitter/schemas';
 import { DeepPartial } from '@/lib/types';
-import { PickerStatus, PickerType, Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 export const pickerFormSchema = z.object({
@@ -82,35 +81,4 @@ export const parseUnvalidatedFormSchema = (
   }
 
   return result.data;
-};
-
-export const publicPickerSchema = pickerFormSchema.extend({
-  id: z.string(),
-  status: z.nativeEnum(PickerStatus),
-  type: z.nativeEnum(PickerType),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  stats: z
-    .object({
-      totalEntries: z.number().int().nonnegative().default(0),
-      uniqueParticipants: z.number().int().nonnegative().default(0),
-      filteredEntries: z.number().int().nonnegative().default(0),
-      validEntries: z.number().int().nonnegative().default(0)
-    })
-    .optional()
-});
-
-export type PublicPickerSchema = z.infer<typeof publicPickerSchema>;
-
-export const toPublicPicker = (
-  picker: Prisma.PickerGetPayload<{}>
-): PublicPickerSchema => {
-  return {
-    id: picker.id,
-    status: picker.status,
-    type: picker.type,
-    createdAt: picker.createdAt,
-    updatedAt: picker.updatedAt,
-    ...parsePickerFormSchema(picker.config)
-  };
 };

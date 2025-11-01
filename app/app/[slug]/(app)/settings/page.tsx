@@ -1,10 +1,8 @@
 'use server';
 
-import { Outline } from '@/components/app/outline';
-import { SettingsTabs } from './components/tabs';
-import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
+import { DEFAULT_SETTINGS_TAB } from '@/lib/settings/schemas/tabs';
 import { TeamPageProps } from '@/schemas/pages';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -18,27 +16,11 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-interface SettingsPageProps {
+interface PickerDetailPageProps {
   params: Promise<TeamPageProps>;
 }
 
-export default async function SettingsPage({ params }: SettingsPageProps) {
-  return (
-    <Outline title="Settings">
-      <Suspense>
-        <Wrapper params={params} />
-      </Suspense>
-    </Outline>
-  );
-}
-
-const Wrapper: React.FC<{ params: Promise<TeamPageProps> }> = async ({
-  params
-}) => {
+export default async function Page({ params }: PickerDetailPageProps) {
   const { slug } = await params;
-  const flagsResult = await getTeamFeatureFlags({ slug });
-
-  const teamFeatureFlags = flagsResult.ok ? flagsResult.data : [];
-
-  return <SettingsTabs teamFeatureFlags={teamFeatureFlags} />;
-};
+  redirect(`/app/${slug}/settings/${DEFAULT_SETTINGS_TAB}`);
+}

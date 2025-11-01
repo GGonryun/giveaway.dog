@@ -43,6 +43,10 @@ export namespace datetime {
     }
   };
 
+  export const minutesFromNow = (minutes: number) => {
+    return new Date(Date.now() + minutes * 60 * 1000);
+  };
+
   export const daysAgo = (days: number) => {
     return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   };

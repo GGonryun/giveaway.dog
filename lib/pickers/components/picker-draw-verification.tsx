@@ -314,39 +314,27 @@ export const PickerDrawVerification: React.FC<PickerDrawVerificationProps> = ({
               <Hash className="h-5 w-5" />
               Verification Hash
             </h3>
-            <p className="text-sm text-muted-foreground mb-3">
-              Draw ID: {draw.id}
-            </p>
             <code className="block p-3 bg-muted rounded-md text-xs break-all font-mono">
-              {draw.verificationHash}
+              {draw.id}
             </code>
             <p className="text-xs text-muted-foreground mt-2">
               This hash proves the draw was conducted fairly and can be
               independently verified
             </p>
           </div>
-
-          <Separator />
-
-          <div className="space-y-3">
-            <div className="flex items-start gap-3 text-sm">
-              <Calendar className="h-4 w-4 text-muted-foreground mt-0.5" />
-              <div>
-                <p className="font-medium">Draw Date</p>
-                <p className="text-muted-foreground">
-                  {format(draw.drawnAt, 'PPP p')}
-                </p>
-              </div>
-            </div>
-          </div>
         </CardContent>
       </Card>
 
       <PickerAuditLogSection logs={auditLogs} />
 
-      <div className="text-center text-sm text-muted-foreground">
-        <p>Powered by Giveaway.dog</p>
-        <p className="text-xs mt-1">Fair, transparent, and verifiable draws</p>
+      <div className="text-center text-muted-foreground">
+        <p>
+          Powered by{' '}
+          <Link href="/" className="font-semibold text-primary underline">
+            Giveaway.dog
+          </Link>
+        </p>
+        <p className="text-sm mt-1">Fair, transparent, and verifiable draws</p>
       </div>
     </div>
   );

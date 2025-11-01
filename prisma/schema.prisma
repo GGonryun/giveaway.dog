@@ -31,6 +31,7 @@ model User {
   fingerprints     UserFingerprint[]
   ageVerifications AgeVerification[]
   featureFlags     UserFeatureFlag[]
+  integrations     Integration[]
 }
 
 enum UserEventType {
@@ -179,6 +180,47 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+}
+
+enum IntegrationStatus {
+  ACTIVE
+  ERROR
+}
+
+enum IntegrationProvider {
+  TWITTER
+}
+
+model Integration {
+  id            String              @id @default(cuid())
+  teamId        String
+  team          Team                @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  status        IntegrationStatus   @default(ACTIVE)
+  // the user who created the integration
+  ownerId       String
+  owner         User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  provider      IntegrationProvider
+  account_id    String
+  refresh_token String?
+  access_token  String?
+  expires_at    Int?
+  scope         String?
+  token_type    String?
+  id_token      String?
+  session_state String?
+  label         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model State {
+  id        String   @id @default(cuid())
+  value     Json
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Session {
@@ -473,6 +515,7 @@ model Team {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  integrations Integration[]
   members      Membership[]
   sweepstakes  Sweepstakes[]
   featureFlags TeamFeatureFlag[]
@@ -555,4 +598,5 @@ model Picker {
   data   Json?
   job    Json?
   logs   Json?
+  draws  Json?
 }

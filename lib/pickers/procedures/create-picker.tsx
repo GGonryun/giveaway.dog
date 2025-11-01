@@ -7,6 +7,8 @@ import { ApplicationError } from '@/lib/errors';
 import {
   DEFAULT_PICKER_CONFIG,
   DEFAULT_PICKER_DATA,
+  DEFAULT_PICKER_DRAWS,
+  DEFAULT_PICKER_JOB,
   DEFAULT_PICKER_LOGS,
   DEFAULT_PICKER_STATUS
 } from '../data/defaults';
@@ -46,7 +48,8 @@ export const createPicker = procedure()
         status: DEFAULT_PICKER_STATUS,
         config: DEFAULT_PICKER_CONFIG,
         data: DEFAULT_PICKER_DATA,
-        job: DEFAULT_PICKER_CONFIG,
+        job: DEFAULT_PICKER_JOB,
+        draws: DEFAULT_PICKER_DRAWS,
         logs: DEFAULT_PICKER_LOGS({
           user: {
             id: user.id,

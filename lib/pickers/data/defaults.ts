@@ -4,6 +4,7 @@ import { PickerDataSchema } from '../schemas/data';
 import { PickerUnvalidatedFormSchema } from '../schemas/form';
 import { PickerJobSchema } from '../schemas/jobs';
 import { PickerStatus } from '../schemas/status';
+import { PickerDrawsSchema } from '../schemas/draws';
 
 export const DEFAULT_PICKER_NAME = 'New Picker';
 export const DEFAULT_PICKER_STATUS: PickerStatus = 'DRAFT';
@@ -48,6 +49,14 @@ export const DEFAULT_PICKER_JOB: PickerJobSchema = {
   tweetId: '',
   actions: [],
   error: null
+};
+
+export const DEFAULT_PICKER_DRAWS: PickerDrawsSchema = {
+  outcome: {
+    totalDraws: 0,
+    finalDraws: []
+  },
+  draws: []
 };
 
 export const DEFAULT_PICKER_LOGS = (
