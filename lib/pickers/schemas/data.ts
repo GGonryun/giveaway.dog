@@ -1,4 +1,5 @@
 import { ApplicationError } from '@/lib/errors';
+import { Prisma } from '@prisma/client';
 import z from 'zod';
 
 export const twitterActionsSchema = z.enum([
@@ -32,16 +33,20 @@ export const pickerTwitterActionSchema = z.object({
 
 export const pickerDataSchema = z.object({
   type: z.enum(['TWITTER']),
-  tweetId: z.string(),
   users: z.array(pickerTwitterUserSchema),
-  actions: z.array(pickerTwitterActionSchema),
-  winners: z.array(z.string())
+  actions: z.array(pickerTwitterActionSchema)
 });
 
 export type PickerDataSchema = z.infer<typeof pickerDataSchema>;
 
-export const parsePickerDataSchema = (data: unknown): PickerDataSchema => {
-  const result = pickerDataSchema.safeParse(data);
+export const parsePickerDataSchema = (
+  storage: Prisma.PickerStorageGetPayload<{
+    select: {
+      data: true;
+    };
+  }> | null
+): PickerDataSchema => {
+  const result = pickerDataSchema.safeParse(storage?.data);
 
   if (!result.success) {
     console.error('Picker data schema validation error:', result.error);

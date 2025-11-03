@@ -653,12 +653,12 @@ function createTasks(sweepstakesId: string): Prisma.TaskCreateInput[] {
 }
 
 async function main() {
-  console.log('Starting seed...');
+  console.debug('Starting seed...');
 
   const teams = [];
   const allUsers = [];
 
-  console.log('Creating organizations and owners...');
+  console.debug('Creating organizations and owners...');
   for (let i = 1; i <= 3; i++) {
     const ownerData = createOwnerUser(i);
     const owner = await prisma.user.create({
@@ -673,7 +673,7 @@ async function main() {
     teams.push(team);
   }
 
-  console.log('Creating IP addresses, device agents, and fingerprints...');
+  console.debug('Creating IP addresses, device agents, and fingerprints...');
   const ipAddresses = [];
   const deviceAgents = [];
   const fingerprints = [];
@@ -695,11 +695,11 @@ async function main() {
     fingerprints.push(fingerprint);
   }
 
-  console.log('Creating 1000 participant users...');
+  console.debug('Creating 1000 participant users...');
   const users = [];
   for (let i = 0; i < 1000; i++) {
     if (i % 100 === 0) {
-      console.log(`  Created ${i} users...`);
+      console.debug(`  Created ${i} users...`);
     }
 
     const userData = createParticipantUser(i);
@@ -757,7 +757,7 @@ async function main() {
     });
   }
 
-  console.log('Creating 15 sweepstakes...');
+  console.debug('Creating 15 sweepstakes...');
   const allSweepstakes = [];
 
   for (let i = 1; i <= 15; i++) {
@@ -768,13 +768,13 @@ async function main() {
     });
     allSweepstakes.push(sweepstakes);
 
-    console.log(`Creating tasks for sweepstakes ${i}...`);
+    console.debug(`Creating tasks for sweepstakes ${i}...`);
     const taskInputs = createTasks(sweepstakes.id);
     const tasks = await Promise.all(
       taskInputs.map((taskData) => prisma.task.create({ data: taskData }))
     );
 
-    console.log(`Creating participations for sweepstakes ${i}...`);
+    console.debug(`Creating participations for sweepstakes ${i}...`);
     const participantsCount = Math.floor(Math.random() * 300) + 100;
     const shuffledUsers = [...users].sort(() => Math.random() - 0.5);
     const participatingUsers = shuffledUsers.slice(0, participantsCount);
@@ -819,8 +819,8 @@ async function main() {
     }
   }
 
-  console.log('Seed completed successfully!');
-  console.log(`
+  console.debug('Seed completed successfully!');
+  console.debug(`
 Summary:
 - Created ${teams.length} organizations
 - Created ${teams.length} team owners

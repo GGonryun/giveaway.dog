@@ -22,14 +22,26 @@ interface PickerPublishConfirmationModalProps {
   onCancel: () => void;
   onSave: () => void;
   onPublish: () => void;
-  isLoading: boolean;
+  isUpdating: boolean;
+  isPublishing: boolean;
   action: UnifiedFormAction;
 }
 
 export const PickerPublishConfirmationModal: React.FC<
   PickerPublishConfirmationModalProps
-> = ({ open, onClose, onCancel, onSave, onPublish, isLoading, action }) => {
+> = ({
+  open,
+  onClose,
+  onCancel,
+  onSave,
+  onPublish,
+  isUpdating,
+  isPublishing,
+  action
+}) => {
   const isDemo = action === 'demo';
+
+  const isLoading = isUpdating || isPublishing;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -84,10 +96,10 @@ export const PickerPublishConfirmationModal: React.FC<
           {!isDemo && (
             <>
               <Button variant="outline" onClick={onSave} disabled={isLoading}>
-                {isLoading ? (
+                {isUpdating ? (
                   <>
                     <Spinner size="sm" />
-                    Loading...
+                    Saving...
                   </>
                 ) : (
                   <>
@@ -101,10 +113,10 @@ export const PickerPublishConfirmationModal: React.FC<
                 disabled={isLoading}
                 className="sm:ml-auto"
               >
-                {isLoading ? (
+                {isPublishing ? (
                   <>
                     <Spinner size="sm" />
-                    Loading...
+                    Publishing...
                   </>
                 ) : (
                   <>

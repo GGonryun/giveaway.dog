@@ -31,7 +31,7 @@ interface PickerUser {
   isBlacklisted: boolean;
   totalEntries: number;
   likeCount: number;
-  retweetCount: number;
+  repostCount: number;
   quoteCount: number;
   replyCount: number;
   filteredEntries: number;
@@ -135,10 +135,8 @@ export const PickerUsers: React.FC<PickerUsersProps> = ({ users }) => {
                         {user.likeCount > 0 && (
                           <Badge variant="outline">❤️ {user.likeCount}</Badge>
                         )}
-                        {user.retweetCount > 0 && (
-                          <Badge variant="outline">
-                            🔁 {user.retweetCount}
-                          </Badge>
+                        {user.repostCount > 0 && (
+                          <Badge variant="outline">🔁 {user.repostCount}</Badge>
                         )}
                         {user.quoteCount > 0 && (
                           <Badge variant="outline">💬 {user.quoteCount}</Badge>

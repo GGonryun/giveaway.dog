@@ -63,7 +63,7 @@ const Wrapper: React.FC<{
     isBlacklisted: i % 10 === 0,
     totalEntries: Math.floor(Math.random() * 20) + 1,
     likeCount: Math.floor(Math.random() * 10),
-    retweetCount: Math.floor(Math.random() * 5),
+    repostCount: Math.floor(Math.random() * 5),
     quoteCount: Math.floor(Math.random() * 3),
     replyCount: Math.floor(Math.random() * 7),
     filteredEntries: i % 5 === 0 ? Math.floor(Math.random() * 5) : 0,
@@ -74,7 +74,7 @@ const Wrapper: React.FC<{
   const mockActions = {
     pickerId,
     like: true,
-    retweet: true,
+    repost: true,
     quote: false,
     reply: true
   };

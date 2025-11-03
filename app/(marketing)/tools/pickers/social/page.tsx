@@ -79,7 +79,7 @@ const PLATFORMS = [
     icon: Share2,
     title: 'Twitter/X',
     description:
-      'Sync likes, retweets, replies, and follows from your Twitter/X sweepstakes posts.'
+      'Sync likes, reposts, replies, and follows from your Twitter/X sweepstakes posts.'
   },
   {
     icon: Globe,

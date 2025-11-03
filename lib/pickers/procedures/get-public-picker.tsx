@@ -1,7 +1,11 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { ApplicationError } from '@/lib/errors';
-import { publicPickerSchema, toPublicPicker } from '../schemas/public-picker';
+import {
+  PUBLIC_PICKER_INCLUDE,
+  publicPickerSchema,
+  toPublicPicker
+} from '../schemas/public-picker';
 
 export const getPublicPicker = procedure()
   .authorization({
@@ -11,7 +15,8 @@ export const getPublicPicker = procedure()
   .output(publicPickerSchema)
   .handler(async ({ db, input }) => {
     const picker = await db.picker.findUnique({
-      where: { id: input.pickerId }
+      where: { id: input.pickerId },
+      include: PUBLIC_PICKER_INCLUDE
     });
 
     if (!picker) {

@@ -41,6 +41,13 @@ import { PublicPickerSchema } from '../schemas/public-picker';
 import { PickerRenameModal } from './picker-rename-modal';
 import { renamePicker } from '../procedures/rename-picker';
 import { useRouter } from 'next/navigation';
+import {
+  PickerActionType,
+  PICKER_ACTION_TYPE_LABEL,
+  PICKER_ACTION_TYPE_ICON
+} from '../schemas/form';
+import { widetype } from '@/lib/widetype';
+import { PickerActionDisplay } from './picker-action-display';
 
 interface PickerOverviewProps {
   picker: PublicPickerSchema;
@@ -95,15 +102,16 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
 
-  const activeActions = Object.entries(picker.config.actions)
-    .filter(([key, value]) => value && key !== 'pickerId')
+  const activeActions = widetype
+    .entries(picker.form.actions)
+    .filter(([_, value]) => value)
     .map(([key]) => key);
 
-  const activeFilters = Object.entries(picker.config.filters)
+  const activeFilters = Object.entries(picker.form.filters)
     .filter(([_, value]) => value !== null && value !== undefined)
     .map(([key, value]) => ({ key, value }));
 
-  const activeRequirements = Object.entries(picker.config.requirements)
+  const activeRequirements = Object.entries(picker.form.requirements)
     .filter(([_, value]) => value)
     .map(([key]) => key);
 
@@ -132,7 +140,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
               <PickerTypeLogo type={picker.type} size={6} />
-              <h2 className="text-2xl font-bold">{picker.config.setup.name}</h2>
+              <h2 className="text-2xl font-bold">{picker.form.setup.name}</h2>
               <Button
                 variant="ghost"
                 size="sm"
@@ -156,7 +164,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
                   </DialogHeader>
                   <div className="px-6 pb-6">
                     <PickerTwitterPreviewEmbed
-                      postUrl={picker.config.setup.postUrl}
+                      postUrl={picker.form.setup.postUrl}
                       className="border rounded-lg px-2"
                     />
                   </div>
@@ -164,7 +172,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
               </Dialog>
               <Button variant="outline" size="sm" asChild>
                 <Link
-                  href={picker.config.setup.postUrl}
+                  href={picker.form.setup.postUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   prefetch={false}
@@ -247,7 +255,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
                   <InfoRow
                     icon={Trophy}
                     label="Winners"
-                    value={picker.config.winners.quota}
+                    value={picker.form.winners.quota}
                     valueClassName="text-primary"
                   />
                   <InfoRow
@@ -255,12 +263,12 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
                     label="Post URL"
                     value={
                       <a
-                        href={picker.config.setup.postUrl}
+                        href={picker.form.setup.postUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:underline text-xs truncate max-w-[200px] block"
                       >
-                        {new URL(picker.config.setup.postUrl).pathname}
+                        {new URL(picker.form.setup.postUrl).pathname}
                       </a>
                     }
                   />
@@ -342,10 +350,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
                 {activeActions.length > 0 ? (
                   activeActions.map((action) => (
                     <Badge key={action} variant="secondary" className="text-xs">
-                      {action === 'like' && '❤️ Like'}
-                      {action === 'retweet' && '🔁 Retweet'}
-                      {action === 'quote' && '💬 Quote'}
-                      {action === 'reply' && '💭 Reply'}
+                      <PickerActionDisplay action={action} size="sm" />
                     </Badge>
                   ))
                 ) : (
@@ -361,9 +366,9 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
 
       <PickerWinnerSection
         pickerId={picker.id}
-        pickerName={picker.config.setup.name}
+        pickerName={picker.form.setup.name}
         status={picker.status}
-        numberOfWinners={picker.config.winners.quota}
+        numberOfWinners={picker.form.winners.quota}
       />
 
       {picker.logs && picker.logs.length > 0 && (
@@ -373,7 +378,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
       <PickerRenameModal
         open={renameOpen}
         onOpenChange={setRenameOpen}
-        currentName={picker.config.setup.name}
+        currentName={picker.form.setup.name}
         pickerId={picker.id}
         onRename={handleRename}
       />

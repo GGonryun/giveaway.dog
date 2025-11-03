@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { pickerStatusSchema } from './status';
+import { pickerActionsSchema, pickerActionType } from './form';
 
 export const pickerProviderSchema = z.enum(['twitter']);
 
@@ -27,16 +28,6 @@ export const pickerSchema = z.object({
 
 export type Picker = z.infer<typeof pickerSchema>;
 
-export const pickerActionsSchema = z.object({
-  pickerId: z.string(),
-  like: z.boolean(),
-  retweet: z.boolean(),
-  quote: z.boolean(),
-  reply: z.boolean()
-});
-
-export type PickerActions = z.infer<typeof pickerActionsSchema>;
-
 export const pickerFilterSettingsSchema = z.object({
   pickerId: z.string(),
   minimumPostCount: z.number().int().nonnegative().nullable(),
@@ -51,15 +42,6 @@ export const pickerFilterSettingsSchema = z.object({
 
 export type PickerFilterSettings = z.infer<typeof pickerFilterSettingsSchema>;
 
-export const pickerActionTypeSchema = z.enum([
-  'like',
-  'retweet',
-  'quote',
-  'reply'
-]);
-
-export type PickerActionType = z.infer<typeof pickerActionTypeSchema>;
-
 export const pickerEntrySchema = z.object({
   id: z.string(),
   pickerId: z.string(),
@@ -68,7 +50,7 @@ export const pickerEntrySchema = z.object({
   twitterUsername: z.string(),
   twitterDisplayName: z.string(),
   twitterProfileImage: z.string().url().nullable(),
-  actionType: pickerActionTypeSchema,
+  actionType: pickerActionType,
   timestamp: z.date(),
   filtered: z.boolean(),
   createdAt: z.date()
@@ -87,7 +69,7 @@ export const pickerParticipantSchema = z.object({
   totalEntries: z.number().int().nonnegative(),
   actions: z.object({
     like: z.number().int().nonnegative(),
-    retweet: z.number().int().nonnegative(),
+    repost: z.number().int().nonnegative(),
     quote: z.number().int().nonnegative(),
     reply: z.number().int().nonnegative()
   })

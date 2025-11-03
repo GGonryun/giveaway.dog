@@ -17,38 +17,25 @@ import { Label } from '@/components/ui/label';
 import { Settings } from 'lucide-react';
 import {
   PickerEntry,
-  PickerActions,
   PickerFilterSettings
 } from '@/lib/pickers/schemas/models';
 import { format } from 'date-fns';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { PickerFilterSettingsDialog } from './picker-filter-settings-dialog';
+import {
+  PICKER_ACTION_TYPE_ICON,
+  PICKER_ACTION_TYPE_LABEL,
+  PickerActionsSchema
+} from '../schemas/form';
 
 interface PickerEntriesProps {
   entries: PickerEntry[];
-  actions: PickerActions;
+  actions: PickerActionsSchema;
   filters: PickerFilterSettings;
   showFiltered: boolean;
 }
 
-const actionIcons = {
-  like: '❤️',
-  retweet: '🔁',
-  quote: '💬',
-  reply: '💭'
-};
-
-const actionLabels = {
-  like: 'Like',
-  retweet: 'Retweet',
-  quote: 'Quote',
-  reply: 'Reply'
-};
-
 export const PickerEntries: React.FC<PickerEntriesProps> = ({
   entries,
-  actions,
-  filters,
   showFiltered: initialShowFiltered
 }) => {
   const router = useRouter();
@@ -74,7 +61,7 @@ export const PickerEntries: React.FC<PickerEntriesProps> = ({
 
   const handleSaveFiltersAndActions = (
     newFilters: PickerFilterSettings,
-    newActions: PickerActions
+    newActions: PickerActionsSchema
   ) => {
     // TODO: Call procedure to update filters and actions
     console.log('Saving filters:', newFilters);
@@ -140,60 +127,53 @@ export const PickerEntries: React.FC<PickerEntriesProps> = ({
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredEntries.map((entry) => (
-                  <TableRow key={entry.id}>
-                    <TableCell className="font-mono text-xs">
-                      {format(entry.timestamp, 'MMM d, yyyy h:mm a')}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        {entry.twitterProfileImage && (
-                          <img
-                            src={entry.twitterProfileImage}
-                            alt={entry.twitterDisplayName}
-                            className="h-8 w-8 rounded-full"
-                          />
-                        )}
-                        <div>
-                          <p className="text-sm font-medium">
-                            {entry.twitterDisplayName}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            @{entry.twitterUsername}
-                          </p>
+                filteredEntries.map((entry) => {
+                  const Icon = PICKER_ACTION_TYPE_ICON[entry.actionType];
+                  return (
+                    <TableRow key={entry.id}>
+                      <TableCell className="font-mono text-xs">
+                        {format(entry.timestamp, 'MMM d, yyyy h:mm a')}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {entry.twitterProfileImage && (
+                            <img
+                              src={entry.twitterProfileImage}
+                              alt={entry.twitterDisplayName}
+                              className="h-8 w-8 rounded-full"
+                            />
+                          )}
+                          <div>
+                            <p className="text-sm font-medium">
+                              {entry.twitterDisplayName}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              @{entry.twitterUsername}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">
-                        <span className="mr-1">
-                          {actionIcons[entry.actionType]}
-                        </span>
-                        {actionLabels[entry.actionType]}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {entry.filtered ? (
-                        <Badge variant="secondary">Filtered</Badge>
-                      ) : (
-                        <Badge variant="default">Valid</Badge>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">
+                          <Icon className="mr-1" />
+                          {PICKER_ACTION_TYPE_LABEL[entry.actionType]}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {entry.filtered ? (
+                          <Badge variant="secondary">Filtered</Badge>
+                        ) : (
+                          <Badge variant="default">Valid</Badge>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>
         </Card>
       </div>
-
-      <PickerFilterSettingsDialog
-        open={filterDialogOpen}
-        onOpenChange={setFilterDialogOpen}
-        filters={filters}
-        actions={actions}
-        onSave={handleSaveFiltersAndActions}
-      />
     </>
   );
 };

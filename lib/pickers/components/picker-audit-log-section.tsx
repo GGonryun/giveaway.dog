@@ -12,12 +12,11 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, FileText } from 'lucide-react';
 import {
   AuditLog,
-  AUDIT_LOG_ACTION_LABEL,
-  AUDIT_LOG_ACTION_CATEGORY,
-  AUDIT_LOG_ACTION_DESCRIPTION,
+  AUDIT_LOG_LABEL,
+  AUDIT_LOG_CATEGORY,
   AUDIT_LOG_CATEGORY_ICON,
   AUDIT_LOG_CATEGORY_BADGE_VARIANT,
-  AUDIT_LOG_ACTION_CATEGORY_LABEL
+  AUDIT_LOG_CATEGORY_LABEL
 } from '@/lib/pickers/schemas/audit-log';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -65,11 +64,12 @@ export const PickerAuditLogSection: React.FC<PickerAuditLogSectionProps> = ({
             ) : (
               <div className="space-y-2">
                 {logs.map((log, index) => {
-                  const category = AUDIT_LOG_ACTION_CATEGORY[log.action];
+                  const label = AUDIT_LOG_LABEL[log.type];
+                  const category = AUDIT_LOG_CATEGORY[log.type];
+
                   const CategoryIcon = AUDIT_LOG_CATEGORY_ICON[category];
                   const badgeVariant =
                     AUDIT_LOG_CATEGORY_BADGE_VARIANT[category];
-                  const description = AUDIT_LOG_ACTION_DESCRIPTION[log.action];
 
                   return (
                     <div
@@ -82,7 +82,7 @@ export const PickerAuditLogSection: React.FC<PickerAuditLogSectionProps> = ({
                           <div className="flex-1 space-y-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className="text-sm font-medium">
-                                {AUDIT_LOG_ACTION_LABEL[log.action]}
+                                {label}
                               </span>
                             </div>
                             <p className="text-xs text-muted-foreground font-mono">
@@ -93,17 +93,17 @@ export const PickerAuditLogSection: React.FC<PickerAuditLogSectionProps> = ({
                             </p>
                           </div>
                           <Badge variant={badgeVariant} className="text-xs">
-                            {AUDIT_LOG_ACTION_CATEGORY_LABEL[category]}
+                            {AUDIT_LOG_CATEGORY_LABEL[category]}
                           </Badge>
                         </div>
-                        {log.metadata && (
+                        {log.data && (
                           <div className="mt-2">
                             <details className="text-xs">
                               <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
                                 View details
                               </summary>
                               <pre className="mt-2 p-2 rounded bg-muted overflow-x-auto">
-                                {JSON.stringify(log.metadata, null, 2)}
+                                {JSON.stringify(log.data, null, 2)}
                               </pre>
                             </details>
                           </div>

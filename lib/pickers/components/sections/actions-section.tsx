@@ -1,18 +1,18 @@
 'use client';
 
 import { useFormContext, useWatch } from 'react-hook-form';
-import { PickerFormSchema } from '@/lib/pickers/schemas/form';
 import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel
-} from '@/components/ui/form';
+  PICKER_ACTION_TYPE_ICON,
+  PICKER_ACTION_TYPE_LABEL,
+  PickerActionType,
+  PickerFormSchema
+} from '@/lib/pickers/schemas/form';
+import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Heart, Repeat2, Quote, MessageSquare } from 'lucide-react';
 import { useEffect } from 'react';
+import { PickerActionDisplay } from '../picker-action-display';
 
 export const ActionsSection = () => {
   const { trigger, clearErrors, formState, control } =
@@ -24,7 +24,7 @@ export const ActionsSection = () => {
   });
 
   useEffect(() => {
-    if (actions.like || actions.retweet || actions.quote || actions.reply) {
+    if (actions.like || actions.repost || actions.quote || actions.reply) {
       clearErrors('actions');
     } else {
       trigger('actions');
@@ -55,8 +55,7 @@ export const ActionsSection = () => {
                       )}
                       onClick={() => field.onChange(!field.value)}
                     >
-                      <Heart className="h-4 w-4 mr-2" />
-                      Like
+                      <PickerActionDisplay action="like" />
                     </Button>
                   </FormControl>
                 </FormItem>
@@ -65,7 +64,7 @@ export const ActionsSection = () => {
 
             <FormField
               control={control}
-              name="actions.retweet"
+              name="actions.repost"
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormControl>
@@ -78,8 +77,7 @@ export const ActionsSection = () => {
                       )}
                       onClick={() => field.onChange(!field.value)}
                     >
-                      <Repeat2 className="h-4 w-4 mr-2" />
-                      Retweet
+                      <PickerActionDisplay action="repost" />
                     </Button>
                   </FormControl>
                 </FormItem>
@@ -101,8 +99,7 @@ export const ActionsSection = () => {
                       )}
                       onClick={() => field.onChange(!field.value)}
                     >
-                      <Quote className="h-4 w-4 mr-2" />
-                      Quote
+                      <PickerActionDisplay action="quote" />
                     </Button>
                   </FormControl>
                 </FormItem>
@@ -121,8 +118,7 @@ export const ActionsSection = () => {
                       className="w-full rounded-l-none"
                       onClick={() => field.onChange(!field.value)}
                     >
-                      <MessageSquare className="h-4 w-4 mr-2" />
-                      Reply
+                      <PickerActionDisplay action="reply" />
                     </Button>
                   </FormControl>
                 </FormItem>

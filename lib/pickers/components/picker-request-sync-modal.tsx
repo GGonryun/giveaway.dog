@@ -35,7 +35,7 @@ export const PickerRequestSyncModal: React.FC<PickerRequestSyncModalProps> = ({
 }) => {
   const [endpoints, setEndpoints] = useState({
     likes: false,
-    retweets: false,
+    reposts: false,
     quotes: false,
     replies: false
   });
@@ -65,7 +65,7 @@ export const PickerRequestSyncModal: React.FC<PickerRequestSyncModalProps> = ({
 
     setEndpoints({
       likes: false,
-      retweets: false,
+      reposts: false,
       quotes: false,
       replies: false
     });
@@ -107,17 +107,17 @@ export const PickerRequestSyncModal: React.FC<PickerRequestSyncModalProps> = ({
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="retweets" className="text-sm font-medium">
-                      🔁 Retweets
+                    <Label htmlFor="reposts" className="text-sm font-medium">
+                      🔁 Reposts
                     </Label>
                     <p className="text-xs text-muted-foreground">
-                      Fetch users who retweeted the post
+                      Fetch users who reposted the post
                     </p>
                   </div>
                   <Switch
-                    id="retweets"
-                    checked={endpoints.retweets}
-                    onCheckedChange={() => handleToggle('retweets')}
+                    id="reposts"
+                    checked={endpoints.reposts}
+                    onCheckedChange={() => handleToggle('reposts')}
                   />
                 </div>
 

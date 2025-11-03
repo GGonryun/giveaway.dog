@@ -40,7 +40,7 @@ export default function SweepstakesToolPage() {
       icon: Zap,
       title: 'Task Automation',
       description:
-        'Auto-verify social tasks like follows, retweets, and Discord joins'
+        'Auto-verify social tasks like follows, reposts, and Discord joins'
     }
   ];
 
@@ -244,7 +244,7 @@ export default function SweepstakesToolPage() {
           <FeatureCard
             icon={Trophy}
             title="Twitter Picker"
-            description="Select winners from likes, retweets, quotes, and replies"
+            description="Select winners from likes, reposts, quotes, and replies"
             action={
               <Button asChild variant="outline" size="sm">
                 <Link href="/tools/picker/x">

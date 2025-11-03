@@ -1,38 +1,40 @@
 import { z } from 'zod';
-import { twitterActionsSchema } from './data';
-import { ApplicationError } from '@/lib/errors';
+import { PickerJobType } from '@prisma/client';
 
-const twitterSyncJob = z.object({
-  type: z.literal('TWITTER_SYNC'),
-  lastRunAt: z.date().nullable().default(null),
-  nextRunAt: z.date().nullable().default(null),
+export const twitterFetchRequestSchema = z.object({
   tweetId: z.string(),
-  actions: z.array(twitterActionsSchema),
-  error: z.string().nullable().default(null)
+  paginationToken: z.string().optional()
 });
 
-const twitterPauseJob = z.object({
-  type: z.literal('PAUSE')
+export type TwitterFetchRequestSchema = z.infer<
+  typeof twitterFetchRequestSchema
+>;
+
+export const twitterFetchDataSchema = z.object({
+  request: twitterFetchRequestSchema,
+  response: z.any().optional(),
+  error: z.any().optional()
 });
 
-export const pickerJobSchema = z.discriminatedUnion('type', [
-  twitterSyncJob,
-  twitterPauseJob
-]);
+export const toTwitterFetchData = (
+  data: TwitterFetchDataSchema
+): TwitterFetchDataSchema => data;
+
+export type TwitterFetchDataSchema = z.infer<typeof twitterFetchDataSchema>;
+
+export const toTwitterFetchRequest = (
+  request: TwitterFetchRequestSchema
+): TwitterFetchDataSchema => ({
+  request
+});
+
+export const pickerJobSchema = z.object({
+  type: z.nativeEnum(PickerJobType),
+  data: z.union([twitterFetchDataSchema, z.object({})])
+});
 
 export type PickerJobSchema = z.infer<typeof pickerJobSchema>;
 
-export const parsePickerJobSchema = (data: unknown): PickerJobSchema => {
-  const result = pickerJobSchema.safeParse(data);
+export const processableJobSchema = z.object({});
 
-  if (!result.success) {
-    console.error('Picker job schema validation error:', result.error);
-    throw new ApplicationError({
-      code: 'VALIDATION_ERROR',
-      cause: result.error,
-      message: 'Invalid picker job schema'
-    });
-  }
-
-  return result.data;
-};
+export type ProcessableJobSchema = z.infer<typeof processableJobSchema>;

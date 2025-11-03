@@ -1,14 +1,19 @@
 import { TWITTER_POST_URL } from '@/lib/settings';
-import { AuditLog, AuditLogMetadataSchema } from '../schemas/audit-log';
+import { AuditLogMetadataSchema } from '../schemas/audit-log';
 import { PickerDataSchema } from '../schemas/data';
 import { PickerUnvalidatedFormSchema } from '../schemas/form';
-import { PickerJobSchema } from '../schemas/jobs';
 import { PickerStatus } from '../schemas/status';
 import { PickerDrawsSchema } from '../schemas/draws';
+import {
+  PickerAuditLogType,
+  PickerJobStatus,
+  PickerJobType,
+  Prisma
+} from '@prisma/client';
 
 export const DEFAULT_PICKER_NAME = 'New Picker';
 export const DEFAULT_PICKER_STATUS: PickerStatus = 'DRAFT';
-export const DEFAULT_PICKER_CONFIG: Omit<PickerUnvalidatedFormSchema, 'id'> = {
+export const DEFAULT_PICKER_FORM: Omit<PickerUnvalidatedFormSchema, 'id'> = {
   setup: {
     postUrl: TWITTER_POST_URL,
     name: DEFAULT_PICKER_NAME
@@ -18,8 +23,9 @@ export const DEFAULT_PICKER_CONFIG: Omit<PickerUnvalidatedFormSchema, 'id'> = {
   },
   actions: {
     like: true,
-    retweet: true,
-    quote: false
+    repost: true,
+    quote: false,
+    reply: false
   },
   filters: {
     minimumPostCount: null,
@@ -34,21 +40,17 @@ export const DEFAULT_PICKER_CONFIG: Omit<PickerUnvalidatedFormSchema, 'id'> = {
     hasDescription: false
   }
 };
-export const DEFAULT_PICKER_DATA: PickerDataSchema = {
+export const DEFAULT_PICKER_STORAGE: PickerDataSchema = {
   type: 'TWITTER',
-  tweetId: '',
   users: [],
-  actions: [],
-  winners: []
+  actions: []
 };
 
-export const DEFAULT_PICKER_JOB: PickerJobSchema = {
-  type: 'TWITTER_SYNC',
-  lastRunAt: null,
-  nextRunAt: null,
-  tweetId: '',
-  actions: [],
-  error: null
+export const DEFAULT_PICKER_JOB: Prisma.PickerJobCreateWithoutPickerInput = {
+  type: PickerJobType.FETCH_TWITTER_DATA,
+  status: PickerJobStatus.QUEUED,
+  runAt: null,
+  data: {}
 };
 
 export const DEFAULT_PICKER_DRAWS: PickerDrawsSchema = {
@@ -59,12 +61,95 @@ export const DEFAULT_PICKER_DRAWS: PickerDrawsSchema = {
   draws: []
 };
 
-export const DEFAULT_PICKER_LOGS = (
-  metadata: AuditLogMetadataSchema
-): AuditLog[] => [
-  {
-    action: 'picker_created',
-    createdAt: new Date(),
-    metadata
-  }
-];
+export const DEFAULT_PICKER_LOG = (
+  data: AuditLogMetadataSchema
+): Prisma.PickerAuditLogCreateWithoutPickerInput => {
+  return {
+    type: PickerAuditLogType.CREATED,
+    data: data ?? {}
+  };
+};
+
+export const createPickerAuditLog = (
+  type: PickerAuditLogType,
+  data: AuditLogMetadataSchema = null
+): Prisma.PickerAuditLogCreateWithoutPickerInput => {
+  return {
+    type,
+    data: data ?? {}
+  };
+};
+
+export const MOCK_PICKER_AUDIT_LOGS = (user: {
+  id: string;
+  name: string;
+  email: string;
+}): Prisma.PickerAuditLogCreateWithoutPickerInput[] => {
+  return [
+    {
+      type: PickerAuditLogType.CREATED,
+      data: { user },
+      createdAt: new Date('2025-11-02T10:00:00Z')
+    },
+    {
+      type: PickerAuditLogType.UPDATED,
+      data: { user, changes: ['filters', 'requirements'] },
+      createdAt: new Date('2025-11-02T10:20:00Z')
+    },
+    {
+      type: PickerAuditLogType.UPDATED,
+      data: { user, changes: ['winners.quota'] },
+      createdAt: new Date('2025-11-02T10:30:00Z')
+    },
+    {
+      type: PickerAuditLogType.PUBLISHED,
+      data: { user },
+      createdAt: new Date('2025-11-02T10:35:00Z')
+    },
+    {
+      type: PickerAuditLogType.JOB_STARTED,
+      data: { jobType: 'FETCH_TWITTER_DATA' },
+      createdAt: new Date('2025-11-02T10:40:00Z')
+    },
+    {
+      type: PickerAuditLogType.JOB_COMPLETED,
+      data: { jobType: 'FETCH_TWITTER_DATA', entriesProcessed: 1247 },
+      createdAt: new Date('2025-11-02T10:45:00Z')
+    },
+    {
+      type: PickerAuditLogType.WINNER_DRAWN,
+      data: { drawNumber: 1, totalWinners: 3 },
+      createdAt: new Date('2025-11-02T11:30:00Z')
+    },
+    {
+      type: PickerAuditLogType.WINNER_SELECTED,
+      data: { user, winnerId: 'usr_123', position: 1 },
+      createdAt: new Date('2025-11-02T11:35:00Z')
+    },
+    {
+      type: PickerAuditLogType.WINNER_DRAWN,
+      data: { drawNumber: 2, totalWinners: 3 },
+      createdAt: new Date('2025-11-02T11:40:00Z')
+    },
+    {
+      type: PickerAuditLogType.WINNER_SELECTED,
+      data: { user, winnerId: 'usr_456', position: 2 },
+      createdAt: new Date('2025-11-02T11:42:00Z')
+    },
+    {
+      type: PickerAuditLogType.WINNER_DRAWN,
+      data: { drawNumber: 3, totalWinners: 3 },
+      createdAt: new Date('2025-11-02T11:45:00Z')
+    },
+    {
+      type: PickerAuditLogType.WINNER_SELECTED,
+      data: { user, winnerId: 'usr_789', position: 3 },
+      createdAt: new Date('2025-11-02T11:48:00Z')
+    },
+    {
+      type: PickerAuditLogType.COMPLETED,
+      data: { user, totalWinners: 3 },
+      createdAt: new Date('2025-11-02T11:50:00Z')
+    }
+  ];
+};

@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
-import { IntegrationSchema, IntegrationsSchema } from '../schemas';
+import { IntegrationSchema } from '../schemas';
 
 interface TwitterCardProps {
   integration?: IntegrationSchema;
@@ -106,7 +106,7 @@ export function TwitterCard({ integration }: TwitterCardProps) {
         ) : (
           <>
             <p className="text-xs text-muted-foreground">
-              Import entries from posts, sync likes, retweets, and replies
+              Import entries from posts, sync likes, reposts, and replies
             </p>
             <Button
               onClick={() => connect.run({ slug })}

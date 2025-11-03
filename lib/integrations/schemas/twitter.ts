@@ -5,3 +5,9 @@ export const xStatusRefineUrl = (url: string) => {
 };
 export const xStatusRefineError =
   'Unexpected URL, should be like https://x.com/username/status/1234567890';
+
+export const extractTweetId = (string: string) => {
+  const tweetIdMatch = string.match(/status\/(\d+)/);
+  const tweetId = tweetIdMatch ? tweetIdMatch[1] : '';
+  return tweetId;
+};

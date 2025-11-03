@@ -7,13 +7,13 @@ import { cn } from '@/lib/utils';
 import { Repeat2Icon } from 'lucide-react';
 import { DisqualificationWarning } from '../disqualification-warning';
 import { WithProviderConnection } from '../provider-connection';
+import { extractTweetId } from '@/lib/integrations/schemas/twitter';
 
 export const TwitterRetweetTaskActionForm: React.FC<
   TaskActionProps<TwitterRetweetTaskSchema>
 > = ({ onCancel, onSubmit, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
-  const tweetIdMatch = task.tweetId.match(/status\/(\d+)/);
-  const tweetId = tweetIdMatch ? tweetIdMatch[1] : '';
+  const tweetId = extractTweetId(task.tweetId);
   return (
     <WithProviderConnection
       task={task}

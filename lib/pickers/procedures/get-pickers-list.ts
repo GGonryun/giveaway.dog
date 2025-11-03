@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { pickersListSchema, listPickersFilterSchema } from '../schemas/list';
-import { parseUnvalidatedFormSchema } from '../schemas/form';
+import { parsePickerFormSchema } from '../schemas/form';
 import { DEFAULT_PICKER_NAME } from '../data/defaults';
 
 export const getPickersList = procedure()
@@ -26,18 +26,27 @@ export const getPickersList = procedure()
       },
       orderBy: {
         updatedAt: 'desc'
+      },
+      include: {
+        form: {
+          select: {
+            data: true
+          }
+        }
       }
     });
 
     return {
       pickers: data.map((picker) => {
-        const config = parseUnvalidatedFormSchema(picker.config);
+        const form = parsePickerFormSchema(picker.form, {
+          validate: false
+        });
         return {
           pickerId: picker.id,
           status: picker.status,
           type: picker.type,
           updatedAt: picker.updatedAt,
-          name: config.setup?.name || DEFAULT_PICKER_NAME
+          name: form.setup?.name || DEFAULT_PICKER_NAME
         };
       })
     };

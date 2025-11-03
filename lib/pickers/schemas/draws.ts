@@ -1,10 +1,10 @@
 import { ApplicationError } from '@/lib/errors';
+import { PickerDrawResult, Prisma } from '@prisma/client';
 import z from 'zod';
 
 export const pickerWinnerSchema = z.object({
   userId: z.string(),
-  position: z.number().int().positive(),
-  selectedAt: z.date()
+  position: z.number().int().positive()
 });
 
 export type PickerWinnerSchema = z.infer<typeof pickerWinnerSchema>;
@@ -15,7 +15,7 @@ export const pickerDrawSchema = z.object({
   drawNumber: z.number().int().positive(),
   eligibleEntries: z.number().int().nonnegative(),
   winner: pickerWinnerSchema,
-  result: z.enum(['SUCCESS', 'DISQUALIFIED']),
+  result: z.nativeEnum(PickerDrawResult),
   disqualificationReason: z.string().nullable(),
   previousDrawId: z.string().nullable()
 });
@@ -36,17 +36,30 @@ export const pickerDrawsSchema = z.object({
 
 export type PickerDrawsSchema = z.infer<typeof pickerDrawsSchema>;
 
-export const parsePickerDrawsSchema = (data: unknown): PickerDrawsSchema => {
-  const result = pickerDrawsSchema.safeParse(data);
+export const parsePickerDrawsSchema = (
+  data: Prisma.PickerDrawGetPayload<{}>[]
+): PickerDrawsSchema => {
+  const draws = data.map((draw) => ({
+    drawId: draw.id,
+    drawnAt: draw.createdAt,
+    drawNumber: draw.order,
+    eligibleEntries: draw.eligibleEntries,
+    winner: {
+      userId: draw.user,
+      position: draw.position
+    },
+    result: draw.result,
+    disqualificationReason: draw.disqualificationReason,
+    previousDrawId: draw.previousDrawId
+  }));
 
-  if (!result.success) {
-    console.error('Picker draws schema validation error:', result.error);
-    throw new ApplicationError({
-      code: 'VALIDATION_ERROR',
-      message: 'Invalid picker draws schema',
-      cause: result.error
-    });
-  }
-
-  return result.data;
+  return {
+    draws,
+    outcome: {
+      totalDraws: draws.length,
+      finalDraws: draws
+        .filter((draw) => draw.result === PickerDrawResult.WINNER)
+        .map((draw) => draw.drawId)
+    }
+  };
 };

@@ -26,6 +26,9 @@ import { format } from 'date-fns';
 import { PickerAuditLogSection } from './picker-audit-log-section';
 import type { AuditLog } from '@/lib/pickers/schemas/audit-log';
 import Link from 'next/link';
+import { PickerActionsSchema, PickerActionType } from '../schemas/form';
+import { PickerActionDisplay } from './picker-action-display';
+import { widetype } from '@/lib/widetype';
 
 interface Picker {
   id: string;
@@ -78,13 +81,6 @@ interface Filters {
   hasDescription: boolean;
 }
 
-interface Actions {
-  like: boolean;
-  retweet: boolean;
-  quote: boolean;
-  reply: boolean;
-}
-
 interface Stats {
   totalEntries: number;
   totalParticipants: number;
@@ -95,7 +91,7 @@ interface PickerDrawVerificationProps {
   picker: Picker;
   draw: Draw;
   filters: Filters;
-  actions: Actions;
+  actions: PickerActionsSchema;
   stats: Stats;
   auditLogs: AuditLog[];
 }
@@ -129,17 +125,10 @@ export const PickerDrawVerification: React.FC<PickerDrawVerificationProps> = ({
       return { label: labels[key], value: displayValue };
     });
 
-  const activeActions = Object.entries(actions)
+  const activeActions = widetype
+    .entries(actions)
     .filter(([, enabled]) => enabled)
-    .map(([action]) => {
-      const labels: Record<string, string> = {
-        like: '❤️ Likes',
-        retweet: '🔁 Retweets',
-        quote: '💬 Quotes',
-        reply: '💭 Replies'
-      };
-      return labels[action];
-    });
+    .map(([action]) => action);
 
   return (
     <div className="container max-w-4xl py-8 space-y-6">
@@ -299,7 +288,7 @@ export const PickerDrawVerification: React.FC<PickerDrawVerificationProps> = ({
                 <div className="flex flex-wrap gap-2">
                   {activeActions.map((action) => (
                     <Badge key={action} variant="outline">
-                      {action}
+                      <PickerActionDisplay action={action} size="sm" />
                     </Badge>
                   ))}
                 </div>

@@ -7,10 +7,20 @@
     {
       "path": "/api/user/scoring",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/jobs/process",
+      "schedule": "*/20 * * * *"
     }
   ],
   "functions": {
     "app/api/user/tracking/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/user/scoring/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/jobs/process/route.ts": {
       "maxDuration": 300
     }
   }

@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { PickerActionDisplay } from './picker-action-display';
 
 interface PickerUser {
   id: string;
@@ -28,7 +29,7 @@ interface PickerUser {
   isBlacklisted: boolean;
   totalEntries: number;
   likeCount: number;
-  retweetCount: number;
+  repostCount: number;
   quoteCount: number;
   replyCount: number;
   filteredEntries: number;
@@ -108,19 +109,19 @@ export const PickerUserDetailModal: React.FC<PickerUserDetailModalProps> = ({
               </p>
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex items-center justify-between p-3 rounded-lg border">
-                  <span className="text-sm">❤️ Likes</span>
+                  <PickerActionDisplay action="like" />
                   <span className="font-semibold">{user.likeCount}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg border">
-                  <span className="text-sm">🔁 Retweets</span>
-                  <span className="font-semibold">{user.retweetCount}</span>
+                  <PickerActionDisplay action="repost" />
+                  <span className="font-semibold">{user.repostCount}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg border">
-                  <span className="text-sm">💬 Quotes</span>
+                  <PickerActionDisplay action="quote" />
                   <span className="font-semibold">{user.quoteCount}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg border">
-                  <span className="text-sm">💭 Replies</span>
+                  <PickerActionDisplay action="reply" />
                   <span className="font-semibold">{user.replyCount}</span>
                 </div>
               </div>

@@ -4,6 +4,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { parsePickerFormSchema } from '../schemas/form';
 import z from 'zod';
 import { ApplicationError } from '@/lib/errors';
+import { PickerAuditLogType } from '@prisma/client';
 
 export const renamePicker = procedure()
   .authorization({
@@ -16,36 +17,45 @@ export const renamePicker = procedure()
     })
   )
   .handler(async ({ input, db }) => {
-    const picker = await db.picker.findUnique({
+    const form = await db.pickerForm.findUnique({
       where: {
-        id: input.pickerId
+        pickerId: input.pickerId
       }
     });
 
-    if (!picker) {
+    if (!form) {
       throw new ApplicationError({
         code: 'NOT_FOUND',
         message: 'Picker not found'
       });
     }
 
-    const config = parsePickerFormSchema(picker.config);
+    const config = parsePickerFormSchema(form, { validate: false });
 
-    const updatedConfig = {
-      ...config,
-      setup: {
-        ...config.setup,
-        name: input.name
-      }
-    };
-
-    await db.picker.update({
-      where: {
-        id: input.pickerId
-      },
-      data: {
-        config: updatedConfig
-      }
+    await db.$transaction(async (tx) => {
+      await tx.pickerForm.update({
+        where: {
+          pickerId: input.pickerId
+        },
+        data: {
+          data: {
+            ...config,
+            setup: {
+              ...config.setup,
+              name: input.name
+            }
+          }
+        }
+      });
+      await tx.pickerAuditLog.create({
+        data: {
+          pickerId: input.pickerId,
+          type: PickerAuditLogType.UPDATED,
+          data: {
+            name: input.name
+          }
+        }
+      });
     });
 
     return {

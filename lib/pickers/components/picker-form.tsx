@@ -36,15 +36,16 @@ import { FiltersSection } from './sections/filters-section';
 import { RequirementsSection } from './sections/requirements-section';
 import { SetupSection } from './sections/setup-section';
 import { deletePicker } from '../procedures/delete-picker';
-import { updatePicker } from '../procedures/update-picker';
+import { updatePicker } from '../procedures/update-picker-config';
 import { useProcedure } from '@/lib/mrpc/hook';
-import { DEFAULT_PICKER_CONFIG, DEFAULT_PICKER_NAME } from '../data/defaults';
+import { DEFAULT_PICKER_FORM, DEFAULT_PICKER_NAME } from '../data/defaults';
 import {
   PickerFormSchema,
   pickerFormSchema,
   PickerUnvalidatedFormSchema
 } from '../schemas/form';
 import { PickerTwitterPreview } from './picker-twitter-preview';
+import { publishPicker } from '../procedures/publish-picker';
 
 export interface PickerFormProps {
   picker: Omit<PickerUnvalidatedFormSchema, 'id'>;
@@ -71,7 +72,7 @@ export const PickerForm: React.FC<PickerFormProps> = ({
 
   const form = useForm<PickerFormSchema>({
     resolver: zodResolver(pickerFormSchema),
-    defaultValues: picker || DEFAULT_PICKER_CONFIG,
+    defaultValues: picker || DEFAULT_PICKER_FORM,
     mode: 'onChange'
   });
 
@@ -121,6 +122,14 @@ const FormContent: React.FC<FormContentProps> = ({
     action: updatePicker,
     onSuccess: () => {
       toast.success('Picker updated successfully!');
+      page.navigateTo({ path: 'list' });
+    }
+  });
+
+  const publishProcedure = useProcedure({
+    action: publishPicker,
+    onSuccess: () => {
+      toast.success('Picker published successfully!');
       page.navigateTo({ path: 'list' });
     }
   });
@@ -185,12 +194,11 @@ const FormContent: React.FC<FormContentProps> = ({
     }
 
     const currentValues = form.getValues();
-    updateProcedure.run({
+    publishProcedure.run({
       pickerId,
-      form: currentValues,
-      status: 'PROCESSING'
+      form: currentValues
     });
-  }, [pickerId, updateProcedure, action]);
+  }, [pickerId, publishProcedure, action]);
 
   const handleContinueEditing = useCallback(
     (fieldName?: string) => {
@@ -250,7 +258,8 @@ const FormContent: React.FC<FormContentProps> = ({
         onCancel={handleCancelSubmission}
         onSave={handleSaveChanges}
         onPublish={handlePublish}
-        isLoading={updateProcedure.isLoading}
+        isUpdating={updateProcedure.isLoading}
+        isPublishing={publishProcedure.isLoading}
         action={action}
       />
     </>

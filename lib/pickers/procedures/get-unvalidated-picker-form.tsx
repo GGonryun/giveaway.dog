@@ -1,7 +1,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import {
-  parseUnvalidatedFormSchema,
+  parsePickerFormSchema,
   pickerUnvalidatedFormSchema
 } from '../schemas/form';
 import { ApplicationError } from '@/lib/errors';
@@ -14,7 +14,10 @@ export const getUnvalidatedPickerForm = procedure()
   .output(pickerUnvalidatedFormSchema)
   .handler(async ({ db, input }) => {
     const picker = await db.picker.findUnique({
-      where: { id: input.pickerId }
+      where: { id: input.pickerId },
+      select: {
+        form: true
+      }
     });
 
     if (!picker) {
@@ -24,5 +27,5 @@ export const getUnvalidatedPickerForm = procedure()
       });
     }
 
-    return parseUnvalidatedFormSchema(picker.config);
+    return parsePickerFormSchema(picker.form, { validate: false });
   });

@@ -20,8 +20,8 @@ export const InboundEmailProvider = ({ secret }: { secret?: string }) => {
     if (result.error) {
       console.error('Failed to send email:', result.error);
     } else {
-      console.log('Email sent successfully!');
-      console.log('Email ID:', result.data?.id);
+      console.info('Email sent successfully!');
+      console.info('Email ID:', result.data?.id);
     }
   };
 

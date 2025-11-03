@@ -5,7 +5,10 @@ import {
   userSchema
 } from '../user';
 import { CompletionStatus } from '@prisma/client';
-import { xStatusRefineError, xStatusRefineUrl } from '@/lib/twitter/schemas';
+import {
+  xStatusRefineError,
+  xStatusRefineUrl
+} from '@/lib/integrations/schemas/twitter';
 
 export const baseTaskSchema = z.object({
   id: z.string(),

@@ -14,17 +14,16 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import {
-  PickerFilterSettings,
-  PickerActions
-} from '@/lib/pickers/schemas/models';
+import { PickerFilterSettings } from '@/lib/pickers/schemas/models';
+import { PickerActionDisplay } from './picker-action-display';
+import { PickerActionsSchema } from '../schemas/form';
 
 interface PickerFilterSettingsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   filters: PickerFilterSettings;
-  actions: PickerActions;
-  onSave: (filters: PickerFilterSettings, actions: PickerActions) => void;
+  actions: PickerActionsSchema;
+  onSave: (filters: PickerFilterSettings, actions: PickerActionsSchema) => void;
 }
 
 export const PickerFilterSettingsDialog: React.FC<
@@ -50,7 +49,7 @@ export const PickerFilterSettingsDialog: React.FC<
   const [hasDescription, setHasDescription] = useState(filters.hasDescription);
 
   const [like, setLike] = useState(actions.like);
-  const [retweet, setRetweet] = useState(actions.retweet);
+  const [repost, setRepost] = useState(actions.repost);
   const [quote, setQuote] = useState(actions.quote);
   const [reply, setReply] = useState(actions.reply);
 
@@ -70,9 +69,8 @@ export const PickerFilterSettingsDialog: React.FC<
         hasDescription
       },
       {
-        pickerId: actions.pickerId,
         like,
-        retweet,
+        repost,
         quote,
         reply
       }
@@ -101,17 +99,17 @@ export const PickerFilterSettingsDialog: React.FC<
                   onCheckedChange={(checked) => setLike(checked as boolean)}
                 />
                 <Label htmlFor="like" className="cursor-pointer">
-                  ❤️ Like
+                  <PickerActionDisplay action="like" size="sm" />
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Checkbox
-                  id="retweet"
-                  checked={retweet}
-                  onCheckedChange={(checked) => setRetweet(checked as boolean)}
+                  id="repost"
+                  checked={repost}
+                  onCheckedChange={(checked) => setRepost(checked as boolean)}
                 />
-                <Label htmlFor="retweet" className="cursor-pointer">
-                  🔁 Retweet
+                <Label htmlFor="repost" className="cursor-pointer">
+                  <PickerActionDisplay action="repost" size="sm" />
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
@@ -121,7 +119,7 @@ export const PickerFilterSettingsDialog: React.FC<
                   onCheckedChange={(checked) => setQuote(checked as boolean)}
                 />
                 <Label htmlFor="quote" className="cursor-pointer">
-                  💬 Quote
+                  <PickerActionDisplay action="quote" size="sm" />
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
@@ -131,7 +129,7 @@ export const PickerFilterSettingsDialog: React.FC<
                   onCheckedChange={(checked) => setReply(checked as boolean)}
                 />
                 <Label htmlFor="reply" className="cursor-pointer">
-                  💭 Reply
+                  <PickerActionDisplay action="reply" size="sm" />
                 </Label>
               </div>
             </div>

@@ -50,18 +50,18 @@ export const codeToStatus: Record<ApplicationErrorCode, number> =
     Object.entries(statusToCode).map(([status, code]) => [code, Number(status)])
   );
 
-export type ApplicationErrorArgs = {
+export type ApplicationErrorArgs<TData = unknown> = {
   code: ApplicationErrorCode;
   message: string;
   cause?: unknown;
-  data?: unknown;
+  data?: TData;
 };
 
-export class ApplicationError extends Error {
+export class ApplicationError<T = unknown> extends Error {
   code: ApplicationErrorCode;
-  data?: unknown;
+  data?: T;
 
-  constructor(error: ApplicationErrorArgs) {
+  constructor(error: ApplicationErrorArgs<T>) {
     super(error.message);
     this.name = error.code;
     this.code = error.code;
@@ -69,12 +69,44 @@ export class ApplicationError extends Error {
     this.cause = error.cause;
     this.data = error.data;
   }
+
+  toJSON(): object {
+    return {
+      code: this.code,
+      message: this.message,
+      data: this.data,
+      cause: this.cause
+        ? isApplicationError(this.cause)
+          ? this.cause.toJSON()
+          : String(this.cause)
+        : undefined
+    };
+  }
 }
 
 export const isApplicationError = (
   error: unknown
 ): error is ApplicationError => {
   return error instanceof ApplicationError;
+};
+
+export const isRetryableApplicationError = (
+  error: unknown
+): error is ApplicationError<{ retryAfter: number }> => {
+  if (!isApplicationError(error)) {
+    return false;
+  }
+
+  if (
+    !error.data ||
+    typeof error.data !== 'object' ||
+    !('retryAfter' in error.data) ||
+    typeof error.data.retryAfter !== 'number'
+  ) {
+    return false;
+  }
+
+  return true;
 };
 
 export const assertNever = (value: never): never => {

@@ -60,7 +60,7 @@ export const connectTwitter = procedure()
       response_type: 'code',
       client_id: TWITTER_CLIENT_ID,
       redirect_uri: TWITTER_REDIRECT_URI,
-      scope: 'tweet.read users.read follows.read offline.access',
+      scope: 'tweet.read users.read follows.read like.read offline.access',
       state: `${team.slug}:${state.id}`,
       code_challenge: codeChallenge,
       code_challenge_method: 'S256'

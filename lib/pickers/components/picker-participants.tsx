@@ -17,8 +17,9 @@ import { Settings } from 'lucide-react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { PickerFilterSettingsDialog } from './picker-filter-settings-dialog';
 import { PickerUserDetailModal } from './picker-user-detail-modal';
-import { PickerActions, PickerFilterSettings } from '../schemas/models';
+import { PickerFilterSettings } from '../schemas/models';
 import { Card } from '@/components/ui/card';
+import { PickerActionsSchema } from '../schemas/form';
 
 interface PickerUser {
   id: string;
@@ -31,7 +32,7 @@ interface PickerUser {
   isBlacklisted: boolean;
   totalEntries: number;
   likeCount: number;
-  retweetCount: number;
+  repostCount: number;
   quoteCount: number;
   replyCount: number;
   filteredEntries: number;
@@ -41,7 +42,7 @@ interface PickerUser {
 
 interface PickerParticipantsProps {
   participants: PickerUser[];
-  actions: PickerActions;
+  actions: PickerActionsSchema;
   filters: PickerFilterSettings;
   showFiltered: boolean;
 }
@@ -76,7 +77,7 @@ export const PickerParticipants: React.FC<PickerParticipantsProps> = ({
 
   const handleSaveFiltersAndActions = (
     newFilters: PickerFilterSettings,
-    newActions: PickerActions
+    newActions: PickerActionsSchema
   ) => {
     console.log('Saving filters:', newFilters);
     console.log('Saving actions:', newActions);
