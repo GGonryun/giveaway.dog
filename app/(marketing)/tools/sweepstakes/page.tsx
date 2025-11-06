@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { SweepstakesPreview } from '@/components/sweepstakes-browse/sweepstakes-preview';
@@ -15,7 +16,6 @@ import {
   Play,
   Sparkles
 } from 'lucide-react';
-import { Typography } from '@/components/ui/typography';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 
 export default function SweepstakesToolPage() {
@@ -110,7 +110,15 @@ export default function SweepstakesToolPage() {
         </div>
         <Card className="overflow-hidden border-2 py-4 p-0 m-0 gap-0">
           <CardContent className="p-0 m-0">
-            <SweepstakesPreview />
+            <Suspense
+              fallback={
+                <div className="p-8 text-center text-muted-foreground">
+                  Loading preview...
+                </div>
+              }
+            >
+              <SweepstakesPreview />
+            </Suspense>
           </CardContent>
           <div className="border-t p-4 m-0 bg-muted/30 text-center">
             <Button asChild variant="link">
