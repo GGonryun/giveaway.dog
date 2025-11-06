@@ -27,7 +27,7 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import { Typography } from '@/components/ui/typography';
+import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 
 const FEATURES = [
   {
@@ -169,20 +169,13 @@ export default function SocialMediaSyncPage() {
       />
 
       <div className="text-center mb-12">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <MousePointerClickIcon className="h-10 w-10 text-primary" />
-          <Typography.Header
-            level={1}
-            className="text-4xl font-bold lg:text-6xl"
-          >
-            Social Pickers
-          </Typography.Header>
+        <div className="mb-8">
+          <MarketingPageHeader
+            icon={MousePointerClickIcon}
+            title="Social Pickers"
+            description="Import entries from Reddit, Twitter/X, Facebook, Twitch into GiveawayDog's unified platform. Run realistic sweepstakes with fraud detection, analytics, and transparent winner selection."
+          />
         </div>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
-          Import entries from Reddit, Twitter/X, Facebook, Twitch into
-          GiveawayDog&apos;s unified platform. Run realistic sweepstakes with
-          fraud detection, analytics, and transparent winner selection.
-        </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" asChild>
             <Link href="/signup">Start Syncing Free</Link>

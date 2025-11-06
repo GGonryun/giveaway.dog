@@ -8,6 +8,8 @@ import { AllGiveawaysSearch } from './components/all-giveaways-search';
 import { HostCTA } from './components/host-cta';
 import { SubscriptionCTA } from './components/subscription-cta';
 import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
+import { MarketingPageHeader } from '../marketing/marketing-page-header';
+import { GiftIcon } from 'lucide-react';
 
 export const SweepstakesPageContent: React.FC<{
   sweepstakes: PublicSweepstakeSchema[];
@@ -24,13 +26,12 @@ export const SweepstakesPageContent: React.FC<{
 
   return (
     <div className="w-full bg-background py-6 sm:py-12 container space-y-8 sm:space-y-12">
-      <div className="text-center space-y-1 mb-8">
-        <Typography.Header level={1} className="text-4xl font-bold lg:text-6xl">
-          All Giveaways
-        </Typography.Header>
-        <Typography className="text-muted-foreground text-base md:text-lg">
-          Discover active, upcoming, and completed giveaways
-        </Typography>
+      <div className="mb-8">
+        <MarketingPageHeader
+          icon={GiftIcon}
+          title="Browse Giveaways"
+          description="Discover active, upcoming, and completed giveaways"
+        />
       </div>
 
       <div className="space-y-6">

@@ -11,8 +11,9 @@ export const publishPicker = procedure()
   })
   .input(publishPickerInputSchema)
   .handler(async ({ input, db }) => {
+    console.log('Publishing picker with ID:', input.pickerId);
     await db.$transaction(async (tx) => {
-      await db.picker.update({
+      await tx.picker.update({
         where: {
           id: input.pickerId
         },
@@ -21,7 +22,7 @@ export const publishPicker = procedure()
         }
       });
 
-      await db.pickerForm.update({
+      await tx.pickerForm.update({
         where: {
           pickerId: input.pickerId
         },
@@ -30,11 +31,11 @@ export const publishPicker = procedure()
         }
       });
 
-      await db.pickerJob.create({
+      await tx.pickerJob.create({
         data: publishPickerJobs(input)
       });
 
-      await db.pickerAuditLog.createMany({
+      await tx.pickerAuditLog.createMany({
         data: publishPickerAuditLogs(input)
       });
     });

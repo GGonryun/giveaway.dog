@@ -10,11 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   ArrowRight,
+  HammerIcon,
   MousePointerClickIcon,
   SparklesIcon,
   UsersIcon
 } from 'lucide-react';
 import { Typography } from '@/components/ui/typography';
+import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 
 export default function ToolsPage() {
   const premiumTools = [
@@ -68,14 +70,14 @@ export default function ToolsPage() {
 
   return (
     <div className="container max-w-6xl mx-auto py-12 px-4">
-      <div className="text-center mb-12">
-        <Typography.Header level={1} className="text-4xl font-bold lg:text-6xl">
-          Giveaway Tools
-        </Typography.Header>
-        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Professional sweepstakes platform and free tools to help you run fair
-          and transparent giveaways
-        </p>
+      <div className="mb-8">
+        <MarketingPageHeader
+          icon={HammerIcon}
+          title="Giveaway Tools"
+          description={
+            'Professional sweepstakes platform and free tools to help you run fair and transparent giveaways'
+          }
+        />
       </div>
 
       <div className="mb-16">

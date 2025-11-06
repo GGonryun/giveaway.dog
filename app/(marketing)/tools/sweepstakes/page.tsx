@@ -16,6 +16,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { Typography } from '@/components/ui/typography';
+import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 
 export default function SweepstakesToolPage() {
   const features = [
@@ -77,20 +78,12 @@ export default function SweepstakesToolPage() {
   return (
     <div className="container max-w-6xl mx-auto py-12 px-4">
       <div className="text-center mb-16">
-        <div className="text-center space-y-1 mb-8">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <Sparkles className="h-10 w-10 text-primary" />
-            <Typography.Header
-              level={1}
-              className="text-4xl font-bold lg:text-6xl"
-            >
-              Sweepstakes Platform
-            </Typography.Header>
-          </div>
-          <Typography className="text-muted-foreground text-base md:text-lg">
-            Create professional giveaway pickers with advanced fraud detection,
-            task automation, and real-time analytics
-          </Typography>
+        <div className="mb-8">
+          <MarketingPageHeader
+            icon={Sparkles}
+            title="Sweepstakes Platform"
+            description="Create professional giveaway pickers with advanced fraud detection, task automation, and real-time analytics"
+          />
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

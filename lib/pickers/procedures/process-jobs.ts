@@ -16,11 +16,11 @@ import {
 import { datetime } from '@/lib/date';
 import { getLikingUsers } from '@/lib/integrations/procedures/get-liking-users';
 import {
+  toTwitterData,
   toTwitterFetchData,
   toTwitterFetchRequest,
-  twitterFetchDataSchema,
-  TwitterFetchRequestSchema,
-  twitterFetchRequestSchema
+  TwitterFetchDataSchema,
+  twitterFetchDataSchema
 } from '../schemas/jobs';
 import { Tx } from '@/lib/prisma';
 import { TWITTER_API_RATE_LIMIT_MINUTES } from '../data/settings';
@@ -67,7 +67,7 @@ export const processJobs = procedure()
             ? new Date(applicationError.data?.retryAfter)
             : datetime.minutesFromNow(TWITTER_API_RATE_LIMIT_MINUTES);
 
-          console.warn('Retrying job', job.id, applicationError, retryAfter);
+          console.warn('Retrying job', job.id, retryAfter);
 
           db.$transaction(async (tx) => {
             await tx.pickerJob.update({
@@ -121,12 +121,12 @@ export const processJobs = procedure()
     }
   });
 
-const PICKER_JOB_CHILDREN_INCLUDE = {
+export const PICKER_JOB_CHILDREN_INCLUDE = {
   children: true,
   picker: true
 } satisfies Prisma.PickerJobInclude;
 
-type PickerJobWithChildren = Prisma.PickerJobGetPayload<{
+export type PickerJobWithChildren = Prisma.PickerJobGetPayload<{
   include: typeof PICKER_JOB_CHILDREN_INCLUDE;
 }>;
 
@@ -204,22 +204,20 @@ const processFetchTwitterDataJob = async (
       where: { id: job.id },
       data: {
         status: PickerJobStatus.QUEUED,
-        runAt: datetime.minutesFromNow(10)
+        runAt: datetime.minutesFromNow(1)
       }
     });
     return;
   }
 
-  console.error(
-    'TODO: Implement processing logic for FETCH_TWITTER_DATA job',
-    job
-  );
+  const data = toTwitterData(job);
 
   await db.$transaction(async (tx) => {
     await tx.pickerJob.update({
       where: { id: job.id },
       data: {
-        status: PickerJobStatus.COMPLETED
+        status: PickerJobStatus.COMPLETED,
+        data
       }
     });
     await tx.picker.update({
@@ -245,6 +243,8 @@ const processFetchTwitterDataJob = async (
       ]
     });
   });
+
+  // we need to notify the user that the picker is complete via email template.
 };
 
 const processFetchTwitterGetLikingUsersJob = async (
@@ -256,8 +256,9 @@ const processFetchTwitterGetLikingUsersJob = async (
     job,
     async (tx, request) =>
       await getLikingUsers(tx, {
-        tweetId: request.tweetId,
         teamId: job.picker.teamId,
+        tweetId: request.tweetId,
+        paginationToken: request.paginationToken,
         maxResults: 100
       })
   );
@@ -271,8 +272,9 @@ const processFetchTwitterGetRepostedByJob = async (
     job,
     async (tx, request) =>
       await getRetweetedBy(tx, {
-        tweetId: request.tweetId,
         teamId: job.picker.teamId,
+        tweetId: request.tweetId,
+        paginationToken: request.paginationToken,
         maxResults: 100
       })
   );
@@ -286,8 +288,9 @@ const processFetchTwitterGetQuotedPostsJob = async (
     job,
     async (tx, request) =>
       await getQuoteTweets(tx, {
-        tweetId: request.tweetId,
         teamId: job.picker.teamId,
+        tweetId: request.tweetId,
+        paginationToken: request.paginationToken,
         maxResults: 100
       })
   );
@@ -296,7 +299,7 @@ const processFetchTwitterGetQuotedPostsJob = async (
 const withAuditTrail = async <T extends { meta?: { next_token?: string } }>(
   db: PrismaClient,
   job: PickerJobWithChildren,
-  fn: (tx: Tx, request: TwitterFetchRequestSchema) => Promise<T>
+  fn: (tx: Tx, request: TwitterFetchDataSchema['request']) => Promise<T>
 ) => {
   const parsed = twitterFetchDataSchema.safeParse(job.data);
 
@@ -333,6 +336,7 @@ const withAuditTrail = async <T extends { meta?: { next_token?: string } }>(
         await tx.pickerJob.create({
           data: {
             pickerId: job.pickerId,
+            parentId: job.parentId,
             type: job.type,
             status: PickerJobStatus.QUEUED,
             runAt: datetime.minutesFromNow(TWITTER_API_RATE_LIMIT_MINUTES),

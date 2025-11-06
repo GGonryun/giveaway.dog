@@ -6,6 +6,7 @@ import { Mail, MessageCircle, CheckCircle, Activity } from 'lucide-react';
 import Link from 'next/link';
 import { DISCORD_INVITE_LINK } from '@/lib/settings';
 import type { Metadata } from 'next';
+import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 
 export const metadata: Metadata = {
   title: 'Support & Help Center | Giveaway.dog',
@@ -35,22 +36,18 @@ export default function SupportPage() {
             variant="outline"
             className="bg-primary/10 text-primary border-primary/20"
           >
-            <CheckCircle className="h-3 w-3 mr-2" />
+            <CheckCircle className="h-3 w-3" />
             All Systems Operational
           </Badge>
         </Link>
       </div>
 
       <div className="text-center mb-8 md:mb-12">
-        <Typography.Header
-          level={1}
-          className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
-        >
-          Support & Help
-        </Typography.Header>
-        <Typography.Paragraph className="text-lg text-muted-foreground">
-          We're here to help! Get support through Discord or email.
-        </Typography.Paragraph>
+        <MarketingPageHeader
+          icon={CheckCircle}
+          title="Support & Help"
+          description="Get assistance with your account and technical issues"
+        />
       </div>
 
       <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">

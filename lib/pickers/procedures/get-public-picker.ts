@@ -9,7 +9,7 @@ import {
 
 export const getPublicPicker = procedure()
   .authorization({
-    required: true
+    required: false
   })
   .input(z.object({ pickerId: z.string() }))
   .output(publicPickerSchema)

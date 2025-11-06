@@ -32,7 +32,7 @@ export const prismaErrorBoundary = (
   console.error(`Encountered prisma error`, err);
 
   if (isPrismaValidationError(err)) {
-    return prismaValidationErrorBoundary();
+    return prismaValidationErrorBoundary(err);
   }
 
   if (isPrismaKnownClientError(err)) {
@@ -78,7 +78,15 @@ const isPrismaValidationError = (
   return err instanceof Prisma.PrismaClientValidationError;
 };
 
-const prismaValidationErrorBoundary = (): Failure => {
+const prismaValidationErrorBoundary = (
+  err?: Prisma.PrismaClientValidationError
+): Failure => {
+  if (err) {
+    console.error('[Prisma Validation Error]', {
+      message: err.message,
+      stack: err.stack
+    });
+  }
   return {
     ok: false,
     data: {

@@ -22,6 +22,7 @@ import {
   AccordionTrigger
 } from '@/components/ui/accordion';
 import { auth } from '@/lib/auth';
+import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 
 const FEATURES = [
   {
@@ -135,14 +136,12 @@ export default async function NamePickerPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Trophy className="h-8 w-8 text-primary" />
-          <h1 className="text-4xl font-bold">Name Picker</h1>
-        </div>
-        <p className="text-muted-foreground text-lg">
-          Spin the wheel to pick a random winner
-        </p>
+      <div className="mb-8">
+        <MarketingPageHeader
+          icon={Users}
+          title="Name Picker"
+          description="Spin the wheel to pick a random winner, perfect for giveaways, raffles, and team selection."
+        />
       </div>
 
       <NamePickerClient isAuthenticated={!!session} />

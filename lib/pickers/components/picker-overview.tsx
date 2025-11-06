@@ -13,7 +13,9 @@ import {
   XCircle,
   Activity,
   Eye,
-  Pencil
+  Pencil,
+  Share2,
+  Clock
 } from 'lucide-react';
 import {
   Dialog,
@@ -22,6 +24,12 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 
 import {
   PICKER_STATUS_LABELS,
@@ -31,26 +39,30 @@ import { cn } from '@/lib/utils';
 import { PickerTwitterPreviewEmbed } from './picker-twitter-preview';
 import { STATUS_COLORS, STATUS_ICONS } from '../themes/status';
 import { PickerTypeLogo } from './picker-type-logo';
-import { formatDistance } from 'date-fns';
+import { formatDistance, format } from 'date-fns';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 import { PickerWinnerSection } from './picker-winner-section';
 import { PickerAuditLogSection } from './picker-audit-log-section';
-import { PublicPickerSchema } from '../schemas/public-picker';
+import { PickerJobsSection } from './picker-jobs-section';
+import {
+  getDisqualificationReason,
+  PublicPickerSchema
+} from '../schemas/public-picker';
 import { PickerRenameModal } from './picker-rename-modal';
 import { renamePicker } from '../procedures/rename-picker';
 import { useRouter } from 'next/navigation';
-import {
-  PickerActionType,
-  PICKER_ACTION_TYPE_LABEL,
-  PICKER_ACTION_TYPE_ICON
-} from '../schemas/form';
 import { widetype } from '@/lib/widetype';
 import { PickerActionDisplay } from './picker-action-display';
+import { useProcedure } from '@/lib/mrpc/hook';
+import { completePicker } from '../procedures/complete-picker';
+import { toast } from 'sonner';
+import { Lock, Loader2 } from 'lucide-react';
 
 interface PickerOverviewProps {
   picker: PublicPickerSchema;
+  teamSlug: string;
 }
 
 const InfoRow = ({
@@ -95,12 +107,30 @@ const StatCard = ({
   </div>
 );
 
-export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
+export const PickerOverview: React.FC<PickerOverviewProps> = ({
+  picker,
+  teamSlug
+}) => {
   const router = useRouter();
   const statusConfig = STATUS_COLORS[picker.status];
   const StatusIcon = STATUS_ICONS[picker.status];
   const [previewOpen, setPreviewOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
+
+  const completeProcedure = useProcedure({
+    action: completePicker,
+    onSuccess() {
+      toast.success(
+        'Picker marked as complete! No further changes can be made.'
+      );
+      router.refresh();
+    },
+    onFailure(error) {
+      toast.error(
+        error.message || 'Failed to complete picker. Please try again.'
+      );
+    }
+  });
 
   const activeActions = widetype
     .entries(picker.form.actions)
@@ -115,12 +145,11 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
     .filter(([_, value]) => value)
     .map(([key]) => key);
 
-  const stats = {
-    totalEntries: picker.data.actions.length,
-    uniqueParticipants: picker.data.users.length,
-    filteredEntries: 0,
-    validEntries: 0
-  };
+  const stats = picker.stats;
+  const hasWinners = picker.draws.draws.some(
+    (draw) => draw.result === 'WINNER'
+  );
+  const isProcessedWithWinners = picker.status === 'PROCESSED' && hasWinners;
 
   const handleRename = async (newName: string) => {
     const result = await renamePicker({
@@ -131,6 +160,10 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
     if (result.ok) {
       router.refresh();
     }
+  };
+
+  const handleCompletePicker = () => {
+    completeProcedure.run({ pickerId: picker.id });
   };
 
   return (
@@ -181,36 +214,112 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
                   Open on X
                 </Link>
               </Button>
+              {hasWinners && (
+                <Button variant="outline" size="sm" asChild>
+                  <Link
+                    href={`/draws/${picker.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share Results
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
 
-          <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/50 border">
-            <div className={cn('mt-0.5', statusConfig.text)}>
-              <StatusIcon
-                className={cn(
-                  'h-6 w-6',
-                  picker.status === 'PROCESSING' ? 'animate-spin' : ''
-                )}
-              />
+          <div
+            className={cn(
+              'flex items-start gap-4 p-4 rounded-lg border',
+              isProcessedWithWinners
+                ? 'bg-green-500/10 border-green-500/30'
+                : 'bg-muted/50'
+            )}
+          >
+            <div
+              className={cn(
+                'mt-0.5',
+                isProcessedWithWinners ? 'text-green-600' : statusConfig.text
+              )}
+            >
+              {isProcessedWithWinners ? (
+                <Trophy className="h-6 w-6" />
+              ) : (
+                <StatusIcon
+                  className={cn(
+                    'h-6 w-6',
+                    picker.status === 'PROCESSING' ? 'animate-spin' : ''
+                  )}
+                />
+              )}
             </div>
-            <div className="flex-1 space-y-1">
+            <div className="flex-1 space-y-2">
               <div className="flex items-center gap-2">
                 <p className="font-semibold">
-                  {PICKER_STATUS_LABELS[picker.status]}
+                  {isProcessedWithWinners
+                    ? 'All Winners Chosen!'
+                    : PICKER_STATUS_LABELS[picker.status]}
                 </p>
-                <Badge variant={statusConfig.badge}>
-                  {PICKER_STATUS_LABELS[picker.status]}
+                <Badge
+                  variant={
+                    isProcessedWithWinners ? 'default' : statusConfig.badge
+                  }
+                  className={cn(
+                    isProcessedWithWinners &&
+                      'bg-green-600 hover:bg-green-700 text-white'
+                  )}
+                >
+                  {isProcessedWithWinners
+                    ? 'Winners Selected'
+                    : PICKER_STATUS_LABELS[picker.status]}
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                {PICKER_STATUS_DESCRIPTIONS[picker.status]}
+                {isProcessedWithWinners
+                  ? 'Winners have been drawn and are ready to be announced. Mark as complete once all participants have verified and received their prize.'
+                  : PICKER_STATUS_DESCRIPTIONS[picker.status]}
+                {picker.status === 'PROCESSING' &&
+                  picker.form.timing?.scheduledAt && (
+                    <span className="block mt-1 text-orange-600 dark:text-orange-400">
+                      Scheduled to complete{' '}
+                      {formatDistance(
+                        new Date(picker.form.timing.scheduledAt),
+                        new Date(),
+                        { addSuffix: true }
+                      )}
+                    </span>
+                  )}
               </p>
+              {isProcessedWithWinners && (
+                <div className="pt-1">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={handleCompletePicker}
+                    disabled={completeProcedure.isLoading}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    {completeProcedure.isLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Completing...
+                      </>
+                    ) : (
+                      <>
+                        <Lock className="h-4 w-4 mr-2" />
+                        Mark as Complete
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <StatCard
-              label="Total Entries"
+              label="Total Actions"
               value={stats.totalEntries}
               icon={Activity}
               iconClassName="bg-blue-500/10 text-blue-500"
@@ -252,6 +361,43 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
                       addSuffix: true
                     })}
                   />
+                  {picker.form.timing?.scheduledAt && (
+                    <InfoRow
+                      icon={Clock}
+                      label="Scheduled Start"
+                      value={
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge
+                                variant="secondary"
+                                className="cursor-help bg-orange-100 text-orange-700 hover:bg-orange-200 dark:bg-orange-950 dark:text-orange-400 dark:hover:bg-orange-900"
+                              >
+                                {formatDistance(
+                                  new Date(picker.form.timing.scheduledAt),
+                                  new Date(),
+                                  { addSuffix: true }
+                                )}
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="font-mono">
+                                {format(
+                                  new Date(picker.form.timing.scheduledAt),
+                                  'MMM d, yyyy HH:mm:ss'
+                                )}
+                                {picker.form.timing.timeZone && (
+                                  <span className="ml-1">
+                                    ({picker.form.timing.timeZone})
+                                  </span>
+                                )}
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      }
+                    />
+                  )}
                   <InfoRow
                     icon={Trophy}
                     label="Winners"
@@ -369,7 +515,16 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({ picker }) => {
         pickerName={picker.form.setup.name}
         status={picker.status}
         numberOfWinners={picker.form.winners.quota}
+        teamSlug={teamSlug}
+        draws={picker.draws.draws}
+        stats={{
+          validEntries: stats.validEntries
+        }}
       />
+
+      {picker.jobs && picker.jobs.length > 0 && (
+        <PickerJobsSection jobs={picker.jobs} />
+      )}
 
       {picker.logs && picker.logs.length > 0 && (
         <PickerAuditLogSection logs={picker.logs} />

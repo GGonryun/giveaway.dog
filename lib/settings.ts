@@ -16,6 +16,7 @@ export const UNKNOWN_SCREEN = '0x0';
 export const DEFAULT_TIME_SERIES_DURATION = 7;
 export const DEFAULT_PAGE_SIZE = 25;
 export const MAX_SWEEPSTAKE_DURATION_DAYS = 30;
+export const MAX_PICKER_SCHEDULE_DAYS = 7;
 export const DEFAULT_SWEEPSTAKES_DETAILS_TAB: SweepstakesTabSchema = 'preview';
 export const DEFAULT_USER_DETAILS_TAB: UserDetailsTabSchema = 'overview';
 export const UNKNOWN_USER_NAME = 'Unknown User';

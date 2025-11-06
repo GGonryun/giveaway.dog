@@ -6,7 +6,6 @@ import { findUserTeamQuery } from '@/procedures/sweepstakes/shared';
 import { ApplicationError } from '@/lib/errors';
 import {
   DEFAULT_PICKER_FORM,
-  DEFAULT_PICKER_STORAGE as DEFAULT_PICKER_STORAGE_DATA,
   DEFAULT_PICKER_LOG,
   DEFAULT_PICKER_STATUS
 } from '../data/defaults';
@@ -47,11 +46,6 @@ export const createPicker = procedure()
         form: {
           create: {
             data: DEFAULT_PICKER_FORM
-          }
-        },
-        storage: {
-          create: {
-            data: DEFAULT_PICKER_STORAGE_DATA
           }
         },
         logs: {

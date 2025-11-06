@@ -20,6 +20,7 @@ import {
 } from '@/lib/pickers/schemas/audit-log';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import pluralize from 'pluralize';
 
 interface PickerAuditLogSectionProps {
   logs: AuditLog[];
@@ -43,7 +44,7 @@ export const PickerAuditLogSection: React.FC<PickerAuditLogSectionProps> = ({
                 <FileText className="h-5 w-5" />
                 Audit Log
                 <Badge variant="secondary" className="ml-2">
-                  {logs.length} {logs.length === 1 ? 'entry' : 'entries'}
+                  {logs.length} {pluralize('entry', logs.length)}
                 </Badge>
               </CardTitle>
               <ChevronDown

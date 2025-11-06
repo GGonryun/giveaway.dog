@@ -44,6 +44,13 @@ export const getLatestTwitterAccessToken = async (
     integration.expires_at <= currentTime + EXPIRY_BUFFER_SECONDS;
 
   if (!isExpired) {
+    const timeUntilExpiry = integration.expires_at! - currentTime;
+    console.info('[Twitter Token] Using existing token', {
+      teamId,
+      integrationId: integration.id,
+      expiresIn: `${Math.floor(timeUntilExpiry / 60)} minutes`,
+      expiresAt: new Date(integration.expires_at! * 1000).toISOString()
+    });
     return {
       access_token: integration.access_token,
       expires_at: integration.expires_at!
@@ -56,6 +63,15 @@ export const getLatestTwitterAccessToken = async (
       message: 'Token expired and no refresh token available'
     });
   }
+
+  console.info('[Twitter Token] Token expired, refreshing', {
+    teamId,
+    integrationId: integration.id,
+    expiredAt: integration.expires_at
+      ? new Date(integration.expires_at * 1000).toISOString()
+      : 'unknown',
+    expiryBuffer: `${EXPIRY_BUFFER_SECONDS}s`
+  });
 
   const tokenResponse = await fetch('https://api.twitter.com/2/oauth2/token', {
     method: 'POST',
@@ -101,6 +117,13 @@ export const getLatestTwitterAccessToken = async (
       scope: tokens.scope,
       token_type: tokens.token_type
     }
+  });
+
+  console.info('[Twitter Token] Token refreshed successfully', {
+    teamId,
+    integrationId: integration.id,
+    newExpiresAt: new Date(expiresAt * 1000).toISOString(),
+    expiresIn: `${Math.floor(tokens.expires_in / 60)} minutes`
   });
 
   return {

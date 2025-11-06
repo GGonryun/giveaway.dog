@@ -3,6 +3,7 @@ import {
   xStatusRefineError,
   xStatusRefineUrl
 } from '@/lib/integrations/schemas/twitter';
+import { MAX_PICKER_SCHEDULE_DAYS } from '@/lib/settings';
 import { DeepPartial } from '@/lib/types';
 import { widetype } from '@/lib/widetype';
 import { Prisma } from '@prisma/client';
@@ -53,6 +54,33 @@ export const pickerFormSchema = z.object({
       }),
     name: z.string().min(1, 'Picker name is required')
   }),
+  timing: z
+    .object({
+      scheduledAt: z
+        .string()
+        .refine(
+          (data) => {
+            return new Date(data) > new Date();
+          },
+          {
+            message: 'End date must be in the future'
+          }
+        )
+        .refine(
+          (data) => {
+            const now = new Date(); // max 7 days in the future
+            const maxDate = new Date();
+            maxDate.setDate(now.getDate() + MAX_PICKER_SCHEDULE_DAYS);
+            return new Date(data) <= maxDate;
+          },
+          {
+            message: `Scheduled date cannot be more than ${MAX_PICKER_SCHEDULE_DAYS} days in the future`
+          }
+        ),
+      timeZone: z.string()
+    })
+    .nullable()
+    .optional(),
   winners: z.object({
     quota: z.number().min(1, 'Must have at least 1 winner').default(1)
   }),

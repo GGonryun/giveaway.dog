@@ -34,7 +34,7 @@ interface Draw {
   numberOfWinners: number;
   eligibleEntries: number;
   verificationHash: string;
-  winners: Winner[];
+  winners?: Winner[];
 }
 
 interface PickerDrawHistorySheetProps {
@@ -89,7 +89,7 @@ export const PickerDrawHistorySheet: React.FC<PickerDrawHistorySheetProps> = ({
               </div>
 
               <div className="space-y-2">
-                {draw.winners.map((winner) => (
+                {draw.winners?.map((winner) => (
                   <div
                     key={winner.id}
                     className="flex items-center gap-3 p-3 rounded-lg border bg-card"

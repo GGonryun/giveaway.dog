@@ -81,9 +81,11 @@ export const AUDIT_LOG_CATEGORY_BADGE_VARIANT: Record<
 export const parsePickerAuditLogs = (
   data: Prisma.PickerAuditLogGetPayload<{}>[]
 ): AuditLog[] => {
-  return data.map((log) => ({
-    type: log.type,
-    data: log.data,
-    createdAt: log.createdAt
-  }));
+  return data
+    .sort((a, b) => (a.createdAt < b.createdAt ? -1 : 1))
+    .map((log) => ({
+      type: log.type,
+      data: log.data,
+      createdAt: log.createdAt
+    }));
 };

@@ -592,22 +592,12 @@ model Picker {
   status    PickerStatus     @default(PROCESSING)
   type      PickerType       @default(TWITTER)
   form      PickerForm?
-  storage   PickerStorage?
   logs      PickerAuditLog[]
   jobs      PickerJob[]
   draws     PickerDraw[]
 }
 
 model PickerForm {
-  id        String   @id @default(cuid())
-  pickerId  String   @unique
-  picker    Picker   @relation(fields: [pickerId], references: [id], onDelete: Cascade)
-  data      Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model PickerStorage {
   id        String   @id @default(cuid())
   pickerId  String   @unique
   picker    Picker   @relation(fields: [pickerId], references: [id], onDelete: Cascade)
@@ -687,7 +677,7 @@ model PickerDraw {
   position               Int
   result                 PickerDrawResult
   disqualificationReason String?
-  previousDrawId         String           @unique
+  previousDrawId         String?          @unique
   previousDraw           PickerDraw?      @relation("PreviousDraw", fields: [previousDrawId], references: [id], onDelete: Cascade)
   nextDraw               PickerDraw?      @relation("PreviousDraw")
 }

@@ -10,6 +10,7 @@ import { ApplicationError } from '@/lib/errors';
 import { compact } from 'lodash';
 import { extractTweetId } from '@/lib/integrations/schemas/twitter';
 import { toTwitterFetchRequest } from '../schemas/jobs';
+import { timezone } from '@/lib/time';
 
 export const publishPickerAuditLogs = (
   input: PublishPickerInputSchema
@@ -52,13 +53,24 @@ export const publishPickerJobs = ({
     });
   }
 
+  console.log(
+    'Scheduling fetch_twitter_data job with form actions:',
+    form.actions
+  );
+  const runAt =
+    form.timing?.scheduledAt && form.timing?.timeZone
+      ? timezone.localTime(form.timing.scheduledAt, form.timing.timeZone)
+      : new Date();
+
+  console.log('Scheduling fetch_twitter_data job at', runAt);
+
   return {
     picker: {
       connect: { id: pickerId }
     },
     type: PickerJobType.FETCH_TWITTER_DATA,
     status: PickerJobStatus.QUEUED,
-    runAt: new Date(),
+    runAt,
     children: {
       createMany: {
         data: compact([
@@ -66,7 +78,7 @@ export const publishPickerJobs = ({
             pickerId,
             type: PickerJobType.FETCH_TWITTER_GET_LIKING_USERS,
             status: PickerJobStatus.QUEUED,
-            runAt: new Date(),
+            runAt,
             data: toTwitterFetchRequest({
               tweetId: extractTweetId(form.setup.postUrl)
             })
@@ -75,7 +87,7 @@ export const publishPickerJobs = ({
             pickerId,
             type: PickerJobType.FETCH_TWITTER_GET_REPOSTED_BY,
             status: PickerJobStatus.QUEUED,
-            runAt: new Date(),
+            runAt,
             data: toTwitterFetchRequest({
               tweetId: extractTweetId(form.setup.postUrl)
             })

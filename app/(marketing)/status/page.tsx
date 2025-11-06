@@ -13,23 +13,19 @@ import {
   Activity,
   Server,
   Database,
-  Globe
+  Globe,
+  ChartPie
 } from 'lucide-react';
+import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 
 export default function StatusPage() {
   return (
     <div className="container py-8 md:py-16 flex flex-col gap-6 items-center justify-center max-w-4xl">
-      <div className="w-full text-center">
-        <Typography.Header
-          level={1}
-          className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
-        >
-          System Status
-        </Typography.Header>
-        <Typography.Paragraph className="text-lg text-muted-foreground">
-          Real-time status of all Giveaway.dog services and infrastructure.
-        </Typography.Paragraph>
-      </div>
+      <MarketingPageHeader
+        icon={ChartPie}
+        title="System Status"
+        description="Real-time status of all Giveaway.dog services and infrastructure."
+      />
 
       {/* Overall Status */}
       <Card className="w-full">

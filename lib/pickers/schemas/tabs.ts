@@ -2,10 +2,11 @@ import { z } from 'zod';
 
 export const PICKER_TAB_OPTIONS = {
   overview: 'Overview',
-  participants: 'Participants'
+  participants: 'Participants',
+  draw: 'Draw'
 } as const;
 
-export const pickerTabSchema = z.enum(['overview', 'participants']);
+export const pickerTabSchema = z.enum(['overview', 'participants', 'draw']);
 
 export type PickerTabSchema = z.infer<typeof pickerTabSchema>;
 

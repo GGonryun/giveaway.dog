@@ -1,10 +1,12 @@
-import { ApplicationError } from '@/lib/errors';
 import { PickerDrawResult, Prisma } from '@prisma/client';
 import z from 'zod';
 
 export const pickerWinnerSchema = z.object({
   userId: z.string(),
-  position: z.number().int().positive()
+  position: z.number().int().positive(),
+  username: z.string().optional(),
+  name: z.string().optional(),
+  profile_image_url: z.string().nullable().optional()
 });
 
 export type PickerWinnerSchema = z.infer<typeof pickerWinnerSchema>;
@@ -36,22 +38,40 @@ export const pickerDrawsSchema = z.object({
 
 export type PickerDrawsSchema = z.infer<typeof pickerDrawsSchema>;
 
+interface TwitterUserData {
+  id: string;
+  username: string;
+  name: string;
+  profile_image_url?: string;
+}
+
 export const parsePickerDrawsSchema = (
-  data: Prisma.PickerDrawGetPayload<{}>[]
+  data: Prisma.PickerDrawGetPayload<{}>[],
+  users?: TwitterUserData[]
 ): PickerDrawsSchema => {
-  const draws = data.map((draw) => ({
-    drawId: draw.id,
-    drawnAt: draw.createdAt,
-    drawNumber: draw.order,
-    eligibleEntries: draw.eligibleEntries,
-    winner: {
-      userId: draw.user,
-      position: draw.position
-    },
-    result: draw.result,
-    disqualificationReason: draw.disqualificationReason,
-    previousDrawId: draw.previousDrawId
-  }));
+  const userMap = new Map(users?.map((u) => [u.id, u]) || []);
+
+  const draws = data
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+    .map((draw, i) => {
+      const userData = userMap.get(draw.user);
+      return {
+        drawId: draw.id,
+        drawnAt: draw.createdAt,
+        drawNumber: i + 1,
+        eligibleEntries: draw.eligibleEntries,
+        winner: {
+          userId: draw.user,
+          position: draw.position,
+          username: userData?.username,
+          name: userData?.name,
+          profile_image_url: userData?.profile_image_url || null
+        },
+        result: draw.result,
+        disqualificationReason: draw.disqualificationReason,
+        previousDrawId: draw.previousDrawId
+      };
+    });
 
   return {
     draws,

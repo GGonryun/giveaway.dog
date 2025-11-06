@@ -1,6 +1,5 @@
 import { TWITTER_POST_URL } from '@/lib/settings';
 import { AuditLogMetadataSchema } from '../schemas/audit-log';
-import { PickerDataSchema } from '../schemas/data';
 import { PickerUnvalidatedFormSchema } from '../schemas/form';
 import { PickerStatus } from '../schemas/status';
 import { PickerDrawsSchema } from '../schemas/draws';
@@ -18,6 +17,7 @@ export const DEFAULT_PICKER_FORM: Omit<PickerUnvalidatedFormSchema, 'id'> = {
     postUrl: TWITTER_POST_URL,
     name: DEFAULT_PICKER_NAME
   },
+  timing: null,
   winners: {
     quota: 1
   },
@@ -39,11 +39,6 @@ export const DEFAULT_PICKER_FORM: Omit<PickerUnvalidatedFormSchema, 'id'> = {
     hasLocation: false,
     hasDescription: false
   }
-};
-export const DEFAULT_PICKER_STORAGE: PickerDataSchema = {
-  type: 'TWITTER',
-  users: [],
-  actions: []
 };
 
 export const DEFAULT_PICKER_JOB: Prisma.PickerJobCreateWithoutPickerInput = {

@@ -4,32 +4,30 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ExternalLink, Share2, Trophy } from 'lucide-react';
-
-interface Winner {
-  id: string;
-  drawId: string;
-  twitterUserId: string;
-  twitterUsername: string;
-  twitterDisplayName: string;
-  twitterProfileImageUrl: string | null;
-  position: number;
-  selectedAt: Date;
-}
+import { ExternalLink, Share2, Trophy, RotateCw } from 'lucide-react';
+import { PickerWinnerSchema } from '../schemas/draws';
 
 interface PickerWinnerCardProps {
-  winner: Winner;
+  winner: PickerWinnerSchema;
   drawId: string;
   pickerId: string;
+  onRedraw?: () => void;
+  showRedrawButton?: boolean;
 }
 
 export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
   winner,
   drawId,
-  pickerId
+  pickerId,
+  onRedraw,
+  showRedrawButton = false
 }) => {
+  const username = winner.username || 'unknown';
+  const name = winner.name || 'Unknown User';
+  const profileImage = winner.profile_image_url || null;
+
   const handleShare = () => {
-    const tweetText = `🎉 Congratulations to @${winner.twitterUsername} for winning our giveaway!\n\nVerify the draw: ${window.location.origin}/pickers/${pickerId}/draws/${drawId}`;
+    const tweetText = `🎉 Congratulations to @${username} for winning our giveaway!\n\nVerify the draw: ${window.location.origin}/pickers/${pickerId}/draws/${drawId}`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(twitterUrl, '_blank', 'noopener,noreferrer');
   };
@@ -37,13 +35,13 @@ export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
   return (
     <Card>
       <CardContent className="p-4">
-        <div className="flex items-center justify-between">
+        <div className="space-y-3">
           <div className="flex items-center gap-3">
             <div className="relative">
               <Avatar className="h-12 w-12">
-                <AvatarImage src={winner.twitterProfileImageUrl ?? undefined} />
+                <AvatarImage src={profileImage ?? undefined} />
                 <AvatarFallback>
-                  {winner.twitterDisplayName.substring(0, 2).toUpperCase()}
+                  {name.substring(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               {winner.position === 1 && (
@@ -52,13 +50,11 @@ export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
                 </div>
               )}
             </div>
-            <div>
+            <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="font-semibold">
-                  {winner.twitterDisplayName}
-                </span>
+                <span className="font-semibold truncate">{name}</span>
                 <svg
-                  className="h-4 w-4"
+                  className="h-4 w-4 flex-shrink-0"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
                   fill="currentColor"
@@ -66,16 +62,16 @@ export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </div>
-              <span className="text-sm text-muted-foreground">
-                @{winner.twitterUsername}
+              <span className="text-sm text-muted-foreground truncate block">
+                @{username}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" asChild>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button variant="outline" size="sm" className="flex-1" asChild>
               <a
-                href={`https://x.com/${winner.twitterUsername}`}
+                href={`https://x.com/${username}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -83,11 +79,28 @@ export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
                 View Profile
               </a>
             </Button>
-            <Button variant="default" size="sm" onClick={handleShare}>
+            <Button
+              variant="default"
+              size="sm"
+              className="flex-1"
+              onClick={handleShare}
+            >
               <Share2 className="h-4 w-4 mr-2" />
               Share
             </Button>
           </div>
+
+          {showRedrawButton && onRedraw && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={onRedraw}
+            >
+              <RotateCw className="h-4 w-4 mr-2" />
+              Redraw Winner
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

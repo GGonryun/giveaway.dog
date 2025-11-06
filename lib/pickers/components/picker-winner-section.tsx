@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -10,40 +10,25 @@ import {
   Trophy,
   Sparkles,
   Lock,
-  ExternalLink
+  ExternalLink,
+  Share2
 } from 'lucide-react';
 import { PickerWinnerCard } from './picker-winner-card';
-import { PickerDrawHistorySheet } from './picker-draw-history-sheet';
 import Link from 'next/link';
-
-interface Winner {
-  id: string;
-  drawId: string;
-  twitterUserId: string;
-  twitterUsername: string;
-  twitterDisplayName: string;
-  twitterProfileImageUrl: string | null;
-  position: number;
-  selectedAt: Date;
-}
-
-interface Draw {
-  id: string;
-  pickerId: string;
-  drawNumber: number;
-  drawnAt: Date;
-  numberOfWinners: number;
-  eligibleEntries: number;
-  verificationHash: string;
-  winners: Winner[];
-}
+import { PickerDrawSchema } from '../schemas/draws';
+import { useProcedure } from '@/lib/mrpc/hook';
+import { completePicker } from '../procedures/complete-picker';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { PickerDrawResult } from '@prisma/client';
 
 interface PickerWinnerSectionProps {
   pickerId: string;
   pickerName: string;
   status: string;
   numberOfWinners: number;
-  draws?: Draw[];
+  teamSlug: string;
+  draws?: PickerDrawSchema[];
   stats?: {
     validEntries: number;
   };
@@ -54,22 +39,35 @@ export const PickerWinnerSection: React.FC<PickerWinnerSectionProps> = ({
   pickerName,
   status,
   numberOfWinners,
+  teamSlug,
   draws = [],
   stats
 }) => {
-  const [isClosing, setIsClosing] = useState(false);
+  const router = useRouter();
 
-  const latestDraw = draws.length > 0 ? draws[draws.length - 1] : null;
-  const hasWinners = latestDraw && latestDraw.winners.length > 0;
+  const completeProcedure = useProcedure({
+    action: completePicker,
+    onSuccess() {
+      toast.success(
+        'Picker marked as complete! No further changes can be made.'
+      );
+      router.refresh();
+    },
+    onFailure(error) {
+      toast.error(
+        error.message || 'Failed to complete picker. Please try again.'
+      );
+    }
+  });
+
+  const hasWinners = draws.length > 0;
   const isProcessed = status === 'PROCESSED';
   const isComplete = status === 'COMPLETE';
   const isPending = status === 'PENDING' || status === 'DRAFT';
   const isProcessing = status === 'PROCESSING';
 
-  const handleClosePicker = async () => {
-    setIsClosing(true);
-    console.log('Closing picker:', pickerId);
-    setIsClosing(false);
+  const handleClosePicker = () => {
+    completeProcedure.run({ pickerId });
   };
 
   if (isPending) {
@@ -102,23 +100,104 @@ export const PickerWinnerSection: React.FC<PickerWinnerSectionProps> = ({
     );
   }
 
-  if (isComplete) {
+  if (hasWinners) {
+    const currentWinners = draws.filter(
+      (draw) => draw.result === PickerDrawResult.WINNER
+    );
+    const latestDraw =
+      currentWinners[currentWinners.length - 1] || draws[draws.length - 1];
+
     return (
-      <Card className="border-2 border-muted">
+      <Card
+        className={
+          isComplete ? 'border-2 border-muted' : 'border-2 border-primary/20'
+        }
+      >
         <CardHeader>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Lock className="h-5 w-5 text-muted-foreground" />
-              <CardTitle>Picker Closed</CardTitle>
+            <div className="flex items-center gap-3">
+              <div
+                className={`p-2 rounded-lg ${isComplete ? 'bg-muted' : 'bg-primary/10'}`}
+              >
+                {isComplete ? (
+                  <Lock className="h-5 w-5 text-muted-foreground" />
+                ) : (
+                  <Trophy className="h-5 w-5 text-primary" />
+                )}
+              </div>
+              <div>
+                <CardTitle>
+                  {isComplete ? 'Picker Closed' : 'Winners Selected'}
+                </CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {currentWinners.length} winner
+                  {currentWinners.length > 1 ? 's' : ''} selected
+                  {isComplete && ' (Picker Complete)'}
+                </p>
+              </div>
             </div>
-            {draws.length > 0 && <PickerDrawHistorySheet draws={draws} />}
+            <div className="flex items-center gap-2">
+              {!isComplete && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleClosePicker}
+                  disabled={completeProcedure.isLoading}
+                >
+                  {completeProcedure.isLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2" />
+                      Completing...
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="h-4 w-4 mr-2" />
+                      Mark Complete
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            This picker has been marked as complete. No further draws can be
-            made.
-          </p>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {currentWinners.map((draw) => (
+              <PickerWinnerCard
+                key={draw.drawId}
+                winner={draw.winner}
+                drawId={draw.drawId}
+                pickerId={pickerId}
+              />
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between pt-4 border-t">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <AlertCircle className="h-3 w-3" />
+              <span>
+                Drawn from {latestDraw.eligibleEntries} eligible entries
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="link" size="sm" asChild>
+                <Link href={`/app/${teamSlug}/pickers/${pickerId}/draw`}>
+                  <ExternalLink className="h-3 w-3 mr-1" />
+                  View Draw Details
+                </Link>
+              </Button>
+              <Button variant="link" size="sm" asChild>
+                <Link
+                  href={`/draws/${pickerId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Share2 className="h-3 w-3 mr-1" />
+                  Share Results
+                </Link>
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     );
@@ -140,75 +219,13 @@ export const PickerWinnerSection: React.FC<PickerWinnerSectionProps> = ({
             </p>
           </div>
           <Button asChild>
-            <Link href={`/app/${pickerId}/draw`}>
+            <Link href={`/app/${teamSlug}/pickers/${pickerId}/draw`}>
               <Sparkles className="h-4 w-4 mr-2" />
               Draw Winners
             </Link>
           </Button>
         </AlertDescription>
       </Alert>
-    );
-  }
-
-  if (hasWinners && latestDraw) {
-    return (
-      <Card className="border-2 border-primary/20">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Trophy className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <CardTitle>Winners Selected</CardTitle>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Draw #{latestDraw.drawNumber} • {latestDraw.winners.length}{' '}
-                  winner{latestDraw.winners.length > 1 ? 's' : ''}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              {draws.length > 1 && <PickerDrawHistorySheet draws={draws} />}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleClosePicker}
-                disabled={isClosing}
-              >
-                <Lock className="h-4 w-4 mr-2" />
-                Close Picker
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {latestDraw.winners.map((winner) => (
-              <PickerWinnerCard
-                key={winner.id}
-                winner={winner}
-                drawId={latestDraw.id}
-                pickerId={pickerId}
-              />
-            ))}
-          </div>
-
-          <div className="flex items-center justify-between pt-4 border-t">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <AlertCircle className="h-3 w-3" />
-              <span>
-                Drawn from {latestDraw.eligibleEntries} eligible entries
-              </span>
-            </div>
-            <Button variant="link" size="sm" asChild>
-              <Link href={`/app/${pickerId}/draw`}>
-                <ExternalLink className="h-3 w-3 mr-1" />
-                View Draw Details
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     );
   }
 

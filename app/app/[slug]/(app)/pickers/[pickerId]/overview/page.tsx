@@ -39,7 +39,7 @@ export default async function Page({ params }: PickerOverviewPageProps) {
 const Wrapper: React.FC<{
   params: Promise<{ slug: string; pickerId: string }>;
 }> = async ({ params }) => {
-  const { pickerId } = await params;
+  const { pickerId, slug } = await params;
 
   const picker = await getPublicPicker({ pickerId });
 
@@ -47,5 +47,5 @@ const Wrapper: React.FC<{
     return <div>Failed to load picker: {picker.data.message}</div>;
   }
 
-  return <PickerOverview picker={picker.data} />;
+  return <PickerOverview picker={picker.data} teamSlug={slug} />;
 };

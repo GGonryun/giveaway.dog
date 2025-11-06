@@ -6,6 +6,46 @@ export namespace time {
 }
 
 export namespace timezone {
+  export const localTime = (datetime: string, timeZone: string) => {
+    const tz = getTimeZones().find((t) => t.name === timeZone);
+    if (!tz) throw new Error('Invalid timezone');
+
+    const offsetMinutes = tz.currentTimeOffsetInMinutes; // e.g. -480 for PST
+    const sign = offsetMinutes >= 0 ? '+' : '-';
+    const absOffset = Math.abs(offsetMinutes);
+    const hours = String(Math.floor(absOffset / 60)).padStart(2, '0');
+    const mins = String(absOffset % 60).padStart(2, '0');
+    const offset = `${sign}${hours}:${mins}`;
+
+    const isoWithOffset = attachOffsetToIso(datetime, offset);
+
+    const date = new Date(isoWithOffset);
+    return date.toISOString();
+  };
+
+  /**
+   * Safely attach a timezone offset to an ISO timestamp.
+   * Ensures the final string is ISO 8601–compliant.
+   *
+   * Examples:
+   * attachOffsetToIso("2025-11-08T20:00:00.000Z", "-09:00") → "2025-11-08T20:00:00.000-09:00"
+   * attachOffsetToIso("2025-11-08T20:00:00.000", "-09:00")  → "2025-11-08T20:00:00.000-09:00"
+   */
+  export function attachOffsetToIso(iso: string, offset: string): string {
+    // Normalize input
+    let cleanIso = iso.trim();
+
+    // If ISO already has an offset or 'Z', strip it first
+    cleanIso = cleanIso.replace(/([+-]\d{2}:?\d{2}|Z)$/i, '');
+
+    // Ensure offset has the correct format (+HH:MM or -HH:MM)
+    if (!/^[+-]\d{2}:?\d{2}$/.test(offset)) {
+      throw new Error(`Invalid offset format: ${offset}`);
+    }
+
+    return `${cleanIso}${offset}`;
+  }
+
   export const current = () => {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   };
