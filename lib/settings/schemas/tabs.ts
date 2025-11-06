@@ -22,7 +22,7 @@ export const isSettingsTab = (value: string): value is SettingsTabSchema => {
 
 export const DEFAULT_SETTINGS_TAB: SettingsTabSchema = 'profile';
 
-const tabRegex = new RegExp('^/app/[^/]+/pickers/[^/]+(?:/([^/]+))?');
+const tabRegex = new RegExp('^/app/[^/]+/settings(?:/([^/]+))?');
 
 export const matchSettingsTab = (path: string): SettingsTabSchema | null => {
   const data = tabRegex.exec(path)?.[1];
