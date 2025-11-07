@@ -172,14 +172,14 @@ export const PickerWinnerSection: React.FC<PickerWinnerSectionProps> = ({
             ))}
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t">
+          <div className="flex flex-col md:flex-row items-center justify-between pt-4 border-t gap-2">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <AlertCircle className="h-3 w-3" />
               <span>
                 Drawn from {latestDraw.eligibleEntries} eligible entries
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center gap-2">
               <Button variant="link" size="sm" asChild>
                 <Link href={`/app/${teamSlug}/pickers/${pickerId}/draw`}>
                   <ExternalLink className="h-3 w-3 mr-1" />

@@ -40,7 +40,7 @@ import { PickerTwitterPreviewEmbed } from './picker-twitter-preview';
 import { STATUS_COLORS, STATUS_ICONS } from '../themes/status';
 import { PickerTypeLogo } from './picker-type-logo';
 import { formatDistance, format } from 'date-fns';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 import { PickerWinnerSection } from './picker-winner-section';
@@ -58,7 +58,13 @@ import { PickerActionDisplay } from './picker-action-display';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { completePicker } from '../procedures/complete-picker';
 import { toast } from 'sonner';
-import { Lock, Loader2 } from 'lucide-react';
+import { Lock, Loader2, MoreVertical } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 
 interface PickerOverviewProps {
   picker: PublicPickerSchema;
@@ -114,7 +120,6 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({
   const router = useRouter();
   const statusConfig = STATUS_COLORS[picker.status];
   const StatusIcon = STATUS_ICONS[picker.status];
-  const [previewOpen, setPreviewOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
 
   const completeProcedure = useProcedure({
@@ -172,61 +177,20 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({
         <CardContent className="space-y-6">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
-              <PickerTypeLogo type={picker.type} size={6} />
-              <h2 className="text-2xl font-bold">{picker.form.setup.name}</h2>
+              <PickerTypeLogo type={picker.type} className="size-4 sm:size-6" />
+              <h2 className="text-xl sm:text-2xl font-bold">
+                {picker.form.setup.name}
+              </h2>
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={() => setRenameOpen(true)}
-                className="h-8 w-8 p-0"
+                className="size-4 sm:size-6"
               >
                 <Pencil className="h-4 w-4" />
               </Button>
             </div>
-            <div className="flex items-center gap-2">
-              <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <Eye className="h-4 w-4 mr-2" />
-                    Preview Post
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-0">
-                  <DialogHeader className="px-6 pt-6 pb-2">
-                    <DialogTitle>Post Preview</DialogTitle>
-                  </DialogHeader>
-                  <div className="px-6 pb-6">
-                    <PickerTwitterPreviewEmbed
-                      postUrl={picker.form.setup.postUrl}
-                      className="border rounded-lg px-2"
-                    />
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <Button variant="outline" size="sm" asChild>
-                <Link
-                  href={picker.form.setup.postUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  prefetch={false}
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Open on X
-                </Link>
-              </Button>
-              {hasWinners && (
-                <Button variant="outline" size="sm" asChild>
-                  <Link
-                    href={`/draws/${picker.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share Results
-                  </Link>
-                </Button>
-              )}
-            </div>
+            <PickerOverviewMenu picker={picker} hasWinners={hasWinners} />
           </div>
 
           <div
@@ -538,5 +502,126 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({
         onRename={handleRename}
       />
     </div>
+  );
+};
+
+const PickerOverviewMenu: React.FC<{
+  picker: PublicPickerSchema;
+  hasWinners: boolean;
+}> = ({ picker, hasWinners }) => {
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  return (
+    <>
+      <div className="block sm:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon-sm">
+              <MoreVertical />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onSelect={() => setPreviewOpen(true)}>
+              <Eye className="h-4 w-4 mr-2" />
+              Preview Post
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href={picker.form.setup.postUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                prefetch={false}
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Open on X
+              </Link>
+            </DropdownMenuItem>
+            {hasWinners && (
+              <DropdownMenuItem asChild>
+                <Link
+                  href={`/draws/${picker.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share Results
+                </Link>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+          <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-0">
+            <DialogHeader className="px-6 pt-6 pb-2">
+              <DialogTitle>Post Preview</DialogTitle>
+            </DialogHeader>
+            <div className="px-6 pb-6">
+              <PickerTwitterPreviewEmbed
+                postUrl={picker.form.setup.postUrl}
+                className="border rounded-lg px-2"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <div className="hidden sm:flex items-center gap-2">
+        <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 w-8 sm:w-auto p-0 sm:px-3 [&_svg]:mr-0"
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              <span className="hidden lg:inline">Preview Post</span>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-0">
+            <DialogHeader className="px-6 pt-6 pb-2">
+              <DialogTitle>Post Preview</DialogTitle>
+            </DialogHeader>
+            <div className="px-6 pb-6">
+              <PickerTwitterPreviewEmbed
+                postUrl={picker.form.setup.postUrl}
+                className="border rounded-lg px-2"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 w-8 sm:w-auto p-0 sm:px-3 [&_svg]:mr-0"
+          asChild
+        >
+          <Link
+            href={picker.form.setup.postUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            prefetch={false}
+          >
+            <ExternalLink />
+            <span className="hidden lg:inline">Open on X</span>
+          </Link>
+        </Button>
+        {hasWinners && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-8 w-8 sm:w-auto p-0 sm:px-3 [&_svg]:mr-0"
+            asChild
+          >
+            <Link
+              href={`/draws/${picker.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Share2 className="h-4 w-4 mr-2" />
+              <span className="hidden lg:inline">Share Results</span>
+            </Link>
+          </Button>
+        )}
+      </div>
+    </>
   );
 };

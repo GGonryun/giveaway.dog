@@ -68,24 +68,19 @@ export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2">
-            <Button variant="outline" size="sm" className="flex-1" asChild>
+          <div className="flex flex-wrap flex-col lg:flex-row gap-2">
+            <Button variant="outline" size="sm" asChild>
               <a
                 href={`https://x.com/${username}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <ExternalLink className="h-4 w-4 mr-2" />
+                <ExternalLink />
                 View Profile
               </a>
             </Button>
-            <Button
-              variant="default"
-              size="sm"
-              className="flex-1"
-              onClick={handleShare}
-            >
-              <Share2 className="h-4 w-4 mr-2" />
+            <Button variant="default" size="sm" onClick={handleShare}>
+              <Share2 />
               Share
             </Button>
           </div>

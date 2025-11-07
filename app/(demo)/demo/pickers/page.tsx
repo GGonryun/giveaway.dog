@@ -32,7 +32,8 @@ export default function PickersDemoPage() {
     {
       icon: Zap,
       title: 'Instant Results',
-      description: 'Get results in minutes with automated data collection and processing'
+      description:
+        'Get results in minutes with automated data collection and processing'
     },
     {
       icon: BarChart3,
@@ -60,7 +61,8 @@ export default function PickersDemoPage() {
     },
     {
       title: 'Configure Requirements',
-      description: 'Set filters for winners (actions, followers, account age, etc.)'
+      description:
+        'Set filters for winners (actions, followers, account age, etc.)'
     },
     {
       title: 'Schedule or Run Now',
@@ -91,9 +93,7 @@ export default function PickersDemoPage() {
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link href="/tools/pickers/social">
-              Try Free Tool
-            </Link>
+            <Link href="/tools/pickers/social">Try Free Tool</Link>
           </Button>
         </div>
       </div>
