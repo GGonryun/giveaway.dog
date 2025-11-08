@@ -1,17 +1,16 @@
 'use client';
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGiveawayParticipation } from '../../giveaway-participation-context';
 import { UserInfoSection } from '../../user-info-section';
 import { Typography } from '@/components/ui/typography';
-import { TaskItem } from './task-item';
-import { TaskThemeProvider } from '@/components/tasks/theme';
 import { useSearchParams } from 'next/navigation';
 import { browser } from '@/lib/browser';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PrizeItem } from './prize-item';
+import { TaskList } from './task-list';
 
 export const ActiveParticipation: React.FC = () => {
   const searchParams = useSearchParams();
@@ -21,7 +20,7 @@ export const ActiveParticipation: React.FC = () => {
   }, [searchParams]);
 
   const [open, setOpen] = React.useState<string | null>(taskId);
-  const { sweepstakes, userParticipation } = useGiveawayParticipation();
+  const { sweepstakes } = useGiveawayParticipation();
 
   const handleOpen = useCallback(
     (taskId: string | null) => {
@@ -61,23 +60,7 @@ export const ActiveParticipation: React.FC = () => {
 
         <TabsContent value="tasks">
           {hasTasks ? (
-            <div className="space-y-2">
-              {sweepstakes.tasks.map((task, index) => {
-                const completed =
-                  userParticipation?.completedTasks.includes(task.id) ?? false;
-
-                return (
-                  <TaskThemeProvider key={index} type={task.type}>
-                    <TaskItem
-                      open={open === task.id}
-                      setOpen={(status) => handleOpen(status ? task.id : null)}
-                      task={task}
-                      completed={completed}
-                    />
-                  </TaskThemeProvider>
-                );
-              })}
-            </div>
+            <TaskList open={open} setOpen={handleOpen} />
           ) : (
             <div className="text-center py-8">
               <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />

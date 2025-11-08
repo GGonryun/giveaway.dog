@@ -52,7 +52,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         action:
           'bg-discord-1 text-white group-hover:bg-discord-1 hover:bg-discord-1',
         symbol: 'bg-discord-1 text-white',
-        arrow: 'bg-discord-1 text-discord-3 fill-discord-1',
+        arrow: 'bg-discord-1 text-white fill-discord-1',
         icon: SocialDiscordIcon
       };
     default:

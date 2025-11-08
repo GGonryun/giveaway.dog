@@ -1,9 +1,3 @@
-- [ ] Horizontal improvements to picker pages.
-
-- [ ] Add a picker draw verification mock page for marketing.
-- [ ] Add a picker demo page for marketing.
-
-- [ ] Add mandatory tasks that participants must complete to enter the rest of the sweepstake's tasks.
 - [ ] Add task requirements so that user's must complete a certain number of other tasks to unlock this one.
 
 - [ ] Add settings, and team rbac

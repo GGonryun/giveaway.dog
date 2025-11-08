@@ -1,7 +1,6 @@
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { nanoid } from 'nanoid';
 import { toDefaultValues } from '@/lib/task/defaults';
-import { STEAM_APP_ID_URL, TWITTER_PROFILE_URL } from '@/lib/settings';
 
 export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   setup: {

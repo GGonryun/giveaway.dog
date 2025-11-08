@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, ChevronDownIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGiveawayParticipation } from '../../giveaway-participation-context';
-import { useTaskTheme } from '@/components/tasks/theme';
+import { TaskThemeProvider, useTaskTheme } from '@/components/tasks/theme';
 import {
   Tooltip,
   TooltipContent,
@@ -27,19 +27,27 @@ import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { FailureData, isFailureData } from '@/lib/mrpc/types';
 
-export const TaskItem: React.FC<{
+type TaskItemProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
   task: TaskSchema;
   completed: boolean;
-}> = ({ open, setOpen, task, completed: initialCompleted }) => {
+  setCompleted?: () => void;
+};
+
+const TaskItemContent: React.FC<TaskItemProps> = ({
+  open,
+  setOpen,
+  task,
+  completed,
+  setCompleted
+}) => {
   const pathname = usePathname();
   const router = useRouter();
   const { theme } = useTaskTheme();
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<FailureData | undefined>(undefined);
-  const [completed, setCompleted] = React.useState(initialCompleted);
 
   const { userProfile, onTaskComplete } = useGiveawayParticipation();
 
@@ -49,11 +57,6 @@ export const TaskItem: React.FC<{
     () => `${task.value} ${pluralize('entry', task.value)}`,
     [task.value]
   );
-
-  // Sync with prop when it changes from server
-  useEffect(() => {
-    setCompleted(initialCompleted);
-  }, [initialCompleted]);
 
   useEffect(() => {
     if (open && taskRef.current) {
@@ -71,7 +74,7 @@ export const TaskItem: React.FC<{
 
       await onTaskComplete(task.id);
 
-      setCompleted(true);
+      setCompleted?.();
       setOpen(false);
       toast.success('Task completed!');
       router.refresh();
@@ -132,7 +135,7 @@ export const TaskItem: React.FC<{
           </div>
 
           <div className="flex items-center gap-2 p-1.5">
-            {task.mandatory && (
+            {!completed && task.mandatory && (
               <Badge variant="destructive" className="text-xs">
                 Required
               </Badge>
@@ -163,8 +166,16 @@ export const TaskItem: React.FC<{
               <TooltipContent
                 side="left"
                 align="center"
-                className={cn(theme.arrow)}
-                arrowClassName={cn(theme.arrow)}
+                className={cn(
+                  completed
+                    ? 'bg-success text-success-foreground fill-success'
+                    : theme.arrow
+                )}
+                arrowClassName={cn(
+                  completed
+                    ? 'bg-success text-success-foreground fill-success'
+                    : theme.arrow
+                )}
               >
                 {completed ? (
                   <p>You earned {entriesText}.</p>
@@ -203,5 +214,13 @@ export const TaskItem: React.FC<{
         )}
       </CollapsibleContent>
     </Collapsible>
+  );
+};
+
+export const TaskItem: React.FC<TaskItemProps> = (props) => {
+  return (
+    <TaskThemeProvider type={props.task.type}>
+      <TaskItemContent {...props} />
+    </TaskThemeProvider>
   );
 };
