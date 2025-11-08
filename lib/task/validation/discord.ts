@@ -1,6 +1,7 @@
 import { ApplicationError } from '@/lib/errors';
 import { DiscordJoinTaskSchema } from '@/schemas/tasks/schemas';
 import { PrismaClient } from '@prisma/client';
+import { refreshDiscordToken } from '@/lib/integrations/utils/refresh-discord-token';
 
 export const checkDiscordJoin = async (
   db: PrismaClient,
@@ -9,28 +10,9 @@ export const checkDiscordJoin = async (
     userId: string;
   }
 ): Promise<void> => {
-  const discordAccount = await db.account.findFirst({
-    where: {
-      userId: args.userId,
-      provider: 'discord'
-    }
+  const { access_token } = await refreshDiscordToken(db, {
+    userId: args.userId
   });
-
-  if (!discordAccount) {
-    throw new ApplicationError({
-      code: 'VALIDATION_ERROR',
-      message:
-        'You must connect your Discord account before completing this task.'
-    });
-  }
-
-  if (!discordAccount.access_token) {
-    throw new ApplicationError({
-      code: 'VALIDATION_ERROR',
-      message:
-        'Discord access token not found. Please reconnect your Discord account.'
-    });
-  }
 
   const channel = args.task.channel;
   const guildId = channel.match(/discord\.com\/channels\/(\d+)\//)?.[1];
@@ -46,7 +28,7 @@ export const checkDiscordJoin = async (
     `https://discord.com/api/v10/users/@me/guilds/${guildId}/member`,
     {
       headers: {
-        Authorization: `Bearer ${discordAccount.access_token}`
+        Authorization: `Bearer ${access_token}`
       }
     }
   );
