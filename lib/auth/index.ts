@@ -19,8 +19,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
     }),
     TwitterProvider({
       allowDangerousEmailAccountLinking: true,
-      clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET,
+      clientId: process.env.TWITTER_LOGIN_APP_CLIENT_ID,
+      clientSecret: process.env.TWITTER_LOGIN_APP_CLIENT_SECRET,
       profile(profile) {
         return {
           id: profile.data?.id ?? profile.id,

@@ -1,6 +1,9 @@
 import { ApplicationError } from '@/lib/errors';
 import { IntegrationProvider } from '@prisma/client';
-import { TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET } from '../schemas';
+import {
+  TWITTER_TEAM_APP_CLIENT_ID,
+  TWITTER_TEAM_APP_CLIENT_SECRET
+} from '../schemas';
 import { Tx } from '@/lib/prisma';
 
 const EXPIRY_BUFFER_SECONDS = 300;
@@ -13,7 +16,7 @@ export const getLatestTwitterAccessToken = async (
     teamId: string;
   }
 ) => {
-  if (!TWITTER_CLIENT_ID || !TWITTER_CLIENT_SECRET) {
+  if (!TWITTER_TEAM_APP_CLIENT_ID || !TWITTER_TEAM_APP_CLIENT_SECRET) {
     throw new ApplicationError({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'Twitter OAuth not configured'
@@ -77,7 +80,7 @@ export const getLatestTwitterAccessToken = async (
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: `Basic ${Buffer.from(`${TWITTER_CLIENT_ID}:${TWITTER_CLIENT_SECRET}`).toString('base64')}`
+      Authorization: `Basic ${Buffer.from(`${TWITTER_TEAM_APP_CLIENT_ID}:${TWITTER_TEAM_APP_CLIENT_SECRET}`).toString('base64')}`
     },
     body: new URLSearchParams({
       grant_type: 'refresh_token',

@@ -5,8 +5,8 @@ import { ApplicationError } from '@/lib/errors';
 import z from 'zod';
 import { IntegrationProvider } from '@prisma/client';
 import {
-  TWITTER_CLIENT_ID,
-  TWITTER_CLIENT_SECRET,
+  TWITTER_TEAM_APP_CLIENT_ID,
+  TWITTER_TEAM_APP_CLIENT_SECRET,
   TWITTER_REDIRECT_URI,
   twitterStateSchema
 } from '../schemas';
@@ -22,7 +22,11 @@ export const twitterOAuthCallback = procedure()
     })
   )
   .handler(async ({ input, db, user }) => {
-    if (!TWITTER_CLIENT_ID || !TWITTER_CLIENT_SECRET || !TWITTER_REDIRECT_URI) {
+    if (
+      !TWITTER_TEAM_APP_CLIENT_ID ||
+      !TWITTER_TEAM_APP_CLIENT_SECRET ||
+      !TWITTER_REDIRECT_URI
+    ) {
       throw new ApplicationError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Twitter OAuth not configured'
@@ -37,7 +41,7 @@ export const twitterOAuthCallback = procedure()
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Basic ${Buffer.from(`${TWITTER_CLIENT_ID}:${TWITTER_CLIENT_SECRET}`).toString('base64')}`
+          Authorization: `Basic ${Buffer.from(`${TWITTER_TEAM_APP_CLIENT_ID}:${TWITTER_TEAM_APP_CLIENT_SECRET}`).toString('base64')}`
         },
         body: new URLSearchParams({
           code: input.code,

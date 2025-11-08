@@ -4,7 +4,10 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
 import z from 'zod';
 import { IntegrationProvider } from '@prisma/client';
-import { TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET } from '../schemas';
+import {
+  TWITTER_TEAM_APP_CLIENT_ID,
+  TWITTER_TEAM_APP_CLIENT_SECRET
+} from '../schemas';
 
 export const refreshTwitterToken = procedure()
   .authorization({
@@ -22,7 +25,7 @@ export const refreshTwitterToken = procedure()
     })
   )
   .handler(async ({ input, db }) => {
-    if (!TWITTER_CLIENT_ID || !TWITTER_CLIENT_SECRET) {
+    if (!TWITTER_TEAM_APP_CLIENT_ID || !TWITTER_TEAM_APP_CLIENT_SECRET) {
       throw new ApplicationError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Twitter OAuth not configured'
@@ -56,12 +59,12 @@ export const refreshTwitterToken = procedure()
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Basic ${Buffer.from(`${TWITTER_CLIENT_ID}:${TWITTER_CLIENT_SECRET}`).toString('base64')}`
+          Authorization: `Basic ${Buffer.from(`${TWITTER_TEAM_APP_CLIENT_ID}:${TWITTER_TEAM_APP_CLIENT_SECRET}`).toString('base64')}`
         },
         body: new URLSearchParams({
           grant_type: 'refresh_token',
           refresh_token: integration.refresh_token,
-          client_id: TWITTER_CLIENT_ID
+          client_id: TWITTER_TEAM_APP_CLIENT_ID
         })
       }
     );

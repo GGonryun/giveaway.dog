@@ -6,7 +6,7 @@ import z from 'zod';
 import { findUserTeamQuery } from '@/procedures/sweepstakes/shared';
 import { datetime } from '@/lib/date';
 import {
-  TWITTER_CLIENT_ID,
+  TWITTER_TEAM_APP_CLIENT_ID,
   TWITTER_REDIRECT_URI,
   TwitterStateSchema
 } from '../schemas';
@@ -37,7 +37,7 @@ export const connectTwitter = procedure()
       });
     }
 
-    if (!TWITTER_CLIENT_ID || !TWITTER_REDIRECT_URI) {
+    if (!TWITTER_TEAM_APP_CLIENT_ID || !TWITTER_REDIRECT_URI) {
       throw new ApplicationError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Twitter OAuth not configured'
@@ -58,7 +58,7 @@ export const connectTwitter = procedure()
 
     const params = new URLSearchParams({
       response_type: 'code',
-      client_id: TWITTER_CLIENT_ID,
+      client_id: TWITTER_TEAM_APP_CLIENT_ID,
       redirect_uri: TWITTER_REDIRECT_URI,
       scope: 'tweet.read users.read follows.read like.read offline.access',
       state: `${team.slug}:${state.id}`,
