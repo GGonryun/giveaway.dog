@@ -1,6 +1,6 @@
 'use server';
 
-import { PickerPublicView } from '@/lib/pickers/components/picker-public-view';
+import { PickerPublicPage } from '@/lib/pickers/pages/picker-public-page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPublicPicker } from '@/lib/pickers/procedures/get-public-picker';
@@ -57,5 +57,5 @@ export default async function DrawVerificationPage({
 
   const picker = result.data;
 
-  return <PickerPublicView picker={picker} />;
+  return <PickerPublicPage picker={picker} />;
 }

@@ -13,7 +13,9 @@ import {
   MessageSquare,
   Share2,
   Globe,
-  Video
+  Video,
+  Play,
+  ArrowRight
 } from 'lucide-react';
 import { FeatureCard } from '@/components/marketing/feature-card';
 import { HowItWorksSection } from '@/components/marketing/how-it-works-section';
@@ -28,6 +30,8 @@ import {
   AccordionTrigger
 } from '@/components/ui/accordion';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
+import { PickerDrawPreview } from '@/lib/pickers/components/picker-draw-preview';
+import { Suspense } from 'react';
 
 const FEATURES = [
   {
@@ -168,7 +172,7 @@ export default function SocialMediaSyncPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <div className="text-center mb-12">
+      <div className="text-center mb-16">
         <div className="mb-8">
           <MarketingPageHeader
             icon={MousePointerClickIcon}
@@ -177,13 +181,48 @@ export default function SocialMediaSyncPage() {
           />
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
-            <Link href="/signup">Start Syncing Free</Link>
+          <Button asChild>
+            <Link href="/demo/pickers/x">
+              <Play className="mr-2 h-5 w-5" />
+              Try Interactive Demo
+            </Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
-            <Link href="#platforms">View Platforms</Link>
+          <Button asChild variant="outline" className="px-8">
+            <Link href="/pricing">
+              View Pricing <ArrowRight />
+            </Link>
           </Button>
         </div>
+      </div>
+
+      <div className="mb-20">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold">See It In Action</h2>
+          <p className="text-muted-foreground">
+            Preview a live draw verification page
+          </p>
+        </div>
+        <Card className="overflow-hidden border-2 py-4 p-0 m-0 gap-0">
+          <CardContent className="p-0 m-0 bg-primary/10">
+            <Suspense
+              fallback={
+                <div className="p-8 text-center text-muted-foreground">
+                  Loading preview...
+                </div>
+              }
+            >
+              <PickerDrawPreview />
+            </Suspense>
+          </CardContent>
+          <div className="border-t p-4 m-0 bg-muted/30 text-center">
+            <Button asChild variant="link">
+              <Link href="/demo/pickers/x" className="text-primary">
+                Try Interactive Demo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </Card>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-20">

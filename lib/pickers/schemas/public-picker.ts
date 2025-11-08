@@ -18,7 +18,6 @@ import {
   EligibleTwitterUser,
   eligibleTwitterUserSchema
 } from '@/lib/integrations/schemas/api';
-import { widetype } from '@/lib/widetype';
 import { fetchTwitterDataSchema, toTwitterData } from './jobs';
 import { ApplicationError } from '@/lib/errors';
 

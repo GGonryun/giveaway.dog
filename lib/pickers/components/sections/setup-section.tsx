@@ -78,7 +78,10 @@ export const SetupSection: React.FC<SetupSectionProps> = ({ integrations }) => {
               </Alert>
             ) : (
               <FormControl>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value ?? undefined}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select your account" />
                   </SelectTrigger>

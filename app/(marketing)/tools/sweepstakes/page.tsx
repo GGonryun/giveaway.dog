@@ -105,7 +105,7 @@ export default function SweepstakesToolPage() {
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold">See It In Action</h2>
           <p className="text-muted-foreground">
-            Preview a live giveaway picker below
+            Preview a live sweepstakes below
           </p>
         </div>
         <Card className="overflow-hidden border-2 py-4 p-0 m-0 gap-0">
@@ -178,7 +178,7 @@ export default function SweepstakesToolPage() {
                 <div className="text-center mb-6">
                   <Trophy className="h-16 w-16 text-primary mx-auto mb-4" />
                   <h3 className="text-2xl font-bold mb-2">
-                    Ready to Launch Your First Giveaway?
+                    Ready to Launch Your First Sweepstake?
                   </h3>
                   <p className="text-muted-foreground">
                     Join thousands of creators running successful pickers
@@ -217,8 +217,8 @@ export default function SweepstakesToolPage() {
       <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl p-8 md:p-12 text-center shadow-md border-1 border-primary/20">
         <h2 className="text-3xl font-bold mb-4">Start Growing Your Audience</h2>
         <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-          Create your first professional giveaway picker in minutes. No credit
-          card required for the demo.
+          Create your first professional sweepstake in minutes. No credit card
+          required for the demo.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg" className="text-lg px-8">

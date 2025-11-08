@@ -506,9 +506,13 @@ export const PickerOverview: React.FC<{
 };
 
 const IntegrationInfoRow: React.FC<{
-  integrationId: string;
+  integrationId?: string | null;
   integrations?: IntegrationsSchema;
 }> = ({ integrationId, integrations }) => {
+  if (!integrationId) {
+    return null;
+  }
+
   const integration = integrations?.find((int) => int.id === integrationId);
 
   if (!integration) {

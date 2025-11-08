@@ -50,47 +50,49 @@ export const PickerPublishConfirmationModal: React.FC<
           <DialogTitle>Ready to Publish?</DialogTitle>
           <DialogDescription asChild>
             <div className="mt-1 space-y-3">
-              <Alert variant="info">
-                <InfoIcon />
-                <AlertTitle>
-                  <strong>Note:</strong>
-                </AlertTitle>
-                <AlertDescription>
-                  <span>
-                    Once published, a picker will start synchronizing entries
-                    from the connected source. This can{' '}
-                    <strong>take a few hours</strong>. You will be notified{' '}
-                    <strong>via email</strong> when the process is complete.
-                  </span>
-                </AlertDescription>
-              </Alert>
-              <Alert variant="error">
-                <InfoIcon />
-                <AlertTitle>
-                  <strong>Warning:</strong>
-                </AlertTitle>
-                <AlertDescription>
-                  <span>
-                    Your picker <strong>cannot be changed</strong> after
-                    publishing. Make sure to review all settings before
-                    proceeding.
-                  </span>
-                </AlertDescription>
-              </Alert>
+              {isDemo ? (
+                <Alert className="border-blue-200 bg-blue-50">
+                  <InfoIcon className="h-4 w-4 text-blue-600" />
+                  <AlertDescription className="text-blue-800">
+                    <strong>Demo Mode:</strong> Publishing and saving are not
+                    available in the demo. You can continue exploring the editor
+                    or exit to learn more about pricing.
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <>
+                  <Alert variant="info">
+                    <InfoIcon />
+                    <AlertTitle>
+                      <strong>Note:</strong>
+                    </AlertTitle>
+                    <AlertDescription>
+                      <span>
+                        Once published, a picker will start synchronizing
+                        entries from the connected source. This can{' '}
+                        <strong>take a few hours</strong>. You will be notified{' '}
+                        <strong>via email</strong> when the process is complete.
+                      </span>
+                    </AlertDescription>
+                  </Alert>
+                  <Alert variant="error">
+                    <InfoIcon />
+                    <AlertTitle>
+                      <strong>Warning:</strong>
+                    </AlertTitle>
+                    <AlertDescription>
+                      <span>
+                        Your picker <strong>cannot be changed</strong> after
+                        publishing. Make sure to review all settings before
+                        proceeding.
+                      </span>
+                    </AlertDescription>
+                  </Alert>
+                </>
+              )}
             </div>
           </DialogDescription>
         </DialogHeader>
-
-        {isDemo && (
-          <Alert className="border-blue-200 bg-blue-50">
-            <InfoIcon className="h-4 w-4 text-blue-600" />
-            <AlertDescription className="text-blue-800">
-              <strong>Demo Mode:</strong> Publishing and saving are not
-              available in the demo. You can continue exploring the editor or
-              exit to learn more about pricing.
-            </AlertDescription>
-          </Alert>
-        )}
 
         <DialogFooter className="flex-col sm:flex-row gap-2">
           {!isDemo && (
