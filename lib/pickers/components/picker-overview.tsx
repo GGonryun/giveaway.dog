@@ -246,7 +246,7 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({
                 {picker.status === 'PROCESSING' &&
                   picker.form.timing?.scheduledAt && (
                     <span className="block mt-1 text-orange-600 dark:text-orange-400">
-                      Scheduled to complete{' '}
+                      Scheduled to begin processing{' '}
                       {formatDistance(
                         new Date(picker.form.timing.scheduledAt),
                         new Date(),
