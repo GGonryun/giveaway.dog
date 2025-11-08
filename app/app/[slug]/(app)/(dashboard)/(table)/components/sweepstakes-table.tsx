@@ -50,6 +50,8 @@ import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepsta
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { Badge } from '@/components/ui/badge';
 import { DerivedStatusIcon } from '@/lib/sweepstake-status';
+import { useCreateSweepstakesPage } from '@/components/sweepstakes/use-create-sweepstakes-page';
+import { cn } from '@/lib/utils';
 
 interface SweepstakesTableProps {
   data: ListSweepstakesDataSchema;
@@ -97,11 +99,18 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
   const { sweepstakes, totalCount, currentPage, totalPages } = data;
   const basePage = useSweepstakesPage();
   const editPage = useEditSweepstakesPage();
+  const createPage = useCreateSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
 
   const [deleteModal, setDeleteModal] = useState<SweepstakesDataSchema | null>(
     null
   );
+
+  const editRoute = (item: SweepstakesDataSchema) => {
+    return item.status === 'DRAFT'
+      ? createPage.route(item.id)
+      : editPage.route(item.id);
+  };
 
   // Handle column sorting
   const handleSort = (field: SortField) => {
@@ -134,7 +143,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
 
   const handleRowClick = (item: SweepstakesDataSchema) => () => {
     if (item.status === 'DRAFT') {
-      editPage.navigateTo(item.id);
+      createPage.navigateTo(item.id);
     } else {
       detailsPage.navigateTo(item.id);
     }
@@ -145,7 +154,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
       <Card className="overflow-hidden p-0 gap-0">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="p-0-0">
               <SortableHeader
                 field="name"
                 className="w-[300px]"
@@ -165,50 +174,64 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
           <TableBody>
             {sweepstakes.map((item) => {
               const isEditable = EDITABLE_DERIVED_STATUS[item.status];
+
               return (
                 <TableRow
                   key={item.id}
-                  className="group hover:bg-muted/50 h-12  cursor-pointer"
-                  onClick={handleRowClick(item)}
+                  className="group hover:bg-muted/50 cursor-pointer"
                 >
-                  <TableCell className="py-2 min-w-[256px]">
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <DerivedStatusIcon status={item.status} size={4} />
-                        <div className="font-medium group-hover:text-primary group-hover:underline line-clamp-1">
-                          {item.name || DEFAULT_SWEEPSTAKES_NAME}
-                        </div>
+                  <Clickable href={editRoute(item)} className="min-w-[256px]">
+                    <div className="flex items-center space-x-2">
+                      <DerivedStatusIcon status={item.status} size={4} />
+                      <div className="font-medium group-hover:text-primary group-hover:underline line-clamp-1">
+                        {item.name || DEFAULT_SWEEPSTAKES_NAME}
                       </div>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right w-24">
+                  </Clickable>
+                  <Clickable
+                    href={editRoute(item)}
+                    className="text-right min-w-24 w-24"
+                  >
                     <div className="flex items-center justify-end space-x-1 text-sm">
                       <FileCheck className="h-3 w-3" />
                       <span>{item.entries}</span>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right w-24">
+                  </Clickable>
+                  <Clickable
+                    href={editRoute(item)}
+                    className="text-right min-w-24 w-24"
+                  >
                     <div className="flex items-center justify-end space-x-1 text-sm">
                       <Users className="h-3 w-3" />
                       <span>{item.participants}</span>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right w-32">
+                  </Clickable>
+                  <Clickable
+                    href={editRoute(item)}
+                    className="text-right min-w-32 w-32"
+                  >
                     <span>{item.timeLeft}</span>
-                  </TableCell>
-                  <TableCell className="text-right w-28">
+                  </Clickable>
+                  <Clickable
+                    href={editRoute(item)}
+                    className="text-right min-w-28 w-28"
+                  >
                     <Badge variant="outline" className="gap-1.5">
                       <DerivedStatusIcon status={item.status} size={3} />
                       <span className="capitalize">
                         {item.status.toLowerCase()}
                       </span>
                     </Badge>
-                  </TableCell>
-                  <TableCell className="text-right w-8">
+                  </Clickable>
+                  <Clickable href={editRoute(item)} className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="p-0 m-0 size-8"
+                        >
+                          <MoreHorizontal />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
@@ -222,7 +245,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                         )}
                         {isEditable && (
                           <DropdownMenuItem asChild>
-                            <Link href={editPage.route(item.id)}>
+                            <Link href={editRoute(item)}>
                               <Edit className="h-4 w-4 mr-2" />
                               Edit
                             </Link>
@@ -241,7 +264,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </TableCell>
+                  </Clickable>
                 </TableRow>
               );
             })}
@@ -279,3 +302,15 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
     </div>
   );
 }
+
+const Clickable: React.PC<{ className?: string; href: string }> = ({
+  className,
+  href,
+  children
+}) => (
+  <TableCell className={cn('p-0 m-0 min-h-12 h-12', className)}>
+    <Link href={href} className={cn('block w-full min-h-12 px-4 py-4')}>
+      {children}
+    </Link>
+  </TableCell>
+);
