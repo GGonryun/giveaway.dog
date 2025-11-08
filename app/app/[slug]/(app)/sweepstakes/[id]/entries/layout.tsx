@@ -28,7 +28,7 @@ export default async function EntriesLayout({
 }
 
 const Wrapper: React.FC<Params> = async ({ id, slug }) => {
-  const entries = await getSweepstakeEntries({ id });
+  const entries = await getSweepstakeEntries({ sweepstakesId: id, slug });
 
   if (!entries.ok) {
     return (

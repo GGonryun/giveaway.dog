@@ -1,22 +1,21 @@
 - [ ] Add task requirements so that user's must complete a certain number of other tasks to unlock this one.
-
+- [ ] Allow users to copy and clone existing sweepstakes.
+- [ ] As a host, I want to create templates for sweepstakes so that i can easily create duplicates.
+- [ ] As a host, I want to automatically send a twitter post and then update my sweepstake with the tweet link.
 - [ ] Add settings, and team rbac
+- [ ] As a host, I want to display my organization's logo and social media links on the sweepstake page.
+- [ ] I want to create short links for my sweepstakes, and draw verification
+- [ ] As a host of a picker, I want to receive an email notification when the picker is ready to be drawn.
+- [ ] Add Twitch integration.
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
   - [ ] When an entry method or prize has an error it should show an error triangle and outline it as red.
-
 - [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
 - [ ] As a host, I want to be able to attach screenshots/proof that a user has claimed a prize.
-- [ ] As a host, I want to display my organization's logo and social media links on the sweepstake page.
 - [ ] As a host, I want protection against malicious users and teams trying to mimic my profile or copy my name.
 
 - [ ] Add a customizable email template for winners.
-- [ ] Allow users to copy and clone existing sweepstakes.
-- [ ] As a host, I want to create templates for sweepstakes so that i can easily create duplicates.
-- [ ] As a host, I want to automatically send a twitter post and then update my sweepstake with the tweet link.
-
-- [ ] I want to create short links for my sweepstakes, and draw verification
 
 - [ ] Add a Charity Games integration.
 - [ ] As a host, I want to use my own custom domain and url for my sweepstakes.
@@ -38,7 +37,6 @@
 - [ ] Add limits to how many active sweepstakes an organization can have at once.
 - [ ] Add a way to pause sweepstakes.
 
-- [ ] Add Twitch integration.
 - [ ] Add TikTok integration.
 - [ ] Add YouTube integration.
 - [ ] Add Facebook integration.

@@ -16,15 +16,18 @@ const getSweepstakeEntries = procedure()
   })
   .input(
     z.object({
-      id: z.string()
+      sweepstakesId: z.string(),
+      slug: z.string()
     })
   )
-  .cache({ revalidate: 60 })
   .output(userEntriesSchema.array())
-  .handler(async ({ input, db }) => {
+  .handler(async ({ input: { sweepstakesId, slug }, db }) => {
     const sweepstakes = await db.sweepstakes.findUnique({
       where: {
-        id: input.id
+        id: sweepstakesId,
+        team: {
+          slug: slug
+        }
       },
       include: PARTICIPANT_SWEEPSTAKES_PAYLOAD
     });
@@ -32,14 +35,14 @@ const getSweepstakeEntries = procedure()
     if (!sweepstakes || !sweepstakes.team) {
       throw new ApplicationError({
         code: 'NOT_FOUND',
-        message: `Sweepstakes with ID ${input.id} not found`
+        message: `Sweepstakes with ID ${sweepstakesId} not found`
       });
     }
 
     const completions = await db.taskCompletion.findMany({
       where: {
         task: {
-          sweepstakesId: input.id
+          sweepstakesId: sweepstakes.id
         }
       },
       include: {
