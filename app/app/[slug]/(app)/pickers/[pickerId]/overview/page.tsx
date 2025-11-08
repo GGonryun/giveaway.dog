@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { PickerOverview } from '@/lib/pickers/components/picker-overview';
 import { getUnvalidatedPickerForm } from '@/lib/pickers/procedures/get-unvalidated-picker-form';
 import { getPublicPicker } from '@/lib/pickers/procedures/get-public-picker';
+import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -42,10 +43,20 @@ const Wrapper: React.FC<{
   const { pickerId, slug } = await params;
 
   const picker = await getPublicPicker({ pickerId });
-
   if (!picker.ok) {
     return <div>Failed to load picker: {picker.data.message}</div>;
   }
 
-  return <PickerOverview picker={picker.data} teamSlug={slug} />;
+  const integrations = await getTeamIntegrations({ slug });
+  if (!integrations.ok) {
+    return <div>Failed to load integrations: {integrations.data.message}</div>;
+  }
+
+  return (
+    <PickerOverview
+      picker={picker.data}
+      teamSlug={slug}
+      integrations={integrations.data}
+    />
+  );
 };

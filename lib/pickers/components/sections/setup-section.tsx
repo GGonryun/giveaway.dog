@@ -7,8 +7,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-  FormMessageParagraph
+  FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
@@ -28,15 +27,79 @@ import {
 } from '@/components/ui/select';
 import { timezone } from '@/lib/time';
 import { memo, useMemo } from 'react';
+import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { useParams } from 'next/navigation';
+import { SocialXIcon } from '@/components/ui/patterns/x-icon';
 
-export const SetupSection = () => {
+interface SetupSectionProps {
+  integrations?: IntegrationsSchema;
+}
+
+export const SetupSection: React.FC<SetupSectionProps> = ({ integrations }) => {
   const form = useFormContext<PickerFormSchema>();
+  const params = useParams();
+  const slug = params.slug as string;
+
+  const twitterIntegrations =
+    integrations?.filter(
+      (i) => i.provider === 'TWITTER' && i.status === 'ACTIVE'
+    ) || [];
 
   return (
     <UnifiedSectionHeader
       label="Overview"
       description="Configure the basic details of your picker"
     >
+      <FormField
+        control={form.control}
+        name="setup.integrationId"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Integration</FormLabel>
+            {twitterIntegrations.length === 0 ? (
+              <Alert variant="error">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription className="flex flex-col gap-2">
+                  <p>
+                    No X integrations found. You need to connect an X account to
+                    use pickers.
+                  </p>
+                  <Button asChild variant="outline" size="sm" className="w-fit">
+                    <Link href={`/app/${slug}/settings/integrations`}>
+                      <SocialXIcon className="h-4 w-4 mr-2" />
+                      Add X Integration
+                    </Link>
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <FormControl>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your account" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {twitterIntegrations.map((integration) => (
+                      <SelectItem key={integration.id} value={integration.id}>
+                        <div className="flex items-center gap-2">
+                          <SocialXIcon className="h-4 w-4" />
+                          {integration.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+            )}
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
       <FormField
         control={form.control}
         name="setup.name"

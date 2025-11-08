@@ -52,7 +52,8 @@ export const pickerFormSchema = z.object({
       .refine(xStatusRefineUrl, {
         message: xStatusRefineError
       }),
-    name: z.string().min(1, 'Picker name is required')
+    name: z.string().min(1, 'Picker name is required'),
+    integrationId: z.string().min(1, 'Integration is required')
   }),
   timing: z
     .object({

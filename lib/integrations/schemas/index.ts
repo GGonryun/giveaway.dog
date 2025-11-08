@@ -11,6 +11,7 @@ export const TWITTER_REDIRECT_URI = `${process.env.NEXTAUTH_URL}/api/auth/twitte
 export const integrationSchema = z.object({
   id: z.string(),
   label: z.string(),
+  url: z.string().url().nullable(),
   provider: z.nativeEnum(IntegrationProvider),
   status: z.nativeEnum(IntegrationStatus)
 });

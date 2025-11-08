@@ -1,3 +1,8 @@
+- [ ] Horizontal improvements to picker pages.
+
+- [ ] Add a picker draw verification mock page for marketing.
+- [ ] Add a picker demo page for marketing.
+
 - [ ] Add mandatory tasks that participants must complete to enter the rest of the sweepstake's tasks.
 - [ ] Add task requirements so that user's must complete a certain number of other tasks to unlock this one.
 
@@ -16,6 +21,8 @@
 - [ ] Allow users to copy and clone existing sweepstakes.
 - [ ] As a host, I want to create templates for sweepstakes so that i can easily create duplicates.
 - [ ] As a host, I want to automatically send a twitter post and then update my sweepstake with the tweet link.
+
+- [ ] I want to create short links for my sweepstakes, and draw verification
 
 - [ ] Add a Charity Games integration.
 - [ ] As a host, I want to use my own custom domain and url for my sweepstakes.
@@ -47,6 +54,8 @@
 
 - [ ] Add a small banner that says "Thank you for completing all the tasks!"
 - [ ] Add "bot" integrations that automate sweepstake creation/notification via Discord, X
+
+- [ ] you shouldn't be allowed to create pickers for tweets that don't belong to you.
 
 ## Tech Debt
 

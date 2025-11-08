@@ -7,6 +7,7 @@ import {
   DEFAULT_INTEGRATION_LABEL,
   integrationsSchema
 } from '@/lib/integrations/schemas';
+import { toProviderUrl } from '../utils/to-provider-url';
 
 export const getTeamIntegrations = procedure()
   .authorization({
@@ -37,6 +38,7 @@ export const getTeamIntegrations = procedure()
     return team.integrations.map((i) => ({
       id: i.id,
       provider: i.provider,
+      url: toProviderUrl(i),
       label: i.label ?? DEFAULT_INTEGRATION_LABEL,
       status: i.status
     }));

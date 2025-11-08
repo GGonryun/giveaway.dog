@@ -46,16 +46,19 @@ import {
 } from '../schemas/form';
 import { PickerTwitterPreview } from './picker-twitter-preview';
 import { publishPicker } from '../procedures/publish-picker';
+import { IntegrationsSchema } from '@/lib/integrations/schemas';
 
 export interface PickerFormProps {
   picker: Omit<PickerUnvalidatedFormSchema, 'id'>;
   teamFeatureFlags: TeamFeatureFlagKeySchema[];
+  integrations?: IntegrationsSchema;
   isDemo?: boolean;
 }
 
 export const PickerForm: React.FC<PickerFormProps> = ({
   picker,
   teamFeatureFlags,
+  integrations,
   isDemo = false
 }) => {
   const pathname = usePathname();
@@ -84,6 +87,7 @@ export const PickerForm: React.FC<PickerFormProps> = ({
           pickerId={pickerId}
           action={action}
           teamFeatureFlags={teamFeatureFlags}
+          integrations={integrations}
         />
       </FormProvider>
     </MobileSuspense>
@@ -95,13 +99,15 @@ interface FormContentProps {
   pickerId: string;
   action: UnifiedFormAction;
   teamFeatureFlags: TeamFeatureFlagKeySchema[];
+  integrations?: IntegrationsSchema;
 }
 
 const FormContent: React.FC<FormContentProps> = ({
   pickerId,
   step,
   action,
-  teamFeatureFlags
+  teamFeatureFlags,
+  integrations
 }) => {
   const page = usePickersPage();
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -227,7 +233,7 @@ const FormContent: React.FC<FormContentProps> = ({
           onSave={handleSaveChanges}
           stepLabels={PICKER_STEP_LABELS}
           defaultStep={step}
-          form={<PickerFormContent />}
+          form={<PickerFormContent integrations={integrations} />}
           preview={<PickerPreview />}
           previewFooter={undefined}
           type={'picker'}
@@ -266,11 +272,17 @@ const FormContent: React.FC<FormContentProps> = ({
   );
 };
 
-export const PickerFormContent = () => {
+interface PickerFormContentProps {
+  integrations?: IntegrationsSchema;
+}
+
+export const PickerFormContent: React.FC<PickerFormContentProps> = ({
+  integrations
+}) => {
   const { currentStep } = useUnifiedFormLayout<PickerStep>();
   switch (currentStep) {
     case 'setup':
-      return <SetupSection />;
+      return <SetupSection integrations={integrations} />;
     case 'actions':
       return <ActionsSection />;
     case 'filters':
@@ -278,7 +290,7 @@ export const PickerFormContent = () => {
     case 'requirements':
       return <RequirementsSection />;
     default:
-      return <SetupSection />;
+      return <SetupSection integrations={integrations} />;
   }
 };
 

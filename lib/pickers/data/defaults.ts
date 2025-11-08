@@ -15,7 +15,8 @@ export const DEFAULT_PICKER_STATUS: PickerStatus = 'DRAFT';
 export const DEFAULT_PICKER_FORM: Omit<PickerUnvalidatedFormSchema, 'id'> = {
   setup: {
     postUrl: TWITTER_POST_URL,
-    name: DEFAULT_PICKER_NAME
+    name: DEFAULT_PICKER_NAME,
+    integrationId: ''
   },
   timing: null,
   winners: {

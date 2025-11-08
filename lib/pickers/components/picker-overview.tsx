@@ -15,7 +15,8 @@ import {
   Eye,
   Pencil,
   Share2,
-  Clock
+  Clock,
+  LinkIcon
 } from 'lucide-react';
 import {
   Dialog,
@@ -46,10 +47,7 @@ import { Separator } from '@/components/ui/separator';
 import { PickerWinnerSection } from './picker-winner-section';
 import { PickerAuditLogSection } from './picker-audit-log-section';
 import { PickerJobsSection } from './picker-jobs-section';
-import {
-  getDisqualificationReason,
-  PublicPickerSchema
-} from '../schemas/public-picker';
+import { PublicPickerSchema } from '../schemas/public-picker';
 import { PickerRenameModal } from './picker-rename-modal';
 import { renamePicker } from '../procedures/rename-picker';
 import { useRouter } from 'next/navigation';
@@ -65,11 +63,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-
-interface PickerOverviewProps {
-  picker: PublicPickerSchema;
-  teamSlug: string;
-}
+import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { SocialXIcon } from '@/components/ui/patterns/x-icon';
 
 const InfoRow = ({
   icon: Icon,
@@ -113,10 +108,11 @@ const StatCard = ({
   </div>
 );
 
-export const PickerOverview: React.FC<PickerOverviewProps> = ({
-  picker,
-  teamSlug
-}) => {
+export const PickerOverview: React.FC<{
+  picker: PublicPickerSchema;
+  teamSlug: string;
+  integrations: IntegrationsSchema;
+}> = ({ picker, teamSlug, integrations }) => {
   const router = useRouter();
   const statusConfig = STATUS_COLORS[picker.status];
   const StatusIcon = STATUS_ICONS[picker.status];
@@ -382,6 +378,10 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({
                       </a>
                     }
                   />
+                  <IntegrationInfoRow
+                    integrationId={picker.form.setup.integrationId}
+                    integrations={integrations}
+                  />
                 </div>
               </div>
 
@@ -502,6 +502,46 @@ export const PickerOverview: React.FC<PickerOverviewProps> = ({
         onRename={handleRename}
       />
     </div>
+  );
+};
+
+const IntegrationInfoRow: React.FC<{
+  integrationId: string;
+  integrations?: IntegrationsSchema;
+}> = ({ integrationId, integrations }) => {
+  const integration = integrations?.find((int) => int.id === integrationId);
+
+  if (!integration) {
+    return (
+      <InfoRow
+        icon={ExternalLink}
+        label="Integration"
+        value={
+          <span className="text-xs text-red-600 dark:text-red-400">
+            Integration not found
+          </span>
+        }
+      />
+    );
+  }
+
+  return (
+    <InfoRow
+      icon={LinkIcon}
+      label="Integration"
+      value={
+        <Badge variant="secondary" className="text-xs" asChild>
+          <Link
+            href={integration.url ?? '#'}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <SocialXIcon />
+            {integration.label}
+          </Link>
+        </Badge>
+      }
+    />
   );
 };
 
