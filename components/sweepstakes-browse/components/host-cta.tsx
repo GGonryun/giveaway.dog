@@ -79,7 +79,7 @@ export const HostCTA: React.FC<{ minimal?: boolean }> = ({ minimal }) => {
             <Link href="/app">Start Your Giveaway</Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
-            <Link href="/demo">
+            <Link href="/demo/sweepstakes">
               Try The Demo <ArrowRight />
             </Link>
           </Button>

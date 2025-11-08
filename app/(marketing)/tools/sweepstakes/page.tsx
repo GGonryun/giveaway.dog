@@ -88,7 +88,7 @@ export default function SweepstakesToolPage() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild>
-            <Link href="/demo">
+            <Link href="/demo/sweepstakes">
               <Play className="mr-2 h-5 w-5" />
               Try Interactive Demo
             </Link>
@@ -122,7 +122,7 @@ export default function SweepstakesToolPage() {
           </CardContent>
           <div className="border-t p-4 m-0 bg-muted/30 text-center">
             <Button asChild variant="link">
-              <Link href="/demo" className="text-primary">
+              <Link href="/demo/sweepstakes" className="text-primary">
                 Try Interactive Demo
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -186,7 +186,7 @@ export default function SweepstakesToolPage() {
                 </div>
                 <div className="space-y-3">
                   <Button asChild className="w-full" size="lg">
-                    <Link href="/demo">
+                    <Link href="/demo/sweepstakes">
                       <Play className="mr-2 h-4 w-4" />
                       Try Demo
                     </Link>
@@ -222,7 +222,7 @@ export default function SweepstakesToolPage() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg" className="text-lg px-8">
-            <Link href="/demo">
+            <Link href="/demo/sweepstakes">
               <Play className="mr-2 h-5 w-5" />
               Try Demo Now
             </Link>

@@ -24,7 +24,7 @@ export const MorePowerfulGiveawaysCTA: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
               <Button asChild>
-                <Link href="/demo">
+                <Link href="/demo/sweepstakes">
                   Get Started - Free
                   <ArrowRight className="mb-0.5 h-4 w-4" />
                 </Link>

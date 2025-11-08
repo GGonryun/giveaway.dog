@@ -28,7 +28,7 @@ export function PricingCTA() {
             <Link href="/login">Start Your Free Giveaways</Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
-            <Link href="/demo">
+            <Link href="/demo/sweepstakes">
               Try The Demo <ArrowRightIcon />
             </Link>
           </Button>
