@@ -106,6 +106,12 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
     null
   );
 
+  const rowRoute = (item: SweepstakesDataSchema) => {
+    return item.status === 'DRAFT'
+      ? createPage.route(item.id)
+      : detailsPage.route(item.id);
+  };
+
   const editRoute = (item: SweepstakesDataSchema) => {
     return item.status === 'DRAFT'
       ? createPage.route(item.id)
@@ -141,14 +147,6 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
     setDeleteModal(null);
   };
 
-  const handleRowClick = (item: SweepstakesDataSchema) => () => {
-    if (item.status === 'DRAFT') {
-      createPage.navigateTo(item.id);
-    } else {
-      detailsPage.navigateTo(item.id);
-    }
-  };
-
   return (
     <div className="space-y-4">
       <Card className="overflow-hidden p-0 gap-0">
@@ -180,7 +178,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                   key={item.id}
                   className="group hover:bg-muted/50 cursor-pointer"
                 >
-                  <Clickable href={editRoute(item)} className="min-w-[256px]">
+                  <Clickable href={rowRoute(item)} className="min-w-[256px]">
                     <div className="flex items-center space-x-2">
                       <DerivedStatusIcon status={item.status} size={4} />
                       <div className="font-medium group-hover:text-primary group-hover:underline line-clamp-1">
@@ -189,7 +187,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                     </div>
                   </Clickable>
                   <Clickable
-                    href={editRoute(item)}
+                    href={rowRoute(item)}
                     className="text-right min-w-24 w-24"
                   >
                     <div className="flex items-center justify-end space-x-1 text-sm">
@@ -198,7 +196,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                     </div>
                   </Clickable>
                   <Clickable
-                    href={editRoute(item)}
+                    href={rowRoute(item)}
                     className="text-right min-w-24 w-24"
                   >
                     <div className="flex items-center justify-end space-x-1 text-sm">
@@ -207,13 +205,13 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                     </div>
                   </Clickable>
                   <Clickable
-                    href={editRoute(item)}
+                    href={rowRoute(item)}
                     className="text-right min-w-32 w-32"
                   >
                     <span>{item.timeLeft}</span>
                   </Clickable>
                   <Clickable
-                    href={editRoute(item)}
+                    href={rowRoute(item)}
                     className="text-right min-w-28 w-28"
                   >
                     <Badge variant="outline" className="gap-1.5">
@@ -223,7 +221,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                       </span>
                     </Badge>
                   </Clickable>
-                  <Clickable href={editRoute(item)} className="text-right">
+                  <Clickable href={rowRoute(item)} className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
