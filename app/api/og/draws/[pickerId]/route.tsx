@@ -96,9 +96,12 @@ export async function GET(
     }
 
     const draws = publicPicker.draws.draws;
+    const winningDraws = publicPicker.draws.draws.filter(
+      (d) => d.result === 'WINNER'
+    );
     const pickerName = publicPicker.form.setup.name;
 
-    const hasWinners = draws.length > 0;
+    const hasWinners = winningDraws.length > 0;
 
     if (!hasWinners) {
       return new ImageResponse(
@@ -157,8 +160,8 @@ export async function GET(
       );
     }
 
-    const winner = draws[0].winner;
-    const winnerCount = draws.length;
+    const winner = winningDraws[0].winner;
+    const winnerCount = winningDraws.length;
 
     return new ImageResponse(
       (
