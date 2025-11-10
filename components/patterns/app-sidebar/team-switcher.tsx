@@ -51,7 +51,7 @@ export function TeamSwitcher() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+              <div className="bg-sidebar-primary/20 text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                 <div className="size-4">
                   {activeTeam.logo || DEFAULT_TEAM_LOGO}
                 </div>
@@ -79,7 +79,7 @@ export function TeamSwitcher() {
                 onClick={() => handleSelectTeam(team)}
                 className="gap-2 p-2"
               >
-                <div className="flex size-6 items-center justify-center rounded-md border">
+                <div className="flex size-6 items-center justify-center rounded-md bg-sidebar-primary/20">
                   <div className="size-4">{team.logo || DEFAULT_TEAM_LOGO}</div>
                 </div>
                 {team.name}
