@@ -4,11 +4,15 @@ import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@/schemas/pages';
 import { TeamRoles } from '@/lib/settings/components/team-roles';
+import getTeamMembers from '@/procedures/teams/get-team-members';
+import getTeamInvitations from '@/procedures/teams/get-team-invitations';
+import getInviteLink from '@/procedures/teams/get-invite-link';
+import { redirect } from 'next/navigation';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Team Profile | Giveaway.dog',
-    description: 'View your team profile settings and details',
+    title: 'Team Settings | Giveaway.dog',
+    description: 'Manage your team members and invitations',
     robots: {
       index: false,
       follow: false
@@ -22,7 +26,7 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   return (
-    <Suspense fallback={<div>Loading profile page...</div>}>
+    <Suspense fallback={<div>Loading team settings...</div>}>
       <Wrapper params={params} />
     </Suspense>
   );
@@ -32,5 +36,25 @@ const Wrapper: React.FC<{
   params: Promise<TeamPageProps>;
 }> = async ({ params }) => {
   const { slug } = await params;
-  return <TeamRoles slug={slug} />;
+
+  const [membersResult, invitationsResult, inviteLinkResult] =
+    await Promise.all([
+      getTeamMembers({ slug }),
+      getTeamInvitations({ slug }),
+      getInviteLink({ slug })
+    ]);
+
+  if (!membersResult.ok || !invitationsResult.ok || !inviteLinkResult.ok) {
+    redirect(`/app/${slug}`);
+  }
+
+  return (
+    <TeamRoles
+      slug={slug}
+      initialMembers={membersResult.data}
+      initialInvitations={invitationsResult.data}
+      initialInviteUrl={inviteLinkResult.data.url}
+      initialInviteCode={inviteLinkResult.data.code}
+    />
+  );
 };

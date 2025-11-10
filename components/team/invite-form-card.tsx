@@ -208,7 +208,7 @@ export const InviteFormCard: React.FC<InviteFormCardProps> = ({
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="mt-2 border-t bg-muted/50 text-sm text-muted-foreground">
+        <CardFooter className="mt-2 border-t text-sm text-muted-foreground">
           <Link href="/support" className="flex items-center hover:underline">
             Learn more about Team Members
             <ExternalLink className="ml-1 h-3 w-3" />
