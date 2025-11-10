@@ -29,7 +29,8 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  FileCheck
+  FileCheck,
+  Copy
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -52,6 +53,9 @@ import { Badge } from '@/components/ui/badge';
 import { DerivedStatusIcon } from '@/lib/sweepstake-status';
 import { useCreateSweepstakesPage } from '@/components/sweepstakes/use-create-sweepstakes-page';
 import { cn } from '@/lib/utils';
+import { useCopySweepstakes } from '@/components/sweepstakes/use-copy-sweepstakes';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface SweepstakesTableProps {
   data: ListSweepstakesDataSchema;
@@ -101,10 +105,16 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
   const editPage = useEditSweepstakesPage();
   const createPage = useCreateSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
+  const router = useRouter();
 
   const [deleteModal, setDeleteModal] = useState<SweepstakesDataSchema | null>(
     null
   );
+
+  const copySweepstakes = useCopySweepstakes((data) => {
+    toast.success('Sweepstakes copied successfully');
+    router.push(createPage.route(data.id));
+  });
 
   const rowRoute = (item: SweepstakesDataSchema) => {
     return item.status === 'DRAFT'
@@ -249,6 +259,16 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                             </Link>
                           </DropdownMenuItem>
                         )}
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copySweepstakes.run({ id: item.id });
+                          }}
+                          disabled={copySweepstakes.isLoading}
+                        >
+                          <Copy className="h-4 w-4 mr-2" />
+                          Copy
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           className="text-red-600"
