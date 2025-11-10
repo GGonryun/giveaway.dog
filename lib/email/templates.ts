@@ -240,3 +240,101 @@ export const getPickerProcessedEmailContent = (
   html: getPickerProcessedEmailHTML(options),
   text: getPickerProcessedEmailText(options)
 });
+
+export interface TeamInviteEmailOptions {
+  teamName: string;
+  teamLogo: string;
+  inviterName?: string;
+  role: string;
+  inviteUrl: string;
+  recipientEmail: string;
+}
+
+export const getTeamInviteEmailHTML = ({
+  teamName,
+  teamLogo,
+  inviterName,
+  role,
+  inviteUrl
+}: TeamInviteEmailOptions): string => {
+  const inviterText = inviterName
+    ? `${inviterName} has invited you`
+    : "You've been invited";
+  return `
+  <!DOCTYPE html>
+  <html>
+    <body style="font-family: Arial, sans-serif; color: #333; background: #fafafa; padding: 20px;">
+      <table style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+        <tr>
+          <td style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 16px;">${teamLogo}</div>
+            <h1 style="color: #222; margin-bottom: 8px; font-size: 24px;">Team Invitation</h1>
+            <p style="font-size: 18px; line-height: 1.5; color: #666; margin-bottom: 24px;">
+              ${inviterText} to join <strong style="color:#ff7b00;">${teamName}</strong>
+            </p>
+            <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; margin: 24px 0;">
+              <p style="margin: 0; font-size: 15px; color: #666;">
+                <strong>Your Role:</strong> <span style="color:#ff7b00; font-weight: bold;">${role}</span>
+              </p>
+            </div>
+            <p style="font-size: 16px; line-height: 1.6; margin: 24px 0; color: #666;">
+              Click the button below to accept the invitation and join the team.
+            </p>
+            <p style="margin: 24px 0;">
+              <a href="${inviteUrl}"
+                 style="background-color:#ff7b00; color:#fff; padding:14px 28px; text-decoration:none; border-radius:8px; font-weight:bold; display:inline-block; font-size: 16px;">
+                Accept Invitation
+              </a>
+            </p>
+            <p style="font-size: 13px; color:#666; margin: 24px 0;">
+              Or copy and paste this link into your browser:<br>
+              <a href="${inviteUrl}" style="color:#ff7b00; word-break:break-all; font-size: 12px;">${inviteUrl}</a>
+            </p>
+            <p style="font-size: 13px; color:#999; margin-top: 32px; border-top: 1px solid #e0e0e0; padding-top: 20px;">
+              If you don't want to join this team, you can safely ignore this email.
+            </p>
+            <p style="font-size: 12px; color:#999; margin-top: 16px;">
+              Powered by <strong style="color:#ff7b00;">Giveaway.Dog</strong> 🐶
+            </p>
+          </td>
+        </tr>
+      </table>
+    </body>
+  </html>
+  `;
+};
+
+export const getTeamInviteEmailText = ({
+  teamName,
+  inviterName,
+  role,
+  inviteUrl
+}: TeamInviteEmailOptions): string => {
+  const inviterText = inviterName
+    ? `${inviterName} has invited you`
+    : "You've been invited";
+  return `🐶 Team Invitation - Giveaway.Dog
+
+${inviterText} to join "${teamName}"
+
+YOUR ROLE
+=========
+${role}
+
+ACCEPT INVITATION
+=================
+Click the link below to accept the invitation and join the team:
+${inviteUrl}
+
+If you don't want to join this team, you can safely ignore this email.
+
+---
+Powered by Giveaway.Dog 🐶
+`;
+};
+
+export const getTeamInviteEmailContent = (options: TeamInviteEmailOptions) => ({
+  subject: `You've been invited to join ${options.teamName} - Giveaway.Dog`,
+  html: getTeamInviteEmailHTML(options),
+  text: getTeamInviteEmailText(options)
+});

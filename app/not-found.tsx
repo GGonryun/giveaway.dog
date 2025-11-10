@@ -1,4 +1,4 @@
-import { NotFoundLogo } from '@/components/patterns/not-found-logo';
+import { EasterEggLogo } from '@/components/patterns/easter-egg-logo';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
@@ -8,9 +8,8 @@ export default function NotFound() {
     <div className="w-full h-full min-h-screen flex items-center justify-center bg-background">
       <div className="container max-w-md mx-auto text-center px-4">
         <div className="space-y-6">
-          <NotFoundLogo />
-
           <div className="space-y-2">
+            <EasterEggLogo size={150} />
             <Typography.Header
               level={1}
               className="text-6xl font-bold text-primary"

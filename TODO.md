@@ -1,4 +1,4 @@
-- [ ] Add settings, and team rbac
+- [ ] Add a settings page for the company profile.
 
 - [ ] As a host, I want to display my organization's logo and social media links on the sweepstake page.
 
@@ -66,3 +66,5 @@
 ## Tech Debt
 
 - [ ] Get rid of invalidate and cache methods on procedures
+- [ ] Add actual RBAC support for other membership/role types beyond owner, and admin.
+  - [ ] if we have real RBAC we can now have a true sandbox org where _everyone_ gets the guest role.

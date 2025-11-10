@@ -30,6 +30,7 @@ export default async function Page({ params }: PageProps) {
 
 const Wrapper: React.FC<{
   params: Promise<TeamPageProps>;
-}> = async () => {
-  return <TeamRoles />;
+}> = async ({ params }) => {
+  const { slug } = await params;
+  return <TeamRoles slug={slug} />;
 };

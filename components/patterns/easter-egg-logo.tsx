@@ -3,21 +3,28 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
 
-export const NotFoundLogo = () => {
+interface EasterEggLogoProps {
+  size?: number;
+}
+
+export const EasterEggLogo: React.FC<EasterEggLogoProps> = ({ size = 200 }) => {
   const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const emojiSize = Math.floor(size * 0.75);
+
   return (
     <div>
       {showEasterEgg ? (
         <Image
-          src={'/dog.png'}
-          alt="Team Logo"
+          src={'/taki.png'}
+          alt="Easter Egg"
           className="mx-auto"
-          width={200}
-          height={200}
+          width={size}
+          height={size}
         />
       ) : (
         <div
-          className="text-8xl cursor-help"
+          className="cursor-help"
+          style={{ fontSize: `${emojiSize}px` }}
           onClick={() => setShowEasterEgg(!showEasterEgg)}
         >
           {DEFAULT_TEAM_LOGO}
@@ -26,3 +33,5 @@ export const NotFoundLogo = () => {
     </div>
   );
 };
+
+export { EasterEggLogo as NotFoundLogo };
