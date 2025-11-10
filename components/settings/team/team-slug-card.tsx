@@ -1,7 +1,6 @@
 'use client';
 
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { SettingsCard } from '../settings-card';
 import { Lock } from 'lucide-react';
 
@@ -17,17 +16,14 @@ export const TeamSlugCard: React.FC<TeamSlugCardProps> = ({ slug }) => {
       footerNote="Team slugs cannot be changed after creation."
       readOnly
     >
-      <div className="space-y-2">
-        <Label htmlFor="team-slug" className="flex items-center gap-2">
-          Slug
-          <Lock className="h-3 w-3 text-muted-foreground" />
-        </Label>
+      <div className="space-y-2 flex items-center gap-2">
         <Input
           id="team-slug"
           value={slug}
           disabled
           className="font-mono text-sm"
         />
+        <Lock className="h-5 w-5 mb-2 text-muted-foreground" />
       </div>
     </SettingsCard>
   );

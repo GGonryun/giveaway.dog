@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -15,74 +15,55 @@ import { MembersTable } from '@/components/team/members-table';
 import { PendingInvitationsTable } from '@/components/team/pending-invitations-table';
 import { TeamInviteLinkProvider } from '@/lib/invites/context/team-invite-link-context';
 import { useProcedure } from '@/lib/mrpc/hook';
-import getTeamMembers from '@/procedures/teams/get-team-members';
-import getTeamInvitations from '@/procedures/teams/get-team-invitations';
-import getInviteLink from '@/procedures/teams/get-invite-link';
 import regenerateInviteLink from '@/procedures/teams/regenerate-invite-link';
-import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
+import { TeamRole } from '@prisma/client';
+
+interface Member {
+  id: string;
+  userId: string;
+  role: TeamRole;
+  createdAt: Date;
+  user: {
+    id: string;
+    name: string | null;
+    email: string | null;
+    image: string | null;
+    emoji: string | null;
+  };
+}
+
+interface Invitation {
+  id: string;
+  email: string;
+  role: TeamRole;
+  createdAt: Date;
+}
 
 interface TeamRolesProps {
   slug: string;
+  initialMembers: Member[];
+  initialInvitations: Invitation[];
+  initialInviteUrl: string;
+  initialInviteCode: string;
 }
 
-export function TeamRoles({ slug }: TeamRolesProps) {
+export function TeamRoles({
+  slug,
+  initialMembers,
+  initialInvitations,
+  initialInviteUrl,
+  initialInviteCode
+}: TeamRolesProps) {
   const { data: session } = useSession();
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [members, setMembers] = useState<any[]>([]);
-  const [invitations, setInvitations] = useState<any[]>([]);
-  const [inviteUrl, setInviteUrl] = useState<string | null>(null);
-  const [inviteCode, setInviteCode] = useState<string | null>(null);
-
-  const {
-    isLoading: membersLoading,
-    isPending: membersPending,
-    run: fetchMembers
-  } = useProcedure({
-    action: getTeamMembers,
-    onSuccess(data) {
-      setMembers(data);
-    },
-    onFailure(error) {
-      toast.error(`Failed to load members: ${error.message}`);
-    }
-  });
-
-  const {
-    isLoading: invitationsLoading,
-    isPending: invitationsPending,
-    run: fetchInvitations
-  } = useProcedure({
-    action: getTeamInvitations,
-    onSuccess(data) {
-      setInvitations(data);
-    },
-    onFailure(error) {
-      toast.error(`Failed to load invitations: ${error.message}`);
-    }
-  });
-
-  const {
-    isLoading: inviteLinkLoading,
-    run: fetchInviteLink
-  } = useProcedure({
-    action: getInviteLink,
-    onSuccess(data) {
-      setInviteUrl(data.url);
-      setInviteCode(data.code);
-    },
-    onFailure(error) {
-      toast.error(`Failed to load invite link: ${error.message}`);
-    }
-  });
+  const router = useRouter();
 
   const { isLoading: isRegenerating, run: handleRegenerateLink } = useProcedure(
     {
       action: regenerateInviteLink,
-      onSuccess(data) {
-        setInviteUrl(data.url);
-        setInviteCode(data.code);
+      onSuccess() {
         toast.success('Invite link regenerated successfully');
+        router.refresh();
       },
       onFailure(error) {
         toast.error(`Failed to regenerate invite link: ${error.message}`);
@@ -90,27 +71,15 @@ export function TeamRoles({ slug }: TeamRolesProps) {
     }
   );
 
-  useEffect(() => {
-    fetchMembers({ slug });
-    fetchInvitations({ slug });
-    fetchInviteLink({ slug });
-  }, [slug, refreshKey]);
-
   const handleRefresh = () => {
-    setRefreshKey((prev) => prev + 1);
+    router.refresh();
   };
-
-  const isLoading =
-    membersLoading ||
-    membersPending ||
-    invitationsLoading ||
-    invitationsPending;
 
   return (
     <TeamInviteLinkProvider
-      inviteUrl={inviteUrl}
-      inviteCode={inviteCode}
-      isLoading={inviteLinkLoading || isRegenerating}
+      inviteUrl={initialInviteUrl}
+      inviteCode={initialInviteCode}
+      isLoading={isRegenerating}
       regenerate={() => handleRegenerateLink({ slug })}
     >
       <div className="space-y-6">
@@ -124,40 +93,34 @@ export function TeamRoles({ slug }: TeamRolesProps) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {isLoading ? (
-              <div className="flex h-32 items-center justify-center">
-                <Spinner className="h-8 w-8" />
-              </div>
-            ) : (
-              <Tabs defaultValue="members" className="w-full">
-                <TabsList className="w-full sm:w-auto">
-                  <TabsTrigger value="members" className="flex-1 sm:flex-none">
-                    Members ({members?.length || 0})
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="invitations"
-                    className="flex-1 sm:flex-none"
-                  >
-                    Pending ({invitations?.length || 0})
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="members">
-                  <MembersTable
-                    slug={slug}
-                    members={members || []}
-                    currentUserId={session?.user?.id || ''}
-                    onMemberRemoved={handleRefresh}
-                  />
-                </TabsContent>
-                <TabsContent value="invitations">
-                  <PendingInvitationsTable
-                    slug={slug}
-                    invitations={invitations || []}
-                    onInvitationRevoked={handleRefresh}
-                  />
-                </TabsContent>
-              </Tabs>
-            )}
+            <Tabs defaultValue="members" className="w-full">
+              <TabsList className="w-full sm:w-auto">
+                <TabsTrigger value="members" className="flex-1 sm:flex-none">
+                  Members ({initialMembers.length})
+                </TabsTrigger>
+                <TabsTrigger
+                  value="invitations"
+                  className="flex-1 sm:flex-none"
+                >
+                  Pending ({initialInvitations.length})
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="members">
+                <MembersTable
+                  slug={slug}
+                  members={initialMembers}
+                  currentUserId={session?.user?.id || ''}
+                  onMemberRemoved={handleRefresh}
+                />
+              </TabsContent>
+              <TabsContent value="invitations">
+                <PendingInvitationsTable
+                  slug={slug}
+                  invitations={initialInvitations}
+                  onInvitationRevoked={handleRefresh}
+                />
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       </div>
