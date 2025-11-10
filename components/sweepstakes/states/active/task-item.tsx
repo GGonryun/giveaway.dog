@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, ChevronDownIcon } from 'lucide-react';
+import { CheckCircle, ChevronDownIcon, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGiveawayParticipation } from '../../giveaway-participation-context';
 import { TaskThemeProvider, useTaskTheme } from '@/components/tasks/theme';
@@ -31,7 +31,7 @@ type TaskItemProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
   task: TaskSchema;
-  completed: boolean;
+  completed: string[];
   setCompleted?: () => void;
 };
 
@@ -45,6 +45,20 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
   const pathname = usePathname();
   const router = useRouter();
   const { theme } = useTaskTheme();
+
+  const isCompleted = useMemo(
+    () => completed.includes(task.id),
+    [completed, task.id]
+  );
+
+  const isLocked = useMemo(() => {
+    if (task.tasksRequired === 0) return false;
+    return completed.length < task.tasksRequired;
+  }, [completed.length, task.tasksRequired]);
+
+  const remainingTasksRequired = useMemo(() => {
+    return Math.max(0, task.tasksRequired - completed.length);
+  }, [completed.length, task.tasksRequired]);
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<FailureData | undefined>(undefined);
@@ -111,17 +125,21 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
           className={cn(
             'group flex items-stretch justify-between w-full',
             isLoading ? 'cursor-progress' : 'cursor-pointer',
-            completed ? 'bg-green-50 border-green-200' : 'hover:bg-gray-100'
+            isCompleted
+              ? 'bg-green-50 border-green-200'
+              : isLocked
+                ? 'bg-gray-50'
+                : 'hover:bg-gray-100'
           )}
         >
           <div className="flex items-center gap-3 flex-1">
             <div
               className={cn(
                 'flex items-center justify-center min-w-8 w-11 h-full group-hover:opacity-50',
-                completed ? 'bg-green-100 text-green-600' : theme.symbol
+                isCompleted ? 'bg-green-100 text-green-600' : theme.symbol
               )}
             >
-              {completed ? (
+              {isCompleted ? (
                 <CheckCircle className="h-6 w-6" />
               ) : (
                 <theme.icon className="h-6 w-6" />
@@ -135,7 +153,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
           </div>
 
           <div className="flex items-center gap-2 p-1.5">
-            {!completed && task.mandatory && (
+            {!isCompleted && task.mandatory && (
               <Badge variant="destructive" className="text-xs">
                 Required
               </Badge>
@@ -145,16 +163,18 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
                 <Button
                   size="icon"
                   type="button"
-                  variant={completed ? 'success' : 'outline'}
+                  variant={isCompleted ? 'success' : 'outline'}
                   className={cn(
                     'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-primary-foreground hover:text-primary-foreground group-hover:opacity-70 hover:opacity-70',
-                    completed ? '' : theme.action
+                    isCompleted ? '' : theme.action
                   )}
                 >
                   {isLoading ? (
                     <Spinner />
-                  ) : completed ? (
+                  ) : isCompleted ? (
                     '✓'
+                  ) : isLocked ? (
+                    <Lock className="h-4 w-4" />
                   ) : open ? (
                     <ChevronDownIcon />
                   ) : (
@@ -167,18 +187,27 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
                 side="left"
                 align="center"
                 className={cn(
-                  completed
+                  isCompleted
                     ? 'bg-success text-success-foreground fill-success'
-                    : theme.arrow
+                    : isLocked
+                      ? 'bg-gray-800 text-white fill-gray-800'
+                      : theme.arrow
                 )}
                 arrowClassName={cn(
-                  completed
+                  isCompleted
                     ? 'bg-success text-success-foreground fill-success'
-                    : theme.arrow
+                    : isLocked
+                      ? 'bg-gray-800 text-white fill-gray-800'
+                      : theme.arrow
                 )}
               >
-                {completed ? (
+                {isCompleted ? (
                   <p>You earned {entriesText}.</p>
+                ) : isLocked ? (
+                  <p>
+                    You must complete {remainingTasksRequired} other{' '}
+                    {pluralize('action', remainingTasksRequired)} first
+                  </p>
                 ) : open ? (
                   <p>Complete task for {entriesText}.</p>
                 ) : (
@@ -196,12 +225,30 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
               <LoginOptions label={'Login with:'} redirectTo={pathname} icons />
             </Flex>
           </div>
-        ) : completed ? (
+        ) : isCompleted ? (
           <TaskContent className="text-sm sm:text-base">
             <p>
               Task completed for{' '}
               <span className="font-semibold">{entriesText}</span>.
             </p>
+          </TaskContent>
+        ) : isLocked ? (
+          <TaskContent className="text-sm sm:text-base flex-col">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Lock className="h-5 w-5" />
+              <p>
+                You must complete {remainingTasksRequired} other{' '}
+                {pluralize('action', remainingTasksRequired)} first
+              </p>
+            </div>
+            <Button
+              size="sm"
+              variant="link"
+              className="text-black mt-2"
+              onClick={handleTaskCancel}
+            >
+              Close
+            </Button>
           </TaskContent>
         ) : (
           <TaskActionForm

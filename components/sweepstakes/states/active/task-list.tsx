@@ -70,7 +70,7 @@ export const TaskList: React.FC<{
             open={open === task.id}
             setOpen={(status) => setOpen(status ? task.id : null)}
             task={task}
-            completed={completed.includes(task.id)}
+            completed={completed}
             setCompleted={handleCompletion(task.id)}
           />
         );
@@ -105,7 +105,7 @@ export const TaskList: React.FC<{
             {mockOptionalTasks.map((task, index) => (
               <TaskItem
                 key={index}
-                completed={false}
+                completed={[]}
                 open={open === task.id}
                 setOpen={(status) => setOpen(status ? task.id : null)}
                 task={task}
@@ -123,7 +123,7 @@ export const TaskList: React.FC<{
               open={open === task.id}
               setOpen={(status) => setOpen(status ? task.id : null)}
               task={task}
-              completed={completed.includes(task.id)}
+              completed={completed}
               setCompleted={handleCompletion(task.id)}
             />
           );

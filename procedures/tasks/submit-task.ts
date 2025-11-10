@@ -4,8 +4,9 @@ import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { validateTask } from '@/lib/task/validation/integrations';
 import { validateMandatoryTasks } from '@/lib/task/validation/mandatory';
+import { validateRequiredTasks } from '@/lib/task/validation/required';
 import { toTaskSchema } from '@/schemas/tasks/parse';
-import { CompletionStatus, Prisma } from '@prisma/client';
+import { CompletionStatus } from '@prisma/client';
 import { z } from 'zod';
 
 const submitTask = procedure()
@@ -106,6 +107,12 @@ const submitTask = procedure()
     }
 
     await validateMandatoryTasks({
+      taskId,
+      tasks,
+      completions
+    });
+
+    await validateRequiredTasks({
       taskId,
       tasks,
       completions
