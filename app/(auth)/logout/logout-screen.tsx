@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
-export const LogoutScreen: React.FC<{ onDone: () => Promise<void> }> = ({
-  onDone
+export const LogoutScreen: React.FC<{ onDoneAction: () => Promise<void> }> = ({
+  onDoneAction
 }) => {
   const router = useRouter();
   const [progress, setProgress] = useState(0);
@@ -38,7 +38,7 @@ export const LogoutScreen: React.FC<{ onDone: () => Promise<void> }> = ({
 
       if (elapsed >= duration) {
         clearInterval(interval);
-        onDone();
+        onDoneAction();
       }
     }, 50);
 
