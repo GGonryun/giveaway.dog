@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 
 import { Figtree } from 'next/font/google';
 import { UserMetricsCollector } from '@/components/user-metrics-collector';
+import { environment } from '@/lib/environment';
 
 const figtree = Figtree({
   subsets: ['latin'],
@@ -14,7 +15,7 @@ const figtree = Figtree({
   variable: '--font-sans'
 });
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const appUrl = environment.appUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),

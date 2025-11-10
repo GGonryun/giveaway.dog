@@ -1,6 +1,7 @@
+import { environment } from '@/lib/environment';
 import { Metadata } from 'next';
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const appUrl = environment.appUrl();
 
 export const metadata: Metadata = {
   title: 'Social Pickers - Import Sweepstakes Entries from Any Platform | Free',

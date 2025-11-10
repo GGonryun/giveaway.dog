@@ -4,6 +4,7 @@ import { PickerPublicPage } from '@/lib/pickers/pages/picker-public-page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPublicPicker } from '@/lib/pickers/procedures/get-public-picker';
+import { environment } from '@/lib/environment';
 
 export async function generateMetadata({
   params
@@ -12,7 +13,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { pickerId } = await params;
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://giveaway.dog';
+  const baseUrl = environment.appUrl();
   const ogImageUrl = `${baseUrl}/api/og/draws/${pickerId}`;
 
   return {

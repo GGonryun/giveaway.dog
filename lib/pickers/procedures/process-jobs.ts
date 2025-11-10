@@ -20,12 +20,18 @@ import {
   toTwitterFetchData,
   toTwitterFetchRequest,
   TwitterFetchDataSchema,
-  twitterFetchDataSchema
+  twitterFetchDataSchema,
+  FetchTwitterDataSchema
 } from '../schemas/jobs';
 import { Tx } from '@/lib/prisma';
 import { TWITTER_API_RATE_LIMIT_MINUTES } from '../data/settings';
 import { getRetweetedBy } from '@/lib/integrations/procedures/get-retweets';
 import { getQuoteTweets } from '@/lib/integrations/procedures/get-quote-tweets';
+import { newEmailClient, NO_REPLY_EMAIL } from '@/lib/email/client';
+import { getPickerProcessedEmailContent } from '@/lib/email/templates';
+import { parsePickerFormSchema } from '../schemas/form';
+import { getDisqualificationReason } from '../schemas/public-picker';
+import { environment } from '@/lib/environment';
 
 export const processJobs = procedure()
   .authorization({
@@ -244,7 +250,7 @@ const processFetchTwitterDataJob = async (
     });
   });
 
-  // we need to notify the user that the picker is complete via email template.
+  await sendPickerReadyEmail(db, job.pickerId, data);
 };
 
 const processFetchTwitterGetLikingUsersJob = async (
@@ -368,4 +374,84 @@ const withAuditTrail = async <T extends { meta?: { next_token?: string } }>(
       maxWait: 10000
     }
   );
+};
+
+const sendPickerReadyEmail = async (
+  db: PrismaClient,
+  pickerId: string,
+  data: FetchTwitterDataSchema
+) => {
+  const picker = await db.picker.findUnique({
+    where: { id: pickerId },
+    include: {
+      form: {
+        select: { data: true }
+      },
+      team: {
+        include: {
+          members: {
+            where: { role: 'OWNER' },
+            include: {
+              user: true
+            }
+          }
+        }
+      }
+    }
+  });
+
+  if (!picker) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: 'Picker not found'
+    });
+  }
+
+  const owner = picker.team.members.find((m) => m.role === 'OWNER');
+  if (!owner?.user.email) {
+    console.warn(
+      `No owner email found for picker ${picker.id}, skipping email notification`
+    );
+    return;
+  }
+
+  const form = parsePickerFormSchema(picker.form, { validate: true });
+
+  const eligibleUsers = data.users.filter(
+    (user) => !getDisqualificationReason(user, form)
+  );
+
+  const baseUrl = environment.appUrl();
+  const pickerUrl = `${baseUrl}/app/${picker.team.slug}/pickers/${picker.id}/draw`;
+
+  try {
+    const emailClient = newEmailClient({
+      secret: process.env.INBOUND_SECRET
+    });
+
+    const emailContent = getPickerProcessedEmailContent({
+      pickerName: form.setup.name,
+      totalParticipants: data.users.length,
+      eligibleParticipants: eligibleUsers.length,
+      verificationUrl: pickerUrl,
+      name: owner.user.name || undefined
+    });
+
+    await emailClient.send({
+      to: owner.user.email,
+      from: NO_REPLY_EMAIL,
+      subject: emailContent.subject,
+      html: emailContent.html,
+      text: emailContent.text
+    });
+
+    console.info(
+      `Sent picker ready email to ${owner.user.email} for picker ${picker.id}`
+    );
+  } catch (error) {
+    console.error(
+      `Failed to send picker ready email for picker ${picker.id}`,
+      error
+    );
+  }
 };
