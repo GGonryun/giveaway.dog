@@ -2,16 +2,18 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import { validateTask } from '@/lib/task/validation';
+import { validateTask } from '@/lib/task/validation/integrations';
+import { validateMandatoryTasks } from '@/lib/task/validation/mandatory';
 import { toTaskSchema } from '@/schemas/tasks/parse';
-import { CompletionStatus } from '@prisma/client';
+import { CompletionStatus, Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 const submitTask = procedure()
   .authorization({ required: true })
   .input(
     z.object({
-      taskId: z.string()
+      taskId: z.string(),
+      sweepstakesId: z.string()
     })
   )
   .output(
@@ -20,10 +22,10 @@ const submitTask = procedure()
       sweepstakesSlug: z.string().nullable().optional()
     })
   )
-  .handler(async ({ db, user, input }) => {
-    const task = await db.task.findUnique({
+  .handler(async ({ db, user, input: { taskId, sweepstakesId } }) => {
+    const tasks = await db.task.findMany({
       where: {
-        id: input.taskId
+        sweepstakesId: sweepstakesId
       },
       include: {
         sweepstakes: {
@@ -34,6 +36,8 @@ const submitTask = procedure()
         }
       }
     });
+
+    const task = tasks.find((t) => t.id === taskId);
 
     if (!task) {
       throw new ApplicationError({
@@ -86,19 +90,26 @@ const submitTask = procedure()
     }
 
     // Check if task has already been completed
-    const existingCompletion = await db.taskCompletion.findFirst({
+    const completions = await db.taskCompletion.findMany({
       where: {
         userId: user.id,
-        taskId: input.taskId
+        task: { sweepstakesId }
       }
     });
 
+    const existingCompletion = completions.find((c) => c.taskId === taskId);
     if (existingCompletion) {
       throw new ApplicationError({
         code: 'VALIDATION_ERROR',
         message: 'You have already completed this task.'
       });
     }
+
+    await validateMandatoryTasks({
+      taskId,
+      tasks,
+      completions
+    });
 
     await validateTask(db, {
       task: toTaskSchema(task),
@@ -108,7 +119,7 @@ const submitTask = procedure()
     await db.taskCompletion.create({
       data: {
         userId: user.id,
-        taskId: input.taskId,
+        taskId,
         status: CompletionStatus.COMPLETED
       }
     });

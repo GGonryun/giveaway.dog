@@ -23,6 +23,8 @@ export const SweepstakesParticipationPage: React.FC<
   const router = useRouter();
   const pathname = usePathname();
 
+  const sweepstakesId = props.sweepstakes.id;
+
   const submitTaskProcedure = useProcedureAsync({
     action: submitTask
   });
@@ -41,7 +43,10 @@ export const SweepstakesParticipationPage: React.FC<
       {...props}
       className="p-4 py-8 sm:py-16"
       onTaskComplete={async (taskId) => {
-        return await submitTaskProcedure.run({ taskId });
+        return await submitTaskProcedure.run({
+          taskId,
+          sweepstakesId
+        });
       }}
       onLogin={handleLogin}
       onCompleteProfile={handleCompleteProfile}

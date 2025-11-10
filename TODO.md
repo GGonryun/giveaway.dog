@@ -7,6 +7,9 @@
 - [ ] I want to create short links for my sweepstakes, and draw verification
 - [ ] As a host of a picker, I want to receive an email notification when the picker is ready to be drawn.
 - [ ] Add Twitch integration.
+- [ ] Add a referral integration.
+- [ ] Add a secret code integration.
+- [ ] Add a small banner that says "Thank you for completing all the tasks!"
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
@@ -44,12 +47,14 @@
 - [ ] Add a recurring tasks.
 - [ ] Add a form integration.
 
-- [ ] Add a small banner that says "Thank you for completing all the tasks!"
-- [ ] Add "bot" integrations that automate sweepstake creation/notification via Discord, X
-
 - [ ] you shouldn't be allowed to create pickers for tweets that don't belong to you.
+
+## Major Features
+
+- [ ] Add an instant giveaway feature where users can instantly win prizes without waiting for a draw.
+- [ ] Add a leaderboard giveaway feature where users can compete for prizes based on points earned through tasks.
+- [ ] Add a discord giveaway "bot" that automate sweepstake creation/notification via Discord
 
 ## Tech Debt
 
 - [ ] Get rid of invalidate and cache methods on procedures
-- [ ] Handle required task completion checks in the backend too.
