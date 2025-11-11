@@ -73,9 +73,19 @@ export const PickerJobsSection: React.FC<PickerJobsSectionProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const sortedJobs = [...jobs].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-  );
+  const sortedJobs = [...jobs].sort((a, b) => {
+    const statusPriority: Record<PickerJobStatus, number> = {
+      QUEUED: 0,
+      RUNNING: 1,
+      COMPLETED: 2,
+      FAILED: 3
+    };
+
+    const priorityDiff = statusPriority[a.status] - statusPriority[b.status];
+    if (priorityDiff !== 0) return priorityDiff;
+
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
   const pendingJobs = sortedJobs.filter(
     (job) => job.status === 'QUEUED' || job.status === 'RUNNING'
