@@ -43,21 +43,57 @@ export const toPickerActionsArray = (
     .filter(([_, value]) => value)
     .map(([key, _]) => key as PickerActionType);
 
-export const pickerFormSchema = z.object({
-  setup: z.object({
-    postUrl: z
-      .string()
-      .min(1, 'Post URL is required')
-      .url('Please enter a valid URL')
-      .refine(xStatusRefineUrl, {
-        message: xStatusRefineError
-      }),
-    name: z.string().min(1, 'Picker name is required'),
-    integrationId: z.string().min(1, 'Integration is required')
-  }),
-  timing: z
-    .object({
-      scheduledAt: z
+export const pickerFormSchema = ({
+  validateScheduledAt
+}: {
+  validateScheduledAt?: boolean;
+}) => {
+  return z.object({
+    setup: z.object({
+      postUrl: z
+        .string()
+        .min(1, 'Post URL is required')
+        .url('Please enter a valid URL')
+        .refine(xStatusRefineUrl, {
+          message: xStatusRefineError
+        }),
+      name: z.string().min(1, 'Picker name is required'),
+      integrationId: z.string().min(1, 'Integration is required')
+    }),
+    timing: z
+      .object({
+        scheduledAt: scheduledAtSchema({ validate: validateScheduledAt }),
+        timeZone: z.string()
+      })
+      .nullable()
+      .optional(),
+    winners: z.object({
+      quota: z.number().min(1, 'Must have at least 1 winner').default(1)
+    }),
+    actions: pickerActionsSchema.refine(
+      (data) => data.like || data.repost || data.quote || data.reply,
+      {
+        message: 'At least one action must be selected'
+      }
+    ),
+    filters: z.object({
+      minimumPostCount: z.number().min(0).nullable().default(null),
+      minimumAccountAgeDays: z.number().min(0).nullable().default(null),
+      minimumFollowers: z.number().min(0).nullable().default(null),
+      minimumFollowing: z.number().min(0).nullable().default(null)
+    }),
+    requirements: z.object({
+      hasProfileImage: z.boolean().default(false),
+      hasBanner: z.boolean().default(false),
+      hasLocation: z.boolean().default(false),
+      hasDescription: z.boolean().default(false)
+    })
+  });
+};
+
+export const scheduledAtSchema = ({ validate }: { validate?: boolean } = {}) =>
+  validate
+    ? z
         .string()
         .refine(
           (data) => {
@@ -77,35 +113,10 @@ export const pickerFormSchema = z.object({
           {
             message: `Scheduled date cannot be more than ${MAX_PICKER_SCHEDULE_DAYS} days in the future`
           }
-        ),
-      timeZone: z.string()
-    })
-    .nullable()
-    .optional(),
-  winners: z.object({
-    quota: z.number().min(1, 'Must have at least 1 winner').default(1)
-  }),
-  actions: pickerActionsSchema.refine(
-    (data) => data.like || data.repost || data.quote || data.reply,
-    {
-      message: 'At least one action must be selected'
-    }
-  ),
-  filters: z.object({
-    minimumPostCount: z.number().min(0).nullable().default(null),
-    minimumAccountAgeDays: z.number().min(0).nullable().default(null),
-    minimumFollowers: z.number().min(0).nullable().default(null),
-    minimumFollowing: z.number().min(0).nullable().default(null)
-  }),
-  requirements: z.object({
-    hasProfileImage: z.boolean().default(false),
-    hasBanner: z.boolean().default(false),
-    hasLocation: z.boolean().default(false),
-    hasDescription: z.boolean().default(false)
-  })
-});
+        )
+    : z.string();
 
-export type PickerFormSchema = z.infer<typeof pickerFormSchema>;
+export type PickerFormSchema = z.infer<ReturnType<typeof pickerFormSchema>>;
 
 export type PrismaPickerForm = Prisma.PickerFormGetPayload<{
   select: { data: true };
@@ -123,7 +134,9 @@ export const parsePickerFormSchema = <T extends boolean>(
   config: PrismaPickerForm | null,
   { validate }: { validate?: T }
 ): T extends true ? PickerFormSchema : PickerUnvalidatedFormSchema => {
-  const schema = validate ? pickerFormSchema : pickerUnvalidatedFormSchema;
+  const schema = validate
+    ? pickerFormSchema({ validateScheduledAt: false })
+    : pickerUnvalidatedFormSchema;
   const result = schema.safeParse(config?.data);
 
   if (!result.success) {

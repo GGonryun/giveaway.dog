@@ -6,7 +6,8 @@ export enum TeamPermission {
   REMOVE_MEMBERS = 'REMOVE_MEMBERS',
   MANAGE_ROLES = 'MANAGE_ROLES',
   VIEW_MEMBERS = 'VIEW_MEMBERS',
-  MANAGE_INVITE_LINK = 'MANAGE_INVITE_LINK'
+  MANAGE_INVITE_LINK = 'MANAGE_INVITE_LINK',
+  MANAGE_SOCIAL_LINKS = 'MANAGE_SOCIAL_LINKS'
 }
 
 const ROLE_PERMISSIONS: Record<TeamRole, TeamPermission[]> = {
@@ -15,13 +16,15 @@ const ROLE_PERMISSIONS: Record<TeamRole, TeamPermission[]> = {
     TeamPermission.REMOVE_MEMBERS,
     TeamPermission.MANAGE_ROLES,
     TeamPermission.VIEW_MEMBERS,
-    TeamPermission.MANAGE_INVITE_LINK
+    TeamPermission.MANAGE_INVITE_LINK,
+    TeamPermission.MANAGE_SOCIAL_LINKS
   ],
   [TeamRole.ADMIN]: [
     TeamPermission.INVITE_MEMBERS,
     TeamPermission.REMOVE_MEMBERS,
     TeamPermission.VIEW_MEMBERS,
-    TeamPermission.MANAGE_INVITE_LINK
+    TeamPermission.MANAGE_INVITE_LINK,
+    TeamPermission.MANAGE_SOCIAL_LINKS
   ],
   [TeamRole.MEMBER]: [TeamPermission.VIEW_MEMBERS],
   [TeamRole.GUEST]: [],

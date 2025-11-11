@@ -11,6 +11,7 @@ import {
 import { derivedSweepstakesStatusSchema } from '../sweepstakes';
 import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@/lib/settings';
 import { timingSchema } from '../timing';
+import { socialLinksSchema } from '../social-links';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -240,7 +241,8 @@ export const giveawayHostSchema = z.object({
   id: z.string().optional(),
   slug: z.string(),
   name: z.string(),
-  logo: z.string().optional()
+  logo: z.string().optional(),
+  links: socialLinksSchema
 });
 
 export type GiveawayHostSchema = z.infer<typeof giveawayHostSchema>;

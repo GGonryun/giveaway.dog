@@ -172,7 +172,9 @@ export const MembersTable: React.FC<MembersTableProps> = ({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleEditClick(member)}>
+                        <DropdownMenuItem
+                          onClick={() => handleEditClick(member)}
+                        >
                           <Edit className="mr-2 h-4 w-4" />
                           Edit Member
                         </DropdownMenuItem>

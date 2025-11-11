@@ -63,7 +63,10 @@ const updateMemberRole = procedure()
       });
     }
 
-    if (targetMembership.role === TeamRole.OWNER && input.role !== TeamRole.OWNER) {
+    if (
+      targetMembership.role === TeamRole.OWNER &&
+      input.role !== TeamRole.OWNER
+    ) {
       throw new ApplicationError({
         code: 'FORBIDDEN',
         message: 'Cannot change the owner role. Transfer ownership first.'
@@ -77,7 +80,10 @@ const updateMemberRole = procedure()
       });
     }
 
-    if (input.role === TeamRole.OWNER && targetMembership.role !== TeamRole.OWNER) {
+    if (
+      input.role === TeamRole.OWNER &&
+      targetMembership.role !== TeamRole.OWNER
+    ) {
       const currentOwner = await db.membership.findFirst({
         where: {
           teamId: team.id,

@@ -2,6 +2,7 @@ import z from 'zod';
 
 export const SETTINGS_TAB_OPTIONS = {
   profile: 'Profile',
+  socials: 'Socials',
   team: 'Team',
   features: 'Features',
   integrations: 'Integrations'
@@ -11,6 +12,7 @@ export type SettingsTabSchema = keyof typeof SETTINGS_TAB_OPTIONS;
 
 export const settingsTabSchema = z.enum([
   'profile',
+  'socials',
   'team',
   'features',
   'integrations'

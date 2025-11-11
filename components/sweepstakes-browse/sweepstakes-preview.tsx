@@ -13,7 +13,8 @@ export const SweepstakesPreview: React.FC = () => {
 
   const mockHost = {
     slug: 'giveaway-dog',
-    name: 'Giveaway.dog'
+    name: 'Giveaway.dog',
+    links: []
   };
 
   const mockPrizes = SAMPLE_SWEEPSTAKES_DATA.prizes.map((p) => ({

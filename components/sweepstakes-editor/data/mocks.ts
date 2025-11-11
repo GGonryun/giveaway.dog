@@ -9,7 +9,8 @@ export const mockHost = {
   id: 'preview-host-id',
   slug: 'preview-host',
   name: 'Preview Host',
-  avatar: '🐶' // Fallback to giveaway dog emoji
+  avatar: '🐶',
+  links: []
 };
 
 // Mock user data for preview

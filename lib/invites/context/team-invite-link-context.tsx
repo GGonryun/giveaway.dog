@@ -31,9 +31,13 @@ interface TeamInviteLinkProviderProps {
   regenerate: () => void;
 }
 
-export const TeamInviteLinkProvider: React.FC<
-  TeamInviteLinkProviderProps
-> = ({ children, inviteUrl, inviteCode, isLoading, regenerate }) => {
+export const TeamInviteLinkProvider: React.FC<TeamInviteLinkProviderProps> = ({
+  children,
+  inviteUrl,
+  inviteCode,
+  isLoading,
+  regenerate
+}) => {
   return (
     <TeamInviteLinkContext.Provider
       value={{ inviteUrl, inviteCode, isLoading, regenerate }}

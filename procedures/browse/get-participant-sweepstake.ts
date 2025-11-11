@@ -13,6 +13,7 @@ import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
 import { toSweepstakesPrizes } from '@/schemas/giveaway/participant';
 import { DeepNullable, DeepPartial } from '@/lib/types';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+import { parseSocialLinks } from '@/schemas/social-links';
 
 const getParticipantSweepstake = procedure()
   .authorization({
@@ -72,7 +73,8 @@ const getParticipantSweepstake = procedure()
         id: sweepstakes.team.id,
         slug: sweepstakes.team.slug,
         name: sweepstakes.team.name,
-        logo: sweepstakes.team.logo || DEFAULT_TEAM_LOGO
+        logo: sweepstakes.team.logo || DEFAULT_TEAM_LOGO,
+        links: parseSocialLinks(sweepstakes.team.links)
       },
       prizes: toSweepstakesPrizes(sweepstakes.prizes),
       participation: {

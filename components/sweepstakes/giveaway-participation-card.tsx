@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils';
 import { date } from '@/lib/date';
 import { getSweepstakesTimingDescription } from './status-badge';
 import { richTextPreviewStyles } from '@/lib/rich-text-styles';
+import { PLATFORM_ICONS } from '@/components/social-links/social-link-icon';
+import { parseSocialLinks, type SocialLink } from '@/schemas/social-links';
 
 export const GiveawayParticipationCard: React.PC<{
   device?: DeviceType;
@@ -86,6 +88,8 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
 const TitleSection = () => {
   const { sweepstakes, host } = useGiveawayParticipation();
 
+  const socialLinks: SocialLink[] = parseSocialLinks(host);
+
   if (!sweepstakes.design.displayName) return null;
 
   return (
@@ -93,8 +97,30 @@ const TitleSection = () => {
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
         {sweepstakes.setup.name}
       </h1>
-      <p className="text-sm sm:text-base text-muted-foreground">
-        by <span className="font-semibold">{host.name}</span>
+      <p className="text-sm sm:text-base text-muted-foreground flex items-center gap-1 flex-wrap">
+        <span>
+          by <span className="font-semibold">{host.name}</span>
+        </span>
+        {socialLinks.length > 0 && (
+          <span className="flex items-center gap-1">
+            {socialLinks.map((link, index) => {
+              const Icon = PLATFORM_ICONS[link.platform].icon;
+              const label = PLATFORM_ICONS[link.platform].label;
+              return (
+                <a
+                  key={index}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="w-4 h-4 rounded bg-white border border-border flex items-center justify-center hover:bg-accent transition-colors"
+                >
+                  <Icon className="w-2.5 h-2.5 text-foreground" />
+                </a>
+              );
+            })}
+          </span>
+        )}
       </p>
     </CardContent>
   );

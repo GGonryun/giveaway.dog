@@ -80,7 +80,10 @@ export const EditMemberDialog: React.FC<EditMemberDialogProps> = ({
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
-            <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as TeamRole)}>
+            <Select
+              value={selectedRole}
+              onValueChange={(value) => setSelectedRole(value as TeamRole)}
+            >
               <SelectTrigger id="role">
                 <SelectValue />
               </SelectTrigger>
@@ -110,7 +113,11 @@ export const EditMemberDialog: React.FC<EditMemberDialogProps> = ({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isLoading}
+          >
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={isLoading}>

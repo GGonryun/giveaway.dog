@@ -512,6 +512,7 @@ model Team {
   name      String
   slug      String   @unique
   logo      String   @default("🐶")
+  links     Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

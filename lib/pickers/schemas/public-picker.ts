@@ -49,7 +49,7 @@ export const publicPickerSchema = z.object({
   type: z.nativeEnum(PickerType),
   createdAt: z.date(),
   updatedAt: z.date(),
-  form: pickerFormSchema,
+  form: pickerFormSchema({ validateScheduledAt: false }),
   draws: pickerDrawsSchema,
   jobs: z.array(pickerJobSchema),
   logs: z.array(auditLogSchema),

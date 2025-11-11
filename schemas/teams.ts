@@ -7,6 +7,7 @@ export const selectUserDetails = {
     name: true,
     slug: true,
     logo: true,
+    links: true,
     members: {
       select: { id: true, role: true, userId: true }
     }
@@ -26,6 +27,7 @@ export const toDetailedUserTeam = (
     name: team.name,
     slug: team.slug,
     logo: team.logo,
+    links: team.links,
     memberCount: team.members.length,
     role: role || TeamRole.BLOCKED // Default to BLOCKED if no role found
   };
@@ -36,6 +38,7 @@ export const detailedUserTeamSchema = z.object({
   name: z.string(),
   slug: z.string(),
   logo: z.string(), // emoji
+  links: z.any().optional(),
   memberCount: z.number().min(0),
   role: z.nativeEnum(TeamRole)
 });
