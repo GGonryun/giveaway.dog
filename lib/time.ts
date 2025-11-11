@@ -20,7 +20,7 @@ export namespace timezone {
     const isoWithOffset = attachOffsetToIso(datetime, offset);
 
     const date = new Date(isoWithOffset);
-    return date.toISOString();
+    return date;
   };
 
   /**

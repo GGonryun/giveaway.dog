@@ -1,13 +1,10 @@
-- [] Add a small banner that says "Thank you for completing all the tasks!"
-
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
   - [ ] When an entry method or prize has an error it should show an error triangle and outline it as red.
   - [ ] Make it easier to drag and drop tasks/prizes to reorder them.
 
 - [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
-- [ ] As a host, I want to display my organization's logo and social media links on the sweepstake page.
-- [ ] As a host, I want to be able to attach screenshots/proof that a user has claimed a prize.
+- [ ] As a host, I want to display my organization's logo on the sweepstake page.
 
 - [ ] As a host, I want to create templates for sweepstakes so that i can easily create duplicates.
 
@@ -44,6 +41,7 @@
 - [ ] As a host, I want to be able to notify users in-app about rewards and sweepstakes they have won.
 - [ ] Add multiple image support for sweepstakes.
 - [ ] Add a way to pause sweepstakes.
+- [ ] As a host, I want to be able to attach screenshots/proof that a user has claimed a prize.
 
 ## Marketing Features
 

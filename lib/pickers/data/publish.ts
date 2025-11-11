@@ -62,7 +62,7 @@ export const publishPickerJobs = ({
       ? timezone.localTime(form.timing.scheduledAt, form.timing.timeZone)
       : new Date();
 
-  console.log('Scheduling fetch_twitter_data job at', runAt);
+  console.log('Scheduling picker jobs at', runAt);
 
   return {
     picker: {
