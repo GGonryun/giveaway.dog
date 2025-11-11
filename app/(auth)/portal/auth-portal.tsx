@@ -18,7 +18,6 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { useAccountPage } from '@/components/account/use-account-page';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import { CheckCircle } from 'lucide-react';
-import invalidateUser from '@/procedures/user/invalidate-user';
 
 interface AuthPortalProps {
   // Email verification props
@@ -94,20 +93,13 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     }
   });
 
-  const { isLoading: isRevalidating, run: runRevalidation } = useProcedure({
-    action: invalidateUser,
-    onSuccess() {
-      router.push(redirect);
-    }
-  });
-
   useEffect(() => {
     // If there's an existing error, don't proceed
     if (error) return;
     // If verification already succeeded, don't proceed
     if (verificationSuccess) return;
     // Handle signup flow
-    if (isCreating || isVerifying || isRevalidating) return;
+    if (isCreating || isVerifying) return;
     // Wait for session to load
     if (status === 'loading') return;
     // If not authenticated, redirect to login
@@ -123,8 +115,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     }
 
     if (revalidate) {
-      runRevalidation();
-      return;
+      router.push(redirect);
     }
 
     // Handle email verification flow
@@ -151,7 +142,6 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     token,
     email,
     revalidate,
-    isRevalidating,
     runVerification
   ]);
 

@@ -113,6 +113,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
 
   const copySweepstakes = useCopySweepstakes((data) => {
     toast.success('Sweepstakes copied successfully');
+    router.refresh();
     router.push(createPage.route(data.id));
   });
 

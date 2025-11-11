@@ -22,25 +22,6 @@ const getSweepstakesList = procedure()
     })
   )
   .output(listSweepstakesDataSchema)
-  .cache(({ user, input }) => {
-    return {
-      keyParts: [
-        `sweepstakes-list-${user.id}`,
-        `sweepstakes-list-${input.slug}`,
-        `user-${user.id}`,
-        `team-${input.slug}`
-      ],
-      tags: [
-        'sweepstakes',
-        'sweepstakes-list',
-        `sweepstakes-list-${user.id}`,
-        `sweepstakes-list-${input.slug}`,
-        `user-${user.id}`,
-        `team-${input.slug}`
-      ],
-      revalidate: minutesToSeconds(1)
-    };
-  })
   .handler(async ({ input, user, db }) => {
     const page = input.page || 1;
     const searchQuery = input.search

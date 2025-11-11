@@ -22,7 +22,6 @@ export const sendEmailVerification = procedure()
       message: z.string()
     })
   )
-  .invalidate(async ({ user }) => [`user-${user.id}`, 'user-profile'])
   .handler(async ({ input, db, user }) => {
     const { email, redirectTo } = input;
 

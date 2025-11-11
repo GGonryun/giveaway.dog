@@ -23,8 +23,10 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { Spinner } from '../ui/spinner';
 import disconnectAccount from '@/procedures/user/disconnect-account';
 import { Alert, AlertTitle, AlertDescription } from '../ui/alert';
+import { useRouter } from 'next/navigation';
 
 export const SocialProviders = () => {
+  const router = useRouter();
   const user = useUser();
 
   const loginProcedure = useProcedure({
@@ -38,6 +40,7 @@ export const SocialProviders = () => {
     action: disconnectAccount,
     onSuccess: () => {
       toast.success('Account disconnected');
+      router.refresh();
     }
   });
 

@@ -29,6 +29,7 @@ import updateEmail from '@/procedures/user/update-email';
 import { toast } from 'sonner';
 import { Spinner } from '../ui/spinner';
 import { UserProfileSchema } from '@/schemas/user';
+import { useRouter } from 'next/navigation';
 
 interface EmailVerificationProps {
   title?: string;
@@ -49,6 +50,8 @@ export function EmailVerification({
   user,
   redirectTo
 }: EmailVerificationProps) {
+  const router = useRouter();
+
   const [emailInput, setEmailInput] = useState(user.email || '');
   const [emailSent, setEmailSent] = useState(false);
   const [sentToEmail, setSentToEmail] = useState('');
@@ -61,6 +64,7 @@ export function EmailVerification({
       setEmailSent(true);
       setSentToEmail(emailInput || user.email || '');
       onEmailVerified?.();
+      router.refresh();
     },
     onFailure(error: any) {
       toast.error(error.message || 'Failed to send verification email');
@@ -71,6 +75,7 @@ export function EmailVerification({
     action: updateEmail,
     onSuccess() {
       toast.success('Email updated successfully');
+      router.refresh();
       // Now send verification email to the new address
       if (emailInput) {
         sendVerificationProcedure.run({ email: emailInput, redirectTo });

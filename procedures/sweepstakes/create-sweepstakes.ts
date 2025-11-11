@@ -30,7 +30,6 @@ export const createSweepstakes = procedure()
       id: z.string()
     })
   )
-  .invalidate(async ({ input }) => [`sweepstakes-list-${input.slug}`])
   .handler(async ({ db, input, user }) => {
     const team = await db.team.findUnique({
       where: findUserTeamQuery({ slug: input.slug, userId: user.id })

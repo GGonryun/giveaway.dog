@@ -13,7 +13,6 @@ export const updateProfile = procedure()
       id: z.string()
     })
   )
-  .invalidate(async ({ output }) => [`user-${output.id}`])
   .handler(async ({ input, user, db }) => {
     const { name } = input;
 

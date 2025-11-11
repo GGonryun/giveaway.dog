@@ -9,7 +9,6 @@ const publishSweepstakes = procedure()
   .authorization({ required: true })
   .input(sweepstakesInputSchema)
   .output(z.object({ slug: z.string() }))
-  .invalidate(async ({ output }) => [`sweepstakes-list-${output.slug}`])
   .handler(async ({ db, user, input }) => {
     const { team } = await applySweepstakesChanges({
       db,

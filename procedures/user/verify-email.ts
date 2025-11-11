@@ -20,9 +20,6 @@ export const verifyEmail = procedure()
       userId: z.string().optional()
     })
   )
-  .invalidate(async ({ output }) =>
-    output.userId ? [`user-${output.userId}`, 'user-profile'] : []
-  )
   .handler(async ({ input, db }) => {
     const { token, email } = input;
 

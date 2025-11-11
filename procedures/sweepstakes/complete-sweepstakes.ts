@@ -13,10 +13,6 @@ const completeSweepstakes = procedure()
     })
   )
   .output(z.object({ success: z.boolean() }))
-  .invalidate(async ({ input }) => [
-    `sweepstakes-list-${input.slug}`,
-    `sweepstakes-${input.sweepstakesId}`
-  ])
   .handler(async ({ db, user, input }) => {
     const sweepstakes = await db.sweepstakes.findUnique({
       where: {

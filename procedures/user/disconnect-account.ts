@@ -8,7 +8,6 @@ import z from 'zod';
 export const updateEmail = procedure()
   .authorization({ required: true })
   .input(z.object({ type: providerTypeSchema }))
-  .invalidate(async ({ user }) => [`user-${user.id}`])
   .handler(async ({ input, user, db }) => {
     const { type } = input;
 

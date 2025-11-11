@@ -24,13 +24,16 @@ import { EmailVerification } from '../auth/email-verification';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { updateUserProfileSchema, UpdateUserProfile } from '@/schemas/user';
+import { useRouter } from 'next/navigation';
 
 export const UserSettings = () => {
   const user = useUser();
+  const router = useRouter();
   const updateProfileProcedure = useProcedure({
     action: updateProfile,
     onSuccess() {
       toast.success('Profile updated successfully');
+      router.refresh();
     },
     onFailure(error) {
       toast.error(error.message || 'Failed to update profile');

@@ -21,7 +21,6 @@ const copySweepstakes = procedure()
       slug: z.string()
     })
   )
-  .invalidate(async ({ output }) => [`sweepstakes-list-${output.slug}`])
   .handler(async ({ db, input, user }) => {
     const original = await db.sweepstakes.findUnique({
       where: findUserSweepstakesQuery({

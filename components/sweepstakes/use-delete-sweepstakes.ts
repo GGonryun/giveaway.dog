@@ -1,11 +1,16 @@
 import { useProcedure } from '@/lib/mrpc/hook';
 import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 export const useDeleteSweepstakes = (onSuccess: () => void) => {
+  const router = useRouter();
   return useProcedure({
     action: deleteSweepstakes,
-    onSuccess,
+    onSuccess() {
+      onSuccess();
+      router.refresh();
+    },
     onFailure(err) {
       if (err.code === 'NOT_FOUND') {
         toast.error(

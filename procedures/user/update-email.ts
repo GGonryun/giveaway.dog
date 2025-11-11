@@ -17,7 +17,6 @@ export const updateEmail = procedure()
       message: z.string()
     })
   )
-  .invalidate(async ({ user }) => [`user-${user.id}`])
   .handler(async ({ input, user, db }) => {
     const { email } = input;
 
