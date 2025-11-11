@@ -75,11 +75,11 @@ export function EmailVerification({
     action: updateEmail,
     onSuccess() {
       toast.success('Email updated successfully');
-      router.refresh();
       // Now send verification email to the new address
       if (emailInput) {
         sendVerificationProcedure.run({ email: emailInput, redirectTo });
       }
+      router.refresh();
     },
     onFailure(error: any) {
       toast.error(error.message || 'Failed to update email');

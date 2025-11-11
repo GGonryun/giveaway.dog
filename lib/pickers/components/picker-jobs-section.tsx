@@ -73,7 +73,11 @@ export const PickerJobsSection: React.FC<PickerJobsSectionProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const pendingJobs = jobs.filter(
+  const sortedJobs = [...jobs].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
+  const pendingJobs = sortedJobs.filter(
     (job) => job.status === 'QUEUED' || job.status === 'RUNNING'
   );
   const hasActiveJobs = pendingJobs.length > 0;
@@ -99,7 +103,7 @@ export const PickerJobsSection: React.FC<PickerJobsSectionProps> = ({
                   variant={hasActiveJobs ? 'default' : 'secondary'}
                   className="ml-2"
                 >
-                  {jobs.length} {pluralize('job', jobs.length)}
+                  {sortedJobs.length} {pluralize('job', sortedJobs.length)}
                   {hasActiveJobs && ` (${pendingJobs.length} active)`}
                 </Badge>
               </CardTitle>
@@ -114,13 +118,13 @@ export const PickerJobsSection: React.FC<PickerJobsSectionProps> = ({
         </CardHeader>
         <CollapsibleContent>
           <CardContent className="space-y-3 mt-2">
-            {jobs.length === 0 ? (
+            {sortedJobs.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
                 No jobs yet
               </p>
             ) : (
               <div className="space-y-2">
-                {jobs.map((job) => {
+                {sortedJobs.map((job) => {
                   const label = JOB_TYPE_LABEL[job.type];
                   const TypeIcon = JOB_TYPE_ICON[job.type];
                   const StatusIcon = JOB_STATUS_ICON[job.status];
