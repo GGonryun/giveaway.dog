@@ -74,7 +74,7 @@ export const PickerJobsSection: React.FC<PickerJobsSectionProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const sortedJobs = [...jobs].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
 
   const pendingJobs = sortedJobs.filter(
