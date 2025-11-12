@@ -24,7 +24,7 @@ import { Prisma } from '@prisma/client';
 import { datetime } from './date';
 import { Tx } from './prisma';
 
-export const SELECT_USER_FINGERPRINT_QUERY = {
+const SELECT_USER_FINGERPRINT_QUERY = {
   fingerprint: {
     select: {
       fingerprint: true,
@@ -34,7 +34,7 @@ export const SELECT_USER_FINGERPRINT_QUERY = {
   count: true
 } satisfies Prisma.UserFingerprintSelect;
 
-export const SELECT_USER_IP_ADDRESS_QUERY = {
+const SELECT_USER_IP_ADDRESS_QUERY = {
   ip: {
     select: {
       regionCode: true,
@@ -45,7 +45,7 @@ export const SELECT_USER_IP_ADDRESS_QUERY = {
   }
 } satisfies Prisma.UserIpAddressSelect;
 
-export const INCLUDE_USER_ACCOUNTS_QUERY = {
+const INCLUDE_USER_ACCOUNTS_QUERY = {
   accounts: true
 } satisfies Prisma.UserInclude;
 

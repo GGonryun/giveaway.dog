@@ -8,12 +8,6 @@ export const userFingerprintSchema = z.object({
 
 export type UserFingerprint = z.infer<typeof userFingerprintSchema>;
 
-export const DEFAULT_DEVELOPMENT_FINGERPRINT: UserFingerprint = {
-  ip: '127.0.0.1',
-  userAgent: 'development',
-  countryCode: 'US'
-};
-
 export const DEVELOPMENT_GEO = {
   ip: '127.0.0.1',
   success: true,

@@ -14,8 +14,6 @@ import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
 import { DEFAULT_SWEEPSTAKES_DETAILS_TAB } from '@/lib/settings';
 
-export type SweepstakesDetailsFilters = { tab?: SweepstakesTabSchema };
-
 const tabRegex = new RegExp('^/app/[^/]+/sweepstakes/[^/]+(?:/([^/]+))?');
 const matchSweepstakesTab = (path: string): SweepstakesTabSchema | null => {
   const data = tabRegex.exec(path)?.[1];

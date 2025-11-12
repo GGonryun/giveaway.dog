@@ -24,7 +24,6 @@ export const socialLinkSchema = z.object({
 export const socialLinksSchema = z.array(socialLinkSchema);
 
 export type SocialLink = z.infer<typeof socialLinkSchema>;
-export type SocialLinks = z.infer<typeof socialLinksSchema>;
 
 export const PLATFORM_LABELS: Record<SocialPlatform, string> = {
   x: 'X (Twitter)',

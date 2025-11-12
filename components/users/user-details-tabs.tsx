@@ -13,8 +13,6 @@ import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
 import { DEFAULT_USER_DETAILS_TAB } from '@/lib/settings';
 
-export type UserDetailsFilters = { tab?: UserDetailsTabSchema };
-
 const tabRegex = new RegExp('^/app/[^/]+/users/[^/]+(?:/([^/]+))?');
 const matchUserDetailsTab = (path: string): UserDetailsTabSchema | null => {
   const data = tabRegex.exec(path)?.[1];

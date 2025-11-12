@@ -12,10 +12,7 @@ export const selectUserDetails = {
       select: { id: true, role: true, userId: true }
     }
   }
-} as const;
-
-export const _validateSelectUserDetails: { select: Prisma.TeamSelect } =
-  selectUserDetails;
+} satisfies { select: Prisma.TeamSelect };
 
 export const toDetailedUserTeam = (
   user: { id: string },

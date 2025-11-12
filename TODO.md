@@ -1,11 +1,13 @@
-- [ ] As a host, I want to create templates for sweepstakes so that i can easily create duplicates.
-
-- [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
-- [ ] As a host, I want to display my organization's logo on the sweepstake page.
-
 - [ ] Add Twitch integration.
 - [ ] Add a referral integration.
 - [ ] Add a secret code integration.
+- [ ] Add TikTok integration.
+- [ ] Add YouTube integration.
+- [ ] Add Facebook integration.
+- [ ] Add Instagram integration.
+
+- [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
+- [ ] As a host, I want to display my organization's logo on the sweepstake page.
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
@@ -14,10 +16,6 @@
 
 - [ ] I want to create short links for my sweepstakes, and draw verification
 
-- [ ] Add TikTok integration.
-- [ ] Add YouTube integration.
-- [ ] Add Facebook integration.
-- [ ] Add Instagram integration.
 - [ ] Add a form integration.
 - [ ] Add a recurring tasks to sweepstakes integrations.
 - [ ] Add a way to report sweepstakes.

@@ -33,5 +33,3 @@ export const EasterEggLogo: React.FC<EasterEggLogoProps> = ({ size = 200 }) => {
     </div>
   );
 };
-
-export { EasterEggLogo as NotFoundLogo };

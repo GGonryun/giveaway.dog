@@ -3,11 +3,7 @@ import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
-import {
-  FormField,
-  FormItem,
-  FormControl
-} from '@/components/ui/form';
+import { FormField, FormItem, FormControl } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { PickerFormSchema } from '@/lib/pickers/schemas/form';
 import { useFormContext } from 'react-hook-form';

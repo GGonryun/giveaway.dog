@@ -52,15 +52,6 @@ export const providerSchema = z.object({
   label: z.string()
 });
 
-export const includesProvider = (
-  providers: ProviderSchema[] | undefined,
-  providerId: string | ProviderTypeSchema | undefined
-) => {
-  if (!providers || !providerId) return false;
-  if (!isProviderType(providerId)) return false;
-  return providers.some((p) => p.type === providerId);
-};
-
 export type ProviderSchema = z.infer<typeof providerSchema>;
 
 export const PROVIDER_SCHEMA_LABELS: Record<ProviderTypeSchema, string> = {

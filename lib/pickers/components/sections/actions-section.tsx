@@ -1,9 +1,7 @@
 'use client';
 
 import { useFormContext, useWatch } from 'react-hook-form';
-import {
-  PickerFormSchema
-} from '@/lib/pickers/schemas/form';
+import { PickerFormSchema } from '@/lib/pickers/schemas/form';
 import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { Button } from '@/components/ui/button';

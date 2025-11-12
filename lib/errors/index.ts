@@ -45,11 +45,6 @@ export const statusToCode: Record<number, ApplicationErrorCode> = {
   504: 'GATEWAY_TIMEOUT'
 };
 
-export const codeToStatus: Record<ApplicationErrorCode, number> =
-  widetype.fromEntries(
-    Object.entries(statusToCode).map(([status, code]) => [code, Number(status)])
-  );
-
 export type ApplicationErrorArgs<TData = unknown> = {
   code: ApplicationErrorCode;
   message: string;
