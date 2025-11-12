@@ -3,12 +3,7 @@
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {
-  MousePointerClickIcon,
-  ArrowRight,
-  Settings,
-  Sparkles
-} from 'lucide-react';
+import { MousePointerClickIcon, Settings, Sparkles } from 'lucide-react';
 
 interface PickersFeatureDisabledCTAProps {
   slug: string;

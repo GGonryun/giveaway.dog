@@ -16,5 +16,5 @@ export default async function Page({
     return <div>Failed to load templates: {templates.data.message}</div>;
   }
 
-  return <TemplatesPage slug={slug} templates={templates.data} />;
+  return <TemplatesPage templates={templates.data.templates} />;
 }

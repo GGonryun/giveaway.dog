@@ -54,7 +54,7 @@ import { DerivedStatusIcon } from '@/lib/sweepstake-status';
 import { useCreateSweepstakesPage } from '@/components/sweepstakes/use-create-sweepstakes-page';
 import { cn } from '@/lib/utils';
 import { useCopySweepstakes } from '@/components/sweepstakes/use-copy-sweepstakes';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 interface SweepstakesTableProps {
@@ -106,8 +106,6 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
   const createPage = useCreateSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
   const router = useRouter();
-  const params = useParams();
-  const slug = params.slug as string;
 
   const [deleteModal, setDeleteModal] = useState<SweepstakesDataSchema | null>(
     null

@@ -3,7 +3,7 @@
 import { SweepstakesTable } from './components/sweepstakes-table';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import {
   Table,
   TableBody,

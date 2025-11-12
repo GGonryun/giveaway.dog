@@ -2,7 +2,6 @@ import { procedure } from '@/lib/mrpc/procedures';
 import {
   PickerAuditLogType,
   PickerJobStatus,
-  PickerJobType,
   PickerStatus,
   Prisma,
   PrismaClient
@@ -165,21 +164,21 @@ const processFetchTwitterDataJob = async (
 
   if (someChildrenFailed) {
     await db.$transaction(async (tx) => {
-      await db.pickerJob.update({
+      await tx.pickerJob.update({
         where: { id: job.id },
         data: {
           status: PickerJobStatus.FAILED
         }
       });
 
-      await db.picker.update({
+      await tx.picker.update({
         where: { id: job.pickerId },
         data: {
           status: PickerStatus.FAILED
         }
       });
 
-      await db.pickerAuditLog.createMany({
+      await tx.pickerAuditLog.createMany({
         data: [
           {
             pickerId: job.pickerId,

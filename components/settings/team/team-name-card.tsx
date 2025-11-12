@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { SettingsCard } from '../settings-card';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateTeamName from '@/procedures/teams/update-team-name';

@@ -2,9 +2,6 @@
 
 import { useFormContext, useWatch } from 'react-hook-form';
 import {
-  PICKER_ACTION_TYPE_ICON,
-  PICKER_ACTION_TYPE_LABEL,
-  PickerActionType,
   PickerFormSchema
 } from '@/lib/pickers/schemas/form';
 import { FormControl, FormField, FormItem } from '@/components/ui/form';

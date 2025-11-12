@@ -1,4 +1,4 @@
-import { LucideIcon, Sparkles } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 import { Typography } from '../ui/typography';
 
 export const MarketingPageHeader: React.FC<{

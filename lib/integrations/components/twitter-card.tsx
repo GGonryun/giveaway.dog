@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink } from 'lucide-react';
 import { SocialXIcon } from '@/components/ui/patterns/x-icon';
-import { useState } from 'react';
 import { connectTwitter } from '@/lib/integrations/procedures/connect-twitter';
 import { disconnectTwitter } from '@/lib/integrations/procedures/disconnect-twitter';
 import { useRouter } from 'next/navigation';

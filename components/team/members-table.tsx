@@ -41,14 +41,12 @@ interface Member {
 interface MembersTableProps {
   slug: string;
   members: Member[];
-  currentUserId: string;
   onMemberRemoved: () => void;
 }
 
 export const MembersTable: React.FC<MembersTableProps> = ({
   slug,
   members,
-  currentUserId,
   onMemberRemoved
 }) => {
   const [removeDialog, setRemoveDialog] = useState<{
@@ -129,68 +127,63 @@ export const MembersTable: React.FC<MembersTableProps> = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {members.map((member) => {
-              const blockReason = getRemovalBlockReason(member);
-              return (
-                <TableRow key={member.id}>
-                  <TableCell>
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={member.user.image || undefined} />
-                      <AvatarFallback>
-                        {member.user.emoji ||
-                          member.user.name?.charAt(0)?.toUpperCase() ||
-                          member.user.email?.charAt(0)?.toUpperCase() ||
-                          '?'}
-                      </AvatarFallback>
-                    </Avatar>
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    <div>
-                      <div className="font-medium">
-                        {member.user.name || 'Unnamed User'}
-                      </div>
-                      <div className="text-xs text-muted-foreground/70">
-                        {member.user.email || 'No email'}
-                      </div>
+            {members.map((member) => (
+              <TableRow key={member.id}>
+                <TableCell>
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={member.user.image || undefined} />
+                    <AvatarFallback>
+                      {member.user.emoji ||
+                        member.user.name?.charAt(0)?.toUpperCase() ||
+                        member.user.email?.charAt(0)?.toUpperCase() ||
+                        '?'}
+                    </AvatarFallback>
+                  </Avatar>
+                </TableCell>
+                <TableCell className="font-medium">
+                  <div>
+                    <div className="font-medium">
+                      {member.user.name || 'Unnamed User'}
                     </div>
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <Badge variant={getRoleBadgeVariant(member.role)}>
-                      {member.role}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="hidden text-muted-foreground lg:table-cell">
-                    {formatDistance(new Date(member.createdAt), new Date(), {
-                      addSuffix: true
-                    })}
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          onClick={() => handleEditClick(member)}
-                        >
-                          <Edit className="mr-2 h-4 w-4" />
-                          Edit Member
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={() => handleRemoveClick(member)}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Remove Member
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                    <div className="text-xs text-muted-foreground/70">
+                      {member.user.email || 'No email'}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  <Badge variant={getRoleBadgeVariant(member.role)}>
+                    {member.role}
+                  </Badge>
+                </TableCell>
+                <TableCell className="hidden text-muted-foreground lg:table-cell">
+                  {formatDistance(new Date(member.createdAt), new Date(), {
+                    addSuffix: true
+                  })}
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleEditClick(member)}>
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit Member
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-destructive"
+                        onClick={() => handleRemoveClick(member)}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Remove Member
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>

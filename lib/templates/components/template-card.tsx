@@ -8,7 +8,7 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Star, Sparkles, Users, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { TemplateListItemSchema } from '../schemas/template';
 
 interface TemplateCardProps {

@@ -1,6 +1,5 @@
 'use client';
 
-import { Typography } from '@/components/ui/typography';
 import { useState } from 'react';
 
 import { AllGiveawaysGrid } from './components/all-giveaways-grid';

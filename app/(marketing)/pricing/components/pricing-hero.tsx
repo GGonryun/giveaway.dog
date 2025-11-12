@@ -1,7 +1,6 @@
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
 import { Star } from 'lucide-react';
 import Link from 'next/link';
 

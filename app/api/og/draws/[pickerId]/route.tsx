@@ -10,7 +10,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ pickerId: string }> }
 ) {
   try {
@@ -96,9 +96,7 @@ export async function GET(
     }
 
     const draws = publicPicker.draws.draws;
-    const winningDraws = publicPicker.draws.draws.filter(
-      (d) => d.result === 'WINNER'
-    );
+    const winningDraws = draws.filter((d) => d.result === 'WINNER');
     const pickerName = publicPicker.form.setup.name;
 
     const hasWinners = winningDraws.length > 0;

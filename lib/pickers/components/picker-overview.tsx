@@ -498,7 +498,6 @@ export const PickerOverview: React.FC<{
         open={renameOpen}
         onOpenChange={setRenameOpen}
         currentName={picker.form.setup.name}
-        pickerId={picker.id}
         onRename={handleRename}
       />
     </div>

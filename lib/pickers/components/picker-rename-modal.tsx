@@ -28,7 +28,6 @@ interface PickerRenameModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   currentName: string;
-  pickerId: string;
   onRename?: (newName: string) => Promise<void>;
 }
 
@@ -36,7 +35,6 @@ export const PickerRenameModal: React.FC<PickerRenameModalProps> = ({
   open,
   onOpenChange,
   currentName,
-  pickerId,
   onRename
 }) => {
   const [name, setName] = useState(currentName);

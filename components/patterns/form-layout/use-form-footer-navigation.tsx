@@ -1,9 +1,7 @@
-import { useFormContext } from 'react-hook-form';
 import { useUnifiedFormLayout } from './use-unified-form-layout';
 
 export const useFormFooterNavigation = () => {
   const { currentStep, stepOrder, setCurrentStep } = useUnifiedFormLayout();
-  const { trigger } = useFormContext();
 
   // Step navigation logic
   const currentStepIndex = stepOrder.indexOf(currentStep);

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -14,7 +13,6 @@ import {
 } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Settings } from 'lucide-react';
 import {
   PickerEntry,
   PickerFilterSettings
@@ -42,7 +40,6 @@ export const PickerEntries: React.FC<PickerEntriesProps> = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [showFiltered, setShowFiltered] = useState(initialShowFiltered);
-  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
 
   const filteredEntries = showFiltered
     ? entries
@@ -57,16 +54,6 @@ export const PickerEntries: React.FC<PickerEntriesProps> = ({
       params.delete('showFiltered');
     }
     router.push(`${pathname}?${params.toString()}`);
-  };
-
-  const handleSaveFiltersAndActions = (
-    newFilters: PickerFilterSettings,
-    newActions: PickerActionsSchema
-  ) => {
-    // TODO: Call procedure to update filters and actions
-    console.log('Saving filters:', newFilters);
-    console.log('Saving actions:', newActions);
-    setFilterDialogOpen(false);
   };
 
   return (
@@ -94,16 +81,6 @@ export const PickerEntries: React.FC<PickerEntriesProps> = ({
               {filteredEntries.length} {showFiltered ? 'total' : 'valid'}{' '}
               entries
             </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setFilterDialogOpen(true)}
-            >
-              <Settings className="h-4 w-4 mr-2" />
-              Filter Settings & Requirements
-            </Button>
           </div>
         </div>
 

@@ -1,6 +1,4 @@
-import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 import { Nil } from '@/lib/types';
-import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 
 export type SweepstakeStep =
   | 'setup'

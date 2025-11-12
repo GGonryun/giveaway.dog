@@ -19,14 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {
-  Eye,
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  Calendar,
-  FileText
-} from 'lucide-react';
+import { Eye, Edit, Trash2, MoreHorizontal, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';

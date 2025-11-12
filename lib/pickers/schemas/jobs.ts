@@ -1,17 +1,14 @@
 import { z } from 'zod';
-import { PickerJobType, Prisma } from '@prisma/client';
+import { PickerJobType } from '@prisma/client';
 import {
   ActionsTwitterUser,
   actionsTwitterUserSchema,
   likingUsersResponseSchema,
   quoteTweetsResponseSchema,
-  retweetedByResponseSchema,
-  TwitterUser,
-  twitterUserSchema
+  retweetedByResponseSchema
 } from '@/lib/integrations/schemas/api';
 import { PickerJobWithChildren } from '../procedures/process-jobs';
 import { assertNever } from '@/lib/errors';
-import { uniq, uniqBy } from 'lodash';
 
 export const twitterFetchRequestSchema = z.object({
   tweetId: z.string(),

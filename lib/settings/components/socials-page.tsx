@@ -3,7 +3,7 @@
 import { useTeams } from '@/components/context/team-provider';
 import { SocialLinksCard } from '@/components/settings/team/social-links-card';
 import { useRouter } from 'next/navigation';
-import { socialLinksSchema, type SocialLink } from '@/schemas/social-links';
+import { socialLinksSchema } from '@/schemas/social-links';
 
 interface SocialsSettingsProps {
   slug: string;

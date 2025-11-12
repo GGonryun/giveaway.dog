@@ -15,7 +15,6 @@ import {
   SparklesIcon,
   UsersIcon
 } from 'lucide-react';
-import { Typography } from '@/components/ui/typography';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 
 export default function ToolsPage() {

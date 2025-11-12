@@ -3,7 +3,6 @@
 import {
   MousePointerClickIcon,
   SettingsIcon,
-  Sparkles,
   TicketIcon,
   UsersIcon
 } from 'lucide-react';

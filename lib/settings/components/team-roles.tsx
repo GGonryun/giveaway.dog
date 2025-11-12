@@ -1,6 +1,5 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import {
   Card,
@@ -55,7 +54,6 @@ export function TeamRoles({
   initialInviteUrl,
   initialInviteCode
 }: TeamRolesProps) {
-  const { data: session } = useSession();
   const router = useRouter();
 
   const { isLoading: isRegenerating, run: handleRegenerateLink } = useProcedure(
@@ -109,7 +107,6 @@ export function TeamRoles({
                 <MembersTable
                   slug={slug}
                   members={initialMembers}
-                  currentUserId={session?.user?.id || ''}
                   onMemberRemoved={handleRefresh}
                 />
               </TabsContent>

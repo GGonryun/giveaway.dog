@@ -25,7 +25,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { nanoid } from 'nanoid';
-import { TaskSchema, TaskType } from '@/schemas/tasks/schemas';
+import { TaskType } from '@/schemas/tasks/schemas';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };

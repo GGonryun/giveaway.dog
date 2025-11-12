@@ -6,9 +6,6 @@ import z from 'zod';
 import { ApplicationError } from '@/lib/errors';
 
 import {
-  DEFAULT_CLAIM_DEADLINE_DAYS,
-  DEFAULT_GOVERNING_LAW_COUNTRY_CODE,
-  DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
   DEFAULT_SWEEPSTAKES_AUDIENCE,
   DEFAULT_SWEEPSTAKES_DESIGN,
   DEFAULT_SWEEPSTAKES_DETAILS,
@@ -17,17 +14,11 @@ import {
   DEFAULT_SWEEPSTAKES_TERMS,
   DEFAULT_SWEEPSTAKES_TIMING,
   DEFAULT_SWEEPSTAKES_VISIBILITY,
-  DEFAULT_SWEEPSTAKES_WINNER_CRITERIA,
-  DEFAULT_WINNER_SELECTION_METHOD
+  DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
 } from '@/schemas/giveaway/defaults';
 import { findUserTeamQuery } from './shared';
 import { getTemplateById } from '@/lib/templates/data/static-templates';
-import { StaticTemplate } from '@/lib/templates/schemas/template';
-import {
-  Prisma,
-  SweepstakesStatus,
-  SweepstakesTermsType
-} from '@prisma/client';
+import { SweepstakesStatus } from '@prisma/client';
 import { toStorableSweepstakesUpdate } from '@/schemas/giveaway/storable';
 import { isUndefined, omitBy } from 'lodash';
 

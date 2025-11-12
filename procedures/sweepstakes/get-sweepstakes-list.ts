@@ -2,7 +2,6 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import { minutesToSeconds } from 'date-fns';
 import {
   DERIVED_TO_ACTUAL_STATUS_MAP,
   listSweepstakesDataSchema,

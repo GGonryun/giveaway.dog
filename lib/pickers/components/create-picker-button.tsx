@@ -1,6 +1,6 @@
 'use client';
 
-import { PlusIcon, ChevronDown, FileText, Sparkles } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 
 import { useTeams } from '@/components/context/team-provider';
 import { createPicker } from '../procedures/create-picker';
@@ -8,7 +8,6 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { usePickersPage } from '../hooks/use-pickers-page';
-import { useRouter } from 'next/navigation';
 
 export const CreatePickerButton: React.FC<{
   text?: string;
@@ -16,7 +15,6 @@ export const CreatePickerButton: React.FC<{
 }> = ({ text = 'Create', showIcon = true }) => {
   const { activeTeam } = useTeams();
   const { navigateTo } = usePickersPage();
-  const router = useRouter();
 
   const procedure = useProcedure({
     action: createPicker,

@@ -13,14 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useTeamInviteLink } from '@/lib/invites/context/team-invite-link-context';
 import { toast } from 'sonner';
-import {
-  Copy,
-  RefreshCw,
-  ExternalLink,
-  Info,
-  AlertTriangle
-} from 'lucide-react';
-import Link from 'next/link';
+import { Copy, RefreshCw, Info, AlertTriangle } from 'lucide-react';
 
 interface InviteLinkModalProps {
   open: boolean;
