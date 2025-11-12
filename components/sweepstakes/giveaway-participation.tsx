@@ -57,7 +57,7 @@ const GiveawayParticipationContent = () => {
 };
 
 export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = ({
-  hideBackground: noBackground,
+  hideBackground,
   className,
   ...props
 }) => {
@@ -69,7 +69,7 @@ export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = ({
     <div
       className={cn('overflow-auto w-full flex-1 p-2 sm:p-4 flex', className)}
       style={
-        noBackground
+        hideBackground
           ? {}
           : {
               background: bg

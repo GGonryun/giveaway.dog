@@ -1,10 +1,26 @@
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+  BreadcrumbEllipsis
+} from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
+export type TitleData =
+  | string
+  | {
+      href?: string;
+      label: string;
+    }[];
+
 export type SiteHeaderProps = {
-  title: string;
+  title: TitleData;
   action?: React.ReactNode;
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
 };
@@ -22,7 +38,7 @@ export const SiteHeaderWithTrigger: React.FC<SiteHeaderProps> = ({
   );
 };
 export type SiteHeaderContentProps = {
-  title: string;
+  title: TitleData;
   action?: React.ReactNode;
   trigger?: React.ReactNode;
 };
@@ -41,11 +57,39 @@ export const SiteHeaderContent: React.FC<SiteHeaderContentProps> = ({
           className="mx-2 data-[orientation=vertical]:h-4"
         />
       )}
-      <h1 className="text-base font-medium">{title}</h1>
+      <SiteHeaderTitle title={title} />
       {action && (
         <div className="ml-auto flex items-center gap-2">{action}</div>
       )}
     </SiteHeader>
+  );
+};
+
+export const SiteHeaderTitle: React.FC<{ title: TitleData }> = ({ title }) => {
+  if (typeof title === 'string') {
+    return <h1 className="text-base font-medium">{title}</h1>;
+  }
+
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        {title.map((item, index) => {
+          const isLast = index === title.length - 1;
+          const hasLink = !!item.href;
+          const Component = !hasLink ? BreadcrumbPage : BreadcrumbLink;
+          return (
+            <React.Fragment key={index}>
+              <>
+                <BreadcrumbItem>
+                  <Component href={item.href}>{item.label}</Component>
+                </BreadcrumbItem>
+                {isLast ? null : <BreadcrumbSeparator />}
+              </>
+            </React.Fragment>
+          );
+        })}
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 };
 

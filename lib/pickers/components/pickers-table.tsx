@@ -19,22 +19,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Eye, Edit, Trash2, MoreHorizontal, Calendar } from 'lucide-react';
+import {
+  Eye,
+  Edit,
+  Trash2,
+  MoreHorizontal,
+  Calendar,
+  FileText
+} from 'lucide-react';
 import Link from 'next/link';
 
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
-import {
-  PickersListItemSchema,
-  PickersListSchema,
-  PickerTypeSchema
-} from '../schemas/list';
+import { PickersListItemSchema, PickersListSchema } from '../schemas/list';
 import { usePickersNavigation } from '../hooks/use-pickers-navigation';
 import { DEFAULT_PICKER_NAME } from '../data/defaults';
 import { CreatePickerButton } from './create-picker-button';
 import { DeletePickerModal } from './delete-picker-modal';
 import { EDITABLE_PICKER_STATUS } from '../schemas/status';
-import { SocialXIcon } from '@/components/ui/patterns/x-icon';
-import { assertNever } from '@/lib/errors';
 import { PickerStatusBadge } from './picker-status-badge';
 import { datetime } from '@/lib/date';
 import { PickerTypeLogo } from './picker-type-logo';

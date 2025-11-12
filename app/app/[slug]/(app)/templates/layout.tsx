@@ -1,19 +1,23 @@
-import { Outline } from '@/components/app/outline';
-import React from 'react';
-import type { Metadata } from 'next';
+'use server';
 
-export const metadata: Metadata = {
-  title: 'Templates | Giveaway.dog',
-  description: 'Browse sweepstakes templates',
-  robots: {
-    index: false,
-    follow: false
-  }
+import { Outline } from '@/components/app/outline';
+import { TeamPageProps } from '@/schemas/pages';
+
+type Props = {
+  children: React.ReactNode;
+  params: Promise<TeamPageProps>;
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children, params }: Props) {
+  const { slug } = await params;
+
   return (
-    <Outline title="Templates" className="space-y-4">
+    <Outline
+      title={[
+        { href: `/app/${slug}`, label: 'Sweepstakes' },
+        { label: 'Templates' }
+      ]}
+    >
       {children}
     </Outline>
   );

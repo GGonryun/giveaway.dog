@@ -15,6 +15,7 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { useTeams } from '../context/team-provider';
 import { useCreateSweepstakesPage } from './use-create-sweepstakes-page';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 export const CreateGiveawayButton: React.FC<{
   text?: string;
@@ -23,6 +24,7 @@ export const CreateGiveawayButton: React.FC<{
 }> = ({ text = 'Create', showIcon = true, showDropdown = true }) => {
   const { activeTeam } = useTeams();
   const { navigateTo } = useCreateSweepstakesPage();
+  const router = useRouter();
 
   const procedure = useProcedure({
     action: createSweepstakes,
@@ -32,7 +34,7 @@ export const CreateGiveawayButton: React.FC<{
   });
 
   const handleFromTemplate = () => {
-    alert('TODO: support templates');
+    router.push(`/app/${activeTeam.slug}/templates`);
   };
 
   return (

@@ -3,8 +3,8 @@
 import { Outline } from '@/components/app/outline';
 import { UsersTable } from './components/users-table';
 import getParticipatingUsers from '@/procedures/users/get-participating-users';
-import { SlugPageParams } from '../../layout';
 import type { Metadata } from 'next';
+import { TeamPageProps } from '@/schemas/pages';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -16,11 +16,12 @@ export async function generateMetadata(): Promise<Metadata> {
     }
   };
 }
-type UsersPageParams = {
-  params: Promise<SlugPageParams>;
+
+type Props = {
+  params: Promise<TeamPageProps>;
 };
 
-const Page: React.FC<UsersPageParams> = async ({ params }) => {
+const Page: React.FC<Props> = async ({ params }) => {
   const resolvedParams = await params;
 
   const result = await getParticipatingUsers({

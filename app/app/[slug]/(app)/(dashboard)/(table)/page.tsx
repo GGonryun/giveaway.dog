@@ -3,7 +3,7 @@
 import { SweepstakesTable } from './components/sweepstakes-table';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -23,6 +23,10 @@ import { Outline } from '@/components/app/outline';
 import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@/schemas/pages';
+import { TemplatesGrid } from '@/lib/templates/components/templates-grid';
+import { getTemplates } from '@/lib/templates/procedures/get-templates';
+import { TemplatesGridHeader } from '@/lib/templates/components/templates-grid-header';
+import { SweepstakesGridSkeleton } from '@/lib/templates/components/templates-grid-skeleton';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -60,6 +64,13 @@ const SweepstakesPage: SweepstakesPageComponent = async (props) => {
         >
           <SweepstakesWrapper filters={filters} slug={slug} />
         </Suspense>
+        <div className="space-y-4 mt-8">
+          <TemplatesGridHeader slug={slug} />
+          <Suspense fallback={<SweepstakesGridSkeleton />}>
+            {/* Future place for analytics or other components */}
+            <TemplatesGridWrapper slug={slug} />
+          </Suspense>
+        </div>
       </SweepstakesTabs>
     </Outline>
   );
@@ -139,5 +150,15 @@ const SweepstakesTableSkeleton = () => (
     </Card>
   </div>
 );
+
+const TemplatesGridWrapper: React.FC<{ slug: string }> = async ({ slug }) => {
+  const templates = await getTemplates({ slug });
+  if (!templates.ok) {
+    return (
+      <div>There was an error loading templates: {templates.data.message}</div>
+    );
+  }
+  return <TemplatesGrid slug={slug} templates={templates.data} />;
+};
 
 export default SweepstakesPage;

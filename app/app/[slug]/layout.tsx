@@ -5,15 +5,14 @@ import { TeamsProvider } from '@/components/context/team-provider';
 import { UserProvider } from '@/components/context/user-provider';
 import { redirect } from 'next/navigation';
 import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
-
-export type SlugPageParams = { slug: string };
+import { TeamPageProps } from '@/schemas/pages';
 
 export default async function Layout({
   children,
   params
 }: {
   children: React.ReactNode;
-  params: Promise<SlugPageParams>;
+  params: Promise<TeamPageProps>;
 }) {
   const resolvedParams = await params;
   const [user, teams, team] = await Promise.all([

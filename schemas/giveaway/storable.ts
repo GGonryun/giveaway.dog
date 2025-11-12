@@ -196,9 +196,15 @@ export const toStorableSweepstakes = (
   input: SweepstakesInputSchema & { status?: SweepstakesStatus }
 ): Prisma.SweepstakesUncheckedCreateInput => {
   return {
+    ...toStorableSweepstakesUpdate(input),
     id: sweepstakes.id,
     status: input.status ?? sweepstakes.status,
-    teamId: sweepstakes.teamId,
+    teamId: sweepstakes.teamId
+  };
+};
+
+export const toStorableSweepstakesUpdate = (input: SweepstakesInputSchema) => {
+  return {
     details: toStorableDetails(input.setup),
     timing: toStorableTiming(input.timing),
     terms: toStorableTerms(input.terms),

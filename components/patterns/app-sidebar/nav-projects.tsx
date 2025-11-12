@@ -3,6 +3,7 @@
 import {
   MousePointerClickIcon,
   SettingsIcon,
+  Sparkles,
   TicketIcon,
   UsersIcon
 } from 'lucide-react';
@@ -28,25 +29,25 @@ const groups = ({ slug }: { slug: string }) => {
         {
           name: 'Sweepstakes',
           url: `/app/${slug}`,
-          alias: `/app/${slug}/sweepstakes`,
+          alias: [`/app/${slug}/sweepstakes`, `/app/${slug}/templates`],
           icon: TicketIcon
         },
         {
           name: 'Pickers',
           url: `/app/${slug}/pickers`,
-          alias: undefined,
+          alias: [],
           icon: MousePointerClickIcon
         },
         {
           name: 'Users',
           url: `/app/${slug}/users`,
-          alias: undefined,
+          alias: [],
           icon: UsersIcon
         },
         {
           name: 'Settings',
           url: `/app/${slug}/settings`,
-          alias: undefined,
+          alias: [],
           icon: SettingsIcon
         }
       ]
@@ -72,7 +73,7 @@ export const NavGroups = () => {
                     isActive={
                       item.url === path ||
                       (item.alias
-                        ? path.startsWith(item.alias)
+                        ? item.alias.some((alias) => path.startsWith(alias))
                         : path.startsWith(item.url))
                     }
                   >

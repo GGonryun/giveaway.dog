@@ -6,49 +6,27 @@
 - [ ] Add Twitch integration.
 - [ ] Add a referral integration.
 - [ ] Add a secret code integration.
-- [ ] Add TikTok integration.
-- [ ] Add YouTube integration.
-- [ ] Add Facebook integration.
-- [ ] Add Instagram integration.
 
-- [ ] Add a form integration.
-
-## Questionable Features
-
-- [ ] As a host, I want to automatically send a twitter post and then update my sweepstake with the tweet link.
-  - questionable because twitter API limits make this difficult.
-  - it also opens up a can of worms around customizing the tweet content or the task content.
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
   - [ ] When an entry method or prize has an error it should show an error triangle and outline it as red.
   - [ ] Make it easier to drag and drop tasks/prizes to reorder them.
 
-## Major Features
-
 - [ ] I want to create short links for my sweepstakes, and draw verification
-- [ ] Add an instant giveaway feature where users can instantly win prizes without waiting for a draw.
-- [ ] Add a leaderboard giveaway feature where users can compete for prizes based on points earned through tasks.
-- [ ] Add a discord giveaway "bot" that automate sweepstake creation/notification via Discord
-- [ ] As a host, I want to to have a host profile page that looks like link tree so people can navigate and go to my socials.
 
-## Minor Features
-
-- [ ] Add a recurring tasks.
+- [ ] Add TikTok integration.
+- [ ] Add YouTube integration.
+- [ ] Add Facebook integration.
+- [ ] Add Instagram integration.
+- [ ] Add a form integration.
+- [ ] Add a recurring tasks to sweepstakes integrations.
 - [ ] Add a way to report sweepstakes.
 - [ ] Add a way to block users from sweepstakes.
 - [ ] Add a built in ticketing support system for sweepstakes.
 - [ ] As a host, I want to be able to notify users in-app about rewards and sweepstakes they have won.
-- [ ] Add multiple image support for sweepstakes.
-- [ ] Add a way to pause sweepstakes.
 - [ ] As a host, I want to be able to attach screenshots/proof that a user has claimed a prize.
 - [ ] As a host, I want people to subscribe to my newsletter on giveaway.dog and be notified of my sweepstakes.
   - [ ] It should also include an action to "follow" us on giveaway.dog
-
-## Marketing Features
-
-- [ ] Improve the marketing site, include more features and benefits and social proof and a blog.
-- [ ] Add an FAQ or knowledge base.
-- [ ] Add a changelog to the marketing site and the main website.
 
 ## Personal Features
 
@@ -56,6 +34,19 @@
 - [ ] As a host, I want to use my own custom domain and url for my sweepstakes.
 - [ ] Migrate all Charity Games giveaways to Giveaway Dog.
 - [ ] As a host I want to be able to create a subdomain for my giveaways such as: https://charitygames.giveaway.dog/12345
+
+## Unrelated Features
+
+- [ ] Add an instant giveaway app where users can instantly win prizes without waiting for a draw, we can have a minimum number of tasks before claiming a prize, and the prize claim can be random chance or guaranteed based on number of prizes available.
+- [ ] Add a leaderboard (works similar to waitlists app) app where users can compete for prizes based on points earned through tasks.
+- [ ] Add a milestones app where users can unlock prizes by reaching certain milestones, for example number of referrals.
+- [ ] Add a ticket picker, user's get a single ticket number and winners are drawn based on ticket numbers. Works best for in-person events similar to a raffle where users can cut a ticket and then a ticket is drawn.
+- [ ] Add a discord giveaway "bot" that automate sweepstake creation/notification via Discord
+- [ ] As a host, I want to to have a host profile page that looks like link tree so people can navigate and go to my socials.
+
+- [ ] Improve the marketing site, include more features and benefits and social proof and a blog.
+- [ ] Add an FAQ or knowledge base.
+- [ ] Add a changelog to the marketing site and the main website.
 
 ## Tech Debt
 

@@ -3,7 +3,11 @@ import {
   UserParticipationSchema,
   GiveawayPrizeSchema
 } from '@/schemas/giveaway/schemas';
-import { AgeVerificationSchema, UserProfileSchema } from '@/schemas/user';
+import {
+  AgeVerificationSchema,
+  PROVIDER_REQUIRED_SCOPES,
+  UserProfileSchema
+} from '@/schemas/user';
 
 export const mockHost = {
   id: 'preview-host-id',
@@ -23,8 +27,16 @@ export const mockUserProfile: UserProfileSchema = {
   countryCode: 'US',
   qualityScore: 85,
   providers: [
-    { type: 'twitter', label: 'Preview User', scopes: [] },
-    { type: 'google', label: 'preview.user@gmail.com', scopes: [] }
+    {
+      type: 'twitter',
+      label: 'Preview User',
+      scopes: PROVIDER_REQUIRED_SCOPES.twitter
+    },
+    {
+      type: 'google',
+      label: 'preview.user@gmail.com',
+      scopes: PROVIDER_REQUIRED_SCOPES.google
+    }
   ]
 };
 
