@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { HeroSweepstakesPreview } from './hero-sweepstakes-preview';
+import { Suspense } from 'react';
 
 export const Hero = async () => (
   <section className="w-full flex items-center justify-center bg-gradient-to-t from-primary/15 to-transparent">
@@ -34,7 +35,9 @@ export const Hero = async () => (
             </Button>
           </div>
         </div>
-        <HeroSweepstakesPreview />
+        <Suspense>
+          <HeroSweepstakesPreview />
+        </Suspense>
       </div>
     </div>
   </section>
