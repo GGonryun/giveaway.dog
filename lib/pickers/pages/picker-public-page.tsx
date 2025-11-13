@@ -14,7 +14,6 @@ export const PickerPublicPage: React.FC<{
     <div className="container max-w-4xl py-8 space-y-6">
       <div className="text-center space-y-2">
         <MarketingPageHeader
-          icon={ShieldCheck}
           title="Draw Verification"
           description="Transparent and verifiable random winner selection"
         />

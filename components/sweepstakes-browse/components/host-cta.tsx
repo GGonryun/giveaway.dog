@@ -8,23 +8,16 @@ export const HostCTA: React.FC<{ minimal?: boolean }> = ({ minimal }) => {
   return (
     <Card className="bg-gradient-to-br from-primary/5 to-primary/10">
       <CardContent className="p-8 md:p-12 text-center space-y-6">
-        <div className="flex justify-center">
-          <div className="bg-primary/10 p-3 rounded-full">
-            <Sparkles className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-          </div>
-        </div>
-
         <div className="space-y-3">
           <Typography.Header
             level={2}
             className="text-2xl md:text-3xl font-bold tracking-tight"
           >
-            Ready to Host Your Own Giveaway?
+            Ready to host your own giveaway?
           </Typography.Header>
           <Typography.Paragraph className="text-muted-foreground max-w-2xl mx-auto">
-            Join thousands of creators and brands who trust our platform to
-            engage their audience and grow their community through exciting
-            giveaways.
+            Join creators, teams and brands who trust our platform to engage
+            their audience and grow their community through exciting giveaways.
           </Typography.Paragraph>
         </div>
 

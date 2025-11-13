@@ -1,22 +1,17 @@
-import { LucideIcon } from 'lucide-react';
 import { Typography } from '../ui/typography';
 
 export const MarketingPageHeader: React.FC<{
-  icon: LucideIcon;
   title: string;
   description: string;
-}> = ({ title, description, icon: Icon }) => {
+}> = ({ title, description }) => {
   return (
     <div className="text-center space-y-1">
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
-        <Icon className="h-12 w-12 text-primary" />
-        <Typography.Header level={1} className="text-4xl font-bold lg:text-6xl">
-          {title}
-        </Typography.Header>
-      </div>
-      <Typography className="text-muted-foreground text-base md:text-lg">
+      <h1 className="text-4xl font-semibold font-outfit tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">
+        {title}
+      </h1>
+      <Typography.Paragraph className="text-lg text-muted-foreground max-w-2xl mx-auto">
         {description}
-      </Typography>
+      </Typography.Paragraph>
     </div>
   );
 };

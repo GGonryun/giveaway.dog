@@ -1,9 +1,9 @@
 import { Hero } from '@/components/patterns/hero';
 import { FeaturesSection } from '@/components/patterns/features-section';
 import { PricingSection } from '@/components/patterns/pricing-section';
+import { PricingCTA } from '@/components/patterns/pricing-cta';
 import { environment } from '@/lib/environment';
 import { Metadata } from 'next';
-import { PricingCTA } from './pricing/components/pricing-cta';
 
 const appUrl = environment.appUrl();
 

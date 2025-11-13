@@ -73,16 +73,12 @@ export function SubscriptionCTA() {
     <Card className="bg-gradient-to-r from-primary/10 to-primary/5">
       <CardContent className="p-6">
         <div className="text-center space-y-4">
-          <div className="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mx-auto">
-            <Bell className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-          </div>
-
           <div className="space-y-2">
             <Typography.Header
               level={3}
               className="text-2xl md:text-3xl font-semibold"
             >
-              Never Miss a Giveaway!
+              Never miss a giveaway!
             </Typography.Header>
             <Typography.Paragraph className="text-muted-foreground">
               Get notified when new exciting giveaways go live. Join thousands

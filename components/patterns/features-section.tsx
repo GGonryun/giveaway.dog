@@ -27,7 +27,7 @@ const features = [
     icon: DollarSign,
     title: 'Fair Pricing & Full Ownership',
     description:
-      'Pay only when you run a giveaway — no monthly subscriptions or hidden fees. Keep full control of your data, collect audience insights, and export results anytime.'
+      'Pay once for unlimited access — no monthly subscriptions or hidden fees. Keep full control of your data, collect audience insights, and export results anytime.'
   }
 ];
 
@@ -36,14 +36,13 @@ export const FeaturesSection = async () => {
     <section className="w-full flex items-center justify-center bg-secondary/30">
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12">
-          <Typography.Header
-            level={2}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
-          >
-            Why Creators Choose Us
-          </Typography.Header>
+          <h1 className="mx-auto max-w-2xl text-4xl font-semibold font-outfit tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">
+            Everything you need to{' '}
+            <span className="text-primary">run successful giveaways</span>
+          </h1>
           <Typography.Paragraph className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Host a verified giveaway in 60 seconds — no bots, no spam.
+            Host a verified giveaway in 60 seconds. No bots, no spam, just real
+            fans.
           </Typography.Paragraph>
         </div>
 

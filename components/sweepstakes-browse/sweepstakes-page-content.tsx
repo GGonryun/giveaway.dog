@@ -8,7 +8,6 @@ import { HostCTA } from './components/host-cta';
 import { SubscriptionCTA } from './components/subscription-cta';
 import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
 import { MarketingPageHeader } from '../marketing/marketing-page-header';
-import { GiftIcon } from 'lucide-react';
 
 export const SweepstakesPageContent: React.FC<{
   sweepstakes: PublicSweepstakeSchema[];
@@ -27,7 +26,6 @@ export const SweepstakesPageContent: React.FC<{
     <div className="w-full bg-background py-6 sm:py-12 container space-y-8 sm:space-y-12">
       <div className="mb-8">
         <MarketingPageHeader
-          icon={GiftIcon}
           title="Browse Giveaways"
           description="Discover active, upcoming, and completed giveaways"
         />

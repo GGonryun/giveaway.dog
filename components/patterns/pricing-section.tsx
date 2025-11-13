@@ -8,15 +8,12 @@ import Link from 'next/link';
 
 export const PricingSection = async () => {
   return (
-    <section className="w-full flex items-center justify-center">
+    <section id="pricing" className="w-full flex items-center justify-center">
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12">
-          <Typography.Header
-            level={2}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
-          >
-            Simple, transparent pricing
-          </Typography.Header>
+          <h1 className="mx-auto max-w-2xl text-4xl font-semibold font-outfit tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">
+            Simple, <span className="text-primary">transparent</span> pricing
+          </h1>
           <Typography.Paragraph className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Pay only for what you use. No hidden fees, no surprises.
           </Typography.Paragraph>
