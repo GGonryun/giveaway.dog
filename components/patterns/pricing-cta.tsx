@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export function PricingCTA() {
   return (
-    <Card className="bg-gradient-to-br from-primary/5 to-primary/10">
+    <Card className="bg-gradient-to-br from-primary/5 to-primary/10 mb-12">
       <CardContent className="p-8 md:p-12 text-center space-y-6">
         <Typography.Header
           level={2}
