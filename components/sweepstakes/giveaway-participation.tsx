@@ -76,8 +76,8 @@ export const GiveawayParticipation: React.FC<GiveawayParticipationProps> = ({
             }
       }
     >
-      <div className="mx-auto my-auto w-full max-w-2xl min-w-fit">
-        <div className="w-full max-w-2xl mx-auto">
+      <div className="mx-auto my-auto w-full max-w-4xl min-w-fit">
+        <div className="w-full max-w-4xl mx-auto">
           <GiveawayParticipationProvider {...props}>
             <GiveawayParticipationCard device={props.device}>
               <GiveawayParticipationContent />

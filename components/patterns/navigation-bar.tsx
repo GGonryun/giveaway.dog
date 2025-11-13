@@ -59,9 +59,9 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
   };
 
   return (
-    <section className="py-2 sm:py-4">
-      <div className="container">
-        <nav className="flex items-center justify-between">
+    <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2">
             <EmojiLogo className="text-3xl mb-1" />
             <span className="text-lg font-semibold">Giveaway.dog</span>
@@ -77,7 +77,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                       e.preventDefault();
                     }
                   }}
-                  className={cn(isActiveRoute('/tools') && 'bg-accent')}
+                  className={cn(isActiveRoute('/tools') && 'underline')}
                 >
                   Tools
                 </NavigationMenuTrigger>
@@ -172,7 +172,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                   href="/browse"
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    isActiveRoute('/browse') && 'bg-accent'
+                    isActiveRoute('/browse') && 'underline'
                   )}
                 >
                   Browse Giveaways
@@ -183,7 +183,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                   href="/support"
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    isActiveRoute('/support') && 'bg-accent'
+                    isActiveRoute('/support') && 'underline'
                   )}
                 >
                   Support
@@ -194,7 +194,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                   href="/pricing"
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    isActiveRoute('/pricing') && 'bg-accent'
+                    isActiveRoute('/pricing') && 'underline'
                   )}
                 >
                   Pricing
@@ -374,6 +374,6 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
           </Sheet>
         </nav>
       </div>
-    </section>
+    </header>
   );
 };

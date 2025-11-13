@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { SweepstakesPreview } from '@/components/sweepstakes-browse/sweepstakes-preview';
+import { PublicSweepstakesDemo } from '@/components/sweepstakes-browse/sweepstakes-preview';
 import { FeatureCard } from '@/components/marketing/feature-card';
 import { HowItWorksSection } from '@/components/marketing/how-it-works-section';
 import {
@@ -117,7 +117,7 @@ export default function SweepstakesToolPage() {
                 </div>
               }
             >
-              <SweepstakesPreview />
+              <PublicSweepstakesDemo />
             </Suspense>
           </CardContent>
           <div className="border-t p-4 m-0 bg-muted/30 text-center">

@@ -11,9 +11,7 @@ export default async function RootLayout({
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="sticky top-0 z-50 bg-background border-b">
-        <NavigationBar user={user.ok ? user.data : null} />
-      </div>
+      <NavigationBar user={user.ok ? user.data : null} />
       <div className="flex grow">{children}</div>
       <div className="border-t">
         <Footer />

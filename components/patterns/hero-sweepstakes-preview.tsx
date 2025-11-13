@@ -3,8 +3,12 @@
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
 import { computeState } from '@/lib/sweepstakes';
+import {
+  mockUserParticipation,
+  mockUserProfile
+} from '../sweepstakes-editor/data/mocks';
 
-export const PublicSweepstakesDemo: React.FC = () => {
+export const HeroSweepstakesPreview: React.FC = () => {
   const mockSweepstakes = {
     id: 'preview-sweepstake',
     status: 'RUNNING' as const,
@@ -43,15 +47,10 @@ export const PublicSweepstakesDemo: React.FC = () => {
       prizes={mockPrizes}
       participation={mockParticipation}
       state={state}
-      userProfile={undefined}
-      userParticipation={undefined}
-      className="p-4 py-8"
-      onTaskComplete={async () => {
-        return {
-          ok: false,
-          data: { message: 'This is a preview only' }
-        };
-      }}
+      userProfile={mockUserProfile}
+      userParticipation={mockUserParticipation}
+      hideBackground
+      onTaskComplete={async () => {}}
       onLogin={() => {}}
       onCompleteProfile={() => {}}
     />

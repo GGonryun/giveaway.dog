@@ -4,10 +4,10 @@ import { toDefaultValues } from '@/lib/task/defaults';
 
 export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   setup: {
-    name: 'Demo Giveaway - Win Amazing Prizes!',
+    name: 'Win Amazing Prizes!',
     description:
-      'Enter for a chance to win incredible prizes in our demo giveaway. Complete simple tasks to increase your chances of winning!',
-    banner: '/images/demo-sweepstakes-banner.png'
+      'Enter for a chance to win incredible prizes in our demo giveaway. Complete simple tasks to increase your chances of winning! This is a demo sweepstakes to showcase our platform features.',
+    banner: '/images/demo-sweepstakes-banner-2.jpg'
   },
   timing: {
     startDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
@@ -29,6 +29,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   tasks: [
     {
       ...toDefaultValues('VISIT_URL'),
+      href: 'https://charity.games',
       id: nanoid()
     },
     {
@@ -41,6 +42,15 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
     },
     {
       ...toDefaultValues('STEAM_WISHLIST'),
+      id: nanoid()
+    },
+    {
+      ...toDefaultValues('DISCORD_JOIN'),
+      id: nanoid()
+    },
+    {
+      ...toDefaultValues('BONUS_TASK'),
+      tasksRequired: 3,
       id: nanoid()
     }
   ],

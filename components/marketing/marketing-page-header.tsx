@@ -8,7 +8,7 @@ export const MarketingPageHeader: React.FC<{
 }> = ({ title, description, icon: Icon }) => {
   return (
     <div className="text-center space-y-1">
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
         <Icon className="h-12 w-12 text-primary" />
         <Typography.Header level={1} className="text-4xl font-bold lg:text-6xl">
           {title}
