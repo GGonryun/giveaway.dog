@@ -8,12 +8,9 @@ export function PricingCTA() {
   return (
     <Card className="bg-gradient-to-br from-primary/5 to-primary/10 mb-12">
       <CardContent className="p-8 md:p-12 text-center space-y-6">
-        <Typography.Header
-          level={2}
-          className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
-        >
+        <h1 className="mx-auto text-2xl font-semibold font-outfit tracking-tight text-foreground sm:text-3xl lg:text-4xl text-balance">
           Ready to save time on your giveaways?
-        </Typography.Header>
+        </h1>
         <Typography.Paragraph className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Join teams who've switched from expensive subscriptions to our fair,
           unlimited pricing model.{' '}
