@@ -1,6 +1,9 @@
 import { Hero } from '@/components/patterns/hero';
+import { FeaturesSection } from '@/components/patterns/features-section';
+import { PricingSection } from '@/components/patterns/pricing-section';
 import { environment } from '@/lib/environment';
 import { Metadata } from 'next';
+import { PricingCTA } from './pricing/components/pricing-cta';
 
 const appUrl = environment.appUrl();
 
@@ -44,5 +47,14 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  return <Hero />;
+  return (
+    <div className="flex flex-col w-full">
+      <Hero />
+      <FeaturesSection />
+      <PricingSection />
+      <div className="container">
+        <PricingCTA />
+      </div>
+    </div>
+  );
 }
