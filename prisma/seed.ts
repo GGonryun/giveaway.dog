@@ -1,4 +1,7 @@
-import { UserScoreMetricsSchema } from '@/schemas/user-scoring';
+import {
+  DEFAULT_USER_SCORE_METRICS,
+  UserScoreMetricsSchema
+} from '@/schemas/user-scoring';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { nanoid } from 'nanoid';
 
@@ -336,18 +339,7 @@ function createUserQuality(
   userIndex: number,
   allUsers: { ipId: string; agentId: string; fingerprintId: string }[]
 ): Prisma.UserQualityCreateInput {
-  const metrics: UserScoreMetricsSchema = {
-    deviceStability: 0,
-    ipConsistency: 0,
-    geoConsistency: 0,
-    providersConnected: 0,
-    emailVerified: 0,
-    taskActivity: 0,
-    taskDiversity: 0,
-    accountAge: 0,
-    overlappingIpAddresses: 0,
-    overlappingFingerprints: 0
-  };
+  const metrics: UserScoreMetricsSchema = { ...DEFAULT_USER_SCORE_METRICS };
 
   const accountAgeDays = Math.floor(Math.random() * 365);
   metrics.accountAge = Math.min(10, Math.floor(accountAgeDays / 7));
