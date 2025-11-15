@@ -29,6 +29,8 @@ const getUserQualityScore = procedure()
       });
     }
 
+    console.info('User quality score found:', userQuality);
+
     return toUserQuality(userQuality);
   });
 

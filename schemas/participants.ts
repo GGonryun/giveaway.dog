@@ -4,6 +4,7 @@ import { TaskCompletionSchema } from './giveaway/participant';
 import { toTaskInput } from './giveaway/input';
 import { taskSchema } from './tasks/schemas';
 import { DEFAULT_SWEEPSTAKES_NAME } from './giveaway/defaults';
+import { clamp } from 'lodash';
 
 export const TASK_COMPLETION_INCLUDE_QUERY = {
   task: {
@@ -128,7 +129,6 @@ export const toUserParticipationSchema = (
   const engagement = Math.round(
     (userTaskCompletions.length / totalTasks) * 100
   );
-  const qualityScore = participant.quality[0]?.score ?? 0;
   const status: 'active' | 'blocked' = 'active'; // TODO: allow user status modification
 
   return {
@@ -142,7 +142,7 @@ export const toUserParticipationSchema = (
     lastEntryAt: entries[0].completedAt.toISOString(),
     emailVerified: Boolean(participant.emailVerified),
     engagement,
-    qualityScore,
+    qualityScore: clamp(participant.quality[0]?.score ?? 0, 0, 100),
     status
   };
 };

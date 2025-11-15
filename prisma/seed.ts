@@ -1,3 +1,4 @@
+import { UserScoreMetricsSchema } from '@/schemas/user-scoring';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { nanoid } from 'nanoid';
 
@@ -330,17 +331,115 @@ function createDeviceFingerprint(): Prisma.DeviceFingerprintCreateInput {
   };
 }
 
-function createUserQuality(userId: string): Prisma.UserQualityCreateInput {
-  const score = Math.floor(Math.random() * 40) + 60;
+function createUserQuality(
+  userId: string,
+  userIndex: number,
+  allUsers: { ipId: string; agentId: string; fingerprintId: string }[]
+): Prisma.UserQualityCreateInput {
+  const metrics: UserScoreMetricsSchema = {
+    deviceStability: 0,
+    ipConsistency: 0,
+    geoConsistency: 0,
+    providersConnected: 0,
+    emailVerified: 0,
+    taskActivity: 0,
+    taskDiversity: 0,
+    accountAge: 0,
+    overlappingIpAddresses: 0,
+    overlappingFingerprints: 0
+  };
+
+  const accountAgeDays = Math.floor(Math.random() * 365);
+  metrics.accountAge = Math.min(10, Math.floor(accountAgeDays / 7));
+
+  const deviceStabilityPercent = Math.random() * 100;
+  if (deviceStabilityPercent >= 100) {
+    metrics.deviceStability = 20;
+  } else {
+    metrics.deviceStability = Math.min(
+      20,
+      Math.floor(deviceStabilityPercent / 10) * 2
+    );
+  }
+
+  const numIpsInLast30Days = Math.floor(Math.random() * 5) + 1;
+  if (numIpsInLast30Days <= 1) {
+    metrics.ipConsistency = 20;
+  } else {
+    metrics.ipConsistency = Math.max(0, 20 - (numIpsInLast30Days - 1) * 5);
+  }
+
+  const geoRandom = Math.random();
+  if (geoRandom > 0.7) {
+    metrics.geoConsistency = 10;
+  } else if (geoRandom > 0.4) {
+    metrics.geoConsistency = 5;
+  } else {
+    metrics.geoConsistency = 0;
+  }
+
+  const numProviders = Math.floor(Math.random() * 5) + 1;
+  metrics.providersConnected = Math.min(10, numProviders * 2);
+
+  const emailVerified = Math.random() > 0.3;
+  metrics.emailVerified = emailVerified ? 10 : 0;
+
+  const tasksCompletedLast30Days = Math.floor(Math.random() * 50);
+  if (tasksCompletedLast30Days >= 30) {
+    metrics.taskActivity = Math.min(
+      10,
+      Math.floor(tasksCompletedLast30Days / 3)
+    );
+  } else {
+    metrics.taskActivity = Math.floor(tasksCompletedLast30Days / 3);
+  }
+
+  const uniqueActionsLast30Days = Math.floor(Math.random() * 20);
+  if (uniqueActionsLast30Days >= 10) {
+    metrics.taskDiversity = Math.min(10, uniqueActionsLast30Days - 10 + 1);
+  } else {
+    metrics.taskDiversity = 0;
+  }
+
+  const currentUserData = allUsers[userIndex];
+  let ipOverlap = 0;
+  let fingerprintOverlap = 0;
+
+  for (let i = 0; i < allUsers.length; i++) {
+    if (i !== userIndex) {
+      if (allUsers[i].ipId === currentUserData.ipId) {
+        ipOverlap++;
+      }
+      if (allUsers[i].fingerprintId === currentUserData.fingerprintId) {
+        fingerprintOverlap++;
+      }
+    }
+  }
+
+  metrics.overlappingIpAddresses = ipOverlap > 0 ? -30 : 0;
+  metrics.overlappingFingerprints = fingerprintOverlap > 0 ? -30 : 0;
+
+  const score = Math.max(
+    -25,
+    Math.min(
+      125,
+      metrics.deviceStability +
+        metrics.ipConsistency +
+        metrics.geoConsistency +
+        metrics.providersConnected +
+        metrics.emailVerified +
+        metrics.taskActivity +
+        metrics.taskDiversity +
+        metrics.accountAge +
+        metrics.overlappingIpAddresses +
+        metrics.overlappingFingerprints
+    )
+  );
+
   return {
     user: { connect: { id: userId } },
     score,
-    metrics: {
-      ipReputation: Math.floor(Math.random() * 100),
-      deviceTrust: Math.floor(Math.random() * 100),
-      accountAge: Math.floor(Math.random() * 365),
-      verifiedEmail: Math.random() > 0.2
-    }
+    metrics
   };
 }
 
@@ -697,6 +796,12 @@ async function main() {
 
   console.debug('Creating 1000 participant users...');
   const users = [];
+  const userDataMap: {
+    ipId: string;
+    agentId: string;
+    fingerprintId: string;
+  }[] = [];
+
   for (let i = 0; i < 1000; i++) {
     if (i % 100 === 0) {
       console.debug(`  Created ${i} users...`);
@@ -752,8 +857,21 @@ async function main() {
       }
     });
 
+    userDataMap.push({
+      ipId: selectedIp.id,
+      agentId: selectedAgent.id,
+      fingerprintId: selectedFingerprint.id
+    });
+  }
+
+  console.debug('Creating user quality scores...');
+  for (let i = 0; i < users.length; i++) {
+    if (i % 100 === 0) {
+      console.debug(`  Created ${i} quality scores...`);
+    }
+
     await prisma.userQuality.create({
-      data: createUserQuality(user.id)
+      data: createUserQuality(users[i].id, i, userDataMap)
     });
   }
 

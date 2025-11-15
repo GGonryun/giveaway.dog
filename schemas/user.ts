@@ -12,6 +12,7 @@ import {
   REQUIRED_GMAIL_SCOPES
 } from '@/lib/auth/scopes';
 import { Nil } from '@/lib/types';
+import { clamp } from 'lodash';
 
 export const providerTypeSchema = z.union([
   z.literal('twitter'),
@@ -185,7 +186,7 @@ export const toUserSchema = (
   name: user.name,
   emoji: user.emoji,
   countryCode: user.ips[0]?.ip.countryCode || UNKNOWN_USER_COUNTRY_CODE,
-  qualityScore: user.quality[0]?.score ?? 0,
+  qualityScore: clamp(user.quality[0]?.score ?? 0, 0, 100),
   emailVerified: !!user.emailVerified,
   providers: parseProviders(user.accounts),
   featureFlags: parseUserFeatureFlags(user.featureFlags)

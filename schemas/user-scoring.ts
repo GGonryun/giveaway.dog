@@ -1,6 +1,7 @@
 import { ApplicationError } from '@/lib/errors';
 import { widetype } from '@/lib/widetype';
 import { Prisma } from '@prisma/client';
+import { clamp } from 'lodash';
 import {
   CloudAlert,
   CloudCheck,
@@ -149,11 +150,25 @@ export const userQualitySchema = z.object({
 
 export type UserQualitySchema = z.infer<typeof userQualitySchema>;
 
+export const DEFAULT_USER_SCORE_METRICS: UserScoreMetricsSchema = {
+  deviceStability: 0,
+  ipConsistency: 0,
+  geoConsistency: 0,
+  providersConnected: 0,
+  emailVerified: 0,
+  taskActivity: 0,
+  taskDiversity: 0,
+  accountAge: 0,
+  overlappingIpAddresses: 0,
+  overlappingFingerprints: 0
+};
+
 export const toUserQuality = (
   data: Prisma.UserQualityGetPayload<{}>
 ): UserQualitySchema => {
   const metrics = userScoreMetricsSchema.safeParse(data.metrics);
   if (!metrics.success) {
+    console.error('Invalid user quality metrics:', metrics.error);
     throw new ApplicationError({
       code: 'VALIDATION_ERROR',
       message: 'Invalid user quality metrics',
@@ -164,7 +179,7 @@ export const toUserQuality = (
   return {
     id: data.id,
     userId: data.userId,
-    score: data.score,
+    score: clamp(data.score, 0, 100),
     metrics: metrics.data,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt
