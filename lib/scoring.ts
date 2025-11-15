@@ -18,11 +18,13 @@ import {
   PER_DEVICE_STABILITY_BONUS,
   PER_PROVIDER_BONUS,
   PER_TASK_BONUS,
+  USER_BASE_SCORE,
   UserScoreMetricsSchema
 } from '@/schemas/user-scoring';
 import { Prisma } from '@prisma/client';
 import { datetime } from './date';
 import { Tx } from './prisma';
+import { clamp } from 'lodash';
 
 const SELECT_USER_FINGERPRINT_QUERY = {
   fingerprint: {
@@ -236,6 +238,7 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
   });
 
   const metrics: UserScoreMetricsSchema = {
+    baseScore: USER_BASE_SCORE,
     deviceStability: calculateDeviceStability(fingerprints),
     ipConsistency: calculateIpConsistency(ipAddresses),
     geoConsistency: calculateGeoConsistency(ipAddresses),
@@ -254,10 +257,12 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
     )
   };
 
+  const score = Object.values(metrics).reduce((a, b) => a + b, 0);
+
   await tx.userQuality.create({
     data: {
       userId,
-      score: Object.values(metrics).reduce((a, b) => a + b, 0),
+      score: clamp(score, 0, 100),
       metrics
     }
   });

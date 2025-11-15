@@ -13,10 +13,13 @@ import {
   LucideIcon,
   Mail,
   MonitorSmartphone,
-  MonitorX
+  MonitorX,
+  StarIcon,
+  Building
 } from 'lucide-react';
 import z from 'zod';
 
+export const USER_BASE_SCORE = 30;
 export const MAX_SCORING_REQUESTS_PER_RUN = 10;
 export const MAX_JOBS_PER_RUN = 10;
 export const COMPLETION_THRESHOLD_DAYS = 30;
@@ -40,6 +43,7 @@ export const MAX_IP_CONSISTENCY_PUNISHMENT = -30;
 export const MAX_FINGERPRINT_CONSISTENCY_PUNISHMENT = -30;
 
 export const userScoreMetricsSchema = z.object({
+  baseScore: z.number(),
   deviceStability: z.number(),
   ipConsistency: z.number(),
   geoConsistency: z.number(),
@@ -57,6 +61,7 @@ export type UserScoreMetricKey = keyof UserScoreMetricsSchema;
 
 export const USER_METRIC_TYPE: Record<UserScoreMetricKey, 'quality' | 'risk'> =
   {
+    baseScore: 'quality',
     deviceStability: 'quality',
     ipConsistency: 'quality',
     geoConsistency: 'quality',
@@ -78,6 +83,7 @@ export const USER_RISK_METRICS: UserScoreMetricKey[] = widetype
   .filter((key) => USER_METRIC_TYPE[key] === 'risk');
 
 export const USER_METRIC_LABELS: Record<UserScoreMetricKey, string> = {
+  baseScore: 'Base Score',
   deviceStability: 'Device Stability',
   ipConsistency: 'IP Consistency',
   geoConsistency: 'Geolocation Consistency',
@@ -91,6 +97,7 @@ export const USER_METRIC_LABELS: Record<UserScoreMetricKey, string> = {
 };
 
 export const USER_METRIC_ICONS: Record<UserScoreMetricKey, LucideIcon> = {
+  baseScore: StarIcon,
   deviceStability: MonitorSmartphone,
   ipConsistency: CloudCheck,
   geoConsistency: EarthLock,
@@ -104,6 +111,7 @@ export const USER_METRIC_ICONS: Record<UserScoreMetricKey, LucideIcon> = {
 };
 
 export const USER_METRIC_MAX: Record<UserScoreMetricKey, number> = {
+  baseScore: USER_BASE_SCORE,
   deviceStability: MAX_DEVICE_STABILITY_BONUS,
   ipConsistency: MAX_IP_CONSISTENCY_BONUS,
   geoConsistency: MAX_GEO_CONSISTENCY_BONUS,
@@ -117,6 +125,8 @@ export const USER_METRIC_MAX: Record<UserScoreMetricKey, number> = {
 };
 
 export const USER_METRIC_DESCRIPTION: Record<UserScoreMetricKey, string> = {
+  baseScore:
+    'The foundational score assigned to all users, representing their initial trustworthiness on the platform.',
   deviceStability:
     'Measures how consistently the user accesses the platform from the same devices over time. Higher stability indicates a more trustworthy user.',
   ipConsistency:
@@ -151,6 +161,7 @@ export const userQualitySchema = z.object({
 export type UserQualitySchema = z.infer<typeof userQualitySchema>;
 
 export const DEFAULT_USER_SCORE_METRICS: UserScoreMetricsSchema = {
+  baseScore: USER_BASE_SCORE,
   deviceStability: 0,
   ipConsistency: 0,
   geoConsistency: 0,
@@ -166,7 +177,7 @@ export const DEFAULT_USER_SCORE_METRICS: UserScoreMetricsSchema = {
 export const toUserQuality = (
   data: Prisma.UserQualityGetPayload<{}>
 ): UserQualitySchema => {
-  const metrics = userScoreMetricsSchema.safeParse(data.metrics);
+  const metrics = userScoreMetricsSchema.partial().safeParse(data.metrics);
   if (!metrics.success) {
     console.error('Invalid user quality metrics:', metrics.error);
     throw new ApplicationError({
@@ -180,7 +191,7 @@ export const toUserQuality = (
     id: data.id,
     userId: data.userId,
     score: clamp(data.score, 0, 100),
-    metrics: metrics.data,
+    metrics: { ...DEFAULT_USER_SCORE_METRICS, ...metrics.data },
     createdAt: data.createdAt,
     updatedAt: data.updatedAt
   };
