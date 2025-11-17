@@ -11,16 +11,26 @@ const checkSteamGameOwnership = async (
   steamId: string,
   appId: string
 ): Promise<boolean> => {
+  console.info(
+    'Checking Steam game ownership for SteamID:',
+    steamId,
+    'and AppID:',
+    appId
+  );
   const appidsFilter = JSON.stringify([parseInt(appId)]);
   const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${process.env.STEAM_SECRET}&steamid=${steamId}&appids_filter=${encodeURIComponent(appidsFilter)}&format=json`;
 
   const response = await fetch(url);
+
+  console.info('Steam API response status:', response.status);
 
   if (!response.ok) {
     return false;
   }
 
   const ownedGamesData = await response.json();
+
+  console.info('Owned games data:', ownedGamesData);
 
   if (!ownedGamesData?.response?.games) {
     return false;
