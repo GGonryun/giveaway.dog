@@ -116,6 +116,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
 
     if (revalidate) {
       router.push(redirect);
+      return;
     }
 
     // Handle email verification flow
