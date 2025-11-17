@@ -1,6 +1,8 @@
 import { UserPage } from '@/components/account/page';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'My Account | Giveaway.dog',
   description: 'Manage your account settings',
