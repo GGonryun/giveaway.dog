@@ -78,7 +78,7 @@ export const SteamWishlistTaskActionForm: React.FC<
                 onClick={() => setPerformedAction(true)}
                 className="text-xs mt-2 text-black"
               >
-                I already added to wishlist
+                I already added to wishlist or own the game
               </Button>
             </div>
           )}
