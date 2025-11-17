@@ -17,12 +17,6 @@ type ComputeStateOptions = {
 export const computeState = (args: ComputeStateOptions): GiveawayState => {
   const { sweepstakes, userProfile } = args;
 
-  if (!userProfile) return 'not-logged-in';
-  if (requiresEmail(args)) return 'email-required';
-  if (needsAgeVerification({ ...args, userProfile }))
-    return 'age-verification-required';
-  if (!isEligible({ ...args, userProfile })) return 'not-eligible';
-
   switch (sweepstakes.status) {
     case 'DRAFT':
       return 'closed';
@@ -34,8 +28,14 @@ export const computeState = (args: ComputeStateOptions): GiveawayState => {
       return 'error';
     case 'SCHEDULED':
       return 'pending';
-    case 'RUNNING':
+    case 'RUNNING': {
+      if (!userProfile) return 'not-logged-in';
+      if (requiresEmail(args)) return 'email-required';
+      if (needsAgeVerification({ ...args, userProfile }))
+        return 'age-verification-required';
+      if (!isEligible({ ...args, userProfile })) return 'not-eligible';
       return 'active';
+    }
     default:
       throw assertNever(sweepstakes.status);
   }

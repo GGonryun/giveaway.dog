@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 import { sweepstakesPrizeSchema } from '@/schemas/giveaway/schemas';
 import {
-  PRIZE_WINNER_INCLUDE_QUERY,
+  PRIZE_WINNERS_INCLUDE_QUERY,
   toSweepstakesPrizes
 } from '@/schemas/prizes';
 import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@/schemas/participants';
@@ -44,7 +44,7 @@ const getParticipantSweepstake = procedure()
       where: {
         sweepstakesId
       },
-      include: PRIZE_WINNER_INCLUDE_QUERY({
+      include: PRIZE_WINNERS_INCLUDE_QUERY({
         sweepstakesId,
         slug,
         userId: user.id

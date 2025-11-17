@@ -29,11 +29,12 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { useTeams } from '../context/team-provider';
+import { PickerDrawResult } from '@prisma/client';
 
 export const SweepstakesPreview: React.FC<
   ParticipantSweepstakeSchema & { teamFeatureFlags: TeamFeatureFlagKeySchema[] }
 > = (props) => {
-  const { sweepstakes, prizes: winners, teamFeatureFlags = [] } = props;
+  const { sweepstakes, prizes, teamFeatureFlags = [] } = props;
   const browse = useBrowseSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
   const router = useRouter();
@@ -57,8 +58,10 @@ export const SweepstakesPreview: React.FC<
     (sum, prize) => sum + prize.quota,
     0
   );
-  const selectedWinners = winners.reduce(
-    (sum, winner) => sum + winner.winners.length,
+  const selectedWinners = prizes.reduce(
+    (sum, prize) =>
+      sum +
+      prize.draws.filter((d) => d.result === PickerDrawResult.WINNER).length,
     0
   );
   const hasAllWinnersSelected = selectedWinners >= totalPrizeSlots;

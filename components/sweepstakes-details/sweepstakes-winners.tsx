@@ -4,7 +4,15 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Shuffle, ExternalLink, Info, Pencil, Trash2 } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
+import { Shuffle, ExternalLink, Info, Pencil, GiftIcon } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
 import { Label } from '@/components/ui/label';
 import {
@@ -25,7 +33,6 @@ import pluralize from 'pluralize';
 import { useProcedure } from '@/lib/mrpc/hook';
 import rollWinners from '@/procedures/sweepstakes/roll-winners';
 import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteria';
-import deleteWinner from '@/procedures/sweepstakes/delete-winner';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
@@ -38,16 +45,21 @@ import {
   DialogTitle,
   DialogFooter
 } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 import { CompleteSweepstakesAlert } from '../sweepstakes-editor/complete-sweepstakes-alert';
 import {
   DerivedSweepstakeStatus,
   EDITABLE_DERIVED_STATUS
 } from '@/schemas/sweepstakes';
+import { PrizeDrawResult } from '@prisma/client';
+import { DisqualificationDialog } from './disqualification-dialog';
+import Link from 'next/link';
 
 interface GroupedPrize {
   id: string;
   name: string;
-  slots: SweepstakesPrizeSchema[];
+  quota: number;
+  draws: SweepstakesPrizeSchema['draws'];
 }
 
 interface SlotBasedWinnerSystemProps {
@@ -59,6 +71,272 @@ interface SlotBasedWinnerSystemProps {
   endDate: Date;
   criteria: SweepstakesWinnerCriteriaSchema;
 }
+
+interface PrizeDrawRowProps {
+  draw: SweepstakesPrizeSchema['draws'][0];
+  index: number;
+  isEditable: boolean;
+  isRolling: boolean;
+  onReroll: (drawId: string) => void;
+  onViewDisqualification: (draw: SweepstakesPrizeSchema['draws'][0]) => void;
+  teamSlug: string;
+}
+
+const PrizeDrawRow = ({
+  draw,
+  index,
+  isEditable,
+  isRolling,
+  onReroll,
+  onViewDisqualification,
+  teamSlug
+}: PrizeDrawRowProps) => {
+  const router = useRouter();
+
+  return (
+    <TableRow key={draw.id}>
+      <TableCell className="font-medium">#{index + 1}</TableCell>
+      <TableCell>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 min-w-0">
+            <div className="font-medium text-sm truncate">
+              {draw.participant.name}
+            </div>
+            <div className="text-xs text-muted-foreground truncate">
+              {draw.participant.email}
+            </div>
+          </div>
+          <Button variant="ghost" size="sm" className="h-6 w-6 p-0" asChild>
+            <Link href={`/app/${teamSlug}/users/${draw.participant.id}`}>
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+          </Button>
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 min-w-0">
+            <div className="text-sm truncate">
+              {draw.taskCompletion.taskName}
+            </div>
+          </div>
+          <Button variant="ghost" size="sm" className="h-6 w-6 p-0" asChild>
+            <Link
+              href={`/app/${teamSlug}/sweepstakes/${draw.taskCompletion.sweepstakeId}/entries/task/${draw.taskCompletion.taskId}?active=${draw.taskCompletion.completionId}`}
+            >
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+          </Button>
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <div className="w-full bg-muted rounded-full h-2">
+              <div
+                className={`h-2 rounded-full transition-all ${
+                  draw.participant.qualityScore >= 80
+                    ? 'bg-green-500'
+                    : draw.participant.qualityScore >= 60
+                      ? 'bg-yellow-500'
+                      : 'bg-orange-500'
+                }`}
+                style={{
+                  width: `${draw.participant.qualityScore}%`
+                }}
+              />
+            </div>
+          </div>
+          <span className="text-xs font-medium">
+            {draw.participant.qualityScore}
+          </span>
+        </div>
+      </TableCell>
+      <TableCell>
+        {draw.result === PrizeDrawResult.WINNER ? (
+          <Badge variant="default">Winner</Badge>
+        ) : (
+          <Badge variant="destructive">Disqualified</Badge>
+        )}
+      </TableCell>
+      <TableCell className="text-right">
+        {draw.result === PrizeDrawResult.WINNER ? (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onReroll(draw.id)}
+            disabled={isRolling || !isEditable}
+          >
+            <Shuffle className="h-3 w-3 mr-1" />
+            Re-roll
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onViewDisqualification(draw)}
+          >
+            <Info className="h-3 w-3 mr-1" />
+            View Reason
+          </Button>
+        )}
+      </TableCell>
+    </TableRow>
+  );
+};
+
+const PrizeCard: React.FC<{
+  prize: GroupedPrize;
+  isEditable: boolean;
+  isRolling: boolean;
+  hasEnded: boolean;
+  onReroll: (drawId: string) => void;
+  onViewDisqualification: (draw: SweepstakesPrizeSchema['draws'][0]) => void;
+  onPickForSlot: () => void;
+  teamSlug: string;
+}> = ({
+  prize,
+  isEditable,
+  isRolling,
+  hasEnded,
+  onReroll,
+  onViewDisqualification,
+  onPickForSlot,
+  teamSlug
+}) => {
+  const winnerCount = prize.draws.filter(
+    (d) => d.result === PrizeDrawResult.WINNER
+  ).length;
+  const isComplete = winnerCount >= prize.quota;
+
+  return (
+    <Card key={prize.id} className="pb-0">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-1">
+            <GiftIcon className="mb-0.5" />
+            {prize.name}
+          </CardTitle>
+          <div className="flex items-center gap-2">
+            <Badge variant={isComplete ? 'default' : 'secondary'}>
+              {winnerCount} / {prize.quota} winners selected
+            </Badge>
+            {isComplete && (
+              <Badge variant="default" className="bg-green-600">
+                Complete
+              </Badge>
+            )}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="p-0 border-t">
+        {prize.draws.length > 0 ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[60px]"></TableHead>
+                <TableHead>Winner</TableHead>
+                <TableHead>Task Completed</TableHead>
+                <TableHead className="w-[120px]">Quality</TableHead>
+                <TableHead className="w-[120px]">Status</TableHead>
+                <TableHead className="w-[100px] text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {' '}
+              <PrizeDraws
+                draws={prize.draws}
+                isEditable={isEditable}
+                isRolling={isRolling}
+                onReroll={onReroll}
+                onViewDisqualification={onViewDisqualification}
+                teamSlug={teamSlug}
+              />
+            </TableBody>
+          </Table>
+        ) : (
+          <EmptyPrizeState
+            hasEnded={hasEnded}
+            isEditable={isEditable}
+            isRolling={isRolling}
+            onPickForSlot={onPickForSlot}
+          />
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+const PrizeDraws: React.FC<{
+  draws: SweepstakesPrizeSchema['draws'];
+  isEditable?: boolean;
+  isRolling?: boolean;
+  onReroll: (drawId: string) => void;
+  onViewDisqualification: (draw: SweepstakesPrizeSchema['draws'][0]) => void;
+  teamSlug: string;
+}> = ({
+  draws,
+  isEditable = false,
+  isRolling = false,
+  onReroll,
+  onViewDisqualification,
+  teamSlug
+}) => {
+  const sorted = draws
+    .slice()
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+  return (
+    <>
+      {sorted.map((draw, index) => (
+        <PrizeDrawRow
+          key={draw.id}
+          draw={draw}
+          index={index}
+          isEditable={isEditable}
+          isRolling={isRolling}
+          onReroll={onReroll}
+          onViewDisqualification={onViewDisqualification}
+          teamSlug={teamSlug}
+        />
+      ))}
+    </>
+  );
+};
+
+interface EmptyPrizeStateProps {
+  hasEnded: boolean;
+  isEditable: boolean;
+  isRolling: boolean;
+  onPickForSlot: () => void;
+}
+
+const EmptyPrizeState = ({
+  hasEnded,
+  isEditable,
+  isRolling,
+  onPickForSlot
+}: EmptyPrizeStateProps) => {
+  return (
+    <div className="flex flex-col items-center justify-center py-8 text-center">
+      <DiceIcon isRolling={false} />
+      <p className="text-sm text-muted-foreground mt-4">
+        No draws yet for this prize
+      </p>
+      {hasEnded && isEditable && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onPickForSlot}
+          disabled={isRolling}
+          className="mt-4"
+        >
+          <Shuffle className="h-4 w-4 mr-2" />
+          {isRolling ? 'Rolling...' : 'Pick Winner'}
+        </Button>
+      )}
+    </div>
+  );
+};
 
 export const SweepstakesWinners = ({
   prizes,
@@ -76,6 +354,14 @@ export const SweepstakesWinners = ({
   const [isEditingCriteria, setIsEditingCriteria] = useState(false);
   const [editedCriteria, setEditedCriteria] =
     useState<SweepstakesWinnerCriteriaSchema>(criteria);
+  const [rerollDialogOpen, setRerollDialogOpen] = useState(false);
+  const [rerollWinnerId, setRerollWinnerId] = useState<string | null>(null);
+  const [disqualificationReason, setDisqualificationReason] = useState('');
+  const [viewDisqualificationDialog, setViewDisqualificationDialog] =
+    useState(false);
+  const [selectedDisqualifiedDraw, setSelectedDisqualifiedDraw] = useState<
+    SweepstakesPrizeSchema['draws'][0] | null
+  >(null);
 
   const isEditable = EDITABLE_DERIVED_STATUS[status];
 
@@ -97,13 +383,6 @@ export const SweepstakesWinners = ({
       }
     });
 
-  const { run: runDeleteWinner, isLoading: isDeleting } = useProcedure({
-    action: deleteWinner,
-    onSuccess: () => {
-      router.refresh();
-    }
-  });
-
   const { run: runCompleteSweepstakes, isLoading: isCompleting } = useProcedure(
     {
       action: completeSweepstakes,
@@ -116,37 +395,52 @@ export const SweepstakesWinners = ({
   const groupedPrizes: GroupedPrize[] = prizes.reduce((acc, prize) => {
     const existing = acc.find((g) => g.id === prize.id);
     if (existing) {
-      existing.slots.push(prize);
+      existing.draws.push(...prize.draws);
     } else {
       acc.push({
         id: prize.id,
         name: prize.name,
-        slots: [prize]
+        quota: prizes.filter((p) => p.id === prize.id).length,
+        draws: [...prize.draws]
       });
     }
     return acc;
   }, [] as GroupedPrize[]);
 
-  const emptySlots = prizes.filter((p) => !p.winner).length;
+  const getPrizeWinnerCount = (prize: GroupedPrize) => {
+    return prize.draws.filter((d) => d.result === PrizeDrawResult.WINNER)
+      .length;
+  };
+
+  const isPrizeComplete = (prize: GroupedPrize) => {
+    return getPrizeWinnerCount(prize) >= prize.quota;
+  };
+
+  const allPrizesComplete = groupedPrizes.every(isPrizeComplete);
+
+  const incompletePrizes = groupedPrizes.filter((p) => !isPrizeComplete(p));
 
   const hasEnded = new Date() > new Date(endDate);
 
   const getEligibleParticipants = (
-    criteriaToUse: SweepstakesWinnerCriteriaSchema = currentCriteria
+    criteria: SweepstakesWinnerCriteriaSchema
   ) => {
-    const confirmedWinnerIds = !criteriaToUse.allowMultipleWins
-      ? prizes.filter((s) => s.winner).map((s) => s.winner!.participant.id)
+    const confirmedWinnerIds = !criteria.allowMultipleWins
+      ? prizes
+          .flatMap((p) => p.draws)
+          .filter((d) => d.result === PrizeDrawResult.WINNER)
+          .map((d) => d.participant.id)
       : [];
 
     return participants.filter((p) => {
       // Check quality score
-      if (p.qualityScore < criteriaToUse.minQualityScore) return false;
+      if (p.qualityScore < criteria.minQualityScore) return false;
 
       // Check minimum tasks completed
-      if (p.entries.length < criteriaToUse.minTasksCompleted) return false;
+      if (p.entries.length < criteria.minTasksCompleted) return false;
 
       // Check duplicate winners
-      if (!criteriaToUse.allowMultipleWins && confirmedWinnerIds.includes(p.id))
+      if (!criteria.allowMultipleWins && confirmedWinnerIds.includes(p.id))
         return false;
 
       return true;
@@ -154,27 +448,27 @@ export const SweepstakesWinners = ({
   };
 
   const handleReroll = (winnerId: string) => {
+    setRerollWinnerId(winnerId);
+    setDisqualificationReason('');
+    setRerollDialogOpen(true);
+  };
+
+  const handleRerollSubmit = () => {
+    if (!rerollWinnerId || !disqualificationReason.trim()) return;
+
     runRollWinners({
       sweepstakesId,
       slug,
       minQualityScore: currentCriteria.minQualityScore,
       minTasksCompleted: currentCriteria.minTasksCompleted,
       preventDuplicateWinners: !currentCriteria.allowMultipleWins,
-      rerollWinnerId: winnerId
+      rerollWinnerId: rerollWinnerId,
+      disqualificationReason: disqualificationReason.trim()
     });
-  };
 
-  const handleDeleteWinner = (winnerId: string) => {
-    if (
-      confirm(
-        'Are you sure you want to delete this winner? This action cannot be undone.'
-      )
-    ) {
-      runDeleteWinner({
-        winnerId,
-        sweepstakesId
-      });
-    }
+    setRerollDialogOpen(false);
+    setRerollWinnerId(null);
+    setDisqualificationReason('');
   };
 
   const handlePickForSlot = () => {
@@ -219,7 +513,16 @@ export const SweepstakesWinners = ({
     });
   };
 
-  const hasAnyWinners = prizes.some((p) => p.winner);
+  const handleViewDisqualification = (
+    draw: SweepstakesPrizeSchema['draws'][0]
+  ) => {
+    setSelectedDisqualifiedDraw(draw);
+    setViewDisqualificationDialog(true);
+  };
+
+  const hasAnyWinners = prizes.some((p) =>
+    p.draws.some((d) => d.result === PrizeDrawResult.WINNER)
+  );
 
   return (
     <div className="space-y-6">
@@ -274,12 +577,71 @@ export const SweepstakesWinners = ({
             <div className="flex items-center gap-1.5 ml-auto">
               <span className="text-muted-foreground">Eligible:</span>
               <Badge variant="default">
-                {getEligibleParticipants().length} / {participants.length}
+                {getEligibleParticipants(currentCriteria).length} /{' '}
+                {participants.length}
               </Badge>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={rerollDialogOpen} onOpenChange={setRerollDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Re-roll Winner</DialogTitle>
+            <DialogDescription>
+              Provide a justification for re-rolling this winner. The current
+              winner will be marked as disqualified and this action will be
+              recorded.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="disqualification-reason">
+                Disqualification Reason *
+              </Label>
+              <Textarea
+                id="disqualification-reason"
+                placeholder="e.g., Winner did not respond, violated rules, etc."
+                value={disqualificationReason}
+                onChange={(e) => setDisqualificationReason(e.target.value)}
+                rows={4}
+              />
+              <p className="text-sm text-muted-foreground">
+                This reason will be visible in the draw history.
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setRerollDialogOpen(false)}
+              disabled={isRolling}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleRerollSubmit}
+              disabled={!disqualificationReason.trim() || isRolling}
+            >
+              {isRolling ? 'Rolling...' : 'Confirm Re-roll'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <DisqualificationDialog
+        open={viewDisqualificationDialog}
+        onOpenChange={setViewDisqualificationDialog}
+        participantName={selectedDisqualifiedDraw?.participant.name || null}
+        participantEmail={selectedDisqualifiedDraw?.participant.email || null}
+        disqualificationReason={
+          selectedDisqualifiedDraw?.disqualificationReason || null
+        }
+        drawDate={selectedDisqualifiedDraw?.createdAt || null}
+      />
 
       <Dialog open={isEditingCriteria} onOpenChange={setIsEditingCriteria}>
         <DialogContent className="sm:max-w-md">
@@ -374,273 +736,83 @@ export const SweepstakesWinners = ({
         </DialogContent>
       </Dialog>
 
+      {!hasEnded && (
+        <Alert className="border-blue-200 bg-blue-50">
+          <Info className="h-5 w-5 text-blue-600" />
+          <AlertTitle className="text-blue-900">
+            Winners Can Only Be Selected After Giveaway Ends
+          </AlertTitle>
+          <AlertDescription className="text-blue-800">
+            Once your giveaway has ended, you will be able to select and confirm
+            winners. Until then, this section will remain locked.
+          </AlertDescription>
+        </Alert>
+      )}
+
       {!hasAnyWinners ? (
         <Card>
-          <CardContent className="flex flex-col items-center justify-center space-y-6">
-            {!hasEnded && (
-              <Alert className="border-blue-200 bg-blue-50 max-w-2xl">
-                <Info className="h-5 w-5 text-blue-600" />
-                <AlertTitle className="text-blue-900">
-                  Winners Can Only Be Selected After Giveaway Ends
-                </AlertTitle>
-                <AlertDescription className="text-blue-800">
-                  Once your giveaway has ended, you will be able to select and
-                  confirm winners. Until then, this section will remain locked.
-                </AlertDescription>
-              </Alert>
-            )}
-            <div className="flex flex-col items-center text-center space-y-4 max-w-md">
-              <div className="rounded-full bg-muted p-6">
-                <Shuffle className="h-12 w-12 text-muted-foreground" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-xl font-semibold">No Winners Selected</h3>
-                <p className="text-sm text-muted-foreground">
-                  {emptySlots} prize {pluralize('slot', emptySlots)}{' '}
-                  {pluralize('is', emptySlots)} waiting for winners.
-                </p>
-              </div>
-              <Button
-                size="lg"
-                className="mt-4"
-                disabled={!hasEnded || !isEditable}
-                onClick={handlePickWinners}
-              >
-                <Shuffle className="h-4 w-4 mr-2" />
-                Pick Winners
-              </Button>
+          <CardContent className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
+            <div className="text-center sm:text-left">
+              <p className="font-medium">No winners selected yet</p>
+              <p className="text-sm text-muted-foreground">
+                Ready to select winners for {groupedPrizes.length}{' '}
+                {pluralize('prize', groupedPrizes.length)}
+              </p>
             </div>
+            <Button
+              onClick={handlePickWinners}
+              disabled={isRolling || !isEditable || !hasEnded}
+            >
+              <Shuffle className="h-4 w-4 mr-2" />
+              {isRolling ? 'Rolling...' : 'Pick All Winners'}
+            </Button>
+          </CardContent>
+        </Card>
+      ) : !allPrizesComplete ? (
+        <Card>
+          <CardContent className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
+            <div className="text-center sm:text-left">
+              <p className="font-medium">
+                {incompletePrizes.length}{' '}
+                {pluralize('prize', incompletePrizes.length)} incomplete
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Continue picking winners to complete all prizes
+              </p>
+            </div>
+            <Button
+              onClick={handlePickWinners}
+              disabled={isRolling || !isEditable}
+            >
+              <Shuffle className="h-4 w-4 mr-2" />
+              {isRolling ? 'Rolling...' : 'Pick Remaining Winners'}
+            </Button>
           </CardContent>
         </Card>
       ) : (
-        <>
-          {emptySlots > 0 ? (
-            <Card>
-              <CardContent className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
-                <div className="text-center sm:text-left">
-                  <p className="font-medium">
-                    {emptySlots} {pluralize('slot', emptySlots)} remaining
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Pick more winners to fill all empty slots
-                  </p>
-                </div>
-                <Button
-                  onClick={handlePickWinners}
-                  disabled={isRolling || !isEditable}
-                >
-                  <Shuffle className="h-4 w-4 mr-2" />
-                  {isRolling ? 'Rolling...' : 'Pick Remaining'}
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            isEditable && (
-              <CompleteSweepstakesAlert
-                onCompleteAction={handleCompleteSweepstakes}
-                isCompleting={isCompleting}
-              />
-            )
-          )}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {groupedPrizes.map((group) => (
-              <Card key={group.id} className="relative overflow-hidden">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-base">{group.name}</CardTitle>
-                    <Badge variant="secondary">
-                      {group.slots.length}{' '}
-                      {pluralize('winner', group.slots.length)}
-                    </Badge>
-                  </div>
-                </CardHeader>
-
-                <CardContent className="space-y-3">
-                  {group.slots.map((slot, slotIndex) => (
-                    <div
-                      key={slot.position}
-                      className="border rounded-lg p-3 space-y-3"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-muted-foreground">
-                          Slot #{slotIndex + 1}
-                        </span>
-                        {slot.winner && (
-                          <Badge variant="default" className="text-xs">
-                            Confirmed
-                          </Badge>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col items-center justify-center min-h-[80px] p-3 border-2 border-dashed border-muted rounded-lg">
-                        {slot.winner ? (
-                          <div className="space-y-2 w-full">
-                            <div className="flex items-center space-x-2">
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-1">
-                                  <div className="font-medium text-sm truncate">
-                                    {slot.winner.participant.name}
-                                  </div>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-5 w-5 p-0"
-                                    onClick={() => {
-                                      if (!slot.winner) return;
-                                      return router.push(
-                                        `/app/${activeTeam.slug}/users/${slot.winner.participant.id}`
-                                      );
-                                    }}
-                                  >
-                                    <ExternalLink className="h-3 w-3" />
-                                  </Button>
-                                </div>
-                                <div className="text-xs text-muted-foreground truncate">
-                                  {slot.winner.participant.email}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="pt-2 border-t">
-                              <div className="flex items-center justify-between gap-2">
-                                <div className="flex-1 min-w-0">
-                                  <div className="text-xs text-muted-foreground">
-                                    Won via
-                                  </div>
-                                  <div className="text-xs font-medium truncate">
-                                    {slot.winner.taskCompletion.taskName}
-                                  </div>
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={() => {
-                                    router.push(
-                                      `/app/${activeTeam.slug}/sweepstakes/${slot.winner!.taskCompletion.sweepstakeId}/entries`
-                                    );
-                                  }}
-                                >
-                                  <ExternalLink className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            </div>
-
-                            <div className="space-y-1.5 pt-2">
-                              <div>
-                                <div className="flex justify-between text-xs mb-0.5">
-                                  <span className="text-muted-foreground">
-                                    Quality
-                                  </span>
-                                  <span className="font-medium">
-                                    {slot.winner.participant.qualityScore}
-                                  </span>
-                                </div>
-                                <div className="w-full bg-muted rounded-full h-1.5">
-                                  <div
-                                    className={`h-1.5 rounded-full transition-all ${
-                                      slot.winner.participant.qualityScore >= 80
-                                        ? 'bg-green-500'
-                                        : slot.winner.participant
-                                              .qualityScore >= 60
-                                          ? 'bg-yellow-500'
-                                          : 'bg-orange-500'
-                                    }`}
-                                    style={{
-                                      width: `${slot.winner.participant.qualityScore}%`
-                                    }}
-                                  />
-                                </div>
-                              </div>
-
-                              <div>
-                                <div className="flex justify-between text-xs mb-0.5">
-                                  <span className="text-muted-foreground">
-                                    Engagement
-                                  </span>
-                                  <span className="font-medium">
-                                    {slot.winner.participant.engagement}%
-                                  </span>
-                                </div>
-                                <div className="w-full bg-muted rounded-full h-1.5">
-                                  <div
-                                    className={`h-1.5 rounded-full transition-all ${
-                                      slot.winner.participant.engagement >= 80
-                                        ? 'bg-green-500'
-                                        : slot.winner.participant.engagement >=
-                                            60
-                                          ? 'bg-blue-500'
-                                          : 'bg-yellow-500'
-                                    }`}
-                                    style={{
-                                      width: `${slot.winner.participant.engagement}%`
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center text-center gap-y-2">
-                            <DiceIcon isRolling={false} />
-                            <p className="text-xs text-muted-foreground italic">
-                              Waiting for draw...
-                            </p>
-                            {hasEnded && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handlePickForSlot}
-                                disabled={isRolling || !isEditable}
-                                className="w-full"
-                              >
-                                <Shuffle className="h-4 w-4 mr-2" />
-                                {isRolling ? 'Rolling...' : 'Pick Winner'}
-                              </Button>
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      {slot.winner && isEditable && (
-                        <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              if (!slot.winner)
-                                return alert('No winner to re-roll');
-                              handleReroll(slot.winner.id);
-                            }}
-                            disabled={isRolling || isDeleting}
-                            className="flex-1"
-                          >
-                            <Shuffle className="h-4 w-4 mr-2" />
-                            {isRolling ? 'Rolling...' : 'Re-roll'}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => {
-                              if (!slot.winner)
-                                return alert('No winner to re-roll');
-
-                              return handleDeleteWinner(slot.winner.id);
-                            }}
-                            disabled={isRolling || isDeleting}
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </>
+        isEditable && (
+          <CompleteSweepstakesAlert
+            onCompleteAction={handleCompleteSweepstakes}
+            isCompleting={isCompleting}
+          />
+        )
       )}
+
+      <div className="space-y-4">
+        {groupedPrizes.map((prize) => (
+          <PrizeCard
+            key={prize.id}
+            prize={prize}
+            isEditable={isEditable}
+            isRolling={isRolling}
+            hasEnded={hasEnded}
+            onReroll={handleReroll}
+            onViewDisqualification={handleViewDisqualification}
+            onPickForSlot={handlePickForSlot}
+            teamSlug={activeTeam.slug}
+          />
+        ))}
+      </div>
     </div>
   );
 };

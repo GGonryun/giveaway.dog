@@ -5,7 +5,13 @@ import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 import { findUserSweepstakes } from './shared';
 import { nanoid } from 'nanoid';
-import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@/schemas/participants';
+import {
+  SWEEPSTAKES_TASK_WHERE_QUERY,
+  ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY,
+  EligibleTaskCompletion
+} from '@/schemas/participants';
+import { Prisma, PrismaClient, PrizeDrawResult } from '@prisma/client';
+import { rng } from '@/lib/rng';
 
 const rollWinners = procedure()
   .authorization({
@@ -18,7 +24,8 @@ const rollWinners = procedure()
       minQualityScore: z.number().min(0).max(100),
       minTasksCompleted: z.number().min(1).optional().default(1),
       preventDuplicateWinners: z.boolean(),
-      rerollWinnerId: z.string().optional()
+      rerollWinnerId: z.string().optional(),
+      disqualificationReason: z.string().optional()
     })
   )
   .output(z.object({ success: z.boolean() }))
@@ -30,7 +37,8 @@ const rollWinners = procedure()
         minQualityScore,
         minTasksCompleted,
         preventDuplicateWinners,
-        rerollWinnerId
+        rerollWinnerId,
+        disqualificationReason
       },
       db,
       user
@@ -46,14 +54,14 @@ const rollWinners = procedure()
           sweepstakesId
         },
         include: {
-          winners: true
+          draws: true
         },
         orderBy: {
           index: 'asc'
         }
       });
 
-      if (prizes.length === 0) {
+      if (!prizes.length) {
         throw new ApplicationError({
           code: 'VALIDATION_ERROR',
           message: 'No prizes found for this sweepstakes'
@@ -71,18 +79,7 @@ const rollWinners = procedure()
         where: {
           task: taskQuery
         },
-        include: {
-          user: {
-            include: {
-              quality: {
-                take: 1,
-                orderBy: {
-                  createdAt: 'desc'
-                }
-              }
-            }
-          }
-        }
+        include: ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY
       });
 
       // Group by user and count their task completions
@@ -107,127 +104,231 @@ const rollWinners = procedure()
 
       // Filter users by criteria
       const eligibleTaskCompletions = allTaskCompletions.filter(
-        (completion) => {
-          const userId = completion.userId;
-          const userQuality = completion.user.quality[0]?.score ?? 0;
-          const userTaskCount = userCompletionCounts.get(userId) || 0;
-
-          // Check quality score
-          if (userQuality < minQualityScore) return false;
-
-          // Check minimum tasks completed
-          if (userTaskCount < minTasksCompleted) return false;
-
-          return true;
-        }
+        isEligibleTaskCompletion({
+          userCompletionCounts,
+          minQualityScore,
+          minTasksCompleted
+        })
       );
 
-      if (eligibleTaskCompletions.length === 0) {
+      if (!eligibleTaskCompletions.length) {
         throw new ApplicationError({
           code: 'VALIDATION_ERROR',
           message: 'No eligible participants meet the criteria'
         });
       }
 
-      const shuffleArray = <T>(array: T[]): T[] => {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-      };
-
       if (rerollWinnerId) {
-        const existingWinner = await db.prizeWinners.findUnique({
-          where: {
-            id: rerollWinnerId
-          }
-        });
-
-        if (!existingWinner) {
-          throw new ApplicationError({
-            code: 'NOT_FOUND',
-            message: 'Winner not found'
-          });
-        }
-
-        const randomizedCompletions = shuffleArray(eligibleTaskCompletions);
-        const newWinner = randomizedCompletions[0];
-
-        await db.prizeWinners.update({
-          where: {
-            id: rerollWinnerId
-          },
-          data: {
-            taskCompletionId: newWinner.id,
-            updatedAt: new Date()
-          }
+        await rerollWinner(db, {
+          disqualificationReason,
+          rerollWinnerId,
+          eligibleTaskCompletions
         });
       } else {
-        const emptySlots: { prizeId: string }[] = [];
-
-        for (const prize of prizes) {
-          const quota = prize.quota ?? 1;
-          const existingWinners = prize.winners.length;
-
-          for (let i = existingWinners; i < quota; i++) {
-            emptySlots.push({ prizeId: prize.id });
-          }
-        }
-
-        if (emptySlots.length === 0) {
-          throw new ApplicationError({
-            code: 'VALIDATION_ERROR',
-            message: 'All prize slots are already filled'
-          });
-        }
-
-        const randomizedCompletions = shuffleArray(eligibleTaskCompletions);
-
-        if (preventDuplicateWinners) {
-          const uniqueWinners: typeof eligibleTaskCompletions = [];
-          const seenUserIds = new Set<string>();
-
-          for (const completion of randomizedCompletions) {
-            if (!seenUserIds.has(completion.userId)) {
-              uniqueWinners.push(completion);
-              seenUserIds.add(completion.userId);
-            }
-          }
-
-          if (uniqueWinners.length < emptySlots.length) {
-            throw new ApplicationError({
-              code: 'VALIDATION_ERROR',
-              message: `Not enough unique participants (${uniqueWinners.length}) to fill ${emptySlots.length} empty slots`
-            });
-          }
-
-          for (let i = 0; i < emptySlots.length; i++) {
-            await db.prizeWinners.create({
-              data: {
-                id: nanoid(),
-                prizeId: emptySlots[i].prizeId,
-                taskCompletionId: uniqueWinners[i].id
-              }
-            });
-          }
-        } else {
-          for (let i = 0; i < emptySlots.length; i++) {
-            const completionIndex = i % randomizedCompletions.length;
-            await db.prizeWinners.create({
-              data: {
-                id: nanoid(),
-                prizeId: emptySlots[i].prizeId,
-                taskCompletionId: randomizedCompletions[completionIndex].id
-              }
-            });
-          }
-        }
+        await pickWinners(db, {
+          eligibleTaskCompletions,
+          prizes,
+          preventDuplicateWinners
+        });
       }
 
       return { success: true };
     }
   );
+
+const rerollWinner = async (
+  db: PrismaClient,
+  args: {
+    disqualificationReason?: string;
+    rerollWinnerId: string;
+    eligibleTaskCompletions: EligibleTaskCompletion[];
+  }
+) => {
+  const { disqualificationReason, rerollWinnerId, eligibleTaskCompletions } =
+    args;
+  if (!disqualificationReason || disqualificationReason.trim() === '') {
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message: 'Disqualification reason is required when re-rolling a winner'
+    });
+  }
+
+  const existingWinner = await db.prizeDraw.findUnique({
+    where: {
+      id: rerollWinnerId
+    }
+  });
+
+  if (!existingWinner) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: 'Winner not found'
+    });
+  }
+
+  if (existingWinner.result === PrizeDrawResult.DISQUALIFIED) {
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message: 'Cannot re-roll a winner that has already been disqualified'
+    });
+  }
+
+  const disqualifiedUsers = await db.prizeDraw.findMany({
+    where: {
+      result: PrizeDrawResult.DISQUALIFIED,
+      prizeId: existingWinner.prizeId
+    },
+    include: {
+      taskCompletion: true
+    }
+  });
+
+  const newlyEligibleCompletions = eligibleTaskCompletions.filter(
+    (completion) => {
+      // Exclude the current winner
+      if (completion.id === existingWinner.taskCompletionId) {
+        return false;
+      }
+
+      // Exclude previously disqualified users for this prize
+      for (const disqualified of disqualifiedUsers) {
+        if (completion.userId === disqualified.taskCompletion.userId) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+  );
+
+  const randomizedCompletions = rng.shuffleArray(newlyEligibleCompletions);
+
+  if (randomizedCompletions.length === 0) {
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message:
+        'No more eligible participants available for re-rolling the winner'
+    });
+  }
+
+  const [newWinningTask] = randomizedCompletions;
+
+  await db.$transaction(async (tx) => {
+    await tx.prizeDraw.update({
+      where: {
+        id: rerollWinnerId
+      },
+      data: {
+        result: PrizeDrawResult.DISQUALIFIED,
+        disqualificationReason: disqualificationReason.trim()
+      }
+    });
+
+    await tx.prizeDraw.create({
+      data: {
+        id: nanoid(),
+        prizeId: existingWinner.prizeId,
+        taskCompletionId: newWinningTask.id,
+        result: PrizeDrawResult.WINNER,
+        previousDrawId: rerollWinnerId
+      }
+    });
+  });
+};
+
+const pickWinners = async (
+  db: PrismaClient,
+  args: {
+    eligibleTaskCompletions: EligibleTaskCompletion[];
+    prizes: Prisma.PrizeGetPayload<{
+      include: { draws: true };
+    }>[];
+    preventDuplicateWinners: boolean;
+  }
+) => {
+  const { eligibleTaskCompletions, prizes, preventDuplicateWinners } = args;
+  const emptySlots: { prizeId: string }[] = [];
+
+  for (const prize of prizes) {
+    const quota = prize.quota ?? 1;
+    const existingWinners = prize.draws.length;
+
+    for (let i = existingWinners; i < quota; i++) {
+      emptySlots.push({ prizeId: prize.id });
+    }
+  }
+
+  if (emptySlots.length === 0) {
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message: 'All prize slots are already filled'
+    });
+  }
+
+  const randomizedCompletions = rng.shuffleArray(eligibleTaskCompletions);
+
+  if (preventDuplicateWinners) {
+    const uniqueWinners: typeof eligibleTaskCompletions = [];
+    const seenUserIds = new Set<string>();
+
+    for (const completion of randomizedCompletions) {
+      if (!seenUserIds.has(completion.userId)) {
+        uniqueWinners.push(completion);
+        seenUserIds.add(completion.userId);
+      }
+    }
+
+    if (uniqueWinners.length < emptySlots.length) {
+      throw new ApplicationError({
+        code: 'VALIDATION_ERROR',
+        message: `Not enough unique participants (${uniqueWinners.length}) to fill ${emptySlots.length} empty slots`
+      });
+    }
+
+    for (let i = 0; i < emptySlots.length; i++) {
+      await db.prizeDraw.create({
+        data: {
+          id: nanoid(),
+          prizeId: emptySlots[i].prizeId,
+          result: PrizeDrawResult.WINNER,
+          taskCompletionId: uniqueWinners[i].id
+        }
+      });
+    }
+  } else {
+    for (let i = 0; i < emptySlots.length; i++) {
+      const completionIndex = i % randomizedCompletions.length;
+      await db.prizeDraw.create({
+        data: {
+          id: nanoid(),
+          result: PrizeDrawResult.WINNER,
+          prizeId: emptySlots[i].prizeId,
+          taskCompletionId: randomizedCompletions[completionIndex].id
+        }
+      });
+    }
+  }
+};
+
+const isEligibleTaskCompletion =
+  (args: {
+    userCompletionCounts: Map<string, number>;
+    minQualityScore: number;
+    minTasksCompleted: number;
+  }) =>
+  (completion: EligibleTaskCompletion) => {
+    const { userCompletionCounts, minQualityScore, minTasksCompleted } = args;
+    const userId = completion.userId;
+    const userQuality = completion.user.quality[0]?.score ?? 0;
+    const userTaskCount = userCompletionCounts.get(userId) || 0;
+
+    // Check quality score
+    if (userQuality < minQualityScore) return false;
+
+    // Check minimum tasks completed
+    if (userTaskCount < minTasksCompleted) return false;
+
+    return true;
+  };
 
 export default rollWinners;

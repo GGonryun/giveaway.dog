@@ -56,16 +56,18 @@ export const CompleteSweepstakesAlert: React.FC<{
               <CheckCircle2 className="h-5 w-5 text-green-600" />
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             </div>
-            <AlertDialogDescription className="space-y-2">
-              <p>
-                This action is <strong>irreversible</strong> and will
-                permanently complete the sweepstakes.
-              </p>
-              <p>
-                Once completed, the sweepstakes will be closed to all
-                modifications. Any changes after this point will require
-                contacting customer support.
-              </p>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2">
+                <p>
+                  This action is <strong>irreversible</strong> and will
+                  permanently complete the sweepstakes.
+                </p>
+                <p>
+                  Once completed, the sweepstakes will be closed to all
+                  modifications. Any changes after this point will require
+                  contacting customer support.
+                </p>
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -88,11 +88,6 @@ const getSweepstakesList = procedure()
         timing: true,
         tasks: {
           include: { completions: true }
-        },
-        prizes: {
-          include: {
-            winners: true
-          }
         }
       },
       orderBy: input.sortField

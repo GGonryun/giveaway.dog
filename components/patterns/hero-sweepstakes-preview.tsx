@@ -25,7 +25,7 @@ export const HeroSweepstakesPreview: React.FC = () => {
     prizeId: p.id,
     prizeName: p.name,
     quota: p.quota,
-    winners: []
+    draws: []
   }));
 
   const mockParticipation = {

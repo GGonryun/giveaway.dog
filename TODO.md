@@ -1,6 +1,10 @@
-- [ ] Add Twitch integration.
+- [ ] Display an "i already completed this task" button for tasks that have already been completed by the user.
+
+- [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
+
 - [ ] Add a referral integration.
 - [ ] Add a secret code integration.
+- [ ] Add Twitch integration.
 - [ ] Add TikTok integration.
 - [ ] Add YouTube integration.
 - [ ] Add Facebook integration.
@@ -25,6 +29,15 @@
 - [ ] As a host, I want to be able to attach screenshots/proof that a user has claimed a prize.
 - [ ] As a host, I want people to subscribe to my newsletter on giveaway.dog and be notified of my sweepstakes.
   - [ ] It should also include an action to "follow" us on giveaway.dog
+
+## User Feedback
+
+### @Gamelooty
+
+- when a winner is picked and you get to see their X, it would be nice if i could click on it to be redirected to their X profile.
+
+- it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
+- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bobi1234 and another person as bobi12345
 
 ## Personal Features
 

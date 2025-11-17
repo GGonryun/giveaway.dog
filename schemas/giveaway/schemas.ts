@@ -1,9 +1,13 @@
-import { RegionalRestrictionFilter, VisibilityType } from '@prisma/client';
+import {
+  PrizeDrawResult,
+  RegionalRestrictionFilter,
+  VisibilityType
+} from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';
 import { userProfileSchema } from '../user';
-import { taskSchema } from '../tasks/schemas';
+import { baseTaskSchema, taskSchema } from '../tasks/schemas';
 import {
   taskCompletionSchema,
   sweepstakesParticipantSchema
@@ -251,9 +255,19 @@ const giveawayPrizeSchema = z.object({
   prizeId: z.string(),
   prizeName: z.string(),
   quota: z.number(),
-  winners: z.array(
-    userProfileSchema.extend({
-      winningTaskName: z.string().optional()
+  draws: z.array(
+    z.object({
+      id: z.string(),
+      result: z.nativeEnum(PrizeDrawResult),
+      disqualificationReason: z.string().nullable(),
+      createdAt: z.date(),
+      updatedAt: z.date(),
+      task: baseTaskSchema.pick({
+        id: true,
+        type: true,
+        title: true
+      }),
+      user: userProfileSchema
     })
   )
 });
@@ -345,15 +359,17 @@ export const sweepstakesPrizeSchema = z.object({
   id: z.string(),
   name: z.string(),
   position: z.number(),
-  winner: z
+  draws: z
     .object({
       id: z.string(),
       updatedAt: z.date(),
       createdAt: z.date(),
+      result: z.enum(['WINNER', 'DISQUALIFIED']),
+      disqualificationReason: z.string().nullable(),
       participant: sweepstakesParticipantSchema,
       taskCompletion: taskCompletionSchema
     })
-    .optional()
+    .array()
 });
 
 export type SweepstakesPrizeSchema = z.infer<typeof sweepstakesPrizeSchema>;

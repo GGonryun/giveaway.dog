@@ -146,3 +146,20 @@ export const toUserParticipationSchema = (
     status
   };
 };
+
+export const ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY = {
+  user: {
+    include: {
+      quality: {
+        take: 1,
+        orderBy: {
+          createdAt: 'desc'
+        }
+      }
+    }
+  }
+} satisfies Prisma.TaskCompletionInclude;
+
+export type EligibleTaskCompletion = Prisma.TaskCompletionGetPayload<{
+  include: typeof ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY;
+}>;

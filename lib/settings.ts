@@ -19,7 +19,7 @@ export const MAX_SWEEPSTAKE_DURATION_DAYS = 30;
 export const MAX_PICKER_SCHEDULE_DAYS = 7;
 export const DEFAULT_SWEEPSTAKES_DETAILS_TAB: SweepstakesTabSchema = 'preview';
 export const DEFAULT_USER_DETAILS_TAB: UserDetailsTabSchema = 'overview';
-export const UNKNOWN_USER_NAME = 'Unknown User';
+export const UNKNOWN_USER_NAME = 'Anonymous';
 export const DISCORD_INVITE_LINK = 'https://discord.gg/Ys8wW5w2Yt';
 export const DISCORD_PUBLIC_CHANNEL_URL =
   'https://discord.com/channels/1425715950988034130/1425715951906590732';

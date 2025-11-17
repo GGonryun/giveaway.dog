@@ -3,6 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
 import z from 'zod';
+import { PrizeDrawResult } from '@prisma/client';
 
 const completeSweepstakes = procedure()
   .authorization({ required: true })
@@ -13,6 +14,7 @@ const completeSweepstakes = procedure()
     })
   )
   .output(z.object({ success: z.boolean() }))
+
   .handler(async ({ db, user, input }) => {
     const sweepstakes = await db.sweepstakes.findUnique({
       where: {
@@ -29,7 +31,11 @@ const completeSweepstakes = procedure()
       include: {
         prizes: {
           include: {
-            winners: true
+            draws: {
+              where: {
+                result: PrizeDrawResult.WINNER
+              }
+            }
           }
         }
       }
@@ -47,7 +53,7 @@ const completeSweepstakes = procedure()
       0
     );
     const selectedWinners = sweepstakes.prizes.reduce(
-      (sum, prize) => sum + prize.winners.length,
+      (sum, prize) => sum + prize.draws.length,
       0
     );
 

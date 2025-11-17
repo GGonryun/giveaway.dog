@@ -29,7 +29,7 @@ export const PARTICIPANT_SWEEPSTAKES_PAYLOAD = {
   tasks: true,
   prizes: {
     include: {
-      winners: {
+      draws: {
         include: {
           taskCompletion: {
             include: {
@@ -73,7 +73,7 @@ export const PUBLIC_SWEEPSTAKES_PAYLOAD = {
   },
   prizes: {
     include: {
-      winners: {
+      draws: {
         include: {
           taskCompletion: true
         }

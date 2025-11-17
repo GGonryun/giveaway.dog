@@ -8,13 +8,13 @@ import {
 import { SweepstakesPrizeSchema } from './giveaway/schemas';
 import { ApplicationError } from '@/lib/errors';
 
-export const PRIZE_WINNER_INCLUDE_QUERY = (input: {
+export const PRIZE_WINNERS_INCLUDE_QUERY = (input: {
   sweepstakesId?: string;
   slug: string;
   userId: string;
 }) =>
   ({
-    winners: {
+    draws: {
       include: {
         taskCompletion: {
           include: {
@@ -30,13 +30,11 @@ export const PRIZE_WINNER_INCLUDE_QUERY = (input: {
 
 export const toSweepstakesPrizes = (
   prizes: Prisma.PrizeGetPayload<{
-    include: ReturnType<typeof PRIZE_WINNER_INCLUDE_QUERY>;
+    include: ReturnType<typeof PRIZE_WINNERS_INCLUDE_QUERY>;
   }>[],
   totalTasks: number
 ): SweepstakesPrizeSchema[] => {
-  let index = 0;
-  const mapped: SweepstakesPrizeSchema[] = [];
-  for (const prize of prizes) {
+  return prizes.map((prize) => {
     if (!prize.quota)
       throw new ApplicationError({
         code: 'VALIDATION_ERROR',
@@ -50,28 +48,29 @@ export const toSweepstakesPrizes = (
       });
     }
 
-    for (let i = 0; i < prize.quota; i++) {
-      index++;
-      const winner = prize.winners.at(i);
-      mapped.push({
-        id: prize.id,
-        name: prize.name,
-        position: index,
-        winner: winner
-          ? {
-              id: winner.id,
-              createdAt: winner.createdAt,
-              updatedAt: winner.updatedAt,
-              taskCompletion: toTaskCompletion(winner.taskCompletion),
-              participant: toUserParticipationSchema(
-                winner.taskCompletion.user,
-                totalTasks
-              )
-            }
-          : undefined
+    if (prize.index == null) {
+      throw new ApplicationError({
+        code: 'VALIDATION_ERROR',
+        message: `Prize with ID ${prize.id} has no index`
       });
     }
-  }
 
-  return mapped;
+    return {
+      id: prize.id,
+      name: prize.name,
+      position: prize.index,
+      draws: prize.draws.map((draw) => ({
+        id: draw.id,
+        createdAt: draw.createdAt,
+        updatedAt: draw.updatedAt,
+        result: draw.result,
+        disqualificationReason: draw.disqualificationReason,
+        taskCompletion: toTaskCompletion(draw.taskCompletion),
+        participant: toUserParticipationSchema(
+          draw.taskCompletion.user,
+          totalTasks
+        )
+      }))
+    };
+  });
 };

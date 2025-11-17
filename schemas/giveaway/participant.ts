@@ -6,6 +6,7 @@ import { toUserSchema } from '../user';
 import { toTaskInput } from './input';
 import { taskSchema } from '../tasks/schemas';
 import { CompletionStatus, TaskType } from '@prisma/client';
+import { ApplicationError } from '@/lib/errors';
 
 export const taskCompletionSchema = z.object({
   completionId: z.string(),
@@ -50,19 +51,33 @@ export const toSweepstakesPrizes = (
     prizeId: p.id,
     prizeName: p.name ?? null,
     quota: p.quota,
-    winners: toWinners(p.winners)
+    draws: toPrizeDraws(p.draws)
   }));
 };
 
-const toWinners = (
-  winners: ParticipantSweepstakesGetPayload['prizes'][number]['winners']
-): GiveawayPrizeSchema['winners'] => {
-  return winners.map((w) => {
-    const raw = toTaskInput(w.taskCompletion.task);
+const toPrizeDraws = (
+  draws: ParticipantSweepstakesGetPayload['prizes'][number]['draws']
+): GiveawayPrizeSchema['draws'] => {
+  return draws.map((draw) => {
+    const raw = toTaskInput(draw.taskCompletion.task);
     const task = taskSchema.safeParse(raw);
+
+    if (!task.success) {
+      throw new ApplicationError({
+        code: 'VALIDATION_ERROR',
+        message: `Invalid task data for task ID ${draw.taskCompletion.task.id}`,
+        cause: task.error
+      });
+    }
+
     return {
-      ...toUserSchema(w.taskCompletion.user),
-      winningTaskName: task.success ? task.data.title : undefined
+      id: draw.id,
+      result: draw.result,
+      disqualificationReason: draw.disqualificationReason,
+      createdAt: draw.createdAt,
+      updatedAt: draw.updatedAt,
+      user: toUserSchema(draw.taskCompletion.user),
+      task: task.data
     };
   });
 };

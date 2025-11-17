@@ -432,17 +432,28 @@ model Prize {
   index Int?
   quota Int?
 
-  winners PrizeWinners[]
+  draws PrizeDraw[]
 }
 
-model PrizeWinners {
-  id               String         @id
-  prizeId          String
-  prize            Prize          @relation(fields: [prizeId], references: [id], onDelete: Cascade)
-  taskCompletionId String
-  taskCompletion   TaskCompletion @relation(fields: [taskCompletionId], references: [id], onDelete: Cascade)
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+enum PrizeDrawResult {
+  WINNER
+  DISQUALIFIED
+}
+
+model PrizeDraw {
+  id                     String          @id
+  prizeId                String
+  prize                  Prize           @relation(fields: [prizeId], references: [id], onDelete: Cascade)
+  taskCompletionId       String
+  taskCompletion         TaskCompletion  @relation(fields: [taskCompletionId], references: [id], onDelete: Cascade)
+  result                 PrizeDrawResult @default(WINNER)
+  disqualificationReason String?
+  previousDrawId         String?         @unique
+  previousDraw           PrizeDraw?      @relation("PrizeDraw", fields: [previousDrawId], references: [id], onDelete: Cascade)
+  nextDraw               PrizeDraw?      @relation("PrizeDraw")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Task {
@@ -479,7 +490,7 @@ model TaskCompletion {
   taskId String
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
-  winners PrizeWinners[]
+  draws PrizeDraw[]
 
   completedAt DateTime         @default(now())
   proof       Json?

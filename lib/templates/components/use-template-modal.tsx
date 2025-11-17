@@ -52,7 +52,7 @@ export function UseTemplateModal({
     prizeId: p.id,
     prizeName: p.name,
     quota: p.quota,
-    winners: []
+    draws: []
   }));
 
   const mockParticipation = {
