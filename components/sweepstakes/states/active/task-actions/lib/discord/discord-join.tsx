@@ -36,20 +36,29 @@ export const DiscordJoinTaskActionForm: React.FC<
               Thank you for joining our Discord server!
             </p>
           ) : (
-            <>
-              <Button asChild className={cn(theme.action)}>
-                <Link
-                  href={task.invite}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setPerformedAction(true)}
-                >
-                  <UserPlus />
-                  Join Discord Server
-                </Link>
+            <div className="mt-2">
+              <div className="space-y-4">
+                <Button asChild className={cn(theme.action)}>
+                  <Link
+                    href={task.invite}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setPerformedAction(true)}
+                  >
+                    <UserPlus />
+                    Join Discord Server
+                  </Link>
+                </Button>
+                {error && <ErrorDisplay message={error.message} />}
+              </div>
+              <Button
+                variant="link"
+                onClick={() => setPerformedAction(true)}
+                className="text-xs text-black underline mt-2"
+              >
+                I already joined the server
               </Button>
-              {error && <ErrorDisplay message={error.message} />}
-            </>
+            </div>
           )}
         </div>
       )}

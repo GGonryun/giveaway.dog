@@ -56,22 +56,31 @@ export const SteamWishlistTaskActionForm: React.FC<
               Thank you for wishlisting!
             </p>
           ) : (
-            <>
-              <Button asChild className={cn(theme.action)}>
-                <Link
-                  href={task.appId}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setPerformedAction(true)}
-                >
-                  <UserPlus />
-                  Add to Wishlist
-                </Link>
+            <div className="mt-2">
+              <div className="space-y-4">
+                <Button asChild className={cn(theme.action)}>
+                  <Link
+                    href={task.appId}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setPerformedAction(true)}
+                  >
+                    <UserPlus />
+                    Add to Wishlist
+                  </Link>
+                </Button>
+                {error?.code === 'VALIDATION_ERROR' && (
+                  <ErrorDisplay message={error.message} />
+                )}
+              </div>
+              <Button
+                variant="link"
+                onClick={() => setPerformedAction(true)}
+                className="text-xs mt-2 text-black"
+              >
+                I already added to wishlist
               </Button>
-              {error?.code === 'VALIDATION_ERROR' && (
-                <ErrorDisplay message={error.message} />
-              )}
-            </>
+            </div>
           )}
 
           <PrivateSteamProfileDialog

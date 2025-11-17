@@ -28,17 +28,28 @@ export const TwitterFollowTaskActionForm: React.FC<
               Thank you for following!
             </p>
           ) : (
-            <Button asChild className={cn(theme.action)}>
-              <Link
-                href={`https://x.com/intent/follow?screen_name=${screenName}`}
-                target="_blank"
-                rel="noopener noreferrer"
+            <div>
+              <div className="mt-2">
+                <Button asChild className={cn(theme.action)}>
+                  <Link
+                    href={`https://x.com/intent/follow?screen_name=${screenName}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setPerformedAction(true)}
+                  >
+                    <UserPlus />
+                    Follow @{screenName}
+                  </Link>
+                </Button>
+              </div>
+              <Button
+                variant="link"
                 onClick={() => setPerformedAction(true)}
+                className="text-xs text-black underline mt-2"
               >
-                <UserPlus />
-                Follow @{screenName}
-              </Link>
-            </Button>
+                I already followed
+              </Button>
+            </div>
           )}
           <DisqualificationWarning />
         </div>
