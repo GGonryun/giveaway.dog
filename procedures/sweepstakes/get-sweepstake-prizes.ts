@@ -9,7 +9,7 @@ import {
   PRIZE_WINNERS_INCLUDE_QUERY,
   toSweepstakesPrizes
 } from '@/schemas/prizes';
-import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@/schemas/participants';
+import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@/lib/task/queries';
 
 const getParticipantSweepstake = procedure()
   .authorization({

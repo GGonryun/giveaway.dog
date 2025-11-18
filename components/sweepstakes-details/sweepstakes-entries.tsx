@@ -13,12 +13,13 @@ import {
 } from '@/components/ui/table';
 import { Globe } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
-import { TASK_LABEL, UserEntriesSchema } from '@/schemas/tasks/schemas';
 import { formatDistanceToNowStrict } from 'date-fns';
-import { TaskStatusBadge, TaskStatusIcon } from './task-utils';
 import { UserSchema } from '@/schemas/user';
 import { Button } from '../ui/button';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
+import { TASK_LABEL, UserEntriesSchema } from '@/lib/task/schemas';
+import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
+import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
 
 interface SweepstakesEntriesProps {
   slug: string;

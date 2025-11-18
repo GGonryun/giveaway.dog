@@ -20,15 +20,14 @@ import {
   FileCheck
 } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
-import { UserEntriesSchema } from '@/schemas/tasks/schemas';
-import {
-  TaskCategoryBadge,
-  TaskPlatformIcon,
-  TaskStatusBadge,
-  TaskStatusIcon
-} from './task-utils';
+
 import { formatDistanceToNowStrict } from 'date-fns';
 import Link from 'next/link';
+import { UserEntriesSchema } from '@/lib/task/schemas';
+import { TaskCategoryBadge } from '@/lib/task/components/task-category-badge';
+import { TaskPlatformIcon } from '@/lib/task/components/task-platform-icon';
+import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
+import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
 
 export const TaskCompletionDetailSheetContent: React.FC<{
   entries: UserEntriesSchema[];

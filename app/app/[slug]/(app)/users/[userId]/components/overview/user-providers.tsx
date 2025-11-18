@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { PROVIDER_ICON } from '@/components/ui/patterns/provider-icon';
+import { PROVIDER_ICON } from '@/lib/integrations/components/icons/provider-icon';
 import { UserSchema } from '@/schemas/user';
 
 export const UserProviders: React.FC<{

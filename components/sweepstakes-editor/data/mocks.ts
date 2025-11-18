@@ -1,13 +1,10 @@
+import { PROVIDER_REQUIRED_SCOPES } from '@/lib/integrations/schemas/providers';
 import {
   GiveawayParticipationSchema,
   UserParticipationSchema,
   GiveawayPrizeSchema
 } from '@/schemas/giveaway/schemas';
-import {
-  AgeVerificationSchema,
-  PROVIDER_REQUIRED_SCOPES,
-  UserProfileSchema
-} from '@/schemas/user';
+import { AgeVerificationSchema, UserProfileSchema } from '@/schemas/user';
 
 export const mockHost = {
   id: 'preview-host-id',
@@ -36,6 +33,16 @@ export const mockUserProfile: UserProfileSchema = {
       type: 'google',
       label: 'preview.user@gmail.com',
       scopes: PROVIDER_REQUIRED_SCOPES.google
+    },
+    {
+      type: 'discord',
+      label: 'PreviewUser#1234',
+      scopes: PROVIDER_REQUIRED_SCOPES.discord
+    },
+    {
+      type: 'twitch',
+      label: 'PreviewUser',
+      scopes: PROVIDER_REQUIRED_SCOPES.twitch
     }
   ]
 };

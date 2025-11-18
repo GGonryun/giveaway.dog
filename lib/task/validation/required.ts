@@ -1,6 +1,6 @@
 import { ApplicationError } from '@/lib/errors';
-import { toTaskSchema } from '@/schemas/tasks/parse';
 import { Prisma } from '@prisma/client';
+import { toTaskSchema } from '../schemas';
 
 export const validateRequiredTasks = async ({
   taskId,

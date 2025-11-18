@@ -7,7 +7,6 @@ import { assertNever } from '@/lib/errors';
 import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';
 import { userProfileSchema } from '../user';
-import { baseTaskSchema, taskSchema } from '../tasks/schemas';
 import {
   taskCompletionSchema,
   sweepstakesParticipantSchema
@@ -15,6 +14,7 @@ import {
 import { derivedSweepstakesStatusSchema } from '../sweepstakes';
 import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@/lib/settings';
 import { timingSchema } from '../timing';
+import { taskSchema, baseTaskSchema } from '@/lib/task/schemas';
 
 export type DeviceType = 'mobile' | 'desktop';
 

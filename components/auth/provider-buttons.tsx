@@ -1,6 +1,9 @@
 import { Button } from '@/components/ui/button';
-import { ProviderIcon } from '@/components/ui/patterns/provider-icon';
-import { PROVIDER_SCHEMA_LABELS, ProviderTypeSchema } from '@/schemas/user';
+import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
+import {
+  ProviderTypeSchema,
+  PROVIDER_SCHEMA_LABELS
+} from '@/lib/integrations/schemas/providers';
 import React from 'react';
 
 type ProviderButtonsProps = {

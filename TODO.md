@@ -1,10 +1,5 @@
-- [ ] Display an "i already completed this task" button for tasks that have already been completed by the user.
-
-- [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
-
 - [ ] Add a referral integration.
 - [ ] Add a secret code integration.
-- [ ] Add Twitch integration.
 - [ ] Add TikTok integration.
 - [ ] Add YouTube integration.
 - [ ] Add Facebook integration.
@@ -29,6 +24,8 @@
 - [ ] As a host, I want to be able to attach screenshots/proof that a user has claimed a prize.
 - [ ] As a host, I want people to subscribe to my newsletter on giveaway.dog and be notified of my sweepstakes.
   - [ ] It should also include an action to "follow" us on giveaway.dog
+
+- [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
 
 ## User Feedback
 

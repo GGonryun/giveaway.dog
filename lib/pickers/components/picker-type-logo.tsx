@@ -1,4 +1,4 @@
-import { SocialXIcon } from '@/components/ui/patterns/x-icon';
+import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { assertNever } from '@/lib/errors';
 import { PickerTypeSchema } from '../schemas/list';
 import { cn } from '@/lib/utils';

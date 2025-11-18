@@ -7,14 +7,15 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { TASK_LABEL, TaskType } from '@/schemas/tasks/schemas';
 import React from 'react';
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { widetype } from '@/lib/widetype';
 import { PlusIcon, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { toTaskTheme } from '@/components/tasks/theme';
+import { toTaskTheme } from '@/lib/task/components/theme';
+import { TASK_LABEL } from '@/lib/task/schemas';
+import { TaskType } from '@prisma/client';
 
 export const SelectTaskDialog: React.FC<{
   onSelect: (type: TaskType) => void;

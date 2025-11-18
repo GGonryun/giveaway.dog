@@ -33,7 +33,7 @@ import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation';
-import { SocialXIcon } from '@/components/ui/patterns/x-icon';
+import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 
 interface SetupSectionProps {
   integrations?: IntegrationsSchema;

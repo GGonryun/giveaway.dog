@@ -3,9 +3,9 @@
 import React, { useMemo } from 'react';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import Link from 'next/link';
-import { useLogout } from '../auth/use-logout';
 import { usePathname } from 'next/navigation';
-import { ProviderIcon } from '@/components/ui/patterns/provider-icon';
+import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
+import { useLogout } from '@/lib/auth/hooks/use-logout';
 
 export const UserInfoSection: React.FC = () => {
   const { userProfile } = useGiveawayParticipation();

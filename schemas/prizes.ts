@@ -1,12 +1,14 @@
 import { Prisma } from '@prisma/client';
 import {
-  TASK_COMPLETION_INCLUDE_QUERY,
-  toTaskCompletion,
   toUserParticipationSchema,
   USER_PARTICIPATION_INCLUDE_QUERY
 } from './participants';
 import { SweepstakesPrizeSchema } from './giveaway/schemas';
 import { ApplicationError } from '@/lib/errors';
+import {
+  TASK_COMPLETION_INCLUDE_QUERY,
+  toTaskCompletion
+} from '@/lib/task/queries';
 
 export const PRIZE_WINNERS_INCLUDE_QUERY = (input: {
   sweepstakesId?: string;

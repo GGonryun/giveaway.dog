@@ -21,6 +21,8 @@ const getAccountLabel = (account: any, profile: any): string | null => {
       return profile?.username ? `@${profile.username}` : null;
     case 'steam':
       return profile?.personaname || null;
+    case 'twitch':
+      return profile?.name || null;
     default:
       return null;
   }

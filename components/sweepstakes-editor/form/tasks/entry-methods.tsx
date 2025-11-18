@@ -25,8 +25,8 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { nanoid } from 'nanoid';
-import { TaskType } from '@/schemas/tasks/schemas';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { TaskType } from '@prisma/client';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };
 

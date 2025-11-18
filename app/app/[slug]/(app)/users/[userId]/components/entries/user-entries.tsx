@@ -12,15 +12,14 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { TablePagination } from '@/components/ui/table-pagination';
-import { TASK_LABEL } from '@/schemas/tasks/schemas';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
-import {
-  TaskStatusIcon,
-  TaskStatusBadge
-} from '@/components/sweepstakes-details/task-utils';
+
 import { Button } from '@/components/ui/button';
 import { TaskCompletionSchema } from '@/schemas/giveaway/participant';
+import { TASK_LABEL } from '@/lib/task/schemas';
+import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
+import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
 
 interface UserEntriesProps {
   slug: string;

@@ -5,13 +5,14 @@ import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 import { findUserSweepstakes } from './shared';
 import { nanoid } from 'nanoid';
+
+import { Prisma, PrismaClient, PrizeDrawResult } from '@prisma/client';
+import { rng } from '@/lib/rng';
 import {
   SWEEPSTAKES_TASK_WHERE_QUERY,
   ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY,
   EligibleTaskCompletion
-} from '@/schemas/participants';
-import { Prisma, PrismaClient, PrizeDrawResult } from '@prisma/client';
-import { rng } from '@/lib/rng';
+} from '@/lib/task/queries';
 
 const rollWinners = procedure()
   .authorization({

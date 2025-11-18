@@ -12,11 +12,11 @@ import {
 } from '@/components/auth/provider-buttons';
 import { AuthError } from '@/components/auth/auth-error';
 import { ArrowLeftIcon } from 'lucide-react';
-import login from '@/procedures/auth/login';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import { Typography } from '../ui/typography';
 import { Flex } from '../ui/flex';
+import login from '@/lib/auth/procedures/login';
 
 interface LoginOptionsProps {
   className?: string;

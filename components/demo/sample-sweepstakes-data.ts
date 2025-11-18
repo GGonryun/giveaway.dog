@@ -6,7 +6,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   setup: {
     name: 'Win Amazing Prizes!',
     description:
-      'Enter for a chance to win incredible prizes in our demo giveaway. Complete simple tasks to increase your chances of winning! This is a demo sweepstakes to showcase our platform features.',
+      'Enter for a chance to win incredible prizes in our demo giveaway. Complete simple tasks to increase your chances of winning!<br/><br/>This is a demo sweepstakes to showcase our platform features.',
     banner: '/images/demo-sweepstakes-banner-2.jpg'
   },
   timing: {
@@ -33,6 +33,11 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       id: nanoid()
     },
     {
+      ...toDefaultValues('BONUS_TASK'),
+      tasksRequired: 3,
+      id: nanoid()
+    },
+    {
       ...toDefaultValues('TWITTER_FOLLOW'),
       id: nanoid()
     },
@@ -49,8 +54,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       id: nanoid()
     },
     {
-      ...toDefaultValues('BONUS_TASK'),
-      tasksRequired: 3,
+      ...toDefaultValues('TWITCH_FOLLOW'),
       id: nanoid()
     }
   ],

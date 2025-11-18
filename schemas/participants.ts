@@ -1,67 +1,10 @@
 import { UNKNOWN_USER_COUNTRY_CODE, UNKNOWN_USER_AGENT } from '@/lib/settings';
+import {
+  SWEEPSTAKES_TASK_WHERE_QUERY,
+  toTaskCompletion
+} from '@/lib/task/queries';
 import { Prisma } from '@prisma/client';
-import { TaskCompletionSchema } from './giveaway/participant';
-import { toTaskInput } from './giveaway/input';
-import { taskSchema } from './tasks/schemas';
-import { DEFAULT_SWEEPSTAKES_NAME } from './giveaway/defaults';
 import { clamp } from 'lodash';
-
-export const TASK_COMPLETION_INCLUDE_QUERY = {
-  task: {
-    include: {
-      sweepstakes: {
-        include: {
-          details: true
-        }
-      }
-    }
-  }
-} satisfies Prisma.TaskCompletionInclude;
-
-export const toTaskCompletion = (
-  entry: Prisma.TaskCompletionGetPayload<{
-    include: typeof TASK_COMPLETION_INCLUDE_QUERY;
-  }>
-): TaskCompletionSchema => {
-  const raw = toTaskInput(entry.task);
-  const task = taskSchema.safeParse(raw);
-  if (!task.success) {
-    throw new Error('Invalid task config in entry');
-  }
-  return {
-    status: entry.status,
-    completionId: entry.id,
-    completedAt: entry.completedAt,
-    taskId: entry.taskId,
-    taskName: task.data.title,
-    taskType: task.data.type,
-    sweepstakeId: entry.task.sweepstakes.id,
-    sweepstakeName:
-      entry.task.sweepstakes.details?.name ?? DEFAULT_SWEEPSTAKES_NAME
-  };
-};
-
-export const SWEEPSTAKES_TASK_WHERE_QUERY = (input: {
-  sweepstakesId?: string;
-  slug: string;
-  userId: string;
-}) => {
-  if (input.sweepstakesId) {
-    return {
-      sweepstakesId: input.sweepstakesId
-    };
-  }
-  return {
-    sweepstakes: {
-      team: {
-        slug: input.slug,
-        members: {
-          some: { userId: input.userId }
-        }
-      }
-    }
-  } satisfies Prisma.TaskWhereInput;
-};
 
 export const USER_PARTICIPATION_INCLUDE_QUERY = (input: {
   sweepstakesId?: string;
@@ -146,20 +89,3 @@ export const toUserParticipationSchema = (
     status
   };
 };
-
-export const ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY = {
-  user: {
-    include: {
-      quality: {
-        take: 1,
-        orderBy: {
-          createdAt: 'desc'
-        }
-      }
-    }
-  }
-} satisfies Prisma.TaskCompletionInclude;
-
-export type EligibleTaskCompletion = Prisma.TaskCompletionGetPayload<{
-  include: typeof ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY;
-}>;

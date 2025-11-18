@@ -10,7 +10,7 @@ import { useProcedureAsync } from '@/lib/mrpc/hook';
 import getTwitterOEmbed from '@/lib/integrations/procedures/get-twitter-oembed';
 import { xStatusRefineUrl } from '@/lib/integrations/schemas/twitter';
 import { FailureData } from '@/lib/mrpc/types';
-import { SocialXIcon } from '@/components/ui/patterns/x-icon';
+import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { cn } from '@/lib/utils';
 
 interface CachedTwitterEmbed {

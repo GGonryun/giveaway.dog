@@ -1,6 +1,5 @@
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
-import { TASK_LABEL, TaskType } from '@/schemas/tasks/schemas';
 import {
   Trash2Icon,
   CopyIcon,
@@ -17,12 +16,15 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '@/components/ui/collapsible';
-import { AdditionalSettings } from './additional-settings';
-import { AdvancedSettings } from './advanced-settings';
+
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ArrayContext } from '@/components/hooks/use-array-context';
-import { toTaskTheme } from '@/components/tasks/theme';
+import { toTaskTheme } from '@/lib/task/components/theme';
+import { TASK_LABEL } from '@/lib/task/schemas';
+import { TaskType } from '@prisma/client';
+import { AdditionalSettings } from '@/lib/task/components/sweepstakes-editor-form/additional-settings';
+import { AdvancedSettings } from '@/lib/task/components/sweepstakes-editor-form/advanced-settings';
 
 export const EntryMethod: React.FC<{
   id: string;

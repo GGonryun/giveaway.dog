@@ -1,6 +1,6 @@
 import { ApplicationError } from '@/lib/errors';
-import { SteamWishlistTaskSchema } from '@/schemas/tasks/schemas';
 import { PrismaClient } from '@prisma/client';
+import { SteamWishlistTaskSchema } from '../schemas';
 
 export const PRIVATE_STEAM_WISHLIST_ERROR = 'PRIVATE_STEAM_WISHLIST';
 export const GAME_NOT_IN_WISHLIST_ERROR = 'GAME_NOT_IN_WISHLIST';
@@ -17,8 +17,8 @@ const checkSteamGameOwnership = async (
     'and AppID:',
     appId
   );
-  const appidsFilter = JSON.stringify([parseInt(appId)]);
-  const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${process.env.STEAM_SECRET}&steamid=${steamId}&appids_filter=${encodeURIComponent(appidsFilter)}&format=json`;
+  const filter = JSON.stringify([parseInt(appId)]);
+  const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${process.env.STEAM_SECRET}&steamid=${steamId}&appids_filter=${encodeURIComponent(filter)}&format=json`;
 
   const response = await fetch(url);
 

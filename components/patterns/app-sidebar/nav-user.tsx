@@ -21,7 +21,7 @@ import {
 import { useUser } from '@/components/context/user-provider';
 import Link from 'next/link';
 import { useAccountPage } from '@/components/account/use-account-page';
-import { useLogout } from '../../auth/use-logout';
+import { useLogout } from '@/lib/auth/hooks/use-logout';
 
 export const NavUser = () => {
   const { isMobile } = useSidebar();

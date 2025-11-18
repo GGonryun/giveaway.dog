@@ -1,7 +1,7 @@
 import { ApplicationError } from '@/lib/errors';
-import { DiscordJoinTaskSchema } from '@/schemas/tasks/schemas';
 import { PrismaClient } from '@prisma/client';
 import { refreshDiscordToken } from '@/lib/integrations/utils/refresh-discord-token';
+import { DiscordJoinTaskSchema } from '../schemas';
 
 export const checkDiscordJoin = async (
   db: PrismaClient,

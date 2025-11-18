@@ -1,9 +1,10 @@
 import { procedure } from '@/lib/mrpc/procedures';
-import { taskCompletionSchema } from '@/schemas/giveaway/participant';
 import {
   TASK_COMPLETION_INCLUDE_QUERY,
   toTaskCompletion
-} from '@/schemas/participants';
+} from '@/lib/task/queries';
+import { taskCompletionSchema } from '@/schemas/giveaway/participant';
+
 import z from 'zod';
 
 const getUserEntries = procedure()

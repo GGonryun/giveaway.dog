@@ -97,6 +97,9 @@
     --discord-2: oklch(0.7283 0.0249 236.13);
     --discord-3: oklch(0.3038 0.0084 255.56);
 
+    /* Twitch palette */
+    --twitch-1: oklch(0.5908 0.25458 296.0935);
+
     /* Chart palette */
     --chart-1: oklch(0.7459 0.1483 156.4499);
     --chart-2: oklch(0.5393 0.2713 286.7462);
@@ -279,6 +282,8 @@
     --color-discord-1: var(--discord-1);
     --color-discord-2: var(--discord-2);
     --color-discord-3: var(--discord-3);
+
+    --color-twitch-1: var(--twitch-1);
 
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);

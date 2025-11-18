@@ -5,75 +5,17 @@ import {
   parseUserFeatureFlags
 } from './feature-flags';
 import { UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
-import {
-  REQUIRED_DISCORD_SCOPES,
-  REQUIRED_TWITTER_SCOPES,
-  REQUIRED_STEAM_SCOPES,
-  REQUIRED_GMAIL_SCOPES
-} from '@/lib/auth/scopes';
-import { Nil } from '@/lib/types';
+
 import { clamp } from 'lodash';
 
-export const providerTypeSchema = z.union([
-  z.literal('twitter'),
-  z.literal('google'),
-  z.literal('discord'),
-  z.literal('email'),
-  z.literal('steam')
-]);
-
-export type ProviderTypeSchema = z.infer<typeof providerTypeSchema>;
-
-export const PROVIDER_REQUIRED_SCOPES: Record<ProviderTypeSchema, string[]> = {
-  email: [],
-  discord: REQUIRED_DISCORD_SCOPES,
-  twitter: REQUIRED_TWITTER_SCOPES,
-  steam: REQUIRED_STEAM_SCOPES,
-  google: REQUIRED_GMAIL_SCOPES
-};
-
-export const isMissingScopes = (
-  provider: Nil<ProviderSchema>,
-  requiredScopes: string[]
-) => {
-  return (
-    requiredScopes &&
-    requiredScopes.length > 0 &&
-    !requiredScopes.every((scope) => provider?.scopes.includes(scope))
-  );
-};
-
-export const isProviderType = (value: unknown): value is ProviderTypeSchema => {
-  return providerTypeSchema.safeParse(value).success;
-};
-
-export const providerSchema = z.object({
-  type: providerTypeSchema,
-  scopes: z.array(z.string()),
-  label: z.string()
-});
-
-export type ProviderSchema = z.infer<typeof providerSchema>;
-
-export const PROVIDER_SCHEMA_LABELS: Record<ProviderTypeSchema, string> = {
-  twitter: 'X (Twitter)',
-  google: 'Google',
-  discord: 'Discord',
-  email: 'Email',
-  steam: 'Steam'
-};
-
-export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
-  twitter: true,
-  google: true,
-  discord: true,
-  steam: true,
-  email: false
-};
-
-export const SOCIAL_PROVIDERS = Object.entries(IS_SOCIAL_PROVIDER)
-  .filter(([, isSocial]) => isSocial)
-  .map(([providerId]) => providerId) as ProviderTypeSchema[];
+import {
+  providerSchema,
+  ProviderSchema,
+  ProviderTypeSchema,
+  providerTypeSchema
+} from '@/lib/integrations/schemas/providers';
+import { ApplicationError } from '@/lib/errors';
+import { Nil } from '@/lib/types';
 
 export const userProfileSchema = z.object({
   id: z.string(),
@@ -102,17 +44,16 @@ export const parseProviders = (providers: UserAccounts[]): ProviderSchema[] =>
     label: provider.label || 'N/A'
   }));
 
-export const parseProvider = (provider: unknown) => {
-  if (typeof provider !== 'string') {
-    return null;
-  }
-
+export const parseProvider = (provider: Nil<string>): ProviderTypeSchema => {
   const result = providerTypeSchema.safeParse(provider);
   if (result.success) {
     return result.data;
   }
 
-  return null;
+  throw new ApplicationError({
+    code: 'VALIDATION_ERROR',
+    message: `Unsupported provider ${provider || 'unknown'}`
+  });
 };
 
 export const createUserProfileSchema = z.object({

@@ -5,10 +5,9 @@ import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 
-import { userEntriesSchema } from '@/schemas/tasks/schemas';
-import { toTaskSchema } from '@/schemas/tasks/parse';
 import { toJsonObject } from '@/lib/json';
 import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
+import { userEntriesSchema, toTaskSchema } from '@/lib/task/schemas';
 
 const getSweepstakeEntries = procedure()
   .authorization({

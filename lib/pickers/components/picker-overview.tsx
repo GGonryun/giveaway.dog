@@ -64,7 +64,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { IntegrationsSchema } from '@/lib/integrations/schemas';
-import { SocialXIcon } from '@/components/ui/patterns/x-icon';
+import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 
 const InfoRow = ({
   icon: Icon,

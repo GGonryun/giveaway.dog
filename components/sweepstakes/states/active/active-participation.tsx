@@ -10,7 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import { browser } from '@/lib/browser';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PrizeItem } from './prize-item';
-import { TaskList } from './task-list';
+import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';
 
 export const ActiveParticipation: React.FC = () => {
   const searchParams = useSearchParams();

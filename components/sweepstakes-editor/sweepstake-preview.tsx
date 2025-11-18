@@ -24,7 +24,6 @@ import {
   DEFAULT_SWEEPSTAKES_NAME
 } from '@/schemas/giveaway/defaults';
 import { noop } from 'lodash';
-import { TaskSchema } from '@/schemas/tasks/schemas';
 import {
   mockHost,
   mockParticipation,
@@ -32,6 +31,7 @@ import {
   mockUserProfile,
   mockUserParticipation
 } from './data/mocks';
+import { TaskSchema } from '@/lib/task/schemas';
 
 export const SweepstakePreview: React.FC = () => {
   const { control } = useFormContext<GiveawayFormSchema>();

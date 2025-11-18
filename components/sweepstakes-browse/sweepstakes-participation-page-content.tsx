@@ -9,7 +9,7 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { UserProfileSchema } from '@/schemas/user';
 import { useProcedureAsync } from '@/lib/mrpc/hook';
-import submitTask from '@/procedures/tasks/submit-task';
+import submitTask from '@/lib/task/procedures/submit-tasks';
 
 type SweepstakesParticipationPageContentProps = ParticipantSweepstakeSchema & {
   userProfile?: UserProfileSchema;

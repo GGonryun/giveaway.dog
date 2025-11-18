@@ -2,8 +2,9 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
+import { toTaskSchema } from '@/lib/task/schemas';
 import { userParticipationSchema } from '@/schemas/giveaway/schemas';
-import { toTaskSchema } from '@/schemas/tasks/parse';
+
 import z from 'zod';
 
 const getUserSweepstakesParticipation = procedure()

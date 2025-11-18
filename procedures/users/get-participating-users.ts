@@ -1,10 +1,10 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
+import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@/lib/task/queries';
 import { sweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 
 import {
-  SWEEPSTAKES_TASK_WHERE_QUERY,
   toUserParticipationSchema,
   USER_PARTICIPATION_INCLUDE_QUERY
 } from '@/schemas/participants';

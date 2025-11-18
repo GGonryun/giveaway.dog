@@ -479,6 +479,7 @@ enum TaskType {
   TWITTER_RETWEET
   STEAM_WISHLIST
   DISCORD_JOIN
+  TWITCH_FOLLOW
 }
 
 model TaskCompletion {

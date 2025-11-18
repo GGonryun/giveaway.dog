@@ -4,10 +4,15 @@ import NextAuth from 'next-auth';
 import TwitterProvider from 'next-auth/providers/twitter';
 import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
+import TwitchProvider from 'next-auth/providers/twitch';
+
 import { authConfig } from './config';
 import { SteamProvider } from './providers/steam';
-import { REQUIRED_DISCORD_SCOPES } from './scopes';
 import { InboundEmailProvider } from './providers/inbound';
+import {
+  REQUIRED_DISCORD_SCOPES,
+  REQUIRED_TWITCH_SCOPES
+} from '../integrations/scopes';
 
 export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
   ...authConfig,
@@ -48,6 +53,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET,
       authorization: `https://discord.com/api/oauth2/authorize?scope=${REQUIRED_DISCORD_SCOPES.join('+')}`
+    }),
+    TwitchProvider({
+      clientId: process.env.TWITCH_CLIENT_ID,
+      clientSecret: process.env.TWITCH_CLIENT_SECRET,
+      authorization: {
+        params: {
+          scope: REQUIRED_TWITCH_SCOPES.join(' '),
+          claims: {
+            id_token: {
+              email: null,
+              picture: null,
+              preferred_username: null
+            }
+          }
+        }
+      }
     }),
     InboundEmailProvider({
       secret: process.env.INBOUND_SECRET

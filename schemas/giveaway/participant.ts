@@ -4,9 +4,9 @@ import { GiveawayPrizeSchema } from './schemas';
 import z from 'zod';
 import { toUserSchema } from '../user';
 import { toTaskInput } from './input';
-import { taskSchema } from '../tasks/schemas';
 import { CompletionStatus, TaskType } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
+import { taskSchema } from '@/lib/task/schemas';
 
 export const taskCompletionSchema = z.object({
   completionId: z.string(),

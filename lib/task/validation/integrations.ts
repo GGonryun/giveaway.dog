@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { assertNever } from '../../errors';
-import { TaskSchema } from '@/schemas/tasks/schemas';
 import { checkSteamWishlist } from './steam';
 import { checkDiscordJoin } from './discord';
+import { TaskSchema } from '../schemas';
+import { checkTwitchFollow } from './twitch';
 
 export const validateTask = async <T extends TaskSchema>(
   db: PrismaClient,
@@ -10,7 +11,7 @@ export const validateTask = async <T extends TaskSchema>(
     task: T;
     userId: string;
   }
-) => {
+): Promise<void> => {
   switch (input.task.type) {
     case 'BONUS_TASK':
     case 'VISIT_URL':
@@ -26,6 +27,11 @@ export const validateTask = async <T extends TaskSchema>(
       });
     case 'DISCORD_JOIN':
       return await checkDiscordJoin(db, {
+        task: input.task,
+        userId: input.userId
+      });
+    case 'TWITCH_FOLLOW':
+      return await checkTwitchFollow(db, {
         task: input.task,
         userId: input.userId
       });

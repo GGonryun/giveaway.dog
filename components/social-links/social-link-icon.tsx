@@ -11,8 +11,8 @@ import {
 import { type SocialPlatform } from '@/schemas/social-links';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { SocialXIcon } from '../ui/patterns/x-icon';
-import { SocialDiscordIcon } from '../ui/patterns/discord-icon';
+import { SocialXIcon } from '../../lib/integrations/components/icons/x-icon';
+import { SocialDiscordIcon } from '../../lib/integrations/components/icons/discord-icon';
 
 export const PLATFORM_ICONS: Record<
   SocialPlatform,

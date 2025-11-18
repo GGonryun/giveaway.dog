@@ -1,8 +1,8 @@
 'use server';
 
 import { ApplicationError } from '@/lib/errors';
+import { providerTypeSchema } from '@/lib/integrations/schemas/providers';
 import { procedure } from '@/lib/mrpc/procedures';
-import { providerTypeSchema } from '@/schemas/user';
 import z from 'zod';
 
 export const updateEmail = procedure()

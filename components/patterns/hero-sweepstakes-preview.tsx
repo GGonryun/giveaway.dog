@@ -36,8 +36,11 @@ export const HeroSweepstakesPreview: React.FC = () => {
   const state = computeState({
     sweepstakes: mockSweepstakes,
     prizes: mockPrizes,
-    userProfile: undefined,
-    ageVerification: null
+    userProfile: mockUserProfile,
+    ageVerification: {
+      userId: mockUserProfile.id,
+      sweepstakesId: mockSweepstakes.id
+    }
   });
 
   return (

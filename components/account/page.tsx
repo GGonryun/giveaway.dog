@@ -3,10 +3,10 @@
 import { UserSettings } from './user-profile';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { useState } from 'react';
-import { LogoutButton } from './logout-button';
 import { DangerZone } from './danger-zone';
 import { FeatureSettings } from './feature-settings';
 import { HistorySettings } from './history-settings';
+import { LogoutButton } from '@/lib/auth/components/logout-button';
 
 type AccountSections = 'profile' | 'linked-accounts';
 

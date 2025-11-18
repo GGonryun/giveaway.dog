@@ -2,11 +2,12 @@ import {
   DISCORD_INVITE_LINK,
   DISCORD_PUBLIC_CHANNEL_URL,
   STEAM_APP_ID_URL,
+  TWITCH_CHANNEL_URL,
   TWITTER_POST_URL,
   TWITTER_PROFILE_URL
 } from '@/lib/settings';
-import { TaskOf } from '@/schemas/tasks/schemas';
 import { TaskType } from '@prisma/client';
+import { TaskOf } from './schemas';
 
 export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
   const defaults: { [key in TaskType]: TaskOf<key> } = {
@@ -69,6 +70,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       title: 'Join our Discord server',
       invite: DISCORD_INVITE_LINK,
       channel: DISCORD_PUBLIC_CHANNEL_URL,
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
+    ['TWITCH_FOLLOW']: {
+      id: '',
+      type: 'TWITCH_FOLLOW',
+      title: 'Follow us on Twitch',
+      channel: TWITCH_CHANNEL_URL,
       value: 1,
       mandatory: false,
       tasksRequired: 0

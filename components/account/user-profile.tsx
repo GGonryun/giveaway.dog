@@ -19,12 +19,12 @@ import { toast } from 'sonner';
 import { AccountSectionHeader } from './account-section-header';
 import { SaveIcon } from 'lucide-react';
 import { Spinner } from '../ui/spinner';
-import { SocialProviders } from './social-providers';
 import { EmailVerification } from '../auth/email-verification';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { updateUserProfileSchema, UpdateUserProfile } from '@/schemas/user';
 import { useRouter } from 'next/navigation';
+import { SocialProviders } from '@/lib/auth/components/social-providers';
 
 export const UserSettings = () => {
   const user = useUser();
