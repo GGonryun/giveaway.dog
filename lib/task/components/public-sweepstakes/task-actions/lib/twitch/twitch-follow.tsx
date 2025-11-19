@@ -46,7 +46,7 @@ export const TwitchFollowTaskActionForm: React.FC<
                     onClick={() => setPerformedAction(true)}
                   >
                     <UserPlus />
-                    Follow Twitch Channel
+                    Follow on Twitch
                   </Link>
                 </Button>
                 {error && <ErrorDisplay message={error.message} />}
