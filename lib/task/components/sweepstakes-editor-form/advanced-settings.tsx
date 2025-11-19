@@ -24,6 +24,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'STEAM_WISHLIST':
       case 'DISCORD_JOIN':
       case 'TWITCH_FOLLOW':
+      case 'KICK_FOLLOW':
         return (
           <>
             <MandatoryField />

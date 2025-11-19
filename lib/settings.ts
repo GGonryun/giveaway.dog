@@ -27,4 +27,5 @@ export const TWITTER_POST_URL =
   'https://x.com/TheGiveawayDog/status/1948654500698619966';
 export const STEAM_APP_ID_URL =
   'https://store.steampowered.com/app/2457870/Sandys_Great_Escape/';
-export const TWITCH_CHANNEL_URL = 'https://www.twitch.tv/gonryun';
+export const TWITCH_CHANNEL_URL = 'https://www.twitch.tv/ggonryun';
+export const KICK_CHANNEL_URL = 'https://www.kick.com/ggonryun';

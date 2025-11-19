@@ -1,6 +1,7 @@
 import {
   DISCORD_INVITE_LINK,
   DISCORD_PUBLIC_CHANNEL_URL,
+  KICK_CHANNEL_URL,
   STEAM_APP_ID_URL,
   TWITCH_CHANNEL_URL,
   TWITTER_POST_URL,
@@ -79,6 +80,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       type: 'TWITCH_FOLLOW',
       title: 'Follow us on Twitch',
       channel: TWITCH_CHANNEL_URL,
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
+    ['KICK_FOLLOW']: {
+      id: '',
+      type: 'KICK_FOLLOW',
+      title: 'Follow us on Kick',
+      channel: KICK_CHANNEL_URL,
       value: 1,
       mandatory: false,
       tasksRequired: 0

@@ -67,6 +67,7 @@ const signInHandler = async (args: {
     case 'discord':
     case 'twitch':
     case 'steam':
+    case 'kick':
       return await signIn(provider, options);
     case 'email':
       return await signIn('email', {

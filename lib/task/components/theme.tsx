@@ -6,6 +6,7 @@ import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-i
 import { SocialSteamIcon } from '@/lib/integrations/components/icons/steam-icon';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
+import { SocialKickIcon } from '@/lib/integrations/components/icons/kick-icon';
 
 export type TaskTheme = {
   action: string;
@@ -63,6 +64,13 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-twitch-1 text-white',
         arrow: 'bg-twitch-1 text-white fill-twitch-1',
         icon: SocialTwitchIcon
+      };
+    case 'KICK_FOLLOW':
+      return {
+        action: 'text-white bg-black group-hover:bg-black/80 hover:bg-black/80',
+        symbol: 'bg-black text-kick-1',
+        arrow: 'bg-black text-white fill-black',
+        icon: SocialKickIcon
       };
     default:
       throw assertNever(type);

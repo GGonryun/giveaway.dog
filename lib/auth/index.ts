@@ -9,9 +9,11 @@ import TwitchProvider from 'next-auth/providers/twitch';
 import { authConfig } from './config';
 import { SteamProvider } from './providers/steam';
 import { InboundEmailProvider } from './providers/inbound';
+import KickProvider from './providers/kick';
 import {
   REQUIRED_DISCORD_SCOPES,
-  REQUIRED_TWITCH_SCOPES
+  REQUIRED_TWITCH_SCOPES,
+  REQUIRED_KICK_SCOPES
 } from '../integrations/scopes';
 
 export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
@@ -67,6 +69,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
               preferred_username: null
             }
           }
+        }
+      }
+    }),
+    KickProvider({
+      clientId: process.env.KICK_CLIENT_ID,
+      clientSecret: process.env.KICK_CLIENT_SECRET,
+      authorization: {
+        params: {
+          scope: REQUIRED_KICK_SCOPES.join(' ')
         }
       }
     }),

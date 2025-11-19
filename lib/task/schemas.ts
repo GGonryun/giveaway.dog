@@ -114,6 +114,19 @@ export const twitchFollowTaskSchema = baseTaskSchema.extend({
 
 export type TwitchFollowTaskSchema = z.infer<typeof twitchFollowTaskSchema>;
 
+export const kickFollowTaskSchema = baseTaskSchema.extend({
+  type: z.literal('KICK_FOLLOW'),
+  channel: z
+    .string()
+    .url('Kick Channel URL is required')
+    .refine((val) => {
+      const urlPattern = /^https?:\/\/(www\.)?kick\.com\/[A-Za-z0-9_]{4,25}$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://www.kick.com/username')
+});
+
+export type KickFollowTaskSchema = z.infer<typeof kickFollowTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   visitUrlTaskSchema,
@@ -122,7 +135,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   twitterRetweetTaskSchema,
   steamWishlistTaskSchema,
   discordJoinTaskSchema,
-  twitchFollowTaskSchema
+  twitchFollowTaskSchema,
+  kickFollowTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -135,7 +149,8 @@ export const TASK_LABEL: Record<TaskType, string> = {
   TWITTER_RETWEET: 'Repost on X',
   STEAM_WISHLIST: 'Steam Wishlist',
   DISCORD_JOIN: 'Join Discord Server',
-  TWITCH_FOLLOW: 'Follow on Twitch'
+  TWITCH_FOLLOW: 'Follow on Twitch',
+  KICK_FOLLOW: 'Follow on Kick'
 };
 
 export type TaskSchema = z.infer<typeof taskSchema>;
@@ -154,7 +169,8 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   TWITTER_RETWEET: 'twitter',
   STEAM_WISHLIST: 'steam',
   DISCORD_JOIN: 'discord',
-  TWITCH_FOLLOW: 'twitch'
+  TWITCH_FOLLOW: 'twitch',
+  KICK_FOLLOW: 'kick'
 };
 
 export const TASK_REQUIRED_SCOPES: Record<TaskPlatformSchema, string[]> = {
@@ -169,7 +185,8 @@ export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
   discord: 'Discord',
   google: 'Google',
   email: 'Email',
-  twitch: 'Twitch'
+  twitch: 'Twitch',
+  kick: 'Kick'
 };
 
 export const taskCategorySchema = z.enum(['social', 'engagement', 'community']);
@@ -184,7 +201,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   TWITTER_RETWEET: 'social',
   DISCORD_JOIN: 'social',
   STEAM_WISHLIST: 'community',
-  TWITCH_FOLLOW: 'social'
+  TWITCH_FOLLOW: 'social',
+  KICK_FOLLOW: 'social'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',

@@ -100,6 +100,9 @@
     /* Twitch palette */
     --twitch-1: oklch(0.5908 0.25458 296.0935);
 
+    /* Kick Palette */
+    --kick-1: oklch(0.8692 0.2753 140.18);
+
     /* Chart palette */
     --chart-1: oklch(0.7459 0.1483 156.4499);
     --chart-2: oklch(0.5393 0.2713 286.7462);
@@ -284,6 +287,8 @@
     --color-discord-3: var(--discord-3);
 
     --color-twitch-1: var(--twitch-1);
+
+    --color-kick-1: var(--kick-1);
 
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);

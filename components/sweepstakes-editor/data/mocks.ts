@@ -43,6 +43,11 @@ export const mockUserProfile: UserProfileSchema = {
       type: 'twitch',
       label: 'PreviewUser',
       scopes: PROVIDER_REQUIRED_SCOPES.twitch
+    },
+    {
+      type: 'kick',
+      label: 'PreviewUser',
+      scopes: PROVIDER_REQUIRED_SCOPES.kick
     }
   ]
 };

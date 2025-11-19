@@ -8,6 +8,7 @@ import { TwitterRetweetTaskActionForm } from './lib/twitter/twitter-retweet';
 import { SteamWishlistTaskActionForm } from './lib/steam/steam-wishlist';
 import { DiscordJoinTaskActionForm } from './lib/discord/discord-join';
 import { TwitchFollowTaskActionForm } from './lib/twitch/twitch-follow';
+import { KickFollowTaskActionForm } from './lib/kick/kick-follow';
 
 export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
   switch (props.task.type) {
@@ -27,6 +28,8 @@ export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
       return <DiscordJoinTaskActionForm {...props} task={props.task} />;
     case 'TWITCH_FOLLOW':
       return <TwitchFollowTaskActionForm {...props} task={props.task} />;
+    case 'KICK_FOLLOW':
+      return <KickFollowTaskActionForm {...props} task={props.task} />;
     default:
       throw assertNever(props.task);
   }

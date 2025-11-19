@@ -479,6 +479,7 @@ enum TaskType {
   STEAM_WISHLIST
   DISCORD_JOIN
   TWITCH_FOLLOW
+  KICK_FOLLOW
 }
 
 model TaskCompletion {

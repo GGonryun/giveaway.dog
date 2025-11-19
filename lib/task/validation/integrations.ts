@@ -20,6 +20,9 @@ export const validateTask = async <T extends TaskSchema>(
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
       return Promise.resolve(); // No validation possible
+    case 'KICK_FOLLOW':
+      // kick does not support public follower lists or an API to verify follows
+      return Promise.resolve(); // No validation possible
     case 'STEAM_WISHLIST':
       return await checkSteamWishlist(db, {
         task: input.task,
@@ -35,6 +38,7 @@ export const validateTask = async <T extends TaskSchema>(
         task: input.task,
         userId: input.userId
       });
+
     default:
       throw assertNever(input.task);
   }

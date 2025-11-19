@@ -5,7 +5,8 @@ import {
   REQUIRED_TWITTER_SCOPES,
   REQUIRED_STEAM_SCOPES,
   REQUIRED_GMAIL_SCOPES,
-  REQUIRED_TWITCH_SCOPES
+  REQUIRED_TWITCH_SCOPES,
+  REQUIRED_KICK_SCOPES
 } from '../scopes';
 
 export const providerTypeSchema = z.union([
@@ -14,7 +15,8 @@ export const providerTypeSchema = z.union([
   z.literal('discord'),
   z.literal('email'),
   z.literal('steam'),
-  z.literal('twitch')
+  z.literal('twitch'),
+  z.literal('kick')
 ]);
 
 export type ProviderTypeSchema = z.infer<typeof providerTypeSchema>;
@@ -25,7 +27,8 @@ export const PROVIDER_REQUIRED_SCOPES: Record<ProviderTypeSchema, string[]> = {
   twitter: REQUIRED_TWITTER_SCOPES,
   steam: REQUIRED_STEAM_SCOPES,
   google: REQUIRED_GMAIL_SCOPES,
-  twitch: REQUIRED_TWITCH_SCOPES
+  twitch: REQUIRED_TWITCH_SCOPES,
+  kick: REQUIRED_KICK_SCOPES
 };
 
 export const isMissingScopes = (
@@ -57,7 +60,8 @@ export const PROVIDER_SCHEMA_LABELS: Record<ProviderTypeSchema, string> = {
   discord: 'Discord',
   email: 'Email',
   twitch: 'Twitch',
-  steam: 'Steam'
+  steam: 'Steam',
+  kick: 'Kick'
 };
 
 export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
@@ -66,6 +70,7 @@ export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
   discord: true,
   steam: true,
   twitch: true,
+  kick: true,
   email: false
 };
 

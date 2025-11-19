@@ -56,6 +56,10 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
     {
       ...toDefaultValues('TWITCH_FOLLOW'),
       id: nanoid()
+    },
+    {
+      ...toDefaultValues('KICK_FOLLOW'),
+      id: nanoid()
     }
   ],
   terms: {

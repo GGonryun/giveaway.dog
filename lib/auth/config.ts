@@ -23,12 +23,15 @@ const getAccountLabel = (account: any, profile: any): string | null => {
       return profile?.personaname || null;
     case 'twitch':
       return profile?.name || null;
+    case 'kick':
+      return profile?.username || profile?.name || null;
     default:
       return null;
   }
 };
 
 export const authConfig = {
+  debug: true,
   logger: {
     error(error: any) {
       // Suppress the "no authorization code" error for Steam provider
@@ -40,7 +43,13 @@ export const authConfig = {
       ) {
         return;
       }
-      console.error(JSON.stringify(error));
+      console.error('[NextAuth Error]', JSON.stringify(error, null, 2));
+    },
+    warn(code: any) {
+      console.warn('[NextAuth Warn]', code);
+    },
+    debug(code: any, metadata: any) {
+      console.log('[NextAuth Debug]', code, metadata);
     }
   },
   pages: {

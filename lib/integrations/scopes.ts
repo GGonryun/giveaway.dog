@@ -21,3 +21,5 @@ export const REQUIRED_TWITCH_SCOPES = [
   'user:read:email',
   'user:read:follows'
 ];
+
+export const REQUIRED_KICK_SCOPES = ['user:read'];

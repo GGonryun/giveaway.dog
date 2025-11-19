@@ -45,6 +45,8 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         );
       case 'TWITCH_FOLLOW':
         return <TwitchFollowFormField />;
+      case 'KICK_FOLLOW':
+        return <KickFollowFormField />;
       default:
         throw assertNever(type);
     }
@@ -238,6 +240,26 @@ const TwitchFollowFormField: React.FC = () => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Twitch Channel Link</FormLabel>
+          <FormControl>
+            <Input type="text" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+const KickFollowFormField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.channel`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Kick Channel Link</FormLabel>
           <FormControl>
             <Input type="text" {...field} />
           </FormControl>
