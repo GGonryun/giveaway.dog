@@ -16,14 +16,14 @@ export const TeamSlugCard: React.FC<TeamSlugCardProps> = ({ slug }) => {
       footerNote="Team slugs cannot be changed after creation."
       readOnly
     >
-      <div className="space-y-2 flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <Input
           id="team-slug"
           value={slug}
           disabled
           className="font-mono text-sm"
         />
-        <Lock className="h-5 w-5 mb-2 text-muted-foreground" />
+        <Lock className="h-5 w-5 text-muted-foreground" />
       </div>
     </SettingsCard>
   );

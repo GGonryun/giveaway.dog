@@ -1,9 +1,15 @@
-- [ ] Add a referral integration.
+- [ ] Add a form integration
 - [ ] Add a secret code integration.
+- [ ] Add a referral integration.
+
+- [ ] Add a kick integration - https://next-auth.js.org/providers/kick
+- [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook
+- [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram
+
 - [ ] Add TikTok integration.
 - [ ] Add YouTube integration.
-- [ ] Add Facebook integration.
-- [ ] Add Instagram integration.
+- [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin
+- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit
 
 - [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
 - [ ] As a host, I want to display my organization's logo on the sweepstake page.

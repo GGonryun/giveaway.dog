@@ -5,7 +5,8 @@ import { Button } from '../ui/button';
 import { PlusIcon } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { LoadingState } from './loading-state';
-import { DEFAULT_TEAM_LOGO, MAX_USER_TEAMS } from '@/lib/settings';
+import { MAX_USER_TEAMS } from '@/lib/settings';
+import { TeamLogo } from '@/components/team/team-logo';
 
 import { useUserTeams } from '../hooks/use-user-teams';
 import { useTeamsPage } from './use-teams-page';
@@ -45,9 +46,11 @@ export const SelectTeamForm: React.FC = () => {
                 onClick={() => selectTeamsProcedure.run(team)}
               >
                 <div className="flex items-center space-x-3 w-full">
-                  <div className="text-2xl">
-                    {team.logo || DEFAULT_TEAM_LOGO}
-                  </div>
+                  <TeamLogo
+                    logoUrl={team.logo}
+                    alt={`${team.name} logo`}
+                    size={40}
+                  />
                   <div className="flex-1 text-left">
                     <div className="flex items-center space-x-2">
                       <span className="font-medium">{team.name}</span>

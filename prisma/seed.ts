@@ -1,3 +1,4 @@
+import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 import {
   DEFAULT_USER_SCORE_METRICS,
   UserScoreMetricsSchema
@@ -21,17 +22,17 @@ function createTeam(index: number, ownerEmail: string): Prisma.TeamCreateInput {
     {
       name: 'Sample Gaming Studio',
       slug: 'sample-gaming-studio',
-      logo: '🎮'
+      logo: DEFAULT_TEAM_LOGO
     },
     {
       name: 'Tech Innovators Inc',
       slug: 'tech-innovators-inc',
-      logo: '💻'
+      logo: DEFAULT_TEAM_LOGO
     },
     {
       name: 'Creative Labs',
       slug: 'creative-labs',
-      logo: '🎨'
+      logo: DEFAULT_TEAM_LOGO
     }
   ];
 

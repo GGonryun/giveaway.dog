@@ -10,7 +10,10 @@ const updateTeamLogo = procedure()
   .input(
     z.object({
       slug: z.string(),
-      logo: z.string().min(1, 'Team logo must be at least 1 character').max(10)
+      logo: z
+        .string()
+        .min(1, 'Team logo URL is required')
+        .url('Team logo must be a valid URL')
     })
   )
   .output(z.object({ success: z.boolean() }))

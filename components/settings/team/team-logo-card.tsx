@@ -5,7 +5,7 @@ import { SettingsCard } from '../settings-card';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateTeamLogo from '@/procedures/teams/update-team-logo';
 import { toast } from 'sonner';
-import { EmojiPickerComponent } from '@/components/patterns/emoji-picker';
+import { FileUpload } from '@/components/ui/file-upload';
 
 interface TeamLogoCardProps {
   slug: string;
@@ -44,17 +44,17 @@ export const TeamLogoCard: React.FC<TeamLogoCardProps> = ({
   return (
     <SettingsCard
       title="Team Logo"
-      description="An emoji to represent your team."
-      footerNote="Click the button to choose an emoji."
+      description="An image to represent your team."
+      footerNote="Upload an image file (JPEG, PNG, or GIF) up to 3MB."
       onSave={handleSave}
       isSaving={isLoading}
       hasChanges={hasChanges}
     >
-      <EmojiPickerComponent
-        value={logo}
-        onEmojiSelect={setLogo}
-        title="Current Logo"
-        description="Select an emoji to represent your team"
+      <FileUpload
+        initialUrl={logo}
+        onUpload={setLogo}
+        size="md"
+        className="items-start"
       />
     </SettingsCard>
   );

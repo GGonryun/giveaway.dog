@@ -23,7 +23,7 @@ import { DetailedUserTeam } from '@/schemas/teams';
 import { useTeamsPage } from '@/components/team/use-teams-page';
 import { useTeamPage } from '@/components/team/use-team-page';
 import { useTeams } from '@/components/context/team-provider';
-import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
+import { TeamLogo } from '@/components/team/team-logo';
 
 export function TeamSwitcher() {
   const { activeTeam, teams } = useTeams();
@@ -51,11 +51,11 @@ export function TeamSwitcher() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="bg-sidebar-primary/20 text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <div className="size-4">
-                  {activeTeam.logo || DEFAULT_TEAM_LOGO}
-                </div>
-              </div>
+              <TeamLogo
+                logoUrl={activeTeam.logo}
+                alt={`${activeTeam.name} logo`}
+                size={32}
+              />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
                   {activeTeam.name}
@@ -79,17 +79,22 @@ export function TeamSwitcher() {
                 onClick={() => handleSelectTeam(team)}
                 className="gap-2 p-2"
               >
-                <div className="flex size-6 items-center justify-center rounded-md bg-sidebar-primary/20">
-                  <div className="size-4">{team.logo || DEFAULT_TEAM_LOGO}</div>
-                </div>
+                <TeamLogo
+                  logoUrl={team.logo}
+                  alt={`${team.name} logo`}
+                  size={24}
+                />
                 {team.name}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2" onClick={handleAddTeam}>
-              <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
-                <Plus className="size-4" />
+            <DropdownMenuItem
+              className="gap-2 p-2 [&_svg]:mr-0"
+              onClick={handleAddTeam}
+            >
+              <div className="size-6 flex items-center justify-center rounded-md border bg-transparent">
+                <Plus />
               </div>
               <div className="text-muted-foreground font-medium">Add team</div>
             </DropdownMenuItem>

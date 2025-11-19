@@ -34,7 +34,7 @@ export const detailedUserTeamSchema = z.object({
   id: z.string(),
   name: z.string(),
   slug: z.string(),
-  logo: z.string(), // emoji
+  logo: z.string(), // image URL
   links: z.any().optional(),
   memberCount: z.number().min(0),
   role: z.nativeEnum(TeamRole)

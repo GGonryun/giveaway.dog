@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Building, AlertTriangle, ArrowLeft } from 'lucide-react';
-import { EmojiPickerComponent } from '@/components/patterns/emoji-picker';
+import { FileUpload } from '@/components/ui/file-upload';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -23,6 +23,7 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { LoadingState } from './loading-state';
 import { useTeamsPage } from './use-teams-page';
 import { useTeamPage } from './use-team-page';
+import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 
 export const CreateTeamForm: React.FC = () => {
   const { navigateToSelect } = useTeamsPage();
@@ -52,7 +53,7 @@ export const CreateTeamForm: React.FC = () => {
     defaultValues: {
       name: '',
       slug: '',
-      logo: ''
+      logo: DEFAULT_TEAM_LOGO
     }
   });
 
@@ -68,10 +69,6 @@ export const CreateTeamForm: React.FC = () => {
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
       .trim();
-  };
-
-  const handleEmojiSelect = (emoji: string) => {
-    form.setValue('logo', emoji);
   };
 
   if (procedure.isLoading) return <LoadingState text="Creating your team..." />;
@@ -142,13 +139,16 @@ export const CreateTeamForm: React.FC = () => {
               <FormItem>
                 <FormLabel>Team Logo (Optional)</FormLabel>
                 <FormControl>
-                  <EmojiPickerComponent
-                    value={field.value || '🐶'}
-                    onEmojiSelect={handleEmojiSelect}
-                    title="Choose an emoji for your team"
-                    description="Click the button to pick an emoji that represents your team"
+                  <FileUpload
+                    initialUrl={field.value}
+                    onUpload={(url) => field.onChange(url)}
+                    size="md"
+                    className="items-start mt-2"
                   />
                 </FormControl>
+                <FormDescription>
+                  Upload an image file (JPEG, PNG, or GIF) up to 3MB
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

@@ -9,11 +9,10 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-
+  id               String            @id @default(cuid())
+  name             String?
+  email            String?           @unique
+  emailVerified    DateTime?
   username         String? // used to satisfy next-auth schema
   image            String?
   emoji            String?
@@ -523,7 +522,7 @@ model Team {
   id        String   @id @default(cuid())
   name      String
   slug      String   @unique
-  logo      String   @default("🐶")
+  logo      String   @default("https://a8mwfsrzadqc10xo.public.blob.vercel-storage.com/taki.png")
   links     Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

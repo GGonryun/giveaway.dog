@@ -9,7 +9,7 @@ import {
   ParticipantSweepstakeSchema,
   participantSweepstakeSchema
 } from '@/schemas/giveaway/schemas';
-import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
+import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 import { toSweepstakesPrizes } from '@/schemas/giveaway/participant';
 import { DeepNullable, DeepPartial } from '@/lib/types';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';

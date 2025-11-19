@@ -5,7 +5,8 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
 import z from 'zod';
 
-import { DEFAULT_TEAM_LOGO, MAX_USER_TEAMS } from '@/lib/settings';
+import { MAX_USER_TEAMS } from '@/lib/settings';
+import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 
 const createTeam = procedure()
   .authorization({ required: true })

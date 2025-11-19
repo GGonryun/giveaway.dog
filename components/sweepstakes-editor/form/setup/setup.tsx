@@ -59,6 +59,7 @@ export const Setup = () => {
             <FormLabel>Banner Image</FormLabel>
             <FormControl>
               <FileUpload
+                className="items-start"
                 isDemo={action === 'demo'}
                 initialUrl={field.value ?? undefined}
                 onUpload={(url) => field.onChange(url || null)}

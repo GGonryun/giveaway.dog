@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { useState } from 'react';
-import { DEFAULT_TEAM_LOGO } from '@/lib/settings';
+import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 
 interface EasterEggLogoProps {
   size?: number;
@@ -9,7 +9,7 @@ interface EasterEggLogoProps {
 
 export const EasterEggLogo: React.FC<EasterEggLogoProps> = ({ size = 200 }) => {
   const [showEasterEgg, setShowEasterEgg] = useState(false);
-  const emojiSize = Math.floor(size * 0.75);
+  const logoSize = Math.floor(size * 0.75);
 
   return (
     <div>
@@ -22,13 +22,14 @@ export const EasterEggLogo: React.FC<EasterEggLogoProps> = ({ size = 200 }) => {
           height={size}
         />
       ) : (
-        <div
-          className="cursor-help"
-          style={{ fontSize: `${emojiSize}px` }}
+        <Image
+          src={DEFAULT_TEAM_LOGO}
+          alt="Default Team Logo"
+          className="mx-auto cursor-help rounded-md"
+          width={logoSize}
+          height={logoSize}
           onClick={() => setShowEasterEgg(!showEasterEgg)}
-        >
-          {DEFAULT_TEAM_LOGO}
-        </div>
+        />
       )}
     </div>
   );
