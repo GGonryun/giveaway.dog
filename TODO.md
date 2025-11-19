@@ -2,7 +2,6 @@
 - [ ] Add a secret code integration.
 - [ ] Add a referral integration.
 
-- [ ] Add a kick integration - https://next-auth.js.org/providers/kick
 - [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook
 - [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram
 
