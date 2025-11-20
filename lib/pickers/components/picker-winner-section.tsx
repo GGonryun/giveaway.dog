@@ -166,7 +166,6 @@ export const PickerWinnerSection: React.FC<PickerWinnerSectionProps> = ({
                 key={draw.drawId}
                 winner={draw.winner}
                 drawId={draw.drawId}
-                pickerId={pickerId}
               />
             ))}
           </div>

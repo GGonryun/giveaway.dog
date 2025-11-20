@@ -1,5 +1,7 @@
-- [ ] Add a form integration
 - [ ] Add a secret code integration.
+
+- [ ] Add a form integration.
+
 - [ ] Add a referral integration.
 
 - [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook
