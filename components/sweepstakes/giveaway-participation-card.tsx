@@ -88,7 +88,7 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
 const TitleSection = () => {
   const { sweepstakes, host } = useGiveawayParticipation();
 
-  const socialLinks: SocialLink[] = parseSocialLinks(host);
+  const socialLinks: SocialLink[] = parseSocialLinks(host.links);
 
   if (!sweepstakes.design.displayName) return null;
 
