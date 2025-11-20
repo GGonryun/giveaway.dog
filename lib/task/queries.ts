@@ -49,7 +49,8 @@ export const ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY = {
         }
       }
     }
-  }
+  },
+  task: true
 } satisfies Prisma.TaskCompletionInclude;
 
 export type EligibleTaskCompletion = Prisma.TaskCompletionGetPayload<{

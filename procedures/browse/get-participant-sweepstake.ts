@@ -14,6 +14,7 @@ import { toSweepstakesPrizes } from '@/schemas/giveaway/participant';
 import { DeepNullable, DeepPartial } from '@/lib/types';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 import { parseSocialLinks } from '@/schemas/social-links';
+import { toTaskSchema } from '@/lib/task/schemas';
 
 const getParticipantSweepstake = procedure()
   .authorization({
@@ -43,25 +44,24 @@ const getParticipantSweepstake = procedure()
       });
     }
 
-    const totalEntries = await db.taskCompletion.count({
+    const taskCompletions = await db.taskCompletion.findMany({
       where: {
         task: {
           sweepstakesId: sweepstakes.id
         }
+      },
+      include: {
+        task: true
       }
     });
 
-    const totalUsers = await db.taskCompletion.findMany({
-      select: {
-        userId: true
-      },
-      distinct: ['userId'],
-      where: {
-        task: {
-          sweepstakesId: sweepstakes.id
-        }
-      }
-    });
+    const totalEntries = taskCompletions.reduce((sum, completion) => {
+      const taskSchema = toTaskSchema(completion.task);
+      return sum + taskSchema.value;
+    }, 0);
+
+    const uniqueUserIds = new Set(taskCompletions.map((c) => c.userId));
+    const totalUsers = uniqueUserIds.size;
 
     const unparsed: DeepPartial<DeepNullable<ParticipantSweepstakeSchema>> = {
       sweepstakes: {
@@ -78,7 +78,7 @@ const getParticipantSweepstake = procedure()
       },
       prizes: toSweepstakesPrizes(sweepstakes.prizes),
       participation: {
-        totalUsers: totalUsers.length,
+        totalUsers: totalUsers,
         totalEntries: totalEntries
       }
     };

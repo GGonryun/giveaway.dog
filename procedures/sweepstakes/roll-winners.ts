@@ -13,6 +13,24 @@ import {
   ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY,
   EligibleTaskCompletion
 } from '@/lib/task/queries';
+import { toTaskSchema } from '@/lib/task/schemas';
+
+const expandCompletionsByValue = (
+  completions: EligibleTaskCompletion[]
+): EligibleTaskCompletion[] => {
+  const expanded: EligibleTaskCompletion[] = [];
+
+  for (const completion of completions) {
+    const taskSchema = toTaskSchema(completion.task);
+    const value = taskSchema.value;
+
+    for (let i = 0; i < value; i++) {
+      expanded.push(completion);
+    }
+  }
+
+  return expanded;
+};
 
 const rollWinners = procedure()
   .authorization({
@@ -202,7 +220,8 @@ const rerollWinner = async (
     }
   );
 
-  const randomizedCompletions = rng.shuffleArray(newlyEligibleCompletions);
+  const weightedCompletions = expandCompletionsByValue(newlyEligibleCompletions);
+  const randomizedCompletions = rng.shuffleArray(weightedCompletions);
 
   if (randomizedCompletions.length === 0) {
     throw new ApplicationError({
@@ -266,7 +285,8 @@ const pickWinners = async (
     });
   }
 
-  const randomizedCompletions = rng.shuffleArray(eligibleTaskCompletions);
+  const weightedCompletions = expandCompletionsByValue(eligibleTaskCompletions);
+  const randomizedCompletions = rng.shuffleArray(weightedCompletions);
 
   if (preventDuplicateWinners) {
     const uniqueWinners: typeof eligibleTaskCompletions = [];
