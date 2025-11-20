@@ -10,14 +10,15 @@ import { PickerWinnerSchema } from '../schemas/draws';
 interface PickerWinnerCardProps {
   winner: PickerWinnerSchema;
   drawId: string;
+  pickerId: string;
   onRedraw?: () => void;
   showRedrawButton?: boolean;
 }
 
 export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
   winner,
-  drawId,
   onRedraw,
+  pickerId,
   showRedrawButton = false
 }) => {
   const username = winner.username || 'unknown';
@@ -25,7 +26,7 @@ export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
   const profileImage = winner.profile_image_url || null;
 
   const handleShare = () => {
-    const tweetText = `🎉 Congratulations to @${username} for winning our giveaway!\n\nVerify the draw: ${window.location.origin}/draws/${drawId}`;
+    const tweetText = `🎉 Congratulations to @${username} for winning our giveaway!\n\nVerify the draw: ${window.location.origin}/draws/${pickerId}`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(twitterUrl, '_blank', 'noopener,noreferrer');
   };
