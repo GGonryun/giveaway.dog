@@ -31,7 +31,6 @@ const getAccountLabel = (account: any, profile: any): string | null => {
 };
 
 export const authConfig = {
-  debug: true,
   logger: {
     error(error: any) {
       // Suppress the "no authorization code" error for Steam provider
