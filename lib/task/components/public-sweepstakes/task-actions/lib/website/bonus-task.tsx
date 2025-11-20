@@ -1,8 +1,8 @@
-import { TaskActionProps, TaskContent } from '../building-blocks';
+import { TaskActionProps, TaskContent } from '../../building-blocks';
 import { Button } from '@/components/ui/button';
 import { BonusTaskSchema } from '@/lib/task/schemas';
 import { cn } from '@/lib/utils';
-import { useTaskTheme } from '../../../theme';
+import { useTaskTheme } from '../../../../theme';
 
 export const BonusTaskActionForm: React.FC<
   TaskActionProps<BonusTaskSchema>

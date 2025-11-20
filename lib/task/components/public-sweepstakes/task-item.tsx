@@ -81,12 +81,12 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
     }
   }, [open]);
 
-  const handleTaskSubmit = async () => {
+  const handleTaskSubmit = async (data?: unknown) => {
     try {
       setError(undefined);
       setIsLoading(true);
 
-      await onTaskComplete(task.id);
+      await onTaskComplete(task.id, data);
 
       setCompleted?.();
       setOpen(false);

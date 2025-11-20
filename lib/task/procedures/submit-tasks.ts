@@ -14,7 +14,8 @@ const submitTask = procedure()
   .input(
     z.object({
       taskId: z.string(),
-      sweepstakesId: z.string()
+      sweepstakesId: z.string(),
+      data: z.any().optional()
     })
   )
   .output(
@@ -23,7 +24,7 @@ const submitTask = procedure()
       sweepstakesSlug: z.string().nullable().optional()
     })
   )
-  .handler(async ({ db, user, input: { taskId, sweepstakesId } }) => {
+  .handler(async ({ db, user, input: { data, taskId, sweepstakesId } }) => {
     const tasks = await db.task.findMany({
       where: {
         sweepstakesId: sweepstakesId
@@ -120,7 +121,8 @@ const submitTask = procedure()
 
     await validateTask(db, {
       task: toTaskSchema(task),
-      userId: user.id
+      userId: user.id,
+      data
     });
 
     await db.taskCompletion.create({

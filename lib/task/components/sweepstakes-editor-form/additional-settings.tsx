@@ -16,6 +16,7 @@ import { HelpDialog } from '@/components/patterns/help-dialog';
 import { DISCORD_PUBLIC_CHANNEL_URL } from '@/lib/settings';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Textarea } from '@/components/ui/textarea';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -28,6 +29,13 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
           <>
             <HrefFormField />
             <LabelFormField />
+          </>
+        );
+      case 'SECRET_CODE':
+        return (
+          <>
+            <SecretCodeFormField />
+            <SecretHintFormField />
           </>
         );
       case 'TWITTER_FOLLOW':
@@ -262,6 +270,46 @@ const KickFollowFormField: React.FC = () => {
           <FormLabel>Kick Channel Link</FormLabel>
           <FormControl>
             <Input type="text" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+const SecretCodeFormField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.code`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Code</FormLabel>
+          <FormControl>
+            <Input type="text" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+const SecretHintFormField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.hint`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Hint</FormLabel>
+          <FormControl>
+            <Textarea {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

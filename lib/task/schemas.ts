@@ -127,6 +127,14 @@ export const kickFollowTaskSchema = baseTaskSchema.extend({
 
 export type KickFollowTaskSchema = z.infer<typeof kickFollowTaskSchema>;
 
+export const secretCodeTaskSchema = baseTaskSchema.extend({
+  type: z.literal('SECRET_CODE'),
+  code: z.string().min(1, 'Secret code is required'),
+  hint: z.string().optional()
+});
+
+export type SecretCodeTaskSchema = z.infer<typeof secretCodeTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   visitUrlTaskSchema,
@@ -136,7 +144,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   steamWishlistTaskSchema,
   discordJoinTaskSchema,
   twitchFollowTaskSchema,
-  kickFollowTaskSchema
+  kickFollowTaskSchema,
+  secretCodeTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -150,20 +159,45 @@ export const TASK_LABEL: Record<TaskType, string> = {
   STEAM_WISHLIST: 'Steam Wishlist',
   DISCORD_JOIN: 'Join Discord Server',
   TWITCH_FOLLOW: 'Follow on Twitch',
-  KICK_FOLLOW: 'Follow on Kick'
+  KICK_FOLLOW: 'Follow on Kick',
+  SECRET_CODE: 'Enter Secret Code'
 };
+
+export const TASK_INPUT_SCHEMA = {
+  BONUS_TASK: z.object({}),
+  VISIT_URL: z.object({}),
+  TWITTER_CONNECT: z.object({}),
+  TWITTER_FOLLOW: z.object({}),
+  TWITTER_RETWEET: z.object({}),
+  STEAM_WISHLIST: z.object({}),
+  DISCORD_JOIN: z.object({}),
+  TWITCH_FOLLOW: z.object({}),
+  KICK_FOLLOW: z.object({}),
+  SECRET_CODE: z.object({
+    code: z.string().min(1, 'Secret code is required')
+  })
+} as const satisfies Record<TaskType, z.ZodTypeAny>;
+
+export type TaskInput<T extends TaskSchema> = T extends { type: infer U }
+  ? U extends TaskType
+    ? z.infer<(typeof TASK_INPUT_SCHEMA)[U]>
+    : never
+  : never;
 
 export type TaskSchema = z.infer<typeof taskSchema>;
 
 export type TaskOf<T extends TaskType> = Extract<TaskSchema, { type: T }>;
 
-export const taskPlatformSchema = providerTypeSchema.or(z.literal('website'));
+export const taskPlatformSchema = providerTypeSchema
+  .or(z.literal('website'))
+  .or(z.literal('form'));
 
 export type TaskPlatformSchema = z.infer<typeof taskPlatformSchema>;
 
 export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   BONUS_TASK: 'website',
   VISIT_URL: 'website',
+  SECRET_CODE: 'form',
   TWITTER_CONNECT: 'twitter',
   TWITTER_FOLLOW: 'twitter',
   TWITTER_RETWEET: 'twitter',
@@ -175,7 +209,8 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
 
 export const TASK_REQUIRED_SCOPES: Record<TaskPlatformSchema, string[]> = {
   ...PROVIDER_REQUIRED_SCOPES,
-  website: []
+  website: [],
+  form: []
 };
 
 export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
@@ -186,7 +221,8 @@ export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
   google: 'Google',
   email: 'Email',
   twitch: 'Twitch',
-  kick: 'Kick'
+  kick: 'Kick',
+  form: 'Form'
 };
 
 export const taskCategorySchema = z.enum(['social', 'engagement', 'community']);
@@ -196,6 +232,7 @@ export type TaskCategorySchema = z.infer<typeof taskCategorySchema>;
 export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   BONUS_TASK: 'engagement',
   VISIT_URL: 'engagement',
+  SECRET_CODE: 'engagement',
   TWITTER_CONNECT: 'social',
   TWITTER_FOLLOW: 'social',
   TWITTER_RETWEET: 'social',

@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button, ButtonProps } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import {
   Tooltip,
@@ -7,12 +7,12 @@ import {
 } from '@/components/ui/tooltip';
 import { Failure } from '@/lib/mrpc/types';
 import { cn } from '@/lib/utils';
-import { CheckIcon } from 'lucide-react';
+import { CheckIcon, LucideIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { TaskSchema } from '../../../schemas';
 
 export type TaskActionHandlers = {
-  onSubmit: () => void;
+  onSubmit: (data?: unknown) => void;
   onCancel: () => void;
   isLoading: boolean;
   error?: Failure['data'];
@@ -38,46 +38,58 @@ export const TaskContent: React.PC<{ className?: string }> = ({
 
 export type TaskControlsProps = {
   disabled: boolean;
+  submit?: {
+    label?: string;
+    className?: string;
+    variant?: ButtonProps['variant'];
+    icon?: LucideIcon | null;
+  };
 } & TaskActionHandlers;
-
-const COMPLETE_TASK_LABEL = 'Complete Task';
 
 export const TaskControls: React.FC<TaskControlsProps> = ({
   disabled,
   isLoading,
+  submit,
   onSubmit,
   onCancel
 }) => {
-  const button = useMemo(
-    () =>
-      disabled ? (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={undefined}
-              className={'opacity-50 cursor-not-allowed'}
-            >
-              {COMPLETE_TASK_LABEL}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Complete above to continue</TooltipContent>
-        </Tooltip>
-      ) : (
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={onSubmit}
-          className="cursor-pointer"
-          disabled={isLoading}
-        >
-          {isLoading ? <Spinner /> : <CheckIcon />}
-          {isLoading ? <span>Loading...</span> : COMPLETE_TASK_LABEL}
-        </Button>
-      ),
-    [disabled, onSubmit]
-  );
+  const button = useMemo(() => {
+    const submitLabel = submit?.label ?? 'Complete Task';
+    const submitVariant = submit?.variant ?? 'outline';
+    const SubmitIcon =
+      submit?.icon === undefined
+        ? CheckIcon
+        : submit?.icon === null
+          ? () => null
+          : submit?.icon;
+
+    return disabled ? (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            size="sm"
+            variant={submitVariant}
+            onClick={undefined}
+            className={cn('opacity-50 cursor-not-allowed', submit?.className)}
+          >
+            {submitLabel}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Complete above to continue</TooltipContent>
+      </Tooltip>
+    ) : (
+      <Button
+        size="sm"
+        variant={submitVariant}
+        onClick={onSubmit}
+        className={cn('cursor-pointer', submit?.className)}
+        disabled={isLoading}
+      >
+        {isLoading ? <Spinner /> : <SubmitIcon />}
+        {isLoading ? <span>Loading...</span> : submitLabel}
+      </Button>
+    );
+  }, [disabled, onSubmit, submit]);
 
   return (
     <TaskContent className="bg-sidebar">

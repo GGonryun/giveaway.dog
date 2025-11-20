@@ -1,11 +1,15 @@
 import { Separator } from '@/components/ui/separator';
-import { TaskActionProps, TaskContent, TaskControls } from '../building-blocks';
+import {
+  TaskActionProps,
+  TaskContent,
+  TaskControls
+} from '../../building-blocks';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ExternalLinkIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useTaskTheme } from '../../../theme';
+import { useTaskTheme } from '../../../../theme';
 import { VisitUrlTaskSchema } from '@/lib/task/schemas';
 
 export const VisitUrlTaskActionForm: React.FC<

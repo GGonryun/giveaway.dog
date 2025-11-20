@@ -1,4 +1,4 @@
-import { EarthIcon, LucideIcon, StarIcon } from 'lucide-react';
+import { EarthIcon, KeyRound, LucideIcon, StarIcon } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
 import React from 'react';
@@ -32,6 +32,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-blue-500 text-blue-100',
         arrow: 'bg-blue-500 text-blue-100 fill-blue-500',
         icon: EarthIcon
+      };
+    case 'SECRET_CODE':
+      return {
+        action:
+          'bg-green-600 text-green-100 group-hover:bg-green-600 hover:bg-green-600',
+        symbol: 'bg-green-600 text-green-100',
+        arrow: 'bg-green-600 text-green-100 fill-green-600',
+        icon: KeyRound
       };
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':

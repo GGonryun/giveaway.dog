@@ -4,13 +4,17 @@ import { checkSteamWishlist } from './steam';
 import { checkDiscordJoin } from './discord';
 import { TaskSchema } from '../schemas';
 import { checkTwitchFollow } from './twitch';
+import { checkSecretCode } from './secret-code';
+
+export type ValidateTaskInput<T extends TaskSchema> = {
+  task: T;
+  userId: string;
+  data?: unknown;
+};
 
 export const validateTask = async <T extends TaskSchema>(
   db: PrismaClient,
-  input: {
-    task: T;
-    userId: string;
-  }
+  input: ValidateTaskInput<T>
 ): Promise<void> => {
   switch (input.task.type) {
     case 'BONUS_TASK':
@@ -38,7 +42,12 @@ export const validateTask = async <T extends TaskSchema>(
         task: input.task,
         userId: input.userId
       });
-
+    case 'SECRET_CODE':
+      return await checkSecretCode(db, {
+        task: input.task,
+        userId: input.userId,
+        data: input.data
+      });
     default:
       throw assertNever(input.task);
   }

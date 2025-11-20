@@ -42,10 +42,11 @@ export const SweepstakesParticipationPage: React.FC<
     <GiveawayParticipation
       {...props}
       className="p-4 py-8 sm:py-16"
-      onTaskComplete={async (taskId) => {
+      onTaskComplete={async (taskId, data) => {
         return await submitTaskProcedure.run({
           taskId,
-          sweepstakesId
+          sweepstakesId,
+          data
         });
       }}
       onLogin={handleLogin}

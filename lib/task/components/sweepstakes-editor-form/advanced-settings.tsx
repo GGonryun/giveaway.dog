@@ -25,6 +25,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'DISCORD_JOIN':
       case 'TWITCH_FOLLOW':
       case 'KICK_FOLLOW':
+      case 'SECRET_CODE':
         return (
           <>
             <MandatoryField />

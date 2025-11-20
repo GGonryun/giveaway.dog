@@ -1,5 +1,3 @@
-- [ ] Add a secret code integration.
-
 - [ ] Add a form integration.
 
 - [ ] Add a referral integration.
@@ -68,3 +66,4 @@
 - [ ] Add actual RBAC support for other membership/role types beyond owner, and admin.
   - [ ] if we have real RBAC we can now have a true sandbox org where _everyone_ gets the guest role.
 - [ ] User's page needs deep links for modal
+- [ ] Update to Prisma 7

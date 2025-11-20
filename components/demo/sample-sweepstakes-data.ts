@@ -60,6 +60,12 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
     {
       ...toDefaultValues('KICK_FOLLOW'),
       id: nanoid()
+    },
+    {
+      ...toDefaultValues('SECRET_CODE'),
+      hint: 'Use code "DEMO2025" to enter the sweepstakes!',
+      code: 'DEMO2025',
+      id: nanoid()
     }
   ],
   terms: {

@@ -1,7 +1,9 @@
 import { assertNever } from '@/lib/errors';
-import { VisitUrlTaskActionForm } from './lib/visit-url';
-import { BonusTaskActionForm } from './lib/bonus-task';
+
 import { TaskActionProps } from './building-blocks';
+
+import { VisitUrlTaskActionForm } from './lib/website/visit-url';
+import { BonusTaskActionForm } from './lib/website/bonus-task';
 import { TwitterConnectTaskActionForm } from './lib/twitter/twitter-connect';
 import { TwitterFollowTaskActionForm } from './lib/twitter/twitter-follow';
 import { TwitterRetweetTaskActionForm } from './lib/twitter/twitter-retweet';
@@ -9,6 +11,7 @@ import { SteamWishlistTaskActionForm } from './lib/steam/steam-wishlist';
 import { DiscordJoinTaskActionForm } from './lib/discord/discord-join';
 import { TwitchFollowTaskActionForm } from './lib/twitch/twitch-follow';
 import { KickFollowTaskActionForm } from './lib/kick/kick-follow';
+import { SecretCodeTaskActionForm } from './lib/form/secret-code';
 
 export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
   switch (props.task.type) {
@@ -30,6 +33,8 @@ export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
       return <TwitchFollowTaskActionForm {...props} task={props.task} />;
     case 'KICK_FOLLOW':
       return <KickFollowTaskActionForm {...props} task={props.task} />;
+    case 'SECRET_CODE':
+      return <SecretCodeTaskActionForm {...props} task={props.task} />;
     default:
       throw assertNever(props.task);
   }
