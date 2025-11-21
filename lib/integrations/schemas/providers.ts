@@ -49,7 +49,8 @@ export const isProviderType = (value: unknown): value is ProviderTypeSchema => {
 export const providerSchema = z.object({
   type: providerTypeSchema,
   scopes: z.array(z.string()),
-  label: z.string()
+  label: z.string(),
+  link: z.string().url().nullish()
 });
 
 export type ProviderSchema = z.infer<typeof providerSchema>;

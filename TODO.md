@@ -1,5 +1,3 @@
-- when a winner is picked and you get to see their X, it would be nice if i could click on it to be redirected to their X profile.
-
 - [ ] Add a form integration.
 
 - [ ] Add a referral integration.

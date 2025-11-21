@@ -41,7 +41,8 @@ export const parseProviders = (providers: UserAccounts[]): ProviderSchema[] =>
   providers.map((provider) => ({
     type: parseProvider(provider.provider) || 'email',
     scopes: provider.scope?.split(' ') ?? [],
-    label: provider.label || 'N/A'
+    label: provider.label || 'N/A',
+    link: provider.link || ''
   }));
 
 export const parseProvider = (provider: Nil<string>): ProviderTypeSchema => {
@@ -83,7 +84,8 @@ export type AgeVerificationSchema = z.infer<typeof ageVerificationSchema>;
 const ACCOUNT_SELECT_QUERY = {
   provider: true,
   scope: true,
-  label: true
+  label: true,
+  link: true
 } satisfies Prisma.AccountSelect;
 
 export type UserAccounts = Prisma.AccountGetPayload<{

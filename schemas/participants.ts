@@ -5,6 +5,7 @@ import {
 } from '@/lib/task/queries';
 import { Prisma } from '@prisma/client';
 import { clamp } from 'lodash';
+import { parseProviders } from './user';
 
 export const USER_PARTICIPATION_INCLUDE_QUERY = (input: {
   sweepstakesId?: string;
@@ -86,6 +87,7 @@ export const toUserParticipationSchema = (
     emailVerified: Boolean(participant.emailVerified),
     engagement,
     qualityScore: clamp(participant.quality[0]?.score ?? 0, 0, 100),
-    status
+    status,
+    providers: parseProviders(participant.accounts)
   };
 };

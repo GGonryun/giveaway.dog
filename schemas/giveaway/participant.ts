@@ -7,6 +7,7 @@ import { toTaskInput } from './input';
 import { CompletionStatus, TaskType } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
 import { taskSchema } from '@/lib/task/schemas';
+import { providerSchema } from '@/lib/integrations/schemas/providers';
 
 export const taskCompletionSchema = z.object({
   completionId: z.string(),
@@ -37,7 +38,8 @@ export const sweepstakesParticipantSchema = z.object({
   engagement: z.number(),
   status: z.enum(['active', 'blocked']),
   userAgent: z.string(),
-  emailVerified: z.boolean()
+  emailVerified: z.boolean(),
+  providers: providerSchema.array()
 });
 
 export type SweepstakesParticipantSchema = z.infer<

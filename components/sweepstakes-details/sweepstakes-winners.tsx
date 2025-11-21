@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Shuffle, ExternalLink, Info, Pencil, GiftIcon } from 'lucide-react';
+import { Shuffle, Info, Pencil, GiftIcon } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
 import { Label } from '@/components/ui/label';
 import {
@@ -53,7 +53,7 @@ import {
 } from '@/schemas/sweepstakes';
 import { PrizeDrawResult } from '@prisma/client';
 import { DisqualificationDialog } from './disqualification-dialog';
-import Link from 'next/link';
+import { TASK_LABEL } from '@/lib/task/schemas';
 
 interface GroupedPrize {
   id: string;
@@ -93,11 +93,27 @@ const PrizeDrawRow = ({
 }: PrizeDrawRowProps) => {
   const router = useRouter();
 
+  const handleUserClick = () => {
+    router.push(
+      `/app/${teamSlug}/sweepstakes/${draw.taskCompletion.sweepstakeId}/winners/user/${draw.participant.id}`
+    );
+  };
+
+  const handleTaskClick = () => {
+    router.push(
+      `/app/${teamSlug}/sweepstakes/${draw.taskCompletion.sweepstakeId}/winners/task/${draw.taskCompletion.taskId}?active=${draw.taskCompletion.completionId}`
+    );
+  };
+
   return (
     <TableRow key={draw.id}>
       <TableCell className="font-medium">#{index + 1}</TableCell>
       <TableCell>
-        <div className="flex items-center gap-2">
+        <Button
+          variant="link"
+          className="p-0 m-0 h-auto font-medium hover:text-primary transition-colors cursor-pointer text-left"
+          onClick={handleUserClick}
+        >
           <div className="flex-1 min-w-0">
             <div className="font-medium text-sm truncate">
               {draw.participant.name}
@@ -106,28 +122,23 @@ const PrizeDrawRow = ({
               {draw.participant.email}
             </div>
           </div>
-          <Button variant="ghost" size="sm" className="h-6 w-6 p-0" asChild>
-            <Link href={`/app/${teamSlug}/users/${draw.participant.id}`}>
-              <ExternalLink className="h-3 w-3" />
-            </Link>
-          </Button>
-        </div>
+        </Button>
       </TableCell>
       <TableCell>
-        <div className="flex items-center gap-2">
+        <Button
+          variant="link"
+          className="p-0 m-0 h-auto font-medium hover:text-primary transition-colors cursor-pointer text-left"
+          onClick={handleTaskClick}
+        >
           <div className="flex-1 min-w-0">
-            <div className="text-sm truncate">
+            <div className="font-medium text-sm truncate">
               {draw.taskCompletion.taskName}
             </div>
+            <div className="text-xs text-muted-foreground truncate">
+              {TASK_LABEL[draw.taskCompletion.taskType]}
+            </div>
           </div>
-          <Button variant="ghost" size="sm" className="h-6 w-6 p-0" asChild>
-            <Link
-              href={`/app/${teamSlug}/sweepstakes/${draw.taskCompletion.sweepstakeId}/entries/task/${draw.taskCompletion.taskId}?active=${draw.taskCompletion.completionId}`}
-            >
-              <ExternalLink className="h-3 w-3" />
-            </Link>
-          </Button>
-        </div>
+        </Button>
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
@@ -219,7 +230,8 @@ const PrizeCard: React.FC<{
           </CardTitle>
           <div className="flex items-center gap-2">
             <Badge variant={isComplete ? 'default' : 'secondary'}>
-              {winnerCount} / {prize.quota} winners selected
+              {winnerCount} / {prize.quota} {pluralize('winner', winnerCount)}{' '}
+              selected
             </Badge>
             {isComplete && (
               <Badge variant="default" className="bg-green-600">
@@ -243,7 +255,6 @@ const PrizeCard: React.FC<{
               </TableRow>
             </TableHeader>
             <TableBody>
-              {' '}
               <PrizeDraws
                 draws={prize.draws}
                 isEditable={isEditable}

@@ -34,6 +34,8 @@ import { datetime } from '@/lib/date';
 import { cn } from '@/lib/utils';
 import { toQualityTextColor, toQualityProgressColor } from '@/schemas/quality';
 import { Progress } from '../ui/progress';
+import { ProviderSchema } from '@/lib/integrations/schemas/providers';
+import { UserProviders } from '@/lib/integrations/components/user-providers';
 
 export const ParticipatingUserSheetContent: React.FC<{
   user: SweepstakesParticipantSchema;
@@ -51,6 +53,7 @@ export const ParticipatingUserSheetContent: React.FC<{
     };
 
     const config = variants[status as keyof typeof variants] || variants.active;
+
     return (
       <Badge
         variant={config.variant}
@@ -69,30 +72,39 @@ export const ParticipatingUserSheetContent: React.FC<{
 
   return (
     <>
-      <SheetHeader>
+      <SheetHeader className="pb-0">
         <div className="flex items-center space-x-3">
           <div className="flex-1">
-            <SheetTitle className="text-xl">{user.name}</SheetTitle>
+            <SheetTitle className="flex items-center gap-2">
+              <span className="text-2xl text-primary font-bold">
+                {user.name}
+              </span>
+            </SheetTitle>
             <SheetDescription className="flex items-center space-x-2">
               <span>{user.email}</span>
-              {getStatusBadge(user.status)}
             </SheetDescription>
+            <div className="my-2">
+              <UserProviders providers={user.providers} />
+            </div>
           </div>
         </div>
       </SheetHeader>
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="text-center p-3 bg-muted/50 rounded-lg">
+        <div className="grid grid-cols-3 gap-4">
+          <div className="text-center p-3 bg-muted rounded-lg">
             <div className="text-xl font-bold">{user.entries.length}</div>
             <div className="text-sm text-muted-foreground">Total Entries</div>
           </div>
-          <div className="text-center p-3 bg-muted/50 rounded-lg">
+          <div className="text-center p-3 bg-muted rounded-lg">
             <div className="text-xl font-bold text-blue-600">
               {user.engagement}%
             </div>
             <div className="text-sm text-muted-foreground">Engagement</div>
+          </div>
+          <div className="flex items-center justify-center p-3 bg-muted rounded-lg">
+            {getStatusBadge(user.status)}
           </div>
         </div>
 
@@ -311,13 +323,15 @@ const useUserIdFromPath = (regex: RegExp) => {
 export const ParticipatingUserSheet: React.PC<{
   slug: string;
   sweepstakesId: string;
-  root: 'participants' | 'entries';
+  root: 'participants' | 'entries' | 'winners';
 }> = ({ slug, sweepstakesId, root, children }) => {
   const router = useRouter();
   const userId = useUserIdFromPath(
     root === 'participants'
       ? /\/participants\/([^/]+)/
-      : /\/entries\/user\/([^/]+)/
+      : root === 'entries'
+        ? /\/entries\/user\/([^/]+)/
+        : /\/winners\/user\/([^/]+)/
   );
   const [open, setOpen] = useState(false);
 

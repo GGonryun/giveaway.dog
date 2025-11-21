@@ -290,18 +290,22 @@ const UserCompletion: React.FC<{ entry: UserEntriesSchema }> = ({ entry }) => {
   );
 };
 
-const useTaskIdFromPath = () => {
+const useTaskIdFromPath = (root?: 'entries' | 'winners') => {
   const pathname = usePathname();
-  const match = pathname.match(/\/entries\/task\/([^/]+)/);
+  const regex = root === 'winners'
+    ? /\/winners\/task\/([^/]+)/
+    : /\/entries\/task\/([^/]+)/;
+  const match = pathname.match(regex);
   return match ? match[1] : undefined;
 };
 
 export const TaskCompletionDetailSheet: React.PC<{
   sweepstakesId: string;
   slug: string;
-}> = ({ sweepstakesId, slug, children }) => {
+  root?: 'entries' | 'winners';
+}> = ({ sweepstakesId, slug, root = 'entries', children }) => {
   const router = useRouter();
-  const taskId = useTaskIdFromPath();
+  const taskId = useTaskIdFromPath(root);
 
   const [open, setOpen] = useState(false);
 
@@ -312,7 +316,7 @@ export const TaskCompletionDetailSheet: React.PC<{
   const handleClose = (status: boolean) => {
     if (!status) {
       setOpen(false);
-      router.push(`/app/${slug}/sweepstakes/${sweepstakesId}/entries`);
+      router.push(`/app/${slug}/sweepstakes/${sweepstakesId}/${root}`);
     }
   };
 

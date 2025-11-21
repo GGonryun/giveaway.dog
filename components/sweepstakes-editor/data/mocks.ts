@@ -27,26 +27,31 @@ export const mockUserProfile: UserProfileSchema = {
     {
       type: 'twitter',
       label: 'Preview User',
+      link: 'https://x.com/thegiveawaydog',
       scopes: PROVIDER_REQUIRED_SCOPES.twitter
     },
     {
       type: 'google',
       label: 'preview.user@gmail.com',
+      link: 'https://myaccount.google.com/',
       scopes: PROVIDER_REQUIRED_SCOPES.google
     },
     {
       type: 'discord',
       label: 'PreviewUser#1234',
+      link: 'https://discord.com/channels/@me',
       scopes: PROVIDER_REQUIRED_SCOPES.discord
     },
     {
       type: 'twitch',
       label: 'PreviewUser',
+      link: 'https://www.twitch.tv/twitch',
       scopes: PROVIDER_REQUIRED_SCOPES.twitch
     },
     {
       type: 'kick',
       label: 'PreviewUser',
+      link: 'https://kick.com/kick',
       scopes: PROVIDER_REQUIRED_SCOPES.kick
     }
   ]

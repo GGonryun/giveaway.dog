@@ -4,7 +4,7 @@ import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 import { KeyMetricsCard } from './key-metrics-card';
 import { ProfileInformationCard } from './profile-information-card';
 import { UserSchema } from '@/schemas/user';
-import { UserProviders } from './user-providers';
+import { UserProviders } from '@/lib/integrations/components/user-providers';
 
 export const UserDetailsOverview: React.FC<{
   participant: SweepstakesParticipantSchema;
@@ -15,7 +15,7 @@ export const UserDetailsOverview: React.FC<{
     <div className="space-y-2">
       <ProfileInformationCard
         participant={participant}
-        providers={<UserProviders user={user} />}
+        providers={<UserProviders providers={user.providers} />}
       />
       <KeyMetricsCard slug={slug} participant={participant} />
     </div>
