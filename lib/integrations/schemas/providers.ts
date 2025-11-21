@@ -50,7 +50,7 @@ export const providerSchema = z.object({
   type: providerTypeSchema,
   scopes: z.array(z.string()),
   label: z.string(),
-  link: z.string().url().nullish()
+  link: z.string().nullish()
 });
 
 export type ProviderSchema = z.infer<typeof providerSchema>;
