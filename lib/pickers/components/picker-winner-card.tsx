@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ExternalLink, Share2, Trophy, RotateCw } from 'lucide-react';
 import { PickerWinnerSchema } from '../schemas/draws';
+import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 
 interface PickerWinnerCardProps {
   winner: PickerWinnerSchema;
@@ -81,8 +82,8 @@ export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
               </a>
             </Button>
             <Button variant="default" size="sm" onClick={handleShare}>
-              <Share2 />
-              Share
+              <SocialXIcon />
+              Share Winner
             </Button>
           </div>
 

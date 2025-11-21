@@ -587,8 +587,8 @@ const PickerOverviewMenu: React.FC<{
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share Results
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Draw Verification
                 </Link>
               </DropdownMenuItem>
             )}
@@ -660,8 +660,8 @@ const PickerOverviewMenu: React.FC<{
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Share2 className="h-4 w-4 mr-2" />
-              <span className="hidden lg:inline">Share Results</span>
+              <ExternalLink className="h-4 w-4 mr-2" />
+              <span className="hidden lg:inline">Draw Verification</span>
             </Link>
           </Button>
         )}

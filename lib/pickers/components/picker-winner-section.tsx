@@ -10,7 +10,8 @@ import {
   Sparkles,
   Lock,
   ExternalLink,
-  Share2
+  Share2,
+  TrophyIcon
 } from 'lucide-react';
 import { PickerWinnerCard } from './picker-winner-card';
 import Link from 'next/link';
@@ -183,7 +184,7 @@ export const PickerWinnerSection: React.FC<PickerWinnerSectionProps> = ({
             <div className="flex flex-col md:flex-row items-center gap-2">
               <Button variant="link" size="sm" asChild>
                 <Link href={`/app/${teamSlug}/pickers/${pickerId}/draw`}>
-                  <ExternalLink className="h-3 w-3 mr-1" />
+                  <TrophyIcon className="h-3 w-3 mr-1" />
                   View Draw Details
                 </Link>
               </Button>
