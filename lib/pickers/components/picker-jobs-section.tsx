@@ -20,7 +20,7 @@ import {
   XCircle,
   Clock
 } from 'lucide-react';
-import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import { cn } from '@/lib/utils';
 import pluralize from 'pluralize';
 import { PickerJobSchema } from '../schemas/public-picker';
@@ -162,20 +162,24 @@ export const PickerJobsSection: React.FC<PickerJobsSectionProps> = ({
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                               <span className="font-mono">
                                 Created:{' '}
-                                {format(
+                                {formatInTimeZone(
                                   new Date(job.createdAt),
+                                  'UTC',
                                   'MMM d, HH:mm:ss'
-                                )}
+                                )}{' '}
+                                UTC
                               </span>
                               {job.runAt && (
                                 <>
                                   <span>•</span>
                                   <span className="font-mono">
                                     Run at:{' '}
-                                    {format(
+                                    {formatInTimeZone(
                                       new Date(job.runAt),
+                                      'UTC',
                                       'MMM d, HH:mm:ss'
-                                    )}
+                                    )}{' '}
+                                    UTC
                                   </span>
                                 </>
                               )}

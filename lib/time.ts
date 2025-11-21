@@ -6,6 +6,16 @@ export namespace time {
 }
 
 export namespace timezone {
+  /**
+   * Converts a local datetime string to UTC.
+   * The input datetime is assumed to be in the specified timezone.
+   * Returns a Date object representing that moment in UTC.
+   *
+   * Example:
+   * localTime("2025-11-21T15:00:00", "America/Los_Angeles")
+   * - Input: 3:00 PM PST (UTC-8)
+   * - Output: Date representing 11:00 PM UTC
+   */
   export const localTime = (datetime: string, timeZone: string) => {
     const tz = getTimeZones().find((t) => t.name === timeZone);
     if (!tz) throw new Error('Invalid timezone');
