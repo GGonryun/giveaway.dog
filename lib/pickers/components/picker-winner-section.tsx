@@ -195,7 +195,7 @@ export const PickerWinnerSection: React.FC<PickerWinnerSectionProps> = ({
                   rel="noopener noreferrer"
                 >
                   <Share2 className="h-3 w-3 mr-1" />
-                  Share Results
+                  Draw Verification
                 </Link>
               </Button>
             </div>

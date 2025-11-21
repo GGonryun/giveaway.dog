@@ -644,7 +644,7 @@ const PickerOverviewMenu: React.FC<{
             rel="noopener noreferrer"
             prefetch={false}
           >
-            <ExternalLink />
+            <SocialXIcon />
             <span className="hidden lg:inline">Open on X</span>
           </Link>
         </Button>
