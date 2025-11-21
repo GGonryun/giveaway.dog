@@ -1,3 +1,5 @@
+- when a winner is picked and you get to see their X, it would be nice if i could click on it to be redirected to their X profile.
+
 - [ ] Add a form integration.
 
 - [ ] Add a referral integration.
@@ -9,9 +11,7 @@
 - [ ] Add YouTube integration.
 - [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin
 - [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit
-
-- [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
-- [ ] As a host, I want to display my organization's logo on the sweepstake page.
+- [ ] Add BlueSky integration - https://next-auth.js.org/providers/bluesky
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
@@ -32,11 +32,12 @@
 
 - [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
 
+- [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
+- [ ] As a host, I want to display my organization's logo on the sweepstake page.
+
 ## User Feedback
 
 ### @Gamelooty
-
-- when a winner is picked and you get to see their X, it would be nice if i could click on it to be redirected to their X profile.
 
 - it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
 - i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bobi1234 and another person as bobi12345

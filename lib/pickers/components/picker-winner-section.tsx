@@ -27,6 +27,7 @@ interface PickerWinnerSectionProps {
   status: string;
   numberOfWinners: number;
   teamSlug: string;
+  postUrl: string;
   draws?: PickerDrawSchema[];
   stats?: {
     validEntries: number;
@@ -39,6 +40,7 @@ export const PickerWinnerSection: React.FC<PickerWinnerSectionProps> = ({
   status,
   numberOfWinners,
   teamSlug,
+  postUrl,
   draws = [],
   stats
 }) => {
@@ -164,8 +166,8 @@ export const PickerWinnerSection: React.FC<PickerWinnerSectionProps> = ({
             {currentWinners.map((draw) => (
               <PickerWinnerCard
                 key={draw.drawId}
+                postUrl={postUrl}
                 winner={draw.winner}
-                drawId={draw.drawId}
                 pickerId={pickerId}
               />
             ))}

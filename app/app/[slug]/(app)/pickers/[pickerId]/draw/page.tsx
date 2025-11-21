@@ -20,6 +20,7 @@ export default async function PickerDrawPage({ params: rawParams }: PageProps) {
     <PickerDrawInterface
       pickerId={picker.data.id}
       pickerName={picker.data.form.setup.name}
+      postUrl={picker.data.form.setup.postUrl}
       numberOfWinners={picker.data.form.winners.quota}
       eligibleEntries={picker.data.stats.validEntries}
       alreadyDrawn={picker.data.draws.outcome.finalDraws.length > 0}

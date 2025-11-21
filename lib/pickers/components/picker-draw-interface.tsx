@@ -46,6 +46,7 @@ import { PickerDrawResult } from '@prisma/client';
 interface PickerDrawInterfaceProps {
   pickerId: string;
   pickerName: string;
+  postUrl: string;
   numberOfWinners: number;
   eligibleEntries: number;
   alreadyDrawn: boolean;
@@ -57,6 +58,7 @@ interface PickerDrawInterfaceProps {
 export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
   pickerId,
   pickerName,
+  postUrl,
   numberOfWinners,
   eligibleEntries,
   alreadyDrawn,
@@ -285,7 +287,7 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
                 <PickerWinnerCard
                   key={draw.drawId}
                   winner={draw.winner}
-                  drawId={draw.drawId}
+                  postUrl={postUrl}
                   pickerId={pickerId}
                   showRedrawButton={!isComplete}
                   onRedraw={() => handleRedrawClick(draw.drawId)}

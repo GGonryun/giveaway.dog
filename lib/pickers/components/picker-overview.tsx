@@ -478,6 +478,7 @@ export const PickerOverview: React.FC<{
         pickerId={picker.id}
         pickerName={picker.form.setup.name}
         status={picker.status}
+        postUrl={picker.form.setup.postUrl}
         numberOfWinners={picker.form.winners.quota}
         teamSlug={teamSlug}
         draws={picker.draws.draws}
