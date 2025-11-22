@@ -13,7 +13,6 @@ enum UserSource {
   TWITTER_IMPORT
   MANUAL_IMPORT
   DISCORD_IMPORT
-  OAUTH_UPGRADED
 }
 
 model User {
@@ -304,6 +303,7 @@ model Sweepstakes {
   ageVerifications AgeVerification[]
   prizes           Prize[]
   tasks            Task[]
+  jobs             SweepstakesJob[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -368,9 +368,36 @@ model SweepstakesWinnerCriteria {
   sweepstakesId String      @unique
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
-  minTasksCompleted Int?     @default(1)
-  minQualityScore   Int?     @default(70)
-  allowMultipleWins Boolean? @default(false)
+  minTasksCompleted Int?    @default(1)
+  minQualityScore   Int?    @default(70)
+  allowMultipleWins Boolean @default(false)
+  externalPlatforms Json?
+}
+
+enum SweepstakesJobType {
+  FETCH_TWITTER_DATA
+  FETCH_TWITTER_GET_LIKING_USERS
+  FETCH_TWITTER_GET_REPOSTED_BY
+  FETCH_TWITTER_GET_QUOTED_POSTS
+}
+
+enum SweepstakesJobStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model SweepstakesJob {
+  id            String               @id @default(cuid())
+  sweepstakesId String
+  sweepstakes   Sweepstakes          @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+  type          SweepstakesJobType
+  status        SweepstakesJobStatus
+  data          Json?
+  runAt         DateTime?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
 }
 
 enum SweepstakesStatus {
