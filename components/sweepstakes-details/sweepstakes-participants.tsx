@@ -145,8 +145,18 @@ export const SweepstakesParticipants: React.FC<{
                         <TableCell>
                           <div className="flex items-center space-x-3">
                             <div>
-                              <div className="font-medium text-sm">
-                                {user.name}
+                              <div className="flex items-center gap-2">
+                                <div className="font-medium text-sm">
+                                  {user.name}
+                                </div>
+                                {user.source === 'TWITTER_IMPORT' && (
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-xs px-1.5 py-0"
+                                  >
+                                    Twitter Import
+                                  </Badge>
+                                )}
                               </div>
                               <div className="text-xs text-muted-foreground">
                                 {user.email}

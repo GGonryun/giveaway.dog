@@ -44,7 +44,7 @@ export function LoginForm({
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
-        <CardHeader className="text-center mb-4">
+        <CardHeader className="text-center mb-2">
           <CardTitle className="text-xl">Connect with us</CardTitle>
           <CardDescription>
             Sign in with your account to access Giveaway Dog
@@ -54,7 +54,6 @@ export function LoginForm({
           <LoginOptions redirectTo={redirectTo} />
         </CardContent>
       </Card>
-
       <AuthFooter />
     </div>
   );

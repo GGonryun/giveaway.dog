@@ -4,7 +4,7 @@
 // this is because these happen on the edge and providers are not supported there
 import NextAuth from 'next-auth';
 
-import { authConfig } from './config';
+import { authConfig } from './config-runtime';
 
 export const noProviderAuth = NextAuth({
   ...authConfig,

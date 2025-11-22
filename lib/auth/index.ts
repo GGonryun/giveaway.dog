@@ -6,7 +6,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
 import TwitchProvider from 'next-auth/providers/twitch';
 
-import { authConfig } from './config';
+import { authConfig } from './config-runtime';
 import { SteamProvider } from './providers/steam';
 import { InboundEmailProvider } from './providers/inbound';
 import KickProvider from './providers/kick';

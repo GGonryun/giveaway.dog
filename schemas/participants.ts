@@ -86,6 +86,7 @@ export const toUserParticipationSchema = (
     lastEntryAt: entries[0].completedAt.toISOString(),
     emailVerified: Boolean(participant.emailVerified),
     engagement,
+    source: participant.source,
     qualityScore: clamp(participant.quality[0]?.score ?? 0, 0, 100),
     status,
     providers: parseProviders(participant.accounts)

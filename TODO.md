@@ -1,24 +1,27 @@
-- [ ] Add a form integration.
+- [ ] Add YouTube integration - probably violates ToS so we can't do it officially.
+
+- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit
 
 - [ ] Add a referral integration.
+- [ ] Add a form integration.
 
 - [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook
 - [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram
 
-- [ ] Add TikTok integration.
-- [ ] Add YouTube integration.
 - [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin
-- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit
-- [ ] Add BlueSky integration - https://next-auth.js.org/providers/bluesky
+
+- [ ] Add GitHub integration - https://next-auth.js.org/providers/github
+- [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
+
+- [ ] Add TikTok integration - https://www.better-auth.com/docs/authentication/tiktok
+
+- [ ] Also, do you think it would be possible to use picker in a way so that as soon as i create a giveaway with rewuirements, i put that link into pocker and it'd monitor entries from the start, so that when its time to pick, it doesnt take so long to scan through all from 0?
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
   - [ ] When an entry method or prize has an error it should show an error triangle and outline it as red.
   - [ ] Make it easier to drag and drop tasks/prizes to reorder them.
 
-- [ ] I want to create short links for my sweepstakes, and draw verification
-
-- [ ] Add a form integration.
 - [ ] Add a recurring tasks to sweepstakes integrations.
 - [ ] Add a way to report sweepstakes.
 - [ ] Add a way to block users from sweepstakes.
@@ -32,6 +35,8 @@
 
 - [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
 - [ ] As a host, I want to display my organization's logo on the sweepstake page.
+
+- [ ] I want to create short links for my sweepstakes, and draw verification
 
 ## User Feedback
 

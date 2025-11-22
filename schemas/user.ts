@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, UserSource } from '@prisma/client';
 import z from 'zod';
 import {
   userFeatureFlagKeySchema,
@@ -25,7 +25,8 @@ export const userProfileSchema = z.object({
   emoji: z.string().nullable(),
   countryCode: z.string().nullable(),
   qualityScore: z.number(),
-  providers: providerSchema.array()
+  providers: providerSchema.array(),
+  source: z.nativeEnum(UserSource)
 });
 
 export type UserProfileSchema = z.infer<typeof userProfileSchema>;
@@ -97,6 +98,7 @@ export const USER_SCHEMA_SELECT_QUERY = {
   email: true,
   name: true,
   emoji: true,
+  source: true,
   ips: {
     include: {
       ip: true
@@ -128,6 +130,7 @@ export const toUserSchema = (
   email: user.email,
   name: user.name,
   emoji: user.emoji,
+  source: user.source,
   countryCode: user.ips[0]?.ip.countryCode || UNKNOWN_USER_COUNTRY_CODE,
   qualityScore: clamp(user.quality[0]?.score ?? 0, 0, 100),
   emailVerified: !!user.emailVerified,

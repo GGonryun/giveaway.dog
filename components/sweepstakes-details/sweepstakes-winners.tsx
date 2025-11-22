@@ -593,6 +593,15 @@ export const SweepstakesWinners = ({
               </Badge>
             </div>
           </div>
+
+          {participants.some((p) => p.qualityScore < currentCriteria.minQualityScore && p.entries.length >= currentCriteria.minTasksCompleted) && (
+            <Alert className="mt-4 border-amber-200 bg-amber-50">
+              <Info className="h-4 w-4 text-amber-600" />
+              <AlertDescription className="text-amber-800 text-sm">
+                Some participants (including Twitter imports with base quality score of 30) are being filtered out by your quality threshold. Consider lowering the minimum quality score to {Math.min(...participants.map(p => p.qualityScore))}% to include all participants.
+              </AlertDescription>
+            </Alert>
+          )}
         </CardContent>
       </Card>
 

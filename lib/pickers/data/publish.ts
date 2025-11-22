@@ -53,15 +53,9 @@ export const publishPickerJobs = ({
     });
   }
 
-  console.log(
-    'Scheduling fetch_twitter_data job with form actions:',
-    form.actions
-  );
   const runAt = form.timing?.scheduledAt
     ? new Date(form.timing.scheduledAt)
     : new Date();
-
-  console.log('Scheduling picker jobs at', runAt);
 
   return {
     picker: {

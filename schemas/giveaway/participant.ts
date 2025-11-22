@@ -4,7 +4,7 @@ import { GiveawayPrizeSchema } from './schemas';
 import z from 'zod';
 import { toUserSchema } from '../user';
 import { toTaskInput } from './input';
-import { CompletionStatus, TaskType } from '@prisma/client';
+import { CompletionStatus, TaskType, UserSource } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
 import { taskSchema } from '@/lib/task/schemas';
 import { providerSchema } from '@/lib/integrations/schemas/providers';
@@ -36,6 +36,7 @@ export const sweepstakesParticipantSchema = z.object({
   lastEntryAt: z.string(),
   qualityScore: z.number(),
   engagement: z.number(),
+  source: z.nativeEnum(UserSource),
   status: z.enum(['active', 'blocked']),
   userAgent: z.string(),
   emailVerified: z.boolean(),

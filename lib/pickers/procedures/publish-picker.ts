@@ -11,7 +11,6 @@ export const publishPicker = procedure()
   })
   .input(publishPickerInputSchema)
   .handler(async ({ input, db }) => {
-    console.log('Publishing picker with ID:', input.pickerId);
     await db.$transaction(async (tx) => {
       await tx.picker.update({
         where: {

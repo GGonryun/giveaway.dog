@@ -11,12 +11,15 @@ import {
   ProviderIcons
 } from '@/components/auth/provider-buttons';
 import { AuthError } from '@/components/auth/auth-error';
-import { ArrowLeftIcon } from 'lucide-react';
+import { AlertCircle, ArrowLeftIcon } from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import { Typography } from '../ui/typography';
 import { Flex } from '../ui/flex';
 import login from '@/lib/auth/procedures/login';
+import { Alert, AlertDescription } from '../ui/alert';
+import { toAuthErrorDescription } from '@/lib/auth/util';
+import { useSearchParams } from 'next/navigation';
 
 interface LoginOptionsProps {
   className?: string;
@@ -32,6 +35,10 @@ export function LoginOptions({
   label,
   ...props
 }: LoginOptionsProps & React.ComponentProps<'div'>) {
+  const searchParams = useSearchParams();
+
+  const error = searchParams.get('error');
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const loginProcedure = useProcedure({
@@ -135,10 +142,18 @@ export function LoginOptions({
   }
 
   return (
-    <Flex.Stack center gap="sm" className={cn(className)} {...props}>
-      {label && <Typography.Header level={5}>{label}</Typography.Header>}
-      <Providers onSubmit={handleProviderLogin} />
-      <AuthError error={errorMessage} />
-    </Flex.Stack>
+    <div>
+      <Alert className={cn('mb-4', !error && 'hidden')} variant="error">
+        <AlertCircle className="mb-2 h-6 w-6 text-muted-foreground" />
+        <AlertDescription className="text-sm">
+          {toAuthErrorDescription(error)}
+        </AlertDescription>
+      </Alert>
+      <Flex.Stack center gap="sm" className={cn(className)} {...props}>
+        {label && <Typography.Header level={5}>{label}</Typography.Header>}
+        <Providers onSubmit={handleProviderLogin} />
+        <AuthError error={errorMessage} />
+      </Flex.Stack>
+    </div>
   );
 }

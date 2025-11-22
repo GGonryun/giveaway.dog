@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "UserSource" AS ENUM ('SIGNUP', 'TWITTER_IMPORT', 'MANUAL_IMPORT', 'DISCORD_IMPORT');
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "source" "UserSource" NOT NULL DEFAULT 'SIGNUP';

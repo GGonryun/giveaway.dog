@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "UserSource" ADD VALUE 'OAUTH_UPGRADED';

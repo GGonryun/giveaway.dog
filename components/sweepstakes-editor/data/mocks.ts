@@ -22,6 +22,7 @@ export const mockUserProfile: UserProfileSchema = {
   emailVerified: true,
   emoji: '🐶',
   countryCode: 'US',
+  source: 'SIGNUP',
   qualityScore: 85,
   providers: [
     {
