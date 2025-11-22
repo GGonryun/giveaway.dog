@@ -1,8 +1,13 @@
+- [ ] Unified Sweepstakes Platform
+
+- [ ] User feedback: Show the host's name instead of just preview host (just a quick question what to do here to show By L1ghterVibes and not preview host)
+
+- [ ] Add a referral integration.
+
 - [ ] Add YouTube integration - probably violates ToS so we can't do it officially.
 
 - [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit
 
-- [ ] Add a referral integration.
 - [ ] Add a form integration.
 
 - [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook
@@ -21,6 +26,8 @@
   - [ ] When adding an entry method or prize it should automatically appear "open"
   - [ ] When an entry method or prize has an error it should show an error triangle and outline it as red.
   - [ ] Make it easier to drag and drop tasks/prizes to reorder them.
+  - [ ] When I click "next" on a sweepstake it doesn't scroll me back to the top of the page.
+  - [ ] The horizontal scroll bar for sweepstakes tabs doesn't look good when the screen is too small.
 
 - [ ] Add a recurring tasks to sweepstakes integrations.
 - [ ] Add a way to report sweepstakes.
