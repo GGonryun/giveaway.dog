@@ -178,7 +178,7 @@ const toCriteriaInput = (
       minQualityScore: DEFAULT_MIN_QUALITY_SCORE,
       minTasksCompleted: DEFAULT_MIN_TASK_COMPLETED,
       allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS,
-      externalPlatforms: []
+      externalPlatforms: null
     };
 
   return {

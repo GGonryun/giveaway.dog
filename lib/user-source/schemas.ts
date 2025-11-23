@@ -20,9 +20,9 @@ export type AllowedUserSourcesSchema = z.infer<typeof allowedUserSourcesSchema>;
 
 export const parseUserSourceSchema = (
   data: Prisma.JsonValue
-): UserSourceSchema => {
+): UserSourceSchema | null => {
   if (!data) {
-    return [];
+    return null;
   }
 
   const sources = userSourceSchema.safeParse(data);
