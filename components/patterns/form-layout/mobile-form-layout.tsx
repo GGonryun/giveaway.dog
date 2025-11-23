@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { XIcon, SaveIcon, EyeIcon, EditIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FormLayoutProps } from './types';
 import { UnifiedFormFooter } from './unified-form-footer';
 import { useUnifiedFormLayout } from './use-unified-form-layout';
@@ -130,6 +130,14 @@ export const MobileFormLayout: React.FC<FormLayoutProps> = ({
   hideTabs
 }) => {
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
+  const { currentStep } = useUnifiedFormLayout();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [currentStep]);
 
   return (
     <div className="fixed inset-0 flex flex-col bg-background">
@@ -140,7 +148,7 @@ export const MobileFormLayout: React.FC<FormLayoutProps> = ({
         <div className="bg-background flex-1 min-h-0 overflow-hidden relative top-0 z-10 flex flex-col">
           {mobileView === 'form' ? (
             <>
-              <div className="overflow-y-scroll flex-1">{form}</div>
+              <div ref={scrollContainerRef} className="overflow-y-scroll flex-1">{form}</div>
               <UnifiedFormFooter />
             </>
           ) : (

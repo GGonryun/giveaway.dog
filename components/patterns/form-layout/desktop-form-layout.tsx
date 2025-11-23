@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/resizable';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { XIcon, SaveIcon, AlertCircleIcon } from 'lucide-react';
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { FormLayoutProps } from './types';
 import { UnifiedFormFooter } from './unified-form-footer';
 import { DemoBanner } from './demo-banner';
@@ -132,6 +132,15 @@ export const DesktopFormLayout: React.FC<FormLayoutProps> = ({
   previewFooter,
   hideTabs
 }) => {
+  const { currentStep } = useUnifiedFormLayout();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [currentStep]);
+
   return (
     <div className="fixed inset-0 flex flex-col bg-background">
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -143,7 +152,7 @@ export const DesktopFormLayout: React.FC<FormLayoutProps> = ({
             defaultSize={30}
             className="min-w-[450px] xl:max-w-[800px] flex flex-col"
           >
-            <div className="space-y-2 overflow-y-scroll flex-1">{form}</div>
+            <div ref={scrollContainerRef} className="space-y-2 overflow-y-scroll flex-1">{form}</div>
             <UnifiedFormFooter />
           </ResizablePanel>
           <ResizableHandle withHandle />
