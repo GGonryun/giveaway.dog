@@ -14,8 +14,7 @@ import {
   Mail,
   MonitorSmartphone,
   MonitorX,
-  StarIcon,
-  Building
+  StarIcon
 } from 'lucide-react';
 import z from 'zod';
 

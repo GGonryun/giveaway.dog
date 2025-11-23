@@ -26,6 +26,7 @@ import { PreviewStateContext } from './contexts/preview-state-context';
 
 import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
 import { UnifiedFormLayoutContextProvider } from '../patterns/form-layout/use-unified-form-layout';
+import { IntegrationsSchema } from '@/lib/integrations/schemas';
 import {
   SWEEPSTAKE_FIELD_TO_STEP_MAP,
   isSweepstakeStepKey,
@@ -43,8 +44,9 @@ import { PublishConfirmationModal } from './publish-confirmation-modal';
 export const SweepstakesForm: React.FC<{
   sweepstakes: GiveawayFormSchema;
   teamFeatureFlags: TeamFeatureFlagKeySchema[];
+  integrations: IntegrationsSchema;
   isDemo?: boolean;
-}> = ({ sweepstakes: defaultValues, teamFeatureFlags, isDemo = false }) => {
+}> = ({ sweepstakes: defaultValues, teamFeatureFlags, integrations, isDemo = false }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const params = useParams();
@@ -86,6 +88,7 @@ export const SweepstakesForm: React.FC<{
           step={step}
           action={action}
           teamFeatureFlags={teamFeatureFlags}
+          integrations={integrations}
         />
       </FormProvider>
     </PreviewStateContext.Provider>
@@ -96,8 +99,9 @@ const FormContent: React.FC<{
   id: string;
   step: SweepstakeStep;
   teamFeatureFlags: TeamFeatureFlagKeySchema[];
+  integrations: IntegrationsSchema;
   action: UnifiedFormAction;
-}> = ({ id, teamFeatureFlags, action, step }) => {
+}> = ({ id, teamFeatureFlags, integrations, action, step }) => {
   const page = useSweepstakesPage();
 
   const [showIssues, setShowIssues] = useState(false);
@@ -224,6 +228,7 @@ const FormContent: React.FC<{
           form={<SweepstakeFormContent />}
           preview={<SweepstakePreview />}
           teamFeatureFlags={teamFeatureFlags}
+          integrations={integrations}
           previewFooter={<SweepstakesPreviewFooter />}
           type={'sweepstake'}
           action={action}

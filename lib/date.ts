@@ -33,7 +33,7 @@ export namespace datetime {
   ) => {
     switch (format) {
       case 'tiny':
-        return fnsFormat(date, 'MM/dd/yyyy, hh:mm a');
+        return fnsFormat(date, 'MMM d, hh:mm a');
       case 'short':
         return fnsFormat(date, 'MMM d, yyyy, hh:mm a');
       case 'long':
@@ -43,12 +43,16 @@ export namespace datetime {
     }
   };
 
+  export const secondsFromNow = (seconds: number) => {
+    return new Date(Date.now() + seconds * 1000);
+  };
+
   export const minutesFromNow = (minutes: number) => {
     return new Date(Date.now() + minutes * 60 * 1000);
   };
 
-  export const secondsFromNow = (seconds: number) => {
-    return new Date(Date.now() + seconds * 1000);
+  export const hoursFromNow = (hours: number) => {
+    return new Date(Date.now() + hours * 60 * 60 * 1000);
   };
 
   export const daysAgo = (days: number) => {

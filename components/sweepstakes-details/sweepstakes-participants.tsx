@@ -25,13 +25,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { MoreVertical, Eye, UserX, CheckCircle, Users } from 'lucide-react';
+import { MoreVertical, Eye, UserX, Users } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { StatusExplanationDialog } from '../users/status-explanation-dialog';
 
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { datetime } from '@/lib/date';
 import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 
 export const SweepstakesParticipants: React.FC<{
   slug: string;
@@ -50,44 +51,6 @@ export const SweepstakesParticipants: React.FC<{
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-  };
-
-  const getStatusBadge = (
-    status: string,
-    user: SweepstakesParticipantSchema
-  ) => {
-    const variants = {
-      active: {
-        variant: 'default' as const,
-        label: 'Active',
-        icon: CheckCircle,
-        className: 'bg-blue-500 hover:bg-blue-600 text-white'
-      },
-      blocked: {
-        variant: 'secondary' as const,
-        label: 'Blocked',
-        icon: UserX,
-        className: ''
-      }
-    };
-
-    const config = variants[status as keyof typeof variants] || variants.active;
-    const IconComponent = config.icon;
-
-    return (
-      <Badge
-        variant={config.variant}
-        className={`text-xs cursor-pointer hover:opacity-80 transition-opacity ${config.className}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          setStatusDialogUser(user);
-          setShowStatusDialog(true);
-        }}
-      >
-        <IconComponent className="h-3 w-3 mr-1" />
-        {config.label}
-      </Badge>
-    );
   };
 
   // Calculate shown entries for pagination
@@ -119,14 +82,16 @@ export const SweepstakesParticipants: React.FC<{
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>Source</TableHead>
                       <TableHead>User</TableHead>
-                      <TableHead>Last Entry</TableHead>
-                      <TableHead>Quality</TableHead>
-                      <TableHead className="hidden lg:table-cell">
+                      <TableHead className="hidden lg:table-cell text-right">
+                        Quality
+                      </TableHead>
+                      <TableHead className="hidden xl:table-cell text-right">
                         Engagement
                       </TableHead>
-                      <TableHead className="hidden xl:table-cell">
-                        Status
+                      <TableHead className="hidden sm:table-cell text-right">
+                        Last Entry
                       </TableHead>
                       <TableHead className="w-12"></TableHead>
                     </TableRow>
@@ -142,6 +107,9 @@ export const SweepstakesParticipants: React.FC<{
                           );
                         }}
                       >
+                        <TableCell className="w-24 pr-0">
+                          <UserSourceBadge source={user.source} />
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-3">
                             <div>
@@ -149,36 +117,16 @@ export const SweepstakesParticipants: React.FC<{
                                 <div className="font-medium text-sm">
                                   {user.name}
                                 </div>
-                                {user.source === 'TWITTER_IMPORT' && (
-                                  <Badge
-                                    variant="secondary"
-                                    className="text-xs px-1.5 py-0"
-                                  >
-                                    Twitter Import
-                                  </Badge>
-                                )}
                               </div>
-                              <div className="text-xs text-muted-foreground">
-                                {user.email}
-                              </div>
-                              <div className="mt-1">
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs px-1 py-0"
-                                >
-                                  {user.country}
-                                </Badge>
+                              <div className="text-xs text-muted-foreground italic">
+                                {user.email ?? 'No email'}
                               </div>
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <div className="text-sm">
-                            {datetime.format(user.lastEntryAt)}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center space-x-2">
+
+                        <TableCell className="hidden lg:table-cell text-right">
+                          <div className="flex items-center justify-end space-x-2">
                             <div className="w-16 bg-muted rounded-full h-1.5">
                               <div
                                 className={`h-1.5 rounded-full transition-all ${
@@ -198,8 +146,8 @@ export const SweepstakesParticipants: React.FC<{
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell className="hidden lg:table-cell">
-                          <div className="flex items-center space-x-2">
+                        <TableCell className="hidden xl:table-cell text-right">
+                          <div className="flex items-center justify-end space-x-2">
                             <div className="w-16 bg-muted rounded-full h-1.5">
                               <div
                                 className={`h-1.5 rounded-full transition-all ${
@@ -219,8 +167,10 @@ export const SweepstakesParticipants: React.FC<{
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell className="hidden xl:table-cell">
-                          {getStatusBadge(user.status, user)}
+                        <TableCell className="hidden sm:table-cell text-right">
+                          <div className="text-sm">
+                            {datetime.format(user.lastEntryAt, 'tiny')}
+                          </div>
                         </TableCell>
                         <TableCell onClick={(e) => e.stopPropagation()}>
                           <DropdownMenu>

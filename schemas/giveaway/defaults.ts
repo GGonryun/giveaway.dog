@@ -11,6 +11,7 @@ import {
   MinimumAgeRestrictionSchema,
   SolidColorBackgroundSchema
 } from './schemas';
+import { AllowedUserSourcesSchema } from '@/lib/user-source/schemas';
 
 export const DEFAULT_MINIMUM_AGE = 13;
 
@@ -33,6 +34,10 @@ export const DEFAULT_MINIMUM_AGE_RESTRICTION: MinimumAgeRestrictionSchema = {
   label: `I am at least ${DEFAULT_MINIMUM_AGE} years of age (required)`,
   required: true
 };
+
+export const DEFAULT_ALLOWED_USER_SOURCES: AllowedUserSourcesSchema = [
+  'TWITTER_IMPORT'
+];
 
 export const DEFAULT_SWEEPSTAKES_DETAILS: Prisma.SweepstakesDetailsUncheckedCreateWithoutSweepstakesInput =
   {

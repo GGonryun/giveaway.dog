@@ -11,6 +11,7 @@ export default async function Page() {
     <Suspense>
       <MockTeamProvider>
         <SweepstakesForm
+          integrations={[]}
           sweepstakes={SAMPLE_SWEEPSTAKES_DATA}
           isDemo={true}
           teamFeatureFlags={[PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY]}

@@ -8,7 +8,7 @@ import { getAccountLabel, getAccountLink } from './get-account-data';
 export const authConfig = {
   ...authConfigMiddleware,
   events: {
-    async linkAccount({ account, profile, user }) {
+    async linkAccount({ account, profile }) {
       const label = getAccountLabel(account, profile);
       const link = getAccountLink(account, profile);
       if (label || link) {

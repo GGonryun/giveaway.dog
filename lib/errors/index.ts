@@ -52,9 +52,9 @@ export type ApplicationErrorArgs<TData = unknown> = {
   data?: TData;
 };
 
-export class ApplicationError<T = unknown> extends Error {
+export class ApplicationError<T = unknown | undefined> extends Error {
   code: ApplicationErrorCode;
-  data?: T;
+  data: T;
 
   constructor(error: ApplicationErrorArgs<T>) {
     super(error.message);
@@ -62,7 +62,7 @@ export class ApplicationError<T = unknown> extends Error {
     this.code = error.code;
     this.message = error.message;
     this.cause = error.cause;
-    this.data = error.data;
+    this.data = error.data as T;
   }
 
   toJSON(): object {

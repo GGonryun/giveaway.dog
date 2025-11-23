@@ -3,7 +3,11 @@ import {
   SweepstakesStatus,
   SweepstakesTermsType
 } from '@prisma/client';
-import { SweepstakesInputSchema, TeamSweepstakesGetPayload } from './db';
+import {
+  SweepstakesInputSchema,
+  SweepstakesInputTaskSchema,
+  TeamSweepstakesGetPayload
+} from './db';
 import { compact } from 'lodash';
 import { assertNever } from '@/lib/errors';
 import { isStorablePrize, isStorableTask } from './is';
@@ -12,6 +16,7 @@ import {
   DEFAULT_MIN_QUALITY_SCORE,
   DEFAULT_MIN_TASK_COMPLETED
 } from './defaults';
+import { RequiredFields } from '@/lib/types';
 
 const toStorableDetails = (setup: SweepstakesInputSchema['setup']) => {
   return {
@@ -125,22 +130,52 @@ const toStorableTasks = (
   tasks: SweepstakesInputSchema['tasks']
 ): Prisma.TaskUncheckedCreateNestedManyWithoutSweepstakesInput | undefined => {
   if (!tasks) return undefined;
-  const compactTasks = compact(tasks).filter(isStorableTask);
+  const compacted = compact(tasks).filter(isStorableTask);
 
-  if (!compactTasks.length) return undefined;
+  if (!compacted.length) return undefined;
   return {
-    createMany: {
-      // TODO: why doesn't config have all of the discriminated type properties.
-      // Specifically, properties like 'href' for VISIT_URL tasks are missing.
-      data: compactTasks.map(({ id, ...config }, index) => {
-        return {
-          id,
-          index,
-          config
-        };
-      })
-    }
+    // TODO: why doesn't config have all of the discriminated type properties.
+    // Specifically, properties like 'href' for VISIT_URL tasks are missing.
+    create: compacted.map((task, index) => {
+      const { id, ...config } = task;
+      return {
+        id,
+        index,
+        config,
+        jobs: {
+          create: createJobsForTask(task)
+        }
+      };
+    })
   };
+};
+
+const createJobsForTask = (
+  task: RequiredFields<SweepstakesInputTaskSchema, 'id'>
+): Prisma.TaskJobCreateWithoutTaskInput[] => {
+  if (!task?.type) return [];
+  switch (task.type) {
+    case 'VISIT_URL':
+    case 'BONUS_TASK':
+    case 'DISCORD_JOIN':
+    case 'TWITCH_FOLLOW':
+    case 'KICK_FOLLOW':
+    case 'SECRET_CODE':
+    case 'STEAM_WISHLIST':
+    case 'TWITTER_FOLLOW':
+    case 'TWITTER_CONNECT':
+      return [];
+    case 'TWITTER_RETWEET':
+      return task.validateEntries
+        ? [
+            {
+              runAt: new Date()
+            }
+          ]
+        : [];
+    default:
+      throw assertNever(task.type);
+  }
 };
 
 const toStorableDesign = (
@@ -186,7 +221,8 @@ export const toStorableCriteria = (
         criteria.minTasksCompleted ?? DEFAULT_MIN_TASK_COMPLETED,
       minQualityScore: criteria.minQualityScore ?? DEFAULT_MIN_QUALITY_SCORE,
       allowMultipleWins:
-        criteria.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS
+        criteria.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS,
+      externalPlatforms: criteria.externalPlatforms || []
     }
   };
 };

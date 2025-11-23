@@ -7,6 +7,7 @@ import {
   LikingUsersResponse,
   likingUsersResponseSchema
 } from '../schemas/api';
+import { extractTweetId } from '../schemas/twitter';
 
 export const getLikingUsers = async (
   tx: Tx,
@@ -22,10 +23,12 @@ export const getLikingUsers = async (
     params.append('pagination_token', input.paginationToken);
   }
 
+  const tweetId = extractTweetId(input.tweetId);
+
   return twitterApiRequest({
     tx,
     teamId: input.teamId,
-    endpoint: `https://api.x.com/2/tweets/${input.tweetId}/liking_users`,
+    endpoint: `https://api.x.com/2/tweets/${tweetId}/liking_users`,
     params,
     responseSchema: likingUsersResponseSchema
   });

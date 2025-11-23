@@ -45,12 +45,16 @@ const getParticipatingUsers = procedure()
           }
         }
       },
+
       include: sweepstakesInclude
     });
 
-    const processedUsers = participants.map((user) =>
-      toUserParticipationSchema(user, totalTasks)
-    );
+    const processedUsers = participants
+      .map((user) => toUserParticipationSchema(user, totalTasks))
+      .sort(
+        (a, b) =>
+          new Date(b.lastEntryAt).getTime() - new Date(a.lastEntryAt).getTime()
+      );
 
     return {
       users: processedUsers

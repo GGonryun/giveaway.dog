@@ -9,6 +9,7 @@ import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-statu
 import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
 import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
 import { SweepstakesPageProps } from '@/schemas/pages';
+import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
 
 export const SweepstakeFormPage = async ({
   params
@@ -16,10 +17,11 @@ export const SweepstakeFormPage = async ({
   params: Promise<SweepstakesPageProps>;
 }) => {
   const { id, slug } = await params;
-  const [form, info, teamFeatureFlags] = await Promise.all([
+  const [form, info, teamFeatureFlags, integrations] = await Promise.all([
     getSweepstakesForm({ id }),
     getSweepstakesStatus({ id }),
-    getTeamFeatureFlags({ slug })
+    getTeamFeatureFlags({ slug }),
+    getTeamIntegrations({ slug })
   ]);
 
   if (!form.ok) {
@@ -35,6 +37,12 @@ export const SweepstakeFormPage = async ({
   if (!teamFeatureFlags.ok) {
     return (
       <div>Failed to load team feature flags: {teamFeatureFlags.data.code}</div>
+    );
+  }
+
+  if (!integrations.ok) {
+    return (
+      <div>Failed to load integrations: {integrations.data.code}</div>
     );
   }
 
@@ -55,6 +63,7 @@ export const SweepstakeFormPage = async ({
       <SweepstakesForm
         sweepstakes={form.data as GiveawayFormSchema}
         teamFeatureFlags={teamFeatureFlags.data}
+        integrations={integrations.data}
       />
     </Suspense>
   );

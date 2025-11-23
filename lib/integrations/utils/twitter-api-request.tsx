@@ -33,9 +33,10 @@ export async function twitterApiRequest<T>({
   });
 
   if (!response.ok) {
-    const error = await response.json();
+    console.error(`Twitter API Error: ${url} - Status: ${response.status}`);
 
     if (response.status === 429) {
+      const error = await response.clone().json();
       const resetTime = response.headers.get('x-rate-limit-reset');
       const retryAfter = resetTime
         ? new Date(parseInt(resetTime) * 1000)
@@ -55,7 +56,7 @@ export async function twitterApiRequest<T>({
     throw new ApplicationError({
       code: 'BAD_REQUEST',
       message: 'Failed to fetch data from Twitter API',
-      cause: JSON.stringify(error)
+      cause: await response.clone().text()
     });
   }
 

@@ -7,6 +7,7 @@ import {
   RetweetedByResponse,
   retweetedByResponseSchema
 } from '../schemas/api';
+import { extractTweetId } from '../schemas/twitter';
 
 export const getRetweetedBy = async (
   tx: Tx,
@@ -22,10 +23,12 @@ export const getRetweetedBy = async (
     params.append('pagination_token', input.paginationToken);
   }
 
+  const tweetId = extractTweetId(input.tweetId);
+
   return twitterApiRequest({
     tx,
     teamId: input.teamId,
-    endpoint: `https://api.x.com/2/tweets/${input.tweetId}/retweeted_by`,
+    endpoint: `https://api.x.com/2/tweets/${tweetId}/retweeted_by`,
     params,
     responseSchema: retweetedByResponseSchema
   });

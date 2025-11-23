@@ -34,8 +34,8 @@ import { datetime } from '@/lib/date';
 import { cn } from '@/lib/utils';
 import { toQualityTextColor, toQualityProgressColor } from '@/schemas/quality';
 import { Progress } from '../ui/progress';
-import { ProviderSchema } from '@/lib/integrations/schemas/providers';
 import { UserProviders } from '@/lib/integrations/components/user-providers';
+import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
 
 export const ParticipatingUserSheetContent: React.FC<{
   user: SweepstakesParticipantSchema;
@@ -43,30 +43,6 @@ export const ParticipatingUserSheetContent: React.FC<{
   const router = useRouter();
   const { activeTeam } = useTeams();
   const [showStatusDialog, setShowStatusDialog] = useState(false);
-
-  const getStatusBadge = (status: string) => {
-    const variants = {
-      active: { variant: 'default' as const, label: 'Active' },
-      flagged: { variant: 'destructive' as const, label: 'Flagged' },
-      blocked: { variant: 'secondary' as const, label: 'Blocked' },
-      trusted: { variant: 'default' as const, label: 'Trusted' }
-    };
-
-    const config = variants[status as keyof typeof variants] || variants.active;
-
-    return (
-      <Badge
-        variant={config.variant}
-        className="cursor-pointer hover:opacity-80 transition-opacity"
-        onClick={(e) => {
-          e.stopPropagation();
-          setShowStatusDialog(true);
-        }}
-      >
-        {config.label}
-      </Badge>
-    );
-  };
 
   if (!user) return null;
 
@@ -104,7 +80,7 @@ export const ParticipatingUserSheetContent: React.FC<{
             <div className="text-sm text-muted-foreground">Engagement</div>
           </div>
           <div className="flex items-center justify-center p-3 bg-muted rounded-lg">
-            {getStatusBadge(user.status)}
+            <UserStatusBadge status={user.status} />
           </div>
         </div>
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { processJobs } from '@/lib/pickers/procedures/process-jobs';
+import { processTaskJobs } from '@/procedures/sweepstakes/process-task-jobs';
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
@@ -8,5 +9,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  return NextResponse.json(await processJobs());
+  const [pickerResults, sweepstakesResults] = await Promise.all([
+    processJobs(),
+    processTaskJobs()
+  ]);
+
+  return NextResponse.json({
+    pickers: pickerResults,
+    sweepstakes: sweepstakesResults
+  });
 }

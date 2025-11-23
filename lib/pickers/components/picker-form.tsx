@@ -240,6 +240,7 @@ const FormContent: React.FC<FormContentProps> = ({
           action={action}
           id={pickerId}
           teamFeatureFlags={teamFeatureFlags}
+          integrations={integrations || []}
           stepOrder={PICKER_STEP_ORDER}
           stepsToFields={PICKER_STEP_TO_FIELD_MAP}
           fieldsToSteps={PICKER_FIELD_TO_STEP_MAP}

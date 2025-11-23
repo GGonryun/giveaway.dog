@@ -148,32 +148,28 @@ export const applySweepstakesChanges = async ({
       }
     });
 
+    // delete existing sweepstakes and all nested properties
+
     await tx.sweepstakes.delete({
       where: { id: sweepstakes.id }
     });
 
     const created = await tx.sweepstakes.create({
       data: toStorableSweepstakes(sweepstakes, input),
-      include: {
-        tasks: true
-      }
+      include: { tasks: true }
     });
 
+    // restore retained data
     await tx.ageVerification.createMany({
       data: ageVerifications.map((d) => ({ ...d }))
     });
 
     // we only want to retain the task completions for tasks that still exist
     const taskIds = new Set(created.tasks?.map((t) => t.id));
-    const filteredCompletions = completions.filter((c) =>
-      taskIds.has(c.taskId)
-    );
+    const filtered = completions.filter((c) => taskIds.has(c.taskId));
 
     await tx.taskCompletion.createMany({
-      data: filteredCompletions.map((d) => ({
-        ...d,
-        proof: d.proof ?? undefined
-      }))
+      data: filtered.map((d) => ({ ...d, proof: d.proof ?? undefined }))
     });
   });
 

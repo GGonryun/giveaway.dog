@@ -7,6 +7,7 @@ import {
   QuoteTweetsResponse,
   quoteTweetsResponseSchema
 } from '../schemas/api';
+import { extractTweetId } from '../schemas/twitter';
 
 export const getQuoteTweets = async (
   tx: Tx,
@@ -24,10 +25,12 @@ export const getQuoteTweets = async (
     params.append('pagination_token', input.paginationToken);
   }
 
+  const tweetId = extractTweetId(input.tweetId);
+
   return twitterApiRequest({
     tx,
     teamId: input.teamId,
-    endpoint: `https://api.x.com/2/tweets/${input.tweetId}/quote_tweets`,
+    endpoint: `https://api.x.com/2/tweets/${tweetId}/quote_tweets`,
     params,
     responseSchema: quoteTweetsResponseSchema
   });

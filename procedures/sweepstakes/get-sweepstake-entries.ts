@@ -52,7 +52,7 @@ const getSweepstakeEntries = procedure()
       }
     });
 
-    return completions.map((c) => {
+    const entries = completions.map((c) => {
       return {
         ...c,
         user: toUserSchema(c.user),
@@ -61,6 +61,8 @@ const getSweepstakeEntries = procedure()
         task: toTaskSchema(c.task)
       };
     });
+
+    return entries.sort((a, b) => b.completedAt - a.completedAt);
   });
 
 export default getSweepstakeEntries;

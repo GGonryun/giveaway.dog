@@ -1,9 +1,11 @@
 import {
+  Prisma,
   PrizeDrawResult,
   RegionalRestrictionFilter,
+  UserSource,
   VisibilityType
 } from '@prisma/client';
-import { assertNever } from '@/lib/errors';
+import { ApplicationError, assertNever } from '@/lib/errors';
 import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';
 import { userProfileSchema } from '../user';
@@ -15,6 +17,7 @@ import { derivedSweepstakesStatusSchema } from '../sweepstakes';
 import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@/lib/settings';
 import { timingSchema } from '../timing';
 import { taskSchema, baseTaskSchema } from '@/lib/task/schemas';
+import { allowedUserSourcesSchema } from '@/lib/user-source/schemas';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -129,7 +132,8 @@ const sweepstakesWinnerCriteriaSchema = z.object({
     .min(0, 'Quality score must be between 0-100')
     .max(100, 'Quality score must be between 0-100')
     .default(70),
-  allowMultipleWins: z.boolean().default(false)
+  allowMultipleWins: z.boolean().default(false),
+  externalPlatforms: allowedUserSourcesSchema.nullable().optional()
 });
 
 export type SweepstakesWinnerCriteriaSchema = z.infer<

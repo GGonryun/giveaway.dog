@@ -68,6 +68,14 @@ const rollWinners = procedure()
         id: sweepstakesId
       });
 
+      const sweepstakesWithCriteria = await db.sweepstakes.findUnique({
+        where: { id: sweepstakesId },
+        include: { criteria: true }
+      });
+
+      const externalPlatforms = sweepstakesWithCriteria?.criteria
+        ?.externalPlatforms as string[] | null;
+
       const prizes = await db.prize.findMany({
         where: {
           sweepstakesId
@@ -126,7 +134,8 @@ const rollWinners = procedure()
         isEligibleTaskCompletion({
           userCompletionCounts,
           minQualityScore,
-          minTasksCompleted
+          minTasksCompleted,
+          externalPlatforms
         })
       );
 
@@ -336,12 +345,26 @@ const isEligibleTaskCompletion =
     userCompletionCounts: Map<string, number>;
     minQualityScore: number;
     minTasksCompleted: number;
+    externalPlatforms: string[] | null;
   }) =>
   (completion: EligibleTaskCompletion) => {
-    const { userCompletionCounts, minQualityScore, minTasksCompleted } = args;
+    const {
+      userCompletionCounts,
+      minQualityScore,
+      minTasksCompleted,
+      externalPlatforms
+    } = args;
     const userId = completion.userId;
     const userQuality = completion.user.quality[0]?.score ?? 0;
     const userTaskCount = userCompletionCounts.get(userId) || 0;
+    const userSource = completion.user.source;
+
+    // Check external platform source filter
+    if (externalPlatforms && externalPlatforms.length > 0) {
+      if (!externalPlatforms.includes(userSource)) {
+        return false;
+      }
+    }
 
     // Check quality score
     if (userQuality < minQualityScore) return false;

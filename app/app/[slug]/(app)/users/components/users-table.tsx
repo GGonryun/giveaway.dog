@@ -26,21 +26,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {
-  MoreVertical,
-  Eye,
-  UserCheck,
-  UserX,
-  AlertTriangle,
-  CheckCircle,
-  Users,
-  ArrowUpDown
-} from 'lucide-react';
+import { MoreVertical, Eye, UserX, Users, ArrowUpDown } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { FilterBar } from '../../../../../../components/users/filter-bar';
 import { SearchBar } from '../../../../../../components/users/search-bar';
-
-import { StatusExplanationDialog } from '../../../../../../components/users/status-explanation-dialog';
 
 import { useTeams } from '@/components/context/team-provider';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
@@ -49,6 +38,9 @@ import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { toQualityProgressColor } from '@/schemas/quality';
+import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
+import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
+import { datetime } from '@/lib/date';
 
 interface UsersTableProps {
   users: SweepstakesParticipantSchema[];
@@ -64,9 +56,6 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   const [selectedUser, setSelectedUser] =
     useState<SweepstakesParticipantSchema | null>(null);
   const [showUserSheet, setShowUserSheet] = useState(false);
-  const [showStatusDialog, setShowStatusDialog] = useState(false);
-  const [statusDialogUser, setStatusDialogUser] =
-    useState<SweepstakesParticipantSchema | null>(null);
 
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [sortField, setSortField] = useState(
@@ -278,65 +267,6 @@ export const UsersTable: React.FC<UsersTableProps> = ({
     setCurrentPage(page);
   }, []);
 
-  const getStatusBadge = (
-    status: string,
-    user: SweepstakesParticipantSchema
-  ) => {
-    const variants = {
-      active: {
-        variant: 'default' as const,
-        label: 'Active',
-        icon: CheckCircle,
-        className: 'bg-blue-500 hover:bg-blue-600 text-white'
-      },
-      flagged: {
-        variant: 'destructive' as const,
-        label: 'Flagged',
-        icon: AlertTriangle,
-        className: ''
-      },
-      blocked: {
-        variant: 'secondary' as const,
-        label: 'Blocked',
-        icon: UserX,
-        className: ''
-      },
-      trusted: {
-        variant: 'default' as const,
-        label: 'Trusted',
-        icon: UserCheck,
-        className: ''
-      }
-    };
-
-    const config = variants[status as keyof typeof variants] || variants.active;
-    const IconComponent = config.icon;
-
-    return (
-      <Badge
-        variant={config.variant}
-        className={`text-xs cursor-pointer hover:opacity-80 transition-opacity ${config.className}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          setStatusDialogUser(user);
-          setShowStatusDialog(true);
-        }}
-      >
-        <IconComponent className="h-3 w-3 mr-1" />
-        {config.label}
-      </Badge>
-    );
-  };
-
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
   const SortButton = ({
     field,
     children
@@ -402,18 +332,16 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>Source</TableHead>
                       <TableHead>User</TableHead>
-                      <TableHead>
-                        <SortButton field="lastEntryAt">Last Entry</SortButton>
-                      </TableHead>
-                      <TableHead>
+                      <TableHead className="hidden lg:table-cell text-right">
                         <SortButton field="qualityScore">Quality</SortButton>
                       </TableHead>
-                      <TableHead className="hidden lg:table-cell">
+                      <TableHead className="hidden xl:table-cell text-right">
                         <SortButton field="engagement">Engagement</SortButton>
                       </TableHead>
-                      <TableHead className="hidden xl:table-cell">
-                        <SortButton field="status">Status</SortButton>
+                      <TableHead className="hidden sm:table-cell text-right">
+                        <SortButton field="lastEntryAt">Last Entry</SortButton>
                       </TableHead>
                       <TableHead className="w-12"></TableHead>
                     </TableRow>
@@ -430,6 +358,9 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                           setShowUserSheet(true);
                         }}
                       >
+                        <TableCell className="w-24 pr-0">
+                          <UserSourceBadge source={user.source} />
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-3">
                             <div>
@@ -437,40 +368,34 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                                 {user.name}
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                {user.email}
-                              </div>
-                              <div className="mt-1">
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs px-1 py-0"
-                                >
-                                  {user.country}
-                                </Badge>
+                                {user.email ?? 'No email'}
                               </div>
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <div className="text-sm">
-                            {formatDate(user.lastEntryAt)}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center space-x-2">
-                            <Progress
-                              value={user.qualityScore}
-                              className={`h-1.5 rounded-full transition-all`}
-                              indicatorClassName={cn(
-                                toQualityProgressColor(user.qualityScore)
-                              )}
-                            />
+                        <TableCell className="hidden lg:table-cell text-right">
+                          <div className="flex items-center justify-end space-x-2">
+                            <div className="w-16 bg-muted rounded-full h-1.5">
+                              <div
+                                className={`h-1.5 rounded-full transition-all ${
+                                  user.qualityScore >= 80
+                                    ? 'bg-green-500'
+                                    : user.qualityScore >= 60
+                                      ? 'bg-yellow-500'
+                                      : user.qualityScore >= 40
+                                        ? 'bg-orange-500'
+                                        : 'bg-red-500'
+                                }`}
+                                style={{ width: `${user.qualityScore}%` }}
+                              />
+                            </div>
                             <span className="text-xs font-medium min-w-[2rem]">
                               {user.qualityScore}
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell className="hidden lg:table-cell">
-                          <div className="flex items-center space-x-2">
+                        <TableCell className="hidden xl:table-cell text-right">
+                          <div className="flex items-center justify-end space-x-2">
                             <div className="w-16 bg-muted rounded-full h-1.5">
                               <div
                                 className={`h-1.5 rounded-full transition-all ${
@@ -490,8 +415,10 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell className="hidden xl:table-cell">
-                          {getStatusBadge(user.status, user)}
+                        <TableCell className="hidden sm:table-cell text-right">
+                          <div className="text-sm">
+                            {datetime.format(user.lastEntryAt, 'tiny')}
+                          </div>
                         </TableCell>
                         <TableCell onClick={(e) => e.stopPropagation()}>
                           <DropdownMenu>
@@ -568,15 +495,6 @@ export const UsersTable: React.FC<UsersTableProps> = ({
             setSelectedUser(null);
           }
         }}
-      />
-
-      <StatusExplanationDialog
-        open={showStatusDialog}
-        onClose={() => {
-          setShowStatusDialog(false);
-          setStatusDialogUser(null);
-        }}
-        status={statusDialogUser?.status || 'active'}
       />
     </div>
   );

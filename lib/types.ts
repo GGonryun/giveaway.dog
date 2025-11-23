@@ -14,8 +14,9 @@ export type DeepNil<T> = T extends Date
       ? { [K in keyof T]: DeepNil<T[K]> } | null | undefined
       : T | null | undefined;
 
-export type RequiredFields<T, K extends keyof T> = Omit<T, K> &
-  Required<Pick<T, K>>;
+export type RequiredFields<T, K extends keyof T> = T extends any
+  ? Omit<T, K> & Required<Pick<T, K>>
+  : never;
 
 export type DeepNullable<T> = {
   [P in keyof T]: T[P] extends Array<infer U>

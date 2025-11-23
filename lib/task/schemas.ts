@@ -60,7 +60,8 @@ export const twitterRetweetTaskSchema = baseTaskSchema.extend({
   tweetId: z
     .string()
     .url('Post URL is required')
-    .refine(xStatusRefineUrl, xStatusRefineError)
+    .refine(xStatusRefineUrl, xStatusRefineError),
+  validateEntries: z.boolean().optional()
 });
 
 export type TwitterRetweetTaskSchema = z.infer<typeof twitterRetweetTaskSchema>;

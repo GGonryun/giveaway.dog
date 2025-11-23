@@ -8,6 +8,7 @@ import { validateRequiredTasks } from '@/lib/task/validation/required';
 import { CompletionStatus } from '@prisma/client';
 import { z } from 'zod';
 import { toTaskSchema } from '../schemas';
+import { extractUsernameFromTweetUrl } from '@/lib/integrations/schemas/twitter';
 
 const submitTask = procedure()
   .authorization({ required: true })
@@ -125,11 +126,30 @@ const submitTask = procedure()
       data
     });
 
+    const taskConfig = toTaskSchema(task);
+    const requiresValidation =
+      taskConfig.type === 'TWITTER_RETWEET' &&
+      taskConfig.validateEntries === true;
+
+    const status = requiresValidation
+      ? CompletionStatus.PENDING
+      : CompletionStatus.COMPLETED;
+
+    const proof = requiresValidation
+      ? {
+          source: 'user_submission',
+          tweetUrl: taskConfig.tweetId,
+          tweetOwner: extractUsernameFromTweetUrl(taskConfig.tweetId),
+          submittedAt: new Date().toISOString()
+        }
+      : undefined;
+
     await db.taskCompletion.create({
       data: {
         userId: user.id,
         taskId,
-        status: CompletionStatus.COMPLETED
+        status,
+        proof
       }
     });
 

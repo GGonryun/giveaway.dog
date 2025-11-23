@@ -51,9 +51,24 @@ import {
   DerivedSweepstakeStatus,
   EDITABLE_DERIVED_STATUS
 } from '@/schemas/sweepstakes';
-import { PrizeDrawResult } from '@prisma/client';
+import { PrizeDrawResult, UserSource } from '@prisma/client';
 import { DisqualificationDialog } from './disqualification-dialog';
 import { TASK_LABEL } from '@/lib/task/schemas';
+import {
+  USER_SOURCE_LABEL,
+  USER_SOURCE_DESCRIPTION,
+  USER_SOURCE_MANAGEABLE,
+  USER_SOURCE_COMING_SOON
+} from '@/lib/user-source/data';
+import { Checkbox } from '@/components/ui/checkbox';
+import { widetype } from '@/lib/widetype';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import { DEFAULT_ALLOWED_USER_SOURCES } from '@/schemas/giveaway/defaults';
 
 interface GroupedPrize {
   id: string;
@@ -508,7 +523,8 @@ export const SweepstakesWinners = ({
       slug,
       minTasksCompleted: editedCriteria.minTasksCompleted,
       minQualityScore: editedCriteria.minQualityScore,
-      allowMultipleWins: editedCriteria.allowMultipleWins
+      allowMultipleWins: editedCriteria.allowMultipleWins,
+      allowedUserSources: editedCriteria.allowedUserSources
     });
   };
 
@@ -566,32 +582,46 @@ export const SweepstakesWinners = ({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-4 text-sm">
-            <div className="flex items-center gap-1.5">
-              <span className="text-muted-foreground">Min Tasks:</span>
-              <Badge variant="secondary">
-                {currentCriteria.minTasksCompleted}
-              </Badge>
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-4 text-sm">
+              <div className="flex items-center gap-1.5">
+                <span className="text-muted-foreground">Min Tasks:</span>
+                <Badge variant="secondary">
+                  {currentCriteria.minTasksCompleted}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-muted-foreground">Min Quality:</span>
+                <Badge variant="secondary">
+                  {currentCriteria.minQualityScore}%
+                </Badge>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-muted-foreground">Multiple Wins:</span>
+                <Badge variant="secondary">
+                  {currentCriteria.allowMultipleWins ? 'Yes' : 'No'}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-1.5 ml-auto">
+                <span className="text-muted-foreground">Eligible:</span>
+                <Badge variant="default">
+                  {getEligibleParticipants(currentCriteria).length} /{' '}
+                  {participants.length}
+                </Badge>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-muted-foreground">Min Quality:</span>
-              <Badge variant="secondary">
-                {currentCriteria.minQualityScore}%
-              </Badge>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-muted-foreground">Multiple Wins:</span>
-              <Badge variant="secondary">
-                {currentCriteria.allowMultipleWins ? 'Yes' : 'No'}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-1.5 ml-auto">
-              <span className="text-muted-foreground">Eligible:</span>
-              <Badge variant="default">
-                {getEligibleParticipants(currentCriteria).length} /{' '}
-                {participants.length}
-              </Badge>
-            </div>
+            {currentCriteria.allowedUserSources && (
+              <div className="flex items-center gap-1.5 text-sm">
+                <span className="text-muted-foreground">Allowed Sources:</span>
+                <div className="flex flex-wrap gap-1">
+                  {currentCriteria.allowedUserSources.map((source) => (
+                    <Badge key={source} variant="outline">
+                      {USER_SOURCE_LABEL[source as UserSource]}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {participants.some((p) => p.qualityScore < currentCriteria.minQualityScore && p.entries.length >= currentCriteria.minTasksCompleted) && (
@@ -729,6 +759,73 @@ export const SweepstakesWinners = ({
               <Label htmlFor="allowMultipleWins">
                 Allow users to win multiple prizes
               </Label>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="allowExternalUsers"
+                  checked={Boolean(editedCriteria.allowedUserSources)}
+                  onCheckedChange={(checked) =>
+                    setEditedCriteria((prev) => ({
+                      ...prev,
+                      allowedUserSources: checked
+                        ? DEFAULT_ALLOWED_USER_SOURCES
+                        : null
+                    }))
+                  }
+                />
+                <Label htmlFor="allowExternalUsers">
+                  Restrict winner sources
+                </Label>
+              </div>
+              <Collapsible open={Boolean(editedCriteria.allowedUserSources)}>
+                <CollapsibleContent className="space-y-1 pl-6">
+                  {widetype
+                    .entries(USER_SOURCE_LABEL)
+                    .filter(([key]) => USER_SOURCE_MANAGEABLE[key])
+                    .map(([key, value]) => (
+                      <div key={key} className="flex items-center space-x-2">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex gap-2 items-center py-0.5">
+                              <Checkbox
+                                id={`edit-source-${key}`}
+                                checked={
+                                  editedCriteria.allowedUserSources?.includes(
+                                    key
+                                  ) ?? false
+                                }
+                                disabled={USER_SOURCE_COMING_SOON[key]}
+                                onCheckedChange={(checked) => {
+                                  const currentValue =
+                                    editedCriteria.allowedUserSources || [];
+                                  setEditedCriteria((prev) => ({
+                                    ...prev,
+                                    allowedUserSources: checked
+                                      ? [...currentValue, key]
+                                      : currentValue.filter((v) => v !== key)
+                                  }));
+                                }}
+                              />
+                              <Label
+                                htmlFor={`edit-source-${key}`}
+                                className="text-sm font-normal cursor-pointer"
+                              >
+                                {value}
+                              </Label>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent side="right" align="center">
+                            {USER_SOURCE_COMING_SOON[key]
+                              ? 'Coming Soon'
+                              : USER_SOURCE_DESCRIPTION[key]}
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    ))}
+                </CollapsibleContent>
+              </Collapsible>
             </div>
 
             <div className="pt-4 border-t">

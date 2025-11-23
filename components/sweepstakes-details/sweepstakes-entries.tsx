@@ -20,6 +20,7 @@ import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { TASK_LABEL, UserEntriesSchema } from '@/lib/task/schemas';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
+import { UserSourceIcon } from '@/lib/user-source/components/user-source-icon';
 
 interface SweepstakesEntriesProps {
   slug: string;
@@ -108,18 +109,24 @@ export const SweepstakesEntries = ({
 
                 <TableCell>
                   <div>
-                    <Button
-                      variant="link"
-                      className="p-0 m-0 h-6 font-medium hover:text-primary transition-colors cursor-pointer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleUserClick(completion.user);
-                      }}
-                    >
-                      {completion.user.name}
-                    </Button>
+                    <div className="flex items-center gap-1">
+                      <UserSourceIcon
+                        source={completion.user.source}
+                        size={3}
+                      />
+                      <Button
+                        variant="link"
+                        className="p-0 m-0 h-6 font-medium hover:text-primary transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleUserClick(completion.user);
+                        }}
+                      >
+                        {completion.user.name}
+                      </Button>
+                    </div>
                     <div className="text-xs text-muted-foreground">
-                      {completion.user.email}
+                      {completion.user.email ?? 'No email'}
                     </div>
                   </div>
                 </TableCell>

@@ -14,10 +14,12 @@ import { useFormErrors } from './use-form-issues';
 import { browser } from '@/lib/browser';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'sonner';
+import { IntegrationsSchema } from '@/lib/integrations/schemas';
 
 export type UnifiedFormLayoutState<TSteps extends string> = {
   id: string;
   teamFeatureFlags: TeamFeatureFlagKeySchema[];
+  integrations: IntegrationsSchema;
   title: string;
   type: UniformFormType;
   disabled: boolean;
@@ -55,6 +57,7 @@ export const UnifiedFormLayoutContext = React.createContext<
   id: '',
   disabled: false,
   teamFeatureFlags: [],
+  integrations: [],
   currentStep: '',
   isLoadingLayout: false,
   mobile: false,
@@ -94,6 +97,7 @@ export type UnifiedFormLayoutContextProps<TSteps extends string> =
 export const UnifiedFormLayoutContextProvider = <T extends string>({
   id,
   teamFeatureFlags,
+  integrations,
   defaultStep,
   title,
   stepLabels,
@@ -161,6 +165,7 @@ export const UnifiedFormLayoutContextProvider = <T extends string>({
       value={{
         id,
         teamFeatureFlags,
+        integrations,
         type,
         title,
         disabled,

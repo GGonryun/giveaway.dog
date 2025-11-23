@@ -14,6 +14,7 @@ import {
   DEFAULT_MIN_TASK_COMPLETED,
   DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND
 } from './defaults';
+import { parseUserSourceSchema } from '@/lib/user-source/schemas';
 
 const toSetup = (
   data: FormSweepstakesGetPayload['details']
@@ -176,7 +177,8 @@ const toCriteriaInput = (
     return {
       minQualityScore: DEFAULT_MIN_QUALITY_SCORE,
       minTasksCompleted: DEFAULT_MIN_TASK_COMPLETED,
-      allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS
+      allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS,
+      externalPlatforms: []
     };
 
   return {
@@ -185,7 +187,8 @@ const toCriteriaInput = (
         ? data.minQualityScore
         : DEFAULT_MIN_QUALITY_SCORE,
     minTasksCompleted: data.minTasksCompleted ?? DEFAULT_MIN_TASK_COMPLETED,
-    allowMultipleWins: data.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS
+    allowMultipleWins: data.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS,
+    externalPlatforms: parseUserSourceSchema(data.externalPlatforms)
   };
 };
 

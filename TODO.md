@@ -1,7 +1,3 @@
-- [ ] Unified Sweepstakes Platform
-
-- [ ] User feedback: Show the host's name instead of just preview host (just a quick question what to do here to show By L1ghterVibes and not preview host)
-
 - [ ] Add a referral integration.
 
 - [ ] Add YouTube integration - probably violates ToS so we can't do it officially.
@@ -19,8 +15,6 @@
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
 - [ ] Add TikTok integration - https://www.better-auth.com/docs/authentication/tiktok
-
-- [ ] Also, do you think it would be possible to use picker in a way so that as soon as i create a giveaway with rewuirements, i put that link into pocker and it'd monitor entries from the start, so that when its time to pick, it doesnt take so long to scan through all from 0?
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
@@ -49,8 +43,16 @@
 
 ### @Gamelooty
 
+- [ ] Unified Sweepstakes Platform
+  - [ ] Also, do you think it would be possible to use picker in a way so that as soon as i create a giveaway with requirements, i put that link into picker and it'd monitor entries from the start, so that when its time to pick, it doesn't take so long to scan through all from 0?
+
 - it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
-- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bobi1234 and another person as bobi12345
+- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
+
+### @L1ghterVibes
+
+- [ ] User feedback: Show the host's name instead of just preview host (just a quick question what to do here to show and not preview host)
+- [ ] User feedback: add a dark-mode toggle to the marketing site
 
 ## Personal Features
 
@@ -62,7 +64,7 @@
 ## Unrelated Features
 
 - [ ] Add an instant giveaway app where users can instantly win prizes without waiting for a draw, we can have a minimum number of tasks before claiming a prize, and the prize claim can be random chance or guaranteed based on number of prizes available.
-- [ ] Add a leaderboard (works similar to waitlists app) app where users can compete for prizes based on points earned through tasks.
+- [ ] Add a leaderboard (works similar to wait-lists app) app where users can compete for prizes based on points earned through tasks.
 - [ ] Add a milestones app where users can unlock prizes by reaching certain milestones, for example number of referrals.
 - [ ] Add a ticket picker, user's get a single ticket number and winners are drawn based on ticket numbers. Works best for in-person events similar to a raffle where users can cut a ticket and then a ticket is drawn.
 - [ ] Add a discord giveaway "bot" that automate sweepstake creation/notification via Discord
