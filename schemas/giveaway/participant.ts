@@ -26,6 +26,10 @@ export const winnerSchema = z.object({
   prizeName: z.string().nullable()
 });
 
+export const userStatusSchema = z.enum(['active', 'blocked']);
+
+export type UserStatusSchema = z.infer<typeof userStatusSchema>;
+
 export const sweepstakesParticipantSchema = z.object({
   id: z.string(),
   createdAt: z.date(),
@@ -37,7 +41,7 @@ export const sweepstakesParticipantSchema = z.object({
   qualityScore: z.number(),
   engagement: z.number(),
   source: z.nativeEnum(UserSource),
-  status: z.enum(['active', 'blocked']),
+  status: userStatusSchema,
   userAgent: z.string(),
   emailVerified: z.boolean(),
   providers: providerSchema.array()
