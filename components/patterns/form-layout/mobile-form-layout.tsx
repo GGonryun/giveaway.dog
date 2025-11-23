@@ -72,7 +72,7 @@ const MobileFormHeader: React.FC<{ hideTabs?: boolean }> = ({ hideTabs }) => {
         {hideTabs ? null : (
           <div className="w-full">
             <Tabs value={currentStep}>
-              <TabsList className="w-full p-1 gap-1 h-8 shadow-none ">
+              <TabsList className="w-full min-w-fit p-1 gap-1 h-8 shadow-none">
                 {stepOrder.map((step) => (
                   <MobileTabTrigger
                     key={step}
