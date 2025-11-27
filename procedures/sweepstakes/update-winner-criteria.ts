@@ -7,6 +7,7 @@ import {
   allowedUserSourcesSchema,
   parseUserSourceSchema
 } from '@/lib/user-source/schemas';
+import { Prisma } from '@prisma/client';
 
 const updateWinnerCriteriaInput = z.object({
   sweepstakesId: z.string(),
@@ -61,7 +62,7 @@ const updateWinnerCriteria = procedure()
         minTasksCompleted: input.minTasksCompleted,
         minQualityScore: input.minQualityScore,
         allowMultipleWins: input.allowMultipleWins,
-        externalPlatforms: input.externalPlatforms || []
+        externalPlatforms: input.externalPlatforms || Prisma.JsonNull
       }
     });
 
