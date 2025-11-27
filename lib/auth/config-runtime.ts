@@ -2,9 +2,8 @@ import prisma from '@/lib/prisma';
 import { NextAuthConfig } from 'next-auth';
 import { tryAutoMerge } from './auto-merge';
 import { authConfigMiddleware } from './config-middleware';
-import { getCookieSession } from './get-cookie-session';
 import { getAccountLabel, getAccountLink } from './get-account-data';
-
+import { auth } from '.';
 export const authConfig = {
   ...authConfigMiddleware,
   events: {
@@ -49,7 +48,8 @@ export const authConfig = {
         });
 
         console.log('Existing account:', existing);
-        const session = await getCookieSession();
+        const session = await auth();
+
         console.log('Current session:', session);
         if (existing && session) {
           console.log('Attempting auto-merge for account sign-in');

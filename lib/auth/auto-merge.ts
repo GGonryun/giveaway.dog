@@ -1,5 +1,4 @@
-import { JWT } from 'next-auth/jwt';
-import { Account, Profile } from 'next-auth';
+import { Account, Profile, Session } from 'next-auth';
 import prisma from '@/lib/prisma';
 import { getAccountLabel, getAccountLink } from './get-account-data';
 import { Prisma } from '@prisma/client';
@@ -10,13 +9,13 @@ export const tryAutoMerge = async (args: {
   }>;
   account: Account;
   profile: Profile;
-  session: JWT | null;
+  session: Session | null;
 }) => {
   const { existing, account, session, profile } = args;
 
   if (existing.user.source !== 'TWITTER_IMPORT') return false;
 
-  if (!session || !session.id) {
+  if (!session || !session?.user?.id) {
     await prisma.account.update({
       where: {
         provider_providerAccountId: {
@@ -39,7 +38,7 @@ export const tryAutoMerge = async (args: {
 
   await prisma.$transaction(async (tx) => {
     // add a new account for the current user
-    const currentUserId = session.id as string;
+    const currentUserId = session?.user?.id as string;
     await tx.account.update({
       where: {
         provider_providerAccountId: {
