@@ -227,7 +227,7 @@ const processFetchTwitterDataJob = async (
   if (
     someChildrenPending &&
     form.timing?.endDate &&
-    new Date() < form.timing.endDate
+    new Date() < new Date(form.timing.endDate)
   ) {
     // re-queue the job for later
     await db.pickerJob.update({
