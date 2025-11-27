@@ -43,14 +43,14 @@ export const Design = () => {
     <>
       <UnifiedSectionHeader
         label="Form Design"
-        description="Customize the content and appearance of your sweepstakes form."
+        description="Customize the content and appearance of your sweepstakes form"
       >
         <DisplayNameField />
         <DisplayDescriptionField />
       </UnifiedSectionHeader>
       <UnifiedSectionHeader
         label="Layout"
-        description="Choose the layout and background style for your giveaway."
+        description="Choose the layout and background style for your giveaway"
         className="border-t"
       >
         <BackgroundColor />

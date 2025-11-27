@@ -518,8 +518,6 @@ model TaskCompletion {
   completedAt DateTime         @default(now())
   proof       Json?
   status      CompletionStatus @default(COMPLETED)
-
-  @@index([userId, taskId])
 }
 
 model TaskProgress {
@@ -700,6 +698,7 @@ enum PickerJobStatus {
   QUEUED
   RUNNING
   COMPLETED
+  CANCELLED
   FAILED
 }
 

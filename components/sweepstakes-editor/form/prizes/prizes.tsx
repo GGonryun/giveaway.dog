@@ -80,7 +80,7 @@ export const Prizes = () => {
   return (
     <UnifiedSectionHeader
       label="Prizes"
-      description="Add prizes and number of winners to your giveaway."
+      description="Add prizes and number of winners to your giveaway"
     >
       <FormField
         control={form.control}

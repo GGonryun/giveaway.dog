@@ -74,7 +74,7 @@ export const PickerForm: React.FC<PickerFormProps> = ({
   const step = searchParams?.get('step');
 
   const form = useForm<PickerFormSchema>({
-    resolver: zodResolver(pickerFormSchema({ validateScheduledAt: true })),
+    resolver: zodResolver(pickerFormSchema({ validateTiming: true })),
     defaultValues: picker || DEFAULT_PICKER_FORM,
     mode: 'onChange'
   });

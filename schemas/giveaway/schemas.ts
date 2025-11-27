@@ -211,7 +211,7 @@ export const giveawayFormSchema = ({
     setup: giveawayFormSetupSchema,
     terms: giveawayFormTermsSchema,
     timing: timingSchema({
-      validateEndDate,
+      validate: validateEndDate,
       maxDurationDays: MAX_SWEEPSTAKE_DURATION_DAYS
     }),
     audience: giveawayAudienceSchema,

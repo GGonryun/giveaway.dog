@@ -34,6 +34,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { datetime } from '@/lib/date';
 
 interface SetupSectionProps {
   integrations?: IntegrationsSchema;
@@ -172,7 +173,7 @@ export const TimingField = () => {
           <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader
               label="Start Immediately"
-              description="If enabled, the picker will start processing immediately upon creation. Otherwise, you can set a specific start time."
+              description="If enabled, the picker will start processing immediately upon creation. Otherwise, you can provide a custom start and end date."
             />
             <FormControl>
               <Switch
@@ -180,9 +181,8 @@ export const TimingField = () => {
                 onClick={() => {
                   if (timing == null) {
                     field.onChange({
-                      scheduledAt: new Date(
-                        Date.now() + 24 * 60 * 60 * 1000
-                      ).toISOString(),
+                      startDate: datetime.daysFromNow(0),
+                      endDate: datetime.daysFromNow(3),
                       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
                     });
                   } else {
@@ -200,16 +200,25 @@ export const TimingField = () => {
         <CollapsibleContent className="flex flex-col gap-2">
           <FormField
             control={form.control}
-            name="timing.scheduledAt"
+            name="timing.startDate"
+            render={({ field }) => (
+              <FormItem className="grow mt-2">
+                <FormLabel>Start Date</FormLabel>
+                <FormControl>
+                  <DateTimePicker hourCycle={12} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="timing.endDate"
             render={({ field }) => (
               <FormItem className="grow">
-                <FormLabel>Scheduled At</FormLabel>
+                <FormLabel>End Date</FormLabel>
                 <FormControl>
-                  <DateTimePicker
-                    hourCycle={12}
-                    onChange={(date) => field.onChange(date?.toISOString())}
-                    value={field.value ? new Date(field.value) : new Date()}
-                  />
+                  <DateTimePicker hourCycle={12} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

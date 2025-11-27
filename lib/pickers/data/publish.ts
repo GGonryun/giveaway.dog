@@ -53,8 +53,8 @@ export const publishPickerJobs = ({
     });
   }
 
-  const runAt = form.timing?.scheduledAt
-    ? new Date(form.timing.scheduledAt)
+  const runAt = form.timing?.startDate
+    ? new Date(form.timing.startDate)
     : new Date();
 
   return {
@@ -73,6 +73,7 @@ export const publishPickerJobs = ({
             status: PickerJobStatus.QUEUED,
             runAt,
             data: toTwitterFetchRequest({
+              polling: form.timing ? true : false,
               tweetId: extractTweetId(form.setup.postUrl)
             })
           },
@@ -82,6 +83,7 @@ export const publishPickerJobs = ({
             status: PickerJobStatus.QUEUED,
             runAt,
             data: toTwitterFetchRequest({
+              polling: form.timing ? true : false,
               tweetId: extractTweetId(form.setup.postUrl)
             })
           },
@@ -91,6 +93,7 @@ export const publishPickerJobs = ({
             status: PickerJobStatus.QUEUED,
             runAt: new Date(),
             data: toTwitterFetchRequest({
+              polling: form.timing ? true : false,
               tweetId: extractTweetId(form.setup.postUrl)
             })
           }

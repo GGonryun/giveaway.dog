@@ -34,10 +34,7 @@ import {
 } from '@/components/ui/tooltip';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 import { featureFlags } from '@/lib/feature-flags';
-import {
-  EXPERIMENTAL_VALIDATION_FEATURE_FLAG_KEY,
-  PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
-} from '@/schemas/feature-flags';
+import { EXPERIMENTAL_VALIDATION_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 
 const MinTasksCompletedField = () => {
   const form = useFormContext<GiveawayFormSchema>();
@@ -155,7 +152,7 @@ const AllowedUserSourcesField = () => {
           <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader
               label="Allow External Users"
-              description="Set restrictions on which participant sources can win prizes."
+              description="Allow users from external platforms to be eligible to win prizes."
               help={{
                 title: 'Help: Allow External Users',
                 content: (

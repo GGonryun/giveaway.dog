@@ -12,6 +12,7 @@ import { assertNever } from '@/lib/errors';
 
 export const twitterFetchRequestSchema = z.object({
   tweetId: z.string(),
+  polling: z.boolean().optional(),
   paginationToken: z.string().optional()
 });
 
@@ -71,6 +72,10 @@ export const toTwitterData = (
   const users: ActionsTwitterUser[] = [];
 
   for (const child of job.children) {
+    if (child.status !== 'COMPLETED' || !child.data) {
+      continue;
+    }
+
     const parsed = twitterFetchDataSchema.safeParse(child.data);
 
     switch (child.type) {
@@ -83,9 +88,9 @@ export const toTwitterData = (
             parsed.data.response
           );
           for (const user of response.data ?? []) {
-            if (users.find((u) => u.id === user.id)) {
-              const existing = users.find((u) => u.id === user.id);
-              if (existing && !existing.actions.includes('like')) {
+            const existing = users.find((u) => u.id === user.id);
+            if (existing) {
+              if (!existing.actions.includes('like')) {
                 existing.actions.push('like');
               }
             } else {
@@ -104,9 +109,9 @@ export const toTwitterData = (
             parsed.data.response
           );
           for (const user of response.data ?? []) {
-            if (users.find((u) => u.id === user.id)) {
-              const existing = users.find((u) => u.id === user.id);
-              if (existing && !existing.actions.includes('retweet')) {
+            const existing = users.find((u) => u.id === user.id);
+            if (existing) {
+              if (!existing.actions.includes('retweet')) {
                 existing.actions.push('retweet');
               }
             } else {
@@ -130,9 +135,9 @@ export const toTwitterData = (
                 (u) => u.id === tweet.author_id
               );
               if (user) {
-                if (users.find((u) => u.id === user.id)) {
-                  const existing = users.find((u) => u.id === user.id);
-                  if (existing && !existing.actions.includes('quote')) {
+                const existing = users.find((u) => u.id === user.id);
+                if (existing) {
+                  if (!existing.actions.includes('quote')) {
                     existing.actions.push('quote');
                   }
                 } else {

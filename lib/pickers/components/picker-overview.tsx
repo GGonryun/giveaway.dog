@@ -14,7 +14,6 @@ import {
   Activity,
   Eye,
   Pencil,
-  Share2,
   Clock,
   LinkIcon
 } from 'lucide-react';
@@ -40,7 +39,7 @@ import { cn } from '@/lib/utils';
 import { PickerTwitterPreviewEmbed } from './picker-twitter-preview';
 import { STATUS_COLORS, STATUS_ICONS } from '../themes/status';
 import { PickerTypeLogo } from './picker-type-logo';
-import { formatDistance, format } from 'date-fns';
+import { formatDistance } from 'date-fns';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
@@ -65,6 +64,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { IntegrationsSchema } from '@/lib/integrations/schemas';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { datetime } from '@/lib/date';
 
 const InfoRow = ({
   icon: Icon,
@@ -240,11 +240,11 @@ export const PickerOverview: React.FC<{
                   ? 'Winners have been drawn and are ready to be announced. Mark as complete once all participants have verified and received their prize.'
                   : PICKER_STATUS_DESCRIPTIONS[picker.status]}
                 {picker.status === 'PROCESSING' &&
-                  picker.form.timing?.scheduledAt && (
+                  picker.form.timing?.startDate && (
                     <span className="block mt-1 text-orange-600 dark:text-orange-400">
                       Scheduled to begin processing{' '}
                       {formatDistance(
-                        new Date(picker.form.timing.scheduledAt),
+                        picker.form.timing.startDate,
                         new Date(),
                         { addSuffix: true }
                       )}
@@ -321,7 +321,7 @@ export const PickerOverview: React.FC<{
                       addSuffix: true
                     })}
                   />
-                  {picker.form.timing?.scheduledAt && (
+                  {picker.form.timing?.startDate && (
                     <InfoRow
                       icon={Clock}
                       label="Scheduled Start"
@@ -334,7 +334,7 @@ export const PickerOverview: React.FC<{
                                 className="cursor-help bg-orange-100 text-orange-700 hover:bg-orange-200 dark:bg-orange-950 dark:text-orange-400 dark:hover:bg-orange-900"
                               >
                                 {formatDistance(
-                                  new Date(picker.form.timing.scheduledAt),
+                                  picker.form.timing.startDate,
                                   new Date(),
                                   { addSuffix: true }
                                 )}
@@ -342,10 +342,41 @@ export const PickerOverview: React.FC<{
                             </TooltipTrigger>
                             <TooltipContent>
                               <p className="font-mono">
-                                {format(
-                                  new Date(picker.form.timing.scheduledAt),
-                                  'MMM d, yyyy HH:mm:ss'
+                                {datetime.format(picker.form.timing.startDate)}
+                                {picker.form.timing.timeZone && (
+                                  <span className="ml-1">
+                                    ({picker.form.timing.timeZone})
+                                  </span>
                                 )}
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      }
+                    />
+                  )}
+                  {picker.form.timing?.endDate && (
+                    <InfoRow
+                      icon={Clock}
+                      label="Scheduled End"
+                      value={
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge
+                                variant="secondary"
+                                className="cursor-help bg-orange-100 text-orange-700 hover:bg-orange-200 dark:bg-orange-950 dark:text-orange-400 dark:hover:bg-orange-900"
+                              >
+                                {formatDistance(
+                                  picker.form.timing.endDate,
+                                  new Date(),
+                                  { addSuffix: true }
+                                )}
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="font-mono">
+                                {datetime.format(picker.form.timing.endDate)}
                                 {picker.form.timing.timeZone && (
                                   <span className="ml-1">
                                     ({picker.form.timing.timeZone})

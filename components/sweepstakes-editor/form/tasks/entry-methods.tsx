@@ -80,7 +80,7 @@ export const EntryMethods = () => {
   return (
     <UnifiedSectionHeader
       label="Entry Methods"
-      description="Select how users can enter the giveaway."
+      description="Select how users can enter the giveaway"
     >
       <FormField
         control={form.control}

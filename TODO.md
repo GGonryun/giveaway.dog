@@ -1,3 +1,6 @@
+- [ ] Dark mode
+- [ ] Add a way to delete a picker from the overview page.
+
 - [ ] Add a referral integration.
 
 - [ ] Add YouTube integration - probably violates ToS so we can't do it officially.

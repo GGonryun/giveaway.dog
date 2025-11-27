@@ -49,7 +49,7 @@ export const publicPickerSchema = z.object({
   type: z.nativeEnum(PickerType),
   createdAt: z.date(),
   updatedAt: z.date(),
-  form: pickerFormSchema({ validateScheduledAt: false }),
+  form: pickerFormSchema({ validateTiming: false }),
   draws: pickerDrawsSchema,
   jobs: z.array(pickerJobSchema),
   logs: z.array(auditLogSchema),
@@ -204,6 +204,7 @@ export const getMissingActions = (
   form: PickerFormSchema
 ) => {
   const requiredActions: ActionsTwitterUser['actions'] = [];
+
   if (form.actions.like) requiredActions.push('like');
   if (form.actions.repost) requiredActions.push('retweet');
   if (form.actions.quote) requiredActions.push('quote');

@@ -36,7 +36,7 @@ export const Setup = () => {
   return (
     <UnifiedSectionHeader
       label="Setup"
-      description="Choose the details of your giveaway."
+      description="Choose the details of your giveaway"
     >
       <FormField
         control={form.control}

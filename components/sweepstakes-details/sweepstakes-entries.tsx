@@ -21,6 +21,7 @@ import { TASK_LABEL, UserEntriesSchema } from '@/lib/task/schemas';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
 import { UserSourceIcon } from '@/lib/user-source/components/user-source-icon';
+import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 
 interface SweepstakesEntriesProps {
   slug: string;
@@ -110,10 +111,7 @@ export const SweepstakesEntries = ({
                 <TableCell>
                   <div>
                     <div className="flex items-center gap-1">
-                      <UserSourceIcon
-                        source={completion.user.source}
-                        size={3}
-                      />
+                      <UserSourceBadge source={completion.user.source} />
                       <Button
                         variant="link"
                         className="p-0 m-0 h-6 font-medium hover:text-primary transition-colors cursor-pointer"

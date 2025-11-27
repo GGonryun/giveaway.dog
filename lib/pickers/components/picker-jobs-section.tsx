@@ -7,7 +7,7 @@ import {
   CollapsibleTrigger
 } from '@/components/ui/collapsible';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Badge, BadgeVariants } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   ChevronDown,
@@ -18,7 +18,8 @@ import {
   Loader2,
   CheckCircle2,
   XCircle,
-  Clock
+  Clock,
+  TriangleAlert
 } from 'lucide-react';
 import { formatInTimeZone } from 'date-fns-tz';
 import { cn } from '@/lib/utils';
@@ -48,24 +49,24 @@ const JOB_STATUS_LABEL: Record<PickerJobStatus, string> = {
   QUEUED: 'Queued',
   RUNNING: 'Running',
   COMPLETED: 'Completed',
-  FAILED: 'Failed'
+  FAILED: 'Failed',
+  CANCELLED: 'Cancelled'
 };
 
 const JOB_STATUS_ICON: Record<PickerJobStatus, React.ElementType> = {
   QUEUED: Clock,
   RUNNING: Loader2,
   COMPLETED: CheckCircle2,
-  FAILED: XCircle
+  FAILED: TriangleAlert,
+  CANCELLED: XCircle
 };
 
-const JOB_STATUS_BADGE_VARIANT: Record<
-  PickerJobStatus,
-  'default' | 'secondary' | 'destructive' | 'outline'
-> = {
+const JOB_STATUS_BADGE_VARIANT: Record<PickerJobStatus, BadgeVariants> = {
   QUEUED: 'secondary',
   RUNNING: 'default',
   COMPLETED: 'outline',
-  FAILED: 'destructive'
+  FAILED: 'destructive',
+  CANCELLED: 'warning'
 };
 
 export const PickerJobsSection: React.FC<PickerJobsSectionProps> = ({
@@ -78,7 +79,8 @@ export const PickerJobsSection: React.FC<PickerJobsSectionProps> = ({
       QUEUED: 0,
       RUNNING: 1,
       COMPLETED: 2,
-      FAILED: 3
+      CANCELLED: 3,
+      FAILED: 4
     };
 
     const priorityDiff = statusPriority[a.status] - statusPriority[b.status];

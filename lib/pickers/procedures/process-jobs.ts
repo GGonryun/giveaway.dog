@@ -48,7 +48,7 @@ export const processJobs = procedure()
       orderBy: {
         createdAt: 'asc'
       },
-      include: PICKER_JOB_CHILDREN_INCLUDE
+      include: PICKER_JOB_FORM_INCLUDE
     });
 
     console.info(`Found ${jobs.length} jobs to process`);
@@ -135,7 +135,25 @@ export type PickerJobWithChildren = Prisma.PickerJobGetPayload<{
   include: typeof PICKER_JOB_CHILDREN_INCLUDE;
 }>;
 
-const processJob = async (db: PrismaClient, job: PickerJobWithChildren) => {
+export const PICKER_JOB_FORM_INCLUDE = {
+  children: true,
+  picker: {
+    include: {
+      form: {
+        select: {
+          data: true
+        }
+      },
+      team: true
+    }
+  }
+} satisfies Prisma.PickerJobInclude;
+
+export type PickerJobWithForm = Prisma.PickerJobGetPayload<{
+  include: typeof PICKER_JOB_FORM_INCLUDE;
+}>;
+
+const processJob = async (db: PrismaClient, job: PickerJobWithForm) => {
   switch (job.type) {
     case 'FETCH_TWITTER_DATA':
       return await processFetchTwitterDataJob(db, job);
@@ -156,7 +174,7 @@ const processJob = async (db: PrismaClient, job: PickerJobWithChildren) => {
 
 const processFetchTwitterDataJob = async (
   db: PrismaClient,
-  job: PickerJobWithChildren
+  job: PickerJobWithForm
 ) => {
   const someChildrenFailed = job.children.some(
     (child) => child.status === PickerJobStatus.FAILED
@@ -203,19 +221,25 @@ const processFetchTwitterDataJob = async (
       child.status === PickerJobStatus.QUEUED
   );
 
-  if (someChildrenPending) {
+  const data = toTwitterData(job);
+  const form = parsePickerFormSchema(job.picker.form, { validate: true });
+
+  if (
+    someChildrenPending &&
+    form.timing?.endDate &&
+    new Date() < form.timing.endDate
+  ) {
     // re-queue the job for later
     await db.pickerJob.update({
       where: { id: job.id },
       data: {
         status: PickerJobStatus.QUEUED,
-        runAt: datetime.minutesFromNow(1)
+        runAt: datetime.minutesFromNow(10),
+        data
       }
     });
     return;
   }
-
-  const data = toTwitterData(job);
 
   await db.$transaction(async (tx) => {
     await tx.pickerJob.update({
@@ -223,6 +247,15 @@ const processFetchTwitterDataJob = async (
       data: {
         status: PickerJobStatus.COMPLETED,
         data
+      }
+    });
+    await tx.pickerJob.updateMany({
+      where: {
+        parentId: job.id,
+        status: { in: [PickerJobStatus.QUEUED, PickerJobStatus.RUNNING] }
+      },
+      data: {
+        status: PickerJobStatus.CANCELLED
       }
     });
     await tx.picker.update({
@@ -254,9 +287,9 @@ const processFetchTwitterDataJob = async (
 
 const processFetchTwitterGetLikingUsersJob = async (
   db: PrismaClient,
-  job: PickerJobWithChildren
+  job: PickerJobWithForm
 ) =>
-  await withAuditTrail(
+  await twitterJobProcessor(
     db,
     job,
     async (tx, request) =>
@@ -272,7 +305,7 @@ const processFetchTwitterGetRepostedByJob = async (
   db: PrismaClient,
   job: PickerJobWithChildren
 ) =>
-  await withAuditTrail(
+  await twitterJobProcessor(
     db,
     job,
     async (tx, request) =>
@@ -288,7 +321,7 @@ const processFetchTwitterGetQuotedPostsJob = async (
   db: PrismaClient,
   job: PickerJobWithChildren
 ) => {
-  await withAuditTrail(
+  await twitterJobProcessor(
     db,
     job,
     async (tx, request) =>
@@ -301,7 +334,9 @@ const processFetchTwitterGetQuotedPostsJob = async (
   );
 };
 
-const withAuditTrail = async <T extends { meta?: { next_token?: string } }>(
+const twitterJobProcessor = async <
+  T extends { meta?: { next_token?: string } }
+>(
   db: PrismaClient,
   job: PickerJobWithChildren,
   fn: (tx: Tx, request: TwitterFetchDataSchema['request']) => Promise<T>
@@ -337,7 +372,21 @@ const withAuditTrail = async <T extends { meta?: { next_token?: string } }>(
 
       const response = await fn(tx, request);
 
-      if (response.meta?.next_token) {
+      if (request.polling) {
+        await tx.pickerJob.create({
+          data: {
+            pickerId: job.pickerId,
+            parentId: job.parentId,
+            type: job.type,
+            status: PickerJobStatus.QUEUED,
+            runAt: datetime.hoursFromNow(1),
+            data: toTwitterFetchRequest({
+              tweetId: request.tweetId,
+              polling: true
+            })
+          }
+        });
+      } else if (response.meta?.next_token) {
         await tx.pickerJob.create({
           data: {
             pickerId: job.pickerId,

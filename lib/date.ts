@@ -55,6 +55,10 @@ export namespace datetime {
     return new Date(Date.now() + hours * 60 * 60 * 1000);
   };
 
+  export const daysFromNow = (days: number) => {
+    return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+  };
+
   export const daysAgo = (days: number) => {
     return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   };

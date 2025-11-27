@@ -1,13 +1,15 @@
 import z from 'zod';
 
 export const timingSchema = ({
-  validateEndDate,
-  maxDurationDays
+  validate,
+  maxDurationDays,
+  minDurationDays
 }: {
-  validateEndDate: boolean;
+  validate: boolean;
   maxDurationDays: number;
+  minDurationDays?: number;
 }) => {
-  const endDate = validateEndDate
+  const endDate = validate
     ? z.date().refine((date) => date > new Date(), {
         message: 'End date must be in the future'
       })
@@ -17,7 +19,7 @@ export const timingSchema = ({
     endDate,
     timeZone: z.string()
   });
-  if (!validateEndDate) return obj;
+  if (!validate) return obj;
   return obj.superRefine((data, ctx) => {
     const startDate = data.startDate;
     const endDate = data.endDate;

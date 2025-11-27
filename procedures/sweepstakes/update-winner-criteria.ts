@@ -3,7 +3,10 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@/lib/errors';
-import { allowedUserSourcesSchema } from '@/lib/user-source/schemas';
+import {
+  allowedUserSourcesSchema,
+  parseUserSourceSchema
+} from '@/lib/user-source/schemas';
 
 const updateWinnerCriteriaInput = z.object({
   sweepstakesId: z.string(),
@@ -11,7 +14,7 @@ const updateWinnerCriteriaInput = z.object({
   minTasksCompleted: z.number().int().min(1),
   minQualityScore: z.number().int().min(0).max(100),
   allowMultipleWins: z.boolean(),
-  allowedUserSources: allowedUserSourcesSchema.nullable().optional()
+  externalPlatforms: allowedUserSourcesSchema.nullable().optional()
 });
 
 const updateWinnerCriteria = procedure()
@@ -22,7 +25,7 @@ const updateWinnerCriteria = procedure()
       minTasksCompleted: z.number(),
       minQualityScore: z.number(),
       allowMultipleWins: z.boolean(),
-      allowedUserSources: allowedUserSourcesSchema.nullable().optional()
+      externalPlatforms: allowedUserSourcesSchema.nullable().optional()
     })
   )
   .handler(async ({ db, user, input }) => {
@@ -58,7 +61,7 @@ const updateWinnerCriteria = procedure()
         minTasksCompleted: input.minTasksCompleted,
         minQualityScore: input.minQualityScore,
         allowMultipleWins: input.allowMultipleWins,
-        externalPlatforms: input.allowedUserSources || []
+        externalPlatforms: input.externalPlatforms || []
       }
     });
 
@@ -66,7 +69,7 @@ const updateWinnerCriteria = procedure()
       minTasksCompleted: updated.minTasksCompleted ?? 1,
       minQualityScore: updated.minQualityScore ?? 70,
       allowMultipleWins: updated.allowMultipleWins ?? false,
-      allowedUserSources: (updated.externalPlatforms as any) || null
+      externalPlatforms: parseUserSourceSchema(updated.externalPlatforms)
     };
   });
 

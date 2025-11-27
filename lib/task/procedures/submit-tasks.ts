@@ -5,10 +5,9 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { validateTask } from '@/lib/task/validation/integrations';
 import { validateMandatoryTasks } from '@/lib/task/validation/mandatory';
 import { validateRequiredTasks } from '@/lib/task/validation/required';
-import { CompletionStatus } from '@prisma/client';
 import { z } from 'zod';
 import { toTaskSchema } from '../schemas';
-import { extractUsernameFromTweetUrl } from '@/lib/integrations/schemas/twitter';
+import { computeTaskStatus } from '../validation/status';
 
 const submitTask = procedure()
   .authorization({ required: true })
@@ -108,6 +107,8 @@ const submitTask = procedure()
       });
     }
 
+    const taskConfig = toTaskSchema(task);
+
     await validateMandatoryTasks({
       taskId,
       tasks,
@@ -121,35 +122,16 @@ const submitTask = procedure()
     });
 
     await validateTask(db, {
-      task: toTaskSchema(task),
+      task: taskConfig,
       userId: user.id,
       data
     });
-
-    const taskConfig = toTaskSchema(task);
-    const requiresValidation =
-      taskConfig.type === 'TWITTER_RETWEET' &&
-      taskConfig.validateEntries === true;
-
-    const status = requiresValidation
-      ? CompletionStatus.PENDING
-      : CompletionStatus.COMPLETED;
-
-    const proof = requiresValidation
-      ? {
-          source: 'user_submission',
-          tweetUrl: taskConfig.tweetId,
-          tweetOwner: extractUsernameFromTweetUrl(taskConfig.tweetId),
-          submittedAt: new Date().toISOString()
-        }
-      : undefined;
 
     await db.taskCompletion.create({
       data: {
         userId: user.id,
         taskId,
-        status,
-        proof
+        status: computeTaskStatus(taskConfig)
       }
     });
 

@@ -3,6 +3,7 @@ import { Audience } from './form/audience/audience';
 import { Design } from './form/design/design';
 import { Prizes } from './form/prizes/prizes';
 import { Setup } from './form/setup/setup';
+import { Selection } from './form/selection/selection';
 import { EntryMethods } from './form/tasks/entry-methods';
 
 export const SweepstakeFormContent: React.FC = () => {
@@ -12,6 +13,7 @@ export const SweepstakeFormContent: React.FC = () => {
       {currentStep === 'setup' && <Setup />}
       {currentStep === 'audience' && <Audience />}
       {currentStep === 'tasks' && <EntryMethods />}
+      {currentStep === 'selection' && <Selection />}
       {currentStep === 'prizes' && <Prizes />}
       {currentStep === 'design' && <Design />}
     </>

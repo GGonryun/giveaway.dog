@@ -332,7 +332,6 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Source</TableHead>
                       <TableHead>User</TableHead>
                       <TableHead className="hidden lg:table-cell text-right">
                         <SortButton field="qualityScore">Quality</SortButton>
@@ -358,14 +357,14 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                           setShowUserSheet(true);
                         }}
                       >
-                        <TableCell className="w-24 pr-0">
-                          <UserSourceBadge source={user.source} />
-                        </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-3">
                             <div>
-                              <div className="font-medium text-sm">
-                                {user.name}
+                              <div className="flex items-center gap-1">
+                                <UserSourceBadge source={user.source} />
+                                <div className="font-medium text-sm">
+                                  {user.name}
+                                </div>
                               </div>
                               <div className="text-xs text-muted-foreground">
                                 {user.email ?? 'No email'}

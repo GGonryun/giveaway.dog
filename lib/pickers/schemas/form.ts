@@ -6,6 +6,7 @@ import {
 import { MAX_PICKER_SCHEDULE_DAYS } from '@/lib/settings';
 import { DeepPartial } from '@/lib/types';
 import { widetype } from '@/lib/widetype';
+import { timingSchema } from '@/schemas/timing';
 import { Prisma } from '@prisma/client';
 import { Heart, LucideIcon, MessageSquare, Quote, Repeat2 } from 'lucide-react';
 import { z } from 'zod';
@@ -44,9 +45,9 @@ export const toPickerActionsArray = (
     .map(([key, _]) => key as PickerActionType);
 
 export const pickerFormSchema = ({
-  validateScheduledAt
+  validateTiming
 }: {
-  validateScheduledAt?: boolean;
+  validateTiming: boolean;
 }) => {
   return z.object({
     setup: z.object({
@@ -60,11 +61,10 @@ export const pickerFormSchema = ({
       name: z.string().min(1, 'Picker name is required'),
       integrationId: z.string().min(1, 'Integration is required')
     }),
-    timing: z
-      .object({
-        scheduledAt: scheduledAtSchema({ validate: validateScheduledAt }),
-        timeZone: z.string()
-      })
+    timing: timingSchema({
+      validate: validateTiming,
+      maxDurationDays: MAX_PICKER_SCHEDULE_DAYS
+    })
       .nullable()
       .optional(),
     winners: z.object({
@@ -91,31 +91,6 @@ export const pickerFormSchema = ({
   });
 };
 
-export const scheduledAtSchema = ({ validate }: { validate?: boolean } = {}) =>
-  validate
-    ? z
-        .string()
-        .refine(
-          (data) => {
-            return new Date(data) > new Date();
-          },
-          {
-            message: 'End date must be in the future'
-          }
-        )
-        .refine(
-          (data) => {
-            const now = new Date(); // max 7 days in the future
-            const maxDate = new Date();
-            maxDate.setDate(now.getDate() + MAX_PICKER_SCHEDULE_DAYS);
-            return new Date(data) <= maxDate;
-          },
-          {
-            message: `Scheduled date cannot be more than ${MAX_PICKER_SCHEDULE_DAYS} days in the future`
-          }
-        )
-    : z.string();
-
 export type PickerFormSchema = z.infer<ReturnType<typeof pickerFormSchema>>;
 
 export type PrismaPickerForm = Prisma.PickerFormGetPayload<{
@@ -135,7 +110,7 @@ export const parsePickerFormSchema = <T extends boolean>(
   { validate }: { validate?: T }
 ): T extends true ? PickerFormSchema : PickerUnvalidatedFormSchema => {
   const schema = validate
-    ? pickerFormSchema({ validateScheduledAt: false })
+    ? pickerFormSchema({ validateTiming: false })
     : pickerUnvalidatedFormSchema;
   const result = schema.safeParse(config?.data);
 

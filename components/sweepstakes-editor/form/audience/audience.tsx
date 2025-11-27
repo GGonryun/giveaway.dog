@@ -5,7 +5,7 @@ import { RegionalRestriction } from './regional-restriction';
 import { MinimumAgeRestriction } from './minimum-age-restriction';
 import { RequireEmail } from './require-email';
 import { SweepstakesVisibility } from './sweepstakes-visibility';
-import { WinnerCriteria } from './winner-criteria';
+
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 
 export const Audience = () => {
@@ -13,7 +13,7 @@ export const Audience = () => {
     <>
       <UnifiedSectionHeader
         label="Participation Requirements"
-        description="Set the basic requirements for users to participate in your sweepstakes."
+        description="Set the basic requirements for users to participate in your sweepstakes"
       >
         <RequireEmail />
         <RegionalRestriction />
@@ -21,17 +21,10 @@ export const Audience = () => {
       </UnifiedSectionHeader>
       <UnifiedSectionHeader
         label="Visibility"
-        description="Configure the public URL for your sweepstakes."
+        description="Configure the public URL for your sweepstakes"
         className="border-t"
       >
         <SweepstakesVisibility />
-      </UnifiedSectionHeader>
-      <UnifiedSectionHeader
-        label="Winner Selection Criteria"
-        description="Set requirements for participant eligibility when selecting winners."
-        className="border-t"
-      >
-        <WinnerCriteria />
       </UnifiedSectionHeader>
     </>
   );

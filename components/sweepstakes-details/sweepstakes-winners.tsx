@@ -524,7 +524,7 @@ export const SweepstakesWinners = ({
       minTasksCompleted: editedCriteria.minTasksCompleted,
       minQualityScore: editedCriteria.minQualityScore,
       allowMultipleWins: editedCriteria.allowMultipleWins,
-      allowedUserSources: editedCriteria.allowedUserSources
+      externalPlatforms: editedCriteria.externalPlatforms
     });
   };
 
@@ -610,11 +610,11 @@ export const SweepstakesWinners = ({
                 </Badge>
               </div>
             </div>
-            {currentCriteria.allowedUserSources && (
+            {currentCriteria.externalPlatforms && (
               <div className="flex items-center gap-1.5 text-sm">
                 <span className="text-muted-foreground">Allowed Sources:</span>
                 <div className="flex flex-wrap gap-1">
-                  {currentCriteria.allowedUserSources.map((source) => (
+                  {currentCriteria.externalPlatforms.map((source) => (
                     <Badge key={source} variant="outline">
                       {USER_SOURCE_LABEL[source as UserSource]}
                     </Badge>
@@ -624,11 +624,19 @@ export const SweepstakesWinners = ({
             )}
           </div>
 
-          {participants.some((p) => p.qualityScore < currentCriteria.minQualityScore && p.entries.length >= currentCriteria.minTasksCompleted) && (
+          {participants.some(
+            (p) =>
+              p.qualityScore < currentCriteria.minQualityScore &&
+              p.entries.length >= currentCriteria.minTasksCompleted
+          ) && (
             <Alert className="mt-4 border-amber-200 bg-amber-50">
               <Info className="h-4 w-4 text-amber-600" />
               <AlertDescription className="text-amber-800 text-sm">
-                Some participants (including Twitter imports with base quality score of 30) are being filtered out by your quality threshold. Consider lowering the minimum quality score to {Math.min(...participants.map(p => p.qualityScore))}% to include all participants.
+                Some participants (including Twitter imports with base quality
+                score of 30) are being filtered out by your quality threshold.
+                Consider lowering the minimum quality score to{' '}
+                {Math.min(...participants.map((p) => p.qualityScore))}% to
+                include all participants.
               </AlertDescription>
             </Alert>
           )}
@@ -765,11 +773,11 @@ export const SweepstakesWinners = ({
               <div className="flex items-center space-x-2">
                 <Switch
                   id="allowExternalUsers"
-                  checked={Boolean(editedCriteria.allowedUserSources)}
+                  checked={Boolean(editedCriteria.externalPlatforms)}
                   onCheckedChange={(checked) =>
                     setEditedCriteria((prev) => ({
                       ...prev,
-                      allowedUserSources: checked
+                      externalPlatforms: checked
                         ? DEFAULT_ALLOWED_USER_SOURCES
                         : null
                     }))
@@ -779,7 +787,7 @@ export const SweepstakesWinners = ({
                   Restrict winner sources
                 </Label>
               </div>
-              <Collapsible open={Boolean(editedCriteria.allowedUserSources)}>
+              <Collapsible open={Boolean(editedCriteria.externalPlatforms)}>
                 <CollapsibleContent className="space-y-1 pl-6">
                   {widetype
                     .entries(USER_SOURCE_LABEL)
@@ -792,17 +800,17 @@ export const SweepstakesWinners = ({
                               <Checkbox
                                 id={`edit-source-${key}`}
                                 checked={
-                                  editedCriteria.allowedUserSources?.includes(
+                                  editedCriteria.externalPlatforms?.includes(
                                     key
                                   ) ?? false
                                 }
                                 disabled={USER_SOURCE_COMING_SOON[key]}
                                 onCheckedChange={(checked) => {
                                   const currentValue =
-                                    editedCriteria.allowedUserSources || [];
+                                    editedCriteria.externalPlatforms || [];
                                   setEditedCriteria((prev) => ({
                                     ...prev,
-                                    allowedUserSources: checked
+                                    externalPlatforms: checked
                                       ? [...currentValue, key]
                                       : currentValue.filter((v) => v !== key)
                                   }));

@@ -82,7 +82,6 @@ export const SweepstakesParticipants: React.FC<{
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Source</TableHead>
                       <TableHead>User</TableHead>
                       <TableHead className="hidden lg:table-cell text-right">
                         Quality
@@ -107,18 +106,16 @@ export const SweepstakesParticipants: React.FC<{
                           );
                         }}
                       >
-                        <TableCell className="w-24 pr-0">
-                          <UserSourceBadge source={user.source} />
-                        </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-3">
                             <div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-1">
+                                <UserSourceBadge source={user.source} />
                                 <div className="font-medium text-sm">
                                   {user.name}
                                 </div>
                               </div>
-                              <div className="text-xs text-muted-foreground italic">
+                              <div className="text-xs text-muted-foreground">
                                 {user.email ?? 'No email'}
                               </div>
                             </div>
