@@ -8,12 +8,20 @@ export const getCookieSession = async (): Promise<JWT | null> => {
     const token =
       cookieStore.get('authjs.session-token') ??
       cookieStore.get('__Secure-authjs.session-token');
+    const secret = process.env.AUTH_SECRET;
+    console.log('[Auth] Retrieved auth secret:', secret ? '****' : 'not set');
+    if (!secret) {
+      console.warn(
+        '[Auth] AUTH_SECRET is not set. Cannot decode session token.'
+      );
+      throw new Error('AUTH_SECRET is not set');
+    }
 
     const decoded = token
       ? await decode({
           token: token.value,
-          secret: process.env.AUTH_SECRET!, // or NEXTAUTH_SECRET
-          salt: 'authjs.session-token' // required
+          secret,
+          salt: token.name
         })
       : null;
 
