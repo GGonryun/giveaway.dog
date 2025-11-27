@@ -205,7 +205,11 @@ export const TimingField = () => {
               <FormItem className="grow mt-2">
                 <FormLabel>Start Date</FormLabel>
                 <FormControl>
-                  <DateTimePicker hourCycle={12} {...field} />
+                  <DateTimePicker
+                    hourCycle={12}
+                    onChange={(date) => field.onChange(date?.toISOString())}
+                    value={field.value ? new Date(field.value) : new Date()}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -218,7 +222,11 @@ export const TimingField = () => {
               <FormItem className="grow">
                 <FormLabel>End Date</FormLabel>
                 <FormControl>
-                  <DateTimePicker hourCycle={12} {...field} />
+                  <DateTimePicker
+                    hourCycle={12}
+                    onChange={(date) => field.onChange(date?.toISOString())}
+                    value={field.value ? new Date(field.value) : new Date()}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

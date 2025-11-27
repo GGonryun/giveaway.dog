@@ -2,12 +2,10 @@ import z from 'zod';
 
 export const timingSchema = ({
   validate,
-  maxDurationDays,
-  minDurationDays
+  maxDurationDays
 }: {
   validate: boolean;
   maxDurationDays: number;
-  minDurationDays?: number;
 }) => {
   const endDate = validate
     ? z.date().refine((date) => date > new Date(), {

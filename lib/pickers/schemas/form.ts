@@ -6,7 +6,6 @@ import {
 import { MAX_PICKER_SCHEDULE_DAYS } from '@/lib/settings';
 import { DeepPartial } from '@/lib/types';
 import { widetype } from '@/lib/widetype';
-import { timingSchema } from '@/schemas/timing';
 import { Prisma } from '@prisma/client';
 import { Heart, LucideIcon, MessageSquare, Quote, Repeat2 } from 'lucide-react';
 import { z } from 'zod';
@@ -43,6 +42,47 @@ export const toPickerActionsArray = (
     .entries(actions)
     .filter(([_, value]) => value)
     .map(([key, _]) => key as PickerActionType);
+
+const timingSchema = ({
+  validate,
+  maxDurationDays
+}: {
+  validate: boolean;
+  maxDurationDays: number;
+}) => {
+  const endDate = validate
+    ? z.date().refine((date) => date > new Date(), {
+        message: 'End date must be in the future'
+      })
+    : z.date().or(z.string());
+  const obj = z.object({
+    startDate: z.date().or(z.string()),
+    endDate,
+    timeZone: z.string()
+  });
+  if (!validate) return obj;
+  return obj.superRefine((data, ctx) => {
+    const startDate = data.startDate;
+    const endDate = data.endDate;
+    if (startDate && endDate <= startDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'End date must be after start date',
+        path: ['endDate']
+      });
+    }
+    // do not allow giveaways longer than 30 days
+    const maxEndDate = new Date(startDate);
+    maxEndDate.setDate(maxEndDate.getDate() + maxDurationDays);
+    if (endDate > maxEndDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Duration cannot exceed ${maxDurationDays} days`,
+        path: ['endDate']
+      });
+    }
+  });
+};
 
 export const pickerFormSchema = ({
   validateTiming
@@ -115,7 +155,6 @@ export const parsePickerFormSchema = <T extends boolean>(
   const result = schema.safeParse(config?.data);
 
   if (!result.success) {
-    console.error('Picker form schema validation error:', result.error);
     throw new ApplicationError({
       code: 'VALIDATION_ERROR',
       message: 'Invalid picker form schema',
