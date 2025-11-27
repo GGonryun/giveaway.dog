@@ -3,7 +3,6 @@ import prisma from '@/lib/prisma';
 import { NextAuthConfig } from 'next-auth';
 
 export const authConfigMiddleware = {
-  debug: true,
   logger: {
     error(error: any) {
       // Suppress the "no authorization code" error for Steam provider
@@ -19,10 +18,10 @@ export const authConfigMiddleware = {
     },
     warn(code: any) {
       console.warn('[NextAuth Warn]', code);
-    },
-    debug(code: any, metadata: any) {
-      console.debug('[NextAuth Debug]', code, metadata);
     }
+    // debug(code: any, metadata: any) {
+    //   console.debug('[NextAuth Debug]', code, metadata);
+    // }
   },
   pages: {
     signIn: '/login',

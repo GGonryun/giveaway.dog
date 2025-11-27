@@ -115,11 +115,6 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
   });
 
   const handleDraw = () => {
-    console.log('[Draw Interface] handleDraw called with:', {
-      pickerId,
-      numberOfWinners
-    });
-
     drawProcedure.run({
       pickerId,
       numberOfWinners

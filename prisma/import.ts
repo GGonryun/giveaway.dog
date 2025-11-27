@@ -40,7 +40,7 @@ async function main() {
   const sweepstakesId = args[0];
   const taskId = args[1];
 
-  console.log('🐦 Starting Twitter user import seed script...\n');
+  console.debug('🐦 Starting Twitter user import seed script...\n');
 
   // Check if Twitter account already exists
   const existingAccount = await prisma.account.findUnique({
@@ -56,12 +56,12 @@ async function main() {
   let userId: string;
 
   if (existingAccount) {
-    console.log(
+    console.debug(
       `✅ Twitter account already exists for user: ${existingAccount.user.name} (${existingAccount.userId})`
     );
     userId = existingAccount.userId;
   } else {
-    console.log('📝 Creating new imported Twitter user...');
+    console.debug('📝 Creating new imported Twitter user...');
 
     // Create new user
     const newUser = await prisma.user.create({
@@ -74,7 +74,7 @@ async function main() {
       }
     });
 
-    console.log(`✅ Created user: ${newUser.name} (${newUser.id})`);
+    console.debug(`✅ Created user: ${newUser.name} (${newUser.id})`);
 
     // Create Twitter account link
     await prisma.account.create({
@@ -87,7 +87,7 @@ async function main() {
       }
     });
 
-    console.log(`✅ Linked Twitter account: @${FAKE_TWITTER_USER.username}`);
+    console.debug(`✅ Linked Twitter account: @${FAKE_TWITTER_USER.username}`);
 
     // Create quality score
     await prisma.userQuality.create({
@@ -110,7 +110,7 @@ async function main() {
       }
     });
 
-    console.log(
+    console.debug(
       `✅ Created quality score: ${USER_BASE_SCORE} (base score for imports)`
     );
 
@@ -119,7 +119,7 @@ async function main() {
 
   // If sweepstakesId and taskId provided, create task completion
   if (sweepstakesId && taskId) {
-    console.log(`\n📋 Creating task completion for sweepstakes...`);
+    console.debug(`\n📋 Creating task completion for sweepstakes...`);
 
     // Verify sweepstakes exists
     const sweepstakes = await prisma.sweepstakes.findUnique({
@@ -155,7 +155,9 @@ async function main() {
     });
 
     if (existingEntry) {
-      console.log(`⚠️  Task completion already exists for this user and task`);
+      console.debug(
+        `⚠️  Task completion already exists for this user and task`
+      );
     } else {
       // Create task completion
       const completion = await prisma.taskCompletion.create({
@@ -172,28 +174,28 @@ async function main() {
         }
       });
 
-      console.log(`✅ Created task completion: ${completion.id}`);
+      console.debug(`✅ Created task completion: ${completion.id}`);
     }
   }
 
-  console.log('\n✨ Seed complete!\n');
-  console.log('User Details:');
-  console.log(`  ID: ${userId}`);
-  console.log(`  Name: ${FAKE_TWITTER_USER.name}`);
-  console.log(`  Username: @${FAKE_TWITTER_USER.username}`);
-  console.log(`  Twitter ID: ${FAKE_TWITTER_USER.id}`);
-  console.log(`  Source: TWITTER_IMPORT`);
-  console.log(`  Quality Score: ${USER_BASE_SCORE}`);
+  console.debug('\n✨ Seed complete!\n');
+  console.debug('User Details:');
+  console.debug(`  ID: ${userId}`);
+  console.debug(`  Name: ${FAKE_TWITTER_USER.name}`);
+  console.debug(`  Username: @${FAKE_TWITTER_USER.username}`);
+  console.debug(`  Twitter ID: ${FAKE_TWITTER_USER.id}`);
+  console.debug(`  Source: TWITTER_IMPORT`);
+  console.debug(`  Quality Score: ${USER_BASE_SCORE}`);
 
   if (sweepstakesId && taskId) {
-    console.log(`\nTask Completion:`);
-    console.log(`  Sweepstakes: ${sweepstakesId}`);
-    console.log(`  Task: ${taskId}`);
+    console.debug(`\nTask Completion:`);
+    console.debug(`  Sweepstakes: ${sweepstakesId}`);
+    console.debug(`  Task: ${taskId}`);
   } else {
-    console.log(
+    console.debug(
       '\n💡 Tip: Run with sweepstakesId and taskId to create a task completion:'
     );
-    console.log(
+    console.debug(
       '   npx tsx scripts/seed-twitter-import.ts <sweepstakesId> <taskId>'
     );
   }
