@@ -181,8 +181,8 @@ export const TimingField = () => {
                 onClick={() => {
                   if (timing == null) {
                     field.onChange({
-                      startDate: datetime.daysFromNow(0),
-                      endDate: datetime.daysFromNow(3),
+                      startDate: datetime.daysFromNow(0).toISOString(),
+                      endDate: datetime.daysFromNow(3).toISOString(),
                       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
                     });
                   } else {
