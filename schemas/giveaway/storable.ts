@@ -222,7 +222,7 @@ export const toStorableCriteria = (
       minQualityScore: criteria.minQualityScore ?? DEFAULT_MIN_QUALITY_SCORE,
       allowMultipleWins:
         criteria.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS,
-      externalPlatforms: criteria.externalPlatforms || []
+      externalPlatforms: criteria.externalPlatforms || Prisma.JsonNull
     }
   };
 };
