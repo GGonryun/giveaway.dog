@@ -51,12 +51,12 @@ const timingSchema = ({
   maxDurationDays: number;
 }) => {
   const endDate = validate
-    ? z.date().refine((date) => date > new Date(), {
+    ? z.string().refine((date) => new Date(date) > new Date(), {
         message: 'End date must be in the future'
       })
-    : z.date().or(z.string());
+    : z.string();
   const obj = z.object({
-    startDate: z.date().or(z.string()),
+    startDate: z.string(),
     endDate,
     timeZone: z.string()
   });
@@ -74,7 +74,7 @@ const timingSchema = ({
     // do not allow giveaways longer than 30 days
     const maxEndDate = new Date(startDate);
     maxEndDate.setDate(maxEndDate.getDate() + maxDurationDays);
-    if (endDate > maxEndDate) {
+    if (new Date(endDate) > maxEndDate) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `Duration cannot exceed ${maxDurationDays} days`,
