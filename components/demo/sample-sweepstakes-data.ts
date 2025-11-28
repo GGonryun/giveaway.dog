@@ -93,7 +93,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
     displayDescription: true,
     background: {
       type: 'color',
-      color: '#edf0f4'
+      color: '#63478b'
     }
   },
   visibility: {

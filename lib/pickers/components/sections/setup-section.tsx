@@ -62,7 +62,7 @@ export const SetupSection: React.FC<SetupSectionProps> = ({ integrations }) => {
           <FormItem>
             <FormLabel>Integration</FormLabel>
             {twitterIntegrations.length === 0 ? (
-              <Alert variant="error">
+              <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription className="flex flex-col gap-2">
                   <p>

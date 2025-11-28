@@ -12,6 +12,7 @@ import {
 } from '@/schemas/quality';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { QualityBadge } from '../risk/quality-badge';
 
 export const KeyMetricsCard: React.FC<{
   slug: string;
@@ -52,14 +53,11 @@ export const KeyMetricsCard: React.FC<{
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-2">
-            <Icon className={cn('h-6 w-6', theme.text)} />
             <div className="text-2xl font-bold ">
               {participant.qualityScore}
             </div>
           </div>
-          <p className={cn('text-xs text-muted-foreground', theme.text)}>
-            {label}
-          </p>
+          <p className={'text-xs text-muted-foreground'}>{label}</p>
         </CardContent>
       </Card>
     </div>

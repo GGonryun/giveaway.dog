@@ -25,6 +25,7 @@ import { UserSchema } from '@/schemas/user';
 import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { featureFlags } from '@/lib/feature-flags';
 import { cn } from '@/lib/utils';
+import { ThemeToggleButton } from '@/components/theme/theme-toggle-button';
 
 export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
   user
@@ -91,6 +92,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-2 lg:flex">
+            <ThemeToggleButton />
             {!isLoggedIn ? (
               <>
                 <Button variant="outline" asChild>
@@ -172,6 +174,10 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                   </Link>
                 </div>
                 <div className="mt-6 flex flex-col gap-2">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-sm font-medium">Theme</span>
+                    <ThemeToggleButton />
+                  </div>
                   {!isLoggedIn ? (
                     <>
                       <Button variant="outline" asChild>

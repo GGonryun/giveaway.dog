@@ -33,7 +33,7 @@ export const UserInfoSection: React.FC = () => {
               {userProfile.providers?.map((provider) => (
                 <div
                   key={provider.type}
-                  className="w-4 h-4 rounded bg-white border border-border flex items-center justify-center"
+                  className="w-4 h-4 rounded bg-background border border-border flex items-center justify-center"
                 >
                   <ProviderIcon
                     type={provider.type}
@@ -43,7 +43,7 @@ export const UserInfoSection: React.FC = () => {
               ))}
               {/* Email icon for verified email */}
               {userProfile.email && userProfile.emailVerified && (
-                <div className="w-4 h-4 rounded bg-white border border-border flex items-center justify-center">
+                <div className="w-4 h-4 rounded bg-background border border-border flex items-center justify-center">
                   <ProviderIcon
                     type="email"
                     className="w-2.5 h-2.5 text-foreground"

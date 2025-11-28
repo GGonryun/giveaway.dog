@@ -426,7 +426,7 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
           </div>
 
           {eligibleEntries < numberOfWinners && (
-            <Alert variant="error">
+            <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
                 Not enough eligible entries to draw {numberOfWinners}{' '}
@@ -455,7 +455,7 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
           </div>
 
           {!isProcessed && (
-            <Alert variant="error">
+            <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Cannot Draw Winners</AlertTitle>
               <AlertDescription>

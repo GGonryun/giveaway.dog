@@ -12,6 +12,7 @@ import { xStatusRefineUrl } from '@/lib/integrations/schemas/twitter';
 import { FailureData } from '@/lib/mrpc/types';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { cn } from '@/lib/utils';
+import { useTheme } from 'next-themes';
 
 interface CachedTwitterEmbed {
   data: TwitterEmbedData;
@@ -101,6 +102,7 @@ const TwitterPreviewInternal = ({
 }: TwitterPreviewProps) => {
   const [embedData, setEmbedData] = useState<TwitterEmbedData | null>(null);
   const [error, setError] = useState<FailureData | null>(null);
+  const { theme } = useTheme();
   const { run: fetchTwitterEmbed, isLoading } = useProcedureAsync({
     action: getTwitterOEmbed
   });
@@ -128,7 +130,10 @@ const TwitterPreviewInternal = ({
       setError(null);
 
       try {
-        const data = await fetchTwitterEmbed({ postUrl });
+        const data = await fetchTwitterEmbed({
+          postUrl,
+          theme: theme === 'light' ? 'light' : 'dark'
+        });
         setEmbedData(data);
         setCachedEmbed(postUrl, data);
       } catch (err: any) {
@@ -140,7 +145,7 @@ const TwitterPreviewInternal = ({
 
     const debounceTimer = setTimeout(fetchEmbed, 500);
     return () => clearTimeout(debounceTimer);
-  }, [postUrl, hasError, fetchTwitterEmbed]);
+  }, [postUrl, hasError, fetchTwitterEmbed, theme]);
 
   useEffect(() => {
     if (!embedData) return;
@@ -157,7 +162,7 @@ const TwitterPreviewInternal = ({
   return (
     <div className={cn('flex grow overflow-y-auto bg-primary/5', className)}>
       <div className="flex flex-col items-center min-h-full w-full">
-        <div className="w-full max-w-xl my-auto">
+        <div className="w-full max-w-xl my-auto ">
           {isLoading && (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -193,7 +198,7 @@ const TwitterPreviewInternal = ({
           {embedData && !isLoading && (
             <div
               dangerouslySetInnerHTML={{ __html: embedData.html }}
-              className="flex justify-center"
+              className="wrapper"
             />
           )}
         </div>

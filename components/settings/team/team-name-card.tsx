@@ -45,7 +45,7 @@ export const TeamNameCard: React.FC<TeamNameCardProps> = ({
     <SettingsCard
       title="Team Name"
       description="The name of your team as it appears throughout the application."
-      footerNote="Must be at least 1 character long."
+      footer="Must be at least 1 character long."
       onSave={handleSave}
       isSaving={isLoading}
       hasChanges={hasChanges}

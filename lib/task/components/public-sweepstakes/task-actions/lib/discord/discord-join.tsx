@@ -54,7 +54,7 @@ export const DiscordJoinTaskActionForm: React.FC<
               <Button
                 variant="link"
                 onClick={() => setPerformedAction(true)}
-                className="text-xs text-black underline mt-2"
+                className="text-xs text-foreground underline mt-2"
               >
                 I already joined the server
               </Button>

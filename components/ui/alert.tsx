@@ -11,11 +11,13 @@ const alertVariants = cva(
         default: 'bg-card text-card-foreground text-muted-foreground',
         primary:
           'text-primary bg-card  [&>svg]:text-current bg-primary/10 border-primary/50',
-        error:
-          'text-error bg-card [&>svg]:text-current bg-error/10 border-error/50',
+        destructive:
+          'text-destructive bg-card [&>svg]:text-current bg-destructive/10 border-destructive/50',
         info: 'text-info bg-card [&>svg]:text-current bg-info/10 border-info/50',
         success:
-          'text-success bg-card [&>svg]:text-current bg-success/10 border-success/50'
+          'text-success bg-card [&>svg]:text-current bg-success/10 border-success/50',
+        warning:
+          'text-warning bg-card [&>svg]:text-current bg-warning/10 border-warning/50'
       }
     },
     defaultVariants: {

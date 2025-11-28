@@ -1,13 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -30,6 +24,7 @@ import { toast } from 'sonner';
 import { Spinner } from '../ui/spinner';
 import { UserProfileSchema } from '@/schemas/user';
 import { useRouter } from 'next/navigation';
+import { SettingsCard } from '../settings/settings-card';
 
 interface EmailVerificationProps {
   title?: string;
@@ -181,7 +176,7 @@ export function EmailVerification({
     <div className="space-y-2">
       {/* Email Verification Warning */}
       {needsVerification && !isChangingEmail && (
-        <Alert variant="error">
+        <Alert variant="destructive">
           <ShieldAlert className="h-4 w-4" />
           <AlertTitle>Email Verification Required</AlertTitle>
           <AlertDescription className="flex items-center justify-between">
@@ -202,7 +197,7 @@ export function EmailVerification({
 
       {/* Twitter No Email Warning */}
       {needsEmail && (
-        <Alert variant="error">
+        <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Email Required</AlertTitle>
           <AlertDescription>{verificationText}</AlertDescription>
@@ -214,7 +209,7 @@ export function EmailVerification({
         <div className="w-full flex flex-col sm:flex-row gap-4 sm:gap-2 items-center justify-between p-2 border rounded-lg">
           {/* LEFT: icon + text (this area must be allowed to shrink) */}
           <div className="flex items-center gap-3 min-w-0 w-full sm:flex-1">
-            <div className="w-12 h-12 flex-shrink-0 bg-white flex items-center justify-center">
+            <div className="w-12 h-12 flex-shrink-0 bg-background flex items-center justify-center">
               <Mail className="w-8 h-8 text-foreground" />
             </div>
 
@@ -312,12 +307,8 @@ export function EmailVerification({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent>{content}</CardContent>
-    </Card>
+    <SettingsCard title={title} description={description}>
+      {content}
+    </SettingsCard>
   );
 }

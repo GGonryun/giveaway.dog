@@ -138,14 +138,14 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           </div>
         ) : (
           <div
-            className={`flex flex-col items-center justify-center border-1 rounded-lg w-full cursor-pointer transition-colors bg-white shadow-sm hover:bg-gray-50 ${sizeClasses} ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+            className={`flex flex-col items-center justify-center border-1 rounded-lg w-full cursor-pointer transition-colors bg-white shadow-sm hover:bg-gray-50 dark:bg-input/30 dark:hover:bg-input/40 ${sizeClasses} ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
             style={sizeStyle}
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
             onClick={() => inputRef.current?.click()}
           >
             <UploadCloud className="w-8 h-8 text-gray-400 mb-2" />
-            <Typography.Text className="font-medium text-gray-700">
+            <Typography.Text className="font-medium">
               Drag and drop files here
             </Typography.Text>
             <Typography.Caption className="mt-1">

@@ -45,7 +45,7 @@ export const TeamLogoCard: React.FC<TeamLogoCardProps> = ({
     <SettingsCard
       title="Team Logo"
       description="An image to represent your team."
-      footerNote="Upload an image file (JPEG, PNG, or GIF) up to 3MB."
+      footer="Upload an image file (JPEG, PNG, or GIF) up to 3MB."
       onSave={handleSave}
       isSaving={isLoading}
       hasChanges={hasChanges}

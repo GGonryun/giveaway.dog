@@ -76,7 +76,7 @@ export const SteamWishlistTaskActionForm: React.FC<
               <Button
                 variant="link"
                 onClick={() => setPerformedAction(true)}
-                className="text-xs mt-2 text-black"
+                className="text-xs mt-2 text-foreground"
               >
                 I already added to wishlist or own the game
               </Button>

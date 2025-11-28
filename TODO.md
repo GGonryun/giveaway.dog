@@ -1,9 +1,10 @@
-- [ ] Dark mode
 - [ ] Add a way to delete a picker from the overview page.
+
+- [ ] Validate my ownership for google verification
 
 - [ ] Add a referral integration.
 
-- [ ] Add YouTube integration - probably violates ToS so we can't do it officially.
+- [ ] Add YouTube integration - https://support.google.com/youtube/answer/3399767
 
 - [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit
 

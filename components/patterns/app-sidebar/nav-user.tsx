@@ -1,6 +1,14 @@
 'use client';
 
-import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from 'lucide-react';
+import {
+  BadgeCheck,
+  Bell,
+  ChevronsUpDown,
+  LogOut,
+  Monitor,
+  Moon,
+  Sun
+} from 'lucide-react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -10,6 +18,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import {
@@ -22,12 +33,30 @@ import { useUser } from '@/components/context/user-provider';
 import Link from 'next/link';
 import { useAccountPage } from '@/components/account/use-account-page';
 import { useLogout } from '@/lib/auth/hooks/use-logout';
+import { useTheme } from 'next-themes';
 
 export const NavUser = () => {
   const { isMobile } = useSidebar();
   const { routes } = useAccountPage();
   const { email, name, emoji } = useUser();
   const logout = useLogout();
+  const { theme, setTheme } = useTheme();
+
+  const getThemeIcon = () => {
+    if (theme === 'light') {
+      return <Sun className="h-4 w-4" />;
+    } else if (theme === 'dark') {
+      return <Moon className="h-4 w-4" />;
+    } else {
+      return <Monitor className="h-4 w-4" />;
+    }
+  };
+
+  const getThemeLabel = () => {
+    if (theme === 'light') return 'Light';
+    if (theme === 'dark') return 'Dark';
+    return 'System';
+  };
 
   return (
     <SidebarMenu>
@@ -71,6 +100,26 @@ export const NavUser = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <div className="mr-2">{getThemeIcon()}</div>
+                  Theme: {getThemeLabel()}
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem onClick={() => setTheme('light')}>
+                    <Sun className="mr-2 h-4 w-4" />
+                    Light
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme('dark')}>
+                    <Moon className="mr-2 h-4 w-4" />
+                    Dark
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme('system')}>
+                    <Monitor className="mr-2 h-4 w-4" />
+                    System
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
               <DropdownMenuItem asChild>
                 <Link href={routes.base}>
                   <BadgeCheck />

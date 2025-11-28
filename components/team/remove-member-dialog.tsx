@@ -13,6 +13,8 @@ import {
 import { useProcedure } from '@/lib/mrpc/hook';
 import removeMember from '@/procedures/teams/remove-member';
 import { toast } from 'sonner';
+import { Alert, AlertDescription } from '../ui/alert';
+import { FileWarningIcon, TriangleAlertIcon } from 'lucide-react';
 
 interface RemoveMemberDialogProps {
   open: boolean;
@@ -62,11 +64,10 @@ export const RemoveMemberDialog: React.FC<RemoveMemberDialogProps> = ({
               cannot be removed from the team.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm dark:border-amber-800 dark:bg-amber-950/50">
-            <p className="font-medium text-amber-900 dark:text-amber-200">
-              {blockReason}
-            </p>
-          </div>
+          <Alert variant="warning">
+            <TriangleAlertIcon />
+            <AlertDescription>{blockReason}</AlertDescription>
+          </Alert>
           <AlertDialogFooter>
             <AlertDialogCancel>Close</AlertDialogCancel>
           </AlertDialogFooter>

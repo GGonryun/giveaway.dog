@@ -7,6 +7,7 @@ import { DangerZone } from './danger-zone';
 import { FeatureSettings } from './feature-settings';
 import { HistorySettings } from './history-settings';
 import { LogoutButton } from '@/lib/auth/components/logout-button';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 
 type AccountSections = 'profile' | 'linked-accounts';
 
@@ -14,6 +15,7 @@ const tabItems = [
   { id: 'profile', label: 'Profile' },
   { id: 'history', label: 'History' },
   { id: 'features', label: 'Features' },
+  { id: 'appearance', label: 'Appearance' },
   { id: 'notifications', label: 'Notifications' },
   { id: 'danger-zone', label: 'Danger Zone' }
 ];
@@ -48,6 +50,9 @@ export const UserPage: React.FC = () => {
         </TabsContent>
         <TabsContent value="features" className="mt-0">
           <FeatureSettings />
+        </TabsContent>
+        <TabsContent value="appearance" className="mt-0">
+          <ThemeToggle />
         </TabsContent>
         <TabsContent value="notifications" className="mt-0">
           <div className="p-4 border border-dashed rounded-lg text-center text-sm text-muted-foreground">

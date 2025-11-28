@@ -53,12 +53,16 @@ export const toUserDeviceActivity = (
   }>
 ): UserDeviceActivitySchema => {
   const device = deviceTypeSchema.safeParse(data.agent.device);
-  if (!device.success)
-    throw new ApplicationError({
-      code: 'VALIDATION_ERROR',
-      message: 'Invalid device type',
-      cause: device.error
-    });
+  if (!device.success) {
+    return {
+      agent: data.agent.agent,
+      device: 'unknown',
+      os: data.agent.os ?? UNKNOWN_OS,
+      browser: data.agent.browser ?? UNKNOWN_BROWSER,
+      count: data.count,
+      lastUsed: data.updatedAt
+    };
+  }
 
   return {
     agent: data.agent.agent,

@@ -110,7 +110,7 @@ export const SocialLinksCard: React.FC<SocialLinksCardProps> = ({
     <SettingsCard
       title="Social Media Links"
       description="Add links to your social media profiles and website."
-      footerNote="Links will be displayed on your sweepstakes pages."
+      footer="Links will be displayed on your sweepstakes pages."
       onSave={handleSave}
       isSaving={isLoading}
       hasChanges={form.formState.isDirty}

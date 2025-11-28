@@ -17,6 +17,9 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import regenerateInviteLink from '@/procedures/teams/regenerate-invite-link';
 import { toast } from 'sonner';
 import { TeamRole } from '@prisma/client';
+import { SettingsCard } from '@/components/settings/settings-card';
+import Link from 'next/link';
+import { ExternalLink } from 'lucide-react';
 
 interface Member {
   id: string;
@@ -83,43 +86,41 @@ export function TeamRoles({
       <div className="space-y-6">
         <InviteFormCard slug={slug} onInvitesSent={handleRefresh} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Team Members</CardTitle>
-            <CardDescription>
-              Manage your team members and pending invitations
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="members" className="w-full">
-              <TabsList className="w-full sm:w-auto">
-                <TabsTrigger value="members" className="flex-1 sm:flex-none">
-                  Members ({initialMembers.length})
-                </TabsTrigger>
-                <TabsTrigger
-                  value="invitations"
-                  className="flex-1 sm:flex-none"
-                >
-                  Pending ({initialInvitations.length})
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="members">
-                <MembersTable
-                  slug={slug}
-                  members={initialMembers}
-                  onMemberRemoved={handleRefresh}
-                />
-              </TabsContent>
-              <TabsContent value="invitations">
-                <PendingInvitationsTable
-                  slug={slug}
-                  invitations={initialInvitations}
-                  onInvitationRevoked={handleRefresh}
-                />
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+        <SettingsCard
+          title="Team Members"
+          description="Manage your team members and pending invitations."
+          footer={
+            <Link href="/support" className="flex items-center hover:underline">
+              Learn more about Team Members
+              <ExternalLink className="ml-1 h-3 w-3" />
+            </Link>
+          }
+        >
+          <Tabs defaultValue="members" className="w-full">
+            <TabsList className="w-full sm:w-auto">
+              <TabsTrigger value="members" className="flex-1 sm:flex-none">
+                Members ({initialMembers.length})
+              </TabsTrigger>
+              <TabsTrigger value="invitations" className="flex-1 sm:flex-none">
+                Pending ({initialInvitations.length})
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="members">
+              <MembersTable
+                slug={slug}
+                members={initialMembers}
+                onMemberRemoved={handleRefresh}
+              />
+            </TabsContent>
+            <TabsContent value="invitations">
+              <PendingInvitationsTable
+                slug={slug}
+                invitations={initialInvitations}
+                onInvitationRevoked={handleRefresh}
+              />
+            </TabsContent>
+          </Tabs>
+        </SettingsCard>
       </div>
     </TeamInviteLinkProvider>
   );

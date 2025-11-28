@@ -31,14 +31,15 @@ const getTwitterOEmbed = procedure()
   .authorization({ required: false })
   .input(
     z.object({
-      postUrl: z.string().url()
+      postUrl: z.string().url(),
+      theme: z.enum(['light', 'dark']).optional().default('dark')
     })
   )
   .output(twitterEmbedSchema)
   .handler(async ({ input }) => {
     try {
       const response = await fetch(
-        `https://publish.twitter.com/oembed?url=${encodeURIComponent(input.postUrl)}`,
+        `https://publish.twitter.com/oembed?url=${encodeURIComponent(input.postUrl)}&theme=${input.theme}`,
         {
           headers: {
             'User-Agent': 'giveaway.dog/1.0'

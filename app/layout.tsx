@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Analytics } from '@vercel/analytics/react';
 import { SessionProvider } from '@/components/context/auth-session-provider';
 import { Metadata } from 'next';
+import { ThemeProvider } from '@/components/theme/theme-provider';
 
 import { Figtree } from 'next/font/google';
 import { UserMetricsCollector } from '@/components/user-metrics-collector';
@@ -51,16 +52,24 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${figtree.variable}`}>
+    <html lang="en" className={`${figtree.variable}`} suppressHydrationWarning>
       <head>
         <script async src="https://platform.twitter.com/widgets.js"></script>
       </head>
       <body>
-        <SessionProvider>
-          <UserMetricsCollector />
-          <main>{children}</main>
-          <Toaster />
-        </SessionProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          storageKey="giveaway-theme"
+          disableTransitionOnChange
+        >
+          <SessionProvider>
+            <UserMetricsCollector />
+            <main>{children}</main>
+            <Toaster />
+          </SessionProvider>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

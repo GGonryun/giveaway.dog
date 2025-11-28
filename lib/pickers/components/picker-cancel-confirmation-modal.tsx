@@ -51,9 +51,9 @@ export const PickerCancelConfirmationModal: React.FC<
         </DialogHeader>
 
         {action === 'demo' && (
-          <Alert className="border-blue-200 bg-blue-50">
-            <InfoIcon className="h-4 w-4 text-blue-600" />
-            <AlertDescription className="text-blue-800">
+          <Alert variant="primary">
+            <InfoIcon className="h-4 w-4" />
+            <AlertDescription>
               <strong>Demo Mode:</strong> Saving and deleting are not available
               in the demo. You can continue editing or exit to return.
             </AlertDescription>
@@ -90,7 +90,7 @@ export const PickerCancelConfirmationModal: React.FC<
 
           {action === 'demo' && (
             <div className="flex gap-2 sm:ml-auto">
-              <Link href="/pricing">
+              <Link href="/#pricing">
                 <Button variant="outline">Exit Demo</Button>
               </Link>
               <Link href="/login">

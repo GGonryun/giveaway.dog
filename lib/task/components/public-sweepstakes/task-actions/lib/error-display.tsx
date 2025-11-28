@@ -2,7 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircleIcon } from 'lucide-react';
 
 export const ErrorDisplay: React.FC<{ message: string }> = ({ message }) => (
-  <Alert variant="error" className="text-left">
+  <Alert variant="destructive" className="text-left">
     <AlertCircleIcon />
     <AlertTitle>Verification Failed</AlertTitle>
     <AlertDescription>{message}</AlertDescription>

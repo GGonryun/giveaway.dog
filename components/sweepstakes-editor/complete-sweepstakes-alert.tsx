@@ -77,7 +77,7 @@ export const CompleteSweepstakesAlert: React.FC<{
             <AlertDialogAction
               onClick={handleConfirm}
               disabled={isCompleting}
-              className="bg-green-600 text-white hover:bg-green-700"
+              className="bg-green-600 text-background hover:bg-green-700"
             >
               {isCompleting ? 'Completing...' : 'Yes, Complete Sweepstakes'}
             </AlertDialogAction>

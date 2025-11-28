@@ -81,7 +81,7 @@ export const InviteLinkModal: React.FC<InviteLinkModalProps> = ({
                 </AlertDescription>
               </Alert>
 
-              <Alert variant="error">
+              <Alert variant="destructive">
                 <AlertTriangle className="h-4 w-4" />
                 <AlertTitle>Warning</AlertTitle>
                 <AlertDescription>

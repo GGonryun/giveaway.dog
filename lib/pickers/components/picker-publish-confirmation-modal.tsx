@@ -51,9 +51,9 @@ export const PickerPublishConfirmationModal: React.FC<
           <DialogDescription asChild>
             <div className="mt-1 space-y-3">
               {isDemo ? (
-                <Alert className="border-blue-200 bg-blue-50">
-                  <InfoIcon className="h-4 w-4 text-blue-600" />
-                  <AlertDescription className="text-blue-800">
+                <Alert variant="primary">
+                  <InfoIcon className="h-4 w-4" />
+                  <AlertDescription>
                     <strong>Demo Mode:</strong> Publishing and saving are not
                     available in the demo. You can continue exploring the editor
                     or exit to learn more about pricing.
@@ -75,7 +75,7 @@ export const PickerPublishConfirmationModal: React.FC<
                       </span>
                     </AlertDescription>
                   </Alert>
-                  <Alert variant="error">
+                  <Alert variant="destructive">
                     <InfoIcon />
                     <AlertTitle>
                       <strong>Warning:</strong>
@@ -136,7 +136,7 @@ export const PickerPublishConfirmationModal: React.FC<
                 Continue Editing
               </Button>
               <div className="flex gap-2 sm:ml-auto">
-                <Link href="/pricing">
+                <Link href="/#pricing">
                   <Button variant="outline">Exit Demo</Button>
                 </Link>
                 <Link href="/login">

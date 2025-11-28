@@ -2,7 +2,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { AlertCircleIcon } from 'lucide-react';
 
 export const DisqualificationWarning: React.FC = () => (
-  <Alert variant="error" className="text-left">
+  <Alert variant="destructive" className="text-left">
     <AlertCircleIcon />
     <AlertTitle>Important</AlertTitle>
     <AlertDescription>

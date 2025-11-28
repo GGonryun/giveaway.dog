@@ -56,7 +56,7 @@ export const MetricIcon: React.FC<{ type: QualityType; icon: LucideIcon }> = ({
 }) => {
   const theme = QUALITY_THEME[type];
   return (
-    <div className={cn('p-2 rounded-lg w-fit', theme.light)}>
+    <div className={cn('p-2 rounded-lg w-fit', theme.bg)}>
       <Icon className={cn('h-6 w-6', theme.text)} />
     </div>
   );

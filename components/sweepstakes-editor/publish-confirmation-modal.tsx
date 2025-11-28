@@ -79,9 +79,9 @@ export const PublishConfirmationModal: React.FC<
         </DialogHeader>
 
         {isDemo && (
-          <Alert className="border-blue-200 bg-blue-50">
-            <InfoIcon className="h-4 w-4 text-blue-600" />
-            <AlertDescription className="text-blue-800">
+          <Alert variant="primary">
+            <InfoIcon />
+            <AlertDescription>
               <strong>Demo Mode:</strong> Publishing and saving are not
               available in the demo. You can continue exploring the editor or
               exit to learn more about pricing.
@@ -141,7 +141,7 @@ export const PublishConfirmationModal: React.FC<
                 Continue Editing
               </Button>
               <div className="flex gap-2 sm:ml-auto">
-                <Link href="/pricing">
+                <Link href="/#pricing">
                   <Button variant="outline">Exit Demo</Button>
                 </Link>
                 <Link href="/login">

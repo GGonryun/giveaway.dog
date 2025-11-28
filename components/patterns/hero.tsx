@@ -18,8 +18,8 @@ export const Hero = async () => (
             Unified Sweepstakes Platform
           </div>
           <h1 className="max-w-xl text-4xl font-semibold font-outfit tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">
-            How creators{' '}
-            <span className="text-primary">build bigger communities</span>
+            How creators build{' '}
+            <span className="text-primary">bigger communities</span>
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-8 text-pretty">
             Host verified giveaways in under 60 seconds that grow your community

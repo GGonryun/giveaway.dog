@@ -11,11 +11,13 @@ import {
   QUALITY_THEME,
   QUALITY_LABELS,
   QUALITY_DESCRIPTION,
-  QUALITY_ICON
+  QUALITY_ICON,
+  QUALITY_ALERT_VARIANT
 } from '@/schemas/quality';
 import { UserQualitySchema } from '@/schemas/user-scoring';
 import { QualityMetrics } from './quality-metrics';
 import { QualityBadge } from './quality-badge';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export const UserQualityBreakdown: React.FC<{ quality: UserQualitySchema }> = ({
   quality
@@ -60,23 +62,16 @@ export const UserQualityBreakdown: React.FC<{ quality: UserQualitySchema }> = ({
 
 const QualityScoreAlert: React.FC<{ score: number }> = ({ score }) => {
   const quality = toQualityType(score);
-  const theme = QUALITY_THEME[quality];
   const label = QUALITY_LABELS[quality];
   const description = QUALITY_DESCRIPTION[quality];
+  const variant = QUALITY_ALERT_VARIANT[quality];
   const Icon = QUALITY_ICON[quality];
 
   return (
-    <div className={cn('p-4 border rounded-lg', theme.border, theme.light)}>
-      <div
-        className={cn(
-          'flex items-center space-x-2 text-sm font-medium',
-          theme.text
-        )}
-      >
-        <Icon className="h-4 w-4" />
-        <span>{label}</span>
-      </div>
-      <div className={cn('text-sm mt-1', theme.text)}>{description}</div>
-    </div>
+    <Alert variant={variant}>
+      <Icon />
+      <AlertTitle className="font-semibold">{label}</AlertTitle>
+      <AlertDescription>{description}</AlertDescription>
+    </Alert>
   );
 };

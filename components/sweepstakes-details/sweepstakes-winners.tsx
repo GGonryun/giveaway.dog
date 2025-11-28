@@ -859,12 +859,12 @@ export const SweepstakesWinners = ({
       </Dialog>
 
       {!hasEnded && (
-        <Alert className="border-blue-200 bg-blue-50">
-          <Info className="h-5 w-5 text-blue-600" />
-          <AlertTitle className="text-blue-900">
+        <Alert variant="warning">
+          <Info className="h-5 w-" />
+          <AlertTitle>
             Winners Can Only Be Selected After Giveaway Ends
           </AlertTitle>
-          <AlertDescription className="text-blue-800">
+          <AlertDescription>
             Once your giveaway has ended, you will be able to select and confirm
             winners. Until then, this section will remain locked.
           </AlertDescription>

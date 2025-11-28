@@ -46,7 +46,9 @@ export const TeamIntegrationSettings: React.FC<{
   return (
     <div className="space-y-6">
       {statusMessage && (
-        <Alert variant={statusMessage.type === 'error' ? 'error' : 'success'}>
+        <Alert
+          variant={statusMessage.type === 'error' ? 'destructive' : 'success'}
+        >
           {statusMessage.type === 'success' ? (
             <CheckCircle2 className="h-4 w-4" />
           ) : (

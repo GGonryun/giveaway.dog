@@ -1,3 +1,5 @@
+import { AlertVariant } from '@/components/ui/alert';
+import { BadgeVariants } from '@/components/ui/badge';
 import { widetype } from '@/lib/widetype';
 import {
   LucideIcon,
@@ -49,48 +51,58 @@ export const toQualityTextColor = (score: number): string => {
 };
 
 export type QualityColor = {
-  light: string;
+  bg: string;
   border: string;
   text: string;
   base: string;
-  dark: string;
+};
+
+export const QUALITY_BADGE_VARIANT: Record<QualityType, BadgeVariants> = {
+  excellent: 'success',
+  good: 'info',
+  fair: 'warning',
+  weak: 'warning',
+  poor: 'destructive'
+};
+
+export const QUALITY_ALERT_VARIANT: Record<QualityType, AlertVariant> = {
+  excellent: 'success',
+  good: 'info',
+  fair: 'warning',
+  weak: 'warning',
+  poor: 'destructive'
 };
 
 export const QUALITY_THEME: Record<QualityType, QualityColor> = {
   excellent: {
-    light: 'bg-green-50',
+    bg: 'bg-green-100 dark:bg-green-800',
     border: 'border-green-700',
-    base: 'bg-green-500',
-    dark: 'bg-green-700',
-    text: 'text-green-800'
+    base: 'bg-green-500 dark:bg-green-800',
+    text: 'text-green-800 dark:text-green-200'
   },
   good: {
-    light: 'bg-blue-50',
+    bg: 'bg-blue-100 dark:bg-blue-800',
     border: 'border-blue-700',
-    base: 'bg-blue-500',
-    dark: 'bg-blue-700',
-    text: 'text-blue-800'
+    base: 'bg-blue-500 dark:bg-blue-800',
+    text: 'text-blue-800 dark:text-blue-200'
   },
   fair: {
-    light: 'bg-yellow-50',
+    bg: 'bg-yellow-100 dark:bg-yellow-800',
     border: 'border-yellow-700',
-    base: 'bg-yellow-500',
-    dark: 'bg-yellow-700',
-    text: 'text-yellow-800'
+    base: 'bg-yellow-500 dark:bg-yellow-800',
+    text: 'text-yellow-800 dark:text-yellow-200'
   },
   weak: {
-    light: 'bg-orange-50',
+    bg: 'bg-orange-100 dark:bg-orange-800',
     border: 'border-orange-700',
-    base: 'bg-orange-500',
-    dark: 'bg-orange-700',
-    text: 'text-orange-800'
+    base: 'bg-orange-500 dark:bg-orange-800',
+    text: 'text-orange-800 dark:text-orange-200'
   },
   poor: {
-    light: 'bg-red-50',
+    bg: 'bg-red-100 dark:bg-red-800',
     border: 'border-red-700',
-    base: 'bg-red-500',
-    dark: 'bg-red-700',
-    text: 'text-red-800'
+    base: 'bg-red-500 dark:bg-red-800',
+    text: 'text-red-800 dark:text-red-200'
   }
 };
 

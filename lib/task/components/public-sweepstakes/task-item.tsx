@@ -116,27 +116,29 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
       open={open}
       onOpenChange={setOpen}
       className={cn(
-        'rounded-sm transition-colors bg-sidebar overflow-hidden relative',
-        open ? 'z-50' : 'border'
+        'rounded-sm transition-colors bg-sidebar overflow-hidden relative border',
+        open ? 'z-50 shadow-xl' : ''
       )}
     >
       <CollapsibleTrigger disabled={isLoading} asChild>
         <div
           className={cn(
-            'group flex items-stretch justify-between w-full',
+            'group flex items-stretch justify-between w-full ',
             isLoading ? 'cursor-progress' : 'cursor-pointer',
             isCompleted
-              ? 'bg-green-50 border-green-200'
+              ? 'bg-green-50 border-green-200 dark:bg-green-900 dark:border-green-800'
               : isLocked
-                ? 'bg-gray-50'
-                : 'hover:bg-gray-100'
+                ? 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'
+                : 'hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-700'
           )}
         >
           <div className="flex items-center gap-3 flex-1">
             <div
               className={cn(
-                'flex items-center justify-center min-w-8 w-11 h-full group-hover:opacity-50',
-                isCompleted ? 'bg-green-100 text-green-600' : theme.symbol
+                'flex items-center justify-center min-w-8 w-10 pl-0.5 h-full group-hover:opacity-50 border-r',
+                isCompleted
+                  ? 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-100 dark:border-r-0'
+                  : theme.symbol
               )}
             >
               {isCompleted ? (
@@ -165,7 +167,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
                   type="button"
                   variant={isCompleted ? 'success' : 'outline'}
                   className={cn(
-                    'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-primary-foreground hover:text-primary-foreground group-hover:opacity-70 hover:opacity-70',
+                    'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-white hover:text-white group-hover:opacity-70 hover:opacity-70',
                     isCompleted ? '' : theme.action
                   )}
                 >
@@ -190,14 +192,14 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
                   isCompleted
                     ? 'bg-success text-success-foreground fill-success'
                     : isLocked
-                      ? 'bg-gray-800 text-white fill-gray-800'
+                      ? 'bg-foreground text-background fill-foreground'
                       : theme.arrow
                 )}
                 arrowClassName={cn(
                   isCompleted
                     ? 'bg-success text-success-foreground fill-success'
                     : isLocked
-                      ? 'bg-gray-800 text-white fill-gray-800'
+                      ? 'bg-foreground text-background fill-foreground'
                       : theme.arrow
                 )}
               >
@@ -244,7 +246,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
             <Button
               size="sm"
               variant="link"
-              className="text-black mt-2"
+              className="text-foreground mt-2"
               onClick={handleTaskCancel}
             >
               Close

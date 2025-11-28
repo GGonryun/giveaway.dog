@@ -135,7 +135,7 @@ const IsMissingPermissions: React.FC<{
   providerLabel: string;
 }> = ({ providerLabel }) => {
   return (
-    <Alert variant="error" className="text-left">
+    <Alert variant="destructive" className="text-left">
       <AlertTriangle className="h-4 w-4" />
       <AlertTitle>Missing Permissions</AlertTitle>
       <AlertDescription>

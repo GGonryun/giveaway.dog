@@ -98,7 +98,7 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
       <Button
         size="sm"
         variant="link"
-        className="text-black"
+        className="text-foreground"
         onClick={onCancel}
       >
         Cancel

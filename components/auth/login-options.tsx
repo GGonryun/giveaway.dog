@@ -143,7 +143,7 @@ export function LoginOptions({
 
   return (
     <div>
-      <Alert className={cn('mb-4', !error && 'hidden')} variant="error">
+      <Alert className={cn('mb-4', !error && 'hidden')} variant="destructive">
         <AlertCircle className="mb-2 h-6 w-6 text-muted-foreground" />
         <AlertDescription className="text-sm">
           {toAuthErrorDescription(error)}

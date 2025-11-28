@@ -13,8 +13,7 @@ export const TeamSlugCard: React.FC<TeamSlugCardProps> = ({ slug }) => {
     <SettingsCard
       title="Team Slug"
       description="The unique identifier for your team in URLs."
-      footerNote="Team slugs cannot be changed after creation."
-      readOnly
+      footer="Team slugs cannot be changed after creation."
     >
       <div className="flex items-center gap-2">
         <Input

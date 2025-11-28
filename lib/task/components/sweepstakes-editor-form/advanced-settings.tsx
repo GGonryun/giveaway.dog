@@ -242,7 +242,7 @@ const ValidateEntriesField: React.FC = () => {
         {validateEntries && (
           <div className="space-y-2 mt-2">
             {twitterIntegrations.length === 0 ? (
-              <Alert variant="error">
+              <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription className="flex flex-col gap-2">
                   <p>
@@ -286,7 +286,7 @@ const ValidateEntriesField: React.FC = () => {
                 </AlertDescription>
               </Alert>
             ) : hasOwnershipMismatch ? (
-              <Alert variant="error">
+              <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
                   <p className="font-medium">Tweet ownership mismatch</p>

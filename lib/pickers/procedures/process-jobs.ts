@@ -379,7 +379,7 @@ const twitterJobProcessor = async <
             parentId: job.parentId,
             type: job.type,
             status: PickerJobStatus.QUEUED,
-            runAt: datetime.hoursFromNow(1),
+            runAt: datetime.hoursFromNow(1.5),
             data: toTwitterFetchRequest({
               tweetId: request.tweetId,
               polling: true

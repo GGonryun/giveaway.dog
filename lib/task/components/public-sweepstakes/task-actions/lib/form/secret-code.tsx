@@ -45,7 +45,7 @@ export const SecretCodeTaskActionForm: React.FC<
           </Typography.Caption>
         )}
         {error && (
-          <Alert variant="error" className="text-left">
+          <Alert variant="destructive" className="text-left">
             <AlertCircleIcon />
             <AlertTitle>Invalid Code</AlertTitle>
             <AlertDescription>{error.message}</AlertDescription>

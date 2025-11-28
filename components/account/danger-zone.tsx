@@ -20,6 +20,9 @@ import {
 } from '../ui/card';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
+import { SettingsCard } from '../settings/settings-card';
+import { Alert, AlertDescription } from '../ui/alert';
+import { AlertTriangleIcon } from 'lucide-react';
 
 export const DangerZone = () => {
   const deleteUserProcedure = useProcedure({
@@ -33,14 +36,14 @@ export const DangerZone = () => {
     deleteUserProcedure.run();
   };
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Account Actions</CardTitle>
-        <CardDescription>
-          Manage your account settings and deletion
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <SettingsCard
+      variant="destructive"
+      title="Account Actions"
+      description="Manage your account settings and deletion"
+      footer=" Account deletion is permanent and cannot be reversed."
+      isSaving={deleteUserProcedure.isLoading}
+      hasChanges={true}
+      action={
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive" className="w-full sm:w-auto">
@@ -56,10 +59,13 @@ export const DangerZone = () => {
                 This action cannot be undone. Your account will be permanently
                 deleted.
               </AlertDialogDescription>
-              <p className="text-sm font-medium text-destructive">
-                ⚠️ Your account deletion will be fully processed after any
-                giveaways you've entered have completed.
-              </p>
+              <Alert variant="destructive" className="mt-2">
+                <AlertTriangleIcon />
+                <AlertDescription>
+                  Your account deletion will be fully processed after any
+                  giveaways you've entered have completed.
+                </AlertDescription>
+              </Alert>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -72,10 +78,7 @@ export const DangerZone = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        <p className="text-xs text-muted-foreground">
-          Account deletion is permanent and cannot be reversed.
-        </p>
-      </CardContent>
-    </Card>
+      }
+    ></SettingsCard>
   );
 };

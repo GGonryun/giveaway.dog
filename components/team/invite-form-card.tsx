@@ -36,6 +36,7 @@ import { InviteLinkModal } from './invite-link-modal';
 import { TeamRole } from '@prisma/client';
 import z from 'zod';
 import Link from 'next/link';
+import { SettingsCard } from '../settings/settings-card';
 
 const inviteFormSchema = z.object({
   invitations: z.array(
@@ -98,123 +99,107 @@ export const InviteFormCard: React.FC<InviteFormCardProps> = ({
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <div className="mb-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <CardTitle>Invite Team Members</CardTitle>
-              <CardDescription>
-                Invite people by email or share an invite link
-              </CardDescription>
-            </div>
+      <SettingsCard
+        title="Invite Team Members"
+        description="Invite people by email or share an invite link"
+        accent={
+          <Button
+            variant="outline"
+            onClick={() => setShowInviteLink(true)}
+            className="w-full sm:w-auto"
+          >
+            <Link2 className="mr-2 h-4 w-4" />
+            Invite Link
+          </Button>
+        }
+        footer={
+          <div className="w-full flex flex-col gap-2 sm:flex-row">
             <Button
+              type="button"
               variant="outline"
-              onClick={() => setShowInviteLink(true)}
+              onClick={() => append({ email: '', role: TeamRole.MEMBER })}
               className="w-full sm:w-auto"
             >
-              <Link2 className="mr-2 h-4 w-4" />
-              Invite Link
+              <Plus className="mr-2 h-4 w-4" />
+              Add Another Member
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full sm:ml-auto sm:w-auto"
+            >
+              {isLoading ? 'Sending...' : 'Send Invitations'}
             </Button>
           </div>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              {fields.map((field, index) => (
-                <div
-                  key={field.id}
-                  className="flex flex-col gap-2 rounded-lg border p-3 sm:flex-row sm:items-start"
-                >
-                  <FormField
-                    control={form.control}
-                    name={`invitations.${index}.email`}
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel className="text-xs">Email Address</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="email@example.com"
-                            {...field}
-                            className="w-full"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`invitations.${index}.role`}
-                    render={({ field }) => (
-                      <FormItem className="w-full sm:w-32">
-                        <FormLabel className="text-xs">Role</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value={TeamRole.GUEST}>
-                              Guest
-                            </SelectItem>
-                            <SelectItem value={TeamRole.MEMBER}>
-                              Member
-                            </SelectItem>
-                            <SelectItem value={TeamRole.ADMIN}>
-                              Admin
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {fields.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => remove(index)}
-                      className="mt-auto mb-1"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+        }
+      >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="flex flex-col gap-2 rounded-lg border p-3 sm:flex-row sm:items-start"
+              >
+                <FormField
+                  control={form.control}
+                  name={`invitations.${index}.email`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel className="text-xs">Email Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="email@example.com"
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </div>
-              ))}
-
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => append({ email: '', role: TeamRole.MEMBER })}
-                  className="w-full sm:w-auto"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Another Member
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full sm:ml-auto sm:w-auto"
-                >
-                  {isLoading ? 'Sending...' : 'Send Invitations'}
-                </Button>
+                />
+                <FormField
+                  control={form.control}
+                  name={`invitations.${index}.role`}
+                  render={({ field }) => (
+                    <FormItem className="w-full sm:w-32">
+                      <FormLabel className="text-xs">Role</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={TeamRole.GUEST}>Guest</SelectItem>
+                          <SelectItem value={TeamRole.MEMBER}>
+                            Member
+                          </SelectItem>
+                          <SelectItem value={TeamRole.ADMIN}>Admin</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {fields.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => remove(index)}
+                    className="mt-auto mb-1"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
-            </form>
-          </Form>
-        </CardContent>
-        <CardFooter className="mt-2 border-t text-sm text-muted-foreground">
-          <Link href="/support" className="flex items-center hover:underline">
-            Learn more about Team Members
-            <ExternalLink className="ml-1 h-3 w-3" />
-          </Link>
-        </CardFooter>
-      </Card>
+            ))}
+          </form>
+        </Form>
+      </SettingsCard>
 
       <InviteLinkModal open={showInviteLink} onOpenChange={setShowInviteLink} />
     </>

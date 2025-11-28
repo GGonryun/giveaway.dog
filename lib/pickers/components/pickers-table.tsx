@@ -94,7 +94,7 @@ export function PickersTable({ data }: PickersTableProps) {
                   </TableCell>
 
                   <TableCell className="text-right w-46">
-                    <code className="text-xs font-code bg-gray-100 block">
+                    <code className="text-xs font-code bg-muted block">
                       {datetime.format(item.updatedAt, 'short')}
                     </code>
                   </TableCell>

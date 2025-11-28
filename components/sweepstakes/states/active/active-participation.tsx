@@ -42,7 +42,7 @@ export const ActiveParticipation: React.FC = () => {
     <div className="space-y-2 relative">
       {open && (
         <div
-          className="fixed inset-0 h-full bg-black/30 z-50"
+          className="fixed inset-0 h-full bg-foreground/10 z-50 backdrop-blur-[1px]"
           onClick={() => handleOpen(null)}
         />
       )}
