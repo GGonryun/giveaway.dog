@@ -76,9 +76,9 @@ export const CreateTeamForm: React.FC = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(procedure.run)} className="grid gap-4">
-        <Alert className="border-orange-200 bg-orange-50">
-          <AlertTriangle className="h-4 w-4 text-orange-600" />
-          <AlertDescription className="text-orange-800">
+        <Alert variant="warning">
+          <AlertTriangle />
+          <AlertDescription>
             <strong>Warning:</strong> The team slug cannot be changed after
             creation. Choose wisely!
           </AlertDescription>

@@ -89,22 +89,18 @@ export const SelectTeamForm: React.FC = () => {
           onClick={() => navigateToCreate()}
           disabled={teams.data.length >= MAX_USER_TEAMS}
         >
-          <div className="flex items-center space-x-2">
-            <PlusIcon
-              className={
-                teams.data.length === 0
-                  ? 'h-4 w-4'
-                  : 'h-4 w-4 text-muted-foreground'
-              }
-            />
-            <span>
-              {teams.data.length >= MAX_USER_TEAMS
-                ? 'Team limit reached (5/5)'
-                : teams.data.length === 0
-                  ? 'Create your first team'
-                  : 'Create new team'}
-            </span>
-          </div>
+          <PlusIcon
+            className={
+              teams.data.length === 0
+                ? 'h-4 w-4'
+                : 'h-4 w-4 text-muted-foreground'
+            }
+          />
+          {teams.data.length >= MAX_USER_TEAMS
+            ? 'Team limit reached (5/5)'
+            : teams.data.length === 0
+              ? 'Create your first team'
+              : 'Create new team'}
         </Button>
         {teams.data.length >= 5 && (
           <p className="text-xs text-muted-foreground text-center mt-2">
