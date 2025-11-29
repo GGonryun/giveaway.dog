@@ -1,10 +1,6 @@
 ## Roadmap
 
-### L1ghterVibes
-
-### TheGamesDetective & Infinithil
-
-- [ ] Add YouTube integration - https://support.google.com/youtube/answer/3399767
+- [ ] Add twitter likes entry method
 
 ### h7ban
 

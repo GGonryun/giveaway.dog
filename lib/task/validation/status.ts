@@ -13,6 +13,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
     case 'SECRET_CODE':
+    case 'YOUTUBE_VISIT':
       return CompletionStatus.COMPLETED;
     case 'TWITTER_RETWEET':
       return task.type === 'TWITTER_RETWEET' && task.validateEntries

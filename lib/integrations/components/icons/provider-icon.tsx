@@ -8,6 +8,7 @@ import { SocialSteamIcon } from './steam-icon';
 import { SocialTwitchIcon } from './twitch-icon';
 import { ProviderTypeSchema } from '../../schemas/providers';
 import { SocialKickIcon } from './kick-icon';
+import { SocialYouTubeIcon } from './youtube';
 
 interface ProviderIconProps {
   type: ProviderTypeSchema;
@@ -24,6 +25,7 @@ export const PROVIDER_ICON: Record<
   steam: SocialSteamIcon,
   twitch: SocialTwitchIcon,
   kick: SocialKickIcon,
+  youtube: SocialYouTubeIcon,
   email: Mail
 };
 

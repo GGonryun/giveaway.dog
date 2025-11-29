@@ -17,7 +17,7 @@ export const HelpDialog: React.FC<HelpDialogProps> = ({ title, content }) => {
       <DialogTrigger asChild>
         <HelpCircleIcon className="h-4 w-4 text-primary-foreground bg-primary rounded-full cursor-help" />
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>

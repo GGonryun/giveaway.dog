@@ -29,3 +29,6 @@ export const STEAM_APP_ID_URL =
   'https://store.steampowered.com/app/2457870/Sandys_Great_Escape/';
 export const TWITCH_CHANNEL_URL = 'https://www.twitch.tv/ggonryun';
 export const KICK_CHANNEL_URL = 'https://www.kick.com/ggonryun';
+export const DEFAULT_YOUTUBE_VISIT_TITLE = 'Visit our YouTube channel';
+export const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@gonryun';
+export const YOUTUBE_CHANNEL_ID = 'UCbTcSd0aoM0A0sxxz8TBD6w';

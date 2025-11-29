@@ -12,6 +12,7 @@ import {
 export const providerTypeSchema = z.union([
   z.literal('twitter'),
   z.literal('google'),
+  z.literal('youtube'),
   z.literal('discord'),
   z.literal('email'),
   z.literal('steam'),
@@ -23,6 +24,7 @@ export type ProviderTypeSchema = z.infer<typeof providerTypeSchema>;
 
 export const PROVIDER_REQUIRED_SCOPES: Record<ProviderTypeSchema, string[]> = {
   email: [],
+  youtube: [],
   discord: REQUIRED_DISCORD_SCOPES,
   twitter: REQUIRED_TWITTER_SCOPES,
   steam: REQUIRED_STEAM_SCOPES,
@@ -59,6 +61,7 @@ export const PROVIDER_SCHEMA_LABELS: Record<ProviderTypeSchema, string> = {
   twitter: 'X (Twitter)',
   google: 'Google',
   discord: 'Discord',
+  youtube: 'YouTube',
   email: 'Email',
   twitch: 'Twitch',
   steam: 'Steam',
@@ -72,6 +75,7 @@ export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
   steam: true,
   twitch: true,
   kick: true,
+  youtube: false,
   email: false
 };
 

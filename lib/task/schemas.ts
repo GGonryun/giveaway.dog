@@ -136,6 +136,25 @@ export const secretCodeTaskSchema = baseTaskSchema.extend({
 
 export type SecretCodeTaskSchema = z.infer<typeof secretCodeTaskSchema>;
 
+export const youtubeVisitTaskSchema = baseTaskSchema.extend({
+  type: z.literal('YOUTUBE_VISIT'),
+  channelName: z.string().optional(),
+  subConfirmation: z.boolean().optional(),
+  channelUrl: z
+    .string()
+    .url('YouTube Channel URL is required')
+    .refine((val) => {
+      // support either: https://www.youtube.com/@gonryun
+      // or https://www.youtube.com/channel/UCbTcSd0aoM0A0sxxz8TBD6w
+      // or situations where ?sub_confirmation=1 is appended
+      const urlPattern =
+        /^https?:\/\/(www\.)?youtube\.com\/(channel\/[A-Za-z0-9_\-]+|@[\w\-]+)(\?sub_confirmation=1)?$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://www.youtube.com/@username or https://www.youtube.com/channel/CHANNEL_ID')
+});
+
+export type YoutubeVisitTaskSchema = z.infer<typeof youtubeVisitTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   visitUrlTaskSchema,
@@ -146,7 +165,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   discordJoinTaskSchema,
   twitchFollowTaskSchema,
   kickFollowTaskSchema,
-  secretCodeTaskSchema
+  secretCodeTaskSchema,
+  youtubeVisitTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -160,6 +180,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   STEAM_WISHLIST: 'Steam Wishlist',
   DISCORD_JOIN: 'Join Discord Server',
   TWITCH_FOLLOW: 'Follow on Twitch',
+  YOUTUBE_VISIT: 'Visit YouTube Channel',
   KICK_FOLLOW: 'Follow on Kick',
   SECRET_CODE: 'Enter Secret Code'
 };
@@ -174,6 +195,7 @@ export const TASK_INPUT_SCHEMA = {
   DISCORD_JOIN: z.object({}),
   TWITCH_FOLLOW: z.object({}),
   KICK_FOLLOW: z.object({}),
+  YOUTUBE_VISIT: z.object({}),
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
   })
@@ -203,6 +225,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   TWITTER_FOLLOW: 'twitter',
   TWITTER_RETWEET: 'twitter',
   STEAM_WISHLIST: 'steam',
+  YOUTUBE_VISIT: 'youtube',
   DISCORD_JOIN: 'discord',
   TWITCH_FOLLOW: 'twitch',
   KICK_FOLLOW: 'kick'
@@ -223,7 +246,8 @@ export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
   email: 'Email',
   twitch: 'Twitch',
   kick: 'Kick',
-  form: 'Form'
+  form: 'Form',
+  youtube: 'YouTube'
 };
 
 export const taskCategorySchema = z.enum(['social', 'engagement', 'community']);
@@ -240,7 +264,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   DISCORD_JOIN: 'social',
   STEAM_WISHLIST: 'community',
   TWITCH_FOLLOW: 'social',
-  KICK_FOLLOW: 'social'
+  KICK_FOLLOW: 'social',
+  YOUTUBE_VISIT: 'social'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',

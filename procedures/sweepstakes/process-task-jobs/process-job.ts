@@ -25,6 +25,7 @@ export const processJob = async (
       case 'TWITTER_FOLLOW':
       case 'STEAM_WISHLIST':
       case 'TWITCH_FOLLOW':
+      case 'YOUTUBE_VISIT':
       case 'SECRET_CODE':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',

@@ -12,6 +12,7 @@ import { DiscordJoinTaskActionForm } from './lib/discord/discord-join';
 import { TwitchFollowTaskActionForm } from './lib/twitch/twitch-follow';
 import { KickFollowTaskActionForm } from './lib/kick/kick-follow';
 import { SecretCodeTaskActionForm } from './lib/form/secret-code';
+import { YouTubeVisitTaskActionForm } from './lib/youtube/youtube-visit';
 
 export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
   switch (props.task.type) {
@@ -35,6 +36,8 @@ export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
       return <KickFollowTaskActionForm {...props} task={props.task} />;
     case 'SECRET_CODE':
       return <SecretCodeTaskActionForm {...props} task={props.task} />;
+    case 'YOUTUBE_VISIT':
+      return <YouTubeVisitTaskActionForm {...props} task={props.task} />;
     default:
       throw assertNever(props.task);
   }

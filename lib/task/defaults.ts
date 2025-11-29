@@ -1,11 +1,13 @@
 import {
+  DEFAULT_YOUTUBE_VISIT_TITLE,
   DISCORD_INVITE_LINK,
   DISCORD_PUBLIC_CHANNEL_URL,
   KICK_CHANNEL_URL,
   STEAM_APP_ID_URL,
   TWITCH_CHANNEL_URL,
   TWITTER_POST_URL,
-  TWITTER_PROFILE_URL
+  TWITTER_PROFILE_URL,
+  YOUTUBE_CHANNEL_URL
 } from '@/lib/settings';
 import { TaskType } from '@prisma/client';
 import { TaskOf } from './schemas';
@@ -99,6 +101,17 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       title: 'Enter the secret code',
       code: 'MY_SECRET_CODE',
       hint: 'Check our announcement channel for the code!',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
+    ['YOUTUBE_VISIT']: {
+      id: '',
+      type: 'YOUTUBE_VISIT',
+      title: DEFAULT_YOUTUBE_VISIT_TITLE,
+      channelUrl: YOUTUBE_CHANNEL_URL,
+      channelName: 'GiveawayDog',
+      subConfirmation: false,
       value: 1,
       mandatory: false,
       tasksRequired: 0

@@ -74,6 +74,11 @@ const signInHandler = async (args: {
         email,
         ...options
       });
+    case 'youtube':
+      throw new ApplicationError({
+        code: 'NOT_IMPLEMENTED',
+        message: 'YouTube login is not yet implemented.'
+      });
     default:
       throw assertNever(provider);
   }

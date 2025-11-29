@@ -109,7 +109,7 @@ export const EntryMethod: React.FC<{
             </div>
           </CollapsibleTrigger>
           <CollapsibleContent className="p-3 pt-1.5 border-t space-y-2">
-            <BaseSettings />
+            <BaseSettings type={type} />
             <AdditionalSettings type={type} />
             <AdvancedSettings type={type} />
           </CollapsibleContent>

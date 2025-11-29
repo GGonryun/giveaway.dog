@@ -46,6 +46,10 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       id: nanoid()
     },
     {
+      ...toDefaultValues('YOUTUBE_VISIT'),
+      id: nanoid()
+    },
+    {
       ...toDefaultValues('STEAM_WISHLIST'),
       id: nanoid()
     },
