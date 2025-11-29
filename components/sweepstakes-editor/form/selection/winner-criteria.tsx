@@ -35,6 +35,8 @@ import {
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 import { featureFlags } from '@/lib/feature-flags';
 import { EXPERIMENTAL_VALIDATION_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
+import { HelpDialog } from '@/components/patterns/help-dialog';
+import { BotEnforcementField } from '@/lib/user-quality/bot-enforcement-field';
 
 const MinTasksCompletedField = () => {
   const form = useFormContext<GiveawayFormSchema>();
@@ -71,17 +73,73 @@ const MinQualityScoreField = () => {
       name="criteria.minQualityScore"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Minimum Quality Score (%)</FormLabel>
+          <div className="flex gap-1 items-center">
+            <FormLabel>Bot Enforcement</FormLabel>
+            <HelpDialog
+              title={'Bot Enforcement'}
+              content={
+                <div className="space-y-3">
+                  <p>
+                    Control how strictly you want to filter out bots, cheaters, and suspicious accounts from your giveaway. The quality score is a 0-100% rating that helps identify trustworthy participants and filter out potential fraud or bot activity.
+                  </p>
+                  <div>
+                    <p className="font-medium mb-2">Quality Signals:</p>
+                    <ul className="list-disc list-inside space-y-1 text-sm">
+                      <li>
+                        <strong>Device Stability</strong>:
+                        Consistent device usage
+                      </li>
+                      <li>
+                        <strong>IP Consistency</strong>: Stable IP
+                        address
+                      </li>
+                      <li>
+                        <strong>Geo Consistency</strong>: Same
+                        region/country
+                      </li>
+                      <li>
+                        <strong>Providers Connected</strong>:
+                        Multiple auth providers
+                      </li>
+                      <li>
+                        <strong>Email Verified</strong>: Verified email
+                        address
+                      </li>
+                      <li>
+                        <strong>Task Activity</strong>: Recent task
+                        completions
+                      </li>
+                      <li>
+                        <strong>Task Diversity</strong>: Variety of
+                        tasks completed
+                      </li>
+                      <li>
+                        <strong>Account Age</strong>: Older
+                        accounts are more trusted
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-medium mb-2">Risk Signals:</p>
+                    <ul className="list-disc list-inside space-y-1 text-sm">
+                      <li>
+                        <strong>Overlapping IPs</strong>: Sharing IP
+                        with other accounts
+                      </li>
+                      <li>
+                        <strong>Overlapping Fingerprints</strong>:
+                        Sharing device with other accounts
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              }
+            />
+          </div>
           <FormControl>
-            <Input
-              type="number"
-              min={0}
-              max={100}
-              value={isNaN(field.value) ? 0 : field.value}
-              onChange={(e) => {
-                const v = parseInt(e.target.value);
-                return field.onChange(isNaN(v) ? 0 : v);
-              }}
+            <BotEnforcementField
+              value={field.value}
+              onChange={field.onChange}
             />
           </FormControl>
           <FormMessage />

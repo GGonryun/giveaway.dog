@@ -1,18 +1,10 @@
 ## Roadmap
 
-- [ ] Validate my ownership for google verification
-
 ### L1ghterVibes
-
-- [ ] User feedback: Show the host's name instead of just preview host (just a quick question what to do here to show and not preview host)
 
 ### TheGamesDetective & Infinithil
 
 - [ ] Add YouTube integration - https://support.google.com/youtube/answer/3399767
-
-### Infinithil
-
-- [ ] Add some a tooltip for the min quality score for users.
 
 ### h7ban
 

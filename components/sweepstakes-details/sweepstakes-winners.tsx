@@ -16,13 +16,6 @@ import { Shuffle, Info, Pencil, GiftIcon } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
 import { Label } from '@/components/ui/label';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import {
   SweepstakesPrizeSchema,
   SweepstakesWinnerCriteriaSchema
 } from '@/schemas/giveaway/schemas';
@@ -47,6 +40,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { CompleteSweepstakesAlert } from '../sweepstakes-editor/complete-sweepstakes-alert';
+import { BotEnforcementField } from '@/lib/user-quality/bot-enforcement-field';
 import {
   DerivedSweepstakeStatus,
   EDITABLE_DERIVED_STATUS
@@ -724,28 +718,17 @@ export const SweepstakesWinners = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="minQualityScore">Minimum Quality Score (%)</Label>
-              <Select
-                value={editedCriteria.minQualityScore.toString()}
-                onValueChange={(value) =>
+              <Label htmlFor="minQualityScore">Bot Enforcement</Label>
+              <BotEnforcementField
+                value={editedCriteria.minQualityScore}
+                onChange={(value) =>
                   setEditedCriteria((prev) => ({
                     ...prev,
-                    minQualityScore: parseInt(value)
+                    minQualityScore: value
                   }))
                 }
-              >
-                <SelectTrigger id="minQualityScore">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">No minimum</SelectItem>
-                  <SelectItem value="50">50%</SelectItem>
-                  <SelectItem value="60">60%</SelectItem>
-                  <SelectItem value="70">70% (Recommended)</SelectItem>
-                  <SelectItem value="80">80%</SelectItem>
-                  <SelectItem value="90">90%</SelectItem>
-                </SelectContent>
-              </Select>
+                showAlert={false}
+              />
             </div>
 
             <div className="flex items-center space-x-2">
