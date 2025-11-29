@@ -1,11 +1,16 @@
 'use client';
 
 import { useArrayContext } from '@/components/hooks/use-array-context';
-import { FormField, FormItem, FormControl } from '@/components/ui/form';
+import {
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage
+} from '@/components/ui/form';
 import { Typography } from '@/components/ui/typography';
 import { assertNever } from '@/lib/errors';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import {
   SwitchBox,
@@ -15,7 +20,7 @@ import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { TaskType } from '@prisma/client';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, Info, RefreshCw } from 'lucide-react';
+import { AlertCircle, AlertCircleIcon, Info, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useParams, useRouter } from 'next/navigation';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
@@ -108,12 +113,22 @@ const MandatoryField: React.FC = () => {
 
 const TasksRequiredField: React.FC = () => {
   const index = useArrayContext();
-  const form = useFormContext<GiveawayFormSchema>();
+  const { control, setError, clearErrors } =
+    useFormContext<GiveawayFormSchema>();
+  const tasks = useWatch({
+    control,
+    name: 'tasks'
+  });
+
+  // No need to show if there is only one task
+  if (tasks.length <= 1) {
+    return null;
+  }
 
   return (
     <SwitchBox>
       <FormField
-        control={form.control}
+        control={control}
         name={`tasks.${index}.tasksRequired`}
         render={({ field }) => (
           <FormItem className="grid grid-cols-[1fr_80px] gap-2 items-center">
@@ -144,6 +159,7 @@ const TasksRequiredField: React.FC = () => {
                 }}
               />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       />

@@ -46,7 +46,12 @@ export const SweepstakesForm: React.FC<{
   teamFeatureFlags: TeamFeatureFlagKeySchema[];
   integrations: IntegrationsSchema;
   isDemo?: boolean;
-}> = ({ sweepstakes: defaultValues, teamFeatureFlags, integrations, isDemo = false }) => {
+}> = ({
+  sweepstakes: defaultValues,
+  teamFeatureFlags,
+  integrations,
+  isDemo = false
+}) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const params = useParams();
@@ -61,7 +66,7 @@ export const SweepstakesForm: React.FC<{
       : 'create';
 
   const form = useForm<GiveawayFormSchema>({
-    resolver: zodResolver(giveawayFormSchema({ validateEndDate: !isDemo })),
+    resolver: zodResolver(giveawayFormSchema({ validate: !isDemo })),
     defaultValues,
     mode: 'onChange'
   });

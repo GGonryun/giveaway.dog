@@ -321,7 +321,7 @@ const LabelFormField: React.FC = () => {
         <FormItem>
           <FormLabel>Link Label</FormLabel>
           <FormControl>
-            <Input type="url" {...field} />
+            <Input {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

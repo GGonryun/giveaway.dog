@@ -5,7 +5,6 @@
 - [ ] Add twitter likes entry method
 - [ ] Add twitter replies entry method
 - [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
-- [ ] Add some error message if someone tries to add minimum tasks which exceeds the total number of tasks set for the sweepstake.
 
 ### h7ban
 

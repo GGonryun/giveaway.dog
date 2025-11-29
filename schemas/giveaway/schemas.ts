@@ -148,10 +148,36 @@ const giveawayAudienceSchema = z.object({
 
 export type GiveawayFormAudience = z.infer<typeof giveawayAudienceSchema>;
 
-const giveawayFormTaskSchema = z
-  .array(taskSchema)
-  .min(1, 'At least one entry method is required')
-  .max(25, 'Maximum of 25 entry methods are allowed');
+const giveawayFormTaskSchema = ({ validate }: { validate: boolean }) => {
+  const base = z
+    .array(taskSchema)
+    .min(1, 'At least one entry method is required')
+    .max(25, 'Maximum of 25 entry methods are allowed');
+
+  if (!validate) {
+    return base;
+  }
+  return base.superRefine((tasks, ctx) => {
+    console.log('superRefine tasks', tasks);
+    // ensure that if a task specifies tasksRequired, that it's less than total tasks
+    tasks.forEach((task, index) => {
+      if (
+        task.tasksRequired !== undefined &&
+        task.tasksRequired >= tasks.length
+      ) {
+        ctx.addIssue({
+          path: [index, 'tasksRequired'],
+          code: z.ZodIssueCode.custom,
+          message: `Tasks required cannot exceed total number of tasks (${tasks.length})`
+        });
+      }
+    });
+  });
+};
+
+export type GiveawayFormTaskSchema = z.infer<
+  ReturnType<typeof giveawayFormTaskSchema>
+>;
 
 const giveawayFormPrizeSchema = z
   .array(prizeSchema)
@@ -202,20 +228,16 @@ export const giveawayDesignSchema = z.object({
 
 export type GiveawayDesignSchema = z.infer<typeof giveawayDesignSchema>;
 
-export const giveawayFormSchema = ({
-  validateEndDate
-}: {
-  validateEndDate: boolean;
-}) =>
+export const giveawayFormSchema = ({ validate }: { validate: boolean }) =>
   z.object({
     setup: giveawayFormSetupSchema,
     terms: giveawayFormTermsSchema,
     timing: timingSchema({
-      validate: validateEndDate,
+      validate: validate,
       maxDurationDays: MAX_SWEEPSTAKE_DURATION_DAYS
     }),
     audience: giveawayAudienceSchema,
-    tasks: giveawayFormTaskSchema,
+    tasks: giveawayFormTaskSchema({ validate }),
     prizes: giveawayFormPrizeSchema,
     design: giveawayDesignSchema,
     visibility: sweepstakesVisibilitySchema,
@@ -229,7 +251,7 @@ export const giveawaySchema = ({
 }: {
   validateEndDate: boolean;
 }) =>
-  giveawayFormSchema({ validateEndDate }).extend({
+  giveawayFormSchema({ validate: validateEndDate }).extend({
     status: derivedSweepstakesStatusSchema,
     id: z.string()
   });

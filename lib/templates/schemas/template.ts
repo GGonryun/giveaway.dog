@@ -7,7 +7,7 @@ export const staticTemplateSchema = z.object({
   description: z.string(),
   image: z.string(),
   tags: z.array(z.string()),
-  content: giveawayFormSchema({ validateEndDate: false }).omit({
+  content: giveawayFormSchema({ validate: false }).omit({
     timing: true,
     terms: true,
     prizes: true,
