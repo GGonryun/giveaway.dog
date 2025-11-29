@@ -158,7 +158,6 @@ const giveawayFormTaskSchema = ({ validate }: { validate: boolean }) => {
     return base;
   }
   return base.superRefine((tasks, ctx) => {
-    console.log('superRefine tasks', tasks);
     // ensure that if a task specifies tasksRequired, that it's less than total tasks
     tasks.forEach((task, index) => {
       if (

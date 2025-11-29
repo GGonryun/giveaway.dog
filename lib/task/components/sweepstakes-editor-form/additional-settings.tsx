@@ -8,16 +8,13 @@ import {
   FormItem,
   FormLabel,
   FormControl,
-  FormMessage
+  FormMessage,
+  FormDescription
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { TaskType } from '@prisma/client';
 import { HelpDialog } from '@/components/patterns/help-dialog';
-import {
-  DISCORD_PUBLIC_CHANNEL_URL,
-  YOUTUBE_CHANNEL_ID,
-  YOUTUBE_CHANNEL_URL
-} from '@/lib/settings';
+import { DISCORD_PUBLIC_CHANNEL_URL } from '@/lib/settings';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
@@ -27,7 +24,8 @@ import {
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { InfoIcon } from 'lucide-react';
+import { InfoIcon, Loader2, CheckCircle2 } from 'lucide-react';
+import { useYouTubeChannelValidation } from '../../hooks/use-youtube-channel-validation';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -84,6 +82,29 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
 const YouTubeChannelUrlFormField: React.FC = () => {
   const index = useArrayContext();
   const form = useFormContext<GiveawayFormSchema>();
+
+  const channelUrl = useWatch({
+    control: form.control,
+    name: `tasks.${index}.channelUrl`
+  });
+
+  const taskErrors = form.formState.errors?.tasks?.[index];
+  const fieldError =
+    taskErrors && 'channelUrl' in taskErrors
+      ? taskErrors.channelUrl
+      : undefined;
+
+  const { status } = useYouTubeChannelValidation({
+    channelUrl,
+    debounceMs: 1000,
+    skipValidation: !!fieldError,
+    onError: (error) => {
+      form.setError(`tasks.${index}.channelUrl`, {
+        type: 'manual',
+        message: error
+      });
+    }
+  });
 
   const standardStyleUrl = `https://www.youtube.com/@your_channel_name`;
   const channelStyleUrl = `https://www.youtube.com/channel/<CHANNEL_ID>`;
@@ -191,6 +212,18 @@ const YouTubeChannelUrlFormField: React.FC = () => {
           <FormControl>
             <Input type="url" {...field} />
           </FormControl>
+          {status === 'checking' && (
+            <FormDescription className="flex items-center gap-1.5 text-muted-foreground">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              Verifying channel URL...
+            </FormDescription>
+          )}
+          {status === 'success' && channelUrl && (
+            <FormDescription className="flex items-center gap-1.5 text-green-600">
+              <CheckCircle2 className="h-3 w-3" />
+              Channel URL verified successfully
+            </FormDescription>
+          )}
           <FormMessage />
         </FormItem>
       )}
@@ -219,16 +252,14 @@ const YouTubeSubscriptionConfirmationFormField: React.FC = () => {
         render={({ field }) => (
           <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader
-              label="Show Subscription Confirmation"
-              description="Ask users to confirm they have subscribed to your YouTube channel."
+              label="Append Subscription Prompt"
+              description="Ask users if they would like to subscribe to your YouTube channel."
               help={{
-                title: 'Help: Show Subscription Confirmation',
+                title: 'Help: Subscription Prompt',
                 content: (
                   <div className="space-y-4">
                     <p>
-                      Enabling this option will prompt users to confirm that
-                      they have subscribed to your YouTube channel after
-                      visiting it. In order to remain compliant with{' '}
+                      In order to remain compliant with{' '}
                       <Link
                         href="https://support.google.com/youtube/answer/3399767"
                         target="_blank"
@@ -236,16 +267,17 @@ const YouTubeSubscriptionConfirmationFormField: React.FC = () => {
                       >
                         YouTube's Fake Engagement
                       </Link>{' '}
-                      policies, we cannot automatically verify subscriptions. It
-                      is the user's responsibility to decide whether to
-                      subscribe or not.
+                      policies, we cannot require users to subscribe to a
+                      channel as part of the sweepstake. It is up to the user's
+                      discretion to decide whether or not they wish to subscribe
+                      to your channel
                     </p>
                     <p>
-                      This is done by appending{' '}
+                      Enabling this flag will append
                       <code className="bg-muted"> ?sub_confirmation=1</code> to
                       the end of your YouTube channel URL. When users visit the
-                      modified URL, they will see a prompt asking them to
-                      confirm their subscription.
+                      modified URL, they will see a prompt asking them if they
+                      would like to subscribe to your channel.
                     </p>
                     <div className="relative mx-auto w-full max-w-128 aspect-[744/354] border rounded-lg overflow-hidden">
                       <Image
