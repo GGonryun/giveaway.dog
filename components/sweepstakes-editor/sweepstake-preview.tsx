@@ -32,8 +32,11 @@ import {
   mockUserParticipation
 } from './data/mocks';
 import { TaskSchema } from '@/lib/task/schemas';
+import { useTeams } from '../context/team-provider';
+import { toSweepstakesHost } from '@/schemas/giveaway/participant';
 
 export const SweepstakePreview: React.FC = () => {
+  const { activeTeam } = useTeams();
   const { control } = useFormContext<GiveawayFormSchema>();
   const { previewState } = usePreviewState();
 
@@ -141,7 +144,7 @@ export const SweepstakePreview: React.FC = () => {
   return (
     <GiveawayParticipation
       sweepstakes={mockSweepstakes}
-      host={mockHost}
+      host={toSweepstakesHost(activeTeam)}
       participation={mockParticipation}
       prizes={mockWinners}
       userProfile={mockUserProfile}

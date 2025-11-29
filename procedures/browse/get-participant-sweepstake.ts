@@ -9,11 +9,12 @@ import {
   ParticipantSweepstakeSchema,
   participantSweepstakeSchema
 } from '@/schemas/giveaway/schemas';
-import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
-import { toSweepstakesPrizes } from '@/schemas/giveaway/participant';
+import {
+  toSweepstakesHost,
+  toSweepstakesPrizes
+} from '@/schemas/giveaway/participant';
 import { DeepNullable, DeepPartial } from '@/lib/types';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
-import { parseSocialLinks } from '@/schemas/social-links';
 import { toTaskSchema } from '@/lib/task/schemas';
 
 const getParticipantSweepstake = procedure()
@@ -69,13 +70,7 @@ const getParticipantSweepstake = procedure()
         status: toDerivedSweepstakeStatus(sweepstakes),
         ...toSweepstakesInput(sweepstakes)
       },
-      host: {
-        id: sweepstakes.team.id,
-        slug: sweepstakes.team.slug,
-        name: sweepstakes.team.name,
-        logo: sweepstakes.team.logo || DEFAULT_TEAM_LOGO,
-        links: parseSocialLinks(sweepstakes.team.links)
-      },
+      host: toSweepstakesHost(sweepstakes.team),
       prizes: toSweepstakesPrizes(sweepstakes.prizes),
       participation: {
         totalUsers: totalUsers,

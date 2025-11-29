@@ -4,10 +4,13 @@ import { GiveawayPrizeSchema } from './schemas';
 import z from 'zod';
 import { toUserSchema } from '../user';
 import { toTaskInput } from './input';
-import { CompletionStatus, TaskType, UserSource } from '@prisma/client';
+import { CompletionStatus, Prisma, TaskType, UserSource } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
 import { taskSchema } from '@/lib/task/schemas';
 import { providerSchema } from '@/lib/integrations/schemas/providers';
+import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
+import { parseSocialLinks } from '../social-links';
+import { DetailedUserTeam } from '../teams';
 
 export const taskCompletionSchema = z.object({
   completionId: z.string(),
@@ -87,4 +90,16 @@ const toPrizeDraws = (
       task: task.data
     };
   });
+};
+
+export const toSweepstakesHost = (
+  team: Prisma.TeamGetPayload<{}> | DetailedUserTeam
+) => {
+  return {
+    id: team.id,
+    slug: team.slug,
+    name: team.name,
+    logo: team.logo || DEFAULT_TEAM_LOGO,
+    links: parseSocialLinks(team.links)
+  };
 };
