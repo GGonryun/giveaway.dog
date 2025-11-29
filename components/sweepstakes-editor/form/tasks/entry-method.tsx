@@ -5,11 +5,13 @@ import {
   CopyIcon,
   ChevronUpIcon,
   ChevronDownIcon,
-  GripVerticalIcon
+  GripVerticalIcon,
+  AlertCircleIcon
 } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { BaseSettings } from './base-settings';
 import { IconButton } from '../icon-button';
+import { Badge } from '@/components/ui/badge';
 
 import {
   Collapsible,
@@ -25,6 +27,8 @@ import { TASK_LABEL } from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
 import { AdditionalSettings } from '@/lib/task/components/sweepstakes-editor-form/additional-settings';
 import { AdvancedSettings } from '@/lib/task/components/sweepstakes-editor-form/advanced-settings';
+import { useFormContext } from 'react-hook-form';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
 export const EntryMethod: React.FC<{
   id: string;
@@ -36,6 +40,10 @@ export const EntryMethod: React.FC<{
   onCopy: () => void;
 }> = ({ onRemove, onCopy, open, onOpenChange, type, id, index }) => {
   const theme = useMemo(() => toTaskTheme(type), [type]);
+  const form = useFormContext<GiveawayFormSchema>();
+  const taskErrors = form.formState.errors.tasks?.[index];
+  const errorCount = taskErrors ? Object.keys(taskErrors).length : 0;
+  const hasErrors = errorCount > 0;
   const {
     attributes,
     listeners,
@@ -57,7 +65,8 @@ export const EntryMethod: React.FC<{
         style={style}
         className={cn(
           'bg-background relative border shadow-xs rounded-lg w-full group',
-          isDragging ? 'opacity-50' : 'opacity-100'
+          isDragging ? 'opacity-50' : 'opacity-100',
+          hasErrors && 'border-destructive'
         )}
       >
         <div
@@ -82,14 +91,25 @@ export const EntryMethod: React.FC<{
                 <div
                   className={cn(
                     'flex items-center justify-center w-6 h-6 p-0.5 rounded-md border',
-                    theme.symbol
+                    hasErrors
+                      ? 'bg-destructive/10 border-destructive text-destructive'
+                      : theme.symbol
                   )}
                 >
-                  <theme.icon />
+                  {hasErrors ? (
+                    <AlertCircleIcon className="size-4" />
+                  ) : (
+                    <theme.icon />
+                  )}
                 </div>
                 <Typography.Paragraph size="md" weight="medium">
                   {TASK_LABEL[type]}
                 </Typography.Paragraph>
+                {hasErrors && (
+                  <Badge variant="destructive">
+                    {errorCount} {errorCount === 1 ? 'error' : 'errors'}
+                  </Badge>
+                )}
               </div>
               <div className="flex items-center gap-1">
                 <IconButton
