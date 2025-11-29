@@ -1,6 +1,6 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EntryMethod } from './entry-method';
 import { SelectTaskDialog } from './select-task-dialog';
 import { toDefaultValues } from '@/lib/task/defaults';
@@ -27,21 +27,33 @@ import {
 import { nanoid } from 'nanoid';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { TaskType } from '@prisma/client';
+import { uniq } from 'lodash';
+import { time } from '@/lib/time';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };
 
 export const EntryMethods = () => {
   const [active, setActive] = useState<ActiveEntry | null>(null);
   const [open, setOpen] = useState<string[]>([]);
+  const [prevLength, setPrevLength] = useState(0);
   const form = useFormContext<GiveawayFormSchema>();
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
     name: 'tasks'
   });
 
-  const handleSelection = (type: TaskType) => {
-    append({ ...toDefaultValues(type), id: nanoid() });
+  const handleSelection = async (type: TaskType) => {
+    const task = { ...toDefaultValues(type), id: nanoid() };
+    append(task);
   };
+
+  useEffect(() => {
+    if (fields.length > prevLength && fields.length > 0) {
+      const lastField = fields[fields.length - 1];
+      handleOpenChange(lastField.id)(true);
+    }
+    setPrevLength(fields.length);
+  }, [fields.length, prevLength, fields]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     setActive(null);
@@ -68,11 +80,17 @@ export const EntryMethods = () => {
   const handleOpenChange = (id: string) => {
     return (open: boolean) => {
       if (open) {
-        setOpen((prev) => [...prev, id]);
+        setOpen((prev) => uniq([...prev, id]));
       } else {
-        setOpen((prev) => prev.filter((id) => id !== id));
+        setOpen((prev) => prev.filter((i) => i !== id));
       }
     };
+  };
+
+  const handleRemove = (index: number) => {
+    const field = fields[index];
+    remove(index);
+    setOpen((prev) => prev.filter((i) => i !== field.id));
   };
 
   const sensors = useSensors(useSensor(PointerSensor));
@@ -106,7 +124,7 @@ export const EntryMethods = () => {
                         index={index}
                         open={open.includes(field.id)}
                         onOpenChange={handleOpenChange(field.id)}
-                        onRemove={() => remove(index)}
+                        onRemove={() => handleRemove(index)}
                         onCopy={() => append(field)}
                       />
                     ))}

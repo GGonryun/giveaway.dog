@@ -37,7 +37,7 @@ export const SelectTaskDialog: React.FC<{
         <SheetHeader className="text-left">
           <SheetTitle>Entry Methods</SheetTitle>
           <SheetDescription>
-            Select how users can enter the giveaway, here are some options:
+            Select how users can enter the giveaway:
           </SheetDescription>
         </SheetHeader>
         <div className="space-y-2 px-2 sm:px-4">
