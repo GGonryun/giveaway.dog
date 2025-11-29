@@ -47,6 +47,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
     },
     {
       ...toDefaultValues('YOUTUBE_VISIT'),
+      subConfirmation: true,
       id: nanoid()
     },
     {
