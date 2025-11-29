@@ -2,28 +2,39 @@
 
 ### The Games Detective
 
-- [ ] Add twitter likes entry method
-- [ ] Add twitter replies entry method
-- [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
+- [ ] Add a twitter likes entry method
+- [ ] Add a twitter post entry method
+- [ ] Add a twitter reply entry method
 
 ### h7ban
 
-- [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook
-- [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram
+- [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook (join a group, like a page, select a photo, share with friends, visit a page, login with facebook)
+- [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram (follow account, comment on instagram, view post, login with instagram)
 
 ### Nobody Asked
 
 - [ ] Add a referral integration.
 
-- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit
-- [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin
+- [ ] Add more steam entry methods (join a group, play a game for X hours, wishlist a game, follow a curator)
 
-- [ ] Add GitHub integration - https://next-auth.js.org/providers/github
+- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, upvote a post, follow a subreddit, login with Reddit)
+
+- [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
+
+- [ ] Add GitHub integration - https://next-auth.js.org/providers/github (follow a repo, star a repo, login with GitHub)
+
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
 - [ ] Add TikTok integration - https://www.better-auth.com/docs/authentication/tiktok
 
-- [ ] Add a form integration.
+- [ ] Add basic question integrations (ask a question, run a poll, upload a file)
+
+- [ ] Add a "first to complete" entry method where only the first X number of users can complete the task can enter.
+- [ ] Add a "loyalty bonus" entry method where users who have participated in X number of sweepstakes get bonus entries.
+- [ ] Add a "time limited" entry method where users have to complete the task within a certain time frame to get entries.
+- [ ] Add a "geolocation" entry method where users have to be in a certain location to get entries.
+- [ ] Add a kofi link entry method.
+- [ ] Add a producthunt entry method (visit page, vote for product, follow on producthunt)
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
@@ -47,6 +58,10 @@
 - [ ] As a host, I want to display my organization's logo on the sweepstake page.
 
 - [ ] I want to create short links for my sweepstakes, and draw verification
+
+### The Games Detective
+
+- [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
 
 ### @Gamelooty
 
