@@ -1,24 +1,37 @@
-- [ ] Add a way to delete a picker from the overview page.
+## Roadmap
 
 - [ ] Validate my ownership for google verification
 
-- [ ] Add a referral integration.
+### L1ghterVibes
+
+- [ ] User feedback: Show the host's name instead of just preview host (just a quick question what to do here to show and not preview host)
+
+### TheGamesDetective & Infinithil
 
 - [ ] Add YouTube integration - https://support.google.com/youtube/answer/3399767
 
-- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit
+### Infinithil
 
-- [ ] Add a form integration.
+- [ ] Add some a tooltip for the min quality score for users.
+
+### h7ban
 
 - [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook
 - [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram
 
+### Nobody Asked
+
+- [ ] Add a referral integration.
+
+- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit
 - [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin
 
 - [ ] Add GitHub integration - https://next-auth.js.org/providers/github
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
 - [ ] Add TikTok integration - https://www.better-auth.com/docs/authentication/tiktok
+
+- [ ] Add a form integration.
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
@@ -43,8 +56,6 @@
 
 - [ ] I want to create short links for my sweepstakes, and draw verification
 
-## User Feedback
-
 ### @Gamelooty
 
 - [ ] Unified Sweepstakes Platform
@@ -52,11 +63,6 @@
 
 - it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
 - i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
-
-### @L1ghterVibes
-
-- [ ] User feedback: Show the host's name instead of just preview host (just a quick question what to do here to show and not preview host)
-- [ ] User feedback: add a dark-mode toggle to the marketing site
 
 ## Personal Features
 
@@ -83,4 +89,5 @@
 - [ ] Add actual RBAC support for other membership/role types beyond owner, and admin.
   - [ ] if we have real RBAC we can now have a true sandbox org where _everyone_ gets the guest role.
 - [ ] User's page needs deep links for modal
+- [ ] Winner's page needs deep links for modal
 - [ ] Update to Prisma 7

@@ -113,7 +113,7 @@ const TitleSection = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-4 h-4 rounded bg-white border border-border flex items-center justify-center hover:bg-accent transition-colors"
+                  className="w-4 h-4 rounded bg-white dark:bg-input/30 border border-border flex items-center justify-center hover:bg-accent transition-colors"
                 >
                   <Icon className="w-2.5 h-2.5 text-foreground" />
                 </a>
