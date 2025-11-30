@@ -54,7 +54,6 @@ export const KickFollowTaskActionForm: React.FC<
               </Button>
             </div>
           )}
-          <DisqualificationWarning />
         </div>
       )}
     />

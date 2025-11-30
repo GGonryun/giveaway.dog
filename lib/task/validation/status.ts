@@ -12,6 +12,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'KICK_FOLLOW':
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
+    case 'TWITTER_LIKE':
     case 'SECRET_CODE':
     case 'YOUTUBE_VISIT':
       return CompletionStatus.COMPLETED;

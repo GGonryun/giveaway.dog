@@ -51,7 +51,6 @@ export const TwitterFollowTaskActionForm: React.FC<
               </Button>
             </div>
           )}
-          <DisqualificationWarning />
         </div>
       )}
     />

@@ -26,6 +26,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
+    case 'TWITTER_LIKE':
     case 'STEAM_WISHLIST':
     case 'DISCORD_JOIN':
     case 'TWITCH_FOLLOW':

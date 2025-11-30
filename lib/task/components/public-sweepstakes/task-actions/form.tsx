@@ -13,6 +13,7 @@ import { TwitchFollowTaskActionForm } from './lib/twitch/twitch-follow';
 import { KickFollowTaskActionForm } from './lib/kick/kick-follow';
 import { SecretCodeTaskActionForm } from './lib/form/secret-code';
 import { YouTubeVisitTaskActionForm } from './lib/youtube/youtube-visit';
+import { TwitterLikeTaskActionForm } from './lib/twitter/twitter-like';
 
 export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
   switch (props.task.type) {
@@ -26,6 +27,8 @@ export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
       return <TwitterFollowTaskActionForm {...props} task={props.task} />;
     case 'TWITTER_RETWEET':
       return <TwitterRetweetTaskActionForm {...props} task={props.task} />;
+    case 'TWITTER_LIKE':
+      return <TwitterLikeTaskActionForm {...props} task={props.task} />;
     case 'STEAM_WISHLIST':
       return <SteamWishlistTaskActionForm {...props} task={props.task} />;
     case 'DISCORD_JOIN':

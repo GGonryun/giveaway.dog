@@ -2,7 +2,6 @@
 
 ### The Games Detective
 
-- [ ] Add a twitter likes entry method
 - [ ] Add a twitter post entry method
 - [ ] Add a twitter reply entry method
 

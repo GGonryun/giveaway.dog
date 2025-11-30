@@ -66,6 +66,17 @@ export const twitterRetweetTaskSchema = baseTaskSchema.extend({
 
 export type TwitterRetweetTaskSchema = z.infer<typeof twitterRetweetTaskSchema>;
 
+export const twitterLikeTaskSchema = baseTaskSchema.extend({
+  type: z.literal('TWITTER_LIKE'),
+  tweetId: z
+    .string()
+    .url('Post URL is required')
+    .refine(xStatusRefineUrl, xStatusRefineError),
+  validateEntries: z.boolean().optional()
+});
+
+export type TwitterLikeTaskSchema = z.infer<typeof twitterLikeTaskSchema>;
+
 export const steamWishlistTaskSchema = baseTaskSchema.extend({
   type: z.literal('STEAM_WISHLIST'),
   appId: z
@@ -161,6 +172,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   twitterConnectTaskSchema,
   twitterFollowTaskSchema,
   twitterRetweetTaskSchema,
+  twitterLikeTaskSchema,
   steamWishlistTaskSchema,
   discordJoinTaskSchema,
   twitchFollowTaskSchema,
@@ -177,6 +189,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   TWITTER_CONNECT: 'Connect X',
   TWITTER_FOLLOW: 'Follow on X',
   TWITTER_RETWEET: 'Repost on X',
+  TWITTER_LIKE: 'Like a post on X',
   STEAM_WISHLIST: 'Steam Wishlist',
   DISCORD_JOIN: 'Join Discord Server',
   TWITCH_FOLLOW: 'Follow on Twitch',
@@ -191,6 +204,7 @@ export const TASK_INPUT_SCHEMA = {
   TWITTER_CONNECT: z.object({}),
   TWITTER_FOLLOW: z.object({}),
   TWITTER_RETWEET: z.object({}),
+  TWITTER_LIKE: z.object({}),
   STEAM_WISHLIST: z.object({}),
   DISCORD_JOIN: z.object({}),
   TWITCH_FOLLOW: z.object({}),
@@ -224,6 +238,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   TWITTER_CONNECT: 'twitter',
   TWITTER_FOLLOW: 'twitter',
   TWITTER_RETWEET: 'twitter',
+  TWITTER_LIKE: 'twitter',
   STEAM_WISHLIST: 'steam',
   YOUTUBE_VISIT: 'youtube',
   DISCORD_JOIN: 'discord',
@@ -261,6 +276,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   TWITTER_CONNECT: 'social',
   TWITTER_FOLLOW: 'social',
   TWITTER_RETWEET: 'social',
+  TWITTER_LIKE: 'social',
   DISCORD_JOIN: 'social',
   STEAM_WISHLIST: 'community',
   TWITCH_FOLLOW: 'social',

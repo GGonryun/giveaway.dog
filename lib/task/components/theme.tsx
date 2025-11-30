@@ -45,6 +45,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
     case 'TWITTER_CONNECT':
+    case 'TWITTER_LIKE':
       return {
         action:
           'bg-black text-white group-hover:bg-black hover:bg-black dark:bg-black dark:hover:bg-black',

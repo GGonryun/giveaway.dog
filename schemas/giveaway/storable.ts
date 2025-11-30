@@ -164,6 +164,7 @@ const createJobsForTask = (
     case 'STEAM_WISHLIST':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_CONNECT':
+    case 'TWITTER_LIKE':
     case 'YOUTUBE_VISIT':
       return [];
     case 'TWITTER_RETWEET':

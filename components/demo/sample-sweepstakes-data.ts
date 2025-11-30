@@ -46,6 +46,10 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       id: nanoid()
     },
     {
+      ...toDefaultValues('TWITTER_LIKE'),
+      id: nanoid()
+    },
+    {
       ...toDefaultValues('YOUTUBE_VISIT'),
       subConfirmation: true,
       id: nanoid()
