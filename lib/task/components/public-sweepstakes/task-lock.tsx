@@ -1,8 +1,18 @@
 import z, { date } from 'zod';
-import { BonusTimedTaskSchema, TaskSchema } from '../../schemas';
+import {
+  BonusLimitedTaskSchema,
+  BonusTimedTaskSchema,
+  TaskSchema
+} from '../../schemas';
 import pluralize from 'pluralize';
 import { formatDistance } from 'date-fns';
-import { AlarmClockIcon, ClockIcon, LockIcon, LucideIcon } from 'lucide-react';
+import {
+  AlarmClockIcon,
+  BanIcon,
+  ClockIcon,
+  LockIcon,
+  LucideIcon
+} from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 
 export const lockStateSchema = z.enum([
@@ -18,8 +28,9 @@ export type TaskLock = { message: string; icon: LucideIcon } | null;
 export const getTaskLock = (args: {
   task: TaskSchema;
   completed: string[];
+  entrants: number;
 }): TaskLock => {
-  const { task, completed } = args;
+  const { task, completed, entrants } = args;
   const isMissingRequirements =
     task.tasksRequired === 0 ? false : completed.length < task.tasksRequired;
 
@@ -36,6 +47,8 @@ export const getTaskLock = (args: {
   }
 
   switch (task.type) {
+    case 'BONUS_LIMITED':
+      return bonusLimitedTaskLock({ task, entrants });
     case 'BONUS_TIMED':
       return bonusTimedTaskLock({ task });
     case 'BONUS_TASK':
@@ -74,9 +87,25 @@ const bonusTimedTaskLock = ({ task }: { task: BonusTimedTaskSchema }) => {
     if (now > until) {
       return {
         message: `This task expired ${formatDistance(until, now, { addSuffix: true })}.`,
-        icon: AlarmClockIcon
+        icon: BanIcon
       };
     }
+  }
+  return null;
+};
+
+const bonusLimitedTaskLock = ({
+  task,
+  entrants
+}: {
+  task: BonusLimitedTaskSchema;
+  entrants: number;
+}) => {
+  if (entrants >= task.maxEntrants) {
+    return {
+      message: `This task has reached its maximum number of entrants.`,
+      icon: BanIcon
+    };
   }
   return null;
 };

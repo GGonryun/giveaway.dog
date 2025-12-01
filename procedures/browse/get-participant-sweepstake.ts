@@ -16,6 +16,7 @@ import {
 import { DeepNullable, DeepPartial } from '@/lib/types';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 import { toTaskSchema } from '@/lib/task/schemas';
+import { Prisma } from '@prisma/client';
 
 const getParticipantSweepstake = procedure()
   .authorization({
@@ -63,13 +64,7 @@ const getParticipantSweepstake = procedure()
 
     const uniqueUserIds = new Set(taskCompletions.map((c) => c.userId));
     const totalUsers = uniqueUserIds.size;
-    const usersByTask = taskCompletions.reduce<Record<string, number>>(
-      (acc, completion) => {
-        acc[completion.taskId] = (acc[completion.taskId] || 0) + 1;
-        return acc;
-      },
-      {}
-    );
+    const usersByTask = computeUsersByTask(taskCompletions);
 
     const unparsed: DeepPartial<DeepNullable<ParticipantSweepstakeSchema>> = {
       sweepstakes: {
@@ -100,3 +95,11 @@ const getParticipantSweepstake = procedure()
   });
 
 export default getParticipantSweepstake;
+
+const computeUsersByTask = (
+  taskCompletions: Prisma.TaskCompletionGetPayload<{}>[]
+) =>
+  taskCompletions.reduce<Record<string, number>>((acc, completion) => {
+    acc[completion.taskId] = (acc[completion.taskId] || 0) + 1;
+    return acc;
+  }, {});

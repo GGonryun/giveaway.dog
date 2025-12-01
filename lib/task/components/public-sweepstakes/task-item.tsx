@@ -38,14 +38,18 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
 }) => {
   const router = useRouter();
 
-  const { onTaskComplete } = useGiveawayParticipation();
+  const { onTaskComplete, participation } = useGiveawayParticipation();
 
   const isCompleted = useMemo(
     () => completed.includes(task.id),
     [completed, task.id]
   );
 
-  const lock = getTaskLock({ task, completed });
+  const entrants = useMemo(() => {
+    return participation.usersByTask[task.id] || 0;
+  }, [participation.usersByTask, task.id]);
+
+  const lock = getTaskLock({ task, completed, entrants });
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<FailureData | undefined>(undefined);
@@ -121,7 +125,11 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
           </div>
 
           <div className="flex items-center gap-2 p-1.5">
-            <TaskBadge isCompleted={isCompleted} task={task} />
+            <TaskBadge
+              isCompleted={isCompleted}
+              task={task}
+              entrants={entrants}
+            />
             <Tooltip>
               <TaskButton
                 open={open}
@@ -145,6 +153,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
         <TaskAction
           isCompleted={isCompleted}
           entriesText={entriesText}
+          entrants={entrants}
           isLoading={isLoading}
           task={task}
           onSubmit={handleTaskSubmit}

@@ -3,9 +3,14 @@ import {
   ClockIcon,
   KeyIcon,
   LockIcon,
-  LucideIcon
+  LucideIcon,
+  UnlockIcon
 } from 'lucide-react';
-import { BonusTimedTaskSchema, TaskSchema } from '../../schemas';
+import {
+  BonusLimitedTaskSchema,
+  BonusTimedTaskSchema,
+  TaskSchema
+} from '../../schemas';
 import { formatDistanceToNowStrict } from 'date-fns';
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
@@ -62,6 +67,21 @@ const BonusTimedContent: React.FC<{ task: BonusTimedTaskSchema }> = ({
   return null;
 };
 
+const BonusLimitedContent: React.FC<{
+  task: BonusLimitedTaskSchema;
+  entrants: number;
+}> = ({ task, entrants }) => {
+  if (task.maxEntrants != null && entrants >= task.maxEntrants) {
+    return null;
+  } else {
+    return (
+      <Container
+        Icon={UnlockIcon}
+      >{`${entrants} / ${task.maxEntrants} claimed`}</Container>
+    );
+  }
+};
+
 export type TaskBadgeProps<T extends TaskSchema = TaskSchema> = {
   task: T;
 };
@@ -69,8 +89,9 @@ export type TaskBadgeProps<T extends TaskSchema = TaskSchema> = {
 export const TaskBadge: React.FC<
   TaskBadgeProps & {
     isCompleted: boolean;
+    entrants: number;
   }
-> = ({ isCompleted, task }) => {
+> = ({ isCompleted, task, entrants }) => {
   if (isCompleted) return null;
 
   if (task.mandatory) {
@@ -78,6 +99,8 @@ export const TaskBadge: React.FC<
   }
 
   switch (task.type) {
+    case 'BONUS_LIMITED':
+      return <BonusLimitedContent task={task} entrants={entrants} />;
     case 'BONUS_TIMED':
       return <BonusTimedContent task={task} />;
     case 'BONUS_TASK':

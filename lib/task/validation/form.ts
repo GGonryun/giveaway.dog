@@ -44,11 +44,12 @@ const globalValidator = (args: ValidateSweepstakeTaskOptions) => {
 };
 
 const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
-  const { task, form, index, ctx } = args;
+  const { task } = args;
 
   switch (task.type) {
     case 'BONUS_TIMED':
       return bonusTimedValidator({ ...args, task });
+    case 'BONUS_LIMITED':
     case 'BONUS_TASK':
     case 'VISIT_URL':
     case 'TWITTER_CONNECT':

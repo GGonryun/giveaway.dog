@@ -18,6 +18,7 @@ export const TaskAction: React.FC<{
   onSubmit: (data?: unknown) => void;
   onCancel: () => void;
   error: FailureData | undefined;
+  entrants: number;
   lock: TaskLock;
 }> = ({
   isCompleted,
@@ -25,6 +26,7 @@ export const TaskAction: React.FC<{
   task,
   lock,
   isLoading,
+  entrants,
   onSubmit,
   onCancel,
   error
@@ -66,6 +68,7 @@ export const TaskAction: React.FC<{
         <TaskActionForm
           task={task}
           error={error}
+          entrants={entrants}
           isLoading={isLoading}
           onSubmit={onSubmit}
           onCancel={onCancel}

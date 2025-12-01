@@ -30,9 +30,6 @@ import { SweepstakeStep } from '@/components/sweepstakes-editor/data/steps';
 import Link from 'next/link';
 import { featureFlags } from '@/lib/feature-flags';
 import { EXPERIMENTAL_VALIDATION_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
-import { datetime } from '@/lib/date';
-import { DateTimePicker } from '@/components/ui/date-time-picker';
 
 export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -45,6 +42,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'TWITCH_FOLLOW':
       case 'KICK_FOLLOW':
       case 'SECRET_CODE':
+      case 'BONUS_LIMITED':
       case 'YOUTUBE_VISIT':
       case 'TWITTER_LIKE':
       case 'BONUS_TIMED':

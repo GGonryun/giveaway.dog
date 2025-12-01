@@ -64,7 +64,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                     isActiveRoute('/browse') && 'underline'
                   )}
                 >
-                  Browse Giveaways
+                  Giveaways
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -150,7 +150,7 @@ export const NavigationBar: React.FC<{ user: UserSchema | null }> = ({
                     )}
                     onClick={closeSheet}
                   >
-                    Browse Giveaways
+                    Giveaways
                   </Link>
                   <Link
                     href="/#pricing"

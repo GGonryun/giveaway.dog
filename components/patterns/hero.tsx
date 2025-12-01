@@ -31,7 +31,7 @@ export const Hero = async () => (
               <Link href={'/demo/sweepstakes'}>Try The Demo - Free</Link>
             </Button>
             <Button asChild variant="outline" className="w-full sm:w-auto">
-              <Link href={'/browse'}>Browse Giveaways</Link>
+              <Link href={'/browse'}>Giveaways</Link>
             </Button>
           </div>
         </div>

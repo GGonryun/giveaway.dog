@@ -31,6 +31,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['BONUS_LIMITED']: {
+      id: '',
+      type: 'BONUS_LIMITED',
+      title: 'Click for a bonus entry',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0,
+      maxEntrants: 100
+    },
     ['VISIT_URL']: {
       id: '',
       type: 'VISIT_URL',

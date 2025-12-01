@@ -17,17 +17,25 @@ import { TwitterUsernameFormField } from './lib/twitter-username';
 import { SecretHintFormField } from './lib/secret-hint';
 import { SteamAppIdFormField } from './lib/steam-app-id';
 import { DateValidatorField } from './lib/date-validator';
+import { MaxEntrantsField } from './lib/max-entrants';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
       case 'TWITTER_CONNECT':
       case 'BONUS_TASK':
+        return <></>;
       case 'VISIT_URL':
         return (
           <>
             <HrefFormField />
             <LabelFormField />
+          </>
+        );
+      case 'BONUS_LIMITED':
+        return (
+          <>
+            <MaxEntrantsField />
           </>
         );
       case 'BONUS_TIMED':

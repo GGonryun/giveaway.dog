@@ -23,6 +23,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       );
     case 'BONUS_TASK':
     case 'BONUS_TIMED':
+    case 'BONUS_LIMITED':
     case 'VISIT_URL':
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':

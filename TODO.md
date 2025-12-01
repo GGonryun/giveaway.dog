@@ -1,12 +1,16 @@
 ## Roadmap
 
-- [ ] Add a "first to complete" entry method where only the first X number of users can complete the task can enter.
-
 - [ ] Add a "loyalty bonus" entry method where users who have participated in X number of sweepstakes get bonus entries.
 
-- [ ] Add a "geolocation" entry method where users have to be in a certain location to get entries.
+- [ ] Add a referral task.
+- [ ] I want to create short links for my sweepstakes, and draw verification
 
 - [ ] Add basic question integrations (ask a question, run a poll, upload a file)
+
+## The Games Detective
+
+- [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
+- [ ] Fix the
 
 ### h7ban
 
@@ -14,8 +18,6 @@
 - [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram (follow account, comment on instagram, view post, login with instagram)
 
 ### Nobody Asked
-
-- [ ] Add a referral integration.
 
 - [ ] Add a twitter post entry method
 - [ ] Add a twitter reply entry method
@@ -56,7 +58,7 @@
 - [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
 - [ ] As a host, I want to display my organization's logo on the sweepstake page.
 
-- [ ] I want to create short links for my sweepstakes, and draw verification
+- [ ] Add a "geolocation" entry method where users have to be in a certain location to get entries.
 
 ### The Games Detective
 

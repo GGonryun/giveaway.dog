@@ -6,6 +6,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
   switch (task.type) {
     case 'BONUS_TASK':
     case 'BONUS_TIMED':
+    case 'BONUS_LIMITED':
     case 'VISIT_URL':
     case 'STEAM_WISHLIST':
     case 'DISCORD_JOIN':

@@ -163,6 +163,7 @@ const createJobsForTask = (
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':
     case 'STEAM_WISHLIST':
+    case 'BONUS_LIMITED':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_CONNECT':
     case 'TWITTER_LIKE':

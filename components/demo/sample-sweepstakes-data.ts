@@ -29,59 +29,65 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   ],
   tasks: [
     {
-      ...toDefaultValues('VISIT_URL'),
-      href: 'https://charity.games',
-      id: nanoid()
-    },
-    {
-      ...toDefaultValues('BONUS_TASK'),
-      tasksRequired: 3,
-      id: nanoid()
-    },
-    {
-      ...toDefaultValues('BONUS_TIMED'),
-      title: "Unlock a bonus entry before it's too late",
-      endDate: datetime.daysFromNow(30).toISOString(),
-      id: nanoid()
+      ...toDefaultValues('TWITCH_FOLLOW'),
+      id: '1'
     },
     {
       ...toDefaultValues('TWITTER_FOLLOW'),
-      id: nanoid()
-    },
-    {
-      ...toDefaultValues('TWITTER_RETWEET'),
-      id: nanoid()
-    },
-    {
-      ...toDefaultValues('TWITTER_LIKE'),
-      id: nanoid()
+      id: '2'
     },
     {
       ...toDefaultValues('YOUTUBE_VISIT'),
       subConfirmation: true,
-      id: nanoid()
+      id: '3'
     },
     {
       ...toDefaultValues('STEAM_WISHLIST'),
-      id: nanoid()
+      id: '4'
     },
     {
       ...toDefaultValues('DISCORD_JOIN'),
-      id: nanoid()
-    },
-    {
-      ...toDefaultValues('TWITCH_FOLLOW'),
-      id: nanoid()
+      id: '5'
     },
     {
       ...toDefaultValues('KICK_FOLLOW'),
-      id: nanoid()
+      id: '6'
+    },
+    {
+      ...toDefaultValues('VISIT_URL'),
+      href: 'https://charity.games',
+      id: '7'
     },
     {
       ...toDefaultValues('SECRET_CODE'),
       hint: 'Use code "DEMO2025" to enter the sweepstakes!',
       code: 'DEMO2025',
-      id: nanoid()
+      id: '8'
+    },
+    {
+      ...toDefaultValues('BONUS_TASK'),
+      tasksRequired: 3,
+      id: '9'
+    },
+    {
+      ...toDefaultValues('BONUS_TIMED'),
+      title: "Unlock before it's too late",
+      endDate: datetime.daysFromNow(30).toISOString(),
+      id: '10'
+    },
+    {
+      ...toDefaultValues('BONUS_LIMITED'),
+      title: 'Bonus for the first 100 participants',
+      maxEntrants: 100,
+      id: '11'
+    },
+    {
+      ...toDefaultValues('TWITTER_RETWEET'),
+      id: '12'
+    },
+    {
+      ...toDefaultValues('TWITTER_LIKE'),
+      id: '13'
     }
   ],
   terms: {

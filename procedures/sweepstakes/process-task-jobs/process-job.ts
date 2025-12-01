@@ -26,6 +26,7 @@ export const processJob = async (
       case 'STEAM_WISHLIST':
       case 'TWITCH_FOLLOW':
       case 'YOUTUBE_VISIT':
+      case 'BONUS_LIMITED':
       case 'TWITTER_LIKE':
       case 'SECRET_CODE':
       case 'BONUS_TIMED':

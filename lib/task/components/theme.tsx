@@ -3,7 +3,8 @@ import {
   EarthIcon,
   KeyRound,
   LucideIcon,
-  StarIcon
+  StarIcon,
+  UsersIcon
 } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
@@ -40,6 +41,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-yellow-500 text-yellow-100',
         arrow: 'bg-yellow-500 text-yellow-100 fill-yellow-500',
         icon: ClockIcon
+      };
+    case 'BONUS_LIMITED':
+      return {
+        action:
+          'bg-purple-500 text-purple-100 group-hover:bg-purple-500 hover:bg-purple-500 dark:bg-purple-500 dark:hover:bg-purple-500',
+        symbol: 'bg-purple-500 text-purple-100',
+        arrow: 'bg-purple-500 text-purple-100 fill-purple-500',
+        icon: UsersIcon
       };
     case 'VISIT_URL':
       return {

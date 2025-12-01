@@ -38,6 +38,13 @@ export const bonusTimedSchema = bonusTaskSchema.extend({
 
 export type BonusTimedTaskSchema = z.infer<typeof bonusTimedSchema>;
 
+export const bonusLimitedSchema = bonusTaskSchema.extend({
+  type: z.literal('BONUS_LIMITED'),
+  maxEntrants: z.number().min(1, 'Limit must be at least 1')
+});
+
+export type BonusLimitedTaskSchema = z.infer<typeof bonusLimitedSchema>;
+
 export const visitUrlTaskSchema = baseTaskSchema.extend({
   type: z.literal('VISIT_URL'),
   href: z.string().url(),
@@ -179,6 +186,7 @@ export type YoutubeVisitTaskSchema = z.infer<typeof youtubeVisitTaskSchema>;
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedSchema,
+  bonusLimitedSchema,
   visitUrlTaskSchema,
   twitterConnectTaskSchema,
   twitterFollowTaskSchema,
@@ -197,6 +205,7 @@ export type TaskType = z.infer<typeof taskSchema>['type'];
 export const TASK_LABEL: Record<TaskType, string> = {
   BONUS_TASK: 'Bonus',
   BONUS_TIMED: 'Timed Bonus',
+  BONUS_LIMITED: 'Limited Bonus',
   VISIT_URL: 'Visit URL',
   TWITTER_CONNECT: 'Connect X',
   TWITTER_FOLLOW: 'Follow on X',
@@ -213,6 +222,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
 export const TASK_INPUT_SCHEMA = {
   BONUS_TASK: z.object({}),
   BONUS_TIMED: z.object({}),
+  BONUS_LIMITED: z.object({}),
   VISIT_URL: z.object({}),
   TWITTER_CONNECT: z.object({}),
   TWITTER_FOLLOW: z.object({}),
@@ -247,6 +257,7 @@ export type TaskPlatformSchema = z.infer<typeof taskPlatformSchema>;
 export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   BONUS_TASK: 'bonus',
   BONUS_TIMED: 'bonus',
+  BONUS_LIMITED: 'bonus',
   SECRET_CODE: 'bonus',
   VISIT_URL: 'website',
   TWITTER_CONNECT: 'twitter',
@@ -286,6 +297,7 @@ export type TaskCategorySchema = z.infer<typeof taskCategorySchema>;
 export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   BONUS_TASK: 'engagement',
   BONUS_TIMED: 'engagement',
+  BONUS_LIMITED: 'engagement',
   VISIT_URL: 'engagement',
   SECRET_CODE: 'engagement',
   TWITTER_CONNECT: 'social',

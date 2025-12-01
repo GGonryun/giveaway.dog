@@ -1,21 +1,19 @@
 import { TaskActionProps, TaskContent } from '../../building-blocks';
 import { Button } from '@/components/ui/button';
-import { BonusTimedTaskSchema } from '@/lib/task/schemas';
+import { BonusLimitedTaskSchema } from '@/lib/task/schemas';
 import { cn } from '@/lib/utils';
 import { useTaskTheme } from '../../../../theme';
-import { datetime } from '@/lib/date';
 import React, { useState } from 'react';
-import { useInterval } from '@/components/hooks/use-interval';
-import { formatDistanceToNow } from 'date-fns';
+import pluralize from 'pluralize';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
 } from '@/components/ui/tooltip';
 
-export const BonusTimedActionForm: React.FC<
-  TaskActionProps<BonusTimedTaskSchema>
-> = ({ task, onSubmit }) => {
+export const BonusLimitedActionForm: React.FC<
+  TaskActionProps<BonusLimitedTaskSchema>
+> = ({ task, onSubmit, entrants }) => {
   const { theme } = useTaskTheme();
 
   return (
@@ -23,30 +21,29 @@ export const BonusTimedActionForm: React.FC<
       <Button className={cn(theme.action)} onClick={onSubmit}>
         Continue
       </Button>
-      {task.endDate && <AvailableUntilTimer availableUntil={task.endDate} />}
+      <Remaining entrants={entrants} max={task.maxEntrants} />
     </TaskContent>
   );
 };
 
-const AvailableUntilTimer: React.FC<{ availableUntil: string }> = ({
-  availableUntil
+const Remaining: React.FC<{ entrants: number; max: number }> = ({
+  entrants,
+  max
 }) => {
   const { theme } = useTaskTheme();
   const [open, setOpen] = useState(false);
-  const d = new Date(availableUntil);
-  const compute = () => {
-    return formatDistanceToNow(d);
-  };
 
-  const [timer, setTimer] = useState<string>(compute());
-
-  useInterval(() => {
-    setTimer(compute());
-  }, 1000);
+  if (entrants >= max) {
+    return (
+      <p className="text-sm">
+        This task is no longer accepting entries ({max} / {max})
+      </p>
+    );
+  }
 
   return (
     <p className="text-sm">
-      This task expires in{' '}
+      This task has{' '}
       <Tooltip open={open} onOpenChange={setOpen}>
         <TooltipTrigger
           type="button"
@@ -55,10 +52,12 @@ const AvailableUntilTimer: React.FC<{ availableUntil: string }> = ({
             return setOpen(!open);
           }}
         >
-          <span className="font-semibold cursor-help underline">{timer}</span>
+          <span className="font-semibold cursor-help underline">
+            {max - entrants} {pluralize('entry', max - entrants)} remaining
+          </span>
         </TooltipTrigger>
         <TooltipContent className={theme.arrow} arrowClassName={theme.arrow}>
-          {datetime.format(d)}
+          Max entries allowed: {max}
         </TooltipContent>
       </Tooltip>
     </p>
