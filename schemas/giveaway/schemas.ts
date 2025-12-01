@@ -372,6 +372,7 @@ export const sweepstakesPrizeSchema = z.object({
   id: z.string(),
   name: z.string(),
   position: z.number(),
+  quota: z.number(),
   draws: z
     .object({
       id: z.string(),

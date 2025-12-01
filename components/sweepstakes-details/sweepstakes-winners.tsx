@@ -234,7 +234,7 @@ const PrizeCard: React.FC<{
           </CardTitle>
           <div className="flex items-center gap-2">
             <Badge variant={isComplete ? 'default' : 'secondary'}>
-              {winnerCount} / {prize.quota} {pluralize('winner', winnerCount)}{' '}
+              {winnerCount} / {prize.quota} {pluralize('winner', prize.quota)}{' '}
               selected
             </Badge>
             {isComplete && (
@@ -432,7 +432,7 @@ export const SweepstakesWinners = ({
       acc.push({
         id: prize.id,
         name: prize.name,
-        quota: prizes.filter((p) => p.id === prize.id).length,
+        quota: prize.quota,
         draws: [...prize.draws]
       });
     }

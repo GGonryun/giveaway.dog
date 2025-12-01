@@ -61,6 +61,7 @@ export const toSweepstakesPrizes = (
       id: prize.id,
       name: prize.name,
       position: prize.index,
+      quota: prize.quota,
       draws: prize.draws.map((draw) => ({
         id: draw.id,
         createdAt: draw.createdAt,
