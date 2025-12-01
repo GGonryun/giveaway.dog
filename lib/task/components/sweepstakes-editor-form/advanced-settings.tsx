@@ -10,7 +10,7 @@ import {
 import { Typography } from '@/components/ui/typography';
 import { assertNever } from '@/lib/errors';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import {
   SwitchBox,
@@ -20,7 +20,7 @@ import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { TaskType } from '@prisma/client';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, AlertCircleIcon, Info, RefreshCw } from 'lucide-react';
+import { AlertCircle, Info, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useParams, useRouter } from 'next/navigation';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
@@ -30,12 +30,14 @@ import { SweepstakeStep } from '@/components/sweepstakes-editor/data/steps';
 import Link from 'next/link';
 import { featureFlags } from '@/lib/feature-flags';
 import { EXPERIMENTAL_VALIDATION_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import { datetime } from '@/lib/date';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 
 export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
       case 'VISIT_URL':
-      case 'BONUS_TASK':
       case 'TWITTER_CONNECT':
       case 'TWITTER_FOLLOW':
       case 'STEAM_WISHLIST':
@@ -45,12 +47,15 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'SECRET_CODE':
       case 'YOUTUBE_VISIT':
       case 'TWITTER_LIKE':
+      case 'BONUS_TIMED':
+      case 'BONUS_TASK':
         return (
           <>
             <MandatoryField />
             <TasksRequiredField />
           </>
         );
+
       case 'TWITTER_RETWEET':
         return (
           <>
@@ -114,14 +119,12 @@ const MandatoryField: React.FC = () => {
 
 const TasksRequiredField: React.FC = () => {
   const index = useArrayContext();
-  const { control, setError, clearErrors } =
-    useFormContext<GiveawayFormSchema>();
+  const { control } = useFormContext<GiveawayFormSchema>();
   const tasks = useWatch({
     control,
     name: 'tasks'
   });
 
-  // No need to show if there is only one task
   if (tasks.length <= 1) {
     return null;
   }

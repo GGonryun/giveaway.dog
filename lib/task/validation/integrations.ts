@@ -5,6 +5,7 @@ import { checkDiscordJoin } from './discord';
 import { TaskSchema } from '../schemas';
 import { checkTwitchFollow } from './twitch';
 import { checkSecretCode } from './secret-code';
+import { checkBonusTimed } from './bonus';
 
 export type ValidateTaskInput<T extends TaskSchema> = {
   task: T;
@@ -29,6 +30,8 @@ export const validateTask = async <T extends TaskSchema>(
     case 'KICK_FOLLOW':
       // kick does not support public follower lists or an API to verify follows
       return Promise.resolve(); // No validation possible
+    case 'BONUS_TIMED':
+      return await checkBonusTimed(input.task);
     case 'STEAM_WISHLIST':
       return await checkSteamWishlist(db, {
         task: input.task,

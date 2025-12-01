@@ -15,6 +15,8 @@ import {
 
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from './alert';
+import { AlertCircleIcon } from 'lucide-react';
 
 const Form = FormProvider;
 
@@ -168,6 +170,33 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = 'FormMessage';
 
+const FormAlertMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, children, ...props }, ref) => {
+  const { error, formMessageId } = useFormField();
+  const body = error ? String(error?.message ?? '') : children;
+
+  if (!body) {
+    return null;
+  }
+
+  return (
+    <Alert variant="destructive">
+      <AlertCircleIcon />
+      <AlertDescription
+        ref={ref}
+        id={formMessageId}
+        className={cn('text-sm font-medium text-destructive', className)}
+        {...props}
+      >
+        {body}
+      </AlertDescription>
+    </Alert>
+  );
+});
+FormAlertMessage.displayName = 'FormAlertMessage';
+
 const FormMessageParagraph = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement> & {
@@ -201,6 +230,7 @@ export {
   FormLabel,
   FormControl,
   FormDescription,
+  FormAlertMessage,
   FormMessage,
   FormField,
   FormMessageParagraph

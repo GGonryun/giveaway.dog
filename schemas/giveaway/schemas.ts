@@ -1,11 +1,9 @@
 import {
-  Prisma,
   PrizeDrawResult,
   RegionalRestrictionFilter,
-  UserSource,
   VisibilityType
 } from '@prisma/client';
-import { ApplicationError, assertNever } from '@/lib/errors';
+import { assertNever } from '@/lib/errors';
 import z from 'zod';
 import { DEFAULT_MINIMUM_AGE } from './defaults';
 import { userProfileSchema } from '../user';
@@ -18,6 +16,7 @@ import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@/lib/settings';
 import { timingSchema } from '../timing';
 import { taskSchema, baseTaskSchema } from '@/lib/task/schemas';
 import { allowedUserSourcesSchema } from '@/lib/user-source/schemas';
+import { refineSweepstakeTasks } from '@/lib/task/validation/form';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -148,35 +147,12 @@ const giveawayAudienceSchema = z.object({
 
 export type GiveawayFormAudience = z.infer<typeof giveawayAudienceSchema>;
 
-const giveawayFormTaskSchema = ({ validate }: { validate: boolean }) => {
-  const base = z
-    .array(taskSchema)
-    .min(1, 'At least one entry method is required')
-    .max(25, 'Maximum of 25 entry methods are allowed');
+const giveawayFormTaskSchema = z
+  .array(taskSchema)
+  .min(1, 'At least one entry method is required')
+  .max(25, 'Maximum of 25 entry methods are allowed');
 
-  if (!validate) {
-    return base;
-  }
-  return base.superRefine((tasks, ctx) => {
-    // ensure that if a task specifies tasksRequired, that it's less than total tasks
-    tasks.forEach((task, index) => {
-      if (
-        task.tasksRequired !== undefined &&
-        task.tasksRequired >= tasks.length
-      ) {
-        ctx.addIssue({
-          path: [index, 'tasksRequired'],
-          code: z.ZodIssueCode.custom,
-          message: `Tasks required cannot exceed total number of tasks (${tasks.length})`
-        });
-      }
-    });
-  });
-};
-
-export type GiveawayFormTaskSchema = z.infer<
-  ReturnType<typeof giveawayFormTaskSchema>
->;
+export type GiveawayFormTaskSchema = z.infer<typeof giveawayFormTaskSchema>;
 
 const giveawayFormPrizeSchema = z
   .array(prizeSchema)
@@ -227,7 +203,7 @@ export const giveawayDesignSchema = z.object({
 
 export type GiveawayDesignSchema = z.infer<typeof giveawayDesignSchema>;
 
-export const giveawayFormSchema = ({ validate }: { validate: boolean }) =>
+export const baseGiveawayFormSchema = ({ validate }: { validate: boolean }) =>
   z.object({
     setup: giveawayFormSetupSchema,
     terms: giveawayFormTermsSchema,
@@ -236,26 +212,37 @@ export const giveawayFormSchema = ({ validate }: { validate: boolean }) =>
       maxDurationDays: MAX_SWEEPSTAKE_DURATION_DAYS
     }),
     audience: giveawayAudienceSchema,
-    tasks: giveawayFormTaskSchema({ validate }),
+    tasks: giveawayFormTaskSchema,
     prizes: giveawayFormPrizeSchema,
     design: giveawayDesignSchema,
     visibility: sweepstakesVisibilitySchema,
     criteria: sweepstakesWinnerCriteriaSchema
   });
 
+export type BaseGiveawayFormSchema = z.infer<
+  ReturnType<typeof baseGiveawayFormSchema>
+>;
+
+export const giveawayFormSchema = ({ validate }: { validate: boolean }) => {
+  if (!validate) {
+    return baseGiveawayFormSchema({ validate });
+  }
+
+  return baseGiveawayFormSchema({ validate }).superRefine((form, ctx) => {
+    refineSweepstakeTasks({ form, ctx });
+  });
+};
+
 export type GiveawayFormSchema = z.infer<ReturnType<typeof giveawayFormSchema>>;
 
-export const giveawaySchema = ({
-  validateEndDate
-}: {
-  validateEndDate: boolean;
-}) =>
-  giveawayFormSchema({ validate: validateEndDate }).extend({
-    status: derivedSweepstakesStatusSchema,
-    id: z.string()
-  });
+export const giveawaySchema = baseGiveawayFormSchema({
+  validate: false
+}).extend({
+  status: derivedSweepstakesStatusSchema,
+  id: z.string()
+});
 
-export type GiveawaySchema = z.infer<ReturnType<typeof giveawaySchema>>;
+export type GiveawaySchema = z.infer<typeof giveawaySchema>;
 
 export const userParticipationSchema = z.object({
   entries: z.number().int().min(0),
@@ -301,6 +288,7 @@ export type GiveawayPrizeSchema = z.infer<typeof giveawayPrizeSchema>;
 
 export const giveawayParticipationSchema = z.object({
   totalEntries: z.number().int().min(0),
+  usersByTask: z.record(z.string(), z.number().int().min(0)),
   totalUsers: z.number().int().min(0)
 });
 
@@ -364,7 +352,7 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
 };
 
 export const participantSweepstakeSchema = z.object({
-  sweepstakes: giveawaySchema({ validateEndDate: false }),
+  sweepstakes: giveawaySchema,
   host: giveawayHostSchema,
   prizes: giveawayPrizeSchema.array(),
   participation: giveawayParticipationSchema

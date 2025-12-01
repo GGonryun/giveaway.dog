@@ -1,0 +1,147 @@
+import z from 'zod';
+import { BonusTimedTaskSchema, TaskSchema } from '../schemas';
+import { assertNever } from '@/lib/errors';
+import { BaseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
+
+export type ValidateSweepstakeTaskOptions<T extends TaskSchema = TaskSchema> = {
+  task: T;
+  form: BaseGiveawayFormSchema;
+  index: number;
+  ctx: z.RefinementCtx;
+};
+
+export const refineSweepstakeTasks = async ({
+  form,
+  ctx
+}: {
+  form: BaseGiveawayFormSchema;
+  ctx: z.RefinementCtx;
+}) => {
+  form.tasks.forEach((task, index) => {
+    const options = { task, form, index, ctx };
+
+    globalValidator(options);
+    typeValidator(options);
+  });
+};
+
+const globalValidator = (args: ValidateSweepstakeTaskOptions) => {
+  const { task, form, index, ctx } = args;
+
+  if (
+    task.tasksRequired !== undefined &&
+    task.tasksRequired >= form.tasks.length
+  ) {
+    ctx.addIssue({
+      path: ['tasks', index, 'tasksRequired'],
+      code: z.ZodIssueCode.too_big,
+      maximum: form.tasks.length,
+      inclusive: false,
+      type: 'number',
+      message: `Tasks required cannot exceed total number of tasks (${form.tasks.length})`
+    });
+  }
+};
+
+const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
+  const { task, form, index, ctx } = args;
+
+  switch (task.type) {
+    case 'BONUS_TIMED':
+      return bonusTimedValidator({ ...args, task });
+    case 'BONUS_TASK':
+    case 'VISIT_URL':
+    case 'TWITTER_CONNECT':
+    case 'TWITTER_FOLLOW':
+    case 'TWITTER_RETWEET':
+    case 'TWITTER_LIKE':
+    case 'STEAM_WISHLIST':
+    case 'DISCORD_JOIN':
+    case 'TWITCH_FOLLOW':
+    case 'KICK_FOLLOW':
+    case 'SECRET_CODE':
+    case 'YOUTUBE_VISIT':
+      // no specific validation needed
+      return;
+    default:
+      throw assertNever(task);
+  }
+};
+
+const bonusTimedValidator = (
+  args: ValidateSweepstakeTaskOptions<BonusTimedTaskSchema>
+) => {
+  const { task, form, index, ctx } = args;
+  if (task.endDate) {
+    const endDate = new Date(task.endDate);
+
+    if (endDate < form.timing.startDate) {
+      ctx.addIssue({
+        path: ['tasks', index, 'endDate'],
+        code: z.ZodIssueCode.invalid_date,
+        message: 'End date cannot be before sweepstakes start date'
+      });
+    }
+
+    if (endDate > form.timing.endDate) {
+      ctx.addIssue({
+        path: ['tasks', index, 'endDate'],
+        code: z.ZodIssueCode.invalid_date,
+        message: 'End date cannot be after sweepstakes end date'
+      });
+    }
+  }
+
+  if (task.startDate) {
+    const startDate = new Date(task.startDate);
+
+    if (startDate < form.timing.startDate) {
+      ctx.addIssue({
+        path: ['tasks', index, 'startDate'],
+        code: z.ZodIssueCode.invalid_date,
+        message: 'Start date cannot be before sweepstakes start date'
+      });
+    }
+
+    if (startDate > form.timing.endDate) {
+      ctx.addIssue({
+        path: ['tasks', index, 'startDate'],
+        code: z.ZodIssueCode.invalid_date,
+        message: 'Start date cannot be after sweepstakes end date'
+      });
+    }
+  }
+
+  if (task.startDate && task.endDate) {
+    const startDate = new Date(task.startDate);
+    const endDate = new Date(task.endDate);
+
+    if (endDate <= startDate) {
+      ctx.addIssue({
+        path: ['tasks', index, 'endDate'],
+        code: z.ZodIssueCode.invalid_date,
+        message: 'End date must be after start date'
+      });
+    }
+  }
+
+  if (!task.startDate && !task.endDate) {
+    const message =
+      'At least one of start date or end date must be set for timed bonus tasks';
+    ctx.addIssue({
+      path: ['tasks', index, 'validator'],
+      code: z.ZodIssueCode.custom,
+      message
+    });
+    ctx.addIssue({
+      path: ['tasks', index, 'startDate'],
+      code: z.ZodIssueCode.custom,
+      message: ''
+    });
+    ctx.addIssue({
+      path: ['tasks', index, 'endDate'],
+      code: z.ZodIssueCode.custom,
+      message: ''
+    });
+  }
+};

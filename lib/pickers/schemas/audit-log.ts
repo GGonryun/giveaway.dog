@@ -2,7 +2,6 @@ import { BadgeVariants } from '@/components/ui/badge';
 import { PickerAuditLogType, Prisma } from '@prisma/client';
 import { FileText, RefreshCw, Trophy, LucideIcon } from 'lucide-react';
 import { z } from 'zod';
-import { PublishPickerInputSchema, publishPickerInputSchema } from './form';
 
 export const auditLogTypeSchema = z.nativeEnum(PickerAuditLogType);
 

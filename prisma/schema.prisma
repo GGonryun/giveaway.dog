@@ -492,6 +492,7 @@ model Task {
 }
 
 enum TaskType {
+  BONUS_TIMED
   BONUS_TASK
   VISIT_URL
   TWITTER_CONNECT

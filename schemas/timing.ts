@@ -40,3 +40,5 @@ export const timingSchema = ({
     }
   });
 };
+
+export type TimingSchema = z.infer<ReturnType<typeof timingSchema>>;

@@ -65,6 +65,7 @@ export const mockAgeVerification: AgeVerificationSchema = {
 
 export const mockParticipation: GiveawayParticipationSchema = {
   totalEntries: 1247,
+  usersByTask: {},
   totalUsers: 357
 };
 

@@ -14,11 +14,14 @@ import { KickFollowTaskActionForm } from './lib/kick/kick-follow';
 import { SecretCodeTaskActionForm } from './lib/form/secret-code';
 import { YouTubeVisitTaskActionForm } from './lib/youtube/youtube-visit';
 import { TwitterLikeTaskActionForm } from './lib/twitter/twitter-like';
+import { BonusTimedActionForm } from './lib/website/bonus-timed';
 
 export const TaskActionForm: React.FC<TaskActionProps> = (props) => {
   switch (props.task.type) {
     case 'BONUS_TASK':
       return <BonusTaskActionForm {...props} task={props.task} />;
+    case 'BONUS_TIMED':
+      return <BonusTimedActionForm {...props} task={props.task} />;
     case 'VISIT_URL':
       return <VisitUrlTaskActionForm {...props} task={props.task} />;
     case 'TWITTER_CONNECT':

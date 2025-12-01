@@ -1,0 +1,99 @@
+import {
+  AlarmClockIcon,
+  ClockIcon,
+  KeyIcon,
+  LockIcon,
+  LucideIcon
+} from 'lucide-react';
+import { BonusTimedTaskSchema, TaskSchema } from '../../schemas';
+import { formatDistanceToNowStrict } from 'date-fns';
+import React from 'react';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { useTaskTheme } from '../theme';
+import { assertNever } from '@/lib/errors';
+
+const Container: React.PC<{
+  Icon?: LucideIcon;
+}> = ({ children, Icon }) => {
+  const { theme } = useTaskTheme();
+
+  if (!children || (Array.isArray(children) && children.length === 0))
+    return null;
+
+  return (
+    <Badge className={cn('text-xs hidden md:inline-flex', theme.action)}>
+      <span className="flex items-center gap-1.5">
+        {Icon && <Icon className="size-3" />}
+        {children}
+      </span>
+    </Badge>
+  );
+};
+
+const BonusTimedContent: React.FC<{ task: BonusTimedTaskSchema }> = ({
+  task
+}) => {
+  if (task.startDate) {
+    const start = new Date(task.startDate);
+    if (start > new Date()) {
+      return (
+        <Container Icon={ClockIcon}>
+          Unlocks in {formatDistanceToNowStrict(start)}
+        </Container>
+      );
+    }
+  }
+
+  if (task.endDate) {
+    const end = new Date(task.endDate);
+    if (end < new Date()) {
+      return <Container Icon={AlarmClockIcon}>Expired</Container>;
+    } else {
+      const end = new Date(task.endDate);
+      return (
+        <Container Icon={AlarmClockIcon}>
+          {formatDistanceToNowStrict(end)} left
+        </Container>
+      );
+    }
+  }
+
+  return null;
+};
+
+export type TaskBadgeProps<T extends TaskSchema = TaskSchema> = {
+  task: T;
+};
+
+export const TaskBadge: React.FC<
+  TaskBadgeProps & {
+    isCompleted: boolean;
+  }
+> = ({ isCompleted, task }) => {
+  if (isCompleted) return null;
+
+  if (task.mandatory) {
+    return <Container Icon={LockIcon}>Required</Container>;
+  }
+
+  switch (task.type) {
+    case 'BONUS_TIMED':
+      return <BonusTimedContent task={task} />;
+    case 'BONUS_TASK':
+    case 'VISIT_URL':
+    case 'TWITTER_CONNECT':
+    case 'TWITTER_FOLLOW':
+    case 'TWITTER_RETWEET':
+    case 'TWITTER_LIKE':
+    case 'STEAM_WISHLIST':
+    case 'DISCORD_JOIN':
+    case 'TWITCH_FOLLOW':
+    case 'KICK_FOLLOW':
+    case 'SECRET_CODE':
+    case 'YOUTUBE_VISIT':
+      return null;
+    default:
+      throw assertNever(task);
+  }
+};

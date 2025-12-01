@@ -1,6 +1,7 @@
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { nanoid } from 'nanoid';
 import { toDefaultValues } from '@/lib/task/defaults';
+import { datetime } from '@/lib/date';
 
 export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   setup: {
@@ -35,6 +36,12 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
     {
       ...toDefaultValues('BONUS_TASK'),
       tasksRequired: 3,
+      id: nanoid()
+    },
+    {
+      ...toDefaultValues('BONUS_TIMED'),
+      title: "Unlock a bonus entry before it's too late",
+      endDate: datetime.daysFromNow(30).toISOString(),
       id: nanoid()
     },
     {

@@ -5,6 +5,7 @@ import { TaskSchema } from '../schemas';
 export const computeTaskStatus = (task: TaskSchema) => {
   switch (task.type) {
     case 'BONUS_TASK':
+    case 'BONUS_TIMED':
     case 'VISIT_URL':
     case 'STEAM_WISHLIST':
     case 'DISCORD_JOIN':

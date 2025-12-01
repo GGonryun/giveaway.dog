@@ -11,6 +11,7 @@ import { AlertTriangleIcon, SquareArrowOutUpRightIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUnifiedFormLayout } from './use-unified-form-layout';
 import { ErrorMessage } from './use-form-issues';
+import pluralize from 'pluralize';
 
 export type FormIssuesDialogProps = {
   open: boolean;
@@ -44,7 +45,7 @@ export const FormIssuesDialog: React.FC<FormIssuesDialogProps> = ({
             </div>
           </DialogTitle>
           <DialogDescription className="text-left">
-            {`${errors.length} issue${errors.length > 1 ? 's' : ''} need to be fixed before you can ${action === 'create' ? 'publish' : 'save changes'}`}
+            {`${errors.length} ${pluralize('issue', errors.length)} need to be fixed before you can ${action === 'create' ? 'publish' : 'save changes'}`}
           </DialogDescription>
         </DialogHeader>
         <div className={'space-y-4'}>

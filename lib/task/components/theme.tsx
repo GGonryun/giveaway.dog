@@ -1,4 +1,10 @@
-import { EarthIcon, KeyRound, LucideIcon, StarIcon } from 'lucide-react';
+import {
+  ClockIcon,
+  EarthIcon,
+  KeyRound,
+  LucideIcon,
+  StarIcon
+} from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
 import React from 'react';
@@ -25,6 +31,15 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-red-500 text-red-100',
         arrow: 'bg-red-500 text-red-100 fill-red-500',
         icon: StarIcon
+      };
+
+    case 'BONUS_TIMED':
+      return {
+        action:
+          'bg-yellow-500 text-yellow-100 group-hover:bg-yellow-500 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-500',
+        symbol: 'bg-yellow-500 text-yellow-100',
+        arrow: 'bg-yellow-500 text-yellow-100 fill-yellow-500',
+        icon: ClockIcon
       };
     case 'VISIT_URL':
       return {

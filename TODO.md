@@ -1,9 +1,12 @@
 ## Roadmap
 
-### The Games Detective
+- [ ] Add a "first to complete" entry method where only the first X number of users can complete the task can enter.
 
-- [ ] Add a twitter post entry method
-- [ ] Add a twitter reply entry method
+- [ ] Add a "loyalty bonus" entry method where users who have participated in X number of sweepstakes get bonus entries.
+
+- [ ] Add a "geolocation" entry method where users have to be in a certain location to get entries.
+
+- [ ] Add basic question integrations (ask a question, run a poll, upload a file)
 
 ### h7ban
 
@@ -13,6 +16,9 @@
 ### Nobody Asked
 
 - [ ] Add a referral integration.
+
+- [ ] Add a twitter post entry method
+- [ ] Add a twitter reply entry method
 
 - [ ] Add more steam entry methods (join a group, play a game for X hours, wishlist a game, follow a curator)
 
@@ -26,12 +32,6 @@
 
 - [ ] Add TikTok integration - https://www.better-auth.com/docs/authentication/tiktok
 
-- [ ] Add basic question integrations (ask a question, run a poll, upload a file)
-
-- [ ] Add a "first to complete" entry method where only the first X number of users can complete the task can enter.
-- [ ] Add a "loyalty bonus" entry method where users who have participated in X number of sweepstakes get bonus entries.
-- [ ] Add a "time limited" entry method where users have to complete the task within a certain time frame to get entries.
-- [ ] Add a "geolocation" entry method where users have to be in a certain location to get entries.
 - [ ] Add a kofi link entry method.
 - [ ] Add a producthunt entry method (visit page, vote for product, follow on producthunt)
 
@@ -93,6 +93,7 @@
 ## Tech Debt
 
 - [ ] Add actual RBAC support for other membership/role types beyond owner, and admin.
+- [ ] Fix the timing schema to use super refine on the entire form instead
   - [ ] if we have real RBAC we can now have a true sandbox org where _everyone_ gets the guest role.
 - [ ] User's page needs deep links for modal
 - [ ] Winner's page needs deep links for modal

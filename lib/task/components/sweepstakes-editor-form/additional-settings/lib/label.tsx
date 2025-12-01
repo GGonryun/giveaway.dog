@@ -1,0 +1,31 @@
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { useArrayContext } from '@/components/hooks/use-array-context';
+import { useFormContext } from 'react-hook-form';
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+
+export const LabelFormField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.label`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Link Label</FormLabel>
+          <FormControl>
+            <Input {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};

@@ -175,7 +175,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
         {isEditable && visibility === VisibilityType.PRIVATE && (
           <Alert variant="info">
             <EyeOff />
-            <div className="flex items-start justify-between gap-3 w-full">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-3 w-full">
               <div className="flex-1">
                 <AlertTitle>Sweepstakes is Private</AlertTitle>
                 <AlertDescription>

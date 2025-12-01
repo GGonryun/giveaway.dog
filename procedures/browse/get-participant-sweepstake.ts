@@ -63,6 +63,13 @@ const getParticipantSweepstake = procedure()
 
     const uniqueUserIds = new Set(taskCompletions.map((c) => c.userId));
     const totalUsers = uniqueUserIds.size;
+    const usersByTask = taskCompletions.reduce<Record<string, number>>(
+      (acc, completion) => {
+        acc[completion.taskId] = (acc[completion.taskId] || 0) + 1;
+        return acc;
+      },
+      {}
+    );
 
     const unparsed: DeepPartial<DeepNullable<ParticipantSweepstakeSchema>> = {
       sweepstakes: {
@@ -73,8 +80,9 @@ const getParticipantSweepstake = procedure()
       host: toSweepstakesHost(sweepstakes.team),
       prizes: toSweepstakesPrizes(sweepstakes.prizes),
       participation: {
-        totalUsers: totalUsers,
-        totalEntries: totalEntries
+        totalUsers,
+        usersByTask,
+        totalEntries
       }
     };
     const parsed = participantSweepstakeSchema.safeParse(unparsed);

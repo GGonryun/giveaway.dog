@@ -57,6 +57,7 @@ export function UseTemplateModal({
 
   const mockParticipation = {
     totalEntries: 167,
+    usersByTask: {},
     totalUsers: 32
   };
 

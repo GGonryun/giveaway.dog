@@ -1,0 +1,79 @@
+import { assertNever } from '@/lib/errors';
+import { useCallback } from 'react';
+import { TaskType } from '@prisma/client';
+import { StartDateField } from './lib/start-date';
+import { EndDateField } from './lib/end-date';
+import { YouTubeChannelUrlFormField } from './lib/youtube-channel-url';
+import { YouTubeSubscriptionConfirmationFormField } from './lib/youtube-subscription-confirmation';
+import { DiscordGuildIdFormField } from './lib/discord-guild-id';
+import { DiscordInviteLinkFormField } from './lib/discord-invite-link';
+import { HrefFormField } from './lib/href';
+import { KickFollowFormField } from './lib/kick-follow';
+import { LabelFormField } from './lib/label';
+import { SecretCodeFormField } from './lib/secret-code';
+import { TweetIdFormField } from './lib/tweet-id';
+import { TwitchFollowFormField } from './lib/twitch-follow';
+import { TwitterUsernameFormField } from './lib/twitter-username';
+import { SecretHintFormField } from './lib/secret-hint';
+import { SteamAppIdFormField } from './lib/steam-app-id';
+import { DateValidatorField } from './lib/date-validator';
+
+export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
+  const content = useCallback(() => {
+    switch (type) {
+      case 'TWITTER_CONNECT':
+      case 'BONUS_TASK':
+      case 'VISIT_URL':
+        return (
+          <>
+            <HrefFormField />
+            <LabelFormField />
+          </>
+        );
+      case 'BONUS_TIMED':
+        return (
+          <>
+            <StartDateField />
+            <EndDateField />
+            <DateValidatorField />
+          </>
+        );
+      case 'SECRET_CODE':
+        return (
+          <>
+            <SecretCodeFormField />
+            <SecretHintFormField />
+          </>
+        );
+      case 'TWITTER_FOLLOW':
+        return <TwitterUsernameFormField />;
+      case 'TWITTER_LIKE':
+      case 'TWITTER_RETWEET':
+        return <TweetIdFormField />;
+      case 'STEAM_WISHLIST':
+        return <SteamAppIdFormField />;
+      case 'DISCORD_JOIN':
+        return (
+          <>
+            <DiscordGuildIdFormField />
+            <DiscordInviteLinkFormField />
+          </>
+        );
+      case 'TWITCH_FOLLOW':
+        return <TwitchFollowFormField />;
+      case 'KICK_FOLLOW':
+        return <KickFollowFormField />;
+      case 'YOUTUBE_VISIT':
+        return (
+          <>
+            <YouTubeChannelUrlFormField />
+            <YouTubeSubscriptionConfirmationFormField />
+          </>
+        );
+      default:
+        throw assertNever(type);
+    }
+  }, []);
+
+  return <div className="space-y-2">{content()}</div>;
+};

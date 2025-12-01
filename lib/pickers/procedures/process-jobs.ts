@@ -270,13 +270,6 @@ const processFetchTwitterDataJob = async (
           pickerId: job.pickerId,
           type: PickerAuditLogType.JOB_COMPLETED,
           data: { job: job.type }
-        },
-        {
-          pickerId: job.pickerId,
-          type: PickerAuditLogType.COMPLETED,
-          data: {
-            completedAt: new Date()
-          }
         }
       ]
     });

@@ -1,17 +1,26 @@
 import { HelpDialog, HelpDialogProps } from '@/components/patterns/help-dialog';
 import { FormDescription, FormLabel } from '@/components/ui/form';
+import { cn } from '@/lib/utils';
 
-export const SwitchBox: React.PC = ({ children }) => {
-  return <div className="rounded-lg border p-3 shadow-xs">{children}</div>;
+export const SwitchBox: React.PC<{ className?: string }> = ({
+  children,
+  className
+}) => {
+  return (
+    <div className={cn('rounded-lg border p-3 shadow-xs', className)}>
+      {children}
+    </div>
+  );
 };
 
 export const SwitchFormHeader: React.FC<{
   label: string;
   description?: string;
   help?: HelpDialogProps;
-}> = ({ label, description, help }) => {
+  className?: string;
+}> = ({ label, description, help, className }) => {
   return (
-    <div className="space-y-0.5 m-0">
+    <div className={cn('space-y-0.5 m-0', className)}>
       <div className="flex gap-2 items-center">
         <FormLabel>{label}</FormLabel>
         {help && <HelpDialog {...help} />}

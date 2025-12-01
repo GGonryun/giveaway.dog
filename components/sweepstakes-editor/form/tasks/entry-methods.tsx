@@ -28,7 +28,6 @@ import { nanoid } from 'nanoid';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { TaskType } from '@prisma/client';
 import { uniq } from 'lodash';
-import { time } from '@/lib/time';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };
 
@@ -36,6 +35,7 @@ export const EntryMethods = () => {
   const [active, setActive] = useState<ActiveEntry | null>(null);
   const [open, setOpen] = useState<string[]>([]);
   const [prevLength, setPrevLength] = useState(0);
+  const [isInitialMount, setIsInitialMount] = useState(true);
   const form = useFormContext<GiveawayFormSchema>();
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
@@ -48,12 +48,18 @@ export const EntryMethods = () => {
   };
 
   useEffect(() => {
+    if (isInitialMount) {
+      setPrevLength(fields.length);
+      setIsInitialMount(false);
+      return;
+    }
+
     if (fields.length > prevLength && fields.length > 0) {
       const lastField = fields[fields.length - 1];
       handleOpenChange(lastField.id)(true);
     }
     setPrevLength(fields.length);
-  }, [fields.length, prevLength, fields]);
+  }, [fields.length, prevLength, fields, isInitialMount]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     setActive(null);

@@ -28,6 +28,7 @@ export const processJob = async (
       case 'YOUTUBE_VISIT':
       case 'TWITTER_LIKE':
       case 'SECRET_CODE':
+      case 'BONUS_TIMED':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',
           message: `Job processing not implemented for task type: ${task.type}`

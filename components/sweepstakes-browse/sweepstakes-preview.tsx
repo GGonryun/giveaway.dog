@@ -26,6 +26,7 @@ export const PublicSweepstakesDemo: React.FC = () => {
 
   const mockParticipation = {
     totalEntries: 1234,
+    usersByTask: {},
     totalUsers: 567
   };
 

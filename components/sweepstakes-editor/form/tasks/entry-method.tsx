@@ -25,10 +25,11 @@ import { ArrayContext } from '@/components/hooks/use-array-context';
 import { toTaskTheme } from '@/lib/task/components/theme';
 import { TASK_LABEL } from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
-import { AdditionalSettings } from '@/lib/task/components/sweepstakes-editor-form/additional-settings';
+import { AdditionalSettings } from '@/lib/task/components/sweepstakes-editor-form/additional-settings/additional-settings';
 import { AdvancedSettings } from '@/lib/task/components/sweepstakes-editor-form/advanced-settings';
-import { useFormContext } from 'react-hook-form';
+import { FieldError, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import pluralize from 'pluralize';
 
 export const EntryMethod: React.FC<{
   id: string;
@@ -42,7 +43,11 @@ export const EntryMethod: React.FC<{
   const theme = useMemo(() => toTaskTheme(type), [type]);
   const form = useFormContext<GiveawayFormSchema>();
   const taskErrors = form.formState.errors.tasks?.[index];
-  const errorCount = taskErrors ? Object.keys(taskErrors).length : 0;
+  const errorCount = taskErrors
+    ? Object.values(taskErrors)
+        .map((e) => e as FieldError)
+        .filter((e) => e?.message).length
+    : 0;
   const hasErrors = errorCount > 0;
   const {
     attributes,
@@ -107,7 +112,7 @@ export const EntryMethod: React.FC<{
                 </Typography.Paragraph>
                 {hasErrors && (
                   <Badge variant="destructive">
-                    {errorCount} {errorCount === 1 ? 'error' : 'errors'}
+                    {errorCount} {pluralize('error', errorCount)}
                   </Badge>
                 )}
               </div>
