@@ -40,9 +40,15 @@ export const SelectTaskDialog: React.FC<{
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-full sm:w-[600px] flex flex-col">
+        <SheetHeader className="text-left pb-0 hidden">
+          <SheetTitle>Entry Methods</SheetTitle>
+          <SheetDescription>
+            Select how users can enter the giveaway:
+          </SheetDescription>
+        </SheetHeader>
         <Tabs
           defaultValue="regular"
-          className="flex-1 overflow-hidden flex flex-col mt-4"
+          className="flex-1 overflow-hidden flex flex-col mt-2 gap-2"
         >
           <TabsList className="mx-2 sm:mx-4">
             <TabsTrigger value="regular">
