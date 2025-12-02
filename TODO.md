@@ -1,5 +1,8 @@
 ## Roadmap
 
+### @Gamelooty & Self
+
+- [ ] Unified Sweepstakes Platform (i.e. create import tasks instead of the validation tasks)
 - [ ] "Unified Sweepstakes Platform" add support for imported actions from a twitter post.
 
 ### @theejankanator & @h7ban
@@ -11,10 +14,6 @@
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
 - [ ] Add TikTok integration - https://www.better-auth.com/docs/authentication/tiktok
-
-### @Gamelooty
-
-- [ ] Unified Sweepstakes Platform (i.e. create import tasks instead of the validation tasks)
 
 ### The Games Detective
 

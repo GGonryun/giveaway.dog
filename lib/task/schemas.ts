@@ -329,6 +329,24 @@ export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   community: 'Community'
 };
 
+export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
+  BONUS_TASK: false,
+  BONUS_TIMED: false,
+  BONUS_LIMITED: false,
+  BONUS_LOYALTY: false,
+  VISIT_URL: false,
+  SECRET_CODE: false,
+  TWITTER_CONNECT: false,
+  TWITTER_FOLLOW: false,
+  TWITTER_RETWEET: false,
+  TWITTER_LIKE: false,
+  DISCORD_JOIN: false,
+  STEAM_WISHLIST: false,
+  TWITCH_FOLLOW: false,
+  KICK_FOLLOW: false,
+  YOUTUBE_VISIT: false
+};
+
 export const userEntriesSchema = z.object({
   id: z.string(),
   user: userSchema,

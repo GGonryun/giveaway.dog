@@ -7,6 +7,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import React from 'react';
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
@@ -14,13 +15,18 @@ import { widetype } from '@/lib/widetype';
 import { PlusIcon, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { toTaskTheme } from '@/lib/task/components/theme';
-import { TASK_LABEL } from '@/lib/task/schemas';
+import { TASK_LABEL, TASK_IS_IMPORT } from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
 
 export const SelectTaskDialog: React.FC<{
   onSelect: (type: TaskType) => void;
 }> = ({ onSelect }) => {
   const [open, setOpen] = React.useState(false);
+
+  const allTaskTypes = widetype.keys(TASK_LABEL);
+  const regularTasks = allTaskTypes.filter((t) => !TASK_IS_IMPORT[t]);
+  const importTasks = allTaskTypes.filter((t) => TASK_IS_IMPORT[t]);
+
   return (
     <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild>
@@ -33,25 +39,58 @@ export const SelectTaskDialog: React.FC<{
           Add Entry Method
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-full sm:w-[600px]">
-        <SheetHeader className="text-left">
-          <SheetTitle>Entry Methods</SheetTitle>
-          <SheetDescription>
-            Select how users can enter the giveaway:
-          </SheetDescription>
-        </SheetHeader>
-        <div className="space-y-2 pb-8 px-2 sm:px-4 overflow-auto">
-          {widetype.keys(TASK_LABEL).map((t) => (
-            <SelectTask
-              key={t}
-              type={t}
-              onClick={() => {
-                setOpen(false);
-                onSelect(t);
-              }}
-            />
-          ))}
-        </div>
+      <SheetContent side="left" className="w-full sm:w-[600px] flex flex-col">
+        <Tabs
+          defaultValue="regular"
+          className="flex-1 overflow-hidden flex flex-col mt-4"
+        >
+          <TabsList className="mx-2 sm:mx-4">
+            <TabsTrigger value="regular">
+              Entry Methods ({regularTasks.length})
+            </TabsTrigger>
+            <TabsTrigger value="import">
+              Import Tasks ({importTasks.length})
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent
+            value="regular"
+            className="space-y-2 pb-8 px-2 sm:px-4 overflow-auto"
+          >
+            {regularTasks.map((t) => (
+              <SelectTask
+                key={t}
+                type={t}
+                onClick={() => {
+                  setOpen(false);
+                  onSelect(t);
+                }}
+              />
+            ))}
+          </TabsContent>
+          <TabsContent
+            value="import"
+            className="space-y-2 pb-8 px-2 sm:px-4 overflow-auto"
+          >
+            {importTasks.length > 0 ? (
+              importTasks.map((t) => (
+                <SelectTask
+                  key={t}
+                  type={t}
+                  onClick={() => {
+                    setOpen(false);
+                    onSelect(t);
+                  }}
+                />
+              ))
+            ) : (
+              <div className="flex items-center justify-center py-8">
+                <Typography.Paragraph className="text-muted-foreground">
+                  No import tasks available
+                </Typography.Paragraph>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </SheetContent>
     </Sheet>
   );
