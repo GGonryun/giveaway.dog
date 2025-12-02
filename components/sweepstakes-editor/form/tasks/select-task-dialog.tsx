@@ -40,7 +40,7 @@ export const SelectTaskDialog: React.FC<{
             Select how users can enter the giveaway:
           </SheetDescription>
         </SheetHeader>
-        <div className="space-y-2 px-2 sm:px-4">
+        <div className="space-y-2 pb-8 px-2 sm:px-4 overflow-auto">
           {widetype.keys(TASK_LABEL).map((t) => (
             <SelectTask
               key={t}
