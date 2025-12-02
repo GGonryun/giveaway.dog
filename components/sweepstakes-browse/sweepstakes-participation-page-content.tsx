@@ -4,6 +4,7 @@ import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-partici
 import {
   GiveawayState,
   ParticipantSweepstakeSchema,
+  UserHostRelationshipSchema,
   UserParticipationSchema
 } from '@/schemas/giveaway/schemas';
 import { usePathname, useRouter } from 'next/navigation';
@@ -14,6 +15,7 @@ import submitTask from '@/lib/task/procedures/submit-tasks';
 type SweepstakesParticipationPageContentProps = ParticipantSweepstakeSchema & {
   userProfile?: UserProfileSchema;
   userParticipation?: UserParticipationSchema;
+  userHostRelationship?: UserHostRelationshipSchema;
   state: GiveawayState;
 };
 
@@ -42,13 +44,13 @@ export const SweepstakesParticipationPage: React.FC<
     <GiveawayParticipation
       {...props}
       className="p-4 py-8 sm:py-16"
-      onTaskComplete={async (taskId, data) => {
-        return await submitTaskProcedure.run({
+      onTaskComplete={async (taskId, data) =>
+        await submitTaskProcedure.run({
           taskId,
           sweepstakesId,
           data
-        });
-      }}
+        })
+      }
       onLogin={handleLogin}
       onCompleteProfile={handleCompleteProfile}
     />

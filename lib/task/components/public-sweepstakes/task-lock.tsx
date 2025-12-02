@@ -1,18 +1,13 @@
 import z, { date } from 'zod';
 import {
   BonusLimitedTaskSchema,
+  BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema,
   TaskSchema
 } from '../../schemas';
 import pluralize from 'pluralize';
 import { formatDistance } from 'date-fns';
-import {
-  AlarmClockIcon,
-  BanIcon,
-  ClockIcon,
-  LockIcon,
-  LucideIcon
-} from 'lucide-react';
+import { BanIcon, ClockIcon, LockIcon, LucideIcon } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 
 export const lockStateSchema = z.enum([
@@ -27,10 +22,11 @@ export type TaskLock = { message: string; icon: LucideIcon } | null;
 
 export const getTaskLock = (args: {
   task: TaskSchema;
+  loyalty: number;
   completed: string[];
   entrants: number;
 }): TaskLock => {
-  const { task, completed, entrants } = args;
+  const { task, completed, loyalty, entrants } = args;
   const isMissingRequirements =
     task.tasksRequired === 0 ? false : completed.length < task.tasksRequired;
 
@@ -51,6 +47,8 @@ export const getTaskLock = (args: {
       return bonusLimitedTaskLock({ task, entrants });
     case 'BONUS_TIMED':
       return bonusTimedTaskLock({ task });
+    case 'BONUS_LOYALTY':
+      return bonusLoyaltyTaskLock({ task, loyalty });
     case 'BONUS_TASK':
     case 'VISIT_URL':
     case 'TWITTER_CONNECT':
@@ -105,6 +103,23 @@ const bonusLimitedTaskLock = ({
     return {
       message: `This task has reached its maximum number of entrants.`,
       icon: BanIcon
+    };
+  }
+  return null;
+};
+
+const bonusLoyaltyTaskLock = ({
+  task,
+  loyalty
+}: {
+  task: BonusLoyaltyTaskSchema;
+  loyalty: number;
+}) => {
+  // check to see if a user meets the loyalty requirement
+  if (loyalty < task.loyaltyRequired) {
+    return {
+      message: `Unlocks after participating in ${task.loyaltyRequired} sweepstakes with this host.`,
+      icon: LockIcon
     };
   }
   return null;

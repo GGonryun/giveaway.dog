@@ -16,6 +16,7 @@ import { YouTubeVisitTaskActionForm } from './lib/youtube/youtube-visit';
 import { TwitterLikeTaskActionForm } from './lib/twitter/twitter-like';
 import { BonusTimedActionForm } from './lib/website/bonus-timed';
 import { BonusLimitedActionForm } from './lib/website/bonus-limited';
+import { BonusLoyaltyActionForm } from './lib/website/bonus-loyalty';
 
 export const TaskActionForm: React.FC<
   TaskActionProps & {
@@ -29,6 +30,8 @@ export const TaskActionForm: React.FC<
       return <BonusTimedActionForm {...props} task={props.task} />;
     case 'BONUS_LIMITED':
       return <BonusLimitedActionForm {...props} task={props.task} />;
+    case 'BONUS_LOYALTY':
+      return <BonusLoyaltyActionForm {...props} task={props.task} />;
     case 'VISIT_URL':
       return <VisitUrlTaskActionForm {...props} task={props.task} />;
     case 'TWITTER_CONNECT':
@@ -51,6 +54,7 @@ export const TaskActionForm: React.FC<
       return <SecretCodeTaskActionForm {...props} task={props.task} />;
     case 'YOUTUBE_VISIT':
       return <YouTubeVisitTaskActionForm {...props} task={props.task} />;
+
     default:
       throw assertNever(props.task);
   }

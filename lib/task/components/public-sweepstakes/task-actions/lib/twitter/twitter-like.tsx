@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { HeartIcon } from 'lucide-react';
-import { DisqualificationWarning } from '../disqualification-warning';
 import { WithProviderConnection } from '../provider-connection';
 import { extractTweetId } from '@/lib/integrations/schemas/twitter';
 import { TwitterLikeTaskSchema } from '@/lib/task/schemas';

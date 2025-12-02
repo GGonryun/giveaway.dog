@@ -64,7 +64,7 @@ const useProviderConnection = ({
 };
 
 export const WithProviderConnection: React.FC<
-  Omit<TaskActionProps<TaskSchema>, 'entrants'> & {
+  Omit<TaskActionProps<TaskSchema>, 'entrants' | 'loyalty'> & {
     render: (ctx: {
       theme: TaskTheme;
       provider: ProviderSchema;

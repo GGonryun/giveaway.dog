@@ -9,7 +9,6 @@ import {
   AlertCircleIcon
 } from 'lucide-react';
 import React, { useMemo } from 'react';
-import { BaseSettings } from './base-settings';
 import { IconButton } from '../icon-button';
 import { Badge } from '@/components/ui/badge';
 
@@ -27,6 +26,7 @@ import { TASK_LABEL } from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
 import { AdditionalSettings } from '@/lib/task/components/sweepstakes-editor-form/additional-settings/additional-settings';
 import { AdvancedSettings } from '@/lib/task/components/sweepstakes-editor-form/advanced-settings';
+import { BaseSettings } from '@/lib/task/components/sweepstakes-editor-form/base-settings';
 import { FieldError, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import pluralize from 'pluralize';

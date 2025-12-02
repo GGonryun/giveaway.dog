@@ -42,11 +42,12 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'TWITCH_FOLLOW':
       case 'KICK_FOLLOW':
       case 'SECRET_CODE':
-      case 'BONUS_LIMITED':
       case 'YOUTUBE_VISIT':
       case 'TWITTER_LIKE':
       case 'BONUS_TIMED':
       case 'BONUS_TASK':
+      case 'BONUS_LIMITED':
+      case 'BONUS_LOYALTY':
         return (
           <>
             <MandatoryField />
@@ -68,7 +69,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   }, []);
 
   return (
-    <div className="space-y-1 pt-2">
+    <div className="space-y-1">
       <AdvancedLabel />
       <div className="space-y-2">{content()}</div>
     </div>

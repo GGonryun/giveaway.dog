@@ -21,7 +21,7 @@ export const SwitchFormHeader: React.FC<{
 }> = ({ label, description, help, className }) => {
   return (
     <div className={cn('space-y-0.5 m-0', className)}>
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-1 items-center">
         <FormLabel>{label}</FormLabel>
         {help && <HelpDialog {...help} />}
       </div>

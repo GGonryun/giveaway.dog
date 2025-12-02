@@ -4,6 +4,7 @@ import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-partici
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
 import { computeState } from '@/lib/sweepstakes';
 import {
+  mockUserHostRelationship,
   mockUserParticipation,
   mockUserProfile
 } from '../sweepstakes-editor/data/mocks';
@@ -53,6 +54,7 @@ export const HeroSweepstakesPreview: React.FC = () => {
       state={state}
       userProfile={mockUserProfile}
       userParticipation={mockUserParticipation}
+      userHostRelationship={mockUserHostRelationship}
       hideBackground
       onTaskComplete={async () => {}}
       onLogin={() => {}}

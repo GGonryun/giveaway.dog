@@ -1,4 +1,4 @@
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useArrayContext } from '@/components/hooks/use-array-context';
 import {
@@ -34,6 +34,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':
+    case 'BONUS_LOYALTY':
       return (
         <BaseSettingsContainer>
           <TitleField />

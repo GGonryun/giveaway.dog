@@ -32,7 +32,7 @@ export const TaskAction: React.FC<{
   error
 }) => {
   const pathname = usePathname();
-  const { userProfile } = useGiveawayParticipation();
+  const { userProfile, userHostRelationship } = useGiveawayParticipation();
 
   return (
     <>
@@ -69,6 +69,7 @@ export const TaskAction: React.FC<{
           task={task}
           error={error}
           entrants={entrants}
+          loyalty={userHostRelationship?.loyalty ?? 0}
           isLoading={isLoading}
           onSubmit={onSubmit}
           onCancel={onCancel}

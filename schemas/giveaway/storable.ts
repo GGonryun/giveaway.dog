@@ -168,6 +168,7 @@ const createJobsForTask = (
     case 'TWITTER_CONNECT':
     case 'TWITTER_LIKE':
     case 'YOUTUBE_VISIT':
+    case 'BONUS_LOYALTY':
       return [];
     case 'TWITTER_RETWEET':
       return task.validateEntries

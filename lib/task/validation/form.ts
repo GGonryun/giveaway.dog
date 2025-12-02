@@ -1,5 +1,9 @@
 import z from 'zod';
-import { BonusTimedTaskSchema, TaskSchema } from '../schemas';
+import {
+  BonusLoyaltyTaskSchema,
+  BonusTimedTaskSchema,
+  TaskSchema
+} from '../schemas';
 import { assertNever } from '@/lib/errors';
 import { BaseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
@@ -7,18 +11,21 @@ export type ValidateSweepstakeTaskOptions<T extends TaskSchema = TaskSchema> = {
   task: T;
   form: BaseGiveawayFormSchema;
   index: number;
+  maxLoyalty: number;
   ctx: z.RefinementCtx;
 };
 
 export const refineSweepstakeTasks = async ({
   form,
-  ctx
+  ctx,
+  maxLoyalty
 }: {
   form: BaseGiveawayFormSchema;
   ctx: z.RefinementCtx;
+  maxLoyalty: number;
 }) => {
   form.tasks.forEach((task, index) => {
-    const options = { task, form, index, ctx };
+    const options = { maxLoyalty, task, form, index, ctx };
 
     globalValidator(options);
     typeValidator(options);
@@ -49,6 +56,8 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
   switch (task.type) {
     case 'BONUS_TIMED':
       return bonusTimedValidator({ ...args, task });
+    case 'BONUS_LOYALTY':
+      return bonusLoyaltyValidator({ ...args, task });
     case 'BONUS_LIMITED':
     case 'BONUS_TASK':
     case 'VISIT_URL':
@@ -66,6 +75,23 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
       return;
     default:
       throw assertNever(task);
+  }
+};
+
+const bonusLoyaltyValidator = (
+  args: ValidateSweepstakeTaskOptions<BonusLoyaltyTaskSchema>
+) => {
+  const { task, maxLoyalty, index, ctx } = args;
+
+  if (task.loyaltyRequired > maxLoyalty) {
+    ctx.addIssue({
+      path: ['tasks', index, 'loyaltyRequired'],
+      code: z.ZodIssueCode.too_small,
+      minimum: 1,
+      inclusive: true,
+      type: 'number',
+      message: `Loyalty required cannot exceed your total number of published sweepstakes (${maxLoyalty})`
+    });
   }
 };
 

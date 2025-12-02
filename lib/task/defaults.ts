@@ -11,7 +11,6 @@ import {
 } from '@/lib/settings';
 import { TaskType } from '@prisma/client';
 import { TaskOf } from './schemas';
-import { datetime } from '../date';
 
 export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
   const defaults: { [key in TaskType]: TaskOf<key> } = {
@@ -39,6 +38,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0,
       maxEntrants: 100
+    },
+    ['BONUS_LOYALTY']: {
+      id: '',
+      type: 'BONUS_LOYALTY',
+      title: 'Click for a bonus entry',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0,
+      loyaltyRequired: 3
     },
     ['VISIT_URL']: {
       id: '',

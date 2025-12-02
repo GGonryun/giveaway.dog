@@ -38,18 +38,25 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
 }) => {
   const router = useRouter();
 
-  const { onTaskComplete, participation } = useGiveawayParticipation();
+  const { onTaskComplete, participation, userHostRelationship } =
+    useGiveawayParticipation();
 
   const isCompleted = useMemo(
     () => completed.includes(task.id),
     [completed, task.id]
   );
 
-  const entrants = useMemo(() => {
-    return participation.usersByTask[task.id] || 0;
-  }, [participation.usersByTask, task.id]);
+  const loyalty = useMemo(
+    () => userHostRelationship?.loyalty || 0,
+    [userHostRelationship]
+  );
 
-  const lock = getTaskLock({ task, completed, entrants });
+  const entrants = useMemo(
+    () => participation.usersByTask[task.id] || 0,
+    [participation.usersByTask, task.id]
+  );
+
+  const lock = getTaskLock({ task, completed, entrants, loyalty });
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<FailureData | undefined>(undefined);
@@ -129,6 +136,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
               isCompleted={isCompleted}
               task={task}
               entrants={entrants}
+              loyalty={loyalty}
             />
             <Tooltip>
               <TaskButton

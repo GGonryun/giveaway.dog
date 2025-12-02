@@ -8,7 +8,8 @@ import {
   GiveawayPrizeSchema,
   GiveawaySchema,
   UserParticipationSchema,
-  DeviceType
+  DeviceType,
+  UserHostRelationshipSchema
 } from '@/schemas/giveaway/schemas';
 import { UserProfileSchema } from '@/schemas/user';
 
@@ -21,6 +22,7 @@ export interface GiveawayParticipationProps {
   prizes: GiveawayPrizeSchema[];
   userProfile?: UserProfileSchema;
   userParticipation?: UserParticipationSchema;
+  userHostRelationship?: UserHostRelationshipSchema;
   state: GiveawayState;
   hideBackground?: boolean;
   onTaskComplete: (taskId: string, data?: unknown) => Promise<unknown>;
@@ -49,6 +51,7 @@ export const GiveawayParticipationProvider: React.FC<
   prizes: winners,
   userProfile,
   userParticipation,
+  userHostRelationship,
   state = 'active',
   onTaskComplete,
   onLogin,
@@ -61,6 +64,7 @@ export const GiveawayParticipationProvider: React.FC<
     prizes: winners,
     userProfile,
     userParticipation,
+    userHostRelationship,
     state,
     onTaskComplete,
     onLogin,

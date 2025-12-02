@@ -56,6 +56,13 @@ const submitTask = procedure()
       });
     }
 
+    if (!task.sweepstakes.teamId) {
+      throw new ApplicationError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Giveaway team data is missing. Please contact support.'
+      });
+    }
+
     if (
       !task.sweepstakes.timing.startDate ||
       !task.sweepstakes.timing.endDate
@@ -124,6 +131,7 @@ const submitTask = procedure()
     await validateTask(db, {
       task: taskConfig,
       userId: user.id,
+      teamId: task.sweepstakes.teamId,
       data
     });
 

@@ -29,7 +29,8 @@ import {
   mockParticipation,
   mockWinners,
   mockUserProfile,
-  mockUserParticipation
+  mockUserParticipation,
+  mockUserHostRelationship
 } from './data/mocks';
 import { TaskSchema } from '@/lib/task/schemas';
 import { useTeams } from '../context/team-provider';
@@ -149,6 +150,7 @@ export const SweepstakePreview: React.FC = () => {
       prizes={mockWinners}
       userProfile={mockUserProfile}
       userParticipation={mockUserParticipation}
+      userHostRelationship={mockUserHostRelationship}
       state={previewState}
       onTaskComplete={() => Promise.resolve()}
       onLogin={noop}

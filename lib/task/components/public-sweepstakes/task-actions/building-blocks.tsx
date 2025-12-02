@@ -22,6 +22,7 @@ export type TaskActionProps<T extends TaskSchema = TaskSchema> =
   TaskActionHandlers & {
     task: T;
     entrants: number;
+    loyalty: number;
   };
 
 export const TaskContent: React.PC<{ className?: string }> = ({

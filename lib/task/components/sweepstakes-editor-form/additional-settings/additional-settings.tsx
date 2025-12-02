@@ -18,6 +18,7 @@ import { SecretHintFormField } from './lib/secret-hint';
 import { SteamAppIdFormField } from './lib/steam-app-id';
 import { DateValidatorField } from './lib/date-validator';
 import { MaxEntrantsField } from './lib/max-entrants';
+import { LoyaltyRequiredField } from './lib/bonus-loyalty';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -36,6 +37,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return (
           <>
             <MaxEntrantsField />
+          </>
+        );
+      case 'BONUS_LOYALTY':
+        return (
+          <>
+            <LoyaltyRequiredField />
           </>
         );
       case 'BONUS_TIMED':

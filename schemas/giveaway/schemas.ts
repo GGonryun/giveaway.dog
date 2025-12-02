@@ -203,7 +203,9 @@ export const giveawayDesignSchema = z.object({
 
 export type GiveawayDesignSchema = z.infer<typeof giveawayDesignSchema>;
 
-export const baseGiveawayFormSchema = ({ validate }: { validate: boolean }) =>
+export const baseGiveawayFormSchema = ({
+  validate
+}: Pick<GiveawayFormSchemaOptions, 'validate'>) =>
   z.object({
     setup: giveawayFormSetupSchema,
     terms: giveawayFormTermsSchema,
@@ -223,13 +225,21 @@ export type BaseGiveawayFormSchema = z.infer<
   ReturnType<typeof baseGiveawayFormSchema>
 >;
 
-export const giveawayFormSchema = ({ validate }: { validate: boolean }) => {
+export type GiveawayFormSchemaOptions = {
+  validate: boolean;
+  maxLoyalty: number;
+};
+
+export const giveawayFormSchema = ({
+  validate,
+  maxLoyalty
+}: GiveawayFormSchemaOptions) => {
   if (!validate) {
     return baseGiveawayFormSchema({ validate });
   }
 
   return baseGiveawayFormSchema({ validate }).superRefine((form, ctx) => {
-    refineSweepstakeTasks({ form, ctx });
+    refineSweepstakeTasks({ maxLoyalty, form, ctx });
   });
 };
 
@@ -250,6 +260,14 @@ export const userParticipationSchema = z.object({
 });
 
 export type UserParticipationSchema = z.infer<typeof userParticipationSchema>;
+
+export const userHostRelationshipSchema = z.object({
+  loyalty: z.number().int().min(0)
+});
+
+export type UserHostRelationshipSchema = z.infer<
+  typeof userHostRelationshipSchema
+>;
 
 // Host Schema
 export const giveawayHostSchema = z.object({

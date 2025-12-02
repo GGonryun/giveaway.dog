@@ -18,6 +18,9 @@ export const processJob = async (
 
     switch (task.type) {
       case 'BONUS_TASK':
+      case 'BONUS_TIMED':
+      case 'BONUS_LIMITED':
+      case 'BONUS_LOYALTY':
       case 'DISCORD_JOIN':
       case 'KICK_FOLLOW':
       case 'VISIT_URL':
@@ -26,10 +29,8 @@ export const processJob = async (
       case 'STEAM_WISHLIST':
       case 'TWITCH_FOLLOW':
       case 'YOUTUBE_VISIT':
-      case 'BONUS_LIMITED':
       case 'TWITTER_LIKE':
       case 'SECRET_CODE':
-      case 'BONUS_TIMED':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',
           message: `Job processing not implemented for task type: ${task.type}`

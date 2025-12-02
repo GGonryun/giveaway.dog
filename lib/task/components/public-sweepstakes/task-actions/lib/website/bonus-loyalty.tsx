@@ -1,0 +1,23 @@
+import { TaskActionProps, TaskContent } from '../../building-blocks';
+import { Button } from '@/components/ui/button';
+import { BonusLoyaltyTaskSchema } from '@/lib/task/schemas';
+import { cn } from '@/lib/utils';
+import { useTaskTheme } from '../../../../theme';
+import React from 'react';
+
+export const BonusLoyaltyActionForm: React.FC<
+  TaskActionProps<BonusLoyaltyTaskSchema>
+> = ({ task, onSubmit, loyalty }) => {
+  const { theme } = useTaskTheme();
+
+  return (
+    <TaskContent className="flex-col gap-4">
+      <Button className={cn(theme.action)} onClick={onSubmit}>
+        Continue
+      </Button>
+      <p className="text-sm">
+        You have participated in {loyalty} sweepstakes with this host.
+      </p>
+    </TaskContent>
+  );
+};

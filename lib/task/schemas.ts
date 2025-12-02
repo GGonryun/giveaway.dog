@@ -28,7 +28,7 @@ export const bonusTaskSchema = baseTaskSchema.extend({
 
 export type BonusTaskSchema = z.infer<typeof bonusTaskSchema>;
 
-export const bonusTimedSchema = bonusTaskSchema.extend({
+export const bonusTimedTaskSchema = bonusTaskSchema.extend({
   type: z.literal('BONUS_TIMED'),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
@@ -36,14 +36,22 @@ export const bonusTimedSchema = bonusTaskSchema.extend({
   validator: z.any().optional()
 });
 
-export type BonusTimedTaskSchema = z.infer<typeof bonusTimedSchema>;
+export type BonusTimedTaskSchema = z.infer<typeof bonusTimedTaskSchema>;
 
-export const bonusLimitedSchema = bonusTaskSchema.extend({
+export const bonusLimitedTaskSchema = bonusTaskSchema.extend({
   type: z.literal('BONUS_LIMITED'),
   maxEntrants: z.number().min(1, 'Limit must be at least 1')
 });
 
-export type BonusLimitedTaskSchema = z.infer<typeof bonusLimitedSchema>;
+export type BonusLimitedTaskSchema = z.infer<typeof bonusLimitedTaskSchema>;
+
+export const MAX_ALLOWED_LOYALTY_TIERS = 5;
+export const bonusLoyaltyTaskSchema = bonusTaskSchema.extend({
+  type: z.literal('BONUS_LOYALTY'),
+  loyaltyRequired: z.number().min(1, 'Must be at least 1')
+});
+
+export type BonusLoyaltyTaskSchema = z.infer<typeof bonusLoyaltyTaskSchema>;
 
 export const visitUrlTaskSchema = baseTaskSchema.extend({
   type: z.literal('VISIT_URL'),
@@ -185,8 +193,9 @@ export type YoutubeVisitTaskSchema = z.infer<typeof youtubeVisitTaskSchema>;
 
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
-  bonusTimedSchema,
-  bonusLimitedSchema,
+  bonusTimedTaskSchema,
+  bonusLimitedTaskSchema,
+  bonusLoyaltyTaskSchema,
   visitUrlTaskSchema,
   twitterConnectTaskSchema,
   twitterFollowTaskSchema,
@@ -206,6 +215,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   BONUS_TASK: 'Bonus',
   BONUS_TIMED: 'Timed Bonus',
   BONUS_LIMITED: 'Limited Bonus',
+  BONUS_LOYALTY: 'Loyalty Bonus',
   VISIT_URL: 'Visit URL',
   TWITTER_CONNECT: 'Connect X',
   TWITTER_FOLLOW: 'Follow on X',
@@ -233,6 +243,7 @@ export const TASK_INPUT_SCHEMA = {
   TWITCH_FOLLOW: z.object({}),
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
+  BONUS_LOYALTY: z.object({}),
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
   })
@@ -258,6 +269,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   BONUS_TASK: 'bonus',
   BONUS_TIMED: 'bonus',
   BONUS_LIMITED: 'bonus',
+  BONUS_LOYALTY: 'bonus',
   SECRET_CODE: 'bonus',
   VISIT_URL: 'website',
   TWITTER_CONNECT: 'twitter',
@@ -298,6 +310,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   BONUS_TASK: 'engagement',
   BONUS_TIMED: 'engagement',
   BONUS_LIMITED: 'engagement',
+  BONUS_LOYALTY: 'engagement',
   VISIT_URL: 'engagement',
   SECRET_CODE: 'engagement',
   TWITTER_CONNECT: 'social',

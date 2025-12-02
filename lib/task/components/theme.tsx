@@ -1,6 +1,7 @@
 import {
   ClockIcon,
   EarthIcon,
+  HeartIcon,
   KeyRound,
   LucideIcon,
   StarIcon,
@@ -33,7 +34,6 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         arrow: 'bg-red-500 text-red-100 fill-red-500',
         icon: StarIcon
       };
-
     case 'BONUS_TIMED':
       return {
         action:
@@ -49,6 +49,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-purple-500 text-purple-100',
         arrow: 'bg-purple-500 text-purple-100 fill-purple-500',
         icon: UsersIcon
+      };
+    case 'BONUS_LOYALTY':
+      return {
+        action:
+          'bg-indigo-500 text-indigo-100 group-hover:bg-indigo-500 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-500',
+        symbol: 'bg-indigo-500 text-indigo-100',
+        arrow: 'bg-indigo-500 text-indigo-100 fill-indigo-500',
+        icon: HeartIcon
       };
     case 'VISIT_URL':
       return {

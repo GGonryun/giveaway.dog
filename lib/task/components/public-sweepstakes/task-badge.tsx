@@ -1,6 +1,7 @@
 import {
   AlarmClockIcon,
   ClockIcon,
+  HeartIcon,
   KeyIcon,
   LockIcon,
   LucideIcon,
@@ -8,6 +9,7 @@ import {
 } from 'lucide-react';
 import {
   BonusLimitedTaskSchema,
+  BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema,
   TaskSchema
 } from '../../schemas';
@@ -82,16 +84,34 @@ const BonusLimitedContent: React.FC<{
   }
 };
 
-export type TaskBadgeProps<T extends TaskSchema = TaskSchema> = {
+const BonusLoyaltyContent: React.FC<{
+  task: BonusLoyaltyTaskSchema;
+  loyalty: number;
+}> = ({ task, loyalty }) => {
+  if (loyalty >= task.loyaltyRequired) {
+    return null;
+  }
+
+  return (
+    <Container Icon={LockIcon}>
+      {loyalty} / {task.loyaltyRequired} loyalty
+    </Container>
+  );
+};
+
+type TaskBadgeProps<T extends TaskSchema = TaskSchema> = {
+  isCompleted: boolean;
+  entrants: number;
+  loyalty: number;
   task: T;
 };
 
-export const TaskBadge: React.FC<
-  TaskBadgeProps & {
-    isCompleted: boolean;
-    entrants: number;
-  }
-> = ({ isCompleted, task, entrants }) => {
+export const TaskBadge: React.FC<TaskBadgeProps> = ({
+  isCompleted,
+  task,
+  entrants,
+  loyalty
+}) => {
   if (isCompleted) return null;
 
   if (task.mandatory) {
@@ -103,6 +123,8 @@ export const TaskBadge: React.FC<
       return <BonusLimitedContent task={task} entrants={entrants} />;
     case 'BONUS_TIMED':
       return <BonusTimedContent task={task} />;
+    case 'BONUS_LOYALTY':
+      return <BonusLoyaltyContent task={task} loyalty={loyalty} />;
     case 'BONUS_TASK':
     case 'VISIT_URL':
     case 'TWITTER_CONNECT':

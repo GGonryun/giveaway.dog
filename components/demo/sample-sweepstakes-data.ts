@@ -82,12 +82,18 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       id: '11'
     },
     {
+      ...toDefaultValues('BONUS_LOYALTY'),
+      id: '12',
+      title: 'Get rewarded for your loyalty',
+      loyaltyRequired: 10
+    },
+    {
       ...toDefaultValues('TWITTER_RETWEET'),
-      id: '12'
+      id: '13'
     },
     {
       ...toDefaultValues('TWITTER_LIKE'),
-      id: '13'
+      id: '14'
     }
   ],
   terms: {

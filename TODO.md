@@ -1,23 +1,44 @@
 ## Roadmap
 
-- [ ] Add a "loyalty bonus" entry method where users who have participated in X number of sweepstakes get bonus entries.
+- [ ] "Unified Sweepstakes Platform" add support for imported actions from a twitter post.
 
-- [ ] Add a referral task.
-- [ ] I want to create short links for my sweepstakes, and draw verification
+### @theejankanator & @h7ban
 
-- [ ] Add basic question integrations (ask a question, run a poll, upload a file)
+- [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram (follow account, comment on instagram, view post, login with instagram)
 
-## The Games Detective
+### @theejankanator
 
-- [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
-- [ ] Fix the
+- [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
+
+- [ ] Add TikTok integration - https://www.better-auth.com/docs/authentication/tiktok
+
+### @Gamelooty
+
+- [ ] Unified Sweepstakes Platform (i.e. create import tasks instead of the validation tasks)
+
+### The Games Detective
+
+- [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
 
 ### h7ban
 
 - [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook (join a group, like a page, select a photo, share with friends, visit a page, login with facebook)
-- [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram (follow account, comment on instagram, view post, login with instagram)
+
+## The Games Detective
+
+- [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
+
+### @Gamelooty
+
+- it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
+- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
 
 ### Nobody Asked
+
+- [ ] Add basic question integrations (ask a question, run a poll, upload a file)
+
+- [ ] Add a referral task.
+- [ ] I want to create short links for my sweepstakes, and draw verification
 
 - [ ] Add a twitter post entry method
 - [ ] Add a twitter reply entry method
@@ -29,10 +50,6 @@
 - [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
 
 - [ ] Add GitHub integration - https://next-auth.js.org/providers/github (follow a repo, star a repo, login with GitHub)
-
-- [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
-
-- [ ] Add TikTok integration - https://www.better-auth.com/docs/authentication/tiktok
 
 - [ ] Add a kofi link entry method.
 - [ ] Add a producthunt entry method (visit page, vote for product, follow on producthunt)
@@ -59,18 +76,6 @@
 - [ ] As a host, I want to display my organization's logo on the sweepstake page.
 
 - [ ] Add a "geolocation" entry method where users have to be in a certain location to get entries.
-
-### The Games Detective
-
-- [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
-
-### @Gamelooty
-
-- [ ] Unified Sweepstakes Platform
-  - [ ] Also, do you think it would be possible to use picker in a way so that as soon as i create a giveaway with requirements, i put that link into picker and it'd monitor entries from the start, so that when its time to pick, it doesn't take so long to scan through all from 0?
-
-- it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
-- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
 
 ## Personal Features
 

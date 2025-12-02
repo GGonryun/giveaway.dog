@@ -11,6 +11,7 @@ export default async function Page() {
     <Suspense>
       <MockTeamProvider>
         <SweepstakesForm
+          maxLoyalty={10}
           integrations={[]}
           sweepstakes={SAMPLE_SWEEPSTAKES_DATA}
           isDemo={true}

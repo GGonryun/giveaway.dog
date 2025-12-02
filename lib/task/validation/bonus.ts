@@ -1,6 +1,12 @@
 import { ApplicationError } from '@/lib/errors';
-import { BonusLimitedTaskSchema, BonusTimedTaskSchema } from '../schemas';
+import {
+  BonusLimitedTaskSchema,
+  BonusLoyaltyTaskSchema,
+  BonusTimedTaskSchema,
+  TASK_INPUT_SCHEMA
+} from '../schemas';
 import { PrismaClient } from '@prisma/client';
+import { ValidateTaskInput } from './integrations';
 
 export const checkBonusTimed = async (task: BonusTimedTaskSchema) => {
   // check to see if the current time is within the task's time window
@@ -40,6 +46,54 @@ export const checkBonusLimited = async (
       code: 'BAD_REQUEST',
       message:
         'This bonus limited task has reached its maximum number of entrants.'
+    });
+  }
+
+  return;
+};
+
+export const checkBonusLoyalty = async (
+  db: PrismaClient,
+  input: ValidateTaskInput<BonusLoyaltyTaskSchema>
+) => {
+  // check to see if the user has enough loyalty to complete the task
+  const parsed = TASK_INPUT_SCHEMA.BONUS_LOYALTY.safeParse(input.data);
+  if (!parsed.success) {
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message: 'Invalid input data for bonus loyalty task'
+    });
+  }
+
+  // we need to figure out who the team is, and then find every task completion
+  // owned by the user for sweepstakes owned by that team
+  const completions = await db.taskCompletion.findMany({
+    where: {
+      userId: input.userId,
+      task: {
+        sweepstakes: {
+          teamId: input.teamId
+        }
+      }
+    },
+    include: {
+      task: {
+        select: {
+          sweepstakesId: true
+        }
+      }
+    }
+  });
+  // loyalty is the number of unique sweepstakes the user has completed tasks in
+  const loyalty = new Set(completions.map((c) => c.task.sweepstakesId)).size;
+  if (loyalty < input.task.loyaltyRequired) {
+    throw new ApplicationError({
+      code: 'FORBIDDEN',
+      message: `You need at least ${input.task.loyaltyRequired} loyalty to complete this tier.`,
+      data: {
+        userLoyalty: loyalty,
+        requiredLoyalty: input.task.loyaltyRequired
+      }
     });
   }
 

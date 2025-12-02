@@ -2,7 +2,8 @@ import { PROVIDER_REQUIRED_SCOPES } from '@/lib/integrations/schemas/providers';
 import {
   GiveawayParticipationSchema,
   UserParticipationSchema,
-  GiveawayPrizeSchema
+  GiveawayPrizeSchema,
+  UserHostRelationshipSchema
 } from '@/schemas/giveaway/schemas';
 import { AgeVerificationSchema, UserProfileSchema } from '@/schemas/user';
 
@@ -72,6 +73,10 @@ export const mockParticipation: GiveawayParticipationSchema = {
 export const mockUserParticipation: UserParticipationSchema = {
   entries: 0,
   completedTasks: [] // First task completed for demo
+};
+
+export const mockUserHostRelationship: UserHostRelationshipSchema = {
+  loyalty: 5
 };
 
 export const mockWinners: GiveawayPrizeSchema[] = [];

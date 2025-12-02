@@ -10,6 +10,7 @@ import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
 import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
 import { SweepstakesPageProps } from '@/schemas/pages';
 import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
+import { getPublishedSweepstakes } from '@/procedures/sweepstakes/get-published-sweepstakes';
 
 export const SweepstakeFormPage = async ({
   params
@@ -17,12 +18,14 @@ export const SweepstakeFormPage = async ({
   params: Promise<SweepstakesPageProps>;
 }) => {
   const { id, slug } = await params;
-  const [form, info, teamFeatureFlags, integrations] = await Promise.all([
-    getSweepstakesForm({ id }),
-    getSweepstakesStatus({ id }),
-    getTeamFeatureFlags({ slug }),
-    getTeamIntegrations({ slug })
-  ]);
+  const [form, info, teamFeatureFlags, integrations, completed] =
+    await Promise.all([
+      getSweepstakesForm({ id }),
+      getSweepstakesStatus({ id }),
+      getTeamFeatureFlags({ slug }),
+      getTeamIntegrations({ slug }),
+      getPublishedSweepstakes({ slug }) // new line to get maxLoyalty
+    ]);
 
   if (!form.ok) {
     if (form.data.code === 'NOT_FOUND') notFound();
@@ -41,15 +44,21 @@ export const SweepstakeFormPage = async ({
   }
 
   if (!integrations.ok) {
-    return (
-      <div>Failed to load integrations: {integrations.data.code}</div>
-    );
+    return <div>Failed to load integrations: {integrations.data.code}</div>;
   }
 
   const isEditable = EDITABLE_DERIVED_STATUS[info.data.status];
   if (!isEditable) {
     return (
       <div>Sweepstakes with status "{info.data.status}" cannot be edited.</div>
+    );
+  }
+
+  if (!completed.ok) {
+    return (
+      <div>
+        Failed to load completed sweepstakes count: {completed.data.code}
+      </div>
     );
   }
 
@@ -64,6 +73,7 @@ export const SweepstakeFormPage = async ({
         sweepstakes={form.data as GiveawayFormSchema}
         teamFeatureFlags={teamFeatureFlags.data}
         integrations={integrations.data}
+        maxLoyalty={completed.data.count}
       />
     </Suspense>
   );

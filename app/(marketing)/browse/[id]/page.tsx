@@ -7,6 +7,7 @@ import getAgeVerification from '@/procedures/browse/get-age-verification';
 import { computeState } from '@/lib/sweepstakes';
 import { Metadata } from 'next';
 import { date } from '@/lib/date';
+import { getUserHostRelationship } from '@/procedures/browse/get-user-host-relationship';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -67,6 +68,7 @@ export default async function Page({ params }: PageProps) {
   const result = await getParticipantSweepstake({ sweepstakesId: id });
   const user = await findUser({ self: true });
   const participation = await getUserSweepstakesParticipation({ id });
+  const relationship = await getUserHostRelationship({ id });
   const verification = await getAgeVerification({ sweepstakesId: id });
 
   if (!result.ok) {
@@ -76,6 +78,11 @@ export default async function Page({ params }: PageProps) {
 
   if (!user.ok) {
     console.warn('User not found:', user.data?.message);
+    notFound();
+  }
+
+  if (!relationship.ok) {
+    console.warn('Host relationship fetch error:', relationship.data?.message);
     notFound();
   }
 
@@ -104,6 +111,7 @@ export default async function Page({ params }: PageProps) {
         ageVerification
       })}
       userProfile={userProfile}
+      userHostRelationship={relationship.data}
       userParticipation={participation.data}
     />
   );

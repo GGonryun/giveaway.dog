@@ -5,11 +5,12 @@ import { checkDiscordJoin } from './discord';
 import { TaskSchema } from '../schemas';
 import { checkTwitchFollow } from './twitch';
 import { checkSecretCode } from './secret-code';
-import { checkBonusLimited, checkBonusTimed } from './bonus';
+import { checkBonusLimited, checkBonusLoyalty, checkBonusTimed } from './bonus';
 
 export type ValidateTaskInput<T extends TaskSchema> = {
   task: T;
   userId: string;
+  teamId: string;
   data?: unknown;
 };
 
@@ -34,6 +35,13 @@ export const validateTask = async <T extends TaskSchema>(
       return await checkBonusLimited(db, { task: input.task });
     case 'BONUS_TIMED':
       return await checkBonusTimed(input.task);
+    case 'BONUS_LOYALTY':
+      return await checkBonusLoyalty(db, {
+        task: input.task,
+        userId: input.userId,
+        teamId: input.teamId,
+        data: input.data
+      });
     case 'STEAM_WISHLIST':
       return await checkSteamWishlist(db, {
         task: input.task,
@@ -53,6 +61,7 @@ export const validateTask = async <T extends TaskSchema>(
       return await checkSecretCode(db, {
         task: input.task,
         userId: input.userId,
+        teamId: input.teamId,
         data: input.data
       });
     default:
