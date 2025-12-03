@@ -25,6 +25,9 @@ const submitTask = procedure()
     })
   )
   .handler(async ({ db, user, input: { data, taskId, sweepstakesId } }) => {
+    console.info(
+      `User ${user.id} is submitting task ${taskId} for sweepstakes ${sweepstakesId}`
+    );
     const tasks = await db.task.findMany({
       where: {
         sweepstakesId: sweepstakesId
@@ -116,18 +119,23 @@ const submitTask = procedure()
 
     const taskConfig = toTaskSchema(task);
 
+    console.info(
+      `Validating mandatory and required tasks for user ${user.id} on task ${taskId}`
+    );
     await validateMandatoryTasks({
       taskId,
       tasks,
       completions
     });
 
+    console.info(`Validating task ${taskId} for user ${user.id}`);
     await validateRequiredTasks({
       taskId,
       tasks,
       completions
     });
 
+    console.info(`Validating task ${taskId} for user ${user.id}`);
     await validateTask(db, {
       task: taskConfig,
       userId: user.id,
@@ -135,6 +143,7 @@ const submitTask = procedure()
       data
     });
 
+    console.info(`Recording completion of task ${taskId} for user ${user.id}`);
     await db.taskCompletion.create({
       data: {
         userId: user.id,
