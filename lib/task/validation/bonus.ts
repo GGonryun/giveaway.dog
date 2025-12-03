@@ -57,18 +57,6 @@ export const checkBonusLoyalty = async (
   input: ValidateTaskInput<BonusLoyaltyTaskSchema>
 ) => {
   console.info(
-    `Validating bonus loyalty task ${input.task.id} for user ${input.userId}`
-  );
-  // check to see if the user has enough loyalty to complete the task
-  const parsed = TASK_INPUT_SCHEMA.BONUS_LOYALTY.safeParse(input.data);
-  if (!parsed.success) {
-    throw new ApplicationError({
-      code: 'VALIDATION_ERROR',
-      message: 'Invalid input data for bonus loyalty task'
-    });
-  }
-
-  console.info(
     `Checking loyalty requirements for bonus loyalty task ${input.task.id} for user ${input.userId}`
   );
   // we need to figure out who the team is, and then find every task completion
