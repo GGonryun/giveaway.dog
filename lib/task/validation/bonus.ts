@@ -56,6 +56,9 @@ export const checkBonusLoyalty = async (
   db: PrismaClient,
   input: ValidateTaskInput<BonusLoyaltyTaskSchema>
 ) => {
+  console.info(
+    `Validating bonus loyalty task ${input.task.id} for user ${input.userId}`
+  );
   // check to see if the user has enough loyalty to complete the task
   const parsed = TASK_INPUT_SCHEMA.BONUS_LOYALTY.safeParse(input.data);
   if (!parsed.success) {
@@ -65,6 +68,9 @@ export const checkBonusLoyalty = async (
     });
   }
 
+  console.info(
+    `Checking loyalty requirements for bonus loyalty task ${input.task.id} for user ${input.userId}`
+  );
   // we need to figure out who the team is, and then find every task completion
   // owned by the user for sweepstakes owned by that team
   const completions = await db.taskCompletion.findMany({
@@ -84,8 +90,14 @@ export const checkBonusLoyalty = async (
       }
     }
   });
+  console.info(
+    `Checking loyalty requirements for bonus loyalty task ${input.task.id} for user ${input.userId}`
+  );
   // loyalty is the number of unique sweepstakes the user has completed tasks in
   const loyalty = new Set(completions.map((c) => c.task.sweepstakesId)).size;
+  console.info(
+    `User ${input.userId} has loyalty ${loyalty} for bonus loyalty task ${input.task.id}`
+  );
   if (loyalty < input.task.loyaltyRequired) {
     throw new ApplicationError({
       code: 'FORBIDDEN',
@@ -96,6 +108,10 @@ export const checkBonusLoyalty = async (
       }
     });
   }
+
+  console.info(
+    `Bonus loyalty task ${input.task.id} validation passed for user ${input.userId}`
+  );
 
   return;
 };

@@ -128,7 +128,7 @@ const submitTask = procedure()
       completions
     });
 
-    console.info(`Validating task ${taskId} for user ${user.id}`);
+    console.info(`Validating required tasks ${taskId} for user ${user.id}`);
     await validateRequiredTasks({
       taskId,
       tasks,
