@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "TaskJob" ADD COLUMN     "runs" INTEGER NOT NULL DEFAULT 0;

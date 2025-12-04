@@ -22,6 +22,7 @@ import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
 import { UserSourceIcon } from '@/lib/user-source/components/user-source-icon';
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
+import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
 
 interface SweepstakesEntriesProps {
   slug: string;
@@ -85,7 +86,6 @@ export const SweepstakesEntries = ({
               >
                 <TableCell>
                   <div className="flex items-center space-x-2">
-                    <TaskStatusIcon status={completion.status} />
                     <TaskStatusBadge status={completion.status} />
                   </div>
                 </TableCell>
@@ -124,7 +124,7 @@ export const SweepstakesEntries = ({
                       </Button>
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {completion.user.email ?? 'No email'}
+                      <UserSourceCaption user={completion.user} />
                     </div>
                   </div>
                 </TableCell>

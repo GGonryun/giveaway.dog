@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { toTaskTheme } from '@/lib/task/components/theme';
 import { TASK_LABEL, TASK_IS_IMPORT } from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
+import { ImportBadge } from '@/lib/task/components/sweepstakes-editor-form/import-badge';
 
 export const SelectTaskDialog: React.FC<{
   onSelect: (type: TaskType) => void;
@@ -121,9 +122,12 @@ const SelectTask: React.FC<{ type: TaskType; onClick: () => void }> = ({
         >
           <theme.icon />
         </div>
-        <Typography.Paragraph size="md" weight="medium">
-          {TASK_LABEL[type]}
-        </Typography.Paragraph>
+        <div className="flex items-center gap-2">
+          <Typography.Paragraph size="md" weight="medium">
+            {TASK_LABEL[type]}
+          </Typography.Paragraph>
+          <ImportBadge type={type} />
+        </div>
       </div>
       <Badge variant="secondary" className="px-0.5 mr-1">
         <ChevronRight strokeWidth={2.5} />

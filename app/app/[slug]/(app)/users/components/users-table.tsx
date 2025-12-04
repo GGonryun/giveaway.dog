@@ -35,12 +35,9 @@ import { useTeams } from '@/components/context/team-provider';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { UserDetailSheet } from '@/components/sweepstakes-details/user-detail-sheet';
 import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
-import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils';
-import { toQualityProgressColor } from '@/schemas/quality';
-import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 import { datetime } from '@/lib/date';
+import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
 
 interface UsersTableProps {
   users: SweepstakesParticipantSchema[];
@@ -367,7 +364,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                                 </div>
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                {user.email ?? 'No email'}
+                                <UserSourceCaption user={user} />
                               </div>
                             </div>
                           </div>

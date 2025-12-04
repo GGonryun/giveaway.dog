@@ -76,6 +76,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
       };
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
+    case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_CONNECT':
     case 'TWITTER_LIKE':
       return {

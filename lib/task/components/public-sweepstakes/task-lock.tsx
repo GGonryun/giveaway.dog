@@ -9,6 +9,7 @@ import pluralize from 'pluralize';
 import { formatDistance } from 'date-fns';
 import { BanIcon, ClockIcon, LockIcon, LucideIcon } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 
 export const lockStateSchema = z.enum([
   'MISSING_REQUIREMENTS',
@@ -23,17 +24,22 @@ export type TaskLock = { message: string; icon: LucideIcon } | null;
 export const getTaskLock = (args: {
   task: TaskSchema;
   loyalty: number;
-  completed: string[];
+  submissions: UserTaskSubmissionSchema[];
   entrants: number;
 }): TaskLock => {
-  const { task, completed, loyalty, entrants } = args;
+  const { task, submissions, loyalty, entrants } = args;
+  const completedTasks = submissions
+    .filter((c) => c.status === 'COMPLETED')
+    .map((c) => c.taskId);
   const isMissingRequirements =
-    task.tasksRequired === 0 ? false : completed.length < task.tasksRequired;
+    task.tasksRequired === 0
+      ? false
+      : completedTasks.length < task.tasksRequired;
 
   if (isMissingRequirements) {
     const remainingTasksRequired = Math.max(
       0,
-      task.tasksRequired - completed.length
+      task.tasksRequired - completedTasks.length
     );
 
     return {
@@ -54,6 +60,7 @@ export const getTaskLock = (args: {
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
+    case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE':
     case 'STEAM_WISHLIST':
     case 'DISCORD_JOIN':

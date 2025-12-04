@@ -7,7 +7,7 @@ import React from 'react';
 
 export const BonusLoyaltyActionForm: React.FC<
   TaskActionProps<BonusLoyaltyTaskSchema>
-> = ({ task, onSubmit, loyalty }) => {
+> = ({ onSubmit, loyalty }) => {
   const { theme } = useTaskTheme();
 
   return (

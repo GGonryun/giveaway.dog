@@ -6,10 +6,13 @@ import { cn } from '@/lib/utils';
 import { Repeat2Icon } from 'lucide-react';
 import { WithProviderConnection } from '../provider-connection';
 import { extractTweetId } from '@/lib/integrations/schemas/twitter';
-import { TwitterRetweetTaskSchema } from '@/lib/task/schemas';
+import {
+  TwitterRetweetImportTaskSchema,
+  TwitterRetweetTaskSchema
+} from '@/lib/task/schemas';
 
 export const TwitterRetweetTaskActionForm: React.FC<
-  TaskActionProps<TwitterRetweetTaskSchema>
+  TaskActionProps<TwitterRetweetTaskSchema | TwitterRetweetImportTaskSchema>
 > = ({ onCancel, onSubmit, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
   const tweetId = extractTweetId(task.tweetId);

@@ -8,13 +8,13 @@ import { TaskSchema } from '@/lib/task/schemas';
 import { PrismaClient } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 
-export const processJob = async (
+export const processTaskJob = async (
   db: PrismaClient,
   task: TaskSchema,
   job: TaskJobWithRelations
 ) => {
   try {
-    console.info(`Processing job ${job.id}`, job);
+    console.info(`Processing task job ${job.id}`, job);
 
     switch (task.type) {
       case 'BONUS_TASK':
@@ -31,11 +31,12 @@ export const processJob = async (
       case 'YOUTUBE_VISIT':
       case 'TWITTER_LIKE':
       case 'SECRET_CODE':
+      case 'TWITTER_RETWEET':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',
           message: `Job processing not implemented for task type: ${task.type}`
         });
-      case 'TWITTER_RETWEET':
+      case 'TWITTER_RETWEET_IMPORT':
         return await processRetweetTaskJob(db, task, job);
       default:
         throw assertNever(task);

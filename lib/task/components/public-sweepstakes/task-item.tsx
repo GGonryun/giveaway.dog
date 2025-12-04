@@ -20,30 +20,31 @@ import { TaskTooltipContent } from './task-tooltip-content';
 import { TaskAction } from './task-action';
 import { TaskIcon } from './task-icon';
 import { Tooltip } from '@/components/ui/tooltip';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 
 type TaskItemProps = {
-  open: boolean;
-  setOpen: (open: boolean) => void;
   task: TaskSchema;
-  completed: string[];
-  setCompleted?: () => void;
+  open: boolean;
+  submissions: UserTaskSubmissionSchema[];
+  onOpen: (open: boolean) => void;
+  onSubmit?: () => void;
 };
 
 const TaskItemContent: React.FC<TaskItemProps> = ({
-  open,
-  setOpen,
   task,
-  completed,
-  setCompleted
+  open,
+  submissions,
+  onOpen,
+  onSubmit
 }) => {
   const router = useRouter();
 
   const { onTaskComplete, participation, userHostRelationship } =
     useGiveawayParticipation();
 
-  const isCompleted = useMemo(
-    () => completed.includes(task.id),
-    [completed, task.id]
+  const submission = useMemo(
+    () => submissions.find((c) => c.taskId === task.id)?.status,
+    [submissions, task.id]
   );
 
   const loyalty = useMemo(
@@ -56,7 +57,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
     [participation.usersByTask, task.id]
   );
 
-  const lock = getTaskLock({ task, completed, entrants, loyalty });
+  const lock = getTaskLock({ task, submissions, entrants, loyalty });
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<FailureData | undefined>(undefined);
@@ -84,8 +85,8 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
 
       await onTaskComplete(task.id, data);
 
-      setCompleted?.();
-      setOpen(false);
+      onSubmit?.();
+      onOpen(false);
       toast.success('Task completed!');
       router.refresh();
     } catch (error) {
@@ -102,7 +103,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
 
   const handleTaskCancel = () => {
     setIsLoading(false);
-    setOpen(false);
+    onOpen(false);
     setError(undefined);
   };
 
@@ -110,7 +111,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
     <Collapsible
       ref={taskRef}
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={onOpen}
       className={cn(
         'rounded-sm transition-colors bg-sidebar overflow-hidden relative border',
         open ? 'z-50 shadow-xl' : ''
@@ -125,7 +126,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
           )}
         >
           <div className="flex items-center gap-3 flex-1">
-            <TaskIcon isCompleted={isCompleted} />
+            <TaskIcon submission={submission} />
             <h4 className="text-left font-medium text-sm sm:text-base group-hover:underline">
               {task.title}
             </h4>
@@ -133,7 +134,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
 
           <div className="flex items-center gap-2 p-1.5">
             <TaskBadge
-              isCompleted={isCompleted}
+              submission={submission}
               task={task}
               entrants={entrants}
               loyalty={loyalty}
@@ -144,11 +145,11 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
                 task={task}
                 isLoading={isLoading}
                 lock={lock}
-                isCompleted={isCompleted}
+                submission={submission}
               />
 
               <TaskTooltipContent
-                isCompleted={isCompleted}
+                submission={submission}
                 entriesText={entriesText}
                 lock={lock}
                 open={open}
@@ -159,7 +160,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
       </CollapsibleTrigger>
       <CollapsibleContent className="border-t bg-background">
         <TaskAction
-          isCompleted={isCompleted}
+          submission={submission}
           entriesText={entriesText}
           entrants={entrants}
           isLoading={isLoading}

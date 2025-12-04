@@ -18,11 +18,10 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'TWITTER_LIKE':
     case 'SECRET_CODE':
     case 'YOUTUBE_VISIT':
-      return CompletionStatus.COMPLETED;
     case 'TWITTER_RETWEET':
-      return task.type === 'TWITTER_RETWEET' && task.validateEntries
-        ? CompletionStatus.PENDING
-        : CompletionStatus.COMPLETED;
+      return CompletionStatus.COMPLETED;
+    case 'TWITTER_RETWEET_IMPORT':
+      return CompletionStatus.PENDING;
 
     default:
       throw assertNever(task);

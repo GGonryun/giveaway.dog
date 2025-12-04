@@ -32,7 +32,7 @@ import { parsePickerFormSchema } from '../schemas/form';
 import { getDisqualificationReason } from '../schemas/public-picker';
 import { environment } from '@/lib/environment';
 
-export const processJobs = procedure()
+export const processPickerJobs = procedure()
   .authorization({
     required: false
   })
@@ -51,7 +51,7 @@ export const processJobs = procedure()
       include: PICKER_JOB_FORM_INCLUDE
     });
 
-    console.info(`Found ${jobs.length} jobs to process`);
+    console.info(`Found ${jobs.length} picker jobs to process`);
     for (const job of jobs) {
       try {
         console.info(`Processing job ${job.id} of type ${job.type}`);

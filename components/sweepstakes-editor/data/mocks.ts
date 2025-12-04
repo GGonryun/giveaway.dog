@@ -72,7 +72,7 @@ export const mockParticipation: GiveawayParticipationSchema = {
 
 export const mockUserParticipation: UserParticipationSchema = {
   entries: 0,
-  completedTasks: [] // First task completed for demo
+  submissions: [] // First task completed for demo
 };
 
 export const mockUserHostRelationship: UserHostRelationshipSchema = {

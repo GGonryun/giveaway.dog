@@ -34,7 +34,6 @@ import {
 } from '@/components/ui/tooltip';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 import { featureFlags } from '@/lib/feature-flags';
-import { EXPERIMENTAL_VALIDATION_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import { BotEnforcementField } from '@/lib/user-quality/bot-enforcement-field';
 
@@ -80,42 +79,41 @@ const MinQualityScoreField = () => {
               content={
                 <div className="space-y-3">
                   <p>
-                    Control how strictly you want to filter out bots, cheaters, and suspicious accounts from your giveaway. The quality score is a 0-100% rating that helps identify trustworthy participants and filter out potential fraud or bot activity.
+                    Control how strictly you want to filter out bots, cheaters,
+                    and suspicious accounts from your giveaway. The quality
+                    score is a 0-100% rating that helps identify trustworthy
+                    participants and filter out potential fraud or bot activity.
                   </p>
                   <div>
                     <p className="font-medium mb-2">Quality Signals:</p>
                     <ul className="list-disc list-inside space-y-1 text-sm">
                       <li>
-                        <strong>Device Stability</strong>:
-                        Consistent device usage
+                        <strong>Device Stability</strong>: Consistent device
+                        usage
                       </li>
                       <li>
-                        <strong>IP Consistency</strong>: Stable IP
-                        address
+                        <strong>IP Consistency</strong>: Stable IP address
                       </li>
                       <li>
-                        <strong>Geo Consistency</strong>: Same
-                        region/country
+                        <strong>Geo Consistency</strong>: Same region/country
                       </li>
                       <li>
-                        <strong>Providers Connected</strong>:
-                        Multiple auth providers
+                        <strong>Providers Connected</strong>: Multiple auth
+                        providers
                       </li>
                       <li>
-                        <strong>Email Verified</strong>: Verified email
-                        address
+                        <strong>Email Verified</strong>: Verified email address
                       </li>
                       <li>
-                        <strong>Task Activity</strong>: Recent task
-                        completions
+                        <strong>Task Activity</strong>: Recent task completions
                       </li>
                       <li>
-                        <strong>Task Diversity</strong>: Variety of
-                        tasks completed
+                        <strong>Task Diversity</strong>: Variety of tasks
+                        completed
                       </li>
                       <li>
-                        <strong>Account Age</strong>: Older
-                        accounts are more trusted
+                        <strong>Account Age</strong>: Older accounts are more
+                        trusted
                       </li>
                     </ul>
                   </div>
@@ -123,12 +121,12 @@ const MinQualityScoreField = () => {
                     <p className="font-medium mb-2">Risk Signals:</p>
                     <ul className="list-disc list-inside space-y-1 text-sm">
                       <li>
-                        <strong>Overlapping IPs</strong>: Sharing IP
-                        with other accounts
+                        <strong>Overlapping IPs</strong>: Sharing IP with other
+                        accounts
                       </li>
                       <li>
-                        <strong>Overlapping Fingerprints</strong>:
-                        Sharing device with other accounts
+                        <strong>Overlapping Fingerprints</strong>: Sharing
+                        device with other accounts
                       </li>
                     </ul>
                   </div>
@@ -179,80 +177,6 @@ const AllowMultipleWinsField = () => {
           </FormItem>
         )}
       />
-    </SwitchBox>
-  );
-};
-
-const AllowedUserSourcesField = () => {
-  const { teamFeatureFlags } = useUnifiedFormLayout();
-  const form = useFormContext<GiveawayFormSchema>();
-
-  const allowedUserSources = useWatch({
-    control: form.control,
-    name: 'criteria.externalPlatforms'
-  });
-
-  const hasExperimentalValidation = featureFlags.parseTeam(
-    teamFeatureFlags,
-    EXPERIMENTAL_VALIDATION_FEATURE_FLAG_KEY
-  );
-
-  if (!hasExperimentalValidation) {
-    return null;
-  }
-
-  return (
-    <SwitchBox>
-      <FormField
-        control={form.control}
-        name="criteria.externalPlatforms"
-        render={({ field }) => (
-          <FormItem className="flex flex-row items-start justify-between">
-            <SwitchFormHeader
-              label="Allow External Users"
-              description="Allow users from external platforms to be eligible to win prizes."
-              help={{
-                title: 'Help: Allow External Users',
-                content: (
-                  <div>
-                    <p>
-                      Specify which participant sources are eligible to win
-                      prizes in this giveaway. Depending on your giveaway setup,
-                      you might want to restrict winners to certain sources
-                      only.
-                    </p>
-                    <br />
-                    <p>
-                      Depending on your tasks, we automatically import users
-                      from external platforms like X or Discord. Use this
-                      setting to control whether those users can win prizes.
-                    </p>
-                  </div>
-                )
-              }}
-            />
-
-            <FormControl>
-              <Switch
-                checked={Boolean(field.value)}
-                onCheckedChange={() => {
-                  if (Boolean(field.value)) {
-                    return field.onChange(null);
-                  } else {
-                    return field.onChange(DEFAULT_ALLOWED_USER_SOURCES);
-                  }
-                }}
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
-      <Collapsible open={Boolean(allowedUserSources)}>
-        <CollapsibleContent className="flex flex-col gap-1">
-          <CheckboxGroupField />
-        </CollapsibleContent>
-      </Collapsible>
-      <FormMessage />
     </SwitchBox>
   );
 };
@@ -315,7 +239,6 @@ export const WinnerCriteria = () => {
       <MinTasksCompletedField />
       <MinQualityScoreField />
       <AllowMultipleWinsField />
-      <AllowedUserSourcesField />
     </>
   );
 };

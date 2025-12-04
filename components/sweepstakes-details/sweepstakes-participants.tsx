@@ -33,6 +33,7 @@ import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { datetime } from '@/lib/date';
 import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
+import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
 
 export const SweepstakesParticipants: React.FC<{
   slug: string;
@@ -116,7 +117,7 @@ export const SweepstakesParticipants: React.FC<{
                                 </div>
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                {user.email ?? 'No email'}
+                                <UserSourceCaption user={user} />
                               </div>
                             </div>
                           </div>

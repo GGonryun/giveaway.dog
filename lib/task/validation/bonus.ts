@@ -2,8 +2,7 @@ import { ApplicationError } from '@/lib/errors';
 import {
   BonusLimitedTaskSchema,
   BonusLoyaltyTaskSchema,
-  BonusTimedTaskSchema,
-  TASK_INPUT_SCHEMA
+  BonusTimedTaskSchema
 } from '../schemas';
 import { PrismaClient } from '@prisma/client';
 import { ValidateTaskInput } from './integrations';

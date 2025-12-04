@@ -3,15 +3,16 @@ import { Flex } from '@/components/ui/flex';
 import { LoginOptions } from '@/components/auth/login-options';
 import { usePathname } from 'next/navigation';
 import { TaskContent } from './task-actions/building-blocks';
-import { LockIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TaskSchema } from '../../schemas';
 import { TaskActionForm } from './task-actions/form';
 import { FailureData } from '@/lib/mrpc/types';
 import { TaskLock } from './task-lock';
+import { CompletionStatus } from '@prisma/client';
+import { SubmissionTaskContent } from '../../submission';
 
 export const TaskAction: React.FC<{
-  isCompleted: boolean;
+  submission: CompletionStatus | undefined;
   entriesText: string;
   isLoading: boolean;
   task: TaskSchema;
@@ -21,7 +22,7 @@ export const TaskAction: React.FC<{
   entrants: number;
   lock: TaskLock;
 }> = ({
-  isCompleted,
+  submission,
   entriesText,
   task,
   lock,
@@ -42,12 +43,12 @@ export const TaskAction: React.FC<{
             <LoginOptions label={'Login with:'} redirectTo={pathname} icons />
           </Flex>
         </div>
-      ) : isCompleted ? (
+      ) : submission ? (
         <TaskContent className="text-sm sm:text-base">
-          <p>
-            Task completed for{' '}
-            <span className="font-semibold">{entriesText}</span>.
-          </p>
+          <SubmissionTaskContent
+            submission={submission}
+            entriesText={entriesText}
+          />
         </TaskContent>
       ) : lock ? (
         <TaskContent className="text-sm sm:text-base flex-col">

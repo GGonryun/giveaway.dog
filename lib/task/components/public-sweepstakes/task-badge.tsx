@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useTaskTheme } from '../theme';
 import { assertNever } from '@/lib/errors';
+import { CompletionStatus } from '@prisma/client';
 
 const Container: React.PC<{
   Icon?: LucideIcon;
@@ -100,19 +101,19 @@ const BonusLoyaltyContent: React.FC<{
 };
 
 type TaskBadgeProps<T extends TaskSchema = TaskSchema> = {
-  isCompleted: boolean;
+  submission: CompletionStatus | undefined;
   entrants: number;
   loyalty: number;
   task: T;
 };
 
 export const TaskBadge: React.FC<TaskBadgeProps> = ({
-  isCompleted,
+  submission,
   task,
   entrants,
   loyalty
 }) => {
-  if (isCompleted) return null;
+  if (submission) return null;
 
   if (task.mandatory) {
     return <Container Icon={LockIcon}>Required</Container>;
@@ -130,6 +131,7 @@ export const TaskBadge: React.FC<TaskBadgeProps> = ({
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
+    case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE':
     case 'STEAM_WISHLIST':
     case 'DISCORD_JOIN':

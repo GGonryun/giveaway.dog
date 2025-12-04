@@ -63,10 +63,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { DEFAULT_ALLOWED_USER_SOURCES } from '@/schemas/giveaway/defaults';
-import {
-  EXPERIMENTAL_VALIDATION_FEATURE_FLAG_KEY,
-  TeamFeatureFlagKeySchema
-} from '@/schemas/feature-flags';
+import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
 import { featureFlags } from '@/lib/feature-flags';
 
 interface GroupedPrize {
@@ -389,11 +386,6 @@ export const SweepstakesWinners = ({
   const [selectedDisqualifiedDraw, setSelectedDisqualifiedDraw] = useState<
     SweepstakesPrizeSchema['draws'][0] | null
   >(null);
-
-  const externalPlatformsAllowed = featureFlags.parseTeam(
-    teamFeatureFlags,
-    EXPERIMENTAL_VALIDATION_FEATURE_FLAG_KEY
-  );
 
   const isEditable = EDITABLE_DERIVED_STATUS[status];
 
@@ -746,75 +738,6 @@ export const SweepstakesWinners = ({
                 Allow users to win multiple prizes
               </Label>
             </div>
-
-            {externalPlatformsAllowed && (
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="allowExternalUsers"
-                    checked={Boolean(editedCriteria.externalPlatforms)}
-                    onCheckedChange={(checked) =>
-                      setEditedCriteria((prev) => ({
-                        ...prev,
-                        externalPlatforms: checked
-                          ? DEFAULT_ALLOWED_USER_SOURCES
-                          : null
-                      }))
-                    }
-                  />
-                  <Label htmlFor="allowExternalUsers">
-                    Restrict winner sources
-                  </Label>
-                </div>
-                <Collapsible open={Boolean(editedCriteria.externalPlatforms)}>
-                  <CollapsibleContent className="space-y-1 pl-6">
-                    {widetype
-                      .entries(USER_SOURCE_LABEL)
-                      .filter(([key]) => USER_SOURCE_MANAGEABLE[key])
-                      .map(([key, value]) => (
-                        <div key={key} className="flex items-center space-x-2">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="flex gap-2 items-center py-0.5">
-                                <Checkbox
-                                  id={`edit-source-${key}`}
-                                  checked={
-                                    editedCriteria.externalPlatforms?.includes(
-                                      key
-                                    ) ?? false
-                                  }
-                                  disabled={USER_SOURCE_COMING_SOON[key]}
-                                  onCheckedChange={(checked) => {
-                                    const currentValue =
-                                      editedCriteria.externalPlatforms || [];
-                                    setEditedCriteria((prev) => ({
-                                      ...prev,
-                                      externalPlatforms: checked
-                                        ? [...currentValue, key]
-                                        : currentValue.filter((v) => v !== key)
-                                    }));
-                                  }}
-                                />
-                                <Label
-                                  htmlFor={`edit-source-${key}`}
-                                  className="text-sm font-normal cursor-pointer"
-                                >
-                                  {value}
-                                </Label>
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent side="right" align="center">
-                              {USER_SOURCE_COMING_SOON[key]
-                                ? 'Coming Soon'
-                                : USER_SOURCE_DESCRIPTION[key]}
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                      ))}
-                  </CollapsibleContent>
-                </Collapsible>
-              </div>
-            )}
 
             <div className="pt-4 border-t">
               <div className="text-sm text-muted-foreground">

@@ -2,9 +2,9 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
-import { isRetryableApplicationError } from '@/lib/errors';
 import { toTaskSchema } from '@/lib/task/schemas';
-import { processJob } from './process-job';
+import { processTaskJob } from './process-job';
+import { taskJobInclude } from './types';
 
 export const processTaskJobs = procedure()
   .authorization({ required: false })
@@ -25,23 +25,14 @@ export const processTaskJobs = procedure()
       orderBy: {
         createdAt: 'asc'
       },
-      include: {
-        task: {
-          include: {
-            sweepstakes: {
-              include: {
-                timing: true
-              }
-            }
-          }
-        }
-      }
+      include: taskJobInclude
     });
 
+    console.info(`Found ${pending.length} task jobs to process`);
     for (const job of pending) {
       try {
         const task = toTaskSchema(job.task);
-        await processJob(db, task, job);
+        await processTaskJob(db, task, job);
       } catch (error) {
         console.error(`Failed to process job ${job.id}`, error);
       }

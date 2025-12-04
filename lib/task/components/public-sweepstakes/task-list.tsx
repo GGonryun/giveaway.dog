@@ -1,4 +1,4 @@
-import { partition } from 'lodash';
+import { partition, uniqBy } from 'lodash';
 import { Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toDefaultValues } from '@/lib/task/defaults';
@@ -7,6 +7,8 @@ import React, { useEffect } from 'react';
 import { TaskSchema } from '@/lib/task/schemas';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
 import { TaskItem } from './task-item';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { computeTaskStatus } from '../../validation/status';
 
 export const TaskList: React.FC<{
   open: string | null;
@@ -14,13 +16,13 @@ export const TaskList: React.FC<{
 }> = ({ open, setOpen }) => {
   const { userParticipation, sweepstakes } = useGiveawayParticipation();
 
-  const [completed, setCompleted] = React.useState<string[]>(
-    userParticipation?.completedTasks ?? []
-  );
+  const [submissions, setSubmissions] = React.useState<
+    UserTaskSubmissionSchema[]
+  >(userParticipation?.submissions ?? []);
 
   useEffect(() => {
     if (userParticipation) {
-      setCompleted(userParticipation.completedTasks);
+      setSubmissions(userParticipation.submissions);
     }
   }, [userParticipation]);
 
@@ -29,13 +31,21 @@ export const TaskList: React.FC<{
     (task) => task.mandatory
   );
 
-  const handleCompletion = (taskId: string) => () => {
-    const uniqueCompleted = Array.from(new Set([...completed, taskId]));
-    setCompleted(uniqueCompleted);
+  const handleSubmission = (task: TaskSchema) => () => {
+    const status = computeTaskStatus(task);
+    setSubmissions(
+      uniqBy(
+        [
+          ...submissions.filter((c) => c.taskId !== task.id),
+          { taskId: task.id, status }
+        ],
+        (c) => c.taskId
+      )
+    );
   };
 
-  const allMandatoryCompleted = mandatory.every((task) =>
-    completed.includes(task.id)
+  const allMandatoryCompleted = mandatory.every(
+    (task) => submissions.filter((c) => c.taskId === task.id).length > 0
   );
 
   const hasMandatoryTasks = mandatory.length > 0;
@@ -68,10 +78,10 @@ export const TaskList: React.FC<{
           <TaskItem
             key={index}
             open={open === task.id}
-            setOpen={(status) => setOpen(status ? task.id : null)}
+            onOpen={(status) => setOpen(status ? task.id : null)}
             task={task}
-            completed={completed}
-            setCompleted={handleCompletion(task.id)}
+            submissions={submissions}
+            onSubmit={handleSubmission(task)}
           />
         );
       })}
@@ -105,9 +115,9 @@ export const TaskList: React.FC<{
             {mockOptionalTasks.map((task, index) => (
               <TaskItem
                 key={index}
-                completed={[]}
+                submissions={[]}
                 open={open === task.id}
-                setOpen={(status) => setOpen(status ? task.id : null)}
+                onOpen={(status) => setOpen(status ? task.id : null)}
                 task={task}
               />
             ))}
@@ -121,10 +131,10 @@ export const TaskList: React.FC<{
             <TaskItem
               key={index}
               open={open === task.id}
-              setOpen={(status) => setOpen(status ? task.id : null)}
+              onOpen={(status) => setOpen(status ? task.id : null)}
               task={task}
-              completed={completed}
-              setCompleted={handleCompletion(task.id)}
+              submissions={submissions}
+              onSubmit={handleSubmission(task)}
             />
           );
         })}

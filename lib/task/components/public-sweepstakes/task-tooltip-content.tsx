@@ -2,31 +2,36 @@ import { TooltipContent } from '@/components/ui/tooltip';
 import { useTaskTheme } from '../theme';
 import { cn } from '@/lib/utils';
 import { TaskLock } from './task-lock';
+import { CompletionStatus } from '@prisma/client';
+import {
+  SUBMISSION_TOOLTIP_COLOR_MAP,
+  SUBMISSION_TOOLTIP_CONTENT
+} from '../../submission';
 
 export const TaskTooltipContent: React.FC<{
-  isCompleted: boolean;
+  submission: CompletionStatus | undefined;
   entriesText: string;
   lock: TaskLock;
   open: boolean;
-}> = ({ isCompleted, entriesText, lock, open }) => {
+}> = ({ submission, entriesText, lock, open }) => {
   const { theme } = useTaskTheme();
+  const color = submission
+    ? SUBMISSION_TOOLTIP_COLOR_MAP[submission]
+    : undefined;
+
+  const content = submission
+    ? SUBMISSION_TOOLTIP_CONTENT({ entriesText })[submission]
+    : null;
+
   return (
     <TooltipContent
       side="left"
       align="center"
-      className={cn(
-        isCompleted
-          ? 'bg-success text-success-foreground fill-success'
-          : theme.arrow
-      )}
-      arrowClassName={cn(
-        isCompleted
-          ? 'bg-success text-success-foreground fill-success'
-          : theme.arrow
-      )}
+      className={cn(color || theme.arrow)}
+      arrowClassName={cn(color || theme.arrow)}
     >
-      {isCompleted ? (
-        <p>You earned {entriesText}.</p>
+      {content ? (
+        <p>{content}</p>
       ) : lock ? (
         <p>{lock.message}</p>
       ) : open ? (

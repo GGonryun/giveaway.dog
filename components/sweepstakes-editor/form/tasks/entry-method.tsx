@@ -30,6 +30,7 @@ import { BaseSettings } from '@/lib/task/components/sweepstakes-editor-form/base
 import { FieldError, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import pluralize from 'pluralize';
+import { ImportBadge } from '@/lib/task/components/sweepstakes-editor-form/import-badge';
 
 export const EntryMethod: React.FC<{
   id: string;
@@ -107,9 +108,12 @@ export const EntryMethod: React.FC<{
                     <theme.icon />
                   )}
                 </div>
-                <Typography.Paragraph size="md" weight="medium">
-                  {TASK_LABEL[type]}
-                </Typography.Paragraph>
+                <div className="flex items-center gap-2">
+                  <Typography.Paragraph size="md" weight="medium">
+                    {TASK_LABEL[type]}
+                  </Typography.Paragraph>
+                  <ImportBadge type={type} />
+                </div>
                 {hasErrors && (
                   <Badge variant="destructive">
                     {errorCount} {pluralize('error', errorCount)}

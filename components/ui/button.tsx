@@ -15,6 +15,8 @@ const buttonVariants = cva(
           'bg-green-600 text-white shadow-xs hover:bg-green-700 focus-visible:ring-green-700/20',
         destructive:
           'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
+        warning:
+          'bg-warning text-white shadow-xs hover:bg-warning/90 focus-visible:ring-warning/20',
         outline:
           'border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent',
         secondary:
@@ -62,5 +64,7 @@ function Button({
 }
 
 export type ButtonProps = React.ComponentProps<typeof Button>;
+
+export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
 
 export { Button, buttonVariants };

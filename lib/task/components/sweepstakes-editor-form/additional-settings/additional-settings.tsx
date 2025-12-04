@@ -19,6 +19,10 @@ import { SteamAppIdFormField } from './lib/steam-app-id';
 import { DateValidatorField } from './lib/date-validator';
 import { MaxEntrantsField } from './lib/max-entrants';
 import { LoyaltyRequiredField } from './lib/bonus-loyalty';
+import {
+  ImportingAccountField,
+  ImportingTweetIdValidation
+} from './lib/importing-account';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -64,7 +68,14 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return <TwitterUsernameFormField />;
       case 'TWITTER_LIKE':
       case 'TWITTER_RETWEET':
-        return <TweetIdFormField />;
+      case 'TWITTER_RETWEET_IMPORT':
+        return (
+          <>
+            <ImportingAccountField />
+            <TweetIdFormField />
+            <ImportingTweetIdValidation />
+          </>
+        );
       case 'STEAM_WISHLIST':
         return <SteamAppIdFormField />;
       case 'DISCORD_JOIN':

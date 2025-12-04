@@ -1,4 +1,5 @@
 import {
+  CompletionStatus,
   PrizeDrawResult,
   RegionalRestrictionFilter,
   VisibilityType
@@ -254,9 +255,16 @@ export const giveawaySchema = baseGiveawayFormSchema({
 
 export type GiveawaySchema = z.infer<typeof giveawaySchema>;
 
+export const userTaskSubmissionSchema = z.object({
+  taskId: z.string(),
+  status: z.nativeEnum(CompletionStatus)
+});
+
+export type UserTaskSubmissionSchema = z.infer<typeof userTaskSubmissionSchema>;
+
 export const userParticipationSchema = z.object({
   entries: z.number().int().min(0),
-  completedTasks: z.array(z.string())
+  submissions: z.array(userTaskSubmissionSchema)
 });
 
 export type UserParticipationSchema = z.infer<typeof userParticipationSchema>;

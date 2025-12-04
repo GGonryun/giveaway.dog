@@ -2,8 +2,14 @@
 
 ### @Gamelooty & Self
 
-- [ ] Unified Sweepstakes Platform (i.e. create import tasks instead of the validation tasks)
-- [ ] "Unified Sweepstakes Platform" add support for imported actions from a twitter post.
+- [x] Create import reposts
+- [ ] Create import likes
+- [ ] Create import quotes
+- [ ] Create import comments
+
+# L1ghterVibes
+
+- [ ] Fix comment picker (import comments) for X
 
 ### @theejankanator & @h7ban
 
@@ -13,11 +19,7 @@
 
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
-- [ ] Add TikTok integration - https://www.better-auth.com/docs/authentication/tiktok
-
-### The Games Detective
-
-- [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
+- [ ] Add TikTok integration - https://authjs.dev/getting-started/providers/tiktok
 
 ### h7ban
 
@@ -27,6 +29,8 @@
 
 - [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
 
+- [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
+
 ### @Gamelooty
 
 - it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
@@ -34,10 +38,9 @@
 
 ### Nobody Asked
 
-- [ ] Add basic question integrations (ask a question, run a poll, upload a file)
+- [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
 
-- [ ] Add a referral task.
-- [ ] I want to create short links for my sweepstakes, and draw verification
+- [ ] Add basic question integrations (ask a question, run a poll, upload a file)
 
 - [ ] Add a twitter post entry method
 - [ ] Add a twitter reply entry method
@@ -50,8 +53,26 @@
 
 - [ ] Add GitHub integration - https://next-auth.js.org/providers/github (follow a repo, star a repo, login with GitHub)
 
+- [ ] Add a patreon integration - https://next-auth.js.org/providers/patreon (connect with patreon, become a patron)
+
+- [ ] Add a threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads,follow on threads, like a post, reply to a post)
+
+- [ ] Add a spotify integration - https://authjs.dev/getting-started/providers/spotify (connect with spotify, follow a playlist, listen to a song)
+
+- [ ] Add a pinterest integration - https://next-auth.js.org/providers/pinterest (connect with pinterest, follow on pinterest, save a pin)
+
+- [ ] Add a snapchat integration - https://developers.snap.com/api/marketing-api/Ads-API/authentication (connect with snapchat, follow on snapchat)
+
+- [ ] Add a Tumblr integration - https://www.tumblr.com/docs/en/api/v2 (connect with tumblr, follow a blog, like a post)
+
+- [ ] Add a Producthunt entry method - https://api.producthunt.com/v2/docs/oauth_user_authentication/oauth_authorize_ask_for_access_grant_code_on_behalf_of_the_user (visit page, vote for product, follow on producthunt)
+
+- [ ] Add a daily recurring entry method (visit daily to get entries)
+
+- [ ] Add support for generating short links for my sweepstakes, and draw verification
+- [ ] Add a referral task.
+
 - [ ] Add a kofi link entry method.
-- [ ] Add a producthunt entry method (visit page, vote for product, follow on producthunt)
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
@@ -60,7 +81,6 @@
   - [ ] When I click "next" on a sweepstake it doesn't scroll me back to the top of the page.
   - [ ] The horizontal scroll bar for sweepstakes tabs doesn't look good when the screen is too small.
 
-- [ ] Add a recurring tasks to sweepstakes integrations.
 - [ ] Add a way to report sweepstakes.
 - [ ] Add a way to block users from sweepstakes.
 - [ ] Add a built in ticketing support system for sweepstakes.
@@ -68,8 +88,6 @@
 - [ ] As a host, I want to be able to attach screenshots/proof that a user has claimed a prize.
 - [ ] As a host, I want people to subscribe to my newsletter on giveaway.dog and be notified of my sweepstakes.
   - [ ] It should also include an action to "follow" us on giveaway.dog
-
-- [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
 
 - [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
 - [ ] As a host, I want to display my organization's logo on the sweepstake page.

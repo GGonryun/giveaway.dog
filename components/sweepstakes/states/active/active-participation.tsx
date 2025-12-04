@@ -114,7 +114,9 @@ const UserProgressSection: React.FC<{ className?: string }> = ({
       };
 
     const completed = sweepstakes.tasks.filter((t) =>
-      userParticipation.completedTasks.includes(t.id)
+      userParticipation.submissions.some(
+        (s) => s.taskId === t.id && s.status === 'COMPLETED'
+      )
     ).length;
     const total = sweepstakes.tasks.length;
     const percentage = total > 0 ? (completed / total) * 100 : 0;

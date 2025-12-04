@@ -32,9 +32,6 @@ const getUserSweepstakesParticipation = procedure()
           sweepstakes: {
             OR: [{ id: input.id }, { visibility: { slug: input.id } }]
           }
-        },
-        status: {
-          in: ['COMPLETED']
         }
       },
       include: {
@@ -44,11 +41,15 @@ const getUserSweepstakesParticipation = procedure()
 
     return {
       entries: taskCompletions
+        .filter((c) => c.status === 'COMPLETED')
         .map((c) => toTaskSchema(c.task))
         .reduce((acc, c) => {
           return acc + c.value;
         }, 0),
-      completedTasks: taskCompletions.map((t) => t.taskId)
+      submissions: taskCompletions.map((c) => ({
+        taskId: c.taskId,
+        status: c.status
+      }))
     };
   });
 

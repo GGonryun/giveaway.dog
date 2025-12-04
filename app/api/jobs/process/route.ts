@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { processJobs } from '@/lib/pickers/procedures/process-jobs';
+import { processPickerJobs } from '@/lib/pickers/procedures/process-jobs';
 import { processTaskJobs } from '@/procedures/sweepstakes/process-task-jobs';
 
 export async function GET(request: NextRequest) {
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   const [pickerResults, sweepstakesResults] = await Promise.all([
-    processJobs(),
+    processPickerJobs(),
     processTaskJobs()
   ]);
 

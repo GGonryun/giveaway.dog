@@ -85,19 +85,30 @@ export const twitterRetweetTaskSchema = baseTaskSchema.extend({
   tweetId: z
     .string()
     .url('Post URL is required')
-    .refine(xStatusRefineUrl, xStatusRefineError),
-  validateEntries: z.boolean().optional()
+    .refine(xStatusRefineUrl, xStatusRefineError)
 });
 
 export type TwitterRetweetTaskSchema = z.infer<typeof twitterRetweetTaskSchema>;
+
+export const twitterRetweetImportTaskSchema = baseTaskSchema.extend({
+  type: z.literal('TWITTER_RETWEET_IMPORT'),
+  tweetId: z
+    .string()
+    .url('Post URL is required')
+    .refine(xStatusRefineUrl, xStatusRefineError),
+  importingAccount: z.string().min(1, 'Importing account is required')
+});
+
+export type TwitterRetweetImportTaskSchema = z.infer<
+  typeof twitterRetweetImportTaskSchema
+>;
 
 export const twitterLikeTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_LIKE'),
   tweetId: z
     .string()
     .url('Post URL is required')
-    .refine(xStatusRefineUrl, xStatusRefineError),
-  validateEntries: z.boolean().optional()
+    .refine(xStatusRefineUrl, xStatusRefineError)
 });
 
 export type TwitterLikeTaskSchema = z.infer<typeof twitterLikeTaskSchema>;
@@ -200,6 +211,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   twitterConnectTaskSchema,
   twitterFollowTaskSchema,
   twitterRetweetTaskSchema,
+  twitterRetweetImportTaskSchema,
   twitterLikeTaskSchema,
   steamWishlistTaskSchema,
   discordJoinTaskSchema,
@@ -220,6 +232,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   TWITTER_CONNECT: 'Connect X',
   TWITTER_FOLLOW: 'Follow on X',
   TWITTER_RETWEET: 'Repost on X',
+  TWITTER_RETWEET_IMPORT: 'Repost on X',
   TWITTER_LIKE: 'Like a post on X',
   STEAM_WISHLIST: 'Steam Wishlist',
   DISCORD_JOIN: 'Join Discord Server',
@@ -237,6 +250,7 @@ export const TASK_INPUT_SCHEMA = {
   TWITTER_CONNECT: z.object({}),
   TWITTER_FOLLOW: z.object({}),
   TWITTER_RETWEET: z.object({}),
+  TWITTER_RETWEET_IMPORT: z.object({}),
   TWITTER_LIKE: z.object({}),
   STEAM_WISHLIST: z.object({}),
   DISCORD_JOIN: z.object({}),
@@ -247,6 +261,28 @@ export const TASK_INPUT_SCHEMA = {
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
   })
+} as const satisfies Record<TaskType, z.ZodTypeAny>;
+
+export const TASK_JOB_DATA_SCHEMA = {
+  BONUS_TASK: z.object({}),
+  BONUS_TIMED: z.object({}),
+  BONUS_LIMITED: z.object({}),
+  VISIT_URL: z.object({}),
+  TWITTER_CONNECT: z.object({}),
+  TWITTER_FOLLOW: z.object({}),
+  TWITTER_RETWEET: z.object({}),
+  TWITTER_LIKE: z.object({}),
+  TWITTER_RETWEET_IMPORT: z.object({
+    runs: z.number().min(0),
+    lastProcessedId: z.string().optional()
+  }),
+  STEAM_WISHLIST: z.object({}),
+  DISCORD_JOIN: z.object({}),
+  TWITCH_FOLLOW: z.object({}),
+  KICK_FOLLOW: z.object({}),
+  YOUTUBE_VISIT: z.object({}),
+  BONUS_LOYALTY: z.object({}),
+  SECRET_CODE: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export type TaskInput<T extends TaskSchema> = T extends { type: infer U }
@@ -275,6 +311,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   TWITTER_CONNECT: 'twitter',
   TWITTER_FOLLOW: 'twitter',
   TWITTER_RETWEET: 'twitter',
+  TWITTER_RETWEET_IMPORT: 'twitter',
   TWITTER_LIKE: 'twitter',
   STEAM_WISHLIST: 'steam',
   YOUTUBE_VISIT: 'youtube',
@@ -316,6 +353,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   TWITTER_CONNECT: 'social',
   TWITTER_FOLLOW: 'social',
   TWITTER_RETWEET: 'social',
+  TWITTER_RETWEET_IMPORT: 'social',
   TWITTER_LIKE: 'social',
   DISCORD_JOIN: 'social',
   STEAM_WISHLIST: 'community',
@@ -339,6 +377,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   TWITTER_CONNECT: false,
   TWITTER_FOLLOW: false,
   TWITTER_RETWEET: false,
+  TWITTER_RETWEET_IMPORT: true,
   TWITTER_LIKE: false,
   DISCORD_JOIN: false,
   STEAM_WISHLIST: false,

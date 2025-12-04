@@ -17,6 +17,8 @@ import {
   DEFAULT_MIN_TASK_COMPLETED
 } from './defaults';
 import { RequiredFields } from '@/lib/types';
+import { datetime } from '@/lib/date';
+import { TWITTER_API_RATE_LIMIT_MINUTES } from '@/lib/pickers/data/settings';
 
 const toStorableDetails = (setup: SweepstakesInputSchema['setup']) => {
   return {
@@ -133,9 +135,8 @@ const toStorableTasks = (
   const compacted = compact(tasks).filter(isStorableTask);
 
   if (!compacted.length) return undefined;
+
   return {
-    // TODO: why doesn't config have all of the discriminated type properties.
-    // Specifically, properties like 'href' for VISIT_URL tasks are missing.
     create: compacted.map((task, index) => {
       const { id, ...config } = task;
       return {
@@ -169,15 +170,17 @@ const createJobsForTask = (
     case 'TWITTER_LIKE':
     case 'YOUTUBE_VISIT':
     case 'BONUS_LOYALTY':
-      return [];
     case 'TWITTER_RETWEET':
-      return task.validateEntries
-        ? [
-            {
-              runAt: new Date()
-            }
-          ]
-        : [];
+      return [];
+    case 'TWITTER_RETWEET_IMPORT':
+      return [
+        {
+          runAt: new Date(),
+          data: {
+            runs: 0
+          }
+        }
+      ];
     default:
       throw assertNever(task.type);
   }
