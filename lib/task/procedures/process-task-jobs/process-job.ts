@@ -17,6 +17,35 @@ export const processTaskJob = async (
   try {
     console.info(`Processing task job ${job.id}`, job);
 
+    const { timing } = job.task.sweepstakes;
+    // if the sweepstakes has a start date in the future, reschedule the job.
+    if (timing?.startDate && timing.startDate > new Date()) {
+      console.info(
+        `[${task.type}] Sweepstakes ${job.task.sweepstakes.id} has not started yet, rescheduling task job ${job.id} to ${timing.startDate}`
+      );
+
+      await db.taskJob.update({
+        where: { id: job.id },
+        data: {
+          runAt: timing.startDate
+        }
+      });
+
+      return;
+    }
+    // if the sweepstakes has ended, cancel the job.
+    if (timing?.endDate && timing.endDate < new Date()) {
+      console.info(
+        `[${task.type}] Sweepstakes ${job.task.sweepstakes.id} has ended, deleting task job ${job.id}`
+      );
+
+      await db.taskJob.delete({
+        where: { id: job.id }
+      });
+
+      return;
+    }
+
     switch (task.type) {
       case 'BONUS_TASK':
       case 'BONUS_TIMED':

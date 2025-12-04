@@ -36,17 +36,6 @@ export const processTwitterTaskJob = async <
     });
   }
 
-  // if the sweepstakes has ended, cancel the job.
-  if (timing?.endDate && timing.endDate < new Date()) {
-    console.info(
-      `[${type}] Sweepstakes ${sweepstakesId} has ended, deleting task job ${job.id}`
-    );
-    await db.taskJob.delete({
-      where: { id: job.id }
-    });
-    return;
-  }
-
   const response = await action(db);
 
   console.info(
