@@ -1,11 +1,5 @@
 ## Roadmap
 
-### @Gamelooty & Self
-
-- [x] Create import reposts
-- [x] Create import likes
-- [ ] Create import quotes
-
 ### @theejankanator & @h7ban
 
 - [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram (follow account, comment on instagram, view post, login with instagram)
