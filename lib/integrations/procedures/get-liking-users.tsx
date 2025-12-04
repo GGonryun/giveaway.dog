@@ -8,11 +8,18 @@ import {
   likingUsersResponseSchema
 } from '../schemas/api';
 import { extractTweetId } from '../schemas/twitter';
+import { ApplicationError } from '@/lib/errors';
 
 export const getLikingUsers = async (
   tx: Tx,
-  input: LikingUsersRequest & { maxResults: number; teamId: string }
+  input: LikingUsersRequest & { maxResults: number; teamId: string | null }
 ): Promise<LikingUsersResponse> => {
+  if (!input.teamId)
+    throw new ApplicationError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Missing required parameter teamId'
+    });
+
   const params = new URLSearchParams({
     max_results: input.maxResults.toString(),
     'user.fields':

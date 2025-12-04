@@ -135,7 +135,7 @@ export const ImportingTweetIdValidation = () => {
 
   const tweetOwner =
     typeof tweetId === 'string' ? extractUsernameFromTweetUrl(tweetId) : null;
-  const connectedUsername = twitterIntegration?.label ?? 'DUNNO';
+  const connectedUsername = twitterIntegration?.label ?? 'UNKNOWN';
 
   const isOwnershipValid =
     tweetOwner && connectedUsername && tweetOwner === connectedUsername;
@@ -152,6 +152,11 @@ export const ImportingTweetIdValidation = () => {
     router.refresh();
     setLoading(false);
   };
+
+  if (!importingAccount || !tweetId) {
+    return null;
+  }
+
   return (
     <div className="space-y-2 mt-2">
       {twitterIntegrations.length === 0 ? (

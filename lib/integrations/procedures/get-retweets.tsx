@@ -8,11 +8,18 @@ import {
   retweetedByResponseSchema
 } from '../schemas/api';
 import { extractTweetId } from '../schemas/twitter';
+import { ApplicationError } from '@/lib/errors';
 
 export const getRetweetedBy = async (
   tx: Tx,
-  input: RetweetedByRequest & { maxResults: number; teamId: string }
+  input: RetweetedByRequest & { maxResults: number; teamId: string | null }
 ): Promise<RetweetedByResponse> => {
+  if (!input.teamId)
+    throw new ApplicationError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Missing required parameter teamId'
+    });
+
   const params = new URLSearchParams({
     max_results: input.maxResults.toString(),
     'user.fields':

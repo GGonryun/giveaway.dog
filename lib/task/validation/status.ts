@@ -21,6 +21,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'TWITTER_RETWEET':
       return CompletionStatus.COMPLETED;
     case 'TWITTER_RETWEET_IMPORT':
+    case 'TWITTER_LIKE_IMPORT':
       return CompletionStatus.PENDING;
 
     default:

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { processPickerJobs } from '@/lib/pickers/procedures/process-jobs';
-import { processTaskJobs } from '@/procedures/sweepstakes/process-task-jobs';
+import { processTaskJobs } from '@/lib/task/procedures/process-task-jobs';
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization');

@@ -27,6 +27,7 @@ export const validateTask = async <T extends TaskSchema>(
     case 'TWITTER_RETWEET':
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE':
+    case 'TWITTER_LIKE_IMPORT':
     case 'YOUTUBE_VISIT':
       return Promise.resolve(); // No validation possible
     case 'KICK_FOLLOW':

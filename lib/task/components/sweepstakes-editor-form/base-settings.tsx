@@ -30,6 +30,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'TWITTER_RETWEET':
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE':
+    case 'TWITTER_LIKE_IMPORT':
     case 'STEAM_WISHLIST':
     case 'DISCORD_JOIN':
     case 'TWITCH_FOLLOW':

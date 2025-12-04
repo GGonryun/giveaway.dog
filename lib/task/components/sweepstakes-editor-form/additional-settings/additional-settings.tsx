@@ -68,6 +68,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return <TwitterUsernameFormField />;
       case 'TWITTER_LIKE':
       case 'TWITTER_RETWEET':
+        return (
+          <>
+            <TweetIdFormField />
+          </>
+        );
+      case 'TWITTER_LIKE_IMPORT':
       case 'TWITTER_RETWEET_IMPORT':
         return (
           <>

@@ -113,6 +113,19 @@ export const twitterLikeTaskSchema = baseTaskSchema.extend({
 
 export type TwitterLikeTaskSchema = z.infer<typeof twitterLikeTaskSchema>;
 
+export const twitterLikeImportTaskSchema = baseTaskSchema.extend({
+  type: z.literal('TWITTER_LIKE_IMPORT'),
+  tweetId: z
+    .string()
+    .url('Post URL is required')
+    .refine(xStatusRefineUrl, xStatusRefineError),
+  importingAccount: z.string().min(1, 'Importing account is required')
+});
+
+export type TwitterLikeImportTaskSchema = z.infer<
+  typeof twitterLikeImportTaskSchema
+>;
+
 export const steamWishlistTaskSchema = baseTaskSchema.extend({
   type: z.literal('STEAM_WISHLIST'),
   appId: z
@@ -213,6 +226,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   twitterRetweetTaskSchema,
   twitterRetweetImportTaskSchema,
   twitterLikeTaskSchema,
+  twitterLikeImportTaskSchema,
   steamWishlistTaskSchema,
   discordJoinTaskSchema,
   twitchFollowTaskSchema,
@@ -234,6 +248,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   TWITTER_RETWEET: 'Repost on X',
   TWITTER_RETWEET_IMPORT: 'Repost on X',
   TWITTER_LIKE: 'Like a post on X',
+  TWITTER_LIKE_IMPORT: 'Like a post on X',
   STEAM_WISHLIST: 'Steam Wishlist',
   DISCORD_JOIN: 'Join Discord Server',
   TWITCH_FOLLOW: 'Follow on Twitch',
@@ -252,6 +267,7 @@ export const TASK_INPUT_SCHEMA = {
   TWITTER_RETWEET: z.object({}),
   TWITTER_RETWEET_IMPORT: z.object({}),
   TWITTER_LIKE: z.object({}),
+  TWITTER_LIKE_IMPORT: z.object({}),
   STEAM_WISHLIST: z.object({}),
   DISCORD_JOIN: z.object({}),
   TWITCH_FOLLOW: z.object({}),
@@ -271,8 +287,12 @@ export const TASK_JOB_DATA_SCHEMA = {
   TWITTER_CONNECT: z.object({}),
   TWITTER_FOLLOW: z.object({}),
   TWITTER_RETWEET: z.object({}),
-  TWITTER_LIKE: z.object({}),
   TWITTER_RETWEET_IMPORT: z.object({
+    runs: z.number().min(0),
+    lastProcessedId: z.string().optional()
+  }),
+  TWITTER_LIKE: z.object({}),
+  TWITTER_LIKE_IMPORT: z.object({
     runs: z.number().min(0),
     lastProcessedId: z.string().optional()
   }),
@@ -313,6 +333,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   TWITTER_RETWEET: 'twitter',
   TWITTER_RETWEET_IMPORT: 'twitter',
   TWITTER_LIKE: 'twitter',
+  TWITTER_LIKE_IMPORT: 'twitter',
   STEAM_WISHLIST: 'steam',
   YOUTUBE_VISIT: 'youtube',
   DISCORD_JOIN: 'discord',
@@ -355,6 +376,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   TWITTER_RETWEET: 'social',
   TWITTER_RETWEET_IMPORT: 'social',
   TWITTER_LIKE: 'social',
+  TWITTER_LIKE_IMPORT: 'social',
   DISCORD_JOIN: 'social',
   STEAM_WISHLIST: 'community',
   TWITCH_FOLLOW: 'social',
@@ -379,6 +401,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   TWITTER_RETWEET: false,
   TWITTER_RETWEET_IMPORT: true,
   TWITTER_LIKE: false,
+  TWITTER_LIKE_IMPORT: true,
   DISCORD_JOIN: false,
   STEAM_WISHLIST: false,
   TWITCH_FOLLOW: false,

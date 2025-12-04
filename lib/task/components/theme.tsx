@@ -74,11 +74,12 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         arrow: 'bg-green-600 text-green-100 fill-green-600',
         icon: KeyRound
       };
+    case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
     case 'TWITTER_RETWEET_IMPORT':
-    case 'TWITTER_CONNECT':
     case 'TWITTER_LIKE':
+    case 'TWITTER_LIKE_IMPORT':
       return {
         action:
           'bg-black text-white group-hover:bg-black hover:bg-black dark:bg-black dark:hover:bg-black',

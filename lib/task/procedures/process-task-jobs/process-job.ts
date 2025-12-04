@@ -3,10 +3,11 @@ import {
   assertNever,
   isRetryableApplicationError
 } from '@/lib/errors';
-import { processRetweetTaskJob } from './process-retweet-validation';
+import { processRetweetTaskJob } from './process-retweet-task-job';
 import { TaskSchema } from '@/lib/task/schemas';
 import { PrismaClient } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
+import { processLikeTaskJob } from './process-like-task-job';
 
 export const processTaskJob = async (
   db: PrismaClient,
@@ -38,6 +39,8 @@ export const processTaskJob = async (
         });
       case 'TWITTER_RETWEET_IMPORT':
         return await processRetweetTaskJob(db, task, job);
+      case 'TWITTER_LIKE_IMPORT':
+        return await processLikeTaskJob(db, task, job);
       default:
         throw assertNever(task);
     }

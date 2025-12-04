@@ -22,7 +22,7 @@ export const twitterUserSchema = z.object({
     .optional()
 });
 
-export type TwitterUser = z.infer<typeof twitterUserSchema>;
+export type TwitterUserSchema = z.infer<typeof twitterUserSchema>;
 
 export const actionsTwitterUserSchema = twitterUserSchema.extend({
   actions: z.array(z.enum(['like', 'retweet', 'quote', 'reply'])).default([])

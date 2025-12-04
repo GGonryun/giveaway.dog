@@ -6,10 +6,13 @@ import { cn } from '@/lib/utils';
 import { HeartIcon } from 'lucide-react';
 import { WithProviderConnection } from '../provider-connection';
 import { extractTweetId } from '@/lib/integrations/schemas/twitter';
-import { TwitterLikeTaskSchema } from '@/lib/task/schemas';
+import {
+  TwitterLikeImportTaskSchema,
+  TwitterLikeTaskSchema
+} from '@/lib/task/schemas';
 
 export const TwitterLikeTaskActionForm: React.FC<
-  TaskActionProps<TwitterLikeTaskSchema>
+  TaskActionProps<TwitterLikeTaskSchema | TwitterLikeImportTaskSchema>
 > = ({ onCancel, onSubmit, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
   const tweetId = extractTweetId(task.tweetId);

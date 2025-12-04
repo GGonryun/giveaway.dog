@@ -19,6 +19,7 @@ import {
 import { RequiredFields } from '@/lib/types';
 import { datetime } from '@/lib/date';
 import { TWITTER_API_RATE_LIMIT_MINUTES } from '@/lib/pickers/data/settings';
+import { createJobsForTask } from '@/lib/task/jobs';
 
 const toStorableDetails = (setup: SweepstakesInputSchema['setup']) => {
   return {
@@ -149,41 +150,6 @@ const toStorableTasks = (
       };
     })
   };
-};
-
-const createJobsForTask = (
-  task: RequiredFields<SweepstakesInputTaskSchema, 'id'>
-): Prisma.TaskJobCreateWithoutTaskInput[] => {
-  if (!task?.type) return [];
-  switch (task.type) {
-    case 'VISIT_URL':
-    case 'BONUS_TASK':
-    case 'BONUS_TIMED':
-    case 'DISCORD_JOIN':
-    case 'TWITCH_FOLLOW':
-    case 'KICK_FOLLOW':
-    case 'SECRET_CODE':
-    case 'STEAM_WISHLIST':
-    case 'BONUS_LIMITED':
-    case 'TWITTER_FOLLOW':
-    case 'TWITTER_CONNECT':
-    case 'TWITTER_LIKE':
-    case 'YOUTUBE_VISIT':
-    case 'BONUS_LOYALTY':
-    case 'TWITTER_RETWEET':
-      return [];
-    case 'TWITTER_RETWEET_IMPORT':
-      return [
-        {
-          runAt: new Date(),
-          data: {
-            runs: 0
-          }
-        }
-      ];
-    default:
-      throw assertNever(task.type);
-  }
 };
 
 const toStorableDesign = (

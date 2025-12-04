@@ -42,6 +42,7 @@ export const TaskActionForm: React.FC<
     case 'TWITTER_RETWEET_IMPORT':
       return <TwitterRetweetTaskActionForm {...props} task={props.task} />;
     case 'TWITTER_LIKE':
+    case 'TWITTER_LIKE_IMPORT':
       return <TwitterLikeTaskActionForm {...props} task={props.task} />;
     case 'STEAM_WISHLIST':
       return <SteamWishlistTaskActionForm {...props} task={props.task} />;

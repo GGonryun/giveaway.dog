@@ -1,7 +1,7 @@
-import { getRetweetedBy } from '@/lib/integrations/procedures/get-retweets';
 import { importTwitterUsers } from '@/lib/sweepstakes/twitter-import';
 import {
   TASK_JOB_DATA_SCHEMA,
+  TwitterLikeImportTaskSchema,
   TwitterRetweetImportTaskSchema
 } from '@/lib/task/schemas';
 import { PrismaClient } from '@prisma/client';
@@ -10,35 +10,36 @@ import { datetime } from '@/lib/date';
 import { TWITTER_API_RATE_LIMIT_MINUTES } from '@/lib/pickers/data/settings';
 import { ApplicationError } from '@/lib/errors';
 import { takeUntil } from '@/lib/arrays';
+import { Tx } from '@/lib/prisma';
+import { TwitterUserSchema } from '@/lib/integrations/schemas/api';
 
-export const processRetweetTaskJob = async (
+export const processTwitterTaskJob = async <
+  T extends TwitterLikeImportTaskSchema | TwitterRetweetImportTaskSchema
+>(
   db: PrismaClient,
-  task: TwitterRetweetImportTaskSchema,
-  job: TaskJobWithRelations
+  task: T,
+  job: TaskJobWithRelations,
+  action: (tx: Tx) => Promise<{ data?: TwitterUserSchema[] }>
 ) => {
   const { taskId, data } = job;
   const { sweepstakesId } = job.task;
-  const { teamId, timing } = job.task.sweepstakes;
-  if (!teamId) {
-    throw new ApplicationError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'Sweepstakes teamId is required'
-    });
-  }
+  const { timing } = job.task.sweepstakes;
+  const { type } = task;
 
-  const parsed = TASK_JOB_DATA_SCHEMA.TWITTER_RETWEET_IMPORT.safeParse(data);
+  const parsed = TASK_JOB_DATA_SCHEMA[type].safeParse(data);
   if (!parsed.success) {
     throw new ApplicationError({
       code: 'INTERNAL_SERVER_ERROR',
-      message: 'Invalid task job data for Twitter retweet import task',
-      cause: parsed.error
+      message: `Invalid task job data for Twitter import task`,
+      cause: parsed.error,
+      data: task
     });
   }
 
   // if the sweepstakes has ended, cancel the job.
   if (timing?.endDate && timing.endDate < new Date()) {
     console.info(
-      `Sweepstakes ${sweepstakesId} has ended, deleting retweet task job ${job.id}`
+      `[${type}] Sweepstakes ${sweepstakesId} has ended, deleting task job ${job.id}`
     );
     await db.taskJob.delete({
       where: { id: job.id }
@@ -46,14 +47,10 @@ export const processRetweetTaskJob = async (
     return;
   }
 
-  const response = await getRetweetedBy(db, {
-    teamId,
-    tweetId: task.tweetId,
-    maxResults: 100
-  });
+  const response = await action(db);
 
   console.info(
-    `Fetched ${response.data?.length ?? 0} retweets for tweet ${task.tweetId} in retweet task job ${job.id}`
+    `[${type}] Fetched ${response.data?.length ?? 0} users in task job ${job.id}`
   );
 
   const twitterUsers = takeUntil(
@@ -62,7 +59,7 @@ export const processRetweetTaskJob = async (
   );
 
   console.info(
-    `Processing ${twitterUsers.length} new retweets for retweet task job ${job.id}`
+    `[${type}] Processing ${twitterUsers.length} users task job ${job.id}`
   );
 
   const { imported, existing } = await importTwitterUsers(db, {
@@ -72,7 +69,7 @@ export const processRetweetTaskJob = async (
   });
 
   console.info(
-    `Imported ${imported.length} users, ${existing.length} existing users for retweet task job ${job.id}`
+    `[${type}] Imported ${imported.length} users, ${existing.length} existing users for task job ${job.id}`
   );
 
   let created = 0;
@@ -125,7 +122,7 @@ export const processRetweetTaskJob = async (
   }
 
   console.info(
-    `Created ${created} and updated ${updated} task completions for retweet task job ${job.id}`
+    `[${type}] Created ${created} and updated ${updated} task completions for task job ${job.id}`
   );
 
   const nextRunAt = datetime.minutesFromNow(
@@ -143,6 +140,6 @@ export const processRetweetTaskJob = async (
     }
   });
   console.info(
-    `Retweet task job ${job.id} completed, scheduling next run at ${nextRunAt}`
+    `[${type}] Task job ${job.id} completed, scheduling next run at ${nextRunAt}`
   );
 };

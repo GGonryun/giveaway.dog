@@ -3,7 +3,7 @@
 ### @Gamelooty & Self
 
 - [x] Create import reposts
-- [ ] Create import likes
+- [x] Create import likes
 - [ ] Create import quotes
 - [ ] Create import comments
 

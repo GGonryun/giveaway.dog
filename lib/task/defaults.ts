@@ -103,6 +103,16 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['TWITTER_LIKE_IMPORT']: {
+      id: '',
+      type: 'TWITTER_LIKE_IMPORT',
+      title: 'Like our post',
+      tweetId: TWITTER_POST_URL,
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0,
+      importingAccount: ''
+    },
     ['STEAM_WISHLIST']: {
       id: '',
       type: 'STEAM_WISHLIST',
