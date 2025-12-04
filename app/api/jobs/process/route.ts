@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { processPickerJobs } from '@/lib/pickers/procedures/process-jobs';
+import { processPickerJobs } from '@/lib/pickers/procedures/process-picker-jobs';
 import { processTaskJobs } from '@/lib/task/procedures/process-task-jobs';
 
 export async function GET(request: NextRequest) {

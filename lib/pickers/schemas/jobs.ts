@@ -8,7 +8,7 @@ import {
   repliedByResponseSchema,
   retweetedByResponseSchema
 } from '@/lib/integrations/schemas/api';
-import { PickerJobWithChildren } from '../procedures/process-jobs';
+import { PickerJobWithChildren } from '../procedures/process-picker-jobs';
 import { assertNever } from '@/lib/errors';
 import { max } from 'lodash';
 

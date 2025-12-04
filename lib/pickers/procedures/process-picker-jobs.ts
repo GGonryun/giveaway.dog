@@ -78,7 +78,7 @@ export const processPickerJobs = procedure()
 
           console.warn('Retrying job', job.id, retryAfter);
 
-          db.$transaction(async (tx) => {
+          await db.$transaction(async (tx) => {
             await tx.pickerJob.update({
               where: { id: job.id },
               data: {
@@ -106,7 +106,7 @@ export const processPickerJobs = procedure()
 
         console.error('Unable to process job', job.id, error);
 
-        db.$transaction(async (tx) => {
+        await db.$transaction(async (tx) => {
           await tx.pickerJob.update({
             where: { id: job.id },
             data: {
