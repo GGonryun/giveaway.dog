@@ -41,6 +41,16 @@ export const tweetSchema = z.object({
   text: z.string(),
   author_id: z.string().optional(),
   created_at: z.string().optional(),
+  conversation_id: z.string().optional(),
+  in_reply_to_user_id: z.string().optional(),
+  referenced_tweets: z
+    .array(
+      z.object({
+        type: z.enum(['retweeted', 'quoted', 'replied_to']),
+        id: z.string()
+      })
+    )
+    .optional(),
   public_metrics: z
     .object({
       retweet_count: z.number(),
@@ -115,3 +125,27 @@ export const retweetedByRequest = z.object({
 });
 
 export type RetweetedByRequest = z.infer<typeof retweetedByRequest>;
+
+export const repliedByResponseSchema = z.object({
+  data: z.array(tweetSchema).optional(),
+  includes: z
+    .object({
+      users: z.array(twitterUserSchema).optional()
+    })
+    .optional(),
+  meta: z
+    .object({
+      result_count: z.number(),
+      next_token: z.string().optional()
+    })
+    .optional()
+});
+
+export type RepliedByResponse = z.infer<typeof repliedByResponseSchema>;
+
+export const repliedByRequest = z.object({
+  tweetId: z.string(),
+  paginationToken: z.string().optional()
+});
+
+export type RepliedByRequest = z.infer<typeof repliedByRequest>;

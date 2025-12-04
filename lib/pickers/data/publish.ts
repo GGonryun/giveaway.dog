@@ -96,6 +96,16 @@ export const publishPickerJobs = ({
               polling: form.timing ? true : false,
               tweetId: extractTweetId(form.setup.postUrl)
             })
+          },
+          form.actions.reply && {
+            pickerId,
+            type: PickerJobType.FETCH_TWITTER_GET_REPLY_TO,
+            status: PickerJobStatus.QUEUED,
+            runAt,
+            data: toTwitterFetchRequest({
+              polling: form.timing ? true : false,
+              tweetId: extractTweetId(form.setup.postUrl)
+            })
           }
         ])
       }

@@ -5,15 +5,18 @@ import {
   actionsTwitterUserSchema,
   likingUsersResponseSchema,
   quoteTweetsResponseSchema,
+  repliedByResponseSchema,
   retweetedByResponseSchema
 } from '@/lib/integrations/schemas/api';
 import { PickerJobWithChildren } from '../procedures/process-jobs';
 import { assertNever } from '@/lib/errors';
+import { max } from 'lodash';
 
 export const twitterFetchRequestSchema = z.object({
   tweetId: z.string(),
   polling: z.boolean().optional(),
-  paginationToken: z.string().optional()
+  paginationToken: z.string().optional(),
+  maxResults: z.number().optional()
 });
 
 export type TwitterFetchRequestSchema = z.infer<
@@ -144,6 +147,32 @@ export const toTwitterData = (
                   users.push({
                     ...user,
                     actions: ['quote']
+                  });
+                }
+              }
+            }
+          }
+        }
+        continue;
+      }
+      case 'FETCH_TWITTER_GET_REPLY_TO': {
+        if (parsed.success) {
+          const response = repliedByResponseSchema.parse(parsed.data.response);
+          for (const tweet of response.data ?? []) {
+            if (tweet.author_id) {
+              const user = response.includes?.users?.find(
+                (u) => u.id === tweet.author_id
+              );
+              if (user) {
+                const existing = users.find((u) => u.id === user.id);
+                if (existing) {
+                  if (!existing.actions.includes('reply')) {
+                    existing.actions.push('reply');
+                  }
+                } else {
+                  users.push({
+                    ...user,
+                    actions: ['reply']
                   });
                 }
               }

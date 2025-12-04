@@ -5,11 +5,6 @@
 - [x] Create import reposts
 - [x] Create import likes
 - [ ] Create import quotes
-- [ ] Create import comments
-
-# L1ghterVibes
-
-- [ ] Fix comment picker (import comments) for X
 
 ### @theejankanator & @h7ban
 

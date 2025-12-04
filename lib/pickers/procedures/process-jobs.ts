@@ -9,6 +9,7 @@ import {
 import { MAX_JOBS_PER_RUN } from '@/schemas/user-scoring';
 import {
   ApplicationError,
+  assertNever,
   isApplicationError,
   isRetryableApplicationError
 } from '@/lib/errors';
@@ -26,11 +27,14 @@ import { Tx } from '@/lib/prisma';
 import { TWITTER_API_RATE_LIMIT_MINUTES } from '../data/settings';
 import { getRetweetedBy } from '@/lib/integrations/procedures/get-retweets';
 import { getQuoteTweets } from '@/lib/integrations/procedures/get-quote-tweets';
+import { getRepliesTo } from '@/lib/integrations/procedures/get-replies';
 import { newEmailClient, NO_REPLY_EMAIL } from '@/lib/email/client';
 import { getPickerProcessedEmailContent } from '@/lib/email/templates';
 import { parsePickerFormSchema } from '../schemas/form';
 import { getDisqualificationReason } from '../schemas/public-picker';
 import { environment } from '@/lib/environment';
+
+const MAX_RESULTS_PER_RUN = 100;
 
 export const processPickerJobs = procedure()
   .authorization({
@@ -163,12 +167,10 @@ const processJob = async (db: PrismaClient, job: PickerJobWithForm) => {
       return await processFetchTwitterGetRepostedByJob(db, job);
     case 'FETCH_TWITTER_GET_QUOTED_POSTS':
       return await processFetchTwitterGetQuotedPostsJob(db, job);
+    case 'FETCH_TWITTER_GET_REPLY_TO':
+      return await processFetchTwitterGetRepliesJob(db, job);
     default:
-      throw new ApplicationError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: `Unknown job type: ${job.type}`,
-        data: job
-      });
+      throw assertNever(job.type);
   }
 };
 
@@ -226,8 +228,7 @@ const processFetchTwitterDataJob = async (
 
   if (
     someChildrenPending &&
-    form.timing?.endDate &&
-    new Date() < new Date(form.timing.endDate)
+    (!form.timing?.endDate || new Date() < new Date(form.timing.endDate))
   ) {
     // re-queue the job for later
     await db.pickerJob.update({
@@ -238,6 +239,7 @@ const processFetchTwitterDataJob = async (
         data
       }
     });
+
     return;
   }
 
@@ -290,7 +292,7 @@ const processFetchTwitterGetLikingUsersJob = async (
         teamId: job.picker.teamId,
         tweetId: request.tweetId,
         paginationToken: request.paginationToken,
-        maxResults: 100
+        maxResults: MAX_RESULTS_PER_RUN
       })
   );
 
@@ -306,7 +308,7 @@ const processFetchTwitterGetRepostedByJob = async (
         teamId: job.picker.teamId,
         tweetId: request.tweetId,
         paginationToken: request.paginationToken,
-        maxResults: 100
+        maxResults: MAX_RESULTS_PER_RUN
       })
   );
 
@@ -322,13 +324,30 @@ const processFetchTwitterGetQuotedPostsJob = async (
         teamId: job.picker.teamId,
         tweetId: request.tweetId,
         paginationToken: request.paginationToken,
-        maxResults: 100
+        maxResults: MAX_RESULTS_PER_RUN
+      })
+  );
+};
+
+const processFetchTwitterGetRepliesJob = async (
+  db: PrismaClient,
+  job: PickerJobWithChildren
+) => {
+  await twitterJobProcessor(
+    db,
+    job,
+    async (tx, request) =>
+      await getRepliesTo(tx, {
+        teamId: job.picker.teamId,
+        tweetId: request.tweetId,
+        paginationToken: request.paginationToken,
+        maxResults: MAX_RESULTS_PER_RUN
       })
   );
 };
 
 const twitterJobProcessor = async <
-  T extends { meta?: { next_token?: string } }
+  T extends { meta?: { next_token?: string; result_count?: number } }
 >(
   db: PrismaClient,
   job: PickerJobWithChildren,
@@ -379,7 +398,17 @@ const twitterJobProcessor = async <
             })
           }
         });
-      } else if (response.meta?.next_token) {
+      } else if (
+        response.meta &&
+        response.meta.next_token &&
+        response.meta.result_count
+      ) {
+        if (response.meta.result_count < MAX_RESULTS_PER_RUN) {
+          console.info(
+            `[twitterJobProcessor] No more results for job ${job.id}, not queuing further requests.`
+          );
+          return;
+        }
         await tx.pickerJob.create({
           data: {
             pickerId: job.pickerId,

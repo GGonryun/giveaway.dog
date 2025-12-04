@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "PickerJobType" ADD VALUE 'FETCH_TWITTER_GET_REPLY_TO';

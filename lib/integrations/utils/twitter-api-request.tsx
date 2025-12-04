@@ -38,9 +38,20 @@ export async function twitterApiRequest<T>({
     if (response.status === 429) {
       const error = await response.clone().json();
       const resetTime = response.headers.get('x-rate-limit-reset');
+      const rateLimit = response.headers.get('x-rate-limit-limit');
+      const rateLimitRemaining = response.headers.get('x-rate-limit-remaining');
+
       const retryAfter = resetTime
         ? new Date(parseInt(resetTime) * 1000)
         : new Date(Date.now() + 15 * 60 * 1000);
+
+      console.error('[twitterApiRequest] Rate limit details:', {
+        resetTime: resetTime ? new Date(parseInt(resetTime) * 1000) : null,
+        rateLimit,
+        rateLimitRemaining,
+        retryAfter: retryAfter.toISOString(),
+        error
+      });
 
       throw new ApplicationError({
         code: 'TOO_MANY_REQUESTS',
@@ -53,17 +64,25 @@ export async function twitterApiRequest<T>({
       });
     }
 
+    const errorText = await response.clone().text();
+    console.error('[twitterApiRequest] Error response:', errorText);
+
     throw new ApplicationError({
       code: 'BAD_REQUEST',
       message: 'Failed to fetch data from Twitter API',
-      cause: await response.clone().text()
+      cause: errorText
     });
   }
 
   const data = await response.json();
+
   const parsed = responseSchema.safeParse(data);
 
   if (!parsed.success) {
+    console.error(
+      '[twitterApiRequest] Schema validation failed:',
+      parsed.error
+    );
     throw new ApplicationError({
       code: 'BAD_REQUEST',
       message: 'Invalid response format from Twitter',

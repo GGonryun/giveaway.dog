@@ -9,10 +9,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const [pickerResults, sweepstakesResults] = await Promise.all([
-    processPickerJobs(),
-    processTaskJobs()
-  ]);
+  const sweepstakesResults = await processTaskJobs();
+  const pickerResults = await processPickerJobs();
 
   return NextResponse.json({
     pickers: pickerResults,

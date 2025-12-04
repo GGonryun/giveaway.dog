@@ -25,8 +25,7 @@ export const DEFAULT_PICKER_FORM: Omit<PickerUnvalidatedFormSchema, 'id'> = {
   actions: {
     like: true,
     repost: true,
-    quote: false,
-    reply: false
+    quote: false
   },
   filters: {
     minimumPostCount: null,

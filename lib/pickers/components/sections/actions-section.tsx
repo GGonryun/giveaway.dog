@@ -88,32 +88,10 @@ export const ActionsSection = () => {
                     <Button
                       type="button"
                       variant={field.value ? 'default' : 'outline'}
-                      className={cn(
-                        'w-full rounded-none border-r-0',
-                        field.value && 'border-r'
-                      )}
-                      onClick={() => field.onChange(!field.value)}
-                    >
-                      <PickerActionDisplay action="quote" />
-                    </Button>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={control}
-              name="actions.reply"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <Button
-                      type="button"
-                      variant={field.value ? 'default' : 'outline'}
                       className="w-full rounded-l-none"
                       onClick={() => field.onChange(!field.value)}
                     >
-                      <PickerActionDisplay action="reply" />
+                      <PickerActionDisplay action="quote" />
                     </Button>
                   </FormControl>
                 </FormItem>
