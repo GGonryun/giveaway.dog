@@ -414,7 +414,9 @@ const twitterJobProcessor = async <
               parentId: job.parentId,
               type: job.type,
               status: PickerJobStatus.QUEUED,
-              runAt: datetime.minutesFromNow(TWITTER_API_RATE_LIMIT_MINUTES),
+              runAt: datetime.minutesFromNow(
+                TWITTER_API_RATE_LIMIT_MINUTES + 5
+              ),
               data: toTwitterFetchRequest({
                 tweetId: request.tweetId,
                 paginationToken: response.meta.next_token

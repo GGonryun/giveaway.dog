@@ -33,7 +33,7 @@ export async function twitterApiRequest<T>({
   });
 
   if (!response.ok) {
-    console.error(`Twitter API Error: ${url} - Status: ${response.status}`);
+    console.warn(`Twitter API Error: ${url} - Status: ${response.status}`);
 
     if (response.status === 429) {
       const error = await response.clone().json();
@@ -45,7 +45,7 @@ export async function twitterApiRequest<T>({
         ? new Date(parseInt(resetTime) * 1000)
         : new Date(Date.now() + 15 * 60 * 1000);
 
-      console.error('[twitterApiRequest] Rate limit details:', {
+      console.warn('[twitterApiRequest] Rate limit details:', {
         resetTime: resetTime ? new Date(parseInt(resetTime) * 1000) : null,
         rateLimit,
         rateLimitRemaining,
