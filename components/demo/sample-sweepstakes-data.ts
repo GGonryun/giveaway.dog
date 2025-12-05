@@ -2,6 +2,19 @@ import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { nanoid } from 'nanoid';
 import { toDefaultValues } from '@/lib/task/defaults';
 import { datetime } from '@/lib/date';
+import {
+  DISCORD_INVITE_LINK,
+  DISCORD_PUBLIC_CHANNEL_URL,
+  INSTAGRAM_PROFILE_URL,
+  KICK_CHANNEL_URL,
+  STEAM_APP_ID_URL,
+  TWITCH_CHANNEL_URL,
+  TWITTER_POST_URL,
+  TWITTER_PROFILE_URL,
+  VISIT_URL,
+  YOUTUBE_CHANNEL_NAME,
+  YOUTUBE_CHANNEL_URL
+} from '@/lib/settings';
 
 export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   setup: {
@@ -30,37 +43,46 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   tasks: [
     {
       ...toDefaultValues('TWITCH_FOLLOW'),
+      channel: TWITCH_CHANNEL_URL,
       id: '50ee'
     },
     {
       ...toDefaultValues('TWITTER_FOLLOW'),
+      username: TWITTER_PROFILE_URL,
       id: '4cd9'
     },
     {
       ...toDefaultValues('YOUTUBE_VISIT'),
       subConfirmation: true,
+      title: `Visit ${YOUTUBE_CHANNEL_NAME} on YouTube`,
+      channelUrl: YOUTUBE_CHANNEL_URL,
+      channelName: YOUTUBE_CHANNEL_NAME,
       id: 'a13f'
     },
     {
       ...toDefaultValues('INSTAGRAM_VISIT'),
-      profileUrl: 'https://www.instagram.com/charitydotgames/',
+      profileUrl: INSTAGRAM_PROFILE_URL,
       id: '5fa0'
     },
     {
       ...toDefaultValues('STEAM_WISHLIST'),
+      appId: STEAM_APP_ID_URL,
       id: 'f105'
     },
     {
       ...toDefaultValues('DISCORD_JOIN'),
+      invite: DISCORD_INVITE_LINK,
+      channel: DISCORD_PUBLIC_CHANNEL_URL,
       id: '492b'
     },
     {
       ...toDefaultValues('KICK_FOLLOW'),
+      channel: KICK_CHANNEL_URL,
       id: 'bd33'
     },
     {
       ...toDefaultValues('VISIT_URL'),
-      href: 'https://charity.games',
+      href: VISIT_URL,
       id: 'e505'
     },
     {
@@ -94,10 +116,12 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
     },
     {
       ...toDefaultValues('TWITTER_RETWEET'),
+      tweetId: TWITTER_POST_URL,
       id: '8a04'
     },
     {
       ...toDefaultValues('TWITTER_LIKE'),
+      tweetId: TWITTER_POST_URL,
       id: '47f2'
     }
   ],

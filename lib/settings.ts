@@ -19,6 +19,7 @@ export const MAX_PICKER_SCHEDULE_DAYS = 7;
 export const DEFAULT_SWEEPSTAKES_DETAILS_TAB: SweepstakesTabSchema = 'preview';
 export const DEFAULT_USER_DETAILS_TAB: UserDetailsTabSchema = 'overview';
 export const UNKNOWN_USER_NAME = 'Anonymous';
+export const VISIT_URL = 'https://charity.games';
 export const DISCORD_INVITE_LINK = 'https://discord.gg/Ys8wW5w2Yt';
 export const DISCORD_PUBLIC_CHANNEL_URL =
   'https://discord.com/channels/1425715950988034130/1425715951906590732';
@@ -30,6 +31,7 @@ export const STEAM_APP_ID_URL =
 export const TWITCH_CHANNEL_URL = 'https://www.twitch.tv/ggonryun';
 export const KICK_CHANNEL_URL = 'https://www.kick.com/ggonryun';
 export const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@gonryun';
+export const YOUTUBE_CHANNEL_NAME = 'GiveawayDog';
 export const YOUTUBE_CHANNEL_ID = 'UCbTcSd0aoM0A0sxxz8TBD6w';
 export const INSTAGRAM_PROFILE_URL =
   'https://www.instagram.com/charitydotgames/';

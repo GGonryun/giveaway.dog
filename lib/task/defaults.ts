@@ -1,13 +1,3 @@
-import {
-  DISCORD_INVITE_LINK,
-  DISCORD_PUBLIC_CHANNEL_URL,
-  KICK_CHANNEL_URL,
-  STEAM_APP_ID_URL,
-  TWITCH_CHANNEL_URL,
-  TWITTER_POST_URL,
-  TWITTER_PROFILE_URL,
-  YOUTUBE_CHANNEL_URL
-} from '@/lib/settings';
 import { TaskType } from '@prisma/client';
 import { TaskOf } from './schemas';
 
@@ -52,7 +42,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       type: 'VISIT_URL',
       title: 'Visit our website',
       label: 'Click Here!',
-      href: 'https://example.com',
+      href: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -69,7 +59,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'TWITTER_FOLLOW',
       title: 'Follow us on X (Twitter)',
-      username: TWITTER_PROFILE_URL,
+      username: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -78,7 +68,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'TWITTER_RETWEET',
       title: 'Repost our sweepstakes',
-      tweetId: TWITTER_POST_URL,
+      tweetId: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -87,7 +77,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'TWITTER_RETWEET_IMPORT',
       title: 'Repost our sweepstakes',
-      tweetId: TWITTER_POST_URL,
+      tweetId: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0,
@@ -97,7 +87,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'TWITTER_LIKE',
       title: 'Like our post',
-      tweetId: TWITTER_POST_URL,
+      tweetId: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -106,7 +96,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'TWITTER_LIKE_IMPORT',
       title: 'Like our post',
-      tweetId: TWITTER_POST_URL,
+      tweetId: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0,
@@ -116,7 +106,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'STEAM_WISHLIST',
       title: 'Add to your Steam Wishlist',
-      appId: STEAM_APP_ID_URL,
+      appId: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -125,8 +115,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'DISCORD_JOIN',
       title: 'Join our Discord server',
-      invite: DISCORD_INVITE_LINK,
-      channel: DISCORD_PUBLIC_CHANNEL_URL,
+      invite: '',
+      channel: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -135,7 +125,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'TWITCH_FOLLOW',
       title: 'Follow us on Twitch',
-      channel: TWITCH_CHANNEL_URL,
+      channel: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -144,7 +134,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'KICK_FOLLOW',
       title: 'Follow us on Kick',
-      channel: KICK_CHANNEL_URL,
+      channel: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0
@@ -163,8 +153,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'YOUTUBE_VISIT',
       title: 'Visit our YouTube channel',
-      channelUrl: YOUTUBE_CHANNEL_URL,
-      channelName: 'GiveawayDog',
+      channelUrl: '',
+      channelName: '',
       subConfirmation: false,
       value: 1,
       mandatory: false,

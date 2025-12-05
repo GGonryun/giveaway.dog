@@ -10,10 +10,11 @@ import { useTaskTheme } from '@/lib/task/components/theme';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ExternalLinkIcon } from 'lucide-react';
+import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
 
 export const YouTubeVisitTaskActionForm: React.FC<
   TaskActionProps<YoutubeVisitTaskSchema>
-> = ({ onCancel, onSubmit, isLoading, task, error }) => {
+> = ({ onCancel, onSubmit, isLoading, task }) => {
   const { theme } = useTaskTheme();
   const [visited, setVisited] = useState(false);
 
@@ -37,8 +38,8 @@ export const YouTubeVisitTaskActionForm: React.FC<
       <TaskContent>
         <Button className={cn(theme.action)} asChild onClick={handleVisit}>
           <a href={url} target="_blank">
+            <SocialYouTubeIcon />
             {label}
-            <ExternalLinkIcon />
           </a>
         </Button>
       </TaskContent>
@@ -53,7 +54,12 @@ export const YouTubeVisitTaskActionForm: React.FC<
   );
 };
 
-const generateLabel = (task: YoutubeVisitTaskSchema) => `Visit Channel`;
+const generateLabel = (task: YoutubeVisitTaskSchema) => {
+  if (task.channelName && task.channelName.trim().length > 0) {
+    return `Visit ${task.channelName}'s Channel`;
+  }
+  return `Visit Channel`;
+};
 
 const generateUrl = (task: YoutubeVisitTaskSchema) => {
   const base = task.channelUrl;
