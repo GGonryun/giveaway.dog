@@ -90,7 +90,7 @@ export function TeamRoles({
           title="Team Members"
           description="Manage your team members and pending invitations."
           footer={
-            <Link href="/support" className="flex items-center hover:underline">
+            <Link href="/contact" className="flex items-center hover:underline">
               Learn more about Team Members
               <ExternalLink className="ml-1 h-3 w-3" />
             </Link>

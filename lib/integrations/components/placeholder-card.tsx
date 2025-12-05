@@ -13,7 +13,7 @@ import { CircleQuestionMark, MessageSquare } from 'lucide-react';
 export function PlaceholderCard() {
   return (
     <Card className="border-dashed">
-      <CardHeader className="pb-4">
+      <CardHeader>
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-muted">
             <CircleQuestionMark className="h-6 w-6" />
@@ -31,7 +31,7 @@ export function PlaceholderCard() {
           We're working on bringing you more integration options.
         </p>
         <Button variant="outline" size="sm" className="w-full" asChild>
-          <a href="/support">
+          <a href="/contact">
             <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
             Suggest Integration
           </a>

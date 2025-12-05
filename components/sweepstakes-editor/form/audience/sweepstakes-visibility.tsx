@@ -99,7 +99,7 @@ const VisibilityTypeField = () => {
             <FormDescription className="text-red-600">
               You do not have permission to make sweepstakes public.{' '}
               <Link
-                href="/support"
+                href="/contact"
                 className="font-semibold underline hover:text-red-800"
               >
                 Contact support

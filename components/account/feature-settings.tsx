@@ -117,7 +117,7 @@ const ContactSupportDialog: React.FC<{
             Okay
           </AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Link href="/support" className="inline-flex">
+            <Link href="/contact" className="inline-flex">
               Contact Support
             </Link>
           </AlertDialogAction>
@@ -147,7 +147,7 @@ const CannotDisableDialog: React.FC<{
             Okay
           </AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Link href="/support" className="inline-flex">
+            <Link href="/contact" className="inline-flex">
               Contact Support
             </Link>
           </AlertDialogAction>

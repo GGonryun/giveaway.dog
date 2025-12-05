@@ -197,7 +197,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                       <span className="font-bold">private</span>. You{' '}
                       <span className="font-bold">do not</span> have permission
                       to make sweepstakes public.{' '}
-                      <Link href="/support">Contact support</Link> to enable
+                      <Link href="/contact">Contact support</Link> to enable
                       this feature for your team.
                     </span>
                   )}

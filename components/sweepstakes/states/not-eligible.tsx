@@ -15,7 +15,7 @@ export const NotEligible: React.FC = () => {
       </p>
       <p className="text-sm text-muted-foreground">
         If you believe this is an error, please contact{' '}
-        <Link href="/support" className="underline">
+        <Link href="/contact" className="underline">
           support
         </Link>
         .
