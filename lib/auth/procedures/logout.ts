@@ -1,6 +1,6 @@
 'use server';
 
-import { signOut } from '@/lib/auth';
+import { signOut } from '@/lib/auth/config';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 

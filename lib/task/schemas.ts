@@ -357,7 +357,8 @@ export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
   email: 'Email',
   twitch: 'Twitch',
   kick: 'Kick',
-  youtube: 'YouTube'
+  youtube: 'YouTube',
+  instagram: 'Instagram'
 };
 
 export const taskCategorySchema = z.enum(['social', 'engagement', 'community']);

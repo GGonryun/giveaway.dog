@@ -1,6 +1,6 @@
 'use server';
 
-import { auth, signOut } from '@/lib/auth';
+import { auth, signOut } from '@/lib/auth/config';
 import { LogoutScreen } from './logout-screen';
 import { Metadata } from 'next';
 

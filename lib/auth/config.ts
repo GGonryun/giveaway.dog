@@ -5,10 +5,12 @@ import TwitterProvider from 'next-auth/providers/twitter';
 import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
 import TwitchProvider from 'next-auth/providers/twitch';
+import InstagramProvider from 'next-auth/providers/instagram';
 
 import { authConfig } from './config-runtime';
 import { SteamProvider } from './providers/steam';
 import { InboundEmailProvider } from './providers/inbound';
+
 import KickProvider from './providers/kick';
 import {
   REQUIRED_DISCORD_SCOPES,
@@ -83,6 +85,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
     }),
     InboundEmailProvider({
       secret: process.env.INBOUND_SECRET
+    }),
+    InstagramProvider({
+      clientId: process.env.INSTAGRAM_CLIENT_ID!,
+      clientSecret: process.env.INSTAGRAM_CLIENT_SECRET!
     })
   ]
 }));

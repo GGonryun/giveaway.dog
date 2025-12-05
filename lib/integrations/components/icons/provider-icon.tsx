@@ -9,6 +9,7 @@ import { SocialTwitchIcon } from './twitch-icon';
 import { ProviderTypeSchema } from '../../schemas/providers';
 import { SocialKickIcon } from './kick-icon';
 import { SocialYouTubeIcon } from './youtube';
+import { SocialInstagramIcon } from './instagram';
 
 interface ProviderIconProps {
   type: ProviderTypeSchema;
@@ -19,14 +20,15 @@ export const PROVIDER_ICON: Record<
   ProviderTypeSchema,
   React.FC<{ className?: string }>
 > = {
+  youtube: SocialYouTubeIcon,
+  email: Mail,
   twitter: SocialXIcon,
   google: SocialGoogleIcon,
   discord: SocialDiscordIcon,
   steam: SocialSteamIcon,
   twitch: SocialTwitchIcon,
   kick: SocialKickIcon,
-  youtube: SocialYouTubeIcon,
-  email: Mail
+  instagram: SocialInstagramIcon
 };
 
 export const ProviderIcon: React.FC<ProviderIconProps> = ({

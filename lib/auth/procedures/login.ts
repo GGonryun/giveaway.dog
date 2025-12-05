@@ -5,7 +5,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { parseProvider } from '@/schemas/user';
 import { AuthError } from 'next-auth';
 import z from 'zod';
-import { signIn } from '..';
+import { signIn } from '../config';
 
 const login = procedure()
   .authorization({
@@ -68,6 +68,7 @@ const signInHandler = async (args: {
     case 'twitch':
     case 'steam':
     case 'kick':
+    case 'instagram':
       return await signIn(provider, options);
     case 'email':
       return await signIn('email', {

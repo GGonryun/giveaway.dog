@@ -3,7 +3,7 @@ import { NextAuthConfig } from 'next-auth';
 import { tryAutoMerge } from './auto-merge';
 import { authConfigMiddleware } from './config-middleware';
 import { getAccountLabel, getAccountLink } from './get-account-data';
-import { auth } from '.';
+import { auth } from './config';
 export const authConfig = {
   ...authConfigMiddleware,
   events: {
