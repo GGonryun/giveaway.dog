@@ -215,6 +215,20 @@ export const youtubeVisitTaskSchema = baseTaskSchema.extend({
 
 export type YoutubeVisitTaskSchema = z.infer<typeof youtubeVisitTaskSchema>;
 
+export const instagramVisitTaskSchema = baseTaskSchema.extend({
+  type: z.literal('INSTAGRAM_VISIT'),
+  profileUrl: z
+    .string()
+    .url('Instagram Profile URL is required')
+    .refine((val) => {
+      const urlPattern =
+        /^https?:\/\/(www\.)?instagram\.com\/[A-Za-z0-9_.]{1,30}\/?$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://www.instagram.com/username/')
+});
+
+export type InstagramVisitTaskSchema = z.infer<typeof instagramVisitTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -232,7 +246,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   twitchFollowTaskSchema,
   kickFollowTaskSchema,
   secretCodeTaskSchema,
-  youtubeVisitTaskSchema
+  youtubeVisitTaskSchema,
+  instagramVisitTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -243,6 +258,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   BONUS_LIMITED: 'Limited Bonus',
   BONUS_LOYALTY: 'Loyalty Bonus',
   VISIT_URL: 'Visit URL',
+  SECRET_CODE: 'Enter Secret Code',
   TWITTER_CONNECT: 'Connect X',
   TWITTER_FOLLOW: 'Follow on X',
   TWITTER_RETWEET: 'Repost on X',
@@ -254,7 +270,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   TWITCH_FOLLOW: 'Follow on Twitch',
   YOUTUBE_VISIT: 'Visit YouTube Channel',
   KICK_FOLLOW: 'Follow on Kick',
-  SECRET_CODE: 'Enter Secret Code'
+  INSTAGRAM_VISIT: 'Visit Instagram Profile'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -274,6 +290,7 @@ export const TASK_INPUT_SCHEMA = {
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
   BONUS_LOYALTY: z.object({}),
+  INSTAGRAM_VISIT: z.object({}),
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
   })
@@ -296,6 +313,7 @@ export const TASK_JOB_DATA_SCHEMA = {
     runs: z.number().min(0),
     lastProcessedId: z.string().optional()
   }),
+  INSTAGRAM_VISIT: z.object({}),
   STEAM_WISHLIST: z.object({}),
   DISCORD_JOIN: z.object({}),
   TWITCH_FOLLOW: z.object({}),
@@ -336,6 +354,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   TWITTER_LIKE_IMPORT: 'twitter',
   STEAM_WISHLIST: 'steam',
   YOUTUBE_VISIT: 'youtube',
+  INSTAGRAM_VISIT: 'instagram',
   DISCORD_JOIN: 'discord',
   TWITCH_FOLLOW: 'twitch',
   KICK_FOLLOW: 'kick'
@@ -382,7 +401,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   STEAM_WISHLIST: 'community',
   TWITCH_FOLLOW: 'social',
   KICK_FOLLOW: 'social',
-  YOUTUBE_VISIT: 'social'
+  YOUTUBE_VISIT: 'social',
+  INSTAGRAM_VISIT: 'social'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',
@@ -407,7 +427,8 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   STEAM_WISHLIST: false,
   TWITCH_FOLLOW: false,
   KICK_FOLLOW: false,
-  YOUTUBE_VISIT: false
+  YOUTUBE_VISIT: false,
+  INSTAGRAM_VISIT: false
 };
 
 export const userEntriesSchema = z.object({

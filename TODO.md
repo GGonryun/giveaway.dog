@@ -2,7 +2,10 @@
 
 ### @theejankanator & @h7ban
 
-- [ ] Add Instagram integration - https://next-auth.js.org/providers/instagram (follow account, comment on instagram, view post, login with instagram)
+- [ ] Add Instagram integration
+  - [ ] view a post
+  - [ ] follow
+  - [ ] comment
 
 ### @theejankanator
 

@@ -1,5 +1,4 @@
 import {
-  DEFAULT_YOUTUBE_VISIT_TITLE,
   DISCORD_INVITE_LINK,
   DISCORD_PUBLIC_CHANNEL_URL,
   KICK_CHANNEL_URL,
@@ -163,10 +162,19 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
     ['YOUTUBE_VISIT']: {
       id: '',
       type: 'YOUTUBE_VISIT',
-      title: DEFAULT_YOUTUBE_VISIT_TITLE,
+      title: 'Visit our YouTube channel',
       channelUrl: YOUTUBE_CHANNEL_URL,
       channelName: 'GiveawayDog',
       subConfirmation: false,
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
+    ['INSTAGRAM_VISIT']: {
+      id: '',
+      type: 'INSTAGRAM_VISIT',
+      title: 'Visit our Instagram profile',
+      profileUrl: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0

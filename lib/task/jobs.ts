@@ -23,6 +23,7 @@ export const createJobsForTask = (
     case 'YOUTUBE_VISIT':
     case 'BONUS_LOYALTY':
     case 'TWITTER_RETWEET':
+    case 'INSTAGRAM_VISIT':
       return [];
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':

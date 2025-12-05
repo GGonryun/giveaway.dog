@@ -23,6 +23,7 @@ import {
   ImportingAccountField,
   ImportingTweetIdValidation
 } from './lib/importing-account';
+import { InstagramProfileUrl } from './lib/instagram';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -100,6 +101,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
           <>
             <YouTubeChannelUrlFormField />
             <YouTubeSubscriptionConfirmationFormField />
+          </>
+        );
+      case 'INSTAGRAM_VISIT':
+        return (
+          <>
+            <InstagramProfileUrl />
           </>
         );
       default:

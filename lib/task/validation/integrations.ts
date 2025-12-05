@@ -21,7 +21,6 @@ export const validateTask = async <T extends TaskSchema>(
   switch (input.task.type) {
     case 'BONUS_TASK':
     case 'VISIT_URL':
-      return Promise.resolve(); // No validation needed
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
@@ -29,10 +28,9 @@ export const validateTask = async <T extends TaskSchema>(
     case 'TWITTER_LIKE':
     case 'TWITTER_LIKE_IMPORT':
     case 'YOUTUBE_VISIT':
-      return Promise.resolve(); // No validation possible
     case 'KICK_FOLLOW':
-      // kick does not support public follower lists or an API to verify follows
-      return Promise.resolve(); // No validation possible
+    case 'INSTAGRAM_VISIT':
+      return Promise.resolve(); // No validation possible/needed
     case 'BONUS_LIMITED':
       return await checkBonusLimited(db, { task: input.task });
     case 'BONUS_TIMED':

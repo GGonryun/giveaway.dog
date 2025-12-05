@@ -16,6 +16,7 @@ import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
 import { SocialKickIcon } from '@/lib/integrations/components/icons/kick-icon';
 import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
+import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
 
 export type TaskTheme = {
   action: string;
@@ -126,6 +127,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-youtube-1 text-white',
         arrow: 'bg-youtube-1 text-white fill-youtube-1',
         icon: SocialYouTubeIcon
+      };
+    case 'INSTAGRAM_VISIT':
+      return {
+        action:
+          'text-white bg-instagram-1 group-hover:bg-instagram-1/80 hover:bg-instagram-1/80 dark:bg-instagram-1/80 dark:hover:bg-instagram-1/80',
+        symbol: 'bg-instagram-1 text-white',
+        arrow: 'bg-instagram-1 text-white fill-instagram-1',
+        icon: SocialInstagramIcon
       };
     default:
       throw assertNever(type);

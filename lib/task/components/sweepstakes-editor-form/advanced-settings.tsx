@@ -38,6 +38,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'BONUS_LIMITED':
       case 'BONUS_LOYALTY':
       case 'TWITTER_RETWEET':
+      case 'INSTAGRAM_VISIT':
         return (
           <>
             <MandatoryField />

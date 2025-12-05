@@ -30,70 +30,75 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   tasks: [
     {
       ...toDefaultValues('TWITCH_FOLLOW'),
-      id: '1'
+      id: '50ee'
     },
     {
       ...toDefaultValues('TWITTER_FOLLOW'),
-      id: '2'
+      id: '4cd9'
     },
     {
       ...toDefaultValues('YOUTUBE_VISIT'),
       subConfirmation: true,
-      id: '3'
+      id: 'a13f'
+    },
+    {
+      ...toDefaultValues('INSTAGRAM_VISIT'),
+      profileUrl: 'https://www.instagram.com/charitydotgames/',
+      id: '5fa0'
     },
     {
       ...toDefaultValues('STEAM_WISHLIST'),
-      id: '4'
+      id: 'f105'
     },
     {
       ...toDefaultValues('DISCORD_JOIN'),
-      id: '5'
+      id: '492b'
     },
     {
       ...toDefaultValues('KICK_FOLLOW'),
-      id: '6'
+      id: 'bd33'
     },
     {
       ...toDefaultValues('VISIT_URL'),
       href: 'https://charity.games',
-      id: '7'
+      id: 'e505'
     },
     {
       ...toDefaultValues('SECRET_CODE'),
       hint: 'Use code "DEMO2025" to enter the sweepstakes!',
       code: 'DEMO2025',
-      id: '8'
+      id: 'ef5b'
     },
     {
       ...toDefaultValues('BONUS_TASK'),
       tasksRequired: 3,
-      id: '9'
+      id: '1229'
     },
     {
       ...toDefaultValues('BONUS_TIMED'),
       title: "Unlock before it's too late",
       endDate: datetime.daysFromNow(30).toISOString(),
-      id: '10'
+      id: '6b3c'
     },
     {
       ...toDefaultValues('BONUS_LIMITED'),
       title: 'Bonus for the first 100 participants',
       maxEntrants: 100,
-      id: '11'
+      id: '90e0'
     },
     {
       ...toDefaultValues('BONUS_LOYALTY'),
-      id: '12',
+      id: '4f8e',
       title: 'Get rewarded for your loyalty',
       loyaltyRequired: 10
     },
     {
       ...toDefaultValues('TWITTER_RETWEET'),
-      id: '13'
+      id: '8a04'
     },
     {
       ...toDefaultValues('TWITTER_LIKE'),
-      id: '14'
+      id: '47f2'
     }
   ],
   terms: {
