@@ -407,21 +407,21 @@ const twitterJobProcessor = async <
           console.info(
             `[twitterJobProcessor] No more results for job ${job.id}, not queuing further requests.`
           );
-          return;
+        } else {
+          await tx.pickerJob.create({
+            data: {
+              pickerId: job.pickerId,
+              parentId: job.parentId,
+              type: job.type,
+              status: PickerJobStatus.QUEUED,
+              runAt: datetime.minutesFromNow(TWITTER_API_RATE_LIMIT_MINUTES),
+              data: toTwitterFetchRequest({
+                tweetId: request.tweetId,
+                paginationToken: response.meta.next_token
+              })
+            }
+          });
         }
-        await tx.pickerJob.create({
-          data: {
-            pickerId: job.pickerId,
-            parentId: job.parentId,
-            type: job.type,
-            status: PickerJobStatus.QUEUED,
-            runAt: datetime.minutesFromNow(TWITTER_API_RATE_LIMIT_MINUTES),
-            data: toTwitterFetchRequest({
-              tweetId: request.tweetId,
-              paginationToken: response.meta.next_token
-            })
-          }
-        });
       }
 
       await tx.pickerJob.update({
