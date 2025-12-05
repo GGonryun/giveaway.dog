@@ -1,5 +1,5 @@
 import { ApplicationError } from '@/lib/errors';
-import { IntegrationProvider } from '@prisma/client';
+import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import {
   TWITTER_TEAM_APP_CLIENT_ID,
   TWITTER_TEAM_APP_CLIENT_SECRET
@@ -96,6 +96,14 @@ export const getLatestTwitterAccessToken = async (
       refreshTokenLength: integration.refresh_token.length,
       refreshTokenPreview: `${integration.refresh_token.substring(0, 10)}...`
     });
+
+    await tx.integration.update({
+      where: { id: integration.id },
+      data: {
+        status: IntegrationStatus.ERROR
+      }
+    });
+
     throw new ApplicationError({
       code: 'BAD_REQUEST',
       message: 'Failed to refresh access token',
