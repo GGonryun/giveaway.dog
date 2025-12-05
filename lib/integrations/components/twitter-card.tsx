@@ -8,7 +8,7 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+
 import { ExternalLink } from 'lucide-react';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { connectTwitter } from '@/lib/integrations/procedures/connect-twitter';
@@ -18,6 +18,8 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
 import { IntegrationSchema } from '../schemas';
+import { IntegrationStatusBadge } from './integration-status-badge';
+import { IntegrationStatusAlert } from './integration-status-alert';
 
 interface TwitterCardProps {
   integration?: IntegrationSchema;
@@ -50,8 +52,8 @@ export function TwitterCard({ integration }: TwitterCardProps) {
   });
 
   return (
-    <Card className="relative">
-      <CardHeader className="pb-4">
+    <Card className="relative flex flex-col">
+      <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-muted">
@@ -60,27 +62,22 @@ export function TwitterCard({ integration }: TwitterCardProps) {
             <div>
               <CardTitle className="text-base">Twitter / X</CardTitle>
               <CardDescription className="text-xs mt-0.5">
-                Social media platform
+                {integration
+                  ? `@${integration.label}`
+                  : 'Social media platform'}
               </CardDescription>
             </div>
           </div>
           {integration && (
-            <Badge variant="success" className="text-xs">
-              Connected
-            </Badge>
+            <IntegrationStatusBadge status={integration.status} />
           )}
         </div>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 flex-1 flex flex-col ">
         {integration ? (
           <>
-            <div className="space-y-2">
-              <p className="text-sm font-medium">@{integration.label}</p>
-              <p className="text-xs text-muted-foreground">
-                Import entries, sync engagement, and manage giveaways
-              </p>
-            </div>
-            <div className="flex gap-2 pt-2">
+            <IntegrationStatusAlert status={integration.status} />
+            <div className="flex gap-2 pt-2 mt-auto">
               <Button variant="outline" size="sm" className="flex-1" asChild>
                 <a
                   href={`https://twitter.com/${integration.label}`}
@@ -110,7 +107,7 @@ export function TwitterCard({ integration }: TwitterCardProps) {
             <Button
               onClick={() => connect.run({ slug })}
               disabled={connect.isLoading}
-              className="w-full"
+              className="w-full mt-auto"
               size="sm"
             >
               {connect.isLoading ? 'Connecting...' : 'Connect'}
