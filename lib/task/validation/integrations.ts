@@ -6,6 +6,7 @@ import { TaskSchema } from '../schemas';
 import { checkTwitchFollow } from './twitch';
 import { checkSecretCode } from './secret-code';
 import { checkBonusLimited, checkBonusLoyalty, checkBonusTimed } from './bonus';
+import { checkVisitUrl } from './visit-url';
 
 export type ValidateTaskInput<T extends TaskSchema> = {
   task: T;
@@ -19,8 +20,12 @@ export const validateTask = async <T extends TaskSchema>(
   input: ValidateTaskInput<T>
 ): Promise<void> => {
   switch (input.task.type) {
-    case 'BONUS_TASK':
     case 'VISIT_URL':
+      return await checkVisitUrl({
+        ...input,
+        task: input.task
+      });
+    case 'BONUS_TASK':
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':

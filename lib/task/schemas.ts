@@ -22,6 +22,24 @@ export const baseTaskSchema = z.object({
   tasksRequired: z.number()
 });
 
+export const afterVisitSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('DELAY'),
+    seconds: z
+      .number()
+      .min(1, 'Seconds must be at least 1')
+      .max(300, 'Seconds cannot exceed 300')
+  }),
+  z.object({
+    type: z.literal('QUESTION'),
+    question: z.string().min(1, 'Question is required'),
+    input: z.enum(['TEXT'])
+  }),
+  z.object({
+    type: z.literal('INSTANT')
+  })
+]);
+
 export const bonusTaskSchema = baseTaskSchema.extend({
   type: z.literal('BONUS_TASK')
 });
@@ -56,7 +74,8 @@ export type BonusLoyaltyTaskSchema = z.infer<typeof bonusLoyaltyTaskSchema>;
 export const visitUrlTaskSchema = baseTaskSchema.extend({
   type: z.literal('VISIT_URL'),
   href: z.string().url(),
-  label: z.string().min(3, 'Label is required')
+  label: z.string().min(3, 'Label is required'),
+  afterVisit: afterVisitSchema.optional()
 });
 
 export type VisitUrlTaskSchema = z.infer<typeof visitUrlTaskSchema>;
@@ -277,7 +296,9 @@ export const TASK_INPUT_SCHEMA = {
   BONUS_TASK: z.object({}),
   BONUS_TIMED: z.object({}),
   BONUS_LIMITED: z.object({}),
-  VISIT_URL: z.object({}),
+  VISIT_URL: z.object({
+    answer: z.optional(z.string())
+  }),
   TWITTER_CONNECT: z.object({}),
   TWITTER_FOLLOW: z.object({}),
   TWITTER_RETWEET: z.object({}),

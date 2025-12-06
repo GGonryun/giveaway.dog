@@ -70,6 +70,7 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
         <TooltipTrigger asChild>
           <Button
             size="sm"
+            type="button"
             variant={submitVariant}
             onClick={undefined}
             className={cn('opacity-50 cursor-not-allowed', submit?.className)}
@@ -82,6 +83,7 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
     ) : (
       <Button
         size="sm"
+        type="button"
         variant={submitVariant}
         onClick={onSubmit}
         className={cn('cursor-pointer', submit?.className)}

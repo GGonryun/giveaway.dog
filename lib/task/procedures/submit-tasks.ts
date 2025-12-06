@@ -8,6 +8,7 @@ import { validateRequiredTasks } from '@/lib/task/validation/required';
 import { z } from 'zod';
 import { toTaskSchema } from '../schemas';
 import { computeTaskStatus } from '../validation/status';
+import { saveTaskProof } from '../validation/proof';
 
 const submitTask = procedure()
   .authorization({ required: true })
@@ -148,7 +149,8 @@ const submitTask = procedure()
       data: {
         userId: user.id,
         taskId,
-        status: computeTaskStatus(taskConfig)
+        status: computeTaskStatus(taskConfig),
+        proof: saveTaskProof(taskConfig, data)
       }
     });
 

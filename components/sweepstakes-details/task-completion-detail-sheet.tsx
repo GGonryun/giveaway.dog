@@ -9,6 +9,13 @@ import {
   SheetHeader,
   SheetTitle
 } from '../ui/sheet';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from '../ui/dialog';
 import { Button } from '../ui/button';
 import {
   Globe,
@@ -28,6 +35,7 @@ import { TaskCategoryBadge } from '@/lib/task/components/task-category-badge';
 import { TaskPlatformIcon } from '@/lib/task/components/task-platform-icon';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
+import { size } from 'lodash';
 
 export const TaskCompletionDetailSheetContent: React.FC<{
   entries: UserEntriesSchema[];
@@ -38,6 +46,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
   const { activeTeam } = useTeams();
   const [selectedTaskCompletion, setSelectedTaskCompletion] =
     useState<UserEntriesSchema | null>(null);
+  const [showProofDialog, setShowProofDialog] = useState(false);
 
   useEffect(() => {
     if (taskCompletionId) {
@@ -188,17 +197,18 @@ export const TaskCompletionDetailSheetContent: React.FC<{
               <UserCompletion entry={selectedTaskCompletion} />
             </div>
 
-            {selectedTaskCompletion.proof ? (
-              <div className="pt-2 border-t border-muted">
+            {selectedTaskCompletion.proof &&
+            size(selectedTaskCompletion.proof) ? (
+              <div className="border-t border-muted">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">
                     Proof Submitted
                   </span>
                   <Button
                     variant="ghost"
-                    size="sm"
+                    size="xs"
                     className="h-6 px-2 text-xs"
-                    onClick={() => alert('This feature is coming soon!')}
+                    onClick={() => setShowProofDialog(true)}
                   >
                     <ExternalLink className="h-3 w-3 mr-1" />
                     View
@@ -264,7 +274,41 @@ export const TaskCompletionDetailSheetContent: React.FC<{
           Close Details
         </Button>
       </div>
+
+      {/* Proof Dialog */}
+      <Dialog open={showProofDialog} onOpenChange={setShowProofDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Task Proof</DialogTitle>
+            <DialogDescription>
+              Proof submitted by{' '}
+              <span className="font-semibold">
+                {selectedTaskCompletion.user.name ??
+                  selectedTaskCompletion.user.email ??
+                  'User'}
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <ProofDisplay proof={selectedTaskCompletion.proof} />
+        </DialogContent>
+      </Dialog>
     </>
+  );
+};
+
+const ProofDisplay: React.FC<{ proof: unknown }> = ({ proof }) => {
+  if (!proof || typeof proof !== 'object') {
+    return (
+      <div className="text-sm text-muted-foreground">No proof available</div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      <pre className="p-3 bg-muted rounded-lg text-xs overflow-x-auto">
+        {JSON.stringify(proof, null, 2)}
+      </pre>
+    </div>
   );
 };
 
@@ -292,9 +336,10 @@ const UserCompletion: React.FC<{ entry: UserEntriesSchema }> = ({ entry }) => {
 
 const useTaskIdFromPath = (root?: 'entries' | 'winners') => {
   const pathname = usePathname();
-  const regex = root === 'winners'
-    ? /\/winners\/task\/([^/]+)/
-    : /\/entries\/task\/([^/]+)/;
+  const regex =
+    root === 'winners'
+      ? /\/winners\/task\/([^/]+)/
+      : /\/entries\/task\/([^/]+)/;
   const match = pathname.match(regex);
   return match ? match[1] : undefined;
 };
