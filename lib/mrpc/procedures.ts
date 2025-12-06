@@ -102,7 +102,7 @@ class ProcedureBuilder<
         if (this.outputSchema) {
           const parsed = this.outputSchema.safeParse(data);
           if (!parsed.success) {
-            console.error('Output validation error:', data); // Log the error for debugging
+            console.error('Output validation error:', data, parsed.error); // Log the error for debugging
             throw new ApplicationError({
               code: 'UNPROCESSABLE_CONTENT',
               message: `Output validation failed: ${parsed.error.message}`,

@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import { StaticTemplate } from '../schemas/template';
 import { toDefaultValues } from '@/lib/task/defaults';
 import { Nil } from '@/lib/types';
+import { TWITTER_POST_URL, TWITTER_PROFILE_URL } from '@/lib/settings';
 
 const BASIC_TEMPLATE: StaticTemplate = {
   id: 'basic-giveaway',
@@ -20,6 +21,7 @@ const BASIC_TEMPLATE: StaticTemplate = {
     tasks: [
       {
         ...toDefaultValues('VISIT_URL'),
+        href: 'https://giveaway.dog',
         id: nanoid()
       }
     ],
@@ -64,9 +66,21 @@ const TWITTER_TEMPLATE: StaticTemplate = {
     },
     tasks: [
       { ...toDefaultValues('TWITTER_CONNECT'), mandatory: true, id: nanoid() },
-      { ...toDefaultValues('TWITTER_FOLLOW'), id: nanoid() },
-      { ...toDefaultValues('TWITTER_RETWEET'), id: nanoid() },
-      { ...toDefaultValues('BONUS_TASK'), tasksRequired: 3, id: nanoid() }
+      {
+        ...toDefaultValues('TWITTER_FOLLOW'),
+        username: TWITTER_PROFILE_URL,
+        id: nanoid()
+      },
+      {
+        ...toDefaultValues('TWITTER_RETWEET'),
+        tweetId: TWITTER_POST_URL,
+        id: nanoid()
+      },
+      {
+        ...toDefaultValues('BONUS_TASK'),
+        tasksRequired: 3,
+        id: nanoid()
+      }
     ],
     audience: {
       requireEmail: true,

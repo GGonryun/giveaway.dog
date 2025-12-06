@@ -1,5 +1,7 @@
 ## Roadmap
 
+- [ ] Add an "After visiting" advanced option to entry methods that require visiting a link, so users have to stay on the page for X seconds before getting entries.
+
 ### @theejankanator & @h7ban
 
 - [ ] Add Instagram integration
@@ -7,15 +9,21 @@
   - [ ] follow
   - [ ] comment
 
+- [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook (join a group, like a page, select a photo, share with friends, visit a page, login with facebook)
+
 ### @theejankanator
 
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
 - [ ] Add TikTok integration - https://authjs.dev/getting-started/providers/tiktok
 
-### h7ban
+### RoeBunny
 
-- [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook (join a group, like a page, select a photo, share with friends, visit a page, login with facebook)
+- [ ] Anonymous giveaways
+
+### Fuzy
+
+- [ ] Team RBAC, Raffles as a feature.
 
 ## The Games Detective
 
@@ -65,6 +73,8 @@
 - [ ] Add a referral task.
 
 - [ ] Add a kofi link entry method.
+
+- [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"

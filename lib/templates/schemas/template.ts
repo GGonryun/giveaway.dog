@@ -1,5 +1,15 @@
+import { DeepPartial } from '@/lib/types';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { z } from 'zod';
-import { baseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
+
+type SweepstakesTemplateSchema = Omit<
+  DeepPartial<GiveawayFormSchema>,
+  'timing' | 'terms' | 'prizes' | 'visibility'
+>;
+export const sweepstakesTemplateSchema = z.custom<SweepstakesTemplateSchema>(
+  (data): data is SweepstakesTemplateSchema =>
+    typeof data === 'object' && data !== null
+);
 
 export const staticTemplateSchema = z.object({
   id: z.string(),
@@ -7,12 +17,7 @@ export const staticTemplateSchema = z.object({
   description: z.string(),
   image: z.string(),
   tags: z.array(z.string()),
-  content: baseGiveawayFormSchema({ validate: false }).omit({
-    timing: true,
-    terms: true,
-    prizes: true,
-    visibility: true
-  })
+  content: sweepstakesTemplateSchema
 });
 
 export type StaticTemplate = z.infer<typeof staticTemplateSchema>;
