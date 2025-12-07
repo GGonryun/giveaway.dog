@@ -23,7 +23,7 @@ import {
   ImportingAccountField,
   ImportingTweetIdValidation
 } from './lib/importing-account';
-import { InstagramProfileUrl } from './lib/instagram';
+import { InstagramProfileUrl, InstagramPostUrl } from './lib/instagram';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -107,6 +107,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return (
           <>
             <InstagramProfileUrl />
+          </>
+        );
+      case 'INSTAGRAM_LIKE':
+        return (
+          <>
+            <InstagramPostUrl />
           </>
         );
       default:

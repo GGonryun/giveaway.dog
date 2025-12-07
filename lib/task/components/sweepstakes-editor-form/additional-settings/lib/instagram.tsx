@@ -29,3 +29,23 @@ export const InstagramProfileUrl: React.FC = () => {
     />
   );
 };
+
+export const InstagramPostUrl: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+  return (
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.postUrl`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Post URL</FormLabel>
+          <FormControl>
+            <Input type="text" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};

@@ -20,11 +20,11 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'SECRET_CODE':
     case 'YOUTUBE_VISIT':
     case 'INSTAGRAM_VISIT':
+    case 'INSTAGRAM_LIKE':
       return CompletionStatus.COMPLETED;
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':
       return CompletionStatus.PENDING;
-
     default:
       throw assertNever(task);
   }

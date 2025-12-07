@@ -248,6 +248,20 @@ export const instagramVisitTaskSchema = baseTaskSchema.extend({
 
 export type InstagramVisitTaskSchema = z.infer<typeof instagramVisitTaskSchema>;
 
+export const instagramLikeTaskSchema = baseTaskSchema.extend({
+  type: z.literal('INSTAGRAM_LIKE'),
+  postUrl: z
+    .string()
+    .url('Instagram Post URL is required')
+    .refine((val) => {
+      const urlPattern =
+        /^https?:\/\/(www\.)?instagram\.com\/p\/[A-Za-z0-9_-]+\/?$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://www.instagram.com/p/POST_ID/')
+});
+
+export type InstagramLikeTaskSchema = z.infer<typeof instagramLikeTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -266,7 +280,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   kickFollowTaskSchema,
   secretCodeTaskSchema,
   youtubeVisitTaskSchema,
-  instagramVisitTaskSchema
+  instagramVisitTaskSchema,
+  instagramLikeTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -289,13 +304,15 @@ export const TASK_LABEL: Record<TaskType, string> = {
   TWITCH_FOLLOW: 'Follow on Twitch',
   YOUTUBE_VISIT: 'Visit YouTube Channel',
   KICK_FOLLOW: 'Follow on Kick',
-  INSTAGRAM_VISIT: 'Visit Instagram Profile'
+  INSTAGRAM_VISIT: 'Visit Instagram Profile',
+  INSTAGRAM_LIKE: 'View Instagram Post'
 };
 
 export const TASK_INPUT_SCHEMA = {
   BONUS_TASK: z.object({}),
   BONUS_TIMED: z.object({}),
   BONUS_LIMITED: z.object({}),
+  BONUS_LOYALTY: z.object({}),
   VISIT_URL: z.object({
     answer: z.optional(z.string())
   }),
@@ -310,8 +327,8 @@ export const TASK_INPUT_SCHEMA = {
   TWITCH_FOLLOW: z.object({}),
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
-  BONUS_LOYALTY: z.object({}),
   INSTAGRAM_VISIT: z.object({}),
+  INSTAGRAM_LIKE: z.object({}),
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
   })
@@ -321,6 +338,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   BONUS_TASK: z.object({}),
   BONUS_TIMED: z.object({}),
   BONUS_LIMITED: z.object({}),
+  BONUS_LOYALTY: z.object({}),
   VISIT_URL: z.object({}),
   TWITTER_CONNECT: z.object({}),
   TWITTER_FOLLOW: z.object({}),
@@ -334,13 +352,13 @@ export const TASK_JOB_DATA_SCHEMA = {
     runs: z.number().min(0),
     lastProcessedId: z.string().optional()
   }),
-  INSTAGRAM_VISIT: z.object({}),
   STEAM_WISHLIST: z.object({}),
   DISCORD_JOIN: z.object({}),
   TWITCH_FOLLOW: z.object({}),
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
-  BONUS_LOYALTY: z.object({}),
+  INSTAGRAM_VISIT: z.object({}),
+  INSTAGRAM_LIKE: z.object({}),
   SECRET_CODE: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
@@ -376,6 +394,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   STEAM_WISHLIST: 'steam',
   YOUTUBE_VISIT: 'youtube',
   INSTAGRAM_VISIT: 'instagram',
+  INSTAGRAM_LIKE: 'instagram',
   DISCORD_JOIN: 'discord',
   TWITCH_FOLLOW: 'twitch',
   KICK_FOLLOW: 'kick'
@@ -423,7 +442,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   TWITCH_FOLLOW: 'social',
   KICK_FOLLOW: 'social',
   YOUTUBE_VISIT: 'social',
-  INSTAGRAM_VISIT: 'social'
+  INSTAGRAM_VISIT: 'social',
+  INSTAGRAM_LIKE: 'social'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',
@@ -449,7 +469,8 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   TWITCH_FOLLOW: false,
   KICK_FOLLOW: false,
   YOUTUBE_VISIT: false,
-  INSTAGRAM_VISIT: false
+  INSTAGRAM_VISIT: false,
+  INSTAGRAM_LIKE: false
 };
 
 export const userEntriesSchema = z.object({

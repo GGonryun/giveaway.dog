@@ -18,6 +18,7 @@ import { BonusTimedActionForm } from './lib/website/bonus-timed';
 import { BonusLimitedActionForm } from './lib/website/bonus-limited';
 import { BonusLoyaltyActionForm } from './lib/website/bonus-loyalty';
 import { InstagramVisitTaskActionForm } from './lib/instagram/visit';
+import { InstagramLikeTaskActionForm } from './lib/instagram/like';
 
 export const TaskActionForm: React.FC<
   TaskActionProps & {
@@ -59,6 +60,8 @@ export const TaskActionForm: React.FC<
       return <YouTubeVisitTaskActionForm {...props} task={props.task} />;
     case 'INSTAGRAM_VISIT':
       return <InstagramVisitTaskActionForm {...props} task={props.task} />;
+    case 'INSTAGRAM_LIKE':
+      return <InstagramLikeTaskActionForm {...props} task={props.task} />;
     default:
       throw assertNever(props.task);
   }

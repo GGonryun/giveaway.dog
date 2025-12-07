@@ -1,11 +1,8 @@
 ## Roadmap
 
-- [ ] Add an "After visiting" advanced option to entry methods that require visiting a link, so users have to stay on the page for X seconds before getting entries.
-
 ### @theejankanator & @h7ban
 
 - [ ] Add Instagram integration
-  - [ ] view a post
   - [ ] follow
   - [ ] comment
 
@@ -17,13 +14,21 @@
 
 - [ ] Add TikTok integration - https://authjs.dev/getting-started/providers/tiktok
 
+### Chizuru the Deaf Gamer
+
+- [ ] Anonymous Twitter Giveaways
+
 ### RoeBunny
 
 - [ ] Anonymous giveaways
 
-### Fuzy
+### Fuzey
 
-- [ ] Team RBAC, Raffles as a feature.
+- [ ] Fix Team RBAC.
+
+### Fuzey
+
+- [ ] Paid raffle features
 
 ## The Games Detective
 
@@ -47,7 +52,7 @@
 
 - [ ] Add more steam entry methods (join a group, play a game for X hours, wishlist a game, follow a curator)
 
-- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, upvote a post, follow a subreddit, login with Reddit)
+- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, up vote a post, follow a subreddit, login with Reddit)
 
 - [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
 
@@ -72,7 +77,7 @@
 - [ ] Add support for generating short links for my sweepstakes, and draw verification
 - [ ] Add a referral task.
 
-- [ ] Add a kofi link entry method.
+- [ ] Add a ko-fi link entry method.
 
 - [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
 
@@ -94,7 +99,7 @@
 - [ ] As a host, I want to let other participants know we are verified and trustworthy by adding a verification badge to my profile.
 - [ ] As a host, I want to display my organization's logo on the sweepstake page.
 
-- [ ] Add a "geolocation" entry method where users have to be in a certain location to get entries.
+- [ ] Add a "geo-location" entry method where users have to be in a certain location to get entries.
 
 ## Personal Features
 

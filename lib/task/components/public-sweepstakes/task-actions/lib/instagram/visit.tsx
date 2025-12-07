@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { useTaskTheme } from '../../../../theme';
 import { InstagramVisitTaskSchema } from '@/lib/task/schemas';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
+import { ActionContainer } from './shared-container';
 
 export const InstagramVisitTaskActionForm: React.FC<
   TaskActionProps<InstagramVisitTaskSchema>
@@ -25,11 +26,6 @@ export const InstagramVisitTaskActionForm: React.FC<
     onSubmit();
   };
 
-  const handleCancel = () => {
-    setVisited(false);
-    onCancel();
-  };
-
   const profileName = task.profileUrl
     .replace(/^(https?:\/\/)?(www\.)?instagram\.com\//, '')
     .replace(/\/$/, '');
@@ -37,20 +33,18 @@ export const InstagramVisitTaskActionForm: React.FC<
   return (
     <>
       <TaskContent>
-        <Button className={cn(theme.action)} asChild onClick={handleVisit}>
-          <Link href={task.profileUrl} target="_blank">
-            <SocialInstagramIcon />
-            {profileName}
-          </Link>
-        </Button>
+        <ActionContainer
+          title={'Instagram Profile'}
+          description={'Visit the Instagram profile to complete this task.'}
+          isCompleted={visited}
+          isDisabled={isLoading}
+          action={`Visit @${profileName}`}
+          onSubmit={handleSubmit}
+          onVisit={handleVisit}
+          help={'visit the profile'}
+          url={task.profileUrl}
+        />
       </TaskContent>
-      <Separator />
-      <TaskControls
-        isLoading={isLoading}
-        disabled={!visited}
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-      />
     </>
   );
 };

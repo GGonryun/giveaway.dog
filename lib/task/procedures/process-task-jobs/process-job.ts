@@ -63,6 +63,7 @@ export const processTaskJob = async (
       case 'SECRET_CODE':
       case 'TWITTER_RETWEET':
       case 'INSTAGRAM_VISIT':
+      case 'INSTAGRAM_LIKE':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',
           message: `Job processing not implemented for task type: ${task.type}`

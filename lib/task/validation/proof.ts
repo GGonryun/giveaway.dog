@@ -30,10 +30,10 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'SECRET_CODE':
     case 'YOUTUBE_VISIT':
     case 'INSTAGRAM_VISIT':
+    case 'INSTAGRAM_LIKE':
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':
       return Prisma.JsonNull;
-
     default:
       throw assertNever(task);
   }
