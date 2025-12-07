@@ -2,10 +2,6 @@
 
 ### @theejankanator & @h7ban
 
-- [ ] Add Instagram integration
-  - [ ] follow
-  - [ ] comment
-
 - [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook (join a group, like a page, select a photo, share with friends, visit a page, login with facebook)
 
 ### @theejankanator

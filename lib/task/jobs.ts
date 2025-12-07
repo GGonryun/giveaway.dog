@@ -25,6 +25,7 @@ export const createJobsForTask = (
     case 'TWITTER_RETWEET':
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':
+    case 'INSTAGRAM_COMMENT':
       return [];
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':

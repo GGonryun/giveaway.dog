@@ -81,20 +81,10 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       id: 'bd33'
     },
     {
-      ...toDefaultValues('VISIT_URL'),
-      href: VISIT_URL,
-      id: 'e505'
-    },
-    {
       ...toDefaultValues('SECRET_CODE'),
       hint: 'Use code "DEMO2025" to enter the sweepstakes!',
       code: 'DEMO2025',
       id: 'ef5b'
-    },
-    {
-      ...toDefaultValues('BONUS_TASK'),
-      tasksRequired: 3,
-      id: '1229'
     },
     {
       ...toDefaultValues('BONUS_TIMED'),
@@ -113,16 +103,6 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       id: '4f8e',
       title: 'Get rewarded for your loyalty',
       loyaltyRequired: 10
-    },
-    {
-      ...toDefaultValues('TWITTER_RETWEET'),
-      tweetId: TWITTER_POST_URL,
-      id: '8a04'
-    },
-    {
-      ...toDefaultValues('TWITTER_LIKE'),
-      tweetId: TWITTER_POST_URL,
-      id: '47f2'
     }
   ],
   terms: {

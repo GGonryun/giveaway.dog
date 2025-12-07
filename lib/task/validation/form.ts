@@ -75,6 +75,7 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
     case 'YOUTUBE_VISIT':
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':
+    case 'INSTAGRAM_COMMENT':
       // no specific validation needed
       return;
     default:

@@ -136,6 +136,7 @@ export const TaskBadge: React.FC<TaskBadgeProps> = ({
     case 'TWITTER_LIKE_IMPORT':
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':
+    case 'INSTAGRAM_COMMENT':
     case 'STEAM_WISHLIST':
     case 'DISCORD_JOIN':
     case 'TWITCH_FOLLOW':

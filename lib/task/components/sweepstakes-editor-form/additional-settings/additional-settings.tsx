@@ -110,6 +110,7 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
           </>
         );
       case 'INSTAGRAM_LIKE':
+      case 'INSTAGRAM_COMMENT':
         return (
           <>
             <InstagramPostUrl />

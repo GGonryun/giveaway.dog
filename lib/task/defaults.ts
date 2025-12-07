@@ -177,6 +177,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0
+    },
+    ['INSTAGRAM_COMMENT']: {
+      id: '',
+      type: 'INSTAGRAM_COMMENT',
+      title: 'Comment on our Instagram post',
+      postUrl: '',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
     }
   };
 

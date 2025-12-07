@@ -130,6 +130,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
       };
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':
+    case 'INSTAGRAM_COMMENT':
       return {
         action:
           'text-white bg-instagram-1 group-hover:bg-instagram-1/80 hover:bg-instagram-1/80 dark:bg-instagram-1/80 dark:hover:bg-instagram-1/80',
