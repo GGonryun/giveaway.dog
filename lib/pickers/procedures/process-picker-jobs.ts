@@ -398,32 +398,20 @@ const twitterJobProcessor = async <
             })
           }
         });
-      } else if (
-        response.meta &&
-        response.meta.next_token &&
-        response.meta.result_count
-      ) {
-        if (response.meta.result_count < MAX_RESULTS_PER_RUN) {
-          console.info(
-            `[twitterJobProcessor] No more results for job ${job.id}, not queuing further requests.`
-          );
-        } else {
-          await tx.pickerJob.create({
-            data: {
-              pickerId: job.pickerId,
-              parentId: job.parentId,
-              type: job.type,
-              status: PickerJobStatus.QUEUED,
-              runAt: datetime.minutesFromNow(
-                TWITTER_API_RATE_LIMIT_MINUTES + 5
-              ),
-              data: toTwitterFetchRequest({
-                tweetId: request.tweetId,
-                paginationToken: response.meta.next_token
-              })
-            }
-          });
-        }
+      } else if (response.meta && response.meta.next_token) {
+        await tx.pickerJob.create({
+          data: {
+            pickerId: job.pickerId,
+            parentId: job.parentId,
+            type: job.type,
+            status: PickerJobStatus.QUEUED,
+            runAt: datetime.minutesFromNow(TWITTER_API_RATE_LIMIT_MINUTES + 5),
+            data: toTwitterFetchRequest({
+              tweetId: request.tweetId,
+              paginationToken: response.meta.next_token
+            })
+          }
+        });
       }
 
       await tx.pickerJob.update({
