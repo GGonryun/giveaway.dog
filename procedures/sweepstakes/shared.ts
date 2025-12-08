@@ -12,6 +12,7 @@ import {
 } from '@prisma/client';
 import { User } from 'next-auth';
 import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
+import { RecursiveRequired } from '@/types/index';
 
 export const findUserSweepstakesQuery = ({
   userId,
@@ -51,7 +52,7 @@ export const findUserSweepstakes = async ({
   id
 }: {
   db: PrismaClient;
-  user: Required<User>;
+  user: RecursiveRequired<User>;
   id: string;
 }) => {
   const sweepstakes = await db.sweepstakes.findUnique({
@@ -81,7 +82,7 @@ export const applySweepstakesChanges = async ({
   input
 }: {
   db: PrismaClient;
-  user: Required<User>;
+  user: RecursiveRequired<User>;
   input: SweepstakesInputSchema & { status?: SweepstakesStatus };
 }) => {
   const { sweepstakes, team } = await findUserSweepstakes({

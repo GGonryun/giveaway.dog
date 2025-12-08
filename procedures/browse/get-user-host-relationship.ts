@@ -15,7 +15,7 @@ export const getUserHostRelationship = procedure()
   .input(z.object({ id: z.string() }))
   .output(userHostRelationshipSchema.optional())
   .handler(async ({ db, user, input }) => {
-    if (!user) return undefined;
+    if (!user?.id) return undefined;
 
     const profile = await db.user.findUnique({
       where: { id: user.id }

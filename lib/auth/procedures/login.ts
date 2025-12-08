@@ -32,7 +32,7 @@ const login = procedure()
     try {
       await signInHandler({ provider, email, options });
     } catch (error) {
-      if (error instanceof AuthError) {
+      if (error instanceof AuthError && 'type' in error) {
         switch (error.type) {
           case 'CredentialsSignin':
             throw new ApplicationError({

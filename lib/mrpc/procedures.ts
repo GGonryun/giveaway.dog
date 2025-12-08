@@ -44,7 +44,7 @@ class ProcedureBuilder<
   handler<
     F extends (args: {
       db: PrismaClient;
-      user: TAuthRequired extends true ? Required<User> : User | null;
+      user: TAuthRequired extends true ? RecursiveRequired<User> : User | null;
       input: TInputSchema extends z.ZodType<any> ? z.infer<TInputSchema> : void;
     }) => Promise<
       TOutputSchema extends z.ZodType<any> ? z.infer<TOutputSchema> : unknown
