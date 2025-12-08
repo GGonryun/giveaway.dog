@@ -24,6 +24,7 @@ import {
   ImportingTweetIdValidation
 } from './lib/importing-account';
 import { InstagramProfileUrl, InstagramPostUrl } from './lib/instagram';
+import { FacebookPageUrl } from './lib/facebook';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -114,6 +115,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return (
           <>
             <InstagramPostUrl />
+          </>
+        );
+      case 'FACEBOOK_VISIT_PAGE':
+        return (
+          <>
+            <FacebookPageUrl />
           </>
         );
       default:

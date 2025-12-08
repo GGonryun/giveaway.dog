@@ -143,6 +143,7 @@ export const TaskBadge: React.FC<TaskBadgeProps> = ({
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':
     case 'YOUTUBE_VISIT':
+    case 'FACEBOOK_VISIT_PAGE':
       return null;
     default:
       throw assertNever(task);

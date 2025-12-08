@@ -17,6 +17,7 @@ import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-ico
 import { SocialKickIcon } from '@/lib/integrations/components/icons/kick-icon';
 import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
+import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
 
 export type TaskTheme = {
   action: string;
@@ -137,6 +138,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-instagram-1 text-white',
         arrow: 'bg-instagram-1 text-white fill-instagram-1',
         icon: SocialInstagramIcon
+      };
+    case 'FACEBOOK_VISIT_PAGE':
+      return {
+        action:
+          'text-white bg-facebook-1 group-hover:bg-facebook-1/80 hover:bg-facebook-1/80 dark:bg-facebook-1 dark:hover:bg-facebook-1',
+        symbol: 'bg-facebook-1 text-white',
+        arrow: 'bg-facebook-1 text-white fill-facebook-1',
+        icon: SocialFacebookIcon
       };
     default:
       throw assertNever(type);

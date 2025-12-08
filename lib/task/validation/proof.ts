@@ -15,6 +15,17 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
         answer: parsed.answer
       };
     }
+    case 'FACEBOOK_VISIT_PAGE': {
+      if (!task.afterVisit) return Prisma.JsonNull;
+      if (task.afterVisit.type !== 'QUESTION') return Prisma.JsonNull;
+
+      const parsed = TASK_INPUT_SCHEMA.FACEBOOK_VISIT_PAGE.parse(data);
+
+      return {
+        question: task.afterVisit.question,
+        answer: parsed.answer
+      };
+    }
     case 'BONUS_TASK':
     case 'BONUS_TIMED':
     case 'BONUS_LIMITED':

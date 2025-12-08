@@ -274,6 +274,24 @@ export type InstagramCommentTaskSchema = z.infer<
   typeof instagramCommentTaskSchema
 >;
 
+export const facebookVisitPageTaskSchema = baseTaskSchema.extend({
+  type: z.literal('FACEBOOK_VISIT_PAGE'),
+  afterVisit: afterVisitSchema,
+  pageUrl: z
+    .string()
+    .url('Facebook Page URL is required')
+    .refine((val) => {
+      // can be in the form of https://www.facebook.com/61584646297782 or https://www.facebook.com/people/Giveaway-Dog/61584646297782/ or https://www.facebook.com/profile.php?id=61584646297782#
+      const urlPattern =
+        /^https?:\/\/(www\.)?facebook\.com\/(profile\.php\?id=\d+|people\/[A-Za-z0-9_.\-]+\/\d+|\d+)(#)?$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://www.facebook.com/yourpagename or https://www.facebook.com/profile.php?id=PAGE_ID')
+});
+
+export type FacebookVisitPageTaskSchema = z.infer<
+  typeof facebookVisitPageTaskSchema
+>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -294,7 +312,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   youtubeVisitTaskSchema,
   instagramVisitTaskSchema,
   instagramLikeTaskSchema,
-  instagramCommentTaskSchema
+  instagramCommentTaskSchema,
+  facebookVisitPageTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -319,7 +338,8 @@ export const TASK_LABEL: Record<TaskType, string> = {
   KICK_FOLLOW: 'Follow on Kick',
   INSTAGRAM_VISIT: 'Visit Instagram Profile',
   INSTAGRAM_LIKE: 'Like Instagram Post',
-  INSTAGRAM_COMMENT: 'Comment on Instagram Post'
+  INSTAGRAM_COMMENT: 'Comment on Instagram Post',
+  FACEBOOK_VISIT_PAGE: 'Visit Facebook Page'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -344,6 +364,9 @@ export const TASK_INPUT_SCHEMA = {
   INSTAGRAM_VISIT: z.object({}),
   INSTAGRAM_LIKE: z.object({}),
   INSTAGRAM_COMMENT: z.object({}),
+  FACEBOOK_VISIT_PAGE: z.object({
+    answer: z.optional(z.string())
+  }),
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
   })
@@ -375,6 +398,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   INSTAGRAM_VISIT: z.object({}),
   INSTAGRAM_LIKE: z.object({}),
   INSTAGRAM_COMMENT: z.object({}),
+  FACEBOOK_VISIT_PAGE: z.object({}),
   SECRET_CODE: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
@@ -412,6 +436,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   INSTAGRAM_VISIT: 'instagram',
   INSTAGRAM_LIKE: 'instagram',
   INSTAGRAM_COMMENT: 'instagram',
+  FACEBOOK_VISIT_PAGE: 'facebook',
   DISCORD_JOIN: 'discord',
   TWITCH_FOLLOW: 'twitch',
   KICK_FOLLOW: 'kick'
@@ -462,7 +487,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   YOUTUBE_VISIT: 'social',
   INSTAGRAM_VISIT: 'social',
   INSTAGRAM_LIKE: 'social',
-  INSTAGRAM_COMMENT: 'social'
+  INSTAGRAM_COMMENT: 'social',
+  FACEBOOK_VISIT_PAGE: 'social'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',
@@ -490,7 +516,8 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   YOUTUBE_VISIT: false,
   INSTAGRAM_VISIT: false,
   INSTAGRAM_LIKE: false,
-  INSTAGRAM_COMMENT: false
+  INSTAGRAM_COMMENT: false,
+  FACEBOOK_VISIT_PAGE: false
 };
 
 export const userEntriesSchema = z.object({

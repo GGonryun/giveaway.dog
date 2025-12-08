@@ -22,6 +22,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':
     case 'INSTAGRAM_COMMENT':
+    case 'FACEBOOK_VISIT_PAGE':
       return CompletionStatus.COMPLETED;
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':

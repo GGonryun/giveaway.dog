@@ -112,6 +112,9 @@
     /* Instagram Palette */
     --instagram-1: oklch(0.6394 0.255767 9.5992);
 
+    /* Facebook Palette */
+    --facebook-1: oklch(0.5641 0.2402 261.15);
+
     /* Chart palette */
     --chart-1: oklch(0.7459 0.1483 156.4499);
     --chart-2: oklch(0.5393 0.2713 286.7462);
@@ -307,6 +310,8 @@
     --color-youtube-1: var(--youtube-1);
 
     --color-instagram-1: var(--instagram-1);
+
+    --color-facebook-1: var(--facebook-1);
 
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);

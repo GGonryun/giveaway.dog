@@ -2,7 +2,7 @@
 
 ### @theejankanator & @h7ban
 
-- [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook (join a group, like a page, select a photo, share with friends, visit a page, login with facebook)
+- [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook (visit a page, view a post)
 
 ### @theejankanator
 
@@ -38,6 +38,8 @@
 - i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
 
 ### Nobody Asked
+
+- [ ] Get a business license for facebook login support.
 
 - [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
 

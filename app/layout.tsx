@@ -55,6 +55,12 @@ export default async function RootLayout({
     <html lang="en" className={`${figtree.variable}`} suppressHydrationWarning>
       <head>
         <script async src="https://platform.twitter.com/widgets.js"></script>
+        <script
+          async
+          defer
+          crossOrigin="anonymous"
+          src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"
+        ></script>
       </head>
       <body>
         <ThemeProvider

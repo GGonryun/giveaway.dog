@@ -76,6 +76,7 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':
     case 'INSTAGRAM_COMMENT':
+    case 'FACEBOOK_VISIT_PAGE':
       // no specific validation needed
       return;
     default:

@@ -186,6 +186,18 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0
+    },
+    ['FACEBOOK_VISIT_PAGE']: {
+      id: '',
+      type: 'FACEBOOK_VISIT_PAGE',
+      title: 'Visit our Facebook page',
+      pageUrl: '',
+      afterVisit: {
+        type: 'INSTANT'
+      },
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
     }
   };
 

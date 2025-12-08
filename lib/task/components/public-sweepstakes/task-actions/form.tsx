@@ -20,6 +20,7 @@ import { BonusLoyaltyActionForm } from './lib/website/bonus-loyalty';
 import { InstagramVisitTaskActionForm } from './lib/instagram/visit';
 import { InstagramLikeTaskActionForm } from './lib/instagram/like';
 import { InstagramCommentTaskActionForm } from './lib/instagram/comment';
+import { FacebookVisitPageTaskActionForm } from './lib/facebook/visit-page';
 
 export const TaskActionForm: React.FC<
   TaskActionProps & {
@@ -65,6 +66,8 @@ export const TaskActionForm: React.FC<
       return <InstagramLikeTaskActionForm {...props} task={props.task} />;
     case 'INSTAGRAM_COMMENT':
       return <InstagramCommentTaskActionForm {...props} task={props.task} />;
+    case 'FACEBOOK_VISIT_PAGE':
+      return <FacebookVisitPageTaskActionForm {...props} task={props.task} />;
     default:
       throw assertNever(props.task);
   }

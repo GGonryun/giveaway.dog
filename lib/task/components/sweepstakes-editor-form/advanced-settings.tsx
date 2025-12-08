@@ -27,6 +27,7 @@ import { Label } from '@/components/ui/label';
 export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
+      case 'FACEBOOK_VISIT_PAGE':
       case 'VISIT_URL':
         return (
           <>
