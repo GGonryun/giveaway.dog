@@ -73,6 +73,7 @@ export const getTaskLock = (args: {
     case 'SECRET_CODE':
     case 'YOUTUBE_VISIT':
     case 'FACEBOOK_VISIT_PAGE':
+    case 'FACEBOOK_VIEW_POST':
       return null;
     default:
       throw assertNever(task);

@@ -292,6 +292,35 @@ export type FacebookVisitPageTaskSchema = z.infer<
   typeof facebookVisitPageTaskSchema
 >;
 
+export const facebookViewPostTaskSchema = baseTaskSchema.extend({
+  type: z.literal('FACEBOOK_VIEW_POST'),
+  postUrl: z
+    .string()
+    .url('Facebook Post URL is required')
+    .refine((val) => {
+      // Support multiple Facebook post URL formats:
+      // 1. https://www.facebook.com/permalink.php?story_fbid=pfbid0rb57os1TLNQSUHKiKuLQLWYtYxMhiBZ2xXXs3c8whHjXwoddiiDfaNwk5ASEeNgwl&id=61584646297782
+      // 2. https://www.facebook.com/pagename/posts/123456789
+      // 3. https://www.facebook.com/photo.php?fbid=123456789&id=987654321
+      const permalinkPattern =
+        /^https?:\/\/(www\.)?facebook\.com\/permalink\.php\?story_fbid=[A-Za-z0-9]+(&|&amp;)id=\d+/;
+      const postsPattern =
+        /^https?:\/\/(www\.)?facebook\.com\/[A-Za-z0-9_.\-]+\/posts\/[A-Za-z0-9]+\/?$/;
+      const photoPattern =
+        /^https?:\/\/(www\.)?facebook\.com\/photo\.php\?fbid=\d+(&|&amp;)id=\d+/;
+
+      return (
+        permalinkPattern.test(val) ||
+        postsPattern.test(val) ||
+        photoPattern.test(val)
+      );
+    }, 'Unexpected URL format. Please provide a valid Facebook post URL')
+});
+
+export type FacebookViewPostTaskSchema = z.infer<
+  typeof facebookViewPostTaskSchema
+>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -313,7 +342,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   instagramVisitTaskSchema,
   instagramLikeTaskSchema,
   instagramCommentTaskSchema,
-  facebookVisitPageTaskSchema
+  facebookVisitPageTaskSchema,
+  facebookViewPostTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -339,7 +369,8 @@ export const TASK_LABEL: Record<TaskType, string> = {
   INSTAGRAM_VISIT: 'Visit Instagram Profile',
   INSTAGRAM_LIKE: 'Like Instagram Post',
   INSTAGRAM_COMMENT: 'Comment on Instagram Post',
-  FACEBOOK_VISIT_PAGE: 'Visit Facebook Page'
+  FACEBOOK_VISIT_PAGE: 'Visit Facebook Page',
+  FACEBOOK_VIEW_POST: 'View Facebook Post'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -367,6 +398,7 @@ export const TASK_INPUT_SCHEMA = {
   FACEBOOK_VISIT_PAGE: z.object({
     answer: z.optional(z.string())
   }),
+  FACEBOOK_VIEW_POST: z.object({}),
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
   })
@@ -399,6 +431,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   INSTAGRAM_LIKE: z.object({}),
   INSTAGRAM_COMMENT: z.object({}),
   FACEBOOK_VISIT_PAGE: z.object({}),
+  FACEBOOK_VIEW_POST: z.object({}),
   SECRET_CODE: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
@@ -437,6 +470,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   INSTAGRAM_LIKE: 'instagram',
   INSTAGRAM_COMMENT: 'instagram',
   FACEBOOK_VISIT_PAGE: 'facebook',
+  FACEBOOK_VIEW_POST: 'facebook',
   DISCORD_JOIN: 'discord',
   TWITCH_FOLLOW: 'twitch',
   KICK_FOLLOW: 'kick'
@@ -488,7 +522,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   INSTAGRAM_VISIT: 'social',
   INSTAGRAM_LIKE: 'social',
   INSTAGRAM_COMMENT: 'social',
-  FACEBOOK_VISIT_PAGE: 'social'
+  FACEBOOK_VISIT_PAGE: 'social',
+  FACEBOOK_VIEW_POST: 'social'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',
@@ -517,7 +552,8 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   INSTAGRAM_VISIT: false,
   INSTAGRAM_LIKE: false,
   INSTAGRAM_COMMENT: false,
-  FACEBOOK_VISIT_PAGE: false
+  FACEBOOK_VISIT_PAGE: false,
+  FACEBOOK_VIEW_POST: false
 };
 
 export const userEntriesSchema = z.object({

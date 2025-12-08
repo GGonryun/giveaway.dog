@@ -40,6 +40,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'INSTAGRAM_LIKE':
     case 'INSTAGRAM_COMMENT':
     case 'FACEBOOK_VISIT_PAGE':
+    case 'FACEBOOK_VIEW_POST':
     case 'BONUS_LOYALTY':
       return (
         <BaseSettingsContainer>

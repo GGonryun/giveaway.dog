@@ -140,6 +140,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         icon: SocialInstagramIcon
       };
     case 'FACEBOOK_VISIT_PAGE':
+    case 'FACEBOOK_VIEW_POST':
       return {
         action:
           'text-white bg-facebook-1 group-hover:bg-facebook-1/80 hover:bg-facebook-1/80 dark:bg-facebook-1 dark:hover:bg-facebook-1',

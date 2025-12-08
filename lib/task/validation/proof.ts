@@ -26,6 +26,7 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
         answer: parsed.answer
       };
     }
+    case 'FACEBOOK_VIEW_POST':
     case 'BONUS_TASK':
     case 'BONUS_TIMED':
     case 'BONUS_LIMITED':

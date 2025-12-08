@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { CheckIcon, LucideIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { TaskSchema } from '../../../schemas';
+import { useTaskTheme } from '../../theme';
 
 export type TaskActionHandlers = {
   onSubmit: (data?: unknown) => void;
@@ -40,6 +41,7 @@ export const TaskContent: React.PC<{ className?: string }> = ({
 
 export type TaskControlsProps = {
   disabled: boolean;
+  help?: string;
   submit?: {
     label?: string;
     className?: string;
@@ -52,9 +54,11 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
   disabled,
   isLoading,
   submit,
+  help = 'Complete above to continue',
   onSubmit,
   onCancel
 }) => {
+  const { theme } = useTaskTheme();
   const button = useMemo(() => {
     const submitLabel = submit?.label ?? 'Complete Task';
     const submitVariant = submit?.variant ?? 'outline';
@@ -78,7 +82,9 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
             {submitLabel}
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Complete above to continue</TooltipContent>
+        <TooltipContent className={theme.arrow} arrowClassName={theme.arrow}>
+          {help}
+        </TooltipContent>
       </Tooltip>
     ) : (
       <Button

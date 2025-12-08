@@ -38,6 +38,7 @@ export const validateTask = async <T extends TaskSchema>(
     case 'INSTAGRAM_LIKE':
     case 'INSTAGRAM_COMMENT':
     case 'FACEBOOK_VISIT_PAGE':
+    case 'FACEBOOK_VIEW_POST':
       return Promise.resolve(); // No validation possible/needed
     case 'BONUS_LIMITED':
       return await checkBonusLimited(db, { task: input.task });
