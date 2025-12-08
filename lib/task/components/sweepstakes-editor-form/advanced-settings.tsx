@@ -28,6 +28,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
       case 'FACEBOOK_VISIT_PAGE':
+      case 'FACEBOOK_VIEW_POST':
       case 'VISIT_URL':
         return (
           <>
@@ -52,7 +53,6 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'TWITTER_RETWEET':
       case 'INSTAGRAM_VISIT':
       case 'INSTAGRAM_LIKE':
-      case 'FACEBOOK_VIEW_POST':
       case 'INSTAGRAM_COMMENT':
         return (
           <>
