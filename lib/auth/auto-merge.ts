@@ -13,6 +13,14 @@ export const tryAutoMerge = async (args: {
 }) => {
   const { existing, account, session, profile } = args;
 
+  if (
+    existing.provider === account.provider &&
+    existing.providerAccountId === account.providerAccountId
+  ) {
+    // Same account, no merge needed, user is doing a reconnect
+    return true;
+  }
+
   if (existing.user.source !== 'TWITTER_IMPORT') return false;
 
   if (!session || !session?.user?.id) {
