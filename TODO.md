@@ -1,5 +1,9 @@
 ## Roadmap
 
+### @theejankanator & @h7ban
+
+- [ ] Add Facebook integration - https://next-auth.js.org/providers/facebook (visit a page, view a post)
+
 ### @theejankanator
 
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client

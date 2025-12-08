@@ -25,5 +25,3 @@ export const REQUIRED_TWITCH_SCOPES = [
 export const REQUIRED_KICK_SCOPES = ['user:read'];
 
 export const REQUIRED_FACEBOOK_SCOPES = ['email', 'user_link'];
-
-export const REQUIRED_TIKTOK_SCOPES = ['user.info.profile'];
