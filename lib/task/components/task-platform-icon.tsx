@@ -11,6 +11,7 @@ import { SocialKickIcon } from '@/lib/integrations/components/icons/kick-icon';
 import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
+import { SocialTikTokIcon } from '@/lib/integrations/components/icons/tiktok-icon';
 
 export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
   const platform = TASK_PLATFORM[type];
@@ -40,6 +41,8 @@ export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
       return <SocialInstagramIcon className="h-4 w-4 text-instagram-1" />;
     case 'facebook':
       return <SocialFacebookIcon className="h-4 w-4 text-facebook-1" />;
+    case 'tiktok':
+      return <SocialTikTokIcon className="h-4 w-4 text-black" />;
     default:
       throw assertNever(platform);
   }

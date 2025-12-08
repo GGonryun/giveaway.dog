@@ -11,6 +11,7 @@ import { SocialKickIcon } from './kick-icon';
 import { SocialYouTubeIcon } from './youtube';
 import { SocialInstagramIcon } from './instagram';
 import { SocialFacebookIcon } from './facebook-icon';
+import { SocialTikTokIcon } from './tiktok-icon';
 
 interface ProviderIconProps {
   type: ProviderTypeSchema;
@@ -30,7 +31,8 @@ export const PROVIDER_ICON: Record<
   twitch: SocialTwitchIcon,
   kick: SocialKickIcon,
   instagram: SocialInstagramIcon,
-  facebook: SocialFacebookIcon
+  facebook: SocialFacebookIcon,
+  tiktok: SocialTikTokIcon
 };
 
 export const ProviderIcon: React.FC<ProviderIconProps> = ({

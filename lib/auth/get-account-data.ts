@@ -23,6 +23,8 @@ export const getAccountLabel = (account: any, profile: any): string | null => {
       return profile?.username || profile?.name || null;
     case 'facebook':
       return profile?.name || profile?.email || null;
+    case 'tiktok':
+      return profile?.username || profile?.display_name || null;
     default:
       return null;
   }
@@ -53,6 +55,9 @@ export const getAccountLink = (account: any, profile: any): string | null => {
     case 'facebook':
       if (!profile?.link) return null;
       return profile.link;
+    case 'tiktok':
+      if (!label) return null;
+      return `https://www.tiktok.com/@${label}`;
     default:
       return null;
   }

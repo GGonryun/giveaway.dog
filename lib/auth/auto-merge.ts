@@ -13,6 +13,12 @@ export const tryAutoMerge = async (args: {
 }) => {
   const { existing, account, session, profile } = args;
 
+  console.log('Trying to auto-merge accounts:', {
+    existing,
+    account,
+    session,
+    profile
+  });
   if (
     existing.provider === account.provider &&
     existing.providerAccountId === account.providerAccountId

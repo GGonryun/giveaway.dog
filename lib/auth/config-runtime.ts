@@ -26,6 +26,7 @@ export const authConfig = {
   callbacks: {
     ...authConfigMiddleware.callbacks,
     async signIn({ account, user, profile }) {
+      console.log('SignIn callback invoked for account:', account);
       if (profile && account?.provider && account?.providerAccountId) {
         // Check if this account already exists (imported user scenario)
         const existing = await prisma.account.findUnique({
@@ -42,7 +43,10 @@ export const authConfig = {
           }
         });
 
+        console.log('Existing account found:', existing);
+
         const session = await auth();
+        console.log('Current session:', session);
 
         if (existing && session) {
           return await tryAutoMerge({
