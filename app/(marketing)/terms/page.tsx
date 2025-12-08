@@ -87,7 +87,67 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          7. User Quality Scoring and Eligibility
+          7. Mature and Explicit Content Policy
+        </Typography.Header>
+        <Typography.Paragraph className="mb-6">
+          Giveaway.dog is committed to providing a safe and appropriate
+          environment for all users, including minors. To protect underage users
+          from exposure to inappropriate material, we have established strict
+          policies regarding mature and explicit content.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          <strong>Public Giveaways:</strong> We do not permit public giveaways
+          that promote, feature, or are associated with mature or explicit
+          content. This includes, but is not limited to: adult-oriented material,
+          sexually explicit content, graphic violence, excessive profanity, drug
+          or alcohol-related promotions targeted at minors, gambling or
+          casino-related content, or any other material deemed inappropriate for
+          users under 18 years of age. Public giveaways must be suitable for all
+          audiences and comply with applicable content rating standards.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          <strong>Private Giveaways with Mature Content:</strong> Giveaways
+          containing mature or explicit content may only be run as private
+          giveaways and must be clearly marked with a &quot;mature&quot; content
+          filter. When creating such giveaways, hosts are required to: (a) enable
+          the mature content designation, (b) ensure the giveaway is set to
+          private visibility only, (c) provide accurate age-gating mechanisms, and
+          (d) include clear warnings about the nature of the content. This policy
+          extends to all aspects of the giveaway, including prizes, promotional
+          materials, and any required actions for entry. If a required action for
+          entry involves viewing, sharing, or interacting with content that is
+          rated 18+ or contains mature themes, the entire giveaway must be
+          designated as mature content and restricted to private visibility.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          By enabling the mature content filter, giveaway hosts acknowledge that
+          their giveaway contains material that is not suitable for minors and
+          agree to implement safeguards to prevent underage participation. The
+          mature filter automatically restricts access to users who have verified
+          they are 18 years of age or older. Circumventing or attempting to bypass
+          these age restrictions is strictly prohibited and may result in
+          immediate account termination.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          Giveaway.dog reserves the right to review any giveaway flagged as
+          potentially containing mature content and may require hosts to enable
+          the mature filter or remove content that violates this policy. Failure
+          to properly designate mature content, attempting to run public giveaways
+          with mature themes, or knowingly allowing underage access to
+          age-restricted giveaways will result in: removal of the giveaway,
+          suspension or permanent termination of your account, forfeiture of any
+          unused giveaway credits, and potential reporting to appropriate
+          authorities if illegal content is involved.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          Users who encounter giveaways that appear to violate our mature content
+          policy should report them immediately through our reporting system. We
+          take all reports seriously and will investigate promptly to ensure
+          compliance with this policy and applicable laws protecting minors.
+        </Typography.Paragraph>
+
+        <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
+          8. User Quality Scoring and Eligibility
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           To maintain the integrity of our platform and ensure fair giveaways,
@@ -126,7 +186,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          8. Intellectual Property
+          9. Intellectual Property
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           The Giveaway.dog platform, including its design, functionality, and
@@ -136,7 +196,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          9. Privacy and Data Protection
+          10. Privacy and Data Protection
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           Your privacy is important to us. Our collection and use of personal
@@ -147,7 +207,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          10. Limitation of Liability
+          11. Limitation of Liability
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           To the maximum extent permitted by law, Giveaway.dog shall not be
@@ -158,7 +218,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          11. Service Availability
+          12. Service Availability
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           While we strive to maintain high service availability, we do not
@@ -168,7 +228,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          12. Termination
+          13. Termination
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           Either party may terminate this agreement at any time. We may suspend
@@ -178,7 +238,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          13. Changes to Terms
+          14. Changes to Terms
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           We reserve the right to modify these Terms and Conditions at any time.
@@ -188,7 +248,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          14. Governing Law
+          15. Governing Law
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           These Terms and Conditions are governed by and construed in accordance
@@ -198,7 +258,7 @@ export default function TermsPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          15. Contact Information
+          16. Contact Information
         </Typography.Header>
         <Typography.Paragraph className="mb-6">
           If you have any questions about these Terms and Conditions, please
