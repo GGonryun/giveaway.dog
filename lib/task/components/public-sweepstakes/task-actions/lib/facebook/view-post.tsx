@@ -10,6 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { useTaskTheme } from '@/lib/task/components/theme';
 import { cn } from '@/lib/utils';
 
+const DURATION = 7; // Duration in seconds for the task to complete
 export const FacebookViewPostTaskActionForm: React.FC<
   TaskActionProps<FacebookViewPostTaskSchema>
 > = ({ onSubmit, onCancel, task, isLoading }) => {
@@ -19,7 +20,7 @@ export const FacebookViewPostTaskActionForm: React.FC<
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    const duration = 10000;
+    const duration = DURATION * 1000; // 7 seconds in milliseconds
     const step = 100;
     const increment = (step / duration) * 100;
 
@@ -42,10 +43,10 @@ export const FacebookViewPostTaskActionForm: React.FC<
     <>
       <TaskContent>
         <div className="w-full flex flex-col">
-          <div className="w-full flex justify-center">
+          <div className="w-full flex justify-center cursor-pointer">
             <iframe
               src={embedUrl}
-              className="w-full min-h-[200px]"
+              className="w-full min-h-[200px] cursor-pointer"
               style={{ border: 'none', overflow: 'hidden' }}
               allowFullScreen={true}
               allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
@@ -64,7 +65,7 @@ export const FacebookViewPostTaskActionForm: React.FC<
       <TaskControls
         disabled={!isComplete}
         isLoading={isLoading}
-        help="Watch the post for 10 seconds to complete this task."
+        help={`Watch the post for ${DURATION} seconds to complete this task.`}
         onSubmit={onSubmit}
         onCancel={onCancel}
       />

@@ -35,3 +35,5 @@ export const YOUTUBE_CHANNEL_NAME = 'GiveawayDog';
 export const YOUTUBE_CHANNEL_ID = 'UCbTcSd0aoM0A0sxxz8TBD6w';
 export const INSTAGRAM_PROFILE_URL =
   'https://www.instagram.com/charitydotgames/';
+export const FACEBOOK_POST_URL =
+  'https://www.facebook.com/permalink.php?story_fbid=122099278905154876&id=61584646297782&ref=embed_post';

@@ -5,6 +5,7 @@ import { datetime } from '@/lib/date';
 import {
   DISCORD_INVITE_LINK,
   DISCORD_PUBLIC_CHANNEL_URL,
+  FACEBOOK_POST_URL,
   INSTAGRAM_PROFILE_URL,
   KICK_CHANNEL_URL,
   STEAM_APP_ID_URL,
@@ -58,6 +59,11 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       channelUrl: YOUTUBE_CHANNEL_URL,
       channelName: YOUTUBE_CHANNEL_NAME,
       id: 'a13f'
+    },
+    {
+      ...toDefaultValues('FACEBOOK_VIEW_POST'),
+      postUrl: FACEBOOK_POST_URL,
+      id: 'b2c4'
     },
     {
       ...toDefaultValues('INSTAGRAM_VISIT'),
