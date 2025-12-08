@@ -17,6 +17,7 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import disconnectAccount from '@/procedures/user/disconnect-account';
 import { useRouter } from 'next/navigation';
 import {
+  ENABLED_AUTH_PROVIDERS,
   isMissingScopes,
   PROVIDER_REQUIRED_SCOPES,
   PROVIDER_SCHEMA_LABELS,
@@ -62,6 +63,7 @@ export const SocialProviders = () => {
           const provider = user.providers.find((p) => p.type === providerId);
           const isMissing = isMissingScopes(provider, requiredScopes);
           const isConnectingThis = loginProcedure.isLoading;
+          const isEnabled = ENABLED_AUTH_PROVIDERS[providerId];
 
           return (
             <div key={i} className="p-2 border rounded-lg space-y-2">
@@ -87,7 +89,7 @@ export const SocialProviders = () => {
                   <Button
                     variant={isMissing ? 'default' : 'destructive'}
                     size="sm"
-                    disabled={isConnectingThis}
+                    disabled={isConnectingThis || !isEnabled}
                     onClick={() => {
                       if (isMissing) {
                         loginProcedure.run({
@@ -122,13 +124,22 @@ export const SocialProviders = () => {
                         revalidate: 'true'
                       });
                     }}
-                    disabled={isConnectingThis}
+                    disabled={isConnectingThis || !isEnabled}
                   >
                     {isConnectingThis ? <Spinner size="xs" /> : <Plus />}
                     Connect
                   </Button>
                 )}
               </div>
+              {!isEnabled && (
+                <Alert variant="destructive">
+                  <CircleAlertIcon />
+                  <AlertTitle>Provider Disabled</AlertTitle>
+                  <AlertDescription>
+                    This provider is currently disabled and cannot be connected.
+                  </AlertDescription>
+                </Alert>
+              )}
               {Boolean(provider && isMissing) && (
                 <IsMissingPermissions providerLabel={providerLabel} />
               )}

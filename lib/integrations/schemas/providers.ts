@@ -88,6 +88,19 @@ export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
   email: false
 };
 
+export const ENABLED_AUTH_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
+  twitter: true,
+  google: true,
+  discord: true,
+  steam: true,
+  twitch: true,
+  kick: true,
+  facebook: false,
+  instagram: false,
+  youtube: false,
+  email: false
+};
+
 export const SOCIAL_PROVIDERS = Object.entries(IS_SOCIAL_PROVIDER)
   .filter(([, isSocial]) => isSocial)
   .map(([providerId]) => providerId) as ProviderTypeSchema[];
