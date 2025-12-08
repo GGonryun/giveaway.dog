@@ -41,10 +41,16 @@ export type UserSchema = z.infer<typeof userSchema>;
 export const parseProviders = (providers: UserAccounts[]): ProviderSchema[] =>
   providers.map((provider) => ({
     type: parseProvider(provider.provider) || 'email',
-    scopes: provider.scope?.split(' ') ?? [],
+    scopes: splitScopes(provider.scope),
     label: provider.label || 'N/A',
     link: provider.link || ''
   }));
+
+const splitScopes = (scopes: Nil<string>): string[] =>
+  scopes
+    ?.split(/[\s,]+/) // split by space OR comma
+    .map((s) => s.trim())
+    .filter(Boolean) ?? [];
 
 export const parseProvider = (provider: Nil<string>): ProviderTypeSchema => {
   const result = providerTypeSchema.safeParse(provider);

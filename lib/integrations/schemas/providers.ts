@@ -100,7 +100,7 @@ export const ENABLED_AUTH_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
   steam: true,
   twitch: true,
   kick: true,
-  tiktok: true,
+  tiktok: false,
   facebook: false,
   instagram: false,
   youtube: false,

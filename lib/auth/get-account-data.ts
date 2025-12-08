@@ -56,8 +56,8 @@ export const getAccountLink = (account: any, profile: any): string | null => {
       if (!profile?.link) return null;
       return profile.link;
     case 'tiktok':
-      if (!label) return null;
-      return `https://www.tiktok.com/@${label}`;
+      if (!profile?.profile_deep_link) return null;
+      return profile.profile_deep_link;
     default:
       return null;
   }

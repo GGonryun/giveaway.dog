@@ -8,8 +8,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
 import TwitchProvider from 'next-auth/providers/twitch';
 import InstagramProvider from 'next-auth/providers/instagram';
+import TikTok from 'next-auth/providers/tiktok';
 
-import { TikTok } from './providers/tiktok';
 import { SteamProvider } from './providers/steam';
 import { InboundEmailProvider } from './providers/inbound';
 import { KickProvider } from './providers/kick';
@@ -19,8 +19,7 @@ import {
   REQUIRED_DISCORD_SCOPES,
   REQUIRED_TWITCH_SCOPES,
   REQUIRED_KICK_SCOPES,
-  REQUIRED_FACEBOOK_SCOPES,
-  REQUIRED_TIKTOK_SCOPES
+  REQUIRED_FACEBOOK_SCOPES
 } from '../integrations/scopes';
 
 export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
@@ -29,10 +28,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
     TikTok({
       clientId: process.env.TIKTOK_CLIENT_ID,
       clientSecret: process.env.TIKTOK_CLIENT_SECRET,
-      authorization: {
-        params: {
-          scope: REQUIRED_TIKTOK_SCOPES.join(' ')
-        }
+      userinfo:
+        'https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,username,profile_web_link,profile_deep_link,is_verified',
+      profile(profile) {
+        return {
+          id: profile.data.user.open_id,
+          name: profile.data.user.display_name,
+          image: profile.data.user.avatar_url,
+          email: profile.data.user.email || profile.data.user.username || null,
+          ...profile.data.user // --> any other fields provided by the provider
+        };
       }
     }),
     SteamProvider({
