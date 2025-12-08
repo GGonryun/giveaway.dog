@@ -69,6 +69,7 @@ const signInHandler = async (args: {
     case 'steam':
     case 'kick':
     case 'instagram':
+    case 'facebook':
       return await signIn(provider, options);
     case 'email':
       return await signIn('email', {

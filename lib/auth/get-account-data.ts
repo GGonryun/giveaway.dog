@@ -21,6 +21,8 @@ export const getAccountLabel = (account: any, profile: any): string | null => {
       return profile?.name || null;
     case 'kick':
       return profile?.username || profile?.name || null;
+    case 'facebook':
+      return profile?.name || profile?.email || null;
     default:
       return null;
   }
@@ -48,6 +50,9 @@ export const getAccountLink = (account: any, profile: any): string | null => {
     case 'google':
       if (!label) return null;
       return `mailto:${label}`;
+    case 'facebook':
+      if (!profile?.link) return null;
+      return profile.link;
     default:
       return null;
   }

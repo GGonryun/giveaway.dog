@@ -25,7 +25,7 @@ export interface KickProfile {
   message: string;
 }
 
-export default function Kick(
+export function KickProvider(
   options: OAuthUserConfig<KickProfile>
 ): OAuthConfig<KickProfile> {
   return {

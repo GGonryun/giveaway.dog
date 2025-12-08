@@ -18,7 +18,8 @@ export const providerTypeSchema = z.union([
   z.literal('steam'),
   z.literal('twitch'),
   z.literal('kick'),
-  z.literal('instagram')
+  z.literal('instagram'),
+  z.literal('facebook')
 ]);
 
 export type ProviderTypeSchema = z.infer<typeof providerTypeSchema>;
@@ -27,6 +28,8 @@ export const PROVIDER_REQUIRED_SCOPES: Record<ProviderTypeSchema, string[]> = {
   email: [],
   youtube: [],
   instagram: [],
+  // for some reason facebook does not return scopes on sign in or link account
+  facebook: [],
   discord: REQUIRED_DISCORD_SCOPES,
   twitter: REQUIRED_TWITTER_SCOPES,
   steam: REQUIRED_STEAM_SCOPES,
@@ -68,7 +71,8 @@ export const PROVIDER_SCHEMA_LABELS: Record<ProviderTypeSchema, string> = {
   twitch: 'Twitch',
   steam: 'Steam',
   kick: 'Kick',
-  instagram: 'Instagram'
+  instagram: 'Instagram',
+  facebook: 'Facebook'
 };
 
 export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
@@ -78,6 +82,7 @@ export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
   steam: true,
   twitch: true,
   kick: true,
+  facebook: true,
   instagram: false,
   youtube: false,
   email: false

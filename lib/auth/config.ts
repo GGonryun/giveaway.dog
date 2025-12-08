@@ -1,5 +1,7 @@
 'server only';
 
+import { authConfig } from './config-runtime';
+
 import NextAuth from 'next-auth';
 import TwitterProvider from 'next-auth/providers/twitter';
 import GoogleProvider from 'next-auth/providers/google';
@@ -7,15 +9,16 @@ import DiscordProvider from 'next-auth/providers/discord';
 import TwitchProvider from 'next-auth/providers/twitch';
 import InstagramProvider from 'next-auth/providers/instagram';
 
-import { authConfig } from './config-runtime';
 import { SteamProvider } from './providers/steam';
 import { InboundEmailProvider } from './providers/inbound';
+import { KickProvider } from './providers/kick';
+import { FacebookProvider } from './providers/facebook';
 
-import KickProvider from './providers/kick';
 import {
   REQUIRED_DISCORD_SCOPES,
   REQUIRED_TWITCH_SCOPES,
-  REQUIRED_KICK_SCOPES
+  REQUIRED_KICK_SCOPES,
+  REQUIRED_FACEBOOK_SCOPES
 } from '../integrations/scopes';
 
 export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
@@ -25,6 +28,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       request,
       callbackUrl: `${process.env.NEXTAUTH_URL}/api/auth/steam-callback`,
       clientSecret: process.env.STEAM_SECRET!
+    }),
+    FacebookProvider({
+      allowDangerousEmailAccountLinking: true,
+      clientId: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      authorization: {
+        params: {
+          scope: REQUIRED_FACEBOOK_SCOPES.join(' ')
+        }
+      }
     }),
     TwitterProvider({
       allowDangerousEmailAccountLinking: true,
