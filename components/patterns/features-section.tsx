@@ -38,7 +38,7 @@ export const FeaturesSection = async () => {
         <div className="text-center mb-12">
           <h1 className="mx-auto max-w-2xl text-4xl font-semibold font-outfit tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">
             Everything you need to{' '}
-            <span className="text-primary">run successful giveaways</span>
+            <span className="text-primary">run successful giveaways.</span>
           </h1>
           <Typography.Paragraph className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
             Host a verified giveaway in 60 seconds. No bots, no spam, just real
