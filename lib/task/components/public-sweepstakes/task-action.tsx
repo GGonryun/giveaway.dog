@@ -40,7 +40,7 @@ export const TaskAction: React.FC<{
       {!userProfile ? (
         <div className="p-4 flex items-center justify-center">
           <Flex center gap="sm">
-            <LoginOptions label={'Login with:'} redirectTo={pathname} icons />
+            <LoginOptions label="Login with:" redirectTo={pathname} icons />
           </Flex>
         </div>
       ) : submission ? (

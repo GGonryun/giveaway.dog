@@ -10,6 +10,7 @@ datasource db {
 
 enum UserSource {
   SIGNUP
+  ANONYMOUS
   TWITTER_IMPORT
   MANUAL_IMPORT
   DISCORD_IMPORT

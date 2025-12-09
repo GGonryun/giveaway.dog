@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail } from 'lucide-react';
+import { HatGlassesIcon, MailIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SocialXIcon } from './x-icon';
 import { SocialGoogleIcon } from './google-icon';
@@ -23,7 +23,7 @@ export const PROVIDER_ICON: Record<
   React.FC<{ className?: string }>
 > = {
   youtube: SocialYouTubeIcon,
-  email: Mail,
+  email: MailIcon,
   twitter: SocialXIcon,
   google: SocialGoogleIcon,
   discord: SocialDiscordIcon,
@@ -32,7 +32,8 @@ export const PROVIDER_ICON: Record<
   kick: SocialKickIcon,
   instagram: SocialInstagramIcon,
   facebook: SocialFacebookIcon,
-  tiktok: SocialTikTokIcon
+  tiktok: SocialTikTokIcon,
+  anonymous: HatGlassesIcon
 };
 
 export const ProviderIcon: React.FC<ProviderIconProps> = ({

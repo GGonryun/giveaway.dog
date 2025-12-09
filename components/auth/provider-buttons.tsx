@@ -3,21 +3,14 @@ import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon'
 import {
   ProviderTypeSchema,
   PROVIDER_SCHEMA_LABELS,
-  ENABLED_AUTH_PROVIDERS
+  ENABLED_AUTH_PROVIDERS,
+  LOGIN_PROVIDERS
 } from '@/lib/integrations/schemas/providers';
 import React from 'react';
 
 type ProviderButtonsProps = {
   onSubmit: (provider: string) => void;
 };
-
-const PROVIDERS: ProviderTypeSchema[] = [
-  'twitter',
-  'google',
-  'discord',
-  'email',
-  'tiktok'
-];
 
 export const ProviderButtons: React.FC<ProviderButtonsProps> = ({
   onSubmit
@@ -26,7 +19,7 @@ export const ProviderButtons: React.FC<ProviderButtonsProps> = ({
 
   return (
     <div className="flex flex-col gap-3 w-full">
-      {PROVIDERS.map((provider) => (
+      {LOGIN_PROVIDERS.map((provider) => (
         <Button
           key={provider}
           variant="outline"
@@ -48,7 +41,7 @@ export const ProviderButtons: React.FC<ProviderButtonsProps> = ({
 export const ProviderIcons: React.FC<ProviderButtonsProps> = ({ onSubmit }) => {
   return (
     <div className="flex flex-row gap-2 w-full">
-      {PROVIDERS.map((provider) => (
+      {LOGIN_PROVIDERS.map((provider) => (
         <Button
           key={provider}
           variant="outline"

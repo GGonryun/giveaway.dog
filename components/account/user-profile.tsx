@@ -17,7 +17,11 @@ import { toast } from 'sonner';
 import { EmailVerification } from '../auth/email-verification';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateUserProfileSchema, UpdateUserProfile } from '@/schemas/user';
+import {
+  updateUserProfileSchema,
+  UpdateUserProfile,
+  isAnonymousUser
+} from '@/schemas/user';
 import { useRouter } from 'next/navigation';
 import { SocialProviders } from '@/lib/auth/components/social-providers';
 import { SettingsCard } from '../settings/settings-card';
@@ -67,7 +71,9 @@ export const UserSettings = () => {
                   <Input
                     className="max-w-xl"
                     placeholder="Enter your display name"
-                    disabled={updateProfileProcedure.isLoading}
+                    disabled={
+                      updateProfileProcedure.isLoading || user.isAnonymous
+                    }
                     {...field}
                     value={field.value || ''}
                   />
@@ -76,6 +82,12 @@ export const UserSettings = () => {
               </FormItem>
             )}
           />
+          {user.isAnonymous && (
+            <p className="text-sm mt-2 text-destructive">
+              You are currently using an anonymous account. To set a display
+              name, please connect a social account or update your email.
+            </p>
+          )}
         </SettingsCard>
       </Form>
       <EmailVerification

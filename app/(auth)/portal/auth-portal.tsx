@@ -94,6 +94,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   });
 
   useEffect(() => {
+    console.log('AuthPortal useEffect triggered');
     // If there's an existing error, don't proceed
     if (error) return;
     // If verification already succeeded, don't proceed
@@ -125,6 +126,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
       return;
     }
 
+    console.log('Session user ID:', session.user);
     // Always try to create a profile for new users, or redirect if profile exists
     runCreate({
       name: name || session.user.name || ''

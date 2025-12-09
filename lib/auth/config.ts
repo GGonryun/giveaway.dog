@@ -1,6 +1,7 @@
 'server only';
 
 import { authConfig } from './config-runtime';
+import { createId } from '@paralleldrive/cuid2';
 
 import NextAuth from 'next-auth';
 import TwitterProvider from 'next-auth/providers/twitter';
@@ -8,7 +9,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
 import TwitchProvider from 'next-auth/providers/twitch';
 import InstagramProvider from 'next-auth/providers/instagram';
-import TikTok from 'next-auth/providers/tiktok';
+import TikTokProvider from 'next-auth/providers/tiktok';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { SteamProvider } from './providers/steam';
 import { InboundEmailProvider } from './providers/inbound';
@@ -21,11 +23,12 @@ import {
   REQUIRED_KICK_SCOPES,
   REQUIRED_FACEBOOK_SCOPES
 } from '../integrations/scopes';
+import { UserSource } from '@prisma/client';
 
 export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
   ...authConfig,
   providers: [
-    TikTok({
+    TikTokProvider({
       clientId: process.env.TIKTOK_CLIENT_ID,
       clientSecret: process.env.TIKTOK_CLIENT_SECRET,
       userinfo:
@@ -38,6 +41,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
           email: profile.data.user.email || profile.data.user.username || null,
           ...profile.data.user // --> any other fields provided by the provider
         };
+      }
+    }),
+    CredentialsProvider({
+      id: 'anonymous',
+      name: 'Anonymous',
+      credentials: {},
+      authorize: async () => {
+        const user = await prisma.user.create({
+          data: {
+            id: createId(),
+            name: 'Anonymous',
+            source: UserSource.ANONYMOUS
+          }
+        });
+
+        return user;
       }
     }),
     SteamProvider({

@@ -30,6 +30,12 @@ const login = procedure()
     const options = { redirectTo: `/portal?${queryParams.toString()}` };
 
     try {
+      console.log(
+        'Initiating sign-in with provider:',
+        provider,
+        'and email:',
+        email
+      );
       await signInHandler({ provider, email, options });
     } catch (error) {
       if (error instanceof AuthError && 'type' in error) {
@@ -77,6 +83,8 @@ const signInHandler = async (args: {
         email,
         ...options
       });
+    case 'anonymous':
+      return await signIn('anonymous', options);
     case 'youtube':
       throw new ApplicationError({
         code: 'NOT_IMPLEMENTED',

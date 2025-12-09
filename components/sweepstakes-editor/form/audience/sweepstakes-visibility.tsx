@@ -96,11 +96,11 @@ const VisibilityTypeField = () => {
             </Select>
           </FormControl>
           {!hasPublicSweepstakesAccess && (
-            <FormDescription className="text-red-600">
+            <FormDescription>
               You do not have permission to make sweepstakes public.{' '}
               <Link
                 href="/contact"
-                className="font-semibold underline hover:text-red-800"
+                className="font-semibold underline hover:text-primary"
               >
                 Contact support
               </Link>{' '}

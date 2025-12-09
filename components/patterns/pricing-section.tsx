@@ -55,8 +55,8 @@ export const PricingSection = () => {
       price: 'Free',
       priceSubtext: '',
       buttonSubtext: 'Try it now!',
-      buttonText: 'Get Started',
-      buttonLink: '/signup',
+      buttonText: 'Request Access',
+      buttonLink: '/contact',
       buttonIcon: <ArrowRightIcon />,
       buttonVariant: 'outline',
       features: [

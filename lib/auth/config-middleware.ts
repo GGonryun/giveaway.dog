@@ -66,15 +66,23 @@ export const authConfigMiddleware = {
 
       return true;
     },
-    jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user && user.id) {
         token.id = user.id;
       }
+
+      if (account) {
+        token.provider = account.provider;
+      }
+
       return token;
     },
     session({ token, session }) {
       if (token?.id && session.user) {
         session.user.id = token.id as string;
+      }
+      if (token?.provider && session.user) {
+        session.user.provider = token.provider as string;
       }
       return session;
     }

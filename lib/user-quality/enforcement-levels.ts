@@ -5,12 +5,13 @@ export const ENFORCEMENT_LEVELS = {
     label: 'None',
     variant: 'destructive' as AlertVariant,
     message:
-      'This might allow bots or otherwise unsavory characters from participating in your giveaway.'
+      'This might allow bots, cheaters, and spammers to participate in your giveaway.'
   },
   25: {
     label: 'Minimum',
     variant: 'warning' as AlertVariant,
-    message: 'This might allow some suspicious users but offers some protection.'
+    message:
+      'This might allow some suspicious users but offers some protection against the worst offenders.'
   },
   50: {
     label: 'Moderate',
@@ -30,7 +31,9 @@ export const VALID_ENFORCEMENT_VALUES = [0, 25, 50, 75] as const;
 
 export type EnforcementLevel = (typeof VALID_ENFORCEMENT_VALUES)[number];
 
-export const clampToNearestEnforcementLevel = (value: number): EnforcementLevel => {
+export const clampToNearestEnforcementLevel = (
+  value: number
+): EnforcementLevel => {
   if (isNaN(value)) return 0;
 
   const validValues = VALID_ENFORCEMENT_VALUES;

@@ -33,7 +33,8 @@ export type UserProfileSchema = z.infer<typeof userProfileSchema>;
 
 export const userSchema = userProfileSchema.extend({
   emailVerified: z.boolean().nullable(),
-  featureFlags: userFeatureFlagKeySchema.array().optional()
+  featureFlags: userFeatureFlagKeySchema.array().optional(),
+  isAnonymous: z.boolean()
 });
 
 export type UserSchema = z.infer<typeof userSchema>;
@@ -141,7 +142,8 @@ export const toUserSchema = (
   qualityScore: clamp(user.quality[0]?.score ?? 0, 0, 100),
   emailVerified: !!user.emailVerified,
   providers: parseProviders(user.accounts),
-  featureFlags: parseUserFeatureFlags(user.featureFlags)
+  featureFlags: parseUserFeatureFlags(user.featureFlags),
+  isAnonymous: user.accounts.length === 0
 });
 
 export const userDetailsTabSchema = z.union([
@@ -162,4 +164,9 @@ export const USER_DETAILS_TAB_OPTIONS: Record<UserDetailsTabSchema, string> = {
 
 export const isUserDetailsTab = (tab: string): tab is UserDetailsTabSchema => {
   return userDetailsTabSchema.safeParse(tab).success;
+};
+
+export const isAnonymousUser = (user: Nil<UserSchema>): boolean => {
+  if (user?.providers.length === 0) return true;
+  return user?.providers.some((p) => p.type === 'anonymous') ?? false;
 };

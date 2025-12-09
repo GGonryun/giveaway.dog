@@ -495,7 +495,8 @@ export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
   youtube: 'YouTube',
   instagram: 'Instagram',
   facebook: 'Facebook',
-  tiktok: 'TikTok'
+  tiktok: 'TikTok',
+  anonymous: 'Anonymous'
 };
 
 export const taskCategorySchema = z.enum(['social', 'engagement', 'community']);

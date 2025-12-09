@@ -55,7 +55,7 @@
 
 - [ ] Add GitHub integration - https://next-auth.js.org/providers/github (follow a repo, star a repo, login with GitHub)
 
-- [ ] Add a patreon integration - https://next-auth.js.org/providers/patreon (connect with patreon, become a patron)
+- [ ] Add a Patreon integration - https://next-auth.js.org/providers/patreon (connect with patreon, become a patron)
 
 - [ ] Add a threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads,follow on threads, like a post, reply to a post)
 
