@@ -13,13 +13,6 @@ export const tryAutoMerge = async (args: {
 }) => {
   const { existing, account, session, profile } = args;
 
-  console.log('Trying to auto-merge accounts:', {
-    existing,
-    account,
-    session,
-    profile
-  });
-
   // If the existing account's user source is not from a Twitter import, do
   // not merge. Otherwise the twitter import account merge would have matching
   // provider/providerAccountId and we want to complete a full upgrade
