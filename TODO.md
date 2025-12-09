@@ -2,9 +2,12 @@
 
 ### @theejankanator
 
-- [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
+- [...] Add TikTok integration - https://authjs.dev/getting-started/providers/tiktok
+  - [x] submit for approval
+  - [ ] Enable entry methods (follow, like, share)
+  - [ ] Enable login/auth with TikTok
 
-- [ ] Add TikTok integration - https://authjs.dev/getting-started/providers/tiktok
+- [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
 ### Chizuru the Deaf Gamer
 
@@ -16,7 +19,7 @@
 
 ### Fuzey
 
-- [ ] Fix Team RBAC.
+- [ ] Fix Team RBAC
 
 ### Fuzey
 
