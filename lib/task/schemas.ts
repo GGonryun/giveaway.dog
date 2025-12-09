@@ -279,11 +279,10 @@ export const facebookVisitPageTaskSchema = baseTaskSchema.extend({
   afterVisit: afterVisitSchema,
   pageUrl: z
     .string()
-    .url('Facebook Page URL is required')
+    .url('Facebook Page URL is required or missing https://')
     .refine((val) => {
-      // can be in the form of https://www.facebook.com/61584646297782 or https://www.facebook.com/people/Giveaway-Dog/61584646297782/ or https://www.facebook.com/profile.php?id=61584646297782#
       const urlPattern =
-        /^https?:\/\/(www\.)?facebook\.com\/(profile\.php\?id=\d+|people\/[A-Za-z0-9_.\-]+\/\d+|\d+)(#)?$/;
+        /^https?:\/\/(www\.)?facebook\.com\/(profile\.php\?id=\d+|people\/[A-Za-z0-9_.\-]+\/\d+|\d+|[A-Za-z0-9_.]+)(#|\/?)?$/;
       return urlPattern.test(val);
     }, 'Unexpected URL, should be like https://www.facebook.com/yourpagename or https://www.facebook.com/profile.php?id=PAGE_ID')
 });
