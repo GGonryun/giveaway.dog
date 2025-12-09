@@ -11,6 +11,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { UserProfileSchema } from '@/schemas/user';
 import { useProcedureAsync } from '@/lib/mrpc/hook';
 import submitTask from '@/lib/task/procedures/submit-tasks';
+import { toast } from 'sonner';
 
 type SweepstakesParticipationPageContentProps = ParticipantSweepstakeSchema & {
   userProfile?: UserProfileSchema;
@@ -53,6 +54,7 @@ export const SweepstakesParticipationPage: React.FC<
       }
       onLogin={handleLogin}
       onCompleteProfile={handleCompleteProfile}
+      verifyEmail
     />
   );
 };

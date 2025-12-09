@@ -6,6 +6,7 @@ import {
   UserHostRelationshipSchema
 } from '@/schemas/giveaway/schemas';
 import { AgeVerificationSchema, UserProfileSchema } from '@/schemas/user';
+import { toast } from 'sonner';
 
 export const mockHost = {
   id: 'preview-host-id',
@@ -80,3 +81,21 @@ export const mockUserHostRelationship: UserHostRelationshipSchema = {
 };
 
 export const mockWinners: GiveawayPrizeSchema[] = [];
+
+export const onFakeLogin = () => {
+  toast.success('Login action triggered (not implemented in preview)');
+};
+
+export const onFakeTaskComplete = async (
+  taskId: string,
+  data?: unknown
+): Promise<unknown> => {
+  toast.success(`Task ${taskId} completed (not implemented in preview)`);
+  return Promise.resolve(data);
+};
+
+export const onFakeCompleteProfile = () => {
+  toast.success(
+    'Complete profile action triggered (not implemented in preview)'
+  );
+};

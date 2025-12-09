@@ -3,6 +3,11 @@
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
 import { computeState } from '@/lib/sweepstakes';
+import {
+  onFakeCompleteProfile,
+  onFakeLogin,
+  onFakeTaskComplete
+} from '../sweepstakes-editor/data/mocks';
 
 export const PublicSweepstakesDemo: React.FC = () => {
   const mockSweepstakes = {
@@ -47,14 +52,10 @@ export const PublicSweepstakesDemo: React.FC = () => {
       userProfile={undefined}
       userParticipation={undefined}
       className="p-4 py-8"
-      onTaskComplete={async () => {
-        return {
-          ok: false,
-          data: { message: 'This is a preview only' }
-        };
-      }}
-      onLogin={() => {}}
-      onCompleteProfile={() => {}}
+      onTaskComplete={onFakeTaskComplete}
+      onLogin={onFakeLogin}
+      onCompleteProfile={onFakeCompleteProfile}
+      verifyEmail={false}
     />
   );
 };

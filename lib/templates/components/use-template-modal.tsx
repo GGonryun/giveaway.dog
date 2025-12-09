@@ -13,7 +13,13 @@ import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-partici
 import { computeState } from '@/lib/sweepstakes';
 import { TemplateListItemSchema } from '../schemas/template';
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
-import { mockUserProfile } from '@/components/sweepstakes-editor/data/mocks';
+import {
+  mockUserProfile,
+  onFakeCompleteProfile,
+  onFakeLogin,
+  onFakeTaskComplete
+} from '@/components/sweepstakes-editor/data/mocks';
+import { noop } from 'lodash';
 
 interface UseTemplateModalProps {
   open: boolean;
@@ -85,14 +91,10 @@ export function UseTemplateModal({
             userProfile={mockUserProfile}
             state={state}
             className="w-full"
-            onTaskComplete={async () => {
-              return {
-                ok: false,
-                data: { message: 'This is a preview only' }
-              };
-            }}
-            onLogin={() => {}}
-            onCompleteProfile={() => {}}
+            onTaskComplete={onFakeTaskComplete}
+            onCompleteProfile={onFakeCompleteProfile}
+            onLogin={onFakeLogin}
+            verifyEmail={false}
           />
         </div>
 

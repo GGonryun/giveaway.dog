@@ -6,7 +6,10 @@ import { computeState } from '@/lib/sweepstakes';
 import {
   mockUserHostRelationship,
   mockUserParticipation,
-  mockUserProfile
+  mockUserProfile,
+  onFakeCompleteProfile,
+  onFakeLogin,
+  onFakeTaskComplete
 } from '../sweepstakes-editor/data/mocks';
 
 export const HeroSweepstakesPreview: React.FC = () => {
@@ -56,9 +59,10 @@ export const HeroSweepstakesPreview: React.FC = () => {
       userParticipation={mockUserParticipation}
       userHostRelationship={mockUserHostRelationship}
       hideBackground
-      onTaskComplete={async () => {}}
-      onLogin={() => {}}
-      onCompleteProfile={() => {}}
+      onCompleteProfile={onFakeCompleteProfile}
+      onLogin={onFakeLogin}
+      onTaskComplete={onFakeTaskComplete}
+      verifyEmail={false}
     />
   );
 };

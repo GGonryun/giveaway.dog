@@ -30,10 +30,10 @@ interface EmailVerificationProps {
   title?: string;
   description?: string;
   showCard?: boolean;
-  onEmailVerified?: () => void;
   user: UserProfileSchema;
   redirectTo?: string;
   verificationText?: string;
+  verifyEmail: boolean;
 }
 
 export function EmailVerification({
@@ -41,9 +41,9 @@ export function EmailVerification({
   description = 'Manage your email address and verification status',
   verificationText = 'Please add and verify an email address to participate in this giveaway.',
   showCard = true,
-  onEmailVerified,
   user,
-  redirectTo
+  redirectTo,
+  verifyEmail
 }: EmailVerificationProps) {
   const router = useRouter();
 
@@ -58,7 +58,6 @@ export function EmailVerification({
       toast.success('Verification email sent successfully');
       setEmailSent(true);
       setSentToEmail(emailInput || user.email || '');
-      onEmailVerified?.();
       router.refresh();
     },
     onFailure(error: any) {
@@ -86,7 +85,19 @@ export function EmailVerification({
   const isLoading =
     sendVerificationProcedure.isLoading || updateEmailProcedure.isLoading;
 
-  const handleSaveEmail = async () => {
+  const handleSendVerification = async () => {
+    if (user.email) {
+      setSentToEmail(user.email);
+      sendVerificationProcedure.run({ email: user.email, redirectTo });
+    }
+  };
+
+  const handleVerifyEmail = async () => {
+    if (!verifyEmail) {
+      toast.error('Email verification is not required at this time.');
+      return;
+    }
+
     if (!emailInput) {
       toast.error('Please enter an email address');
       return;
@@ -98,13 +109,6 @@ export function EmailVerification({
     } else {
       // Same email, just send verification
       sendVerificationProcedure.run({ email: emailInput, redirectTo });
-    }
-  };
-
-  const handleSendVerification = async () => {
-    if (user.email) {
-      setSentToEmail(user.email);
-      sendVerificationProcedure.run({ email: user.email, redirectTo });
     }
   };
 
@@ -264,9 +268,10 @@ export function EmailVerification({
           <div className="flex flex-col sm:flex-row gap-2">
             <Button
               size="sm"
-              onClick={handleSaveEmail}
+              onClick={handleVerifyEmail}
               disabled={isLoading}
               variant="default"
+              type="button"
               className="w-full sm:w-fit"
             >
               {isLoading ? (
@@ -288,6 +293,7 @@ export function EmailVerification({
                 onClick={handleCancelChangeEmail}
                 variant="outline"
                 className="w-full sm:w-fit"
+                type="button"
               >
                 <XIcon />
                 Cancel

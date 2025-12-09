@@ -15,7 +15,10 @@ import {
   mockUserProfile,
   mockUserParticipation,
   mockAgeVerification,
-  mockUserHostRelationship
+  mockUserHostRelationship,
+  onFakeLogin,
+  onFakeTaskComplete,
+  onFakeCompleteProfile
 } from '../sweepstakes-editor/data/mocks';
 import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
@@ -172,9 +175,10 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                 userParticipation={mockUserParticipation}
                 userHostRelationship={mockUserHostRelationship}
                 state={state}
-                onTaskComplete={async () => Promise.resolve()}
-                onLogin={noop}
-                onCompleteProfile={noop}
+                onTaskComplete={onFakeTaskComplete}
+                onLogin={onFakeLogin}
+                onCompleteProfile={onFakeCompleteProfile}
+                verifyEmail={false}
               />
             </>
           ) : (

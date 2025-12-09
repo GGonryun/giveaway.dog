@@ -2,13 +2,19 @@ import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-i
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { cn } from '@/lib/utils';
 import { UserSource } from '@prisma/client';
-import { EditIcon, LucideIcon, VerifiedIcon } from 'lucide-react';
+import {
+  EditIcon,
+  HatGlassesIcon,
+  LucideIcon,
+  VerifiedIcon
+} from 'lucide-react';
 
 export const USER_SOURCE_ICON: Record<UserSource, LucideIcon> = {
   TWITTER_IMPORT: SocialXIcon,
   SIGNUP: VerifiedIcon,
   DISCORD_IMPORT: SocialDiscordIcon,
-  MANUAL_IMPORT: EditIcon
+  MANUAL_IMPORT: EditIcon,
+  ANONYMOUS: HatGlassesIcon
 };
 
 export const UserSourceIcon: React.FC<{ source: UserSource; size: number }> = ({

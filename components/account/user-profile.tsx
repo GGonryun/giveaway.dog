@@ -91,6 +91,7 @@ export const UserSettings = () => {
         </SettingsCard>
       </Form>
       <EmailVerification
+        verifyEmail
         user={user}
         redirectTo="/account"
         showCard={true}

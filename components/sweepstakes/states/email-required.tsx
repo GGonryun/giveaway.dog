@@ -6,7 +6,7 @@ import { EmailVerification } from '@/components/auth/email-verification';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
 
 export const EmailRequired: React.FC = () => {
-  const { userProfile } = useGiveawayParticipation();
+  const { userProfile, verifyEmail } = useGiveawayParticipation();
   const pathname = usePathname();
 
   if (!userProfile) {
@@ -25,6 +25,7 @@ export const EmailRequired: React.FC = () => {
   return (
     <div>
       <EmailVerification
+        verifyEmail={verifyEmail}
         showCard={false}
         user={userProfile}
         redirectTo={pathname}

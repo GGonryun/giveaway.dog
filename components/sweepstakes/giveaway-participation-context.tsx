@@ -25,6 +25,7 @@ export interface GiveawayParticipationProps {
   userHostRelationship?: UserHostRelationshipSchema;
   state: GiveawayState;
   hideBackground?: boolean;
+  verifyEmail: boolean;
   onTaskComplete: (taskId: string, data?: unknown) => Promise<unknown>;
   onLogin: () => void;
   onCompleteProfile: () => void;
@@ -53,6 +54,7 @@ export const GiveawayParticipationProvider: React.FC<
   userParticipation,
   userHostRelationship,
   state = 'active',
+  verifyEmail,
   onTaskComplete,
   onLogin,
   onCompleteProfile
@@ -66,6 +68,7 @@ export const GiveawayParticipationProvider: React.FC<
     userParticipation,
     userHostRelationship,
     state,
+    verifyEmail,
     onTaskComplete,
     onLogin,
     onCompleteProfile

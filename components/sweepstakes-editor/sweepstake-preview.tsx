@@ -10,6 +10,7 @@ import {
   GiveawayDesignBackgroundSchema,
   GiveawayFormSchema,
   GiveawaySchema,
+  GiveawayState,
   Prize
 } from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
@@ -30,11 +31,16 @@ import {
   mockWinners,
   mockUserProfile,
   mockUserParticipation,
-  mockUserHostRelationship
+  mockUserHostRelationship,
+  onFakeLogin,
+  onFakeCompleteProfile,
+  onFakeTaskComplete
 } from './data/mocks';
 import { TaskSchema } from '@/lib/task/schemas';
 import { useTeams } from '../context/team-provider';
 import { toSweepstakesHost } from '@/schemas/giveaway/participant';
+import { assertNever } from '@/lib/errors';
+import { UserProfileSchema } from '@/schemas/user';
 
 export const SweepstakePreview: React.FC = () => {
   const { activeTeam } = useTeams();
@@ -148,13 +154,79 @@ export const SweepstakePreview: React.FC = () => {
       host={toSweepstakesHost(activeTeam)}
       participation={mockParticipation}
       prizes={mockWinners}
-      userProfile={mockUserProfile}
-      userParticipation={mockUserParticipation}
-      userHostRelationship={mockUserHostRelationship}
+      userProfile={getUserProfile(previewState)}
+      userParticipation={getUserParticipation(previewState)}
+      userHostRelationship={getUserHostRelationship(previewState)}
       state={previewState}
-      onTaskComplete={() => Promise.resolve()}
-      onLogin={noop}
-      onCompleteProfile={noop}
+      onTaskComplete={onFakeTaskComplete}
+      onLogin={onFakeLogin}
+      onCompleteProfile={onFakeCompleteProfile}
+      verifyEmail={false}
     />
   );
+};
+
+const getUserProfile = (
+  previewState: GiveawayState
+): UserProfileSchema | undefined => {
+  switch (previewState) {
+    case 'not-logged-in':
+      return undefined;
+    case 'active':
+    case 'pending':
+    case 'email-required':
+      return { ...mockUserProfile, email: '', emailVerified: false };
+    case 'age-verification-required':
+    case 'not-eligible':
+    case 'profile-incomplete':
+    case 'winners-announced':
+    case 'winners-pending':
+    case 'closed':
+    case 'canceled':
+    case 'error':
+      return mockUserProfile;
+    default:
+  }
+};
+
+const getUserParticipation = (previewState: GiveawayState) => {
+  switch (previewState) {
+    case 'not-logged-in':
+      return undefined;
+    case 'active':
+    case 'pending':
+    case 'email-required':
+    case 'age-verification-required':
+    case 'not-eligible':
+    case 'profile-incomplete':
+    case 'winners-announced':
+    case 'winners-pending':
+    case 'closed':
+    case 'canceled':
+    case 'error':
+      return mockUserParticipation;
+    default:
+      throw assertNever(previewState);
+  }
+};
+
+const getUserHostRelationship = (previewState: GiveawayState) => {
+  switch (previewState) {
+    case 'not-logged-in':
+      return undefined;
+    case 'active':
+    case 'pending':
+    case 'email-required':
+    case 'age-verification-required':
+    case 'not-eligible':
+    case 'profile-incomplete':
+    case 'winners-announced':
+    case 'winners-pending':
+    case 'closed':
+    case 'canceled':
+    case 'error':
+      return mockUserHostRelationship;
+    default:
+      throw assertNever(previewState);
+  }
 };

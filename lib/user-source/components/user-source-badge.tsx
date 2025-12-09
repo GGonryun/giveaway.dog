@@ -8,7 +8,8 @@ export const USER_SOURCE_BADGE_VARIANTS: Record<UserSource, BadgeVariants> = {
   TWITTER_IMPORT: 'secondary',
   SIGNUP: 'default',
   DISCORD_IMPORT: 'secondary',
-  MANUAL_IMPORT: 'secondary'
+  MANUAL_IMPORT: 'secondary',
+  ANONYMOUS: 'secondary'
 };
 
 export const UserSourceBadge: React.FC<{ source: UserSource }> = ({
@@ -18,6 +19,7 @@ export const UserSourceBadge: React.FC<{ source: UserSource }> = ({
     const Icon = USER_SOURCE_ICON[source];
     const variant = USER_SOURCE_BADGE_VARIANTS[source];
     switch (source) {
+      case 'ANONYMOUS':
       case 'TWITTER_IMPORT':
       case 'DISCORD_IMPORT':
       case 'MANUAL_IMPORT':
