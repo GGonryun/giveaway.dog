@@ -104,7 +104,7 @@ export const ENABLED_AUTH_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
   facebook: false,
   instagram: false,
   youtube: false,
-  email: false
+  email: true
 };
 
 export const SOCIAL_PROVIDERS = Object.entries(IS_SOCIAL_PROVIDER)

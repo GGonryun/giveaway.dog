@@ -2,7 +2,8 @@ import { Button } from '@/components/ui/button';
 import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
 import {
   ProviderTypeSchema,
-  PROVIDER_SCHEMA_LABELS
+  PROVIDER_SCHEMA_LABELS,
+  ENABLED_AUTH_PROVIDERS
 } from '@/lib/integrations/schemas/providers';
 import React from 'react';
 
@@ -14,7 +15,8 @@ const PROVIDERS: ProviderTypeSchema[] = [
   'twitter',
   'google',
   'discord',
-  'email'
+  'email',
+  'tiktok'
 ];
 
 export const ProviderButtons: React.FC<ProviderButtonsProps> = ({
@@ -30,6 +32,7 @@ export const ProviderButtons: React.FC<ProviderButtonsProps> = ({
           variant="outline"
           name="provider"
           value={provider}
+          disabled={!ENABLED_AUTH_PROVIDERS[provider]}
           formNoValidate
           className="w-full justify-start"
           onClick={() => onSubmit(provider)}
@@ -52,6 +55,7 @@ export const ProviderIcons: React.FC<ProviderButtonsProps> = ({ onSubmit }) => {
           size="icon"
           name="provider"
           value={provider}
+          disabled={!ENABLED_AUTH_PROVIDERS[provider]}
           formNoValidate
           aria-label={`Login with ${PROVIDER_SCHEMA_LABELS[provider]}`}
           onClick={() => onSubmit(provider)}
