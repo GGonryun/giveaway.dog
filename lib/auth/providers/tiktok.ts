@@ -78,7 +78,6 @@ export function TikTok<P extends TiktokProfile>(
     userinfo: {
       url: 'https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,username,profile_deep_link',
       async request({ tokens, provider }: any) {
-        console.log('Fetching TikTok user info with tokens:', tokens);
         try {
           return await fetch(provider.userinfo?.url as URL, {
             headers: { Authorization: `Bearer ${tokens.access_token}` }
@@ -90,7 +89,6 @@ export function TikTok<P extends TiktokProfile>(
       }
     },
     profile(profile) {
-      console.log('TikTok profile:', profile);
       return {
         id: profile.data.user.open_id,
         name: profile.data.user.display_name,

@@ -19,37 +19,59 @@ export const tryAutoMerge = async (args: {
     session,
     profile
   });
-  if (
-    existing.provider === account.provider &&
-    existing.providerAccountId === account.providerAccountId
-  ) {
-    // Same account, no merge needed, user is doing a reconnect
-    return true;
+
+  // If the existing account's user source is not from a Twitter import, do
+  // not merge. Otherwise the twitter import account merge would have matching
+  // provider/providerAccountId and we want to complete a full upgrade
+  if (existing.user.source !== 'TWITTER_IMPORT') {
+    if (
+      existing.provider === account.provider &&
+      existing.providerAccountId === account.providerAccountId
+    ) {
+      // Same account, no merge needed, user is doing a reconnect
+      return true;
+    }
+    return false;
   }
 
-  if (existing.user.source !== 'TWITTER_IMPORT') return false;
-
+  // this gets called if this user is signing in for the first time with twitter
+  // and the account already exists because it was imported previously from
+  // twitter import.
   if (!session || !session?.user?.id) {
-    await prisma.account.update({
-      where: {
-        provider_providerAccountId: {
-          provider: account.provider,
-          providerAccountId: account.providerAccountId
+    await prisma.$transaction(async (tx) => {
+      await tx.account.update({
+        where: {
+          provider_providerAccountId: {
+            provider: account.provider,
+            providerAccountId: account.providerAccountId
+          }
+        },
+        data: {
+          access_token: account.access_token,
+          refresh_token: account.refresh_token,
+          expires_at: account.expires_at,
+          token_type: account.token_type,
+          scope: account.scope,
+          id_token: account.id_token
         }
-      },
-      data: {
-        access_token: account.access_token,
-        refresh_token: account.refresh_token,
-        expires_at: account.expires_at,
-        token_type: account.token_type,
-        scope: account.scope,
-        id_token: account.id_token
-      }
+      });
+
+      await tx.user.update({
+        where: {
+          id: existing.user.id
+        },
+        data: {
+          source: 'SIGNUP'
+        }
+      });
     });
 
     return true;
   }
 
+  // this gets called when the user is signed in and is trying to link an
+  // account that was previously imported from twitter. The old account
+  // needs to be merged into the current session user and the old user deleted.
   await prisma.$transaction(async (tx) => {
     // add a new account for the current user
     const currentUserId = session?.user?.id as string;
@@ -89,5 +111,5 @@ export const tryAutoMerge = async (args: {
     });
   });
 
-  return '/account?merged_x=true';
+  return '/account?merged=true';
 };
