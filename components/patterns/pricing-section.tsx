@@ -1,12 +1,13 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button, ButtonVariant } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
 import { Badge } from '@/components/ui/badge';
-import { Check } from 'lucide-react';
+import { ArrowRightIcon, Check, ContactIcon } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 type PricingTier = {
   title: string;
@@ -19,6 +20,11 @@ type PricingTier = {
   priceSubtext: string;
   features: React.ReactNode[];
   border?: boolean;
+  buttonText: string;
+  buttonLink: string;
+  buttonVariant: ButtonVariant;
+  buttonIcon: React.ReactNode;
+  buttonSubtext: string;
 };
 
 const sharedFeatures = {
@@ -48,7 +54,11 @@ export const PricingSection = () => {
       subtitle: 'Best for small creators',
       price: 'Free',
       priceSubtext: '',
-      border: true,
+      buttonSubtext: 'Try it now!',
+      buttonText: 'Get Started',
+      buttonLink: '/signup',
+      buttonIcon: <ArrowRightIcon />,
+      buttonVariant: 'outline',
       features: [
         sharedFeatures.team,
         '3 seats',
@@ -71,6 +81,12 @@ export const PricingSection = () => {
         billingCycle === 'yearly'
           ? `(billed as $${(5 * 0.6 * 12).toFixed(2)}/year)`
           : '',
+      border: true,
+      buttonSubtext: 'Billed monthly or yearly',
+      buttonText: 'Contact Us',
+      buttonLink: '/signup',
+      buttonIcon: <ArrowRightIcon />,
+      buttonVariant: 'default',
       features: [
         <GradientText>Unlimited giveaways</GradientText>,
         <GradientText>Unlimited entry methods</GradientText>,
@@ -83,26 +99,31 @@ export const PricingSection = () => {
         'Unlimited integrations',
         sharedFeatures.humanSupport
       ]
-    },
-    {
-      title: 'Enterprise',
-      badge: { text: 'Big dogs only', variant: 'destructive' },
-      subtitle: 'Pay once, use forever',
-      price: 2999,
-      priceSubtext: 'one-time payment',
-      features: [
-        <GradientText>Everything in Pro</GradientText>,
-        <GradientText>Lifetime access</GradientText>,
-        'No recurring fees',
-        'Priority support',
-        'Early access to new features',
-        'Dedicated account manager',
-        'Custom branding options',
-        'API access',
-        'Advanced analytics',
-        'White-label options'
-      ]
     }
+    // {
+    //   title: 'Enterprise',
+    //   badge: { text: 'Big dogs only', variant: 'destructive' },
+    //   subtitle: 'Pay once, use forever',
+    //   price: 2999,
+    //   priceSubtext: 'one-time payment',
+    //   buttonSubtext: 'Contact us for more info',
+    //   buttonText: 'Contact Us',
+    //   buttonLink: '/contact',
+    //   buttonIcon: <ArrowRightIcon />,
+    //   buttonVariant: 'outline',
+    //   features: [
+    //     <GradientText>Everything in Pro</GradientText>,
+    //     <GradientText>Lifetime access</GradientText>,
+    //     'No recurring fees',
+    //     'Priority support',
+    //     'Early access to new features',
+    //     'Dedicated account manager',
+    //     'Custom branding options',
+    //     'API access',
+    //     'Advanced analytics',
+    //     'White-label options'
+    //   ]
+    // }
   ];
 
   return (
@@ -147,11 +168,14 @@ export const PricingSection = () => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {tiers.map((tier) => (
             <Card
               key={tier.title}
-              className={`p-4 flex flex-col ${tier.border ? 'border-2 border-primary' : ''}`}
+              className={cn(
+                `p-4 flex flex-col`,
+                tier.border && 'border-2 border-primary'
+              )}
             >
               <CardHeader className="pb-2 pt-6 lg:pb-4 lg:pt-8">
                 <div className="flex items-center gap-2 mb-2">
@@ -203,14 +227,16 @@ export const PricingSection = () => {
 
                 <Button
                   size="lg"
-                  variant={tier.border ? 'outline' : 'default'}
+                  variant={tier.buttonVariant}
                   className="w-full mt-4 lg:mt-6"
                   asChild
                 >
-                  <Link href="/contact">Contact Us</Link>
+                  <Link href={tier.buttonLink}>
+                    {tier.buttonText} {tier.buttonIcon}
+                  </Link>
                 </Button>
                 <p className="text-xs text-muted-foreground text-center mt-2">
-                  Currently in Beta!
+                  {tier.buttonSubtext}
                 </p>
               </CardContent>
             </Card>
