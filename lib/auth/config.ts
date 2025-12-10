@@ -48,15 +48,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       name: 'Anonymous',
       credentials: {},
       authorize: async () => {
-        const user = await prisma.user.create({
-          data: {
-            id: createId(),
-            name: 'Anonymous',
-            source: UserSource.ANONYMOUS
-          }
-        });
-
-        return user;
+        console.log('Creating anonymous user account');
+        try {
+          const user = await prisma.user.create({
+            data: {
+              id: createId(),
+              name: 'Anonymous',
+              source: UserSource.ANONYMOUS
+            }
+          });
+          console.log('Anonymous user account created:', user);
+          return user;
+        } catch (error) {
+          console.log('Error creating anonymous user:', error);
+          throw error;
+        }
       }
     }),
     SteamProvider({
