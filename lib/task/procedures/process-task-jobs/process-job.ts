@@ -4,24 +4,35 @@ import {
   isRetryableApplicationError
 } from '@/lib/errors';
 import { processRetweetTaskJob } from './process-retweet-task-job';
-import { TaskSchema } from '@/lib/task/schemas';
+import { toTaskSchema } from '@/lib/task/schemas';
 import { PrismaClient } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 import { processLikeTaskJob } from './process-like-task-job';
 
 export const processTaskJob = async (
   db: PrismaClient,
-  task: TaskSchema,
   job: TaskJobWithRelations
 ) => {
   try {
     console.info(`Processing task job ${job.id}`, job);
 
-    const { timing } = job.task.sweepstakes;
+    const { timing, status } = job.task.sweepstakes;
+    if (status !== 'ACTIVE') {
+      console.info(
+        `Sweepstakes ${job.task.sweepstakes.id} is not active, deleting task job ${job.id}`
+      );
+
+      await db.taskJob.delete({
+        where: { id: job.id }
+      });
+
+      return;
+    }
+
     // if the sweepstakes has a start date in the future, reschedule the job.
     if (timing?.startDate && timing.startDate > new Date()) {
       console.info(
-        `[${task.type}] Sweepstakes ${job.task.sweepstakes.id} has not started yet, rescheduling task job ${job.id} to ${timing.startDate}`
+        `Sweepstakes ${job.task.sweepstakes.id} has not started yet, rescheduling task job ${job.id} to ${timing.startDate}`
       );
 
       await db.taskJob.update({
@@ -33,6 +44,8 @@ export const processTaskJob = async (
 
       return;
     }
+
+    const task = toTaskSchema(job.task);
     // if the sweepstakes has ended, cancel the job.
     if (timing?.endDate && timing.endDate < new Date()) {
       console.info(
@@ -66,7 +79,7 @@ export const processTaskJob = async (
       case 'INSTAGRAM_LIKE':
       case 'INSTAGRAM_COMMENT':
       case 'FACEBOOK_VISIT_PAGE':
-    case 'FACEBOOK_VIEW_POST':
+      case 'FACEBOOK_VIEW_POST':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',
           message: `Job processing not implemented for task type: ${task.type}`

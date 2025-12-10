@@ -1,11 +1,15 @@
 import { SweepstakesInputTaskSchema } from '@/schemas/giveaway/db';
-import { Prisma } from '@prisma/client';
+import { Prisma, SweepstakesStatus } from '@prisma/client';
 import { assertNever } from '../errors';
 import { RequiredFields } from '../types';
 
 export const createJobsForTask = (
-  task: RequiredFields<SweepstakesInputTaskSchema, 'id'>
+  task: RequiredFields<SweepstakesInputTaskSchema, 'id'>,
+  status: SweepstakesStatus
 ): Prisma.TaskJobCreateWithoutTaskInput[] => {
+  if (status !== 'ACTIVE') {
+    return [];
+  }
   if (!task?.type) return [];
   switch (task.type) {
     case 'VISIT_URL':

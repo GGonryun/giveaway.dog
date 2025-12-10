@@ -31,8 +31,7 @@ export const processTaskJobs = procedure()
     console.info(`Found ${pending.length} task jobs to process`);
     for (const job of pending) {
       try {
-        const task = toTaskSchema(job.task);
-        await processTaskJob(db, task, job);
+        await processTaskJob(db, job);
       } catch (error) {
         console.error(`Failed to process job ${job.id}`, error);
       }

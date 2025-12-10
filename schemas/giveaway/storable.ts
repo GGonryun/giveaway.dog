@@ -133,7 +133,8 @@ const toStorablePrizes = (
 };
 
 const toStorableTasks = (
-  tasks: SweepstakesInputSchema['tasks']
+  tasks: SweepstakesInputSchema['tasks'],
+  status: SweepstakesStatus
 ): Prisma.TaskUncheckedCreateNestedManyWithoutSweepstakesInput | undefined => {
   if (!tasks) return undefined;
   const compacted = compact(tasks).filter(isStorableTask);
@@ -148,7 +149,7 @@ const toStorableTasks = (
         index,
         config,
         jobs: {
-          create: createJobsForTask(task)
+          create: createJobsForTask(task, status)
         }
       };
     })
@@ -208,22 +209,26 @@ export const toStorableSweepstakes = (
   sweepstakes: TeamSweepstakesGetPayload,
   input: SweepstakesInputSchema & { status?: SweepstakesStatus }
 ): Prisma.SweepstakesUncheckedCreateInput => {
+  const status = input.status ?? sweepstakes.status;
   return {
-    ...toStorableSweepstakesUpdate(input),
+    ...toStorableSweepstakesUpdate(input, status),
     id: sweepstakes.id,
-    status: input.status ?? sweepstakes.status,
-    teamId: sweepstakes.teamId
+    teamId: sweepstakes.teamId,
+    status
   };
 };
 
-export const toStorableSweepstakesUpdate = (input: SweepstakesInputSchema) => {
+export const toStorableSweepstakesUpdate = (
+  input: SweepstakesInputSchema,
+  status: SweepstakesStatus
+) => {
   return {
     details: toStorableDetails(input.setup),
     timing: toStorableTiming(input.timing),
     terms: toStorableTerms(input.terms),
     audience: toStorableAudience(input.audience),
     prizes: toStorablePrizes(input.prizes),
-    tasks: toStorableTasks(input.tasks),
+    tasks: toStorableTasks(input.tasks, status),
     design: toStorableDesign(input.design),
     visibility: toStorableVisibility(input.visibility),
     criteria: toStorableCriteria(input.criteria)
