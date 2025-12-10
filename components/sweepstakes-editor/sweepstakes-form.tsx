@@ -40,6 +40,7 @@ import { UnifiedFormAction } from '../patterns/form-layout/types';
 import { SweepstakeFormContent } from './sweepstake-form-content';
 import { CancelConfirmationModal } from '../sweepstakes/cancel-confirmation-modal';
 import { PublishConfirmationModal } from './publish-confirmation-modal';
+import { useSweepstakesDetailsPage } from '../sweepstakes/use-sweepstakes-details-page';
 
 export const SweepstakesForm: React.FC<{
   sweepstakes: GiveawayFormSchema;
@@ -111,7 +112,8 @@ const FormContent: React.FC<{
   integrations: IntegrationsSchema;
   action: UnifiedFormAction;
 }> = ({ id, teamFeatureFlags, integrations, action, step }) => {
-  const page = useSweepstakesPage();
+  const detailsPage = useSweepstakesDetailsPage();
+  const sweepstakesPage = useSweepstakesPage();
 
   const [showIssues, setShowIssues] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -121,14 +123,23 @@ const FormContent: React.FC<{
 
   const deleteSweepstakes = useDeleteSweepstakes(() => {
     toast.success('Sweepstakes deleted successfully!');
-    page.navigateTo();
+    sweepstakesPage.navigateTo();
   });
+
+  const returnToPage = () => {
+    console.log('Returning to page with action:', action);
+    if (action === 'edit' || action === 'view') {
+      detailsPage.navigateTo(id);
+    } else {
+      sweepstakesPage.navigateTo();
+    }
+  };
 
   const updateSweepstakesProcedure = useProcedure({
     action: updateSweepstakes,
     onSuccess: () => {
       toast.success('Sweepstakes updated successfully!');
-      page.navigateTo();
+      returnToPage();
     }
   });
 
@@ -136,7 +147,7 @@ const FormContent: React.FC<{
     action: publishSweepstakes,
     onSuccess() {
       toast.success('Sweepstakes published successfully!');
-      page.navigateTo();
+      returnToPage();
     }
   });
 
@@ -162,9 +173,9 @@ const FormContent: React.FC<{
     if (form.formState.isDirty || action === 'create' || action === 'demo') {
       setShowCancelModal(true);
     } else {
-      page.navigateTo();
+      returnToPage();
     }
-  }, [form.formState.isDirty, page.navigateTo, action]);
+  }, [form.formState.isDirty, returnToPage, action]);
 
   const handleSaveChanges = useCallback(async () => {
     if (action === 'demo') {
@@ -189,7 +200,7 @@ const FormContent: React.FC<{
     if (action === 'create') {
       deleteSweepstakes.run({ id });
     } else {
-      page.navigateTo();
+      returnToPage();
     }
   }, [deleteSweepstakes.run, action, id]);
 
