@@ -45,7 +45,7 @@ export const UserInfoSection: React.FC = () => {
               {userProfile.email && userProfile.emailVerified && (
                 <div className="w-4 h-4 rounded bg-background border border-border flex items-center justify-center">
                   <ProviderIcon
-                    type="email"
+                    type="EMAIL"
                     className="w-2.5 h-2.5 text-foreground"
                   />
                 </div>

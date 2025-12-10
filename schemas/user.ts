@@ -1,4 +1,4 @@
-import { Prisma, UserSource } from '@prisma/client';
+import { IdentityProvider, Prisma, UserSource } from '@prisma/client';
 import z from 'zod';
 import {
   userFeatureFlagKeySchema,
@@ -9,6 +9,7 @@ import { UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
 import { clamp } from 'lodash';
 
 import {
+  AUTH_PROVIDER_TO_IDENTITY_PROVIDER,
   providerSchema,
   ProviderSchema,
   ProviderTypeSchema,
@@ -41,7 +42,9 @@ export type UserSchema = z.infer<typeof userSchema>;
 
 export const parseProviders = (providers: UserAccounts[]): ProviderSchema[] =>
   providers.map((provider) => ({
-    type: parseProvider(provider.provider) || 'email',
+    type:
+      parseProvider(AUTH_PROVIDER_TO_IDENTITY_PROVIDER[provider.provider]) ||
+      'EMAIL',
     scopes: splitScopes(provider.scope),
     label: provider.label || 'N/A',
     link: provider.link || ''
@@ -168,5 +171,7 @@ export const isUserDetailsTab = (tab: string): tab is UserDetailsTabSchema => {
 
 export const isAnonymousUser = (user: Nil<UserSchema>): boolean => {
   if (user?.providers.length === 0) return true;
-  return user?.providers.some((p) => p.type === 'anonymous') ?? false;
+  return (
+    user?.providers.some((p) => p.type === IdentityProvider.ANONYMOUS) ?? false
+  );
 };

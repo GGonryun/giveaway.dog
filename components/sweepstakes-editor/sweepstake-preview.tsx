@@ -41,6 +41,7 @@ import { useTeams } from '../context/team-provider';
 import { toSweepstakesHost } from '@/schemas/giveaway/participant';
 import { assertNever } from '@/lib/errors';
 import { UserProfileSchema } from '@/schemas/user';
+import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
 
 export const SweepstakePreview: React.FC = () => {
   const { activeTeam } = useTeams();
@@ -110,7 +111,9 @@ export const SweepstakePreview: React.FC = () => {
                 required:
                   formValues.audience.minimumAgeRestriction.required || false
               }
-            : undefined
+            : undefined,
+          allowedIdentities:
+            formValues.audience?.allowedIdentities ?? DEFAULT_ALLOWED_IDENTITIES
         },
         tasks: (formValues.tasks || []) as TaskSchema[],
         prizes: (formValues.prizes || []) as Prize[],

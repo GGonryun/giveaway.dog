@@ -7,7 +7,7 @@ export const UserSourceCaption: React.FC<{
     case 'SIGNUP':
       return <>{user.email ?? 'No email'}</>;
     case 'TWITTER_IMPORT': {
-      const provider = user.providers?.find((p) => p.type === 'twitter');
+      const provider = user.providers?.find((p) => p.type === 'TWITTER');
       if (!provider) {
         return <>Imported from X</>;
       }

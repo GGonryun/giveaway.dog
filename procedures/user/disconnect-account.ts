@@ -1,7 +1,10 @@
 'use server';
 
 import { ApplicationError } from '@/lib/errors';
-import { providerTypeSchema } from '@/lib/integrations/schemas/providers';
+import {
+  IDENTITY_PROVIDER_TO_AUTH_PROVIDER,
+  providerTypeSchema
+} from '@/lib/integrations/schemas/providers';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 
@@ -36,7 +39,9 @@ export const updateEmail = procedure()
         });
       }
 
-      const target = existingUser.accounts.find((acc) => acc.provider === type);
+      const target = existingUser.accounts.find(
+        (acc) => acc.provider === IDENTITY_PROVIDER_TO_AUTH_PROVIDER[type]
+      );
 
       if (!target) {
         throw new ApplicationError({

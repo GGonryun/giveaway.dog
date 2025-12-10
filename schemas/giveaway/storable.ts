@@ -20,6 +20,7 @@ import { RequiredFields } from '@/lib/types';
 import { datetime } from '@/lib/date';
 import { TWITTER_API_RATE_LIMIT_MINUTES } from '@/lib/pickers/data/settings';
 import { createJobsForTask } from '@/lib/task/jobs';
+import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
 
 const toStorableDetails = (setup: SweepstakesInputSchema['setup']) => {
   return {
@@ -86,6 +87,8 @@ const toStorableAudience = (
   if (!audience) return undefined;
   return {
     create: {
+      allowedIdentities:
+        audience.allowedIdentities || DEFAULT_ALLOWED_IDENTITIES,
       requireEmail: audience.requireEmail,
       regionalRestriction: audience.regionalRestriction
         ? {

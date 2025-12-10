@@ -6,6 +6,8 @@ import { parseProvider } from '@/schemas/user';
 import { AuthError } from 'next-auth';
 import z from 'zod';
 import { signIn } from '../config';
+import { IdentityProvider } from '@prisma/client';
+import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@/lib/integrations/schemas/providers';
 
 const login = procedure()
   .authorization({
@@ -14,7 +16,7 @@ const login = procedure()
   .input(
     z.object({
       redirectTo: z.string().optional(),
-      provider: z.string().optional(),
+      provider: z.nativeEnum(IdentityProvider).optional(),
       email: z.string().optional(),
       revalidate: z.string().optional()
     })
@@ -68,24 +70,27 @@ const signInHandler = async (args: {
   const provider = parseProvider(rawProvider);
 
   switch (provider) {
-    case 'twitter':
-    case 'google':
-    case 'discord':
-    case 'twitch':
-    case 'steam':
-    case 'kick':
-    case 'instagram':
-    case 'facebook':
-    case 'tiktok':
-      return await signIn(provider, options);
-    case 'email':
+    case 'TWITTER':
+    case 'GOOGLE':
+    case 'DISCORD':
+    case 'TWITCH':
+    case 'STEAM':
+    case 'KICK':
+    case 'INSTAGRAM':
+    case 'FACEBOOK':
+    case 'TIKTOK':
+      return await signIn(
+        IDENTITY_PROVIDER_TO_AUTH_PROVIDER[provider],
+        options
+      );
+    case 'EMAIL':
       return await signIn('email', {
         email,
         ...options
       });
-    case 'anonymous':
+    case 'ANONYMOUS':
       return await signIn('anonymous', options);
-    case 'youtube':
+    case 'YOUTUBE':
       throw new ApplicationError({
         code: 'NOT_IMPLEMENTED',
         message: 'YouTube login is not yet implemented.'

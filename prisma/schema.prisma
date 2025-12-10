@@ -337,6 +337,21 @@ model SweepstakesDetails {
   banner      String?
 }
 
+enum IdentityProvider {
+  TWITTER
+  GOOGLE
+  YOUTUBE
+  DISCORD
+  EMAIL
+  STEAM
+  TWITCH
+  KICK
+  INSTAGRAM
+  FACEBOOK
+  TIKTOK
+  ANONYMOUS
+}
+
 model SweepstakesAudience {
   id            String      @id @default(cuid())
   sweepstakesId String      @unique
@@ -345,6 +360,7 @@ model SweepstakesAudience {
   requireEmail          Boolean?
   regionalRestriction   RegionalRestriction?
   minimumAgeRestriction MinimumAgeRestriction?
+  allowedIdentities     IdentityProvider[]     @default([TWITTER, GOOGLE, DISCORD, EMAIL, TWITCH, STEAM, TIKTOK])
 }
 
 enum VisibilityType {

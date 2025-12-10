@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import {
   ProviderSchema,
+  isIdentityProvider,
   isMissingScopes
 } from '@/lib/integrations/schemas/providers';
 import { TaskTheme, useTaskTheme } from '@/lib/task/components/theme';
@@ -19,9 +20,11 @@ import {
   TaskSchema,
   TASK_PLATFORM,
   TASK_PLATFORM_LABEL,
-  TASK_REQUIRED_SCOPES
+  TASK_REQUIRED_SCOPES,
+  TaskPlatformSchema
 } from '@/lib/task/schemas';
 import login from '@/lib/auth/procedures/login';
+import { ApplicationError } from '@/lib/errors';
 
 const useProviderConnection = ({
   taskId,
@@ -29,7 +32,7 @@ const useProviderConnection = ({
   providerLabel
 }: {
   taskId: string;
-  providerId: string;
+  providerId: TaskPlatformSchema;
   providerLabel: string;
 }) => {
   const pathname = usePathname();
@@ -51,6 +54,13 @@ const useProviderConnection = ({
     // add task id to params to complete the task after login
     params.append('taskId', taskId);
     const redirectTo = `${pathname}?${params.toString()}`;
+
+    if (!isIdentityProvider(providerId)) {
+      throw new ApplicationError({
+        code: 'BAD_REQUEST',
+        message: `Unsupported provider ${providerId}`
+      });
+    }
 
     // Redirect to login with twitter
     return loginProcedure.run({

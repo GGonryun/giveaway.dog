@@ -15,6 +15,7 @@ import {
   DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND
 } from './defaults';
 import { parseUserSourceSchema } from '@/lib/user-source/schemas';
+import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
 
 const toSetup = (
   data: FormSweepstakesGetPayload['details']
@@ -48,6 +49,7 @@ const toAudienceInput = (
   data: FormSweepstakesGetPayload['audience']
 ): SweepstakesInputSchema['audience'] => {
   return {
+    allowedIdentities: data?.allowedIdentities || DEFAULT_ALLOWED_IDENTITIES,
     requireEmail: data?.requireEmail || false,
     regionalRestriction: data?.regionalRestriction
       ? {

@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import { LOGIN_PROVIDERS } from '@/lib/integrations/schemas/providers';
 
 export function LoginForm({
   className,
@@ -50,8 +51,12 @@ export function LoginForm({
             Sign in with your account to access Giveaway Dog
           </CardDescription>
         </CardHeader>
-        <CardContent className="w-full">
-          <LoginOptions redirectTo={redirectTo} />
+        <CardContent>
+          <LoginOptions
+            type="buttons"
+            redirectTo={redirectTo}
+            allowedIdentities={LOGIN_PROVIDERS}
+          />
         </CardContent>
       </Card>
       <AuthFooter />

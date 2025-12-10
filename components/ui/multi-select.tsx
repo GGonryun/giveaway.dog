@@ -36,7 +36,7 @@ import { widetype } from '@/lib/widetype';
  * Uses class-variance-authority (cva) to define different styles based on "variant" prop.
  */
 const multiSelectVariants = cva(
-  'm-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300',
+  'm-0.5 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300',
   {
     variants: {
       variant: {
@@ -234,7 +234,7 @@ export const MultiSelect = React.forwardRef<
             )}
           >
             {selectedValues.length > 0 ? (
-              <div className="flex justify-between items-center w-full">
+              <div className="flex justify-between items-center w-full ">
                 <div className="flex flex-wrap items-center">
                   {selectedValues.slice(0, maxCount).map((value) => {
                     const option = options.find((o) => o.value === value);
@@ -244,7 +244,8 @@ export const MultiSelect = React.forwardRef<
                         key={value}
                         className={cn(
                           isAnimating ? 'animate-bounce' : '',
-                          multiSelectVariants({ variant })
+                          multiSelectVariants({ variant }),
+                          '[&>svg]:pointer-events-auto'
                         )}
                         style={{ animationDuration: `${animation}s` }}
                       >
@@ -253,7 +254,7 @@ export const MultiSelect = React.forwardRef<
                         )}
                         {option?.label}
                         <XCircle
-                          className="ml-2 h-4 w-4 cursor-pointer"
+                          className="ml-2 h-4 w-4 cursor-pointer pointer-events-auto"
                           onClick={(event) => {
                             event.stopPropagation();
                             toggleOption(value);
@@ -273,7 +274,7 @@ export const MultiSelect = React.forwardRef<
                     >
                       {`+ ${selectedValues.length - maxCount} more`}
                       <XCircle
-                        className="ml-2 h-4 w-4 cursor-pointer"
+                        className="ml-2 h-4 w-4 cursor-pointer pointer-events-auto"
                         onClick={(event) => {
                           event.stopPropagation();
                           clearExtraOptions();
@@ -290,10 +291,7 @@ export const MultiSelect = React.forwardRef<
                       handleClear();
                     }}
                   />
-                  <Separator
-                    orientation="vertical"
-                    className="flex min-h-6 h-full"
-                  />
+
                   <ChevronDown className="h-4 mx-2 cursor-pointer text-muted-foreground" />
                 </div>
               </div>

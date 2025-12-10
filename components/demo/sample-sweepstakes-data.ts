@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import { toDefaultValues } from '@/lib/task/defaults';
 import { datetime } from '@/lib/date';
 import {
+  DEFAULT_ALLOWED_IDENTITIES,
   DISCORD_INVITE_LINK,
   DISCORD_PUBLIC_CHANNEL_URL,
   FACEBOOK_POST_URL,
@@ -10,9 +11,7 @@ import {
   KICK_CHANNEL_URL,
   STEAM_APP_ID_URL,
   TWITCH_CHANNEL_URL,
-  TWITTER_POST_URL,
   TWITTER_PROFILE_URL,
-  VISIT_URL,
   YOUTUBE_CHANNEL_NAME,
   YOUTUBE_CHANNEL_URL
 } from '@/lib/settings';
@@ -129,7 +128,8 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       label: 'You must be 18 years or older to participate',
       required: true,
       format: 'CHECKBOX'
-    }
+    },
+    allowedIdentities: DEFAULT_ALLOWED_IDENTITIES
   },
   design: {
     displayName: true,

@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import {
+  ProviderBadges,
   ProviderButtons,
   ProviderIcons
 } from '@/components/auth/provider-buttons';
@@ -20,19 +21,27 @@ import login from '@/lib/auth/procedures/login';
 import { Alert, AlertDescription } from '../ui/alert';
 import { toAuthErrorDescription } from '@/lib/auth/util';
 import { useSearchParams } from 'next/navigation';
+import { IdentityProvider } from '@prisma/client';
+import { assertNever } from '@/lib/errors';
+import { Separator } from '../ui/separator';
 
+type LoginButtonType = 'buttons' | 'icons' | 'badges';
 interface LoginOptionsProps {
   className?: string;
   redirectTo?: string;
   label?: string;
-  icons?: boolean;
+  dividers?: boolean;
+  type?: LoginButtonType;
+  allowedIdentities: IdentityProvider[];
 }
 
 export function LoginOptions({
   className,
   redirectTo = '',
-  icons,
+  type,
   label,
+  dividers = false,
+  allowedIdentities,
   ...props
 }: LoginOptionsProps & React.ComponentProps<'div'>) {
   const searchParams = useSearchParams();
@@ -60,7 +69,7 @@ export function LoginOptions({
     }
 
     loginProcedure.run({
-      provider: 'email',
+      provider: 'EMAIL',
       email,
       redirectTo
     });
@@ -72,8 +81,8 @@ export function LoginOptions({
     setEmail('');
   };
 
-  const handleProviderLogin = (provider: string) => {
-    if (provider === 'email') {
+  const handleProviderLogin = (provider: IdentityProvider) => {
+    if (provider === 'EMAIL') {
       setShowEmailForm(true);
       setErrorMessage(null);
     } else {
@@ -84,11 +93,12 @@ export function LoginOptions({
     }
   };
 
-  const Providers = icons ? ProviderIcons : ProviderButtons;
-
   if (loginProcedure.isLoading) {
     return (
-      <div className={cn('flex justify-center', className)} {...props}>
+      <div
+        className={cn('flex items-center justify-center', className)}
+        {...props}
+      >
         <Spinner size="xl" />
       </div>
     );
@@ -142,7 +152,7 @@ export function LoginOptions({
   }
 
   return (
-    <div>
+    <div className="w-full">
       <Alert className={cn('mb-4', !error && 'hidden')} variant="destructive">
         <AlertCircle className="mb-2 h-6 w-6 text-muted-foreground" />
         <AlertDescription className="text-sm">
@@ -150,10 +160,47 @@ export function LoginOptions({
         </AlertDescription>
       </Alert>
       <Flex.Stack center gap="sm" className={cn(className)} {...props}>
-        {label && <Typography.Header level={5}>{label}</Typography.Header>}
-        <Providers onSubmit={handleProviderLogin} />
+        {label && (
+          <div
+            className={cn(
+              'w-full items-center',
+              dividers && 'grid grid-cols-5'
+            )}
+          >
+            {dividers && <Separator className="col-span-2" />}
+            <Typography.Header
+              level={5}
+              className="mb-1 text-center col-span-1"
+            >
+              {label}
+            </Typography.Header>
+            {dividers && <Separator className="col-span-2" />}
+          </div>
+        )}
+        <Providers
+          onSubmit={handleProviderLogin}
+          identities={allowedIdentities}
+          type={type}
+        />
         <AuthError error={errorMessage} />
       </Flex.Stack>
     </div>
   );
 }
+
+const Providers: React.FC<{
+  identities: IdentityProvider[];
+  onSubmit: (provider: IdentityProvider) => void;
+  type?: LoginButtonType;
+}> = ({ identities, onSubmit, type = 'buttons' }) => {
+  switch (type) {
+    case 'buttons':
+      return <ProviderButtons identities={identities} onSubmit={onSubmit} />;
+    case 'icons':
+      return <ProviderIcons identities={identities} onSubmit={onSubmit} />;
+    case 'badges':
+      return <ProviderBadges identities={identities} onSubmit={onSubmit} />;
+    default:
+      throw assertNever(type);
+  }
+};

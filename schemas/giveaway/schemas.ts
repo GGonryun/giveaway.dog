@@ -18,6 +18,10 @@ import { timingSchema } from '../timing';
 import { taskSchema, baseTaskSchema } from '@/lib/task/schemas';
 import { allowedUserSourcesSchema } from '@/lib/user-source/schemas';
 import { refineSweepstakeTasks } from '@/lib/task/validation/form';
+import {
+  providerSchema,
+  providerTypeSchema
+} from '@/lib/integrations/schemas/providers';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -141,6 +145,9 @@ export type SweepstakesWinnerCriteriaSchema = z.infer<
 >;
 
 const giveawayAudienceSchema = z.object({
+  allowedIdentities: providerTypeSchema
+    .array()
+    .min(1, 'At least one allowed identity is required'),
   requireEmail: z.boolean(),
   regionalRestriction: regionalRestrictionSchema,
   minimumAgeRestriction: minimumAgeRestrictionSchema

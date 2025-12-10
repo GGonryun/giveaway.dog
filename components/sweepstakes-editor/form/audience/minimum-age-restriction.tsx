@@ -46,7 +46,7 @@ export const MinimumAgeRestriction = () => {
         render={({ field }) => (
           <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader
-              label="Minimum Age Restriction"
+              label="Minimum Age"
               description="Set a minimum age requirement for participants."
               help={{
                 title: 'Help: Minimum Age Restriction',

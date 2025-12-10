@@ -10,38 +10,26 @@ import {
   REQUIRED_TIKTOK_SCOPES
 } from '../scopes';
 import { widetype } from '@/lib/widetype';
+import { IdentityProvider } from '@prisma/client';
 
-export const providerTypeSchema = z.union([
-  z.literal('twitter'),
-  z.literal('google'),
-  z.literal('youtube'),
-  z.literal('discord'),
-  z.literal('email'),
-  z.literal('steam'),
-  z.literal('twitch'),
-  z.literal('kick'),
-  z.literal('instagram'),
-  z.literal('facebook'),
-  z.literal('tiktok'),
-  z.literal('anonymous')
-]);
+export const providerTypeSchema = z.nativeEnum(IdentityProvider);
 
 export type ProviderTypeSchema = z.infer<typeof providerTypeSchema>;
 
 export const PROVIDER_REQUIRED_SCOPES: Record<ProviderTypeSchema, string[]> = {
-  email: [],
-  youtube: [],
-  instagram: [],
-  anonymous: [],
+  EMAIL: [],
+  YOUTUBE: [],
+  INSTAGRAM: [],
+  ANONYMOUS: [],
   // for some reason facebook does not return scopes on sign in or link account
-  facebook: [],
-  discord: REQUIRED_DISCORD_SCOPES,
-  twitter: REQUIRED_TWITTER_SCOPES,
-  steam: REQUIRED_STEAM_SCOPES,
-  google: REQUIRED_GMAIL_SCOPES,
-  twitch: REQUIRED_TWITCH_SCOPES,
-  kick: REQUIRED_KICK_SCOPES,
-  tiktok: REQUIRED_TIKTOK_SCOPES
+  FACEBOOK: [],
+  DISCORD: REQUIRED_DISCORD_SCOPES,
+  TWITTER: REQUIRED_TWITTER_SCOPES,
+  STEAM: REQUIRED_STEAM_SCOPES,
+  GOOGLE: REQUIRED_GMAIL_SCOPES,
+  TWITCH: REQUIRED_TWITCH_SCOPES,
+  KICK: REQUIRED_KICK_SCOPES,
+  TIKTOK: REQUIRED_TIKTOK_SCOPES
 };
 
 export const isMissingScopes = (
@@ -68,64 +56,64 @@ export const providerSchema = z.object({
 
 export type ProviderSchema = z.infer<typeof providerSchema>;
 
-export const PROVIDER_SCHEMA_LABELS: Record<ProviderTypeSchema, string> = {
-  twitter: 'X (Twitter)',
-  anonymous: 'Anonymous',
-  google: 'Google',
-  discord: 'Discord',
-  youtube: 'YouTube',
-  email: 'Email',
-  twitch: 'Twitch',
-  steam: 'Steam',
-  kick: 'Kick',
-  instagram: 'Instagram',
-  facebook: 'Facebook',
-  tiktok: 'TikTok'
+export const IDENTITY_PROVIDER_LABEL: Record<ProviderTypeSchema, string> = {
+  TWITTER: 'X (Twitter)',
+  ANONYMOUS: 'Anonymous',
+  GOOGLE: 'Google',
+  DISCORD: 'Discord',
+  YOUTUBE: 'YouTube',
+  EMAIL: 'Email',
+  TWITCH: 'Twitch',
+  STEAM: 'Steam',
+  KICK: 'Kick',
+  INSTAGRAM: 'Instagram',
+  FACEBOOK: 'Facebook',
+  TIKTOK: 'TikTok'
 };
 
 export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
-  anonymous: false,
-  twitter: true,
-  google: true,
-  discord: true,
-  steam: true,
-  twitch: true,
-  kick: true,
-  facebook: true,
-  instagram: false,
-  youtube: false,
-  email: false,
-  tiktok: true
+  ANONYMOUS: false,
+  TWITTER: true,
+  GOOGLE: true,
+  DISCORD: true,
+  STEAM: true,
+  TWITCH: true,
+  KICK: true,
+  FACEBOOK: true,
+  INSTAGRAM: false,
+  YOUTUBE: false,
+  EMAIL: false,
+  TIKTOK: true
 };
 
-export const ENABLED_AUTH_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
-  twitter: true,
-  google: true,
-  discord: true,
-  steam: true,
-  twitch: true,
-  kick: true,
-  tiktok: true,
-  facebook: false,
-  instagram: false,
-  youtube: false,
-  anonymous: true,
-  email: true
+export const ENABLED_IDENTITY_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
+  TWITTER: true,
+  GOOGLE: true,
+  DISCORD: true,
+  STEAM: true,
+  TWITCH: true,
+  KICK: true,
+  TIKTOK: true,
+  FACEBOOK: false,
+  INSTAGRAM: false,
+  YOUTUBE: false,
+  ANONYMOUS: true,
+  EMAIL: true
 };
 
 const AVAILABLE_LOGIN_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
-  twitter: true,
-  google: true,
-  discord: true,
-  steam: false,
-  twitch: false,
-  kick: false,
-  tiktok: true,
-  facebook: false,
-  instagram: false,
-  youtube: false,
-  anonymous: false,
-  email: true
+  TWITTER: true,
+  GOOGLE: true,
+  DISCORD: true,
+  STEAM: true,
+  TWITCH: true,
+  KICK: true,
+  TIKTOK: true,
+  FACEBOOK: false,
+  INSTAGRAM: false,
+  YOUTUBE: false,
+  EMAIL: true,
+  ANONYMOUS: false
 };
 export const LOGIN_PROVIDERS = widetype
   .entries(AVAILABLE_LOGIN_PROVIDERS)
@@ -135,3 +123,51 @@ export const LOGIN_PROVIDERS = widetype
 export const SOCIAL_PROVIDERS = Object.entries(IS_SOCIAL_PROVIDER)
   .filter(([, isSocial]) => isSocial)
   .map(([providerId]) => providerId) as ProviderTypeSchema[];
+
+export const isIdentityProvider = (
+  value: unknown
+): value is IdentityProvider => {
+  return providerTypeSchema.safeParse(value).success;
+};
+
+// Mapping from IdentityProvider to next-auth provider strings found in lib/auth/config.ts
+export const IDENTITY_PROVIDER_TO_AUTH_PROVIDER: Record<
+  IdentityProvider,
+  string
+> = {
+  TWITTER: 'twitter',
+  GOOGLE: 'google',
+  DISCORD: 'discord',
+  STEAM: 'steam',
+  TWITCH: 'twitch',
+  KICK: 'kick',
+  TIKTOK: 'tiktok',
+  FACEBOOK: 'facebook',
+  INSTAGRAM: 'instagram',
+  YOUTUBE: 'youtube',
+  EMAIL: 'email',
+  ANONYMOUS: 'anonymous'
+};
+export const AUTH_PROVIDER_TO_IDENTITY_PROVIDER: Record<
+  string,
+  IdentityProvider
+> = widetype.entries(IDENTITY_PROVIDER_TO_AUTH_PROVIDER).reduce(
+  (acc, [identityProvider, authProvider]) => {
+    acc[authProvider] = identityProvider as IdentityProvider;
+    return acc;
+  },
+  {} as Record<string, IdentityProvider>
+);
+
+export const doesUserHaveAllowedIdentity = (
+  user: Nil<{ providers: ProviderSchema[] }>,
+  allowedIdentities: ProviderTypeSchema[]
+) => {
+  if (!user || !user.providers) {
+    return false;
+  }
+
+  return user.providers.some((provider) =>
+    allowedIdentities.includes(provider.type)
+  );
+};

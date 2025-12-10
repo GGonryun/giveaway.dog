@@ -10,6 +10,7 @@ import { FailureData } from '@/lib/mrpc/types';
 import { TaskLock } from './task-lock';
 import { CompletionStatus } from '@prisma/client';
 import { SubmissionTaskContent } from '../../submission';
+import { doesUserHaveAllowedIdentity } from '@/lib/integrations/schemas/providers';
 
 export const TaskAction: React.FC<{
   submission: CompletionStatus | undefined;
@@ -33,14 +34,26 @@ export const TaskAction: React.FC<{
   error
 }) => {
   const pathname = usePathname();
-  const { userProfile, userHostRelationship } = useGiveawayParticipation();
+  const { userProfile, userHostRelationship, sweepstakes } =
+    useGiveawayParticipation();
+
+  const isLoggedIn = !!userProfile;
+  const isConnected = doesUserHaveAllowedIdentity(
+    userProfile,
+    sweepstakes.audience.allowedIdentities
+  );
 
   return (
     <>
-      {!userProfile ? (
+      {!isConnected ? (
         <div className="p-4 flex items-center justify-center">
-          <Flex center gap="sm">
-            <LoginOptions label="Login with:" redirectTo={pathname} icons />
+          <Flex center gap="sm" className="w-full mb-2">
+            <LoginOptions
+              label={isLoggedIn ? 'Connect with...' : 'Log in with...'}
+              redirectTo={pathname}
+              allowedIdentities={sweepstakes.audience.allowedIdentities}
+              type="badges"
+            />
           </Flex>
         </div>
       ) : submission ? (

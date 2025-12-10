@@ -2,7 +2,11 @@ import { nanoid } from 'nanoid';
 import { StaticTemplate } from '../schemas/template';
 import { toDefaultValues } from '@/lib/task/defaults';
 import { Nil } from '@/lib/types';
-import { TWITTER_POST_URL, TWITTER_PROFILE_URL } from '@/lib/settings';
+import {
+  DEFAULT_ALLOWED_IDENTITIES,
+  TWITTER_POST_URL,
+  TWITTER_PROFILE_URL
+} from '@/lib/settings';
 
 const BASIC_TEMPLATE: StaticTemplate = {
   id: 'basic-giveaway',
@@ -32,7 +36,8 @@ const BASIC_TEMPLATE: StaticTemplate = {
         label: 'You must be 18 years or older to participate',
         required: true,
         format: 'CHECKBOX'
-      }
+      },
+      allowedIdentities: DEFAULT_ALLOWED_IDENTITIES
     },
     design: {
       displayName: true,
@@ -89,7 +94,8 @@ const TWITTER_TEMPLATE: StaticTemplate = {
         label: 'You must be 18 years or older to participate',
         required: true,
         format: 'CHECKBOX'
-      }
+      },
+      allowedIdentities: DEFAULT_ALLOWED_IDENTITIES
     },
     design: {
       displayName: true,

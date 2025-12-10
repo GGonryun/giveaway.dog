@@ -16,7 +16,7 @@ export const getAccountLabel = (account: any, profile: any): string | null => {
     case 'twitter':
       return profile?.username ? profile.username : null;
     case 'steam':
-      return profile?.personaname || null;
+      return profile?.name || null;
     case 'twitch':
       return profile?.name || null;
     case 'kick':

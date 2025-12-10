@@ -7,18 +7,36 @@ import { RequireEmail } from './require-email';
 import { SweepstakesVisibility } from './sweepstakes-visibility';
 
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { AllowedIdentities } from './allowed-identities';
 
 export const Audience = () => {
   return (
     <>
       <UnifiedSectionHeader
-        label="Participation Requirements"
-        description="Set the basic requirements for users to participate in your sweepstakes"
+        label="Identity"
+        description="Customize how users log in to participate"
       >
-        <RequireEmail />
-        <RegionalRestriction />
-        <MinimumAgeRestriction />
+        <AllowedIdentities />
+        {/* <div>TODO: Require pre-entry login</div> */}
       </UnifiedSectionHeader>
+      <UnifiedSectionHeader
+        label="User Details"
+        description="Require specific information from participants"
+        className="border-t"
+      >
+        {/* <div>TODO: Add name requirements</div> */}
+        <RequireEmail />
+        <MinimumAgeRestriction />
+        {/* <div>TODO: Add fields and add twitter handle field</div> */}
+      </UnifiedSectionHeader>
+      <UnifiedSectionHeader
+        label="Location"
+        description="Restrict participation based on users' location"
+        className="border-t"
+      >
+        <RegionalRestriction />
+      </UnifiedSectionHeader>
+
       <UnifiedSectionHeader
         label="Visibility"
         description="Configure the public URL for your sweepstakes"

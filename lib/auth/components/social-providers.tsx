@@ -1,12 +1,5 @@
 'use client';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
 import { CircleAlertIcon, Plus, UnlinkIcon, UnplugIcon } from 'lucide-react';
@@ -17,10 +10,10 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import disconnectAccount from '@/procedures/user/disconnect-account';
 import { useRouter } from 'next/navigation';
 import {
-  ENABLED_AUTH_PROVIDERS,
+  ENABLED_IDENTITY_PROVIDERS,
   isMissingScopes,
   PROVIDER_REQUIRED_SCOPES,
-  PROVIDER_SCHEMA_LABELS,
+  IDENTITY_PROVIDER_LABEL,
   SOCIAL_PROVIDERS
 } from '@/lib/integrations/schemas/providers';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -57,13 +50,13 @@ export const SocialProviders = () => {
     >
       <div className="space-y-4">
         {SOCIAL_PROVIDERS.map((providerId, i) => {
-          const providerLabel = PROVIDER_SCHEMA_LABELS[providerId];
+          const providerLabel = IDENTITY_PROVIDER_LABEL[providerId];
           const requiredScopes = PROVIDER_REQUIRED_SCOPES[providerId] || [];
 
           const provider = user.providers.find((p) => p.type === providerId);
           const isMissing = isMissingScopes(provider, requiredScopes);
           const isConnectingThis = loginProcedure.isLoading;
-          const isEnabled = ENABLED_AUTH_PROVIDERS[providerId];
+          const isEnabled = ENABLED_IDENTITY_PROVIDERS[providerId];
 
           return (
             <div key={i} className="p-2 border rounded-lg space-y-2">

@@ -17,33 +17,33 @@ export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
   const platform = TASK_PLATFORM[type];
 
   switch (platform) {
-    case 'bonus':
+    case 'BONUS':
       return <StarIcon className="h-4 w-4 text-gray-500" />;
-    case 'website':
+    case 'WEBSITE':
       return <Globe2Icon className="h-4 w-4 text-gray-500" />;
-    case 'email':
+    case 'EMAIL':
       return <MailIcon className="h-4 w-4 text-gray-500" />;
-    case 'twitter':
+    case 'TWITTER':
       return <SocialXIcon className="h-4 w-4 text-black" />;
-    case 'steam':
+    case 'STEAM':
       return <SocialSteamIcon className="h-4 w-4 text-steam-1" />;
-    case 'discord':
+    case 'DISCORD':
       return <SocialDiscordIcon className="h-4 w-4 text-discord-1" />;
-    case 'google':
+    case 'GOOGLE':
       return <SocialGoogleIcon className="h-4 w-4 text-black" />;
-    case 'twitch':
+    case 'TWITCH':
       return <SocialDiscordIcon className="h-4 w-4 text-twitch-1" />;
-    case 'kick':
+    case 'KICK':
       return <SocialKickIcon className="h-4 w-4 text-kick-1" />;
-    case 'youtube':
+    case 'YOUTUBE':
       return <SocialYouTubeIcon className="h-4 w-4 text-youtube-1" />;
-    case 'instagram':
+    case 'INSTAGRAM':
       return <SocialInstagramIcon className="h-4 w-4 text-instagram-1" />;
-    case 'facebook':
+    case 'FACEBOOK':
       return <SocialFacebookIcon className="h-4 w-4 text-facebook-1" />;
-    case 'tiktok':
+    case 'TIKTOK':
       return <SocialTikTokIcon className="h-4 w-4 text-black" />;
-    case 'anonymous':
+    case 'ANONYMOUS':
       return <HatGlassesIcon className="h-4 w-4 text-gray-500" />;
     default:
       throw assertNever(platform);

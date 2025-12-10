@@ -445,57 +445,57 @@ export type TaskSchema = z.infer<typeof taskSchema>;
 export type TaskOf<T extends TaskType> = Extract<TaskSchema, { type: T }>;
 
 export const taskPlatformSchema = providerTypeSchema
-  .or(z.literal('website'))
-  .or(z.literal('bonus'));
+  .or(z.literal('WEBSITE'))
+  .or(z.literal('BONUS'));
 
 export type TaskPlatformSchema = z.infer<typeof taskPlatformSchema>;
 
 export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
-  BONUS_TASK: 'bonus',
-  BONUS_TIMED: 'bonus',
-  BONUS_LIMITED: 'bonus',
-  BONUS_LOYALTY: 'bonus',
-  SECRET_CODE: 'bonus',
-  VISIT_URL: 'website',
-  TWITTER_CONNECT: 'twitter',
-  TWITTER_FOLLOW: 'twitter',
-  TWITTER_RETWEET: 'twitter',
-  TWITTER_RETWEET_IMPORT: 'twitter',
-  TWITTER_LIKE: 'twitter',
-  TWITTER_LIKE_IMPORT: 'twitter',
-  STEAM_WISHLIST: 'steam',
-  YOUTUBE_VISIT: 'youtube',
-  INSTAGRAM_VISIT: 'instagram',
-  INSTAGRAM_LIKE: 'instagram',
-  INSTAGRAM_COMMENT: 'instagram',
-  FACEBOOK_VISIT_PAGE: 'facebook',
-  FACEBOOK_VIEW_POST: 'facebook',
-  DISCORD_JOIN: 'discord',
-  TWITCH_FOLLOW: 'twitch',
-  KICK_FOLLOW: 'kick'
+  BONUS_TASK: 'BONUS',
+  BONUS_TIMED: 'BONUS',
+  BONUS_LIMITED: 'BONUS',
+  BONUS_LOYALTY: 'BONUS',
+  SECRET_CODE: 'BONUS',
+  VISIT_URL: 'WEBSITE',
+  TWITTER_CONNECT: 'TWITTER',
+  TWITTER_FOLLOW: 'TWITTER',
+  TWITTER_RETWEET: 'TWITTER',
+  TWITTER_RETWEET_IMPORT: 'TWITTER',
+  TWITTER_LIKE: 'TWITTER',
+  TWITTER_LIKE_IMPORT: 'TWITTER',
+  STEAM_WISHLIST: 'STEAM',
+  YOUTUBE_VISIT: 'YOUTUBE',
+  INSTAGRAM_VISIT: 'INSTAGRAM',
+  INSTAGRAM_LIKE: 'INSTAGRAM',
+  INSTAGRAM_COMMENT: 'INSTAGRAM',
+  FACEBOOK_VISIT_PAGE: 'FACEBOOK',
+  FACEBOOK_VIEW_POST: 'FACEBOOK',
+  DISCORD_JOIN: 'DISCORD',
+  TWITCH_FOLLOW: 'TWITCH',
+  KICK_FOLLOW: 'KICK'
 };
 
 export const TASK_REQUIRED_SCOPES: Record<TaskPlatformSchema, string[]> = {
   ...PROVIDER_REQUIRED_SCOPES,
-  website: [],
-  bonus: []
+  WEBSITE: [],
+  BONUS: []
 };
 
 export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
-  website: 'Website',
-  bonus: 'Bonus',
-  twitter: 'X (Twitter)',
-  steam: 'Steam',
-  discord: 'Discord',
-  google: 'Google',
-  email: 'Email',
-  twitch: 'Twitch',
-  kick: 'Kick',
-  youtube: 'YouTube',
-  instagram: 'Instagram',
-  facebook: 'Facebook',
-  tiktok: 'TikTok',
-  anonymous: 'Anonymous'
+  WEBSITE: 'Website',
+  BONUS: 'Bonus',
+  TWITTER: 'X (Twitter)',
+  STEAM: 'Steam',
+  DISCORD: 'Discord',
+  GOOGLE: 'Google',
+  EMAIL: 'Email',
+  TWITCH: 'Twitch',
+  KICK: 'Kick',
+  YOUTUBE: 'YouTube',
+  INSTAGRAM: 'Instagram',
+  FACEBOOK: 'Facebook',
+  TIKTOK: 'TikTok',
+  ANONYMOUS: 'Anonymous'
 };
 
 export const taskCategorySchema = z.enum(['social', 'engagement', 'community']);

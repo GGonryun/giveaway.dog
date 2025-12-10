@@ -6,6 +6,7 @@ import {
   UserHostRelationshipSchema
 } from '@/schemas/giveaway/schemas';
 import { AgeVerificationSchema, UserProfileSchema } from '@/schemas/user';
+import { IdentityProvider } from '@prisma/client';
 import { toast } from 'sonner';
 
 export const mockHost = {
@@ -28,34 +29,34 @@ export const mockUserProfile: UserProfileSchema = {
   qualityScore: 85,
   providers: [
     {
-      type: 'twitter',
+      type: IdentityProvider.TWITTER,
       label: 'Preview User',
       link: 'https://x.com/thegiveawaydog',
-      scopes: PROVIDER_REQUIRED_SCOPES.twitter
+      scopes: PROVIDER_REQUIRED_SCOPES.TWITTER
     },
     {
-      type: 'google',
+      type: IdentityProvider.GOOGLE,
       label: 'preview.user@gmail.com',
       link: 'https://myaccount.google.com/',
-      scopes: PROVIDER_REQUIRED_SCOPES.google
+      scopes: PROVIDER_REQUIRED_SCOPES.GOOGLE
     },
     {
-      type: 'discord',
+      type: IdentityProvider.DISCORD,
       label: 'PreviewUser#1234',
       link: 'https://discord.com/channels/@me',
-      scopes: PROVIDER_REQUIRED_SCOPES.discord
+      scopes: PROVIDER_REQUIRED_SCOPES.DISCORD
     },
     {
-      type: 'twitch',
+      type: IdentityProvider.TWITCH,
       label: 'PreviewUser',
       link: 'https://www.twitch.tv/twitch',
-      scopes: PROVIDER_REQUIRED_SCOPES.twitch
+      scopes: PROVIDER_REQUIRED_SCOPES.TWITCH
     },
     {
-      type: 'kick',
+      type: IdentityProvider.KICK,
       label: 'PreviewUser',
       link: 'https://kick.com/kick',
-      scopes: PROVIDER_REQUIRED_SCOPES.kick
+      scopes: PROVIDER_REQUIRED_SCOPES.KICK
     }
   ]
 };

@@ -18,7 +18,7 @@ export const RequireEmail = () => {
         render={({ field }) => (
           <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader
-              label="Email Required"
+              label="Email"
               description="A valid email address is required to enter."
               help={{
                 title: 'Help: Require Email',

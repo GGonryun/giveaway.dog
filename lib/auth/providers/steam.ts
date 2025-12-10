@@ -125,8 +125,11 @@ export function SteamProvider(
     profile(profile: SteamProfile) {
       return {
         id: profile.steamid,
-        ...profile
-      } as any;
+        name: profile.personaname,
+        image: profile.avatarfull || profile.avatarmedium || profile.avatar,
+        email: null,
+        emailVerified: null
+      };
     }
   };
 }

@@ -1,5 +1,6 @@
 import { SweepstakesTabSchema } from '@/schemas/sweepstakes';
 import { UserDetailsTabSchema } from '@/schemas/user';
+import { IdentityProvider } from '@prisma/client';
 export const MAX_USER_TEAMS = 5;
 export const NEW_SWEEPSTAKE_THRESHOLD = 3;
 export const ENDING_SOON_SWEEPSTAKE_THRESHOLD = 3;
@@ -18,6 +19,16 @@ export const MAX_SWEEPSTAKE_DURATION_DAYS = 30;
 export const MAX_PICKER_SCHEDULE_DAYS = 7;
 export const DEFAULT_SWEEPSTAKES_DETAILS_TAB: SweepstakesTabSchema = 'preview';
 export const DEFAULT_USER_DETAILS_TAB: UserDetailsTabSchema = 'overview';
+export const DEFAULT_ALLOWED_IDENTITIES = [
+  IdentityProvider.TWITTER,
+  IdentityProvider.GOOGLE,
+  IdentityProvider.DISCORD,
+  IdentityProvider.EMAIL,
+  IdentityProvider.TWITCH,
+  IdentityProvider.KICK,
+  IdentityProvider.TIKTOK,
+  IdentityProvider.STEAM
+];
 export const UNKNOWN_USER_NAME = 'Anonymous';
 export const VISIT_URL = 'https://charity.games';
 export const DISCORD_INVITE_LINK = 'https://discord.gg/Ys8wW5w2Yt';
