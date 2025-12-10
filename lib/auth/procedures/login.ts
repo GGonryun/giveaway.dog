@@ -27,6 +27,11 @@ const login = procedure()
     if (redirectTo) queryParams.append('redirectTo', redirectTo);
     if (email) queryParams.append('email', email);
     if (revalidate) queryParams.append('revalidate', revalidate);
+    if (provider)
+      queryParams.append(
+        'provider',
+        IDENTITY_PROVIDER_TO_AUTH_PROVIDER[provider]
+      );
 
     // Redirect to auth portal which will handle profile creation and final redirect
     const options = { redirectTo: `/portal?${queryParams.toString()}` };

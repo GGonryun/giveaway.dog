@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import {
@@ -32,6 +32,7 @@ interface AuthPortalProps {
   // Common props
   redirectTo?: string;
   revalidate?: string;
+  provider?: string;
 }
 
 export const AuthPortal: React.FC<AuthPortalProps> = ({
@@ -41,7 +42,8 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   name,
   emoji,
   redirectTo,
-  revalidate
+  revalidate,
+  provider
 }) => {
   const { navigateToAccountOverview } = useAccountPage();
   const router = useRouter();
@@ -102,6 +104,10 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     if (isCreating || isVerifying) return;
     // Wait for session to load
     if (status === 'loading') return;
+    if (provider === 'anonymous') {
+      router.push(redirectTo || '/');
+      return;
+    }
     // If not authenticated, redirect to login
     if (status === 'unauthenticated') {
       router.push('/login');
@@ -147,19 +153,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   ]);
 
   if (revalidate) {
-    return (
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle>Revalidating Session</CardTitle>
-          <CardDescription>
-            Please wait while we revalidate your session. Redirecting you now...
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex justify-center py-4">
-          <Spinner />
-        </CardContent>
-      </Card>
-    );
+    return <RevalidateSessionCard />;
   }
 
   // Show email verification success
@@ -226,4 +220,59 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   }
 
   return null; // Should not reach here due to redirects
+};
+
+const RevalidateSessionCard = () => {
+  return (
+    <Card>
+      <CardHeader className="text-center">
+        <CardTitle>Revalidating Session</CardTitle>
+        <CardDescription>
+          Please wait while we revalidate your session. Redirecting you now...
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex justify-center py-4">
+        <Spinner />
+      </CardContent>
+    </Card>
+  );
+};
+
+export const AnonymousRedirectCard = ({
+  redirectTo
+}: {
+  redirectTo?: string;
+}) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const redirect = getUserAuthRedirect({ redirectTo });
+    router.push(redirect);
+  }, [redirectTo, router]);
+
+  return (
+    <PortalLayout>
+      <RevalidateSessionCard />
+    </PortalLayout>
+  );
+};
+
+export const PortalLayout: React.FC<{ children: React.ReactNode }> = ({
+  children
+}) => {
+  return (
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center p-8">
+              <Spinner size="lg" />
+            </div>
+          }
+        >
+          {children}
+        </Suspense>
+      </div>
+    </div>
+  );
 };

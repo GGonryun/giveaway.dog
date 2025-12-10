@@ -7,12 +7,10 @@ export const SweepstakesLoginOptions: React.FC = () => {
 
   const pathname = usePathname();
 
-  const isLoggedIn = !!userProfile;
-
   return (
     <div className="mt-2 mb-4">
       <LoginOptions
-        label={isLoggedIn ? 'Connect to participate' : 'Log in to participate'}
+        label={'Connect to participate...'}
         redirectTo={pathname}
         allowedIdentities={sweepstakes.audience.allowedIdentities}
         type="badges"

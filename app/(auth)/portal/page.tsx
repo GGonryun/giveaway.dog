@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { AuthPortal } from './auth-portal';
+import { AnonymousRedirectCard, AuthPortal, PortalLayout } from './auth-portal';
 import { notFound, redirect } from 'next/navigation';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import trackUser from '@/procedures/user/track-user';
@@ -26,27 +26,30 @@ const PortalPage: React.FC<{
     token: string;
     email: string;
     revalidate: string;
+    provider: string;
   }>;
 }> = async ({ searchParams }) => {
-  const { signup, name, emoji, redirectTo, token, email, revalidate } =
-    await searchParams;
+  const {
+    signup,
+    name,
+    emoji,
+    redirectTo,
+    token,
+    email,
+    revalidate,
+    provider
+  } = await searchParams;
+
+  if (provider === 'anonymous') {
+    return <AnonymousRedirectCard redirectTo={redirectTo} />;
+  }
 
   // If token and email are provided, this is an email verification request
   if (token && email) {
     return (
-      <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-        <div className="flex w-full max-w-sm flex-col gap-6">
-          <Suspense
-            fallback={
-              <div className="flex items-center justify-center p-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              </div>
-            }
-          >
-            <AuthPortal token={token} email={email} redirectTo={redirectTo} />
-          </Suspense>
-        </div>
-      </div>
+      <PortalLayout>
+        <AuthPortal token={token} email={email} redirectTo={redirectTo} />
+      </PortalLayout>
     );
   }
 
@@ -63,25 +66,16 @@ const PortalPage: React.FC<{
   }
 
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center p-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-          }
-        >
-          <AuthPortal
-            name={name}
-            emoji={emoji}
-            redirectTo={redirectTo}
-            signup={signup}
-            revalidate={revalidate}
-          />
-        </Suspense>
-      </div>
-    </div>
+    <PortalLayout>
+      <AuthPortal
+        name={name}
+        emoji={emoji}
+        redirectTo={redirectTo}
+        signup={signup}
+        revalidate={revalidate}
+        provider={provider}
+      />
+    </PortalLayout>
   );
 };
 

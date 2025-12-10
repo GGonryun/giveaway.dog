@@ -18,6 +18,7 @@ import { Clock, TrendingUp } from 'lucide-react';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { SweepstakesStatusBadge } from '../sweepstakes/status-badge';
+import { Spinner } from '../ui/spinner';
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -62,7 +63,7 @@ export const ParticipationHistoryTable: React.FC = () => {
       <Card>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <Spinner size="lg" />
           </div>
         </CardContent>
       </Card>
