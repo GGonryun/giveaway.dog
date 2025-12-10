@@ -77,11 +77,20 @@ export const WithProviderConnection: React.FC<
   Omit<TaskActionProps<TaskSchema>, 'entrants' | 'loyalty'> & {
     render: (ctx: {
       theme: TaskTheme;
-      provider: ProviderSchema;
+      provider: ProviderSchema | undefined;
     }) => React.ReactNode;
     disabled?: boolean;
+    requiresConnection?: boolean;
   }
-> = ({ render, onSubmit, onCancel, task, disabled, isLoading }) => {
+> = ({
+  render,
+  onSubmit,
+  onCancel,
+  task,
+  disabled,
+  isLoading,
+  requiresConnection = true
+}) => {
   const { theme } = useTaskTheme();
   const providerId = TASK_PLATFORM[task.type];
   const providerLabel = TASK_PLATFORM_LABEL[providerId];
@@ -101,7 +110,7 @@ export const WithProviderConnection: React.FC<
 
   const isMissing = isMissingScopes(provider, requiredScopes);
 
-  const isConnected = provider && !isMissing;
+  const isConnected = !requiresConnection || (provider && !isMissing);
 
   return (
     <>
@@ -132,7 +141,10 @@ export const WithProviderConnection: React.FC<
       </TaskContent>
       <Separator />
       <TaskControls
-        disabled={disabled || !provider || loginProcedure.isLoading}
+        disabled={
+          disabled ||
+          (requiresConnection && (!provider || loginProcedure.isLoading))
+        }
         isLoading={isLoading}
         onSubmit={onSubmit}
         onCancel={onCancel}

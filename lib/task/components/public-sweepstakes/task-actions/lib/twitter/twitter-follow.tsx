@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { DisqualificationWarning } from '../disqualification-warning';
 import { WithProviderConnection } from '../provider-connection';
 import { TwitterFollowTaskSchema } from '@/lib/task/schemas';
 
@@ -14,9 +13,11 @@ export const TwitterFollowTaskActionForm: React.FC<
   const [performedAction, setPerformedAction] = useState(false);
 
   const screenName = task.username.replace(/^https?:\/\/(www\.)?x\.com\//, '');
+  const requiresConnection = task.validation?.type !== 'NONE';
   return (
     <WithProviderConnection
       task={task}
+      requiresConnection={requiresConnection}
       disabled={!performedAction}
       onCancel={onCancel}
       onSubmit={onSubmit}

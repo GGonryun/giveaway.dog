@@ -22,6 +22,10 @@ export const validateTask = async <T extends TaskSchema>(
   db: PrismaClient,
   input: ValidateTaskInput<T>
 ): Promise<void> => {
+  if ('validation' in input.task && input.task.validation?.type === 'NONE') {
+    return Promise.resolve();
+  }
+
   switch (input.task.type) {
     case 'VISIT_URL':
       return await checkVisitUrl({

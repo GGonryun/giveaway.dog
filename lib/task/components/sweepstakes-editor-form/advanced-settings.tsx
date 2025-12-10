@@ -6,8 +6,7 @@ import {
   FormItem,
   FormControl,
   FormMessage,
-  FormLabel,
-  FormDescription
+  FormLabel
 } from '@/components/ui/form';
 import { Typography } from '@/components/ui/typography';
 import { assertNever } from '@/lib/errors';
@@ -36,8 +35,16 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <AfterVisitField />
           </>
         );
-      case 'TWITTER_CONNECT':
       case 'TWITTER_FOLLOW':
+      case 'TWITTER_RETWEET':
+        return (
+          <>
+            <MandatoryField />
+            <TasksRequiredField />
+            <RequireConnectionField />
+          </>
+        );
+      case 'TWITTER_CONNECT':
       case 'STEAM_WISHLIST':
       case 'DISCORD_JOIN':
       case 'TWITCH_FOLLOW':
@@ -49,7 +56,6 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'BONUS_TASK':
       case 'BONUS_LIMITED':
       case 'BONUS_LOYALTY':
-      case 'TWITTER_RETWEET':
       case 'INSTAGRAM_VISIT':
       case 'INSTAGRAM_LIKE':
       case 'FACEBOOK_VIEW_POST':
@@ -312,6 +318,52 @@ const AfterVisitField: React.FC = () => {
           </div>
         )}
       </div>
+    </SwitchBox>
+  );
+};
+
+const RequireConnectionField: React.FC = () => {
+  const index = useArrayContext();
+  const form = useFormContext<GiveawayFormSchema>();
+
+  return (
+    <SwitchBox>
+      <FormField
+        control={form.control}
+        name={`tasks.${index}.validation`}
+        render={({ field }) => (
+          <FormItem className="flex flex-row items-start justify-between">
+            <SwitchFormHeader
+              label="Require Connection"
+              description="Users must connect their account in order to complete this task"
+              help={{
+                title: 'Help: Require Connection',
+                content: (
+                  <p>
+                    When enabled, users must connect their Twitter account.
+                    Twitter API limits prevent us from validating
+                    follows/retweets even with a connected account. Having a
+                    connected account gives you the ability to manually verify
+                    entries if needed.
+                  </p>
+                )
+              }}
+            />
+            <FormControl>
+              <Switch
+                checked={field.value?.type !== 'NONE'}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    field.onChange({ type: 'STRICT' });
+                  } else {
+                    field.onChange({ type: 'NONE' });
+                  }
+                }}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
     </SwitchBox>
   );
 };

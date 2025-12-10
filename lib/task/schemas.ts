@@ -40,6 +40,15 @@ export const afterVisitSchema = z.discriminatedUnion('type', [
   })
 ]);
 
+export const validationSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('NONE')
+  }),
+  z.object({
+    type: z.literal('STRICT')
+  })
+]);
+
 export const bonusTaskSchema = baseTaskSchema.extend({
   type: z.literal('BONUS_TASK')
 });
@@ -125,6 +134,7 @@ export type TwitterConnectTaskSchema = z.infer<typeof twitterConnectTaskSchema>;
 
 export const twitterFollowTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_FOLLOW'),
+  validation: validationSchema.default({ type: 'STRICT' }).optional(),
   username: z
     .string()
     .url('Profile URL is required')
@@ -138,6 +148,7 @@ export type TwitterFollowTaskSchema = z.infer<typeof twitterFollowTaskSchema>;
 
 export const twitterRetweetTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_RETWEET'),
+  validation: validationSchema.default({ type: 'STRICT' }).optional(),
   tweetId: z
     .string()
     .url('Post URL is required')
@@ -161,6 +172,7 @@ export type TwitterRetweetImportTaskSchema = z.infer<
 
 export const twitterLikeTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_LIKE'),
+
   tweetId: z
     .string()
     .url('Post URL is required')
