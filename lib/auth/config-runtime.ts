@@ -10,7 +10,7 @@ export const authConfig = {
   ...authConfigMiddleware,
   events: {
     async linkAccount({ user, account, profile }) {
-      console.log('linkAccount event for provider:', account, user, profile);
+      console.info('linkAccount event for provider:', account, user, profile);
       const label = getAccountLabel(account, profile);
       const link = getAccountLink(account, profile);
 
@@ -42,7 +42,7 @@ export const authConfig = {
   callbacks: {
     ...authConfigMiddleware.callbacks,
     async signIn({ account, profile, user }) {
-      console.log('signIn callback for provider:', account?.provider);
+      console.info('signIn callback for provider:', account?.provider);
       if (profile && account?.provider && account?.providerAccountId) {
         // Check if this account already exists (imported user scenario)
         const existing = await prisma.account.findUnique({
@@ -59,10 +59,10 @@ export const authConfig = {
           }
         });
 
-        console.log('Existing account found:', !!existing);
+        console.info('Existing account found:', !!existing);
 
         const session = await auth();
-        console.log('Current session user ID:', session?.user);
+        console.info('Current session user ID:', session?.user);
 
         if (existing) {
           return await tryAutoMerge({

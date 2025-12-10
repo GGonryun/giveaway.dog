@@ -24,6 +24,7 @@ import {
   REQUIRED_FACEBOOK_SCOPES
 } from '../integrations/scopes';
 import { UserSource } from '@prisma/client';
+import prisma from '@/lib/prisma';
 
 export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
   ...authConfig,
@@ -48,19 +49,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       name: 'Anonymous',
       credentials: {},
       authorize: async () => {
-        console.log('Creating anonymous user account');
         try {
-          const user = await prisma.user.create({
+          return await prisma.user.create({
             data: {
               id: createId(),
               name: 'Anonymous',
               source: UserSource.ANONYMOUS
             }
           });
-          console.log('Anonymous user account created:', user);
-          return user;
         } catch (error) {
-          console.log('Error creating anonymous user:', error);
+          console.error('Error creating anonymous user:', error);
           throw error;
         }
       }

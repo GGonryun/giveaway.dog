@@ -43,27 +43,21 @@ export const authConfigMiddleware = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      console.log('authorized callback for route:', nextUrl.pathname);
       const connectionRoutes = ['/login'];
       const hostRoutes = ['/app'];
       const sensitiveRoutes = [...hostRoutes, '/account'];
       const isLoggedIn = !!auth?.user;
-      console.log('isLoggedIn:', isLoggedIn);
 
       const isLogoutRoute = nextUrl.pathname.startsWith('/logout');
-      console.log('isLogoutRoute:', isLogoutRoute);
 
       const isConnectionRoute = connectionRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)
       );
 
-      console.log('isConnectionRoute:', isConnectionRoute);
-
       const isSensitiveRoute = sensitiveRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)
       );
 
-      console.log('isSensitiveRoute:', isSensitiveRoute);
       if (isLogoutRoute && !isLoggedIn)
         return Response.redirect(new URL('/', nextUrl));
 
@@ -75,7 +69,6 @@ export const authConfigMiddleware = {
       return true;
     },
     async jwt({ token, user, account }) {
-      console.log('jwt callback invoked');
       if (user && user?.id) {
         token.id = user?.id;
       }
@@ -87,7 +80,6 @@ export const authConfigMiddleware = {
       return token;
     },
     session({ token, session }) {
-      console.log('session callback invoked');
       if (token?.id && session?.user) {
         session.user.id = token.id as string;
       }

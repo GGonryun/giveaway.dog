@@ -127,7 +127,6 @@ const FormContent: React.FC<{
   });
 
   const returnToPage = () => {
-    console.log('Returning to page with action:', action);
     if (action === 'edit' || action === 'view') {
       detailsPage.navigateTo(id);
     } else {

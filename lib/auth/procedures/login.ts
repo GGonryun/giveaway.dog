@@ -32,7 +32,7 @@ const login = procedure()
     const options = { redirectTo: `/portal?${queryParams.toString()}` };
 
     try {
-      console.log(
+      console.info(
         'Initiating sign-in with provider:',
         provider,
         'and email:',

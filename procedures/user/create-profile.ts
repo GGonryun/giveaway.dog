@@ -14,7 +14,7 @@ const createProfile = procedure()
     })
   )
   .handler(async ({ input, user, db }) => {
-    console.log('Creating profile for user:', user);
+    console.info('Creating profile for user:', user);
 
     const { name } = input;
 
