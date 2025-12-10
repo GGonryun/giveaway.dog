@@ -1,7 +1,6 @@
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
 import { Flex } from '@/components/ui/flex';
-import { LoginOptions } from '@/components/auth/login-options';
-import { usePathname } from 'next/navigation';
+
 import { TaskContent } from './task-actions/building-blocks';
 import { Button } from '@/components/ui/button';
 import { TaskSchema } from '../../schemas';
@@ -11,6 +10,7 @@ import { TaskLock } from './task-lock';
 import { CompletionStatus } from '@prisma/client';
 import { SubmissionTaskContent } from '../../submission';
 import { doesUserHaveAllowedIdentity } from '@/lib/integrations/schemas/providers';
+import { SweepstakesLoginOptions } from '@/components/sweepstakes/sweepstakes-login-options';
 
 export const TaskAction: React.FC<{
   submission: CompletionStatus | undefined;
@@ -33,11 +33,9 @@ export const TaskAction: React.FC<{
   onCancel,
   error
 }) => {
-  const pathname = usePathname();
   const { userProfile, userHostRelationship, sweepstakes } =
     useGiveawayParticipation();
 
-  const isLoggedIn = !!userProfile;
   const isConnected = doesUserHaveAllowedIdentity(
     userProfile,
     sweepstakes.audience.allowedIdentities
@@ -46,15 +44,8 @@ export const TaskAction: React.FC<{
   return (
     <>
       {!isConnected ? (
-        <div className="p-4 flex items-center justify-center">
-          <Flex center gap="sm" className="w-full mb-2">
-            <LoginOptions
-              label={isLoggedIn ? 'Connect with...' : 'Log in with...'}
-              redirectTo={pathname}
-              allowedIdentities={sweepstakes.audience.allowedIdentities}
-              type="badges"
-            />
-          </Flex>
+        <div className="p-4 flex items-center justify-center mb-2">
+          <SweepstakesLoginOptions />
         </div>
       ) : submission ? (
         <TaskContent className="text-sm sm:text-base">

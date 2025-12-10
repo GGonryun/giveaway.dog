@@ -22,13 +22,20 @@ import { useGiveawayParticipation } from './giveaway-participation-context';
 import { assertNever } from '@/lib/errors';
 import { toBackgroundStyle } from '@/schemas/color';
 import { cn } from '@/lib/utils';
+import { LoginOptions } from '../auth/login-options';
+import { SweepstakesLoginOptions } from './sweepstakes-login-options';
 
 const GiveawayParticipationContent = () => {
-  const { state } = useGiveawayParticipation();
+  const { state, sweepstakes } = useGiveawayParticipation();
+  const { requirePreEntryLogin } = sweepstakes.audience;
 
   switch (state) {
     case 'not-logged-in':
-      return <ActiveParticipation />;
+      return requirePreEntryLogin ? (
+        <SweepstakesLoginOptions />
+      ) : (
+        <ActiveParticipation />
+      );
     case 'pending':
       return <Pending />;
     case 'email-required':

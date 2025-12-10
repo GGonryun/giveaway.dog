@@ -154,7 +154,8 @@ const giveawayAudienceSchema = z.object({
     .min(1, 'At least one allowed identity is required'),
   requireEmail: z.boolean(),
   regionalRestriction: regionalRestrictionSchema,
-  minimumAgeRestriction: minimumAgeRestrictionSchema
+  minimumAgeRestriction: minimumAgeRestrictionSchema,
+  requirePreEntryLogin: z.boolean().optional().default(false)
 });
 
 export type GiveawayFormAudience = z.infer<typeof giveawayAudienceSchema>;

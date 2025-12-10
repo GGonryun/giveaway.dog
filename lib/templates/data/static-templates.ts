@@ -31,6 +31,7 @@ const BASIC_TEMPLATE: StaticTemplate = {
     ],
     audience: {
       requireEmail: true,
+      requirePreEntryLogin: false,
       minimumAgeRestriction: {
         value: 18,
         label: 'You must be 18 years or older to participate',
@@ -89,6 +90,7 @@ const TWITTER_TEMPLATE: StaticTemplate = {
     ],
     audience: {
       requireEmail: true,
+      requirePreEntryLogin: false,
       minimumAgeRestriction: {
         value: 18,
         label: 'You must be 18 years or older to participate',

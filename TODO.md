@@ -13,10 +13,6 @@
 
 - [ ] Anonymous Twitter Giveaways
 
-### RoeBunny
-
-- [ ] Anonymous giveaways
-
 ### Fuzey
 
 - [ ] Fix Team RBAC

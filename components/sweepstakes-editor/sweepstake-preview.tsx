@@ -24,9 +24,7 @@ import {
   DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND,
   DEFAULT_SWEEPSTAKES_NAME
 } from '@/schemas/giveaway/defaults';
-import { noop } from 'lodash';
 import {
-  mockHost,
   mockParticipation,
   mockWinners,
   mockUserProfile,
@@ -42,6 +40,7 @@ import { toSweepstakesHost } from '@/schemas/giveaway/participant';
 import { assertNever } from '@/lib/errors';
 import { UserProfileSchema } from '@/schemas/user';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { RequirePreEntryLogin } from './form/audience/require-pre-entry-login';
 
 export const SweepstakePreview: React.FC = () => {
   const { activeTeam } = useTeams();
@@ -113,7 +112,10 @@ export const SweepstakePreview: React.FC = () => {
               }
             : undefined,
           allowedIdentities:
-            formValues.audience?.allowedIdentities ?? DEFAULT_ALLOWED_IDENTITIES
+            formValues.audience?.allowedIdentities ??
+            DEFAULT_ALLOWED_IDENTITIES,
+          requirePreEntryLogin:
+            formValues.audience?.requirePreEntryLogin || false
         },
         tasks: (formValues.tasks || []) as TaskSchema[],
         prizes: (formValues.prizes || []) as Prize[],

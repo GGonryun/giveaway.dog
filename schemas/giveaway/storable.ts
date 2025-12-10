@@ -16,9 +16,7 @@ import {
   DEFAULT_MIN_QUALITY_SCORE,
   DEFAULT_MIN_TASK_COMPLETED
 } from './defaults';
-import { RequiredFields } from '@/lib/types';
-import { datetime } from '@/lib/date';
-import { TWITTER_API_RATE_LIMIT_MINUTES } from '@/lib/pickers/data/settings';
+
 import { createJobsForTask } from '@/lib/task/jobs';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
 
@@ -89,6 +87,7 @@ const toStorableAudience = (
     create: {
       allowedIdentities:
         audience.allowedIdentities || DEFAULT_ALLOWED_IDENTITIES,
+      requirePreEntryLogin: audience.requirePreEntryLogin || false,
       requireEmail: audience.requireEmail,
       regionalRestriction: audience.regionalRestriction
         ? {

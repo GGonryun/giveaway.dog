@@ -361,6 +361,7 @@ model SweepstakesAudience {
   regionalRestriction   RegionalRestriction?
   minimumAgeRestriction MinimumAgeRestriction?
   allowedIdentities     IdentityProvider[]     @default([TWITTER, GOOGLE, DISCORD, EMAIL, TWITCH, STEAM, TIKTOK])
+  requirePreEntryLogin  Boolean?               @default(false)
 }
 
 enum VisibilityType {

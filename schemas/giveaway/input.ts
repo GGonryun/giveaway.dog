@@ -64,7 +64,8 @@ const toAudienceInput = (
           required: data?.minimumAgeRestriction?.required ?? undefined,
           format: data?.minimumAgeRestriction?.format ?? undefined
         }
-      : undefined
+      : undefined,
+    requirePreEntryLogin: data?.requirePreEntryLogin || false
   };
 };
 

@@ -122,6 +122,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   },
   audience: {
     requireEmail: true,
+    requirePreEntryLogin: false,
     regionalRestriction: undefined,
     minimumAgeRestriction: {
       value: 18,

@@ -8,6 +8,7 @@ import { SweepstakesVisibility } from './sweepstakes-visibility';
 
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { AllowedIdentities } from './allowed-identities';
+import { RequirePreEntryLogin } from './require-pre-entry-login';
 
 export const Audience = () => {
   return (
@@ -17,7 +18,7 @@ export const Audience = () => {
         description="Customize how users log in to participate"
       >
         <AllowedIdentities />
-        {/* <div>TODO: Require pre-entry login</div> */}
+        <RequirePreEntryLogin />
       </UnifiedSectionHeader>
       <UnifiedSectionHeader
         label="User Details"
