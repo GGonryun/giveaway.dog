@@ -1,3 +1,4 @@
+import { assertNever } from '@/lib/errors';
 import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 
 export const UserSourceCaption: React.FC<{
@@ -17,7 +18,9 @@ export const UserSourceCaption: React.FC<{
       return <>Imported from Discord</>;
     case 'MANUAL_IMPORT':
       return <>Manually imported</>;
+    case 'ANONYMOUS':
+      return <>Anonymous user</>;
     default:
-      return <>Unknown source</>;
+      throw assertNever(user.source);
   }
 };

@@ -25,6 +25,8 @@ import {
 import { useRouter } from 'next/navigation';
 import { SocialProviders } from '@/lib/auth/components/social-providers';
 import { SettingsCard } from '../settings/settings-card';
+import { Alert, AlertDescription } from '../ui/alert';
+import { AlertCircleIcon } from 'lucide-react';
 
 export const UserSettings = () => {
   const user = useUser();
@@ -71,9 +73,7 @@ export const UserSettings = () => {
                   <Input
                     className="max-w-xl"
                     placeholder="Enter your display name"
-                    disabled={
-                      updateProfileProcedure.isLoading || user.isAnonymous
-                    }
+                    disabled={updateProfileProcedure.isLoading}
                     {...field}
                     value={field.value || ''}
                   />
@@ -83,10 +83,14 @@ export const UserSettings = () => {
             )}
           />
           {user.isAnonymous && (
-            <p className="text-sm mt-2 text-destructive">
-              You are currently using an anonymous account. To set a display
-              name, please connect a social account or update your email.
-            </p>
+            <Alert variant="warning" className="mt-4">
+              <AlertCircleIcon />
+              <AlertDescription>
+                You are currently using an anonymous account. Please consider
+                creating a full account to save your profile and giveaway
+                entries.
+              </AlertDescription>
+            </Alert>
           )}
         </SettingsCard>
       </Form>

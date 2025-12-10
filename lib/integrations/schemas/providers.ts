@@ -167,6 +167,10 @@ export const doesUserHaveAllowedIdentity = (
     return false;
   }
 
+  if (allowedIdentities.includes('ANONYMOUS') && user) {
+    return true;
+  }
+
   return user.providers.some((provider) =>
     allowedIdentities.includes(provider.type)
   );
