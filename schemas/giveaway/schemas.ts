@@ -117,8 +117,8 @@ const sweepstakesVisibilitySchema = z.object({
     .min(3, 'URL slug must be at least 3 characters')
     .max(50, 'URL slug must be at most 50 characters')
     .regex(
-      /^[a-z0-9-]+$/,
-      'URL slug can only contain lowercase letters, numbers, and hyphens'
+      /^[a-zA-Z0-9-]+$/,
+      'URL slug can only contain letters, numbers, and hyphens'
     )
     .nullable()
     .optional()

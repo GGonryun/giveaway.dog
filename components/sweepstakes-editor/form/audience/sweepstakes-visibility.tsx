@@ -295,8 +295,8 @@ const UrlSlugField = () => {
                 )}
                 {slugStatus === 'idle' && currentSlug && (
                   <FormDescription>
-                    Only lowercase letters, numbers, and hyphens. Must be unique
-                    across all giveaways.
+                    Only letters, numbers, and hyphens. Must be unique across
+                    all giveaways.
                   </FormDescription>
                 )}
                 <FormMessage />
