@@ -22,6 +22,9 @@ import { InstagramLikeTaskActionForm } from './lib/instagram/like';
 import { InstagramCommentTaskActionForm } from './lib/instagram/comment';
 import { FacebookVisitPageTaskActionForm } from './lib/facebook/visit-page';
 import { FacebookViewPostTaskActionForm } from './lib/facebook/view-post';
+import { AskQuestionTaskActionForm } from './lib/form/ask-question';
+import { SingleChoiceTaskActionForm } from './lib/form/single-choice';
+import { MultipleChoiceTaskActionForm } from './lib/form/multiple-choice';
 
 export const TaskActionForm: React.FC<
   TaskActionProps & {
@@ -71,6 +74,12 @@ export const TaskActionForm: React.FC<
       return <FacebookVisitPageTaskActionForm {...props} task={props.task} />;
     case 'FACEBOOK_VIEW_POST':
       return <FacebookViewPostTaskActionForm {...props} task={props.task} />;
+    case 'ASK_QUESTION':
+      return <AskQuestionTaskActionForm {...props} task={props.task} />;
+    case 'SINGLE_CHOICE':
+      return <SingleChoiceTaskActionForm {...props} task={props.task} />;
+    case 'MULTIPLE_CHOICE':
+      return <MultipleChoiceTaskActionForm {...props} task={props.task} />;
     default:
       throw assertNever(props.task);
   }

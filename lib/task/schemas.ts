@@ -80,6 +80,43 @@ export const visitUrlTaskSchema = baseTaskSchema.extend({
 
 export type VisitUrlTaskSchema = z.infer<typeof visitUrlTaskSchema>;
 
+export const askQuestionTaskSchema = baseTaskSchema.extend({
+  type: z.literal('ASK_QUESTION'),
+  question: z.string().min(1, 'Question is required'),
+  placeholder: z.string().optional(),
+  instructions: z.string().optional()
+});
+
+export type AskQuestionTaskSchema = z.infer<typeof askQuestionTaskSchema>;
+
+export const singleChoiceTaskSchema = baseTaskSchema.extend({
+  type: z.literal('SINGLE_CHOICE'),
+  question: z.string().min(1, 'Question is required'),
+  options: z
+    .array(z.string().min(1, 'Option cannot be empty'))
+    .min(2, 'At least two options are required')
+});
+
+export type SingleChoiceTaskSchema = z.infer<typeof singleChoiceTaskSchema>;
+
+export const multipleChoiceTaskSchema = baseTaskSchema.extend({
+  type: z.literal('MULTIPLE_CHOICE'),
+  question: z.string().min(1, 'Question is required'),
+  options: z
+    .array(z.string().min(1, 'Option cannot be empty'))
+    .min(2, 'At least two options are required'),
+  minSelections: z
+    .number()
+    .min(1, 'Minimum selections must be at least 1')
+    .optional(),
+  maxSelections: z
+    .number()
+    .min(1, 'Maximum selections must be at least 1')
+    .optional()
+});
+
+export type MultipleChoiceTaskSchema = z.infer<typeof multipleChoiceTaskSchema>;
+
 export const twitterConnectTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_CONNECT')
 });
@@ -326,6 +363,9 @@ export const taskSchema = z.discriminatedUnion('type', [
   bonusLimitedTaskSchema,
   bonusLoyaltyTaskSchema,
   visitUrlTaskSchema,
+  askQuestionTaskSchema,
+  singleChoiceTaskSchema,
+  multipleChoiceTaskSchema,
   twitterConnectTaskSchema,
   twitterFollowTaskSchema,
   twitterRetweetTaskSchema,
@@ -353,6 +393,9 @@ export const TASK_LABEL: Record<TaskType, string> = {
   BONUS_LIMITED: 'Limited Bonus',
   BONUS_LOYALTY: 'Loyalty Bonus',
   VISIT_URL: 'Visit URL',
+  ASK_QUESTION: 'Ask a Question',
+  SINGLE_CHOICE: 'Single Choice',
+  MULTIPLE_CHOICE: 'Multiple Choice',
   SECRET_CODE: 'Enter Secret Code',
   TWITTER_CONNECT: 'Connect X',
   TWITTER_FOLLOW: 'Follow on X',
@@ -400,6 +443,15 @@ export const TASK_INPUT_SCHEMA = {
   FACEBOOK_VIEW_POST: z.object({}),
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
+  }),
+  ASK_QUESTION: z.object({
+    answer: z.string().min(1, 'Answer is required')
+  }),
+  SINGLE_CHOICE: z.object({
+    choice: z.string().min(1, 'Please select an option')
+  }),
+  MULTIPLE_CHOICE: z.object({
+    choices: z.array(z.string()).min(1, 'Please select at least one option')
   })
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
@@ -431,7 +483,10 @@ export const TASK_JOB_DATA_SCHEMA = {
   INSTAGRAM_COMMENT: z.object({}),
   FACEBOOK_VISIT_PAGE: z.object({}),
   FACEBOOK_VIEW_POST: z.object({}),
-  SECRET_CODE: z.object({})
+  SECRET_CODE: z.object({}),
+  ASK_QUESTION: z.object({}),
+  SINGLE_CHOICE: z.object({}),
+  MULTIPLE_CHOICE: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export type TaskInput<T extends TaskSchema> = T extends { type: infer U }
@@ -446,7 +501,8 @@ export type TaskOf<T extends TaskType> = Extract<TaskSchema, { type: T }>;
 
 export const taskPlatformSchema = providerTypeSchema
   .or(z.literal('WEBSITE'))
-  .or(z.literal('BONUS'));
+  .or(z.literal('BONUS'))
+  .or(z.literal('QUESTION'));
 
 export type TaskPlatformSchema = z.infer<typeof taskPlatformSchema>;
 
@@ -472,18 +528,23 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   FACEBOOK_VIEW_POST: 'FACEBOOK',
   DISCORD_JOIN: 'DISCORD',
   TWITCH_FOLLOW: 'TWITCH',
-  KICK_FOLLOW: 'KICK'
+  KICK_FOLLOW: 'KICK',
+  ASK_QUESTION: 'QUESTION',
+  SINGLE_CHOICE: 'QUESTION',
+  MULTIPLE_CHOICE: 'QUESTION'
 };
 
 export const TASK_REQUIRED_SCOPES: Record<TaskPlatformSchema, string[]> = {
   ...PROVIDER_REQUIRED_SCOPES,
   WEBSITE: [],
-  BONUS: []
+  BONUS: [],
+  QUESTION: []
 };
 
 export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
   WEBSITE: 'Website',
   BONUS: 'Bonus',
+  QUESTION: 'Question',
   TWITTER: 'X (Twitter)',
   STEAM: 'Steam',
   DISCORD: 'Discord',
@@ -524,7 +585,10 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   INSTAGRAM_LIKE: 'social',
   INSTAGRAM_COMMENT: 'social',
   FACEBOOK_VISIT_PAGE: 'social',
-  FACEBOOK_VIEW_POST: 'social'
+  FACEBOOK_VIEW_POST: 'social',
+  ASK_QUESTION: 'engagement',
+  SINGLE_CHOICE: 'engagement',
+  MULTIPLE_CHOICE: 'engagement'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',
@@ -554,7 +618,10 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   INSTAGRAM_LIKE: false,
   INSTAGRAM_COMMENT: false,
   FACEBOOK_VISIT_PAGE: false,
-  FACEBOOK_VIEW_POST: false
+  FACEBOOK_VIEW_POST: false,
+  ASK_QUESTION: false,
+  SINGLE_CHOICE: false,
+  MULTIPLE_CHOICE: false
 };
 
 export const userEntriesSchema = z.object({

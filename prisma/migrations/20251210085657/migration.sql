@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "TaskType" ADD VALUE 'ASK_QUESTION';

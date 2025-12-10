@@ -5,7 +5,8 @@ import {
   KeyRound,
   LucideIcon,
   StarIcon,
-  UsersIcon
+  UsersIcon,
+  MessageSquareIcon
 } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
@@ -147,6 +148,16 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-facebook-1 text-white',
         arrow: 'bg-facebook-1 text-white fill-facebook-1',
         icon: SocialFacebookIcon
+      };
+    case 'ASK_QUESTION':
+    case 'SINGLE_CHOICE':
+    case 'MULTIPLE_CHOICE':
+      return {
+        action:
+          'text-white bg-primary group-hover:bg-primary/80 hover:bg-primary/80 dark:bg-primary dark:hover:bg-primary/80',
+        symbol: 'bg-primary text-white',
+        arrow: 'bg-primary text-white fill-primary',
+        icon: MessageSquareIcon
       };
     default:
       throw assertNever(type);

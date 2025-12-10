@@ -7,6 +7,9 @@ import { checkTwitchFollow } from './twitch';
 import { checkSecretCode } from './secret-code';
 import { checkBonusLimited, checkBonusLoyalty, checkBonusTimed } from './bonus';
 import { checkVisitUrl } from './visit-url';
+import { checkAskQuestion } from './ask-question';
+import { checkSingleChoice } from './single-choice';
+import { checkMultipleChoice } from './multiple-choice';
 
 export type ValidateTaskInput<T extends TaskSchema> = {
   task: T;
@@ -68,6 +71,27 @@ export const validateTask = async <T extends TaskSchema>(
       });
     case 'SECRET_CODE':
       return await checkSecretCode(db, {
+        task: input.task,
+        userId: input.userId,
+        teamId: input.teamId,
+        data: input.data
+      });
+    case 'ASK_QUESTION':
+      return await checkAskQuestion(db, {
+        task: input.task,
+        userId: input.userId,
+        teamId: input.teamId,
+        data: input.data
+      });
+    case 'SINGLE_CHOICE':
+      return await checkSingleChoice(db, {
+        task: input.task,
+        userId: input.userId,
+        teamId: input.teamId,
+        data: input.data
+      });
+    case 'MULTIPLE_CHOICE':
+      return await checkMultipleChoice(db, {
         task: input.task,
         userId: input.userId,
         teamId: input.teamId,

@@ -42,6 +42,9 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'FACEBOOK_VISIT_PAGE':
     case 'FACEBOOK_VIEW_POST':
     case 'BONUS_LOYALTY':
+    case 'ASK_QUESTION':
+    case 'SINGLE_CHOICE':
+    case 'MULTIPLE_CHOICE':
       return (
         <BaseSettingsContainer>
           <TitleField />

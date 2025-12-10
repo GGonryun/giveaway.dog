@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "TaskType" ADD VALUE 'MULTIPLE_CHOICE';

@@ -25,6 +25,9 @@ import {
 } from './lib/importing-account';
 import { InstagramProfileUrl, InstagramPostUrl } from './lib/instagram';
 import { FacebookPageUrl, FacebookPostUrl } from './lib/facebook';
+import { AskQuestionFormFields } from './lib/ask-question';
+import { SingleChoiceFormFields } from './lib/single-choice';
+import { MultipleChoiceFormFields } from './lib/multiple-choice';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -129,6 +132,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <FacebookPostUrl />
           </>
         );
+      case 'ASK_QUESTION':
+        return <AskQuestionFormFields />;
+      case 'SINGLE_CHOICE':
+        return <SingleChoiceFormFields />;
+      case 'MULTIPLE_CHOICE':
+        return <MultipleChoiceFormFields />;
       default:
         throw assertNever(type);
     }

@@ -1,5 +1,11 @@
 import { TaskType } from '@prisma/client';
-import { Globe2Icon, HatGlassesIcon, MailIcon, StarIcon } from 'lucide-react';
+import {
+  Globe2Icon,
+  HatGlassesIcon,
+  MailIcon,
+  MessageSquareIcon,
+  StarIcon
+} from 'lucide-react';
 
 import { TASK_PLATFORM } from '@/lib/task/schemas';
 import { assertNever } from '@/lib/errors';
@@ -21,6 +27,8 @@ export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
       return <StarIcon className="h-4 w-4 text-gray-500" />;
     case 'WEBSITE':
       return <Globe2Icon className="h-4 w-4 text-gray-500" />;
+    case 'QUESTION':
+      return <MessageSquareIcon className="h-4 w-4 text-gray-500" />;
     case 'EMAIL':
       return <MailIcon className="h-4 w-4 text-gray-500" />;
     case 'TWITTER':
@@ -45,6 +53,8 @@ export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
       return <SocialTikTokIcon className="h-4 w-4 text-black" />;
     case 'ANONYMOUS':
       return <HatGlassesIcon className="h-4 w-4 text-gray-500" />;
+    case 'QUESTION':
+      return <MessageSquareIcon className="h-4 w-4 text-gray-500" />;
     default:
       throw assertNever(platform);
   }

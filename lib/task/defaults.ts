@@ -208,6 +208,39 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0
+    },
+    ['ASK_QUESTION']: {
+      id: '',
+      type: 'ASK_QUESTION',
+      title: 'Answer a question',
+      question: '',
+      placeholder: '',
+      instructions: '',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
+    ['SINGLE_CHOICE']: {
+      id: '',
+      type: 'SINGLE_CHOICE',
+      title: 'Select an option',
+      question: '',
+      options: ['Option 1', 'Option 2'],
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
+    ['MULTIPLE_CHOICE']: {
+      id: '',
+      type: 'MULTIPLE_CHOICE',
+      title: 'Select one or more options',
+      question: '',
+      options: ['Option 1', 'Option 2'],
+      minSelections: 1,
+      maxSelections: undefined,
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
     }
   };
 

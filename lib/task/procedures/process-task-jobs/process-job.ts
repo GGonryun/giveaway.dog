@@ -80,6 +80,9 @@ export const processTaskJob = async (
       case 'INSTAGRAM_COMMENT':
       case 'FACEBOOK_VISIT_PAGE':
       case 'FACEBOOK_VIEW_POST':
+      case 'ASK_QUESTION':
+      case 'SINGLE_CHOICE':
+      case 'MULTIPLE_CHOICE':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',
           message: `Job processing not implemented for task type: ${task.type}`

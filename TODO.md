@@ -1,11 +1,16 @@
 ## Roadmap
 
+- [ ] Add question integrations
+- [ ] Upload a file
+- [ ] Pick an image from a gallery
+
 ### @theejankanator
 
 - [...] Add TikTok integration - https://authjs.dev/getting-started/providers/tiktok
   - [x] submit for approval
+  - [x] app approved
+  - [x] Enable login/auth with TikTok
   - [ ] Enable entry methods (follow, like, share)
-  - [ ] Enable login/auth with TikTok
 
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
@@ -21,24 +26,19 @@
 
 - [ ] Paid raffle features
 
+### @Gamelooty
+
+- it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
+- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
+- [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries
+
 ## The Games Detective
 
 - [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
 
 - [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
 
-### @Gamelooty
-
-- it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
-- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
-
 ### Nobody Asked
-
-- [ ] Get a business license for facebook login support.
-
-- [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
-
-- [ ] Add basic question integrations (ask a question, run a poll, upload a file)
 
 - [ ] Add a twitter post entry method
 - [ ] Add a twitter reply entry method
@@ -65,14 +65,18 @@
 
 - [ ] Add a Producthunt entry method - https://api.producthunt.com/v2/docs/oauth_user_authentication/oauth_authorize_ask_for_access_grant_code_on_behalf_of_the_user (visit page, vote for product, follow on producthunt)
 
+- [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
+
+- [ ] Get a business license for facebook login support.
+
+- [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
+
 - [ ] Add a daily recurring entry method (visit daily to get entries)
 
 - [ ] Add support for generating short links for my sweepstakes, and draw verification
 - [ ] Add a referral task.
 
 - [ ] Add a ko-fi link entry method.
-
-- [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"

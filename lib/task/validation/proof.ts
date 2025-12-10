@@ -26,6 +26,35 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
         answer: parsed.answer
       };
     }
+    case 'SECRET_CODE': {
+      const parsed = TASK_INPUT_SCHEMA.SECRET_CODE.parse(data);
+      return {
+        code: parsed.code
+      };
+    }
+    case 'ASK_QUESTION': {
+      const parsed = TASK_INPUT_SCHEMA.ASK_QUESTION.parse(data);
+      return {
+        question: task.question,
+        answer: parsed.answer
+      };
+    }
+    case 'SINGLE_CHOICE': {
+      const parsed = TASK_INPUT_SCHEMA.SINGLE_CHOICE.parse(data);
+      return {
+        question: task.question,
+        options: task.options,
+        choice: parsed.choice
+      };
+    }
+    case 'MULTIPLE_CHOICE': {
+      const parsed = TASK_INPUT_SCHEMA.MULTIPLE_CHOICE.parse(data);
+      return {
+        question: task.question,
+        options: task.options,
+        choices: parsed.choices
+      };
+    }
     case 'FACEBOOK_VIEW_POST':
     case 'BONUS_TASK':
     case 'BONUS_TIMED':
@@ -39,7 +68,6 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'TWITTER_FOLLOW':
     case 'TWITTER_LIKE':
     case 'TWITTER_RETWEET':
-    case 'SECRET_CODE':
     case 'YOUTUBE_VISIT':
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':

@@ -54,6 +54,9 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'INSTAGRAM_LIKE':
       case 'FACEBOOK_VIEW_POST':
       case 'INSTAGRAM_COMMENT':
+      case 'ASK_QUESTION':
+      case 'SINGLE_CHOICE':
+      case 'MULTIPLE_CHOICE':
         return (
           <>
             <MandatoryField />
