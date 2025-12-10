@@ -1,5 +1,7 @@
 ## Roadmap
 
+- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
+
 - [ ] Add question integrations
 - [ ] Upload a file
 - [ ] Pick an image from a gallery

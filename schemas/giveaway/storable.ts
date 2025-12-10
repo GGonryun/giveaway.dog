@@ -164,6 +164,7 @@ const toStorableDesign = (
   return {
     create: {
       data: {
+        aspectRatio: design.aspectRatio || 'VIDEO',
         displayName: design.displayName ?? false,
         displayDescription: design.displayDescription ?? false,
         background: design.background

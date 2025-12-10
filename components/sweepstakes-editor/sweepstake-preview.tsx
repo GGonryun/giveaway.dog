@@ -122,6 +122,7 @@ export const SweepstakePreview: React.FC = () => {
         design: {
           displayName: formValues.design?.displayName !== false,
           displayDescription: formValues.design?.displayDescription !== false,
+          aspectRatio: formValues.design?.aspectRatio || 'VIDEO',
           background: (formValues.design?.background ||
             DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND) as GiveawayDesignBackgroundSchema
         },

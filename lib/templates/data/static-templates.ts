@@ -43,6 +43,7 @@ const BASIC_TEMPLATE: StaticTemplate = {
     design: {
       displayName: true,
       displayDescription: true,
+      aspectRatio: 'VIDEO',
       background: {
         type: 'color',
         color: '#edf0f4'
@@ -102,6 +103,7 @@ const TWITTER_TEMPLATE: StaticTemplate = {
     design: {
       displayName: true,
       displayDescription: true,
+      aspectRatio: 'VIDEO',
       background: {
         type: 'color',
         color: '#000000'

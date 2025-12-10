@@ -22,6 +22,7 @@ import {
   providerSchema,
   providerTypeSchema
 } from '@/lib/integrations/schemas/providers';
+import { aspectRatioSchema } from '@/lib/aspect-ratio/data';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -211,6 +212,7 @@ export type GiveawayDesignBackgroundSchema = z.infer<
 export const giveawayDesignSchema = z.object({
   displayName: z.boolean(),
   displayDescription: z.boolean(),
+  aspectRatio: aspectRatioSchema.default('VIDEO'),
   background: giveawayDesignBackgroundSchema
 });
 

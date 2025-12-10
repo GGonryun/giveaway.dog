@@ -97,6 +97,7 @@ export const DEFAULT_GRADIENT_DESIGN_BACKGROUND: GradientBackgroundSchema = {
 const DEFAULT_DESIGN_DATA: GiveawayDesignSchema = {
   displayName: true,
   displayDescription: true,
+  aspectRatio: 'VIDEO',
   background: DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND
 };
 

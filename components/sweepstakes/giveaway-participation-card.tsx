@@ -128,12 +128,18 @@ const TitleSection = () => {
 
 const BannerSection = () => {
   const { sweepstakes } = useGiveawayParticipation();
+  const { aspectRatio } = sweepstakes.design;
 
   return (
     <CardContent className="relative">
       {sweepstakes.setup.banner && (
         <div className="relative">
-          <div className="overflow-hidden rounded-lg aspect-video flex w-full">
+          <div
+            className={cn(
+              'overflow-hidden rounded-lg flex w-full',
+              aspectRatio === 'VIDEO' ? 'aspect-video' : ''
+            )}
+          >
             <img
               src={sweepstakes.setup.banner}
               alt={sweepstakes.setup.name}

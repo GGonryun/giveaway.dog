@@ -135,6 +135,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   design: {
     displayName: true,
     displayDescription: true,
+    aspectRatio: 'VIDEO',
     background: {
       type: 'color',
       color: '#63478b'

@@ -16,6 +16,7 @@ import {
 } from './defaults';
 import { parseUserSourceSchema } from '@/lib/user-source/schemas';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { parseAspectRatio } from '@/lib/aspect-ratio/data';
 
 const toSetup = (
   data: FormSweepstakesGetPayload['details']
@@ -152,6 +153,7 @@ export const toDesignInput = (
   const config = toJsonObject(data.data);
 
   return {
+    aspectRatio: parseAspectRatio(config.aspectRatio),
     displayName: config.displayName ?? true,
     displayDescription: config.displayDescription ?? true,
     background: toDesignBackgroundInput(config.background)

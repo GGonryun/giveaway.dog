@@ -37,6 +37,7 @@ import {
 } from '@/components/ui/popover';
 import { toGradient } from '@/schemas/color';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 
 export const Design = () => {
   return (
@@ -47,6 +48,7 @@ export const Design = () => {
       >
         <DisplayNameField />
         <DisplayDescriptionField />
+        <AspectRatioField />
       </UnifiedSectionHeader>
       <UnifiedSectionHeader
         label="Layout"
@@ -472,5 +474,52 @@ const GradientStopsField = () => {
         ))}
       </div>
     </div>
+  );
+};
+
+const AspectRatioField = () => {
+  const form = useFormContext<GiveawayFormSchema>();
+
+  return (
+    <SwitchBox>
+      <FormField
+        control={form.control}
+        name="design.aspectRatio"
+        render={({ field }) => (
+          <FormItem className="flex flex-row items-start justify-between">
+            <SwitchFormHeader
+              label="Video Aspect Ratio"
+              description="Apply a 16:9 video aspect ratio to your sweepstakes images."
+              help={{
+                title: 'Help: Video Aspect Ratio',
+                content: (
+                  <div>
+                    Enable this to apply a{' '}
+                    <strong>16:9 video aspect ratio</strong> to your sweepstakes
+                    images, optimized for modern displays and video content.
+                    <br />
+                    <br />
+                    When disabled, no aspect ratio constraint will be applied
+                    and the image will adapt to its natural dimensions.
+                  </div>
+                )
+              }}
+            />
+            <FormControl>
+              <Switch
+                checked={field.value === 'VIDEO'}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    field.onChange('VIDEO');
+                  } else {
+                    field.onChange('NONE');
+                  }
+                }}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+    </SwitchBox>
   );
 };
