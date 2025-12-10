@@ -2,7 +2,6 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
-import { toTaskSchema } from '@/lib/task/schemas';
 import { processTaskJob } from './process-job';
 import { taskJobInclude } from './types';
 

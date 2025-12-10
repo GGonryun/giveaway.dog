@@ -27,6 +27,12 @@ import { debounce } from '@/lib/utils';
 import verifySlug from '@/procedures/sweepstakes/verify-slug';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
+import {
+  SwitchBox,
+  SwitchFormHeader
+} from '@/components/patterns/form-layout/switch-form-header';
+import { Switch } from '@/components/ui/switch';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 
 const VisibilityTypeField = () => {
   const form = useFormContext<GiveawayFormSchema>();
@@ -210,63 +216,95 @@ const UrlSlugField = () => {
     };
   }, []);
 
+  const state = form.getFieldState('visibility.slug');
+
   return (
-    <FormField
-      control={form.control}
-      name="visibility.slug"
-      render={({ field }) => (
-        <FormItem>
-          <div className="flex items-end gap-1">
-            <FormLabel>URL Slug</FormLabel>
-            <HelpDialog
-              title={'Help: URL Slug'}
-              content={
-                <div>
-                  Choose a <strong>unique and memorable</strong> slug for your
-                  sweepstakes URL. This value must be unique across all
-                  giveaways on the platform.
-                  <br />
-                  <br />
-                  This will be the web address where participants can find and
-                  enter your sweepstakes. For example, if you set the slug to{' '}
-                  <span className="font-semibold text-primary">
-                    my-awesome-giveaway
-                  </span>
-                  , the URL will be:
-                  <br />
-                  <br />
-                  https://giveaway.dog/browse/
-                  <span className="font-semibold text-primary">
-                    my-awesome-giveaway
-                  </span>
-                </div>
-              }
-            />
-          </div>
-          <FormControl>
-            <Input {...field} value={field.value || ''} />
-          </FormControl>
-          {slugStatus === 'checking' && (
-            <FormDescription className="flex items-center gap-1.5 text-muted-foreground">
-              <Loader2 className="h-3 w-3 animate-spin" />
-              Verifying slug availability...
-            </FormDescription>
-          )}
-          {slugStatus === 'available' && currentSlug && (
-            <FormDescription className="flex items-center gap-1.5 text-green-600">
-              <CheckCircle2 className="h-3 w-3" />
-              The slug &quot;{currentSlug}&quot; is available
-            </FormDescription>
-          )}
-          {slugStatus === 'idle' && (
-            <FormDescription>
-              Must be unique across all giveaways on the platform
-            </FormDescription>
-          )}
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <SwitchBox className={state.error ? 'border-destructive' : ''}>
+      <FormField
+        control={form.control}
+        name="visibility.slug"
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex flex-row items-start justify-between">
+              <SwitchFormHeader
+                label="Custom URL Slug"
+                description="Set a custom, memorable URL for your sweepstakes"
+                help={{
+                  title: 'Help: Custom URL Slug',
+                  content: (
+                    <div>
+                      Choose a <strong>unique and memorable</strong> slug for
+                      your sweepstakes URL. This value must be unique across all
+                      giveaways on the platform.
+                      <br />
+                      <br />
+                      This will be the web address where participants can find
+                      and enter your sweepstakes. For example, if you set the
+                      slug to{' '}
+                      <span className="font-semibold text-primary">
+                        my-awesome-giveaway
+                      </span>
+                      , the URL will be:
+                      <br />
+                      <br />
+                      https://giveaway.dog/browse/
+                      <span className="font-semibold text-primary">
+                        my-awesome-giveaway
+                      </span>
+                    </div>
+                  )
+                }}
+              />
+              <FormControl>
+                <Switch
+                  checked={field.value !== null}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      field.onChange(id);
+                    } else {
+                      field.onChange(null);
+                    }
+                  }}
+                />
+              </FormControl>
+            </div>
+          </FormItem>
+        )}
+      />
+      <Collapsible open={currentSlug !== null}>
+        <CollapsibleContent className="flex flex-col gap-1">
+          <FormField
+            control={form.control}
+            name="visibility.slug"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl className="mt-3">
+                  <Input {...field} value={field.value || ''} />
+                </FormControl>
+                {slugStatus === 'checking' && (
+                  <FormDescription className="flex items-center gap-1.5 text-muted-foreground">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Verifying slug availability...
+                  </FormDescription>
+                )}
+                {slugStatus === 'available' && currentSlug && (
+                  <FormDescription className="flex items-center gap-1.5 text-green-600">
+                    <CheckCircle2 className="h-3 w-3" />
+                    The slug &quot;{currentSlug}&quot; is available
+                  </FormDescription>
+                )}
+                {slugStatus === 'idle' && currentSlug && (
+                  <FormDescription>
+                    Must be unique across all giveaways on the platform
+                  </FormDescription>
+                )}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </CollapsibleContent>
+      </Collapsible>
+    </SwitchBox>
   );
 };
 
