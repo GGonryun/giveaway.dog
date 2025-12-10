@@ -5,7 +5,7 @@ import { RequiredFields } from '../types';
 
 export const createJobsForTask = (
   task: RequiredFields<SweepstakesInputTaskSchema, 'id'>,
-  status: SweepstakesStatus
+  status?: SweepstakesStatus
 ): Prisma.TaskJobCreateWithoutTaskInput[] => {
   if (status !== 'ACTIVE') {
     return [];

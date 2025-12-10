@@ -134,7 +134,7 @@ const toStorablePrizes = (
 
 const toStorableTasks = (
   tasks: SweepstakesInputSchema['tasks'],
-  status: SweepstakesStatus
+  status?: SweepstakesStatus
 ): Prisma.TaskUncheckedCreateNestedManyWithoutSweepstakesInput | undefined => {
   if (!tasks) return undefined;
   const compacted = compact(tasks).filter(isStorableTask);
@@ -220,7 +220,7 @@ export const toStorableSweepstakes = (
 
 export const toStorableSweepstakesUpdate = (
   input: SweepstakesInputSchema,
-  status: SweepstakesStatus
+  status?: SweepstakesStatus
 ) => {
   return {
     details: toStorableDetails(input.setup),
