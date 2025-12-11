@@ -10,7 +10,7 @@
     },
     {
       "path": "/api/jobs/process",
-      "schedule": "*/15 * * * *"
+      "schedule": "*/5 * * * *"
     }
   ],
   "functions": {
