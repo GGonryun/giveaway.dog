@@ -885,16 +885,27 @@ async function main() {
       taskInputs.map((taskData) => prisma.task.create({ data: taskData }))
     );
 
-    console.debug(`Creating participations for sweepstakes ${i}...`);
+    console.debug(`Creating participation for sweepstakes ${i}...`);
     const participantsCount = Math.floor(Math.random() * 300) + 100;
     const shuffledUsers = [...users].sort(() => Math.random() - 0.5);
     const participatingUsers = shuffledUsers.slice(0, participantsCount);
 
     for (const user of participatingUsers) {
+      const participant = await prisma.sweepstakesParticipant.create({
+        data: {
+          user: {
+            connect: { id: user.id }
+          },
+          sweepstakes: {
+            connect: { id: sweepstakes.id }
+          }
+        }
+      });
+
       await prisma.ageVerification.create({
         data: {
           userId: user.id,
-          sweepstakesId: sweepstakes.id,
+          participantId: participant.id,
           verified: true,
           verifiedAt: new Date()
         }
@@ -907,7 +918,7 @@ async function main() {
       for (const task of tasksToComplete) {
         await prisma.taskCompletion.create({
           data: {
-            userId: user.id,
+            participantId: participant.id,
             taskId: task.id,
             status: 'COMPLETED',
             completedAt: new Date(
@@ -921,7 +932,7 @@ async function main() {
 
         await prisma.taskProgress.create({
           data: {
-            userId: user.id,
+            participantId: participant.id,
             taskId: task.id,
             count: 1
           }

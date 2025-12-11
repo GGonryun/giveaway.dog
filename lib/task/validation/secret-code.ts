@@ -11,9 +11,9 @@ export const checkSecretCode = async (
 ): Promise<void> => {
   const existingProgress = await db.taskProgress.upsert({
     where: {
-      userId_taskId: {
+      participantId_taskId: {
         taskId: input.task.id,
-        userId: input.userId
+        participantId: input.participantId
       }
     },
     update: {
@@ -23,7 +23,7 @@ export const checkSecretCode = async (
     },
     create: {
       taskId: input.task.id,
-      userId: input.userId,
+      participantId: input.participantId,
       count: 1
     }
   });
@@ -63,7 +63,7 @@ export const checkSecretCode = async (
   const existingCompletion = await db.taskCompletion.findFirst({
     where: {
       taskId: input.task.id,
-      userId: input.userId
+      participantId: input.participantId
     }
   });
 

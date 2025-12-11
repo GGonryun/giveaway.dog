@@ -86,7 +86,7 @@ const toPrizeDraws = (
       disqualificationReason: draw.disqualificationReason,
       createdAt: draw.createdAt,
       updatedAt: draw.updatedAt,
-      user: toUserSchema(draw.taskCompletion.user),
+      user: toUserSchema(draw.taskCompletion.participant.user),
       task: task.data
     };
   });

@@ -42,21 +42,31 @@ const verifyAge = procedure()
       });
     }
 
-    // Create or update age verification record
-    const ageVerification = await db.ageVerification.upsert({
+    const participant = await db.sweepstakesParticipant.upsert({
       where: {
         userId_sweepstakesId: {
           userId: input.userId,
           sweepstakesId: input.sweepstakesId
         }
       },
+      update: {},
+      create: {
+        userId: input.userId,
+        sweepstakesId: input.sweepstakesId
+      }
+    });
+
+    // Create or update age verification record
+    const ageVerification = await db.ageVerification.upsert({
+      where: {
+        participantId: participant.id
+      },
       update: {
         verified: true,
         verifiedAt: new Date()
       },
       create: {
-        userId: input.userId,
-        sweepstakesId: input.sweepstakesId,
+        participantId: participant.id,
         verified: true,
         verifiedAt: new Date()
       }

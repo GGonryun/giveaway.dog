@@ -87,7 +87,17 @@ const getSweepstakesList = procedure()
         details: true,
         timing: true,
         tasks: {
-          include: { completions: true }
+          include: {
+            completions: {
+              include: {
+                participant: {
+                  include: {
+                    user: true
+                  }
+                }
+              }
+            }
+          }
         }
       },
       orderBy: input.sortField
@@ -117,7 +127,7 @@ const getSweepstakesList = procedure()
         );
         const participants = new Set(
           s.tasks.flatMap((task) =>
-            task.completions.map((completion) => completion.userId)
+            task.completions.map((completion) => completion.participant.user.id)
           )
         ).size;
 

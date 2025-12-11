@@ -14,6 +14,7 @@ import { checkMultipleChoice } from './multiple-choice';
 export type ValidateTaskInput<T extends TaskSchema> = {
   task: T;
   userId: string;
+  participantId: string;
   teamId: string;
   data?: unknown;
 };
@@ -53,53 +54,43 @@ export const validateTask = async <T extends TaskSchema>(
       return await checkBonusTimed(input.task);
     case 'BONUS_LOYALTY':
       return await checkBonusLoyalty(db, {
-        task: input.task,
-        userId: input.userId,
-        teamId: input.teamId,
-        data: input.data
+        ...input,
+        task: input.task
       });
     case 'STEAM_WISHLIST':
       return await checkSteamWishlist(db, {
-        task: input.task,
-        userId: input.userId
+        ...input,
+        task: input.task
       });
     case 'DISCORD_JOIN':
       return await checkDiscordJoin(db, {
-        task: input.task,
-        userId: input.userId
+        ...input,
+        task: input.task
       });
     case 'TWITCH_FOLLOW':
       return await checkTwitchFollow(db, {
-        task: input.task,
-        userId: input.userId
+        ...input,
+        task: input.task
       });
     case 'SECRET_CODE':
       return await checkSecretCode(db, {
-        task: input.task,
-        userId: input.userId,
-        teamId: input.teamId,
-        data: input.data
+        ...input,
+        task: input.task
       });
     case 'ASK_QUESTION':
       return await checkAskQuestion(db, {
-        task: input.task,
-        userId: input.userId,
-        teamId: input.teamId,
-        data: input.data
+        ...input,
+        task: input.task
       });
     case 'SINGLE_CHOICE':
       return await checkSingleChoice(db, {
-        task: input.task,
-        userId: input.userId,
-        teamId: input.teamId,
-        data: input.data
+        ...input,
+        task: input.task
       });
     case 'MULTIPLE_CHOICE':
       return await checkMultipleChoice(db, {
-        task: input.task,
-        userId: input.userId,
-        teamId: input.teamId,
-        data: input.data
+        ...input,
+        task: input.task
       });
     default:
       throw assertNever(input.task);

@@ -146,10 +146,24 @@ async function main() {
       process.exit(1);
     }
 
+    const participant = await prisma.sweepstakesParticipant.upsert({
+      where: {
+        userId_sweepstakesId: {
+          userId,
+          sweepstakesId
+        }
+      },
+      update: {},
+      create: {
+        userId,
+        sweepstakesId
+      }
+    });
+
     // Check if entry already exists
     const existingEntry = await prisma.taskCompletion.findFirst({
       where: {
-        userId,
+        participantId: participant.id,
         taskId
       }
     });
@@ -162,7 +176,7 @@ async function main() {
       // Create task completion
       const completion = await prisma.taskCompletion.create({
         data: {
-          userId,
+          participantId: participant.id,
           taskId,
           status: 'COMPLETED',
           proof: {

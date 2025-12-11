@@ -215,7 +215,7 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
 
   const completions = await tx.taskCompletion.findMany({
     where: {
-      userId,
+      participant: { userId },
       completedAt: { gte: datetime.daysAgo(COMPLETION_THRESHOLD_DAYS) }
     },
     orderBy: { completedAt: 'desc' },

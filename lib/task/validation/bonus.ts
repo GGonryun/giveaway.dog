@@ -62,7 +62,7 @@ export const checkBonusLoyalty = async (
   // owned by the user for sweepstakes owned by that team
   const completions = await db.taskCompletion.findMany({
     where: {
-      userId: input.userId,
+      participantId: input.participantId,
       task: {
         sweepstakes: {
           teamId: input.teamId

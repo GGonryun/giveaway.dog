@@ -41,17 +41,21 @@ export const USER_PARTICIPATION_INCLUDE_QUERY = (input: {
       }
     },
     accounts: true,
-    taskCompletions: {
-      where: {
-        task: SWEEPSTAKES_TASK_WHERE_QUERY(input)
-      },
+    participation: {
       include: {
-        task: {
+        taskCompletions: {
+          where: {
+            task: SWEEPSTAKES_TASK_WHERE_QUERY(input)
+          },
           include: {
-            sweepstakes: {
+            task: {
               include: {
-                details: true,
-                team: true
+                sweepstakes: {
+                  include: {
+                    details: true,
+                    team: true
+                  }
+                }
               }
             }
           }
@@ -61,12 +65,14 @@ export const USER_PARTICIPATION_INCLUDE_QUERY = (input: {
   }) satisfies Prisma.UserInclude;
 
 export const toUserParticipationSchema = (
-  participant: Prisma.UserGetPayload<{
+  user: Prisma.UserGetPayload<{
     include: ReturnType<typeof USER_PARTICIPATION_INCLUDE_QUERY>;
   }>,
   totalTasks: number
 ) => {
-  const userTaskCompletions = participant.taskCompletions;
+  const userTaskCompletions = user.participation.flatMap(
+    (p) => p.taskCompletions
+  );
   const entries = userTaskCompletions.sort(
     (a, b) => b.completedAt.getTime() - a.completedAt.getTime()
   );
@@ -76,19 +82,19 @@ export const toUserParticipationSchema = (
   const status: 'active' | 'blocked' = 'active'; // TODO: allow user status modification
 
   return {
-    id: participant.id,
-    createdAt: participant.createdAt,
-    name: participant.name,
-    email: participant.email,
-    country: participant.ips[0]?.ip.countryCode ?? UNKNOWN_USER_COUNTRY_CODE,
-    userAgent: participant.agents[0]?.agent.id ?? UNKNOWN_USER_AGENT,
+    id: user.id,
+    createdAt: user.createdAt,
+    name: user.name,
+    email: user.email,
+    country: user.ips[0]?.ip.countryCode ?? UNKNOWN_USER_COUNTRY_CODE,
+    userAgent: user.agents[0]?.agent.id ?? UNKNOWN_USER_AGENT,
     entries: userTaskCompletions.map((tc) => toTaskCompletion(tc)),
     lastEntryAt: entries[0].completedAt.toISOString(),
-    emailVerified: Boolean(participant.emailVerified),
+    emailVerified: Boolean(user.emailVerified),
     engagement,
-    source: participant.source,
-    qualityScore: clamp(participant.quality[0]?.score ?? 0, 0, 100),
+    source: user.source,
+    qualityScore: clamp(user.quality[0]?.score ?? 0, 0, 100),
     status,
-    providers: parseProviders(participant.accounts)
+    providers: parseProviders(user.accounts)
   };
 };

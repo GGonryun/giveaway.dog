@@ -102,10 +102,24 @@ const submitTask = procedure()
       });
     }
 
+    const participant = await db.sweepstakesParticipant.upsert({
+      where: {
+        userId_sweepstakesId: {
+          userId: user.id,
+          sweepstakesId: sweepstakesId
+        }
+      },
+      update: {},
+      create: {
+        userId: user.id,
+        sweepstakesId: sweepstakesId
+      }
+    });
+
     // Check if task has already been completed
     const completions = await db.taskCompletion.findMany({
       where: {
-        userId: user.id,
+        participantId: participant.id,
         task: { sweepstakesId }
       }
     });
@@ -121,7 +135,7 @@ const submitTask = procedure()
     const taskConfig = toTaskSchema(task);
 
     console.info(
-      `Validating mandatory and required tasks for user ${user.id} on task ${taskId}`
+      `Validating mandatory and required tasks for user ${participant.userId} on task ${taskId}`
     );
     await validateMandatoryTasks({
       taskId,
@@ -129,25 +143,30 @@ const submitTask = procedure()
       completions
     });
 
-    console.info(`Validating required tasks ${taskId} for user ${user.id}`);
+    console.info(
+      `Validating required tasks ${taskId} for user ${participant.userId}`
+    );
     await validateRequiredTasks({
       taskId,
       tasks,
       completions
     });
 
-    console.info(`Validating task ${taskId} for user ${user.id}`);
+    console.info(`Validating task ${taskId} for user ${participant.userId}`);
     await validateTask(db, {
       task: taskConfig,
-      userId: user.id,
+      userId: participant.userId,
+      participantId: participant.id,
       teamId: task.sweepstakes.teamId,
       data
     });
 
-    console.info(`Recording completion of task ${taskId} for user ${user.id}`);
+    console.info(
+      `Recording completion of task ${taskId} for user ${participant.userId}`
+    );
     await db.taskCompletion.create({
       data: {
-        userId: user.id,
+        participantId: participant.id,
         taskId,
         status: computeTaskStatus(taskConfig),
         proof: saveTaskProof(taskConfig, data)

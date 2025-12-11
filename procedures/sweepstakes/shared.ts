@@ -145,7 +145,9 @@ export const applySweepstakesChanges = async ({
 
     const ageVerifications = await tx.ageVerification.findMany({
       where: {
-        sweepstakesId: sweepstakes.id
+        participant: {
+          sweepstakesId: sweepstakes.id
+        }
       }
     });
 

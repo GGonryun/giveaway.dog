@@ -21,8 +21,12 @@ export const PRIZE_WINNERS_INCLUDE_QUERY = (input: {
         taskCompletion: {
           include: {
             ...TASK_COMPLETION_INCLUDE_QUERY,
-            user: {
-              include: USER_PARTICIPATION_INCLUDE_QUERY(input)
+            participant: {
+              include: {
+                user: {
+                  include: USER_PARTICIPATION_INCLUDE_QUERY(input)
+                }
+              }
             }
           }
         }
@@ -70,7 +74,7 @@ export const toSweepstakesPrizes = (
         disqualificationReason: draw.disqualificationReason,
         taskCompletion: toTaskCompletion(draw.taskCompletion),
         participant: toUserParticipationSchema(
-          draw.taskCompletion.user,
+          draw.taskCompletion.participant.user,
           totalTasks
         )
       }))

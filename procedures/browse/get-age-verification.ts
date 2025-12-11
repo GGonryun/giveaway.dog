@@ -16,18 +16,28 @@ const getAgeVerification = procedure()
   .handler(async ({ input, user }) => {
     if (!user?.id) return null;
 
-    const ageVerification = await prisma.ageVerification.findFirst({
+    const participant = await prisma.sweepstakesParticipant.findFirst({
       where: {
         userId: user.id,
-        OR: [
-          {
-            sweepstakesId: input.sweepstakesId
-          },
-          { sweepstakes: { visibility: { slug: input.sweepstakesId } } }
-        ]
+        sweepstakes: {
+          OR: [
+            { id: input.sweepstakesId },
+            { visibility: { slug: input.sweepstakesId } }
+          ]
+        }
+      },
+      include: {
+        ageVerification: true
       }
     });
 
-    return ageVerification;
+    if (!participant || !participant.ageVerification) {
+      return null;
+    }
+
+    return {
+      userId: participant.userId,
+      sweepstakesId: participant.sweepstakesId
+    };
   });
 export default getAgeVerification;

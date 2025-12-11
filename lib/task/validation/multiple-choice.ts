@@ -40,14 +40,20 @@ export const checkMultipleChoice = async (
     }
   }
 
-  if (input.task.minSelections && submittedChoices.length < input.task.minSelections) {
+  if (
+    input.task.minSelections &&
+    submittedChoices.length < input.task.minSelections
+  ) {
     throw new ApplicationError({
       code: 'BAD_REQUEST',
       message: `At least ${input.task.minSelections} option(s) must be selected`
     });
   }
 
-  if (input.task.maxSelections && submittedChoices.length > input.task.maxSelections) {
+  if (
+    input.task.maxSelections &&
+    submittedChoices.length > input.task.maxSelections
+  ) {
     throw new ApplicationError({
       code: 'BAD_REQUEST',
       message: `At most ${input.task.maxSelections} option(s) can be selected`
@@ -57,7 +63,7 @@ export const checkMultipleChoice = async (
   const existingCompletion = await db.taskCompletion.findFirst({
     where: {
       taskId: input.task.id,
-      userId: input.userId
+      participantId: input.participantId
     }
   });
 

@@ -68,7 +68,7 @@ export const processTwitterTaskJob = async <
     const { userId, twitterUserId, twitterUsername } = user;
     const existingCompletion = await db.taskCompletion.findFirst({
       where: {
-        userId,
+        participant: { userId },
         taskId,
         status: {
           in: ['COMPLETED', 'PENDING']
@@ -94,8 +94,23 @@ export const processTwitterTaskJob = async <
     } else {
       await db.taskCompletion.create({
         data: {
-          userId,
-          taskId,
+          participant: {
+            connectOrCreate: {
+              where: {
+                userId_sweepstakesId: {
+                  sweepstakesId,
+                  userId
+                }
+              },
+              create: {
+                sweepstakesId,
+                userId
+              }
+            }
+          },
+          task: {
+            connect: { id: taskId }
+          },
           status: 'COMPLETED',
           proof: {
             source: 'twitter_import',

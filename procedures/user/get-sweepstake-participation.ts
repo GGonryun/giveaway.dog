@@ -22,12 +22,12 @@ const getSweepstakeParticipation = procedure()
             OR: [
               {
                 completions: {
-                  some: { userId: user.id }
+                  some: { participant: { userId: user.id } }
                 }
               },
               {
                 progress: {
-                  some: { userId: user.id }
+                  some: { participant: { userId: user.id } }
                 }
               }
             ]

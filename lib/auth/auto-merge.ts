@@ -88,7 +88,8 @@ export const tryAutoMerge = async (args: {
       }
       // reassign the task completions to the new user
     });
-    await tx.taskCompletion.updateMany({
+    // find all of this user's participation and reassign to current user
+    await tx.sweepstakesParticipant.updateMany({
       where: {
         userId: existing.user.id
       },

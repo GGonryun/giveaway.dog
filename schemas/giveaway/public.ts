@@ -45,7 +45,9 @@ export const tryToPublicSweepstakes = (
     },
     prizes: sweepstakes.prizes.length ?? 0,
     participants: new Set(
-      sweepstakes.tasks.flatMap((t) => t.completions.map((c) => c.userId))
+      sweepstakes.tasks.flatMap((t) =>
+        t.completions.map((c) => c.participantId)
+      )
     ).size,
     featured: false // TODO: support featured sweepstakes.
   };

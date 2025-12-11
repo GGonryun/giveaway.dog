@@ -40,12 +40,16 @@ export const toTaskCompletion = (
 };
 
 export const ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY = {
-  user: {
+  participant: {
     include: {
-      quality: {
-        take: 1,
-        orderBy: {
-          createdAt: 'desc'
+      user: {
+        include: {
+          quality: {
+            take: 1,
+            orderBy: {
+              createdAt: 'desc'
+            }
+          }
         }
       }
     }

@@ -34,7 +34,11 @@ export const PARTICIPANT_SWEEPSTAKES_PAYLOAD = {
           taskCompletion: {
             include: {
               task: true,
-              user: { select: USER_SCHEMA_SELECT_QUERY }
+              participant: {
+                include: {
+                  user: { select: USER_SCHEMA_SELECT_QUERY }
+                }
+              }
             }
           }
         }
@@ -64,10 +68,14 @@ export const PUBLIC_SWEEPSTAKES_PAYLOAD = {
   tasks: {
     include: {
       completions: {
-        select: {
-          userId: true
+        include: {
+          participant: {
+            include: {
+              user: true
+            }
+          }
         },
-        distinct: ['userId']
+        distinct: ['participantId']
       }
     }
   },
@@ -75,7 +83,15 @@ export const PUBLIC_SWEEPSTAKES_PAYLOAD = {
     include: {
       draws: {
         include: {
-          taskCompletion: true
+          taskCompletion: {
+            include: {
+              participant: {
+                include: {
+                  user: true
+                }
+              }
+            }
+          }
         }
       }
     }

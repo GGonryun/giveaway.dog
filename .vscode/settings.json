@@ -6,11 +6,16 @@
     "cuid",
     "discordapp",
     "dropcursor",
+    "fkey",
     "gapcursor",
     "inboundemail",
+    "KHTML",
     "Metadatas",
     "mrpc",
+    "paralleldrive",
+    "pgcrypto",
     "Pickable",
+    "pkey",
     "Producthunt",
     "qrcode",
     "Repost",
@@ -23,6 +28,9 @@
     "tzdb",
     "Unvalidated",
     "vaul",
-    "Vercel"
+    "Vercel",
+    "Xander",
+    "Xena",
+    "Yara"
   ]
 }

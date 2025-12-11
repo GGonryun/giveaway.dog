@@ -17,22 +17,21 @@ enum UserSource {
 }
 
 model User {
-  id               String            @id @default(cuid())
+  id               String                   @id @default(cuid())
   name             String?
-  email            String?           @unique
+  email            String?                  @unique
   emailVerified    DateTime?
   username         String? // used to satisfy next-auth schema
   image            String?
   emoji            String?
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  source           UserSource        @default(SIGNUP)
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+  source           UserSource               @default(SIGNUP)
   accounts         Account[]
   sessions         Session[]
   teams            Membership[]
-  taskCompletions  TaskCompletion[]
-  taskProgresses   TaskProgress[]
   events           UserEvent[]
+  participation    SweepstakesParticipant[]
   ips              UserIpAddress[]
   agents           UserAgent[]
   quality          UserQuality[]
@@ -294,16 +293,17 @@ model Sweepstakes {
   teamId String?
   team   Team?   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
-  details          SweepstakesDetails?
-  timing           SweepstakesTiming?
-  terms            SweepstakesTerms?
-  audience         SweepstakesAudience?
-  design           SweepstakesDesign?
-  visibility       SweepstakesVisibility?
-  criteria         SweepstakesWinnerCriteria?
-  ageVerifications AgeVerification[]
-  prizes           Prize[]
-  tasks            Task[]
+  details      SweepstakesDetails?
+  timing       SweepstakesTiming?
+  terms        SweepstakesTerms?
+  audience     SweepstakesAudience?
+  design       SweepstakesDesign?
+  visibility   SweepstakesVisibility?
+  criteria     SweepstakesWinnerCriteria?
+  participants SweepstakesParticipant[]
+
+  prizes Prize[]
+  tasks  Task[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -493,6 +493,24 @@ model PrizeDraw {
   updatedAt DateTime @updatedAt
 }
 
+model SweepstakesParticipant {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sweepstakesId String
+  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+
+  taskCompletions TaskCompletion[]
+  taskProgresses  TaskProgress[]
+  ageVerification AgeVerification?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, sweepstakesId])
+  @@map("Participant")
+}
+
 model Task {
   id            String      @id
   sweepstakesId String
@@ -540,8 +558,8 @@ enum TaskType {
 model TaskCompletion {
   id String @id @default(cuid())
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participantId String
+  participant   SweepstakesParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
 
   taskId String
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
@@ -556,8 +574,8 @@ model TaskCompletion {
 model TaskProgress {
   id String @id @default(cuid())
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participantId String
+  participant   SweepstakesParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
 
   taskId String
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
@@ -565,7 +583,7 @@ model TaskProgress {
   count     Int      @default(0) // how many times completed
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, taskId])
+  @@unique([participantId, taskId])
 }
 
 enum CompletionStatus {
@@ -636,17 +654,16 @@ model TeamInviteEmail {
 
 // Age verification records for specific sweepstakes
 model AgeVerification {
-  id            String      @id @default(cuid())
-  userId        String
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sweepstakesId String
-  sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
-  verified      Boolean     @default(false)
+  id            String                 @id @default(cuid())
+  participantId String                 @unique
+  participant   SweepstakesParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  verified      Boolean                @default(false)
   verifiedAt    DateTime?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
 
-  @@unique([userId, sweepstakesId])
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
 }
 
 // Metadata for uploaded images.

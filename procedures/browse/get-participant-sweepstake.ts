@@ -53,7 +53,12 @@ const getParticipantSweepstake = procedure()
         }
       },
       include: {
-        task: true
+        task: true,
+        participant: {
+          include: {
+            user: true
+          }
+        }
       }
     });
 
@@ -62,7 +67,9 @@ const getParticipantSweepstake = procedure()
       return sum + taskSchema.value;
     }, 0);
 
-    const uniqueUserIds = new Set(taskCompletions.map((c) => c.userId));
+    const uniqueUserIds = new Set(
+      taskCompletions.map((c) => c.participant.user.id)
+    );
     const totalUsers = uniqueUserIds.size;
     const usersByTask = computeUsersByTask(taskCompletions);
 

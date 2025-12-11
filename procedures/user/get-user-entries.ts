@@ -20,7 +20,9 @@ const getUserEntries = procedure()
   .handler(async ({ input, db, user }) => {
     const tasks = await db.taskCompletion.findMany({
       where: {
-        userId: input.userId,
+        participant: {
+          user: { id: input.userId }
+        },
         task: {
           sweepstakes: {
             team: {

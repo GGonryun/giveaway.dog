@@ -31,7 +31,7 @@ export const getUserHostRelationship = procedure()
     // get me all the task completions for this user where the task's sweepstake is associated with the host of the sweepstake being queried
     const taskCompletions = await db.taskCompletion.findMany({
       where: {
-        userId: user.id,
+        participant: { userId: user.id },
         task: {
           sweepstakes: {
             team: {

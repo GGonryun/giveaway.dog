@@ -39,9 +39,13 @@ const getParticipatingUsers = procedure()
 
     const participants = await db.user.findMany({
       where: {
-        taskCompletions: {
+        participation: {
           some: {
-            task: ownedBySweepstakes
+            taskCompletions: {
+              some: {
+                task: ownedBySweepstakes
+              }
+            }
           }
         }
       },

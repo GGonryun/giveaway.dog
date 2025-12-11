@@ -40,8 +40,10 @@ const getSweepstakeTaskEntries = procedure()
         taskId: input.taskId
       },
       include: {
-        user: {
-          select: USER_SCHEMA_SELECT_QUERY
+        participant: {
+          select: {
+            user: { select: USER_SCHEMA_SELECT_QUERY }
+          }
         },
         task: true
       }
@@ -49,7 +51,7 @@ const getSweepstakeTaskEntries = procedure()
 
     return completions.map((completion) => ({
       ...completion,
-      user: toUserSchema(completion.user),
+      user: toUserSchema(completion.participant.user),
       completedAt: completion.completedAt.getTime(),
       proof: toJsonObject(completion.proof),
       task: toTaskSchema(completion.task)

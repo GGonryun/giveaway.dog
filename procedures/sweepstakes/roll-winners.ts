@@ -117,7 +117,7 @@ const rollWinners = procedure()
       >();
 
       for (const completion of allTaskCompletions) {
-        const userId = completion.userId;
+        const userId = completion.participant.userId;
         userCompletionCounts.set(
           userId,
           (userCompletionCounts.get(userId) || 0) + 1
@@ -207,7 +207,15 @@ const rerollWinner = async (
       prizeId: existingWinner.prizeId
     },
     include: {
-      taskCompletion: true
+      taskCompletion: {
+        include: {
+          participant: {
+            include: {
+              user: true
+            }
+          }
+        }
+      }
     }
   });
 
@@ -220,7 +228,10 @@ const rerollWinner = async (
 
       // Exclude previously disqualified users for this prize
       for (const disqualified of disqualifiedUsers) {
-        if (completion.userId === disqualified.taskCompletion.userId) {
+        if (
+          completion.participant.user.id ===
+          disqualified.taskCompletion.participant.user.id
+        ) {
           return false;
         }
       }
@@ -229,7 +240,9 @@ const rerollWinner = async (
     }
   );
 
-  const weightedCompletions = expandCompletionsByValue(newlyEligibleCompletions);
+  const weightedCompletions = expandCompletionsByValue(
+    newlyEligibleCompletions
+  );
   const randomizedCompletions = rng.shuffleArray(weightedCompletions);
 
   if (randomizedCompletions.length === 0) {
@@ -302,9 +315,9 @@ const pickWinners = async (
     const seenUserIds = new Set<string>();
 
     for (const completion of randomizedCompletions) {
-      if (!seenUserIds.has(completion.userId)) {
+      if (!seenUserIds.has(completion.participant.user.id)) {
         uniqueWinners.push(completion);
-        seenUserIds.add(completion.userId);
+        seenUserIds.add(completion.participant.user.id);
       }
     }
 
@@ -354,10 +367,10 @@ const isEligibleTaskCompletion =
       minTasksCompleted,
       externalPlatforms
     } = args;
-    const userId = completion.userId;
-    const userQuality = completion.user.quality[0]?.score ?? 0;
+    const userId = completion.participant.user.id;
+    const userQuality = completion.participant.user.quality[0]?.score ?? 0;
     const userTaskCount = userCompletionCounts.get(userId) || 0;
-    const userSource = completion.user.source;
+    const userSource = completion.participant.user.source;
 
     // Check external platform source filter
     if (externalPlatforms && externalPlatforms.length > 0) {

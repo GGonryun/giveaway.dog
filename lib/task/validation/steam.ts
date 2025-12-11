@@ -1,6 +1,7 @@
 import { ApplicationError } from '@/lib/errors';
 import { PrismaClient } from '@prisma/client';
 import { SteamWishlistTaskSchema } from '../schemas';
+import { ValidateTaskInput } from './integrations';
 
 export const PRIVATE_STEAM_WISHLIST_ERROR = 'PRIVATE_STEAM_WISHLIST';
 export const GAME_NOT_IN_WISHLIST_ERROR = 'GAME_NOT_IN_WISHLIST';
@@ -42,15 +43,12 @@ const checkSteamGameOwnership = async (
 
 export const checkSteamWishlist = async (
   db: PrismaClient,
-  args: {
-    task: SteamWishlistTaskSchema;
-    userId: string;
-  }
+  input: ValidateTaskInput<SteamWishlistTaskSchema>
 ): Promise<void> => {
   // Get the user's Steam account
   const steamAccount = await db.account.findFirst({
     where: {
-      userId: args.userId,
+      userId: input.userId,
       provider: 'steam'
     }
   });
@@ -64,7 +62,7 @@ export const checkSteamWishlist = async (
   }
 
   // Extract the Steam App ID from the URL
-  const appIdMatch = args.task.appId.match(/\/app\/(\d+)/);
+  const appIdMatch = input.task.appId.match(/\/app\/(\d+)/);
   if (!appIdMatch) {
     throw new ApplicationError({
       code: 'VALIDATION_ERROR',

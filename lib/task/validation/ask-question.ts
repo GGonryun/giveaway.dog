@@ -27,7 +27,7 @@ export const checkAskQuestion = async (
   const existingCompletion = await db.taskCompletion.findFirst({
     where: {
       taskId: input.task.id,
-      userId: input.userId
+      participantId: input.participantId
     }
   });
 

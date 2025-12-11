@@ -26,7 +26,9 @@ const getParticipationHistory = procedure()
           some: {
             completions: {
               some: {
-                userId: user.id
+                participant: {
+                  userId: user.id
+                }
               }
             }
           }
@@ -39,7 +41,9 @@ const getParticipationHistory = procedure()
           include: {
             completions: {
               where: {
-                userId: user.id
+                participant: {
+                  userId: user.id
+                }
               },
               orderBy: {
                 completedAt: 'desc'
