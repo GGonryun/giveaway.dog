@@ -2,7 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@/lib/task/queries';
-import { sweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { sweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
 
 import {
   toUserParticipationSchema,
@@ -22,7 +22,7 @@ const getParticipatingUsers = procedure()
   )
   .output(
     z.object({
-      users: sweepstakesParticipantSchema.array()
+      users: sweepstakesParticipantSchema_old.array()
     })
   )
   .handler(async ({ db, input, user }) => {

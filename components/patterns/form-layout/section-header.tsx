@@ -23,7 +23,7 @@ export const UnifiedSectionHeader: React.FC<UnifiedSectionHeaderProps> = ({
           <SectionTitle {...props} />
         </div>
       </div>
-      <div className="flex flex-col gap-2 p-2 sm:p-4 space-y-2">{children}</div>
+      <div className="flex flex-col gap-2 p-2 sm:p-4">{children}</div>
     </div>
   );
 };

@@ -7,11 +7,10 @@ import {
   GiveawayHostSchema,
   GiveawayPrizeSchema,
   GiveawaySchema,
-  UserParticipationSchema,
   DeviceType,
   UserHostRelationshipSchema
 } from '@/schemas/giveaway/schemas';
-import { UserProfileSchema } from '@/schemas/user';
+import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 
 export interface GiveawayParticipationProps {
   device?: DeviceType;
@@ -20,8 +19,7 @@ export interface GiveawayParticipationProps {
   host: GiveawayHostSchema;
   participation: GiveawayParticipationSchema;
   prizes: GiveawayPrizeSchema[];
-  userProfile?: UserProfileSchema;
-  userParticipation?: UserParticipationSchema;
+  participant?: SweepstakesParticipantSchema;
   userHostRelationship?: UserHostRelationshipSchema;
   state: GiveawayState;
   hideBackground?: boolean;
@@ -29,6 +27,7 @@ export interface GiveawayParticipationProps {
   onTaskComplete: (taskId: string, data?: unknown) => Promise<unknown>;
   onLogin: () => void;
   onCompleteProfile: () => void;
+  onFormSubmit: (data: unknown) => Promise<unknown>;
 }
 
 export interface GiveawayParticipationContextValue
@@ -50,28 +49,28 @@ export const GiveawayParticipationProvider: React.FC<
   sweepstakes,
   host,
   prizes: winners,
-  userProfile,
-  userParticipation,
+  participant,
   userHostRelationship,
   state = 'active',
   verifyEmail,
   onTaskComplete,
   onLogin,
-  onCompleteProfile
+  onCompleteProfile,
+  onFormSubmit
 }) => {
   const value: GiveawayParticipationContextValue = {
     participation,
     sweepstakes,
     host,
     prizes: winners,
-    userProfile,
-    userParticipation,
+    participant,
     userHostRelationship,
     state,
     verifyEmail,
     onTaskComplete,
     onLogin,
-    onCompleteProfile
+    onCompleteProfile,
+    onFormSubmit
   };
 
   return (

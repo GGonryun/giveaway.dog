@@ -20,7 +20,7 @@ import {
   SweepstakesWinnerCriteriaSchema
 } from '@/schemas/giveaway/schemas';
 import { DiceIcon } from './dice-icon';
-import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
 import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useProcedure } from '@/lib/mrpc/hook';
@@ -352,7 +352,7 @@ const EmptyPrizeState = ({
 
 type SweepstakesWinnersProps = {
   prizes: SweepstakesPrizeSchema[];
-  participants: SweepstakesParticipantSchema[];
+  participants: SweepstakesParticipantSchema_old[];
   sweepstakesId: string;
   slug: string;
   status: DerivedSweepstakeStatus;

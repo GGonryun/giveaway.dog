@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SquareArrowOutUpRight } from 'lucide-react';
-import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
 import { cn } from '@/lib/utils';
 import {
   QUALITY_ICON,
@@ -16,7 +16,7 @@ import { QualityBadge } from '../risk/quality-badge';
 
 export const KeyMetricsCard: React.FC<{
   slug: string;
-  participant: SweepstakesParticipantSchema;
+  participant: SweepstakesParticipantSchema_old;
 }> = ({ participant, slug }) => {
   const type = toQualityType(participant.qualityScore);
   const theme = QUALITY_THEME[type];

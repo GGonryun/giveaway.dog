@@ -357,11 +357,56 @@ model SweepstakesAudience {
   sweepstakesId String      @unique
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
+  allowedIdentities    IdentityProvider[] @default([TWITTER, GOOGLE, DISCORD, EMAIL, TWITCH, STEAM, TIKTOK])
+  requirePreEntryLogin Boolean?           @default(false)
+
   requireEmail          Boolean?
-  regionalRestriction   RegionalRestriction?
   minimumAgeRestriction MinimumAgeRestriction?
-  allowedIdentities     IdentityProvider[]     @default([TWITTER, GOOGLE, DISCORD, EMAIL, TWITCH, STEAM, TIKTOK])
-  requirePreEntryLogin  Boolean?               @default(false)
+  formFields            SweepstakesFormField[]
+
+  regionalRestriction RegionalRestriction?
+}
+
+enum SweepstakesFormFieldType {
+  USERNAME
+  AGE
+  EMAIL
+  TWITTER
+}
+
+model SweepstakesFormField {
+  id         String              @id @default(cuid())
+  audienceId String
+  audience   SweepstakesAudience @relation(fields: [audienceId], references: [id], onDelete: Cascade)
+
+  label       String?
+  type        SweepstakesFormFieldType?
+  required    Boolean?
+  placeholder String? // for USERNAME type
+  minimum     Int? // for AGE type
+  maximum     Int? // for AGE type
+  index       Int?
+
+  values SweepstakesFormValue[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SweepstakesFormValue {
+  id String @id @default(cuid())
+
+  participantId String
+  participant   SweepstakesParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  fieldId       String
+  field         SweepstakesFormField   @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  value String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([participantId, fieldId])
 }
 
 enum VisibilityType {
@@ -503,6 +548,7 @@ model SweepstakesParticipant {
   taskCompletions TaskCompletion[]
   taskProgresses  TaskProgress[]
   ageVerification AgeVerification?
+  formValues      SweepstakesFormValue[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

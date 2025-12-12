@@ -16,6 +16,7 @@ import {
 } from '@/components/sweepstakes-editor/form/terms';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { date } from '@/lib/date';
+import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 
 interface TermsModalProps {
   children: React.ReactNode;
@@ -53,9 +54,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({ children }) => {
     const termOptions: SweepstakesTermOptions = {
       sweepstakesName: sweepstakes.setup.name,
       eligibilityRegions: getEligibilityRegions(),
-      eligibilityAge: sweepstakes.audience.minimumAgeRestriction
-        ? `${sweepstakes.audience.minimumAgeRestriction.value}`
-        : undefined,
+      eligibilityAge: getEligibilityAge(sweepstakes.audience.formFields),
       startDate: date.format(sweepstakes.timing.startDate, 'long'),
       endDate: date.format(sweepstakes.timing.endDate, 'long'),
       entryUrl: typeof window !== 'undefined' ? window.location.href : '',
@@ -96,4 +95,12 @@ export const TermsModal: React.FC<TermsModalProps> = ({ children }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+const getEligibilityAge = (
+  formFields: SweepstakesFormFieldSchema[]
+): string | undefined => {
+  const field = formFields.find((field) => field.type === 'AGE');
+
+  return field ? `${field.minimum}` : undefined;
 };

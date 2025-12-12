@@ -78,9 +78,11 @@ export const MultipleChoiceTaskActionForm: React.FC<
                 onCheckedChange={() => handleToggle(option)}
                 disabled={
                   isLoading ||
-                  !!(task.maxSelections &&
+                  !!(
+                    task.maxSelections &&
                     !choices.includes(option) &&
-                    choices.length >= task.maxSelections)
+                    choices.length >= task.maxSelections
+                  )
                 }
               />
               <Label htmlFor={`option-${index}`} className="cursor-pointer">

@@ -44,10 +44,10 @@ const useProviderConnection = ({
     }
   });
 
-  const { userProfile } = useGiveawayParticipation();
+  const { participant } = useGiveawayParticipation();
   const provider = useMemo(() => {
-    return userProfile?.providers.find((p) => p.type === providerId);
-  }, [userProfile?.providers]);
+    return participant?.user.providers.find((p) => p.type === providerId);
+  }, [participant?.user.providers]);
 
   const connect = () => {
     const params = new URLSearchParams();

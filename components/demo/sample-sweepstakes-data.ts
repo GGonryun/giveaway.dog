@@ -121,15 +121,9 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
     privacyPolicyUrl: 'https://example.com/privacy'
   },
   audience: {
-    requireEmail: true,
+    formFields: [],
     requirePreEntryLogin: false,
     regionalRestriction: undefined,
-    minimumAgeRestriction: {
-      value: 18,
-      label: 'You must be 18 years or older to participate',
-      required: true,
-      format: 'CHECKBOX'
-    },
     allowedIdentities: DEFAULT_ALLOWED_IDENTITIES
   },
   design: {

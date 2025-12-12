@@ -1,10 +1,14 @@
 ## Roadmap
 
 - [ ] If an integration is unhealthy, ask the user to re-authenticate first.
+- [ ] switch to using participant instead of "user" in sweepstakes entry and show custom participant profile.
 
-- [ ] Add question integrations
-- [ ] Upload a file
-- [ ] Pick an image from a gallery
+- [ ] Can we allow private sweepstakes that only people with a link can enter? (switch to using "private" | "unlisted" | "public" for visibility)
+
+- [ ] CHUCKY has a request on discord too.
+- [ ] Abinesh on discord has a bug too.
+
+- [ ] Add back "Validate user" feature validates to make sure that the user email is valid and not disposable.
 
 ### @theejankanator
 
@@ -15,10 +19,6 @@
   - [ ] Enable entry methods (follow, like, share)
 
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
-
-### Chizuru the Deaf Gamer
-
-- [ ] Anonymous Twitter Giveaways
 
 ### Fuzey
 
@@ -40,7 +40,16 @@
 
 - [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
 
+## PJ & Dom
+
+- [ ] Global Black List
+- [ ] Global White List
+
 ### Nobody Asked
+
+- [ ] Add question entry method types:
+  - [ ] Upload a file
+  - [ ] Pick an image from a gallery
 
 - [ ] Add a twitter post entry method
 - [ ] Add a twitter reply entry method

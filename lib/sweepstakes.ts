@@ -2,20 +2,26 @@ import {
   GiveawayState,
   ParticipantSweepstakeSchema
 } from '@/schemas/giveaway/schemas';
-import { AgeVerificationSchema, UserProfileSchema } from '@/schemas/user';
 import { assertNever } from './errors';
 import { RequiredFields } from './types';
 import { expandCountries, includesCountryCode } from './countries';
+import {
+  isProfileIncomplete,
+  SweepstakesParticipantSchema,
+  toParticipantForm
+} from '@/schemas/giveaway/participant';
 
-type ComputeStateOptions = {
-  sweepstakes: ParticipantSweepstakeSchema['sweepstakes'];
-  prizes: ParticipantSweepstakeSchema['prizes'];
-  userProfile?: UserProfileSchema;
-  ageVerification?: AgeVerificationSchema | null;
+type ComputeStateOptions = Pick<
+  ParticipantSweepstakeSchema,
+  'prizes' | 'sweepstakes'
+> & {
+  participant?: SweepstakesParticipantSchema;
 };
 
-export const computeState = (args: ComputeStateOptions): GiveawayState => {
-  const { sweepstakes, userProfile } = args;
+export const toSweepstakesState = (
+  args: ComputeStateOptions
+): GiveawayState => {
+  const { sweepstakes, participant } = args;
 
   switch (sweepstakes.status) {
     case 'DRAFT':
@@ -29,11 +35,10 @@ export const computeState = (args: ComputeStateOptions): GiveawayState => {
     case 'SCHEDULED':
       return 'pending';
     case 'RUNNING': {
-      if (!userProfile) return 'not-logged-in';
-      if (requiresEmail(args)) return 'email-required';
-      if (needsAgeVerification({ ...args, userProfile }))
-        return 'age-verification-required';
-      if (!isEligible({ ...args, userProfile })) return 'not-eligible';
+      if (!participant) return 'not-logged-in';
+      if (isProfileIncomplete(sweepstakes.audience.formFields, participant))
+        return 'profile-incomplete';
+      if (!isEligible({ ...args, participant })) return 'not-eligible';
       return 'active';
     }
     default:
@@ -41,40 +46,20 @@ export const computeState = (args: ComputeStateOptions): GiveawayState => {
   }
 };
 
-const requiresEmail = ({ sweepstakes, userProfile }: ComputeStateOptions) => {
-  return (
-    sweepstakes.audience.requireEmail &&
-    (!userProfile?.email || !userProfile?.emailVerified)
-  );
-};
-
-const needsAgeVerification = ({
-  sweepstakes,
-  ageVerification
-}: RequiredFields<ComputeStateOptions, 'userProfile'>) => {
-  if (sweepstakes.audience.minimumAgeRestriction) {
-    return !ageVerification;
-  }
-  return false;
-};
-
 const isEligible = ({
   sweepstakes,
-  userProfile,
-  ageVerification
-}: RequiredFields<ComputeStateOptions, 'userProfile'>) => {
-  if (sweepstakes.audience.minimumAgeRestriction) {
-    if (!ageVerification) return false;
-  }
-
-  // check if region requirement is met
+  participant
+}: RequiredFields<ComputeStateOptions, 'participant'>) => {
   if (sweepstakes.audience.regionalRestriction) {
-    if (!userProfile.countryCode) return false;
+    if (!participant.user.countryCode) return false;
 
     const countries = expandCountries(
       sweepstakes.audience.regionalRestriction.regions
     );
-    const hasRegion = includesCountryCode(countries, userProfile.countryCode);
+    const hasRegion = includesCountryCode(
+      countries,
+      participant.user.countryCode
+    );
 
     switch (sweepstakes.audience.regionalRestriction.filter) {
       case 'INCLUDE':

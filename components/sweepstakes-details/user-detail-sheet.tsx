@@ -23,7 +23,7 @@ import {
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import { StatusExplanationDialog } from '../users/status-explanation-dialog';
-import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
 import { userAgent } from '@/lib/devices';
 import {
   USER_AGENT_DEVICE_ICON,
@@ -38,7 +38,7 @@ import { UserProviders } from '@/lib/integrations/components/user-providers';
 import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
 
 export const ParticipatingUserSheetContent: React.FC<{
-  user: SweepstakesParticipantSchema;
+  user: SweepstakesParticipantSchema_old;
 }> = ({ user }) => {
   const router = useRouter();
   const { activeTeam } = useTeams();
@@ -346,7 +346,7 @@ const ParticipatingUserSheetLayout: React.PC<{
 };
 
 export const UserDetailSheet: React.FC<{
-  user: SweepstakesParticipantSchema | null;
+  user: SweepstakesParticipantSchema_old | null;
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
 }> = ({ user, open, onOpenChangeAction }) => {

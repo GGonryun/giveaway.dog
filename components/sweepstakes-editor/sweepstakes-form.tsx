@@ -256,31 +256,31 @@ const FormContent: React.FC<{
           fieldsToSteps={SWEEPSTAKE_FIELD_TO_STEP_MAP}
           stepLabels={SWEEPSTAKE_STEP_LABELS}
         />
+
+        <CancelConfirmationModal
+          onClose={() => setShowCancelModal(false)}
+          open={showCancelModal}
+          isLoading={
+            deleteSweepstakes.isLoading || updateSweepstakesProcedure.isLoading
+          }
+          action={action}
+          onDiscard={handleDiscardChanges}
+          onSave={handleSaveChanges}
+        />
+
+        <PublishConfirmationModal
+          open={showPublishModal}
+          onClose={handleClosePublishModal}
+          onContinueEditing={handleContinueEditing}
+          onCancel={handleCancelSubmission}
+          onSave={handleSaveChanges}
+          onPublish={handlePublish}
+          isPublishing={publishSweepstakesProcedure.isLoading}
+          isSaving={updateSweepstakesProcedure.isLoading}
+          action={action}
+          name={name}
+        />
       </form>
-
-      <CancelConfirmationModal
-        onClose={() => setShowCancelModal(false)}
-        open={showCancelModal}
-        isLoading={
-          deleteSweepstakes.isLoading || updateSweepstakesProcedure.isLoading
-        }
-        action={action}
-        onDiscard={handleDiscardChanges}
-        onSave={handleSaveChanges}
-      />
-
-      <PublishConfirmationModal
-        open={showPublishModal}
-        onClose={handleClosePublishModal}
-        onContinueEditing={handleContinueEditing}
-        onCancel={handleCancelSubmission}
-        onSave={handleSaveChanges}
-        onPublish={handlePublish}
-        isPublishing={publishSweepstakesProcedure.isLoading}
-        isSaving={updateSweepstakesProcedure.isLoading}
-        action={action}
-        name={name}
-      />
     </>
   );
 };

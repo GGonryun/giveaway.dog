@@ -152,7 +152,9 @@ export const DesktopFormLayout: React.FC<FormLayoutProps> = ({
             defaultSize={30}
             className="min-w-[450px] xl:max-w-[800px] flex flex-col"
           >
-            <div ref={scrollContainerRef} className="space-y-2 overflow-y-scroll flex-1">{form}</div>
+            <div ref={scrollContainerRef} className="overflow-y-scroll flex-1">
+              {form}
+            </div>
             <UnifiedFormFooter />
           </ResizablePanel>
           <ResizableHandle withHandle />

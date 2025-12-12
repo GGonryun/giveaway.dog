@@ -15,7 +15,7 @@ import {
 } from '@/schemas/giveaway/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
 import {
-  MinimumAgeRestrictionFormat,
+  SweepstakesFormFieldType,
   RegionalRestrictionFilter,
   SweepstakesTermsType
 } from '@prisma/client';
@@ -32,15 +32,26 @@ import {
   mockUserHostRelationship,
   onFakeLogin,
   onFakeCompleteProfile,
-  onFakeTaskComplete
+  onFakeTaskComplete,
+  onFakeFormSubmit,
+  mockParticipant
 } from './data/mocks';
 import { TaskSchema } from '@/lib/task/schemas';
 import { useTeams } from '../context/team-provider';
-import { toSweepstakesHost } from '@/schemas/giveaway/participant';
+import {
+  SweepstakesParticipantSchema,
+  toSweepstakesHost
+} from '@/schemas/giveaway/participant';
 import { assertNever } from '@/lib/errors';
 import { UserProfileSchema } from '@/schemas/user';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
-import { RequirePreEntryLogin } from './form/audience/require-pre-entry-login';
+import {
+  DEFAULT_ALLOWED_IDENTITIES,
+  TWITTER_PROFILE_URL
+} from '@/lib/settings';
+import { DeepNil } from '@/lib/types';
+import { isDefined } from '@/lib/widetype';
+import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
 
 export const SweepstakePreview: React.FC = () => {
   const { activeTeam } = useTeams();
@@ -93,7 +104,6 @@ export const SweepstakePreview: React.FC = () => {
           timeZone: formValues.timing?.timeZone || 'UTC'
         },
         audience: {
-          requireEmail: formValues.audience?.requireEmail ?? true,
           regionalRestriction: formValues.audience?.regionalRestriction
             ? {
                 regions: formValues.audience.regionalRestriction.regions || [],
@@ -102,20 +112,12 @@ export const SweepstakePreview: React.FC = () => {
                   RegionalRestrictionFilter.INCLUDE
               }
             : undefined,
-          minimumAgeRestriction: formValues.audience?.minimumAgeRestriction
-            ? {
-                format: MinimumAgeRestrictionFormat.CHECKBOX,
-                value: formValues.audience.minimumAgeRestriction.value || 13,
-                label: formValues.audience.minimumAgeRestriction.label || '',
-                required:
-                  formValues.audience.minimumAgeRestriction.required || false
-              }
-            : undefined,
           allowedIdentities:
             formValues.audience?.allowedIdentities ??
             DEFAULT_ALLOWED_IDENTITIES,
           requirePreEntryLogin:
-            formValues.audience?.requirePreEntryLogin || false
+            formValues.audience?.requirePreEntryLogin || false,
+          formFields: toMockFormFields(formValues.audience?.formFields)
         },
         tasks: (formValues.tasks || []) as TaskSchema[],
         prizes: (formValues.prizes || []) as Prize[],
@@ -160,37 +162,86 @@ export const SweepstakePreview: React.FC = () => {
       host={toSweepstakesHost(activeTeam)}
       participation={mockParticipation}
       prizes={mockWinners}
-      userProfile={getUserProfile(previewState)}
-      userParticipation={getUserParticipation(previewState)}
+      participant={getParticipant(previewState)}
       userHostRelationship={getUserHostRelationship(previewState)}
       state={previewState}
       onTaskComplete={onFakeTaskComplete}
       onLogin={onFakeLogin}
       onCompleteProfile={onFakeCompleteProfile}
+      onFormSubmit={onFakeFormSubmit}
       verifyEmail={false}
     />
   );
 };
 
-const getUserProfile = (
+const toMockFormFields = (fields?: DeepNil<SweepstakesFormFieldSchema>[]) => {
+  if (!fields) return [];
+
+  return fields.filter(isDefined('type')).map((field, index) => {
+    switch (field.type) {
+      case 'USERNAME':
+        return {
+          id: field.id ?? '',
+          label: field.label ?? '',
+          type: SweepstakesFormFieldType.USERNAME,
+          required: field.required || false,
+          placeholder: field.placeholder || ''
+        };
+      case 'EMAIL':
+        return {
+          id: field.id ?? '',
+          label: field.label ?? '',
+          type: SweepstakesFormFieldType.EMAIL,
+          placeholder: field.placeholder || ''
+        };
+      case 'AGE':
+        return {
+          id: field.id ?? '',
+          label: field.label ?? '',
+          type: SweepstakesFormFieldType.AGE,
+          required: field.required || false,
+          minimum: field.minimum || DEFAULT_MINIMUM_AGE,
+          maximum: field.maximum || 99
+        };
+      case 'TWITTER':
+        return {
+          id: field.id ?? '',
+          label: field.label ?? '',
+          type: SweepstakesFormFieldType.TWITTER,
+          required: field.required || false,
+          placeholder: field.placeholder || TWITTER_PROFILE_URL
+        };
+      default:
+        throw assertNever(field);
+    }
+  });
+};
+
+const getParticipant = (
   previewState: GiveawayState
-): UserProfileSchema | undefined => {
+): SweepstakesParticipantSchema | undefined => {
   switch (previewState) {
     case 'not-logged-in':
       return undefined;
     case 'active':
     case 'pending':
-    case 'email-required':
-      return { ...mockUserProfile, email: '', emailVerified: false };
-    case 'age-verification-required':
     case 'not-eligible':
     case 'profile-incomplete':
+      return {
+        ...mockParticipant,
+        user: {
+          ...mockUserProfile,
+          email: '',
+          emailVerified: false
+        },
+        formValues: {}
+      };
     case 'winners-announced':
     case 'winners-pending':
     case 'closed':
     case 'canceled':
     case 'error':
-      return mockUserProfile;
+      return mockParticipant;
     default:
   }
 };
@@ -201,8 +252,6 @@ const getUserParticipation = (previewState: GiveawayState) => {
       return undefined;
     case 'active':
     case 'pending':
-    case 'email-required':
-    case 'age-verification-required':
     case 'not-eligible':
     case 'profile-incomplete':
     case 'winners-announced':
@@ -222,8 +271,6 @@ const getUserHostRelationship = (previewState: GiveawayState) => {
       return undefined;
     case 'active':
     case 'pending':
-    case 'email-required':
-    case 'age-verification-required':
     case 'not-eligible':
     case 'profile-incomplete':
     case 'winners-announced':

@@ -10,16 +10,20 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
-import { computeState } from '@/lib/sweepstakes';
+import { toSweepstakesState } from '@/lib/sweepstakes';
 import { TemplateListItemSchema } from '../schemas/template';
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
 import {
+  mockHost,
+  mockParticipant,
+  mockParticipation,
+  mockPrizes,
   mockUserProfile,
   onFakeCompleteProfile,
+  onFakeFormSubmit,
   onFakeLogin,
   onFakeTaskComplete
 } from '@/components/sweepstakes-editor/data/mocks';
-import { noop } from 'lodash';
 
 interface UseTemplateModalProps {
   open: boolean;
@@ -48,30 +52,10 @@ export function UseTemplateModal({
     ...template.content
   };
 
-  const mockHost = {
-    slug: 'template-preview',
-    name: 'Template Preview',
-    links: []
-  };
-
-  const mockPrizes = mockSweepstakes.prizes.map((p) => ({
-    prizeId: p.id,
-    prizeName: p.name,
-    quota: p.quota,
-    draws: []
-  }));
-
-  const mockParticipation = {
-    totalEntries: 167,
-    usersByTask: {},
-    totalUsers: 32
-  };
-
-  const state = computeState({
+  const state = toSweepstakesState({
     sweepstakes: mockSweepstakes,
     prizes: mockPrizes,
-    userProfile: undefined,
-    ageVerification: null
+    participant: mockParticipant
   });
 
   return (
@@ -88,12 +72,13 @@ export function UseTemplateModal({
             host={mockHost}
             prizes={mockPrizes}
             participation={mockParticipation}
-            userProfile={mockUserProfile}
+            participant={mockParticipant}
             state={state}
             className="w-full"
             onTaskComplete={onFakeTaskComplete}
             onCompleteProfile={onFakeCompleteProfile}
             onLogin={onFakeLogin}
+            onFormSubmit={onFakeFormSubmit}
             verifyEmail={false}
           />
         </div>

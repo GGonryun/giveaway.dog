@@ -10,7 +10,8 @@ export const FORM_SWEEPSTAKES_PAYLOAD = {
   audience: {
     include: {
       regionalRestriction: true,
-      minimumAgeRestriction: true
+      minimumAgeRestriction: true,
+      formFields: true
     }
   },
   terms: true,
@@ -48,7 +49,8 @@ export const PARTICIPANT_SWEEPSTAKES_PAYLOAD = {
   audience: {
     include: {
       regionalRestriction: true,
-      minimumAgeRestriction: true
+      minimumAgeRestriction: true,
+      formFields: true
     }
   },
   terms: true,
@@ -141,4 +143,7 @@ export type SweepstakesInputPrizeSchema = DeepPartial<
 >;
 export type SweepstakesInputDesignBackgroundSchema = DeepPartial<
   SweepstakesFormSchema['design']['background']
+>;
+export type SweepstakesInputFormFieldSchema = DeepPartial<
+  SweepstakesFormSchema['audience']['formFields'][number]
 >;

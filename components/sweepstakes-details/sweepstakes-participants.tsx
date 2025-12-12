@@ -31,20 +31,20 @@ import { StatusExplanationDialog } from '../users/status-explanation-dialog';
 
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { datetime } from '@/lib/date';
-import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
 
 export const SweepstakesParticipants: React.FC<{
   slug: string;
   sweepstakesId: string;
-  users: SweepstakesParticipantSchema[];
+  users: SweepstakesParticipantSchema_old[];
 }> = ({ users, slug, sweepstakesId }) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
   const [statusDialogUser, setStatusDialogUser] =
-    useState<SweepstakesParticipantSchema | null>(null);
+    useState<SweepstakesParticipantSchema_old | null>(null);
 
   const pageSize = DEFAULT_PAGE_SIZE;
   const totalUsers = users.length;

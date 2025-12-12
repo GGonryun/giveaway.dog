@@ -1,13 +1,13 @@
 'use client';
 
-import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
 import { KeyMetricsCard } from './key-metrics-card';
 import { ProfileInformationCard } from './profile-information-card';
 import { UserSchema } from '@/schemas/user';
 import { UserProviders } from '@/lib/integrations/components/user-providers';
 
 export const UserDetailsOverview: React.FC<{
-  participant: SweepstakesParticipantSchema;
+  participant: SweepstakesParticipantSchema_old;
   user: UserSchema;
   slug: string;
 }> = ({ participant, user, slug }) => {

@@ -3,7 +3,7 @@
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@/lib/task/queries';
-import { sweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { sweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
 import {
   toUserParticipationSchema,
   USER_PARTICIPATION_INCLUDE_QUERY
@@ -21,7 +21,7 @@ const getParticipatingUser = procedure()
       userId: z.string()
     })
   )
-  .output(sweepstakesParticipantSchema)
+  .output(sweepstakesParticipantSchema_old)
   .handler(async ({ db, input, user }) => {
     const query = {
       ...input,

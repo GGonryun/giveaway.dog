@@ -60,6 +60,18 @@ export const PublishConfirmationModal: React.FC<
     [isSaving, isPublishing]
   );
 
+  const formattedStartDate = useMemo(() => {
+    if (!startDate) return 'immediately';
+
+    const now = new Date();
+
+    if (startDate <= now) {
+      return 'immediately';
+    }
+
+    return formatDistance(startDate, Date.now(), { addSuffix: true });
+  }, [startDate]);
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px]">
@@ -72,7 +84,7 @@ export const PublishConfirmationModal: React.FC<
           <DialogDescription className="text-left">
             Your sweepstakes "{name}" will be{' '}
             {isDraft
-              ? `published and go live ${formatDistance(startDate, Date.now(), { addSuffix: true })}`
+              ? `published and go live ${formattedStartDate}`
               : 'updated and changes will go live immediately'}
             !
           </DialogDescription>

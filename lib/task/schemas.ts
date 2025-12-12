@@ -2,6 +2,8 @@ import z from 'zod';
 
 import { CompletionStatus, Task } from '@prisma/client';
 import {
+  xProfileRefineError,
+  xProfileRefineUrl,
   xStatusRefineError,
   xStatusRefineUrl
 } from '@/lib/integrations/schemas/twitter';
@@ -138,10 +140,7 @@ export const twitterFollowTaskSchema = baseTaskSchema.extend({
   username: z
     .string()
     .url('Profile URL is required')
-    .refine((val) => {
-      const urlPattern = /^https?:\/\/(www\.)?x\.com\/[A-Za-z0-9_]{1,15}$/;
-      return urlPattern.test(val);
-    }, 'Unexpected URL, should be like https://x.com/username')
+    .refine(xProfileRefineUrl, xProfileRefineError)
 });
 
 export type TwitterFollowTaskSchema = z.infer<typeof twitterFollowTaskSchema>;

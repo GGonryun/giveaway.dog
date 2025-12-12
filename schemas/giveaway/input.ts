@@ -3,6 +3,7 @@ import * as dates from 'date-fns';
 import {
   FormSweepstakesGetPayload,
   SweepstakesInputDesignBackgroundSchema,
+  SweepstakesInputFormFieldSchema,
   SweepstakesInputSchema,
   SweepstakesInputTaskSchema
 } from './db';
@@ -17,6 +18,7 @@ import {
 import { parseUserSourceSchema } from '@/lib/user-source/schemas';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
 import { parseAspectRatio } from '@/lib/aspect-ratio/data';
+import { Prisma } from '@prisma/client';
 
 const toSetup = (
   data: FormSweepstakesGetPayload['details']
@@ -51,23 +53,32 @@ const toAudienceInput = (
 ): SweepstakesInputSchema['audience'] => {
   return {
     allowedIdentities: data?.allowedIdentities || DEFAULT_ALLOWED_IDENTITIES,
-    requireEmail: data?.requireEmail || false,
     regionalRestriction: data?.regionalRestriction
       ? {
           regions: data?.regionalRestriction?.regions ?? [],
           filter: data?.regionalRestriction?.filter ?? undefined
         }
       : undefined,
-    minimumAgeRestriction: data?.minimumAgeRestriction
-      ? {
-          value: data?.minimumAgeRestriction?.value ?? undefined,
-          label: data?.minimumAgeRestriction?.label ?? undefined,
-          required: data?.minimumAgeRestriction?.required ?? undefined,
-          format: data?.minimumAgeRestriction?.format ?? undefined
-        }
-      : undefined,
-    requirePreEntryLogin: data?.requirePreEntryLogin || false
+    requirePreEntryLogin: data?.requirePreEntryLogin || false,
+    formFields: toFormFieldsInput(data?.formFields ?? [])
   };
+};
+
+const toFormFieldsInput = (
+  data: Prisma.SweepstakesFormFieldGetPayload<{}>[]
+): SweepstakesInputFormFieldSchema[] => {
+  if (!data) return [];
+
+  return data.map((field) => ({
+    id: field.id ?? undefined,
+    label: field.label ?? undefined,
+    type: field.type ?? undefined,
+    required: field.required ?? false,
+    placeholder: field.placeholder ?? undefined,
+    minimum: field.minimum ?? undefined,
+    maximum: field.maximum ?? undefined,
+    index: field.index ?? undefined
+  }));
 };
 
 const toTimingInput = (

@@ -2,13 +2,12 @@
 
 import React from 'react';
 import { RegionalRestriction } from './regional-restriction';
-import { MinimumAgeRestriction } from './minimum-age-restriction';
-import { RequireEmail } from './require-email';
 import { SweepstakesVisibility } from './sweepstakes-visibility';
 
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { AllowedIdentities } from './allowed-identities';
 import { RequirePreEntryLogin } from './require-pre-entry-login';
+import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fields';
 
 export const Audience = () => {
   return (
@@ -25,10 +24,9 @@ export const Audience = () => {
         description="Require specific information from participants"
         className="border-t"
       >
-        {/* <div>TODO: Add name requirements</div> */}
-        <RequireEmail />
-        <MinimumAgeRestriction />
-        {/* <div>TODO: Add fields and add twitter handle field</div> */}
+        <CustomFormFields />
+        {/* <RequireEmail />
+        <MinimumAgeRestriction /> */}
       </UnifiedSectionHeader>
       <UnifiedSectionHeader
         label="Location"

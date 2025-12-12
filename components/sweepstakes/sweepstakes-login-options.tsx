@@ -3,7 +3,7 @@ import { useGiveawayParticipation } from './giveaway-participation-context';
 import { LoginOptions } from '../auth/login-options';
 
 export const SweepstakesLoginOptions: React.FC = () => {
-  const { userProfile, sweepstakes } = useGiveawayParticipation();
+  const { sweepstakes } = useGiveawayParticipation();
 
   const pathname = usePathname();
 

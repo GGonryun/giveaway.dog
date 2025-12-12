@@ -64,7 +64,7 @@ export const ActiveParticipation: React.FC = () => {
           ) : (
             <div className="text-center py-8">
               <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-              <h4 className="text-lg font-medium text-gray-600 mb-2">
+              <h4 className="text-lg font-medium text-muted-foreground mb-2">
                 No Entry Methods
               </h4>
               <p className="text-sm text-muted-foreground">
@@ -101,11 +101,10 @@ export const ActiveParticipation: React.FC = () => {
 const UserProgressSection: React.FC<{ className?: string }> = ({
   className
 }) => {
-  const { sweepstakes, userProfile, userParticipation } =
-    useGiveawayParticipation();
+  const { sweepstakes, participant } = useGiveawayParticipation();
 
   const userProgress = useMemo(() => {
-    if (!userParticipation)
+    if (!participant)
       return {
         completed: 0,
         total: sweepstakes.tasks.length,
@@ -113,20 +112,27 @@ const UserProgressSection: React.FC<{ className?: string }> = ({
         entries: 0
       };
 
-    const completed = sweepstakes.tasks.filter((t) =>
-      userParticipation.submissions.some(
-        (s) => s.taskId === t.id && s.status === 'COMPLETED'
+    const completed = sweepstakes.tasks.filter((task) =>
+      participant.completions.some(
+        (completion) =>
+          completion.task.id === task.id && completion.status === 'COMPLETED'
       )
     ).length;
     const total = sweepstakes.tasks.length;
     const percentage = total > 0 ? (completed / total) * 100 : 0;
 
-    return { completed, total, percentage, entries: userParticipation.entries };
-  }, [userParticipation, sweepstakes.tasks]);
+    return {
+      completed,
+      total,
+      percentage,
+      entries: participant.completions.length
+    };
+  }, [participant, sweepstakes.tasks]);
 
   const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
 
-  if (!userProfile && !hasTasks) return null;
+  if (!participant && !hasTasks) return null;
+
   return (
     <div className={cn('space-y-1', className)}>
       <div className="flex items-end justify-between">

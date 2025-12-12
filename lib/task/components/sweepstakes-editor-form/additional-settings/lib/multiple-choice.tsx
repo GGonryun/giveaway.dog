@@ -55,7 +55,10 @@ export const MultipleChoiceFormFields: React.FC = () => {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input {...field} placeholder={`Option ${optionIndex + 1}`} />
+                      <Input
+                        {...field}
+                        placeholder={`Option ${optionIndex + 1}`}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

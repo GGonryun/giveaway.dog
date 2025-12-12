@@ -1,7 +1,4 @@
-import {
-  TaskActionProps,
-  TaskContent
-} from '../../building-blocks';
+import { TaskActionProps, TaskContent } from '../../building-blocks';
 import { useState } from 'react';
 import { FacebookVisitPageTaskSchema } from '@/lib/task/schemas';
 import { ActionContainer } from './shared-container';

@@ -33,11 +33,11 @@ export const TaskAction: React.FC<{
   onCancel,
   error
 }) => {
-  const { userProfile, userHostRelationship, sweepstakes } =
+  const { participant, userHostRelationship, sweepstakes } =
     useGiveawayParticipation();
 
   const isConnected = doesUserHaveAllowedIdentity(
-    userProfile,
+    participant?.user,
     sweepstakes.audience.allowedIdentities
   );
 

@@ -2,17 +2,13 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import { toTaskSchema } from '@/lib/task/schemas';
-import {
-  userHostRelationshipSchema,
-  userParticipationSchema
-} from '@/schemas/giveaway/schemas';
+import { userHostRelationshipSchema } from '@/schemas/giveaway/schemas';
 
 import z from 'zod';
 
 export const getUserHostRelationship = procedure()
   .authorization({ required: false })
-  .input(z.object({ id: z.string() }))
+  .input(z.object({ sweepstakesId: z.string() }))
   .output(userHostRelationshipSchema.optional())
   .handler(async ({ db, user, input }) => {
     if (!user?.id) return undefined;
@@ -37,7 +33,10 @@ export const getUserHostRelationship = procedure()
             team: {
               sweepstakes: {
                 some: {
-                  OR: [{ id: input.id }, { visibility: { slug: input.id } }]
+                  OR: [
+                    { id: input.sweepstakesId },
+                    { visibility: { slug: input.sweepstakesId } }
+                  ]
                 }
               }
             }

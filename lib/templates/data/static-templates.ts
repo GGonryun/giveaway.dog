@@ -30,14 +30,8 @@ const BASIC_TEMPLATE: StaticTemplate = {
       }
     ],
     audience: {
-      requireEmail: true,
+      formFields: [],
       requirePreEntryLogin: false,
-      minimumAgeRestriction: {
-        value: 18,
-        label: 'You must be 18 years or older to participate',
-        required: true,
-        format: 'CHECKBOX'
-      },
       allowedIdentities: DEFAULT_ALLOWED_IDENTITIES
     },
     design: {
@@ -90,14 +84,8 @@ const TWITTER_TEMPLATE: StaticTemplate = {
       }
     ],
     audience: {
-      requireEmail: true,
+      formFields: [],
       requirePreEntryLogin: false,
-      minimumAgeRestriction: {
-        value: 18,
-        label: 'You must be 18 years or older to participate',
-        required: true,
-        format: 'CHECKBOX'
-      },
       allowedIdentities: DEFAULT_ALLOWED_IDENTITIES
     },
     design: {

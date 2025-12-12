@@ -1,13 +1,10 @@
 import { SweepstakesParticipationPage } from '@/components/sweepstakes-browse/sweepstakes-participation-page-content';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import { notFound } from 'next/navigation';
-import getUserSweepstakesParticipation from '@/procedures/browse/get-user-sweepstakes-participation';
-import findUser from '@/procedures/user/find-user';
-import getAgeVerification from '@/procedures/browse/get-age-verification';
-import { computeState } from '@/lib/sweepstakes';
 import { Metadata } from 'next';
 import { date } from '@/lib/date';
 import { getUserHostRelationship } from '@/procedures/browse/get-user-host-relationship';
+import { getOrCreateSweepstakesParticipant } from '@/procedures/browse/get-sweepstake-participant';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -65,19 +62,14 @@ export async function generateMetadata({
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
 
-  const result = await getParticipantSweepstake({ sweepstakesId: id });
-  const user = await findUser({ self: true });
-  const participation = await getUserSweepstakesParticipation({ id });
-  const relationship = await getUserHostRelationship({ id });
-  const verification = await getAgeVerification({ sweepstakesId: id });
+  const options = { sweepstakesId: id };
 
-  if (!result.ok) {
-    console.warn('Sweepstake not found:', result.data.message);
-    notFound();
-  }
+  const sweepstakes = await getParticipantSweepstake(options);
+  const participant = await getOrCreateSweepstakesParticipant(options);
+  const relationship = await getUserHostRelationship(options);
 
-  if (!user.ok) {
-    console.warn('User not found:', user.data?.message);
+  if (!sweepstakes.ok) {
+    console.warn('Sweepstake not found:', sweepstakes.data.message);
     notFound();
   }
 
@@ -86,33 +78,16 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
-  if (!participation.ok) {
-    console.warn('Participation fetch error:', participation.data?.message);
+  if (!participant.ok) {
+    console.warn('Participant fetch error:', participant.data?.message);
     notFound();
   }
-
-  if (!verification.ok) {
-    console.warn('Age verification fetch error:', verification.data?.message);
-    notFound();
-  }
-
-  const userProfile = user.data ?? undefined;
-  const sweepstakes = result.data.sweepstakes;
-  const prizes = result.data.prizes;
-  const ageVerification = verification.data ?? null;
 
   return (
     <SweepstakesParticipationPage
-      {...result.data}
-      state={computeState({
-        sweepstakes,
-        prizes,
-        userProfile,
-        ageVerification
-      })}
-      userProfile={userProfile}
-      userHostRelationship={relationship.data}
-      userParticipation={participation.data}
+      {...sweepstakes.data}
+      participant={participant.data}
+      relationship={relationship.data}
     />
   );
 }

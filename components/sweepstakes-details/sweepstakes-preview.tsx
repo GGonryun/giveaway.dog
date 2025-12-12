@@ -14,11 +14,12 @@ import {
   mockParticipation,
   mockUserProfile,
   mockUserParticipation,
-  mockAgeVerification,
   mockUserHostRelationship,
   onFakeLogin,
   onFakeTaskComplete,
-  onFakeCompleteProfile
+  onFakeCompleteProfile,
+  onFakeFormSubmit,
+  mockParticipant
 } from '../sweepstakes-editor/data/mocks';
 import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
@@ -26,7 +27,7 @@ import { useBrowseSweepstakesPage } from '../sweepstakes/use-browse-sweepstakes-
 import { useSweepstakesDetailsPage } from '../sweepstakes/use-sweepstakes-details-page';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
-import { computeState } from '@/lib/sweepstakes';
+import { toSweepstakesState } from '@/lib/sweepstakes';
 import { toBackgroundStyle } from '@/schemas/color';
 import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
 import { useProcedure } from '@/lib/mrpc/hook';
@@ -128,11 +129,10 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
     }
   }, [isMobile]);
 
-  const state = computeState({
+  const state = toSweepstakesState({
     sweepstakes,
     prizes: winners,
-    userProfile: mockUserProfile,
-    ageVerification: mockAgeVerification
+    participant: mockParticipant
   });
 
   const bg = useMemo(
@@ -171,13 +171,13 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                 host={host}
                 participation={mockParticipation}
                 prizes={winners}
-                userProfile={mockUserProfile}
-                userParticipation={mockUserParticipation}
+                participant={mockParticipant}
                 userHostRelationship={mockUserHostRelationship}
                 state={state}
                 onTaskComplete={onFakeTaskComplete}
                 onLogin={onFakeLogin}
                 onCompleteProfile={onFakeCompleteProfile}
+                onFormSubmit={onFakeFormSubmit}
                 verifyEmail={false}
               />
             </>

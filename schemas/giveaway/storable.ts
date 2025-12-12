@@ -4,6 +4,7 @@ import {
   SweepstakesTermsType
 } from '@prisma/client';
 import {
+  SweepstakesInputFormFieldSchema,
   SweepstakesInputSchema,
   SweepstakesInputTaskSchema,
   TeamSweepstakesGetPayload
@@ -88,7 +89,6 @@ const toStorableAudience = (
       allowedIdentities:
         audience.allowedIdentities || DEFAULT_ALLOWED_IDENTITIES,
       requirePreEntryLogin: audience.requirePreEntryLogin || false,
-      requireEmail: audience.requireEmail,
       regionalRestriction: audience.regionalRestriction
         ? {
             create: {
@@ -97,18 +97,73 @@ const toStorableAudience = (
             }
           }
         : undefined,
-      minimumAgeRestriction: audience.minimumAgeRestriction
+      formFields: audience.formFields
         ? {
-            create: {
-              value: audience.minimumAgeRestriction?.value,
-              label: audience.minimumAgeRestriction?.label,
-              required: audience.minimumAgeRestriction?.required,
-              format: audience.minimumAgeRestriction?.format
+            createMany: {
+              data: audience.formFields.map(toStorableFormField)
             }
           }
         : undefined
     }
   };
+};
+
+const toStorableFormField = (
+  field: SweepstakesInputFormFieldSchema,
+  index: number
+): Prisma.SweepstakesFormFieldUncheckedCreateWithoutAudienceInput => {
+  if (!field.type) {
+    return {
+      id: field.id,
+      label: field.label,
+      type: field.type,
+      required: undefined,
+      index,
+      placeholder: undefined,
+      minimum: undefined,
+      maximum: undefined
+    };
+  }
+  switch (field.type) {
+    case 'USERNAME':
+      return {
+        id: field.id,
+        label: field.label,
+        type: field.type,
+        required: field.required || false,
+        placeholder: field.placeholder,
+        index
+      };
+    case 'EMAIL':
+      return {
+        id: field.id,
+        label: field.label,
+        type: field.type,
+        placeholder: field.placeholder,
+        index
+      };
+    case 'AGE':
+      return {
+        id: field.id,
+        label: field.label,
+        type: field.type,
+        required: field.required || false,
+        minimum: field.minimum,
+        maximum: field.maximum,
+        index
+      };
+    case 'TWITTER':
+      return {
+        id: field.id,
+        label: field.label,
+        type: field.type,
+        required: field.required || false,
+        placeholder: field.placeholder,
+        index
+      };
+    default:
+      return assertNever(field.type);
+  }
 };
 
 const toStorablePrizes = (

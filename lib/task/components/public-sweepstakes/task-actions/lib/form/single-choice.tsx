@@ -35,7 +35,11 @@ export const SingleChoiceTaskActionForm: React.FC<
         <Typography.Paragraph className="font-semibold mb-4">
           {task.question}
         </Typography.Paragraph>
-        <RadioGroup value={choice} onValueChange={setChoice} disabled={isLoading}>
+        <RadioGroup
+          value={choice}
+          onValueChange={setChoice}
+          disabled={isLoading}
+        >
           {task.options.map((option, index) => (
             <div key={index} className="flex items-center space-x-2">
               <RadioGroupItem value={option} id={`option-${index}`} />

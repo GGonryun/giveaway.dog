@@ -12,3 +12,16 @@ export namespace widetype {
     return Object.keys(obj) as (keyof T)[];
   };
 }
+
+export const isDefined =
+  <T extends object, P extends keyof T>(property: P) =>
+  (
+    value: T | null | undefined
+  ): value is T & { [K in P]-?: NonNullable<T[K]> } => {
+    return (
+      value !== null &&
+      value !== undefined &&
+      value[property] !== null &&
+      value[property] !== undefined
+    );
+  };

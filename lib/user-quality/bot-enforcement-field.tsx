@@ -46,7 +46,11 @@ export const BotEnforcementField: React.FC<BotEnforcementFieldProps> = ({
         className="grid grid-cols-4 gap-2 w-full"
       >
         {VALID_ENFORCEMENT_VALUES.map((level) => (
-          <ToggleGroupItem key={level} value={level.toString()} className="flex-1">
+          <ToggleGroupItem
+            key={level}
+            value={level.toString()}
+            className="flex-1"
+          >
             {ENFORCEMENT_LEVELS[level].label}
           </ToggleGroupItem>
         ))}

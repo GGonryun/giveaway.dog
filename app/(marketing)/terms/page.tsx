@@ -98,52 +98,55 @@ export default function TermsPage() {
         <Typography.Paragraph className="mb-6">
           <strong>Public Giveaways:</strong> We do not permit public giveaways
           that promote, feature, or are associated with mature or explicit
-          content. This includes, but is not limited to: adult-oriented material,
-          sexually explicit content, graphic violence, excessive profanity, drug
-          or alcohol-related promotions targeted at minors, gambling or
-          casino-related content, or any other material deemed inappropriate for
-          users under 18 years of age. Public giveaways must be suitable for all
-          audiences and comply with applicable content rating standards.
+          content. This includes, but is not limited to: adult-oriented
+          material, sexually explicit content, graphic violence, excessive
+          profanity, drug or alcohol-related promotions targeted at minors,
+          gambling or casino-related content, or any other material deemed
+          inappropriate for users under 18 years of age. Public giveaways must
+          be suitable for all audiences and comply with applicable content
+          rating standards.
         </Typography.Paragraph>
         <Typography.Paragraph className="mb-6">
           <strong>Private Giveaways with Mature Content:</strong> Giveaways
           containing mature or explicit content may only be run as private
           giveaways and must be clearly marked with a &quot;mature&quot; content
-          filter. When creating such giveaways, hosts are required to: (a) enable
-          the mature content designation, (b) ensure the giveaway is set to
-          private visibility only, (c) provide accurate age-gating mechanisms, and
-          (d) include clear warnings about the nature of the content. This policy
-          extends to all aspects of the giveaway, including prizes, promotional
-          materials, and any required actions for entry. If a required action for
-          entry involves viewing, sharing, or interacting with content that is
-          rated 18+ or contains mature themes, the entire giveaway must be
-          designated as mature content and restricted to private visibility.
+          filter. When creating such giveaways, hosts are required to: (a)
+          enable the mature content designation, (b) ensure the giveaway is set
+          to private visibility only, (c) provide accurate age-gating
+          mechanisms, and (d) include clear warnings about the nature of the
+          content. This policy extends to all aspects of the giveaway, including
+          prizes, promotional materials, and any required actions for entry. If
+          a required action for entry involves viewing, sharing, or interacting
+          with content that is rated 18+ or contains mature themes, the entire
+          giveaway must be designated as mature content and restricted to
+          private visibility.
         </Typography.Paragraph>
         <Typography.Paragraph className="mb-6">
           By enabling the mature content filter, giveaway hosts acknowledge that
           their giveaway contains material that is not suitable for minors and
           agree to implement safeguards to prevent underage participation. The
-          mature filter automatically restricts access to users who have verified
-          they are 18 years of age or older. Circumventing or attempting to bypass
-          these age restrictions is strictly prohibited and may result in
-          immediate account termination.
+          mature filter automatically restricts access to users who have
+          verified they are 18 years of age or older. Circumventing or
+          attempting to bypass these age restrictions is strictly prohibited and
+          may result in immediate account termination.
         </Typography.Paragraph>
         <Typography.Paragraph className="mb-6">
           Giveaway.dog reserves the right to review any giveaway flagged as
           potentially containing mature content and may require hosts to enable
           the mature filter or remove content that violates this policy. Failure
-          to properly designate mature content, attempting to run public giveaways
-          with mature themes, or knowingly allowing underage access to
+          to properly designate mature content, attempting to run public
+          giveaways with mature themes, or knowingly allowing underage access to
           age-restricted giveaways will result in: removal of the giveaway,
           suspension or permanent termination of your account, forfeiture of any
           unused giveaway credits, and potential reporting to appropriate
           authorities if illegal content is involved.
         </Typography.Paragraph>
         <Typography.Paragraph className="mb-6">
-          Users who encounter giveaways that appear to violate our mature content
-          policy should report them immediately through our reporting system. We
-          take all reports seriously and will investigate promptly to ensure
-          compliance with this policy and applicable laws protecting minors.
+          Users who encounter giveaways that appear to violate our mature
+          content policy should report them immediately through our reporting
+          system. We take all reports seriously and will investigate promptly to
+          ensure compliance with this policy and applicable laws protecting
+          minors.
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">

@@ -11,10 +11,10 @@ import {
   CircleCheckIcon
 } from 'lucide-react';
 import { datetime } from '@/lib/date';
-import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
 
 export const ProfileInformationCard: React.FC<{
-  participant: SweepstakesParticipantSchema;
+  participant: SweepstakesParticipantSchema_old;
   providers: React.ReactNode;
 }> = ({ participant, providers }) => {
   return (

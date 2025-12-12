@@ -34,13 +34,13 @@ import { SearchBar } from '../../../../../../components/users/search-bar';
 import { useTeams } from '@/components/context/team-provider';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { UserDetailSheet } from '@/components/sweepstakes-details/user-detail-sheet';
-import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 import { datetime } from '@/lib/date';
 import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
 
 interface UsersTableProps {
-  users: SweepstakesParticipantSchema[];
+  users: SweepstakesParticipantSchema_old[];
 }
 
 export const UsersTable: React.FC<UsersTableProps> = ({
@@ -51,7 +51,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   const searchParams = useSearchParams();
 
   const [selectedUser, setSelectedUser] =
-    useState<SweepstakesParticipantSchema | null>(null);
+    useState<SweepstakesParticipantSchema_old | null>(null);
   const [showUserSheet, setShowUserSheet] = useState(false);
 
   const [search, setSearch] = useState(searchParams.get('search') || '');

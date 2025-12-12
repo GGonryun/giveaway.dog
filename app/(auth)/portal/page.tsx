@@ -1,5 +1,4 @@
-import { Suspense } from 'react';
-import { AnonymousRedirectCard, AuthPortal, PortalLayout } from './auth-portal';
+import { AuthPortal, PortalLayout } from './auth-portal';
 import { notFound, redirect } from 'next/navigation';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import trackUser from '@/procedures/user/track-user';
@@ -39,10 +38,6 @@ const PortalPage: React.FC<{
     revalidate,
     provider
   } = await searchParams;
-
-  if (provider === 'anonymous') {
-    return <AnonymousRedirectCard redirectTo={redirectTo} />;
-  }
 
   // If token and email are provided, this is an email verification request
   if (token && email) {

@@ -2,15 +2,16 @@ import { DeepNullable } from '@/lib/types';
 import { ParticipantSweepstakesGetPayload } from './db';
 import { GiveawayPrizeSchema } from './schemas';
 import z from 'zod';
-import { toUserSchema } from '../user';
+import { toUserSchema, USER_SCHEMA_SELECT_QUERY, userSchema } from '../user';
 import { toTaskInput } from './input';
 import { CompletionStatus, Prisma, TaskType, UserSource } from '@prisma/client';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError, assertNever } from '@/lib/errors';
 import { taskSchema } from '@/lib/task/schemas';
 import { providerSchema } from '@/lib/integrations/schemas/providers';
 import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 import { parseSocialLinks } from '../social-links';
 import { DetailedUserTeam } from '../teams';
+import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 
 export const taskCompletionSchema = z.object({
   completionId: z.string(),
@@ -33,7 +34,7 @@ export const userStatusSchema = z.enum(['active', 'blocked']);
 
 export type UserStatusSchema = z.infer<typeof userStatusSchema>;
 
-export const sweepstakesParticipantSchema = z.object({
+export const sweepstakesParticipantSchema_old = z.object({
   id: z.string(),
   createdAt: z.date(),
   name: z.string().nullable(),
@@ -50,8 +51,8 @@ export const sweepstakesParticipantSchema = z.object({
   providers: providerSchema.array()
 });
 
-export type SweepstakesParticipantSchema = z.infer<
-  typeof sweepstakesParticipantSchema
+export type SweepstakesParticipantSchema_old = z.infer<
+  typeof sweepstakesParticipantSchema_old
 >;
 
 export const toSweepstakesPrizes = (
@@ -102,4 +103,143 @@ export const toSweepstakesHost = (
     logo: team.logo || DEFAULT_TEAM_LOGO,
     links: parseSocialLinks(team.links)
   };
+};
+
+export const sweepstakesParticipantSchema = z.object({
+  id: z.string(),
+  user: userSchema,
+  completions: z
+    .object({
+      id: z.string(),
+      task: taskSchema,
+      status: z.nativeEnum(CompletionStatus)
+    })
+    .array(),
+  formValues: z.record(z.string(), z.any())
+});
+
+export type SweepstakesParticipantSchema = z.infer<
+  typeof sweepstakesParticipantSchema
+>;
+
+export const PARTICIPANT_TASK_COMPLETIONS_SELECT_QUERY = {
+  id: true,
+  task: true,
+  status: true
+} satisfies Prisma.TaskCompletionSelect;
+
+export const toParticipantTaskCompletions = (
+  completions: Prisma.TaskCompletionGetPayload<{
+    select: typeof PARTICIPANT_TASK_COMPLETIONS_SELECT_QUERY;
+  }>[]
+) =>
+  completions.map((tc) => ({
+    id: tc.id,
+    task: taskSchema.parse(toTaskInput(tc.task)),
+    status: tc.status
+  }));
+
+export const toParticipantFormValues = (
+  formValues: Prisma.SweepstakesFormValueGetPayload<{}>[]
+) =>
+  formValues.reduce<Record<string, any>>((acc, curr) => {
+    acc[curr.fieldId] = curr.value;
+    return acc;
+  }, {});
+
+export const SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY = {
+  user: {
+    select: USER_SCHEMA_SELECT_QUERY
+  },
+  taskCompletions: {
+    select: PARTICIPANT_TASK_COMPLETIONS_SELECT_QUERY
+  },
+  formValues: true
+} satisfies Prisma.SweepstakesParticipantInclude;
+
+export const participantFormSchema = z
+  .object({
+    id: z.string(),
+    label: z.string(),
+    value: z.any().nullable(),
+    isCustom: z.boolean() // this indicates if the value is a reference to user data
+  })
+  .array();
+
+export type ParticipantFormSchema = z.infer<typeof participantFormSchema>;
+
+export const toParticipantForm = (
+  formFields: SweepstakesFormFieldSchema[],
+  participant?: SweepstakesParticipantSchema
+): ParticipantFormSchema =>
+  formFields.map((field) => ({
+    id: field.id,
+    label: field.label,
+    ...toFieldValue(field, participant)
+  }));
+
+const toFieldValue = (
+  field: SweepstakesFormFieldSchema,
+  participant?: SweepstakesParticipantSchema
+) => {
+  const value = participant?.formValues[field.id] || null;
+  switch (field.type) {
+    case 'AGE':
+      return { value, isCustom: true };
+
+    case 'USERNAME':
+      if (participant?.user.name) {
+        return { value: participant.user.name, isCustom: false };
+      }
+
+      return { value, isCustom: false };
+
+    case 'EMAIL':
+      if (!!participant?.user.email) {
+        return { value: participant.user.email, isCustom: false };
+      }
+
+      return { value, isCustom: true };
+
+    case 'TWITTER':
+      const link = participant?.user.providers?.find(
+        (provider) => provider.type === 'TWITTER'
+      )?.link;
+
+      if (link) {
+        return { value: link, isCustom: false };
+      }
+
+      return { value, isCustom: true };
+    default:
+      throw assertNever(field);
+  }
+};
+
+export const isProfileIncomplete = (
+  formFields: SweepstakesFormFieldSchema[],
+  participant?: SweepstakesParticipantSchema
+) => {
+  const profile = toParticipantForm(formFields, participant);
+  const required = formFields.filter(isRequired);
+
+  return required.some((field) => {
+    const profileField = profile.find((pf) => pf.id === field.id);
+    return (
+      !profileField || profileField.value === null || profileField.value === ''
+    );
+  });
+};
+
+const isRequired = (field: SweepstakesFormFieldSchema) => {
+  switch (field.type) {
+    case 'USERNAME':
+    case 'TWITTER':
+    case 'AGE':
+      return field.required;
+    case 'EMAIL':
+      return true;
+    default:
+      throw assertNever(field);
+  }
 };

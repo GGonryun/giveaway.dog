@@ -187,7 +187,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
               return (
                 <TableRow
                   key={item.id}
-                  className="group hover:bg-muted/50 cursor-pointer"
+                  className="group hover:bg-muted/50 cursor-pointer p-0 m-0"
                 >
                   <Clickable href={rowRoute(item)} className="min-w-[256px]">
                     <div className="flex items-center space-x-2">
@@ -327,8 +327,8 @@ const Clickable: React.PC<{ className?: string; href: string }> = ({
   href,
   children
 }) => (
-  <TableCell className={cn('p-0 m-0 min-h-12 h-12', className)}>
-    <Link href={href} className={cn('block w-full min-h-12 px-4 py-4')}>
+  <TableCell className={cn('p-0 m-0 min-h-8 h-8', className)}>
+    <Link href={href} className={cn('block w-full min-h-8 px-4 py-2')}>
       {children}
     </Link>
   </TableCell>

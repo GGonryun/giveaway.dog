@@ -238,25 +238,6 @@ const RevalidateSessionCard = () => {
   );
 };
 
-export const AnonymousRedirectCard = ({
-  redirectTo
-}: {
-  redirectTo?: string;
-}) => {
-  const router = useRouter();
-
-  useEffect(() => {
-    const redirect = getUserAuthRedirect({ redirectTo });
-    router.push(redirect);
-  }, [redirectTo, router]);
-
-  return (
-    <PortalLayout>
-      <RevalidateSessionCard />
-    </PortalLayout>
-  );
-};
-
 export const PortalLayout: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {

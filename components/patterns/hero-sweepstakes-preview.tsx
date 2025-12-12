@@ -1,51 +1,27 @@
 'use client';
 
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
-import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
-import { computeState } from '@/lib/sweepstakes';
+import { toSweepstakesState } from '@/lib/sweepstakes';
 import {
+  mockHost,
+  mockParticipant,
+  mockParticipation,
+  mockPrizes,
+  mockSweepstakes,
   mockUserHostRelationship,
   mockUserParticipation,
   mockUserProfile,
   onFakeCompleteProfile,
+  onFakeFormSubmit,
   onFakeLogin,
   onFakeTaskComplete
 } from '../sweepstakes-editor/data/mocks';
 
 export const HeroSweepstakesPreview: React.FC = () => {
-  const mockSweepstakes = {
-    id: 'preview-sweepstake',
-    status: 'RUNNING' as const,
-    ...SAMPLE_SWEEPSTAKES_DATA
-  };
-
-  const mockHost = {
-    slug: 'giveaway-dog',
-    name: 'Giveaway.dog',
-    links: []
-  };
-
-  const mockPrizes = SAMPLE_SWEEPSTAKES_DATA.prizes.map((p) => ({
-    prizeId: p.id,
-    prizeName: p.name,
-    quota: p.quota,
-    draws: []
-  }));
-
-  const mockParticipation = {
-    totalEntries: 1234,
-    usersByTask: {},
-    totalUsers: 567
-  };
-
-  const state = computeState({
+  const state = toSweepstakesState({
     sweepstakes: mockSweepstakes,
     prizes: mockPrizes,
-    userProfile: mockUserProfile,
-    ageVerification: {
-      userId: mockUserProfile.id,
-      sweepstakesId: mockSweepstakes.id
-    }
+    participant: mockParticipant
   });
 
   return (
@@ -55,13 +31,13 @@ export const HeroSweepstakesPreview: React.FC = () => {
       prizes={mockPrizes}
       participation={mockParticipation}
       state={state}
-      userProfile={mockUserProfile}
-      userParticipation={mockUserParticipation}
+      participant={mockParticipant}
       userHostRelationship={mockUserHostRelationship}
       hideBackground
       onCompleteProfile={onFakeCompleteProfile}
       onLogin={onFakeLogin}
       onTaskComplete={onFakeTaskComplete}
+      onFormSubmit={onFakeFormSubmit}
       verifyEmail={false}
     />
   );

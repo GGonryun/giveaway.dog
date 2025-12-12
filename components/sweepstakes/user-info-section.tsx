@@ -6,9 +6,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
 import { useLogout } from '@/lib/auth/hooks/use-logout';
+import { cn } from '@/lib/utils';
 
-export const UserInfoSection: React.FC = () => {
-  const { userProfile } = useGiveawayParticipation();
+export const UserInfoSection: React.FC<{ className?: string }> = ({
+  className
+}) => {
+  const { participant } = useGiveawayParticipation();
   const logout = useLogout();
   const pathname = usePathname();
 
@@ -20,17 +23,17 @@ export const UserInfoSection: React.FC = () => {
   }, [pathname]);
 
   return (
-    <div className="text-xs text-muted-foreground">
-      {userProfile ? (
+    <div className={cn('text-xs text-muted-foreground', className)}>
+      {participant ? (
         <div className="flex justify-between">
           <div className="flex items-center gap-1 flex-wrap">
             <span className="hidden sm:inline">Signed in as</span>
             <Link href="/account" className="font-semibold">
-              {userProfile.name}
+              {participant.user.name}
             </Link>
             <div className="flex items-center gap-1 ">
               {/* Social provider icons */}
-              {userProfile.providers?.map((provider) => (
+              {participant.user.providers?.map((provider) => (
                 <div
                   key={provider.type}
                   className="w-4 h-4 rounded bg-background border border-border flex items-center justify-center"
@@ -42,7 +45,7 @@ export const UserInfoSection: React.FC = () => {
                 </div>
               ))}
               {/* Email icon for verified email */}
-              {userProfile.email && userProfile.emailVerified && (
+              {participant.user.email && participant.user.emailVerified && (
                 <div className="w-4 h-4 rounded bg-background border border-border flex items-center justify-center">
                   <ProviderIcon
                     type="EMAIL"

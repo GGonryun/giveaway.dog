@@ -11,7 +11,7 @@ export type DeepNil<T> = T extends Date
   : T extends Array<infer U>
     ? Array<DeepNil<U>> | null | undefined
     : T extends object
-      ? { [K in keyof T]: DeepNil<T[K]> } | null | undefined
+      ? { [K in keyof T]?: DeepNil<T[K]> } | null | undefined
       : T | null | undefined;
 
 export type RequiredFields<T, K extends keyof T> = T extends any
@@ -31,3 +31,13 @@ export type Nullable<T> = {
 };
 
 export type Nil<T> = T | null | undefined;
+
+// Expand a union into a union of fully-expanded objects
+export type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+
+// Convert a union into a flat object with all keys optional
+type UnionKeys<T> = T extends T ? keyof T : never;
+
+export type FlatUnion<T> = {
+  [K in UnionKeys<T>]?: T extends { [P in K]?: infer V } ? V : never;
+};

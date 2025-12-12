@@ -1,24 +1,37 @@
+import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
 import { PROVIDER_REQUIRED_SCOPES } from '@/lib/integrations/schemas/providers';
+import { TWITTER_PROFILE_URL } from '@/lib/settings';
+import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 import {
   GiveawayParticipationSchema,
   UserParticipationSchema,
   GiveawayPrizeSchema,
-  UserHostRelationshipSchema
+  UserHostRelationshipSchema,
+  GiveawayHostSchema
 } from '@/schemas/giveaway/schemas';
-import { AgeVerificationSchema, UserProfileSchema } from '@/schemas/user';
+import { UserSchema } from '@/schemas/user';
 import { IdentityProvider } from '@prisma/client';
 import { toast } from 'sonner';
 
-export const mockHost = {
-  id: 'preview-host-id',
-  slug: 'preview-host',
-  name: 'Preview Host',
-  avatar: '🐶',
-  links: []
+export const mockHost: GiveawayHostSchema = {
+  id: 'giveaway-dog-id',
+  slug: 'giveaway-dog',
+  name: 'Giveaway Dog',
+  logo: '/taki.png',
+  links: [
+    {
+      platform: 'twitter',
+      url: TWITTER_PROFILE_URL
+    },
+    {
+      platform: 'discord',
+      url: 'https://discord.gg/giveawaydog'
+    }
+  ]
 };
 
 // Mock user data for preview
-export const mockUserProfile: UserProfileSchema = {
+export const mockUserProfile: UserSchema = {
   id: 'preview-user',
   name: 'Preview User',
   email: 'user@example.com',
@@ -27,6 +40,7 @@ export const mockUserProfile: UserProfileSchema = {
   countryCode: 'US',
   source: 'SIGNUP',
   qualityScore: 85,
+  isAnonymous: false,
   providers: [
     {
       type: IdentityProvider.TWITTER,
@@ -61,11 +75,6 @@ export const mockUserProfile: UserProfileSchema = {
   ]
 };
 
-export const mockAgeVerification: AgeVerificationSchema = {
-  userId: mockUserProfile.id,
-  sweepstakesId: 'preview-sweepstake'
-};
-
 export const mockParticipation: GiveawayParticipationSchema = {
   totalEntries: 1247,
   usersByTask: {},
@@ -77,11 +86,31 @@ export const mockUserParticipation: UserParticipationSchema = {
   submissions: [] // First task completed for demo
 };
 
+export const mockParticipant: SweepstakesParticipantSchema = {
+  id: 'preview-participant',
+  user: mockUserProfile,
+  completions: [],
+  formValues: []
+};
+
 export const mockUserHostRelationship: UserHostRelationshipSchema = {
   loyalty: 5
 };
 
 export const mockWinners: GiveawayPrizeSchema[] = [];
+
+export const mockSweepstakes = {
+  id: 'preview-sweepstake',
+  status: 'RUNNING' as const,
+  ...SAMPLE_SWEEPSTAKES_DATA
+};
+
+export const mockPrizes = SAMPLE_SWEEPSTAKES_DATA.prizes.map((p) => ({
+  prizeId: p.id,
+  prizeName: p.name,
+  quota: p.quota,
+  draws: []
+}));
 
 export const onFakeLogin = () => {
   toast.success('Login action triggered (not implemented in preview)');
@@ -99,4 +128,9 @@ export const onFakeCompleteProfile = () => {
   toast.success(
     'Complete profile action triggered (not implemented in preview)'
   );
+};
+
+export const onFakeFormSubmit = (_: unknown): Promise<unknown> => {
+  toast.success('Form submitted (not implemented in preview)');
+  return Promise.resolve();
 };

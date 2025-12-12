@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { ClockIcon, CalendarIcon, FileCheck } from 'lucide-react';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { TermsModal } from './terms-modal';
-import { DeviceType } from '@/schemas/giveaway/schemas';
+import { DeviceType, GiveawayState } from '@/schemas/giveaway/schemas';
 import { cn } from '@/lib/utils';
 import { date } from '@/lib/date';
 import { getSweepstakesTimingDescription } from './status-badge';
@@ -14,9 +14,25 @@ import { richTextPreviewStyles } from '@/lib/rich-text-styles';
 import { PLATFORM_ICONS } from '@/components/social-links/social-link-icon';
 import { parseSocialLinks, type SocialLink } from '@/schemas/social-links';
 
+const SWEEPSTAKE_PARTICIPATION_CARD_THEME: Record<GiveawayState, string> = {
+  'not-logged-in': '',
+  pending: '',
+  'profile-incomplete': 'bg-muted',
+  'not-eligible': '',
+  'winners-announced': '',
+  active: '',
+  canceled: '',
+  closed: '',
+  error: '',
+  'winners-pending': ''
+};
+
 export const GiveawayParticipationCard: React.PC<{
   device?: DeviceType;
 }> = ({ children, device }) => {
+  const { state } = useGiveawayParticipation();
+  const stateTheme = SWEEPSTAKE_PARTICIPATION_CARD_THEME[state];
+
   return (
     <Card className="relative gap-0 overflow-hidden w-full space-y-2 sm:space-y-4 px-0 pb-2 pt-4">
       <TimeRemainingSection device={device} />
@@ -24,9 +40,13 @@ export const GiveawayParticipationCard: React.PC<{
       <TitleSection />
       <DescriptionSection />
       <Separator className="mb-0" />
-      <CardContent className="py-3 m-0">{children}</CardContent>
-      <Separator />
-      <FooterSection />
+      <CardContent className={cn('p-3 m-0', stateTheme)}>
+        {children}
+      </CardContent>
+      <div className="space-y-2">
+        <Separator />
+        <FooterSection />
+      </div>
     </Card>
   );
 };

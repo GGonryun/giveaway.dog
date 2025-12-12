@@ -157,6 +157,14 @@ export const applySweepstakesChanges = async ({
       }
     });
 
+    const formValues = await tx.sweepstakesFormValue.findMany({
+      where: {
+        participant: {
+          sweepstakesId: sweepstakes.id
+        }
+      }
+    });
+
     // delete existing sweepstakes and all nested properties
 
     await tx.sweepstakes.delete({
@@ -165,10 +173,10 @@ export const applySweepstakesChanges = async ({
 
     const created = await tx.sweepstakes.create({
       data: toStorableSweepstakes(sweepstakes, input),
-      include: { tasks: true }
+      include: { tasks: true, audience: { include: { formFields: true } } }
     });
 
-    // restore retained data - must restore participants before task completions
+    // restore retained data - must restore participants before dependent records
     await tx.sweepstakesParticipant.createMany({
       data: participants.map((d) => ({ ...d }))
     });
@@ -184,6 +192,20 @@ export const applySweepstakesChanges = async ({
     await tx.taskCompletion.createMany({
       data: filtered.map((d) => ({ ...d, proof: d.proof ?? undefined }))
     });
+
+    // we only want to retain form values for fields that still exist
+    const formFieldIds = new Set(
+      created.audience?.formFields?.map((f) => f.id) ?? []
+    );
+    const filteredFormValues = formValues.filter((v) =>
+      formFieldIds.has(v.fieldId)
+    );
+
+    if (filteredFormValues.length > 0) {
+      await tx.sweepstakesFormValue.createMany({
+        data: filteredFormValues.map((d) => ({ ...d }))
+      });
+    }
   });
 
   return { sweepstakes, team };

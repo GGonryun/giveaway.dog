@@ -6,11 +6,10 @@ import {
 } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import z from 'zod';
-import { DEFAULT_MINIMUM_AGE } from './defaults';
 import { userProfileSchema } from '../user';
 import {
   taskCompletionSchema,
-  sweepstakesParticipantSchema
+  sweepstakesParticipantSchema_old
 } from './participant';
 import { derivedSweepstakesStatusSchema } from '../sweepstakes';
 import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@/lib/settings';
@@ -18,11 +17,10 @@ import { timingSchema } from '../timing';
 import { taskSchema, baseTaskSchema } from '@/lib/task/schemas';
 import { allowedUserSourcesSchema } from '@/lib/user-source/schemas';
 import { refineSweepstakeTasks } from '@/lib/task/validation/form';
-import {
-  providerSchema,
-  providerTypeSchema
-} from '@/lib/integrations/schemas/providers';
+import { providerTypeSchema } from '@/lib/integrations/schemas/providers';
 import { aspectRatioSchema } from '@/lib/aspect-ratio/data';
+import { sweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -153,10 +151,9 @@ const giveawayAudienceSchema = z.object({
   allowedIdentities: providerTypeSchema
     .array()
     .min(1, 'At least one allowed identity is required'),
-  requireEmail: z.boolean(),
   regionalRestriction: regionalRestrictionSchema,
-  minimumAgeRestriction: minimumAgeRestrictionSchema,
-  requirePreEntryLogin: z.boolean().optional().default(false)
+  requirePreEntryLogin: z.boolean().optional().default(false),
+  formFields: z.array(sweepstakesFormFieldSchema).default([])
 });
 
 export type GiveawayFormAudience = z.infer<typeof giveawayAudienceSchema>;
@@ -340,10 +337,8 @@ export type GiveawayState =
   | 'active' // Default participation view
   | 'pending' // Giveaway is not yet ready for participation
   | 'not-logged-in' // User needs to log in
-  | 'email-required' // User needs to set an email
-  | 'age-verification-required' // User needs to verify age for this sweepstakes
   | 'not-eligible' // User not eligible (age/region restrictions)
-  | 'profile-incomplete'
+  | 'profile-incomplete' // User needs to fill out some profile details
   | 'winners-announced' // Winners have been announced
   | 'winners-pending' // Winners are pending announcement
   | 'closed' // Giveaway is closed
@@ -353,8 +348,7 @@ export type GiveawayState =
 export const PREVIEW_GIVEAWAY_STATES: GiveawayState[] = [
   'active',
   'not-logged-in',
-  'email-required',
-  'age-verification-required',
+  'profile-incomplete',
   'not-eligible',
   'winners-announced'
 ];
@@ -368,10 +362,8 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
       return 'Pending';
     case 'not-logged-in':
       return 'Not Logged In';
-    case 'email-required':
-      return 'Email Required';
-    case 'age-verification-required':
-      return 'Age Verification Required';
+    case 'profile-incomplete':
+      return 'Profile Incomplete';
     case 'not-eligible':
       return 'Not Eligible';
     case 'winners-announced':
@@ -420,7 +412,7 @@ export const sweepstakesPrizeSchema = z.object({
       createdAt: z.date(),
       result: z.enum(['WINNER', 'DISQUALIFIED']),
       disqualificationReason: z.string().nullable(),
-      participant: sweepstakesParticipantSchema,
+      participant: sweepstakesParticipantSchema_old,
       taskCompletion: taskCompletionSchema
     })
     .array()

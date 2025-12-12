@@ -1,19 +1,19 @@
 import { timezone } from '@/lib/time';
 import {
-  MinimumAgeRestrictionFormat,
   Prisma,
+  SweepstakesFormFieldType,
   SweepstakesTermsType
 } from '@prisma/client';
 import * as dates from 'date-fns';
 import {
   GiveawayDesignSchema,
   GradientBackgroundSchema,
-  MinimumAgeRestrictionSchema,
   SolidColorBackgroundSchema
 } from './schemas';
 import { AllowedUserSourcesSchema } from '@/lib/user-source/schemas';
-
-export const DEFAULT_MINIMUM_AGE = 13;
+import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { AgeSweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
 
 export const DEFAULT_SWEEPSTAKES_NAME = 'Untitled Sweepstakes';
 export const DEFAULT_SWEEPSTAKES_PRIZE_NAME = 'My Custom Prize';
@@ -27,13 +27,6 @@ export const DEFAULT_SPONSOR_NAME = 'Giveaway Sponsor';
 export const DEFAULT_MIN_QUALITY_SCORE = 50;
 export const DEFAULT_MIN_TASK_COMPLETED = 1;
 export const DEFAULT_ALLOW_MULTIPLE_WINS = false;
-
-export const DEFAULT_MINIMUM_AGE_RESTRICTION: MinimumAgeRestrictionSchema = {
-  value: DEFAULT_MINIMUM_AGE,
-  format: MinimumAgeRestrictionFormat.CHECKBOX,
-  label: `I am at least ${DEFAULT_MINIMUM_AGE} years of age (required)`,
-  required: true
-};
 
 export const DEFAULT_ALLOWED_USER_SOURCES: AllowedUserSourcesSchema = [
   'TWITTER_IMPORT'
@@ -67,7 +60,24 @@ export const DEFAULT_SWEEPSTAKES_TERMS: Prisma.SweepstakesTermsUncheckedCreateWi
 
 export const DEFAULT_SWEEPSTAKES_AUDIENCE: Prisma.SweepstakesAudienceUncheckedCreateWithoutSweepstakesInput =
   {
-    requireEmail: true
+    allowedIdentities: DEFAULT_ALLOWED_IDENTITIES,
+    formFields: {
+      createMany: {
+        data: [
+          {
+            type: 'USERNAME',
+            label: 'Username',
+            required: true
+          },
+          {
+            label: 'Email',
+            type: 'EMAIL',
+            required: true
+          },
+          DEFAULT_MINIMUM_AGE_FIELD
+        ]
+      }
+    }
   };
 
 export const DEFAULT_SWEEPSTAKES_PRIZES: Prisma.PrizeCreateManySweepstakesInput[] =

@@ -14,17 +14,27 @@ export const TaskList: React.FC<{
   open: string | null;
   setOpen: (open: string | null) => void;
 }> = ({ open, setOpen }) => {
-  const { userParticipation, sweepstakes } = useGiveawayParticipation();
+  const { participant, sweepstakes } = useGiveawayParticipation();
 
   const [submissions, setSubmissions] = React.useState<
     UserTaskSubmissionSchema[]
-  >(userParticipation?.submissions ?? []);
+  >(
+    participant?.completions.map((completion) => ({
+      taskId: completion.task.id,
+      status: completion.status
+    })) ?? []
+  );
 
   useEffect(() => {
-    if (userParticipation) {
-      setSubmissions(userParticipation.submissions);
+    if (participant) {
+      setSubmissions(
+        participant.completions.map((completion) => ({
+          taskId: completion.task.id,
+          status: completion.status
+        }))
+      );
     }
-  }, [userParticipation]);
+  }, [participant]);
 
   const [mandatory, optional] = partition(
     sweepstakes.tasks,

@@ -148,7 +148,12 @@ export const MobileFormLayout: React.FC<FormLayoutProps> = ({
         <div className="bg-background flex-1 min-h-0 overflow-hidden relative top-0 z-10 flex flex-col">
           {mobileView === 'form' ? (
             <>
-              <div ref={scrollContainerRef} className="overflow-y-scroll flex-1">{form}</div>
+              <div
+                ref={scrollContainerRef}
+                className="overflow-y-scroll flex-1"
+              >
+                {form}
+              </div>
               <UnifiedFormFooter />
             </>
           ) : (

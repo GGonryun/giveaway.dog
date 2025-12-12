@@ -34,10 +34,7 @@ export const ProviderButtons: React.FC<ProviderButtonsProps> = ({
           className="w-full justify-center items-center relative"
           onClick={() => onSubmit(provider)}
         >
-          <ProviderIcon
-            type={provider}
-            className="absolute left-4 h-4 w-4"
-          />
+          <ProviderIcon type={provider} className="absolute left-4 h-4 w-4" />
           <span>
             {actionText} with {IDENTITY_PROVIDER_LABEL[provider]}
           </span>
