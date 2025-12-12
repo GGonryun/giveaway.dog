@@ -56,7 +56,7 @@ const timingSchema = ({
       })
     : z.string();
   const obj = z.object({
-    startDate: z.string(),
+    startDate: z.string().nullable().optional(),
     endDate,
     timeZone: z.string()
   });
@@ -71,15 +71,16 @@ const timingSchema = ({
         path: ['endDate']
       });
     }
-    // do not allow giveaways longer than 30 days
-    const maxEndDate = new Date(startDate);
-    maxEndDate.setDate(maxEndDate.getDate() + maxDurationDays);
-    if (new Date(endDate) > maxEndDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Duration cannot exceed ${maxDurationDays} days`,
-        path: ['endDate']
-      });
+    if (startDate) {
+      const maxEndDate = new Date(startDate);
+      maxEndDate.setDate(maxEndDate.getDate() + maxDurationDays);
+      if (new Date(endDate) > maxEndDate) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Duration cannot exceed ${maxDurationDays} days`,
+          path: ['endDate']
+        });
+      }
     }
   });
 };

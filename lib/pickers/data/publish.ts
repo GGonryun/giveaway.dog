@@ -53,9 +53,7 @@ export const publishPickerJobs = ({
     });
   }
 
-  const runAt = form.timing?.startDate
-    ? new Date(form.timing.startDate)
-    : new Date();
+  const runAt = toRunAt(form.timing);
 
   return {
     picker: {
@@ -73,7 +71,7 @@ export const publishPickerJobs = ({
             status: PickerJobStatus.QUEUED,
             runAt,
             data: toTwitterFetchRequest({
-              polling: form.timing ? true : false,
+              polling: isPolling(form.timing),
               tweetId: extractTweetId(form.setup.postUrl)
             })
           },
@@ -83,7 +81,7 @@ export const publishPickerJobs = ({
             status: PickerJobStatus.QUEUED,
             runAt,
             data: toTwitterFetchRequest({
-              polling: form.timing ? true : false,
+              polling: isPolling(form.timing),
               tweetId: extractTweetId(form.setup.postUrl)
             })
           },
@@ -91,9 +89,9 @@ export const publishPickerJobs = ({
             pickerId,
             type: PickerJobType.FETCH_TWITTER_GET_QUOTED_POSTS,
             status: PickerJobStatus.QUEUED,
-            runAt: new Date(),
+            runAt,
             data: toTwitterFetchRequest({
-              polling: form.timing ? true : false,
+              polling: isPolling(form.timing),
               tweetId: extractTweetId(form.setup.postUrl)
             })
           },
@@ -103,7 +101,7 @@ export const publishPickerJobs = ({
             status: PickerJobStatus.QUEUED,
             runAt,
             data: toTwitterFetchRequest({
-              polling: form.timing ? true : false,
+              polling: isPolling(form.timing),
               tweetId: extractTweetId(form.setup.postUrl)
             })
           }
@@ -111,4 +109,45 @@ export const publishPickerJobs = ({
       }
     }
   };
+};
+
+const isPolling = (timing: PublishPickerInputSchema['form']['timing']) => {
+  if (!timing) {
+    return false;
+  }
+
+  if (!timing.endDate || !timing.startDate) {
+    return false;
+  }
+
+  const now = new Date();
+  const endDate = timing.endDate ? new Date(timing.endDate) : null;
+
+  if (endDate && endDate.getTime() > now.getTime()) {
+    return true;
+  }
+
+  return false;
+};
+
+const toRunAt = (timing: PublishPickerInputSchema['form']['timing']): Date => {
+  const now = new Date();
+
+  if (!timing) {
+    return now;
+  }
+
+  if (!timing.startDate || !timing.endDate) {
+    return now;
+  }
+
+  if (!timing.startDate && timing.endDate) {
+    return new Date(timing.endDate);
+  }
+
+  if (timing.startDate && timing.endDate) {
+    return new Date(timing.startDate);
+  }
+
+  return now;
 };

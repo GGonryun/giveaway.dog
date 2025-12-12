@@ -181,7 +181,7 @@ export const TimingField = () => {
                 onClick={() => {
                   if (timing == null) {
                     field.onChange({
-                      startDate: datetime.daysFromNow(0).toISOString(),
+                      startDate: null,
                       endDate: datetime.daysFromNow(3).toISOString(),
                       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
                     });
@@ -203,12 +203,12 @@ export const TimingField = () => {
             name="timing.startDate"
             render={({ field }) => (
               <FormItem className="grow mt-2">
-                <FormLabel>Start Date</FormLabel>
+                <FormLabel>Start Date (Optional)</FormLabel>
                 <FormControl>
                   <DateTimePicker
                     hourCycle={12}
-                    onChange={(date) => field.onChange(date?.toISOString())}
-                    value={field.value ? new Date(field.value) : new Date()}
+                    onChange={(date) => field.onChange(date?.toISOString() ?? null)}
+                    value={field.value ? new Date(field.value) : undefined}
                   />
                 </FormControl>
                 <FormMessage />
