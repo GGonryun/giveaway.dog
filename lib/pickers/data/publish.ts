@@ -137,7 +137,7 @@ const toRunAt = (timing: PublishPickerInputSchema['form']['timing']): Date => {
     return now;
   }
 
-  if (!timing.startDate || !timing.endDate) {
+  if (!timing.startDate && !timing.endDate) {
     return now;
   }
 
