@@ -41,7 +41,7 @@ const validateEmailField = async (ctx: ValidationContext) => {
     if (!currentUserId) {
       throw new ApplicationError({
         code: 'INTERNAL_SERVER_ERROR',
-        message: 'Unable to verify your account ownership.'
+        message: 'An entry with this email already exists.'
       });
     }
 
@@ -112,7 +112,7 @@ const validateTwitterField = async (ctx: ValidationContext) => {
     if (!currentUserId) {
       throw new ApplicationError({
         code: 'INTERNAL_SERVER_ERROR',
-        message: 'Unable to verify your account ownership.'
+        message: 'An entry with this profile already exists.'
       });
     }
 
