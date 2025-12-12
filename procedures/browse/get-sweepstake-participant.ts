@@ -19,10 +19,24 @@ export const getOrCreateSweepstakesParticipant = procedure()
   .handler(async ({ db, user, input }) => {
     if (!user?.id) return undefined;
 
+    const sweepstakes = await db.sweepstakes.findFirst({
+      where: {
+        OR: [
+          { id: input.sweepstakesId },
+          { visibility: { slug: input.sweepstakesId } }
+        ]
+      },
+      select: { id: true }
+    });
+
+    if (!sweepstakes) {
+      return undefined;
+    }
+
     const participant = await findOrCreateParticipant({
       db,
       userId: user.id,
-      sweepstakesId: input.sweepstakesId
+      sweepstakesId: sweepstakes.id
     });
 
     return {
