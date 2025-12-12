@@ -135,6 +135,12 @@ export const applySweepstakesChanges = async ({
   // it. This works fine with smaller sets of data but we will need a more comprehensive
   // update method for massive giveaways with potentially hundreds of thousands of entries
   await db.$transaction(async (tx) => {
+    const participants = await tx.sweepstakesParticipant.findMany({
+      where: {
+        sweepstakesId: sweepstakes.id
+      }
+    });
+
     const completions = await tx.taskCompletion.findMany({
       where: {
         task: {
@@ -162,7 +168,11 @@ export const applySweepstakesChanges = async ({
       include: { tasks: true }
     });
 
-    // restore retained data
+    // restore retained data - must restore participants before task completions
+    await tx.sweepstakesParticipant.createMany({
+      data: participants.map((d) => ({ ...d }))
+    });
+
     await tx.ageVerification.createMany({
       data: ageVerifications.map((d) => ({ ...d }))
     });
