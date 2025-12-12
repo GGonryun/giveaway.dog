@@ -12,6 +12,7 @@ import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 import { parseSocialLinks } from '../social-links';
 import { DetailedUserTeam } from '../teams';
 import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import { size } from 'lodash';
 
 export const taskCompletionSchema = z.object({
   completionId: z.string(),
@@ -216,17 +217,26 @@ const toFieldValue = (
   }
 };
 
-export const isProfileIncomplete = (
+export const isProfileComplete = (
   formFields: SweepstakesFormFieldSchema[],
   participant?: SweepstakesParticipantSchema
 ) => {
+  if (
+    formFields.length > 0 &&
+    (!participant ||
+      !participant.formValues ||
+      size(participant.formValues) === 0)
+  ) {
+    return false;
+  }
+
   const profile = toParticipantForm(formFields, participant);
   const required = formFields.filter(isRequired);
 
-  return required.some((field) => {
+  return required.every((field) => {
     const profileField = profile.find((pf) => pf.id === field.id);
     return (
-      !profileField || profileField.value === null || profileField.value === ''
+      profileField && profileField.value !== null && profileField.value !== ''
     );
   });
 };

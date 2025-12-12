@@ -79,6 +79,11 @@ const validateTwitterField = async (ctx: ValidationContext) => {
   const { value, userAccounts, fieldId, participantId, sweepstakesId, db } =
     ctx;
 
+  // If the field isn't required and no value is provided, skip validation
+  if (!value || value.trim() === '') {
+    return;
+  }
+
   // Extract username from the submitted URL
   const submittedUsername = extractUsernameFromProfileUrl(value);
 

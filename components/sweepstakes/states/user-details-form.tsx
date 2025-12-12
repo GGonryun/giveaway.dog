@@ -67,14 +67,14 @@ const createFormSchema = (formFields: SweepstakesFormFieldSchema[]) => {
         break;
 
       case SweepstakesFormFieldType.TWITTER:
-        fieldSchema = z
-          .string()
-          .min(1, 'Twitter profile is required')
-          .url('Please enter a valid URL')
-          .refine(xProfileRefineUrl, xProfileRefineError);
-
-        if (!field.required) {
-          fieldSchema = fieldSchema.optional();
+        if (field.required) {
+          fieldSchema = z
+            .string()
+            .min(1, 'Twitter profile is required')
+            .url('Please enter a valid URL')
+            .refine(xProfileRefineUrl, xProfileRefineError);
+        } else {
+          fieldSchema = z.string().optional();
         }
         break;
 
@@ -313,7 +313,7 @@ export const UserDetailsForm = () => {
             type="button"
             onClick={form.handleSubmit(handleFormSubmit)}
             className="w-full mt-2"
-            disabled={!form.formState.isValid || submitting}
+            disabled={submitting}
           >
             {submitting ? 'Submitting...' : 'Continue to Sweepstakes'}{' '}
             <ArrowRight />
