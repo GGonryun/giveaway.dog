@@ -177,12 +177,12 @@ const toVisibilityInput = (
   if (!data)
     return {
       visibility: 'PRIVATE',
-      slug: undefined
+      slug: null
     };
 
   return {
     visibility: data.visibility ?? 'PRIVATE',
-    slug: data.slug ?? undefined
+    slug: data.slug ?? null
   };
 };
 
