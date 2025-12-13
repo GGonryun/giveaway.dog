@@ -6,7 +6,6 @@ import {
 import {
   SweepstakesInputFormFieldSchema,
   SweepstakesInputSchema,
-  SweepstakesInputTaskSchema,
   TeamSweepstakesGetPayload
 } from './db';
 import { compact } from 'lodash';

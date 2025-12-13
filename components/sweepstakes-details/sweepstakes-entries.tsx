@@ -19,8 +19,6 @@ import { Button } from '../ui/button';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { TASK_LABEL, UserEntriesSchema } from '@/lib/task/schemas';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
-import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
-import { UserSourceIcon } from '@/lib/user-source/components/user-source-icon';
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
 

@@ -1,5 +1,3 @@
-import { widetype } from '../widetype';
-
 export type ApplicationErrorCode =
   | 'BAD_REQUEST'
   | 'UNAUTHORIZED'

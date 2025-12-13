@@ -2,7 +2,6 @@ import { SweepstakesWinners } from '@/components/sweepstakes-details/sweepstakes
 import { SweepstakesWinnersSkeleton } from '@/components/sweepstakes-details/sweepstakes-winners-skeleton';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import getSweepstakePrizes from '@/procedures/sweepstakes/get-sweepstake-prizes';
-import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
 import getParticipatingUsers from '@/procedures/users/get-participating-users';
 import { Suspense } from 'react';
 
@@ -31,21 +30,12 @@ export default async function WinnersLayout({
 }
 
 const Wrapper: React.FC<Params> = async ({ id, slug }) => {
-  const teamFeatureFlags = await getTeamFeatureFlags({ slug });
   const result = await getParticipantSweepstake({ sweepstakesId: id });
   const prizes = await getSweepstakePrizes({ sweepstakesId: id, slug });
   const participants = await getParticipatingUsers({
     slug,
     sweepstakesId: id
   });
-
-  if (!teamFeatureFlags.ok) {
-    return (
-      <div>
-        Failed to load team feature flags: {teamFeatureFlags.data.message}
-      </div>
-    );
-  }
 
   if (!result.ok) {
     return <div>Failed to load sweepstakes winners: {result.data.message}</div>;
@@ -65,7 +55,6 @@ const Wrapper: React.FC<Params> = async ({ id, slug }) => {
       participants={participants.data.users}
       sweepstakesId={id}
       slug={slug}
-      teamFeatureFlags={teamFeatureFlags.data}
       status={result.data.sweepstakes.status}
       endDate={result.data.sweepstakes.timing.endDate}
       criteria={result.data.sweepstakes.criteria}

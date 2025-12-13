@@ -2,12 +2,7 @@ import { useArrayContext } from '@/components/hooks/use-array-context';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import React, { useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import {
-  FormAlertMessage,
-  FormField,
-  FormItem,
-  FormMessage
-} from '@/components/ui/form';
+import { FormAlertMessage, FormField, FormItem } from '@/components/ui/form';
 
 export const DateValidatorField: React.FC = () => {
   const index = useArrayContext();

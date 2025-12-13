@@ -48,23 +48,7 @@ import {
 import { PrizeDrawResult, UserSource } from '@prisma/client';
 import { DisqualificationDialog } from './disqualification-dialog';
 import { TASK_LABEL } from '@/lib/task/schemas';
-import {
-  USER_SOURCE_LABEL,
-  USER_SOURCE_DESCRIPTION,
-  USER_SOURCE_MANAGEABLE,
-  USER_SOURCE_COMING_SOON
-} from '@/lib/user-source/data';
-import { Checkbox } from '@/components/ui/checkbox';
-import { widetype } from '@/lib/widetype';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
-import { DEFAULT_ALLOWED_USER_SOURCES } from '@/schemas/giveaway/defaults';
-import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
-import { featureFlags } from '@/lib/feature-flags';
+import { USER_SOURCE_LABEL } from '@/lib/user-source/data';
 
 interface GroupedPrize {
   id: string;
@@ -358,13 +342,11 @@ type SweepstakesWinnersProps = {
   status: DerivedSweepstakeStatus;
   endDate: Date;
   criteria: SweepstakesWinnerCriteriaSchema;
-  teamFeatureFlags: TeamFeatureFlagKeySchema[];
 };
 
 export const SweepstakesWinners = ({
   prizes,
   participants,
-  teamFeatureFlags,
   sweepstakesId,
   slug,
   status,

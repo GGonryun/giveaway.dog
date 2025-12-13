@@ -6,7 +6,6 @@ import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
-import { usePreviewState } from '../../contexts/preview-state-context';
 
 export const RequirePreEntryLogin = () => {
   const form = useFormContext<GiveawayFormSchema>();

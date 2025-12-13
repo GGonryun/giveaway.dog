@@ -1,22 +1,11 @@
-import { Separator } from '@/components/ui/separator';
-import {
-  TaskActionProps,
-  TaskContent,
-  TaskControls
-} from '../../building-blocks';
+import { TaskActionProps, TaskContent } from '../../building-blocks';
 import { useState } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { useTaskTheme } from '../../../../theme';
 import { InstagramVisitTaskSchema } from '@/lib/task/schemas';
-import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
 import { ActionContainer } from './shared-container';
 
 export const InstagramVisitTaskActionForm: React.FC<
   TaskActionProps<InstagramVisitTaskSchema>
-> = ({ onCancel, onSubmit, task, isLoading }) => {
-  const { theme } = useTaskTheme();
+> = ({ onSubmit, task, isLoading }) => {
   const [visited, setVisited] = useState(false);
 
   const handleVisit = () => setVisited(true);

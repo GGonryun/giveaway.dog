@@ -17,11 +17,7 @@ import { toast } from 'sonner';
 import { EmailVerification } from '../auth/email-verification';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  updateUserProfileSchema,
-  UpdateUserProfile,
-  isAnonymousUser
-} from '@/schemas/user';
+import { updateUserProfileSchema, UpdateUserProfile } from '@/schemas/user';
 import { useRouter } from 'next/navigation';
 import { SocialProviders } from '@/lib/auth/components/social-providers';
 import { SettingsCard } from '../settings/settings-card';

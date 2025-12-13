@@ -41,7 +41,7 @@ export const authConfig = {
   },
   callbacks: {
     ...authConfigMiddleware.callbacks,
-    async signIn({ account, profile, user }) {
+    async signIn({ account, profile }) {
       console.info('signIn callback for provider:', account?.provider);
       if (profile && account?.provider && account?.providerAccountId) {
         // Check if this account already exists (imported user scenario)

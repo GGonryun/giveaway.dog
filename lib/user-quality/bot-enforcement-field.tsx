@@ -7,8 +7,7 @@ import {
   ENFORCEMENT_LEVELS,
   VALID_ENFORCEMENT_VALUES,
   clampToNearestEnforcementLevel,
-  getEnforcementLevel,
-  EnforcementLevel
+  getEnforcementLevel
 } from './enforcement-levels';
 
 interface BotEnforcementFieldProps {

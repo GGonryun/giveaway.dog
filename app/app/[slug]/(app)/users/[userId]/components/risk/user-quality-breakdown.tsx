@@ -2,7 +2,6 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils';
 
 import React from 'react';
 import { RiskMetrics } from './risk-metrics';

@@ -9,7 +9,6 @@ import {
   Trophy,
   Sparkles,
   Lock,
-  ExternalLink,
   Share2,
   TrophyIcon
 } from 'lucide-react';

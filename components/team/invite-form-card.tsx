@@ -4,14 +4,6 @@ import { useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  CardFooter
-} from '@/components/ui/card';
-import {
   Form,
   FormControl,
   FormField,
@@ -31,11 +23,10 @@ import { Button } from '@/components/ui/button';
 import { useProcedure } from '@/lib/mrpc/hook';
 import inviteMembers from '@/procedures/teams/invite-members';
 import { toast } from 'sonner';
-import { Plus, Trash2, Link2, ExternalLink } from 'lucide-react';
+import { Plus, Trash2, Link2 } from 'lucide-react';
 import { InviteLinkModal } from './invite-link-modal';
 import { TeamRole } from '@prisma/client';
 import z from 'zod';
-import Link from 'next/link';
 import { SettingsCard } from '../settings/settings-card';
 
 const inviteFormSchema = z.object({

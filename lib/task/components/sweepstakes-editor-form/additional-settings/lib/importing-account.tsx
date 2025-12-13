@@ -2,7 +2,7 @@ import { useArrayContext } from '@/components/hooks/use-array-context';
 import { SwitchFormHeader } from '@/components/patterns/form-layout/switch-form-header';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 import { SweepstakeStep } from '@/components/sweepstakes-editor/data/steps';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { FormField, FormItem, FormControl } from '@/components/ui/form';
 import {

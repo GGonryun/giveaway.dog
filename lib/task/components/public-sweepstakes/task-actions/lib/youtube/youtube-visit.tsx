@@ -9,7 +9,6 @@ import { YoutubeVisitTaskSchema } from '@/lib/task/schemas';
 import { useTaskTheme } from '@/lib/task/components/theme';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ExternalLinkIcon } from 'lucide-react';
 import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
 
 export const YouTubeVisitTaskActionForm: React.FC<

@@ -1,8 +1,6 @@
 import {
   AlarmClockIcon,
   ClockIcon,
-  HeartIcon,
-  KeyIcon,
   LockIcon,
   LucideIcon,
   UnlockIcon

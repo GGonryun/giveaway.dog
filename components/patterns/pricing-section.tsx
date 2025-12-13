@@ -4,7 +4,7 @@ import { Button, ButtonVariant } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRightIcon, Check, ContactIcon } from 'lucide-react';
+import { ArrowRightIcon, Check } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';

@@ -1,9 +1,5 @@
 import { timezone } from '@/lib/time';
-import {
-  Prisma,
-  SweepstakesFormFieldType,
-  SweepstakesTermsType
-} from '@prisma/client';
+import { Prisma, SweepstakesTermsType } from '@prisma/client';
 import * as dates from 'date-fns';
 import {
   GiveawayDesignSchema,
@@ -12,7 +8,6 @@ import {
 } from './schemas';
 import { AllowedUserSourcesSchema } from '@/lib/user-source/schemas';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
-import { AgeSweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
 
 export const DEFAULT_SWEEPSTAKES_NAME = 'Untitled Sweepstakes';

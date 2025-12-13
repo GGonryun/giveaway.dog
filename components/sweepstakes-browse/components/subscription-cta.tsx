@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Typography } from '@/components/ui/typography';
-import { Bell, Check, Mail } from 'lucide-react';
+import { Check, Mail } from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import subscribeEmail from '@/procedures/marketing/subscribe-email';
 import { toast } from 'sonner';

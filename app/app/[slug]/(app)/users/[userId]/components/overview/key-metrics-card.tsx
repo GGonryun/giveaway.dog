@@ -3,25 +3,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SquareArrowOutUpRight } from 'lucide-react';
 import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
-import { cn } from '@/lib/utils';
-import {
-  QUALITY_ICON,
-  QUALITY_LABELS,
-  QUALITY_THEME,
-  toQualityType
-} from '@/schemas/quality';
+import { QUALITY_LABELS, toQualityType } from '@/schemas/quality';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { QualityBadge } from '../risk/quality-badge';
 
 export const KeyMetricsCard: React.FC<{
   slug: string;
   participant: SweepstakesParticipantSchema_old;
 }> = ({ participant, slug }) => {
   const type = toQualityType(participant.qualityScore);
-  const theme = QUALITY_THEME[type];
   const label = QUALITY_LABELS[type];
-  const Icon = QUALITY_ICON[type];
 
   return (
     <div className="grid gap-4 grid-cols-2">

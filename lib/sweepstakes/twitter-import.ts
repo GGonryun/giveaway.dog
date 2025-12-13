@@ -2,9 +2,6 @@ import { PrismaClient, UserSource } from '@prisma/client';
 import { USER_BASE_SCORE } from '@/schemas/user-scoring';
 import { nanoid } from 'nanoid';
 import { TwitterUserSchema } from '../integrations/schemas/api';
-import { profile } from 'console';
-import { getAccountLabel, getAccountLink } from '../auth/get-account-data';
-import { ApplicationError } from '../errors';
 
 export interface ImportTwitterParticipantsInput {
   sweepstakesId: string;

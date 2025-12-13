@@ -1,5 +1,4 @@
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
-import { Flex } from '@/components/ui/flex';
 
 import { TaskContent } from './task-actions/building-blocks';
 import { Button } from '@/components/ui/button';

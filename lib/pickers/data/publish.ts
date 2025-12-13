@@ -10,7 +10,6 @@ import { ApplicationError } from '@/lib/errors';
 import { compact } from 'lodash';
 import { extractTweetId } from '@/lib/integrations/schemas/twitter';
 import { toTwitterFetchRequest } from '../schemas/jobs';
-import { timezone } from '@/lib/time';
 
 export const publishPickerAuditLogs = (
   input: PublishPickerInputSchema

@@ -10,7 +10,6 @@ import {
 } from '@/lib/integrations/schemas/api';
 import { PickerJobWithChildren } from '../procedures/process-picker-jobs';
 import { assertNever } from '@/lib/errors';
-import { max } from 'lodash';
 
 export const twitterFetchRequestSchema = z.object({
   tweetId: z.string(),

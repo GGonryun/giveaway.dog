@@ -5,15 +5,12 @@ import {
   ParticipantSweepstakeSchema,
   DeviceType
 } from '@/schemas/giveaway/schemas';
-import { noop } from 'lodash';
 import { Eye, Smartphone, Monitor } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import { useIsMobile } from '../hooks/use-mobile';
 import { QRCodeModal } from '../patterns/qr-code-modal';
 import {
   mockParticipation,
-  mockUserProfile,
-  mockUserParticipation,
   mockUserHostRelationship,
   onFakeLogin,
   onFakeTaskComplete,
@@ -172,7 +169,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                 participation={mockParticipation}
                 prizes={winners}
                 participant={mockParticipant}
-                userHostRelationship={mockUserHostRelationship}
+                relationship={mockUserHostRelationship}
                 state={state}
                 onTaskComplete={onFakeTaskComplete}
                 onLogin={onFakeLogin}

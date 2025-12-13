@@ -14,7 +14,7 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import removeMember from '@/procedures/teams/remove-member';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '../ui/alert';
-import { FileWarningIcon, TriangleAlertIcon } from 'lucide-react';
+import { TriangleAlertIcon } from 'lucide-react';
 
 interface RemoveMemberDialogProps {
   open: boolean;

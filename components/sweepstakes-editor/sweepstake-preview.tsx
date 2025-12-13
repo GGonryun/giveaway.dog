@@ -27,8 +27,6 @@ import {
 import {
   mockParticipation,
   mockWinners,
-  mockUserProfile,
-  mockUserParticipation,
   mockUserHostRelationship,
   onFakeLogin,
   onFakeCompleteProfile,
@@ -176,7 +174,7 @@ export const SweepstakePreview: React.FC = () => {
 const toMockFormFields = (fields?: DeepNil<SweepstakesFormFieldSchema>[]) => {
   if (!fields) return [];
 
-  return fields.filter(isDefined('type')).map((field, index) => {
+  return fields.filter(isDefined('type')).map((field) => {
     switch (field.type) {
       case 'USERNAME':
         return {

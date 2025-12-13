@@ -4,7 +4,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ExternalLink, Share2, Trophy, RotateCw } from 'lucide-react';
+import { ExternalLink, Trophy, RotateCw } from 'lucide-react';
 import { PickerWinnerSchema } from '../schemas/draws';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 

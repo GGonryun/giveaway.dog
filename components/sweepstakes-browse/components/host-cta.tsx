@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
-import { Sparkles, Users, Trophy, TrendingUp, ArrowRight } from 'lucide-react';
+import { Users, Trophy, TrendingUp, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export const HostCTA: React.FC<{ minimal?: boolean }> = ({ minimal }) => {

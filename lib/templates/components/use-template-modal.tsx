@@ -18,7 +18,6 @@ import {
   mockParticipant,
   mockParticipation,
   mockPrizes,
-  mockUserProfile,
   onFakeCompleteProfile,
   onFakeFormSubmit,
   onFakeLogin,

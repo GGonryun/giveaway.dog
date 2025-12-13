@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { DisqualificationWarning } from '../disqualification-warning';
 import { WithProviderConnection } from '../provider-connection';
 import { KickFollowTaskSchema } from '@/lib/task/schemas';
 

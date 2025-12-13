@@ -1,4 +1,3 @@
-import { ApplicationError } from '@/lib/errors';
 import { UNKNOWN_BROWSER, UNKNOWN_OS } from '@/lib/settings';
 import { Prisma } from '@prisma/client';
 import { Eye, LucideIcon, Monitor, Smartphone, Tablet } from 'lucide-react';

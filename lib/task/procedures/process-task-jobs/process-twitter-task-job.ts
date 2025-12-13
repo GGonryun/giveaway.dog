@@ -23,7 +23,6 @@ export const processTwitterTaskJob = async <
 ) => {
   const { taskId, data } = job;
   const { sweepstakesId } = job.task;
-  const { timing } = job.task.sweepstakes;
   const { type } = task;
 
   const parsed = TASK_JOB_DATA_SCHEMA[type].safeParse(data);

@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { PublicPickerSchema } from '../schemas/public-picker';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
