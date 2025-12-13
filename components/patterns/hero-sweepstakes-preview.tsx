@@ -30,7 +30,7 @@ export const HeroSweepstakesPreview: React.FC = () => {
       participation={mockParticipation}
       state={state}
       participant={mockParticipant}
-      userHostRelationship={mockUserHostRelationship}
+      relationship={mockUserHostRelationship}
       hideBackground
       onCompleteProfile={onFakeCompleteProfile}
       onLogin={onFakeLogin}

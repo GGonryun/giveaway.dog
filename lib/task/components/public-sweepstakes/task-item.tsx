@@ -39,7 +39,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
 }) => {
   const router = useRouter();
 
-  const { onTaskComplete, participation, userHostRelationship } =
+  const { onTaskComplete, participation, relationship } =
     useGiveawayParticipation();
 
   const submission = useMemo(
@@ -47,10 +47,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
     [submissions, task.id]
   );
 
-  const loyalty = useMemo(
-    () => userHostRelationship?.loyalty || 0,
-    [userHostRelationship]
-  );
+  const loyalty = useMemo(() => relationship?.loyalty || 0, [relationship]);
 
   const entrants = useMemo(
     () => participation.usersByTask[task.id] || 0,

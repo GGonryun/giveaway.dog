@@ -162,7 +162,7 @@ export const SweepstakePreview: React.FC = () => {
       participation={mockParticipation}
       prizes={mockWinners}
       participant={getParticipant(previewState)}
-      userHostRelationship={getUserHostRelationship(previewState)}
+      relationship={getUserHostRelationship(previewState)}
       state={previewState}
       onTaskComplete={onFakeTaskComplete}
       onLogin={onFakeLogin}

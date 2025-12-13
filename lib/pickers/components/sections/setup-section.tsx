@@ -207,7 +207,9 @@ export const TimingField = () => {
                 <FormControl>
                   <DateTimePicker
                     hourCycle={12}
-                    onChange={(date) => field.onChange(date?.toISOString() ?? null)}
+                    onChange={(date) =>
+                      field.onChange(date?.toISOString() ?? null)
+                    }
                     value={field.value ? new Date(field.value) : undefined}
                   />
                 </FormControl>

@@ -33,8 +33,7 @@ export const TaskAction: React.FC<{
   onCancel,
   error
 }) => {
-  const { participant, userHostRelationship, sweepstakes } =
-    useGiveawayParticipation();
+  const { participant, relationship, sweepstakes } = useGiveawayParticipation();
 
   const isConnected = doesUserHaveAllowedIdentity(
     participant?.user,
@@ -74,7 +73,7 @@ export const TaskAction: React.FC<{
           task={task}
           error={error}
           entrants={entrants}
-          loyalty={userHostRelationship?.loyalty ?? 0}
+          loyalty={relationship?.loyalty ?? 0}
           isLoading={isLoading}
           onSubmit={onSubmit}
           onCancel={onCancel}

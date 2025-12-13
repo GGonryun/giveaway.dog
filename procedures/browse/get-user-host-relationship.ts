@@ -24,35 +24,29 @@ export const getUserHostRelationship = procedure()
           'User profile does not exist. Update any of your account settings to continue.'
       });
 
-    // get me all the task completions for this user where the task's sweepstake is associated with the host of the sweepstake being queried
-    const taskCompletions = await db.taskCompletion.findMany({
+    const host = await db.sweepstakes.findFirst({
       where: {
-        participant: { userId: user.id },
-        task: {
-          sweepstakes: {
-            team: {
-              sweepstakes: {
-                some: {
-                  OR: [
-                    { id: input.sweepstakesId },
-                    { visibility: { slug: input.sweepstakesId } }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        status: {
-          in: ['COMPLETED']
-        }
+        OR: [
+          { id: input.sweepstakesId },
+          { visibility: { slug: input.sweepstakesId } }
+        ]
       },
-      include: {
-        task: true
+      select: {
+        teamId: true
       }
     });
 
-    const loyalty = new Set(taskCompletions.map((c) => c.task.sweepstakesId))
-      .size;
+    if (!host) return undefined;
+
+    // get me all the task completions for this user where the task's sweepstake is associated with the host of the sweepstake being queried
+    const loyalty = await db.sweepstakesParticipant.count({
+      where: {
+        userId: user.id,
+        sweepstakes: {
+          teamId: host.teamId
+        }
+      }
+    });
 
     return {
       loyalty
