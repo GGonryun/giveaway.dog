@@ -193,7 +193,7 @@ const toFieldValue = (
         return { value: participant.user.name, isCustom: false };
       }
 
-      return { value, isCustom: false };
+      return { value, isCustom: true };
 
     case 'EMAIL':
       if (!!participant?.user.email) {

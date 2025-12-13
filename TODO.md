@@ -1,7 +1,7 @@
 ## Roadmap
 
+- [ ] Loyalty bonus seems broken now.
 - [ ] If an integration is unhealthy, ask the user to re-authenticate first.
-- [ ] switch to using participant instead of "user" in sweepstakes entry and show custom participant profile.
 
 - [ ] Can we allow private sweepstakes that only people with a link can enter? (switch to using "private" | "unlisted" | "public" for visibility)
 
@@ -9,6 +9,9 @@
 - [ ] Abinesh on discord has a bug too.
 
 - [ ] Add back "Validate user" feature validates to make sure that the user email is valid and not disposable.
+
+- [ ] Delete unused ageVerification and requireEmail fields.
+- [ ] Switch to using participant instead of "user" in sweepstakes entry and show custom participant profile.
 
 ### @theejankanator
 
