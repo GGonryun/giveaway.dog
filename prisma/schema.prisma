@@ -17,28 +17,27 @@ enum UserSource {
 }
 
 model User {
-  id               String                   @id @default(cuid())
-  name             String?
-  email            String?                  @unique
-  emailVerified    DateTime?
-  username         String? // used to satisfy next-auth schema
-  image            String?
-  emoji            String?
-  createdAt        DateTime                 @default(now())
-  updatedAt        DateTime                 @updatedAt
-  source           UserSource               @default(SIGNUP)
-  accounts         Account[]
-  sessions         Session[]
-  teams            Membership[]
-  events           UserEvent[]
-  participation    SweepstakesParticipant[]
-  ips              UserIpAddress[]
-  agents           UserAgent[]
-  quality          UserQuality[]
-  fingerprints     UserFingerprint[]
-  ageVerifications AgeVerification[]
-  featureFlags     UserFeatureFlag[]
-  integrations     Integration[]
+  id            String                   @id @default(cuid())
+  name          String?
+  email         String?                  @unique
+  emailVerified DateTime?
+  username      String? // used to satisfy next-auth schema
+  image         String?
+  emoji         String?
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  source        UserSource               @default(SIGNUP)
+  accounts      Account[]
+  sessions      Session[]
+  teams         Membership[]
+  events        UserEvent[]
+  participation SweepstakesParticipant[]
+  ips           UserIpAddress[]
+  agents        UserAgent[]
+  quality       UserQuality[]
+  fingerprints  UserFingerprint[]
+  featureFlags  UserFeatureFlag[]
+  integrations  Integration[]
 }
 
 enum UserEventType {
@@ -547,7 +546,6 @@ model SweepstakesParticipant {
 
   taskCompletions TaskCompletion[]
   taskProgresses  TaskProgress[]
-  ageVerification AgeVerification?
   formValues      SweepstakesFormValue[]
 
   createdAt DateTime @default(now())
@@ -698,20 +696,6 @@ model TeamInviteEmail {
   updatedAt DateTime @updatedAt
 
   @@unique([teamId, email])
-}
-
-// Age verification records for specific sweepstakes
-model AgeVerification {
-  id            String                 @id @default(cuid())
-  participantId String                 @unique
-  participant   SweepstakesParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  verified      Boolean                @default(false)
-  verifiedAt    DateTime?
-  createdAt     DateTime               @default(now())
-  updatedAt     DateTime               @updatedAt
-
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String?
 }
 
 // Metadata for uploaded images.

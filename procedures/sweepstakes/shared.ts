@@ -149,14 +149,6 @@ export const applySweepstakesChanges = async ({
       }
     });
 
-    const ageVerifications = await tx.ageVerification.findMany({
-      where: {
-        participant: {
-          sweepstakesId: sweepstakes.id
-        }
-      }
-    });
-
     const formValues = await tx.sweepstakesFormValue.findMany({
       where: {
         participant: {
@@ -179,10 +171,6 @@ export const applySweepstakesChanges = async ({
     // restore retained data - must restore participants before dependent records
     await tx.sweepstakesParticipant.createMany({
       data: participants.map((d) => ({ ...d }))
-    });
-
-    await tx.ageVerification.createMany({
-      data: ageVerifications.map((d) => ({ ...d }))
     });
 
     // we only want to retain the task completions for tasks that still exist

@@ -85,13 +85,6 @@ export const updateUserProfileSchema = z.object({
 
 export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
 
-export const ageVerificationSchema = z.object({
-  userId: z.string(),
-  sweepstakesId: z.string()
-});
-
-export type AgeVerificationSchema = z.infer<typeof ageVerificationSchema>;
-
 const ACCOUNT_SELECT_QUERY = {
   provider: true,
   scope: true,

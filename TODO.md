@@ -1,43 +1,13 @@
 ## Roadmap
 
-- [ ] Loyalty bonus seems broken now.
-- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
-- [ ] there's a visual bug where some entries aren't being counted see gabriosq on disc
-
-- [ ] Can we allow private sweepstakes that only people with a link can enter? (switch to using "private" | "unlisted" | "public" for visibility)
-
-- [ ] CHUCKY has a request on discord too.
-- [ ] Abinesh on discord has a bug too.
-
-- [ ] Add back "Validate user" feature validates to make sure that the user email is valid and not disposable.
-
-- [ ] Delete unused ageVerification and requireEmail fields.
-- [ ] Switch to using participant instead of "user" in sweepstakes entry and show custom participant profile.
-
 ### @theejankanator
-
-- [...] Add TikTok integration - https://authjs.dev/getting-started/providers/tiktok
-  - [x] submit for approval
-  - [x] app approved
-  - [x] Enable login/auth with TikTok
-  - [x] Add TikTok entry methods (follow)
-  - [ ] Add TikTok entry methods (like)
 
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
-### Fuzey
+## PJ & Dom
 
-- [ ] Fix Team RBAC
-
-### Fuzey
-
-- [ ] Paid raffle features
-
-### @Gamelooty
-
-- it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
-- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
-- [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries
+- [ ] Global Black List
+- [ ] Global White List
 
 ## The Games Detective
 
@@ -45,10 +15,11 @@
 
 - [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
 
-## PJ & Dom
+### @Gamelooty
 
-- [ ] Global Black List
-- [ ] Global White List
+- it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
+- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
+- [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries
 
 ### Nobody Asked
 
@@ -114,6 +85,8 @@
 
 - [ ] Add a "geo-location" entry method where users have to be in a certain location to get entries.
 
+- [ ] Add back "Validate user" feature validates to make sure that the user email is valid and not disposable.
+
 ## Personal Features
 
 - [ ] Add a Charity Games integration.
@@ -136,6 +109,9 @@
 
 ## Tech Debt
 
+- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
+- [ ] Can we allow private sweepstakes that only people with a link can enter? (switch to using "private" | "unlisted" | "public" for visibility)
+- [ ] Switch to using participant instead of "user" in sweepstakes entry and show custom participant profile.
 - [ ] Add actual RBAC support for other membership/role types beyond owner, and admin.
 - [ ] Fix the timing schema to use super refine on the entire form instead
   - [ ] if we have real RBAC we can now have a true sandbox org where _everyone_ gets the guest role.

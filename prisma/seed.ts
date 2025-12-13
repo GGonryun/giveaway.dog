@@ -902,15 +902,6 @@ async function main() {
         }
       });
 
-      await prisma.ageVerification.create({
-        data: {
-          userId: user.id,
-          participantId: participant.id,
-          verified: true,
-          verifiedAt: new Date()
-        }
-      });
-
       const numTasksToComplete = Math.floor(Math.random() * tasks.length) + 1;
       const shuffledTasks = [...tasks].sort(() => Math.random() - 0.5);
       const tasksToComplete = shuffledTasks.slice(0, numTasksToComplete);
