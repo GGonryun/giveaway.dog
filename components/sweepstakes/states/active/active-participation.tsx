@@ -115,7 +115,7 @@ const UserProgressSection: React.FC<{ className?: string }> = ({
     const completed = sweepstakes.tasks.filter((task) =>
       participant.completions.some(
         (completion) =>
-          completion.task.id === task.id && completion.status === 'COMPLETED'
+          completion.task.id === task.id && completion.status !== 'REJECTED'
       )
     ).length;
     const total = sweepstakes.tasks.length;
