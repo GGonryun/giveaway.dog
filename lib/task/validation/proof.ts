@@ -75,6 +75,7 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':
     case 'TIKTOK_FOLLOW':
+    case 'TIKTOK_LIKE':
       return Prisma.JsonNull;
     default:
       throw assertNever(task);

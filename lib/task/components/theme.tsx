@@ -151,6 +151,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         icon: SocialFacebookIcon
       };
     case 'TIKTOK_FOLLOW':
+    case 'TIKTOK_LIKE':
       return {
         action: 'text-white bg-black group-hover:opacity-80 hover:opacity-80',
         symbol: 'bg-black text-white',

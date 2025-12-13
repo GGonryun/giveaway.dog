@@ -25,6 +25,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'FACEBOOK_VISIT_PAGE':
     case 'FACEBOOK_VIEW_POST':
     case 'TIKTOK_FOLLOW':
+    case 'TIKTOK_LIKE':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':

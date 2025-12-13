@@ -383,6 +383,22 @@ export const tiktokFollowTaskSchema = baseTaskSchema.extend({
 
 export type TiktokFollowTaskSchema = z.infer<typeof tiktokFollowTaskSchema>;
 
+export const tiktokLikeTaskSchema = baseTaskSchema.extend({
+  type: z.literal('TIKTOK_LIKE'),
+  validation: validationSchema.default({ type: 'STRICT' }).optional(),
+  postUrl: z
+    .string()
+    .url('TikTok Post URL is required')
+    .refine((val) => {
+      // shape of https://www.tiktok.com/@abcdefg1234/video/762349816943123414
+      const urlPattern =
+        /^https?:\/\/(www\.)?tiktok\.com\/@[A-Za-z0-9_.]{1,30}\/video\/[0-9]+\/?$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://www.tiktok.com/@username/video/1234567890/')
+});
+
+export type TiktokLikeTaskSchema = z.infer<typeof tiktokLikeTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -409,7 +425,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   instagramCommentTaskSchema,
   facebookVisitPageTaskSchema,
   facebookViewPostTaskSchema,
-  tiktokFollowTaskSchema
+  tiktokFollowTaskSchema,
+  tiktokLikeTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -440,7 +457,8 @@ export const TASK_LABEL: Record<TaskType, string> = {
   INSTAGRAM_COMMENT: 'Comment on Instagram Post',
   FACEBOOK_VISIT_PAGE: 'Visit Facebook Page',
   FACEBOOK_VIEW_POST: 'View Facebook Post',
-  TIKTOK_FOLLOW: 'Follow on TikTok'
+  TIKTOK_FOLLOW: 'Follow on TikTok',
+  TIKTOK_LIKE: 'Like TikTok Video'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -470,6 +488,7 @@ export const TASK_INPUT_SCHEMA = {
   }),
   FACEBOOK_VIEW_POST: z.object({}),
   TIKTOK_FOLLOW: z.object({}),
+  TIKTOK_LIKE: z.object({}),
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
   }),
@@ -513,6 +532,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   FACEBOOK_VISIT_PAGE: z.object({}),
   FACEBOOK_VIEW_POST: z.object({}),
   TIKTOK_FOLLOW: z.object({}),
+  TIKTOK_LIKE: z.object({}),
   SECRET_CODE: z.object({}),
   ASK_QUESTION: z.object({}),
   SINGLE_CHOICE: z.object({}),
@@ -557,6 +577,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   FACEBOOK_VISIT_PAGE: 'FACEBOOK',
   FACEBOOK_VIEW_POST: 'FACEBOOK',
   TIKTOK_FOLLOW: 'TIKTOK',
+  TIKTOK_LIKE: 'TIKTOK',
   DISCORD_JOIN: 'DISCORD',
   TWITCH_FOLLOW: 'TWITCH',
   KICK_FOLLOW: 'KICK',
@@ -618,6 +639,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   FACEBOOK_VISIT_PAGE: 'social',
   FACEBOOK_VIEW_POST: 'social',
   TIKTOK_FOLLOW: 'social',
+  TIKTOK_LIKE: 'social',
   ASK_QUESTION: 'engagement',
   SINGLE_CHOICE: 'engagement',
   MULTIPLE_CHOICE: 'engagement'
@@ -652,6 +674,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   FACEBOOK_VISIT_PAGE: false,
   FACEBOOK_VIEW_POST: false,
   TIKTOK_FOLLOW: false,
+  TIKTOK_LIKE: false,
   ASK_QUESTION: false,
   SINGLE_CHOICE: false,
   MULTIPLE_CHOICE: false
