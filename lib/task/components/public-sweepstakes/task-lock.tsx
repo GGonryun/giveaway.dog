@@ -10,6 +10,7 @@ import { formatDistance } from 'date-fns';
 import { BanIcon, ClockIcon, LockIcon, LucideIcon } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { isLoyal } from '@/lib/loyalty/validation';
 
 export const lockStateSchema = z.enum([
   'MISSING_REQUIREMENTS',
@@ -133,12 +134,12 @@ const bonusLoyaltyTaskLock = ({
   task: BonusLoyaltyTaskSchema;
   loyalty: number;
 }) => {
-  // check to see if a user meets the loyalty requirement
-  if (loyalty < task.loyaltyRequired) {
-    return {
-      message: `Unlocks after participating in ${task.loyaltyRequired} sweepstakes with this host.`,
-      icon: LockIcon
-    };
+  if (isLoyal(loyalty, task)) {
+    return null;
   }
-  return null;
+
+  return {
+    message: `Unlocks after participating in ${task.loyaltyRequired} sweepstakes with this host. (${loyalty})`,
+    icon: LockIcon
+  };
 };

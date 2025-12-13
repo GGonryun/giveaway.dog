@@ -1,12 +1,12 @@
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
 import { PROVIDER_REQUIRED_SCOPES } from '@/lib/integrations/schemas/providers';
+import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { TWITTER_PROFILE_URL } from '@/lib/settings';
 import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 import {
   GiveawayParticipationSchema,
   UserParticipationSchema,
   GiveawayPrizeSchema,
-  UserHostRelationshipSchema,
   GiveawayHostSchema
 } from '@/schemas/giveaway/schemas';
 import { UserSchema } from '@/schemas/user';

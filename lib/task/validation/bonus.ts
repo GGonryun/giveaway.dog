@@ -6,6 +6,8 @@ import {
 } from '../schemas';
 import { PrismaClient } from '@prisma/client';
 import { ValidateTaskInput } from './integrations';
+import { getLoyalty } from '@/lib/loyalty/db';
+import { isLoyal } from '@/lib/loyalty/validation';
 
 export const checkBonusTimed = async (task: BonusTimedTaskSchema) => {
   // check to see if the current time is within the task's time window
@@ -60,45 +62,29 @@ export const checkBonusLoyalty = async (
   );
   // we need to figure out who the team is, and then find every task completion
   // owned by the user for sweepstakes owned by that team
-  const completions = await db.taskCompletion.findMany({
-    where: {
-      participantId: input.participantId,
-      task: {
-        sweepstakes: {
-          teamId: input.teamId
-        }
-      }
-    },
-    include: {
-      task: {
-        select: {
-          sweepstakesId: true
-        }
-      }
-    }
-  });
+  const loyalty = await getLoyalty(db, input);
   console.info(
     `Checking loyalty requirements for bonus loyalty task ${input.task.id} for user ${input.userId}`
   );
-  // loyalty is the number of unique sweepstakes the user has completed tasks in
-  const loyalty = new Set(completions.map((c) => c.task.sweepstakesId)).size;
+
   console.info(
     `User ${input.userId} has loyalty ${loyalty} for bonus loyalty task ${input.task.id}`
   );
-  if (loyalty < input.task.loyaltyRequired) {
-    throw new ApplicationError({
-      code: 'FORBIDDEN',
-      message: `You need at least ${input.task.loyaltyRequired} loyalty to complete this tier.`,
-      data: {
-        userLoyalty: loyalty,
-        requiredLoyalty: input.task.loyaltyRequired
-      }
-    });
+
+  if (isLoyal(loyalty, input.task)) {
+    console.info(
+      `Bonus loyalty task ${input.task.id} validation passed for user ${input.userId}`
+    );
+
+    return;
   }
 
-  console.info(
-    `Bonus loyalty task ${input.task.id} validation passed for user ${input.userId}`
-  );
-
-  return;
+  throw new ApplicationError({
+    code: 'FORBIDDEN',
+    message: `You need at least ${input.task.loyaltyRequired} loyalty to complete this tier.`,
+    data: {
+      userLoyalty: loyalty,
+      requiredLoyalty: input.task.loyaltyRequired
+    }
+  });
 };

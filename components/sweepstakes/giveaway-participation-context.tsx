@@ -7,10 +7,10 @@ import {
   GiveawayHostSchema,
   GiveawayPrizeSchema,
   GiveawaySchema,
-  DeviceType,
-  UserHostRelationshipSchema
+  DeviceType
 } from '@/schemas/giveaway/schemas';
 import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 
 export interface GiveawayParticipationProps {
   device?: DeviceType;

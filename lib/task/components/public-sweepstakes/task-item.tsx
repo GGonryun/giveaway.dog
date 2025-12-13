@@ -87,12 +87,9 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
       toast.success('Task completed!');
       router.refresh();
     } catch (error) {
-      isFailureData(error)
-        ? setError(error)
-        : setError({
-            message: 'An unexpected error occurred. Please try again later.',
-            code: 'UNKNOWN_HTTP_ERROR'
-          });
+      const failure = toFailureData(error);
+      setError(failure);
+      toast.error(failure.message);
     } finally {
       setIsLoading(false);
     }
@@ -178,4 +175,13 @@ export const TaskItem: React.FC<TaskItemProps> = (props) => {
       <TaskItemContent {...props} />
     </TaskThemeProvider>
   );
+};
+
+const toFailureData = (error: unknown): FailureData => {
+  return isFailureData(error)
+    ? error
+    : {
+        message: 'An unexpected error occurred. Please try again later.',
+        code: 'UNKNOWN_HTTP_ERROR'
+      };
 };

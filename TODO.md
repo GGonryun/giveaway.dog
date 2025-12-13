@@ -4,6 +4,10 @@
 
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
+### Me:
+
+- new marketing page
+
 ## PJ & Dom
 
 - [ ] Global Black List

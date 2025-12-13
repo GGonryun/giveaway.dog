@@ -280,14 +280,6 @@ export const userParticipationSchema = z.object({
 
 export type UserParticipationSchema = z.infer<typeof userParticipationSchema>;
 
-export const userHostRelationshipSchema = z.object({
-  loyalty: z.number().int().min(0)
-});
-
-export type UserHostRelationshipSchema = z.infer<
-  typeof userHostRelationshipSchema
->;
-
 // Host Schema
 export const giveawayHostSchema = z.object({
   id: z.string().optional(),

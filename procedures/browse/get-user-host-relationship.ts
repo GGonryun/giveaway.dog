@@ -1,8 +1,9 @@
 'use server';
 
 import { ApplicationError } from '@/lib/errors';
+import { getLoyalty } from '@/lib/loyalty/db';
+import { userHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { procedure } from '@/lib/mrpc/procedures';
-import { userHostRelationshipSchema } from '@/schemas/giveaway/schemas';
 
 import z from 'zod';
 
@@ -36,19 +37,11 @@ export const getUserHostRelationship = procedure()
       }
     });
 
-    if (!host) return undefined;
+    if (!host?.teamId) return undefined;
 
     // get me all the task completions for this user where the task's sweepstake is associated with the host of the sweepstake being queried
-    const loyalty = await db.sweepstakesParticipant.count({
-      where: {
-        userId: user.id,
-        sweepstakes: {
-          teamId: host.teamId
-        }
-      }
-    });
 
     return {
-      loyalty
+      loyalty: await getLoyalty(db, { userId: user.id, teamId: host.teamId })
     };
   });
