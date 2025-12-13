@@ -3,7 +3,9 @@
 import { cn } from '@/lib/utils';
 import {
   ParticipantSweepstakeSchema,
-  DeviceType
+  DeviceType,
+  GiveawayState,
+  getStateDisplayLabel
 } from '@/schemas/giveaway/schemas';
 import { Eye, Smartphone, Monitor } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
@@ -24,6 +26,13 @@ import { useBrowseSweepstakesPage } from '../sweepstakes/use-browse-sweepstakes-
 import { useSweepstakesDetailsPage } from '../sweepstakes/use-sweepstakes-details-page';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '../ui/select';
 import { toSweepstakesState } from '@/lib/sweepstakes';
 import { toBackgroundStyle } from '@/schemas/color';
 import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
@@ -119,6 +128,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
 }) => {
   const { isMobile } = useIsMobile();
   const [previewDevice, setPreviewDevice] = useState<DeviceType>('desktop');
+  const [previewState, setPreviewState] = useState<GiveawayState>('active');
 
   useEffect(() => {
     if (isMobile) {
@@ -145,13 +155,17 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
       }}
     >
       <CardContent className="p-4 space-y-4">
-        <div className="flex items-center justify-center space-x-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           {!isMobile && (
             <DeviceSelector
               previewDevice={previewDevice}
               setPreviewDevice={setPreviewDevice}
             />
           )}
+          <StateSelector
+            previewState={previewState}
+            setPreviewState={setPreviewState}
+          />
         </div>
         <div
           className={cn(
@@ -170,7 +184,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                 prizes={winners}
                 participant={mockParticipant}
                 relationship={mockUserHostRelationship}
-                state={state}
+                state={previewState}
                 onTaskComplete={onFakeTaskComplete}
                 onLogin={onFakeLogin}
                 onCompleteProfile={onFakeCompleteProfile}
@@ -225,5 +239,46 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
         <Monitor className="h-4 w-4" /> Desktop
       </Button>
     </div>
+  );
+};
+
+type StateSelectorProps = {
+  previewState: GiveawayState;
+  setPreviewState: React.Dispatch<React.SetStateAction<GiveawayState>>;
+};
+
+const AVAILABLE_PREVIEW_STATES: GiveawayState[] = [
+  'active',
+  'not-logged-in',
+  'profile-incomplete',
+  'not-eligible',
+  'winners-announced',
+  'winners-pending',
+  'pending',
+  'closed',
+  'canceled',
+  'error'
+];
+
+const StateSelector: React.FC<StateSelectorProps> = ({
+  previewState,
+  setPreviewState
+}) => {
+  return (
+    <Select
+      value={previewState}
+      onValueChange={(value) => setPreviewState(value as GiveawayState)}
+    >
+      <SelectTrigger className="w-[180px] h-8">
+        <SelectValue placeholder="Select state" />
+      </SelectTrigger>
+      <SelectContent>
+        {AVAILABLE_PREVIEW_STATES.map((state) => (
+          <SelectItem key={state} value={state}>
+            {getStateDisplayLabel(state)}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 };
