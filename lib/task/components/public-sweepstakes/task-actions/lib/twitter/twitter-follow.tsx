@@ -11,13 +11,11 @@ export const TwitterFollowTaskActionForm: React.FC<
   TaskActionProps<TwitterFollowTaskSchema>
 > = ({ onCancel, onSubmit, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
-
   const screenName = task.username.replace(/^https?:\/\/(www\.)?x\.com\//, '');
-  const requiresConnection = task.validation?.type !== 'NONE';
+
   return (
     <WithProviderConnection
       task={task}
-      requiresConnection={requiresConnection}
       disabled={!performedAction}
       onCancel={onCancel}
       onSubmit={onSubmit}

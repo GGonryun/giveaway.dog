@@ -22,6 +22,7 @@ import { InstagramLikeTaskActionForm } from './lib/instagram/like';
 import { InstagramCommentTaskActionForm } from './lib/instagram/comment';
 import { FacebookVisitPageTaskActionForm } from './lib/facebook/visit-page';
 import { FacebookViewPostTaskActionForm } from './lib/facebook/view-post';
+import { TikTokFollowTaskActionForm } from './lib/tiktok/tiktok-follow';
 import { AskQuestionTaskActionForm } from './lib/form/ask-question';
 import { SingleChoiceTaskActionForm } from './lib/form/single-choice';
 import { MultipleChoiceTaskActionForm } from './lib/form/multiple-choice';
@@ -74,6 +75,8 @@ export const TaskActionForm: React.FC<
       return <FacebookVisitPageTaskActionForm {...props} task={props.task} />;
     case 'FACEBOOK_VIEW_POST':
       return <FacebookViewPostTaskActionForm {...props} task={props.task} />;
+    case 'TIKTOK_FOLLOW':
+      return <TikTokFollowTaskActionForm {...props} task={props.task} />;
     case 'ASK_QUESTION':
       return <AskQuestionTaskActionForm {...props} task={props.task} />;
     case 'SINGLE_CHOICE':

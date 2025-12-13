@@ -10,6 +10,7 @@ import {
   INSTAGRAM_PROFILE_URL,
   KICK_CHANNEL_URL,
   STEAM_APP_ID_URL,
+  TIKTOK_PROFILE_URL,
   TWITCH_CHANNEL_URL,
   TWITTER_PROFILE_URL,
   YOUTUBE_CHANNEL_NAME,
@@ -63,6 +64,11 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       ...toDefaultValues('FACEBOOK_VIEW_POST'),
       postUrl: FACEBOOK_POST_URL,
       id: 'b2c4'
+    },
+    {
+      ...toDefaultValues('TIKTOK_FOLLOW'),
+      profileUrl: TIKTOK_PROFILE_URL,
+      id: 'd7e9'
     },
     {
       ...toDefaultValues('INSTAGRAM_VISIT'),

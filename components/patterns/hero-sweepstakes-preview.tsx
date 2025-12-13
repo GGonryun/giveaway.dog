@@ -9,8 +9,6 @@ import {
   mockPrizes,
   mockSweepstakes,
   mockUserHostRelationship,
-  mockUserParticipation,
-  mockUserProfile,
   onFakeCompleteProfile,
   onFakeFormSubmit,
   onFakeLogin,

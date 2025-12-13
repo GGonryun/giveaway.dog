@@ -368,6 +368,21 @@ export type FacebookViewPostTaskSchema = z.infer<
   typeof facebookViewPostTaskSchema
 >;
 
+export const tiktokFollowTaskSchema = baseTaskSchema.extend({
+  type: z.literal('TIKTOK_FOLLOW'),
+  validation: validationSchema.default({ type: 'STRICT' }).optional(),
+  profileUrl: z
+    .string()
+    .url('TikTok Profile URL is required')
+    .refine((val) => {
+      const urlPattern =
+        /^https?:\/\/(www\.)?tiktok\.com\/@[A-Za-z0-9_.]{1,30}\/?$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://www.tiktok.com/@username/')
+});
+
+export type TiktokFollowTaskSchema = z.infer<typeof tiktokFollowTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -393,7 +408,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   instagramLikeTaskSchema,
   instagramCommentTaskSchema,
   facebookVisitPageTaskSchema,
-  facebookViewPostTaskSchema
+  facebookViewPostTaskSchema,
+  tiktokFollowTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -423,7 +439,8 @@ export const TASK_LABEL: Record<TaskType, string> = {
   INSTAGRAM_LIKE: 'Like Instagram Post',
   INSTAGRAM_COMMENT: 'Comment on Instagram Post',
   FACEBOOK_VISIT_PAGE: 'Visit Facebook Page',
-  FACEBOOK_VIEW_POST: 'View Facebook Post'
+  FACEBOOK_VIEW_POST: 'View Facebook Post',
+  TIKTOK_FOLLOW: 'Follow on TikTok'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -452,6 +469,7 @@ export const TASK_INPUT_SCHEMA = {
     answer: z.optional(z.string())
   }),
   FACEBOOK_VIEW_POST: z.object({}),
+  TIKTOK_FOLLOW: z.object({}),
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
   }),
@@ -494,6 +512,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   INSTAGRAM_COMMENT: z.object({}),
   FACEBOOK_VISIT_PAGE: z.object({}),
   FACEBOOK_VIEW_POST: z.object({}),
+  TIKTOK_FOLLOW: z.object({}),
   SECRET_CODE: z.object({}),
   ASK_QUESTION: z.object({}),
   SINGLE_CHOICE: z.object({}),
@@ -537,6 +556,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   INSTAGRAM_COMMENT: 'INSTAGRAM',
   FACEBOOK_VISIT_PAGE: 'FACEBOOK',
   FACEBOOK_VIEW_POST: 'FACEBOOK',
+  TIKTOK_FOLLOW: 'TIKTOK',
   DISCORD_JOIN: 'DISCORD',
   TWITCH_FOLLOW: 'TWITCH',
   KICK_FOLLOW: 'KICK',
@@ -597,6 +617,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   INSTAGRAM_COMMENT: 'social',
   FACEBOOK_VISIT_PAGE: 'social',
   FACEBOOK_VIEW_POST: 'social',
+  TIKTOK_FOLLOW: 'social',
   ASK_QUESTION: 'engagement',
   SINGLE_CHOICE: 'engagement',
   MULTIPLE_CHOICE: 'engagement'
@@ -630,6 +651,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   INSTAGRAM_COMMENT: false,
   FACEBOOK_VISIT_PAGE: false,
   FACEBOOK_VIEW_POST: false,
+  TIKTOK_FOLLOW: false,
   ASK_QUESTION: false,
   SINGLE_CHOICE: false,
   MULTIPLE_CHOICE: false

@@ -2,6 +2,7 @@
 
 - [ ] Loyalty bonus seems broken now.
 - [ ] If an integration is unhealthy, ask the user to re-authenticate first.
+- [ ] there's a visual bug where some entries aren't being counted see gabriosq on disc
 
 - [ ] Can we allow private sweepstakes that only people with a link can enter? (switch to using "private" | "unlisted" | "public" for visibility)
 
@@ -19,7 +20,8 @@
   - [x] submit for approval
   - [x] app approved
   - [x] Enable login/auth with TikTok
-  - [ ] Enable entry methods (follow, like, share)
+  - [x] Add TikTok entry methods (follow)
+  - [ ] Add TikTok entry methods (like)
 
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 

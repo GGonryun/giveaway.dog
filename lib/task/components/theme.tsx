@@ -19,6 +19,7 @@ import { SocialKickIcon } from '@/lib/integrations/components/icons/kick-icon';
 import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
+import { SocialTikTokIcon } from '@/lib/integrations/components/icons/tiktok-icon';
 
 export type TaskTheme = {
   action: string;
@@ -148,6 +149,13 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-facebook-1 text-white',
         arrow: 'bg-facebook-1 text-white fill-facebook-1',
         icon: SocialFacebookIcon
+      };
+    case 'TIKTOK_FOLLOW':
+      return {
+        action: 'text-white bg-black group-hover:opacity-80 hover:opacity-80',
+        symbol: 'bg-black text-white',
+        arrow: 'bg-black text-white fill-black',
+        icon: SocialTikTokIcon
       };
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':

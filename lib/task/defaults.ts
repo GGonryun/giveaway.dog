@@ -204,7 +204,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       type: 'FACEBOOK_VIEW_POST',
       title: 'View our Facebook post',
       postUrl: '',
-
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
+    ['TIKTOK_FOLLOW']: {
+      id: '',
+      type: 'TIKTOK_FOLLOW',
+      title: 'Follow us on TikTok',
+      profileUrl: '',
       value: 1,
       mandatory: false,
       tasksRequired: 0

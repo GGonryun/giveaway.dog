@@ -43,7 +43,6 @@ import {
   toSweepstakesHost
 } from '@/schemas/giveaway/participant';
 import { assertNever } from '@/lib/errors';
-import { UserProfileSchema } from '@/schemas/user';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
   TWITTER_PROFILE_URL
@@ -222,20 +221,11 @@ const getParticipant = (
 ): SweepstakesParticipantSchema | undefined => {
   switch (previewState) {
     case 'not-logged-in':
+    case 'profile-incomplete':
       return undefined;
     case 'active':
     case 'pending':
     case 'not-eligible':
-    case 'profile-incomplete':
-      return {
-        ...mockParticipant,
-        user: {
-          ...mockUserProfile,
-          email: '',
-          emailVerified: false
-        },
-        formValues: {}
-      };
     case 'winners-announced':
     case 'winners-pending':
     case 'closed':
@@ -243,25 +233,6 @@ const getParticipant = (
     case 'error':
       return mockParticipant;
     default:
-  }
-};
-
-const getUserParticipation = (previewState: GiveawayState) => {
-  switch (previewState) {
-    case 'not-logged-in':
-      return undefined;
-    case 'active':
-    case 'pending':
-    case 'not-eligible':
-    case 'profile-incomplete':
-    case 'winners-announced':
-    case 'winners-pending':
-    case 'closed':
-    case 'canceled':
-    case 'error':
-      return mockUserParticipation;
-    default:
-      throw assertNever(previewState);
   }
 };
 

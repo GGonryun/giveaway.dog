@@ -41,6 +41,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'INSTAGRAM_COMMENT':
     case 'FACEBOOK_VISIT_PAGE':
     case 'FACEBOOK_VIEW_POST':
+    case 'TIKTOK_FOLLOW':
     case 'BONUS_LOYALTY':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':

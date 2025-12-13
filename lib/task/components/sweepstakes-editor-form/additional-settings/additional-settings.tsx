@@ -25,6 +25,7 @@ import {
 } from './lib/importing-account';
 import { InstagramProfileUrl, InstagramPostUrl } from './lib/instagram';
 import { FacebookPageUrl, FacebookPostUrl } from './lib/facebook';
+import { TikTokProfileUrl } from './lib/tiktok';
 import { AskQuestionFormFields } from './lib/ask-question';
 import { SingleChoiceFormFields } from './lib/single-choice';
 import { MultipleChoiceFormFields } from './lib/multiple-choice';
@@ -130,6 +131,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return (
           <>
             <FacebookPostUrl />
+          </>
+        );
+      case 'TIKTOK_FOLLOW':
+        return (
+          <>
+            <TikTokProfileUrl />
           </>
         );
       case 'ASK_QUESTION':

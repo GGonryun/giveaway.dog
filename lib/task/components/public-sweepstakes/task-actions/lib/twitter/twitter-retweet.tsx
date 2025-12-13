@@ -16,12 +16,9 @@ export const TwitterRetweetTaskActionForm: React.FC<
 > = ({ onCancel, onSubmit, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
   const tweetId = extractTweetId(task.tweetId);
-  const requiresConnection =
-    task.type === 'TWITTER_RETWEET' ? task.validation?.type !== 'NONE' : true;
   return (
     <WithProviderConnection
       task={task}
-      requiresConnection={requiresConnection}
       disabled={!performedAction}
       onCancel={onCancel}
       onSubmit={onSubmit}

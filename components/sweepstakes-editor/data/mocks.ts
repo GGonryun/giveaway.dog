@@ -71,6 +71,12 @@ export const mockUserProfile: UserSchema = {
       label: 'PreviewUser',
       link: 'https://kick.com/kick',
       scopes: PROVIDER_REQUIRED_SCOPES.KICK
+    },
+    {
+      type: IdentityProvider.TIKTOK,
+      label: 'PreviewUser',
+      link: 'https://www.tiktok.com/@previewuser',
+      scopes: PROVIDER_REQUIRED_SCOPES.TIKTOK
     }
   ]
 };

@@ -80,17 +80,8 @@ export const WithProviderConnection: React.FC<
       provider: ProviderSchema | undefined;
     }) => React.ReactNode;
     disabled?: boolean;
-    requiresConnection?: boolean;
   }
-> = ({
-  render,
-  onSubmit,
-  onCancel,
-  task,
-  disabled,
-  isLoading,
-  requiresConnection = true
-}) => {
+> = ({ render, onSubmit, onCancel, task, disabled, isLoading }) => {
   const { theme } = useTaskTheme();
   const providerId = TASK_PLATFORM[task.type];
   const providerLabel = TASK_PLATFORM_LABEL[providerId];
@@ -110,6 +101,8 @@ export const WithProviderConnection: React.FC<
 
   const isMissing = isMissingScopes(provider, requiredScopes);
 
+  const requiresConnection =
+    !('validation' in task) || task.validation?.type !== 'NONE';
   const isConnected = !requiresConnection || (provider && !isMissing);
 
   return (
