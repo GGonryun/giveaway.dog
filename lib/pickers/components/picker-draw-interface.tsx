@@ -233,7 +233,7 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <Trophy className="h-5 w-5 text-primary" />
@@ -245,12 +245,13 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
                   been selected for {pickerName}
                 </CardDescription>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                 {!isComplete && (
                   <Button
                     variant="default"
                     onClick={handleCompletePicker}
                     disabled={completeProcedure.isLoading}
+                    className="w-full sm:w-auto"
                   >
                     {completeProcedure.isLoading ? (
                       <>
@@ -270,6 +271,7 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
                   onClick={() =>
                     router.push(`/app/${teamSlug}/pickers/${pickerId}/overview`)
                   }
+                  className="w-full sm:w-auto"
                 >
                   Back to Overview
                 </Button>

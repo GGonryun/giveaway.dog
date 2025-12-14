@@ -1,5 +1,9 @@
 ## Roadmap
 
+- [ ] show participant details so that hosts can see them.
+- [ ] make it really clear for the host which actions support "automatic verification" if that helps.
+- [ ] Give an "automatic" free entry for completing your profile.
+
 ### @theejankanator
 
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
@@ -13,7 +17,7 @@
 - [ ] Global Black List
 - [ ] Global White List
 
-## The Games Detective
+## @TheGamesDetective
 
 - [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
 
@@ -24,6 +28,21 @@
 - it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
 - i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
 - [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries
+
+### @Gore096
+
+Most of the people want proof that the prize is given, maybe it will be useful to have “previous winners” page or something? Just to let people know that the prizes are being given. ( I know that the proof are being posted here on x by the host) but idk, just tryin to help.
+
+#### @Chizuruthedeaf
+
+it can be confusing to know how your changes are affecting the different previews, we should switch to different states in the preview depending on which one
+
+### @amd_saad
+
+- if I signed up with Google account why I need to verify my email account?
+- can I see how the giveaway tracker looks like before creating one ( in the demo)
+- do you have a share template so I can share in social media ? Or embed in website?
+- Check this , when creating a team, if the logo is optional I should get the button to create team active but it is not, I have to delete the placeholder image to process
 
 ### Nobody Asked
 
