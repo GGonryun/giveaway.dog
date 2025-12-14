@@ -32,8 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
     TikTokProvider({
       clientId: process.env.TIKTOK_CLIENT_ID,
       clientSecret: process.env.TIKTOK_CLIENT_SECRET,
-      userinfo:
-        'https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,username,profile_web_link,profile_deep_link,is_verified',
+
       profile(profile) {
         return {
           id: profile.data.user.open_id,
