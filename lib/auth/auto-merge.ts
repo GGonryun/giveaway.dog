@@ -12,6 +12,7 @@ export const tryAutoMerge = async (args: {
   session: Session | null;
 }) => {
   const { existing, account, session, profile } = args;
+  console.info('tryAutoMerge called for account:', account, existing, session);
 
   // If the existing account's user source is not from a Twitter import, do
   // not merge. Otherwise the twitter import account merge would have matching
@@ -21,9 +22,18 @@ export const tryAutoMerge = async (args: {
       existing.provider === account.provider &&
       existing.providerAccountId === account.providerAccountId
     ) {
+      console.info(
+        'Not merging, same provider and providerAccountId',
+        existing.providerAccountId,
+        account.providerAccountId
+      );
       // Same account, no merge needed, user is doing a reconnect
       return true;
     }
+    console.info(
+      'Not merging, existing account user source is:',
+      existing.user.source
+    );
     return false;
   }
 
