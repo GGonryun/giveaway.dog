@@ -79,6 +79,19 @@ const getSweepstakesList = procedure()
       team: teamQuery
     } satisfies Prisma.SweepstakesWhereInput;
 
+    const orderBy =
+      input.sortField === 'name'
+        ? {
+            details: {
+              name: input.sortDirection
+            }
+          }
+        : input.sortField
+          ? {
+              [input.sortField]: input.sortDirection
+            }
+          : undefined;
+
     const sweepstakes = await db.sweepstakes.findMany({
       where: whereClause,
       take: DEFAULT_PAGE_SIZE,
@@ -100,11 +113,7 @@ const getSweepstakesList = procedure()
           }
         }
       },
-      orderBy: input.sortField
-        ? {
-            [input.sortField]: input.sortDirection
-          }
-        : undefined
+      orderBy
     });
 
     const totalCount = await db.sweepstakes.count({
