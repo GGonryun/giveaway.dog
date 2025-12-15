@@ -1,13 +1,13 @@
 import { Badge } from '@/components/ui/badge';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
-import { WrenchIcon } from 'lucide-react';
+import { ZapIcon } from 'lucide-react';
 export const EntryMethodBadge: React.FC<{ type: TaskType }> = ({ type }) => {
   switch (type) {
     case 'BONUS_COMPLETE_PROFILE':
       return (
         <Badge variant="info">
-          <WrenchIcon /> <span className="hidden sm:inline">Automatic</span>
+          <ZapIcon /> <span className="hidden sm:inline">Instant</span>
         </Badge>
       );
     case 'BONUS_LIMITED':
