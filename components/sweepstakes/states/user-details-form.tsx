@@ -28,7 +28,7 @@ import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { UserInfoSection } from '../user-info-section';
 import { toParticipantForm } from '@/schemas/giveaway/participant';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { isFailureData } from '@/lib/mrpc/types';
 import { useRouter } from 'next/navigation';
@@ -237,18 +237,32 @@ export const UserDetailsForm = () => {
 
   const { formFields } = sweepstakes.audience;
 
-  const profile = toParticipantForm(formFields, participant);
+  const profile = toParticipantForm(
+    formFields,
+    participant?.user,
+    participant?.formValues
+  );
 
   const schema = createFormSchema(formFields);
   type FormValues = z.infer<typeof schema>;
 
+  const defaultValues = formFields.reduce<Record<string, any>>((acc, field) => {
+    acc[field.id] = profile.find((p) => p.id === field.id)?.value || '';
+    return acc;
+  }, {});
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     mode: 'onChange',
-    defaultValues: formFields.reduce<Record<string, any>>((acc, field) => {
-      acc[field.id] = profile.find((p) => p.id === field.id)?.value || '';
-      return acc;
-    }, {})
+    defaultValues
+  });
+
+  // if all form fields are filled in, skip the form we'll automatically submit
+  const readyForm = formFields.every((field) => {
+    const value = form.getValues(field.id);
+    if (field.type === SweepstakesFormFieldType.AGE) {
+      return value === true;
+    }
+    return value !== undefined && value !== '';
   });
 
   const handleFormSubmit = async (data: FormValues) => {

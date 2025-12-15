@@ -7,10 +7,6 @@
 
 - [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
 
-### Me:
-
-- new marketing page
-
 ## PJ & Dom
 
 - [ ] Global Black List
@@ -21,6 +17,10 @@
 - [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
 
 - [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
+
+### Me:
+
+- new marketing page
 
 ### @Gamelooty
 

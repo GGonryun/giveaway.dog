@@ -12,6 +12,11 @@ import {
 import z from 'zod';
 import { widetype } from '../widetype';
 import { SweepstakesFormFieldSchema } from '../custom-fields/schemas';
+import {
+  toParticipantForm,
+  toParticipantFormFields
+} from '@/schemas/giveaway/participant';
+import { ApplicationError } from '../errors';
 
 export const toParticipantFormValues = (
   formValues: Prisma.SweepstakesFormValueGetPayload<{}>[]
@@ -52,10 +57,47 @@ export const findOrCreateSweepstakesParticipant = async ({
     return existing;
   }
 
+  const user = await db.user.findFirst({
+    where: { id: userId },
+    select: USER_SCHEMA_SELECT_QUERY
+  });
+
+  if (!user) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: `User with ID ${userId} not found when creating sweepstakes participant`
+    });
+  }
+
+  const sweepstakes = await db.sweepstakes.findUnique({
+    where: { id: sweepstakesId },
+    select: {
+      audience: { select: { formFields: true } }
+    }
+  });
+
+  if (!sweepstakes?.audience?.formFields) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: `Sweepstakes with ID ${sweepstakesId} not found when creating participant`
+    });
+  }
+
+  const values = toParticipantForm(
+    toParticipantFormFields(sweepstakes.audience.formFields),
+    toUserSchema(user),
+    {}
+  );
+
   const created = await db.sweepstakesParticipant.create({
     data: {
       userId,
-      sweepstakesId
+      sweepstakesId,
+      formValues: {
+        createMany: {
+          data: values.map((fv) => ({ fieldId: fv.id, value: fv.value }))
+        }
+      }
     },
     include: SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY
   });

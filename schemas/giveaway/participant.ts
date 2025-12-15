@@ -2,7 +2,7 @@ import { DeepNullable } from '@/lib/types';
 import { ParticipantSweepstakesGetPayload } from './db';
 import { GiveawayPrizeSchema } from './schemas';
 import z from 'zod';
-import { toUserSchema } from '../user';
+import { toUserSchema, UserSchema } from '../user';
 import { toTaskInput } from './input';
 import { Prisma } from '@prisma/client';
 import { ApplicationError, assertNever } from '@/lib/errors';
@@ -10,7 +10,10 @@ import { taskSchema } from '@/lib/task/schemas';
 import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 import { parseSocialLinks } from '../social-links';
 import { DetailedUserTeam } from '../teams';
-import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import {
+  sweepstakesFormFieldSchema,
+  SweepstakesFormFieldSchema
+} from '@/lib/custom-fields/schemas';
 import { size } from 'lodash';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 
@@ -84,41 +87,58 @@ export const participantFormSchema = z
 
 export type ParticipantFormSchema = z.infer<typeof participantFormSchema>;
 
+export const toParticipantFormFields = (
+  formFields: Prisma.SweepstakesFormFieldGetPayload<{}>[]
+): SweepstakesFormFieldSchema[] =>
+  formFields.map((field) => {
+    const parse = sweepstakesFormFieldSchema.safeParse(field);
+    if (!parse.success) {
+      throw new ApplicationError({
+        code: 'VALIDATION_ERROR',
+        message: `Invalid form field data for field ID ${field.id}`,
+        cause: parse.error
+      });
+    }
+    return parse.data;
+  });
+
 export const toParticipantForm = (
   formFields: SweepstakesFormFieldSchema[],
-  participant?: SweepstakesParticipantSchema
+  user?: UserSchema,
+  values?: SweepstakesParticipantSchema['formValues']
 ): ParticipantFormSchema =>
   formFields.map((field) => ({
     id: field.id,
     label: field.label,
-    ...toFieldValue(field, participant)
+    ...toFieldValue(field, user, values)
   }));
 
 const toFieldValue = (
   field: SweepstakesFormFieldSchema,
-  participant?: SweepstakesParticipantSchema
+  user?: UserSchema,
+  values?: SweepstakesParticipantSchema['formValues']
 ) => {
-  const value = participant?.formValues[field.id] || null;
+  const value = values?.[field.id] || null;
   switch (field.type) {
     case 'AGE':
       return { value, isCustom: true };
 
     case 'USERNAME':
-      if (participant?.user.name) {
-        return { value: participant.user.name, isCustom: false };
+      if (user?.name) {
+        return { value: user.name, isCustom: false };
       }
 
       return { value, isCustom: true };
 
     case 'EMAIL':
-      if (!!participant?.user.email) {
-        return { value: participant.user.email, isCustom: false };
+      if (user?.email) {
+        return { value: user.email, isCustom: false };
       }
 
       return { value, isCustom: true };
 
     case 'TWITTER':
-      const link = participant?.user.providers?.find(
+      const link = user?.providers?.find(
         (provider) => provider.type === 'TWITTER'
       )?.link;
 
@@ -134,18 +154,14 @@ const toFieldValue = (
 
 export const isProfileComplete = (
   formFields: SweepstakesFormFieldSchema[],
-  participant?: SweepstakesParticipantSchema
+  user?: UserSchema,
+  values?: SweepstakesParticipantSchema['formValues']
 ) => {
-  if (
-    formFields.length > 0 &&
-    (!participant ||
-      !participant.formValues ||
-      size(participant.formValues) === 0)
-  ) {
+  if (formFields.length > 0 && (!user || !values || size(values) === 0)) {
     return false;
   }
 
-  const profile = toParticipantForm(formFields, participant);
+  const profile = toParticipantForm(formFields, user, values);
   const required = formFields.filter(isRequired);
 
   return required.every((field) => {

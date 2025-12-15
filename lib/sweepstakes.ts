@@ -33,7 +33,13 @@ export const toSweepstakesState = (
       return 'pending';
     case 'RUNNING': {
       if (!participant) return 'not-logged-in';
-      if (!isProfileComplete(sweepstakes.audience.formFields, participant))
+      if (
+        !isProfileComplete(
+          sweepstakes.audience.formFields,
+          participant.user,
+          participant.formValues
+        )
+      )
         return 'profile-incomplete';
       if (!isEligible({ ...args, participant })) return 'not-eligible';
       return 'active';
