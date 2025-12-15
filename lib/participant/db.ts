@@ -95,7 +95,9 @@ export const findOrCreateSweepstakesParticipant = async ({
       sweepstakesId,
       formValues: {
         createMany: {
-          data: values.map((fv) => ({ fieldId: fv.id, value: fv.value }))
+          data: values
+            .filter((fv) => fv.value !== null && fv.value !== undefined)
+            .map((fv) => ({ fieldId: fv.id, value: String(fv.value) }))
         }
       }
     },
