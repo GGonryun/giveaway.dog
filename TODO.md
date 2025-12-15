@@ -1,6 +1,5 @@
 ## Roadmap
 
-- [ ] show participant details so that hosts can see them.
 - [ ] make it really clear for the host which actions support "automatic verification" if that helps.
 - [ ] Give an "automatic" free entry for completing your profile.
 

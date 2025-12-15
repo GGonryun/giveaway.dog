@@ -3,9 +3,10 @@
 import { Suspense } from 'react';
 import { UserDetailsOverview } from '../components/overview/user-details-overview';
 import { UserDetailsOverviewSkeleton } from '../components/overview/user-details-overview-skeleton';
-import getParticipatingUser from '@/procedures/users/get-participating-user';
 import { UserParams } from '../params';
 import getUser from '@/procedures/user/get-user';
+import { getTeamParticipant } from '@/lib/team-participant/procedures/get-team-participant';
+import { getTeamTasks } from '@/lib/team-participant/procedures/get-team-tasks';
 
 interface PageProps {
   params: Promise<UserParams>;
@@ -23,7 +24,8 @@ export default async function Page({ params }: PageProps) {
 
 const Wrapper: React.FC<UserParams> = async ({ userId, slug }) => {
   const user = await getUser({ userId });
-  const participant = await getParticipatingUser({ userId, slug });
+  const participant = await getTeamParticipant({ userId, slug });
+  const tasks = await getTeamTasks({ slug });
 
   if (!user.ok) {
     return <div>Error loading user: {user.data.message}</div>;
@@ -33,12 +35,15 @@ const Wrapper: React.FC<UserParams> = async ({ userId, slug }) => {
       <div>Error loading participant data: {participant.data.message}</div>
     );
   }
+  if (!tasks.ok) {
+    return <div>Error loading tasks: {tasks.data.message}</div>;
+  }
 
   return (
     <UserDetailsOverview
       slug={slug}
       participant={participant.data}
-      user={user.data}
+      totalTasks={tasks.data.length}
     />
   );
 };

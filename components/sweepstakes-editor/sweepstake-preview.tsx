@@ -36,10 +36,7 @@ import {
 } from './data/mocks';
 import { TaskSchema } from '@/lib/task/schemas';
 import { useTeams } from '../context/team-provider';
-import {
-  SweepstakesParticipantSchema,
-  toSweepstakesHost
-} from '@/schemas/giveaway/participant';
+import { toSweepstakesHost } from '@/schemas/giveaway/participant';
 import { assertNever } from '@/lib/errors';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
@@ -49,6 +46,7 @@ import { DeepNil } from '@/lib/types';
 import { isDefined } from '@/lib/widetype';
 import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
+import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 
 export const SweepstakePreview: React.FC = () => {
   const { activeTeam } = useTeams();

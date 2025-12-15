@@ -4,7 +4,7 @@ import {
   userFeatureFlagKeySchema,
   parseUserFeatureFlags
 } from './feature-flags';
-import { UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
+import { UNKNOWN_USER_AGENT, UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
 
 import { clamp } from 'lodash';
 
@@ -25,6 +25,7 @@ export const userProfileSchema = z.object({
   emailVerified: z.boolean().nullable(),
   emoji: z.string().nullable(),
   countryCode: z.string().nullable(),
+  userAgent: z.string().nullable(),
   qualityScore: z.number(),
   providers: providerSchema.array(),
   source: z.nativeEnum(UserSource)
@@ -34,11 +35,18 @@ export type UserProfileSchema = z.infer<typeof userProfileSchema>;
 
 export const userSchema = userProfileSchema.extend({
   emailVerified: z.boolean().nullable(),
+  createdAt: z.date(),
   featureFlags: userFeatureFlagKeySchema.array().optional(),
   isAnonymous: z.boolean()
 });
 
 export type UserSchema = z.infer<typeof userSchema>;
+
+export const engagedUserSchema = userSchema.extend({
+  engagement: z.number()
+});
+
+export type EngagedUserSchema = z.infer<typeof engagedUserSchema>;
 
 export const parseProviders = (providers: UserAccounts[]): ProviderSchema[] =>
   providers.map((provider) => ({
@@ -102,6 +110,17 @@ export const USER_SCHEMA_SELECT_QUERY = {
   name: true,
   emoji: true,
   source: true,
+  createdAt: true,
+  agents: {
+    include: {
+      agent: true
+    },
+    take: 1,
+    orderBy: {
+      // Get the latest user agent
+      updatedAt: 'desc'
+    }
+  },
   ips: {
     include: {
       ip: true
@@ -134,7 +153,9 @@ export const toUserSchema = (
   name: user.name,
   emoji: user.emoji,
   source: user.source,
+  createdAt: user.createdAt,
   countryCode: user.ips[0]?.ip.countryCode || UNKNOWN_USER_COUNTRY_CODE,
+  userAgent: user.agents[0]?.agent.id ?? UNKNOWN_USER_AGENT,
   qualityScore: clamp(user.quality[0]?.score ?? 0, 0, 100),
   emailVerified: !!user.emailVerified,
   providers: parseProviders(user.accounts),

@@ -20,7 +20,6 @@ import {
   SweepstakesWinnerCriteriaSchema
 } from '@/schemas/giveaway/schemas';
 import { DiceIcon } from './dice-icon';
-import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
 import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useProcedure } from '@/lib/mrpc/hook';
@@ -49,6 +48,7 @@ import { PrizeDrawResult, UserSource } from '@prisma/client';
 import { DisqualificationDialog } from './disqualification-dialog';
 import { TASK_LABEL } from '@/lib/task/schemas';
 import { USER_SOURCE_LABEL } from '@/lib/user-source/data';
+import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 
 interface GroupedPrize {
   id: string;
@@ -80,13 +80,13 @@ const PrizeDrawRow = ({
 
   const handleUserClick = () => {
     router.push(
-      `/app/${teamSlug}/sweepstakes/${draw.taskCompletion.sweepstakeId}/winners/user/${draw.participant.id}`
+      `/app/${teamSlug}/sweepstakes/${draw.taskCompletion.sweepstake.id}/winners/user/${draw.participant.id}`
     );
   };
 
   const handleTaskClick = () => {
     router.push(
-      `/app/${teamSlug}/sweepstakes/${draw.taskCompletion.sweepstakeId}/winners/task/${draw.taskCompletion.taskId}?active=${draw.taskCompletion.completionId}`
+      `/app/${teamSlug}/sweepstakes/${draw.taskCompletion.sweepstake.id}/winners/task/${draw.taskCompletion.task.id}?active=${draw.taskCompletion.id}`
     );
   };
 
@@ -117,10 +117,10 @@ const PrizeDrawRow = ({
         >
           <div className="flex-1 min-w-0">
             <div className="font-medium text-sm truncate">
-              {draw.taskCompletion.taskName}
+              {draw.taskCompletion.task.title}
             </div>
             <div className="text-xs text-muted-foreground truncate">
-              {TASK_LABEL[draw.taskCompletion.taskType]}
+              {TASK_LABEL[draw.taskCompletion.task.type]}
             </div>
           </div>
         </Button>
@@ -336,7 +336,7 @@ const EmptyPrizeState = ({
 
 type SweepstakesWinnersProps = {
   prizes: SweepstakesPrizeSchema[];
-  participants: SweepstakesParticipantSchema_old[];
+  participants: SweepstakesParticipantSchema[];
   sweepstakesId: string;
   slug: string;
   status: DerivedSweepstakeStatus;
@@ -440,10 +440,10 @@ export const SweepstakesWinners = ({
 
     return participants.filter((p) => {
       // Check quality score
-      if (p.qualityScore < criteria.minQualityScore) return false;
+      if (p.user.qualityScore < criteria.minQualityScore) return false;
 
       // Check minimum tasks completed
-      if (p.entries.length < criteria.minTasksCompleted) return false;
+      if (p.completions.length < criteria.minTasksCompleted) return false;
 
       // Check duplicate winners
       if (!criteria.allowMultipleWins && confirmedWinnerIds.includes(p.id))

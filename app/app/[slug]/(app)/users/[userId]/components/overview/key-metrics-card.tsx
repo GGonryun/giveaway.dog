@@ -2,16 +2,18 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SquareArrowOutUpRight } from 'lucide-react';
-import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
+
 import { QUALITY_LABELS, toQualityType } from '@/schemas/quality';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 
 export const KeyMetricsCard: React.FC<{
   slug: string;
-  participant: SweepstakesParticipantSchema_old;
-}> = ({ participant, slug }) => {
-  const type = toQualityType(participant.qualityScore);
+  engagement: number;
+  participant: SweepstakesParticipantSchema;
+}> = ({ participant, slug, engagement }) => {
+  const type = toQualityType(participant.user.qualityScore);
   const label = QUALITY_LABELS[type];
 
   return (
@@ -20,15 +22,17 @@ export const KeyMetricsCard: React.FC<{
         <CardHeader className="flex flex-row items-center justify-between space-y-0">
           <CardTitle className="font-medium">Total Entries</CardTitle>
           <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-            <Link href={`/app/${slug}/users/${participant.id}/entries`}>
+            <Link href={`/app/${slug}/users/${participant.user.id}/entries`}>
               <SquareArrowOutUpRight className=" text-muted-foreground" />
             </Link>
           </Button>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{participant.entries.length}</div>
+          <div className="text-2xl font-bold">
+            {participant.completions.length}
+          </div>
           <p className="text-xs text-muted-foreground">
-            {participant.engagement}% completion rate
+            {engagement}% completion rate
           </p>
         </CardContent>
       </Card>
@@ -37,7 +41,7 @@ export const KeyMetricsCard: React.FC<{
         <CardHeader className="flex flex-row items-center justify-between space-y-0">
           <CardTitle className="font-medium">Quality Score</CardTitle>
           <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-            <Link href={`/app/${slug}/users/${participant.id}/risk`}>
+            <Link href={`/app/${slug}/users/${participant.user.id}/risk`}>
               <SquareArrowOutUpRight className=" text-muted-foreground" />
             </Link>
           </Button>
@@ -45,7 +49,7 @@ export const KeyMetricsCard: React.FC<{
         <CardContent>
           <div className="flex items-center gap-2">
             <div className="text-2xl font-bold ">
-              {participant.qualityScore}
+              {participant.user.qualityScore}
             </div>
           </div>
           <p className={'text-xs text-muted-foreground'}>{label}</p>

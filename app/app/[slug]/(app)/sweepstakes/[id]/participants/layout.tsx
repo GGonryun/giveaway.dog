@@ -2,8 +2,8 @@
 
 import { SweepstakesParticipants } from '@/components/sweepstakes-details/sweepstakes-participants';
 import { SweepstakesParticipantsSkeleton } from '@/components/sweepstakes-details/sweepstakes-participants-skeleton';
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import getParticipatingUsers from '@/procedures/users/get-participating-users';
+import { getSweepstakesParticipants } from '@/lib/participant/procedures/get-sweepstakes-participants';
+import { getSweepstakesTasks } from '@/procedures/browse/get-sweepstake-tasks';
 
 import React, { Suspense } from 'react';
 
@@ -30,15 +30,15 @@ export default async function Layout({
   );
 }
 
-const Wrapper: React.FC<Params> = async ({ slug, id }) => {
-  const result = await getParticipantSweepstake({ sweepstakesId: id });
-  const participants = await getParticipatingUsers({
+const Wrapper: React.FC<Params> = async ({ slug, id: sweepstakesId }) => {
+  const tasks = await getSweepstakesTasks({ sweepstakesId });
+  const participants = await getSweepstakesParticipants({
     slug,
-    sweepstakesId: id
+    sweepstakesId
   });
 
-  if (!result.ok) {
-    return <div>Failed to load sweepstakes info: {result.data.message}</div>;
+  if (!tasks.ok) {
+    return <div>Failed to load sweepstakes info: {tasks.data.message}</div>;
   }
   if (!participants.ok) {
     return (
@@ -50,8 +50,9 @@ const Wrapper: React.FC<Params> = async ({ slug, id }) => {
   return (
     <SweepstakesParticipants
       slug={slug}
-      sweepstakesId={id}
-      users={participants.data.users}
+      sweepstakesId={sweepstakesId}
+      totalTasks={tasks.data.length}
+      participants={participants.data.users}
     />
   );
 };

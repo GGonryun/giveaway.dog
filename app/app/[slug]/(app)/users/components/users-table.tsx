@@ -33,25 +33,29 @@ import { SearchBar } from '../../../../../../components/users/search-bar';
 
 import { useTeams } from '@/components/context/team-provider';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
-import { UserDetailSheet } from '@/components/sweepstakes-details/user-detail-sheet';
-import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
+import { UserDetailSheet } from '@/components/sweepstakes-details/user-participant-detail-sheet';
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 import { datetime } from '@/lib/date';
 import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
+import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { toMostRecentCompletion } from '@/lib/task/completions';
+import { toSweepstakesEngagement } from '@/lib/participant/db';
 
 interface UsersTableProps {
-  users: SweepstakesParticipantSchema_old[];
+  participants: SweepstakesParticipantSchema[];
+  totalTasks: number;
 }
 
 export const UsersTable: React.FC<UsersTableProps> = ({
-  users: initialUsers
+  participants: initialParticipants,
+  totalTasks
 }) => {
   const { activeTeam } = useTeams();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [selectedUser, setSelectedUser] =
-    useState<SweepstakesParticipantSchema_old | null>(null);
+    useState<SweepstakesParticipantSchema | null>(null);
   const [showUserSheet, setShowUserSheet] = useState(false);
 
   const [search, setSearch] = useState(searchParams.get('search') || '');
@@ -115,20 +119,20 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   ]);
 
   const filteredAndSortedUsers = useMemo(() => {
-    let filtered = [...initialUsers];
+    let filtered = [...initialParticipants];
 
     if (search && search.trim() !== '') {
       const searchLower = search.toLowerCase();
       filtered = filtered.filter(
-        (user) =>
-          user.name?.toLowerCase().includes(searchLower) ||
-          user.email?.toLowerCase().includes(searchLower) ||
-          user.id.toLowerCase().includes(searchLower)
+        (participant) =>
+          participant.user.name?.toLowerCase().includes(searchLower) ||
+          participant.user.email?.toLowerCase().includes(searchLower) ||
+          participant.user.id.toLowerCase().includes(searchLower)
       );
     }
 
     if (status && status !== 'all') {
-      filtered = filtered.filter((user) => user.status === status);
+      filtered = filtered.filter((participant) => 'active' === status);
     }
 
     if (dateRange && dateRange !== 'all') {
@@ -159,43 +163,53 @@ export const UsersTable: React.FC<UsersTableProps> = ({
           dateThreshold = new Date(0);
       }
 
-      filtered = filtered.filter(
-        (user) => new Date(user.lastEntryAt) >= dateThreshold
-      );
+      filtered = filtered.filter((participant) => {
+        const lastEntry = toMostRecentCompletion(participant.completions) ?? 0;
+        return new Date(lastEntry) >= dateThreshold;
+      });
     }
 
     if (minScore !== undefined && minScore > 0) {
-      filtered = filtered.filter((user) => user.qualityScore >= minScore);
+      filtered = filtered.filter(
+        (participant) => participant.user.qualityScore >= minScore
+      );
     }
 
     if (maxScore !== undefined && maxScore < 100) {
-      filtered = filtered.filter((user) => user.qualityScore <= maxScore);
+      filtered = filtered.filter(
+        (participant) => participant.user.qualityScore <= maxScore
+      );
     }
 
     if (sortField) {
       filtered.sort((a, b) => {
         let valueA: any, valueB: any;
 
+        const lastEntryA = toMostRecentCompletion(a.completions) ?? 0;
+        const lastEntryB = toMostRecentCompletion(b.completions) ?? 0;
+        const engagementA = toSweepstakesEngagement(a.completions, totalTasks);
+        const engagementB = toSweepstakesEngagement(b.completions, totalTasks);
+
         switch (sortField) {
           case 'lastEntryAt':
-            valueA = new Date(a.lastEntryAt);
-            valueB = new Date(b.lastEntryAt);
+            valueA = new Date(lastEntryA);
+            valueB = new Date(lastEntryB);
             break;
           case 'qualityScore':
-            valueA = a.qualityScore;
-            valueB = b.qualityScore;
+            valueA = a.user.qualityScore;
+            valueB = b.user.qualityScore;
             break;
           case 'engagement':
-            valueA = a.engagement;
-            valueB = b.engagement;
+            valueA = engagementA;
+            valueB = engagementB;
             break;
           case 'status':
-            valueA = a.status;
-            valueB = b.status;
+            valueA = 'active';
+            valueB = 'active';
             break;
           default:
-            valueA = new Date(a.lastEntryAt);
-            valueB = new Date(b.lastEntryAt);
+            valueA = new Date(lastEntryA);
+            valueB = new Date(lastEntryB);
         }
 
         if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
@@ -206,7 +220,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
 
     return filtered;
   }, [
-    initialUsers,
+    initialParticipants,
     search,
     status,
     dateRange,
@@ -216,7 +230,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
     sortDirection
   ]);
 
-  const paginatedUsers = useMemo(() => {
+  const paginatedParticipants = useMemo(() => {
     const startIndex = (currentPage - 1) * DEFAULT_PAGE_SIZE;
     return filteredAndSortedUsers.slice(
       startIndex,
@@ -343,128 +357,142 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {paginatedUsers.map((user) => (
-                      <TableRow
-                        key={user.id}
-                        className={`cursor-pointer hover:bg-muted/50 ${
-                          selectedUser?.id === user.id ? 'bg-muted' : ''
-                        }`}
-                        onClick={() => {
-                          setSelectedUser(user);
-                          setShowUserSheet(true);
-                        }}
-                      >
-                        <TableCell>
-                          <div className="flex items-center space-x-3">
-                            <div>
-                              <div className="flex items-center gap-1">
-                                <UserSourceBadge source={user.source} />
-                                <div className="font-medium text-sm">
-                                  {user.name}
+                    {paginatedParticipants.map((participant) => {
+                      const lastEntryAt = toMostRecentCompletion(
+                        participant.completions
+                      );
+                      const engagement = toSweepstakesEngagement(
+                        participant.completions,
+                        totalTasks
+                      );
+
+                      return (
+                        <TableRow
+                          key={participant.id}
+                          className={`cursor-pointer hover:bg-muted/50 ${selectedUser?.id === participant.id ? 'bg-muted' : ''}`}
+                          onClick={() => {
+                            setSelectedUser(participant);
+                            setShowUserSheet(true);
+                          }}
+                        >
+                          <TableCell>
+                            <div className="flex items-center space-x-3">
+                              <div>
+                                <div className="flex items-center gap-1">
+                                  <UserSourceBadge
+                                    source={participant.user.source}
+                                  />
+                                  <div className="font-medium text-sm">
+                                    {participant.user.name}
+                                  </div>
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  <UserSourceCaption user={participant.user} />
                                 </div>
                               </div>
-                              <div className="text-xs text-muted-foreground">
-                                <UserSourceCaption user={user} />
-                              </div>
                             </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell text-right">
-                          <div className="flex items-center justify-end space-x-2">
-                            <div className="w-16 bg-muted rounded-full h-1.5">
-                              <div
-                                className={`h-1.5 rounded-full transition-all ${
-                                  user.qualityScore >= 80
-                                    ? 'bg-green-500'
-                                    : user.qualityScore >= 60
-                                      ? 'bg-yellow-500'
-                                      : user.qualityScore >= 40
-                                        ? 'bg-orange-500'
-                                        : 'bg-red-500'
-                                }`}
-                                style={{ width: `${user.qualityScore}%` }}
-                              />
-                            </div>
-                            <span className="text-xs font-medium min-w-[2rem]">
-                              {user.qualityScore}
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden xl:table-cell text-right">
-                          <div className="flex items-center justify-end space-x-2">
-                            <div className="w-16 bg-muted rounded-full h-1.5">
-                              <div
-                                className={`h-1.5 rounded-full transition-all ${
-                                  user.engagement >= 80
-                                    ? 'bg-green-500'
-                                    : user.engagement >= 60
-                                      ? 'bg-blue-500'
-                                      : user.engagement >= 40
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell text-right">
+                            <div className="flex items-center justify-end space-x-2">
+                              <div className="w-16 bg-muted rounded-full h-1.5">
+                                <div
+                                  className={`h-1.5 rounded-full transition-all ${
+                                    participant.user.qualityScore >= 80
+                                      ? 'bg-green-500'
+                                      : participant.user.qualityScore >= 60
                                         ? 'bg-yellow-500'
-                                        : 'bg-red-500'
-                                }`}
-                                style={{ width: `${user.engagement}%` }}
-                              />
+                                        : participant.user.qualityScore >= 40
+                                          ? 'bg-orange-500'
+                                          : 'bg-red-500'
+                                  }`}
+                                  style={{
+                                    width: `${participant.user.qualityScore}%`
+                                  }}
+                                />
+                              </div>
+                              <span className="text-xs font-medium min-w-[2rem]">
+                                {participant.user.qualityScore}
+                              </span>
                             </div>
-                            <span className="text-xs font-medium min-w-[2.5rem]">
-                              {user.engagement}%
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell text-right">
-                          <div className="text-sm">
-                            {datetime.format(user.lastEntryAt, 'tiny')}
-                          </div>
-                        </TableCell>
-                        <TableCell onClick={(e) => e.stopPropagation()}>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              side="bottom"
-                              sideOffset={4}
-                              avoidCollisions={true}
-                            >
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  router.push(
-                                    `/app/${activeTeam.slug}/users/${user.id}`
-                                  );
-                                }}
+                          </TableCell>
+                          <TableCell className="hidden xl:table-cell text-right">
+                            <div className="flex items-center justify-end space-x-2">
+                              <div className="w-16 bg-muted rounded-full h-1.5">
+                                <div
+                                  className={`h-1.5 rounded-full transition-all ${
+                                    engagement >= 80
+                                      ? 'bg-green-500'
+                                      : engagement >= 60
+                                        ? 'bg-blue-500'
+                                        : engagement >= 40
+                                          ? 'bg-yellow-500'
+                                          : 'bg-red-500'
+                                  }`}
+                                  style={{ width: `${engagement}%` }}
+                                />
+                              </div>
+                              <span className="text-xs font-medium min-w-[2.5rem]">
+                                {engagement}%
+                              </span>
+                            </div>
+                          </TableCell>
+                          {lastEntryAt && (
+                            <TableCell className="hidden sm:table-cell text-right">
+                              <div className="text-sm">
+                                {datetime.format(lastEntryAt, 'tiny')}
+                              </div>
+                            </TableCell>
+                          )}
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                align="end"
+                                side="bottom"
+                                sideOffset={4}
+                                avoidCollisions={true}
                               >
-                                <Eye className="h-4 w-4 mr-2" />
-                                View Full Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSelectedUser(user);
-                                  setShowUserSheet(true);
-                                }}
-                              >
-                                <Eye className="h-4 w-4 mr-2" />
-                                Quick View
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                className="text-red-600"
-                                onClick={() => {
-                                  alert('This feature is coming soon!');
-                                }}
-                              >
-                                <UserX className="h-4 w-4 mr-2" />
-                                Block User
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    router.push(
+                                      `/app/${activeTeam.slug}/users/${participant.id}`
+                                    );
+                                  }}
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  View Full Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedUser(participant);
+                                    setShowUserSheet(true);
+                                  }}
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  Quick View
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  className="text-red-600"
+                                  onClick={() => {
+                                    alert('This feature is coming soon!');
+                                  }}
+                                >
+                                  <UserX className="h-4 w-4 mr-2" />
+                                  Block User
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </div>
@@ -483,7 +511,8 @@ export const UsersTable: React.FC<UsersTableProps> = ({
       </div>
 
       <UserDetailSheet
-        user={selectedUser}
+        totalTasks={totalTasks}
+        participant={selectedUser}
         open={showUserSheet}
         onOpenChangeAction={(open) => {
           if (!open) {

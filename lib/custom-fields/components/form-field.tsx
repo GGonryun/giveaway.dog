@@ -233,7 +233,7 @@ const FieldMinimumInput = () => {
                   `audience.formFields.${index}.minimum`
                 );
 
-                if (oldAge !== undefined && label) {
+                if (oldAge != null && label) {
                   form.setValue(
                     `audience.formFields.${index}.label`,
                     strings.replace(label, oldAge, n)

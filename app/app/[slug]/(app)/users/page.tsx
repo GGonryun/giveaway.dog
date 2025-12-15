@@ -2,9 +2,11 @@
 
 import { Outline } from '@/components/app/outline';
 import { UsersTable } from './components/users-table';
-import getParticipatingUsers from '@/procedures/users/get-participating-users';
+
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@/schemas/pages';
+import { getTeamParticipants } from '@/lib/team-participant/procedures/get-team-participants';
+import { getTeamTasks } from '@/lib/team-participant/procedures/get-team-tasks';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -24,17 +26,28 @@ type Props = {
 const Page: React.FC<Props> = async ({ params }) => {
   const resolvedParams = await params;
 
-  const result = await getParticipatingUsers({
+  const participants = await getTeamParticipants({
     ...resolvedParams
   });
 
-  if (!result.ok) {
-    return <div>Failed to load users: {result.data.message}</div>;
+  const tasks = await getTeamTasks({
+    ...resolvedParams
+  });
+
+  if (!participants.ok) {
+    return <div>Failed to load users: {participants.data.message}</div>;
+  }
+
+  if (!tasks.ok) {
+    return <div>Failed to load tasks: {tasks.data.message}</div>;
   }
 
   return (
     <Outline title="Users">
-      <UsersTable users={result.data.users} />
+      <UsersTable
+        participants={participants.data}
+        totalTasks={tasks.data.length}
+      />
     </Outline>
   );
 };

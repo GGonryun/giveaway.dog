@@ -1,14 +1,8 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import {
-  SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY,
-  sweepstakesParticipantSchema,
-  toParticipantFormValues,
-  toParticipantTaskCompletions
-} from '@/schemas/giveaway/participant';
-import { toUserSchema } from '@/schemas/user';
-import { PrismaClient } from '@prisma/client';
+import { findOrCreateSweepstakesParticipant } from '@/lib/participant/db';
+import { sweepstakesParticipantSchema } from '@/lib/participant/schemas';
 
 import z from 'zod';
 
@@ -33,48 +27,9 @@ export const getOrCreateSweepstakesParticipant = procedure()
       return undefined;
     }
 
-    const participant = await findOrCreateParticipant({
+    return await findOrCreateSweepstakesParticipant({
       db,
       userId: user.id,
       sweepstakesId: sweepstakes.id
     });
-
-    return {
-      id: participant.id,
-      user: toUserSchema(participant.user),
-      completions: toParticipantTaskCompletions(participant.taskCompletions),
-      formValues: toParticipantFormValues(participant.formValues)
-    };
   });
-
-const findOrCreateParticipant = async ({
-  db,
-  userId,
-  sweepstakesId
-}: {
-  db: PrismaClient;
-  userId: string;
-  sweepstakesId: string;
-}) => {
-  const participant = await db.sweepstakesParticipant.findUnique({
-    where: {
-      userId_sweepstakesId: {
-        userId,
-        sweepstakesId
-      }
-    },
-    include: SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY
-  });
-
-  if (participant) {
-    return participant;
-  }
-
-  return await db.sweepstakesParticipant.create({
-    data: {
-      userId,
-      sweepstakesId
-    },
-    include: SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY
-  });
-};

@@ -3,7 +3,7 @@ import { UserParams } from '../params';
 import { UserEntries } from '../components/entries/user-entries';
 import { UserEntriesSkeleton } from '../components/entries/user-entries-skeleton';
 import { NoEntries } from '../components/entries/no-entries';
-import getUserEntries from '@/procedures/user/get-user-entries';
+import { getTaskCompletions } from '@/lib/participant/procedures/get-task-completions';
 
 interface UserDetailEntriesPageProps {
   params: Promise<UserParams>;
@@ -22,7 +22,7 @@ export default async function UserDetailEntriesPage({
 }
 
 const Wrapper: React.FC<UserParams> = async ({ userId, slug }) => {
-  const entries = await getUserEntries({ userId });
+  const entries = await getTaskCompletions({ userId });
 
   if (!entries.ok) {
     return <div>Error loading entries: {entries.data.message}</div>;

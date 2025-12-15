@@ -12,8 +12,8 @@ export const baseSweepstakesFormFieldSchema = z.object({
 export const ageSweepstakesFormFieldSchema =
   baseSweepstakesFormFieldSchema.extend({
     type: z.literal(SweepstakesFormFieldType.AGE),
-    minimum: z.number().int().optional(),
-    maximum: z.number().int().optional(),
+    minimum: z.number().int().nullish(),
+    maximum: z.number().int().nullish(),
     required: z.boolean().default(false)
   });
 
@@ -24,17 +24,17 @@ export type AgeSweepstakesFormFieldSchema = z.infer<
 export const sweepstakesFormFieldSchema = z.discriminatedUnion('type', [
   baseSweepstakesFormFieldSchema.extend({
     type: z.literal(SweepstakesFormFieldType.USERNAME),
-    placeholder: z.string().optional(),
+    placeholder: z.string().nullish(),
     required: z.boolean().default(false)
   }),
   ageSweepstakesFormFieldSchema,
   baseSweepstakesFormFieldSchema.extend({
     type: z.literal(SweepstakesFormFieldType.EMAIL),
-    placeholder: z.string().optional()
+    placeholder: z.string().nullish()
   }),
   baseSweepstakesFormFieldSchema.extend({
     type: z.literal(SweepstakesFormFieldType.TWITTER),
-    placeholder: z.string().optional(),
+    placeholder: z.string().nullable(),
     required: z.boolean().default(false)
   })
 ]);

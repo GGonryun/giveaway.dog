@@ -1,13 +1,13 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import {
-  TASK_COMPLETION_INCLUDE_QUERY,
+  TASK_COMPLETIONS_SELECT_QUERY,
+  taskCompletionSchema,
   toTaskCompletion
-} from '@/lib/task/queries';
-import { taskCompletionSchema } from '@/schemas/giveaway/participant';
+} from '@/lib/task/completions';
 
 import z from 'zod';
 
-const getUserEntries = procedure()
+export const getTaskCompletions = procedure()
   .authorization({
     required: true
   })
@@ -33,10 +33,8 @@ const getUserEntries = procedure()
           }
         }
       },
-      include: TASK_COMPLETION_INCLUDE_QUERY
+      select: TASK_COMPLETIONS_SELECT_QUERY
     });
 
     return tasks.map(toTaskCompletion);
   });
-
-export default getUserEntries;

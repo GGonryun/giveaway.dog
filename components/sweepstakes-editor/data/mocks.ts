@@ -2,7 +2,7 @@ import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-da
 import { PROVIDER_REQUIRED_SCOPES } from '@/lib/integrations/schemas/providers';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { TWITTER_PROFILE_URL } from '@/lib/settings';
-import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
+import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import {
   GiveawayParticipationSchema,
   UserParticipationSchema,
@@ -38,7 +38,9 @@ export const mockUserProfile: UserSchema = {
   emailVerified: true,
   emoji: '🐶',
   countryCode: 'US',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
   source: 'SIGNUP',
+  createdAt: new Date('2023-01-15T10:00:00Z'),
   qualityScore: 85,
   isAnonymous: false,
   providers: [
@@ -96,7 +98,7 @@ export const mockParticipant: SweepstakesParticipantSchema = {
   id: 'preview-participant',
   user: mockUserProfile,
   completions: [],
-  formValues: []
+  formValues: {}
 };
 
 export const mockUserHostRelationship: UserHostRelationshipSchema = {

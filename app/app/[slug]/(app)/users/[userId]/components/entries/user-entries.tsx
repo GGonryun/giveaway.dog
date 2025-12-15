@@ -16,10 +16,11 @@ import { formatDistanceToNowStrict } from 'date-fns';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 
 import { Button } from '@/components/ui/button';
-import { TaskCompletionSchema } from '@/schemas/giveaway/participant';
+
 import { TASK_LABEL } from '@/lib/task/schemas';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
+import { TaskCompletionSchema } from '@/lib/task/completions';
 
 interface UserEntriesProps {
   slug: string;
@@ -46,13 +47,13 @@ export const UserEntries = ({ slug, entries }: UserEntriesProps) => {
 
   const handleTaskClick = (taskCompletion: TaskCompletionSchema) => {
     router.push(
-      `/app/${slug}/sweepstakes/${taskCompletion.sweepstakeId}/entries/task/${taskCompletion.taskId}?active=${taskCompletion.completionId}`
+      `/app/${slug}/sweepstakes/${taskCompletion.sweepstake.id}/entries/task/${taskCompletion.task.id}?active=${taskCompletion.id}`
     );
   };
 
   const handleSweepstakeClick = (taskCompletion: TaskCompletionSchema) => {
     router.push(
-      `/app/${slug}/sweepstakes/${taskCompletion.sweepstakeId}/preview`
+      `/app/${slug}/sweepstakes/${taskCompletion.sweepstake.id}/preview`
     );
   };
 
@@ -70,7 +71,7 @@ export const UserEntries = ({ slug, entries }: UserEntriesProps) => {
           </TableHeader>
           <TableBody>
             {paginatedEntries.map((completion) => (
-              <TableRow key={completion.completionId}>
+              <TableRow key={completion.id}>
                 <TableCell>
                   <div>
                     <div className="flex items-center space-x-2">
@@ -79,12 +80,12 @@ export const UserEntries = ({ slug, entries }: UserEntriesProps) => {
                         className="p-0 m-0 h-6 font-medium hover:text-primary transition-colors cursor-pointer"
                         onClick={() => handleTaskClick(completion)}
                       >
-                        {completion.taskName}
+                        {completion.task.title}
                       </Button>
                     </div>
                     <div className="flex items-center space-x-2">
                       <div className="text-xs text-muted-foreground">
-                        {TASK_LABEL[completion.taskType]}
+                        {TASK_LABEL[completion.task.type]}
                       </div>
                     </div>
                   </div>
@@ -97,12 +98,12 @@ export const UserEntries = ({ slug, entries }: UserEntriesProps) => {
                         className="p-0 m-0 h-6 font-medium hover:text-primary transition-colors cursor-pointer"
                         onClick={() => handleSweepstakeClick(completion)}
                       >
-                        {completion.sweepstakeName}
+                        {completion.sweepstake.name}
                       </Button>
                     </div>
                     <div className="flex items-center space-x-2">
                       <div className="text-xs text-muted-foreground">
-                        ID: {completion.sweepstakeId}
+                        ID: {completion.sweepstake.id}
                       </div>
                     </div>
                   </div>

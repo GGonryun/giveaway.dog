@@ -6,11 +6,7 @@ import {
 } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import z from 'zod';
-import { userProfileSchema } from '../user';
-import {
-  taskCompletionSchema,
-  sweepstakesParticipantSchema_old
-} from './participant';
+import { userProfileSchema, userSchema } from '../user';
 import { derivedSweepstakesStatusSchema } from '../sweepstakes';
 import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@/lib/settings';
 import { timingSchema } from '../timing';
@@ -21,6 +17,7 @@ import { providerTypeSchema } from '@/lib/integrations/schemas/providers';
 import { aspectRatioSchema } from '@/lib/aspect-ratio/data';
 import { sweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
+import { taskCompletionSchema } from '@/lib/task/completions';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -158,7 +155,7 @@ const giveawayAudienceSchema = z.object({
 
 export type GiveawayFormAudience = z.infer<typeof giveawayAudienceSchema>;
 
-const giveawayFormTaskSchema = z
+export const giveawayFormTaskSchema = z
   .array(taskSchema)
   .min(1, 'At least one entry method is required')
   .max(25, 'Maximum of 25 entry methods are allowed');
@@ -404,7 +401,7 @@ export const sweepstakesPrizeSchema = z.object({
       createdAt: z.date(),
       result: z.enum(['WINNER', 'DISQUALIFIED']),
       disqualificationReason: z.string().nullable(),
-      participant: sweepstakesParticipantSchema_old,
+      participant: userProfileSchema,
       taskCompletion: taskCompletionSchema
     })
     .array()

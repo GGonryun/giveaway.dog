@@ -5,10 +5,8 @@ import {
 import { assertNever } from './errors';
 import { RequiredFields } from './types';
 import { expandCountries, includesCountryCode } from './countries';
-import {
-  isProfileComplete,
-  SweepstakesParticipantSchema
-} from '@/schemas/giveaway/participant';
+import { isProfileComplete } from '@/schemas/giveaway/participant';
+import { SweepstakesParticipantSchema } from './participant/schemas';
 
 type ComputeStateOptions = Pick<
   ParticipantSweepstakeSchema,

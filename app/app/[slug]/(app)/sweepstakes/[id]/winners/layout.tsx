@@ -1,8 +1,9 @@
 import { SweepstakesWinners } from '@/components/sweepstakes-details/sweepstakes-winners';
 import { SweepstakesWinnersSkeleton } from '@/components/sweepstakes-details/sweepstakes-winners-skeleton';
+import { getSweepstakesParticipants } from '@/lib/participant/procedures/get-sweepstakes-participants';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import getSweepstakePrizes from '@/procedures/sweepstakes/get-sweepstake-prizes';
-import getParticipatingUsers from '@/procedures/users/get-participating-users';
+
 import { Suspense } from 'react';
 
 type Params = { slug: string; id: string };
@@ -32,7 +33,7 @@ export default async function WinnersLayout({
 const Wrapper: React.FC<Params> = async ({ id, slug }) => {
   const result = await getParticipantSweepstake({ sweepstakesId: id });
   const prizes = await getSweepstakePrizes({ sweepstakesId: id, slug });
-  const participants = await getParticipatingUsers({
+  const participants = await getSweepstakesParticipants({
     slug,
     sweepstakesId: id
   });

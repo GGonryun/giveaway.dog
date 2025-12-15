@@ -22,7 +22,7 @@ const getParticipantSweepstake = procedure()
     })
   )
   .output(sweepstakesPrizeSchema.array())
-  .handler(async ({ input: { sweepstakesId, slug }, db, user }) => {
+  .handler(async ({ input: { sweepstakesId, slug }, db }) => {
     const sweepstakes = await db.sweepstakes.findUnique({
       where: {
         id: sweepstakesId,
@@ -44,22 +44,10 @@ const getParticipantSweepstake = procedure()
       where: {
         sweepstakesId
       },
-      include: PRIZE_WINNERS_INCLUDE_QUERY({
-        sweepstakesId,
-        slug,
-        userId: user.id
-      })
+      include: PRIZE_WINNERS_INCLUDE_QUERY
     });
 
-    const totalTasks = await db.task.count({
-      where: SWEEPSTAKES_TASK_WHERE_QUERY({
-        sweepstakesId,
-        slug,
-        userId: user.id
-      })
-    });
-
-    return toSweepstakesPrizes(prizes, totalTasks);
+    return toSweepstakesPrizes(prizes);
   });
 
 export default getParticipantSweepstake;

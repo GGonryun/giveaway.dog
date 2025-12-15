@@ -1,44 +1,37 @@
 import { Prisma } from '@prisma/client';
-import {
-  toUserParticipationSchema,
-  USER_PARTICIPATION_INCLUDE_QUERY
-} from './participants';
+
 import { SweepstakesPrizeSchema } from './giveaway/schemas';
 import { ApplicationError } from '@/lib/errors';
-import {
-  TASK_COMPLETION_INCLUDE_QUERY,
-  toTaskCompletion
-} from '@/lib/task/queries';
 
-export const PRIZE_WINNERS_INCLUDE_QUERY = (input: {
-  sweepstakesId?: string;
-  slug: string;
-  userId: string;
-}) =>
-  ({
-    draws: {
-      include: {
-        taskCompletion: {
-          include: {
-            ...TASK_COMPLETION_INCLUDE_QUERY,
-            participant: {
-              include: {
-                user: {
-                  include: USER_PARTICIPATION_INCLUDE_QUERY(input)
-                }
+import {
+  TASK_COMPLETIONS_SELECT_QUERY,
+  toTaskCompletion
+} from '@/lib/task/completions';
+import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from './user';
+
+export const PRIZE_WINNERS_INCLUDE_QUERY = {
+  draws: {
+    include: {
+      taskCompletion: {
+        select: {
+          ...TASK_COMPLETIONS_SELECT_QUERY,
+          participant: {
+            include: {
+              user: {
+                select: USER_SCHEMA_SELECT_QUERY
               }
             }
           }
         }
       }
     }
-  }) satisfies Prisma.PrizeInclude;
+  }
+} satisfies Prisma.PrizeInclude;
 
 export const toSweepstakesPrizes = (
   prizes: Prisma.PrizeGetPayload<{
-    include: ReturnType<typeof PRIZE_WINNERS_INCLUDE_QUERY>;
-  }>[],
-  totalTasks: number
+    include: typeof PRIZE_WINNERS_INCLUDE_QUERY;
+  }>[]
 ): SweepstakesPrizeSchema[] => {
   return prizes.map((prize) => {
     if (!prize.quota)
@@ -73,10 +66,7 @@ export const toSweepstakesPrizes = (
         result: draw.result,
         disqualificationReason: draw.disqualificationReason,
         taskCompletion: toTaskCompletion(draw.taskCompletion),
-        participant: toUserParticipationSchema(
-          draw.taskCompletion.participant.user,
-          totalTasks
-        )
+        participant: toUserSchema(draw.taskCompletion.participant.user)
       }))
     };
   });

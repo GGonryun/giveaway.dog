@@ -2,29 +2,17 @@ import { DeepNullable } from '@/lib/types';
 import { ParticipantSweepstakesGetPayload } from './db';
 import { GiveawayPrizeSchema } from './schemas';
 import z from 'zod';
-import { toUserSchema, USER_SCHEMA_SELECT_QUERY, userSchema } from '../user';
+import { toUserSchema } from '../user';
 import { toTaskInput } from './input';
-import { CompletionStatus, Prisma, TaskType, UserSource } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { ApplicationError, assertNever } from '@/lib/errors';
 import { taskSchema } from '@/lib/task/schemas';
-import { providerSchema } from '@/lib/integrations/schemas/providers';
 import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 import { parseSocialLinks } from '../social-links';
 import { DetailedUserTeam } from '../teams';
 import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { size } from 'lodash';
-
-export const taskCompletionSchema = z.object({
-  completionId: z.string(),
-  completedAt: z.date().nullable(),
-  taskId: z.string(),
-  taskName: z.string(),
-  taskType: z.nativeEnum(TaskType),
-  sweepstakeId: z.string(),
-  sweepstakeName: z.string(),
-  status: z.nativeEnum(CompletionStatus)
-});
-export type TaskCompletionSchema = z.infer<typeof taskCompletionSchema>;
+import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 
 export const winnerSchema = z.object({
   prizeId: z.string(),
@@ -34,27 +22,6 @@ export const winnerSchema = z.object({
 export const userStatusSchema = z.enum(['active', 'blocked']);
 
 export type UserStatusSchema = z.infer<typeof userStatusSchema>;
-
-export const sweepstakesParticipantSchema_old = z.object({
-  id: z.string(),
-  createdAt: z.date(),
-  name: z.string().nullable(),
-  email: z.string().nullable(),
-  country: z.string(),
-  entries: taskCompletionSchema.array(),
-  lastEntryAt: z.string(),
-  qualityScore: z.number(),
-  engagement: z.number(),
-  source: z.nativeEnum(UserSource),
-  status: userStatusSchema,
-  userAgent: z.string(),
-  emailVerified: z.boolean(),
-  providers: providerSchema.array()
-});
-
-export type SweepstakesParticipantSchema_old = z.infer<
-  typeof sweepstakesParticipantSchema_old
->;
 
 export const toSweepstakesPrizes = (
   prizes: ParticipantSweepstakesGetPayload['prizes']
@@ -105,58 +72,6 @@ export const toSweepstakesHost = (
     links: parseSocialLinks(team.links)
   };
 };
-
-export const sweepstakesParticipantSchema = z.object({
-  id: z.string(),
-  user: userSchema,
-  completions: z
-    .object({
-      id: z.string(),
-      task: taskSchema,
-      status: z.nativeEnum(CompletionStatus)
-    })
-    .array(),
-  formValues: z.record(z.string(), z.any())
-});
-
-export type SweepstakesParticipantSchema = z.infer<
-  typeof sweepstakesParticipantSchema
->;
-
-export const PARTICIPANT_TASK_COMPLETIONS_SELECT_QUERY = {
-  id: true,
-  task: true,
-  status: true
-} satisfies Prisma.TaskCompletionSelect;
-
-export const toParticipantTaskCompletions = (
-  completions: Prisma.TaskCompletionGetPayload<{
-    select: typeof PARTICIPANT_TASK_COMPLETIONS_SELECT_QUERY;
-  }>[]
-) =>
-  completions.map((tc) => ({
-    id: tc.id,
-    task: taskSchema.parse(toTaskInput(tc.task)),
-    status: tc.status
-  }));
-
-export const toParticipantFormValues = (
-  formValues: Prisma.SweepstakesFormValueGetPayload<{}>[]
-) =>
-  formValues.reduce<Record<string, any>>((acc, curr) => {
-    acc[curr.fieldId] = curr.value;
-    return acc;
-  }, {});
-
-export const SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY = {
-  user: {
-    select: USER_SCHEMA_SELECT_QUERY
-  },
-  taskCompletions: {
-    select: PARTICIPANT_TASK_COMPLETIONS_SELECT_QUERY
-  },
-  formValues: true
-} satisfies Prisma.SweepstakesParticipantInclude;
 
 export const participantFormSchema = z
   .object({

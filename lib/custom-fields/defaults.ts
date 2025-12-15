@@ -12,6 +12,7 @@ export const DEFAULT_MINIMUM_AGE_FIELD: Omit<
   'id'
 > = {
   minimum: DEFAULT_MINIMUM_AGE,
+  maximum: null,
   type: SweepstakesFormFieldType.AGE,
   label: toMinimumAgeLabel(DEFAULT_MINIMUM_AGE),
   required: true

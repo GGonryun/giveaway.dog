@@ -2,9 +2,12 @@
 
 import {
   ParticipatingUserSheet,
-  ParticipatingUserSheetContent
-} from '@/components/sweepstakes-details/user-detail-sheet';
-import getParticipatingUser from '@/procedures/users/get-participating-user';
+  UserParticipantSheetContent
+} from '@/components/sweepstakes-details/user-participant-detail-sheet';
+import { getSweepstakesParticipant } from '@/lib/participant/procedures/get-sweepstake-participant';
+import { getSweepstakesFormFields } from '@/procedures/browse/get-sweepstake-form-field';
+import { getSweepstakesTasks } from '@/procedures/browse/get-sweepstake-tasks';
+
 import { Suspense } from 'react';
 
 const Page: React.FC<{
@@ -30,7 +33,9 @@ const Wrapper: React.FC<{
   sweepstakesId: string;
   userId: string;
 }> = async ({ slug, sweepstakesId, userId }) => {
-  const details = await getParticipatingUser({
+  const tasks = await getSweepstakesTasks({ sweepstakesId });
+  const fields = await getSweepstakesFormFields({ sweepstakesId });
+  const details = await getSweepstakesParticipant({
     slug,
     sweepstakesId,
     userId
@@ -40,7 +45,23 @@ const Wrapper: React.FC<{
     return <div>Failed to load sweepstakes entry: {details.data.message}</div>;
   }
 
-  return <ParticipatingUserSheetContent user={details.data} />;
+  if (!tasks.ok) {
+    return <div>Failed to load sweepstakes tasks: {tasks.data.message}</div>;
+  }
+
+  if (!fields.ok) {
+    return (
+      <div>Failed to load sweepstakes form fields: {fields.data.message}</div>
+    );
+  }
+
+  return (
+    <UserParticipantSheetContent
+      participant={details.data}
+      totalTasks={tasks.data.length}
+      fields={fields.data}
+    />
+  );
 };
 
 export default Page;

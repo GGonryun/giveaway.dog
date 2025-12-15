@@ -31,24 +31,25 @@ import { StatusExplanationDialog } from '../users/status-explanation-dialog';
 
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { datetime } from '@/lib/date';
-import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
+
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
+import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { toSweepstakesEngagement } from '@/lib/participant/db';
+import { toMostRecentCompletion } from '@/lib/task/completions';
 
 export const SweepstakesParticipants: React.FC<{
   slug: string;
   sweepstakesId: string;
-  users: SweepstakesParticipantSchema_old[];
-}> = ({ users, slug, sweepstakesId }) => {
-  const router = useRouter();
+  totalTasks: number;
+  participants: SweepstakesParticipantSchema[];
+}> = ({ participants, slug, sweepstakesId, totalTasks }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
-  const [statusDialogUser, setStatusDialogUser] =
-    useState<SweepstakesParticipantSchema_old | null>(null);
 
   const pageSize = DEFAULT_PAGE_SIZE;
-  const totalUsers = users.length;
-  const totalPages = Math.ceil(totalUsers / pageSize);
+  const totalParticipants = participants.length;
+  const totalPages = Math.ceil(totalParticipants / pageSize);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -56,8 +57,8 @@ export const SweepstakesParticipants: React.FC<{
 
   // Calculate shown entries for pagination
   const startEntry = (currentPage - 1) * DEFAULT_PAGE_SIZE + 1;
-  const endEntry = Math.min(currentPage * DEFAULT_PAGE_SIZE, totalUsers);
-  const paginatedUsers = users.slice(startEntry - 1, endEntry);
+  const endEntry = Math.min(currentPage * DEFAULT_PAGE_SIZE, totalParticipants);
+  const paginatedParticipants = participants.slice(startEntry - 1, endEntry);
 
   return (
     <div>
@@ -70,12 +71,12 @@ export const SweepstakesParticipants: React.FC<{
                   <Users className="h-5 w-5" />
                   <span className="text-lg font-semibold">Participants</span>
                   <Badge variant="secondary">
-                    {totalUsers.toLocaleString()} total
+                    {totalParticipants.toLocaleString()} total
                   </Badge>
                 </div>
               </div>
               <CardDescription>
-                Users participating in this specific sweepstakes.
+                Participants who have entered this sweepstake.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -97,136 +98,20 @@ export const SweepstakesParticipants: React.FC<{
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {paginatedUsers.map((user) => (
-                      <TableRow
-                        key={user.id}
-                        className={'cursor-pointer hover:bg-muted/50'}
-                        onClick={() => {
-                          router.push(
-                            `/app/${slug}/sweepstakes/${sweepstakesId}/participants/${user.id}`
-                          );
-                        }}
-                      >
-                        <TableCell>
-                          <div className="flex items-center space-x-3">
-                            <div>
-                              <div className="flex items-center gap-1">
-                                <UserSourceBadge source={user.source} />
-                                <div className="font-medium text-sm">
-                                  {user.name}
-                                </div>
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                <UserSourceCaption user={user} />
-                              </div>
-                            </div>
-                          </div>
-                        </TableCell>
-
-                        <TableCell className="hidden lg:table-cell text-right">
-                          <div className="flex items-center justify-end space-x-2">
-                            <div className="w-16 bg-muted rounded-full h-1.5">
-                              <div
-                                className={`h-1.5 rounded-full transition-all ${
-                                  user.qualityScore >= 80
-                                    ? 'bg-green-500'
-                                    : user.qualityScore >= 60
-                                      ? 'bg-yellow-500'
-                                      : user.qualityScore >= 40
-                                        ? 'bg-orange-500'
-                                        : 'bg-red-500'
-                                }`}
-                                style={{ width: `${user.qualityScore}%` }}
-                              />
-                            </div>
-                            <span className="text-xs font-medium min-w-[2rem]">
-                              {user.qualityScore}
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden xl:table-cell text-right">
-                          <div className="flex items-center justify-end space-x-2">
-                            <div className="w-16 bg-muted rounded-full h-1.5">
-                              <div
-                                className={`h-1.5 rounded-full transition-all ${
-                                  user.engagement >= 80
-                                    ? 'bg-green-500'
-                                    : user.engagement >= 60
-                                      ? 'bg-blue-500'
-                                      : user.engagement >= 40
-                                        ? 'bg-yellow-500'
-                                        : 'bg-red-500'
-                                }`}
-                                style={{ width: `${user.engagement}%` }}
-                              />
-                            </div>
-                            <span className="text-xs font-medium min-w-[2.5rem]">
-                              {user.engagement}%
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell text-right">
-                          <div className="text-sm">
-                            {datetime.format(user.lastEntryAt, 'tiny')}
-                          </div>
-                        </TableCell>
-                        <TableCell onClick={(e) => e.stopPropagation()}>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="size-7"
-                              >
-                                <MoreVertical />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              side="bottom"
-                              sideOffset={4}
-                              avoidCollisions={true}
-                            >
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  router.push(`/app/${slug}/users/${user.id}`);
-                                }}
-                              >
-                                <Eye />
-                                View Full Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  router.push(
-                                    `/app/${slug}/sweepstakes/${sweepstakesId}/participants/${user.id}`
-                                  );
-                                }}
-                              >
-                                <Eye />
-                                Quick View
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                className="text-red-600"
-                                onClick={() => {
-                                  alert('Block user action');
-                                }}
-                              >
-                                <UserX />
-                                Block User
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
+                    {paginatedParticipants.map((participant) => (
+                      <SweepstakeParticipant
+                        key={participant.id}
+                        slug={slug}
+                        sweepstakesId={sweepstakesId}
+                        totalTasks={totalTasks}
+                        participant={participant}
+                      />
                     ))}
                   </TableBody>
                 </Table>
               </div>
               <TablePagination
-                totalItems={totalUsers}
+                totalItems={totalParticipants}
                 currentPage={currentPage}
                 totalPages={totalPages}
                 pageSize={DEFAULT_PAGE_SIZE}
@@ -243,10 +128,147 @@ export const SweepstakesParticipants: React.FC<{
         open={showStatusDialog}
         onClose={() => {
           setShowStatusDialog(false);
-          setStatusDialogUser(null);
         }}
-        status={statusDialogUser?.status || 'active'}
+        status="active"
       />
     </div>
+  );
+};
+
+const SweepstakeParticipant: React.FC<{
+  slug: string;
+  sweepstakesId: string;
+  participant: SweepstakesParticipantSchema;
+  totalTasks: number | null;
+}> = ({ sweepstakesId, slug, participant, totalTasks }) => {
+  const router = useRouter();
+
+  const engagement = toSweepstakesEngagement(
+    participant.completions,
+    totalTasks
+  );
+  const lastEntryAt = toMostRecentCompletion(participant.completions);
+  return (
+    <TableRow
+      key={participant.user.id}
+      className={'cursor-pointer hover:bg-muted/50'}
+      onClick={() => {
+        router.push(
+          `/app/${slug}/sweepstakes/${sweepstakesId}/participants/${participant.user.id}`
+        );
+      }}
+    >
+      <TableCell>
+        <div className="flex items-center space-x-3">
+          <div>
+            <div className="flex items-center gap-1">
+              <UserSourceBadge source={participant.user.source} />
+              <div className="font-medium text-sm">{participant.user.name}</div>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              <UserSourceCaption user={participant.user} />
+            </div>
+          </div>
+        </div>
+      </TableCell>
+
+      <TableCell className="hidden lg:table-cell text-right">
+        <div className="flex items-center justify-end space-x-2">
+          <div className="w-16 bg-muted rounded-full h-1.5">
+            <div
+              className={`h-1.5 rounded-full transition-all ${
+                participant.user.qualityScore >= 80
+                  ? 'bg-green-500'
+                  : participant.user.qualityScore >= 60
+                    ? 'bg-yellow-500'
+                    : participant.user.qualityScore >= 40
+                      ? 'bg-orange-500'
+                      : 'bg-red-500'
+              }`}
+              style={{
+                width: `${participant.user.qualityScore}%`
+              }}
+            />
+          </div>
+          <span className="text-xs font-medium min-w-[2rem]">
+            {participant.user.qualityScore}
+          </span>
+        </div>
+      </TableCell>
+      <TableCell className="hidden xl:table-cell text-right">
+        <div className="flex items-center justify-end space-x-2">
+          <div className="w-16 bg-muted rounded-full h-1.5">
+            <div
+              className={`h-1.5 rounded-full transition-all ${
+                engagement >= 80
+                  ? 'bg-green-500'
+                  : engagement >= 60
+                    ? 'bg-blue-500'
+                    : engagement >= 40
+                      ? 'bg-yellow-500'
+                      : 'bg-red-500'
+              }`}
+              style={{ width: `${engagement}%` }}
+            />
+          </div>
+          <span className="text-xs font-medium min-w-[2.5rem]">
+            {engagement}%
+          </span>
+        </div>
+      </TableCell>
+      <TableCell className="hidden sm:table-cell text-right">
+        {lastEntryAt ? (
+          <div className="text-sm">{datetime.format(lastEntryAt, 'tiny')}</div>
+        ) : (
+          '—'
+        )}
+      </TableCell>
+      <TableCell onClick={(e) => e.stopPropagation()}>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="size-7">
+              <MoreVertical />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            side="bottom"
+            sideOffset={4}
+            avoidCollisions={true}
+          >
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/app/${slug}/users/${participant.user.id}`);
+              }}
+            >
+              <Eye />
+              View Full Details
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(
+                  `/app/${slug}/sweepstakes/${sweepstakesId}/participants/${participant.user.id}`
+                );
+              }}
+            >
+              <Eye />
+              Quick View
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-red-600"
+              onClick={() => {
+                alert('Block user action');
+              }}
+            >
+              <UserX />
+              Block User
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TableCell>
+    </TableRow>
   );
 };

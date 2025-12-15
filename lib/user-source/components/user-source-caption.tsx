@@ -1,11 +1,8 @@
 import { assertNever } from '@/lib/errors';
-import { SweepstakesParticipantSchema_old } from '@/schemas/giveaway/participant';
+import { UserSchema } from '@/schemas/user';
 
 export const UserSourceCaption: React.FC<{
-  user: Pick<
-    SweepstakesParticipantSchema_old,
-    'email' | 'source' | 'providers'
-  >;
+  user: Pick<UserSchema, 'email' | 'source' | 'providers'>;
 }> = ({ user }) => {
   switch (user.source) {
     case 'SIGNUP':

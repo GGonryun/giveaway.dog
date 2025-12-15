@@ -6,9 +6,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useProcedureAsync } from '@/lib/mrpc/hook';
 import submitTask from '@/lib/task/procedures/submit-tasks';
 import { toSweepstakesState } from '@/lib/sweepstakes';
-import { SweepstakesParticipantSchema } from '@/schemas/giveaway/participant';
 import { submitParticipantForm } from '@/lib/custom-fields/procedures/submit-form';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
+import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 
 export type SweepstakesParticipationPageContentProps =
   ParticipantSweepstakeSchema & {
