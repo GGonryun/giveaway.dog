@@ -60,6 +60,7 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'BONUS_TIMED':
     case 'BONUS_LIMITED':
     case 'BONUS_LOYALTY':
+    case 'BONUS_COMPLETE_PROFILE':
     case 'STEAM_WISHLIST':
     case 'DISCORD_JOIN':
     case 'TWITCH_FOLLOW':

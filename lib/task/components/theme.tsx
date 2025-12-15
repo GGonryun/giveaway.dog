@@ -6,7 +6,8 @@ import {
   LucideIcon,
   StarIcon,
   UsersIcon,
-  MessageSquareIcon
+  MessageSquareIcon,
+  UserCheck
 } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
@@ -61,6 +62,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-indigo-500 text-indigo-100',
         arrow: 'bg-indigo-500 text-indigo-100 fill-indigo-500',
         icon: HeartIcon
+      };
+    case 'BONUS_COMPLETE_PROFILE':
+      return {
+        action:
+          'bg-emerald-500 text-emerald-100 group-hover:bg-emerald-500 hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-500',
+        symbol: 'bg-emerald-500 text-emerald-100',
+        arrow: 'bg-emerald-500 text-emerald-100 fill-emerald-500',
+        icon: UserCheck
       };
     case 'VISIT_URL':
       return {

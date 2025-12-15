@@ -125,6 +125,7 @@ export const TaskBadge: React.FC<TaskBadgeProps> = ({
     case 'BONUS_LOYALTY':
       return <BonusLoyaltyContent task={task} loyalty={loyalty} />;
     case 'BONUS_TASK':
+    case 'BONUS_COMPLETE_PROFILE':
     case 'VISIT_URL':
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':

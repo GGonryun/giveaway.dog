@@ -13,10 +13,12 @@ import z from 'zod';
 import { widetype } from '../widetype';
 import { SweepstakesFormFieldSchema } from '../custom-fields/schemas';
 import {
+  isProfileComplete,
   toParticipantForm,
   toParticipantFormFields
 } from '@/schemas/giveaway/participant';
 import { ApplicationError } from '../errors';
+import { toTaskSchema } from '../task/schemas';
 
 export const toParticipantFormValues = (
   formValues: Prisma.SweepstakesFormValueGetPayload<{}>[]
@@ -83,11 +85,18 @@ export const findOrCreateSweepstakesParticipant = async ({
     });
   }
 
-  const values = toParticipantForm(
-    toParticipantFormFields(sweepstakes.audience.formFields),
-    toUserSchema(user),
-    {}
+  const participantFormFields = toParticipantFormFields(
+    sweepstakes.audience.formFields
   );
+  const userSchema = toUserSchema(user);
+
+  const values = toParticipantForm(participantFormFields, userSchema, {});
+
+  const data = values
+    .filter((fv) => fv.value !== null && fv.value !== undefined)
+    .map((fv) => ({ fieldId: fv.id, value: String(fv.value) }));
+
+  const isComplete = isProfileComplete(participantFormFields, userSchema, {});
 
   const created = await db.sweepstakesParticipant.create({
     data: {
@@ -95,14 +104,53 @@ export const findOrCreateSweepstakesParticipant = async ({
       sweepstakesId,
       formValues: {
         createMany: {
-          data: values
-            .filter((fv) => fv.value !== null && fv.value !== undefined)
-            .map((fv) => ({ fieldId: fv.id, value: String(fv.value) }))
+          data
         }
       }
     },
     include: SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY
   });
+
+  if (isComplete) {
+    // Auto-complete BONUS_COMPLETE_PROFILE task if it exists
+    const allTasks = await db.task.findMany({
+      where: {
+        sweepstakesId
+      }
+    });
+
+    // Find the BONUS_COMPLETE_PROFILE task by parsing its config
+    const profileCompletionTask = allTasks.find((task) => {
+      try {
+        const taskConfig = toTaskSchema(task);
+        return taskConfig.type === 'BONUS_COMPLETE_PROFILE';
+      } catch {
+        return false;
+      }
+    });
+
+    if (profileCompletionTask) {
+      // Check if already completed
+      const existingCompletion = await db.taskCompletion.findFirst({
+        where: {
+          participantId: created.id,
+          taskId: profileCompletionTask.id
+        }
+      });
+
+      // Only create if not already completed
+      if (!existingCompletion) {
+        await db.taskCompletion.create({
+          data: {
+            participantId: created.id,
+            taskId: profileCompletionTask.id,
+            status: 'COMPLETED',
+            proof: Prisma.JsonNull
+          }
+        });
+      }
+    }
+  }
 
   return toSweepstakesParticipant(created);
 };

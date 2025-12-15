@@ -61,6 +61,7 @@ export const processTaskJob = async (
 
     switch (task.type) {
       case 'BONUS_TASK':
+      case 'BONUS_COMPLETE_PROFILE':
       case 'BONUS_TIMED':
       case 'BONUS_LIMITED':
       case 'BONUS_LOYALTY':

@@ -15,7 +15,11 @@ import { widetype } from '@/lib/widetype';
 import { PlusIcon, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { toTaskTheme } from '@/lib/task/components/theme';
-import { TASK_LABEL, TASK_IS_IMPORT } from '@/lib/task/schemas';
+import {
+  TASK_LABEL,
+  TASK_IS_IMPORT,
+  TASK_ALLOW_MANUAL_ADD
+} from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
 import { ImportBadge } from '@/lib/task/components/sweepstakes-editor-form/import-badge';
 
@@ -25,7 +29,9 @@ export const SelectTaskDialog: React.FC<{
   const [open, setOpen] = React.useState(false);
 
   const allTaskTypes = widetype.keys(TASK_LABEL);
-  const regularTasks = allTaskTypes.filter((t) => !TASK_IS_IMPORT[t]);
+  const regularTasks = allTaskTypes.filter(
+    (t) => !TASK_IS_IMPORT[t] && TASK_ALLOW_MANUAL_ADD[t]
+  );
   const importTasks = allTaskTypes.filter((t) => TASK_IS_IMPORT[t]);
 
   return (

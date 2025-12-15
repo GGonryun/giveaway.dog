@@ -31,6 +31,7 @@ import { FieldError, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import pluralize from 'pluralize';
 import { ImportBadge } from '@/lib/task/components/sweepstakes-editor-form/import-badge';
+import { EntryMethodBadge } from './entry-method-badge';
 
 export const EntryMethod: React.FC<{
   id: string;
@@ -93,7 +94,7 @@ export const EntryMethod: React.FC<{
                 !open ? 'rounded-lg' : 'rounded-lg rounded-b-none'
               )}
             >
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center min-w-0">
                 <div
                   className={cn(
                     'flex items-center justify-center w-6 h-6 p-0.5 rounded-md border',
@@ -108,10 +109,8 @@ export const EntryMethod: React.FC<{
                     <theme.icon />
                   )}
                 </div>
-                <div className="flex items-center gap-2">
-                  <Typography.Paragraph size="md" weight="medium">
-                    {TASK_LABEL[type]}
-                  </Typography.Paragraph>
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <p className="flex-1 min-w-0 truncate">{TASK_LABEL[type]}</p>
                   <ImportBadge type={type} />
                 </div>
                 {hasErrors && (
@@ -120,7 +119,9 @@ export const EntryMethod: React.FC<{
                   </Badge>
                 )}
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 pl-2">
+                <EntryMethodBadge type={type} />
+
                 <IconButton
                   onClick={() => {
                     onRemove();

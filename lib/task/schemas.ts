@@ -82,6 +82,13 @@ export const bonusLoyaltyTaskSchema = bonusTaskSchema.extend({
 
 export type BonusLoyaltyTaskSchema = z.infer<typeof bonusLoyaltyTaskSchema>;
 
+export const bonusCompleteProfileTaskSchema = bonusTaskSchema.extend({
+  type: z.literal('BONUS_COMPLETE_PROFILE')
+});
+
+export type BonusCompleteProfileTaskSchema = z.infer<
+  typeof bonusCompleteProfileTaskSchema
+>;
 export const visitUrlTaskSchema = baseTaskSchema.extend({
   type: z.literal('VISIT_URL'),
   href: z.string().url(),
@@ -404,6 +411,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   bonusTimedTaskSchema,
   bonusLimitedTaskSchema,
   bonusLoyaltyTaskSchema,
+  bonusCompleteProfileTaskSchema,
   visitUrlTaskSchema,
   askQuestionTaskSchema,
   singleChoiceTaskSchema,
@@ -436,6 +444,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   BONUS_TIMED: 'Timed Bonus',
   BONUS_LIMITED: 'Limited Bonus',
   BONUS_LOYALTY: 'Loyalty Bonus',
+  BONUS_COMPLETE_PROFILE: 'Complete Your Profile',
   VISIT_URL: 'Visit URL',
   ASK_QUESTION: 'Ask a Question',
   SINGLE_CHOICE: 'Single Choice',
@@ -466,6 +475,7 @@ export const TASK_INPUT_SCHEMA = {
   BONUS_TIMED: z.object({}),
   BONUS_LIMITED: z.object({}),
   BONUS_LOYALTY: z.object({}),
+  BONUS_COMPLETE_PROFILE: z.object({}),
   VISIT_URL: z.object({
     answer: z.optional(z.string())
   }),
@@ -508,6 +518,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   BONUS_TIMED: z.object({}),
   BONUS_LIMITED: z.object({}),
   BONUS_LOYALTY: z.object({}),
+  BONUS_COMPLETE_PROFILE: z.object({}),
   VISIT_URL: z.object({}),
   TWITTER_CONNECT: z.object({}),
   TWITTER_FOLLOW: z.object({}),
@@ -561,6 +572,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   BONUS_TIMED: 'BONUS',
   BONUS_LIMITED: 'BONUS',
   BONUS_LOYALTY: 'BONUS',
+  BONUS_COMPLETE_PROFILE: 'BONUS',
   SECRET_CODE: 'BONUS',
   VISIT_URL: 'WEBSITE',
   TWITTER_CONNECT: 'TWITTER',
@@ -620,6 +632,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   BONUS_TIMED: 'engagement',
   BONUS_LIMITED: 'engagement',
   BONUS_LOYALTY: 'engagement',
+  BONUS_COMPLETE_PROFILE: 'engagement',
   VISIT_URL: 'engagement',
   SECRET_CODE: 'engagement',
   TWITTER_CONNECT: 'social',
@@ -655,6 +668,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   BONUS_TIMED: false,
   BONUS_LIMITED: false,
   BONUS_LOYALTY: false,
+  BONUS_COMPLETE_PROFILE: false,
   VISIT_URL: false,
   SECRET_CODE: false,
   TWITTER_CONNECT: false,
@@ -678,6 +692,37 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   ASK_QUESTION: false,
   SINGLE_CHOICE: false,
   MULTIPLE_CHOICE: false
+};
+
+export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
+  BONUS_TASK: true,
+  BONUS_TIMED: true,
+  BONUS_LIMITED: true,
+  BONUS_LOYALTY: true,
+  BONUS_COMPLETE_PROFILE: false,
+  VISIT_URL: true,
+  SECRET_CODE: true,
+  TWITTER_CONNECT: true,
+  TWITTER_FOLLOW: true,
+  TWITTER_RETWEET: true,
+  TWITTER_RETWEET_IMPORT: true,
+  TWITTER_LIKE: true,
+  TWITTER_LIKE_IMPORT: true,
+  DISCORD_JOIN: true,
+  STEAM_WISHLIST: true,
+  TWITCH_FOLLOW: true,
+  KICK_FOLLOW: true,
+  YOUTUBE_VISIT: true,
+  INSTAGRAM_VISIT: true,
+  INSTAGRAM_LIKE: true,
+  INSTAGRAM_COMMENT: true,
+  FACEBOOK_VISIT_PAGE: true,
+  FACEBOOK_VIEW_POST: true,
+  TIKTOK_FOLLOW: true,
+  TIKTOK_LIKE: true,
+  ASK_QUESTION: true,
+  SINGLE_CHOICE: true,
+  MULTIPLE_CHOICE: true
 };
 
 export const userEntriesSchema = z.object({

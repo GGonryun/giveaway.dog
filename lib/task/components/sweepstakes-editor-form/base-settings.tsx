@@ -22,6 +22,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         </BaseSettingsContainer>
       );
     case 'BONUS_TASK':
+    case 'BONUS_COMPLETE_PROFILE':
     case 'BONUS_TIMED':
     case 'BONUS_LIMITED':
     case 'VISIT_URL':

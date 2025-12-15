@@ -56,6 +56,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'TWITTER_LIKE':
       case 'BONUS_TIMED':
       case 'BONUS_TASK':
+      case 'BONUS_COMPLETE_PROFILE':
       case 'BONUS_LIMITED':
       case 'BONUS_LOYALTY':
       case 'INSTAGRAM_VISIT':

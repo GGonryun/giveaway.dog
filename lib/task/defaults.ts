@@ -37,6 +37,14 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       tasksRequired: 0,
       loyaltyRequired: 3
     },
+    ['BONUS_COMPLETE_PROFILE']: {
+      id: '',
+      type: 'BONUS_COMPLETE_PROFILE',
+      title: 'Complete your profile',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
     ['VISIT_URL']: {
       id: '',
       type: 'VISIT_URL',

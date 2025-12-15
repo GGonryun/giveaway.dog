@@ -1,5 +1,6 @@
 import { ApplicationError } from '@/lib/errors';
 import {
+  BonusCompleteProfileTaskSchema,
   BonusLimitedTaskSchema,
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema
@@ -8,6 +9,11 @@ import { PrismaClient } from '@prisma/client';
 import { ValidateTaskInput } from './integrations';
 import { getLoyalty } from '@/lib/loyalty/db';
 import { isLoyal } from '@/lib/loyalty/validation';
+import {
+  isProfileComplete,
+  toParticipantFormFields
+} from '@/schemas/giveaway/participant';
+import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
 
 export const checkBonusTimed = async (task: BonusTimedTaskSchema) => {
   // check to see if the current time is within the task's time window
@@ -87,4 +93,96 @@ export const checkBonusLoyalty = async (
       requiredLoyalty: input.task.loyaltyRequired
     }
   });
+};
+
+export const checkBonusCompleteProfile = async (
+  db: PrismaClient,
+  input: ValidateTaskInput<BonusCompleteProfileTaskSchema>
+) => {
+  console.info(
+    `Checking profile completion for bonus complete profile task ${input.task.id} for user ${input.userId}`
+  );
+
+  // Fetch the sweepstakes with its form fields
+  const sweepstakes = await db.sweepstakes.findFirst({
+    where: {
+      tasks: { some: { id: input.task.id } }
+    },
+    select: {
+      tasks: {
+        where: { id: input.task.id },
+        select: { sweepstakesId: true }
+      },
+      audience: {
+        select: {
+          formFields: true
+        }
+      }
+    }
+  });
+
+  if (!sweepstakes?.audience?.formFields || !sweepstakes.tasks[0]) {
+    throw new ApplicationError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Unable to verify profile completion requirements'
+    });
+  }
+
+  const sweepstakesId = sweepstakes.tasks[0].sweepstakesId;
+
+  // Fetch user with all profile data
+  const user = await db.user.findUnique({
+    where: { id: input.userId },
+    select: USER_SCHEMA_SELECT_QUERY
+  });
+
+  if (!user) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: 'User not found'
+    });
+  }
+
+  // Fetch participant's form values
+  const participant = await db.sweepstakesParticipant.findUnique({
+    where: {
+      userId_sweepstakesId: {
+        userId: input.userId,
+        sweepstakesId
+      }
+    },
+    include: {
+      formValues: true
+    }
+  });
+
+  // Convert form values to a map
+  const formValuesMap =
+    participant?.formValues.reduce<Record<string, string>>((acc, fv) => {
+      acc[fv.fieldId] = fv.value;
+      return acc;
+    }, {}) || {};
+
+  // Check if profile is complete
+  const participantFormFields = toParticipantFormFields(
+    sweepstakes.audience.formFields
+  );
+  const userSchema = toUserSchema(user);
+
+  const profileComplete = isProfileComplete(
+    participantFormFields,
+    userSchema,
+    formValuesMap
+  );
+
+  if (!profileComplete) {
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message: 'Please complete your profile before claiming this bonus.'
+    });
+  }
+
+  console.info(
+    `Profile completion check passed for user ${input.userId} on task ${input.task.id}`
+  );
 };

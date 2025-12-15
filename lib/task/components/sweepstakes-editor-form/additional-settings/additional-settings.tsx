@@ -29,6 +29,8 @@ import { TikTokProfileUrl, TikTokPostUrl } from './lib/tiktok';
 import { AskQuestionFormFields } from './lib/ask-question';
 import { SingleChoiceFormFields } from './lib/single-choice';
 import { MultipleChoiceFormFields } from './lib/multiple-choice';
+import { Typography } from '@/components/ui/typography';
+import { AlertCircle } from 'lucide-react';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -36,6 +38,30 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'TWITTER_CONNECT':
       case 'BONUS_TASK':
         return <></>;
+      case 'BONUS_COMPLETE_PROFILE':
+        return (
+          <div className="flex items-start gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 dark:border-blue-900 dark:bg-blue-950">
+            <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <Typography.Paragraph
+                size="sm"
+                weight="medium"
+                className="text-blue-900 dark:text-blue-100"
+              >
+                Automatic Profile Completion Task
+              </Typography.Paragraph>
+              <Typography.Paragraph
+                size="sm"
+                className="text-blue-800 dark:text-blue-200"
+              >
+                This task is automatically managed by the "Reward Profile
+                Completion" setting in the Audience section. It will be removed
+                if you disable that setting, and all associated entries will be
+                deleted.
+              </Typography.Paragraph>
+            </div>
+          </div>
+        );
       case 'VISIT_URL':
         return (
           <>

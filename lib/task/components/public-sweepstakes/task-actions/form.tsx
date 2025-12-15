@@ -36,6 +36,8 @@ export const TaskActionForm: React.FC<
   switch (props.task.type) {
     case 'BONUS_TASK':
       return <BonusTaskActionForm {...props} task={props.task} />;
+    case 'BONUS_COMPLETE_PROFILE':
+      return <BonusTaskActionForm {...props} task={props.task} />;
     case 'BONUS_TIMED':
       return <BonusTimedActionForm {...props} task={props.task} />;
     case 'BONUS_LIMITED':

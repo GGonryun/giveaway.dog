@@ -8,6 +8,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'BONUS_TIMED':
     case 'BONUS_LIMITED':
     case 'BONUS_LOYALTY':
+    case 'BONUS_COMPLETE_PROFILE':
     case 'VISIT_URL':
     case 'STEAM_WISHLIST':
     case 'DISCORD_JOIN':

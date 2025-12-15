@@ -5,7 +5,12 @@ import { checkDiscordJoin } from './discord';
 import { TaskSchema } from '../schemas';
 import { checkTwitchFollow } from './twitch';
 import { checkSecretCode } from './secret-code';
-import { checkBonusLimited, checkBonusLoyalty, checkBonusTimed } from './bonus';
+import {
+  checkBonusCompleteProfile,
+  checkBonusLimited,
+  checkBonusLoyalty,
+  checkBonusTimed
+} from './bonus';
 import { checkVisitUrl } from './visit-url';
 import { checkAskQuestion } from './ask-question';
 import { checkSingleChoice } from './single-choice';
@@ -56,6 +61,11 @@ export const validateTask = async <T extends TaskSchema>(
       return await checkBonusTimed(input.task);
     case 'BONUS_LOYALTY':
       return await checkBonusLoyalty(db, {
+        ...input,
+        task: input.task
+      });
+    case 'BONUS_COMPLETE_PROFILE':
+      return await checkBonusCompleteProfile(db, {
         ...input,
         task: input.task
       });

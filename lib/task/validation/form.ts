@@ -60,6 +60,7 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
       return bonusLoyaltyValidator({ ...args, task });
     case 'BONUS_LIMITED':
     case 'BONUS_TASK':
+    case 'BONUS_COMPLETE_PROFILE':
     case 'VISIT_URL':
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':

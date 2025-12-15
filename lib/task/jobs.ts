@@ -14,6 +14,7 @@ export const createJobsForTask = (
   switch (task.type) {
     case 'VISIT_URL':
     case 'BONUS_TASK':
+    case 'BONUS_COMPLETE_PROFILE':
     case 'BONUS_TIMED':
     case 'DISCORD_JOIN':
     case 'TWITCH_FOLLOW':

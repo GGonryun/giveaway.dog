@@ -8,6 +8,7 @@ import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-
 import { AllowedIdentities } from './allowed-identities';
 import { RequirePreEntryLogin } from './require-pre-entry-login';
 import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fields';
+import { EnableAutomaticProfileEntry } from './enable-automatic-profile-entry';
 
 export const Audience = () => {
   return (
@@ -25,6 +26,7 @@ export const Audience = () => {
         className="border-t"
       >
         <CustomFormFields />
+        <EnableAutomaticProfileEntry />
         {/* <RequireEmail />
         <MinimumAgeRestriction /> */}
       </UnifiedSectionHeader>

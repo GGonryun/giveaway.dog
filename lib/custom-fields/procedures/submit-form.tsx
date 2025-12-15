@@ -5,10 +5,12 @@ import { ApplicationError, assertNever } from '@/lib/errors';
 import {
   Account,
   PrismaClient,
-  SweepstakesFormFieldType
+  SweepstakesFormFieldType,
+  Prisma
 } from '@prisma/client';
 import { extractUsernameFromProfileUrl } from '@/lib/integrations/schemas/twitter';
 import z from 'zod';
+import { toTaskSchema } from '@/lib/task/schemas';
 
 type ValidationContext = {
   db: PrismaClient;
@@ -334,6 +336,45 @@ export const submitParticipantForm = procedure()
             value: stringValue
           }
         });
+      }
+
+      // Auto-complete BONUS_COMPLETE_PROFILE task if it exists
+      const allTasks = await tx.task.findMany({
+        where: {
+          sweepstakesId
+        }
+      });
+
+      // Find the BONUS_COMPLETE_PROFILE task by parsing its config
+      const profileCompletionTask = allTasks.find((task) => {
+        try {
+          const taskConfig = toTaskSchema(task);
+          return taskConfig.type === 'BONUS_COMPLETE_PROFILE';
+        } catch {
+          return false;
+        }
+      });
+
+      if (profileCompletionTask) {
+        // Check if already completed
+        const existingCompletion = await tx.taskCompletion.findFirst({
+          where: {
+            participantId: participant.id,
+            taskId: profileCompletionTask.id
+          }
+        });
+
+        // Only create if not already completed
+        if (!existingCompletion) {
+          await tx.taskCompletion.create({
+            data: {
+              participantId: participant.id,
+              taskId: profileCompletionTask.id,
+              status: 'COMPLETED',
+              proof: Prisma.JsonNull
+            }
+          });
+        }
       }
     });
 
