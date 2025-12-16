@@ -397,11 +397,11 @@ export const tiktokLikeTaskSchema = baseTaskSchema.extend({
     .string()
     .url('TikTok Post URL is required')
     .refine((val) => {
-      // shape of https://www.tiktok.com/@abcdefg1234/video/762349816943123414
+      // shape of https://www.tiktok.com/@username/video/1234567890 or https://www.tiktok.com/@username/photo/1234567890
       const urlPattern =
-        /^https?:\/\/(www\.)?tiktok\.com\/@[A-Za-z0-9_.]{1,30}\/video\/[0-9]+\/?$/;
+        /^https?:\/\/(www\.)?tiktok\.com\/@[A-Za-z0-9_.]{1,30}\/(video|photo)\/[0-9]+(\/)?(\?.*)?$/;
       return urlPattern.test(val);
-    }, 'Unexpected URL, should be like https://www.tiktok.com/@username/video/1234567890/')
+    }, 'Unexpected URL, should be like https://www.tiktok.com/@username/video/1234567890/ or https://www.tiktok.com/@username/photo/1234567890/')
 });
 
 export type TiktokLikeTaskSchema = z.infer<typeof tiktokLikeTaskSchema>;
@@ -467,7 +467,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   FACEBOOK_VISIT_PAGE: 'Visit Facebook Page',
   FACEBOOK_VIEW_POST: 'View Facebook Post',
   TIKTOK_FOLLOW: 'Follow on TikTok',
-  TIKTOK_LIKE: 'Like TikTok Video'
+  TIKTOK_LIKE: 'Like TikTok Post'
 };
 
 export const TASK_INPUT_SCHEMA = {

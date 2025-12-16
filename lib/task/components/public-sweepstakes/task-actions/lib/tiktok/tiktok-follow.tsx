@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-const TIMER_DURATION = 15000;
+const TIMER_DURATION = 10000;
 
 export const TikTokFollowTaskActionForm: React.FC<
   TaskActionProps<TiktokFollowTaskSchema>

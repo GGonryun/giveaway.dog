@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-const TIMER_DURATION = 15000;
+const TIMER_DURATION = 10000;
 
 export const TikTokLikeTaskActionForm: React.FC<
   TaskActionProps<TiktokLikeTaskSchema>
@@ -34,6 +34,32 @@ export const TikTokLikeTaskActionForm: React.FC<
       try {
         setIsLoadingEmbed(true);
         setEmbedError(false);
+
+        // Check if this is a photo post
+        const isPhotoPost = task.postUrl.includes('/photo/');
+
+        if (isPhotoPost) {
+          // For photo posts, create a simple embed since oEmbed doesn't support them well
+          const photoId = task.postUrl.match(/\/photo\/(\d+)/)?.[1];
+          const username = task.postUrl.match(/@([A-Za-z0-9_.]+)\//)?.[1];
+
+          if (photoId && username) {
+            // Create a manual blockquote embed similar to TikTok's format
+            const manualEmbed = `
+              <blockquote class="tiktok-embed" cite="${task.postUrl}" data-video-id="${photoId}">
+                <section>
+                  <a target="_blank" href="${task.postUrl}">@${username}</a>
+                </section>
+              </blockquote>
+              <script async src="https://www.tiktok.com/embed.js"></script>
+            `;
+            setEmbedHtml(manualEmbed);
+            setIsLoadingEmbed(false);
+            return;
+          }
+        }
+
+        // For video posts, use oEmbed API
         const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(task.postUrl)}`;
         const response = await fetch(oembedUrl);
 
@@ -126,7 +152,7 @@ export const TikTokLikeTaskActionForm: React.FC<
               <AlertDescription>
                 {!hasValidUrl
                   ? 'No TikTok post URL configured. Please set a valid TikTok post URL for this task.'
-                  : 'Unable to load TikTok video. Please verify the post URL is correct.'}
+                  : 'Unable to load TikTok post. Please verify the post URL is correct.'}
               </AlertDescription>
             </Alert>
           ) : (
@@ -140,7 +166,7 @@ export const TikTokLikeTaskActionForm: React.FC<
 
               {isLoadingEmbed && (
                 <div className="text-center text-sm text-muted-foreground py-8">
-                  Loading TikTok video...
+                  Loading TikTok post...
                 </div>
               )}
 
