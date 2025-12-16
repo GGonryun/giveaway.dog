@@ -41,6 +41,8 @@ export const tryAutoMerge = async (args: {
   // and the account already exists because it was imported previously from
   // twitter import.
   if (!session || !session?.user?.id) {
+    console.info('No session user, inserting new account user data');
+
     await prisma.$transaction(async (tx) => {
       await tx.account.update({
         where: {
@@ -75,45 +77,51 @@ export const tryAutoMerge = async (args: {
   // this gets called when the user is signed in and is trying to link an
   // account that was previously imported from twitter. The old account
   // needs to be merged into the current session user and the old user deleted.
-  await prisma.$transaction(async (tx) => {
-    // add a new account for the current user
-    const currentUserId = session?.user?.id as string;
-    await tx.account.update({
-      where: {
-        provider_providerAccountId: {
-          provider: account.provider,
-          providerAccountId: account.providerAccountId
+  console.info('Auto-merging accounts for session user:', session.user.id);
+  try {
+    await prisma.$transaction(async (tx) => {
+      // add a new account for the current user
+      const currentUserId = session?.user?.id as string;
+      await tx.account.update({
+        where: {
+          provider_providerAccountId: {
+            provider: account.provider,
+            providerAccountId: account.providerAccountId
+          }
+        },
+        data: {
+          userId: currentUserId,
+          access_token: account.access_token,
+          refresh_token: account.refresh_token,
+          expires_at: account.expires_at,
+          token_type: account.token_type,
+          scope: account.scope,
+          id_token: account.id_token,
+          label: getAccountLabel(account, profile.data),
+          link: getAccountLink(account, profile.data)
         }
-      },
-      data: {
-        userId: currentUserId,
-        access_token: account.access_token,
-        refresh_token: account.refresh_token,
-        expires_at: account.expires_at,
-        token_type: account.token_type,
-        scope: account.scope,
-        id_token: account.id_token,
-        label: getAccountLabel(account, profile.data),
-        link: getAccountLink(account, profile.data)
-      }
-      // reassign the task completions to the new user
+        // reassign the task completions to the new user
+      });
+      // find all of this user's participation and reassign to current user
+      await tx.sweepstakesParticipant.updateMany({
+        where: {
+          userId: existing.user.id
+        },
+        data: {
+          userId: currentUserId
+        }
+      });
+      // delete the old user
+      await tx.user.delete({
+        where: {
+          id: existing.user.id
+        }
+      });
     });
-    // find all of this user's participation and reassign to current user
-    await tx.sweepstakesParticipant.updateMany({
-      where: {
-        userId: existing.user.id
-      },
-      data: {
-        userId: currentUserId
-      }
-    });
-    // delete the old user
-    await tx.user.delete({
-      where: {
-        id: existing.user.id
-      }
-    });
-  });
+  } catch (error) {
+    console.error('Error during auto-merge transaction:', error);
+    return false;
+  }
 
   return '/account?merged=true';
 };

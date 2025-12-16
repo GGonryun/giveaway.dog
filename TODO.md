@@ -128,6 +128,7 @@ it can be confusing to know how your changes are affecting the different preview
 - [ ] Improve the marketing site, include more features and benefits and social proof and a blog.
 - [ ] Add an FAQ or knowledge base.
 - [ ] Add a changelog to the marketing site and the main website.
+- [ ] There's a way to exploit the site by having two different primary accounts and constantly switching out the
 
 ## Tech Debt
 
