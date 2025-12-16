@@ -2,7 +2,6 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@/lib/task/queries';
 
 import z from 'zod';
 
@@ -11,6 +10,7 @@ import {
   TEAM_PARTICIPANT_USER_SELECT_QUERY,
   toTeamParticipant
 } from '@/lib/participant/db';
+import { TASK_COMPLETIONS_SELECT_QUERY } from '@/lib/task/completions';
 
 export const getTeamParticipant = procedure()
   .authorization({
@@ -28,7 +28,7 @@ export const getTeamParticipant = procedure()
       where: {
         id: input.userId
       },
-      select: TEAM_PARTICIPANT_USER_SELECT_QUERY
+      select: TEAM_PARTICIPANT_USER_SELECT_QUERY(input)
     });
 
     if (!user) {

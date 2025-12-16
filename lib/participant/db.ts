@@ -279,20 +279,34 @@ export const onlyParticipantsWithCompletions = (
   participant: SweepstakesParticipantSchema
 ) => participant.completions.length > 0;
 
-export const TEAM_PARTICIPANT_USER_SELECT_QUERY = {
-  ...USER_SCHEMA_SELECT_QUERY,
-  participation: {
-    select: {
-      taskCompletions: {
-        select: TASK_COMPLETIONS_SELECT_QUERY
+export const TEAM_PARTICIPANT_USER_SELECT_QUERY = ({
+  slug
+}: {
+  slug: string;
+}) =>
+  ({
+    ...USER_SCHEMA_SELECT_QUERY,
+    participation: {
+      select: {
+        taskCompletions: {
+          select: TASK_COMPLETIONS_SELECT_QUERY,
+          where: {
+            task: {
+              sweepstakes: {
+                team: {
+                  slug
+                }
+              }
+            }
+          }
+        }
       }
     }
-  }
-} satisfies Prisma.UserSelect;
+  }) satisfies Prisma.UserSelect;
 
 export const toTeamParticipant = (
   user: Prisma.UserGetPayload<{
-    select: typeof TEAM_PARTICIPANT_USER_SELECT_QUERY;
+    select: ReturnType<typeof TEAM_PARTICIPANT_USER_SELECT_QUERY>;
   }>
 ) => ({
   id: user.id,

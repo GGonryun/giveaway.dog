@@ -38,7 +38,7 @@ export const getTeamParticipants = procedure()
           }
         }
       },
-      select: TEAM_PARTICIPANT_USER_SELECT_QUERY
+      select: TEAM_PARTICIPANT_USER_SELECT_QUERY(input)
     });
 
     return users.map(toTeamParticipant);
