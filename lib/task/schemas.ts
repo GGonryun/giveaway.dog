@@ -309,9 +309,9 @@ const instagramPostRefine = () =>
     .url('Instagram Post URL is required')
     .refine((val) => {
       const urlPattern =
-        /^https?:\/\/(www\.)?instagram\.com\/p\/[A-Za-z0-9_-]+\/?$/;
+        /^https?:\/\/(www\.)?instagram\.com\/(([A-Za-z0-9_.]+)\/)?p\/[A-Za-z0-9_-]+(\/)?(\?.*)?$/;
       return urlPattern.test(val);
-    }, 'Unexpected URL, should be like https://www.instagram.com/p/POST_ID/');
+    }, 'Unexpected URL, should be like https://www.instagram.com/p/POST_ID/ or https://www.instagram.com/username/p/POST_ID/');
 
 export const instagramLikeTaskSchema = baseTaskSchema.extend({
   type: z.literal('INSTAGRAM_LIKE'),
