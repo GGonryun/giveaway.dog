@@ -21,7 +21,7 @@ import {
   TASK_ALLOW_MANUAL_ADD
 } from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
-import { ImportBadge } from '@/lib/task/components/sweepstakes-editor-form/import-badge';
+import { SelectTaskDialogBadge } from './select-task-dialog-badge';
 
 export const SelectTaskDialog: React.FC<{
   onSelect: (type: TaskType) => void;
@@ -132,7 +132,7 @@ const SelectTask: React.FC<{ type: TaskType; onClick: () => void }> = ({
           <Typography.Paragraph size="md" weight="medium">
             {TASK_LABEL[type]}
           </Typography.Paragraph>
-          <ImportBadge type={type} />
+          <SelectTaskDialogBadge type={type} />
         </div>
       </div>
       <Badge variant="secondary" className="px-0.5 mr-1">

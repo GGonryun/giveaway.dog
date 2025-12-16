@@ -109,18 +109,10 @@ export const EntryMethod: React.FC<{
                     <theme.icon />
                   )}
                 </div>
-                <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <p className="flex-1 min-w-0 truncate">{TASK_LABEL[type]}</p>
-                  <ImportBadge type={type} />
-                </div>
-                {hasErrors && (
-                  <Badge variant="destructive">
-                    {errorCount} {pluralize('error', errorCount)}
-                  </Badge>
-                )}
+                <p className="flex-1 min-w-0 truncate">{TASK_LABEL[type]}</p>
               </div>
               <div className="flex items-center gap-1 pl-2">
-                <EntryMethodBadge type={type} />
+                <EntryMethodBadge type={type} errorCount={errorCount} />
 
                 <IconButton
                   onClick={() => {

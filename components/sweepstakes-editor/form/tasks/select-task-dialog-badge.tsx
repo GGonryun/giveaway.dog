@@ -1,28 +1,11 @@
-import { Badge } from '@/components/ui/badge';
 import { assertNever } from '@/lib/errors';
 import { ImportBadge } from '@/lib/task/components/sweepstakes-editor-form/import-badge';
 import { TaskType } from '@prisma/client';
-import { ZapIcon } from 'lucide-react';
-import pluralize from 'pluralize';
-export const EntryMethodBadge: React.FC<{
-  type: TaskType;
-  errorCount: number;
-}> = ({ type, errorCount }) => {
-  if (errorCount > 0) {
-    return (
-      <Badge variant="destructive">
-        {errorCount} {pluralize('error', errorCount)}
-      </Badge>
-    );
-  }
 
+export const SelectTaskDialogBadge: React.FC<{ type: TaskType }> = ({
+  type
+}) => {
   switch (type) {
-    case 'BONUS_COMPLETE_PROFILE':
-      return (
-        <Badge variant="info">
-          <ZapIcon /> <span className="hidden sm:inline">Instant</span>
-        </Badge>
-      );
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':
       return <ImportBadge />;
@@ -30,6 +13,7 @@ export const EntryMethodBadge: React.FC<{
     case 'BONUS_TIMED':
     case 'BONUS_TASK':
     case 'BONUS_LOYALTY':
+    case 'BONUS_COMPLETE_PROFILE':
     case 'VISIT_URL':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
@@ -52,7 +36,6 @@ export const EntryMethodBadge: React.FC<{
     case 'TIKTOK_LIKE':
     case 'SECRET_CODE':
       return null;
-
     default:
       throw assertNever(type);
   }
