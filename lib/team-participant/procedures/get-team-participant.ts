@@ -28,7 +28,7 @@ export const getTeamParticipant = procedure()
       where: {
         id: input.userId
       },
-      include: TEAM_PARTICIPANT_USER_SELECT_QUERY
+      select: TEAM_PARTICIPANT_USER_SELECT_QUERY
     });
 
     if (!user) {
