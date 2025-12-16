@@ -9,8 +9,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const sweepstakesResults = await processTaskJobs();
   const pickerResults = await processPickerJobs();
+  const sweepstakesResults = await processTaskJobs();
 
   return NextResponse.json({
     pickers: pickerResults,
