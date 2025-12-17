@@ -76,7 +76,7 @@ export const getLatestTwitterAccessToken = async (
     expiryBuffer: `${EXPIRY_BUFFER_SECONDS}s`
   });
 
-  const tokenResponse = await fetch('https://api.twitter.com/2/oauth2/token', {
+  const tokenResponse = await fetch('https://api.x.com/2/oauth2/token', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

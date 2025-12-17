@@ -36,7 +36,7 @@ export const twitterOAuthCallback = procedure()
     const { teamId, codeVerifier } = input.state;
 
     const tokenResponse = await fetch(
-      'https://api.twitter.com/2/oauth2/token',
+      'https://api.x.com/2/oauth2/token',
       {
         method: 'POST',
         headers: {
@@ -61,7 +61,7 @@ export const twitterOAuthCallback = procedure()
 
     const tokens = await tokenResponse.json();
 
-    const userResponse = await fetch('https://api.twitter.com/2/users/me', {
+    const userResponse = await fetch('https://api.x.com/2/users/me', {
       headers: {
         Authorization: `Bearer ${tokens.access_token}`
       }
