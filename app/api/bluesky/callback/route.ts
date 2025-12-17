@@ -5,6 +5,7 @@ import { createId } from '@paralleldrive/cuid2';
 import { Agent } from '@atproto/api';
 import { REQUIRED_BLUESKY_SCOPES } from '@/lib/integrations/scopes';
 import { getUserAuthRedirect } from '@/lib/redirect';
+import { auth } from '@/lib/auth/config';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -13,6 +14,9 @@ export async function GET(req: NextRequest) {
 
   // Retrieve redirectTo from cookie
   const redirectTo = req.cookies.get('bluesky_redirect')?.value || '';
+
+  // Check if user is already authenticated (account linking scenario)
+  const currentSession = await auth();
 
   // Process the OAuth callback
   // This validates the code, exchanges it for tokens, and stores the session
@@ -39,6 +43,7 @@ export async function GET(req: NextRequest) {
   });
 
   let userId: string;
+  let shouldSignIn = true;
 
   if (existingAccount) {
     // Account exists and is linked to a real user
@@ -58,6 +63,23 @@ export async function GET(req: NextRequest) {
         scope: REQUIRED_BLUESKY_SCOPES.join(' '),
         session_state: JSON.stringify(session),
         updatedAt: new Date()
+      }
+    });
+  } else if (currentSession?.user?.id) {
+    // User is already logged in - link this Bluesky account to their existing account
+    userId = currentSession.user.id;
+    shouldSignIn = false;
+
+    await prisma.account.create({
+      data: {
+        userId,
+        type: 'oauth',
+        provider: 'bluesky',
+        providerAccountId: session.did,
+        label: handle,
+        link: `https://bsky.app/profile/${handle}`,
+        scope: REQUIRED_BLUESKY_SCOPES.join(' '),
+        session_state: JSON.stringify(session)
       }
     });
   } else {
@@ -85,16 +107,23 @@ export async function GET(req: NextRequest) {
     userId = newUser.id;
   }
 
-  // Use NextAuth's signIn to create a proper session
-  // This will throw NEXT_REDIRECT which Next.js handles automatically
-  const { signIn } = await import('@/lib/auth/config');
+  if (shouldSignIn) {
+    // Use NextAuth's signIn to create a proper session for new users or existing account reconnect
+    // This will throw NEXT_REDIRECT which Next.js handles automatically
+    const { signIn } = await import('@/lib/auth/config');
 
-  const finalRedirect = getUserAuthRedirect({ redirectTo });
+    const finalRedirect = getUserAuthRedirect({ redirectTo });
 
-  // Note: signIn throws a NEXT_REDIRECT, so the cookie cleanup won't execute
-  // The cookie will expire naturally after 10 minutes
-  await signIn('bluesky-direct', {
-    userId,
-    redirectTo: finalRedirect
-  });
+    // Note: signIn throws a NEXT_REDIRECT, so the cookie cleanup won't execute
+    // The cookie will expire naturally after 10 minutes
+    await signIn('bluesky-direct', {
+      userId,
+      redirectTo: finalRedirect
+    });
+  } else {
+    // Account was linked to existing session - redirect back to the page they came from
+    const { redirect } = await import('next/navigation');
+    const finalRedirect = redirectTo || '/account';
+    redirect(finalRedirect);
+  }
 }

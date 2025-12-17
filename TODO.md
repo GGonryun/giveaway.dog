@@ -1,5 +1,9 @@
 ## Roadmap
 
+- [ ] Cache age so that user's dont have to keep using it.
+- [ ] use profile override in user sweepstakes participation.
+- [ ] do not hide entry after participation is completed.
+
 ### @theejankanator
 
 - [ ] Add BlueSky login
