@@ -247,6 +247,10 @@
     --spacing: 0.27rem;
   }
 
+  @theme {
+    --spacing-0: 0px;
+  }
+
   @theme inline {
     /* Colors */
     --color-background: var(--background);

@@ -1,7 +1,7 @@
 ## Roadmap
 
 - [ ] make it really clear for the host which actions support "automatic verification" if that helps.
-- [ ] Give an "automatic" free entry for completing your profile.
+- [ ] There's a problem where completing the imported action doesn't refresh the cached ui all the time, the task might be in a pending state, see discord support channel.
 
 ### @theejankanator
 
@@ -11,6 +11,8 @@
 
 - [ ] Global Black List
 - [ ] Global White List
+- [ ] Team Black List
+- [ ] Team White List
 
 ## @TheGamesDetective
 

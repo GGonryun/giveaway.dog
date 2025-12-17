@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Shuffle, Info, Pencil, GiftIcon } from 'lucide-react';
+import { Shuffle, Info, Pencil, GiftIcon, Trophy } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
 import { Label } from '@/components/ui/label';
 import {
@@ -173,7 +173,7 @@ const PrizeDrawRow = ({
             onClick={() => onViewDisqualification(draw)}
           >
             <Info className="h-3 w-3 mr-1" />
-            View Reason
+            View
           </Button>
         )}
       </TableCell>
@@ -497,6 +497,10 @@ export const SweepstakesWinners = ({
     });
   };
 
+  const handlePublicDraw = () => {
+    router.push(`/app/${slug}/sweepstakes/${sweepstakesId}/winners/public`);
+  };
+
   const handleSaveCriteria = () => {
     runUpdateCriteria({
       sweepstakesId,
@@ -769,13 +773,25 @@ export const SweepstakesWinners = ({
                 {pluralize('prize', groupedPrizes.length)}
               </p>
             </div>
-            <Button
-              onClick={handlePickWinners}
-              disabled={isRolling || !isEditable || !hasEnded}
-            >
-              <Shuffle className="h-4 w-4 mr-2" />
-              {isRolling ? 'Rolling...' : 'Pick All Winners'}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <Button
+                variant="outline"
+                onClick={handlePublicDraw}
+                disabled={isRolling || !isEditable || !hasEnded}
+                className="w-full sm:w-auto"
+              >
+                <Trophy className="h-4 w-4 mr-2" />
+                Roll with public picker
+              </Button>
+              <Button
+                onClick={handlePickWinners}
+                disabled={isRolling || !isEditable || !hasEnded}
+                className="w-full sm:w-auto"
+              >
+                <Shuffle className="h-4 w-4 mr-2" />
+                {isRolling ? 'Rolling...' : 'Pick All Winners'}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ) : !allPrizesComplete ? (
@@ -790,13 +806,25 @@ export const SweepstakesWinners = ({
                 Continue picking winners to complete all prizes
               </p>
             </div>
-            <Button
-              onClick={handlePickWinners}
-              disabled={isRolling || !isEditable}
-            >
-              <Shuffle className="h-4 w-4 mr-2" />
-              {isRolling ? 'Rolling...' : 'Pick Remaining Winners'}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <Button
+                variant="outline"
+                onClick={handlePublicDraw}
+                disabled={isRolling || !isEditable}
+                className="w-full sm:w-auto"
+              >
+                <Trophy className="h-4 w-4 mr-2" />
+                Roll with public picker
+              </Button>
+              <Button
+                onClick={handlePickWinners}
+                disabled={isRolling || !isEditable}
+                className="w-full sm:w-auto"
+              >
+                <Shuffle className="h-4 w-4 mr-2" />
+                {isRolling ? 'Rolling...' : 'Pick Remaining Winners'}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ) : (

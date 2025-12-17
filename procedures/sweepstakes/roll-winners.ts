@@ -44,7 +44,9 @@ const rollWinners = procedure()
       minTasksCompleted: z.number().min(1).optional().default(1),
       preventDuplicateWinners: z.boolean(),
       rerollWinnerId: z.string().optional(),
-      disqualificationReason: z.string().optional()
+      disqualificationReason: z.string().optional(),
+      prizeId: z.string().optional(),
+      winnersCount: z.number().min(1).optional()
     })
   )
   .output(z.object({ success: z.boolean() }))
@@ -57,7 +59,9 @@ const rollWinners = procedure()
         minTasksCompleted,
         preventDuplicateWinners,
         rerollWinnerId,
-        disqualificationReason
+        disqualificationReason,
+        prizeId,
+        winnersCount
       },
       db,
       user
@@ -156,7 +160,9 @@ const rollWinners = procedure()
         await pickWinners(db, {
           eligibleTaskCompletions,
           prizes,
-          preventDuplicateWinners
+          preventDuplicateWinners,
+          prizeId,
+          winnersCount
         });
       }
 
@@ -286,16 +292,44 @@ const pickWinners = async (
       include: { draws: true };
     }>[];
     preventDuplicateWinners: boolean;
+    prizeId?: string;
+    winnersCount?: number;
   }
 ) => {
-  const { eligibleTaskCompletions, prizes, preventDuplicateWinners } = args;
+  const {
+    eligibleTaskCompletions,
+    prizes,
+    preventDuplicateWinners,
+    prizeId,
+    winnersCount
+  } = args;
   const emptySlots: { prizeId: string }[] = [];
 
-  for (const prize of prizes) {
-    const quota = prize.quota ?? 1;
-    const existingWinners = prize.draws.length;
+  // If specific prize is provided, only process that prize
+  const prizesToProcess = prizeId
+    ? prizes.filter((p) => p.id === prizeId)
+    : prizes;
 
-    for (let i = existingWinners; i < quota; i++) {
+  if (prizeId && prizesToProcess.length === 0) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: 'Prize not found'
+    });
+  }
+
+  for (const prize of prizesToProcess) {
+    const quota = prize.quota ?? 1;
+    const existingWinners = prize.draws.filter(
+      (d) => d.result === PrizeDrawResult.WINNER
+    ).length;
+
+    // If specific winnersCount is provided, draw that many winners
+    // Otherwise, fill all empty slots
+    const slotsToFill = winnersCount
+      ? Math.min(winnersCount, quota - existingWinners)
+      : quota - existingWinners;
+
+    for (let i = 0; i < slotsToFill; i++) {
       emptySlots.push({ prizeId: prize.id });
     }
   }
@@ -303,7 +337,9 @@ const pickWinners = async (
   if (emptySlots.length === 0) {
     throw new ApplicationError({
       code: 'VALIDATION_ERROR',
-      message: 'All prize slots are already filled'
+      message: prizeId
+        ? 'This prize has no empty slots or requested winners count is invalid'
+        : 'All prize slots are already filled'
     });
   }
 
