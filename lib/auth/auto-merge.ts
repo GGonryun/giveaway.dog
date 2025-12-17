@@ -41,7 +41,7 @@ export const tryAutoMerge = async (args: {
   // and the account already exists because it was imported previously from
   // twitter import.
   if (!session || !session?.user?.id) {
-    console.info('No session user, inserting new account user data');
+    console.info('No session user, claiming imported Twitter account');
 
     await prisma.$transaction(async (tx) => {
       await tx.account.update({
@@ -104,16 +104,19 @@ export const tryAutoMerge = async (args: {
       });
       // find all of this user's participation and reassign to current user
       // First, find sweepstakes where both users participated (would cause conflicts)
-      const conflictingSweepstakesIds = await tx.sweepstakesParticipant.findMany({
-        where: {
-          userId: currentUserId
-        },
-        select: {
-          sweepstakesId: true
-        }
-      });
+      const conflictingSweepstakesIds =
+        await tx.sweepstakesParticipant.findMany({
+          where: {
+            userId: currentUserId
+          },
+          select: {
+            sweepstakesId: true
+          }
+        });
 
-      const conflictingIds = conflictingSweepstakesIds.map((p) => p.sweepstakesId);
+      const conflictingIds = conflictingSweepstakesIds.map(
+        (p) => p.sweepstakesId
+      );
 
       // Delete old user's participations that would conflict
       await tx.sweepstakesParticipant.deleteMany({
