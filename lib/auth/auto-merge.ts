@@ -103,6 +103,29 @@ export const tryAutoMerge = async (args: {
         // reassign the task completions to the new user
       });
       // find all of this user's participation and reassign to current user
+      // First, find sweepstakes where both users participated (would cause conflicts)
+      const conflictingSweepstakesIds = await tx.sweepstakesParticipant.findMany({
+        where: {
+          userId: currentUserId
+        },
+        select: {
+          sweepstakesId: true
+        }
+      });
+
+      const conflictingIds = conflictingSweepstakesIds.map((p) => p.sweepstakesId);
+
+      // Delete old user's participations that would conflict
+      await tx.sweepstakesParticipant.deleteMany({
+        where: {
+          userId: existing.user.id,
+          sweepstakesId: {
+            in: conflictingIds
+          }
+        }
+      });
+
+      // Update remaining participations to current user
       await tx.sweepstakesParticipant.updateMany({
         where: {
           userId: existing.user.id
