@@ -18,6 +18,12 @@ export async function GET(req: NextRequest) {
   // Check if user is already authenticated (account linking scenario)
   const currentSession = await auth();
 
+  console.info('Bluesky OAuth callback started', {
+    hasSession: !!currentSession?.user?.id,
+    sessionUserId: currentSession?.user?.id,
+    redirectTo
+  });
+
   // Process the OAuth callback
   // This validates the code, exchanges it for tokens, and stores the session
   const { session } = await client.callback(searchParams);
@@ -30,6 +36,12 @@ export async function GET(req: NextRequest) {
   const handle = profile.handle;
   const displayName = profile.displayName || handle;
   const avatar = profile.avatar;
+
+  console.info('Bluesky profile fetched', {
+    did: session.did,
+    handle,
+    displayName
+  });
 
   // Check if this Bluesky account already exists
   const existingAccount = await prisma.account.findUnique({
@@ -49,6 +61,13 @@ export async function GET(req: NextRequest) {
     // Account exists and is linked to a user
     // If user is trying to link but the account belongs to someone else, throw error
     if (currentSession?.user?.id && existingAccount.userId !== currentSession.user.id) {
+      console.warn('Bluesky account linking failed - account already linked to different user', {
+        blueskyHandle: handle,
+        blueskyDid: session.did,
+        existingUserId: existingAccount.userId,
+        attemptedLinkUserId: currentSession.user.id
+      });
+
       const { redirect } = await import('next/navigation');
       const errorUrl = new URL(redirectTo || '/account', req.url);
       errorUrl.searchParams.set('error', 'OAuthAccountAlreadyLinked');
@@ -56,6 +75,12 @@ export async function GET(req: NextRequest) {
     }
 
     userId = existingAccount.userId;
+
+    console.info('Bluesky account reconnected - updating existing account', {
+      userId,
+      handle,
+      did: session.did
+    });
 
     // Update the account with fresh session data
     await prisma.account.update({
@@ -77,6 +102,12 @@ export async function GET(req: NextRequest) {
     // User is already logged in - link this Bluesky account to their existing account
     userId = currentSession.user.id;
     shouldSignIn = false;
+
+    console.info('Bluesky account linked to existing user', {
+      userId,
+      handle,
+      did: session.did
+    });
 
     await prisma.account.create({
       data: {
@@ -113,6 +144,13 @@ export async function GET(req: NextRequest) {
       }
     });
     userId = newUser.id;
+
+    console.info('New Bluesky user created', {
+      userId,
+      handle,
+      did: session.did,
+      displayName
+    });
   }
 
   if (shouldSignIn) {
@@ -121,6 +159,11 @@ export async function GET(req: NextRequest) {
     const { signIn } = await import('@/lib/auth/config');
 
     const finalRedirect = getUserAuthRedirect({ redirectTo });
+
+    console.info('Bluesky OAuth complete - signing in user', {
+      userId,
+      redirectTo: finalRedirect
+    });
 
     // Note: signIn throws a NEXT_REDIRECT, so the cookie cleanup won't execute
     // The cookie will expire naturally after 10 minutes
@@ -132,6 +175,12 @@ export async function GET(req: NextRequest) {
     // Account was linked to existing session - redirect back to the page they came from
     const { redirect } = await import('next/navigation');
     const finalRedirect = redirectTo || '/account';
+
+    console.info('Bluesky account linking complete - redirecting', {
+      userId,
+      redirectTo: finalRedirect
+    });
+
     redirect(finalRedirect);
   }
 }

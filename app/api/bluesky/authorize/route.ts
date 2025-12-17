@@ -8,17 +8,28 @@ export async function GET(req: NextRequest) {
     const redirectTo = searchParams.get('redirectTo');
 
     if (!handle) {
+      console.warn('Bluesky authorization failed - missing handle');
       return NextResponse.json(
         { error: 'Handle parameter is required' },
         { status: 400 }
       );
     }
 
+    console.info('Bluesky authorization started', {
+      handle,
+      redirectTo
+    });
+
     const client = await getBlueskyClient();
 
     // Generate authorization URL for the user's handle
     // The SDK will discover the user's PDS and create the appropriate OAuth URL
     const authUrl = await client.authorize(handle);
+
+    console.info('Bluesky authorization URL generated', {
+      handle,
+      authUrlHost: new URL(authUrl).host
+    });
 
     // Store redirectTo in a cookie so we can retrieve it after callback
     // since OAuth state is managed internally by the Bluesky client
