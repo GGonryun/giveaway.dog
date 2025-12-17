@@ -37,7 +37,7 @@ export const SweepstakesEntries = ({
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const pageSize = DEFAULT_PAGE_SIZE;
+  const pageSize = 25;
   const totalEntries = entries.length;
   const totalPages = Math.ceil(totalEntries / pageSize);
 
