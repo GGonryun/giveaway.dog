@@ -32,6 +32,13 @@ const sharedFeatures = {
   humanSupport: 'Human support'
 };
 
+// Pricing constants
+const MONTHLY_PRICE = 5;
+const YEARLY_DISCOUNT_RATE = 0.4; // 40% off
+const YEARLY_PRICE_PER_MONTH = MONTHLY_PRICE * (1 - YEARLY_DISCOUNT_RATE);
+const YEARLY_TOTAL = YEARLY_PRICE_PER_MONTH * 12;
+const YEARLY_SAVINGS = (MONTHLY_PRICE - YEARLY_PRICE_PER_MONTH) * 12;
+
 const GradientText: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => (
@@ -45,7 +52,8 @@ export const PricingSection = () => {
     'monthly'
   );
 
-  const proPrice = billingCycle === 'monthly' ? 5 : 5 * 0.6;
+  const proPrice =
+    billingCycle === 'monthly' ? MONTHLY_PRICE : YEARLY_PRICE_PER_MONTH;
 
   const tiers: PricingTier[] = [
     {
@@ -53,7 +61,7 @@ export const PricingSection = () => {
       badge: { text: 'Beta', variant: 'secondary' },
       subtitle: 'Best for small creators',
       price: 'Free',
-      priceSubtext: '',
+      priceSubtext: 'No credit card required',
       buttonSubtext: 'Try it now!',
       buttonText: 'Request Access',
       buttonLink: '/contact',
@@ -74,12 +82,15 @@ export const PricingSection = () => {
     },
     {
       title: 'Pro',
-      badge: { text: 'Best deal', variant: 'default' },
+      badge: {
+        text: 'Best deal',
+        variant: 'default'
+      },
       subtitle: 'Best for bigger brands',
       price: proPrice,
       priceSubtext:
         billingCycle === 'yearly'
-          ? `(billed as $${(5 * 0.6 * 12).toFixed(2)}/year)`
+          ? `Billed as $${YEARLY_TOTAL.toFixed(2)}/year`
           : '',
       border: true,
       buttonSubtext: 'Billed monthly or yearly',
@@ -129,7 +140,7 @@ export const PricingSection = () => {
   return (
     <section id="pricing" className="w-full flex items-center justify-center">
       <div className="container mx-auto px-4 py-16 md:py-24">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 relative">
           <h1 className="mx-auto max-w-2xl text-4xl font-semibold font-outfit tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">
             Get more views,{' '}
             <span className="text-primary">with less effort.</span>
@@ -151,7 +162,7 @@ export const PricingSection = () => {
               </button>
               <div className="relative">
                 <Badge className="absolute -top-3 left-16 text-xs">
-                  Save 40%
+                  Save {(YEARLY_DISCOUNT_RATE * 100).toFixed(0)}%
                 </Badge>
                 <button
                   onClick={() => setBillingCycle('yearly')}
@@ -173,11 +184,19 @@ export const PricingSection = () => {
             <Card
               key={tier.title}
               className={cn(
-                `p-4 flex flex-col`,
+                `p-4 flex flex-col relative shadow-xl`,
                 tier.border && 'border-2 border-primary'
               )}
             >
-              <CardHeader className="pb-2 pt-6 lg:pb-4 lg:pt-8">
+              {tier.title === 'Pro' && billingCycle === 'yearly' && (
+                <Badge
+                  variant="default"
+                  className="absolute top-4 right-4 text-xs z-10"
+                >
+                  {(YEARLY_DISCOUNT_RATE * 100).toFixed(0)}% OFF
+                </Badge>
+              )}
+              <CardHeader className="pb-2 pt-6 lg:pt-8">
                 <div className="flex items-center gap-2 mb-2">
                   <h3 className="text-xl lg:text-2xl font-bold">
                     {tier.title}
@@ -189,19 +208,24 @@ export const PricingSection = () => {
                 <Typography.Paragraph className="text-sm text-muted-foreground">
                   {tier.subtitle}
                 </Typography.Paragraph>
-                <div className="mt-4">
+                <div
+                  className={cn(
+                    'mt-4',
+                    billingCycle === 'yearly' ? 'min-h-[90px]' : 'min-h-[75px]'
+                  )}
+                >
                   {typeof tier.price === 'number' ? (
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl lg:text-5xl font-bold">
-                        ${tier.price}
-                      </span>
-                      {tier.title === 'Pro' && (
-                        <>
+                    <div>
+                      <div className="flex items-baseline gap-2 flex-wrap">
+                        <span className="text-4xl lg:text-5xl font-bold">
+                          ${tier.price}
+                        </span>
+                        {tier.title === 'Pro' && (
                           <span className="text-lg text-muted-foreground">
                             /month
                           </span>
-                        </>
-                      )}
+                        )}
+                      </div>
                     </div>
                   ) : (
                     <div className="text-4xl lg:text-5xl font-bold">
@@ -211,6 +235,15 @@ export const PricingSection = () => {
                   {tier.priceSubtext && (
                     <Typography.Paragraph className="text-sm text-muted-foreground mt-1">
                       {tier.priceSubtext}
+                    </Typography.Paragraph>
+                  )}
+                  {tier.title === 'Pro' && billingCycle === 'yearly' && (
+                    <Typography.Paragraph
+                      className="text-primary text-sm font-medium
+                     mt-0.5"
+                    >
+                      Save ${YEARLY_SAVINGS.toFixed(2)}/year (
+                      {(YEARLY_DISCOUNT_RATE * 100).toFixed(0)}% off)
                     </Typography.Paragraph>
                   )}
                 </div>
