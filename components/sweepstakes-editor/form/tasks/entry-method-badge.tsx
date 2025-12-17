@@ -1,8 +1,9 @@
 import { Badge } from '@/components/ui/badge';
 import { assertNever } from '@/lib/errors';
 import { ImportBadge } from '@/lib/task/components/sweepstakes-editor-form/import-badge';
+import { TASK_HAS_AUTOMATIC_VALIDATION } from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
-import { ZapIcon } from 'lucide-react';
+import { ShieldCheck, ZapIcon } from 'lucide-react';
 import pluralize from 'pluralize';
 export const EntryMethodBadge: React.FC<{
   type: TaskType;
@@ -51,7 +52,11 @@ export const EntryMethodBadge: React.FC<{
     case 'TIKTOK_FOLLOW':
     case 'TIKTOK_LIKE':
     case 'SECRET_CODE':
-      return null;
+      return TASK_HAS_AUTOMATIC_VALIDATION[type] ? (
+        <Badge variant="success">
+          <ShieldCheck /> <span className="hidden sm:inline">Verified</span>
+        </Badge>
+      ) : null;
 
     default:
       throw assertNever(type);

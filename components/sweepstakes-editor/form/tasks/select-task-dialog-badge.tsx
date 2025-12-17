@@ -1,6 +1,10 @@
+import { Badge } from '@/components/ui/badge';
 import { assertNever } from '@/lib/errors';
 import { ImportBadge } from '@/lib/task/components/sweepstakes-editor-form/import-badge';
+import { VerifiedBadge } from '@/lib/task/components/sweepstakes-editor-form/verified-badge';
+import { TASK_HAS_AUTOMATIC_VALIDATION } from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
+import { ShieldCheck } from 'lucide-react';
 
 export const SelectTaskDialogBadge: React.FC<{ type: TaskType }> = ({
   type
@@ -35,7 +39,7 @@ export const SelectTaskDialogBadge: React.FC<{ type: TaskType }> = ({
     case 'TIKTOK_FOLLOW':
     case 'TIKTOK_LIKE':
     case 'SECRET_CODE':
-      return null;
+      return TASK_HAS_AUTOMATIC_VALIDATION[type] ? <VerifiedBadge /> : null;
     default:
       throw assertNever(type);
   }

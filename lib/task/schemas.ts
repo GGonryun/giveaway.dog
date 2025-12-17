@@ -752,3 +752,34 @@ export const toTaskSchema = (stored: Task): TaskSchema => {
     });
   }
 };
+
+export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
+  VISIT_URL: false,
+  BONUS_TASK: false,
+  TWITTER_CONNECT: false,
+  TWITTER_FOLLOW: false,
+  TWITTER_RETWEET: false,
+  TWITTER_RETWEET_IMPORT: true,
+  TWITTER_LIKE: false,
+  TWITTER_LIKE_IMPORT: true,
+  YOUTUBE_VISIT: false,
+  KICK_FOLLOW: false,
+  INSTAGRAM_VISIT: false,
+  INSTAGRAM_LIKE: false,
+  INSTAGRAM_COMMENT: false,
+  FACEBOOK_VISIT_PAGE: false,
+  FACEBOOK_VIEW_POST: false,
+  TIKTOK_FOLLOW: true,
+  TIKTOK_LIKE: true,
+  BONUS_LIMITED: false,
+  BONUS_TIMED: false,
+  BONUS_LOYALTY: false,
+  BONUS_COMPLETE_PROFILE: false,
+  STEAM_WISHLIST: true,
+  DISCORD_JOIN: true,
+  TWITCH_FOLLOW: true,
+  SECRET_CODE: true,
+  ASK_QUESTION: false,
+  SINGLE_CHOICE: false,
+  MULTIPLE_CHOICE: false
+};

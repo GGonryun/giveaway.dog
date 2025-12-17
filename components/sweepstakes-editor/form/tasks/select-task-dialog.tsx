@@ -132,12 +132,14 @@ const SelectTask: React.FC<{ type: TaskType; onClick: () => void }> = ({
           <Typography.Paragraph size="md" weight="medium">
             {TASK_LABEL[type]}
           </Typography.Paragraph>
-          <SelectTaskDialogBadge type={type} />
         </div>
       </div>
-      <Badge variant="secondary" className="px-0.5 mr-1">
-        <ChevronRight strokeWidth={2.5} />
-      </Badge>
+      <div className="flex items-center gap-1">
+        <SelectTaskDialogBadge type={type} />
+        <Badge variant="secondary" className="p-1 mr-1">
+          <ChevronRight strokeWidth={2.5} />
+        </Badge>
+      </div>
     </div>
   );
 };
