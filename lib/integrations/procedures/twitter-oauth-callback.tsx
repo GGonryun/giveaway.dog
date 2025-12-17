@@ -35,22 +35,19 @@ export const twitterOAuthCallback = procedure()
 
     const { teamId, codeVerifier } = input.state;
 
-    const tokenResponse = await fetch(
-      'https://api.x.com/2/oauth2/token',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Basic ${Buffer.from(`${TWITTER_TEAM_APP_CLIENT_ID}:${TWITTER_TEAM_APP_CLIENT_SECRET}`).toString('base64')}`
-        },
-        body: new URLSearchParams({
-          code: input.code,
-          grant_type: 'authorization_code',
-          redirect_uri: TWITTER_REDIRECT_URI,
-          code_verifier: codeVerifier
-        })
-      }
-    );
+    const tokenResponse = await fetch('https://api.x.com/2/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${Buffer.from(`${TWITTER_TEAM_APP_CLIENT_ID}:${TWITTER_TEAM_APP_CLIENT_SECRET}`).toString('base64')}`
+      },
+      body: new URLSearchParams({
+        code: input.code,
+        grant_type: 'authorization_code',
+        redirect_uri: TWITTER_REDIRECT_URI,
+        code_verifier: codeVerifier
+      })
+    });
 
     if (!tokenResponse.ok) {
       throw new ApplicationError({
