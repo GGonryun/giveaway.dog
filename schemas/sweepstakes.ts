@@ -33,12 +33,12 @@ export const toDerivedSweepstakeStatus = ({
     return 'COMPLETED';
   }
 
-  if (timing.endDate) {
-    return date.hasExpired(timing.endDate) ? 'EXPIRED' : 'RUNNING';
+  if (timing.startDate && timing.startDate > now) {
+    return 'SCHEDULED';
   }
 
-  if (timing.startDate && now < timing.startDate) {
-    return 'SCHEDULED';
+  if (timing.endDate) {
+    return date.hasExpired(timing.endDate) ? 'EXPIRED' : 'RUNNING';
   }
 
   return 'ERROR';

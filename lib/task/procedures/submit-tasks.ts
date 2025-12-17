@@ -77,17 +77,26 @@ const submitTask = procedure()
       });
     }
 
-    const now = new Date();
-    const startDate = new Date(task.sweepstakes.timing.startDate);
-    const endDate = new Date(task.sweepstakes.timing.endDate);
+    // Check if giveaway is in a valid state for accepting entries
+    if (task.sweepstakes.status === 'DRAFT') {
+      throw new ApplicationError({
+        code: 'FORBIDDEN',
+        message: 'This giveaway has not been published yet.'
+      });
+    }
 
-    if (task.sweepstakes.status !== 'ACTIVE') {
+    if (task.sweepstakes.status === 'COMPLETED') {
       throw new ApplicationError({
         code: 'FORBIDDEN',
         message: 'This giveaway is no longer accepting entries.'
       });
     }
 
+    const now = new Date();
+    const startDate = new Date(task.sweepstakes.timing.startDate);
+    const endDate = new Date(task.sweepstakes.timing.endDate);
+
+    // Check if giveaway has started
     if (now < startDate) {
       throw new ApplicationError({
         code: 'FORBIDDEN',
@@ -95,6 +104,7 @@ const submitTask = procedure()
       });
     }
 
+    // Check if giveaway has ended
     if (now > endDate) {
       throw new ApplicationError({
         code: 'FORBIDDEN',
