@@ -30,6 +30,9 @@
     "rollback": "dotenv -e .env.local -- npx prisma migrate resolve --rolled-back \"20251127095355\""
   },
   "dependencies": {
+    "@atproto/api": "^0.18.8",
+    "@atproto/jwk-jose": "^0.1.11",
+    "@atproto/oauth-client-node": "^0.3.13",
     "@auth/prisma-adapter": "2.7.2",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",

@@ -62,6 +62,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
         }
       }
     }),
+    CredentialsProvider({
+      id: 'bluesky-direct',
+      name: 'Bluesky Direct',
+      credentials: {
+        userId: { label: 'User ID', type: 'text' }
+      },
+      authorize: async (credentials) => {
+        if (!credentials?.userId) {
+          return null;
+        }
+
+        const userId = credentials.userId as string;
+
+        // Find the user
+        const user = await prisma.user.findUnique({
+          where: { id: userId }
+        });
+
+        return user;
+      }
+    }),
     SteamProvider({
       request,
       callbackUrl: `${process.env.NEXTAUTH_URL}/api/auth/steam-callback`,

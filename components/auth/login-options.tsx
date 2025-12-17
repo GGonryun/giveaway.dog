@@ -24,6 +24,19 @@ import { useSearchParams } from 'next/navigation';
 import { IdentityProvider } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import { Separator } from '../ui/separator';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormDescription
+} from '@/components/ui/form';
+import z from 'zod';
+import { blueskyHandleSchema } from '@/schemas/user';
 
 type LoginButtonType = 'buttons' | 'icons' | 'badges';
 interface LoginOptionsProps {
@@ -61,6 +74,18 @@ export function LoginOptions({
   });
 
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [showBlueskyForm, setShowBlueskyForm] = useState(false);
+
+  const blueskyFormSchema = z.object({
+    blueskyHandle: blueskyHandleSchema
+  });
+
+  const blueskyForm = useForm<z.infer<typeof blueskyFormSchema>>({
+    resolver: zodResolver(blueskyFormSchema),
+    defaultValues: {
+      blueskyHandle: ''
+    }
+  });
 
   const handleEmailSubmit = () => {
     if (!email) {
@@ -75,15 +100,32 @@ export function LoginOptions({
     });
   };
 
+  const handleBlueskySubmit = (values: z.infer<typeof blueskyFormSchema>) => {
+    loginProcedure.run({
+      provider: 'BLUESKY',
+      blueskyHandle: values.blueskyHandle,
+      redirectTo
+    });
+  };
+
   const handleCancelEmail = () => {
     setShowEmailForm(false);
     setErrorMessage(null);
     setEmail('');
   };
 
+  const handleCancelBluesky = () => {
+    setShowBlueskyForm(false);
+    setErrorMessage(null);
+    blueskyForm.reset();
+  };
+
   const handleProviderLogin = (provider: IdentityProvider) => {
     if (provider === 'EMAIL') {
       setShowEmailForm(true);
+      setErrorMessage(null);
+    } else if (provider === 'BLUESKY') {
+      setShowBlueskyForm(true);
       setErrorMessage(null);
     } else {
       loginProcedure.run({
@@ -146,6 +188,64 @@ export function LoginOptions({
             </Button>
           </div>
         </div>
+        <AuthError error={errorMessage} />
+      </div>
+    );
+  }
+
+  if (showBlueskyForm) {
+    return (
+      <div className={cn('', className)} {...props}>
+        <Form {...blueskyForm}>
+          <form
+            onSubmit={blueskyForm.handleSubmit(handleBlueskySubmit)}
+            className="grid gap-4"
+          >
+            <FormField
+              control={blueskyForm.control}
+              name="blueskyHandle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bluesky Handle</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="username.bsky.social"
+                      autoFocus
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Enter your Bluesky handle (e.g., username.bsky.social)
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid gap-2">
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loginProcedure.isLoading}
+              >
+                {loginProcedure.isLoading ? (
+                  <Spinner size="xs" />
+                ) : (
+                  'Continue with Bluesky'
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCancelBluesky}
+                className="w-full"
+              >
+                <ArrowLeftIcon className="w-4 h-4 mr-2" />
+                Back
+              </Button>
+            </div>
+          </form>
+        </Form>
         <AuthError error={errorMessage} />
       </div>
     );

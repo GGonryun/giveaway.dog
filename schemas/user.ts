@@ -91,6 +91,14 @@ export const updateUserProfileSchema = z.object({
     .optional()
 });
 
+export const blueskyHandleSchema = z
+  .string()
+  .min(1, 'Bluesky handle is required')
+  .regex(
+    /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/,
+    'Invalid Bluesky handle format. Must be a valid domain (e.g., username.bsky.social)'
+  );
+
 export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
 
 const ACCOUNT_SELECT_QUERY = {

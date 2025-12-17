@@ -7,7 +7,8 @@ import {
   REQUIRED_GMAIL_SCOPES,
   REQUIRED_TWITCH_SCOPES,
   REQUIRED_KICK_SCOPES,
-  REQUIRED_TIKTOK_SCOPES
+  REQUIRED_TIKTOK_SCOPES,
+  REQUIRED_BLUESKY_SCOPES
 } from '../scopes';
 import { widetype } from '@/lib/widetype';
 import { IdentityProvider } from '@prisma/client';
@@ -21,6 +22,7 @@ export const PROVIDER_REQUIRED_SCOPES: Record<ProviderTypeSchema, string[]> = {
   YOUTUBE: [],
   INSTAGRAM: [],
   ANONYMOUS: [],
+  BLUESKY: REQUIRED_BLUESKY_SCOPES,
   // for some reason facebook does not return scopes on sign in or link account
   FACEBOOK: [],
   DISCORD: REQUIRED_DISCORD_SCOPES,
@@ -58,6 +60,7 @@ export type ProviderSchema = z.infer<typeof providerSchema>;
 
 export const IDENTITY_PROVIDER_LABEL: Record<ProviderTypeSchema, string> = {
   TWITTER: 'X (Twitter)',
+  BLUESKY: 'Bluesky',
   ANONYMOUS: 'Anonymous',
   GOOGLE: 'Google',
   DISCORD: 'Discord',
@@ -74,6 +77,7 @@ export const IDENTITY_PROVIDER_LABEL: Record<ProviderTypeSchema, string> = {
 export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
   ANONYMOUS: false,
   TWITTER: true,
+  BLUESKY: true,
   GOOGLE: true,
   DISCORD: true,
   STEAM: true,
@@ -88,6 +92,7 @@ export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
 
 export const ENABLED_IDENTITY_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
   TWITTER: true,
+  BLUESKY: true,
   GOOGLE: true,
   DISCORD: true,
   STEAM: true,
@@ -104,6 +109,7 @@ export const ENABLED_IDENTITY_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
 const AVAILABLE_LOGIN_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
   TWITTER: true,
   GOOGLE: true,
+  BLUESKY: true,
   DISCORD: true,
   STEAM: true,
   TWITCH: true,
@@ -136,6 +142,7 @@ export const IDENTITY_PROVIDER_TO_AUTH_PROVIDER: Record<
   string
 > = {
   TWITTER: 'twitter',
+  BLUESKY: 'bluesky',
   GOOGLE: 'google',
   DISCORD: 'discord',
   STEAM: 'steam',

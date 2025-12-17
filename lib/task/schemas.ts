@@ -610,6 +610,7 @@ export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
   BONUS: 'Bonus',
   QUESTION: 'Question',
   TWITTER: 'X (Twitter)',
+  BLUESKY: 'Bluesky',
   STEAM: 'Steam',
   DISCORD: 'Discord',
   GOOGLE: 'Google',

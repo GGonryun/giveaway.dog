@@ -1,10 +1,9 @@
 ## Roadmap
 
-- [ ] make it really clear for the host which actions support "automatic verification" if that helps.
-
 ### @theejankanator
 
-- [ ] Add BlueSky integration - https://docs.bsky.app/docs/advanced-guides/oauth-client
+- [ ] Add BlueSky login
+  - [ ] Add BlueSky entry methods (follow, repost, like, login, reply, post)
 
 ## PJ & Dom
 
@@ -31,7 +30,7 @@
 
 ### @Gore096
 
-Most of the people want proof that the prize is given, maybe it will be useful to have “previous winners” page or something? Just to let people know that the prizes are being given. ( I know that the proof are being posted here on x by the host) but idk, just tryin to help.
+Most of the people want proof that the prize is given, maybe it will be useful to have “previous winners” page or something? Just to let people know that the prizes are being given. ( I know that the proof are being posted here on x by the host) but idk, just trying to help.
 
 #### @Chizuruthedeaf
 

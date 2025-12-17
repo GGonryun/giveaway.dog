@@ -18,6 +18,7 @@ import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
 import { SocialTikTokIcon } from '@/lib/integrations/components/icons/tiktok-icon';
+import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 
 export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
   const platform = TASK_PLATFORM[type];
@@ -33,6 +34,8 @@ export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
       return <MailIcon className="h-4 w-4 text-gray-500" />;
     case 'TWITTER':
       return <SocialXIcon className="h-4 w-4 text-black" />;
+    case 'BLUESKY':
+      return <SocialBlueskyIcon className="h-4 w-4 text-[#1185fe]" />;
     case 'STEAM':
       return <SocialSteamIcon className="h-4 w-4 text-steam-1" />;
     case 'DISCORD':

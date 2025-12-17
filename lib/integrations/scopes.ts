@@ -27,3 +27,8 @@ export const REQUIRED_KICK_SCOPES = ['user:read'];
 export const REQUIRED_FACEBOOK_SCOPES = ['email', 'user_link'];
 
 export const REQUIRED_TIKTOK_SCOPES = ['user.info.basic'];
+
+export const REQUIRED_BLUESKY_SCOPES = [
+  'atproto',
+  'transition:generic'
+];

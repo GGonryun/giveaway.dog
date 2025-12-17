@@ -15,6 +15,7 @@ import { SocialYouTubeIcon } from './youtube';
 import { SocialInstagramIcon } from './instagram';
 import { SocialFacebookIcon } from './facebook-icon';
 import { SocialTikTokIcon } from './tiktok-icon';
+import { SocialBlueskyIcon } from './bluesky-icon';
 import {
   Tooltip,
   TooltipContent,
@@ -34,6 +35,7 @@ export const PROVIDER_ICON: Record<
   EMAIL: MailIcon,
   TWITTER: SocialXIcon,
   GOOGLE: SocialGoogleIcon,
+  BLUESKY: SocialBlueskyIcon,
   DISCORD: SocialDiscordIcon,
   STEAM: SocialSteamIcon,
   TWITCH: SocialTwitchIcon,
@@ -62,6 +64,11 @@ export const PROVIDER_THEME: Record<
     bgColor: 'bg-black',
     textColor: 'text-white',
     fillColor: 'fill-black'
+  },
+  BLUESKY: {
+    bgColor: 'bg-bluesky-1',
+    textColor: 'text-white',
+    fillColor: 'fill-bluesky-1'
   },
   GOOGLE: {
     bgColor: 'bg-google-1',

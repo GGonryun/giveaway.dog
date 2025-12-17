@@ -338,6 +338,7 @@ model SweepstakesDetails {
 
 enum IdentityProvider {
   TWITTER
+  BLUESKY
   GOOGLE
   YOUTUBE
   DISCORD

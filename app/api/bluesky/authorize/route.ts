@@ -1,0 +1,42 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getBlueskyClient } from '@/lib/auth/bluesky-client';
+
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const handle = searchParams.get('handle');
+    const redirectTo = searchParams.get('redirectTo');
+
+    if (!handle) {
+      return NextResponse.json(
+        { error: 'Handle parameter is required' },
+        { status: 400 }
+      );
+    }
+
+    const client = await getBlueskyClient();
+
+    // Generate authorization URL for the user's handle
+    // The SDK will discover the user's PDS and create the appropriate OAuth URL
+    const authUrl = await client.authorize(handle);
+
+    // Store redirectTo in a cookie so we can retrieve it after callback
+    // since OAuth state is managed internally by the Bluesky client
+    const response = NextResponse.redirect(authUrl);
+    if (redirectTo) {
+      response.cookies.set('bluesky_redirect', redirectTo, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 600 // 10 minutes
+      });
+    }
+
+    return response;
+  } catch (error) {
+    console.error('Bluesky authorization error:', error);
+    return NextResponse.redirect(
+      new URL('/login?error=bluesky_auth_failed', req.url)
+    );
+  }
+}

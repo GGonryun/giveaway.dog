@@ -25,6 +25,8 @@ export const getAccountLabel = (account: any, profile: any): string | null => {
       return profile?.name || profile?.email || null;
     case 'tiktok':
       return profile?.username || profile?.display_name || null;
+    case 'bluesky':
+      return profile?.handle || null;
     default:
       return null;
   }
@@ -58,6 +60,9 @@ export const getAccountLink = (account: any, profile: any): string | null => {
     case 'tiktok':
       if (!profile?.profile_deep_link) return null;
       return profile.profile_deep_link;
+    case 'bluesky':
+      if (!label) return null;
+      return `https://bsky.app/profile/${label}`;
     default:
       return null;
   }
