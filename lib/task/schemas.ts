@@ -755,6 +755,22 @@ export const toTaskSchema = (stored: Task): TaskSchema => {
   }
 };
 
+export const toTaskSchemaSafe = (stored: Task): TaskSchema => {
+  try {
+    return toTaskSchema(stored);
+  } catch {
+    // TODO: add a unknown task type to represent failed parsing?
+    return {
+      type: 'BONUS_TASK',
+      id: stored.id,
+      title: 'Unknown Task',
+      value: 0,
+      mandatory: false,
+      tasksRequired: 0
+    };
+  }
+};
+
 export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
   VISIT_URL: false,
   BONUS_TASK: false,

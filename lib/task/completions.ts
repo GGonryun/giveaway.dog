@@ -1,7 +1,6 @@
 import { CompletionStatus, Prisma } from '@prisma/client';
 import z from 'zod';
-import { taskSchema } from './schemas';
-import { toTaskInput } from '@/schemas/giveaway/input';
+import { taskSchema, toTaskSchema, toTaskSchemaSafe } from './schemas';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 export const taskCompletionSchema = z.object({
@@ -44,7 +43,7 @@ export const toTaskCompletion = (
   id: completion.id,
   completedAt: completion.completedAt,
   status: completion.status,
-  task: taskSchema.parse(toTaskInput(completion.task)),
+  task: toTaskSchemaSafe(completion.task),
   sweepstake: {
     id: completion.task.sweepstakesId,
     name: completion.task.sweepstakes.details?.name ?? DEFAULT_SWEEPSTAKES_NAME
