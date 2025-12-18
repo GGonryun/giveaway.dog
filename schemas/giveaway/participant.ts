@@ -16,6 +16,7 @@ import {
 } from '@/lib/custom-fields/schemas';
 import { size } from 'lodash';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { datetime } from '@/lib/date';
 
 export const winnerSchema = z.object({
   prizeId: z.string(),
@@ -121,6 +122,14 @@ const toFieldValue = (
   const value = values?.[field.id] || null;
   switch (field.type) {
     case 'AGE':
+      if (
+        user?.birthday &&
+        field?.minimum &&
+        user.birthday < datetime.yearsAgo(field.minimum)
+      ) {
+        return { value: true, isCustom: false };
+      }
+
       return { value, isCustom: true };
 
     case 'USERNAME':
@@ -165,6 +174,25 @@ export const isProfileComplete = (
   const required = formFields.filter(isRequired);
 
   return required.every((field) => {
+    const profileField = profile.find((pf) => pf.id === field.id);
+    return (
+      profileField && profileField.value !== null && profileField.value !== ''
+    );
+  });
+};
+
+export const isFormFilled = (
+  formFields: SweepstakesFormFieldSchema[],
+  user?: UserSchema,
+  values?: SweepstakesParticipantSchema['formValues']
+) => {
+  if (formFields.length > 0 && (!user || !values || size(values) === 0)) {
+    return false;
+  }
+
+  const profile = toParticipantForm(formFields, user, values);
+
+  return formFields.every((field) => {
     const profileField = profile.find((pf) => pf.id === field.id);
     return (
       profileField && profileField.value !== null && profileField.value !== ''

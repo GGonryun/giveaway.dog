@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
 import { useLogout } from '@/lib/auth/hooks/use-logout';
 import { cn } from '@/lib/utils';
+import { UNKNOWN_USER_NAME } from '@/lib/settings';
 
 export const UserInfoSection: React.FC<{ className?: string }> = ({
   className
@@ -29,7 +30,7 @@ export const UserInfoSection: React.FC<{ className?: string }> = ({
           <div className="flex items-center gap-1 flex-wrap">
             <span className="hidden sm:inline">Signed in as</span>
             <Link href="/account" className="font-semibold">
-              {participant.user.name}
+              {participant.user.name || UNKNOWN_USER_NAME}
             </Link>
             <div className="flex items-center gap-1 ">
               {/* Social provider icons */}

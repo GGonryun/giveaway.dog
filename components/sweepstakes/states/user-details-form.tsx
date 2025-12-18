@@ -28,7 +28,7 @@ import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { UserInfoSection } from '../user-info-section';
 import { toParticipantForm } from '@/schemas/giveaway/participant';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { isFailureData } from '@/lib/mrpc/types';
 import { useRouter } from 'next/navigation';
@@ -133,7 +133,7 @@ function SweepstakesFormField<T extends z.ZodSchema<any>>({
             <FormItem
               className={cn(
                 'flex flex-row items-start space-x-3 space-y-0 py-2',
-                hidden
+                hidden && 'hidden'
               )}
             >
               <FormControl>
@@ -254,15 +254,6 @@ export const UserDetailsForm = () => {
     resolver: zodResolver(schema),
     mode: 'onChange',
     defaultValues
-  });
-
-  // if all form fields are filled in, skip the form we'll automatically submit
-  const readyForm = formFields.every((field) => {
-    const value = form.getValues(field.id);
-    if (field.type === SweepstakesFormFieldType.AGE) {
-      return value === true;
-    }
-    return value !== undefined && value !== '';
   });
 
   const handleFormSubmit = async (data: FormValues) => {

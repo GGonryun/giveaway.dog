@@ -5,7 +5,10 @@ import {
 import { assertNever } from './errors';
 import { RequiredFields } from './types';
 import { expandCountries, includesCountryCode } from './countries';
-import { isProfileComplete } from '@/schemas/giveaway/participant';
+import {
+  isFormFilled,
+  isProfileComplete
+} from '@/schemas/giveaway/participant';
 import { SweepstakesParticipantSchema } from './participant/schemas';
 
 type ComputeStateOptions = Pick<
@@ -34,7 +37,7 @@ export const toSweepstakesState = (
     case 'RUNNING': {
       if (!participant) return 'not-logged-in';
       if (
-        !isProfileComplete(
+        !isFormFilled(
           sweepstakes.audience.formFields,
           participant.user,
           participant.formValues

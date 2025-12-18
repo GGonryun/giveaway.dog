@@ -266,6 +266,9 @@ export const submitParticipantForm = procedure()
           userId: user.id,
           sweepstakesId
         }
+      },
+      include: {
+        user: true
       }
     });
 
@@ -378,5 +381,83 @@ export const submitParticipantForm = procedure()
       }
     });
 
+    // Update the user's account with entries like AGE or USERNAME if those fields were provided
+    await saveUserChanges({
+      db,
+      user: participant.user,
+      data,
+      fields: formFields
+    });
+
     return { success: true };
   });
+
+export const saveUserChanges = async ({
+  db,
+  user,
+  data,
+  fields
+}: {
+  db: PrismaClient;
+  user: Prisma.UserGetPayload<{}>;
+  data: Record<string, string | boolean>;
+  fields: Prisma.SweepstakesFormFieldGetPayload<{}>[];
+}) => {
+  const updates: Prisma.UserUpdateInput = {};
+
+  console.info('Processing user updates for data:', data, fields);
+
+  for (const [fieldId, value] of Object.entries(data)) {
+    const field = fields.find((f) => f.id === fieldId);
+
+    if (!field || !field.type) continue;
+
+    switch (field.type) {
+      case SweepstakesFormFieldType.AGE: {
+        updates.birthday = toBirthday({ field, user });
+        break;
+      }
+
+      case SweepstakesFormFieldType.USERNAME: {
+        updates.name = value as string;
+        updates.username = value as string;
+        break;
+      }
+
+      default:
+        break;
+    }
+  }
+
+  console.info('Updating user with:', updates);
+
+  if (Object.keys(updates).length > 0) {
+    await db.user.update({
+      where: { id: user.id },
+      data: updates
+    });
+  }
+};
+
+const toBirthday = ({
+  field,
+  user
+}: {
+  field: Prisma.SweepstakesFormFieldGetPayload<{}>;
+  user: Prisma.UserGetPayload<{}>;
+}): Date | null => {
+  if (!field.minimum) {
+    return null;
+  }
+
+  const currentYear = new Date().getFullYear();
+  const birthYear = currentYear - field.minimum;
+  const assumedBirthday = new Date(birthYear, 0, 1);
+
+  if (!user.birthday) {
+    return assumedBirthday;
+  }
+
+  // check if the user's birthday is before the assumed birthday
+  return user.birthday < assumedBirthday ? user.birthday : assumedBirthday;
+};

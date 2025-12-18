@@ -19,6 +19,7 @@ import { EasterEggLogo } from '@/components/patterns/easter-egg-logo';
 import { toast } from 'sonner';
 import { CheckCircle } from 'lucide-react';
 import { TeamRole } from '@prisma/client';
+import { UNKNOWN_USER_NAME } from '@/lib/settings';
 
 interface InviteDetails {
   teamName: string;
@@ -159,7 +160,7 @@ export const InviteAcceptance: React.FC<InviteAcceptanceProps> = ({
               Signed in as
             </p>
             <p className="mt-1 text-base font-semibold">
-              {session.user?.email || session.user?.name}
+              {session.user?.email || session.user?.name || UNKNOWN_USER_NAME}
             </p>
           </div>
           <Button

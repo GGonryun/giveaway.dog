@@ -1,8 +1,12 @@
 ## Roadmap
 
-- [ ] Cache age so that user's dont have to keep using it.
-- [ ] use profile override in user sweepstakes participation.
-- [ ] do not hide entry after participation is completed.
+- [ ] Add embed for twitter posts instead of the "repost" and "like"
+
+- [ ] Do not hide entry after participation is completed.
+- [ ] Update the participant dashboard "account" icon to quickly navigate to profile settings.
+- [ ] Add deep linking for accounts tabs.
+- [ ] Add a "Checkmark" or a way for me to easily see which sweepstakes I have entered.
+- [ ] Make it easier to drag things around in the sweepstake editor.
 
 ### @theejankanator
 

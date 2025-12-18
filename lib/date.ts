@@ -63,6 +63,12 @@ export namespace datetime {
     return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   };
 
+  export const yearsAgo = (years: number) => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - years);
+    return date;
+  };
+
   export const toTimeZoneDisplay = (timeZone: string) => {
     try {
       const date = new Date();

@@ -26,6 +26,7 @@ export const userProfileSchema = z.object({
   emoji: z.string().nullable(),
   countryCode: z.string().nullable(),
   userAgent: z.string().nullable(),
+  birthday: z.coerce.date().nullable(),
   qualityScore: z.number(),
   providers: providerSchema.array(),
   source: z.nativeEnum(UserSource)
@@ -119,6 +120,7 @@ export const USER_SCHEMA_SELECT_QUERY = {
   emoji: true,
   source: true,
   createdAt: true,
+  birthday: true,
   agents: {
     include: {
       agent: true
@@ -161,6 +163,7 @@ export const toUserSchema = (
   name: user.name,
   emoji: user.emoji,
   source: user.source,
+  birthday: user.birthday,
   createdAt: user.createdAt,
   countryCode: user.ips[0]?.ip.countryCode || UNKNOWN_USER_COUNTRY_CODE,
   userAgent: user.agents[0]?.agent.id ?? UNKNOWN_USER_AGENT,
