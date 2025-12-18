@@ -60,13 +60,19 @@ export async function GET(req: NextRequest) {
   if (existingAccount) {
     // Account exists and is linked to a user
     // If user is trying to link but the account belongs to someone else, throw error
-    if (currentSession?.user?.id && existingAccount.userId !== currentSession.user.id) {
-      console.warn('Bluesky account linking failed - account already linked to different user', {
-        blueskyHandle: handle,
-        blueskyDid: session.did,
-        existingUserId: existingAccount.userId,
-        attemptedLinkUserId: currentSession.user.id
-      });
+    if (
+      currentSession?.user?.id &&
+      existingAccount.userId !== currentSession.user.id
+    ) {
+      console.warn(
+        'Bluesky account linking failed - account already linked to different user',
+        {
+          blueskyHandle: handle,
+          blueskyDid: session.did,
+          existingUserId: existingAccount.userId,
+          attemptedLinkUserId: currentSession.user.id
+        }
+      );
 
       const { redirect } = await import('next/navigation');
       const errorUrl = new URL(redirectTo || '/account', req.url);

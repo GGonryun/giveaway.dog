@@ -116,63 +116,61 @@ export const SocialProviders = () => {
                   </div>
                 </div>
 
-                {provider ? (
-                  !(providerId === 'BLUESKY' && showBlueskyInput) && (
-                    <Button
-                      variant={isMissing ? 'default' : 'destructive'}
-                      size="sm"
-                      disabled={isConnectingThis || !isEnabled}
-                      onClick={() => {
-                        if (isMissing) {
+                {provider
+                  ? !(providerId === 'BLUESKY' && showBlueskyInput) && (
+                      <Button
+                        variant={isMissing ? 'default' : 'destructive'}
+                        size="sm"
+                        disabled={isConnectingThis || !isEnabled}
+                        onClick={() => {
+                          if (isMissing) {
+                            if (providerId === 'BLUESKY') {
+                              setShowBlueskyInput(true);
+                            } else {
+                              loginProcedure.run({
+                                provider: providerId,
+                                redirectTo: '/account',
+                                revalidate: 'true'
+                              });
+                            }
+                          } else {
+                            disconnectAccountProcedure.run(provider);
+                          }
+                        }}
+                        className="w-full sm:w-[125px]"
+                      >
+                        {isConnectingThis ? (
+                          <Spinner size="xs" />
+                        ) : isMissing ? (
+                          <UnplugIcon />
+                        ) : (
+                          <UnlinkIcon />
+                        )}
+                        {isMissing ? 'Reconnect' : 'Disconnect'}
+                      </Button>
+                    )
+                  : !(providerId === 'BLUESKY' && showBlueskyInput) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full sm:w-[125px]"
+                        onClick={() => {
                           if (providerId === 'BLUESKY') {
                             setShowBlueskyInput(true);
                           } else {
-                            loginProcedure.run({
+                            return loginProcedure.run({
                               provider: providerId,
                               redirectTo: '/account',
                               revalidate: 'true'
                             });
                           }
-                        } else {
-                          disconnectAccountProcedure.run(provider);
-                        }
-                      }}
-                      className="w-full sm:w-[125px]"
-                    >
-                      {isConnectingThis ? (
-                        <Spinner size="xs" />
-                      ) : isMissing ? (
-                        <UnplugIcon />
-                      ) : (
-                        <UnlinkIcon />
-                      )}
-                      {isMissing ? 'Reconnect' : 'Disconnect'}
-                    </Button>
-                  )
-                ) : (
-                  !(providerId === 'BLUESKY' && showBlueskyInput) && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full sm:w-[125px]"
-                      onClick={() => {
-                        if (providerId === 'BLUESKY') {
-                          setShowBlueskyInput(true);
-                        } else {
-                          return loginProcedure.run({
-                            provider: providerId,
-                            redirectTo: '/account',
-                            revalidate: 'true'
-                          });
-                        }
-                      }}
-                      disabled={isConnectingThis || !isEnabled}
-                    >
-                      {isConnectingThis ? <Spinner size="xs" /> : <Plus />}
-                      Connect
-                    </Button>
-                  )
-                )}
+                        }}
+                        disabled={isConnectingThis || !isEnabled}
+                      >
+                        {isConnectingThis ? <Spinner size="xs" /> : <Plus />}
+                        Connect
+                      </Button>
+                    )}
               </div>
               {!isEnabled && (
                 <Alert variant="destructive">
@@ -206,7 +204,8 @@ export const SocialProviders = () => {
                             />
                           </FormControl>
                           <FormDescription>
-                            Enter your Bluesky handle (e.g., username.bsky.social)
+                            Enter your Bluesky handle (e.g.,
+                            username.bsky.social)
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
