@@ -764,7 +764,7 @@ export const toTaskSchemaSafe = (stored: Task): TaskSchema => {
       type: 'BONUS_TASK',
       id: stored.id,
       title: 'Unknown Task',
-      value: 0,
+      value: 1,
       mandatory: false,
       tasksRequired: 0
     };
