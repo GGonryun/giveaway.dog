@@ -1,13 +1,15 @@
 ## Roadmap
 
-- [ ] Update the participant dashboard "account" icon to quickly navigate to profile settings.
 - [ ] Add deep linking for accounts tabs.
+
+- [ ] Update the participant dashboard "account" icon to quickly navigate to profile settings.
 - [ ] Add a "Checkmark" or a way for me to easily see which sweepstakes I have entered.
-- [ ] Make it easier to drag things around in the sweepstake editor.
+
 - [ ] Introduce an unlisted visibility for sweepstakes which is what private is now.
 - [ ] Add some help tooltips on team creation to aid new users.
 - [ ] add a toggle for start immediately on sweepstakes creation.
 - [ ] When someone submits an answer we should show them the data they provided.
+- [ ] Add an internal tool that allows us to send messages when sweepstakes go live.
 
 ### @theejankanator
 
@@ -141,6 +143,7 @@ it can be confusing to know how your changes are affecting the different preview
 
 ## Tech Debt
 
+- [ ] Make it easier to drag things around in the sweepstake editor.
 - [ ] If an integration is unhealthy, ask the user to re-authenticate first.
 - [ ] Can we allow private sweepstakes that only people with a link can enter? (switch to using "private" | "unlisted" | "public" for visibility)
 - [ ] Switch to using participant instead of "user" in sweepstakes entry and show custom participant profile.
