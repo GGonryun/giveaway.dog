@@ -36,10 +36,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       profile(profile) {
         return {
           id: profile.data.user.open_id,
-          name: profile.data.user.display_name,
+          name: profile.data.user.display_name || profile.data.user.username,
           image: profile.data.user.avatar_url,
-          email: profile.data.user.email || profile.data.user.username || null,
-          ...profile.data.user // --> any other fields provided by the provider
+          email: profile.data.user.email || profile.data.user.username || null
         };
       }
     }),

@@ -24,7 +24,9 @@ export const getAccountLabel = (account: any, profile: any): string | null => {
     case 'facebook':
       return profile?.name || profile?.email || null;
     case 'tiktok':
-      return profile?.username || profile?.display_name || null;
+      return (
+        profile?.username || profile?.display_name || profile?.name || null
+      );
     case 'bluesky':
       return profile?.handle || null;
     default:
