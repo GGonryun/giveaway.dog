@@ -47,7 +47,7 @@ const MOCK_PICKER_DATA: PublicPickerSchema = {
         drawId: 'draw-1',
         drawnAt: new Date('2024-06-20T15:30:00Z'),
         drawNumber: 1,
-        eligibleEntries: 1247,
+        eligibleEntries: 2147,
         winner: {
           userId: 'user-1',
           position: 1,
@@ -102,9 +102,9 @@ const MOCK_PICKER_DATA: PublicPickerSchema = {
   users: [],
   stats: {
     totalEntries: 3842,
-    uniqueParticipants: 1247,
+    uniqueParticipants: 2147,
     filteredEntries: 0,
-    validEntries: 1247
+    validEntries: 2147
   }
 };
 

@@ -11,12 +11,15 @@ import { CheckIcon, LucideIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { TaskSchema } from '../../../schemas';
 import { useTaskTheme } from '../../theme';
+import { CompletionStatus } from '@prisma/client';
+import { Separator } from '@/components/ui/separator';
 
 export type TaskActionHandlers = {
   onSubmit: (data?: unknown) => void;
   onCancel: () => void;
   isLoading: boolean;
   error?: Failure['data'];
+  submission: CompletionStatus | undefined;
 };
 
 export type TaskActionProps<T extends TaskSchema = TaskSchema> =
@@ -140,31 +143,37 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
   submit,
   cancel,
   help = 'Complete above to continue',
+  submission,
   onSubmit,
   onCancel
 }) => {
-  return (
-    <TaskContent className="bg-sidebar">
-      <CustomTooltipButton
-        disabled={disabled}
-        isLoading={isLoading}
-        onClick={onSubmit}
-        tooltip={help}
-        defaultIcon={CheckIcon}
-        defaultLabel="Complete Task"
-        defaultVariant="outline"
-        buttonProps={submit}
-      />
+  if (submission) return null;
 
-      <CustomTooltipButton
-        onClick={onCancel}
-        buttonProps={{
-          className: 'text-foreground',
-          ...cancel
-        }}
-        defaultLabel="Cancel"
-        defaultVariant="link"
-      />
-    </TaskContent>
+  return (
+    <>
+      <Separator />
+      <TaskContent className="bg-sidebar">
+        <CustomTooltipButton
+          disabled={disabled}
+          isLoading={isLoading}
+          onClick={onSubmit}
+          tooltip={help}
+          defaultIcon={CheckIcon}
+          defaultLabel="Complete Task"
+          defaultVariant="outline"
+          buttonProps={submit}
+        />
+
+        <CustomTooltipButton
+          onClick={onCancel}
+          buttonProps={{
+            className: 'text-foreground',
+            ...cancel
+          }}
+          defaultLabel="Cancel"
+          defaultVariant="link"
+        />
+      </TaskContent>
+    </>
   );
 };

@@ -18,7 +18,7 @@ import { TwitterEmbed } from './shared';
 
 export const TwitterRetweetTaskActionForm: React.FC<
   TaskActionProps<TwitterRetweetTaskSchema | TwitterRetweetImportTaskSchema>
-> = ({ onCancel, onSubmit, task, isLoading }) => {
+> = ({ onCancel, onSubmit, task, submission, isLoading }) => {
   const [userInteracted, setUserInteracted] = useState(false);
   const { theme } = useTheme();
 
@@ -43,6 +43,7 @@ export const TwitterRetweetTaskActionForm: React.FC<
     <WithProviderConnection
       task={task}
       disabled={false}
+      submission={submission}
       cancel={{
         className: 'hidden'
       }}

@@ -5,10 +5,11 @@ import { TwitterConnectTaskSchema } from '@/lib/task/schemas';
 
 export const TwitterConnectTaskActionForm: React.FC<
   TaskActionProps<TwitterConnectTaskSchema>
-> = ({ onCancel, onSubmit, task, isLoading }) => {
+> = ({ onCancel, onSubmit, submission, task, isLoading }) => {
   return (
     <WithProviderConnection
       task={task}
+      submission={submission}
       onCancel={onCancel}
       onSubmit={onSubmit}
       isLoading={isLoading}

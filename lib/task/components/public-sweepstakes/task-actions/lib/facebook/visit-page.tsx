@@ -5,7 +5,7 @@ import { ActionContainer } from './shared-container';
 
 export const FacebookVisitPageTaskActionForm: React.FC<
   TaskActionProps<FacebookVisitPageTaskSchema>
-> = ({ onSubmit, task, isLoading }) => {
+> = ({ onSubmit, task, submission, isLoading }) => {
   const [visited, setVisited] = useState(false);
 
   const handleVisit = () => setVisited(true);
@@ -32,6 +32,7 @@ export const FacebookVisitPageTaskActionForm: React.FC<
     <>
       <TaskContent>
         <ActionContainer
+          submission={submission}
           title={'Facebook Page'}
           description={'Visit the Facebook page to complete this task.'}
           isCompleted={visited}

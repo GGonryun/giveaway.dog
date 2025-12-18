@@ -5,7 +5,7 @@ import { ActionContainer } from './shared-container';
 
 export const InstagramLikeTaskActionForm: React.FC<
   TaskActionProps<InstagramLikeTaskSchema>
-> = ({ onSubmit, task, isLoading }) => {
+> = ({ onSubmit, task, submission, isLoading }) => {
   const [visited, setVisited] = useState(false);
 
   const handleVisit = () => setVisited(true);
@@ -16,20 +16,19 @@ export const InstagramLikeTaskActionForm: React.FC<
   };
 
   return (
-    <>
-      <TaskContent>
-        <ActionContainer
-          title={'Instagram Post'}
-          description={'View the Instagram post to complete this task.'}
-          isCompleted={visited}
-          isDisabled={isLoading}
-          action="View Post on Instagram"
-          onSubmit={handleSubmit}
-          onVisit={handleVisit}
-          help="view the post"
-          url={task.postUrl}
-        />
-      </TaskContent>
-    </>
+    <TaskContent>
+      <ActionContainer
+        submission={submission}
+        title={'Instagram Post'}
+        description={'View the Instagram post to complete this task.'}
+        isCompleted={visited}
+        isDisabled={isLoading}
+        action="View Post on Instagram"
+        onSubmit={handleSubmit}
+        onVisit={handleVisit}
+        help="view the post"
+        url={task.postUrl}
+      />
+    </TaskContent>
   );
 };

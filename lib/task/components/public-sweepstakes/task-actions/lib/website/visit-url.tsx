@@ -18,7 +18,7 @@ import pluralize from 'pluralize';
 
 export const VisitUrlTaskActionForm: React.FC<
   TaskActionProps<VisitUrlTaskSchema>
-> = ({ onCancel, onSubmit, task, isLoading }) => {
+> = ({ onCancel, onSubmit, task, submission, isLoading }) => {
   const { theme } = useTaskTheme();
   const [visited, setVisited] = useState(false);
   const [delayProgress, setDelayProgress] = useState(0);
@@ -27,7 +27,6 @@ export const VisitUrlTaskActionForm: React.FC<
 
   const afterVisit = task.afterVisit;
   const afterVisitType = afterVisit?.type ?? 'INSTANT';
-
   const handleVisit = () => {
     setVisited(true);
 
@@ -129,8 +128,8 @@ export const VisitUrlTaskActionForm: React.FC<
           </div>
         )}
       </TaskContent>
-      <Separator />
       <TaskControls
+        submission={submission}
         isLoading={isLoading}
         disabled={!canSubmit}
         onSubmit={handleSubmit}

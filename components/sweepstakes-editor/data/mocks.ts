@@ -85,7 +85,7 @@ export const mockUserProfile: UserSchema = {
 };
 
 export const mockParticipation: GiveawayParticipationSchema = {
-  totalEntries: 1247,
+  totalEntries: 2147,
   usersByTask: {},
   totalUsers: 357
 };

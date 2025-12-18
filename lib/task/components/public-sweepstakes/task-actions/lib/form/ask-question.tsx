@@ -13,7 +13,7 @@ import { AlertCircleIcon } from 'lucide-react';
 
 export const AskQuestionTaskActionForm: React.FC<
   TaskActionProps<AskQuestionTaskSchema>
-> = ({ onCancel, onSubmit, isLoading, task, error }) => {
+> = ({ onCancel, onSubmit, submission, isLoading, task, error }) => {
   const [answer, setAnswer] = useState('');
 
   const handleSubmit = () => {
@@ -31,32 +31,41 @@ export const AskQuestionTaskActionForm: React.FC<
   return (
     <>
       <TaskContent className="flex-col mt-2">
-        <Typography.Paragraph className="font-semibold mb-2">
-          {task.question}
-        </Typography.Paragraph>
-        {task.instructions && (
-          <Typography.Caption className="text-muted-foreground mb-2">
-            {task.instructions}
-          </Typography.Caption>
-        )}
-        <Textarea
-          placeholder={task.placeholder || 'Enter your answer...'}
-          value={answer}
-          disabled={isLoading}
-          onChange={(e) => setAnswer(e.target.value)}
-          rows={4}
-        />
-        {error && (
-          <Alert variant="destructive" className="text-left mt-2">
-            <AlertCircleIcon />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error.message}</AlertDescription>
-          </Alert>
+        {submission ? (
+          <p className="text-sm text-foreground ">
+            You have already submitted your answer. Thank you!
+          </p>
+        ) : (
+          <>
+            <Typography.Paragraph className="font-semibold mb-2">
+              {task.question}
+            </Typography.Paragraph>
+            {task.instructions && (
+              <Typography.Caption className="text-muted-foreground mb-2">
+                {task.instructions}
+              </Typography.Caption>
+            )}
+            <Textarea
+              placeholder={task.placeholder || 'Enter your answer...'}
+              value={answer}
+              disabled={isLoading}
+              onChange={(e) => setAnswer(e.target.value)}
+              rows={4}
+            />
+            {error && (
+              <Alert variant="destructive" className="text-left mt-2">
+                <AlertCircleIcon />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error.message}</AlertDescription>
+              </Alert>
+            )}
+            <Separator />
+          </>
         )}
       </TaskContent>
-      <Separator />
       <TaskControls
         submit={{ label: 'Submit Answer' }}
+        submission={submission}
         isLoading={isLoading}
         disabled={!answer.trim()}
         onSubmit={handleSubmit}

@@ -9,7 +9,7 @@ import { KickFollowTaskSchema } from '@/lib/task/schemas';
 
 export const KickFollowTaskActionForm: React.FC<
   TaskActionProps<KickFollowTaskSchema>
-> = ({ onCancel, onSubmit, task, isLoading }) => {
+> = ({ onCancel, onSubmit, task, submission, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
 
   const screenName = task.channel.replace(
@@ -19,6 +19,7 @@ export const KickFollowTaskActionForm: React.FC<
   return (
     <WithProviderConnection
       task={task}
+      submission={submission}
       disabled={!performedAction}
       onCancel={onCancel}
       onSubmit={onSubmit}
@@ -44,13 +45,15 @@ export const KickFollowTaskActionForm: React.FC<
                   </Link>
                 </Button>
               </div>
-              <Button
-                variant="link"
-                onClick={() => setPerformedAction(true)}
-                className="text-xs text-foreground underline mt-2"
-              >
-                I already followed
-              </Button>
+              {!submission && (
+                <Button
+                  variant="link"
+                  onClick={() => setPerformedAction(true)}
+                  className="text-xs text-foreground underline mt-2"
+                >
+                  I already followed
+                </Button>
+              )}
             </div>
           )}
         </div>

@@ -13,7 +13,7 @@ import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
 
 export const YouTubeVisitTaskActionForm: React.FC<
   TaskActionProps<YoutubeVisitTaskSchema>
-> = ({ onCancel, onSubmit, isLoading, task }) => {
+> = ({ onCancel, onSubmit, isLoading, submission, task }) => {
   const { theme } = useTaskTheme();
   const [visited, setVisited] = useState(false);
 
@@ -44,6 +44,7 @@ export const YouTubeVisitTaskActionForm: React.FC<
       </TaskContent>
       <Separator />
       <TaskControls
+        submission={submission}
         isLoading={isLoading}
         disabled={!visited}
         onSubmit={handleSubmit}

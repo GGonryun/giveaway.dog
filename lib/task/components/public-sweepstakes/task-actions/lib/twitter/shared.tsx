@@ -47,6 +47,7 @@ export const TwitterEmbed: React.FC<TwitterEmbedProps> = ({
 }) => {
   const [embedData, setEmbedData] = useState<TwitterEmbedData | null>(null);
   const [embedError, setEmbedError] = useState(false);
+  const [hasTimedOut, setHasTimedOut] = useState(false);
 
   const { run: fetchTwitterEmbed, isLoading: isLoadingEmbed } =
     useProcedureAsync({
@@ -54,29 +55,48 @@ export const TwitterEmbed: React.FC<TwitterEmbedProps> = ({
     });
 
   useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setHasTimedOut(true);
+    }, 5000);
+
     const fetchEmbed = async () => {
       try {
         const data = await fetchTwitterEmbed({
           postUrl,
           theme
         });
+        clearTimeout(timeoutId);
         setEmbedData(data);
         setEmbedError(false);
+        setHasTimedOut(false);
       } catch (err) {
         console.error('Failed to load Twitter embed:', err);
+        clearTimeout(timeoutId);
         setEmbedError(true);
         setEmbedData(null);
       }
     };
 
     fetchEmbed();
+
+    return () => clearTimeout(timeoutId);
   }, [postUrl, theme, fetchTwitterEmbed]);
 
   const content = useMemo(() => {
-    if (isLoadingEmbed) {
+    if (isLoadingEmbed && !hasTimedOut) {
       return (
         <div className="flex items-center justify-center py-8">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      );
+    }
+
+    if (hasTimedOut && !embedData) {
+      return (
+        <div className="flex items-center justify-center py-8">
+          <p className="text-sm text-muted-foreground">
+            Click the button below to continue
+          </p>
         </div>
       );
     }
@@ -86,7 +106,7 @@ export const TwitterEmbed: React.FC<TwitterEmbedProps> = ({
     }
 
     return <TwitterEmbedContent html={embedData.html} />;
-  }, [isLoadingEmbed, embedError, embedData]);
+  }, [isLoadingEmbed, embedError, embedData, hasTimedOut]);
 
   return content;
 };

@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
 import { useTaskTheme } from '@/lib/task/components/theme';
 import { cn } from '@/lib/utils';
+import { CompletionStatus } from '@prisma/client';
 import { CheckIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -10,6 +11,7 @@ export const ActionContainer: React.FC<{
   action: string;
   description: string;
   isCompleted: boolean;
+  submission: CompletionStatus | undefined;
   isDisabled: boolean;
   onSubmit: () => void;
   onVisit: () => void;
@@ -19,6 +21,7 @@ export const ActionContainer: React.FC<{
   title,
   action,
   description,
+  submission,
   isCompleted,
   isDisabled,
   onSubmit,
@@ -65,7 +68,7 @@ export const ActionContainer: React.FC<{
             <Button
               className={cn(theme.action, 'w-full')}
               asChild
-              onClick={onVisit}
+              onClick={submission ? undefined : onVisit}
             >
               <Link href={url} target="_blank">
                 <SocialInstagramIcon />

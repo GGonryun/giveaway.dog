@@ -9,13 +9,14 @@ import { TwitterFollowTaskSchema } from '@/lib/task/schemas';
 
 export const TwitterFollowTaskActionForm: React.FC<
   TaskActionProps<TwitterFollowTaskSchema>
-> = ({ onCancel, onSubmit, task, isLoading }) => {
+> = ({ onCancel, onSubmit, task, submission, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
   const screenName = task.username.replace(/^https?:\/\/(www\.)?x\.com\//, '');
 
   return (
     <WithProviderConnection
       task={task}
+      submission={submission}
       disabled={!performedAction}
       onCancel={onCancel}
       onSubmit={onSubmit}
@@ -40,13 +41,15 @@ export const TwitterFollowTaskActionForm: React.FC<
                   </Link>
                 </Button>
               </div>
-              <Button
-                variant="link"
-                onClick={() => setPerformedAction(true)}
-                className="text-xs text-foreground underline mt-2"
-              >
-                I already followed
-              </Button>
+              {!submission && (
+                <Button
+                  variant="link"
+                  onClick={() => setPerformedAction(true)}
+                  className="text-xs text-foreground underline mt-2"
+                >
+                  I already followed
+                </Button>
+              )}
             </div>
           )}
         </div>

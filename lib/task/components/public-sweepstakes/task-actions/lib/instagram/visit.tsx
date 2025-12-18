@@ -5,7 +5,7 @@ import { ActionContainer } from './shared-container';
 
 export const InstagramVisitTaskActionForm: React.FC<
   TaskActionProps<InstagramVisitTaskSchema>
-> = ({ onSubmit, task, isLoading }) => {
+> = ({ onSubmit, task, submission, isLoading }) => {
   const [visited, setVisited] = useState(false);
 
   const handleVisit = () => setVisited(true);
@@ -23,6 +23,7 @@ export const InstagramVisitTaskActionForm: React.FC<
     <>
       <TaskContent>
         <ActionContainer
+          submission={submission}
           title={'Instagram Profile'}
           description={'Visit the Instagram profile to complete this task.'}
           isCompleted={visited}

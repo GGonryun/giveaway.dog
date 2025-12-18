@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 
 export const MultipleChoiceTaskActionForm: React.FC<
   TaskActionProps<MultipleChoiceTaskSchema>
-> = ({ onCancel, onSubmit, isLoading, task, error }) => {
+> = ({ onCancel, onSubmit, submission, isLoading, task, error }) => {
   const [choices, setChoices] = useState<string[]>([]);
 
   const handleToggle = (option: string) => {
@@ -62,46 +62,54 @@ export const MultipleChoiceTaskActionForm: React.FC<
 
   return (
     <>
-      <TaskContent className="flex-col mt-2">
-        <Typography.Paragraph className="font-semibold mb-2">
-          {task.question}
-        </Typography.Paragraph>
-        <Typography.Caption className="text-muted-foreground mb-4">
-          {getHelperText()}
-        </Typography.Caption>
-        <div className="space-y-2">
-          {task.options.map((option, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <Checkbox
-                id={`option-${index}`}
-                checked={choices.includes(option)}
-                onCheckedChange={() => handleToggle(option)}
-                disabled={
-                  isLoading ||
-                  !!(
-                    task.maxSelections &&
-                    !choices.includes(option) &&
-                    choices.length >= task.maxSelections
-                  )
-                }
-              />
-              <Label htmlFor={`option-${index}`} className="cursor-pointer">
-                {option}
-              </Label>
+      <TaskContent className="flex-col">
+        {submission ? (
+          <p className="text-sm text-foreground ">
+            You have already submitted your choices. Thank you!
+          </p>
+        ) : (
+          <>
+            <Typography.Paragraph className="font-semibold mb-2">
+              {task.question}
+            </Typography.Paragraph>
+            <Typography.Caption className="text-muted-foreground mb-4">
+              {getHelperText()}
+            </Typography.Caption>
+            <div className="space-y-2">
+              {task.options.map((option, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`option-${index}`}
+                    checked={choices.includes(option)}
+                    onCheckedChange={() => handleToggle(option)}
+                    disabled={
+                      isLoading ||
+                      !!(
+                        task.maxSelections &&
+                        !choices.includes(option) &&
+                        choices.length >= task.maxSelections
+                      )
+                    }
+                  />
+                  <Label htmlFor={`option-${index}`} className="cursor-pointer">
+                    {option}
+                  </Label>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        {error && (
-          <Alert variant="destructive" className="text-left mt-2">
-            <AlertCircleIcon />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error.message}</AlertDescription>
-          </Alert>
+            {error && (
+              <Alert variant="destructive" className="text-left mt-2">
+                <AlertCircleIcon />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error.message}</AlertDescription>
+              </Alert>
+            )}
+          </>
         )}
       </TaskContent>
-      <Separator />
       <TaskControls
         submit={{ label: 'Submit Choices', variant: 'success', icon: null }}
+        submission={submission}
         isLoading={isLoading}
         disabled={!isValid()}
         onSubmit={handleSubmit}

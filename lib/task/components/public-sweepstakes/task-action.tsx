@@ -7,13 +7,11 @@ import { TaskActionForm } from './task-actions/form';
 import { FailureData } from '@/lib/mrpc/types';
 import { TaskLock } from './task-lock';
 import { CompletionStatus } from '@prisma/client';
-import { SubmissionTaskContent } from '../../submission';
 import { doesUserHaveAllowedIdentity } from '@/lib/integrations/schemas/providers';
 import { SweepstakesLoginOptions } from '@/components/sweepstakes/sweepstakes-login-options';
 
 export const TaskAction: React.FC<{
   submission: CompletionStatus | undefined;
-  entriesText: string;
   isLoading: boolean;
   task: TaskSchema;
   onSubmit: (data?: unknown) => void;
@@ -23,7 +21,6 @@ export const TaskAction: React.FC<{
   lock: TaskLock;
 }> = ({
   submission,
-  entriesText,
   task,
   lock,
   isLoading,
@@ -45,13 +42,6 @@ export const TaskAction: React.FC<{
         <div className="p-4 flex items-center justify-center mb-2">
           <SweepstakesLoginOptions />
         </div>
-      ) : submission ? (
-        <TaskContent className="text-sm sm:text-base">
-          <SubmissionTaskContent
-            submission={submission}
-            entriesText={entriesText}
-          />
-        </TaskContent>
       ) : lock ? (
         <TaskContent className="text-sm sm:text-base flex-col">
           <div className="flex items-center gap-2 text-muted-foreground">
@@ -74,6 +64,7 @@ export const TaskAction: React.FC<{
           entrants={entrants}
           loyalty={relationship?.loyalty ?? 0}
           isLoading={isLoading}
+          submission={submission}
           onSubmit={onSubmit}
           onCancel={onCancel}
         />

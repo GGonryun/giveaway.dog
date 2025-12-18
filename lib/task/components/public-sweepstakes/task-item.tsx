@@ -155,7 +155,6 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
       <CollapsibleContent className="border-t bg-background">
         <TaskAction
           submission={submission}
-          entriesText={entriesText}
           entrants={entrants}
           isLoading={isLoading}
           task={task}

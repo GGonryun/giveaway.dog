@@ -22,7 +22,7 @@ import { SteamWishlistTaskSchema } from '@/lib/task/schemas';
 
 export const SteamWishlistTaskActionForm: React.FC<
   TaskActionProps<SteamWishlistTaskSchema>
-> = ({ onCancel, onSubmit, error, task, isLoading }) => {
+> = ({ onCancel, onSubmit, submission, error, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
   const [showPrivateDialog, setShowPrivateDialog] = useState(false);
 
@@ -41,6 +41,7 @@ export const SteamWishlistTaskActionForm: React.FC<
   return (
     <WithProviderConnection
       task={task}
+      submission={submission}
       disabled={!performedAction}
       onCancel={onCancel}
       onSubmit={onSubmit}
@@ -73,13 +74,15 @@ export const SteamWishlistTaskActionForm: React.FC<
                   <ErrorDisplay message={error.message} />
                 )}
               </div>
-              <Button
-                variant="link"
-                onClick={() => setPerformedAction(true)}
-                className="text-xs mt-2 text-foreground"
-              >
-                I already added to wishlist or own the game
-              </Button>
+              {!submission && (
+                <Button
+                  variant="link"
+                  onClick={() => setPerformedAction(true)}
+                  className="text-xs mt-2 text-foreground"
+                >
+                  I already added to wishlist or own the game
+                </Button>
+              )}
             </div>
           )}
 

@@ -1,12 +1,13 @@
 ## Roadmap
 
-- [ ] Add embed for twitter posts instead of the "repost" and "like"
-- [ ] Do not hide entry after participation is completed.
-
 - [ ] Update the participant dashboard "account" icon to quickly navigate to profile settings.
 - [ ] Add deep linking for accounts tabs.
 - [ ] Add a "Checkmark" or a way for me to easily see which sweepstakes I have entered.
 - [ ] Make it easier to drag things around in the sweepstake editor.
+- [ ] Introduce an unlisted visibility for sweepstakes which is what private is now.
+- [ ] Add some help tooltips on team creation to aid new users.
+- [ ] add a toggle for start immediately on sweepstakes creation.
+- [ ] When someone submits an answer we should show them the data they provided.
 
 ### @theejankanator
 
@@ -149,3 +150,4 @@ it can be confusing to know how your changes are affecting the different preview
 - [ ] User's page needs deep links for modal
 - [ ] Winner's page needs deep links for modal
 - [ ] Update to Prisma 7
+  - [ ] We need to unify submissions so that we don't have to add "complete" or "submitted" flags on every task we introduce.

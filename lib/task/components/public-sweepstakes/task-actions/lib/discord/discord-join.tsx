@@ -11,7 +11,7 @@ import { DiscordJoinTaskSchema } from '@/lib/task/schemas';
 
 export const DiscordJoinTaskActionForm: React.FC<
   TaskActionProps<DiscordJoinTaskSchema>
-> = ({ onCancel, onSubmit, error, task, isLoading }) => {
+> = ({ onCancel, onSubmit, submission, error, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
 
   useEffect(() => {
@@ -23,6 +23,7 @@ export const DiscordJoinTaskActionForm: React.FC<
   return (
     <WithProviderConnection
       task={task}
+      submission={submission}
       disabled={!performedAction}
       onCancel={onCancel}
       onSubmit={onSubmit}
@@ -51,13 +52,15 @@ export const DiscordJoinTaskActionForm: React.FC<
                 </Button>
                 {error && <ErrorDisplay message={error.message} />}
               </div>
-              <Button
-                variant="link"
-                onClick={() => setPerformedAction(true)}
-                className="text-xs text-foreground underline mt-2"
-              >
-                I already joined the server
-              </Button>
+              {!submission && (
+                <Button
+                  variant="link"
+                  onClick={() => setPerformedAction(true)}
+                  className="text-xs text-foreground underline mt-2"
+                >
+                  I already joined the server
+                </Button>
+              )}
             </div>
           )}
         </div>

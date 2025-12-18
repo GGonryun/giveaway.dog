@@ -15,15 +15,25 @@ import {
 
 export const BonusTimedActionForm: React.FC<
   TaskActionProps<BonusTimedTaskSchema>
-> = ({ task, onSubmit }) => {
+> = ({ task, onSubmit, submission }) => {
   const { theme } = useTaskTheme();
 
   return (
     <TaskContent className="flex-col gap-4">
-      <Button className={cn(theme.action)} onClick={onSubmit}>
-        Continue
-      </Button>
-      {task.endDate && <AvailableUntilTimer availableUntil={task.endDate} />}
+      {submission ? (
+        <p className="text-sm text-foreground mt-2">
+          You have claimed this bonus reward. Thank you!
+        </p>
+      ) : (
+        <>
+          <Button className={cn(theme.action)} onClick={onSubmit}>
+            Continue
+          </Button>
+          {task.endDate && (
+            <AvailableUntilTimer availableUntil={task.endDate} />
+          )}
+        </>
+      )}
     </TaskContent>
   );
 };

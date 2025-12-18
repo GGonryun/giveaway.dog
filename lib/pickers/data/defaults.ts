@@ -108,7 +108,7 @@ export const MOCK_PICKER_AUDIT_LOGS = (user: {
     },
     {
       type: PickerAuditLogType.JOB_COMPLETED,
-      data: { jobType: 'FETCH_TWITTER_DATA', entriesProcessed: 1247 },
+      data: { jobType: 'FETCH_TWITTER_DATA', entriesProcessed: 2147 },
       createdAt: new Date('2025-11-02T10:45:00Z')
     },
     {

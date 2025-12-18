@@ -13,15 +13,23 @@ import {
 
 export const BonusLimitedActionForm: React.FC<
   TaskActionProps<BonusLimitedTaskSchema>
-> = ({ task, onSubmit, entrants }) => {
+> = ({ task, onSubmit, entrants, submission }) => {
   const { theme } = useTaskTheme();
 
   return (
     <TaskContent className="flex-col gap-4">
-      <Button className={cn(theme.action)} onClick={onSubmit}>
-        Continue
-      </Button>
-      <Remaining entrants={entrants} max={task.maxEntrants} />
+      {submission ? (
+        <p className="text-sm text-foreground mt-2">
+          You have already claimed this limited bonus. Thank you!
+        </p>
+      ) : (
+        <>
+          <Button className={cn(theme.action)} onClick={onSubmit}>
+            Continue
+          </Button>
+          <Remaining entrants={entrants} max={task.maxEntrants} />
+        </>
+      )}
     </TaskContent>
   );
 };

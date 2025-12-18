@@ -7,21 +7,25 @@ import {
 import { cn } from '@/lib/utils';
 import { useTaskTheme } from '../../../../theme';
 import React from 'react';
-import { Typography } from '@/components/ui/typography';
-import { CheckCircle2 } from 'lucide-react';
 
 export const BonusTaskActionForm: React.FC<
   TaskActionProps<BonusTaskSchema | BonusCompleteProfileTaskSchema>
-> = ({ task, onSubmit }) => {
+> = ({ task, submission, onSubmit }) => {
   const { theme } = useTaskTheme();
 
   return (
     <TaskContent className="flex-col">
-      <Button className={cn(theme.action)} onClick={onSubmit}>
-        {task.type === 'BONUS_COMPLETE_PROFILE'
-          ? 'Complete Profile'
-          : 'Continue'}
-      </Button>
+      {submission ? (
+        <p className="text-sm text-foreground mt-2">
+          You have already claimed this bonus. Thank you!
+        </p>
+      ) : (
+        <Button className={cn(theme.action)} onClick={onSubmit}>
+          {task.type === 'BONUS_COMPLETE_PROFILE'
+            ? 'Complete Profile'
+            : 'Continue'}
+        </Button>
+      )}
     </TaskContent>
   );
 };

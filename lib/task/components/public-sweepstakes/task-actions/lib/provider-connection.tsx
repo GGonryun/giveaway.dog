@@ -95,6 +95,7 @@ export const WithProviderConnection: React.FC<
   disabled,
   isLoading,
   submit,
+  submission,
   cancel
 }) => {
   const { theme } = useTaskTheme();
@@ -147,13 +148,12 @@ export const WithProviderConnection: React.FC<
           </>
         )}
       </TaskContent>
-
-      <Separator />
       <TaskControls
         disabled={
           disabled ||
           (requiresConnection && (!provider || loginProcedure.isLoading))
         }
+        submission={submission}
         isLoading={isLoading}
         submit={submit}
         cancel={cancel}

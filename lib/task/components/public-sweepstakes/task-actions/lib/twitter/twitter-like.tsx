@@ -19,7 +19,7 @@ import { TwitterEmbed } from './shared';
 
 export const TwitterLikeTaskActionForm: React.FC<
   TaskActionProps<TwitterLikeTaskSchema | TwitterLikeImportTaskSchema>
-> = ({ onCancel, onSubmit, task, isLoading }) => {
+> = ({ onCancel, onSubmit, task, submission, isLoading }) => {
   const [userInteracted, setUserInteracted] = useState(false);
   const { theme } = useTheme();
 
@@ -47,6 +47,7 @@ export const TwitterLikeTaskActionForm: React.FC<
       cancel={{
         className: 'hidden'
       }}
+      submission={submission}
       onCancel={onCancel}
       onSubmit={handleSubmit}
       isLoading={isLoading}

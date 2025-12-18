@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 
 export const SingleChoiceTaskActionForm: React.FC<
   TaskActionProps<SingleChoiceTaskSchema>
-> = ({ onCancel, onSubmit, isLoading, task, error }) => {
+> = ({ onCancel, onSubmit, submission, isLoading, task, error }) => {
   const [choice, setChoice] = useState('');
 
   const handleSubmit = () => {
@@ -32,35 +32,43 @@ export const SingleChoiceTaskActionForm: React.FC<
   return (
     <>
       <TaskContent className="flex-col mt-2">
-        <Typography.Paragraph className="font-semibold mb-4">
-          {task.question}
-        </Typography.Paragraph>
-        <RadioGroup
-          value={choice}
-          onValueChange={setChoice}
-          disabled={isLoading}
-        >
-          {task.options.map((option, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <RadioGroupItem value={option} id={`option-${index}`} />
-              <Label htmlFor={`option-${index}`} className="cursor-pointer">
-                {option}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
-        {error && (
-          <Alert variant="destructive" className="text-left mt-2">
-            <AlertCircleIcon />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error.message}</AlertDescription>
-          </Alert>
+        {submission ? (
+          <p className="text-sm text-foreground ">
+            You have already submitted your choice. Thank you!
+          </p>
+        ) : (
+          <>
+            <Typography.Paragraph className="font-semibold mb-4">
+              {task.question}
+            </Typography.Paragraph>
+            <RadioGroup
+              value={choice}
+              onValueChange={setChoice}
+              disabled={isLoading}
+            >
+              {task.options.map((option, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <RadioGroupItem value={option} id={`option-${index}`} />
+                  <Label htmlFor={`option-${index}`} className="cursor-pointer">
+                    {option}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+            {error && (
+              <Alert variant="destructive" className="text-left mt-2">
+                <AlertCircleIcon />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error.message}</AlertDescription>
+              </Alert>
+            )}
+          </>
         )}
       </TaskContent>
-      <Separator />
       <TaskControls
         submit={{ label: 'Submit Choice', variant: 'success', icon: null }}
         isLoading={isLoading}
+        submission={submission}
         disabled={!choice}
         onSubmit={handleSubmit}
         onCancel={handleCancel}

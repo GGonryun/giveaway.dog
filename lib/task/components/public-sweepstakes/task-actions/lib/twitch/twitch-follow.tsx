@@ -11,7 +11,7 @@ import { TwitchFollowTaskSchema } from '@/lib/task/schemas';
 
 export const TwitchFollowTaskActionForm: React.FC<
   TaskActionProps<TwitchFollowTaskSchema>
-> = ({ onCancel, onSubmit, error, task, isLoading }) => {
+> = ({ onCancel, onSubmit, error, task, submission, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
 
   useEffect(() => {
@@ -23,6 +23,7 @@ export const TwitchFollowTaskActionForm: React.FC<
   return (
     <WithProviderConnection
       task={task}
+      submission={submission}
       disabled={!performedAction}
       onCancel={onCancel}
       onSubmit={onSubmit}
@@ -51,13 +52,15 @@ export const TwitchFollowTaskActionForm: React.FC<
                 </Button>
                 {error && <ErrorDisplay message={error.message} />}
               </div>
-              <Button
-                variant="link"
-                onClick={() => setPerformedAction(true)}
-                className="text-xs text-foreground underline mt-2"
-              >
-                I already followed the channel
-              </Button>
+              {!submission && (
+                <Button
+                  variant="link"
+                  onClick={() => setPerformedAction(true)}
+                  className="text-xs text-foreground underline mt-2"
+                >
+                  I already followed
+                </Button>
+              )}
             </div>
           )}
         </div>

@@ -2,12 +2,14 @@ import { Button } from '@/components/ui/button';
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
 import { useTaskTheme } from '@/lib/task/components/theme';
 import { cn } from '@/lib/utils';
+import { CompletionStatus } from '@prisma/client';
 import { CheckIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export const ActionContainer: React.FC<{
   title: string;
   action: string;
+  submission: CompletionStatus | undefined;
   description: string;
   isCompleted: boolean;
   isDisabled: boolean;
@@ -23,6 +25,7 @@ export const ActionContainer: React.FC<{
   isDisabled,
   onSubmit,
   onVisit,
+  submission,
   help,
   url
 }) => {
@@ -65,7 +68,7 @@ export const ActionContainer: React.FC<{
             <Button
               className={cn(theme.action, 'w-full')}
               asChild
-              onClick={onVisit}
+              onClick={submission ? undefined : onVisit}
             >
               <Link href={url} target="_blank">
                 <SocialFacebookIcon />

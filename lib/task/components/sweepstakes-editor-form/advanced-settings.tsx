@@ -191,6 +191,7 @@ const TasksRequiredField: React.FC = () => {
 const AfterVisitField: React.FC = () => {
   const index = useArrayContext();
   const { control, setValue } = useFormContext<GiveawayFormSchema>();
+
   const afterVisit = useWatch({
     control,
     name: `tasks.${index}.afterVisit`
@@ -217,110 +218,118 @@ const AfterVisitField: React.FC = () => {
 
   return (
     <SwitchBox>
-      <div className="space-y-4">
-        <SwitchFormHeader
-          label="After Visiting"
-          description="Customize what happens after the user visits the URL"
-          help={{
-            title: 'Help: After Visit',
-            content: (
-              <div className="space-y-2">
-                <p>Control what happens after users click the visit button:</p>
-                <ul className="list-disc list-inside space-y-1">
-                  <li>
-                    <strong>Reward Immediately:</strong> Task completes
-                    instantly when the visit button is clicked.
-                  </li>
-                  <li>
-                    <strong>Delay the Reward:</strong> Add a countdown timer
-                    before the task can be completed, ensuring users spend time
-                    on the page.
-                  </li>
-                  <li>
-                    <strong>Ask a Question:</strong> Require users to answer a
-                    question about the visited content to verify they engaged
-                    with it.
-                  </li>
-                </ul>
-              </div>
-            )
-          }}
-        />
-
-        <RadioGroup
-          className="mt-2"
-          value={selectedType}
-          onValueChange={handleTypeChange}
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="INSTANT" id="instant" />
-            <Label htmlFor="instant" className="cursor-pointer">
-              Reward immediately
-            </Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="DELAY" id="delay" />
-            <Label htmlFor="delay" className="cursor-pointer">
-              Delay the reward
-            </Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="QUESTION" id="question" />
-            <Label htmlFor="question" className="cursor-pointer">
-              Ask a question
-            </Label>
-          </div>
-        </RadioGroup>
-
-        {selectedType === 'DELAY' && (
-          <FormField
-            control={control}
-            name={`tasks.${index}.afterVisit.seconds`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Delay (seconds)</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    min={1}
-                    max={300}
-                    value={field.value ?? 5}
-                    onChange={(e) => {
-                      const value = Number(e.target.value);
-                      if (!isNaN(value)) {
-                        field.onChange(value);
-                      }
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
-
-        {selectedType === 'QUESTION' && (
+      <FormField
+        control={control}
+        name={`tasks.${index}.afterVisit`}
+        render={() => (
           <div className="space-y-4">
-            <FormField
-              control={control}
-              name={`tasks.${index}.afterVisit.question`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Question</FormLabel>
-
-                  <FormControl>
-                    <Input
-                      placeholder="e.g., What is the main color of the website?"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <SwitchFormHeader
+              label="After Visiting"
+              description="Customize what happens after the user visits the URL"
+              help={{
+                title: 'Help: After Visit',
+                content: (
+                  <div className="space-y-2">
+                    <p>
+                      Control what happens after users click the visit button:
+                    </p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>
+                        <strong>Reward Immediately:</strong> Task completes
+                        instantly when the visit button is clicked.
+                      </li>
+                      <li>
+                        <strong>Delay the Reward:</strong> Add a countdown timer
+                        before the task can be completed, ensuring users spend
+                        time on the page.
+                      </li>
+                      <li>
+                        <strong>Ask a Question:</strong> Require users to answer
+                        a question about the visited content to verify they
+                        engaged with it.
+                      </li>
+                    </ul>
+                  </div>
+                )
+              }}
             />
+
+            <RadioGroup
+              className="mt-2"
+              value={selectedType}
+              onValueChange={handleTypeChange}
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="INSTANT" id="instant" />
+                <Label htmlFor="instant" className="cursor-pointer">
+                  Reward immediately
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="DELAY" id="delay" />
+                <Label htmlFor="delay" className="cursor-pointer">
+                  Delay the reward
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="QUESTION" id="question" />
+                <Label htmlFor="question" className="cursor-pointer">
+                  Ask a question
+                </Label>
+              </div>
+            </RadioGroup>
+
+            {selectedType === 'DELAY' && (
+              <FormField
+                control={control}
+                name={`tasks.${index}.afterVisit.seconds`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Delay (seconds)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={300}
+                        value={field.value ?? 5}
+                        onChange={(e) => {
+                          const value = Number(e.target.value);
+                          if (!isNaN(value)) {
+                            field.onChange(value);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {selectedType === 'QUESTION' && (
+              <div className="space-y-4">
+                <FormField
+                  control={control}
+                  name={`tasks.${index}.afterVisit.question`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Question</FormLabel>
+
+                      <FormControl>
+                        <Input
+                          placeholder="e.g., What is the main color of the website?"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
           </div>
         )}
-      </div>
+      />
     </SwitchBox>
   );
 };

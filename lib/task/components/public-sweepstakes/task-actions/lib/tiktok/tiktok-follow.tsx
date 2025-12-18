@@ -10,7 +10,7 @@ const TIMER_DURATION = 10000;
 
 export const TikTokFollowTaskActionForm: React.FC<
   TaskActionProps<TiktokFollowTaskSchema>
-> = ({ onCancel, onSubmit, task, isLoading }) => {
+> = ({ onCancel, onSubmit, task, submission, isLoading }) => {
   const [embedHtml, setEmbedHtml] = useState<string | null>(null);
   const [isLoadingEmbed, setIsLoadingEmbed] = useState(true);
   const [embedError, setEmbedError] = useState(false);
@@ -114,6 +114,7 @@ export const TikTokFollowTaskActionForm: React.FC<
   return (
     <WithProviderConnection
       task={task}
+      submission={submission}
       disabled={!timerComplete}
       onCancel={onCancel}
       onSubmit={onSubmit}
@@ -144,22 +145,8 @@ export const TikTokFollowTaskActionForm: React.FC<
                 </div>
               )}
 
-              {!isLoadingEmbed && embedHtml && (
-                <div className="space-y-2">
-                  <div className="text-sm text-center text-muted-foreground">
-                    {timerComplete ? (
-                      <span className="text-green-600 font-medium">
-                        Ready to complete!
-                      </span>
-                    ) : (
-                      <span>
-                        Please wait {remainingSeconds} second
-                        {remainingSeconds !== 1 ? 's' : ''}...
-                      </span>
-                    )}
-                  </div>
-                  <Progress value={timerProgress} className="h-2" />
-                </div>
+              {!isLoadingEmbed && embedHtml && !submission && (
+                <Progress value={timerProgress} />
               )}
             </>
           )}

@@ -13,7 +13,7 @@ import { AlertCircleIcon } from 'lucide-react';
 
 export const SecretCodeTaskActionForm: React.FC<
   TaskActionProps<SecretCodeTaskSchema>
-> = ({ onCancel, onSubmit, isLoading, task, error }) => {
+> = ({ onCancel, onSubmit, submission, isLoading, task, error }) => {
   const [code, setCode] = useState('');
 
   const handleSubmit = () => {
@@ -33,28 +33,36 @@ export const SecretCodeTaskActionForm: React.FC<
   return (
     <>
       <TaskContent className="flex-col mt-2">
-        <Input
-          placeholder="Enter the secret code"
-          value={code}
-          disabled={noMoreAttempts || isLoading}
-          onChange={(e) => setCode(e.target.value)}
-        />
-        {!noMoreAttempts && (
-          <Typography.Caption className="text-center mt-2">
-            {task.hint}
-          </Typography.Caption>
-        )}
-        {error && (
-          <Alert variant="destructive" className="text-left">
-            <AlertCircleIcon />
-            <AlertTitle>Invalid Code</AlertTitle>
-            <AlertDescription>{error.message}</AlertDescription>
-          </Alert>
+        {submission ? (
+          <p className="text-sm text-foreground ">
+            You have already submitted the secret code. Thank you!
+          </p>
+        ) : (
+          <>
+            <Input
+              placeholder="Enter the secret code"
+              value={code}
+              disabled={noMoreAttempts || isLoading}
+              onChange={(e) => setCode(e.target.value)}
+            />
+            {!noMoreAttempts && (
+              <Typography.Caption className="text-center mt-2">
+                {task.hint}
+              </Typography.Caption>
+            )}
+            {error && (
+              <Alert variant="destructive" className="text-left">
+                <AlertCircleIcon />
+                <AlertTitle>Invalid Code</AlertTitle>
+                <AlertDescription>{error.message}</AlertDescription>
+              </Alert>
+            )}
+          </>
         )}
       </TaskContent>
-      <Separator />
       <TaskControls
         submit={{ label: 'Submit Code', variant: 'success', icon: null }}
+        submission={submission}
         isLoading={isLoading}
         disabled={!code || noMoreAttempts}
         onSubmit={handleSubmit}
