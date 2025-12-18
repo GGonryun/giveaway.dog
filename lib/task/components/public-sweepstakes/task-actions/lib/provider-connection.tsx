@@ -1,5 +1,10 @@
 import { Separator } from '@/components/ui/separator';
-import { TaskActionProps, TaskContent, TaskControls } from '../building-blocks';
+import {
+  TaskActionProps,
+  TaskContent,
+  TaskControls,
+  TaskControlsProps
+} from '../building-blocks';
 import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -74,14 +79,24 @@ const useProviderConnection = ({
 };
 
 export const WithProviderConnection: React.FC<
-  Omit<TaskActionProps<TaskSchema>, 'entrants' | 'loyalty'> & {
-    render: (ctx: {
-      theme: TaskTheme;
-      provider: ProviderSchema | undefined;
-    }) => React.ReactNode;
-    disabled?: boolean;
-  }
-> = ({ render, onSubmit, onCancel, task, disabled, isLoading }) => {
+  Omit<TaskActionProps<TaskSchema>, 'entrants' | 'loyalty'> &
+    Pick<TaskControlsProps, 'submit' | 'cancel' | 'disabled'> & {
+      hidden?: boolean;
+      render: (ctx: {
+        theme: TaskTheme;
+        provider: ProviderSchema | undefined;
+      }) => React.ReactNode;
+    }
+> = ({
+  render,
+  onSubmit,
+  onCancel,
+  task,
+  disabled,
+  isLoading,
+  submit,
+  cancel
+}) => {
   const { theme } = useTaskTheme();
   const providerId = TASK_PLATFORM[task.type];
   const providerLabel = TASK_PLATFORM_LABEL[providerId];
@@ -132,6 +147,7 @@ export const WithProviderConnection: React.FC<
           </>
         )}
       </TaskContent>
+
       <Separator />
       <TaskControls
         disabled={
@@ -139,6 +155,8 @@ export const WithProviderConnection: React.FC<
           (requiresConnection && (!provider || loginProcedure.isLoading))
         }
         isLoading={isLoading}
+        submit={submit}
+        cancel={cancel}
         onSubmit={onSubmit}
         onCancel={onCancel}
       />

@@ -39,80 +39,132 @@ export const TaskContent: React.PC<{ className?: string }> = ({
   );
 };
 
+export type CustomButtonProps = {
+  label?: string;
+  className?: string;
+  variant?: ButtonProps['variant'];
+  icon?: LucideIcon | null;
+};
+
+type CustomTooltipButtonProps = {
+  disabled?: boolean;
+  isLoading?: boolean;
+  onClick: () => void;
+  tooltip?: string;
+  buttonProps?: CustomButtonProps;
+  defaultLabel?: string;
+  defaultIcon?: LucideIcon;
+  defaultVariant?: ButtonProps['variant'];
+};
+
+const CustomTooltipButton: React.FC<CustomTooltipButtonProps> = ({
+  disabled = false,
+  isLoading = false,
+  onClick,
+  tooltip,
+  buttonProps,
+  defaultLabel,
+  defaultIcon,
+  defaultVariant
+}) => {
+  const { theme } = useTaskTheme();
+
+  const label = buttonProps?.label ?? defaultLabel;
+  const variant = buttonProps?.variant ?? defaultVariant;
+  const Icon =
+    buttonProps?.icon === undefined
+      ? defaultIcon
+      : buttonProps?.icon === null
+        ? () => null
+        : buttonProps?.icon;
+
+  return useMemo(
+    () =>
+      disabled ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              type="button"
+              variant={variant}
+              onClick={undefined}
+              className={cn(
+                'opacity-50 cursor-not-allowed',
+                buttonProps?.className
+              )}
+            >
+              {label}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent className={theme.arrow} arrowClassName={theme.arrow}>
+            {tooltip}
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        <Button
+          size="sm"
+          type="button"
+          variant={variant}
+          onClick={onClick}
+          className={cn('cursor-pointer', buttonProps?.className)}
+          disabled={isLoading}
+        >
+          {isLoading ? <Spinner /> : Icon && <Icon />}
+          {isLoading ? <span>Loading...</span> : label}
+        </Button>
+      ),
+    [
+      disabled,
+      onClick,
+      buttonProps,
+      isLoading,
+      label,
+      variant,
+      Icon,
+      tooltip,
+      theme.arrow
+    ]
+  );
+};
+
 export type TaskControlsProps = {
-  disabled: boolean;
+  disabled?: boolean;
   help?: string;
-  submit?: {
-    label?: string;
-    className?: string;
-    variant?: ButtonProps['variant'];
-    icon?: LucideIcon | null;
-  };
+  submit?: CustomButtonProps;
+  cancel?: CustomButtonProps;
 } & TaskActionHandlers;
 
 export const TaskControls: React.FC<TaskControlsProps> = ({
   disabled,
   isLoading,
   submit,
+  cancel,
   help = 'Complete above to continue',
   onSubmit,
   onCancel
 }) => {
-  const { theme } = useTaskTheme();
-  const button = useMemo(() => {
-    const submitLabel = submit?.label ?? 'Complete Task';
-    const submitVariant = submit?.variant ?? 'outline';
-    const SubmitIcon =
-      submit?.icon === undefined
-        ? CheckIcon
-        : submit?.icon === null
-          ? () => null
-          : submit?.icon;
-
-    return disabled ? (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            size="sm"
-            type="button"
-            variant={submitVariant}
-            onClick={undefined}
-            className={cn('opacity-50 cursor-not-allowed', submit?.className)}
-          >
-            {submitLabel}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent className={theme.arrow} arrowClassName={theme.arrow}>
-          {help}
-        </TooltipContent>
-      </Tooltip>
-    ) : (
-      <Button
-        size="sm"
-        type="button"
-        variant={submitVariant}
-        onClick={onSubmit}
-        className={cn('cursor-pointer', submit?.className)}
-        disabled={isLoading}
-      >
-        {isLoading ? <Spinner /> : <SubmitIcon />}
-        {isLoading ? <span>Loading...</span> : submitLabel}
-      </Button>
-    );
-  }, [disabled, onSubmit, submit]);
-
   return (
     <TaskContent className="bg-sidebar">
-      {button}
+      <CustomTooltipButton
+        disabled={disabled}
+        isLoading={isLoading}
+        onClick={onSubmit}
+        tooltip={help}
+        defaultIcon={CheckIcon}
+        defaultLabel="Complete Task"
+        defaultVariant="outline"
+        buttonProps={submit}
+      />
 
-      <Button
-        size="sm"
-        variant="link"
-        className="text-foreground"
+      <CustomTooltipButton
         onClick={onCancel}
-      >
-        Cancel
-      </Button>
+        buttonProps={{
+          className: 'text-foreground',
+          ...cancel
+        }}
+        defaultLabel="Cancel"
+        defaultVariant="link"
+      />
     </TaskContent>
   );
 };

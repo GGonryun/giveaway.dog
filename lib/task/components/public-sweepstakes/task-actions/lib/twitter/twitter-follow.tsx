@@ -33,7 +33,6 @@ export const TwitterFollowTaskActionForm: React.FC<
                   <Link
                     href={`https://x.com/intent/follow?screen_name=${screenName}`}
                     target="_blank"
-                    rel="noopener noreferrer"
                     onClick={() => setPerformedAction(true)}
                   >
                     <UserPlus />
