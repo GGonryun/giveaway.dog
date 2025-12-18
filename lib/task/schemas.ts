@@ -746,6 +746,7 @@ export const toTaskSchema = (stored: Task): TaskSchema => {
   if (parsed.success) {
     return parsed.data;
   } else {
+    console.error('Failed to parse task config:', parsed.error);
     throw new ApplicationError({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'Failed to parse task config',
