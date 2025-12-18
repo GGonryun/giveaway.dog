@@ -2,7 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
-import { taskSchema, toTaskSchema } from '@/lib/task/schemas';
+import { taskSchema, toTaskSchemaSafe } from '@/lib/task/schemas';
 
 export const getTeamTasks = procedure()
   .authorization({
@@ -28,5 +28,5 @@ export const getTeamTasks = procedure()
       }
     });
 
-    return tasks.map(toTaskSchema);
+    return tasks.map(toTaskSchemaSafe);
   });
