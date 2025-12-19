@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Table,
@@ -11,66 +11,35 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { TablePagination } from '@/components/ui/table-pagination';
-import { useProcedure } from '@/lib/mrpc/hook';
-import getParticipationHistory from '@/procedures/user/get-participation-history';
-import { ParticipationHistoryItem } from '@/schemas/participation-history';
+import { ParticipationHistory } from '@/schemas/participation-history';
 import { Clock, TrendingUp } from 'lucide-react';
-import { useEffect } from 'react';
 import Link from 'next/link';
 import { SweepstakesStatusBadge } from '../sweepstakes/status-badge';
-import { Spinner } from '../ui/spinner';
+import { toEngagementTheme } from '@/lib/participant/util';
+import { datetime } from '@/lib/date';
 
-const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_PAGE_SIZE = 50;
 
-export const ParticipationHistoryTable: React.FC = () => {
+export const ParticipationHistoryTable: React.FC<{
+  history: ParticipationHistory;
+}> = ({ history }) => {
   const [page, setPage] = useState(1);
-  const [data, setData] = useState<{
-    items: ParticipationHistoryItem[];
-    total: number;
-    totalPages: number;
-  } | null>(null);
 
-  const procedure = useProcedure({
-    action: getParticipationHistory,
-    onSuccess(result) {
-      setData(result);
-    }
-  });
+  const paginatedData = useMemo(() => {
+    const total = history.length;
+    const totalPages = Math.ceil(total / DEFAULT_PAGE_SIZE);
+    const startIndex = (page - 1) * DEFAULT_PAGE_SIZE;
+    const endIndex = startIndex + DEFAULT_PAGE_SIZE;
+    const items = history.slice(startIndex, endIndex);
 
-  useEffect(() => {
-    procedure.run({ page, pageSize: DEFAULT_PAGE_SIZE });
-  }, [page]);
+    return {
+      items,
+      total,
+      totalPages
+    };
+  }, [history, page]);
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const getEngagementColor = (engagement: number) => {
-    if (engagement >= 80) return 'bg-green-500';
-    if (engagement >= 60) return 'bg-blue-500';
-    if (engagement >= 40) return 'bg-yellow-500';
-    return 'bg-red-500';
-  };
-
-  if (procedure.isPending && !data) {
-    return (
-      <Card>
-        <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <Spinner size="lg" />
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (!data || data.items.length === 0) {
+  if (history.length === 0) {
     return (
       <Card>
         <CardContent>
@@ -99,7 +68,7 @@ export const ParticipationHistoryTable: React.FC = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.items.map((item) => (
+              {paginatedData.items.map((item) => (
                 <TableRow key={item.sweepstakesId}>
                   <TableCell>
                     <Link
@@ -117,7 +86,7 @@ export const ParticipationHistoryTable: React.FC = () => {
                     <div className="flex items-center space-x-2">
                       <div className="w-16 bg-muted rounded-full h-1.5">
                         <div
-                          className={`h-1.5 rounded-full transition-all ${getEngagementColor(item.engagement)}`}
+                          className={`h-1.5 rounded-full transition-all ${toEngagementTheme(item.engagement)}`}
                           style={{ width: `${item.engagement}%` }}
                         />
                       </div>
@@ -136,7 +105,9 @@ export const ParticipationHistoryTable: React.FC = () => {
                   <TableCell>
                     <div className="flex items-center space-x-1 text-sm">
                       <Clock className="h-3 w-3 text-muted-foreground" />
-                      <span>{formatDate(item.lastParticipatedAt)}</span>
+                      <span>
+                        {datetime.format(item.lastParticipatedAt, 'short')}
+                      </span>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -145,13 +116,12 @@ export const ParticipationHistoryTable: React.FC = () => {
           </Table>
         </div>
         <TablePagination
-          totalItems={data.total}
+          totalItems={paginatedData.total}
           currentPage={page}
-          totalPages={data.totalPages}
+          totalPages={paginatedData.totalPages}
           pageSize={DEFAULT_PAGE_SIZE}
           onPageChange={setPage}
           itemName="giveaways"
-          isPending={procedure.isLoading}
         />
       </CardContent>
     </Card>

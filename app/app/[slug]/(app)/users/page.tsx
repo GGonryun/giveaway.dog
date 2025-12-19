@@ -5,8 +5,8 @@ import { UsersTable } from './components/users-table';
 
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@/schemas/pages';
-import { getTeamParticipants } from '@/lib/team-participant/procedures/get-team-participants';
-import { getTeamTasks } from '@/lib/team-participant/procedures/get-team-tasks';
+import { getTeamParticipants } from '@/lib/participant/procedures/get-team-participants';
+import { getTeamTasks } from '@/lib/participant/procedures/get-team-tasks';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

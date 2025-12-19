@@ -34,7 +34,7 @@ interface PrizeCard {
   slotIndex: number;
   drawId: string | null;
   winnerName: string | null;
-  winnerEmoji: string | null;
+  winnerImage: string | null;
   revealed: boolean;
   needsRoll: boolean;
   isLoading: boolean;
@@ -116,7 +116,7 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
           slotIndex: index,
           drawId: draw.id,
           winnerName: draw.participant.name,
-          winnerEmoji: draw.participant.emoji,
+          winnerImage: draw.participant.image,
           revealed: !isNewlyRevealed, // Don't reveal new winners yet
           needsRoll: false,
           isLoading: isNewlyRevealed && previousCard?.isLoading ? true : false
@@ -145,7 +145,7 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
             slotIndex: winnerDraws.length + i,
             drawId: null,
             winnerName: null,
-            winnerEmoji: null,
+            winnerImage: null,
             revealed: false,
             needsRoll: true,
             isLoading: wasLoading || false
@@ -358,12 +358,6 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
                           >
                             <Trophy className="h-12 w-12 sm:h-16 sm:w-16 drop-shadow-lg" />
                           </motion.div>
-
-                          {prizeCard.winnerEmoji && (
-                            <span className="text-2xl sm:text-3xl lg:text-4xl">
-                              {prizeCard.winnerEmoji}
-                            </span>
-                          )}
 
                           <div className="text-center space-y-0.5 sm:space-y-1">
                             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold line-clamp-1">

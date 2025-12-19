@@ -1,11 +1,11 @@
-import { UserSettings } from '@/components/account/user-profile';
+import { DangerZone } from '@/components/account/danger-zone';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'My Account | Giveaway.dog',
-  description: 'Manage your account settings',
+  title: 'Danger Zone | Giveaway.dog',
+  description: 'Account deletion and dangerous actions',
   robots: {
     index: false,
     follow: false
@@ -13,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  return <UserSettings />;
+  return <DangerZone />;
 }

@@ -49,6 +49,7 @@ import { DisqualificationDialog } from './disqualification-dialog';
 import { TASK_LABEL } from '@/lib/task/schemas';
 import { USER_SOURCE_LABEL } from '@/lib/user-source/data';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { toQualityTheme } from '@/lib/participant/util';
 
 interface GroupedPrize {
   id: string;
@@ -130,13 +131,9 @@ const PrizeDrawRow = ({
           <div className="flex-1">
             <div className="w-full bg-muted rounded-full h-2">
               <div
-                className={`h-2 rounded-full transition-all ${
-                  draw.participant.qualityScore >= 80
-                    ? 'bg-green-500'
-                    : draw.participant.qualityScore >= 60
-                      ? 'bg-yellow-500'
-                      : 'bg-orange-500'
-                }`}
+                className={`h-2 rounded-full transition-all ${toQualityTheme(
+                  draw.participant.qualityScore
+                )}`}
                 style={{
                   width: `${draw.participant.qualityScore}%`
                 }}

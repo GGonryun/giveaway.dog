@@ -14,15 +14,12 @@ export const participationHistoryItemSchema = z.object({
   sweepstakesStatus: derivedSweepstakesStatusSchema
 });
 
-export const participationHistorySchema = z.object({
-  items: z.array(participationHistoryItemSchema),
-  total: z.number(),
-  page: z.number(),
-  pageSize: z.number(),
-  totalPages: z.number()
-});
-
 export type ParticipationHistoryItem = z.infer<
   typeof participationHistoryItemSchema
 >;
+
+export const participationHistorySchema = z.array(
+  participationHistoryItemSchema
+);
+
 export type ParticipationHistory = z.infer<typeof participationHistorySchema>;

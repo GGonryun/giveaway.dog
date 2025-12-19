@@ -10,7 +10,6 @@ import {
   TEAM_PARTICIPANT_USER_SELECT_QUERY,
   toTeamParticipant
 } from '@/lib/participant/db';
-import { TASK_COMPLETIONS_SELECT_QUERY } from '@/lib/task/completions';
 
 export const getTeamParticipant = procedure()
   .authorization({

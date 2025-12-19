@@ -37,6 +37,7 @@ import { UserSourceCaption } from '@/lib/user-source/components/user-source-capt
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
 import { toMostRecentCompletion } from '@/lib/task/completions';
+import { toEngagementTheme, toQualityTheme } from '@/lib/participant/util';
 
 export const SweepstakesParticipants: React.FC<{
   slug: string;
@@ -176,15 +177,9 @@ const SweepstakeParticipant: React.FC<{
         <div className="flex items-center justify-end space-x-2">
           <div className="w-16 bg-muted rounded-full h-1.5">
             <div
-              className={`h-1.5 rounded-full transition-all ${
-                participant.user.qualityScore >= 80
-                  ? 'bg-green-500'
-                  : participant.user.qualityScore >= 60
-                    ? 'bg-yellow-500'
-                    : participant.user.qualityScore >= 40
-                      ? 'bg-orange-500'
-                      : 'bg-red-500'
-              }`}
+              className={`h-1.5 rounded-full transition-all ${toQualityTheme(
+                participant.user.qualityScore
+              )}`}
               style={{
                 width: `${participant.user.qualityScore}%`
               }}
@@ -199,15 +194,9 @@ const SweepstakeParticipant: React.FC<{
         <div className="flex items-center justify-end space-x-2">
           <div className="w-16 bg-muted rounded-full h-1.5">
             <div
-              className={`h-1.5 rounded-full transition-all ${
-                engagement >= 80
-                  ? 'bg-green-500'
-                  : engagement >= 60
-                    ? 'bg-blue-500'
-                    : engagement >= 40
-                      ? 'bg-yellow-500'
-                      : 'bg-red-500'
-              }`}
+              className={`h-1.5 rounded-full transition-all ${toEngagementTheme(
+                engagement
+              )}`}
               style={{ width: `${engagement}%` }}
             />
           </div>

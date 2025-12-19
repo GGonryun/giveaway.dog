@@ -1,3 +1,5 @@
+'use client';
+
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import logout from '../procedures/logout';

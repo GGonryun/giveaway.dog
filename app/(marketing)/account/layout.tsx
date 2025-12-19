@@ -1,6 +1,8 @@
 import { UserProvider } from '@/components/context/user-provider';
 import { redirect } from 'next/navigation';
 import getUser from '@/procedures/user/get-user';
+import { AccountTabs } from '@/components/account/account-tabs';
+import { LogoutButton } from '@/lib/auth/components/logout-button';
 
 export default async function Layout({
   children
@@ -14,5 +16,12 @@ export default async function Layout({
     redirect(`/`);
   }
 
-  return <UserProvider value={user.data}>{children}</UserProvider>;
+  return (
+    <UserProvider value={user.data}>
+      <div className="py-4 space-y-4 container">
+        <AccountTabs>{children}</AccountTabs>
+        <LogoutButton />
+      </div>
+    </UserProvider>
+  );
 }

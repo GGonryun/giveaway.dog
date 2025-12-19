@@ -1,3 +1,5 @@
+'use client';
+
 import { LoaderCircleIcon, LogOutIcon } from 'lucide-react';
 import { useLogout } from '../hooks/use-logout';
 import { Button } from '@/components/ui/button';

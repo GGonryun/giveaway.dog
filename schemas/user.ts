@@ -23,7 +23,7 @@ export const userProfileSchema = z.object({
   name: z.string().nullable(),
   email: z.string().email().nullable(),
   emailVerified: z.boolean().nullable(),
-  emoji: z.string().nullable(),
+  image: z.string().url().nullable(),
   countryCode: z.string().nullable(),
   userAgent: z.string().nullable(),
   birthday: z.coerce.date().nullable(),
@@ -89,7 +89,8 @@ export const updateUserProfileSchema = z.object({
       /^[a-zA-Z0-9_\- ]+$/,
       'Username can only contain letters, numbers, spaces, hyphens, and underscores'
     )
-    .optional()
+    .optional(),
+  image: z.string().url().nullable().optional()
 });
 
 export const blueskyHandleSchema = z
@@ -117,7 +118,7 @@ export const USER_SCHEMA_SELECT_QUERY = {
   id: true,
   email: true,
   name: true,
-  emoji: true,
+  image: true,
   source: true,
   createdAt: true,
   birthday: true,
@@ -161,7 +162,7 @@ export const toUserSchema = (
   id: user.id,
   email: user.email,
   name: user.name,
-  emoji: user.emoji,
+  image: user.image,
   source: user.source,
   birthday: user.birthday,
   createdAt: user.createdAt,

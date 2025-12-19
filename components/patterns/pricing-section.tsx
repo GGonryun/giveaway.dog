@@ -42,7 +42,7 @@ const YEARLY_SAVINGS = (MONTHLY_PRICE - YEARLY_PRICE_PER_MONTH) * 12;
 const GradientText: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => (
-  <span className="bg-gradient-to-r from-primary via-black to-primary bg-clip-text text-transparent font-bold animate-gradient">
+  <span className="bg-gradient-to-r from-primary via-black dark:via-white to-primary bg-clip-text text-transparent font-bold animate-gradient">
     {children}
   </span>
 );
@@ -95,7 +95,7 @@ export const PricingSection = () => {
       border: true,
       buttonSubtext: 'Billed monthly or yearly',
       buttonText: 'Contact Us',
-      buttonLink: '/signup',
+      buttonLink: '/login',
       buttonIcon: <ArrowRightIcon />,
       buttonVariant: 'default',
       features: [

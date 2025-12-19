@@ -1,9 +1,5 @@
 ## Roadmap
 
-- [ ] Add deep linking for accounts tabs.
-
-- [ ] Update the participant dashboard "account" icon to quickly navigate to profile settings.
-
 - [ ] Add a "Checkmark" or a way for me to easily see which sweepstakes I have entered.
 
 - [ ] Introduce an unlisted visibility for sweepstakes which is what private is now.
@@ -12,6 +8,8 @@
 - [ ] When someone submits an answer we should show them the data they provided.
 - [ ] Add an internal tool that allows us to send messages when sweepstakes go live.
 - [ ] X/Discord bot that notifies when new sweepstakes are created and posted on the Giveaway Dog website.
+- [ ] Move finished sweepstakes down to the bottom, sort by time remaining
+- [ ] add support for "Featured Sweepstakes"
 
 ### @theejankanator
 

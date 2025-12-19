@@ -4,12 +4,7 @@ import { PricingSection } from '@/components/patterns/pricing-section';
 import { PricingCTA } from '@/components/patterns/pricing-cta';
 import { environment } from '@/lib/environment';
 import { Metadata } from 'next';
-import { auth } from '@/lib/auth/config';
 import { HomePage } from '@/lib/home/page';
-import findUser from '@/procedures/user/find-user';
-import { getUserAuthRedirect } from '@/lib/redirect';
-import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
-import { redirect } from 'next/navigation';
 
 const appUrl = environment.appUrl();
 
@@ -52,18 +47,4 @@ export const metadata: Metadata = {
   }
 };
 
-export default async function Page() {
-  // if the user is logged out redirect to /home
-  const user = await findUser({ self: true });
-
-  if (!user.ok || !user.data) {
-    return <HomePage />;
-  }
-
-  // if user has the host flag enabled redirect to /dashboard
-  if (user.data.featureFlags?.includes(HOST_DASHBOARD_FEATURE_FLAG_KEY)) {
-    return redirect('/app');
-  } else {
-    return redirect('/browse');
-  }
-}
+export default HomePage;

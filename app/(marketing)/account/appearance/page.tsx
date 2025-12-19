@@ -1,11 +1,11 @@
-import { UserSettings } from '@/components/account/user-profile';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'My Account | Giveaway.dog',
-  description: 'Manage your account settings',
+  title: 'Appearance Settings | Giveaway.dog',
+  description: 'Customize your appearance preferences',
   robots: {
     index: false,
     follow: false
@@ -13,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  return <UserSettings />;
+  return <ThemeToggle />;
 }

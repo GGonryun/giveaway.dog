@@ -37,7 +37,7 @@ export const mockUserProfile: UserSchema = {
   email: 'user@example.com',
   birthday: new Date('1900-00-00'),
   emailVerified: true,
-  emoji: '🐶',
+  image: null,
   countryCode: 'US',
   userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
   source: 'SIGNUP',

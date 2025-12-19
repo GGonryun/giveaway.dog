@@ -1,3 +1,5 @@
+'use client';
+
 import deleteUser from '@/procedures/user/delete-user';
 import {
   AlertDialog,
@@ -11,13 +13,7 @@ import {
   AlertDialogTrigger
 } from '../ui/alert-dialog';
 import { Button } from '../ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '../ui/card';
+
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { SettingsCard } from '../settings/settings-card';

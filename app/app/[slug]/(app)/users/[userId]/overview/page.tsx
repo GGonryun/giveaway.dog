@@ -5,8 +5,8 @@ import { UserDetailsOverview } from '../components/overview/user-details-overvie
 import { UserDetailsOverviewSkeleton } from '../components/overview/user-details-overview-skeleton';
 import { UserParams } from '../params';
 import getUser from '@/procedures/user/get-user';
-import { getTeamParticipant } from '@/lib/team-participant/procedures/get-team-participant';
-import { getTeamTasks } from '@/lib/team-participant/procedures/get-team-tasks';
+import { getTeamParticipant } from '@/lib/participant/procedures/get-team-participant';
+import { getTeamTasks } from '@/lib/participant/procedures/get-team-tasks';
 
 interface PageProps {
   params: Promise<UserParams>;

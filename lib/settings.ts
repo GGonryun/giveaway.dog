@@ -1,3 +1,4 @@
+import { AccountTabSchema } from '@/schemas/account';
 import { SweepstakesTabSchema } from '@/schemas/sweepstakes';
 import { UserDetailsTabSchema } from '@/schemas/user';
 import { IdentityProvider } from '@prisma/client';
@@ -19,6 +20,7 @@ export const MAX_SWEEPSTAKE_DURATION_DAYS = 30;
 export const MAX_PICKER_SCHEDULE_DAYS = 7;
 export const DEFAULT_SWEEPSTAKES_DETAILS_TAB: SweepstakesTabSchema = 'preview';
 export const DEFAULT_USER_DETAILS_TAB: UserDetailsTabSchema = 'overview';
+export const DEFAULT_ACCOUNT_TAB: AccountTabSchema = 'profile';
 export const DEFAULT_ALLOWED_IDENTITIES = [
   IdentityProvider.TWITTER,
   IdentityProvider.GOOGLE,

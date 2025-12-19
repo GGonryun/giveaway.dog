@@ -6,20 +6,10 @@ import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import z from 'zod';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 
-const DEFAULT_PAGE_SIZE = 10;
-
 const getParticipationHistory = procedure()
   .authorization({ required: true })
-  .input(
-    z.object({
-      page: z.number().min(1).default(1),
-      pageSize: z.number().min(1).max(100).default(DEFAULT_PAGE_SIZE)
-    })
-  )
   .output(participationHistorySchema)
-  .handler(async ({ db, user, input }) => {
-    const skip = (input.page - 1) * input.pageSize;
-
+  .handler(async ({ db, user }) => {
     const sweepstakesWithParticipation = await db.sweepstakes.findMany({
       where: {
         tasks: {
@@ -57,9 +47,6 @@ const getParticipationHistory = procedure()
         updatedAt: 'desc'
       }
     });
-
-    const total = sweepstakesWithParticipation.length;
-    const totalPages = Math.ceil(total / input.pageSize);
 
     const sortedByLastParticipation = sweepstakesWithParticipation
       .map((sweepstakes) => {
@@ -99,19 +86,10 @@ const getParticipationHistory = procedure()
           _sortDate: lastParticipation
         };
       })
-      .sort((a, b) => b._sortDate.getTime() - a._sortDate.getTime());
+      .sort((a, b) => b._sortDate.getTime() - a._sortDate.getTime())
+      .map(({ _sortDate, ...rest }) => rest);
 
-    const paginatedItems = sortedByLastParticipation
-      .slice(skip, skip + input.pageSize)
-      .map(({ _sortDate, ...item }) => item);
-
-    return {
-      items: paginatedItems,
-      total,
-      page: input.page,
-      pageSize: input.pageSize,
-      totalPages
-    };
+    return sortedByLastParticipation;
   });
 
 export default getParticipationHistory;

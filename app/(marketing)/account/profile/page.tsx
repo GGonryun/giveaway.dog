@@ -4,8 +4,8 @@ import type { Metadata } from 'next';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'My Account | Giveaway.dog',
-  description: 'Manage your account settings',
+  title: 'Profile Settings | Giveaway.dog',
+  description: 'Manage your profile settings',
   robots: {
     index: false,
     follow: false
