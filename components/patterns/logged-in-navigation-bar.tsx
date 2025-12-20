@@ -7,7 +7,8 @@ import {
   Settings,
   User,
   History,
-  LogOut
+  LogOut,
+  Gift
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -88,11 +89,21 @@ export const LoggedInNavigationBar: React.FC<{ user: UserSchema }> = ({
               </Button>
             )}
 
-            <Button variant="outline" asChild>
-              <Link href={isHost ? '/app' : '/browse'} onClick={closeSheet}>
-                {isHost ? 'Dashboard' : 'Browse Giveaways'}
-              </Link>
-            </Button>
+            {isHost && (
+              <Button variant="outline" asChild>
+                <Link href="/app" onClick={closeSheet}>
+                  Dashboard
+                </Link>
+              </Button>
+            )}
+
+            {!isHost && (
+              <Button variant="outline" asChild>
+                <Link href="/browse" onClick={closeSheet}>
+                  Browse Giveaways
+                </Link>
+              </Button>
+            )}
 
             <div className="flex flex-col gap-1 mt-4">
               <Link
@@ -114,6 +125,19 @@ export const LoggedInNavigationBar: React.FC<{ user: UserSchema }> = ({
                 </span>
                 <User className="h-4 w-4 text-muted-foreground" />
               </Link>
+
+              {isHost && (
+                <Link
+                  href="/browse"
+                  onClick={closeSheet}
+                  className="flex items-center justify-between py-2"
+                >
+                  <span className="text-sm text-muted-foreground">
+                    Browse Giveaways
+                  </span>
+                  <Gift className="h-4 w-4 text-muted-foreground" />
+                </Link>
+              )}
 
               {!isHost && (
                 <Link
@@ -169,14 +193,14 @@ export const LoggedInNavigationBar: React.FC<{ user: UserSchema }> = ({
               </Link>
 
               <Link
-                href="/"
+                href="/home"
                 onClick={closeSheet}
                 className="flex items-center justify-between py-2"
               >
                 <span className="text-sm text-muted-foreground">Home Page</span>
                 <Home className="h-4 w-4 text-muted-foreground" />
               </Link>
-              <div className="1" />
+              <div className="my-0.5" />
             </div>
           </div>
         </SheetContent>

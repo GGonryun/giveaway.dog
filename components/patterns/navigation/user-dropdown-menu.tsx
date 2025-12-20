@@ -63,17 +63,25 @@ export const UserDropdownMenu: React.FC<{ user: UserSchema }> = ({ user }) => {
 
         <DropdownMenuSeparator />
 
+        {isHost && (
+          <DropdownMenuItem asChild>
+            <Link
+              href="/app"
+              className="cursor-pointer flex items-center justify-between"
+            >
+              <span>Dashboard</span>
+              <Settings className="h-4 w-4" />
+            </Link>
+          </DropdownMenuItem>
+        )}
+
         <DropdownMenuItem asChild>
           <Link
-            href={isHost ? '/app' : '/browse'}
+            href="/browse"
             className="cursor-pointer flex items-center justify-between"
           >
-            <span>{isHost ? 'Dashboard' : 'Browse Giveaways'}</span>
-            {isHost ? (
-              <Settings className="h-4 w-4" />
-            ) : (
-              <Gift className="h-4 w-4" />
-            )}
+            <span>Browse Giveaways</span>
+            <Gift className="h-4 w-4" />
           </Link>
         </DropdownMenuItem>
 
