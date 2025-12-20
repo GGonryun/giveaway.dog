@@ -11,9 +11,9 @@ import { type Locale, enUS } from 'date-fns/locale';
 import {
   Calendar as CalendarIcon,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Clock
 } from 'lucide-react';
-import { Clock } from 'lucide-react';
 import * as React from 'react';
 import { useImperativeHandle, useRef } from 'react';
 
@@ -354,7 +354,7 @@ function Calendar({
                   props.onMonthChange?.(newDate);
                 }}
               >
-                <SelectTrigger className="focus:bg-accent focus:text-accent-foreground w-fit gap-1 border-none p-0">
+                <SelectTrigger className="focus:bg-accent focus:text-accent-foreground  dark:focus:text-accent w-fit gap-1 border-none">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -376,7 +376,7 @@ function Calendar({
                   props.onMonthChange?.(newDate);
                 }}
               >
-                <SelectTrigger className="focus:bg-accent focus:text-accent-foreground w-fit gap-1 border-none p-0">
+                <SelectTrigger className="focus:bg-accent focus:text-accent-foreground dark:focus:text-accent w-fit gap-1 border-none ">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -448,7 +448,7 @@ const TimePeriodSelect = React.forwardRef<
         >
           <SelectTrigger
             ref={ref}
-            className="focus:bg-accent focus:text-accent-foreground w-[65px]"
+            className="focus:bg-accent focus:text-accent-foreground dark:focus:text-accent w-[65px]"
             onKeyDown={handleKeyDown}
           >
             <SelectValue />
@@ -561,7 +561,7 @@ const TimePickerInput = React.forwardRef<
         id={id || picker}
         name={name || picker}
         className={cn(
-          'focus:bg-accent focus:text-accent-foreground w-[48px] text-center font-mono text-base tabular-nums caret-transparent [&::-webkit-inner-spin-button]:appearance-none',
+          'focus:bg-accent focus:text-accent-foreground dark:focus:text-accent w-[48px] text-center font-mono text-base tabular-nums caret-transparent [&::-webkit-inner-spin-button]:appearance-none',
           className
         )}
         value={value || calculatedValue}
