@@ -16,7 +16,6 @@ import { TwitchFollowFormField } from './lib/twitch-follow';
 import { TwitterUsernameFormField } from './lib/twitter-username';
 import { SecretHintFormField } from './lib/secret-hint';
 import { SteamAppIdFormField } from './lib/steam-app-id';
-import { DateValidatorField } from './lib/date-validator';
 import { MaxEntrantsField } from './lib/max-entrants';
 import { LoyaltyRequiredField } from './lib/bonus-loyalty';
 import {
@@ -86,7 +85,6 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
           <>
             <StartDateField />
             <EndDateField />
-            <DateValidatorField />
           </>
         );
       case 'SECRET_CODE':

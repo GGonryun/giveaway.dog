@@ -20,7 +20,7 @@ export const SingleChoiceFormFields: React.FC = () => {
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: `tasks.${index}.options`
+    name: `tasks.${index}.options` as any
   });
 
   return (

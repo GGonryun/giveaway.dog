@@ -31,6 +31,7 @@ export type SwitchBoxFormFieldProps<
   form: ReturnType<typeof useFormContext<T>>;
   name: N;
   defaultValue: ControllerRenderProps<T, N>['value'];
+  onCheckedChange: () => void;
 };
 
 export function SwitchBoxFormField<
@@ -43,7 +44,8 @@ export function SwitchBoxFormField<
   Input,
   form,
   name,
-  defaultValue
+  defaultValue,
+  onCheckedChange
 }: SwitchBoxFormFieldProps<T, N>) {
   const data = useWatch({
     control: form.control,
@@ -70,10 +72,11 @@ export function SwitchBoxFormField<
                   checked={Boolean(field.value)}
                   onCheckedChange={() => {
                     if (Boolean(field.value)) {
-                      return field.onChange(undefined);
+                      field.onChange(null);
                     } else {
-                      return field.onChange(defaultValue);
+                      field.onChange(defaultValue);
                     }
+                    onCheckedChange();
                   }}
                 />
               </FormControl>

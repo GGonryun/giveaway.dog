@@ -169,19 +169,14 @@ const bonusTimedValidator = (
     const message =
       'At least one of start date or end date must be set for timed bonus tasks';
     ctx.addIssue({
-      path: ['tasks', index, 'validator'],
+      path: ['tasks', index, 'startDate'],
       code: z.ZodIssueCode.custom,
       message
     });
     ctx.addIssue({
-      path: ['tasks', index, 'startDate'],
-      code: z.ZodIssueCode.custom,
-      message: ''
-    });
-    ctx.addIssue({
       path: ['tasks', index, 'endDate'],
       code: z.ZodIssueCode.custom,
-      message: ''
+      message
     });
   }
 };

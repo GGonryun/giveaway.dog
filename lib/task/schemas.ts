@@ -59,10 +59,8 @@ export type BonusTaskSchema = z.infer<typeof bonusTaskSchema>;
 
 export const bonusTimedTaskSchema = bonusTaskSchema.extend({
   type: z.literal('BONUS_TIMED'),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
-  // a special field used to render custom validator messages
-  validator: z.any().optional()
+  startDate: z.string().nullish(),
+  endDate: z.string().nullish()
 });
 
 export type BonusTimedTaskSchema = z.infer<typeof bonusTimedTaskSchema>;
