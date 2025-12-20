@@ -8,10 +8,12 @@ import { HostCTA } from './components/host-cta';
 import { SubscriptionCTA } from './components/subscription-cta';
 import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
 import { MarketingPageHeader } from '../marketing/marketing-page-header';
+import { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas';
 
 export const SweepstakesPageContent: React.FC<{
   sweepstakes: PublicSweepstakeSchema[];
-}> = ({ sweepstakes }) => {
+  participation: PublicSweepstakesParticipationSchema;
+}> = ({ sweepstakes, participation }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (query: string) => {
@@ -42,6 +44,7 @@ export const SweepstakesPageContent: React.FC<{
             <AllGiveawaysGrid
               searchQuery={searchQuery}
               sweepstakes={sweepstakes}
+              participation={participation}
             />
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { SweepstakesPageContent } from '@/components/sweepstakes-browse/sweepstakes-page-content';
+import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
 import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes-list';
 import { Metadata } from 'next';
 
@@ -42,6 +43,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const sweepstakes = await getPublicSweepstakesList();
+  const participation = await getPublicSweepstakesParticipation();
   if (!sweepstakes.ok)
     return (
       <div>
@@ -49,5 +51,17 @@ export default async function Page() {
       </div>
     );
 
-  return <SweepstakesPageContent sweepstakes={sweepstakes.data} />;
+  if (!participation.ok)
+    return (
+      <div>
+        [ERROR-{participation.data.code}]: {participation.data.message}
+      </div>
+    );
+
+  return (
+    <SweepstakesPageContent
+      sweepstakes={sweepstakes.data}
+      participation={participation.data}
+    />
+  );
 }

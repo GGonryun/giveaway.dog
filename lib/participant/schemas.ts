@@ -23,3 +23,15 @@ export const resolvedFormFieldSchema = z.object({
 });
 
 export type ResolvedFormFieldSchema = z.infer<typeof resolvedFormFieldSchema>;
+
+export const publicSweepstakesParticipationSchema = z.record(
+  z.object({
+    sweepstakesId: z.string(),
+    completed: z.number(),
+    maximum: z.number()
+  })
+);
+
+export type PublicSweepstakesParticipationSchema = z.infer<
+  typeof publicSweepstakesParticipationSchema
+>;

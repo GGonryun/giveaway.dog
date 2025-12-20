@@ -97,7 +97,7 @@ export const SweepstakesStatusSummaryBadge: React.FC<
     daysUntilStart <= STARTING_SOON_SWEEPSTAKE_THRESHOLD;
 
   if (isStartingSoon) {
-    return <Badge variant="default">Starting Soon</Badge>;
+    return <Badge variant="default">Upcoming</Badge>;
   }
 
   const daysLeft = differenceInDays(end, now);
@@ -105,7 +105,7 @@ export const SweepstakesStatusSummaryBadge: React.FC<
   const isNew = differenceInDays(now, start) <= NEW_SWEEPSTAKE_THRESHOLD;
 
   if (isEndingSoon) {
-    return <Badge variant="destructive">Ending Soon</Badge>;
+    return <Badge variant="destructive">Ending</Badge>;
   } else if (isNew) {
     return <Badge variant="secondary">New</Badge>;
   } else {

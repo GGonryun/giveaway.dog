@@ -1,19 +1,23 @@
 ## Roadmap
 
-- [ ] Add a "Checkmark" or a way for me to easily see which sweepstakes I have entered.
-
-- [ ] Introduce an unlisted visibility for sweepstakes which is what private is now.
+- [ ] Can we allow private sweepstakes that only people with a link can enter? (switch to using "private" | "unlisted" | "public" for visibility)
 - [ ] Add some help tooltips on team creation to aid new users.
 - [ ] add a toggle for start immediately on sweepstakes creation.
 - [ ] When someone submits an answer we should show them the data they provided.
 - [ ] Add an internal tool that allows us to send messages when sweepstakes go live.
 - [ ] X/Discord bot that notifies when new sweepstakes are created and posted on the Giveaway Dog website.
-- [ ] Move finished sweepstakes down to the bottom, sort by time remaining
-- [ ] add support for "Featured Sweepstakes"
+
+- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
+
+- [ ] Second chance giveaways
+
+- [ ] Automated twitter posts when a sweepstake goes live.
+
+- [ ] We need to unify submissions so that we don't have to add "complete" or "submitted" flags on every task we introduce.
 
 ### @theejankanator
 
-- [ ] Add BlueSky login
+- [x] Add BlueSky login
   - [ ] Add BlueSky entry methods (follow, repost, like, login, reply, post)
 
 ## PJ & Dom
@@ -49,10 +53,9 @@ it can be confusing to know how your changes are affecting the different preview
 
 ### @amd_saad
 
-- if I signed up with Google account why I need to verify my email account?
-- can I see how the giveaway tracker looks like before creating one ( in the demo)
-- do you have a share template so I can share in social media ? Or embed in website?
-- Check this , when creating a team, if the logo is optional I should get the button to create team active but it is not, I have to delete the placeholder image to process
+- [ ] if I signed up with Google account why I need to verify my email account?
+- [ ] do you have a share template so I can share in social media ? Or embed in website?
+- [ ] Check this , when creating a team, if the logo is optional I should get the button to create team active but it is not, I have to delete the placeholder image to process
 
 ### Nobody Asked
 
@@ -144,13 +147,10 @@ it can be confusing to know how your changes are affecting the different preview
 ## Tech Debt
 
 - [ ] Make it easier to drag things around in the sweepstake editor.
-- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
-- [ ] Can we allow private sweepstakes that only people with a link can enter? (switch to using "private" | "unlisted" | "public" for visibility)
-- [ ] Switch to using participant instead of "user" in sweepstakes entry and show custom participant profile.
+
 - [ ] Add actual RBAC support for other membership/role types beyond owner, and admin.
 - [ ] Fix the timing schema to use super refine on the entire form instead
   - [ ] if we have real RBAC we can now have a true sandbox org where _everyone_ gets the guest role.
 - [ ] User's page needs deep links for modal
 - [ ] Winner's page needs deep links for modal
 - [ ] Update to Prisma 7
-  - [ ] We need to unify submissions so that we don't have to add "complete" or "submitted" flags on every task we introduce.

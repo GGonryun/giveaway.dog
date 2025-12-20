@@ -7,6 +7,7 @@ import {
 } from '@/schemas/giveaway/public';
 import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { compact } from 'lodash';
+import { datetime } from '@/lib/date';
 
 const getPublicSweepstakesList = procedure()
   .authorization({
@@ -15,8 +16,9 @@ const getPublicSweepstakesList = procedure()
   .output(publicSweepstakesSchema.array())
   .handler(async ({ db }) => {
     const now = new Date();
-    const twoDaysFromNow = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
-    const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+
+    const daysFromNow = datetime.daysFromNow(1);
+    const daysAgo = datetime.daysAgo(1);
 
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
@@ -29,7 +31,7 @@ const getPublicSweepstakesList = procedure()
                 lte: now
               },
               endDate: {
-                gte: twoDaysAgo
+                gte: daysAgo
               }
             }
           },
@@ -37,13 +39,25 @@ const getPublicSweepstakesList = procedure()
             timing: {
               startDate: {
                 gt: now,
-                lte: twoDaysFromNow
+                lte: daysFromNow
               }
             }
           }
         ]
       },
-      include: PUBLIC_SWEEPSTAKES_PAYLOAD
+      include: {
+        ...PUBLIC_SWEEPSTAKES_PAYLOAD,
+        _count: {
+          select: {
+            participants: true
+          }
+        }
+      },
+      orderBy: {
+        participants: {
+          _count: 'desc'
+        }
+      }
     });
 
     return compact(sweepstakes.map(tryToPublicSweepstakes));

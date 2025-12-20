@@ -4,15 +4,18 @@ import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
 import { GiveawayItem } from './giveaway-item';
 import { Typography } from '@/components/ui/typography';
 import pluralize from 'pluralize';
+import { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas';
 
 interface AllGiveawaysGridProps {
   sweepstakes: PublicSweepstakeSchema[];
   searchQuery?: string;
+  participation: PublicSweepstakesParticipationSchema;
 }
 
 export function AllGiveawaysGrid({
   searchQuery = '',
-  sweepstakes = []
+  sweepstakes = [],
+  participation = {}
 }: AllGiveawaysGridProps) {
   const filteredGiveaways = sweepstakes.filter((giveaway) => {
     const matchesSearch =
@@ -49,7 +52,10 @@ export function AllGiveawaysGrid({
         {sweepstakes.map((sweepstake) => {
           return (
             <div key={sweepstake.id}>
-              <GiveawayItem sweepstakes={sweepstake} />
+              <GiveawayItem
+                sweepstakes={sweepstake}
+                participation={participation[sweepstake.id]}
+              />
             </div>
           );
         })}

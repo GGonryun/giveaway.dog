@@ -8,10 +8,13 @@ import Link from 'next/link';
 import { date } from '@/lib/date';
 import { cn } from '@/lib/utils';
 import { SweepstakesStatusSummaryBadge } from '@/components/sweepstakes/status-badge';
+import { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas';
+import { Check } from 'lucide-react';
 
 export const GiveawayItem: React.FC<{
   sweepstakes: PublicSweepstakeSchema;
-}> = ({ sweepstakes }) => {
+  participation?: PublicSweepstakesParticipationSchema[string];
+}> = ({ sweepstakes, participation }) => {
   const { id, name, slug, banner, endDate, startDate, featured, status, host } =
     sweepstakes;
 
@@ -41,11 +44,31 @@ export const GiveawayItem: React.FC<{
               status={status}
             />
           </div>
-          {featured && (
-            <Badge className="absolute top-3 right-3 bg-primary">
-              Featured
-            </Badge>
-          )}
+          <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
+            {featured && (
+              <Badge className="bg-primary">Featured</Badge>
+            )}
+            {participation && participation.completed > 0 && (
+              <Badge
+                className={cn(
+                  'bg-green-600 hover:bg-green-700 text-white flex items-center gap-1',
+                  participation.completed === participation.maximum &&
+                    'bg-green-700 hover:bg-green-800'
+                )}
+              >
+                {participation.completed === participation.maximum ? (
+                  <>
+                    <Check className="w-3 h-3" />
+                    Done
+                  </>
+                ) : (
+                  <>
+                    {participation.completed}/{participation.maximum}
+                  </>
+                )}
+              </Badge>
+            )}
+          </div>
         </div>
 
         <CardContent className="flex-1">
