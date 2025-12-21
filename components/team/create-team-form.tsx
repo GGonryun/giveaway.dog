@@ -53,7 +53,7 @@ export const CreateTeamForm: React.FC = () => {
     defaultValues: {
       name: '',
       slug: '',
-      logo: DEFAULT_TEAM_LOGO
+      logo: undefined
     }
   });
 
