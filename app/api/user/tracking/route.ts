@@ -4,8 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ip } from '@/lib/ip';
 import { UserAgentSchema } from '@/schemas/user-agent';
 import { Nil } from '@/lib/types';
-
-const EVENTS_PER_RUN = 10;
+import { MAX_TRACKING_REQUESTS_PER_RUN } from '@/schemas/user-scoring';
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
@@ -15,7 +14,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const events = await prisma.userEvent.findMany({
-      take: EVENTS_PER_RUN,
+      take: MAX_TRACKING_REQUESTS_PER_RUN,
       orderBy: {
         timestamp: 'asc'
       }
@@ -112,6 +111,9 @@ export async function GET(request: NextRequest) {
       } catch (error) {
         console.error(`Error processing event ${event.id}:`, error);
         errorCount++;
+        await prisma.userEvent.delete({
+          where: { id: event.id }
+        });
         // TODO: Send admin notification for processing failures
       }
     }

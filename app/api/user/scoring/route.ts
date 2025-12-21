@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
   const requests = await prisma.userScoringRequest.findMany({
     take: MAX_SCORING_REQUESTS_PER_RUN,
     orderBy: {
-      // oldest first
       createdAt: 'asc'
     }
   });
+
   console.info('Scoring requests:', requests.length);
 
   // compute user quality scores for users who had an event published in the last 24 hours.
