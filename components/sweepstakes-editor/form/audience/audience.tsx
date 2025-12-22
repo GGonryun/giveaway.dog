@@ -40,7 +40,7 @@ export const Audience = () => {
 
       <UnifiedSectionHeader
         label="Visibility"
-        description="Configure the public URL for your sweepstakes"
+        description="Configure who can see your sweepstakes and how they access it"
         className="border-t"
       >
         <SweepstakesVisibility />

@@ -19,6 +19,7 @@
 
 - [x] Add BlueSky login
   - [ ] Add BlueSky entry methods (follow, repost, like, login, reply, post)
+- Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?
 
 ## PJ & Dom
 

@@ -173,55 +173,92 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
         )}
 
         {isEditable && visibility === VisibilityType.PRIVATE && (
-          <Alert variant="info">
+          <Alert variant="warning">
             <EyeOff />
             <div className="flex flex-col sm:flex-row items-start justify-between gap-3 w-full">
               <div className="flex-1">
                 <AlertTitle>Sweepstakes is Private</AlertTitle>
                 <AlertDescription>
-                  {hasPublicSweepstakesAccess ? (
-                    <>
-                      Your sweepstakes is currently private. Public sweepstakes
-                      can reach more users and appear in our browse page
-                      searches.
-                      <br />
-                      <br />
-                      <span className="text-xs font-semibold">
-                        Note: Visibility changes can take up to an hour to fully
-                        propagate.
-                      </span>
-                    </>
-                  ) : (
-                    <span>
-                      Your sweepstakes is currently{' '}
-                      <span className="font-bold">private</span>. You{' '}
-                      <span className="font-bold">do not</span> have permission
-                      to make sweepstakes public.{' '}
-                      <Link href="/contact">Contact support</Link> to enable
-                      this feature for your team.
+                  <span>
+                    Your sweepstakes is only accessible to other people within
+                    your organization. It will not appear on the public browse
+                    page.
+                    <br />
+                    <br />
+                    <span className="text-xs font-semibold">
+                      Note: Visibility changes can take up to an hour to fully
+                      propagate.
                     </span>
-                  )}
+                  </span>
                 </AlertDescription>
               </div>
-              {hasPublicSweepstakesAccess && (
-                <Select
-                  value={visibility}
-                  onValueChange={handleVisibilityChange}
-                  disabled={isTogglingVisibility}
-                >
-                  <SelectTrigger className="w-full sm:w-34">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
+              <Select
+                value={visibility}
+                onValueChange={handleVisibilityChange}
+                disabled={isTogglingVisibility}
+              >
+                <SelectTrigger className="w-full sm:w-34">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {hasPublicSweepstakesAccess && (
                     <SelectItem value={VisibilityType.PUBLIC}>
                       Public
                     </SelectItem>
-                    <SelectItem value={VisibilityType.PRIVATE}>
-                      Private
+                  )}
+                  <SelectItem value={VisibilityType.UNLISTED}>
+                    Unlisted
+                  </SelectItem>
+                  <SelectItem value={VisibilityType.PRIVATE}>
+                    Private
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </Alert>
+        )}
+
+        {isEditable && visibility === VisibilityType.UNLISTED && (
+          <Alert variant="info">
+            <Eye />
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-3 w-full">
+              <div className="flex-1">
+                <AlertTitle>Sweepstakes is Unlisted</AlertTitle>
+                <AlertDescription>
+                  <span>
+                    Your sweepstakes can be accessed by anyone with the direct
+                    link, but will not appear on the public browse page.
+                    <br />
+                    <br />
+                    <span className="text-xs font-semibold">
+                      Note: Visibility changes can take up to an hour to fully
+                      propagate.
+                    </span>
+                  </span>
+                </AlertDescription>
+              </div>
+              <Select
+                value={visibility}
+                onValueChange={handleVisibilityChange}
+                disabled={isTogglingVisibility}
+              >
+                <SelectTrigger className="w-full sm:w-34 shrink-0 bg-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {hasPublicSweepstakesAccess && (
+                    <SelectItem value={VisibilityType.PUBLIC}>
+                      Public
                     </SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
+                  )}
+                  <SelectItem value={VisibilityType.UNLISTED}>
+                    Unlisted
+                  </SelectItem>
+                  <SelectItem value={VisibilityType.PRIVATE}>
+                    Private
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </Alert>
         )}
@@ -233,9 +270,16 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
               <div className="flex-1">
                 <AlertTitle>Sweepstakes is Public</AlertTitle>
                 <AlertDescription>
-                  Your sweepstakes is visible on the browse page and can be
-                  discovered by anyone. Visibility changes can take up to an
-                  hour to fully propagate.
+                  <span>
+                    Your sweepstakes will appear on the browse page and can be
+                    discovered and accessed by anyone.
+                    <br />
+                    <br />
+                    <span className="text-xs font-semibold">
+                      Note: Visibility changes can take up to an hour to fully
+                      propagate.
+                    </span>
+                  </span>
                 </AlertDescription>
               </div>
               <Select
@@ -252,6 +296,9 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                     disabled={!hasPublicSweepstakesAccess}
                   >
                     Public
+                  </SelectItem>
+                  <SelectItem value={VisibilityType.UNLISTED}>
+                    Unlisted
                   </SelectItem>
                   <SelectItem value={VisibilityType.PRIVATE}>
                     Private

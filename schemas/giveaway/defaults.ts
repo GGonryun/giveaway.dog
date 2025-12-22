@@ -1,5 +1,5 @@
 import { timezone } from '@/lib/time';
-import { Prisma, SweepstakesTermsType } from '@prisma/client';
+import { Prisma, SweepstakesTermsType, VisibilityType } from '@prisma/client';
 import * as dates from 'date-fns';
 import {
   GiveawayDesignSchema,
@@ -114,7 +114,7 @@ export const DEFAULT_SWEEPSTAKES_DESIGN: Prisma.SweepstakesDesignUncheckedCreate
 export const DEFAULT_SWEEPSTAKES_VISIBILITY: Prisma.SweepstakesVisibilityCreateWithoutSweepstakesInput =
   {
     slug: null,
-    visibility: 'PRIVATE'
+    visibility: VisibilityType.UNLISTED
   };
 
 export const DEFAULT_SWEEPSTAKES_WINNER_CRITERIA: Prisma.SweepstakesWinnerCriteriaCreateWithoutSweepstakesInput =

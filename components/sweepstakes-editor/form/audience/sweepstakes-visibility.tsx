@@ -33,6 +33,7 @@ import {
 } from '@/components/patterns/form-layout/switch-form-header';
 import { Switch } from '@/components/ui/switch';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import { VisibilityType } from '@prisma/client';
 
 const VisibilityTypeField = () => {
   const form = useFormContext<GiveawayFormSchema>();
@@ -56,30 +57,43 @@ const VisibilityTypeField = () => {
                 <>
                   <div>
                     <span className="font-semibold">Private</span> sweepstakes
-                    are hidden from the{' '}
+                    are only accessible to other people within your
+                    organization. They will not appear on the public{' '}
                     <Link
                       href="/browse"
                       target="_blank"
                       className="font-bold underline"
                     >
-                      sweepstakes
+                      browse
                     </Link>{' '}
-                    page. Only people with the direct link can access your
-                    sweepstakes, giving you more control over who participates.
+                    page.
                   </div>
                   <br />
                   <div>
-                    <span className="font-bold">Public</span> sweepstakes can be
-                    discovered by anyone on the{' '}
+                    <span className="font-semibold">Unlisted</span> sweepstakes
+                    can be accessed by anyone with the direct link, but will not
+                    appear on the public{' '}
                     <Link
                       href="/browse"
                       target="_blank"
                       className="font-bold underline"
                     >
-                      sweepstakes
+                      browse
                     </Link>{' '}
-                    page. They are visible to all users and can help you reach a
-                    wider audience.
+                    page.
+                  </div>
+                  <br />
+                  <div>
+                    <span className="font-bold">Public</span> sweepstakes will
+                    appear on the{' '}
+                    <Link
+                      href="/browse"
+                      target="_blank"
+                      className="font-bold underline"
+                    >
+                      browse
+                    </Link>{' '}
+                    page and can be discovered and accessed by anyone.
                   </div>
                 </>
               }
@@ -92,12 +106,15 @@ const VisibilityTypeField = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem
-                  value="PUBLIC"
+                  value={VisibilityType.PUBLIC}
                   disabled={!hasPublicSweepstakesAccess}
                 >
                   Public
                 </SelectItem>
-                <SelectItem value="PRIVATE">Private</SelectItem>
+                <SelectItem value={VisibilityType.PRIVATE}>Private</SelectItem>
+                <SelectItem value={VisibilityType.UNLISTED}>
+                  Unlisted
+                </SelectItem>
               </SelectContent>
             </Select>
           </FormControl>

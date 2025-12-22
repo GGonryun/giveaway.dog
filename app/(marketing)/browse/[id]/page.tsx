@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import { date } from '@/lib/date';
 import { getUserHostRelationship } from '@/procedures/browse/get-user-host-relationship';
 import { getOrCreateSweepstakesParticipant } from '@/procedures/browse/get-sweepstake-participant';
+import { getSweepstakesPrivacy } from '@/procedures/browse/get-sweepstakes-privacy';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -67,6 +68,7 @@ export default async function Page({ params }: PageProps) {
   const sweepstakes = await getParticipantSweepstake(options);
   const participant = await getOrCreateSweepstakesParticipant(options);
   const relationship = await getUserHostRelationship(options);
+  const privacy = await getSweepstakesPrivacy(options);
 
   if (!sweepstakes.ok) {
     console.warn('Sweepstake not found:', sweepstakes.data.message);
@@ -80,6 +82,16 @@ export default async function Page({ params }: PageProps) {
 
   if (!participant.ok) {
     console.warn('Participant fetch error:', participant.data?.message);
+    notFound();
+  }
+
+  if (!privacy.ok) {
+    console.warn('Sweepstake privacy fetch error:', privacy.data?.message);
+    notFound();
+  }
+
+  if (!privacy.data) {
+    console.warn('Sweepstake is not visible:', privacy.data);
     notFound();
   }
 

@@ -412,6 +412,7 @@ model SweepstakesFormValue {
 
 enum VisibilityType {
   PUBLIC
+  UNLISTED
   PRIVATE
 }
 
@@ -420,7 +421,7 @@ model SweepstakesVisibility {
   sweepstakesId String      @unique
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
-  visibility VisibilityType @default(PRIVATE)
+  visibility VisibilityType @default(UNLISTED)
   slug       String?        @unique
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
@@ -678,6 +679,8 @@ model Membership {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([userId, teamId])
 }
 
 model TeamInviteLink {
