@@ -209,7 +209,11 @@ export const applySweepstakesChanges = async ({
       });
     }
 
-    if (input.timing?.startDate && input.status === SweepstakesStatus.ACTIVE) {
+    if (
+      input.timing?.startDate &&
+      input.status === SweepstakesStatus.ACTIVE &&
+      input.visibility?.visibility !== 'PRIVATE'
+    ) {
       await tx.sweepstakesJob.upsert({
         where: {
           sweepstakesId_type: {

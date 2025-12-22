@@ -8,6 +8,10 @@
 
 - [ ] We need to unify submissions so that we don't have to add "complete" or "submitted" flags on every task we introduce.
 
+### Discord requests
+
+- [ ] 𝓚𝓔𝓜 @PJPeng how about adding a filter option on the website browse giveaways ? Like - Ending Soon to Coming Soon, Recent, Live, Ended, Etc?
+
 ### @theejankanator
 
 - [x] Add BlueSky login
