@@ -22,6 +22,16 @@ export const tryAutoMerge = async (args: {
       existing.provider === account.provider &&
       existing.providerAccountId === account.providerAccountId
     ) {
+      // Check if the existing account belongs to the current session user
+      if (session?.user?.id && existing.userId !== session.user.id) {
+        console.info(
+          'Not merging, account belongs to different user',
+          existing.userId,
+          'vs',
+          session.user.id
+        );
+        return false;
+      }
       console.info(
         'Not merging, same provider and providerAccountId',
         existing.providerAccountId,

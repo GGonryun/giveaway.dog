@@ -1,15 +1,11 @@
 ## Roadmap
 
-- [ ] Can we allow private sweepstakes that only people with a link can enter? (switch to using "private" | "unlisted" | "public" for visibility)
 - [ ] Add some help tooltips on team creation to aid new users.
-- [ ] add a toggle for start immediately on sweepstakes creation.
-- [ ] When someone submits an answer we should show them the data they provided.
-- [ ] Add an internal tool that allows us to send messages when sweepstakes go live.
-- [ ] X/Discord bot that notifies when new sweepstakes are created and posted on the Giveaway Dog website.
-
-- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
+- [ ] add a Discord bot that notifies when new sweepstakes are created and posted on the Giveaway Dog website.
 
 - [ ] Second chance giveaways
+
+- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
 
 - [ ] Automated twitter posts when a sweepstake goes live.
 
@@ -19,7 +15,6 @@
 
 - [x] Add BlueSky login
   - [ ] Add BlueSky entry methods (follow, repost, like, login, reply, post)
-- Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?
 
 ## PJ & Dom
 
@@ -57,6 +52,10 @@ it can be confusing to know how your changes are affecting the different preview
 - [ ] if I signed up with Google account why I need to verify my email account?
 - [ ] do you have a share template so I can share in social media ? Or embed in website?
 - [ ] Check this , when creating a team, if the logo is optional I should get the button to create team active but it is not, I have to delete the placeholder image to process
+
+### @theejankanator
+
+- Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?
 
 ### Nobody Asked
 
@@ -144,6 +143,11 @@ it can be confusing to know how your changes are affecting the different preview
 - [ ] Add an FAQ or knowledge base.
 - [ ] Add a changelog to the marketing site and the main website.
 - [ ] There's a way to exploit the site by having two different primary accounts and constantly switching out the
+
+## UX Improvements
+
+- [ ] add a toggle for start immediately on sweepstakes creation.
+- [ ] When someone submits an answer we should show them the data they provided.
 
 ## Tech Debt
 
