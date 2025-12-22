@@ -1,8 +1,5 @@
 ## Roadmap
 
-- [x] Add some help tooltips on team creation to aid new users.
-- [ ] add a Discord bot that notifies when new sweepstakes are created and posted on the Giveaway Dog website.
-
 - [ ] Second chance giveaways
 
 - [ ] If an integration is unhealthy, ask the user to re-authenticate first.

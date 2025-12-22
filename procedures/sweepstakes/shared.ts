@@ -7,6 +7,8 @@ import { toStorableSweepstakes } from '@/schemas/giveaway/storable';
 import {
   Prisma,
   PrismaClient,
+  SweepstakesJobStatus,
+  SweepstakesJobType,
   SweepstakesStatus,
   VisibilityType
 } from '@prisma/client';
@@ -157,6 +159,12 @@ export const applySweepstakesChanges = async ({
       }
     });
 
+    const jobs = await tx.sweepstakesJob.findMany({
+      where: {
+        sweepstakesId: sweepstakes.id
+      }
+    });
+
     // delete existing sweepstakes and all nested properties
 
     await tx.sweepstakes.delete({
@@ -192,6 +200,32 @@ export const applySweepstakesChanges = async ({
     if (filteredFormValues.length > 0) {
       await tx.sweepstakesFormValue.createMany({
         data: filteredFormValues.map((d) => ({ ...d }))
+      });
+    }
+
+    if (jobs.length > 0) {
+      await tx.sweepstakesJob.createMany({
+        data: jobs.map((d) => ({ ...d, data: d.data ?? undefined }))
+      });
+    }
+
+    if (input.timing?.startDate && input.status === SweepstakesStatus.ACTIVE) {
+      await tx.sweepstakesJob.upsert({
+        where: {
+          sweepstakesId_type: {
+            sweepstakesId: sweepstakes.id,
+            type: SweepstakesJobType.NOTIFY_PUBLISH_ON_DISCORD
+          }
+        },
+        update: {
+          runAt: input.timing.startDate
+        },
+        create: {
+          sweepstakesId: sweepstakes.id,
+          type: SweepstakesJobType.NOTIFY_PUBLISH_ON_DISCORD,
+          status: SweepstakesJobStatus.PENDING,
+          runAt: input.timing.startDate
+        }
       });
     }
   });

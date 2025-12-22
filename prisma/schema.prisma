@@ -301,9 +301,9 @@ model Sweepstakes {
   visibility   SweepstakesVisibility?
   criteria     SweepstakesWinnerCriteria?
   participants SweepstakesParticipant[]
-
-  prizes Prize[]
-  tasks  Task[]
+  jobs         SweepstakesJob[]
+  prizes       Prize[]
+  tasks        Task[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -436,6 +436,32 @@ model SweepstakesWinnerCriteria {
   minQualityScore   Int?    @default(70)
   allowMultipleWins Boolean @default(false)
   externalPlatforms Json?
+}
+
+enum SweepstakesJobType {
+  NOTIFY_PUBLISH_ON_DISCORD
+  NOTIFY_PUBLISH_ON_TWITTER
+}
+
+enum SweepstakesJobStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+model SweepstakesJob {
+  id            String               @id @default(cuid())
+  sweepstakesId String
+  sweepstakes   Sweepstakes          @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+  data          Json?
+  type          SweepstakesJobType
+  status        SweepstakesJobStatus
+  runAt         DateTime
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  @@unique([sweepstakesId, type])
 }
 
 model TaskJob {

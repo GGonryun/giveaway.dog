@@ -138,6 +138,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^4.1.11",
     "tailwindcss-animate": "^1.0.7",
+    "turndown": "^7.2.2",
     "typescript": "5.7.2",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
@@ -157,6 +158,7 @@
     "@types/lodash": "^4.17.20",
     "@types/openid": "^2.0.5",
     "@types/pluralize": "^0.0.33",
+    "@types/turndown": "^5.0.6",
     "dotenv-cli": "^10.0.0",
     "prisma": "^6.19.0",
     "tsx": "^4.20.6"
