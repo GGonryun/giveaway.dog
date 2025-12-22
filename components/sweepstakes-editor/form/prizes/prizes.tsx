@@ -108,7 +108,7 @@ export const Prizes = () => {
                         onOpenChange={handleOpenChange(field.id)}
                         onRemove={() => remove(index)}
                         onCopy={() => {
-                          append(field);
+                          append({ ...field, id: nanoid() });
                         }}
                       />
                     ))}

@@ -131,7 +131,7 @@ export const EntryMethods = () => {
                         open={open.includes(field.id)}
                         onOpenChange={handleOpenChange(field.id)}
                         onRemove={() => handleRemove(index)}
-                        onCopy={() => append(field)}
+                        onCopy={() => append({ ...field, id: nanoid() })}
                       />
                     ))}
                   </SortableContext>
