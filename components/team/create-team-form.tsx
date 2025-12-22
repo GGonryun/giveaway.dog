@@ -3,8 +3,16 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Building, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { Building, AlertTriangle, ArrowLeft, Info } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
 import { FileUpload } from '@/components/ui/file-upload';
+import { HelpDialog } from '@/components/patterns/help-dialog';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -23,7 +31,6 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { LoadingState } from './loading-state';
 import { useTeamsPage } from './use-teams-page';
 import { useTeamPage } from './use-team-page';
-import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 
 export const CreateTeamForm: React.FC = () => {
   const { navigateToSelect } = useTeamsPage();
@@ -84,13 +91,77 @@ export const CreateTeamForm: React.FC = () => {
           </AlertDescription>
         </Alert>
 
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              type="button"
+              variant="link"
+              className="w-fit p-0 h-auto text-sm text-muted-foreground hover:text-primary"
+            >
+              <Info className="h-4 w-4 mr-1" />
+              What are teams?
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>What are Teams?</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 text-sm text-muted-foreground">
+              <p>
+                Teams help users manage an organization or a group of users who
+                can collaboratively manage giveaways together.
+              </p>
+              <div className="space-y-2">
+                <h3 className="font-semibold text-foreground">
+                  Common Use Cases:
+                </h3>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>
+                    <strong>Brands and Organizations:</strong> Allow multiple
+                    team members or moderators to create and manage giveaways
+                    without sharing personal login credentials.
+                  </li>
+                  <li>
+                    <strong>Collaborative Management:</strong> Multiple users
+                    can work together on the same giveaways, making it easier to
+                    coordinate marketing campaigns.
+                  </li>
+                  <li>
+                    <strong>Support Access:</strong> Grant giveaway.dog support
+                    agents temporary access to provide real-time white-glove
+                    services or assistance with setting up your giveaways.
+                  </li>
+                </ul>
+              </div>
+              <p>
+                With teams, you maintain control over who has access while
+                enabling seamless collaboration and professional support when
+                needed.
+              </p>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         <div className="grid gap-4">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Team Name</FormLabel>
+                <div className="flex gap-1 items-center">
+                  <FormLabel>Team Name</FormLabel>
+                  <HelpDialog
+                    title="Help: Team Name"
+                    content={
+                      <p>
+                        The team name is the display name that will be shown to
+                        others. This can be your brand name, organization name,
+                        or any name that represents your team. You can change
+                        this later.
+                      </p>
+                    }
+                  />
+                </div>
                 <FormControl>
                   <Input
                     placeholder="My Awesome Team"
@@ -112,7 +183,25 @@ export const CreateTeamForm: React.FC = () => {
             name="slug"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Team Slug</FormLabel>
+                <div className="flex gap-1 items-center">
+                  <FormLabel>Team Slug</FormLabel>
+                  <HelpDialog
+                    title="Help: Team Slug"
+                    content={
+                      <div className="space-y-2">
+                        <p>
+                          The team slug is a unique identifier used in your
+                          team's URL (giveaway.dog/your-slug). It can only
+                          contain lowercase letters, numbers, and hyphens.
+                        </p>
+                        <p className="font-semibold text-amber-600">
+                          ⚠️ Warning: The slug cannot be changed after creation,
+                          so choose carefully!
+                        </p>
+                      </div>
+                    }
+                  />
+                </div>
                 <FormControl>
                   <Input
                     placeholder="my-awesome-team"
@@ -137,7 +226,20 @@ export const CreateTeamForm: React.FC = () => {
             name="logo"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Team Logo (Optional)</FormLabel>
+                <div className="flex gap-1 items-center">
+                  <FormLabel>Team Logo (Optional)</FormLabel>
+                  <HelpDialog
+                    title="Help: Team Logo"
+                    content={
+                      <p>
+                        Upload a logo that represents your team or brand. This
+                        will be displayed on your team's profile and can help
+                        users identify your giveaways. You can change or update
+                        this logo at any time.
+                      </p>
+                    }
+                  />
+                </div>
                 <FormControl>
                   <FileUpload
                     initialUrl={field.value}
