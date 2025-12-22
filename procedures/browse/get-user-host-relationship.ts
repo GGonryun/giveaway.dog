@@ -1,6 +1,5 @@
 'use server';
 
-import { ApplicationError } from '@/lib/errors';
 import { getLoyalty } from '@/lib/loyalty/db';
 import { userHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { procedure } from '@/lib/mrpc/procedures';
@@ -18,12 +17,7 @@ export const getUserHostRelationship = procedure()
       where: { id: user.id }
     });
 
-    if (!profile)
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message:
-          'User profile does not exist. Update any of your account settings to continue.'
-      });
+    if (!profile) return undefined;
 
     const host = await db.sweepstakes.findFirst({
       where: {
