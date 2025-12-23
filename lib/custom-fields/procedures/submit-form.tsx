@@ -11,6 +11,9 @@ import {
 import { extractUsernameFromProfileUrl } from '@/lib/integrations/schemas/twitter';
 import z from 'zod';
 import { toTaskSchema } from '@/lib/task/schemas';
+import { RecursiveRequired } from '@/types/index';
+import { User } from 'next-auth';
+import { Nil } from '@/lib/types';
 
 type ValidationContext = {
   db: PrismaClient;
@@ -19,12 +22,11 @@ type ValidationContext = {
   participantId: string;
   sweepstakesId: string;
   userAccounts: Account[];
-  userEmail?: string | null;
+  user: Nil<RecursiveRequired<User>>;
 };
 
 const validateEmailField = async (ctx: ValidationContext) => {
-  const { value, userAccounts, fieldId, participantId, sweepstakesId, db } =
-    ctx;
+  const { value, user, fieldId, participantId, sweepstakesId, db } = ctx;
 
   // Check if this email belongs to ANY user in the system
   const userWithEmail = await db.user.findFirst({
@@ -38,7 +40,7 @@ const validateEmailField = async (ctx: ValidationContext) => {
 
   // If a user exists with this email, verify it's the current user
   if (userWithEmail) {
-    const currentUserId = userAccounts[0]?.userId;
+    const currentUserId = user?.id;
 
     if (!currentUserId) {
       throw new ApplicationError({
@@ -78,8 +80,7 @@ const validateEmailField = async (ctx: ValidationContext) => {
 };
 
 const validateTwitterField = async (ctx: ValidationContext) => {
-  const { value, userAccounts, fieldId, participantId, sweepstakesId, db } =
-    ctx;
+  const { value, user, fieldId, participantId, sweepstakesId, db } = ctx;
 
   // If the field isn't required and no value is provided, skip validation
   if (!value || value.trim() === '') {
@@ -114,7 +115,7 @@ const validateTwitterField = async (ctx: ValidationContext) => {
   // If an account exists with this username, verify it belongs to the current user
   if (accountWithUsername) {
     const accountOwnerId = accountWithUsername.userId;
-    const currentUserId = userAccounts[0]?.userId;
+    const currentUserId = user?.id;
 
     if (!currentUserId) {
       throw new ApplicationError({
@@ -170,7 +171,7 @@ type ValidateUniqueFieldsParams = {
   participantId: string;
   sweepstakesId: string;
   userAccounts: Account[];
-  userEmail?: string | null;
+  user?: RecursiveRequired<User>;
 };
 
 const validateUniqueFields = async (params: ValidateUniqueFieldsParams) => {
@@ -181,7 +182,7 @@ const validateUniqueFields = async (params: ValidateUniqueFieldsParams) => {
     participantId,
     sweepstakesId,
     userAccounts,
-    userEmail
+    user
   } = params;
 
   for (const [fieldId, value] of Object.entries(data)) {
@@ -216,7 +217,7 @@ const validateUniqueFields = async (params: ValidateUniqueFieldsParams) => {
           participantId,
           sweepstakesId,
           userAccounts,
-          userEmail
+          user
         });
         break;
       }
@@ -229,7 +230,7 @@ const validateUniqueFields = async (params: ValidateUniqueFieldsParams) => {
           participantId,
           sweepstakesId,
           userAccounts,
-          userEmail
+          user
         });
         break;
       }
@@ -315,7 +316,7 @@ export const submitParticipantForm = procedure()
       participantId: participant.id,
       sweepstakesId,
       userAccounts,
-      userEmail: user.email
+      user
     });
 
     // Create or update form values
