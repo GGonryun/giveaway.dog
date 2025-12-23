@@ -8,6 +8,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { strings } from '@/lib/strings';
+import { UNKNOWN_EMAIL } from '@/lib/settings';
 
 interface DisqualificationDialogProps {
   open: boolean;
@@ -22,7 +24,6 @@ export const DisqualificationDialog = ({
   open,
   onOpenChange,
   participantName,
-  participantEmail,
   disqualificationReason,
   drawDate
 }: DisqualificationDialogProps) => {
@@ -36,20 +37,17 @@ export const DisqualificationDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-4 ">
           <div className="space-y-2">
             <Label>Participant</Label>
             <div className="text-sm">
-              <div className="font-medium">{participantName}</div>
-              {participantEmail && (
-                <div className="text-muted-foreground">{participantEmail}</div>
-              )}
+              <div className="text-muted-foreground">{participantName}</div>
             </div>
           </div>
 
           <div className="space-y-2">
             <Label>Disqualification Reason</Label>
-            <div className="text-sm p-3 bg-muted rounded-md">
+            <div className="text-sm text-muted-foreground">
               {disqualificationReason || 'No reason provided'}
             </div>
           </div>

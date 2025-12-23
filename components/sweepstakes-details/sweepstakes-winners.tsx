@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -23,7 +23,6 @@ import { DiceIcon } from './dice-icon';
 import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useProcedure } from '@/lib/mrpc/hook';
-import rollWinners from '@/procedures/sweepstakes/roll-winners';
 import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteria';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -50,6 +49,11 @@ import { TASK_LABEL } from '@/lib/task/schemas';
 import { USER_SOURCE_LABEL } from '@/lib/user-source/data';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toQualityTheme } from '@/lib/participant/util';
+import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
+import { rollPrize } from '@/lib/winners/procedures/roll-prize';
+import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';
+import { UNKNOWN_EMAIL } from '@/lib/settings';
+import { strings } from '@/lib/strings';
 
 interface GroupedPrize {
   id: string;
@@ -105,7 +109,7 @@ const PrizeDrawRow = ({
               {draw.participant.name}
             </div>
             <div className="text-xs text-muted-foreground truncate">
-              {draw.participant.email}
+              {strings.obfuscate(draw.participant.email) ?? UNKNOWN_EMAIL}
             </div>
           </div>
         </Button>
@@ -358,7 +362,7 @@ export const SweepstakesWinners = ({
   const [editedCriteria, setEditedCriteria] =
     useState<SweepstakesWinnerCriteriaSchema>(criteria);
   const [rerollDialogOpen, setRerollDialogOpen] = useState(false);
-  const [rerollWinnerId, setRerollWinnerId] = useState<string | null>(null);
+  const [drawId, setDrawId] = useState<string | null>(null);
   const [disqualificationReason, setDisqualificationReason] = useState('');
   const [viewDisqualificationDialog, setViewDisqualificationDialog] =
     useState(false);
@@ -368,12 +372,38 @@ export const SweepstakesWinners = ({
 
   const isEditable = EDITABLE_DERIVED_STATUS[status];
 
-  const { run: runRollWinners, isLoading: isRolling } = useProcedure({
-    action: rollWinners,
+  const rollPrizesProcedure = useProcedure({
+    action: rollPrizes,
     onSuccess: () => {
       router.refresh();
     }
   });
+
+  const rollPrizeProcedure = useProcedure({
+    action: rollPrize,
+    onSuccess: () => {
+      router.refresh();
+    }
+  });
+
+  const rerollDrawProcedure = useProcedure({
+    action: rerollDraw,
+    onSuccess: () => {
+      router.refresh();
+    }
+  });
+
+  const isRolling = useMemo(() => {
+    return (
+      rollPrizesProcedure.isLoading ||
+      rollPrizeProcedure.isLoading ||
+      rerollDrawProcedure.isLoading
+    );
+  }, [
+    rollPrizesProcedure.isLoading,
+    rollPrizeProcedure.isLoading,
+    rerollDrawProcedure.isLoading
+  ]);
 
   const { run: runUpdateCriteria, isLoading: isUpdatingCriteria } =
     useProcedure({
@@ -450,47 +480,39 @@ export const SweepstakesWinners = ({
     });
   };
 
-  const handleReroll = (winnerId: string) => {
-    setRerollWinnerId(winnerId);
+  const handleReroll = (drawId: string) => {
+    setDrawId(drawId);
     setDisqualificationReason('');
     setRerollDialogOpen(true);
   };
 
   const handleRerollSubmit = () => {
-    if (!rerollWinnerId || !disqualificationReason.trim()) return;
+    if (!drawId || !disqualificationReason.trim()) return;
 
-    runRollWinners({
+    rerollDrawProcedure.run({
       sweepstakesId,
       slug,
-      minQualityScore: currentCriteria.minQualityScore,
-      minTasksCompleted: currentCriteria.minTasksCompleted,
-      preventDuplicateWinners: !currentCriteria.allowMultipleWins,
-      rerollWinnerId: rerollWinnerId,
-      disqualificationReason: disqualificationReason.trim()
+      drawId,
+      disqualificationReason
     });
 
     setRerollDialogOpen(false);
-    setRerollWinnerId(null);
+    setDrawId(null);
     setDisqualificationReason('');
   };
 
-  const handlePickForSlot = () => {
-    runRollWinners({
+  const handlePickForSlot = (prizeId: string) => {
+    rollPrizeProcedure.run({
       sweepstakesId,
       slug,
-      minQualityScore: currentCriteria.minQualityScore,
-      minTasksCompleted: currentCriteria.minTasksCompleted,
-      preventDuplicateWinners: !currentCriteria.allowMultipleWins
+      prizeId
     });
   };
 
   const handlePickWinners = () => {
-    runRollWinners({
+    rollPrizesProcedure.run({
       sweepstakesId,
-      slug,
-      minQualityScore: currentCriteria.minQualityScore,
-      minTasksCompleted: currentCriteria.minTasksCompleted,
-      preventDuplicateWinners: !currentCriteria.allowMultipleWins
+      slug
     });
   };
 
@@ -843,7 +865,7 @@ export const SweepstakesWinners = ({
             hasEnded={hasEnded}
             onReroll={handleReroll}
             onViewDisqualification={handleViewDisqualification}
-            onPickForSlot={handlePickForSlot}
+            onPickForSlot={() => handlePickForSlot(prize.id)}
             teamSlug={activeTeam.slug}
           />
         ))}

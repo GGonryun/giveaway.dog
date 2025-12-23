@@ -1,28 +1,21 @@
 ## Roadmap
 
-- [ ] Second chance giveaways
-
-- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
-
 - [ ] Automated twitter posts when a sweepstake goes live.
-
-- [ ] We need to unify submissions so that we don't have to add "complete" or "submitted" flags on every task we introduce.
-
-### Discord requests
-
-- [ ] 𝓚𝓔𝓜 @PJPeng how about adding a filter option on the website browse giveaways ? Like - Ending Soon to Coming Soon, Recent, Live, Ended, Etc?
 
 ### @theejankanator
 
 - [x] Add BlueSky login
   - [ ] Add BlueSky entry methods (follow, repost, like, login, reply, post)
 
-## PJ & Dom
+### @amd_saad
 
-- [ ] Global Black List
-- [ ] Global White List
-- [ ] Team Black List
-- [ ] Team White List
+- [ ] if I signed up with Google account why I need to verify my email account?
+- [ ] do you have a share template so I can share in social media ? Or embed in website?
+- [ ] Check this , when creating a team, if the logo is optional I should get the button to create team active but it is not, I have to delete the placeholder image to process
+
+### Discord requests
+
+- [ ] 𝓚𝓔𝓜 @PJPeng how about adding a filter option on the website browse giveaways ? Like - Ending Soon to Coming Soon, Recent, Live, Ended, Etc?
 
 ## @TheGamesDetective
 
@@ -32,7 +25,25 @@
 
 ### Me:
 
+- [ ] We need to unify submissions so that we don't have to add "complete" or "submitted" flags on every task we introduce.
+
+- [ ] Add a twitter post entry method
+- [ ] Add a twitter reply entry method
+- [ ] Add more steam entry methods (join a group, play a game for X hours, wishlist a game, follow a curator)
+- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, up vote a post, follow a subreddit, login with Reddit)
+- [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
+- [ ] Add a threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads,follow on threads, like a post, reply to a post)
+- [ ] Add a snapchat integration - https://developers.snap.com/api/marketing-api/Ads-API/authentication (connect with snapchat, follow on snapchat)
+- [ ] Add a pinterest integration - https://next-auth.js.org/providers/pinterest (connect with pinterest, follow on pinterest, save a pin)
+
 - new marketing page
+
+## PJ & Dom
+
+- [ ] Global Black List
+- [ ] Global White List
+- [ ] Team Black List
+- [ ] Team White List
 
 ### @Gamelooty
 
@@ -48,15 +59,10 @@ Most of the people want proof that the prize is given, maybe it will be useful t
 
 it can be confusing to know how your changes are affecting the different previews, we should switch to different states in the preview depending on which one
 
-### @amd_saad
-
-- [ ] if I signed up with Google account why I need to verify my email account?
-- [ ] do you have a share template so I can share in social media ? Or embed in website?
-- [ ] Check this , when creating a team, if the logo is optional I should get the button to create team active but it is not, I have to delete the placeholder image to process
-
 ### @theejankanator
 
 - Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?
+- Make it easy to collect data about what responses users have provided to questions.
 
 ### Nobody Asked
 
@@ -64,29 +70,10 @@ it can be confusing to know how your changes are affecting the different preview
   - [ ] Upload a file
   - [ ] Pick an image from a gallery
 
-- [ ] Add a twitter post entry method
-- [ ] Add a twitter reply entry method
-
-- [ ] Add more steam entry methods (join a group, play a game for X hours, wishlist a game, follow a curator)
-
-- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, up vote a post, follow a subreddit, login with Reddit)
-
-- [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
-
 - [ ] Add GitHub integration - https://next-auth.js.org/providers/github (follow a repo, star a repo, login with GitHub)
-
 - [ ] Add a Patreon integration - https://next-auth.js.org/providers/patreon (connect with patreon, become a patron)
-
-- [ ] Add a threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads,follow on threads, like a post, reply to a post)
-
 - [ ] Add a spotify integration - https://authjs.dev/getting-started/providers/spotify (connect with spotify, follow a playlist, listen to a song)
-
-- [ ] Add a pinterest integration - https://next-auth.js.org/providers/pinterest (connect with pinterest, follow on pinterest, save a pin)
-
-- [ ] Add a snapchat integration - https://developers.snap.com/api/marketing-api/Ads-API/authentication (connect with snapchat, follow on snapchat)
-
 - [ ] Add a Tumblr integration - https://www.tumblr.com/docs/en/api/v2 (connect with tumblr, follow a blog, like a post)
-
 - [ ] Add a Producthunt entry method - https://api.producthunt.com/v2/docs/oauth_user_authentication/oauth_authorize_ask_for_access_grant_code_on_behalf_of_the_user (visit page, vote for product, follow on producthunt)
 
 - [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
@@ -126,6 +113,7 @@ it can be confusing to know how your changes are affecting the different preview
 
 ## Personal Features
 
+- [ ] Second chance giveaways
 - [ ] Add a Charity Games integration.
 - [ ] As a host, I want to use my own custom domain and url for my sweepstakes.
 - [ ] Migrate all Charity Games giveaways to Giveaway Dog.
@@ -151,6 +139,8 @@ it can be confusing to know how your changes are affecting the different preview
 - [ ] When someone submits an answer we should show them the data they provided.
 
 ## Tech Debt
+
+- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
 
 - [ ] Make it easier to drag things around in the sweepstake editor.
 

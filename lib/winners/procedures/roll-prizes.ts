@@ -1,0 +1,58 @@
+'use server';
+
+import z from 'zod';
+
+import { procedure } from '@/lib/mrpc/procedures';
+import { getSweepstakesCriteria } from '../criteria';
+import { getEligibleCompletions } from '../completions';
+import { getDrawsInfo, getEmptyPrizeSlots } from '../slots';
+import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
+
+export const rollPrizes = procedure()
+  .authorization({
+    required: true
+  })
+  .input(
+    z.object({
+      sweepstakesId: z.string(),
+      slug: z.string()
+    })
+  )
+  .output(z.object({ success: z.boolean() }))
+  .handler(async ({ input: { sweepstakesId }, db, user }) => {
+    const criteria = await getSweepstakesCriteria({
+      db,
+      sweepstakesId
+    });
+
+    const slots = await getEmptyPrizeSlots({
+      db,
+      sweepstakesId
+    });
+
+    const draws = await getDrawsInfo({
+      db,
+      sweepstakesId
+    });
+
+    const completions = await getEligibleCompletions({
+      db,
+      user,
+      sweepstakesId,
+      criteria
+    });
+
+    const toPrizeDraw = criteria.allowMultipleWins
+      ? toDuplicatePrizeDraw
+      : toUniquePrizeDraw;
+
+    await db.prizeDraw.createMany({
+      data: toPrizeDraw({
+        draws,
+        slots,
+        completions
+      })
+    });
+
+    return { success: true };
+  });

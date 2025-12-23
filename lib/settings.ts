@@ -10,6 +10,7 @@ export const UNKNOWN_USER_COUNTRY_CODE = 'XX';
 export const UNKNOWN_USER_AGENT = 'unknown';
 export const UNKNOWN_OS = 'Unknown OS';
 export const UNKNOWN_BROWSER = 'Unknown Browser';
+export const UNKNOWN_EMAIL = 'no email';
 export const UNKNOWN_ACCEPTED_LANGUAGE = 'en';
 export const UNKNOWN_IP = '::1';
 export const UNKNOWN_TIMEZONE = 'UTC';

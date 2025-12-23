@@ -9,7 +9,6 @@ import { Trophy, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useProcedure } from '@/lib/mrpc/hook';
-import rollWinners from '@/procedures/sweepstakes/roll-winners';
 import {
   SweepstakesPrizeSchema,
   SweepstakesWinnerCriteriaSchema
@@ -18,6 +17,7 @@ import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { PrizeDrawResult } from '@prisma/client';
 import { NavigationHeader } from '@/components/patterns/navigation-header';
 import Link from 'next/link';
+import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
 
 interface PublicWinnerDrawProps {
   sweepstakesName: string;
@@ -57,10 +57,9 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
   const [drawingPrizes, setDrawingPrizes] = useState<Set<string>>(new Set());
   const [shakeButton, setShakeButton] = useState(false);
 
-  const { run: runRollWinners, isLoading: isRolling } = useProcedure({
-    action: rollWinners,
-    onSuccess: async (data) => {
-      // Refresh to get the new winners
+  const rollPrizesProcedure = useProcedure({
+    action: rollPrizes,
+    onSuccess: async () => {
       router.refresh();
     }
   });
@@ -248,12 +247,9 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
   const allWinnersDrawn = prizeCards.every((c) => c.revealed || !c.needsRoll);
 
   const handleDrawAllWinners = () => {
-    runRollWinners({
+    rollPrizesProcedure.run({
       sweepstakesId,
-      slug,
-      minQualityScore: criteria.minQualityScore,
-      minTasksCompleted: criteria.minTasksCompleted,
-      preventDuplicateWinners: !criteria.allowMultipleWins
+      slug
     });
   };
 
@@ -417,10 +413,10 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
               <Button
                 onClick={handleDrawAllWinners}
                 size="lg"
-                disabled={isRolling || isRevealing}
+                disabled={rollPrizesProcedure.isLoading || isRevealing}
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 sm:py-6 text-base sm:text-lg font-semibold"
               >
-                {isRolling || isRevealing ? (
+                {rollPrizesProcedure.isLoading || isRevealing ? (
                   'Drawing winners...'
                 ) : (
                   <>

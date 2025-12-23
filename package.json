@@ -11,6 +11,9 @@
     "lint:unused-imports:count": "tsc --noUnusedLocals --noUnusedParameters --noEmit 2>&1 | grep -E 'is declared but|imported but' | wc -l || echo 0",
     "lint:unused-imports:fix": "bash -c 'UNUSED=$(pnpm run lint:unused-imports:list 2>&1 | tail -n +3); if [ -n \"$UNUSED\" ]; then echo \"$UNUSED\" | claude \"Remove all these unused imports and variables from the codebase. For each error listed, find the file and line number, read the file, and remove the unused import or variable declaration. Do not make any other changes.\"; else echo \"No unused imports found!\"; fi'",
     "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "psql:local": "psql -h localhost -p 5432 -U prisma",
@@ -159,8 +162,10 @@
     "@types/openid": "^2.0.5",
     "@types/pluralize": "^0.0.33",
     "@types/turndown": "^5.0.6",
+    "@vitest/ui": "^4.0.16",
     "dotenv-cli": "^10.0.0",
     "prisma": "^6.19.0",
-    "tsx": "^4.20.6"
+    "tsx": "^4.20.6",
+    "vitest": "^4.0.16"
   }
 }
