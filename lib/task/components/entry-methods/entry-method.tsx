@@ -9,8 +9,6 @@ import {
   AlertCircleIcon
 } from 'lucide-react';
 import React, { useMemo } from 'react';
-import { IconButton } from '../icon-button';
-import { Badge } from '@/components/ui/badge';
 
 import {
   Collapsible,
@@ -21,17 +19,18 @@ import {
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ArrayContext } from '@/components/hooks/use-array-context';
-import { toTaskTheme } from '@/lib/task/components/theme';
-import { TASK_LABEL } from '@/lib/task/schemas';
+
 import { TaskType } from '@prisma/client';
-import { AdditionalSettings } from '@/lib/task/components/sweepstakes-editor-form/additional-settings/additional-settings';
-import { AdvancedSettings } from '@/lib/task/components/sweepstakes-editor-form/advanced-settings';
-import { BaseSettings } from '@/lib/task/components/sweepstakes-editor-form/base-settings';
+
 import { FieldError, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
-import pluralize from 'pluralize';
-import { ImportBadge } from '@/lib/task/components/sweepstakes-editor-form/import-badge';
+import { IconButton } from '@/components/sweepstakes-editor/form/icon-button';
 import { EntryMethodBadge } from './entry-method-badge';
+import { BaseSettings } from '../sweepstakes-editor-form/base-settings';
+import { AdditionalSettings } from '../sweepstakes-editor-form/additional-settings/additional-settings';
+import { AdvancedSettings } from '../sweepstakes-editor-form/advanced-settings';
+import { toTaskTheme } from '../theme';
+import { TASK_LABEL } from '../../schemas';
 
 export const EntryMethod: React.FC<{
   id: string;

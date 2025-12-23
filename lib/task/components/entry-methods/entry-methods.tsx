@@ -2,7 +2,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import React, { useEffect, useState } from 'react';
 import { EntryMethod } from './entry-method';
-import { SelectTaskDialog } from './select-task-dialog';
+import { SelectTaskDialog } from '../select-dialog/select-task-dialog';
 import { toDefaultValues } from '@/lib/task/defaults';
 import {
   DndContext,

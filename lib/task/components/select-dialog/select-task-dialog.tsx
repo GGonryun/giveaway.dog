@@ -14,14 +14,15 @@ import { cn } from '@/lib/utils';
 import { widetype } from '@/lib/widetype';
 import { PlusIcon, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { toTaskTheme } from '@/lib/task/components/theme';
+
+import { TaskType } from '@prisma/client';
+import { SelectTaskDialogBadge } from './select-task-dialog-badge';
 import {
   TASK_LABEL,
   TASK_IS_IMPORT,
   TASK_ALLOW_MANUAL_ADD
-} from '@/lib/task/schemas';
-import { TaskType } from '@prisma/client';
-import { SelectTaskDialogBadge } from './select-task-dialog-badge';
+} from '../../schemas';
+import { toTaskTheme } from '../theme';
 
 export const SelectTaskDialog: React.FC<{
   onSelect: (type: TaskType) => void;
