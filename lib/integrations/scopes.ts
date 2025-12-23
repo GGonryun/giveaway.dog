@@ -1,3 +1,5 @@
+import z from 'zod';
+
 export const REQUIRED_DISCORD_SCOPES = [
   'identify',
   'email',
@@ -15,6 +17,38 @@ export const REQUIRED_TWITTER_SCOPES = [
   'tweet.read',
   'offline.access'
 ];
+
+export const twitterFeatureSchema = z.union([
+  z.literal('GET_PROFILE'),
+  z.literal('IMPORT_TASKS'),
+  z.literal('POST_TWEETS')
+]);
+
+export type TwitterFeatureSchema = z.infer<typeof twitterFeatureSchema>;
+
+export const TWITTER_SCOPE_GROUPS: Record<TwitterFeatureSchema, string[]> = {
+  GET_PROFILE: ['tweet.read', 'users.read', 'offline.access'],
+  IMPORT_TASKS: ['follows.read', 'like.read'],
+  POST_TWEETS: ['tweet.write']
+};
+
+export function getScopesForFeatures(
+  features: TwitterFeatureSchema[]
+): string[] {
+  const scopesSet = new Set<string>();
+
+  // Always include GET_PROFILE as it's mandatory
+  const allFeatures = ['GET_PROFILE' as TwitterFeatureSchema, ...features];
+
+  for (const feature of allFeatures) {
+    const scopes = TWITTER_SCOPE_GROUPS[feature];
+    for (const scope of scopes) {
+      scopesSet.add(scope);
+    }
+  }
+
+  return Array.from(scopesSet);
+}
 
 export const REQUIRED_TWITCH_SCOPES = [
   'openid',

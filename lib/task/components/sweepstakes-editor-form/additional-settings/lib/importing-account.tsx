@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { extractUsernameFromTweetUrl } from '@/lib/integrations/schemas/twitter';
+import { hasFeature } from '@/lib/integrations/schemas';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { AlertCircle, RefreshCw, Info } from 'lucide-react';
 import Link from 'next/link';
@@ -33,8 +34,19 @@ export const ImportingAccountField: React.FC = () => {
 
   const twitterIntegrations =
     integrations?.filter(
-      (i) => i.provider === 'TWITTER' && i.status === 'ACTIVE'
+      (i) =>
+        i.provider === 'TWITTER' &&
+        i.status === 'ACTIVE' &&
+        hasFeature(i, 'IMPORT_TASKS')
     ) || [];
+
+  const hasTwitterButNoPermission =
+    integrations?.some(
+      (i) =>
+        i.provider === 'TWITTER' &&
+        i.status === 'ACTIVE' &&
+        !hasFeature(i, 'IMPORT_TASKS')
+    ) || false;
 
   return (
     <>
@@ -61,13 +73,16 @@ export const ImportingAccountField: React.FC = () => {
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription className="flex flex-col gap-2">
                   <p>
-                    No X integrations found. You need to connect an X account to
-                    use pickers.
+                    {hasTwitterButNoPermission
+                      ? 'Your Twitter integration doesn\'t have import permissions. Please add the "Import Tasks" permission.'
+                      : 'No X integrations found. You need to connect an X account to use pickers.'}
                   </p>
                   <Button asChild variant="outline" size="sm" className="w-fit">
                     <Link href={`/app/${slug}/settings/integrations`}>
                       <SocialXIcon className="h-4 w-4 mr-2" />
-                      Add X Integration
+                      {hasTwitterButNoPermission
+                        ? 'Add Permissions'
+                        : 'Connect Twitter'}
                     </Link>
                   </Button>
                 </AlertDescription>
@@ -126,7 +141,10 @@ export const ImportingTweetIdValidation = () => {
 
   const twitterIntegrations =
     integrations?.filter(
-      (i) => i.provider === 'TWITTER' && i.status === 'ACTIVE'
+      (i) =>
+        i.provider === 'TWITTER' &&
+        i.status === 'ACTIVE' &&
+        hasFeature(i, 'IMPORT_TASKS')
     ) || [];
 
   const twitterIntegration = twitterIntegrations.find(

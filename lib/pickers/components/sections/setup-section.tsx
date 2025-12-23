@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/select';
 import { timezone } from '@/lib/time';
 import { memo, useMemo } from 'react';
-import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { IntegrationsSchema, hasFeature } from '@/lib/integrations/schemas';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -47,8 +47,12 @@ export const SetupSection: React.FC<SetupSectionProps> = ({ integrations }) => {
 
   const twitterIntegrations =
     integrations?.filter(
-      (i) => i.provider === 'TWITTER' && i.status === 'ACTIVE'
+      (i) => i.provider === 'TWITTER' && i.status === 'ACTIVE' && hasFeature(i, 'IMPORT_TASKS')
     ) || [];
+
+  const hasTwitterWithoutPermissions = integrations?.some(
+    (i) => i.provider === 'TWITTER' && i.status === 'ACTIVE' && !hasFeature(i, 'IMPORT_TASKS')
+  );
 
   return (
     <UnifiedSectionHeader
@@ -66,13 +70,14 @@ export const SetupSection: React.FC<SetupSectionProps> = ({ integrations }) => {
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription className="flex flex-col gap-2">
                   <p>
-                    No X integrations found. You need to connect an X account to
-                    use pickers.
+                    {hasTwitterWithoutPermissions
+                      ? "Your X integration doesn't have import permissions. Add permissions to use pickers."
+                      : 'No X integrations found. You need to connect an X account to use pickers.'}
                   </p>
                   <Button asChild variant="outline" size="sm" className="w-fit">
                     <Link href={`/app/${slug}/settings/integrations`}>
                       <SocialXIcon className="h-4 w-4 mr-2" />
-                      Add X Integration
+                      {hasTwitterWithoutPermissions ? 'Add Permissions' : 'Add X Integration'}
                     </Link>
                   </Button>
                 </AlertDescription>

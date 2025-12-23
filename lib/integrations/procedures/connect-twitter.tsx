@@ -10,6 +10,11 @@ import {
   TWITTER_REDIRECT_URI,
   TwitterStateSchema
 } from '../schemas';
+import {
+  getScopesForFeatures,
+  twitterFeatureSchema,
+  type TwitterFeatureSchema
+} from '../scopes';
 
 export const connectTwitter = procedure()
   .authorization({
@@ -17,7 +22,8 @@ export const connectTwitter = procedure()
   })
   .input(
     z.object({
-      slug: z.string()
+      slug: z.string(),
+      features: z.array(twitterFeatureSchema).min(1)
     })
   )
   .output(
@@ -46,6 +52,11 @@ export const connectTwitter = procedure()
 
     const { codeVerifier, codeChallenge } = generateCodeChallenge();
 
+    const scopes = getScopesForFeatures(
+      input.features as TwitterFeatureSchema[]
+    );
+    const scopeString = scopes.join(' ');
+
     const value: TwitterStateSchema = {
       teamId: team.id,
       codeVerifier
@@ -60,7 +71,7 @@ export const connectTwitter = procedure()
       response_type: 'code',
       client_id: TWITTER_TEAM_APP_CLIENT_ID,
       redirect_uri: TWITTER_REDIRECT_URI,
-      scope: 'tweet.read users.read follows.read like.read offline.access',
+      scope: scopeString,
       state: `${team.slug}:${state.id}`,
       code_challenge: codeChallenge,
       code_challenge_method: 'S256'

@@ -10,18 +10,10 @@
 ### @amd_saad
 
 - [ ] if I signed up with Google account why I need to verify my email account?
-- [ ] do you have a share template so I can share in social media ? Or embed in website?
-- [ ] Check this , when creating a team, if the logo is optional I should get the button to create team active but it is not, I have to delete the placeholder image to process
 
 ### Discord requests
 
 - [ ] 𝓚𝓔𝓜 @PJPeng how about adding a filter option on the website browse giveaways ? Like - Ending Soon to Coming Soon, Recent, Live, Ended, Etc?
-
-## @TheGamesDetective
-
-- [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
-
-- [ ] Add an "Expand all" button to the entry methods section when creating/editing a sweepstake.
 
 ### Me:
 
@@ -63,6 +55,10 @@ it can be confusing to know how your changes are affecting the different preview
 
 - Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?
 - Make it easy to collect data about what responses users have provided to questions.
+
+## @TheGamesDetective
+
+- [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
 
 ### Nobody Asked
 

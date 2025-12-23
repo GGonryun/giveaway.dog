@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import z from 'zod';
 
 import { twitterOAuthCallback } from '@/lib/integrations/procedures/twitter-oauth-callback';
 import { twitterStateSchema } from '@/lib/integrations/schemas';
 import { ApplicationError } from '@/lib/errors';
+
+const twitterCallbackResultSchema = z.object({
+  success: z.literal(true),
+  username: z.string()
+});
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -70,18 +76,30 @@ export async function GET(request: NextRequest) {
       code,
       state: parsed.data
     });
+
     if (!result.ok) {
       throw new ApplicationError({
         code: 'BAD_REQUEST',
         message: 'Twitter OAuth callback failed',
-        data: 'oauth_failed',
-        cause: result.data
+        data: 'oauth_failed'
       });
     }
 
+    const validatedResult = twitterCallbackResultSchema.safeParse(result.data);
+    if (!validatedResult.success) {
+      throw new ApplicationError({
+        code: 'VALIDATION_ERROR',
+        message: 'Invalid callback result format',
+        data: 'validation_error',
+        cause: validatedResult.error
+      });
+    }
+
+    const { username } = validatedResult.data;
+
     return NextResponse.redirect(
       new URL(
-        `/app/${slug}/settings/integrations?success=twitter_connected`,
+        `/app/${slug}/settings/integrations?success=twitter_connected&username=${username}`,
         request.url
       )
     );

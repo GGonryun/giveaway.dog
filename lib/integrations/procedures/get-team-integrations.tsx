@@ -40,6 +40,7 @@ export const getTeamIntegrations = procedure()
       provider: i.provider,
       url: toProviderUrl(i),
       label: i.label ?? DEFAULT_INTEGRATION_LABEL,
-      status: i.status
+      status: i.status,
+      scopes: i.scope ? i.scope.split(' ') : []
     }));
   });

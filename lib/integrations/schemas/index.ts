@@ -1,5 +1,6 @@
 import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import z from 'zod';
+import { TWITTER_SCOPE_GROUPS, type TwitterFeatureSchema } from '../scopes';
 
 export const DEFAULT_INTEGRATION_LABEL = 'My Integration';
 export const TWITTER_TEAM_APP_CLIENT_ID =
@@ -13,10 +14,37 @@ export const integrationSchema = z.object({
   label: z.string(),
   url: z.string().url().nullable(),
   provider: z.nativeEnum(IntegrationProvider),
-  status: z.nativeEnum(IntegrationStatus)
+  status: z.nativeEnum(IntegrationStatus),
+  scopes: z.array(z.string()).optional()
 });
 
 export type IntegrationSchema = z.infer<typeof integrationSchema>;
+
+export function hasScope(
+  integration: IntegrationSchema | null | undefined,
+  scope: string
+): boolean {
+  if (!integration?.scopes) return false;
+  return integration.scopes.includes(scope);
+}
+
+export function hasFeature(
+  integration: IntegrationSchema | null | undefined,
+  feature: TwitterFeatureSchema
+): boolean {
+  if (!integration?.scopes) return false;
+
+  // GET_PROFILE is always included, so combine it with the requested feature
+  const requiredScopes =
+    feature === 'GET_PROFILE'
+      ? TWITTER_SCOPE_GROUPS[feature]
+      : [
+          ...TWITTER_SCOPE_GROUPS['GET_PROFILE'],
+          ...TWITTER_SCOPE_GROUPS[feature]
+        ];
+
+  return requiredScopes.every((scope) => integration.scopes!.includes(scope));
+}
 
 export const integrationsSchema = z.array(integrationSchema);
 

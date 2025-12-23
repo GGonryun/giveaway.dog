@@ -50,13 +50,17 @@ export const twitterOAuthCallback = procedure()
     });
 
     if (!tokenResponse.ok) {
+      const errorData = await tokenResponse.text();
+      console.error('Twitter token exchange failed:', errorData);
       throw new ApplicationError({
         code: 'BAD_REQUEST',
-        message: 'Failed to exchange code for tokens'
+        message: `Failed to exchange code for tokens: ${tokenResponse.status} ${tokenResponse.statusText}`,
+        data: errorData
       });
     }
 
     const tokens = await tokenResponse.json();
+    console.log('Twitter OAuth tokens received, scope:', tokens.scope);
 
     const userResponse = await fetch('https://api.x.com/2/users/me', {
       headers: {
@@ -65,9 +69,12 @@ export const twitterOAuthCallback = procedure()
     });
 
     if (!userResponse.ok) {
+      const errorData = await userResponse.text();
+      console.error('Twitter user fetch failed:', errorData);
       throw new ApplicationError({
         code: 'BAD_REQUEST',
-        message: 'Failed to fetch Twitter user info'
+        message: `Failed to fetch Twitter user info: ${userResponse.status} ${userResponse.statusText}`,
+        data: errorData
       });
     }
 

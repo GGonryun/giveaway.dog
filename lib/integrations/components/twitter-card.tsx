@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -8,6 +9,7 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 import { ExternalLink } from 'lucide-react';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
@@ -17,9 +19,11 @@ import { useRouter } from 'next/navigation';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
-import { IntegrationSchema } from '../schemas';
+import { IntegrationSchema, hasFeature } from '../schemas';
 import { IntegrationStatusBadge } from './integration-status-badge';
 import { IntegrationStatusAlert } from './integration-status-alert';
+import { TwitterScopeDialog } from './twitter-scope-dialog';
+import type { TwitterFeatureSchema } from '../scopes';
 
 interface TwitterCardProps {
   integration?: IntegrationSchema;
@@ -28,6 +32,17 @@ interface TwitterCardProps {
 export function TwitterCard({ integration }: TwitterCardProps) {
   const { slug } = useActiveTeam();
   const router = useRouter();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const currentFeatures: TwitterFeatureSchema[] = [];
+  if (integration) {
+    if (hasFeature(integration, 'IMPORT_TASKS')) {
+      currentFeatures.push('IMPORT_TASKS');
+    }
+    if (hasFeature(integration, 'POST_TWEETS')) {
+      currentFeatures.push('POST_TWEETS');
+    }
+  }
 
   const connect = useProcedure({
     action: connectTwitter,
@@ -50,6 +65,10 @@ export function TwitterCard({ integration }: TwitterCardProps) {
       toast(`Failed to disconnect Twitter: ${error.message}`);
     }
   });
+
+  const handleConnect = (features: TwitterFeatureSchema[]) => {
+    connect.run({ slug, features });
+  };
 
   return (
     <Card className="relative flex flex-col">
@@ -77,26 +96,46 @@ export function TwitterCard({ integration }: TwitterCardProps) {
         {integration ? (
           <>
             <IntegrationStatusAlert status={integration.status} />
-            <div className="flex gap-2 pt-2 mt-auto">
-              <Button variant="outline" size="sm" className="flex-1" asChild>
-                <a
-                  href={`https://twitter.com/${integration.label}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-                  Profile
-                </a>
-              </Button>
+
+            {currentFeatures.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {currentFeatures.map((feature) => (
+                  <Badge key={feature} variant="secondary" className="text-xs">
+                    {feature === 'IMPORT_TASKS' ? 'Import Tasks' : 'Posting'} ✓
+                  </Badge>
+                ))}
+              </div>
+            )}
+
+            <div className="space-y-2 pt-2 mt-auto">
               <Button
-                variant="destructive"
+                variant="outline"
                 size="sm"
-                className="flex-1"
-                onClick={() => disconnect.run({ slug })}
-                disabled={disconnect.isLoading}
+                onClick={() => setDialogOpen(true)}
+                className="w-full"
               >
-                {disconnect.isLoading ? 'Removing...' : 'Disconnect'}
+                Add Permissions
               </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" className="flex-1" asChild>
+                  <a
+                    href={`https://twitter.com/${integration.label}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
+                    Profile
+                  </a>
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => disconnect.run({ slug })}
+                  disabled={disconnect.isLoading}
+                >
+                  {disconnect.isLoading ? 'Removing...' : 'Disconnect'}
+                </Button>
+              </div>
             </div>
           </>
         ) : (
@@ -105,7 +144,7 @@ export function TwitterCard({ integration }: TwitterCardProps) {
               Import entries from posts, sync likes, reposts, and replies
             </p>
             <Button
-              onClick={() => connect.run({ slug })}
+              onClick={() => setDialogOpen(true)}
               disabled={connect.isLoading}
               className="w-full mt-auto"
               size="sm"
@@ -114,6 +153,13 @@ export function TwitterCard({ integration }: TwitterCardProps) {
             </Button>
           </>
         )}
+
+        <TwitterScopeDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          onConfirm={handleConnect}
+          existingFeatures={currentFeatures}
+        />
       </CardContent>
     </Card>
   );
