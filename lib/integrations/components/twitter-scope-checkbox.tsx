@@ -32,7 +32,7 @@ export function TwitterScopeCheckbox({
         onCheckedChange={onCheckedChange}
       />
       <div className="flex-1 space-y-1">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <Label
             htmlFor={id}
             className={
@@ -44,13 +44,13 @@ export function TwitterScopeCheckbox({
             {label}
           </Label>
           {required && (
-            <div className="flex items-center justify-center w-5 h-5 rounded border border-blue-500 bg-blue-50">
-              <Shield className="h-3 w-3 text-blue-600" />
+            <div className="flex items-center justify-center w-4 h-4 rounded-full border border-blue-500 bg-blue-50">
+              <Shield className="h-3 w-3 text-blue-600" strokeWidth={3} />
             </div>
           )}
           {alreadyGranted && (
-            <div className="flex items-center justify-center w-5 h-5 rounded border border-green-500 bg-green-50">
-              <Check className="h-3 w-3 text-green-600" />
+            <div className="flex items-center justify-center w-4 h-4 rounded-full border border-green-500 bg-green-50">
+              <Check className="h-3 w-3 text-green-600" strokeWidth={3} />
             </div>
           )}
         </div>

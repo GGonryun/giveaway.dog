@@ -23,6 +23,7 @@ import { IntegrationSchema, hasFeature } from '../schemas';
 import { IntegrationStatusBadge } from './integration-status-badge';
 import { IntegrationStatusAlert } from './integration-status-alert';
 import { TwitterScopeDialog } from './twitter-scope-dialog';
+import { TwitterDisconnectDialog } from './twitter-disconnect-dialog';
 import type { TwitterFeatureSchema } from '../scopes';
 
 interface TwitterCardProps {
@@ -33,6 +34,7 @@ export function TwitterCard({ integration }: TwitterCardProps) {
   const { slug } = useActiveTeam();
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
 
   const currentFeatures: TwitterFeatureSchema[] = [];
   if (integration) {
@@ -59,6 +61,7 @@ export function TwitterCard({ integration }: TwitterCardProps) {
     action: disconnectTwitter,
     onSuccess() {
       toast('Twitter disconnected successfully');
+      setDisconnectDialogOpen(false);
       router.refresh();
     },
     onFailure(error) {
@@ -68,6 +71,10 @@ export function TwitterCard({ integration }: TwitterCardProps) {
 
   const handleConnect = (features: TwitterFeatureSchema[]) => {
     connect.run({ slug, features });
+  };
+
+  const handleDisconnect = () => {
+    disconnect.run({ slug });
   };
 
   return (
@@ -130,7 +137,7 @@ export function TwitterCard({ integration }: TwitterCardProps) {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => disconnect.run({ slug })}
+                  onClick={() => setDisconnectDialogOpen(true)}
                   disabled={disconnect.isLoading}
                 >
                   {disconnect.isLoading ? 'Removing...' : 'Disconnect'}
@@ -159,6 +166,13 @@ export function TwitterCard({ integration }: TwitterCardProps) {
           onOpenChange={setDialogOpen}
           onConfirm={handleConnect}
           existingFeatures={currentFeatures}
+        />
+
+        <TwitterDisconnectDialog
+          open={disconnectDialogOpen}
+          onOpenChange={setDisconnectDialogOpen}
+          onConfirm={handleDisconnect}
+          isLoading={disconnect.isLoading}
         />
       </CardContent>
     </Card>
