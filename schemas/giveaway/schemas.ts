@@ -165,7 +165,7 @@ export type GiveawayFormTaskSchema = z.infer<typeof giveawayFormTaskSchema>;
 const giveawayFormPrizeSchema = z
   .array(prizeSchema)
   .min(1, 'At least one prize is required')
-  .max(100, 'Maximum of 100 prizes are allowed');
+  .max(200, 'Maximum of 200 prizes are allowed');
 
 export const solidColorBackgroundSchema = z.object({
   type: z.literal('color'),
