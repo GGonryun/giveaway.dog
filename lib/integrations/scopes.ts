@@ -63,3 +63,13 @@ export const REQUIRED_FACEBOOK_SCOPES = ['email', 'user_link'];
 export const REQUIRED_TIKTOK_SCOPES = ['user.info.basic'];
 
 export const REQUIRED_BLUESKY_SCOPES = ['atproto', 'transition:generic'];
+
+// TODO: add some strong typing here
+export const VERIFIED_EMAIL_PROVIDERS: Record<string, boolean> = {
+  google: true,
+  discord: true,
+  twitter: true,
+  facebook: true,
+  twitch: true,
+  instagram: true
+};

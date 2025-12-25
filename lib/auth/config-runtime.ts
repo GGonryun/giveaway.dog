@@ -6,6 +6,8 @@ import { getAccountLabel, getAccountLink } from './get-account-data';
 import { auth } from './config';
 import { pickRandom } from '../arrays';
 import { DOG_BREEDS } from '../dogs';
+import { VERIFIED_EMAIL_PROVIDERS } from '../integrations/scopes';
+
 export const authConfig = {
   ...authConfigMiddleware,
   events: {
@@ -35,6 +37,26 @@ export const authConfig = {
               name: profile.name || pickRandom(DOG_BREEDS)
             }
           });
+        }
+
+        // Check if this is a new user signing up (not linking additional account)
+        // and if the provider verifies emails
+        if (user.id) {
+          const shouldVerifyEmail =
+            VERIFIED_EMAIL_PROVIDERS[account.provider] && profile.email;
+
+          if (shouldVerifyEmail) {
+            await tx.user.update({
+              where: { id: user.id },
+              data: {
+                emailVerified: new Date()
+              }
+            });
+            console.info(
+              'Email verified for new user via provider:',
+              account.provider
+            );
+          }
         }
       });
     }

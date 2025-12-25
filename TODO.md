@@ -1,26 +1,11 @@
 ## Roadmap
 
-### @amd_saad
-
-- [ ] if I signed up with Google account why I need to verify my email account?
-
 ### @theejankanator
 
 - [x] Add BlueSky login
   - [ ] Add BlueSky entry methods (follow, repost, like, login, reply, post)
 
 ## Me
-
-- [ ] Add a Threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads,follow on threads, like a post, reply to a post)
-- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, up vote a post, follow a subreddit, login with Reddit)
-- [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
-- [ ] Add a temporary Facebook integration - https://next-auth.js.org/providers/facebook (connect with facebook, follow a page, like a post)
-- [ ] Add a Snapchat integration - https://developers.snap.com/api/marketing-api/Ads-API/authentication (connect with snapchat, follow on snapchat)
-- [ ] Add a Pinterest integration - https://next-auth.js.org/providers/pinterest (connect with pinterest, follow on pinterest, save a pin)
-- [ ] Add GitHub integration - https://next-auth.js.org/providers/github (follow a repo, star a repo, login with GitHub)
-- [ ] Add a twitter post entry method
-- [ ] Add a twitter reply entry method
-- [ ] Add more steam entry methods (join a group, play a game for X hours, wishlist a game, follow a curator)
 
 - [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
 
@@ -76,6 +61,17 @@ it can be confusing to know how your changes are affecting the different preview
   - [ ] Pick an image from a gallery
 
 - [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
+
+- [ ] Add a Threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads,follow on threads, like a post, reply to a post)
+- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, up vote a post, follow a subreddit, login with Reddit)
+- [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
+- [ ] Add a temporary Facebook integration - https://next-auth.js.org/providers/facebook (connect with facebook, follow a page, like a post)
+- [ ] Add a Snapchat integration - https://developers.snap.com/api/marketing-api/Ads-API/authentication (connect with snapchat, follow on snapchat)
+- [ ] Add a Pinterest integration - https://next-auth.js.org/providers/pinterest (connect with pinterest, follow on pinterest, save a pin)
+- [ ] Add GitHub integration - https://next-auth.js.org/providers/github (follow a repo, star a repo, login with GitHub)
+- [ ] Add a twitter post entry method
+- [ ] Add a twitter reply entry method
+- [ ] Add more steam entry methods (join a group, play a game for X hours, wishlist a game, follow a curator)
 
 - [ ] Add a Patreon integration - https://next-auth.js.org/providers/patreon (connect with patreon, become a patron)
 - [ ] Add a spotify integration - https://authjs.dev/getting-started/providers/spotify (connect with spotify, follow a playlist, listen to a song)
@@ -147,3 +143,8 @@ it can be confusing to know how your changes are affecting the different preview
 - [ ] User's page needs deep links for modal
 - [ ] Winner's page needs deep links for modal
 - [ ] Update to Prisma 7
+
+---
+
+Other:
+Give @CuparaGaming access to github repo.
