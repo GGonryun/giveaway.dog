@@ -1,49 +1,55 @@
-import { TaskActionProps, TaskContent } from '../../building-blocks';
+import {
+  TaskActionProps,
+  TaskContent,
+  TaskControls
+} from '../../building-blocks';
 import { useState } from 'react';
 import { FacebookVisitPageTaskSchema } from '@/lib/task/schemas';
-import { ActionContainer } from './shared-container';
+
+import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
+import { cn } from '@/lib/utils';
+import { useTaskTheme } from '@/lib/task/components/theme';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Separator } from '@/components/ui/separator';
+import { FacebookDisclaimer } from './disclaimer';
 
 export const FacebookVisitPageTaskActionForm: React.FC<
   TaskActionProps<FacebookVisitPageTaskSchema>
-> = ({ onSubmit, task, submission, isLoading }) => {
-  const [visited, setVisited] = useState(false);
-
-  const handleVisit = () => setVisited(true);
+> = ({ onSubmit, onCancel, task, submission, isLoading }) => {
+  const [userInteracted, setUserInteracted] = useState(false);
+  const { theme } = useTaskTheme();
 
   const handleSubmit = () => {
-    setVisited(false);
     onSubmit();
+    setUserInteracted(false);
   };
 
-  const extractPageName = (url: string): string => {
-    const match = url.match(/facebook\.com\/([^/?#]+)/);
-    if (match && match[1]) {
-      if (match[1] === 'profile.php' || match[1] === 'people') {
-        return 'this page';
-      }
-      return match[1];
-    }
-    return 'this page';
+  const handleVisit = () => {
+    setUserInteracted(true);
   };
-
-  const pageName = extractPageName(task.pageUrl);
 
   return (
     <>
       <TaskContent>
-        <ActionContainer
-          submission={submission}
-          title={'Facebook Page'}
-          description={'Visit the Facebook page to complete this task.'}
-          isCompleted={visited}
-          isDisabled={isLoading}
-          action={`Visit ${pageName}`}
-          onSubmit={handleSubmit}
-          onVisit={handleVisit}
-          help={'visit the page'}
-          url={task.pageUrl}
-        />
+        <div className="flex flex-col items-center justify-center gap-4">
+          <Button className={cn(theme.action)} asChild onClick={handleVisit}>
+            <Link href={task.pageUrl} target="_blank">
+              <SocialFacebookIcon />
+              Visit our Facebook page
+            </Link>
+          </Button>
+          <Separator />
+          <FacebookDisclaimer />
+        </div>
       </TaskContent>
+      <TaskControls
+        disabled={!userInteracted}
+        submission={submission}
+        isLoading={isLoading}
+        onSubmit={handleSubmit}
+        onCancel={onCancel}
+      />
     </>
   );
 };

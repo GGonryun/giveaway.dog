@@ -50,11 +50,6 @@ export const ActionContainer: React.FC<{
               : `Click the button below to open Facebook and ${help}, then come back to confirm.`}
           </div>
 
-          <div className="text-xs text-muted-foreground/70 border-t pt-3">
-            This promotion is in no way sponsored, administered, or associated
-            with Facebook. Facebook is not responsible for this activity.
-          </div>
-
           {isCompleted || isDisabled ? (
             <Button
               className={cn(theme.action, 'w-full')}

@@ -1,8 +1,5 @@
 ## Roadmap
 
-- [ ] Automated twitter posts when a sweepstake goes live.
-- [ ] We need to unify submissions so that we don't have to add "complete" or "submitted" flags on every task we introduce.
-
 ### @amd_saad
 
 - [ ] if I signed up with Google account why I need to verify my email account?
@@ -12,28 +9,20 @@
 - [x] Add BlueSky login
   - [ ] Add BlueSky entry methods (follow, repost, like, login, reply, post)
 
-### @Gamelooty
-
-- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345 (https://truelist.io/)
-- [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries (https://www.cloudflare.com/application-services/products/turnstile/)
-
 ## Me
 
 - [ ] Add a Threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads,follow on threads, like a post, reply to a post)
 - [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, up vote a post, follow a subreddit, login with Reddit)
 - [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
+- [ ] Add a temporary Facebook integration - https://next-auth.js.org/providers/facebook (connect with facebook, follow a page, like a post)
 - [ ] Add a Snapchat integration - https://developers.snap.com/api/marketing-api/Ads-API/authentication (connect with snapchat, follow on snapchat)
 - [ ] Add a Pinterest integration - https://next-auth.js.org/providers/pinterest (connect with pinterest, follow on pinterest, save a pin)
-- [ ] Add a temporary Facebook integration - https://next-auth.js.org/providers/facebook (connect with facebook, follow a page, like a post)
 - [ ] Add GitHub integration - https://next-auth.js.org/providers/github (follow a repo, star a repo, login with GitHub)
-
-- new marketing page
-
-- [ ] Add support for generating short links for my sweepstakes, and draw verification
-- [ ] Add a referral task.
 - [ ] Add a twitter post entry method
 - [ ] Add a twitter reply entry method
 - [ ] Add more steam entry methods (join a group, play a game for X hours, wishlist a game, follow a curator)
+
+- [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
 
 ## PJ & Dom
 
@@ -42,28 +31,39 @@
 - [ ] Team Black List
 - [ ] Team White List
 
----
+## Me
 
-### Discord requests
-
-- [ ] 𝓚𝓔𝓜 @PJPeng how about adding a filter option on the website browse giveaways ? Like - Ending Soon to Coming Soon, Recent, Live, Ended, Etc?
+- [ ] Add support for generating short links for my sweepstakes, and draw verification
+- [ ] Add a referral task.
+- [ ] Custom discord bots.
 
 ### @Gamelooty
 
-- it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
+- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345 (https://truelist.io/)
+- [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries (https://www.cloudflare.com/application-services/products/turnstile/)
+
+---
 
 ### @Gore096
 
 Most of the people want proof that the prize is given, maybe it will be useful to have “previous winners” page or something? Just to let people know that the prizes are being given. ( I know that the proof are being posted here on x by the host) but idk, just trying to help.
 
-#### @Chizuruthedeaf
+### @Gamelooty
 
-it can be confusing to know how your changes are affecting the different previews, we should switch to different states in the preview depending on which one
+- it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
+
+### Discord requests
+
+- [ ] 𝓚𝓔𝓜 @PJPeng how about adding a filter option on the website browse giveaways ? Like - Ending Soon to Coming Soon, Recent, Live, Ended, Etc?
 
 ### @theejankanator
 
 - Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?
 - Make it easy to collect data about what responses users have provided to questions.
+
+#### @Chizuruthedeaf
+
+it can be confusing to know how your changes are affecting the different previews, we should switch to different states in the preview depending on which one
 
 ## @TheGamesDetective
 
@@ -82,12 +82,9 @@ it can be confusing to know how your changes are affecting the different preview
 - [ ] Add a Tumblr integration - https://www.tumblr.com/docs/en/api/v2 (connect with tumblr, follow a blog, like a post)
 - [ ] Add a Producthunt entry method - https://api.producthunt.com/v2/docs/oauth_user_authentication/oauth_authorize_ask_for_access_grant_code_on_behalf_of_the_user (visit page, vote for product, follow on producthunt)
 - [ ] Add a daily recurring entry method (visit daily to get entries)
-
-- [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
+- [ ] Add a ko-fi link entry method.
 
 - [ ] Get a business license for facebook login support.
-
-- [ ] Add a ko-fi link entry method.
 
 - [ ] As a host, I want improved task and prize selection in form fields.
   - [ ] When adding an entry method or prize it should automatically appear "open"
