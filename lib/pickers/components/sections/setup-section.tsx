@@ -47,11 +47,17 @@ export const SetupSection: React.FC<SetupSectionProps> = ({ integrations }) => {
 
   const twitterIntegrations =
     integrations?.filter(
-      (i) => i.provider === 'TWITTER' && i.status === 'ACTIVE' && hasFeature(i, 'IMPORT_TASKS')
+      (i) =>
+        i.provider === 'TWITTER' &&
+        i.status === 'ACTIVE' &&
+        hasFeature(i, 'IMPORT_TASKS')
     ) || [];
 
   const hasTwitterWithoutPermissions = integrations?.some(
-    (i) => i.provider === 'TWITTER' && i.status === 'ACTIVE' && !hasFeature(i, 'IMPORT_TASKS')
+    (i) =>
+      i.provider === 'TWITTER' &&
+      i.status === 'ACTIVE' &&
+      !hasFeature(i, 'IMPORT_TASKS')
   );
 
   return (
@@ -77,7 +83,9 @@ export const SetupSection: React.FC<SetupSectionProps> = ({ integrations }) => {
                   <Button asChild variant="outline" size="sm" className="w-fit">
                     <Link href={`/app/${slug}/settings/integrations`}>
                       <SocialXIcon className="h-4 w-4 mr-2" />
-                      {hasTwitterWithoutPermissions ? 'Add Permissions' : 'Add X Integration'}
+                      {hasTwitterWithoutPermissions
+                        ? 'Add Permissions'
+                        : 'Add X Integration'}
                     </Link>
                   </Button>
                 </AlertDescription>

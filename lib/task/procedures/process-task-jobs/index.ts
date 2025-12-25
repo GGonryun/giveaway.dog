@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { processTaskJob } from './process-job';
 import { taskJobInclude } from './types';
 
+const MAX_JOBS_PER_RUN = 10;
+
 export const processTaskJobs = procedure()
   .authorization({ required: false })
   .output(
@@ -24,6 +26,7 @@ export const processTaskJobs = procedure()
       orderBy: {
         createdAt: 'asc'
       },
+      take: MAX_JOBS_PER_RUN,
       include: taskJobInclude
     });
 

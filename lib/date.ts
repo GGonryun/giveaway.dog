@@ -11,7 +11,7 @@ export namespace date {
 
   export const format = (
     date: Date | number | string,
-    format: 'short' | 'long' | 'dashed' = 'short'
+    format: 'short' | 'long' | 'dashed' | 'slashed' = 'short'
   ) => {
     switch (format) {
       case 'short':
@@ -20,6 +20,8 @@ export namespace date {
         return fnsFormat(date, 'MMMM d, yyyy');
       case 'dashed':
         return fnsFormat(date, 'yyyy-MM-dd');
+      case 'slashed':
+        return fnsFormat(date, 'yyyy/MM/dd');
       default:
         throw assertNever(format);
     }

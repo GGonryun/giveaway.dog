@@ -165,6 +165,12 @@ export const applySweepstakesChanges = async ({
       }
     });
 
+    const posts = await tx.automatedPostJob.findMany({
+      where: {
+        sweepstakesId: sweepstakes.id
+      }
+    });
+
     // delete existing sweepstakes and all nested properties
 
     await tx.sweepstakes.delete({
@@ -205,7 +211,21 @@ export const applySweepstakesChanges = async ({
 
     if (jobs.length > 0) {
       await tx.sweepstakesJob.createMany({
-        data: jobs.map((d) => ({ ...d, data: d.data ?? undefined }))
+        data: jobs.map((d) => ({
+          ...d,
+          data: d.data ?? undefined,
+          error: d.error ?? undefined
+        }))
+      });
+    }
+
+    if (posts.length > 0) {
+      await tx.automatedPostJob.createMany({
+        data: posts.map((d) => ({
+          ...d,
+          request: d.request ?? undefined,
+          response: d.response ?? undefined
+        }))
       });
     }
 

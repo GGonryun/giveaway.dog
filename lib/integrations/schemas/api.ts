@@ -149,3 +149,36 @@ export const repliedByRequest = z.object({
 });
 
 export type RepliedByRequest = z.infer<typeof repliedByRequest>;
+
+export const createTweetRequestSchema = z.object({
+  text: z.string().max(280),
+  media: z
+    .object({
+      media_ids: z.array(z.string())
+    })
+    .optional()
+});
+
+export type CreateTweetRequest = z.infer<typeof createTweetRequestSchema>;
+
+export const createTweetResponseSchema = z.object({
+  data: z.object({
+    id: z.string(),
+    text: z.string(),
+    edit_history_tweet_ids: z.array(z.string())
+  })
+});
+
+export type CreateTweetResponse = z.infer<typeof createTweetResponseSchema>;
+
+export const uploadMediaResponseSchema = z.object({
+  meta: z.object({}).optional(),
+  data: z.object({
+    id: z.string(),
+    media_key: z.string(),
+    size: z.number().optional(),
+    expires_after_secs: z.number().optional()
+  })
+});
+
+export type UploadMediaResponse = z.infer<typeof uploadMediaResponseSchema>;

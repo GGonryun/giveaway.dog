@@ -302,6 +302,7 @@ model Sweepstakes {
   criteria     SweepstakesWinnerCriteria?
   participants SweepstakesParticipant[]
   jobs         SweepstakesJob[]
+  posts        AutomatedPostJob[]
   prizes       Prize[]
   tasks        Task[]
 
@@ -441,7 +442,6 @@ model SweepstakesWinnerCriteria {
 enum SweepstakesJobType {
   NOTIFY_PUBLISH_ON_DISCORD
   NOTIFY_PUBLISH_ON_TWITTER
-  POST_TO_TWITTER
 }
 
 enum SweepstakesJobStatus {
@@ -456,11 +456,37 @@ model SweepstakesJob {
   sweepstakesId String
   sweepstakes   Sweepstakes          @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
   data          Json?
+  error         Json?
   type          SweepstakesJobType
   status        SweepstakesJobStatus
   runAt         DateTime
   createdAt     DateTime             @default(now())
   updatedAt     DateTime             @updatedAt
+
+  @@unique([sweepstakesId, type])
+}
+
+enum AutomatedPostJobType {
+  POST_TO_TWITTER
+}
+
+enum AutomatedPostJobStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model AutomatedPostJob {
+  id            String                 @id @default(cuid())
+  sweepstakesId String
+  sweepstakes   Sweepstakes            @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
+  request       Json?
+  response      Json?
+  type          AutomatedPostJobType
+  status        AutomatedPostJobStatus
+  runAt         DateTime
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
 
   @@unique([sweepstakesId, type])
 }

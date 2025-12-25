@@ -63,6 +63,8 @@ export const Setup = () => {
                 isDemo={action === 'demo'}
                 initialUrl={field.value ?? undefined}
                 onUpload={(url) => field.onChange(url || null)}
+                size="wide"
+                fillPreview
               />
             </FormControl>
             <FormMessage />

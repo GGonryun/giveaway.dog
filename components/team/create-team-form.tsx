@@ -244,7 +244,8 @@ export const CreateTeamForm: React.FC = () => {
                   <FileUpload
                     initialUrl={field.value}
                     onUpload={(url) => field.onChange(url)}
-                    size="md"
+                    size="wide"
+                    fillPreview
                     className="items-start mt-2"
                   />
                 </FormControl>

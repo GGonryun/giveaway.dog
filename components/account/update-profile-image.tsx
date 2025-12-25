@@ -64,7 +64,7 @@ export const UpdateProfileImage = () => {
                   className="items-start"
                   initialUrl={field.value ?? undefined}
                   onUpload={(url) => field.onChange(url || null)}
-                  size="lg"
+                  size="md"
                 />
               </FormControl>
               <FormMessage />

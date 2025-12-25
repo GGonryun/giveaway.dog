@@ -9,9 +9,8 @@ import {
   PRIZE_WINNERS_INCLUDE_QUERY,
   toSweepstakesPrizes
 } from '@/schemas/prizes';
-import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@/lib/task/queries';
 
-const getParticipantSweepstake = procedure()
+const getSweepstakesPrizes = procedure()
   .authorization({
     required: true
   })
@@ -50,4 +49,4 @@ const getParticipantSweepstake = procedure()
     return toSweepstakesPrizes(prizes);
   });
 
-export default getParticipantSweepstake;
+export default getSweepstakesPrizes;

@@ -44,14 +44,10 @@ export function TwitterScopeCheckbox({
             {label}
           </Label>
           {required && (
-            <div className="flex items-center justify-center w-4 h-4 rounded-full border border-blue-500 bg-blue-50">
-              <Shield className="h-3 w-3 text-blue-600" strokeWidth={3} />
-            </div>
+            <Shield className="h-3 w-3 text-blue-600" strokeWidth={3} />
           )}
           {alreadyGranted && (
-            <div className="flex items-center justify-center w-4 h-4 rounded-full border border-green-500 bg-green-50">
-              <Check className="h-3 w-3 text-green-600" strokeWidth={3} />
-            </div>
+            <Check className="h-3 w-3 text-green-600" strokeWidth={3} />
           )}
         </div>
         <p className="text-muted-foreground text-sm">{description}</p>

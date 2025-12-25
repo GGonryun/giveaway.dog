@@ -21,7 +21,6 @@ import z from 'zod';
 export const USER_BASE_SCORE = 30;
 export const MAX_SCORING_REQUESTS_PER_RUN = 15;
 export const MAX_TRACKING_REQUESTS_PER_RUN = 10;
-export const MAX_JOBS_PER_RUN = 10;
 export const COMPLETION_THRESHOLD_DAYS = 30;
 export const IP_ADDRESS_THRESHOLD_DAYS = 30;
 export const MAX_DEVICE_STABILITY_BONUS = 20;

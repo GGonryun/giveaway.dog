@@ -29,7 +29,7 @@ export type TwitterFeatureSchema = z.infer<typeof twitterFeatureSchema>;
 export const TWITTER_SCOPE_GROUPS: Record<TwitterFeatureSchema, string[]> = {
   GET_PROFILE: ['tweet.read', 'users.read', 'offline.access'],
   IMPORT_TASKS: ['follows.read', 'like.read'],
-  POST_TWEETS: ['tweet.write']
+  POST_TWEETS: ['tweet.write', 'media.write']
 };
 
 export function getScopesForFeatures(

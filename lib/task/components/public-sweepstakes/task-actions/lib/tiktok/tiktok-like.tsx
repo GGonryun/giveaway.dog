@@ -162,8 +162,8 @@ export const TikTokLikeTaskActionForm: React.FC<
             <Alert>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Unable to load TikTok embed. Please use the button below to
-                view and like the post on TikTok.
+                Unable to load TikTok embed. Please use the button below to view
+                and like the post on TikTok.
               </AlertDescription>
             </Alert>
           ) : (

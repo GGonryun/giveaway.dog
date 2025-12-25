@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { UploadCloud, Trash2, ZoomIn, X } from 'lucide-react';
 import { useFileProvider } from '@/components/hooks/use-file-provider';
@@ -13,8 +13,9 @@ export interface FileUploadProps {
   onUpload?: (url: string) => void;
   isDemo?: boolean;
   initialUrl?: string;
-  size?: 'sm' | 'md' | 'lg' | number;
+  size?: 'sm' | 'md' | 'lg' | 'wide';
   className?: string;
+  fillPreview?: boolean;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
@@ -22,39 +23,55 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   isDemo,
   initialUrl,
   size = 'md',
-  className = ''
+  className = '',
+  fillPreview = false
 }) => {
   const [preview, setPreview] = useState<string | null>(initialUrl || null);
   const [progress, setProgress] = useState<number>(0);
   const [uploading, setUploading] = useState(false);
   const [showFullscreen, setShowFullscreen] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileProvider = useFileProvider(isDemo);
 
   const isCustomSize = typeof size === 'number';
-
-  const getSizeStyle = (): React.CSSProperties | undefined => {
-    if (isCustomSize) {
-      return { width: `${size}px`, height: `${size}px` };
-    }
-    return undefined;
-  };
 
   const getSizeClasses = (): string => {
     if (isCustomSize) return '';
     switch (size) {
       case 'sm':
         return 'w-20 h-20';
+      case 'md':
+        return 'w-40 h-40';
       case 'lg':
         return 'w-60 h-60';
-      case 'md':
+      case 'wide':
+        return 'w-full h-40';
       default:
-        return 'w-40 h-40';
+        return 'w-full h-full';
     }
   };
 
-  const sizeStyle = getSizeStyle();
+  const getSizeStyles = (): React.CSSProperties => {
+    if (!fillPreview || !aspectRatio) return {};
+
+    return {
+      width: '100%',
+      aspectRatio: aspectRatio.toString()
+    };
+  };
+
   const sizeClasses = getSizeClasses();
+
+  useEffect(() => {
+    if (fillPreview && initialUrl && !aspectRatio) {
+      const img = new Image();
+      img.onload = () => {
+        setAspectRatio(img.width / img.height);
+      };
+      img.src = initialUrl;
+    }
+  }, [fillPreview, initialUrl, aspectRatio]);
 
   const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -69,11 +86,21 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       alert('Only JPEG, PNG, and GIF files are allowed.');
       return;
     }
-    if (file.size > 3 * 1024 * 1024) {
-      alert('File size must be less than 3MB.');
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB.');
       return;
     }
-    setPreview(URL.createObjectURL(file));
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+
+    if (fillPreview) {
+      const img = new Image();
+      img.onload = () => {
+        setAspectRatio(img.width / img.height);
+      };
+      img.src = objectUrl;
+    }
+
     await uploadFile(file);
   };
 
@@ -100,18 +127,22 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     // TODO: save a delete event for files on remove
     setPreview(null);
     setProgress(0);
+    setAspectRatio(null);
     if (onUpload) onUpload('');
   };
   return (
     <>
       <div className={cn('flex flex-col items-center gap-2 w-full', className)}>
         {preview ? (
-          <div className={cn('relative mb-2', sizeClasses)} style={sizeStyle}>
+          <div
+            className={cn('relative mb-2', fillPreview ? '' : sizeClasses)}
+            style={fillPreview ? getSizeStyles() : undefined}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={preview}
               alt="Preview"
-              className="object-cover w-full h-full rounded-lg border"
+              className="object-cover w-full h-full rounded-lg border shadow-sm"
             />
             <div className="absolute top-1 right-1 flex gap-1">
               <Button
@@ -138,18 +169,21 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           </div>
         ) : (
           <div
-            className={`flex flex-col items-center justify-center border-1 rounded-lg w-full cursor-pointer transition-colors bg-white shadow-sm hover:bg-gray-50 dark:bg-input/30 dark:hover:bg-input/40 ${sizeClasses} ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
-            style={sizeStyle}
+            className={cn(
+              `flex flex-col items-center justify-center border-2 border-dashed rounded-lg w-full cursor-pointer transition-colors bg-white hover:bg-gray-50 dark:bg-input/30 dark:hover:bg-input/40 p-2`,
+              uploading ? 'opacity-50 pointer-events-none' : '',
+              sizeClasses
+            )}
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
             onClick={() => inputRef.current?.click()}
           >
-            <UploadCloud className="w-8 h-8 text-gray-400 mb-2" />
-            <Typography.Text className="font-medium">
+            <UploadCloud className="w-8 h-8 text-gray-400 mb-2 px-2" />
+            <Typography.Text className="font-medium text-center">
               Drag and drop files here
             </Typography.Text>
-            <Typography.Caption className="mt-1">
-              You can upload 1 file up to 2MB. Accepted JPEG, PNG, GIF.
+            <Typography.Caption className="mt-1 text-center">
+              Up to 5MB. Accepts JPEG, PNG, GIF.
             </Typography.Caption>
           </div>
         )}

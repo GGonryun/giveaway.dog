@@ -9,7 +9,10 @@ interface TwitterApiRequestOptions<T> {
   tx: Tx;
   teamId: string;
   endpoint: string;
+  method?: 'GET' | 'POST';
   params?: URLSearchParams;
+  body?: unknown;
+  formData?: FormData;
   responseSchema: z.ZodSchema<T>;
 }
 
@@ -17,19 +20,28 @@ export async function twitterApiRequest<T>({
   tx,
   teamId,
   endpoint,
+  method = 'GET',
   params,
+  body,
+  formData,
   responseSchema
 }: TwitterApiRequestOptions<T>): Promise<T> {
   const { access_token } = await getLatestTwitterAccessToken(tx, { teamId });
 
   const url = params ? `${endpoint}?${params.toString()}` : endpoint;
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${access_token}`
+  };
+
+  if (!formData) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-      'Content-Type': 'application/json'
-    }
+    method,
+    headers,
+    body: formData ? formData : body ? JSON.stringify(body) : undefined
   });
 
   if (!response.ok) {

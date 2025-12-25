@@ -1,34 +1,39 @@
 ## Roadmap
 
 - [ ] Automated twitter posts when a sweepstake goes live.
+- [ ] We need to unify submissions so that we don't have to add "complete" or "submitted" flags on every task we introduce.
+
+### @amd_saad
+
+- [ ] if I signed up with Google account why I need to verify my email account?
 
 ### @theejankanator
 
 - [x] Add BlueSky login
   - [ ] Add BlueSky entry methods (follow, repost, like, login, reply, post)
 
-### @amd_saad
+### @Gamelooty
 
-- [ ] if I signed up with Google account why I need to verify my email account?
+- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345 (https://truelist.io/)
+- [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries (https://www.cloudflare.com/application-services/products/turnstile/)
 
-### Discord requests
+## Me
 
-- [ ] 𝓚𝓔𝓜 @PJPeng how about adding a filter option on the website browse giveaways ? Like - Ending Soon to Coming Soon, Recent, Live, Ended, Etc?
+- [ ] Add a Threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads,follow on threads, like a post, reply to a post)
+- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, up vote a post, follow a subreddit, login with Reddit)
+- [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
+- [ ] Add a Snapchat integration - https://developers.snap.com/api/marketing-api/Ads-API/authentication (connect with snapchat, follow on snapchat)
+- [ ] Add a Pinterest integration - https://next-auth.js.org/providers/pinterest (connect with pinterest, follow on pinterest, save a pin)
+- [ ] Add a temporary Facebook integration - https://next-auth.js.org/providers/facebook (connect with facebook, follow a page, like a post)
+- [ ] Add GitHub integration - https://next-auth.js.org/providers/github (follow a repo, star a repo, login with GitHub)
 
-### Me:
+- new marketing page
 
-- [ ] We need to unify submissions so that we don't have to add "complete" or "submitted" flags on every task we introduce.
-
+- [ ] Add support for generating short links for my sweepstakes, and draw verification
+- [ ] Add a referral task.
 - [ ] Add a twitter post entry method
 - [ ] Add a twitter reply entry method
 - [ ] Add more steam entry methods (join a group, play a game for X hours, wishlist a game, follow a curator)
-- [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, up vote a post, follow a subreddit, login with Reddit)
-- [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
-- [ ] Add a threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads,follow on threads, like a post, reply to a post)
-- [ ] Add a snapchat integration - https://developers.snap.com/api/marketing-api/Ads-API/authentication (connect with snapchat, follow on snapchat)
-- [ ] Add a pinterest integration - https://next-auth.js.org/providers/pinterest (connect with pinterest, follow on pinterest, save a pin)
-
-- new marketing page
 
 ## PJ & Dom
 
@@ -37,11 +42,15 @@
 - [ ] Team Black List
 - [ ] Team White List
 
+---
+
+### Discord requests
+
+- [ ] 𝓚𝓔𝓜 @PJPeng how about adding a filter option on the website browse giveaways ? Like - Ending Soon to Coming Soon, Recent, Live, Ended, Etc?
+
 ### @Gamelooty
 
 - it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
-- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345
-- [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries
 
 ### @Gore096
 
@@ -66,22 +75,17 @@ it can be confusing to know how your changes are affecting the different preview
   - [ ] Upload a file
   - [ ] Pick an image from a gallery
 
-- [ ] Add GitHub integration - https://next-auth.js.org/providers/github (follow a repo, star a repo, login with GitHub)
+- [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
+
 - [ ] Add a Patreon integration - https://next-auth.js.org/providers/patreon (connect with patreon, become a patron)
 - [ ] Add a spotify integration - https://authjs.dev/getting-started/providers/spotify (connect with spotify, follow a playlist, listen to a song)
 - [ ] Add a Tumblr integration - https://www.tumblr.com/docs/en/api/v2 (connect with tumblr, follow a blog, like a post)
 - [ ] Add a Producthunt entry method - https://api.producthunt.com/v2/docs/oauth_user_authentication/oauth_authorize_ask_for_access_grant_code_on_behalf_of_the_user (visit page, vote for product, follow on producthunt)
+- [ ] Add a daily recurring entry method (visit daily to get entries)
 
 - [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
 
 - [ ] Get a business license for facebook login support.
-
-- [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
-
-- [ ] Add a daily recurring entry method (visit daily to get entries)
-
-- [ ] Add support for generating short links for my sweepstakes, and draw verification
-- [ ] Add a referral task.
 
 - [ ] Add a ko-fi link entry method.
 

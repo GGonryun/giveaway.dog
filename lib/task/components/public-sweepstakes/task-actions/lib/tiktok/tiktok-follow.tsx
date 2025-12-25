@@ -135,8 +135,8 @@ export const TikTokFollowTaskActionForm: React.FC<
             <Alert>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Unable to load TikTok embed. Please use the button below to
-                view and follow the profile on TikTok.
+                Unable to load TikTok embed. Please use the button below to view
+                and follow the profile on TikTok.
               </AlertDescription>
             </Alert>
           ) : (

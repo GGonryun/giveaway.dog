@@ -45,9 +45,7 @@ export const GiveawayItem: React.FC<{
             />
           </div>
           <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
-            {featured && (
-              <Badge className="bg-primary">Featured</Badge>
-            )}
+            {featured && <Badge className="bg-primary">Featured</Badge>}
             {participation && participation.completed > 0 && (
               <Badge
                 className={cn(

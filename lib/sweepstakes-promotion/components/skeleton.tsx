@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function SweepstakesPromotionSkeleton() {
+export function SweepstakesPromotionPageSkeleton() {
   return (
     <>
       <Card>

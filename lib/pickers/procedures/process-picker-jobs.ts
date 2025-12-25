@@ -6,7 +6,6 @@ import {
   Prisma,
   PrismaClient
 } from '@prisma/client';
-import { MAX_JOBS_PER_RUN } from '@/schemas/user-scoring';
 import {
   ApplicationError,
   assertNever,
@@ -35,6 +34,7 @@ import { getDisqualificationReason } from '../schemas/public-picker';
 import { environment } from '@/lib/environment';
 
 const MAX_RESULTS_PER_RUN = 100;
+const MAX_JOBS_PER_RUN = 10;
 
 export const processPickerJobs = procedure()
   .authorization({

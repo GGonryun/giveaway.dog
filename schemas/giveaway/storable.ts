@@ -19,6 +19,7 @@ import {
 
 import { createJobsForTask } from '@/lib/task/jobs';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { TaskSchema } from '@/lib/task/schemas';
 
 const toStorableDetails = (setup: SweepstakesInputSchema['setup']) => {
   return {
@@ -185,7 +186,26 @@ const toStorablePrizes = (
   };
 };
 
-const toStorableTasks = (
+export type StorableTaskSchema = TaskSchema & {
+  id: string;
+  index: number;
+};
+export const toStorableTask = (
+  task: StorableTaskSchema,
+  status: SweepstakesStatus
+): Prisma.TaskUncheckedCreateWithoutSweepstakesInput => {
+  const { id, index, ...config } = task;
+  return {
+    id,
+    index,
+    config,
+    jobs: {
+      create: createJobsForTask(task, status)
+    }
+  };
+};
+
+export const toStorableTasks = (
   tasks: SweepstakesInputSchema['tasks'],
   status?: SweepstakesStatus
 ): Prisma.TaskUncheckedCreateNestedManyWithoutSweepstakesInput | undefined => {

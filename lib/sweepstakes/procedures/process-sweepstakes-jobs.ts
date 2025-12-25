@@ -8,6 +8,8 @@ import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { Prisma, PrismaClient, SweepstakesJobStatus } from '@prisma/client';
 import { z } from 'zod';
 
+const MAX_JOBS_PER_RUN = 10;
+
 export const processSweepstakesJobs = procedure()
   .authorization({ required: false })
   .output(
@@ -29,7 +31,8 @@ export const processSweepstakesJobs = procedure()
       },
       orderBy: {
         createdAt: 'asc'
-      }
+      },
+      take: MAX_JOBS_PER_RUN
     });
 
     console.info(`Found ${pending.length} sweepstakes jobs to process`);
