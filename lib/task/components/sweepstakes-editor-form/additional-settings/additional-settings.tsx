@@ -35,6 +35,7 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
       case 'TWITTER_CONNECT':
+      case 'BLUESKY_CONNECT':
       case 'BONUS_TASK':
         return <></>;
       case 'BONUS_COMPLETE_PROFILE':

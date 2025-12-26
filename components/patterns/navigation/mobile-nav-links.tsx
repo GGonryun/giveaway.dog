@@ -5,9 +5,11 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
-export const MobileNavLinks: React.FC<{ onLinkClick: () => void }> = ({
-  onLinkClick
-}) => {
+export interface MobileNavLinks {
+  onLinkClick: () => void;
+}
+
+export const MobileNavLinks: React.FC<MobileNavLinks> = ({ onLinkClick }) => {
   const pathname = usePathname();
 
   const isActiveRoute = (path: string) => {

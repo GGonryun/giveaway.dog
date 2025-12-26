@@ -36,6 +36,7 @@ export const SelectTaskDialogBadge: React.FC<{ type: TaskType }> = ({
     case 'KICK_FOLLOW':
     case 'TIKTOK_FOLLOW':
     case 'TIKTOK_LIKE':
+    case 'BLUESKY_CONNECT':
     case 'SECRET_CODE':
       return TASK_HAS_AUTOMATIC_VALIDATION[type] ? <VerifiedBadge /> : null;
     default:

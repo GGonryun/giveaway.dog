@@ -54,6 +54,7 @@ export function LoginForm({
         <CardContent>
           <LoginOptions
             type="buttons"
+            returnTo={'/login'}
             redirectTo={redirectTo}
             allowedIdentities={LOGIN_PROVIDERS}
           />

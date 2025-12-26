@@ -21,6 +21,7 @@ import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
 import { SocialTikTokIcon } from '@/lib/integrations/components/icons/tiktok-icon';
+import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 
 export type TaskTheme = {
   action: string;
@@ -166,6 +167,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-black text-white',
         arrow: 'bg-black text-white fill-black',
         icon: SocialTikTokIcon
+      };
+    case 'BLUESKY_CONNECT':
+      return {
+        action:
+          'bg-bluesky-1 text-white group-hover:bg-bluesky-1 hover:bg-bluesky-1 dark:bg-bluesky-1 dark:hover:bg-bluesky-1',
+        symbol: 'bg-white text-bluesky-1',
+        arrow: 'bg-bluesky-1 text-white fill-bluesky-1',
+        icon: SocialBlueskyIcon
       };
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':

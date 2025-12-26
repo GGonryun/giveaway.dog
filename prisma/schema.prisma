@@ -656,6 +656,7 @@ enum TaskType {
   TIKTOK_FOLLOW
   TIKTOK_LIKE
   SECRET_CODE
+  BLUESKY_CONNECT
 }
 
 model TaskCompletion {

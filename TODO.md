@@ -2,12 +2,21 @@
 
 ### @theejankanator
 
-- [x] Add BlueSky login
-  - [ ] Add BlueSky entry methods (follow, repost, like, login, reply, post)
+- [x] Add Bluesky login
+  - [ ] Add Bluesky connect
+  - [ ] Add Bluesky follow
+  - [ ] Add Bluesky repost
+  - [ ] Add Bluesky like
+  - [ ] Add Bluesky login
+  - [ ] Add Bluesky reply
+  - [ ] Add Bluesky post
 
 ## Me
 
 - [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
+
+- [ ] Fix the way we update sweepstakes it's unruly for huge giveaways.
+- [ ] Fix the unoptimized users page slow loading
 
 ## PJ & Dom
 
@@ -53,6 +62,10 @@ it can be confusing to know how your changes are affecting the different preview
 ## @TheGamesDetective
 
 - [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
+
+## Cupara
+
+- [ ] Also, I feel when you modify the terms & conditions the additional terms box should be able to handle formatting as I'm one of many streamers that are very OCD about formatting. If the text looks garbled or looks to run together almost all entrants won't read that part of the terms.
 
 ### Nobody Asked
 

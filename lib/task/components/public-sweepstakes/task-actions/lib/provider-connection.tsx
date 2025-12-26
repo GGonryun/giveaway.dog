@@ -1,4 +1,3 @@
-import { Separator } from '@/components/ui/separator';
 import {
   TaskActionProps,
   TaskContent,
@@ -6,76 +5,60 @@ import {
   TaskControlsProps
 } from '../building-blocks';
 import { useMemo } from 'react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { AlertTriangle, UnplugIcon } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
-import { useProcedure } from '@/lib/mrpc/hook';
 import { usePathname } from 'next/navigation';
-import { toast } from 'sonner';
 
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import {
+  IDENTITY_PROVIDER_LABEL,
   ProviderSchema,
-  isIdentityProvider,
   isMissingScopes
 } from '@/lib/integrations/schemas/providers';
 import { TaskTheme, useTaskTheme } from '@/lib/task/components/theme';
 import {
   TaskSchema,
-  TASK_PLATFORM,
-  TASK_PLATFORM_LABEL,
   TASK_REQUIRED_SCOPES,
-  TaskPlatformSchema
+  TASK_IDENTITY_PROVIDER
 } from '@/lib/task/schemas';
-import login from '@/lib/auth/procedures/login';
-import { ApplicationError } from '@/lib/errors';
+import { LoginOptions } from '@/components/auth/login-options';
 
-const useProviderConnection = ({
-  taskId,
-  providerId,
-  providerLabel
-}: {
-  taskId: string;
-  providerId: TaskPlatformSchema;
-  providerLabel: string;
-}) => {
+const useProviderConnection = ({ task }: { task: TaskSchema }) => {
+  const { participant } = useGiveawayParticipation();
   const pathname = usePathname();
 
-  const loginProcedure = useProcedure({
-    action: login,
-    onSuccess: () => {
-      toast.success(`${providerLabel} connected`);
-    }
-  });
+  const providerId = TASK_IDENTITY_PROVIDER[task.type];
+  const providerLabel = IDENTITY_PROVIDER_LABEL[providerId];
 
-  const { participant } = useGiveawayParticipation();
   const provider = useMemo(() => {
     return participant?.user.providers.find((p) => p.type === providerId);
-  }, [participant?.user.providers]);
+  }, [participant?.user.providers, providerId]);
 
-  const connect = () => {
+  const redirectTo = useMemo(() => {
     const params = new URLSearchParams();
     // add task id to params to complete the task after login
-    params.append('taskId', taskId);
-    const redirectTo = `${pathname}?${params.toString()}`;
+    params.append('taskId', task.id);
+    return `${pathname}?${params.toString()}`;
+  }, [pathname, task.id]);
 
-    if (!isIdentityProvider(providerId)) {
-      throw new ApplicationError({
-        code: 'BAD_REQUEST',
-        message: `Unsupported provider ${providerId}`
-      });
-    }
+  const requiredScopes = TASK_REQUIRED_SCOPES[providerId];
 
-    // Redirect to login with twitter
-    return loginProcedure.run({
-      provider: providerId,
-      revalidate: 'true',
-      redirectTo
-    });
+  const isIncomplete = isMissingScopes(provider, requiredScopes);
+
+  const requiresConnection =
+    !('validation' in task) || task.validation?.type !== 'NONE';
+
+  const isConnected = !requiresConnection || (provider && !isIncomplete);
+
+  return {
+    providerId,
+    providerLabel,
+    provider,
+    isIncomplete,
+    requiresConnection,
+    isConnected,
+    redirectTo
   };
-
-  return { connect, provider };
 };
 
 export const WithProviderConnection: React.FC<
@@ -99,27 +82,18 @@ export const WithProviderConnection: React.FC<
   cancel
 }) => {
   const { theme } = useTaskTheme();
-  const providerId = TASK_PLATFORM[task.type];
-  const providerLabel = TASK_PLATFORM_LABEL[providerId];
-  const requiredScopes = TASK_REQUIRED_SCOPES[providerId];
-  const { connect, provider } = useProviderConnection({
-    taskId: task.id,
+
+  const {
+    redirectTo,
+    isConnected,
+    provider,
+    isIncomplete,
+    requiresConnection,
     providerId,
     providerLabel
+  } = useProviderConnection({
+    task
   });
-
-  const loginProcedure = useProcedure({
-    action: login,
-    onSuccess: () => {
-      toast.success(`${providerLabel} connected`);
-    }
-  });
-
-  const isMissing = isMissingScopes(provider, requiredScopes);
-
-  const requiresConnection =
-    !('validation' in task) || task.validation?.type !== 'NONE';
-  const isConnected = !requiresConnection || (provider && !isMissing);
 
   return (
     <>
@@ -128,31 +102,22 @@ export const WithProviderConnection: React.FC<
           render({ provider, theme })
         ) : (
           <>
-            <Button
-              type="button"
-              className={cn(theme.action)}
-              onClick={connect}
-              disabled={isConnected || loginProcedure.isLoading}
-            >
-              <UnplugIcon />
-              {!!provider ? 'Reconnect' : 'Connect'}
-            </Button>
-            {!provider && (
-              <p className="text-sm text-muted-foreground mt-2">
-                Connect to {providerLabel} to continue.
-              </p>
-            )}
-            {Boolean(provider && isMissing) && (
+            <LoginOptions
+              label={`Connect to ${providerLabel} to continue.`}
+              className={'text-left'}
+              redirectTo={redirectTo}
+              returnTo={redirectTo}
+              allowedIdentities={[providerId]}
+              type="pill"
+            />
+            {Boolean(provider && isIncomplete) && (
               <IsMissingPermissions providerLabel={providerLabel} />
             )}
           </>
         )}
       </TaskContent>
       <TaskControls
-        disabled={
-          disabled ||
-          (requiresConnection && (!provider || loginProcedure.isLoading))
-        }
+        disabled={disabled || (requiresConnection && !provider)}
         submission={submission}
         isLoading={isLoading}
         submit={submit}

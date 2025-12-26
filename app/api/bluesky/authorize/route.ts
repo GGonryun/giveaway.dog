@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getBlueskyClient } from '@/lib/auth/bluesky-client';
 
 export async function GET(req: NextRequest) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const handle = searchParams.get('handle');
-    const redirectTo = searchParams.get('redirectTo');
+  const { searchParams } = new URL(req.url);
+  const handle = searchParams.get('handle');
+  const redirectTo = searchParams.get('redirectTo');
+  const returnTo = searchParams.get('returnTo') ?? '/';
 
+  try {
     if (!handle) {
       console.warn('Bluesky authorization failed - missing handle');
       return NextResponse.json(
@@ -17,7 +18,8 @@ export async function GET(req: NextRequest) {
 
     console.info('Bluesky authorization started', {
       handle,
-      redirectTo
+      redirectTo,
+      returnTo
     });
 
     const client = await getBlueskyClient();
@@ -45,9 +47,12 @@ export async function GET(req: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error('Bluesky authorization error:', error);
-    return NextResponse.redirect(
-      new URL('/login?error=bluesky_auth_failed', req.url)
+    // console.error('Bluesky authorization failed:', error);
+    const url = new URL(
+      returnTo,
+      process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXTAUTH_URL
     );
+    url.searchParams.set('error', 'bluesky_auth_failed');
+    return NextResponse.redirect(url.toString());
   }
 }

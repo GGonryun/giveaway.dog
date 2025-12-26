@@ -60,7 +60,6 @@ export const twitterOAuthCallback = procedure()
     }
 
     const tokens = await tokenResponse.json();
-    console.log('Twitter OAuth tokens received, scope:', tokens.scope);
 
     const userResponse = await fetch('https://api.x.com/2/users/me', {
       headers: {

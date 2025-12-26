@@ -4,12 +4,13 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import {
-  ProviderBadges,
+  ProviderDots,
   ProviderButtons,
-  ProviderIcons
+  ProviderIcons,
+  ProviderPills
 } from '@/components/auth/provider-buttons';
 import { AuthError } from '@/components/auth/auth-error';
 import { AlertCircle, ArrowLeftIcon } from 'lucide-react';
@@ -24,21 +25,9 @@ import { useSearchParams } from 'next/navigation';
 import { IdentityProvider } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import { Separator } from '../ui/separator';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription
-} from '@/components/ui/form';
-import z from 'zod';
-import { blueskyHandleSchema } from '@/schemas/user';
+import { BlueskyConnectForm } from '@/lib/auth/components/bluesky-connect-form';
 
-type LoginButtonType = 'buttons' | 'icons' | 'badges';
+type LoginButtonType = 'pill' | 'buttons' | 'icons' | 'dots';
 interface LoginOptionsProps {
   className?: string;
   redirectTo?: string;
@@ -46,11 +35,13 @@ interface LoginOptionsProps {
   dividers?: boolean;
   type?: LoginButtonType;
   allowedIdentities: IdentityProvider[];
+  returnTo: string;
 }
 
 export function LoginOptions({
   className,
   redirectTo = '',
+  returnTo,
   type,
   label,
   dividers = false,
@@ -73,19 +64,14 @@ export function LoginOptions({
     }
   });
 
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(toAuthErrorDescription(error));
+    }
+  }, [error]);
+
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [showBlueskyForm, setShowBlueskyForm] = useState(false);
-
-  const blueskyFormSchema = z.object({
-    blueskyHandle: blueskyHandleSchema
-  });
-
-  const blueskyForm = useForm<z.infer<typeof blueskyFormSchema>>({
-    resolver: zodResolver(blueskyFormSchema),
-    defaultValues: {
-      blueskyHandle: ''
-    }
-  });
 
   const handleEmailSubmit = () => {
     if (!email) {
@@ -96,15 +82,8 @@ export function LoginOptions({
     loginProcedure.run({
       provider: 'EMAIL',
       email,
-      redirectTo
-    });
-  };
-
-  const handleBlueskySubmit = (values: z.infer<typeof blueskyFormSchema>) => {
-    loginProcedure.run({
-      provider: 'BLUESKY',
-      blueskyHandle: values.blueskyHandle,
-      redirectTo
+      redirectTo,
+      returnTo
     });
   };
 
@@ -114,10 +93,14 @@ export function LoginOptions({
     setEmail('');
   };
 
+  const handleConnectBluesky = () => {
+    setShowBlueskyForm(false);
+    setErrorMessage(null);
+  };
+
   const handleCancelBluesky = () => {
     setShowBlueskyForm(false);
     setErrorMessage(null);
-    blueskyForm.reset();
   };
 
   const handleProviderLogin = (provider: IdentityProvider) => {
@@ -130,7 +113,8 @@ export function LoginOptions({
     } else {
       loginProcedure.run({
         provider,
-        redirectTo
+        redirectTo,
+        returnTo
       });
     }
   };
@@ -196,56 +180,12 @@ export function LoginOptions({
   if (showBlueskyForm) {
     return (
       <div className={cn('', className)} {...props}>
-        <Form {...blueskyForm}>
-          <form
-            onSubmit={blueskyForm.handleSubmit(handleBlueskySubmit)}
-            className="grid gap-4"
-          >
-            <FormField
-              control={blueskyForm.control}
-              name="blueskyHandle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bluesky Handle</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="username.bsky.social"
-                      autoFocus
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Enter your Bluesky handle (e.g., username.bsky.social)
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid gap-2">
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loginProcedure.isLoading}
-              >
-                {loginProcedure.isLoading ? (
-                  <Spinner size="xs" />
-                ) : (
-                  'Continue with Bluesky'
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleCancelBluesky}
-                className="w-full"
-              >
-                <ArrowLeftIcon className="w-4 h-4 mr-2" />
-                Back
-              </Button>
-            </div>
-          </form>
-        </Form>
+        <BlueskyConnectForm
+          returnTo={returnTo}
+          redirectTo={redirectTo}
+          onConnect={handleConnectBluesky}
+          onCancel={handleCancelBluesky}
+        />
         <AuthError error={errorMessage} />
       </div>
     );
@@ -253,11 +193,12 @@ export function LoginOptions({
 
   return (
     <div className="w-full">
-      <Alert className={cn('mb-4', !error && 'hidden')} variant="destructive">
-        <AlertCircle className="mb-2 h-6 w-6 text-muted-foreground" />
-        <AlertDescription className="text-sm">
-          {toAuthErrorDescription(error)}
-        </AlertDescription>
+      <Alert
+        className={cn('mb-4', !errorMessage && 'hidden')}
+        variant="destructive"
+      >
+        <AlertCircle />
+        <AlertDescription>{errorMessage}</AlertDescription>
       </Alert>
       <Flex.Stack center gap="sm" className={cn(className)} {...props}>
         {label && (
@@ -282,7 +223,6 @@ export function LoginOptions({
           identities={allowedIdentities}
           type={type}
         />
-        <AuthError error={errorMessage} />
       </Flex.Stack>
     </div>
   );
@@ -298,8 +238,10 @@ const Providers: React.FC<{
       return <ProviderButtons identities={identities} onSubmit={onSubmit} />;
     case 'icons':
       return <ProviderIcons identities={identities} onSubmit={onSubmit} />;
-    case 'badges':
-      return <ProviderBadges identities={identities} onSubmit={onSubmit} />;
+    case 'dots':
+      return <ProviderDots identities={identities} onSubmit={onSubmit} />;
+    case 'pill':
+      return <ProviderPills identities={identities} onSubmit={onSubmit} />;
     default:
       throw assertNever(type);
   }

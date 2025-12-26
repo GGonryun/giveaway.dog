@@ -35,6 +35,7 @@ export const createJobsForTask = (
     case 'FACEBOOK_VIEW_POST':
     case 'TIKTOK_FOLLOW':
     case 'TIKTOK_LIKE':
+    case 'BLUESKY_CONNECT':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':

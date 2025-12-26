@@ -85,6 +85,7 @@ export const processTaskJob = async (
       case 'TIKTOK_LIKE':
       case 'ASK_QUESTION':
       case 'SINGLE_CHOICE':
+      case 'BLUESKY_CONNECT':
       case 'MULTIPLE_CHOICE':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',

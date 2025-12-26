@@ -12,8 +12,9 @@ export const SweepstakesLoginOptions: React.FC = () => {
       <LoginOptions
         label={'Connect to participate...'}
         redirectTo={pathname}
+        returnTo={pathname}
         allowedIdentities={sweepstakes.audience.allowedIdentities}
-        type="badges"
+        type="dots"
       />
     </div>
   );

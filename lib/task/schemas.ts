@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { CompletionStatus, Task } from '@prisma/client';
+import { CompletionStatus, IdentityProvider, Task } from '@prisma/client';
 import {
   xProfileRefineError,
   xProfileRefineUrl,
@@ -404,6 +404,12 @@ export const tiktokLikeTaskSchema = baseTaskSchema.extend({
 
 export type TiktokLikeTaskSchema = z.infer<typeof tiktokLikeTaskSchema>;
 
+export const blueskyConnectTaskSchema = baseTaskSchema.extend({
+  type: z.literal('BLUESKY_CONNECT')
+});
+
+export type BlueskyConnectTaskSchema = z.infer<typeof blueskyConnectTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -432,7 +438,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   facebookVisitPageTaskSchema,
   facebookViewPostTaskSchema,
   tiktokFollowTaskSchema,
-  tiktokLikeTaskSchema
+  tiktokLikeTaskSchema,
+  blueskyConnectTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -465,7 +472,8 @@ export const TASK_LABEL: Record<TaskType, string> = {
   FACEBOOK_VISIT_PAGE: 'Visit Facebook Page',
   FACEBOOK_VIEW_POST: 'View Facebook Post',
   TIKTOK_FOLLOW: 'Follow on TikTok',
-  TIKTOK_LIKE: 'Like TikTok Post'
+  TIKTOK_LIKE: 'Like TikTok Post',
+  BLUESKY_CONNECT: 'Connect Bluesky'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -508,7 +516,8 @@ export const TASK_INPUT_SCHEMA = {
   }),
   MULTIPLE_CHOICE: z.object({
     choices: z.array(z.string()).min(1, 'Please select at least one option')
-  })
+  }),
+  BLUESKY_CONNECT: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export const TASK_JOB_DATA_SCHEMA = {
@@ -545,7 +554,8 @@ export const TASK_JOB_DATA_SCHEMA = {
   SECRET_CODE: z.object({}),
   ASK_QUESTION: z.object({}),
   SINGLE_CHOICE: z.object({}),
-  MULTIPLE_CHOICE: z.object({})
+  MULTIPLE_CHOICE: z.object({}),
+  BLUESKY_CONNECT: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export type TaskInput<T extends TaskSchema> = T extends { type: infer U }
@@ -593,7 +603,40 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   KICK_FOLLOW: 'KICK',
   ASK_QUESTION: 'QUESTION',
   SINGLE_CHOICE: 'QUESTION',
-  MULTIPLE_CHOICE: 'QUESTION'
+  MULTIPLE_CHOICE: 'QUESTION',
+  BLUESKY_CONNECT: 'BLUESKY'
+};
+
+export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
+  BONUS_TASK: 'ANONYMOUS',
+  BONUS_TIMED: 'ANONYMOUS',
+  BONUS_LIMITED: 'ANONYMOUS',
+  BONUS_LOYALTY: 'ANONYMOUS',
+  BONUS_COMPLETE_PROFILE: 'ANONYMOUS',
+  VISIT_URL: 'ANONYMOUS',
+  ASK_QUESTION: 'ANONYMOUS',
+  SINGLE_CHOICE: 'ANONYMOUS',
+  MULTIPLE_CHOICE: 'ANONYMOUS',
+  SECRET_CODE: 'ANONYMOUS',
+  TWITTER_CONNECT: 'TWITTER',
+  TWITTER_FOLLOW: 'TWITTER',
+  TWITTER_RETWEET: 'TWITTER',
+  TWITTER_RETWEET_IMPORT: 'TWITTER',
+  TWITTER_LIKE: 'TWITTER',
+  TWITTER_LIKE_IMPORT: 'TWITTER',
+  STEAM_WISHLIST: 'STEAM',
+  DISCORD_JOIN: 'DISCORD',
+  TWITCH_FOLLOW: 'TWITCH',
+  KICK_FOLLOW: 'KICK',
+  YOUTUBE_VISIT: 'YOUTUBE',
+  INSTAGRAM_VISIT: 'INSTAGRAM',
+  INSTAGRAM_LIKE: 'INSTAGRAM',
+  INSTAGRAM_COMMENT: 'INSTAGRAM',
+  FACEBOOK_VISIT_PAGE: 'FACEBOOK',
+  FACEBOOK_VIEW_POST: 'FACEBOOK',
+  TIKTOK_FOLLOW: 'TIKTOK',
+  TIKTOK_LIKE: 'TIKTOK',
+  BLUESKY_CONNECT: 'BLUESKY'
 };
 
 export const TASK_REQUIRED_SCOPES: Record<TaskPlatformSchema, string[]> = {
@@ -654,7 +697,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   TIKTOK_LIKE: 'social',
   ASK_QUESTION: 'engagement',
   SINGLE_CHOICE: 'engagement',
-  MULTIPLE_CHOICE: 'engagement'
+  MULTIPLE_CHOICE: 'engagement',
+  BLUESKY_CONNECT: 'social'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',
@@ -690,7 +734,8 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   TIKTOK_LIKE: false,
   ASK_QUESTION: false,
   SINGLE_CHOICE: false,
-  MULTIPLE_CHOICE: false
+  MULTIPLE_CHOICE: false,
+  BLUESKY_CONNECT: false
 };
 
 export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
@@ -721,7 +766,8 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   TIKTOK_LIKE: true,
   ASK_QUESTION: true,
   SINGLE_CHOICE: true,
-  MULTIPLE_CHOICE: true
+  MULTIPLE_CHOICE: true,
+  BLUESKY_CONNECT: true
 };
 
 export const userEntriesSchema = z.object({
@@ -797,5 +843,6 @@ export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
   SECRET_CODE: true,
   ASK_QUESTION: false,
   SINGLE_CHOICE: false,
-  MULTIPLE_CHOICE: false
+  MULTIPLE_CHOICE: false,
+  BLUESKY_CONNECT: true
 };

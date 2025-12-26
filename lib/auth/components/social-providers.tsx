@@ -21,36 +21,12 @@ import { Spinner } from '@/components/ui/spinner';
 import login from '../procedures/login';
 import { SettingsCard } from '@/components/settings/settings-card';
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription
-} from '@/components/ui/form';
-import z from 'zod';
-import { blueskyHandleSchema } from '@/schemas/user';
+import { BlueskyConnectForm } from './bluesky-connect-form';
 
 export const SocialProviders = () => {
   const router = useRouter();
   const user = useUser();
   const [showBlueskyInput, setShowBlueskyInput] = useState(false);
-
-  const blueskyFormSchema = z.object({
-    blueskyHandle: blueskyHandleSchema
-  });
-
-  const blueskyForm = useForm<z.infer<typeof blueskyFormSchema>>({
-    resolver: zodResolver(blueskyFormSchema),
-    defaultValues: {
-      blueskyHandle: ''
-    }
-  });
 
   const loginProcedure = useProcedure({
     action: login,
@@ -66,17 +42,6 @@ export const SocialProviders = () => {
       router.refresh();
     }
   });
-
-  const handleBlueskySubmit = (values: z.infer<typeof blueskyFormSchema>) => {
-    loginProcedure.run({
-      provider: 'BLUESKY',
-      blueskyHandle: values.blueskyHandle,
-      redirectTo: '/account',
-      revalidate: 'true'
-    });
-    setShowBlueskyInput(false);
-    blueskyForm.reset();
-  };
 
   return (
     <SettingsCard
@@ -116,61 +81,62 @@ export const SocialProviders = () => {
                   </div>
                 </div>
 
-                {provider
-                  ? !(providerId === 'BLUESKY' && showBlueskyInput) && (
-                      <Button
-                        variant={isMissing ? 'default' : 'destructive'}
-                        size="sm"
-                        disabled={isConnectingThis || !isEnabled}
-                        onClick={() => {
-                          if (isMissing) {
-                            if (providerId === 'BLUESKY') {
-                              setShowBlueskyInput(true);
-                            } else {
-                              loginProcedure.run({
-                                provider: providerId,
-                                redirectTo: '/account',
-                                revalidate: 'true'
-                              });
-                            }
-                          } else {
-                            disconnectAccountProcedure.run(provider);
-                          }
-                        }}
-                        className="w-full sm:w-[125px]"
-                      >
-                        {isConnectingThis ? (
-                          <Spinner size="xs" />
-                        ) : isMissing ? (
-                          <UnplugIcon />
-                        ) : (
-                          <UnlinkIcon />
-                        )}
-                        {isMissing ? 'Reconnect' : 'Disconnect'}
-                      </Button>
-                    )
-                  : !(providerId === 'BLUESKY' && showBlueskyInput) && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full sm:w-[125px]"
-                        onClick={() => {
-                          if (providerId === 'BLUESKY') {
-                            setShowBlueskyInput(true);
-                          } else {
-                            return loginProcedure.run({
-                              provider: providerId,
-                              redirectTo: '/account',
-                              revalidate: 'true'
-                            });
-                          }
-                        }}
-                        disabled={isConnectingThis || !isEnabled}
-                      >
-                        {isConnectingThis ? <Spinner size="xs" /> : <Plus />}
-                        Connect
-                      </Button>
+                {providerId === 'BLUESKY' &&
+                showBlueskyInput ? null : provider ? (
+                  <Button
+                    variant={isMissing ? 'default' : 'destructive'}
+                    size="sm"
+                    disabled={isConnectingThis || !isEnabled}
+                    onClick={() => {
+                      if (isMissing) {
+                        if (providerId === 'BLUESKY') {
+                          setShowBlueskyInput(true);
+                        } else {
+                          loginProcedure.run({
+                            provider: providerId,
+                            redirectTo: '/account',
+                            returnTo: '/account',
+                            revalidate: 'true'
+                          });
+                        }
+                      } else {
+                        disconnectAccountProcedure.run(provider);
+                      }
+                    }}
+                    className="w-full sm:w-[125px]"
+                  >
+                    {isConnectingThis ? (
+                      <Spinner size="xs" />
+                    ) : isMissing ? (
+                      <UnplugIcon />
+                    ) : (
+                      <UnlinkIcon />
                     )}
+                    {isMissing ? 'Reconnect' : 'Disconnect'}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full sm:w-[125px]"
+                    onClick={() => {
+                      if (providerId === 'BLUESKY') {
+                        setShowBlueskyInput(true);
+                      } else {
+                        return loginProcedure.run({
+                          provider: providerId,
+                          redirectTo: '/account',
+                          returnTo: '/account',
+                          revalidate: 'true'
+                        });
+                      }
+                    }}
+                    disabled={isConnectingThis || !isEnabled}
+                  >
+                    {isConnectingThis ? <Spinner size="xs" /> : <Plus />}
+                    Connect
+                  </Button>
+                )}
               </div>
               {!isEnabled && (
                 <Alert variant="destructive">
@@ -185,58 +151,12 @@ export const SocialProviders = () => {
                 <IsMissingPermissions providerLabel={providerLabel} />
               )}
               {providerId === 'BLUESKY' && showBlueskyInput && (
-                <Form {...blueskyForm}>
-                  <form
-                    onSubmit={blueskyForm.handleSubmit(handleBlueskySubmit)}
-                    className="space-y-3 pt-2"
-                  >
-                    <FormField
-                      control={blueskyForm.control}
-                      name="blueskyHandle"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Bluesky Handle</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="username.bsky.social"
-                              autoFocus
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Enter your Bluesky handle (e.g.,
-                            username.bsky.social)
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <div className="flex gap-2">
-                      <Button
-                        type="submit"
-                        size="sm"
-                        disabled={loginProcedure.isLoading}
-                      >
-                        {loginProcedure.isLoading ? (
-                          <Spinner size="xs" />
-                        ) : (
-                          'Continue'
-                        )}
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          setShowBlueskyInput(false);
-                          blueskyForm.reset();
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
+                <BlueskyConnectForm
+                  returnTo="/account"
+                  redirectTo="/account"
+                  onConnect={() => setShowBlueskyInput(false)}
+                  onCancel={() => setShowBlueskyInput(false)}
+                />
               )}
             </div>
           );

@@ -98,7 +98,6 @@ export function PostBuilderSheet({
   const isSweepstakesLive = sweepstakes.status === 'RUNNING';
 
   const handleSubmitValid = (request: PostToTwitterRequestSchema) => {
-    console.log('Submitting request:', request);
     schedule.run({
       sweepstakesId: sweepstakes.id,
       type: AutomatedPostJobType.POST_TO_TWITTER,
@@ -109,7 +108,7 @@ export function PostBuilderSheet({
   const handleSubmitInvalid = (
     errors: FieldErrors<PostToTwitterRequestSchema>
   ) => {
-    console.log('Form submission errors:', errors);
+    console.warn('Form submission errors:', errors);
   };
 
   return (

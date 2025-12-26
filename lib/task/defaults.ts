@@ -234,6 +234,14 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['BLUESKY_CONNECT']: {
+      id: '',
+      type: 'BLUESKY_CONNECT',
+      title: 'Connect to Bluesky',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
     ['ASK_QUESTION']: {
       id: '',
       type: 'ASK_QUESTION',
