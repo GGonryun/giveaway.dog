@@ -136,123 +136,129 @@ export const applySweepstakesChanges = async ({
   // Therefore we need to fetch any data we need to retain before deleting and recreate
   // it. This works fine with smaller sets of data but we will need a more comprehensive
   // update method for massive giveaways with potentially hundreds of thousands of entries
-  await db.$transaction(async (tx) => {
-    const participants = await tx.sweepstakesParticipant.findMany({
-      where: {
-        sweepstakesId: sweepstakes.id
-      }
-    });
-
-    const completions = await tx.taskCompletion.findMany({
-      where: {
-        task: {
-          sweepstakesId: sweepstakes.id
-        }
-      }
-    });
-
-    const formValues = await tx.sweepstakesFormValue.findMany({
-      where: {
-        participant: {
-          sweepstakesId: sweepstakes.id
-        }
-      }
-    });
-
-    const jobs = await tx.sweepstakesJob.findMany({
-      where: {
-        sweepstakesId: sweepstakes.id
-      }
-    });
-
-    const posts = await tx.automatedPostJob.findMany({
-      where: {
-        sweepstakesId: sweepstakes.id
-      }
-    });
-
-    // delete existing sweepstakes and all nested properties
-
-    await tx.sweepstakes.delete({
-      where: { id: sweepstakes.id }
-    });
-
-    const created = await tx.sweepstakes.create({
-      data: toStorableSweepstakes(sweepstakes, input),
-      include: { tasks: true, audience: { include: { formFields: true } } }
-    });
-
-    // restore retained data - must restore participants before dependent records
-    await tx.sweepstakesParticipant.createMany({
-      data: participants.map((d) => ({ ...d }))
-    });
-
-    // we only want to retain the task completions for tasks that still exist
-    const taskIds = new Set(created.tasks?.map((t) => t.id));
-    const filtered = completions.filter((c) => taskIds.has(c.taskId));
-
-    await tx.taskCompletion.createMany({
-      data: filtered.map((d) => ({ ...d, proof: d.proof ?? undefined }))
-    });
-
-    // we only want to retain form values for fields that still exist
-    const formFieldIds = new Set(
-      created.audience?.formFields?.map((f) => f.id) ?? []
-    );
-    const filteredFormValues = formValues.filter((v) =>
-      formFieldIds.has(v.fieldId)
-    );
-
-    if (filteredFormValues.length > 0) {
-      await tx.sweepstakesFormValue.createMany({
-        data: filteredFormValues.map((d) => ({ ...d }))
-      });
-    }
-
-    if (jobs.length > 0) {
-      await tx.sweepstakesJob.createMany({
-        data: jobs.map((d) => ({
-          ...d,
-          data: d.data ?? undefined,
-          error: d.error ?? undefined
-        }))
-      });
-    }
-
-    if (posts.length > 0) {
-      await tx.automatedPostJob.createMany({
-        data: posts.map((d) => ({
-          ...d,
-          request: d.request ?? undefined,
-          response: d.response ?? undefined
-        }))
-      });
-    }
-
-    if (
-      input.timing?.startDate &&
-      input.status === SweepstakesStatus.ACTIVE &&
-      input.visibility?.visibility !== 'PRIVATE'
-    ) {
-      await tx.sweepstakesJob.upsert({
+  await db.$transaction(
+    async (tx) => {
+      const participants = await tx.sweepstakesParticipant.findMany({
         where: {
-          sweepstakesId_type: {
-            sweepstakesId: sweepstakes.id,
-            type: SweepstakesJobType.NOTIFY_PUBLISH_ON_DISCORD
-          }
-        },
-        update: {
-          runAt: input.timing.startDate
-        },
-        create: {
-          sweepstakesId: sweepstakes.id,
-          type: SweepstakesJobType.NOTIFY_PUBLISH_ON_DISCORD,
-          status: SweepstakesJobStatus.PENDING,
-          runAt: input.timing.startDate
+          sweepstakesId: sweepstakes.id
         }
       });
+
+      const completions = await tx.taskCompletion.findMany({
+        where: {
+          task: {
+            sweepstakesId: sweepstakes.id
+          }
+        }
+      });
+
+      const formValues = await tx.sweepstakesFormValue.findMany({
+        where: {
+          participant: {
+            sweepstakesId: sweepstakes.id
+          }
+        }
+      });
+
+      const jobs = await tx.sweepstakesJob.findMany({
+        where: {
+          sweepstakesId: sweepstakes.id
+        }
+      });
+
+      const posts = await tx.automatedPostJob.findMany({
+        where: {
+          sweepstakesId: sweepstakes.id
+        }
+      });
+
+      // delete existing sweepstakes and all nested properties
+
+      await tx.sweepstakes.delete({
+        where: { id: sweepstakes.id }
+      });
+
+      const created = await tx.sweepstakes.create({
+        data: toStorableSweepstakes(sweepstakes, input),
+        include: { tasks: true, audience: { include: { formFields: true } } }
+      });
+
+      // restore retained data - must restore participants before dependent records
+      await tx.sweepstakesParticipant.createMany({
+        data: participants.map((d) => ({ ...d }))
+      });
+
+      // we only want to retain the task completions for tasks that still exist
+      const taskIds = new Set(created.tasks?.map((t) => t.id));
+      const filtered = completions.filter((c) => taskIds.has(c.taskId));
+
+      await tx.taskCompletion.createMany({
+        data: filtered.map((d) => ({ ...d, proof: d.proof ?? undefined }))
+      });
+
+      // we only want to retain form values for fields that still exist
+      const formFieldIds = new Set(
+        created.audience?.formFields?.map((f) => f.id) ?? []
+      );
+      const filteredFormValues = formValues.filter((v) =>
+        formFieldIds.has(v.fieldId)
+      );
+
+      if (filteredFormValues.length > 0) {
+        await tx.sweepstakesFormValue.createMany({
+          data: filteredFormValues.map((d) => ({ ...d }))
+        });
+      }
+
+      if (jobs.length > 0) {
+        await tx.sweepstakesJob.createMany({
+          data: jobs.map((d) => ({
+            ...d,
+            data: d.data ?? undefined,
+            error: d.error ?? undefined
+          }))
+        });
+      }
+
+      if (posts.length > 0) {
+        await tx.automatedPostJob.createMany({
+          data: posts.map((d) => ({
+            ...d,
+            request: d.request ?? undefined,
+            response: d.response ?? undefined
+          }))
+        });
+      }
+
+      if (
+        input.timing?.startDate &&
+        input.status === SweepstakesStatus.ACTIVE &&
+        input.visibility?.visibility !== 'PRIVATE'
+      ) {
+        await tx.sweepstakesJob.upsert({
+          where: {
+            sweepstakesId_type: {
+              sweepstakesId: sweepstakes.id,
+              type: SweepstakesJobType.NOTIFY_PUBLISH_ON_DISCORD
+            }
+          },
+          update: {
+            runAt: input.timing.startDate
+          },
+          create: {
+            sweepstakesId: sweepstakes.id,
+            type: SweepstakesJobType.NOTIFY_PUBLISH_ON_DISCORD,
+            status: SweepstakesJobStatus.PENDING,
+            runAt: input.timing.startDate
+          }
+        });
+      }
+    },
+    {
+      maxWait: 30000,
+      timeout: 30000
     }
-  });
+  );
 
   return { sweepstakes, team };
 };
