@@ -50,7 +50,7 @@ export async function importTwitterUsers(
         include: { user: true }
       });
 
-      if (existingAccount) {
+      if (existingAccount?.userId) {
         existing.push({
           userId: existingAccount.userId,
           twitterUsername: twitterUser.username,

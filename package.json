@@ -23,7 +23,6 @@
     "prisma:generate:local": "dotenv -e .env.local -- npx prisma generate",
     "prisma:reset:local": "dotenv -e .env.local -- npx prisma migrate reset",
     "prisma:seed:local": "dotenv -e .env.local -- tsx prisma/seed.ts",
-    "prisma:import:local": "dotenv -e .env.local -- tsx prisma/import.ts",
     "prisma:studio:production": "dotenv -e .env.prod -- npx prisma studio",
     "prisma:migrate:production": "dotenv -e .env.prod -- npx prisma migrate deploy",
     "prisma:push:production": "dotenv -e .env.prod -- npx prisma db push",
