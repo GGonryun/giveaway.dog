@@ -82,6 +82,7 @@ export const getTaskLock = (args: {
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':
     case 'BLUESKY_CONNECT':
+    case 'BLUESKY_FOLLOW':
       return null;
     default:
       throw assertNever(task);

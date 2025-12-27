@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import { toDefaultValues } from '@/lib/task/defaults';
 import { datetime } from '@/lib/date';
 import {
+  BLUESKY_PROFILE_URL,
   DEFAULT_ALLOWED_IDENTITIES,
   DISCORD_INVITE_LINK,
   DISCORD_PUBLIC_CHANNEL_URL,
@@ -46,6 +47,11 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       ...toDefaultValues('TWITCH_FOLLOW'),
       channel: TWITCH_CHANNEL_URL,
       id: '50ee'
+    },
+    {
+      ...toDefaultValues('BLUESKY_FOLLOW'),
+      profileUrl: BLUESKY_PROFILE_URL,
+      id: '6d7f'
     },
     {
       ...toDefaultValues('TWITTER_FOLLOW'),

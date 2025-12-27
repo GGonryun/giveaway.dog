@@ -52,3 +52,5 @@ export const INSTAGRAM_PROFILE_URL =
 export const FACEBOOK_POST_URL =
   'https://www.facebook.com/permalink.php?story_fbid=122099278905154876&id=61584646297782&ref=embed_post';
 export const TIKTOK_PROFILE_URL = 'https://www.tiktok.com/@giveawaydog';
+export const BLUESKY_PROFILE_URL =
+  'https://bsky.app/profile/giveawaydog.bsky.social';

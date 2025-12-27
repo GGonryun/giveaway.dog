@@ -71,36 +71,62 @@ export async function getBlueskyClient() {
       }
     },
 
-    // Use State model for temporary Bluesky session storage during OAuth flow
-    // Session data will be moved to Account.session_state after user is created
+    // Use Account table to store Bluesky sessions
+    // Sessions are stored in the session_state field of the Account model
     sessionStore: {
       async set(sub: string, session: unknown) {
-        const id = `bluesky-session:${sub}`;
-        const expiresAt = new Date(Date.now() + 3600000); // 1 hour
-
-        await prisma.state.upsert({
-          where: { id },
+        // sub is the DID (providerAccountId)
+        // Create account if it doesn't exist, or update existing account
+        // The callback route will later update this with the correct userId
+        await prisma.account.upsert({
+          where: {
+            provider_providerAccountId: {
+              provider: 'bluesky',
+              providerAccountId: sub
+            }
+          },
           create: {
-            id,
-            value: session as any,
-            expiresAt
+            provider: 'bluesky',
+            type: 'oauth',
+            providerAccountId: sub,
+            session_state: JSON.stringify(session)
+            // userId will be set by the callback route
           },
           update: {
-            value: session as any,
-            expiresAt
+            session_state: JSON.stringify(session)
           }
         });
       },
       async get(sub: string) {
-        const record = await prisma.state.findUnique({
-          where: { id: `bluesky-session:${sub}` }
+        // sub is the DID (providerAccountId)
+        const account = await prisma.account.findFirst({
+          where: {
+            provider: 'bluesky',
+            providerAccountId: sub
+          }
         });
-        if (!record || record.expiresAt < new Date()) return undefined;
-        return record.value as any;
+
+        if (!account?.session_state) return undefined;
+
+        try {
+          return JSON.parse(account.session_state);
+        } catch (error) {
+          console.error('Failed to parse session_state:', error);
+          return undefined;
+        }
       },
       async del(sub: string) {
-        await prisma.state
-          .delete({ where: { id: `bluesky-session:${sub}` } })
+        // sub is the DID (providerAccountId)
+        await prisma.account
+          .updateMany({
+            where: {
+              provider: 'bluesky',
+              providerAccountId: sub
+            },
+            data: {
+              session_state: null
+            }
+          })
           .catch(() => {});
       }
     }

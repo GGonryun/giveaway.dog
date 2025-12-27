@@ -17,7 +17,7 @@ export const tryAutoMerge = async (args: {
   // If the existing account's user source is not from a Twitter import, do
   // not merge. Otherwise the twitter import account merge would have matching
   // provider/providerAccountId and we want to complete a full upgrade
-  if (existing.user.source !== 'TWITTER_IMPORT') {
+  if (existing.user?.source !== 'TWITTER_IMPORT') {
     if (
       existing.provider === account.provider &&
       existing.providerAccountId === account.providerAccountId
@@ -42,7 +42,7 @@ export const tryAutoMerge = async (args: {
     }
     console.info(
       'Not merging, existing account user source is:',
-      existing.user.source
+      existing.user?.source
     );
     return false;
   }
@@ -73,7 +73,7 @@ export const tryAutoMerge = async (args: {
 
       await tx.user.update({
         where: {
-          id: existing.user.id
+          id: existing.user?.id
         },
         data: {
           source: 'SIGNUP'
@@ -131,7 +131,7 @@ export const tryAutoMerge = async (args: {
       // Delete old user's participations that would conflict
       await tx.sweepstakesParticipant.deleteMany({
         where: {
-          userId: existing.user.id,
+          userId: existing.user?.id,
           sweepstakesId: {
             in: conflictingIds
           }
@@ -141,7 +141,7 @@ export const tryAutoMerge = async (args: {
       // Update remaining participations to current user
       await tx.sweepstakesParticipant.updateMany({
         where: {
-          userId: existing.user.id
+          userId: existing.user?.id
         },
         data: {
           userId: currentUserId
@@ -150,7 +150,7 @@ export const tryAutoMerge = async (args: {
       // delete the old user
       await tx.user.delete({
         where: {
-          id: existing.user.id
+          id: existing.user?.id
         }
       });
     });

@@ -168,7 +168,7 @@ model UserFingerprint {
 }
 
 model Account {
-  userId            String
+  userId            String?
   type              String
   provider          String
   providerAccountId String
@@ -185,7 +185,7 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
@@ -657,6 +657,7 @@ enum TaskType {
   TIKTOK_LIKE
   SECRET_CODE
   BLUESKY_CONNECT
+  BLUESKY_FOLLOW
 }
 
 model TaskCompletion {

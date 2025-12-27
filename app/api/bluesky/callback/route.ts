@@ -1,11 +1,12 @@
 import { NextRequest } from 'next/server';
-import { getBlueskyClient } from '@/lib/auth/bluesky-client';
+import { getBlueskyClient } from '@/lib/bluesky/bluesky-client';
 import prisma from '@/lib/prisma';
 import { createId } from '@paralleldrive/cuid2';
 import { Agent } from '@atproto/api';
 import { REQUIRED_BLUESKY_SCOPES } from '@/lib/integrations/scopes';
 import { getUserAuthRedirect } from '@/lib/redirect';
-import { auth } from '@/lib/auth/config';
+import { auth, signIn } from '@/lib/auth/config';
+import { redirect } from 'next/navigation';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -57,8 +58,8 @@ export async function GET(req: NextRequest) {
   let userId: string;
   let shouldSignIn = true;
 
-  if (existingAccount) {
-    // Account exists and is linked to a user
+  if (existingAccount?.userId) {
+    // Account exists and is already linked to a user
     // If user is trying to link but the account belongs to someone else, throw error
     if (
       currentSession?.user?.id &&
@@ -74,12 +75,12 @@ export async function GET(req: NextRequest) {
         }
       );
 
-      const { redirect } = await import('next/navigation');
       const errorUrl = new URL(redirectTo || '/account', req.url);
       errorUrl.searchParams.set('error', 'OAuthAccountAlreadyLinked');
       redirect(errorUrl.toString());
     }
 
+    // Reconnecting existing account
     userId = existingAccount.userId;
 
     console.info('Bluesky account reconnected - updating existing account', {
@@ -88,7 +89,8 @@ export async function GET(req: NextRequest) {
       did: session.did
     });
 
-    // Update the account with fresh session data
+    // Update the account with fresh profile data
+    // Note: session_state was already saved by sessionStore during callback
     await prisma.account.update({
       where: {
         provider_providerAccountId: {
@@ -100,12 +102,12 @@ export async function GET(req: NextRequest) {
         label: handle,
         link: `https://bsky.app/profile/${handle}`,
         scope: REQUIRED_BLUESKY_SCOPES.join(' '),
-        session_state: JSON.stringify(session),
         updatedAt: new Date()
       }
     });
   } else if (currentSession?.user?.id) {
-    // User is already logged in - link this Bluesky account to their existing account
+    // Account exists (created by sessionStore) but has no userId
+    // User is logged in, so link the account to their existing user
     userId = currentSession.user.id;
     shouldSignIn = false;
 
@@ -115,41 +117,52 @@ export async function GET(req: NextRequest) {
       did: session.did
     });
 
-    await prisma.account.create({
+    // Update the account that was created by sessionStore.upsert with the actual userId
+    // Note: session_state was already saved by sessionStore during callback
+    await prisma.account.update({
+      where: {
+        provider_providerAccountId: {
+          provider: 'bluesky',
+          providerAccountId: session.did
+        }
+      },
       data: {
         userId,
-        type: 'oauth',
-        provider: 'bluesky',
-        providerAccountId: session.did,
         label: handle,
         link: `https://bsky.app/profile/${handle}`,
-        scope: REQUIRED_BLUESKY_SCOPES.join(' '),
-        session_state: JSON.stringify(session)
+        scope: REQUIRED_BLUESKY_SCOPES.join(' ')
       }
     });
   } else {
-    // Create new user and account
+    // Account exists (created by sessionStore) but has no userId
+    // No current session, so create a new user and link the account
     const newUser = await prisma.user.create({
       data: {
         id: createId(),
         name: displayName,
         username: handle,
         image: avatar,
-        source: 'SIGNUP',
-        accounts: {
-          create: {
-            type: 'oauth',
-            provider: 'bluesky',
-            providerAccountId: session.did,
-            label: handle,
-            link: `https://bsky.app/profile/${handle}`,
-            scope: REQUIRED_BLUESKY_SCOPES.join(' '),
-            session_state: JSON.stringify(session)
-          }
-        }
+        source: 'SIGNUP'
       }
     });
     userId = newUser.id;
+
+    // Update the account that was created by sessionStore.upsert with the actual userId
+    // Note: session_state was already saved by sessionStore during callback
+    await prisma.account.update({
+      where: {
+        provider_providerAccountId: {
+          provider: 'bluesky',
+          providerAccountId: session.did
+        }
+      },
+      data: {
+        userId,
+        label: handle,
+        link: `https://bsky.app/profile/${handle}`,
+        scope: REQUIRED_BLUESKY_SCOPES.join(' ')
+      }
+    });
 
     console.info('New Bluesky user created', {
       userId,
@@ -162,7 +175,6 @@ export async function GET(req: NextRequest) {
   if (shouldSignIn) {
     // Use NextAuth's signIn to create a proper session for new users or existing account reconnect
     // This will throw NEXT_REDIRECT which Next.js handles automatically
-    const { signIn } = await import('@/lib/auth/config');
 
     const finalRedirect = getUserAuthRedirect({ redirectTo });
 
@@ -179,7 +191,6 @@ export async function GET(req: NextRequest) {
     });
   } else {
     // Account was linked to existing session - redirect back to the page they came from
-    const { redirect } = await import('next/navigation');
     const finalRedirect = redirectTo || '/account';
 
     console.info('Bluesky account linking complete - redirecting', {

@@ -1,8 +1,11 @@
+'use server';
+
 import { IdentityProvider, PrismaClient } from '@prisma/client';
-import { BlueskyConnectTaskSchema } from '../schemas';
+import { BlueskyConnectTaskSchema, BlueskyFollowTaskSchema } from '../schemas';
 import { ValidateTaskInput } from './integrations';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@/lib/integrations/schemas/providers';
 import { ApplicationError } from '@/lib/errors';
+import { isUserFollowingTarget } from '@/lib/bluesky/is-user-following-target';
 
 export const checkBlueskyConnect = async (
   db: PrismaClient,
@@ -27,3 +30,29 @@ export const checkBlueskyConnect = async (
     });
   }
 };
+
+export async function checkBlueskyFollow(
+  db: PrismaClient,
+  args: {
+    task: BlueskyFollowTaskSchema;
+    userId: string;
+  }
+) {
+  const { task, userId } = args;
+  const { profileUrl } = task;
+
+  // Extract handle from URL or use directly
+  const targetHandle = profileUrl.includes('bsky.app/profile/')
+    ? profileUrl.split('bsky.app/profile/')[1].replace(/\/$/, '')
+    : profileUrl;
+
+  // Check if the authenticated user follows the target using the agent
+  const isFollowing = await isUserFollowingTarget(db, { userId, targetHandle });
+
+  if (!isFollowing) {
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message: `User is not following ${targetHandle} on Bluesky`
+    });
+  }
+}

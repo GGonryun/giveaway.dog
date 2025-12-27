@@ -47,9 +47,14 @@ export const mockUserProfile: UserSchema = {
   providers: [
     {
       type: IdentityProvider.TWITTER,
-      label: 'Preview User',
+      label: 'preview_user',
       link: 'https://x.com/thegiveawaydog',
       scopes: PROVIDER_REQUIRED_SCOPES.TWITTER
+    },
+    {
+      type: IdentityProvider.BLUESKY,
+      label: 'giveawaydog.bsky.social',
+      scopes: PROVIDER_REQUIRED_SCOPES.BLUESKY
     },
     {
       type: IdentityProvider.GOOGLE,

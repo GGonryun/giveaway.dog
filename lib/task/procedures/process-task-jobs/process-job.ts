@@ -86,6 +86,7 @@ export const processTaskJob = async (
       case 'ASK_QUESTION':
       case 'SINGLE_CHOICE':
       case 'BLUESKY_CONNECT':
+      case 'BLUESKY_FOLLOW':
       case 'MULTIPLE_CHOICE':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',

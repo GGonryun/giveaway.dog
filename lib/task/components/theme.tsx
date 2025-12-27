@@ -169,9 +169,10 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         icon: SocialTikTokIcon
       };
     case 'BLUESKY_CONNECT':
+    case 'BLUESKY_FOLLOW':
       return {
         action:
-          'bg-bluesky-1 text-white group-hover:bg-bluesky-1 hover:bg-bluesky-1 dark:bg-bluesky-1 dark:hover:bg-bluesky-1',
+          'bg-bluesky-1 text-white group-hover:bg-bluesky-1 group-hover:text-white hover:bg-bluesky-1  hover:text-white dark:bg-bluesky-1 dark:hover:text-white dark:hover:bg-bluesky-1',
         symbol: 'bg-white text-bluesky-1',
         arrow: 'bg-bluesky-1 text-white fill-bluesky-1',
         icon: SocialBlueskyIcon

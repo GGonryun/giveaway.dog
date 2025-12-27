@@ -30,12 +30,14 @@ import { SingleChoiceFormFields } from './lib/single-choice';
 import { MultipleChoiceFormFields } from './lib/multiple-choice';
 import { Typography } from '@/components/ui/typography';
 import { AlertCircle } from 'lucide-react';
+import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
       case 'TWITTER_CONNECT':
       case 'BLUESKY_CONNECT':
+
       case 'BONUS_TASK':
         return <></>;
       case 'BONUS_COMPLETE_PROFILE':
@@ -168,6 +170,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return (
           <>
             <TikTokPostUrl />
+          </>
+        );
+      case 'BLUESKY_FOLLOW':
+        return (
+          <>
+            <BlueskyProfileUrlField />
           </>
         );
       case 'ASK_QUESTION':

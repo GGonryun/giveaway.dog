@@ -15,7 +15,7 @@ import { checkVisitUrl } from './visit-url';
 import { checkAskQuestion } from './ask-question';
 import { checkSingleChoice } from './single-choice';
 import { checkMultipleChoice } from './multiple-choice';
-import { checkBlueskyConnect } from './bluesky';
+import { checkBlueskyConnect, checkBlueskyFollow } from './bluesky';
 
 export type ValidateTaskInput<T extends TaskSchema> = {
   task: T;
@@ -61,6 +61,12 @@ export const validateTask = async <T extends TaskSchema>(
         ...input,
         task: input.task
       });
+    case 'BLUESKY_FOLLOW': {
+      return await checkBlueskyFollow(db, {
+        ...input,
+        task: input.task
+      });
+    }
     case 'BONUS_LIMITED':
       return await checkBonusLimited(db, { task: input.task });
     case 'BONUS_TIMED':

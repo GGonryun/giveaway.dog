@@ -53,6 +53,7 @@ export const EntryMethodBadge: React.FC<{
     case 'TIKTOK_LIKE':
     case 'SECRET_CODE':
     case 'BLUESKY_CONNECT':
+    case 'BLUESKY_FOLLOW':
       return TASK_HAS_AUTOMATIC_VALIDATION[type] ? (
         <Badge variant="success">
           <ShieldCheck /> <span className="hidden sm:inline">Verified</span>

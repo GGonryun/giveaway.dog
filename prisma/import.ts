@@ -57,7 +57,7 @@ async function main() {
 
   if (existingAccount) {
     console.debug(
-      `✅ Twitter account already exists for user: ${existingAccount.user.name} (${existingAccount.userId})`
+      `✅ Twitter account already exists for user: ${existingAccount.user?.name} (${existingAccount.userId})`
     );
     userId = existingAccount.userId;
   } else {

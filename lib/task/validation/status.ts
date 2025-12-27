@@ -28,6 +28,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'TIKTOK_FOLLOW':
     case 'TIKTOK_LIKE':
     case 'BLUESKY_CONNECT':
+    case 'BLUESKY_FOLLOW':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':

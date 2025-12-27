@@ -11,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { TaskType } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
+import { BlueskyProfileUrlField } from './additional-settings/lib/bluesky-profile-url';
 
 export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   switch (type) {
@@ -49,12 +50,14 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':
+    case 'BLUESKY_FOLLOW':
       return (
         <BaseSettingsContainer>
           <TitleField />
           <ValueField />
         </BaseSettingsContainer>
       );
+
     default:
       throw assertNever(type);
   }

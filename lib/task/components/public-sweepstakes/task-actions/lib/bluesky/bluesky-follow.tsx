@@ -1,18 +1,23 @@
 import { TaskActionProps } from '../../building-blocks';
-import Link from 'next/link';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { UserPlus } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { BlueskyFollowTaskSchema } from '@/lib/task/schemas';
 import { WithProviderConnection } from '../provider-connection';
-import { TwitterFollowTaskSchema } from '@/lib/task/schemas';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useState } from 'react';
+import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
+import Link from 'next/link';
 
-export const TwitterFollowTaskActionForm: React.FC<
-  TaskActionProps<TwitterFollowTaskSchema>
-> = ({ onCancel, onSubmit, task, submission, isLoading }) => {
+export const BlueskyFollowTaskActionForm: React.FC<
+  TaskActionProps<BlueskyFollowTaskSchema>
+> = ({ onCancel, onSubmit, submission, task, isLoading }) => {
   const [performedAction, setPerformedAction] = useState(false);
-  const screenName = task.username.replace(/^https?:\/\/(www\.)?x\.com\//, '');
+  const profileUrl = task.profileUrl.startsWith('http')
+    ? task.profileUrl
+    : `https://bsky.app/profile/${task.profileUrl}`;
+
+  const username = task.profileUrl.startsWith('http')
+    ? task.profileUrl.split('/').pop()
+    : task.profileUrl;
 
   return (
     <WithProviderConnection
@@ -23,22 +28,27 @@ export const TwitterFollowTaskActionForm: React.FC<
       onSubmit={onSubmit}
       isLoading={isLoading}
       render={({ theme }) => (
-        <div className="space-y-4">
+        <div>
           {performedAction ? (
             <p className="text-sm text-foreground mt-2">
               Thank you for following!
             </p>
           ) : (
             <div>
-              <div className="mt-2">
-                <Button type="button" asChild className={cn(theme.action)}>
+              <div>
+                <Button
+                  className={cn(theme.action)}
+                  type="button"
+                  variant="outline"
+                  asChild
+                >
                   <Link
-                    href={`https://x.com/intent/follow?screen_name=${screenName}`}
+                    href={profileUrl}
                     target="_blank"
                     onClick={() => setPerformedAction(true)}
                   >
-                    <SocialXIcon />
-                    Follow @{screenName}
+                    <SocialBlueskyIcon />
+                    Follow @{username}
                   </Link>
                 </Button>
               </div>
