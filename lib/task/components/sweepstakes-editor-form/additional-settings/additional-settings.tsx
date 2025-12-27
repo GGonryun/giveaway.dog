@@ -31,6 +31,7 @@ import { MultipleChoiceFormFields } from './lib/multiple-choice';
 import { Typography } from '@/components/ui/typography';
 import { AlertCircle } from 'lucide-react';
 import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
+import { BlueskyPostUrlField } from './lib/bluesky-post-url';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -176,6 +177,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return (
           <>
             <BlueskyProfileUrlField />
+          </>
+        );
+      case 'BLUESKY_LIKE':
+        return (
+          <>
+            <BlueskyPostUrlField />
           </>
         );
       case 'ASK_QUESTION':

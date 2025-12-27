@@ -15,7 +15,11 @@ import { checkVisitUrl } from './visit-url';
 import { checkAskQuestion } from './ask-question';
 import { checkSingleChoice } from './single-choice';
 import { checkMultipleChoice } from './multiple-choice';
-import { checkBlueskyConnect, checkBlueskyFollow } from './bluesky';
+import {
+  checkBlueskyConnect,
+  checkBlueskyFollow,
+  checkBlueskyLike
+} from './bluesky';
 
 export type ValidateTaskInput<T extends TaskSchema> = {
   task: T;
@@ -63,6 +67,12 @@ export const validateTask = async <T extends TaskSchema>(
       });
     case 'BLUESKY_FOLLOW': {
       return await checkBlueskyFollow(db, {
+        ...input,
+        task: input.task
+      });
+    }
+    case 'BLUESKY_LIKE': {
+      return await checkBlueskyLike(db, {
         ...input,
         task: input.task
       });

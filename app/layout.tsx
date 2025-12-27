@@ -9,6 +9,7 @@ import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Figtree } from 'next/font/google';
 import { UserMetricsCollector } from '@/components/user-metrics-collector';
 import { environment } from '@/lib/environment';
+import { BLUESKY_EMBED_SCRIPT_URL } from '@/lib/bluesky/embed';
 
 const figtree = Figtree({
   subsets: ['latin'],
@@ -55,6 +56,7 @@ export default async function RootLayout({
     <html lang="en" className={`${figtree.variable}`} suppressHydrationWarning>
       <head>
         <script async src="https://platform.twitter.com/widgets.js"></script>
+        <script async src={BLUESKY_EMBED_SCRIPT_URL}></script>
         <script
           async
           defer

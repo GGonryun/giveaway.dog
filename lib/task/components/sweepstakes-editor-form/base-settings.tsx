@@ -51,6 +51,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':
     case 'BLUESKY_FOLLOW':
+    case 'BLUESKY_LIKE':
       return (
         <BaseSettingsContainer>
           <TitleField />

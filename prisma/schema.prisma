@@ -658,6 +658,7 @@ enum TaskType {
   SECRET_CODE
   BLUESKY_CONNECT
   BLUESKY_FOLLOW
+  BLUESKY_LIKE
 }
 
 model TaskCompletion {

@@ -151,6 +151,7 @@ export const TaskBadge: React.FC<TaskBadgeProps> = ({
     case 'MULTIPLE_CHOICE':
     case 'BLUESKY_CONNECT':
     case 'BLUESKY_FOLLOW':
+    case 'BLUESKY_LIKE':
       return null;
     default:
       throw assertNever(task);

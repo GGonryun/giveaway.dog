@@ -20,6 +20,7 @@ import { BonusLoyaltyActionForm } from './lib/website/bonus-loyalty';
 import { InstagramVisitTaskActionForm } from './lib/instagram/visit';
 import { BlueskyConnectTaskActionForm } from './lib/bluesky/bluesky-connect';
 import { BlueskyFollowTaskActionForm } from './lib/bluesky/bluesky-follow';
+import { BlueskyLikeTaskActionForm } from './lib/bluesky/bluesky-like';
 import { InstagramLikeTaskActionForm } from './lib/instagram/like';
 import { InstagramCommentTaskActionForm } from './lib/instagram/comment';
 import { FacebookVisitPageTaskActionForm } from './lib/facebook/visit-page';
@@ -94,6 +95,8 @@ export const TaskActionForm: React.FC<
       return <BlueskyConnectTaskActionForm {...props} task={props.task} />;
     case 'BLUESKY_FOLLOW':
       return <BlueskyFollowTaskActionForm {...props} task={props.task} />;
+    case 'BLUESKY_LIKE':
+      return <BlueskyLikeTaskActionForm {...props} task={props.task} />;
     default:
       throw assertNever(props.task);
   }

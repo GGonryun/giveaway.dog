@@ -65,6 +65,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'INSTAGRAM_COMMENT':
       case 'BLUESKY_CONNECT':
       case 'BLUESKY_FOLLOW':
+      case 'BLUESKY_LIKE':
       case 'ASK_QUESTION':
       case 'SINGLE_CHOICE':
       case 'MULTIPLE_CHOICE':

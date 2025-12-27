@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
 
     return response;
   } catch (error) {
-    // console.error('Bluesky authorization failed:', error);
+    console.error('Bluesky authorization failed:', error);
     const url = new URL(
       returnTo,
       process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXTAUTH_URL

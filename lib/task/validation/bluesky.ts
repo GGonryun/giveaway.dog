@@ -1,11 +1,16 @@
 'use server';
 
 import { IdentityProvider, PrismaClient } from '@prisma/client';
-import { BlueskyConnectTaskSchema, BlueskyFollowTaskSchema } from '../schemas';
+import {
+  BlueskyConnectTaskSchema,
+  BlueskyFollowTaskSchema,
+  BlueskyLikeTaskSchema
+} from '../schemas';
 import { ValidateTaskInput } from './integrations';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@/lib/integrations/schemas/providers';
 import { ApplicationError } from '@/lib/errors';
 import { isUserFollowingTarget } from '@/lib/bluesky/is-user-following-target';
+import { isUserLikingPost } from '@/lib/bluesky/is-user-liking-post';
 
 export const checkBlueskyConnect = async (
   db: PrismaClient,
@@ -53,6 +58,23 @@ export async function checkBlueskyFollow(
     throw new ApplicationError({
       code: 'VALIDATION_ERROR',
       message: `User is not following ${targetHandle} on Bluesky`
+    });
+  }
+}
+
+export async function checkBlueskyLike(
+  db: PrismaClient,
+  { task, userId }: ValidateTaskInput<BlueskyLikeTaskSchema>
+): Promise<void> {
+  const hasLiked = await isUserLikingPost(db, {
+    userId,
+    postUrl: task.postUrl
+  });
+
+  if (!hasLiked) {
+    throw new ApplicationError({
+      code: 'FORBIDDEN',
+      message: 'You have not liked this Bluesky post yet'
     });
   }
 }

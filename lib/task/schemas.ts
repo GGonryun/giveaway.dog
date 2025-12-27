@@ -14,6 +14,10 @@ import {
   providerTypeSchema,
   PROVIDER_REQUIRED_SCOPES
 } from '../integrations/schemas/providers';
+import {
+  blueskyPostRefineError,
+  blueskyPostRefineUrl
+} from '../integrations/schemas/bluesky-helpers';
 
 export const baseTaskSchema = z.object({
   id: z.string(),
@@ -427,6 +431,18 @@ export const blueskyFollowTaskSchema = baseTaskSchema.extend({
 
 export type BlueskyFollowTaskSchema = z.infer<typeof blueskyFollowTaskSchema>;
 
+export const blueskyLikeTaskSchema = baseTaskSchema.extend({
+  type: z.literal('BLUESKY_LIKE'),
+  postUrl: z
+    .string()
+    .url('Bluesky Post URL is required')
+    .refine((val) => {
+      return blueskyPostRefineUrl(val);
+    }, blueskyPostRefineError)
+});
+
+export type BlueskyLikeTaskSchema = z.infer<typeof blueskyLikeTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -457,7 +473,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   tiktokFollowTaskSchema,
   tiktokLikeTaskSchema,
   blueskyConnectTaskSchema,
-  blueskyFollowTaskSchema
+  blueskyFollowTaskSchema,
+  blueskyLikeTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -492,7 +509,8 @@ export const TASK_LABEL: Record<TaskType, string> = {
   TIKTOK_FOLLOW: 'Follow on TikTok',
   TIKTOK_LIKE: 'Like TikTok Post',
   BLUESKY_CONNECT: 'Connect Bluesky',
-  BLUESKY_FOLLOW: 'Follow on Bluesky'
+  BLUESKY_FOLLOW: 'Follow on Bluesky',
+  BLUESKY_LIKE: 'Like a post on Bluesky'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -537,7 +555,8 @@ export const TASK_INPUT_SCHEMA = {
     choices: z.array(z.string()).min(1, 'Please select at least one option')
   }),
   BLUESKY_CONNECT: z.object({}),
-  BLUESKY_FOLLOW: z.object({})
+  BLUESKY_FOLLOW: z.object({}),
+  BLUESKY_LIKE: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export const TASK_JOB_DATA_SCHEMA = {
@@ -576,7 +595,8 @@ export const TASK_JOB_DATA_SCHEMA = {
   SINGLE_CHOICE: z.object({}),
   MULTIPLE_CHOICE: z.object({}),
   BLUESKY_CONNECT: z.object({}),
-  BLUESKY_FOLLOW: z.object({})
+  BLUESKY_FOLLOW: z.object({}),
+  BLUESKY_LIKE: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export type TaskInput<T extends TaskSchema> = T extends { type: infer U }
@@ -626,7 +646,8 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   SINGLE_CHOICE: 'QUESTION',
   MULTIPLE_CHOICE: 'QUESTION',
   BLUESKY_CONNECT: 'BLUESKY',
-  BLUESKY_FOLLOW: 'BLUESKY'
+  BLUESKY_FOLLOW: 'BLUESKY',
+  BLUESKY_LIKE: 'BLUESKY'
 };
 
 export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
@@ -659,7 +680,8 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   TIKTOK_FOLLOW: 'TIKTOK',
   TIKTOK_LIKE: 'TIKTOK',
   BLUESKY_CONNECT: 'BLUESKY',
-  BLUESKY_FOLLOW: 'BLUESKY'
+  BLUESKY_FOLLOW: 'BLUESKY',
+  BLUESKY_LIKE: 'BLUESKY'
 };
 
 export const TASK_REQUIRED_SCOPES: Record<TaskPlatformSchema, string[]> = {
@@ -722,7 +744,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   SINGLE_CHOICE: 'engagement',
   MULTIPLE_CHOICE: 'engagement',
   BLUESKY_CONNECT: 'social',
-  BLUESKY_FOLLOW: 'social'
+  BLUESKY_FOLLOW: 'social',
+  BLUESKY_LIKE: 'social'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',
@@ -760,7 +783,8 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   SINGLE_CHOICE: false,
   MULTIPLE_CHOICE: false,
   BLUESKY_CONNECT: false,
-  BLUESKY_FOLLOW: false
+  BLUESKY_FOLLOW: false,
+  BLUESKY_LIKE: false
 };
 
 export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
@@ -793,7 +817,8 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   SINGLE_CHOICE: true,
   MULTIPLE_CHOICE: true,
   BLUESKY_CONNECT: true,
-  BLUESKY_FOLLOW: true
+  BLUESKY_FOLLOW: true,
+  BLUESKY_LIKE: true
 };
 
 export const userEntriesSchema = z.object({
@@ -871,5 +896,6 @@ export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
   SINGLE_CHOICE: false,
   MULTIPLE_CHOICE: false,
   BLUESKY_CONNECT: true,
-  BLUESKY_FOLLOW: true
+  BLUESKY_FOLLOW: true,
+  BLUESKY_LIKE: true
 };

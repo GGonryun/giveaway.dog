@@ -54,6 +54,7 @@ export const EntryMethodBadge: React.FC<{
     case 'SECRET_CODE':
     case 'BLUESKY_CONNECT':
     case 'BLUESKY_FOLLOW':
+    case 'BLUESKY_LIKE':
       return TASK_HAS_AUTOMATIC_VALIDATION[type] ? (
         <Badge variant="success">
           <ShieldCheck /> <span className="hidden sm:inline">Verified</span>

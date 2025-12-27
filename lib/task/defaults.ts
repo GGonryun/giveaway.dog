@@ -251,6 +251,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['BLUESKY_LIKE']: {
+      id: '',
+      type: 'BLUESKY_LIKE',
+      title: 'Like our Bluesky post',
+      postUrl: '',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
     ['ASK_QUESTION']: {
       id: '',
       type: 'ASK_QUESTION',
