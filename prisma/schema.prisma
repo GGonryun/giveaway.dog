@@ -12,6 +12,7 @@ enum UserSource {
   SIGNUP
   ANONYMOUS
   TWITTER_IMPORT
+  BLUESKY_IMPORT
   MANUAL_IMPORT
   DISCORD_IMPORT
 }
@@ -197,6 +198,7 @@ enum IntegrationStatus {
 
 enum IntegrationProvider {
   TWITTER
+  BLUESKY
 }
 
 model Integration {
@@ -659,7 +661,9 @@ enum TaskType {
   BLUESKY_CONNECT
   BLUESKY_FOLLOW
   BLUESKY_LIKE
+  BLUESKY_LIKE_IMPORT
   BLUESKY_REPOST
+  BLUESKY_REPOST_IMPORT
 }
 
 model TaskCompletion {

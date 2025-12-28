@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "TaskType" ADD VALUE 'BLUESKY_LIKE_IMPORT';

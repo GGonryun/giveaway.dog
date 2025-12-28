@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "UserSource" ADD VALUE 'BLUESKY_IMPORT';
