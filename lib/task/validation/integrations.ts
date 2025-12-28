@@ -18,7 +18,8 @@ import { checkMultipleChoice } from './multiple-choice';
 import {
   checkBlueskyConnect,
   checkBlueskyFollow,
-  checkBlueskyLike
+  checkBlueskyLike,
+  checkBlueskyRepost
 } from './bluesky';
 
 export type ValidateTaskInput<T extends TaskSchema> = {
@@ -73,6 +74,12 @@ export const validateTask = async <T extends TaskSchema>(
     }
     case 'BLUESKY_LIKE': {
       return await checkBlueskyLike(db, {
+        ...input,
+        task: input.task
+      });
+    }
+    case 'BLUESKY_REPOST': {
+      return await checkBlueskyRepost(db, {
         ...input,
         task: input.task
       });

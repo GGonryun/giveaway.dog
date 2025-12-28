@@ -84,6 +84,7 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
     case 'BLUESKY_CONNECT':
     case 'BLUESKY_FOLLOW':
     case 'BLUESKY_LIKE':
+    case 'BLUESKY_REPOST':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':

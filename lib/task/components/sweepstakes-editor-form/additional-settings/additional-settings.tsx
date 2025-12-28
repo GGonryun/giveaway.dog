@@ -180,6 +180,7 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
           </>
         );
       case 'BLUESKY_LIKE':
+      case 'BLUESKY_REPOST':
         return (
           <>
             <BlueskyPostUrlField />

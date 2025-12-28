@@ -80,6 +80,7 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'BLUESKY_CONNECT':
     case 'BLUESKY_FOLLOW':
     case 'BLUESKY_LIKE':
+    case 'BLUESKY_REPOST':
       return Prisma.JsonNull;
     default:
       throw assertNever(task);

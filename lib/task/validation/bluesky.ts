@@ -4,13 +4,15 @@ import { IdentityProvider, PrismaClient } from '@prisma/client';
 import {
   BlueskyConnectTaskSchema,
   BlueskyFollowTaskSchema,
-  BlueskyLikeTaskSchema
+  BlueskyLikeTaskSchema,
+  BlueskyRepostTaskSchema
 } from '../schemas';
 import { ValidateTaskInput } from './integrations';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@/lib/integrations/schemas/providers';
 import { ApplicationError } from '@/lib/errors';
 import { isUserFollowingTarget } from '@/lib/bluesky/is-user-following-target';
 import { isUserLikingPost } from '@/lib/bluesky/is-user-liking-post';
+import { isUserRepostingPost } from '@/lib/bluesky/is-user-reposting-post';
 
 export const checkBlueskyConnect = async (
   db: PrismaClient,
@@ -75,6 +77,23 @@ export async function checkBlueskyLike(
     throw new ApplicationError({
       code: 'FORBIDDEN',
       message: 'You have not liked this Bluesky post yet'
+    });
+  }
+}
+
+export async function checkBlueskyRepost(
+  db: PrismaClient,
+  { task, userId }: ValidateTaskInput<BlueskyRepostTaskSchema>
+): Promise<void> {
+  const hasReposted = await isUserRepostingPost(db, {
+    userId,
+    postUrl: task.postUrl
+  });
+
+  if (!hasReposted) {
+    throw new ApplicationError({
+      code: 'FORBIDDEN',
+      message: 'You have not reposted this Bluesky post yet'
     });
   }
 }

@@ -659,6 +659,7 @@ enum TaskType {
   BLUESKY_CONNECT
   BLUESKY_FOLLOW
   BLUESKY_LIKE
+  BLUESKY_REPOST
 }
 
 model TaskCompletion {
