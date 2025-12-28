@@ -339,9 +339,9 @@ export const facebookVisitPageTaskSchema = baseTaskSchema.extend({
     .url('Facebook Page URL is required or missing https://')
     .refine((val) => {
       const urlPattern =
-        /^https?:\/\/(www\.)?facebook\.com\/(profile\.php\?id=\d+|people\/[A-Za-z0-9_.\-]+\/\d+|\d+|[A-Za-z0-9_.]+)(#|\/?)?$/;
+        /^https?:\/\/(www\.)?facebook\.com\/(profile\.php\?id=\d+|people\/[A-Za-z0-9_.\-]+\/\d+|share\/[A-Za-z0-9]+|\d+|[A-Za-z0-9_.]+)(\/)?(\?.*)?$/;
       return urlPattern.test(val);
-    }, 'Unexpected URL, should be like https://www.facebook.com/yourpagename or https://www.facebook.com/profile.php?id=PAGE_ID')
+    }, 'Unexpected URL, should be like https://www.facebook.com/yourpagename or https://www.facebook.com/profile.php?id=PAGE_ID or https://www.facebook.com/share/SHARE_ID')
 });
 
 export type FacebookVisitPageTaskSchema = z.infer<
