@@ -3,7 +3,7 @@ import { SecretCodeTaskSchema, TASK_INPUT_SCHEMA } from '../schemas';
 import { ApplicationError } from '@/lib/errors';
 import { ValidateTaskInput } from './integrations';
 
-const MAX_ATTEMPTS = 10;
+const MAX_ATTEMPTS = 25;
 
 export const checkSecretCode = async (
   db: PrismaClient,
