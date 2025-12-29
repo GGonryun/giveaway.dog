@@ -22,10 +22,19 @@ import { Input } from '@/components/ui/input';
 import { TaskType } from '@prisma/client';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { SecretCodeCaseSensitiveFormField } from './additional-settings/lib/secret-code-case-sensitive';
 
 export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
+      case 'SECRET_CODE':
+        return (
+          <>
+            <SecretCodeCaseSensitiveFormField />
+            <MandatoryField />
+            <TasksRequiredField />
+          </>
+        );
       case 'FACEBOOK_VISIT_PAGE':
       case 'VISIT_URL':
         return (
@@ -51,7 +60,6 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'DISCORD_JOIN':
       case 'TWITCH_FOLLOW':
       case 'KICK_FOLLOW':
-      case 'SECRET_CODE':
       case 'YOUTUBE_VISIT':
       case 'TWITTER_LIKE':
       case 'BONUS_TIMED':

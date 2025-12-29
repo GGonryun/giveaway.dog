@@ -154,6 +154,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       code: 'MY_SECRET_CODE',
       hint: 'Check our announcement channel for the code!',
       value: 1,
+      caseSensitive: false,
       mandatory: false,
       tasksRequired: 0
     },

@@ -269,6 +269,7 @@ export type KickFollowTaskSchema = z.infer<typeof kickFollowTaskSchema>;
 export const secretCodeTaskSchema = baseTaskSchema.extend({
   type: z.literal('SECRET_CODE'),
   code: z.string().min(1, 'Secret code is required'),
+  caseSensitive: z.boolean().nullish().default(false),
   hint: z.string().optional()
 });
 

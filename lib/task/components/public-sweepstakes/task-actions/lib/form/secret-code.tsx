@@ -39,15 +39,20 @@ export const SecretCodeTaskActionForm: React.FC<
           </p>
         ) : (
           <>
+            {!noMoreAttempts && (
+              <Typography.Caption className="text-center mt-2">
+                {task.hint}
+              </Typography.Caption>
+            )}
             <Input
               placeholder="Enter the secret code"
               value={code}
               disabled={noMoreAttempts || isLoading}
               onChange={(e) => setCode(e.target.value)}
             />
-            {!noMoreAttempts && (
+            {task.caseSensitive && (
               <Typography.Caption className="text-center mt-2">
-                {task.hint}
+                The secret code is case sensitive.
               </Typography.Caption>
             )}
             {error && (

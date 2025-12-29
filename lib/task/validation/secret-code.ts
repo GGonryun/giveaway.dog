@@ -52,11 +52,20 @@ export const checkSecretCode = async (
     });
   }
 
-  if (submittedCode !== input.task.code) {
-    throw new ApplicationError({
-      code: 'BAD_REQUEST',
-      message: 'The secret code you entered is incorrect'
-    });
+  if (input.task.caseSensitive) {
+    if (submittedCode !== input.task.code) {
+      throw new ApplicationError({
+        code: 'BAD_REQUEST',
+        message: 'The secret code you entered is incorrect'
+      });
+    } else {
+      if (submittedCode.toLowerCase() !== input.task.code.toLowerCase()) {
+        throw new ApplicationError({
+          code: 'BAD_REQUEST',
+          message: 'The secret code you entered is incorrect'
+        });
+      }
+    }
   }
 
   // Check if the user has already completed this task
