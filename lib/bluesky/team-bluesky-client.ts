@@ -1,31 +1,11 @@
 'use server';
 
-import { NodeOAuthClient } from '@atproto/oauth-client-node';
+import { NodeOAuthClient, requestLocalLock } from '@atproto/oauth-client-node';
 import { JoseKey } from '@atproto/jwk-jose';
 import prisma from '@/lib/prisma';
 import { REQUIRED_BLUESKY_SCOPES } from '@/lib/integrations/scopes';
 
 let teamBlueskyClient: NodeOAuthClient | null = null;
-
-const locks = new Map<string, Promise<void>>();
-
-async function acquireLock(key: string): Promise<() => void> {
-  while (locks.has(key)) {
-    await locks.get(key);
-  }
-
-  let releaseLock: () => void;
-  const lockPromise = new Promise<void>((resolve) => {
-    releaseLock = resolve;
-  });
-
-  locks.set(key, lockPromise);
-
-  return () => {
-    locks.delete(key);
-    releaseLock!();
-  };
-}
 
 /**
  * Get or create the Bluesky OAuth client instance for team-level integrations.
@@ -66,6 +46,7 @@ export async function getTeamBlueskyClient() {
       jwks_uri: `${process.env.NEXTAUTH_URL}/api/bluesky/jwks.json`
     },
     keyset,
+    requestLock: requestLocalLock,
 
     stateStore: {
       async set(key, state) {
@@ -89,27 +70,22 @@ export async function getTeamBlueskyClient() {
 
     sessionStore: {
       async set(sub: string, session: unknown) {
-        const release = await acquireLock(`session:${sub}`);
-        try {
-          await prisma.integration.upsert({
-            where: {
-              provider_account_id: {
-                provider: 'BLUESKY',
-                account_id: sub
-              }
-            },
-            create: {
+        await prisma.integration.upsert({
+          where: {
+            provider_account_id: {
               provider: 'BLUESKY',
-              account_id: sub,
-              session_state: JSON.stringify(session)
-            },
-            update: {
-              session_state: JSON.stringify(session)
+              account_id: sub
             }
-          });
-        } finally {
-          release();
-        }
+          },
+          create: {
+            provider: 'BLUESKY',
+            account_id: sub,
+            session_state: JSON.stringify(session)
+          },
+          update: {
+            session_state: JSON.stringify(session)
+          }
+        });
       },
       async get(sub: string) {
         const integration = await prisma.integration.findFirst({
@@ -129,22 +105,17 @@ export async function getTeamBlueskyClient() {
         }
       },
       async del(sub: string) {
-        const release = await acquireLock(`session:${sub}`);
-        try {
-          await prisma.integration
-            .updateMany({
-              where: {
-                provider: 'BLUESKY',
-                account_id: sub
-              },
-              data: {
-                session_state: null
-              }
-            })
-            .catch(() => {});
-        } finally {
-          release();
-        }
+        await prisma.integration
+          .updateMany({
+            where: {
+              provider: 'BLUESKY',
+              account_id: sub
+            },
+            data: {
+              session_state: null
+            }
+          })
+          .catch(() => {});
       }
     }
   });

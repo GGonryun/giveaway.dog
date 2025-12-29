@@ -1,31 +1,14 @@
 'use server';
 
-import { NodeOAuthClient } from '@atproto/oauth-client-node';
+import {
+  NodeOAuthClient,
+  requestLocalLock
+} from '@atproto/oauth-client-node';
 import { JoseKey } from '@atproto/jwk-jose';
 import prisma from '@/lib/prisma';
 import { REQUIRED_BLUESKY_SCOPES } from '@/lib/integrations/scopes';
 
 let blueskyClient: NodeOAuthClient | null = null;
-
-const locks = new Map<string, Promise<void>>();
-
-async function acquireLock(key: string): Promise<() => void> {
-  while (locks.has(key)) {
-    await locks.get(key);
-  }
-
-  let releaseLock: () => void;
-  const lockPromise = new Promise<void>((resolve) => {
-    releaseLock = resolve;
-  });
-
-  locks.set(key, lockPromise);
-
-  return () => {
-    locks.delete(key);
-    releaseLock!();
-  };
-}
 
 /**
  * Get or create the Bluesky OAuth client instance.
@@ -69,6 +52,7 @@ export async function getBlueskyClient() {
       jwks_uri: `${process.env.NEXTAUTH_URL}/api/bluesky/jwks.json`
     },
     keyset,
+    requestLock: requestLocalLock,
 
     // Use existing NextAuth State model for OAuth state storage
     stateStore: {
@@ -95,32 +79,27 @@ export async function getBlueskyClient() {
     // Sessions are stored in the session_state field of the Account model
     sessionStore: {
       async set(sub: string, session: unknown) {
-        const release = await acquireLock(`session:${sub}`);
-        try {
-          // sub is the DID (providerAccountId)
-          // Create account if it doesn't exist, or update existing account
-          // The callback route will later update this with the correct userId
-          await prisma.account.upsert({
-            where: {
-              provider_providerAccountId: {
-                provider: 'bluesky',
-                providerAccountId: sub
-              }
-            },
-            create: {
+        // sub is the DID (providerAccountId)
+        // Create account if it doesn't exist, or update existing account
+        // The callback route will later update this with the correct userId
+        await prisma.account.upsert({
+          where: {
+            provider_providerAccountId: {
               provider: 'bluesky',
-              type: 'oauth',
-              providerAccountId: sub,
-              session_state: JSON.stringify(session)
-              // userId will be set by the callback route
-            },
-            update: {
-              session_state: JSON.stringify(session)
+              providerAccountId: sub
             }
-          });
-        } finally {
-          release();
-        }
+          },
+          create: {
+            provider: 'bluesky',
+            type: 'oauth',
+            providerAccountId: sub,
+            session_state: JSON.stringify(session)
+            // userId will be set by the callback route
+          },
+          update: {
+            session_state: JSON.stringify(session)
+          }
+        });
       },
       async get(sub: string) {
         // sub is the DID (providerAccountId)
@@ -141,23 +120,18 @@ export async function getBlueskyClient() {
         }
       },
       async del(sub: string) {
-        const release = await acquireLock(`session:${sub}`);
-        try {
-          // sub is the DID (providerAccountId)
-          await prisma.account
-            .updateMany({
-              where: {
-                provider: 'bluesky',
-                providerAccountId: sub
-              },
-              data: {
-                session_state: null
-              }
-            })
-            .catch(() => {});
-        } finally {
-          release();
-        }
+        // sub is the DID (providerAccountId)
+        await prisma.account
+          .updateMany({
+            where: {
+              provider: 'bluesky',
+              providerAccountId: sub
+            },
+            data: {
+              session_state: null
+            }
+          })
+          .catch(() => {});
       }
     }
   });
