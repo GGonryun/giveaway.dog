@@ -50,14 +50,14 @@ export const SetupSection: React.FC<SetupSectionProps> = ({ integrations }) => {
       (i) =>
         i.provider === 'TWITTER' &&
         i.status === 'ACTIVE' &&
-        hasFeature(i, 'IMPORT_TASKS')
+        hasFeature({ ...i, provider: 'TWITTER' }, 'IMPORT_TASKS')
     ) || [];
 
   const hasTwitterWithoutPermissions = integrations?.some(
     (i) =>
       i.provider === 'TWITTER' &&
       i.status === 'ACTIVE' &&
-      !hasFeature(i, 'IMPORT_TASKS')
+      !hasFeature({ ...i, provider: 'TWITTER' }, 'IMPORT_TASKS')
   );
 
   return (
