@@ -40,6 +40,7 @@ model User {
   fingerprints  UserFingerprint[]
   featureFlags  UserFeatureFlag[]
   integrations  Integration[]
+  templates     Template[]
 }
 
 enum UserEventType {
@@ -723,6 +724,34 @@ model Team {
   pickers      Picker[]
   inviteLink   TeamInviteLink?
   inviteEmails TeamInviteEmail[]
+  templates    Template[]
+}
+
+enum TemplateType {
+  SWEEPSTAKES
+  PICKER
+}
+
+model Template {
+  id          String       @id @default(cuid())
+  name        String
+  description String
+  image       String
+  tags        String[]
+  type        TemplateType @default(SWEEPSTAKES)
+  content     Json
+
+  teamId      String
+  team        Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([teamId])
+  @@index([createdById])
 }
 
 enum TeamRole {
