@@ -7,22 +7,20 @@
   - [x] Add Bluesky follow
   - [x] Add Bluesky like
   - [x] Add Bluesky repost
-  - [ ] Add Bluesky like import
-  - [ ] Add Bluesky repost import
+  - [x] Add Bluesky like import
+  - [x] Add Bluesky repost import
   - [ ] Add Bluesky automatic post & link feature
 
 ## Me
 
-- [ ] Check Cupara Discord chat for bug
+- [ ] Check Cupara Discord chat for bug.
+- [ ] Check suggestions in discord.
+
+- [ ] Add the ability to pre-set task defaults.
+- [ ] Add the ability to create your own templates.
+- [ ] Add the ability to create a task-bundle that we can reuse across multiple giveaways.
 
 - [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
-
-## PJ & Dom
-
-- [ ] Global Black List
-- [ ] Global White List
-- [ ] Team Black List
-- [ ] Team White List
 
 ## Me
 
@@ -69,6 +67,13 @@ it can be confusing to know how your changes are affecting the different preview
 ## Cupara
 
 - [ ] Also, I feel when you modify the terms & conditions the additional terms box should be able to handle formatting as I'm one of many streamers that are very OCD about formatting. If the text looks garbled or looks to run together almost all entrants won't read that part of the terms.
+
+## PJ & Dom
+
+- [ ] Global Black List
+- [ ] Global White List
+- [ ] Team Black List
+- [ ] Team White List
 
 ### Nobody Asked
 

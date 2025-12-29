@@ -473,6 +473,7 @@ model SweepstakesJob {
 
 enum AutomatedPostJobType {
   POST_TO_TWITTER
+  POST_TO_BLUESKY
 }
 
 enum AutomatedPostJobStatus {
