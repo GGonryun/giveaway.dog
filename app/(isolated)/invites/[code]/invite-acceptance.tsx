@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 import { CheckCircle } from 'lucide-react';
 import { TeamRole } from '@prisma/client';
 import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import Image from 'next/image';
 
 interface InviteDetails {
   teamName: string;
@@ -139,7 +140,12 @@ export const InviteAcceptance: React.FC<InviteAcceptanceProps> = ({
       <Card>
         <CardHeader className="text-center">
           <div className="mb-2 flex items-center justify-center gap-2">
-            <div className="text-4xl">{inviteDetails.teamLogo}</div>
+            <Image
+              src={inviteDetails.teamLogo}
+              alt={`${inviteDetails.teamName} Logo`}
+              width={64}
+              height={64}
+            />
           </div>
           <CardTitle className="text-2xl">You've Been Invited!</CardTitle>
           <CardDescription className="text-base">

@@ -3,7 +3,6 @@
 ## Me
 
 - [ ] Check Cupara Discord chat for bug.
-- [ ] Check suggestions in discord.
 
 - [ ] Add the ability to pre-set task defaults.
 - [ ] Add the ability to create your own templates.
