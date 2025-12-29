@@ -14,10 +14,13 @@ export const tryAutoMerge = async (args: {
   const { existing, account, session, profile } = args;
   console.info('tryAutoMerge called for account:', account, existing, session);
 
-  // If the existing account's user source is not from a Twitter import, do
-  // not merge. Otherwise the twitter import account merge would have matching
+  // If the existing account's user source is not from an import, do
+  // not merge. Otherwise the import account merge would have matching
   // provider/providerAccountId and we want to complete a full upgrade
-  if (existing.user?.source !== 'TWITTER_IMPORT') {
+  if (
+    existing.user?.source !== 'TWITTER_IMPORT' &&
+    existing.user?.source !== 'BLUESKY_IMPORT'
+  ) {
     if (
       existing.provider === account.provider &&
       existing.providerAccountId === account.providerAccountId
@@ -47,11 +50,11 @@ export const tryAutoMerge = async (args: {
     return false;
   }
 
-  // this gets called if this user is signing in for the first time with twitter
+  // this gets called if this user is signing in for the first time
   // and the account already exists because it was imported previously from
-  // twitter import.
+  // an import task (Twitter or Bluesky).
   if (!session || !session?.user?.id) {
-    console.info('No session user, claiming imported Twitter account');
+    console.info('No session user, claiming imported account');
 
     await prisma.$transaction(async (tx) => {
       await tx.account.update({
@@ -85,7 +88,7 @@ export const tryAutoMerge = async (args: {
   }
 
   // this gets called when the user is signed in and is trying to link an
-  // account that was previously imported from twitter. The old account
+  // account that was previously imported. The old account
   // needs to be merged into the current session user and the old user deleted.
   console.info('Auto-merging accounts for session user:', session.user.id);
   try {

@@ -38,7 +38,7 @@ export async function getBlueskyClient() {
       client_name: 'Giveaway.dog',
       client_uri: process.env.NEXTAUTH_URL,
       logo_uri: `${process.env.NEXTAUTH_URL}/logo.png`,
-      redirect_uris: [`${process.env.NEXTAUTH_URL}/api/bluesky/callback`],
+      redirect_uris: [`${process.env.NEXTAUTH_URL}/api/bluesky/user/callback`],
       grant_types: ['authorization_code', 'refresh_token'],
       scope: REQUIRED_BLUESKY_SCOPES.join(' '),
       response_types: ['code'],
@@ -52,11 +52,11 @@ export async function getBlueskyClient() {
 
     // Use existing NextAuth State model for OAuth state storage
     stateStore: {
-      async set(key: string, state: unknown) {
+      async set(key, state) {
         await prisma.state.create({
           data: {
             id: key,
-            value: state as any,
+            value: state,
             expiresAt: new Date(Date.now() + 3600000) // 1 hour
           }
         });

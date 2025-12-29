@@ -1,5 +1,6 @@
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { cn } from '@/lib/utils';
 import { UserSource } from '@prisma/client';
 import {
@@ -11,6 +12,7 @@ import {
 
 export const USER_SOURCE_ICON: Record<UserSource, LucideIcon> = {
   TWITTER_IMPORT: SocialXIcon,
+  BLUESKY_IMPORT: SocialBlueskyIcon,
   SIGNUP: VerifiedIcon,
   DISCORD_IMPORT: SocialDiscordIcon,
   MANUAL_IMPORT: EditIcon,

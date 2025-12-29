@@ -269,6 +269,26 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['BLUESKY_LIKE_IMPORT']: {
+      id: '',
+      type: 'BLUESKY_LIKE_IMPORT',
+      title: 'Like our Bluesky post',
+      postUrl: '',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0,
+      importingAccount: ''
+    },
+    ['BLUESKY_REPOST_IMPORT']: {
+      id: '',
+      type: 'BLUESKY_REPOST_IMPORT',
+      title: 'Repost on Bluesky',
+      postUrl: '',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0,
+      importingAccount: ''
+    },
     ['ASK_QUESTION']: {
       id: '',
       type: 'ASK_QUESTION',

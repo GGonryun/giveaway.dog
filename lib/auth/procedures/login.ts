@@ -138,7 +138,7 @@ const signInHandler = async (args: {
       if (returnTo) params.append('returnTo', returnTo);
       if (options.redirectTo) params.append('redirectTo', options.redirectTo);
 
-      const blueskyUrl = `/api/bluesky/authorize?${params.toString()}`;
+      const blueskyUrl = `/api/bluesky/user/authorize?${params.toString()}`;
       redirect(blueskyUrl);
     }
     case 'YOUTUBE':

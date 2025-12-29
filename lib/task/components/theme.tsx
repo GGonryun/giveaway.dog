@@ -172,6 +172,8 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
     case 'BLUESKY_FOLLOW':
     case 'BLUESKY_LIKE':
     case 'BLUESKY_REPOST':
+    case 'BLUESKY_LIKE_IMPORT':
+    case 'BLUESKY_REPOST_IMPORT':
       return {
         action:
           'bg-bluesky-1 text-white group-hover:bg-bluesky-1 group-hover:text-white hover:bg-bluesky-1  hover:text-white dark:bg-bluesky-1 dark:hover:text-white dark:hover:bg-bluesky-1',

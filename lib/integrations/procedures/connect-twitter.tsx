@@ -11,7 +11,7 @@ import {
   TwitterStateSchema
 } from '../schemas';
 import {
-  getScopesForFeatures,
+  getScopesForTwitterFeatures,
   twitterFeatureSchema,
   type TwitterFeatureSchema
 } from '../scopes';
@@ -52,7 +52,7 @@ export const connectTwitter = procedure()
 
     const { codeVerifier, codeChallenge } = generateCodeChallenge();
 
-    const scopes = getScopesForFeatures(
+    const scopes = getScopesForTwitterFeatures(
       input.features as TwitterFeatureSchema[]
     );
     const scopeString = scopes.join(' ');

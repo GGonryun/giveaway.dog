@@ -85,6 +85,8 @@ export const getTaskLock = (args: {
     case 'BLUESKY_FOLLOW':
     case 'BLUESKY_LIKE':
     case 'BLUESKY_REPOST':
+    case 'BLUESKY_LIKE_IMPORT':
+    case 'BLUESKY_REPOST_IMPORT':
       return null;
     default:
       throw assertNever(task);

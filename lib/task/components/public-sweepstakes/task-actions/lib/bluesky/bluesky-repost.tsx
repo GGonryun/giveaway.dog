@@ -4,14 +4,17 @@ import { TaskActionProps } from '../../building-blocks';
 import { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { WithProviderConnection } from '../provider-connection';
-import { BlueskyRepostTaskSchema } from '@/lib/task/schemas';
+import {
+  BlueskyRepostTaskSchema,
+  BlueskyRepostImportTaskSchema
+} from '@/lib/task/schemas';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { BlueskyEmbed } from './shared';
 import { blueskyPostRefineUrl } from '@/lib/integrations/schemas/bluesky-helpers';
 
 export const BlueskyRepostTaskActionForm: React.FC<
-  TaskActionProps<BlueskyRepostTaskSchema>
+  TaskActionProps<BlueskyRepostTaskSchema | BlueskyRepostImportTaskSchema>
 > = ({ onCancel, onSubmit, task, submission, isLoading }) => {
   const [userInteracted, setUserInteracted] = useState(false);
 

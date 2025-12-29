@@ -16,7 +16,9 @@ import {
 } from '../integrations/schemas/providers';
 import {
   blueskyPostRefineError,
-  blueskyPostRefineUrl
+  blueskyPostRefineUrl,
+  blueskyProfileRefineError,
+  blueskyProfileRefineUrl
 } from '../integrations/schemas/bluesky-helpers';
 
 export const baseTaskSchema = z.object({
@@ -421,12 +423,8 @@ export const blueskyFollowTaskSchema = baseTaskSchema.extend({
     .min(1, 'Bluesky profile URL or handle is required')
     .refine((val) => {
       // Accept either profile URL or handle format
-      const urlPattern =
-        /^https?:\/\/bsky\.app\/profile\/[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+\/?$/;
-      const handlePattern =
-        /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
-      return urlPattern.test(val) || handlePattern.test(val);
-    }, 'Invalid Bluesky profile. Must be a handle (e.g., username.bsky.social) or profile URL (e.g., https://bsky.app/profile/username.bsky.social)')
+      return blueskyProfileRefineUrl(val);
+    }, blueskyProfileRefineError)
 });
 
 export type BlueskyFollowTaskSchema = z.infer<typeof blueskyFollowTaskSchema>;
@@ -454,6 +452,36 @@ export const blueskyRepostTaskSchema = baseTaskSchema.extend({
 });
 
 export type BlueskyRepostTaskSchema = z.infer<typeof blueskyRepostTaskSchema>;
+
+export const blueskyLikeImportTaskSchema = baseTaskSchema.extend({
+  type: z.literal('BLUESKY_LIKE_IMPORT'),
+  postUrl: z
+    .string()
+    .url('Bluesky Post URL is required')
+    .refine((val) => {
+      return blueskyPostRefineUrl(val);
+    }, blueskyPostRefineError),
+  importingAccount: z.string().min(1, 'Importing account is required')
+});
+
+export type BlueskyLikeImportTaskSchema = z.infer<
+  typeof blueskyLikeImportTaskSchema
+>;
+
+export const blueskyRepostImportTaskSchema = baseTaskSchema.extend({
+  type: z.literal('BLUESKY_REPOST_IMPORT'),
+  postUrl: z
+    .string()
+    .url('Bluesky Post URL is required')
+    .refine((val) => {
+      return blueskyPostRefineUrl(val);
+    }, blueskyPostRefineError),
+  importingAccount: z.string().min(1, 'Importing account is required')
+});
+
+export type BlueskyRepostImportTaskSchema = z.infer<
+  typeof blueskyRepostImportTaskSchema
+>;
 
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
@@ -487,7 +515,9 @@ export const taskSchema = z.discriminatedUnion('type', [
   blueskyConnectTaskSchema,
   blueskyFollowTaskSchema,
   blueskyLikeTaskSchema,
-  blueskyRepostTaskSchema
+  blueskyRepostTaskSchema,
+  blueskyLikeImportTaskSchema,
+  blueskyRepostImportTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -524,7 +554,9 @@ export const TASK_LABEL: Record<TaskType, string> = {
   BLUESKY_CONNECT: 'Connect Bluesky',
   BLUESKY_FOLLOW: 'Follow on Bluesky',
   BLUESKY_LIKE: 'Like a post on Bluesky',
-  BLUESKY_REPOST: 'Repost on Bluesky'
+  BLUESKY_REPOST: 'Repost on Bluesky',
+  BLUESKY_LIKE_IMPORT: 'Like a post on Bluesky',
+  BLUESKY_REPOST_IMPORT: 'Repost on Bluesky'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -571,7 +603,9 @@ export const TASK_INPUT_SCHEMA = {
   BLUESKY_CONNECT: z.object({}),
   BLUESKY_FOLLOW: z.object({}),
   BLUESKY_LIKE: z.object({}),
-  BLUESKY_REPOST: z.object({})
+  BLUESKY_REPOST: z.object({}),
+  BLUESKY_LIKE_IMPORT: z.object({}),
+  BLUESKY_REPOST_IMPORT: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export const TASK_JOB_DATA_SCHEMA = {
@@ -612,7 +646,15 @@ export const TASK_JOB_DATA_SCHEMA = {
   BLUESKY_CONNECT: z.object({}),
   BLUESKY_FOLLOW: z.object({}),
   BLUESKY_LIKE: z.object({}),
-  BLUESKY_REPOST: z.object({})
+  BLUESKY_REPOST: z.object({}),
+  BLUESKY_LIKE_IMPORT: z.object({
+    runs: z.number().min(0),
+    lastProcessedDid: z.string().optional()
+  }),
+  BLUESKY_REPOST_IMPORT: z.object({
+    runs: z.number().min(0),
+    lastProcessedDid: z.string().optional()
+  })
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export type TaskInput<T extends TaskSchema> = T extends { type: infer U }
@@ -664,7 +706,9 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   BLUESKY_CONNECT: 'BLUESKY',
   BLUESKY_FOLLOW: 'BLUESKY',
   BLUESKY_LIKE: 'BLUESKY',
-  BLUESKY_REPOST: 'BLUESKY'
+  BLUESKY_REPOST: 'BLUESKY',
+  BLUESKY_LIKE_IMPORT: 'BLUESKY',
+  BLUESKY_REPOST_IMPORT: 'BLUESKY'
 };
 
 export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
@@ -699,7 +743,9 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   BLUESKY_CONNECT: 'BLUESKY',
   BLUESKY_FOLLOW: 'BLUESKY',
   BLUESKY_LIKE: 'BLUESKY',
-  BLUESKY_REPOST: 'BLUESKY'
+  BLUESKY_REPOST: 'BLUESKY',
+  BLUESKY_LIKE_IMPORT: 'BLUESKY',
+  BLUESKY_REPOST_IMPORT: 'BLUESKY'
 };
 
 export const TASK_REQUIRED_SCOPES: Record<TaskPlatformSchema, string[]> = {
@@ -764,7 +810,9 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   BLUESKY_CONNECT: 'social',
   BLUESKY_FOLLOW: 'social',
   BLUESKY_LIKE: 'social',
-  BLUESKY_REPOST: 'social'
+  BLUESKY_REPOST: 'social',
+  BLUESKY_LIKE_IMPORT: 'social',
+  BLUESKY_REPOST_IMPORT: 'social'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',
@@ -804,7 +852,9 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   BLUESKY_CONNECT: false,
   BLUESKY_FOLLOW: false,
   BLUESKY_LIKE: false,
-  BLUESKY_REPOST: false
+  BLUESKY_REPOST: false,
+  BLUESKY_LIKE_IMPORT: true,
+  BLUESKY_REPOST_IMPORT: true
 };
 
 export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
@@ -839,7 +889,9 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   BLUESKY_CONNECT: true,
   BLUESKY_FOLLOW: true,
   BLUESKY_LIKE: true,
-  BLUESKY_REPOST: true
+  BLUESKY_REPOST: true,
+  BLUESKY_LIKE_IMPORT: true,
+  BLUESKY_REPOST_IMPORT: true
 };
 
 export const userEntriesSchema = z.object({
@@ -919,5 +971,7 @@ export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
   BLUESKY_CONNECT: true,
   BLUESKY_FOLLOW: true,
   BLUESKY_LIKE: true,
-  BLUESKY_REPOST: true
+  BLUESKY_REPOST: true,
+  BLUESKY_LIKE_IMPORT: true,
+  BLUESKY_REPOST_IMPORT: true
 };

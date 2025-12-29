@@ -200,11 +200,6 @@ const processPostToTwitter = async ({
       `[processPostToTwitter] Successfully posted tweet ${tweetId} for job ${job.id}`
     );
   } catch (error) {
-    console.error(
-      `[processPostToTwitter] Failed to process job ${job.id}:`,
-      error
-    );
-
     const errorMessage =
       error instanceof Error ? error.message : 'Unknown error occurred';
 

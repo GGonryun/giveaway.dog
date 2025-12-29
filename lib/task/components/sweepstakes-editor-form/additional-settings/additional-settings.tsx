@@ -116,6 +116,14 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <ImportingTweetIdValidation />
           </>
         );
+      case 'BLUESKY_LIKE_IMPORT':
+      case 'BLUESKY_REPOST_IMPORT':
+        return (
+          <>
+            <ImportingAccountField />
+            <BlueskyPostUrlField />
+          </>
+        );
       case 'STEAM_WISHLIST':
         return <SteamAppIdFormField />;
       case 'DISCORD_JOIN':

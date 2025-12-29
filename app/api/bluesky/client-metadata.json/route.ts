@@ -15,7 +15,10 @@ export async function GET() {
     client_name: 'Giveaway.dog',
     client_uri: baseUrl,
     logo_uri: `${baseUrl}/logo.png`,
-    redirect_uris: [`${baseUrl}/api/bluesky/callback`],
+    redirect_uris: [
+      `${baseUrl}/api/bluesky/user/callback`,
+      `${baseUrl}/api/bluesky/team/callback`
+    ],
     grant_types: ['authorization_code', 'refresh_token'],
     scope: 'atproto transition:generic',
     response_types: ['code'],

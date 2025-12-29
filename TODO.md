@@ -9,15 +9,13 @@
   - [x] Add Bluesky repost
   - [ ] Add Bluesky like import
   - [ ] Add Bluesky repost import
-
-- [ ] Add Threads login
+  - [ ] Add Bluesky automatic post & link feature
 
 ## Me
 
-- [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
+- [ ] Check Cupara Discord chat for bug
 
-- [ ] Fix the way we update sweepstakes it's unruly for huge giveaways.
-- [ ] Fix the unoptimized users page slow loading
+- [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
 
 ## PJ & Dom
 
@@ -30,6 +28,10 @@
 
 - [ ] Add support for generating short links for my sweepstakes, and draw verification
 - [ ] Add a referral task.
+
+- [ ] Fix the way we update sweepstakes it's unruly for huge giveaways.
+- [ ] Fix the unoptimized users page slow loading
+
 - [ ] Custom discord bots.
 
 ### @Gamelooty

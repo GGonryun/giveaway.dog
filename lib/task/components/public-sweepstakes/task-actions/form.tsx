@@ -97,8 +97,10 @@ export const TaskActionForm: React.FC<
     case 'BLUESKY_FOLLOW':
       return <BlueskyFollowTaskActionForm {...props} task={props.task} />;
     case 'BLUESKY_LIKE':
+    case 'BLUESKY_LIKE_IMPORT':
       return <BlueskyLikeTaskActionForm {...props} task={props.task} />;
     case 'BLUESKY_REPOST':
+    case 'BLUESKY_REPOST_IMPORT':
       return <BlueskyRepostTaskActionForm {...props} task={props.task} />;
     default:
       throw assertNever(props.task);

@@ -53,6 +53,8 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'BLUESKY_FOLLOW':
     case 'BLUESKY_LIKE':
     case 'BLUESKY_REPOST':
+    case 'BLUESKY_LIKE_IMPORT':
+    case 'BLUESKY_REPOST_IMPORT':
       return (
         <BaseSettingsContainer>
           <TitleField />

@@ -8,6 +8,8 @@ import { toTaskSchema } from '@/lib/task/schemas';
 import { PrismaClient } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 import { processLikeTaskJob } from './process-like-task-job';
+import { processBlueskyLikeTaskJob } from './process-bluesky-like-task-job';
+import { processBlueskyRepostTaskJob } from './process-bluesky-repost-task-job';
 
 export const processTaskJob = async (
   db: PrismaClient,
@@ -98,6 +100,10 @@ export const processTaskJob = async (
         return await processRetweetTaskJob(db, task, job);
       case 'TWITTER_LIKE_IMPORT':
         return await processLikeTaskJob(db, task, job);
+      case 'BLUESKY_LIKE_IMPORT':
+        return await processBlueskyLikeTaskJob(db, task, job);
+      case 'BLUESKY_REPOST_IMPORT':
+        return await processBlueskyRepostTaskJob(db, task, job);
       default:
         throw assertNever(task);
     }

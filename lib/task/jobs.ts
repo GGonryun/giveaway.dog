@@ -45,6 +45,8 @@ export const createJobsForTask = (
       return [];
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':
+    case 'BLUESKY_LIKE_IMPORT':
+    case 'BLUESKY_REPOST_IMPORT':
       return [
         {
           runAt: new Date(),

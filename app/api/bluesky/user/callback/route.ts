@@ -7,6 +7,7 @@ import { REQUIRED_BLUESKY_SCOPES } from '@/lib/integrations/scopes';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import { auth, signIn } from '@/lib/auth/config';
 import { redirect } from 'next/navigation';
+import { UserSource } from '@prisma/client';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -105,6 +106,15 @@ export async function GET(req: NextRequest) {
         updatedAt: new Date()
       }
     });
+
+    await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        source: UserSource.SIGNUP
+      }
+    });
   } else if (currentSession?.user?.id) {
     // Account exists (created by sessionStore) but has no userId
     // User is logged in, so link the account to their existing user
@@ -142,7 +152,7 @@ export async function GET(req: NextRequest) {
         name: displayName,
         username: handle,
         image: avatar,
-        source: 'SIGNUP'
+        source: UserSource.SIGNUP
       }
     });
     userId = newUser.id;

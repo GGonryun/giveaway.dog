@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Card,
   CardContent,
@@ -22,9 +22,10 @@ import { useActiveTeam } from '@/components/team/use-active-team-page';
 import { IntegrationSchema, hasFeature } from '../schemas';
 import { IntegrationStatusBadge } from './integration-status-badge';
 import { IntegrationStatusAlert } from './integration-status-alert';
-import { TwitterScopeDialog } from './twitter-scope-dialog';
+import { TwitterConnectDialog } from './twitter-connect-dialog';
 import { TwitterDisconnectDialog } from './twitter-disconnect-dialog';
-import type { TwitterFeatureSchema } from '../scopes';
+import { IDENTITY_PROVIDER_LABEL } from '../schemas/providers';
+import { twitterFeatures, TwitterFeatureSchema } from '../scopes';
 
 interface TwitterCardProps {
   integration?: IntegrationSchema;
@@ -49,7 +50,10 @@ export function TwitterCard({ integration }: TwitterCardProps) {
   const connect = useProcedure({
     action: connectTwitter,
     onSuccess(data) {
-      toast('Redirecting to Twitter for authentication...');
+      toast(
+        `Redirecting to ${IDENTITY_PROVIDER_LABEL.TWITTER} for authentication...`
+      );
+      setDialogOpen(false);
       router.push(data.authUrl);
     },
     onFailure(error) {
@@ -60,12 +64,14 @@ export function TwitterCard({ integration }: TwitterCardProps) {
   const disconnect = useProcedure({
     action: disconnectTwitter,
     onSuccess() {
-      toast('Twitter disconnected successfully');
+      toast(`${IDENTITY_PROVIDER_LABEL.TWITTER} disconnected successfully`);
       setDisconnectDialogOpen(false);
       router.refresh();
     },
     onFailure(error) {
-      toast(`Failed to disconnect Twitter: ${error.message}`);
+      toast(
+        `Failed to disconnect ${IDENTITY_PROVIDER_LABEL.TWITTER}: ${error.message}`
+      );
     }
   });
 
@@ -86,7 +92,9 @@ export function TwitterCard({ integration }: TwitterCardProps) {
               <SocialXIcon className="h-6 w-6" />
             </div>
             <div>
-              <CardTitle className="text-base">Twitter / X</CardTitle>
+              <CardTitle className="text-base">
+                {IDENTITY_PROVIDER_LABEL.TWITTER}
+              </CardTitle>
               <CardDescription className="text-xs mt-0.5">
                 {integration
                   ? `@${integration.label}`
@@ -156,15 +164,17 @@ export function TwitterCard({ integration }: TwitterCardProps) {
               className="w-full mt-auto"
               size="sm"
             >
-              {connect.isLoading ? 'Connecting...' : 'Connect'}
+              Connect
             </Button>
           </>
         )}
 
-        <TwitterScopeDialog
+        <TwitterConnectDialog
           open={dialogOpen}
           onOpenChange={setDialogOpen}
           onConfirm={handleConnect}
+          isLoading={connect.isLoading}
+          features={twitterFeatures(currentFeatures)}
           existingFeatures={currentFeatures}
         />
 

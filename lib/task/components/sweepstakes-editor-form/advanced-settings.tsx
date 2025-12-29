@@ -78,6 +78,8 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         );
       case 'TWITTER_RETWEET_IMPORT':
       case 'TWITTER_LIKE_IMPORT':
+      case 'BLUESKY_LIKE_IMPORT':
+      case 'BLUESKY_REPOST_IMPORT':
         return null;
       default:
         throw assertNever(type);

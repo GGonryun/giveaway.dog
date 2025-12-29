@@ -37,6 +37,8 @@ export const computeTaskStatus = (task: TaskSchema) => {
       return CompletionStatus.COMPLETED;
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':
+    case 'BLUESKY_LIKE_IMPORT':
+    case 'BLUESKY_REPOST_IMPORT':
       return CompletionStatus.PENDING;
     default:
       throw assertNever(task);

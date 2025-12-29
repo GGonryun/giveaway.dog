@@ -202,15 +202,16 @@ enum IntegrationProvider {
 }
 
 model Integration {
-  id            String              @id @default(cuid())
-  teamId        String
-  team          Team                @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  status        IntegrationStatus   @default(ACTIVE)
+  id         String              @id @default(cuid())
+  provider   IntegrationProvider
+  account_id String
+
+  teamId        String?
+  team          Team?             @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  status        IntegrationStatus @default(ACTIVE)
   // the user who created the integration
-  ownerId       String
-  owner         User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  provider      IntegrationProvider
-  account_id    String
+  ownerId       String?
+  owner         User?             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   refresh_token String?
   access_token  String?
   expires_at    Int?
@@ -222,6 +223,8 @@ model Integration {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([provider, account_id])
 }
 
 model State {

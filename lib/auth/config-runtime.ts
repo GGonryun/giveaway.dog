@@ -7,6 +7,7 @@ import { auth } from './config';
 import { pickRandom } from '../arrays';
 import { DOG_BREEDS } from '../dogs';
 import { VERIFIED_EMAIL_PROVIDERS } from '../integrations/scopes';
+import { parseAuthProvider } from '../integrations/schemas/providers';
 
 export const authConfig = {
   ...authConfigMiddleware,
@@ -15,6 +16,7 @@ export const authConfig = {
       console.info('linkAccount event for provider:', account, user, profile);
       const label = getAccountLabel(account, profile);
       const link = getAccountLink(account, profile);
+      const provider = parseAuthProvider(account.provider);
 
       await prisma.$transaction(async (tx) => {
         if (label || link) {
@@ -43,7 +45,7 @@ export const authConfig = {
         // and if the provider verifies emails
         if (user.id) {
           const shouldVerifyEmail =
-            VERIFIED_EMAIL_PROVIDERS[account.provider] && profile.email;
+            VERIFIED_EMAIL_PROVIDERS[provider] && profile.email;
 
           if (shouldVerifyEmail) {
             await tx.user.update({

@@ -1,1 +1,2 @@
-export const TWITTER_API_RATE_LIMIT_MINUTES = 15; // 15 minutes
+export const TWITTER_API_RATE_LIMIT_MINUTES = 15;
+export const BLUESKY_API_RATE_LIMIT_MINUTES = 15;

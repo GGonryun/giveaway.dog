@@ -60,6 +60,8 @@ export const validateTask = async <T extends TaskSchema>(
     case 'FACEBOOK_VIEW_POST':
     case 'TIKTOK_FOLLOW':
     case 'TIKTOK_LIKE':
+    case 'BLUESKY_LIKE_IMPORT':
+    case 'BLUESKY_REPOST_IMPORT':
       return Promise.resolve();
     case 'BLUESKY_CONNECT':
       return await checkBlueskyConnect(db, {

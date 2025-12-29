@@ -5,6 +5,7 @@ import { CheckCircle2, XCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { TwitterCard } from '@/lib/integrations/components/twitter-card';
+import { BlueskyCard } from '@/lib/integrations/components/bluesky-card';
 import { PlaceholderCard } from '@/lib/integrations/components/placeholder-card';
 import { IntegrationsSchema } from '@/lib/integrations/schemas';
 import { IntegrationProvider } from '@prisma/client';
@@ -22,6 +23,7 @@ export const TeamIntegrationSettings: React.FC<{
     const success = searchParams.get('success');
     const error = searchParams.get('error');
     const username = searchParams.get('username');
+    const handle = searchParams.get('handle');
 
     if (success === 'twitter_connected' && username) {
       setStatusMessage({
@@ -29,17 +31,22 @@ export const TeamIntegrationSettings: React.FC<{
         message: `Successfully connected Twitter account @${username}`
       });
       setTimeout(() => setStatusMessage(null), 5000);
+    } else if (success === 'bluesky_connected' && handle) {
+      setStatusMessage({
+        type: 'success',
+        message: `Successfully connected Bluesky account @${handle}`
+      });
+      setTimeout(() => setStatusMessage(null), 5000);
     } else if (error) {
       const errorMessages: Record<string, string> = {
         missing_parameters: 'Missing required OAuth parameters',
-        connection_failed: 'Failed to connect Twitter account',
+        connection_failed: 'Failed to connect account',
         unexpected_error: 'An unexpected error occurred'
       };
       setStatusMessage({
         type: 'error',
-        message: errorMessages[error] || 'Failed to connect Twitter account'
+        message: errorMessages[error] || error
       });
-      setTimeout(() => setStatusMessage(null), 5000);
     }
   }, [searchParams]);
 
@@ -64,6 +71,12 @@ export const TeamIntegrationSettings: React.FC<{
           <TwitterCard
             integration={integrations.find(
               (i) => i.provider === IntegrationProvider.TWITTER
+            )}
+          />
+
+          <BlueskyCard
+            integration={integrations.find(
+              (i) => i.provider === IntegrationProvider.BLUESKY
             )}
           />
 

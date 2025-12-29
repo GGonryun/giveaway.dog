@@ -13,6 +13,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { extractUsernameFromTweetUrl } from '@/lib/integrations/schemas/twitter';
 import { hasFeature } from '@/lib/integrations/schemas';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
@@ -32,18 +33,29 @@ export const ImportingAccountField: React.FC = () => {
   const slug = params.slug as string;
   const { integrations } = useUnifiedFormLayout<SweepstakeStep>();
 
-  const twitterIntegrations =
+  const taskType = useWatch({
+    control: form.control,
+    name: `tasks.${index}.type`
+  });
+
+  const isBluesky =
+    taskType === 'BLUESKY_LIKE_IMPORT' || taskType === 'BLUESKY_REPOST_IMPORT';
+  const provider = isBluesky ? 'BLUESKY' : 'TWITTER';
+  const providerName = isBluesky ? 'Bluesky' : 'X';
+  const Icon = isBluesky ? SocialBlueskyIcon : SocialXIcon;
+
+  const platformIntegrations =
     integrations?.filter(
       (i) =>
-        i.provider === 'TWITTER' &&
+        i.provider === provider &&
         i.status === 'ACTIVE' &&
         hasFeature(i, 'IMPORT_TASKS')
     ) || [];
 
-  const hasTwitterButNoPermission =
+  const hasPlatformButNoPermission =
     integrations?.some(
       (i) =>
-        i.provider === 'TWITTER' &&
+        i.provider === provider &&
         i.status === 'ACTIVE' &&
         !hasFeature(i, 'IMPORT_TASKS')
     ) || false;
@@ -62,27 +74,28 @@ export const ImportingAccountField: React.FC = () => {
                 title: 'Help: Integration',
                 content: (
                   <p>
-                    Specify the X account that will be used to import entries.
-                    This account must own the post being validated.
+                    Specify the {providerName} account that will be used to
+                    import entries. This account must own the post being
+                    validated.
                   </p>
                 )
               }}
             />
-            {twitterIntegrations.length === 0 ? (
+            {platformIntegrations.length === 0 ? (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription className="flex flex-col gap-2">
                   <p>
-                    {hasTwitterButNoPermission
-                      ? 'Your Twitter integration doesn\'t have import permissions. Please add the "Import Tasks" permission.'
-                      : 'No X integrations found. You need to connect an X account to use pickers.'}
+                    {hasPlatformButNoPermission
+                      ? `Your ${providerName} integration doesn't have import permissions. Please add the "Import Tasks" permission.`
+                      : `No ${providerName} integrations found. You need to connect a ${providerName} account to use import tasks.`}
                   </p>
                   <Button asChild variant="outline" size="sm" className="w-fit">
                     <Link href={`/app/${slug}/settings/integrations`}>
-                      <SocialXIcon className="h-4 w-4 mr-2" />
-                      {hasTwitterButNoPermission
+                      <Icon className="h-4 w-4 mr-2" />
+                      {hasPlatformButNoPermission
                         ? 'Add Permissions'
-                        : 'Connect Twitter'}
+                        : `Connect ${providerName}`}
                     </Link>
                   </Button>
                 </AlertDescription>
@@ -97,10 +110,10 @@ export const ImportingAccountField: React.FC = () => {
                     <SelectValue placeholder="Select your account" />
                   </SelectTrigger>
                   <SelectContent>
-                    {twitterIntegrations.map((integration) => (
+                    {platformIntegrations.map((integration) => (
                       <SelectItem key={integration.id} value={integration.id}>
                         <div className="flex items-center gap-2">
-                          <SocialXIcon className="h-4 w-4" />
+                          <Icon className="h-4 w-4" />
                           {integration.label}
                         </div>
                       </SelectItem>

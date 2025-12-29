@@ -12,6 +12,7 @@ import {
 } from '../scopes';
 import { widetype } from '@/lib/widetype';
 import { IdentityProvider } from '@prisma/client';
+import { ApplicationError } from '@/lib/errors';
 
 export const providerTypeSchema = z.nativeEnum(IdentityProvider);
 
@@ -137,9 +138,38 @@ export const isIdentityProvider = (
 };
 
 // Mapping from IdentityProvider to next-auth provider strings found in lib/auth/config.ts
+export const authProviderSchema = z.union([
+  z.literal('twitter'),
+  z.literal('bluesky'),
+  z.literal('google'),
+  z.literal('discord'),
+  z.literal('steam'),
+  z.literal('twitch'),
+  z.literal('kick'),
+  z.literal('tiktok'),
+  z.literal('facebook'),
+  z.literal('instagram'),
+  z.literal('youtube'),
+  z.literal('email'),
+  z.literal('anonymous')
+]);
+
+export type AuthProvider = z.infer<typeof authProviderSchema>;
+
+export const parseAuthProvider = (value: unknown): AuthProvider => {
+  const result = authProviderSchema.safeParse(value);
+  if (!result.success)
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message: `Invalid auth provider: ${value}`,
+      cause: result.error
+    });
+  return result.data;
+};
+
 export const IDENTITY_PROVIDER_TO_AUTH_PROVIDER: Record<
   IdentityProvider,
-  string
+  AuthProvider
 > = {
   TWITTER: 'twitter',
   BLUESKY: 'bluesky',

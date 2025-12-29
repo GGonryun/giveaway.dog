@@ -14,6 +14,13 @@ export const UserSourceCaption: React.FC<{
       }
       return <>@{provider.label}</>;
     }
+    case 'BLUESKY_IMPORT': {
+      const provider = user.providers?.find((p) => p.type === 'BLUESKY');
+      if (!provider) {
+        return <>Imported from Bluesky</>;
+      }
+      return <>@{provider.label}</>;
+    }
     case 'DISCORD_IMPORT':
       return <>Imported from Discord</>;
     case 'MANUAL_IMPORT':

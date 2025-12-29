@@ -4,14 +4,17 @@ import { TaskActionProps } from '../../building-blocks';
 import { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { WithProviderConnection } from '../provider-connection';
-import { BlueskyLikeTaskSchema } from '@/lib/task/schemas';
+import {
+  BlueskyLikeTaskSchema,
+  BlueskyLikeImportTaskSchema
+} from '@/lib/task/schemas';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { BlueskyEmbed } from './shared';
 import { blueskyPostRefineUrl } from '@/lib/integrations/schemas/bluesky-helpers';
 
 export const BlueskyLikeTaskActionForm: React.FC<
-  TaskActionProps<BlueskyLikeTaskSchema>
+  TaskActionProps<BlueskyLikeTaskSchema | BlueskyLikeImportTaskSchema>
 > = ({ onCancel, onSubmit, task, submission, isLoading }) => {
   const [userInteracted, setUserInteracted] = useState(false);
 
