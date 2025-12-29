@@ -141,6 +141,7 @@ export const InviteAcceptance: React.FC<InviteAcceptanceProps> = ({
         <CardHeader className="text-center">
           <div className="mb-2 flex items-center justify-center gap-2">
             <Image
+              className="border rounded-full"
               src={inviteDetails.teamLogo}
               alt={`${inviteDetails.teamName} Logo`}
               width={64}
