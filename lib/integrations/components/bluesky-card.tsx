@@ -25,7 +25,6 @@ import { BlueskyConnectDialog } from './bluesky-connect-dialog';
 import { IDENTITY_PROVIDER_LABEL } from '../schemas/providers';
 import {
   blueskyFeatures,
-  getScopesForBlueskyFeatures,
   toBlueskyScope,
   type BlueskyFeatureSchema
 } from '../scopes';
@@ -42,8 +41,8 @@ export function BlueskyCard({ integration }: BlueskyCardProps) {
 
   const currentFeatures: BlueskyFeatureSchema[] = [];
   if (integration) {
-    if (hasFeature(integration, 'IMPORT_TASKS')) {
-      currentFeatures.push('IMPORT_TASKS');
+    if (hasFeature({ ...integration, provider: 'BLUESKY' }, 'FULL_ACCESS')) {
+      currentFeatures.push('FULL_ACCESS');
     }
   }
 
@@ -117,7 +116,7 @@ export function BlueskyCard({ integration }: BlueskyCardProps) {
                       variant="secondary"
                       className="text-xs"
                     >
-                      Import Tasks ✓
+                      Full Access ✓
                     </Badge>
                   ))}
                 </div>
@@ -132,7 +131,11 @@ export function BlueskyCard({ integration }: BlueskyCardProps) {
                     asChild
                   >
                     <a
-                      href={integration.url ?? '#'}
+                      href={
+                        integration.account_id
+                          ? `https://bsky.app/profile/${integration.account_id}`
+                          : '#'
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                     >

@@ -15,7 +15,7 @@ import {
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { extractUsernameFromTweetUrl } from '@/lib/integrations/schemas/twitter';
-import { hasFeature } from '@/lib/integrations/schemas';
+import { hasFeature, type IntegrationSchema } from '@/lib/integrations/schemas';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { AlertCircle, RefreshCw, Info } from 'lucide-react';
 import Link from 'next/link';
@@ -24,6 +24,57 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { useFormContext, useWatch } from 'react-hook-form';
+
+// Helper function to filter Twitter integrations with import tasks feature
+function getTwitterIntegrationsWithImportTasks(
+  integrations: IntegrationSchema[] | undefined
+): IntegrationSchema[] {
+  return (
+    integrations?.filter((i) => {
+      if (i.provider !== 'TWITTER' || i.status !== 'ACTIVE') return false;
+      return hasFeature(
+        i as typeof i & { provider: 'TWITTER' },
+        'IMPORT_TASKS'
+      );
+    }) || []
+  );
+}
+
+// Helper function to filter Bluesky integrations with full access feature
+function getBlueskyIntegrationsWithFullAccess(
+  integrations: IntegrationSchema[] | undefined
+): IntegrationSchema[] {
+  return (
+    integrations?.filter((i) => {
+      if (i.provider !== 'BLUESKY' || i.status !== 'ACTIVE') return false;
+      return hasFeature(i as typeof i & { provider: 'BLUESKY' }, 'FULL_ACCESS');
+    }) || []
+  );
+}
+
+// Helper function to check if there are Twitter integrations without import tasks permission
+function hasTwitterWithoutImportTasks(
+  integrations: IntegrationSchema[] | undefined
+): boolean {
+  return (
+    integrations?.some((i) => {
+      if (i.provider !== 'TWITTER' || i.status !== 'ACTIVE') return false;
+      return !hasFeature({ ...i, provider: 'TWITTER' }, 'IMPORT_TASKS');
+    }) || false
+  );
+}
+
+// Helper function to check if there are Bluesky integrations without full access permission
+function hasBlueskyWithoutFullAccess(
+  integrations: IntegrationSchema[] | undefined
+): boolean {
+  return (
+    integrations?.some((i) => {
+      if (i.provider !== 'BLUESKY' || i.status !== 'ACTIVE') return false;
+      return !hasFeature({ ...i, provider: 'BLUESKY' }, 'FULL_ACCESS');
+    }) || false
+  );
+}
 
 export const ImportingAccountField: React.FC = () => {
   const index = useArrayContext();
@@ -40,25 +91,16 @@ export const ImportingAccountField: React.FC = () => {
 
   const isBluesky =
     taskType === 'BLUESKY_LIKE_IMPORT' || taskType === 'BLUESKY_REPOST_IMPORT';
-  const provider = isBluesky ? 'BLUESKY' : 'TWITTER';
   const providerName = isBluesky ? 'Bluesky' : 'X';
   const Icon = isBluesky ? SocialBlueskyIcon : SocialXIcon;
 
-  const platformIntegrations =
-    integrations?.filter(
-      (i) =>
-        i.provider === provider &&
-        i.status === 'ACTIVE' &&
-        hasFeature(i, 'IMPORT_TASKS')
-    ) || [];
+  const platformIntegrations = isBluesky
+    ? getBlueskyIntegrationsWithFullAccess(integrations)
+    : getTwitterIntegrationsWithImportTasks(integrations);
 
-  const hasPlatformButNoPermission =
-    integrations?.some(
-      (i) =>
-        i.provider === provider &&
-        i.status === 'ACTIVE' &&
-        !hasFeature(i, 'IMPORT_TASKS')
-    ) || false;
+  const hasPlatformButNoPermission = isBluesky
+    ? hasBlueskyWithoutFullAccess(integrations)
+    : hasTwitterWithoutImportTasks(integrations);
 
   return (
     <>
@@ -153,12 +195,7 @@ export const ImportingTweetIdValidation = () => {
   });
 
   const twitterIntegrations =
-    integrations?.filter(
-      (i) =>
-        i.provider === 'TWITTER' &&
-        i.status === 'ACTIVE' &&
-        hasFeature(i, 'IMPORT_TASKS')
-    ) || [];
+    getTwitterIntegrationsWithImportTasks(integrations);
 
   const twitterIntegration = twitterIntegrations.find(
     (i) => i.id === importingAccount

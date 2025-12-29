@@ -106,16 +106,12 @@ export const REQUIRED_TIKTOK_SCOPES = ['user.info.basic'];
 
 export const REQUIRED_BLUESKY_SCOPES = ['atproto', 'transition:generic'];
 
-export const blueskyFeatureSchema = z.union([
-  z.literal('GET_PROFILE'),
-  z.literal('IMPORT_TASKS')
-]);
+export const blueskyFeatureSchema = z.literal('FULL_ACCESS');
 
 export type BlueskyFeatureSchema = z.infer<typeof blueskyFeatureSchema>;
 
 export const BLUESKY_SCOPE_GROUPS: Record<BlueskyFeatureSchema, string[]> = {
-  GET_PROFILE: ['atproto', 'transition:generic'],
-  IMPORT_TASKS: ['atproto', 'transition:generic']
+  FULL_ACCESS: ['atproto', 'transition:generic']
 };
 
 export function getScopesForBlueskyFeatures(
@@ -123,7 +119,7 @@ export function getScopesForBlueskyFeatures(
 ): string[] {
   const scopesSet = new Set<string>();
 
-  const allFeatures: BlueskyFeatureSchema[] = ['GET_PROFILE', ...features];
+  const allFeatures: BlueskyFeatureSchema[] = ['FULL_ACCESS', ...features];
 
   for (const feature of allFeatures) {
     const scopes = BLUESKY_SCOPE_GROUPS[feature];
@@ -140,27 +136,24 @@ export const toBlueskyScope = (features: BlueskyFeatureSchema[]): string => {
 };
 
 export const BLUESKY_FEATURE_LABEL: Record<BlueskyFeatureSchema, string> = {
-  GET_PROFILE: 'Basic profile access',
-  IMPORT_TASKS: 'Import tasks from Bluesky'
+  FULL_ACCESS: 'Full access to Bluesky'
 };
 
 export const BLUESKY_FEATURE_DESCRIPTION: Record<BlueskyFeatureSchema, string> =
   {
-    GET_PROFILE: 'Allows the app to access your basic profile information.',
-    IMPORT_TASKS: 'Allows the app to import your tasks from Bluesky.'
+    FULL_ACCESS:
+      'Allows the app to access your profile, import tasks, and post on your behalf.'
   };
 
 export const BLUESKY_FEATURE_REQUIREMENTS: Record<
   BlueskyFeatureSchema,
   boolean
 > = {
-  GET_PROFILE: true,
-  IMPORT_TASKS: false
+  FULL_ACCESS: true
 };
 
 export const BLUESKY_FEATURE_OPTION: Record<BlueskyFeatureSchema, boolean> = {
-  GET_PROFILE: true,
-  IMPORT_TASKS: true
+  FULL_ACCESS: true
 };
 
 export const blueskyFeatures: (

@@ -1,16 +1,5 @@
 ## Roadmap
 
-### @theejankanator
-
-- [x] Add Bluesky login
-  - [x] Add Bluesky connect
-  - [x] Add Bluesky follow
-  - [x] Add Bluesky like
-  - [x] Add Bluesky repost
-  - [x] Add Bluesky like import
-  - [x] Add Bluesky repost import
-  - [ ] Add Bluesky automatic post & link feature
-
 ## Me
 
 - [ ] Check Cupara Discord chat for bug.

@@ -57,12 +57,12 @@ export function AutomationCard({
             </div>
 
             <Button
-              disabled={hasSweepstakesEnded || jobs.length > 0}
+              disabled={hasSweepstakesEnded}
               size="sm"
               onClick={handleAddAutomation}
             >
-              {jobs.length > 0 ? <></> : <Plus className="h-4 w-4 mr-2" />}
-              {jobs.length > 0 ? 'Max Reached' : 'Add'}
+              <Plus />
+              Add
             </Button>
           </div>
         </CardHeader>

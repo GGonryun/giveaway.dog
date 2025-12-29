@@ -6,6 +6,7 @@ import {
   type TwitterFeatureSchema,
   type BlueskyFeatureSchema
 } from '../scopes';
+import { Nil } from '@/lib/types';
 
 export const DEFAULT_INTEGRATION_LABEL = 'My Integration';
 export const TWITTER_TEAM_APP_CLIENT_ID =
@@ -18,6 +19,7 @@ export const integrationSchema = z.object({
   id: z.string(),
   label: z.string(),
   url: z.string().url().nullable(),
+  account_id: z.string(),
   provider: z.nativeEnum(IntegrationProvider),
   status: z.nativeEnum(IntegrationStatus),
   scopes: z.array(z.string()).optional()
@@ -33,14 +35,34 @@ export function hasScope(
   return integration.scopes.includes(scope);
 }
 
+// Type for Twitter integration
+type TwitterIntegration = IntegrationSchema & {
+  provider: typeof IntegrationProvider.TWITTER;
+};
+
+// Type for Bluesky integration
+type BlueskyIntegration = IntegrationSchema & {
+  provider: typeof IntegrationProvider.BLUESKY;
+};
+
+// Function overloads for type safety
 export function hasFeature(
-  integration: IntegrationSchema | null | undefined,
-  feature: TwitterFeatureSchema | BlueskyFeatureSchema | string
+  integration: Nil<TwitterIntegration>,
+  feature: TwitterFeatureSchema
+): boolean;
+export function hasFeature(
+  integration: Nil<BlueskyIntegration>,
+  feature: BlueskyFeatureSchema
+): boolean;
+export function hasFeature(
+  integration: Nil<IntegrationSchema>,
+  feature: TwitterFeatureSchema | BlueskyFeatureSchema
 ): boolean {
   if (!integration?.scopes) return false;
 
   // Determine which scope group to use based on provider
   if (integration.provider === IntegrationProvider.TWITTER) {
+    if (!integration.scopes) return false;
     const twitterFeature = feature as TwitterFeatureSchema;
     const requiredScopes =
       twitterFeature === 'GET_PROFILE'
@@ -49,18 +71,15 @@ export function hasFeature(
             ...TWITTER_SCOPE_GROUPS['GET_PROFILE'],
             ...TWITTER_SCOPE_GROUPS[twitterFeature]
           ];
+    if (!requiredScopes) return false;
     return requiredScopes.every((scope) => integration.scopes!.includes(scope));
   }
 
   if (integration.provider === IntegrationProvider.BLUESKY) {
+    if (!integration.scopes) return false;
     const blueskyFeature = feature as BlueskyFeatureSchema;
-    const requiredScopes =
-      blueskyFeature === 'GET_PROFILE'
-        ? BLUESKY_SCOPE_GROUPS[blueskyFeature]
-        : [
-            ...BLUESKY_SCOPE_GROUPS['GET_PROFILE'],
-            ...BLUESKY_SCOPE_GROUPS[blueskyFeature]
-          ];
+    const requiredScopes = BLUESKY_SCOPE_GROUPS[blueskyFeature];
+    if (!requiredScopes) return false;
     return requiredScopes.every((scope) => integration.scopes!.includes(scope));
   }
 

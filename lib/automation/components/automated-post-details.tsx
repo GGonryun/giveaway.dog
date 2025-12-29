@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Trash2, ExternalLink, Calendar, Search } from 'lucide-react';
 import { datetime } from '@/lib/date';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,10 +29,22 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { deleteAutomatedPostJob } from '../procedures/delete-automated-post-job';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { AutomatedPostJobType } from '@prisma/client';
+import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 
 interface AutomatedPostDetailsProps {
   job: AutomatedPostJobSchema;
 }
+
+const JOB_TYPE_ICON: Record<AutomatedPostJobType, React.ElementType> = {
+  POST_TO_TWITTER: SocialXIcon,
+  POST_TO_BLUESKY: SocialBlueskyIcon
+};
+
+const JOB_TYPE_LABEL: Record<AutomatedPostJobType, string> = {
+  POST_TO_TWITTER: 'Twitter (X)',
+  POST_TO_BLUESKY: 'Bluesky'
+};
 
 export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
   const router = useRouter();
@@ -56,11 +68,14 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
     deleteJob.run({ jobId: job.id });
   };
 
+  const Icon = JOB_TYPE_ICON[job.type];
+  const jobLabel = JOB_TYPE_LABEL[job.type];
+
   return (
     <>
       <div className="flex items-center justify-between p-3 border rounded-lg bg-card">
         <div className="flex items-center gap-3">
-          <SocialXIcon className="h-5 w-5" />
+          <Icon className="h-5 w-5" />
           <div className="flex flex-col gap-1">
             <AutomatedPostStatusBadge status={job.status} />
             <div className="text-xs text-muted-foreground">
@@ -83,21 +98,15 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
               size="icon"
               onClick={handleDelete}
               disabled={deleteJob.isLoading}
-              title={job.status === 'PENDING' ? 'Cancel post' : 'Delete failed post'}
+              title={
+                job.status === 'PENDING' ? 'Cancel post' : 'Delete failed post'
+              }
             >
               <Trash2 className="h-4 w-4" />
             </Button>
           )}
-          {job.status === 'COMPLETED' && job.response?.tweetUrl && (
-            <Button variant="ghost" size="icon" asChild title="View tweet">
-              <a
-                href={job.response.tweetUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            </Button>
+          {job.status === 'COMPLETED' && (
+            <ExternalLinkButton job={job} hideLabel />
           )}
         </div>
       </div>
@@ -105,9 +114,9 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
       <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Scheduled Twitter Post</DialogTitle>
+            <DialogTitle>Scheduled {jobLabel} Post</DialogTitle>
             <DialogDescription>
-              View details about your scheduled Twitter post
+              View details about your scheduled {jobLabel} post
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-4">
@@ -129,9 +138,8 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
               )}
             </div>
 
-            {/* Tweet content */}
             <div className="space-y-2">
-              <div className="text-sm font-medium">Tweet Content</div>
+              <div className="text-sm font-medium">Content</div>
               <div className="p-3 bg-muted rounded-lg">
                 <p className="text-sm whitespace-pre-wrap">
                   {job.request.text}
@@ -139,7 +147,6 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
               </div>
             </div>
 
-            {/* Image preview */}
             {job.request.imageUrl && (
               <div className="space-y-2">
                 <div className="text-sm font-medium">Image</div>
@@ -153,7 +160,6 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
               </div>
             )}
 
-            {/* Auto tasks */}
             {job.request.tasks && job.request.tasks.length > 0 && (
               <div className="space-y-2">
                 <div className="text-sm font-medium">Linked Tasks</div>
@@ -168,7 +174,6 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
               </div>
             )}
 
-            {/* Error message */}
             {job.status === 'FAILED' && job.response?.error && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-900 font-medium">Error</p>
@@ -178,19 +183,7 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
               </div>
             )}
 
-            {/* Action buttons */}
-            {job.status === 'COMPLETED' && job.response?.tweetUrl && (
-              <Button variant="outline" className="w-full" asChild>
-                <a
-                  href={job.response.tweetUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  View Tweet on X
-                </a>
-              </Button>
-            )}
+            {job.status === 'COMPLETED' && <ExternalLinkButton job={job} />}
           </div>
         </DialogContent>
       </Dialog>
@@ -201,8 +194,7 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Cancel Scheduled Post?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will cancel the scheduled Twitter post. This action cannot be
-              undone.
+              This will cancel the scheduled post. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -216,3 +208,26 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
     </>
   );
 }
+
+const ExternalLinkButton: React.FC<{
+  job: AutomatedPostJobSchema;
+  hideLabel?: boolean;
+}> = ({ job, hideLabel = false }) => {
+  const href =
+    job.type === 'POST_TO_BLUESKY'
+      ? job.response?.postUrl
+      : job.response?.tweetUrl;
+  const label =
+    job.type === 'POST_TO_BLUESKY' ? 'View Post on Bluesky' : 'View Tweet on X';
+
+  if (!href) return null;
+
+  return (
+    <Button variant="ghost" size="icon" asChild title={label}>
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        <ExternalLink className="h-4 w-4" />
+        {!hideLabel && <span>{label}</span>}
+      </a>
+    </Button>
+  );
+};

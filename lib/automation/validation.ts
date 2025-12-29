@@ -1,4 +1,8 @@
-import { PrismaClient } from '@prisma/client';
+import {
+  IdentityProvider,
+  IntegrationStatus,
+  PrismaClient
+} from '@prisma/client';
 import { ScheduleAutomatedPostRequest } from './schemas';
 import { ApplicationError, assertNever } from '../errors';
 
@@ -10,8 +14,10 @@ export const validateAutomatedPostRequest = async (args: {
   switch (args.input.type) {
     case 'POST_TO_TWITTER':
       return validatePostToTwitterRequest(args);
+    case 'POST_TO_BLUESKY':
+      return validatePostToBlueskyRequest(args);
     default:
-      throw assertNever(args.input.type);
+      throw assertNever(args.input);
   }
 };
 
@@ -28,8 +34,8 @@ const validatePostToTwitterRequest = async ({
     where: {
       id: input.request.integrationId,
       teamId,
-      provider: 'TWITTER',
-      status: 'ACTIVE'
+      provider: IdentityProvider.TWITTER,
+      status: IntegrationStatus.ACTIVE
     }
   });
 
@@ -37,6 +43,32 @@ const validatePostToTwitterRequest = async ({
     throw new ApplicationError({
       code: 'PRECONDITION_FAILED',
       message: 'Twitter integration not found or not active'
+    });
+  }
+};
+
+const validatePostToBlueskyRequest = async ({
+  db,
+  input,
+  teamId
+}: {
+  db: PrismaClient;
+  input: ScheduleAutomatedPostRequest;
+  teamId: string;
+}) => {
+  const blueskyIntegration = await db.integration.findFirst({
+    where: {
+      id: input.request.integrationId,
+      teamId,
+      provider: IdentityProvider.BLUESKY,
+      status: IntegrationStatus.ACTIVE
+    }
+  });
+
+  if (!blueskyIntegration) {
+    throw new ApplicationError({
+      code: 'PRECONDITION_FAILED',
+      message: 'Bluesky integration not found or not active'
     });
   }
 };

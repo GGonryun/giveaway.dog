@@ -1,35 +1,23 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { TwitterPostPermissionBanner } from '../twitter-post-permission-banner';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { AlertCircle } from 'lucide-react';
 
 interface AutomatedPostIntegrationStep {
-  hasTwitterIntegration: boolean;
-  hasPostingPermission: boolean;
-  slug: string;
   isSweepstakesLive: boolean;
-  onNext: () => void;
+  onSelectTwitter: () => void;
+  onSelectBluesky: () => void;
 }
 
 export function AutomatedPostIntegrationStep({
-  hasTwitterIntegration,
-  hasPostingPermission,
-  slug,
   isSweepstakesLive,
-  onNext
+  onSelectTwitter,
+  onSelectBluesky
 }: AutomatedPostIntegrationStep) {
   return (
     <div className="space-y-4">
-      <div className="px-4">
-        <TwitterPostPermissionBanner
-          hasTwitterIntegration={hasTwitterIntegration}
-          hasPostingPermission={hasPostingPermission}
-          slug={slug}
-        />
-      </div>
-
       {isSweepstakesLive && (
         <div className="px-4">
           <div className="flex items-start gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -47,10 +35,14 @@ export function AutomatedPostIntegrationStep({
         </div>
       )}
 
-      <div className="px-4">
-        <Button onClick={onNext} variant="outline" className="w-full">
+      <div className="px-4 space-y-2">
+        <Button onClick={onSelectTwitter} variant="outline" className="w-full">
           <SocialXIcon className="h-4 w-4 mr-2" />
           Post to Twitter
+        </Button>
+        <Button onClick={onSelectBluesky} variant="outline" className="w-full">
+          <SocialBlueskyIcon className="h-4 w-4 mr-2" />
+          Post to Bluesky
         </Button>
       </div>
     </div>

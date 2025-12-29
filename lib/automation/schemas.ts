@@ -17,6 +17,17 @@ export type PostToTwitterRequestSchema = z.infer<
   typeof postToTwitterRequestSchema
 >;
 
+export const postToBlueskyRequestSchema = z.object({
+  integrationId: z.string().min(1, 'Please select an account'),
+  text: z.string().min(1, 'Post content is required').max(300),
+  imageUrl: z.string().optional(),
+  tasks: z.array(z.union([z.literal('REPOST'), z.literal('LIKE')])).default([])
+});
+
+export type PostToBlueskyRequestSchema = z.infer<
+  typeof postToBlueskyRequestSchema
+>;
+
 const baseRequestSchema = z.object({
   sweepstakesId: z.string()
 });
@@ -30,8 +41,18 @@ export type ScheduleAutomatedTwitterPostRequestSchema = z.infer<
   typeof scheduleAutomatedTwitterPostRequestSchema
 >;
 
+const scheduleAutomatedBlueskyPostRequestSchema = baseRequestSchema.extend({
+  type: z.literal(AutomatedPostJobType.POST_TO_BLUESKY),
+  request: postToBlueskyRequestSchema
+});
+
+export type ScheduleAutomatedBlueskyPostRequestSchema = z.infer<
+  typeof scheduleAutomatedBlueskyPostRequestSchema
+>;
+
 export const scheduleAutomatedPostSchema = z.discriminatedUnion('type', [
-  scheduleAutomatedTwitterPostRequestSchema
+  scheduleAutomatedTwitterPostRequestSchema,
+  scheduleAutomatedBlueskyPostRequestSchema
 ]);
 
 export type ScheduleAutomatedPostRequest = z.infer<
@@ -62,8 +83,23 @@ const postToTwitterJobSchema = baseJobDataSchema.extend({
 
 export type PostToTwitterJobSchema = z.infer<typeof postToTwitterJobSchema>;
 
+const postToBlueskyJobSchema = baseJobDataSchema.extend({
+  type: z.literal(AutomatedPostJobType.POST_TO_BLUESKY),
+  request: postToBlueskyRequestSchema,
+  response: z
+    .object({
+      postUri: z.string().optional(),
+      postUrl: z.string().url().optional(),
+      error: z.string().optional()
+    })
+    .nullish()
+});
+
+export type PostToBlueskyJobSchema = z.infer<typeof postToBlueskyJobSchema>;
+
 export const automatedPostJobSchema = z.discriminatedUnion('type', [
-  postToTwitterJobSchema
+  postToTwitterJobSchema,
+  postToBlueskyJobSchema
 ]);
 
 export type AutomatedPostJobSchema = z.infer<typeof automatedPostJobSchema>;
