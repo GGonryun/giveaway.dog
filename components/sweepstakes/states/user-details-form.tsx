@@ -44,7 +44,7 @@ const createFormSchema = (formFields: SweepstakesFormFieldSchema[]) => {
       case SweepstakesFormFieldType.USERNAME:
         fieldSchema = z
           .string()
-          .min(3, 'Username must be at least 3 characters')
+          .min(1, 'Username must be at least 1 characters')
           .max(50, 'Username must be at most 50 characters');
 
         if (!field.required) {
