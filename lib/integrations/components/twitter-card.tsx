@@ -39,10 +39,10 @@ export function TwitterCard({ integration }: TwitterCardProps) {
 
   const currentFeatures: TwitterFeatureSchema[] = [];
   if (integration) {
-    if (hasFeature(integration, 'IMPORT_TASKS')) {
+    if (hasFeature({ ...integration, provider: 'TWITTER' }, 'IMPORT_TASKS')) {
       currentFeatures.push('IMPORT_TASKS');
     }
-    if (hasFeature(integration, 'POST_TWEETS')) {
+    if (hasFeature({ ...integration, provider: 'TWITTER' }, 'POST_TWEETS')) {
       currentFeatures.push('POST_TWEETS');
     }
   }
