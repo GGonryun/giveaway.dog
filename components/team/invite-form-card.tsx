@@ -118,6 +118,7 @@ export const InviteFormCard: React.FC<InviteFormCardProps> = ({
               type="submit"
               disabled={isLoading}
               className="w-full sm:ml-auto sm:w-auto"
+              onClick={form.handleSubmit(onSubmit)}
             >
               {isLoading ? 'Sending...' : 'Send Invitations'}
             </Button>
@@ -125,7 +126,7 @@ export const InviteFormCard: React.FC<InviteFormCardProps> = ({
         }
       >
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form className="space-y-4">
             {fields.map((field, index) => (
               <div
                 key={field.id}

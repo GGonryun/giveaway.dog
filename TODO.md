@@ -2,8 +2,6 @@
 
 ## Me
 
-- [ ] Check Cupara Discord chat for bug.
-
 - [ ] Add the ability to pre-set task defaults.
 - [ ] Add the ability to create your own templates.
 - [ ] Add the ability to create a task-bundle that we can reuse across multiple giveaways.

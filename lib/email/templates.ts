@@ -267,7 +267,7 @@ export const getTeamInviteEmailHTML = ({
       <table style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
         <tr>
           <td style="text-align: center;">
-            <div style="font-size: 48px; margin-bottom: 16px;">${teamLogo}</div>
+            <img src="${teamLogo}" alt="${teamName} logo" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 16px; object-fit: cover;" />
             <h1 style="color: #222; margin-bottom: 8px; font-size: 24px;">Team Invitation</h1>
             <p style="font-size: 18px; line-height: 1.5; color: #666; margin-bottom: 24px;">
               ${inviterText} to join <strong style="color:#ff7b00;">${teamName}</strong>
