@@ -282,7 +282,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                           disabled={convertToTemplate.isLoading}
                         >
                           <FileText className="h-4 w-4 mr-2" />
-                          Convert to Template
+                          Templatize
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
