@@ -61,8 +61,8 @@ export const TemplatePublishConfirmationModal: React.FC<
             <AlertTriangleIcon className="h-4 w-4" />
             <AlertDescription>
               <strong>Incomplete Template:</strong> This template has incomplete
-              fields. You can still save it, but creating a sweepstakes from this
-              template will require filling in the missing information.
+              fields. You can still save it, but creating a sweepstakes from
+              this template will require filling in the missing information.
             </AlertDescription>
           </Alert>
         )}

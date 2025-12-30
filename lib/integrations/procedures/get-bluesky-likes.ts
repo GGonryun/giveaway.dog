@@ -63,9 +63,7 @@ async function convertBskyUrlToUri(
   agent: Agent,
   postUrl: string
 ): Promise<string> {
-  const match = postUrl.match(
-    /bsky\.app\/profile\/([^\/]+)\/post\/([^\/\?]+)/
-  );
+  const match = postUrl.match(/bsky\.app\/profile\/([^\/]+)\/post\/([^\/\?]+)/);
   if (!match) {
     throw new ApplicationError({
       code: 'BAD_REQUEST',

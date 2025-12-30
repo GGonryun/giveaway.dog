@@ -16,12 +16,15 @@ export const blueskyProfileRefineUrl = (url: string) => {
   const handleUrlPattern =
     /^https?:\/\/bsky\.app\/profile\/[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+\/?$/;
   // Pattern for DID-based profile URLs: https://bsky.app/profile/did:plc:xxx
-  const didUrlPattern =
-    /^https?:\/\/bsky\.app\/profile\/did:plc:[a-z0-9]+\/?$/;
+  const didUrlPattern = /^https?:\/\/bsky\.app\/profile\/did:plc:[a-z0-9]+\/?$/;
   // Pattern for plain handles: username.bsky.social
   const handlePattern =
     /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
-  return handleUrlPattern.test(url) || didUrlPattern.test(url) || handlePattern.test(url);
+  return (
+    handleUrlPattern.test(url) ||
+    didUrlPattern.test(url) ||
+    handlePattern.test(url)
+  );
 };
 
 export const blueskyProfileRefineError =

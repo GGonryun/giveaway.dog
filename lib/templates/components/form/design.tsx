@@ -21,7 +21,10 @@ export const TemplateDesign = () => {
         description="Customize the content and appearance of your sweepstakes form"
       >
         <DisplayNameField form={form} fieldPath="design.displayName" />
-        <DisplayDescriptionField form={form} fieldPath="design.displayDescription" />
+        <DisplayDescriptionField
+          form={form}
+          fieldPath="design.displayDescription"
+        />
         <AspectRatioField form={form} fieldPath="design.aspectRatio" />
       </UnifiedSectionHeader>
       <UnifiedSectionHeader

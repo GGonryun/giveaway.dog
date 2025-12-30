@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { FieldPath, FieldValues, UseFormReturn, useFormContext } from 'react-hook-form';
+import {
+  FieldPath,
+  FieldValues,
+  UseFormReturn,
+  useFormContext
+} from 'react-hook-form';
 import {
   FormControl,
   FormField,
@@ -36,7 +41,10 @@ import {
 } from '@/components/ui/popover';
 import { toGradient } from '@/schemas/color';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
-import { GiveawayFormSchema, GradientBackgroundSchema } from '@/schemas/giveaway/schemas';
+import {
+  GiveawayFormSchema,
+  GradientBackgroundSchema
+} from '@/schemas/giveaway/schemas';
 
 export const Design = () => {
   const form = useFormContext<GiveawayFormSchema>();
@@ -48,7 +56,10 @@ export const Design = () => {
         description="Customize the content and appearance of your sweepstakes form"
       >
         <DisplayNameField form={form} fieldPath="design.displayName" />
-        <DisplayDescriptionField form={form} fieldPath="design.displayDescription" />
+        <DisplayDescriptionField
+          form={form}
+          fieldPath="design.displayDescription"
+        />
         <AspectRatioField form={form} fieldPath="design.aspectRatio" />
       </UnifiedSectionHeader>
       <UnifiedSectionHeader
@@ -204,10 +215,17 @@ export const BackgroundFields = <
   form: UseFormReturn<TFieldValues>;
   fieldPath: TName;
 }) => {
-  const backgroundType = form.watch(`${fieldPath}.background.type` as FieldPath<TFieldValues>);
+  const backgroundType = form.watch(
+    `${fieldPath}.background.type` as FieldPath<TFieldValues>
+  );
   switch (backgroundType) {
     case 'color':
-      return <ColorPicker form={form} fieldPath={`${fieldPath}.background.color` as FieldPath<TFieldValues>} />;
+      return (
+        <ColorPicker
+          form={form}
+          fieldPath={`${fieldPath}.background.color` as FieldPath<TFieldValues>}
+        />
+      );
     case 'gradient':
       return <GradientPicker form={form} fieldPath={fieldPath} />;
     default:
@@ -280,7 +298,9 @@ const GradientPicker = <
   form: UseFormReturn<TFieldValues>;
   fieldPath: TName;
 }) => {
-  const gradient = form.watch(`${fieldPath}.background` as FieldPath<TFieldValues>) as GradientBackgroundSchema;
+  const gradient = form.watch(
+    `${fieldPath}.background` as FieldPath<TFieldValues>
+  ) as GradientBackgroundSchema;
   const [isOpen, setIsOpen] = useState(false);
 
   if (gradient.type !== 'gradient') return null;
@@ -308,7 +328,12 @@ const GradientPicker = <
           align="start"
         >
           <div className="flex flex-col gap-4">
-            <GradientDirectionField form={form} fieldPath={`${fieldPath}.background.format` as FieldPath<TFieldValues>} />
+            <GradientDirectionField
+              form={form}
+              fieldPath={
+                `${fieldPath}.background.format` as FieldPath<TFieldValues>
+              }
+            />
             <GradientAngleField form={form} fieldPath={fieldPath} />
             <GradientStopsField form={form} fieldPath={fieldPath} />
           </div>
@@ -378,7 +403,9 @@ const GradientAngleField = <
   form: UseFormReturn<TFieldValues>;
   fieldPath: TName;
 }) => {
-  const direction = form.watch(`${fieldPath}.background.format` as FieldPath<TFieldValues>);
+  const direction = form.watch(
+    `${fieldPath}.background.format` as FieldPath<TFieldValues>
+  );
 
   if (direction !== 'linear') return null;
 
@@ -460,7 +487,9 @@ const GradientStopsField = <
   form: UseFormReturn<TFieldValues>;
   fieldPath: TName;
 }) => {
-  const gradient = form.watch(`${fieldPath}.background` as FieldPath<TFieldValues>) as GradientBackgroundSchema;
+  const gradient = form.watch(
+    `${fieldPath}.background` as FieldPath<TFieldValues>
+  ) as GradientBackgroundSchema;
 
   if (gradient.type !== 'gradient') return null;
 
@@ -470,15 +499,18 @@ const GradientStopsField = <
       stops.length > 0
         ? Math.min(stops[stops.length - 1].position + 10, 100)
         : 0;
-    form.setValue(`${fieldPath}.background.stops` as FieldPath<TFieldValues>, [
-      ...stops,
-      { color: '#000000', position: newPosition }
-    ] as any);
+    form.setValue(
+      `${fieldPath}.background.stops` as FieldPath<TFieldValues>,
+      [...stops, { color: '#000000', position: newPosition }] as any
+    );
   };
 
   const removeStop = (index: number) => {
     const stops = gradient.stops.filter((_, i) => i !== index);
-    form.setValue(`${fieldPath}.background.stops` as FieldPath<TFieldValues>, stops as any);
+    form.setValue(
+      `${fieldPath}.background.stops` as FieldPath<TFieldValues>,
+      stops as any
+    );
   };
 
   const updateStop = (
@@ -488,7 +520,10 @@ const GradientStopsField = <
   ) => {
     const stops = [...gradient.stops];
     stops[index] = { ...stops[index], [field]: value };
-    form.setValue(`${fieldPath}.background.stops` as FieldPath<TFieldValues>, stops as any);
+    form.setValue(
+      `${fieldPath}.background.stops` as FieldPath<TFieldValues>,
+      stops as any
+    );
   };
 
   return (

@@ -28,8 +28,12 @@ export const RegionalRestriction = <
   fieldPath: TName;
 }) => {
   const regionalRestriction = form.watch(fieldPath);
-  const filter = form.getFieldState(`${fieldPath}.filter` as FieldPath<TFieldValues>);
-  const regions = form.getFieldState(`${fieldPath}.regions` as FieldPath<TFieldValues>);
+  const filter = form.getFieldState(
+    `${fieldPath}.filter` as FieldPath<TFieldValues>
+  );
+  const regions = form.getFieldState(
+    `${fieldPath}.regions` as FieldPath<TFieldValues>
+  );
 
   return (
     <SwitchBox>
@@ -38,8 +42,14 @@ export const RegionalRestriction = <
       <Collapsible open={regionalRestriction != null}>
         <CollapsibleContent className="flex flex-col gap-2">
           <div className="grid grid-cols-1 sm:grid-cols-[128px_1fr] gap-2 items-start mt-2">
-            <RegionalRestrictionFilterField form={form} fieldPath={`${fieldPath}.filter` as FieldPath<TFieldValues>} />
-            <RegionalRestrictionRegions form={form} fieldPath={`${fieldPath}.regions` as FieldPath<TFieldValues>} />
+            <RegionalRestrictionFilterField
+              form={form}
+              fieldPath={`${fieldPath}.filter` as FieldPath<TFieldValues>}
+            />
+            <RegionalRestrictionRegions
+              form={form}
+              fieldPath={`${fieldPath}.regions` as FieldPath<TFieldValues>}
+            />
           </div>
 
           <FormMessageParagraph
@@ -78,9 +88,10 @@ export const RegionalRestrictionFormField = <
                 title: 'Help: Regional Restrictions',
                 content: (
                   <p>
-                    Restrict access to users from certain regions or countries. This
-                    is useful if your prize is only available in certain areas or if
-                    you need to comply with local laws and regulations.
+                    Restrict access to users from certain regions or countries.
+                    This is useful if your prize is only available in certain
+                    areas or if you need to comply with local laws and
+                    regulations.
                   </p>
                 )
               }}

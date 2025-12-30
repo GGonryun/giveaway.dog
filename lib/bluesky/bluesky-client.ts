@@ -1,9 +1,6 @@
 'use server';
 
-import {
-  NodeOAuthClient,
-  requestLocalLock
-} from '@atproto/oauth-client-node';
+import { NodeOAuthClient, requestLocalLock } from '@atproto/oauth-client-node';
 import { JoseKey } from '@atproto/jwk-jose';
 import prisma from '@/lib/prisma';
 import { REQUIRED_BLUESKY_SCOPES } from '@/lib/integrations/scopes';

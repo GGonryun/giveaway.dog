@@ -22,7 +22,10 @@ export const Audience = () => {
         description="Customize how users log in to participate"
       >
         <AllowedIdentities form={form} fieldPath="audience.allowedIdentities" />
-        <RequirePreEntryLogin form={form} fieldPath="audience.requirePreEntryLogin" />
+        <RequirePreEntryLogin
+          form={form}
+          fieldPath="audience.requirePreEntryLogin"
+        />
       </UnifiedSectionHeader>
       <UnifiedSectionHeader
         label="User Details"
@@ -39,7 +42,10 @@ export const Audience = () => {
         description="Restrict participation based on users' location"
         className="border-t"
       >
-        <RegionalRestriction form={form} fieldPath="audience.regionalRestriction" />
+        <RegionalRestriction
+          form={form}
+          fieldPath="audience.regionalRestriction"
+        />
       </UnifiedSectionHeader>
 
       <UnifiedSectionHeader
