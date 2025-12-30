@@ -2,7 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
-import { HISTORY_PAGE_SIZE } from '@/lib/pagination';
+import { WINNERS_PAGE_SIZE } from '@/lib/pagination';
 import { winnerLeaderboardSchema } from '@/schemas/giveaway/winners';
 
 const getWinnersLeaderboard = procedure()
@@ -13,14 +13,14 @@ const getWinnersLeaderboard = procedure()
     z
       .object({
         page: z.number().int().min(1).default(1),
-        limit: z.number().int().min(1).max(100).default(HISTORY_PAGE_SIZE)
+        limit: z.number().int().min(1).max(100).default(WINNERS_PAGE_SIZE)
       })
       .optional()
   )
   .output(winnerLeaderboardSchema.array())
   .handler(async ({ db, input }) => {
     const page = input?.page ?? 1;
-    const limit = input?.limit ?? HISTORY_PAGE_SIZE;
+    const limit = input?.limit ?? WINNERS_PAGE_SIZE;
     const skip = (page - 1) * limit;
 
     const winners = await db.user.findMany({
@@ -144,7 +144,7 @@ const getWinnersLeaderboard = procedure()
       take: limit
     });
 
-    return winners.map((user) => {
+    const winnersWithCounts = winners.map((user) => {
       const wins = user.participation.flatMap((p) =>
         p.taskCompletions.flatMap((tc) =>
           tc.draws.map((draw) => ({
@@ -168,6 +168,8 @@ const getWinnersLeaderboard = procedure()
         wins
       };
     });
+
+    return winnersWithCounts.sort((a, b) => b.winCount - a.winCount);
   });
 
 export default getWinnersLeaderboard;

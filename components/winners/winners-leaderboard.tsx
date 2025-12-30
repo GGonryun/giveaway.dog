@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, ChevronUp, Trophy, Calendar } from 'lucide-react';
+import { ChevronDown, ChevronUp, Trophy, Calendar, History, Grid3x3 } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,7 +21,7 @@ import {
   PaginationPrevious
 } from '@/components/ui/pagination';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
-import { HISTORY_PAGE_SIZE } from '@/lib/pagination';
+import { WINNERS_PAGE_SIZE } from '@/lib/pagination';
 import { WinnerLeaderboardSchema } from '@/schemas/giveaway/winners';
 
 export function WinnersLeaderboard({
@@ -34,7 +34,7 @@ export function WinnersLeaderboard({
   const pathname = usePathname();
   const [openWinners, setOpenWinners] = useState<Set<string>>(new Set());
   const hasResults = winners.length > 0;
-  const hasMoreResults = winners.length === HISTORY_PAGE_SIZE;
+  const hasMoreResults = winners.length === WINNERS_PAGE_SIZE;
 
   const toggleWinner = (userId: string) => {
     setOpenWinners((prev) => {
@@ -57,11 +57,26 @@ export function WinnersLeaderboard({
   };
 
   return (
-    <div className="w-full bg-background py-6 sm:py-12 container space-y-8">
+    <div className="w-full bg-background py-6 sm:py-12 pb-16 container space-y-8">
       <MarketingPageHeader
-        title="Winners Leaderboard"
+        title="Winner Leaderboard"
         description="Top giveaway winners and their prize history"
       />
+
+      <div className="flex gap-2 w-full sm:w-auto">
+        <Button variant="outline" asChild className="flex-1 sm:flex-initial">
+          <Link href="/browse">
+            <Grid3x3 className="h-4 w-4 mr-2" />
+            Active Giveaways
+          </Link>
+        </Button>
+        <Button variant="outline" asChild className="flex-1 sm:flex-initial">
+          <Link href="/history">
+            <History className="h-4 w-4 mr-2" />
+            History
+          </Link>
+        </Button>
+      </div>
 
       <div className="space-y-4">
         {!hasResults && (
@@ -81,18 +96,18 @@ export function WinnersLeaderboard({
             <Card>
               <CollapsibleTrigger asChild>
                 <button className="w-full text-left hover:bg-muted/50 transition-colors">
-                  <CardContent className="py-4">
+                  <CardContent className="py-2">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4 flex-1 min-w-0">
-                        <div className="flex items-center gap-3">
-                          <div className="text-2xl font-bold text-muted-foreground w-8 text-right">
-                            #{(currentPage - 1) * HISTORY_PAGE_SIZE + index + 1}
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <div className="text-lg font-bold text-muted-foreground w-7 text-right">
+                            #{(currentPage - 1) * WINNERS_PAGE_SIZE + index + 1}
                           </div>
                           {index === 0 && currentPage === 1 && (
-                            <Trophy className="h-6 w-6 text-yellow-500" />
+                            <Trophy className="h-5 w-5 text-yellow-500" />
                           )}
                         </div>
-                        <Avatar className="h-12 w-12">
+                        <Avatar className="h-10 w-10">
                           <AvatarImage
                             src={
                               winner.userImage ??
@@ -128,13 +143,13 @@ export function WinnersLeaderboard({
                 </button>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <CardContent className="pt-0 pb-4">
-                  <div className="border-t pt-4 space-y-2">
+                <CardContent className="pt-0 pb-2">
+                  <div className="border-t pt-2 space-y-1">
                     {winner.wins.map((win, winIndex) => (
                       <Link
                         key={`${win.sweepstakesId}-${winIndex}`}
                         href={`/app/${win.teamSlug}/sweepstakes/${win.sweepstakesId}/winners/public`}
-                        className="block p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                        className="block p-2 rounded-lg hover:bg-muted/50 transition-colors"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1 min-w-0">

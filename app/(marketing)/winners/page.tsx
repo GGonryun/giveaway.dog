@@ -1,5 +1,5 @@
 import getWinnersLeaderboard from '@/procedures/browse/get-winners-leaderboard';
-import { HISTORY_PAGE_SIZE } from '@/lib/pagination';
+import { WINNERS_PAGE_SIZE } from '@/lib/pagination';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { WinnersLeaderboard } from '@/components/winners/winners-leaderboard';
@@ -51,7 +51,7 @@ export default async function Page({
   const page = parseInt(params.page ?? '1', 10);
   const winners = await getWinnersLeaderboard({
     page,
-    limit: HISTORY_PAGE_SIZE
+    limit: WINNERS_PAGE_SIZE
   });
 
   if (!winners.ok)
