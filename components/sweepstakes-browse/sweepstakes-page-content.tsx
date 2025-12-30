@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { History } from 'lucide-react';
+import { History, Trophy } from 'lucide-react';
 
 import { AllGiveawaysGrid } from './components/all-giveaways-grid';
 import { AllGiveawaysSearch } from './components/all-giveaways-search';
@@ -70,12 +70,30 @@ export const SweepstakesPageContent: React.FC<{
               onClear={handleClearSearch}
             />
           </div>
-          <Button variant="outline" asChild className="w-full sm:w-auto">
-            <Link href={isHistoryPage ? '/browse' : '/history'}>
-              <History className="h-4 w-4 mr-2" />
-              {isHistoryPage ? 'Active Giveaways' : 'View History'}
-            </Link>
-          </Button>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Button
+              variant="outline"
+              asChild
+              className="flex-1 sm:flex-initial"
+            >
+              <Link href={isHistoryPage ? '/browse' : '/history'}>
+                <History className="h-4 w-4 mr-2" />
+                {isHistoryPage ? 'Active Giveaways' : 'View History'}
+              </Link>
+            </Button>
+            {isHistoryPage && (
+              <Button
+                variant="outline"
+                asChild
+                className="flex-1 sm:flex-initial"
+              >
+                <Link href="/winners">
+                  <Trophy className="h-4 w-4 mr-2" />
+                  Winners
+                </Link>
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-start gap-6">
