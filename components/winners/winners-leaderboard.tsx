@@ -3,7 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, ChevronUp, Trophy, Calendar, History, Grid3x3 } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  Trophy,
+  Calendar,
+  History,
+  Grid3x3
+} from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -148,7 +155,7 @@ export function WinnersLeaderboard({
                     {winner.wins.map((win, winIndex) => (
                       <Link
                         key={`${win.sweepstakesId}-${winIndex}`}
-                        href={`/app/${win.teamSlug}/sweepstakes/${win.sweepstakesId}/winners/public`}
+                        href={`/browse/${win.sweepstakesId}`}
                         className="block p-2 rounded-lg hover:bg-muted/50 transition-colors"
                       >
                         <div className="flex items-start justify-between gap-4">
