@@ -2,14 +2,6 @@
 
 ## Me
 
-- [ ] Add the ability to pre-set task defaults.
-- [ ] Add the ability to create your own templates.
-- [ ] Add the ability to create a task-bundle that we can reuse across multiple giveaways.
-
-- [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
-
-## Me
-
 - [ ] Add support for generating short links for my sweepstakes, and draw verification
 - [ ] Add a referral task.
 
@@ -21,9 +13,12 @@
 
 ### @Dom on Discord
 
-- [ ] Keep track of winners/historical public giveaways that were run.
 - [ ] Add more filtering options for sorting giveaways.
 - [ ] Let hosts submit proof of receipt to increase their trust score.
+
+## Me
+
+- [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
 
 ### @Gamelooty
 
