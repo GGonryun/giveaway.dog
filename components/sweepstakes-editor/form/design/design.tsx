@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { FieldPath, FieldValues, UseFormReturn, useFormContext } from 'react-hook-form';
 import {
   FormControl,
   FormField,
@@ -37,38 +36,48 @@ import {
 } from '@/components/ui/popover';
 import { toGradient } from '@/schemas/color';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import { GiveawayFormSchema, GradientBackgroundSchema } from '@/schemas/giveaway/schemas';
 
 export const Design = () => {
+  const form = useFormContext<GiveawayFormSchema>();
+
   return (
     <>
       <UnifiedSectionHeader
         label="Form Design"
         description="Customize the content and appearance of your sweepstakes form"
       >
-        <DisplayNameField />
-        <DisplayDescriptionField />
-        <AspectRatioField />
+        <DisplayNameField form={form} fieldPath="design.displayName" />
+        <DisplayDescriptionField form={form} fieldPath="design.displayDescription" />
+        <AspectRatioField form={form} fieldPath="design.aspectRatio" />
       </UnifiedSectionHeader>
       <UnifiedSectionHeader
         label="Layout"
         description="Choose the layout and background style for your giveaway"
         className="border-t"
       >
-        <BackgroundColor />
-        <BackgroundFields />
+        <BackgroundColor form={form} fieldPath="design.background" />
+        <BackgroundFields form={form} fieldPath="design" />
       </UnifiedSectionHeader>
     </>
   );
 };
 
-const DisplayNameField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+export const DisplayNameField = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   return (
     <SwitchBox>
       <FormField
         control={form.control}
-        name="design.displayName"
+        name={fieldPath}
         render={({ field }) => (
           <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader
@@ -95,13 +104,21 @@ const DisplayNameField = () => {
   );
 };
 
-const DisplayDescriptionField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+export const DisplayDescriptionField = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   return (
     <SwitchBox>
       <FormField
         control={form.control}
-        name="design.displayDescription"
+        name={fieldPath}
         render={({ field }) => (
           <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader
@@ -129,12 +146,20 @@ const DisplayDescriptionField = () => {
   );
 };
 
-const BackgroundColor = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+export const BackgroundColor = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   return (
     <FormField
       control={form.control}
-      name="design.background"
+      name={fieldPath}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Background</FormLabel>
@@ -169,28 +194,44 @@ const BackgroundColor = () => {
   );
 };
 
-const BackgroundFields = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-  const backgroundType = form.watch('design.background.type');
+export const BackgroundFields = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
+  const backgroundType = form.watch(`${fieldPath}.background.type` as FieldPath<TFieldValues>);
   switch (backgroundType) {
     case 'color':
-      return <ColorPicker />;
+      return <ColorPicker form={form} fieldPath={`${fieldPath}.background.color` as FieldPath<TFieldValues>} />;
     case 'gradient':
-      return <GradientPicker />;
+      return <GradientPicker form={form} fieldPath={fieldPath} />;
     default:
       throw assertNever(backgroundType);
   }
 };
 
-const ColorPicker = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-  const color = form.watch('design.background.color');
+const ColorPicker = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
+  const color = form.watch(fieldPath);
   const colorInputRef = React.useRef<HTMLInputElement>(null);
 
   return (
     <FormField
       control={form.control}
-      name="design.background.color"
+      name={fieldPath}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Color</FormLabel>
@@ -229,9 +270,17 @@ const ColorPicker = () => {
   );
 };
 
-const GradientPicker = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-  const gradient = form.watch('design.background');
+const GradientPicker = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
+  const gradient = form.watch(`${fieldPath}.background` as FieldPath<TFieldValues>) as GradientBackgroundSchema;
   const [isOpen, setIsOpen] = useState(false);
 
   if (gradient.type !== 'gradient') return null;
@@ -259,9 +308,9 @@ const GradientPicker = () => {
           align="start"
         >
           <div className="flex flex-col gap-4">
-            <GradientDirectionField />
-            <GradientAngleField />
-            <GradientStopsField />
+            <GradientDirectionField form={form} fieldPath={`${fieldPath}.background.format` as FieldPath<TFieldValues>} />
+            <GradientAngleField form={form} fieldPath={fieldPath} />
+            <GradientStopsField form={form} fieldPath={fieldPath} />
           </div>
         </PopoverContent>
       </Popover>
@@ -269,12 +318,20 @@ const GradientPicker = () => {
   );
 };
 
-const GradientDirectionField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+const GradientDirectionField = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   return (
     <FormField
       control={form.control}
-      name="design.background.format"
+      name={fieldPath}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Type</FormLabel>
@@ -311,16 +368,24 @@ const GradientDirectionField = () => {
   );
 };
 
-const GradientAngleField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-  const direction = form.watch('design.background.format');
+const GradientAngleField = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
+  const direction = form.watch(`${fieldPath}.background.format` as FieldPath<TFieldValues>);
 
   if (direction !== 'linear') return null;
 
   return (
     <FormField
       control={form.control}
-      name="design.background.angle"
+      name={`${fieldPath}.background.angle` as FieldPath<TFieldValues>}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Angle</FormLabel>
@@ -385,9 +450,17 @@ const AngleSelector = ({
   );
 };
 
-const GradientStopsField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-  const gradient = form.watch('design.background');
+const GradientStopsField = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
+  const gradient = form.watch(`${fieldPath}.background` as FieldPath<TFieldValues>) as GradientBackgroundSchema;
 
   if (gradient.type !== 'gradient') return null;
 
@@ -397,15 +470,15 @@ const GradientStopsField = () => {
       stops.length > 0
         ? Math.min(stops[stops.length - 1].position + 10, 100)
         : 0;
-    form.setValue('design.background.stops', [
+    form.setValue(`${fieldPath}.background.stops` as FieldPath<TFieldValues>, [
       ...stops,
       { color: '#000000', position: newPosition }
-    ]);
+    ] as any);
   };
 
   const removeStop = (index: number) => {
     const stops = gradient.stops.filter((_, i) => i !== index);
-    form.setValue('design.background.stops', stops);
+    form.setValue(`${fieldPath}.background.stops` as FieldPath<TFieldValues>, stops as any);
   };
 
   const updateStop = (
@@ -415,7 +488,7 @@ const GradientStopsField = () => {
   ) => {
     const stops = [...gradient.stops];
     stops[index] = { ...stops[index], [field]: value };
-    form.setValue('design.background.stops', stops);
+    form.setValue(`${fieldPath}.background.stops` as FieldPath<TFieldValues>, stops as any);
   };
 
   return (
@@ -477,14 +550,21 @@ const GradientStopsField = () => {
   );
 };
 
-const AspectRatioField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-
+export const AspectRatioField = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   return (
     <SwitchBox>
       <FormField
         control={form.control}
-        name="design.aspectRatio"
+        name={fieldPath}
         render={({ field }) => (
           <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader

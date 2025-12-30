@@ -158,7 +158,7 @@ const TemplatesGridWrapper: React.FC<{ slug: string }> = async ({ slug }) => {
       <div>There was an error loading templates: {templates.data.message}</div>
     );
   }
-  return <TemplatesGrid slug={slug} templates={templates.data} />;
+  return <TemplatesGrid slug={slug} items={templates.data} />;
 };
 
 export default SweepstakesPage;

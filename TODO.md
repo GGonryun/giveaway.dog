@@ -14,9 +14,16 @@
 - [ ] Add a referral task.
 
 - [ ] Fix the way we update sweepstakes it's unruly for huge giveaways.
-- [ ] Fix the unoptimized users page slow loading
+- [ ] Fix the unoptimized users page slow loading.
+- [ ] Upload social proof onto the website.
 
 - [ ] Custom discord bots.
+
+### @Dom on Discord
+
+- [ ] Keep track of winners/historical public giveaways that were run.
+- [ ] Add more filtering options for sorting giveaways.
+- [ ] Let hosts submit proof of receipt to increase their trust score.
 
 ### @Gamelooty
 

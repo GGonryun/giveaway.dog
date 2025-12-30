@@ -3,8 +3,7 @@
 import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useFieldArray, useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { ArrayPath, useFieldArray } from 'react-hook-form';
 import {
   closestCenter,
   DndContext,
@@ -43,18 +42,44 @@ import {
 } from '../schemas';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '../defaults';
 import { FormFieldComponent } from './form-field';
+import {
+  FieldPath,
+  FieldValues,
+  UseFormReturn,
+  FieldArray
+} from 'react-hook-form';
 
-export const CustomFormFields = () => {
-  const [active, setActive] = useState<SweepstakesFormFieldSchema | null>(null);
-  const [open, setOpen] = useState<string[]>([]);
+type FormFieldArrayPath<T extends FieldValues> = {
+  [P in ArrayPath<T>]: FieldArray<T, P> extends SweepstakesFormFieldSchema
+    ? P
+    : never;
+}[ArrayPath<T>];
 
-  const form = useFormContext<GiveawayFormSchema>();
+// Type assertion: fields array should contain SweepstakesFormFieldSchema items
+type FieldType = SweepstakesFormFieldSchema & { id: string };
+
+export const CustomFormFields = <
+  TFieldValues extends FieldValues,
+  TName extends
+    FormFieldArrayPath<TFieldValues> = FormFieldArrayPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
-    name: 'audience.formFields'
+    name: fieldPath
   });
 
-  const existingTypes = new Set(fields.map((field) => field.type));
+  const [active, setActive] = useState<FieldType | null>(null);
+  const [open, setOpen] = useState<string[]>([]);
+
+  const existingTypes = new Set(
+    fields.map((field) => (field as FieldType).type)
+  );
 
   const handleDragEnd = (event: DragEndEvent) => {
     setActive(null);
@@ -68,11 +93,9 @@ export const CustomFormFields = () => {
 
   const handleDragStart = (event: DragStartEvent) => {
     const index = fields.findIndex((f) => f.id === event.active.id);
-    const field = fields[index];
+    const field = fields[index] as FieldType;
     if (field) {
-      setActive({
-        ...field
-      });
+      setActive(field);
     }
   };
 
@@ -91,7 +114,7 @@ export const CustomFormFields = () => {
   return (
     <FormField
       control={form.control}
-      name="audience.formFields"
+      name={fieldPath as any}
       render={() => (
         <FormItem>
           <FormControl>
@@ -106,23 +129,29 @@ export const CustomFormFields = () => {
                   items={fields}
                   strategy={verticalListSortingStrategy}
                 >
-                  {fields.map((field, index) => (
-                    <FormFieldComponent
-                      key={field.id}
-                      id={field.id}
-                      type={field.type}
-                      index={index}
-                      open={open.includes(field.id)}
-                      onOpenChange={handleOpenChange(field.id)}
-                      onRemove={() => remove(index)}
-                      onCopy={() => {
-                        append({
-                          ...field,
-                          id: nanoid()
-                        });
-                      }}
-                    />
-                  ))}
+                  {fields.map((field, index) => {
+                    const typedField = field as FieldType;
+                    return (
+                      <FormFieldComponent
+                        key={field.id}
+                        id={field.id}
+                        type={typedField.type}
+                        index={index}
+                        open={open.includes(field.id)}
+                        onOpenChange={handleOpenChange(field.id)}
+                        onRemove={() => remove(index)}
+                        onCopy={() => {
+                          const fieldCopy = {
+                            ...field,
+                            id: nanoid()
+                          };
+                          append(fieldCopy);
+                        }}
+                        form={form}
+                        fieldPath={fieldPath as FieldPath<TFieldValues>}
+                      />
+                    );
+                  })}
                 </SortableContext>
                 <DragOverlay>
                   {active ? (
@@ -134,6 +163,8 @@ export const CustomFormFields = () => {
                       onOpenChange={() => {}}
                       onRemove={() => {}}
                       onCopy={() => {}}
+                      form={form}
+                      fieldPath={fieldPath as FieldPath<TFieldValues>}
                     />
                   ) : null}
                 </DragOverlay>
@@ -160,6 +191,7 @@ export const CustomFormFields = () => {
                         label
                       };
 
+                      // strict typing at the top ensures we only append valid field types
                       switch (type) {
                         case SweepstakesFormFieldType.USERNAME:
                           append({
@@ -167,20 +199,20 @@ export const CustomFormFields = () => {
                             type: SweepstakesFormFieldType.USERNAME,
                             placeholder: '',
                             required: false
-                          });
+                          } as any);
                           break;
                         case SweepstakesFormFieldType.AGE:
                           append({
                             ...DEFAULT_MINIMUM_AGE_FIELD,
                             id: nanoid()
-                          });
+                          } as any);
                           break;
                         case SweepstakesFormFieldType.EMAIL:
                           append({
                             ...baseField,
                             type: SweepstakesFormFieldType.EMAIL,
                             placeholder: ''
-                          });
+                          } as any);
                           break;
                         case SweepstakesFormFieldType.TWITTER:
                           append({
@@ -188,7 +220,7 @@ export const CustomFormFields = () => {
                             type: SweepstakesFormFieldType.TWITTER,
                             placeholder: TWITTER_PROFILE_URL,
                             required: false
-                          });
+                          } as any);
                           break;
                       }
                     };

@@ -273,6 +273,7 @@ export const TermsAndConditions = () => {
                             <Input
                               placeholder="123 Main St, City, Country"
                               {...field}
+                              value={field.value ?? ''}
                             />
                           </FormControl>
                           <FormMessage />
@@ -369,6 +370,7 @@ export const TermsAndConditions = () => {
                             <Input
                               placeholder="https://yourcompany.com/privacy"
                               {...field}
+                              value={field.value ?? ''}
                             />
                           </FormControl>
                           <FormMessage />
@@ -387,6 +389,7 @@ export const TermsAndConditions = () => {
                               placeholder="Add any additional terms and conditions..."
                               rows={4}
                               {...field}
+                              value={field.value ?? ''}
                             />
                           </FormControl>
                         </FormItem>

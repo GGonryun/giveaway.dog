@@ -1,5 +1,11 @@
-import { useFieldArray, useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import {
+  useFieldArray,
+  FieldPath,
+  FieldValues,
+  UseFormReturn,
+  ArrayPath,
+  FieldArray
+} from 'react-hook-form';
 import React, { useEffect, useState } from 'react';
 import { EntryMethod } from './entry-method';
 import { SelectTaskDialog } from '../select-dialog/select-task-dialog';
@@ -28,23 +34,40 @@ import { nanoid } from 'nanoid';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { TaskType } from '@prisma/client';
 import { uniq } from 'lodash';
+import { TaskSchema } from '@/lib/task/schemas';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };
 
-export const EntryMethods = () => {
+type TaskArrayPath<T extends FieldValues> = {
+  [P in ArrayPath<T>]: FieldArray<T, P> extends TaskSchema ? P : never;
+}[ArrayPath<T>];
+
+// Type assertion: fields array should contain TaskSchema items
+type FieldType = TaskSchema & { id: string };
+
+export const EntryMethods = <
+  TFieldValues extends FieldValues,
+  TName extends TaskArrayPath<TFieldValues> = TaskArrayPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   const [active, setActive] = useState<ActiveEntry | null>(null);
   const [open, setOpen] = useState<string[]>([]);
   const [prevLength, setPrevLength] = useState(0);
   const [isInitialMount, setIsInitialMount] = useState(true);
-  const form = useFormContext<GiveawayFormSchema>();
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
-    name: 'tasks'
+    name: fieldPath
   });
 
   const handleSelection = async (type: TaskType) => {
     const task = { ...toDefaultValues(type), id: nanoid() };
-    append(task);
+    // type assertion at the top protects us against invalid types here
+    append(task as any);
   };
 
   useEffect(() => {
@@ -73,13 +96,13 @@ export const EntryMethods = () => {
 
   const handleDragStart = (event: DragStartEvent) => {
     const index = fields.findIndex((f) => f.id === event.active.id);
-    const field = fields[index];
+    const field = fields[index] as FieldType;
     if (field) {
       setActive({
         id: field.id,
         type: field.type,
         index
-      });
+      } as any);
     }
   };
 
@@ -108,7 +131,7 @@ export const EntryMethods = () => {
     >
       <FormField
         control={form.control}
-        name="tasks"
+        name={fieldPath as FieldPath<TFieldValues>}
         render={() => (
           <FormItem>
             <FormControl>
@@ -123,17 +146,22 @@ export const EntryMethods = () => {
                     items={fields}
                     strategy={verticalListSortingStrategy}
                   >
-                    {fields.map((field, index) => (
-                      <EntryMethod
-                        {...field}
-                        key={field.id}
-                        index={index}
-                        open={open.includes(field.id)}
-                        onOpenChange={handleOpenChange(field.id)}
-                        onRemove={() => handleRemove(index)}
-                        onCopy={() => append({ ...field, id: nanoid() })}
-                      />
-                    ))}
+                    {fields.map((field, index) => {
+                      const typedField = field as FieldType;
+                      return (
+                        <EntryMethod
+                          {...typedField}
+                          key={field.id}
+                          index={index}
+                          open={open.includes(field.id)}
+                          onOpenChange={handleOpenChange(field.id)}
+                          onRemove={() => handleRemove(index)}
+                          onCopy={() =>
+                            append({ ...field, id: nanoid() } as any)
+                          }
+                        />
+                      );
+                    })}
                   </SortableContext>
                   <DragOverlay>
                     {active ? (

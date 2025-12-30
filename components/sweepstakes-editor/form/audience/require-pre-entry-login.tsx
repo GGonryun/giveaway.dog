@@ -1,5 +1,4 @@
-import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -7,14 +6,21 @@ import {
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
 
-export const RequirePreEntryLogin = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-
+export const RequirePreEntryLogin = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   return (
     <SwitchBox>
       <FormField
         control={form.control}
-        name="audience.requirePreEntryLogin"
+        name={fieldPath}
         render={({ field }) => (
           <FormItem className="flex flex-row items-start justify-between">
             <SwitchFormHeader

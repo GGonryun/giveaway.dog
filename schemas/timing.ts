@@ -8,12 +8,12 @@ export const timingSchema = ({
   maxDurationDays: number;
 }) => {
   const endDate = validate
-    ? z.date().refine((date) => date > new Date(), {
+    ? z.coerce.date().refine((date) => date > new Date(), {
         message: 'End date must be in the future'
       })
-    : z.date();
+    : z.coerce.date();
   const obj = z.object({
-    startDate: z.date(),
+    startDate: z.coerce.date(),
     endDate,
     timeZone: z.string()
   });

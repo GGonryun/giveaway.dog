@@ -1,5 +1,4 @@
-import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 import {
   FormControl,
   FormField,
@@ -21,12 +20,20 @@ const OPTIONS: Record<RegionalRestrictionFilter, string> = {
   [RegionalRestrictionFilter.EXCLUDE]: 'Exclude'
 };
 
-export const RegionalRestrictionFilterField: React.FC = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+export const RegionalRestrictionFilterField = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   return (
     <FormField
       control={form.control}
-      name="audience.regionalRestriction.filter"
+      name={fieldPath}
       render={({ field }) => (
         <FormItem className="flex flex-row items-center justify-between">
           <FormControl>

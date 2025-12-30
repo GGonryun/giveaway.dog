@@ -136,12 +136,6 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
     }
   }, [isMobile]);
 
-  const state = toSweepstakesState({
-    sweepstakes,
-    prizes: winners,
-    participant: mockParticipant
-  });
-
   const bg = useMemo(
     () => toBackgroundStyle(sweepstakes.design.background),
     [sweepstakes.design.background]

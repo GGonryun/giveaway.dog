@@ -7,7 +7,10 @@ import {
   SolidColorBackgroundSchema
 } from './schemas';
 import { AllowedUserSourcesSchema } from '@/lib/user-source/schemas';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import {
+  DEFAULT_ALLOWED_IDENTITIES,
+  DEFAULT_REQUIRED_PRE_ENTRY_LOGIN
+} from '@/lib/settings';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
 
 export const DEFAULT_SWEEPSTAKES_NAME = 'Untitled Sweepstakes';
@@ -55,6 +58,7 @@ export const DEFAULT_SWEEPSTAKES_TERMS: Prisma.SweepstakesTermsUncheckedCreateWi
 
 export const DEFAULT_SWEEPSTAKES_AUDIENCE: Prisma.SweepstakesAudienceUncheckedCreateWithoutSweepstakesInput =
   {
+    requirePreEntryLogin: DEFAULT_REQUIRED_PRE_ENTRY_LOGIN,
     allowedIdentities: DEFAULT_ALLOWED_IDENTITIES,
     formFields: {
       createMany: {
@@ -66,8 +70,7 @@ export const DEFAULT_SWEEPSTAKES_AUDIENCE: Prisma.SweepstakesAudienceUncheckedCr
           },
           {
             label: 'Email',
-            type: 'EMAIL',
-            required: true
+            type: 'EMAIL'
           },
           DEFAULT_MINIMUM_AGE_FIELD
         ]
@@ -99,7 +102,7 @@ export const DEFAULT_GRADIENT_DESIGN_BACKGROUND: GradientBackgroundSchema = {
   ]
 };
 
-const DEFAULT_DESIGN_DATA: GiveawayDesignSchema = {
+export const DEFAULT_DESIGN_DATA: GiveawayDesignSchema = {
   displayName: true,
   displayDescription: true,
   aspectRatio: 'VIDEO',
@@ -120,6 +123,6 @@ export const DEFAULT_SWEEPSTAKES_VISIBILITY: Prisma.SweepstakesVisibilityCreateW
 export const DEFAULT_SWEEPSTAKES_WINNER_CRITERIA: Prisma.SweepstakesWinnerCriteriaCreateWithoutSweepstakesInput =
   {
     minQualityScore: DEFAULT_MIN_QUALITY_SCORE,
-    minTasksCompleted: 1,
-    allowMultipleWins: false
+    minTasksCompleted: DEFAULT_MIN_TASK_COMPLETED,
+    allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS
   };

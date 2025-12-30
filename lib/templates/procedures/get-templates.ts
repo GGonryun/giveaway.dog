@@ -4,7 +4,9 @@ import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import {
   templateFiltersSchema,
-  templateListItemSchema
+  TemplateListItemSchema,
+  templateListItemSchema,
+  toTemplateInputSchema
 } from '../schemas/template';
 import { STATIC_TEMPLATES } from '../data/static-templates';
 
@@ -27,6 +29,19 @@ export const getTemplates = procedure()
             userId: user.id
           }
         }
+      },
+      include: {
+        templates: {
+          include: {
+            createdBy: {
+              select: {
+                id: true,
+                name: true,
+                image: true
+              }
+            }
+          }
+        }
       }
     });
 
@@ -34,46 +49,61 @@ export const getTemplates = procedure()
       return [];
     }
 
-    let templates = STATIC_TEMPLATES.filter((template) => {
-      if (input.tags && input.tags.length > 0) {
-        const hasTag = input.tags.some((tag) => template.tags.includes(tag));
-        if (!hasTag) return false;
-      }
-
-      if (input.search) {
-        const searchLower = input.search.toLowerCase();
-        const matchesName = template.name.toLowerCase().includes(searchLower);
-        const matchesDescription = template.description
-          .toLowerCase()
-          .includes(searchLower);
-        const matchesTag = template.tags.some((tag) =>
-          tag.toLowerCase().includes(searchLower)
-        );
-        if (!matchesName && !matchesDescription && !matchesTag) {
-          return false;
-        }
-      }
-
-      return true;
+    // Get database templates - parse from storage format to flattened schema
+    const dbTemplates: TemplateListItemSchema[] = team.templates.map((t) => {
+      const template = toTemplateInputSchema(t);
+      return {
+        teamId: team.id,
+        team: {
+          name: team.name,
+          slug: team.slug,
+          logo: team.logo
+        },
+        createdBy: {
+          id: t.createdBy.id,
+          name: t.createdBy.name,
+          image: t.createdBy.image
+        },
+        isCustom: true,
+        template
+      };
     });
 
-    return templates.map((template) => ({
-      id: template.id,
-      name: template.name,
-      description: template.description,
-      image: template.image,
-      tags: template.tags,
-      content: template.content,
-      teamId: team.id,
-      team: {
-        name: team.name,
-        slug: team.slug,
-        logo: team.logo
-      },
-      createdBy: {
-        id: user.id,
-        name: user.name,
-        image: user.image
-      }
-    }));
+    // Get static templates - already in flattened format
+    const staticTemplates: TemplateListItemSchema[] = STATIC_TEMPLATES.map(
+      (template) => ({
+        template,
+        teamId: team.id,
+        team: {
+          name: team.name,
+          slug: team.slug,
+          logo: team.logo
+        },
+        createdBy: {
+          id: user.id,
+          name: user.name,
+          image: user.image
+        },
+        isCustom: false
+      })
+    );
+
+    // Merge both
+    let allTemplates = [...dbTemplates, ...staticTemplates];
+
+    if (input.search) {
+      const searchLower = input.search.toLowerCase();
+      allTemplates = allTemplates.filter((template) => {
+        const matchesName = template.template.template.name
+          .toLowerCase()
+          .includes(searchLower);
+        const matchesDescription = template.template.template.description
+          .toLowerCase()
+          .includes(searchLower);
+
+        return matchesName || matchesDescription;
+      });
+    }
+
+    return allTemplates;
   });

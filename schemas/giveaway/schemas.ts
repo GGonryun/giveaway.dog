@@ -39,7 +39,7 @@ export type RegionalRestrictionFilterSchema = z.infer<
 
 export const termsTemplateSchema = z.object({
   sponsorName: z.string().min(1, 'Sponsor name is required'),
-  sponsorAddress: z.string().optional(),
+  sponsorAddress: z.string().nullish(),
   winnerSelectionMethod: z
     .string()
     .min(1, 'Winner selection method is required'),
@@ -51,14 +51,14 @@ export const termsTemplateSchema = z.object({
     .number()
     .int()
     .positive('Claim deadline must be a positive integer'),
-  maxEntriesPerUser: z.number().int().positive().optional(),
+  maxEntriesPerUser: z.number().int().positive().nullish(),
   governingLawCountry: z.string().min(1, 'Governing law country is required'),
   privacyPolicyUrl: z
     .string()
     .url('Privacy policy must be a valid URL')
     .or(z.literal(''))
-    .optional(),
-  additionalTerms: z.string().optional()
+    .nullish(),
+  additionalTerms: z.string().nullish()
 });
 
 export type TermsTemplateSchema = z.infer<typeof termsTemplateSchema>;
@@ -84,7 +84,7 @@ export const regionalRestrictionSchema = z
     filter: regionalRestrictionFilterSchema
   })
   .nullable()
-  .optional();
+  .nullish();
 
 export type RegionalRestrictionSchema = z.infer<
   typeof regionalRestrictionSchema
@@ -99,8 +99,7 @@ export const minimumAgeRestrictionSchema = z
     label: z.string().min(1, 'Label is required'),
     required: z.boolean()
   })
-  .optional()
-  .nullable();
+  .nullish();
 
 export type MinimumAgeRestrictionSchema = z.infer<
   typeof minimumAgeRestrictionSchema
@@ -117,7 +116,7 @@ const sweepstakesVisibilitySchema = z.object({
       'URL slug can only contain letters, numbers, and hyphens'
     )
     .nullable()
-    .optional()
+    .nullish()
 });
 
 export type SweepstakesVisibilitySchema = z.infer<
@@ -137,7 +136,7 @@ const sweepstakesWinnerCriteriaSchema = z.object({
     .max(100, 'Quality score must be between 0-100')
     .default(70),
   allowMultipleWins: z.boolean().default(false),
-  externalPlatforms: allowedUserSourcesSchema.nullable().optional()
+  externalPlatforms: allowedUserSourcesSchema.nullable().nullish()
 });
 
 export type SweepstakesWinnerCriteriaSchema = z.infer<
@@ -149,7 +148,7 @@ const giveawayAudienceSchema = z.object({
     .array()
     .min(1, 'At least one allowed identity is required'),
   regionalRestriction: regionalRestrictionSchema,
-  requirePreEntryLogin: z.boolean().optional().default(false),
+  requirePreEntryLogin: z.boolean().nullish().default(false),
   formFields: z.array(sweepstakesFormFieldSchema).default([])
 });
 
@@ -279,11 +278,11 @@ export type UserParticipationSchema = z.infer<typeof userParticipationSchema>;
 
 // Host Schema
 export const giveawayHostSchema = z.object({
-  id: z.string().optional(),
+  id: z.string().nullish(),
   slug: z.string(),
   name: z.string(),
-  logo: z.string().optional(),
-  links: z.any().optional()
+  logo: z.string().nullish(),
+  links: z.any().nullish()
 });
 
 export type GiveawayHostSchema = z.infer<typeof giveawayHostSchema>;

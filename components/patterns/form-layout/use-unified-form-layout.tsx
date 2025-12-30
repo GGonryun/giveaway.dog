@@ -7,7 +7,8 @@ import {
   FieldKey,
   FormLayoutProps,
   UnifiedFormAction,
-  UniformFormType
+  UniformFormType,
+  BannerConfig
 } from './types';
 import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
 import { useFormErrors } from './use-form-issues';
@@ -31,6 +32,7 @@ export type UnifiedFormLayoutState<TSteps extends string> = {
   stepLabels: Record<TSteps, string>;
   onCancel: () => void;
   onSave: () => void;
+  banner?: BannerConfig | null;
   // error related data
   showIssues: boolean;
   setShowIssues: (show: boolean) => void;
@@ -74,7 +76,8 @@ export const UnifiedFormLayoutContext = React.createContext<
   stepOrder: [],
   stepsToFields: {},
   fieldsToSteps: {},
-  hasErrors: false
+  hasErrors: false,
+  banner: null
 });
 
 export const useUnifiedFormLayout = <TSteps extends string>() => {
@@ -111,6 +114,7 @@ export const UnifiedFormLayoutContextProvider = <T extends string>({
   onSave,
   setShowIssues,
   showIssues,
+  banner,
   ...props
 }: UnifiedFormLayoutContextProps<T>) => {
   const { trigger } = useFormContext();
@@ -185,7 +189,8 @@ export const UnifiedFormLayoutContextProvider = <T extends string>({
         stepOrder,
         action,
         stepsToFields,
-        fieldsToSteps
+        fieldsToSteps,
+        banner
       }}
     >
       <UnifiedFormLayout {...props} />

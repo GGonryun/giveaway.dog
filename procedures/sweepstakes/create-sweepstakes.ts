@@ -18,9 +18,15 @@ import {
 } from '@/schemas/giveaway/defaults';
 import { findUserTeamQuery } from './shared';
 import { getTemplateById } from '@/lib/templates/data/static-templates';
-import { SweepstakesStatus } from '@prisma/client';
+import { Prisma, PrismaClient, SweepstakesStatus } from '@prisma/client';
 import { toStorableSweepstakesUpdate } from '@/schemas/giveaway/storable';
 import { isUndefined, omitBy } from 'lodash';
+import {
+  TemplateFormSchema,
+  TemplateInputSchema,
+  toTemplateFormSchema,
+  toTemplateInputSchema
+} from '@/lib/templates/schemas/template';
 
 const SWEEPSTAKE_ID_SIZE = 6;
 
@@ -84,19 +90,13 @@ export const createSweepstakes = procedure()
       }
     };
 
-    const template = getTemplateById(input.templateId);
-    if (template) {
-      return await db.sweepstakes.create({
-        data: {
-          ...base,
-          ...omitBy(
-            toStorableSweepstakesUpdate({
-              ...template,
-              ...template.content
-            }),
-            isUndefined
-          )
-        }
+    // Check for template (static or database)
+    if (input.templateId) {
+      return await createFromTemplate({
+        db,
+        teamId: team.id,
+        templateId: input.templateId,
+        base
       });
     }
 
@@ -105,3 +105,59 @@ export const createSweepstakes = procedure()
     });
     return created;
   });
+
+const createFromTemplate = async ({
+  db,
+  teamId,
+  templateId,
+  base
+}: {
+  db: PrismaClient;
+  teamId: string;
+  templateId: string;
+  base: Prisma.SweepstakesCreateInput;
+}) => {
+  const template = await toTemplate({ db, templateId, teamId });
+  const update = toStorableSweepstakesUpdate(template);
+  const omitted = omitBy(update, isUndefined);
+
+  return await db.sweepstakes.create({
+    data: {
+      ...base,
+      ...omitted
+    }
+  });
+};
+
+const toTemplate = async ({
+  templateId,
+  db,
+  teamId
+}: {
+  db: PrismaClient;
+  templateId: string;
+  teamId: string;
+}): Promise<TemplateInputSchema> => {
+  const staticTemplate = getTemplateById(templateId);
+
+  if (staticTemplate) {
+    return staticTemplate;
+  }
+
+  // Check database templates
+  const dbTemplate = await db.template.findFirst({
+    where: {
+      id: templateId,
+      teamId
+    }
+  });
+
+  if (!dbTemplate) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: 'Template not found or you do not have access.'
+    });
+  }
+
+  return toTemplateInputSchema(dbTemplate);
+};

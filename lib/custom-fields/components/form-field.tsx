@@ -27,8 +27,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 import { SweepstakesFormFieldType } from '@prisma/client';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
@@ -36,7 +35,20 @@ import { assertNever } from '@/lib/errors';
 import { strings } from '@/lib/strings';
 import { FIELD_TYPE_ICON, FIELD_TYPE_LABELS } from '../schemas';
 
-export const FormFieldComponent: React.FC<{
+export const FormFieldComponent = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  id,
+  type,
+  onRemove,
+  onOpenChange,
+  onCopy,
+  index,
+  open,
+  form,
+  fieldPath
+}: {
   id: string;
   type: SweepstakesFormFieldType;
   index: number;
@@ -44,7 +56,9 @@ export const FormFieldComponent: React.FC<{
   onOpenChange: (open: boolean) => void;
   onCopy: () => void;
   open: boolean;
-}> = ({ id, type, onRemove, onOpenChange, onCopy, index, open }) => {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   const {
     attributes,
     listeners,
@@ -119,7 +133,7 @@ export const FormFieldComponent: React.FC<{
             </div>
           </CollapsibleTrigger>
           <CollapsibleContent className="p-3 pt-1.5 border-t space-y-3">
-            <FieldSettings fieldType={type} />
+            <FieldSettings fieldType={type} form={form} fieldPath={fieldPath} />
           </CollapsibleContent>
         </Collapsible>
       </div>
@@ -127,38 +141,47 @@ export const FormFieldComponent: React.FC<{
   );
 };
 
-const FieldSettings: React.FC<{ fieldType: SweepstakesFormFieldType }> = ({
-  fieldType
+const FieldSettings = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  fieldType,
+  form,
+  fieldPath
+}: {
+  fieldType: SweepstakesFormFieldType;
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
 }) => {
   switch (fieldType) {
     case SweepstakesFormFieldType.USERNAME:
       return (
         <>
-          <FieldLabelInput />
-          <FieldPlaceholderInput />
-          <FieldRequiredSwitch />
+          <FieldLabelInput form={form} fieldPath={fieldPath} />
+          <FieldPlaceholderInput form={form} fieldPath={fieldPath} />
+          <FieldRequiredSwitch form={form} fieldPath={fieldPath} />
         </>
       );
     case SweepstakesFormFieldType.AGE:
       return (
         <>
-          <FieldLabelInput />
-          <FieldMinimumInput />
-          <FieldMaximumInput />
-          <FieldRequiredSwitch />
+          <FieldLabelInput form={form} fieldPath={fieldPath} />
+          <FieldMinimumInput form={form} fieldPath={fieldPath} />
+          <FieldMaximumInput form={form} fieldPath={fieldPath} />
+          <FieldRequiredSwitch form={form} fieldPath={fieldPath} />
         </>
       );
     case SweepstakesFormFieldType.EMAIL:
       return (
         <>
-          <FieldLabelInput />
-          <FieldPlaceholderInput />
+          <FieldLabelInput form={form} fieldPath={fieldPath} />
+          <FieldPlaceholderInput form={form} fieldPath={fieldPath} />
         </>
       );
     case SweepstakesFormFieldType.TWITTER:
       return (
         <>
-          <FieldRequiredSwitch />
+          <FieldRequiredSwitch form={form} fieldPath={fieldPath} />
         </>
       );
     default:
@@ -166,13 +189,21 @@ const FieldSettings: React.FC<{ fieldType: SweepstakesFormFieldType }> = ({
   }
 };
 
-const FieldLabelInput = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+const FieldLabelInput = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   const index = useArrayContext();
   return (
     <RHFFormField
       control={form.control}
-      name={`audience.formFields.${index}.label`}
+      name={`${fieldPath}.${index}.label` as FieldPath<TFieldValues>}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Label</FormLabel>
@@ -186,13 +217,21 @@ const FieldLabelInput = () => {
   );
 };
 
-const FieldPlaceholderInput = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+const FieldPlaceholderInput = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   const index = useArrayContext();
   return (
     <RHFFormField
       control={form.control}
-      name={`audience.formFields.${index}.placeholder` as any}
+      name={`${fieldPath}.${index}.placeholder` as FieldPath<TFieldValues>}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Placeholder</FormLabel>
@@ -206,13 +245,21 @@ const FieldPlaceholderInput = () => {
   );
 };
 
-const FieldMinimumInput = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+const FieldMinimumInput = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   const index = useArrayContext();
   return (
     <RHFFormField
       control={form.control}
-      name={`audience.formFields.${index}.minimum` as any}
+      name={`${fieldPath}.${index}.minimum` as FieldPath<TFieldValues>}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Minimum Age</FormLabel>
@@ -227,16 +274,16 @@ const FieldMinimumInput = () => {
                 }
 
                 const label = form.getValues(
-                  `audience.formFields.${index}.label`
+                  `${fieldPath}.${index}.label` as FieldPath<TFieldValues>
                 );
                 const oldAge = form.getValues(
-                  `audience.formFields.${index}.minimum`
+                  `${fieldPath}.${index}.minimum` as FieldPath<TFieldValues>
                 );
 
                 if (oldAge != null && label) {
                   form.setValue(
-                    `audience.formFields.${index}.label`,
-                    strings.replace(label, oldAge, n)
+                    `${fieldPath}.${index}.label` as FieldPath<TFieldValues>,
+                    strings.replace(label, oldAge, n) as any
                   );
                 }
 
@@ -254,13 +301,21 @@ const FieldMinimumInput = () => {
   );
 };
 
-const FieldMaximumInput = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+const FieldMaximumInput = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   const index = useArrayContext();
   return (
     <RHFFormField
       control={form.control}
-      name={`audience.formFields.${index}.maximum` as any}
+      name={`${fieldPath}.${index}.maximum` as FieldPath<TFieldValues>}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Maximum Age (optional)</FormLabel>
@@ -284,13 +339,21 @@ const FieldMaximumInput = () => {
   );
 };
 
-const FieldRequiredSwitch = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+const FieldRequiredSwitch = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   const index = useArrayContext();
   return (
     <RHFFormField
       control={form.control}
-      name={`audience.formFields.${index}.required` as any}
+      name={`${fieldPath}.${index}.required` as FieldPath<TFieldValues>}
       render={({ field }) => (
         <FormItem className="flex flex-row items-center justify-between mt-2">
           <FormLabel>Required</FormLabel>

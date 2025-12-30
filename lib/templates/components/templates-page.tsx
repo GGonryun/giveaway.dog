@@ -8,6 +8,7 @@ import { TemplateListItemSchema } from '../schemas/template';
 import { TemplateCard } from './template-card';
 import { UseTemplateModal } from './use-template-modal';
 import { SweepstakesGridSkeleton } from './templates-grid-skeleton';
+import { DeleteTemplateModal } from './delete-template-modal';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { useRouter } from 'next/navigation';
@@ -22,6 +23,9 @@ export const TemplatesPage: React.FC<{
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateListItemSchema | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [staged, setDeleteTemplate] = useState<TemplateListItemSchema | null>(
+    null
+  );
 
   const filteredTemplates = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -29,16 +33,15 @@ export const TemplatesPage: React.FC<{
     }
 
     const query = searchQuery.toLowerCase();
-    return templates.filter((template) => {
-      const matchesName = template.name.toLowerCase().includes(query);
-      const matchesDescription = template.description
+    return templates.filter((form) => {
+      const matchesName = form.template.template.name
         .toLowerCase()
         .includes(query);
-      const matchesTags = template.tags.some((tag) =>
-        tag.toLowerCase().includes(query)
-      );
+      const matchesDescription = form.template.template.description
+        .toLowerCase()
+        .includes(query);
 
-      return matchesName || matchesDescription || matchesTags;
+      return matchesName || matchesDescription;
     });
   }, [templates, searchQuery]);
 
@@ -49,25 +52,38 @@ export const TemplatesPage: React.FC<{
     }
   });
 
-  const handleClickTemplate = (template: TemplateListItemSchema) => {
-    setSelectedTemplate(template);
+  const handleClickTemplate = (item: TemplateListItemSchema) => {
+    setSelectedTemplate(item);
     setIsModalOpen(true);
+  };
+
+  const handleUseTemplate = (item: TemplateListItemSchema) => {
+    create.run({ slug, templateId: item.template.id });
+  };
+
+  const handleCustomizeTemplate = (item: TemplateListItemSchema) => {
+    router.push(`/app/${slug}/templates/${item.template.id}/use`);
+  };
+
+  const handleEditTemplate = (item: TemplateListItemSchema) => {
+    router.push(`/app/${slug}/templates/${item.template.id}/edit`);
+  };
+
+  const handleDeleteTemplate = (item: TemplateListItemSchema) => {
+    setDeleteTemplate(item);
   };
 
   return (
     <div>
-      <div className="flex gap-3 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search templates..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
+      <div className="relative flex-1 mb-4">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search templates..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
       </div>
-
       {templates.length === 0 ? (
         <SweepstakesGridSkeleton />
       ) : filteredTemplates.length === 0 ? (
@@ -78,11 +94,13 @@ export const TemplatesPage: React.FC<{
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredTemplates.map((template) => (
+          {filteredTemplates.map((item) => (
             <TemplateCard
-              key={template.id}
-              template={template}
+              key={item.template.id}
+              item={item}
+              slug={slug}
               onUse={handleClickTemplate}
+              onDelete={handleDeleteTemplate}
             />
           ))}
         </div>
@@ -92,9 +110,22 @@ export const TemplatesPage: React.FC<{
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         template={selectedTemplate}
-        onUse={({ id: templateId }) => {
-          create.run({ slug, templateId });
-        }}
+        onUse={handleUseTemplate}
+        onCustomize={handleCustomizeTemplate}
+        onEdit={handleEditTemplate}
+      />
+
+      <DeleteTemplateModal
+        onClose={() => setDeleteTemplate(null)}
+        template={
+          staged
+            ? {
+                id: staged.template.id,
+                name: staged.template.template.name,
+                slug
+              }
+            : null
+        }
       />
     </div>
   );

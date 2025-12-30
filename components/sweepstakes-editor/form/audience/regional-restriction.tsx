@@ -1,5 +1,4 @@
-import { ControllerProps, useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 import {
   FormControl,
   FormField,
@@ -18,22 +17,29 @@ import { RegionalRestrictionFilterField } from './regional-restriction-filter';
 import { RegionalRestrictionRegions } from './regional-restriction-regions';
 import { RegionalRestrictionFilter } from '@prisma/client';
 
-export const RegionalRestriction = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-
-  const regionalRestriction = form.watch('audience.regionalRestriction');
-  const filter = form.getFieldState('audience.regionalRestriction.filter');
-  const regions = form.getFieldState('audience.regionalRestriction.regions');
+export const RegionalRestriction = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
+  const regionalRestriction = form.watch(fieldPath);
+  const filter = form.getFieldState(`${fieldPath}.filter` as FieldPath<TFieldValues>);
+  const regions = form.getFieldState(`${fieldPath}.regions` as FieldPath<TFieldValues>);
 
   return (
     <SwitchBox>
-      <RegionalRestrictionFormField />
+      <RegionalRestrictionFormField form={form} fieldPath={fieldPath} />
 
       <Collapsible open={regionalRestriction != null}>
         <CollapsibleContent className="flex flex-col gap-2">
           <div className="grid grid-cols-1 sm:grid-cols-[128px_1fr] gap-2 items-start mt-2">
-            <RegionalRestrictionFilterField />
-            <RegionalRestrictionRegions />
+            <RegionalRestrictionFilterField form={form} fieldPath={`${fieldPath}.filter` as FieldPath<TFieldValues>} />
+            <RegionalRestrictionRegions form={form} fieldPath={`${fieldPath}.regions` as FieldPath<TFieldValues>} />
           </div>
 
           <FormMessageParagraph
@@ -46,56 +52,58 @@ export const RegionalRestriction = () => {
   );
 };
 
-export const RegionalRestrictionFormField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-
+export const RegionalRestrictionFormField = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   return (
     <FormField
       control={form.control}
-      name="audience.regionalRestriction"
-      render={regionalRestrictionRender}
+      name={fieldPath}
+      render={({ field }) => {
+        const isEnabled = useMemo(() => Boolean(field.value), [field.value]);
+
+        return (
+          <FormItem className="flex flex-row items-start justify-between">
+            <SwitchFormHeader
+              label="Regional Restrictions"
+              description="Restrict access to users from certain regions or countries."
+              help={{
+                title: 'Help: Regional Restrictions',
+                content: (
+                  <p>
+                    Restrict access to users from certain regions or countries. This
+                    is useful if your prize is only available in certain areas or if
+                    you need to comply with local laws and regulations.
+                  </p>
+                )
+              }}
+            />
+            <FormControl>
+              <Switch
+                checked={isEnabled}
+                onClick={() => {
+                  if (isEnabled) {
+                    field.onChange(null);
+                  } else {
+                    field.onChange({
+                      regions: [],
+                      filter: RegionalRestrictionFilter.INCLUDE
+                    });
+                  }
+                }}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
     />
-  );
-};
-
-export const regionalRestrictionRender: ControllerProps<
-  GiveawayFormSchema,
-  'audience.regionalRestriction'
->['render'] = ({ field }) => {
-  const isEnabled = useMemo(() => Boolean(field.value), [field.value]);
-
-  return (
-    <FormItem className="flex flex-row items-start justify-between">
-      <SwitchFormHeader
-        label="Regional Restrictions"
-        description="Restrict access to users from certain regions or countries."
-        help={{
-          title: 'Help: Regional Restrictions',
-          content: (
-            <p>
-              Restrict access to users from certain regions or countries. This
-              is useful if your prize is only available in certain areas or if
-              you need to comply with local laws and regulations.
-            </p>
-          )
-        }}
-      />
-      <FormControl>
-        <Switch
-          checked={isEnabled}
-          onClick={() => {
-            if (isEnabled) {
-              field.onChange(null);
-            } else {
-              field.onChange({
-                regions: [],
-                filter: RegionalRestrictionFilter.INCLUDE
-              });
-            }
-          }}
-        />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
   );
 };

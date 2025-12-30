@@ -122,6 +122,7 @@ class ProcedureBuilder<
         }
 
         if (err instanceof ApplicationError) {
+          console.error('Application error:', err);
           return {
             ok: false,
             data: {

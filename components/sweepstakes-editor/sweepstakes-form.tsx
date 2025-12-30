@@ -15,7 +15,7 @@ import {
 } from '@/schemas/giveaway/schemas';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { SweepstakePreview } from './sweepstake-preview';
+import { SweepstakesFormPreview } from './sweepstake-preview';
 import { useSweepstakesPage } from '../sweepstakes/use-sweepstakes-page';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { useDeleteSweepstakes } from '../sweepstakes/use-delete-sweepstakes';
@@ -245,7 +245,7 @@ const FormContent: React.FC<{
           onCancel={handleCancel}
           onSave={handleSaveChanges}
           form={<SweepstakeFormContent />}
-          preview={<SweepstakePreview />}
+          preview={<SweepstakesFormPreview />}
           teamFeatureFlags={teamFeatureFlags}
           integrations={integrations}
           previewFooter={<SweepstakesPreviewFooter />}

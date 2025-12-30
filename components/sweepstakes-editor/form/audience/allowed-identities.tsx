@@ -11,11 +11,18 @@ import {
   IDENTITY_PROVIDER_LABEL
 } from '@/lib/integrations/schemas/providers';
 import { widetype } from '@/lib/widetype';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
-import { useFormContext } from 'react-hook-form';
+import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 
-export const AllowedIdentities = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+export const AllowedIdentities = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   const options: MultiSelectOption[] = widetype
     .keys(ENABLED_IDENTITY_PROVIDERS)
     .filter((provider) => ENABLED_IDENTITY_PROVIDERS[provider])
@@ -27,7 +34,7 @@ export const AllowedIdentities = () => {
   return (
     <FormField
       control={form.control}
-      name="audience.allowedIdentities"
+      name={fieldPath}
       render={({ field }) => (
         <FormItem className="flex flex-col gap-1">
           <SwitchFormHeader

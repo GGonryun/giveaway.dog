@@ -42,26 +42,32 @@ import {
   DEFAULT_ALLOWED_IDENTITIES,
   TWITTER_PROFILE_URL
 } from '@/lib/settings';
-import { DeepNil } from '@/lib/types';
+import { DeepNil, DeepPartial } from '@/lib/types';
 import { isDefined } from '@/lib/widetype';
 import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 
-export const SweepstakePreview: React.FC = () => {
-  const { activeTeam } = useTeams();
+export const SweepstakesFormPreview: React.FC = () => {
   const { control } = useFormContext<GiveawayFormSchema>();
-  const { previewState } = usePreviewState();
 
-  // Watch all form values for live preview
   const formValues = useWatch({ control });
+
+  return <SweepstakesSharedFormPreview formValues={formValues} />;
+};
+
+export const SweepstakesSharedFormPreview: React.FC<{
+  formValues: DeepPartial<GiveawayFormSchema>;
+}> = ({ formValues }) => {
+  const { activeTeam } = useTeams();
+  const { previewState } = usePreviewState();
 
   const mockSweepstakes: GiveawaySchema | undefined = useMemo(() => {
     try {
       // Check if we have minimum required data
       if (
         !formValues?.setup?.name &&
-        !formValues.tasks?.length &&
+        !formValues?.tasks?.length &&
         !formValues?.prizes?.length
       ) {
         return undefined;
@@ -71,9 +77,9 @@ export const SweepstakePreview: React.FC = () => {
         id: 'preview-sweepstakes-id',
         status: 'RUNNING' as const,
         setup: {
-          name: formValues.setup?.name ?? DEFAULT_SWEEPSTAKES_NAME,
-          description: formValues.setup?.description ?? '',
-          banner: formValues.setup?.banner ?? ''
+          name: formValues?.setup?.name ?? DEFAULT_SWEEPSTAKES_NAME,
+          description: formValues?.setup?.description ?? '',
+          banner: formValues?.setup?.banner ?? ''
         },
         terms:
           formValues?.terms?.type === SweepstakesTermsType.TEMPLATE
@@ -92,45 +98,46 @@ export const SweepstakePreview: React.FC = () => {
                   text: ''
                 },
         timing: {
-          startDate: formValues.timing?.startDate || new Date(),
+          startDate: formValues?.timing?.startDate || new Date(),
           endDate:
-            formValues.timing?.endDate ||
+            formValues?.timing?.endDate ||
             new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-          timeZone: formValues.timing?.timeZone || 'UTC'
+          timeZone: formValues?.timing?.timeZone || 'UTC'
         },
         audience: {
-          regionalRestriction: formValues.audience?.regionalRestriction
+          regionalRestriction: formValues?.audience?.regionalRestriction
             ? {
-                regions: formValues.audience.regionalRestriction.regions || [],
+                regions:
+                  formValues?.audience?.regionalRestriction?.regions || [],
                 filter:
-                  formValues.audience.regionalRestriction.filter ||
+                  formValues?.audience?.regionalRestriction?.filter ||
                   RegionalRestrictionFilter.INCLUDE
               }
             : undefined,
           allowedIdentities:
-            formValues.audience?.allowedIdentities ??
+            formValues?.audience?.allowedIdentities ??
             DEFAULT_ALLOWED_IDENTITIES,
           requirePreEntryLogin:
-            formValues.audience?.requirePreEntryLogin || false,
-          formFields: toMockFormFields(formValues.audience?.formFields)
+            formValues?.audience?.requirePreEntryLogin || false,
+          formFields: toMockFormFields(formValues?.audience?.formFields)
         },
-        tasks: (formValues.tasks || []) as TaskSchema[],
-        prizes: (formValues.prizes || []) as Prize[],
+        tasks: (formValues?.tasks || []) as TaskSchema[],
+        prizes: (formValues?.prizes || []) as Prize[],
         design: {
-          displayName: formValues.design?.displayName !== false,
-          displayDescription: formValues.design?.displayDescription !== false,
-          aspectRatio: formValues.design?.aspectRatio || 'VIDEO',
-          background: (formValues.design?.background ||
+          displayName: formValues?.design?.displayName !== false,
+          displayDescription: formValues?.design?.displayDescription !== false,
+          aspectRatio: formValues?.design?.aspectRatio || 'VIDEO',
+          background: (formValues?.design?.background ||
             DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND) as GiveawayDesignBackgroundSchema
         },
         visibility: {
-          visibility: formValues.visibility?.visibility || 'PRIVATE',
-          slug: formValues.visibility?.slug || ''
+          visibility: formValues?.visibility?.visibility || 'PRIVATE',
+          slug: formValues?.visibility?.slug || ''
         },
         criteria: {
-          minTasksCompleted: formValues.criteria?.minTasksCompleted || 1,
-          minQualityScore: formValues.criteria?.minQualityScore || 70,
-          allowMultipleWins: formValues.criteria?.allowMultipleWins || false
+          minTasksCompleted: formValues?.criteria?.minTasksCompleted || 1,
+          minQualityScore: formValues?.criteria?.minQualityScore || 70,
+          allowMultipleWins: formValues?.criteria?.allowMultipleWins || false
         }
       };
     } catch (error) {
@@ -145,7 +152,7 @@ export const SweepstakePreview: React.FC = () => {
     }
 
     return (
-      <div className="w-full">
+      <div className="h-full w-full flex items-center justify-center">
         <IncompleteGiveawaySetup />
       </div>
     );

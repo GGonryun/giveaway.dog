@@ -10,8 +10,8 @@ import { useRouter } from 'next/navigation';
 
 export const TemplatesGrid: React.FC<{
   slug: string;
-  templates: TemplateListItemSchema[];
-}> = ({ slug, templates }) => {
+  items: TemplateListItemSchema[];
+}> = ({ slug, items }) => {
   const router = useRouter();
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateListItemSchema | null>(null);
@@ -29,21 +29,26 @@ export const TemplatesGrid: React.FC<{
     setIsModalOpen(true);
   };
 
-  const handleUseTemplate = (template: TemplateListItemSchema) => {
-    create.run({ slug, templateId: template.id });
+  const handleUseTemplate = (item: TemplateListItemSchema) => {
+    create.run({ slug, templateId: item.template.id });
   };
 
-  if (templates.length === 0) {
+  const handleCustomizeTemplate = (item: TemplateListItemSchema) => {
+    router.push(`/app/${slug}/templates/${item.template.id}/use`);
+  };
+
+  if (items.length === 0) {
     return null;
   }
 
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {templates.map((template) => (
+        {items.map((item) => (
           <TemplateCard
-            key={template.id}
-            template={template}
+            key={item.template.id}
+            item={item}
+            slug={slug}
             onUse={handleClickTemplate}
           />
         ))}
@@ -54,6 +59,7 @@ export const TemplatesGrid: React.FC<{
         onOpenChange={setIsModalOpen}
         template={selectedTemplate}
         onUse={handleUseTemplate}
+        onCustomize={handleCustomizeTemplate}
       />
     </>
   );

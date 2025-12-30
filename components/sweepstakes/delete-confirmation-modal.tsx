@@ -70,11 +70,10 @@ export const DeleteConfirmationModal: React.FC<
           </DialogDescription>
         </DialogHeader>
 
-        <Alert>
-          <AlertTriangleIcon className="h-4 w-4" />
+        <Alert variant="destructive">
           <AlertDescription>
-            <strong>Warning:</strong> This action cannot be undone. All
-            associated data, entries, and analytics will be permanently deleted.
+            This action cannot be undone. All associated data, entries, and
+            analytics will be permanently deleted.
           </AlertDescription>
         </Alert>
 

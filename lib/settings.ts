@@ -32,6 +32,7 @@ export const DEFAULT_ALLOWED_IDENTITIES = [
   IdentityProvider.TIKTOK,
   IdentityProvider.STEAM
 ];
+export const DEFAULT_REQUIRED_PRE_ENTRY_LOGIN = false;
 export const UNKNOWN_USER_NAME = 'Anonymous';
 export const VISIT_URL = 'https://charity.games';
 export const DISCORD_INVITE_LINK = 'https://discord.gg/Ys8wW5w2Yt';

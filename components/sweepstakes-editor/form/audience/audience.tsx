@@ -9,23 +9,27 @@ import { AllowedIdentities } from './allowed-identities';
 import { RequirePreEntryLogin } from './require-pre-entry-login';
 import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fields';
 import { EnableAutomaticProfileEntry } from './enable-automatic-profile-entry';
+import { useFormContext } from 'react-hook-form';
+import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
 export const Audience = () => {
+  const form = useFormContext<GiveawayFormSchema>();
+
   return (
     <>
       <UnifiedSectionHeader
         label="Identity"
         description="Customize how users log in to participate"
       >
-        <AllowedIdentities />
-        <RequirePreEntryLogin />
+        <AllowedIdentities form={form} fieldPath="audience.allowedIdentities" />
+        <RequirePreEntryLogin form={form} fieldPath="audience.requirePreEntryLogin" />
       </UnifiedSectionHeader>
       <UnifiedSectionHeader
         label="User Details"
         description="Require specific information from participants"
         className="border-t"
       >
-        <CustomFormFields />
+        <CustomFormFields form={form} fieldPath="audience.formFields" />
         <EnableAutomaticProfileEntry />
         {/* <RequireEmail />
         <MinimumAgeRestriction /> */}
@@ -35,7 +39,7 @@ export const Audience = () => {
         description="Restrict participation based on users' location"
         className="border-t"
       >
-        <RegionalRestriction />
+        <RegionalRestriction form={form} fieldPath="audience.regionalRestriction" />
       </UnifiedSectionHeader>
 
       <UnifiedSectionHeader

@@ -30,7 +30,8 @@ import {
   ArrowUp,
   ArrowDown,
   FileCheck,
-  Copy
+  Copy,
+  FileText
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -54,6 +55,7 @@ import { DerivedStatusIcon } from '@/lib/sweepstake-status';
 import { useCreateSweepstakesPage } from '@/components/sweepstakes/use-create-sweepstakes-page';
 import { cn } from '@/lib/utils';
 import { useCopySweepstakes } from '@/components/sweepstakes/use-copy-sweepstakes';
+import { useConvertToTemplate } from '@/components/sweepstakes/use-convert-to-template';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -116,6 +118,8 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
     router.refresh();
     router.push(createPage.route(data.id));
   });
+
+  const convertToTemplate = useConvertToTemplate();
 
   const rowRoute = (item: SweepstakesDataSchema) => {
     return item.status === 'DRAFT'
@@ -269,6 +273,16 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                         >
                           <Copy className="h-4 w-4 mr-2" />
                           Copy
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            convertToTemplate.run({ id: item.id });
+                          }}
+                          disabled={convertToTemplate.isLoading}
+                        >
+                          <FileText className="h-4 w-4 mr-2" />
+                          Convert to Template
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem

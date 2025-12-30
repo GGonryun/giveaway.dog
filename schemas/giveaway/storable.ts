@@ -293,7 +293,7 @@ export const toStorableSweepstakes = (
 };
 
 export const toStorableSweepstakesUpdate = (
-  input: SweepstakesInputSchema,
+  input: Omit<SweepstakesInputSchema, 'id'>,
   status?: SweepstakesStatus
 ) => {
   return {

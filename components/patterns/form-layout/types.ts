@@ -9,4 +9,13 @@ export type FormLayoutProps = {
 export type FieldKey = string;
 
 export type UnifiedFormAction = 'create' | 'edit' | 'demo' | 'view';
-export type UniformFormType = 'sweepstake' | 'picker';
+export type UniformFormType = 'sweepstake' | 'picker' | 'template';
+
+export type BannerConfig = {
+  title: string;
+  fullMessage: string;
+  shortMessage: string;
+  showAction?: boolean;
+  actionText?: string;
+  actionHref?: string;
+};

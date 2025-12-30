@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '../ui/button';
-import { PlusIcon, ChevronDown, FileText, Sparkles } from 'lucide-react';
+import { PlusIcon, ChevronDown, FileText, Sparkles, FilePlus } from 'lucide-react';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { Spinner } from '../ui/spinner';
 import {
@@ -16,6 +16,7 @@ import { useTeams } from '../context/team-provider';
 import { useCreateSweepstakesPage } from './use-create-sweepstakes-page';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { useCreateTemplate } from '../templates/use-create-template';
 
 export const CreateGiveawayButton: React.FC<{
   text?: string;
@@ -33,8 +34,14 @@ export const CreateGiveawayButton: React.FC<{
     }
   });
 
+  const createTemplate = useCreateTemplate();
+
   const handleFromTemplate = () => {
     router.push(`/app/${activeTeam.slug}/templates`);
+  };
+
+  const handleCreateTemplate = () => {
+    createTemplate.run();
   };
 
   return (
@@ -72,6 +79,10 @@ export const CreateGiveawayButton: React.FC<{
             <DropdownMenuItem onClick={handleFromTemplate}>
               <Sparkles />
               Use a template
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleCreateTemplate}>
+              <FilePlus />
+              Create a template
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
