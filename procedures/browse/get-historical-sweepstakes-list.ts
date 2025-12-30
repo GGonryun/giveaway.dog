@@ -9,6 +9,7 @@ import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { compact } from 'lodash';
 import { datetime } from '@/lib/date';
 import { z } from 'zod';
+import { HISTORY_PAGE_SIZE } from '@/lib/pagination';
 
 const getHistoricalSweepstakesList = procedure()
   .authorization({
@@ -18,14 +19,14 @@ const getHistoricalSweepstakesList = procedure()
     z
       .object({
         page: z.number().int().min(1).default(1),
-        limit: z.number().int().min(1).max(100).default(50)
+        limit: z.number().int().min(1).max(100).default(HISTORY_PAGE_SIZE)
       })
       .optional()
   )
   .output(publicSweepstakesSchema.array())
   .handler(async ({ db, input }) => {
     const page = input?.page ?? 1;
-    const limit = input?.limit ?? 50;
+    const limit = input?.limit ?? HISTORY_PAGE_SIZE;
     const skip = (page - 1) * limit;
 
     const daysAgo = datetime.daysAgo(1);

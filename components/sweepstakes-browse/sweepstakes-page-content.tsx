@@ -21,6 +21,7 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '@/components/ui/pagination';
+import { HISTORY_PAGE_SIZE } from '@/lib/pagination';
 
 export const SweepstakesPageContent: React.FC<{
   sweepstakes: PublicSweepstakeSchema[];
@@ -29,13 +30,15 @@ export const SweepstakesPageContent: React.FC<{
   description?: string;
   showCTAs?: boolean;
   showPagination?: boolean;
+  pageSize?: number;
 }> = ({
   sweepstakes,
   participation,
   title = 'Browse Giveaways',
   description = 'Discover active, upcoming, and completed giveaways',
   showCTAs = true,
-  showPagination = false
+  showPagination = false,
+  pageSize = HISTORY_PAGE_SIZE
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const pathname = usePathname();
@@ -43,7 +46,7 @@ export const SweepstakesPageContent: React.FC<{
   const isHistoryPage = pathname === '/history';
   const currentPage = parseInt(searchParams.get('page') ?? '1', 10);
   const hasResults = sweepstakes.length > 0;
-  const hasMoreResults = sweepstakes.length === 50;
+  const hasMoreResults = sweepstakes.length === pageSize;
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);

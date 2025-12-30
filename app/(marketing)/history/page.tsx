@@ -1,6 +1,7 @@
 import { SweepstakesPageContent } from '@/components/sweepstakes-browse/sweepstakes-page-content';
 import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
 import getHistoricalSweepstakesList from '@/procedures/browse/get-historical-sweepstakes-list';
+import { HISTORY_PAGE_SIZE } from '@/lib/pagination';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -49,7 +50,10 @@ export default async function Page({
 }) {
   const params = await searchParams;
   const page = parseInt(params.page ?? '1', 10);
-  const sweepstakes = await getHistoricalSweepstakesList({ page, limit: 50 });
+  const sweepstakes = await getHistoricalSweepstakesList({
+    page,
+    limit: HISTORY_PAGE_SIZE
+  });
   const participation = await getPublicSweepstakesParticipation();
   if (!sweepstakes.ok)
     return (
@@ -74,6 +78,7 @@ export default async function Page({
         description="Browse historical records of completed giveaways and see past winners"
         showCTAs={false}
         showPagination={true}
+        pageSize={HISTORY_PAGE_SIZE}
       />
     </Suspense>
   );
