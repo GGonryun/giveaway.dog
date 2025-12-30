@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/sheet';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -23,25 +24,56 @@ import {
 } from '@/components/ui/select';
 import { GiveawayFilters } from '@/lib/filters/giveaway-filters';
 
+const FILTERS_COOKIE_NAME = 'giveaway-filters';
+
+const getFiltersFromCookie = (): Partial<GiveawayFilters> => {
+  if (typeof document === 'undefined') return {};
+  const cookie = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith(`${FILTERS_COOKIE_NAME}=`));
+  if (!cookie) return {};
+  try {
+    return JSON.parse(decodeURIComponent(cookie.split('=')[1]));
+  } catch {
+    return {};
+  }
+};
+
+const saveFiltersToCookie = (filters: GiveawayFilters) => {
+  if (typeof document === 'undefined') return;
+  const maxAge = 60 * 60 * 24 * 30; // 30 days
+  document.cookie = `${FILTERS_COOKIE_NAME}=${encodeURIComponent(JSON.stringify(filters))}; path=/; max-age=${maxAge}; SameSite=Lax`;
+};
+
 export function GiveawayFiltersSheet() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
 
+  const cookieFilters = getFiltersFromCookie();
+
   const currentFilters: GiveawayFilters = {
     minEntrants: searchParams.get('minEntrants')
       ? parseInt(searchParams.get('minEntrants')!)
-      : undefined,
+      : cookieFilters.minEntrants,
     maxEntrants: searchParams.get('maxEntrants')
       ? parseInt(searchParams.get('maxEntrants')!)
-      : undefined,
+      : cookieFilters.maxEntrants,
     sortBy:
       (searchParams.get('sortBy') as GiveawayFilters['sortBy']) ??
-      'entrants-desc'
+      cookieFilters.sortBy ??
+      'entrants-desc',
+    hideCompleted: searchParams.get('hideCompleted')
+      ? searchParams.get('hideCompleted') === 'true'
+      : cookieFilters.hideCompleted ?? false
   };
 
   const [filters, setFilters] = useState<GiveawayFilters>(currentFilters);
+
+  useEffect(() => {
+    setFilters(currentFilters);
+  }, [searchParams]);
 
   const handleApplyFilters = () => {
     const params = new URLSearchParams();
@@ -58,15 +90,24 @@ export function GiveawayFiltersSheet() {
       params.set('sortBy', filters.sortBy);
     }
 
+    if (filters.hideCompleted) {
+      params.set('hideCompleted', 'true');
+    }
+
+    saveFiltersToCookie(filters);
+
     const queryString = params.toString();
     router.push(queryString ? `${pathname}?${queryString}` : pathname);
     setIsOpen(false);
   };
 
   const handleClearFilters = () => {
-    setFilters({
-      sortBy: 'entrants-desc'
-    });
+    const clearedFilters = {
+      sortBy: 'entrants-desc' as const,
+      hideCompleted: false
+    };
+    setFilters(clearedFilters);
+    saveFiltersToCookie(clearedFilters);
     router.push(pathname);
     setIsOpen(false);
   };
@@ -74,7 +115,8 @@ export function GiveawayFiltersSheet() {
   const hasActiveFilters =
     filters.minEntrants !== undefined ||
     filters.maxEntrants !== undefined ||
-    (filters.sortBy && filters.sortBy !== 'entrants-desc');
+    (filters.sortBy && filters.sortBy !== 'entrants-desc') ||
+    filters.hideCompleted === true;
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -155,6 +197,27 @@ export function GiveawayFiltersSheet() {
                 })
               }
             />
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="hideCompleted" className="cursor-pointer">
+                Hide Completed Giveaways
+              </Label>
+              <Switch
+                id="hideCompleted"
+                checked={filters.hideCompleted ?? false}
+                onCheckedChange={(checked) =>
+                  setFilters({
+                    ...filters,
+                    hideCompleted: checked
+                  })
+                }
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Hide giveaways where you've completed all entry tasks
+            </p>
           </div>
 
           <div className="flex gap-3 pt-4">

@@ -50,6 +50,7 @@ export default async function Page({
     minEntrants?: string;
     maxEntrants?: string;
     sortBy?: string;
+    hideCompleted?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -57,7 +58,8 @@ export default async function Page({
   const filters: GiveawayFilters = {
     minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
     maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
-    sortBy: params.sortBy as GiveawayFilters['sortBy']
+    sortBy: params.sortBy as GiveawayFilters['sortBy'],
+    hideCompleted: params.hideCompleted === 'true'
   };
 
   const sweepstakes = await getPublicSweepstakesList(filters);

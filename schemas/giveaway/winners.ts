@@ -3,7 +3,6 @@ import z from 'zod';
 export const winnerLeaderboardSchema = z.object({
   userId: z.string(),
   userName: z.string().nullable(),
-
   userImage: z.string().nullable(),
   winCount: z.number(),
   wins: z.array(

@@ -46,8 +46,17 @@ export const SweepstakesPageContent: React.FC<{
   const searchParams = useSearchParams();
   const isHistoryPage = pathname === '/history';
   const currentPage = parseInt(searchParams.get('page') ?? '1', 10);
-  const hasResults = sweepstakes.length > 0;
-  const hasMoreResults = sweepstakes.length === pageSize;
+  const hideCompleted = searchParams.get('hideCompleted') === 'true';
+
+  const filteredSweepstakes = hideCompleted
+    ? sweepstakes.filter((giveaway) => {
+        const participationStatus = participation[giveaway.id];
+        return !participationStatus?.completed;
+      })
+    : sweepstakes;
+
+  const hasResults = filteredSweepstakes.length > 0;
+  const hasMoreResults = filteredSweepstakes.length === pageSize;
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -106,7 +115,7 @@ export const SweepstakesPageContent: React.FC<{
           <div className="flex-1 min-w-0">
             <AllGiveawaysGrid
               searchQuery={searchQuery}
-              sweepstakes={sweepstakes}
+              sweepstakes={filteredSweepstakes}
               participation={participation}
             />
           </div>

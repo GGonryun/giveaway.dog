@@ -2,19 +2,18 @@
 
 ## Me
 
+- [ ] Custom discord bots.
+
 - [ ] Add support for generating short links for my sweepstakes, and draw verification
 - [ ] Add a referral task.
 
 - [ ] Fix the way we update sweepstakes it's unruly for huge giveaways.
 - [ ] Fix the unoptimized users page slow loading.
-- [ ] Upload social proof onto the website.
-
-- [ ] Custom discord bots.
 
 ### @Dom on Discord
 
-- [ ] Add more filtering options for sorting giveaways.
 - [ ] Let hosts submit proof of receipt to increase their trust score.
+- [ ] Upload social proof onto the website.
 
 ## Me
 
@@ -30,14 +29,6 @@
 ### @Gore096
 
 Most of the people want proof that the prize is given, maybe it will be useful to have “previous winners” page or something? Just to let people know that the prizes are being given. ( I know that the proof are being posted here on x by the host) but idk, just trying to help.
-
-### @Gamelooty
-
-- it would also be nice to be able to use an old giveaway (one thats already finished) and save that one as a template but i might just be nitpicking here
-
-### Discord requests
-
-- [ ] 𝓚𝓔𝓜 @PJPeng how about adding a filter option on the website browse giveaways ? Like - Ending Soon to Coming Soon, Recent, Live, Ended, Etc?
 
 ### @theejankanator
 
