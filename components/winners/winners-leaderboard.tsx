@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import {
   ChevronDown,
   ChevronUp,
-  Trophy,
   Calendar,
   History,
   Grid3x3
@@ -70,7 +69,7 @@ export function WinnersLeaderboard({
         description="Top giveaway winners and their prize history"
       />
 
-      <div className="flex gap-2 w-full sm:w-auto">
+      <div className="flex gap-2 w-full items-center justify-center">
         <Button variant="outline" asChild className="flex-1 sm:flex-initial">
           <Link href="/browse">
             <Grid3x3 className="h-4 w-4 mr-2" />
@@ -110,9 +109,6 @@ export function WinnersLeaderboard({
                           <div className="text-lg font-bold text-muted-foreground w-7 text-right">
                             #{(currentPage - 1) * WINNERS_PAGE_SIZE + index + 1}
                           </div>
-                          {index === 0 && currentPage === 1 && (
-                            <Trophy className="h-5 w-5 text-yellow-500" />
-                          )}
                         </div>
                         <Avatar className="h-10 w-10">
                           <AvatarImage

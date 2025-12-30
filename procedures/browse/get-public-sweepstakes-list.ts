@@ -8,17 +8,43 @@ import {
 import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { compact } from 'lodash';
 import { datetime } from '@/lib/date';
+import { giveawayFiltersSchema } from '@/lib/filters/giveaway-filters';
 
 const getPublicSweepstakesList = procedure()
   .authorization({
     required: false
   })
+  .input(giveawayFiltersSchema.optional())
   .output(publicSweepstakesSchema.array())
-  .handler(async ({ db }) => {
+  .handler(async ({ db, input }) => {
     const now = new Date();
 
     const daysFromNow = datetime.daysFromNow(1);
     const daysAgo = datetime.daysAgo(1);
+
+    let orderBy: any = {
+      participants: {
+        _count: 'desc'
+      }
+    };
+
+    if (input?.sortBy === 'entrants-asc') {
+      orderBy = {
+        participants: {
+          _count: 'asc'
+        }
+      };
+    } else if (input?.sortBy === 'ending-soon') {
+      orderBy = {
+        timing: {
+          endDate: 'asc'
+        }
+      };
+    } else if (input?.sortBy === 'newest') {
+      orderBy = {
+        createdAt: 'desc'
+      };
+    }
 
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
@@ -53,14 +79,24 @@ const getPublicSweepstakesList = procedure()
           }
         }
       },
-      orderBy: {
-        participants: {
-          _count: 'desc'
-        }
-      }
+      orderBy
     });
 
-    return compact(sweepstakes.map(tryToPublicSweepstakes));
+    let results = compact(sweepstakes.map(tryToPublicSweepstakes));
+
+    if (input?.minEntrants !== undefined) {
+      results = results.filter(
+        (s) => s.participants >= input.minEntrants!
+      );
+    }
+
+    if (input?.maxEntrants !== undefined) {
+      results = results.filter(
+        (s) => s.participants <= input.maxEntrants!
+      );
+    }
+
+    return results;
   });
 
 export default getPublicSweepstakesList;

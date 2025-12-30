@@ -2,6 +2,8 @@ import { SweepstakesPageContent } from '@/components/sweepstakes-browse/sweepsta
 import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
 import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes-list';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
+import { GiveawayFilters } from '@/lib/filters/giveaway-filters';
 
 export const revalidate = 60; // 1 minutes in seconds, must be statically analyzable
 
@@ -41,9 +43,26 @@ export const metadata: Metadata = {
   }
 };
 
-export default async function Page() {
-  const sweepstakes = await getPublicSweepstakesList();
+export default async function Page({
+  searchParams
+}: {
+  searchParams: Promise<{
+    minEntrants?: string;
+    maxEntrants?: string;
+    sortBy?: string;
+  }>;
+}) {
+  const params = await searchParams;
+
+  const filters: GiveawayFilters = {
+    minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
+    maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
+    sortBy: params.sortBy as GiveawayFilters['sortBy']
+  };
+
+  const sweepstakes = await getPublicSweepstakesList(filters);
   const participation = await getPublicSweepstakesParticipation();
+
   if (!sweepstakes.ok)
     return (
       <div>
@@ -59,9 +78,11 @@ export default async function Page() {
     );
 
   return (
-    <SweepstakesPageContent
-      sweepstakes={sweepstakes.data}
-      participation={participation.data}
-    />
+    <Suspense fallback={<div>Loading...</div>}>
+      <SweepstakesPageContent
+        sweepstakes={sweepstakes.data}
+        participation={participation.data}
+      />
+    </Suspense>
   );
 }

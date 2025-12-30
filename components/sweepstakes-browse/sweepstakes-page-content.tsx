@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { History, Trophy } from 'lucide-react';
+import { Grid3x3, History, Trophy } from 'lucide-react';
 
 import { AllGiveawaysGrid } from './components/all-giveaways-grid';
 import { AllGiveawaysSearch } from './components/all-giveaways-search';
+import { GiveawayFiltersSheet } from './components/giveaway-filters-sheet';
 import { HostCTA } from './components/host-cta';
 import { SubscriptionCTA } from './components/subscription-cta';
 import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
@@ -71,13 +72,18 @@ export const SweepstakesPageContent: React.FC<{
             />
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
+            {!isHistoryPage && <GiveawayFiltersSheet />}
             <Button
               variant="outline"
               asChild
               className="flex-1 sm:flex-initial"
             >
               <Link href={isHistoryPage ? '/browse' : '/history'}>
-                <History className="h-4 w-4 mr-2" />
+                {isHistoryPage ? (
+                  <Grid3x3 className="h-4 w-4 mr-2" />
+                ) : (
+                  <History className="h-4 w-4 mr-2" />
+                )}
                 {isHistoryPage ? 'Active Giveaways' : 'View History'}
               </Link>
             </Button>
