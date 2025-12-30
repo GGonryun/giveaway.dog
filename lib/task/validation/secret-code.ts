@@ -58,13 +58,13 @@ export const checkSecretCode = async (
         code: 'BAD_REQUEST',
         message: 'The secret code you entered is incorrect'
       });
-    } else {
-      if (submittedCode.toLowerCase() !== input.task.code.toLowerCase()) {
-        throw new ApplicationError({
-          code: 'BAD_REQUEST',
-          message: 'The secret code you entered is incorrect'
-        });
-      }
+    }
+  } else {
+    if (submittedCode.toLowerCase() !== input.task.code.toLowerCase()) {
+      throw new ApplicationError({
+        code: 'BAD_REQUEST',
+        message: 'The secret code you entered is incorrect'
+      });
     }
   }
 
