@@ -3,7 +3,6 @@ import {
   ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY,
   EligibleTaskCompletion
 } from '../task/queries';
-import { toTaskSchema } from '../task/schemas';
 import { RecursiveRequired } from '@/types/index';
 import { User } from 'next-auth';
 import { findUserSweepstakes } from '@/procedures/sweepstakes/shared';

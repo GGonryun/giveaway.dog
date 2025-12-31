@@ -2,13 +2,10 @@
 
 ## Me
 
-- [ ] Custom discord bots.
-
 - [ ] Add support for generating short links for my sweepstakes, and draw verification
 - [ ] Add a referral task.
 
-- [ ] Fix the way we update sweepstakes it's unruly for huge giveaways.
-- [ ] Fix the unoptimized users page slow loading.
+- [ ] Custom discord bots.
 
 ### @Dom on Discord
 
@@ -139,6 +136,10 @@ it can be confusing to know how your changes are affecting the different preview
   - [ ] if we have real RBAC we can now have a true sandbox org where _everyone_ gets the guest role.
 - [ ] User's page needs deep links for modal
 - [ ] Winner's page needs deep links for modal
+
+- [ ] Fix the way we update sweepstakes it's unruly for huge giveaways.
+- [ ] Fix the unoptimized users page slow loading.
+
 - [ ] Update to Prisma 7
 
 ---

@@ -33,8 +33,6 @@ export const VerifiedBonusBadge: React.FC<VerifiedBonusBadgeProps> = ({
     ? parseTwitterProofSchema(submission.proof)
     : null;
 
-  console.log('proof', proof);
-
   const Container: React.PC = ({ children }) => (
     <Badge className="bg-white border-2 border-twitter-2/50">
       <span className="flex items-center gap-1 text-twitter-2 font-medium text-base">

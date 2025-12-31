@@ -23,53 +23,53 @@ const getWinnersLeaderboard = procedure()
     const limit = input?.limit ?? WINNERS_PAGE_SIZE;
     const skip = (page - 1) * limit;
 
-    const winners = await db.user.findMany({
+    // Use raw SQL to efficiently aggregate wins and paginate at database level
+    const winnersWithCounts = await db.$queryRaw<
+      Array<{
+        userId: string;
+        userName: string | null;
+        userEmail: string | null;
+        userImage: string | null;
+        winCount: bigint;
+      }>
+    >`
+      SELECT
+        u.id as "userId",
+        u.name as "userName",
+        u.email as "userEmail",
+        u.image as "userImage",
+        COUNT(DISTINCT d.id) as "winCount"
+      FROM "User" u
+      INNER JOIN "Participant" p ON p."userId" = u.id
+      INNER JOIN "TaskCompletion" tc ON tc."participantId" = p.id
+      INNER JOIN "PrizeDraw" d ON d."taskCompletionId" = tc.id
+      INNER JOIN "Prize" pr ON pr.id = d."prizeId"
+      INNER JOIN "Sweepstakes" s ON s.id = pr."sweepstakesId"
+      INNER JOIN "SweepstakesVisibility" sv ON sv."sweepstakesId" = s.id
+      WHERE d.result = 'WINNER'
+        AND sv.visibility = 'PUBLIC'
+      GROUP BY u.id, u.name, u.email, u.image
+      ORDER BY "winCount" DESC, u.id ASC
+      LIMIT ${limit}
+      OFFSET ${skip}
+    `;
+
+    // For each winner, fetch their individual wins
+    const userIds = winnersWithCounts.map((w) => w.userId);
+
+    if (userIds.length === 0) {
+      return [];
+    }
+
+    const userWins = await db.user.findMany({
       where: {
-        participation: {
-          some: {
-            taskCompletions: {
-              some: {
-                draws: {
-                  some: {
-                    result: 'WINNER',
-                    prize: {
-                      sweepstakes: {
-                        visibility: {
-                          visibility: 'PUBLIC'
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+        id: {
+          in: userIds
         }
       },
       select: {
         id: true,
-        name: true,
-        email: true,
-        image: true,
         participation: {
-          where: {
-            taskCompletions: {
-              some: {
-                draws: {
-                  some: {
-                    result: 'WINNER',
-                    prize: {
-                      sweepstakes: {
-                        visibility: {
-                          visibility: 'PUBLIC'
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
           select: {
             taskCompletions: {
               where: {
@@ -134,42 +134,37 @@ const getWinnersLeaderboard = procedure()
             }
           }
         }
-      },
-      orderBy: {
-        participation: {
-          _count: 'desc'
-        }
-      },
-      skip,
-      take: limit
+      }
     });
 
-    const winnersWithCounts = winners.map((user) => {
-      const wins = user.participation.flatMap((p) =>
-        p.taskCompletions.flatMap((tc) =>
-          tc.draws.map((draw) => ({
-            sweepstakesId: draw.prize.sweepstakes.id,
-            sweepstakesName:
-              draw.prize.sweepstakes.details?.name ?? 'Unnamed Giveaway',
-            sweepstakesSlug: draw.prize.sweepstakes.visibility?.slug ?? '',
-            teamSlug: draw.prize.sweepstakes.team?.slug ?? '',
-            prizeName: draw.prize.name,
-            wonAt: draw.createdAt
-          }))
-        )
-      );
+    // Map the wins data back to the aggregated results, maintaining sort order
+    return winnersWithCounts.map((winner) => {
+      const userData = userWins.find((u) => u.id === winner.userId);
+      const wins = userData
+        ? userData.participation.flatMap((p) =>
+            p.taskCompletions.flatMap((tc) =>
+              tc.draws.map((draw) => ({
+                sweepstakesId: draw.prize.sweepstakes.id,
+                sweepstakesName:
+                  draw.prize.sweepstakes.details?.name ?? 'Unnamed Giveaway',
+                sweepstakesSlug: draw.prize.sweepstakes.visibility?.slug ?? '',
+                teamSlug: draw.prize.sweepstakes.team?.slug ?? '',
+                prizeName: draw.prize.name,
+                wonAt: draw.createdAt
+              }))
+            )
+          )
+        : [];
 
       return {
-        userId: user.id,
-        userName: user.name,
-        userEmail: user.email,
-        userImage: user.image,
-        winCount: wins.length,
+        userId: winner.userId,
+        userName: winner.userName,
+        userEmail: winner.userEmail,
+        userImage: winner.userImage,
+        winCount: Number(winner.winCount),
         wins
       };
     });
-
-    return winnersWithCounts.sort((a, b) => b.winCount - a.winCount);
   });
 
 export default getWinnersLeaderboard;
