@@ -110,7 +110,7 @@ it can be confusing to know how your changes are affecting the different preview
 
 ## Unrelated Features
 
-- [ ] hi folks, im brainstorming an idea for participants nicknamed "autocomplete" which would allow active and highly trusted participants to automatically receive entries into future giveaways for tasks that theyve already completed in the past.
+- [ ] hi folks, im brainstorming an idea for participants nicknamed "autocomplete" which would allow active and highly trusted participants to automatically receive entries into future giveaways for tasks that they've already completed in the past.
 - [ ] Add an instant giveaway app where users can instantly win prizes without waiting for a draw, we can have a minimum number of tasks before claiming a prize, and the prize claim can be random chance or guaranteed based on number of prizes available.
 - [ ] Add a leaderboard (works similar to wait-lists app) app where users can compete for prizes based on points earned through tasks.
 - [ ] Add a milestones app where users can unlock prizes by reaching certain milestones, for example number of referrals.

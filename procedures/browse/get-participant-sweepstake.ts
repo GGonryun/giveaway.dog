@@ -15,9 +15,9 @@ import {
 } from '@/schemas/giveaway/participant';
 import { DeepNullable, DeepPartial } from '@/lib/types';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
-import { toTaskSchema } from '@/lib/task/schemas';
 import { Prisma } from '@prisma/client';
 import { countCompletionValue } from '@/lib/task/entries';
+import { ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY } from '@/lib/task/queries';
 
 const getParticipantSweepstake = procedure()
   .authorization({
@@ -53,14 +53,7 @@ const getParticipantSweepstake = procedure()
           sweepstakesId: sweepstakes.id
         }
       },
-      include: {
-        task: true,
-        participant: {
-          include: {
-            user: true
-          }
-        }
-      }
+      include: ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY
     });
 
     const totalEntries = taskCompletions.reduce((sum, completion) => {
