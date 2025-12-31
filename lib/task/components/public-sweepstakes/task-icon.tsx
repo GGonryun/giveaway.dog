@@ -3,13 +3,16 @@ import { useTaskTheme } from '../theme';
 import { cn } from '@/lib/utils';
 import { CompletionStatus } from '@prisma/client';
 import { SUBMISSION_COLOR_MAP, SUBMISSION_ICON_MAP } from '../../submission';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 
 export const TaskIcon: React.FC<{
-  submission: CompletionStatus | undefined;
+  submission: UserTaskSubmissionSchema | undefined;
 }> = ({ submission }) => {
   const { theme } = useTaskTheme();
-  const color = submission ? SUBMISSION_COLOR_MAP[submission] : undefined;
-  const Icon = submission ? SUBMISSION_ICON_MAP[submission] : undefined;
+  const color = submission
+    ? SUBMISSION_COLOR_MAP[submission.status]
+    : undefined;
+  const Icon = submission ? SUBMISSION_ICON_MAP[submission.status] : undefined;
   return (
     <div
       className={cn(

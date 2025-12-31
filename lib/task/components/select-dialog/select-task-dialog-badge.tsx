@@ -1,8 +1,8 @@
 import { assertNever } from '@/lib/errors';
 import { TASK_HAS_AUTOMATIC_VALIDATION } from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
-import { ImportBadge } from '../sweepstakes-editor-form/import-badge';
-import { VerifiedBadge } from '../sweepstakes-editor-form/verified-badge';
+import { ImportBadge } from '../badges/import-badge';
+import { VerifiedBadge } from '../badges/verified-badge';
 
 export const SelectTaskDialogBadge: React.FC<{ type: TaskType }> = ({
   type

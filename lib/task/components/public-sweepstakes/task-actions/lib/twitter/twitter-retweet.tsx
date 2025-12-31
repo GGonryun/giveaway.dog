@@ -15,6 +15,7 @@ import {
 import { useTheme } from 'next-themes';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { TwitterEmbed } from './shared';
+import { VerifiedBonusBadge } from './verified-bonus-badge';
 
 export const TwitterRetweetTaskActionForm: React.FC<
   TaskActionProps<TwitterRetweetTaskSchema | TwitterRetweetImportTaskSchema>
@@ -65,10 +66,13 @@ export const TwitterRetweetTaskActionForm: React.FC<
               </AlertDescription>
             </Alert>
           ) : (
-            <TwitterEmbed
-              postUrl={task.tweetId}
-              theme={theme === 'light' ? 'light' : 'dark'}
-            />
+            <>
+              <TwitterEmbed
+                postUrl={task.tweetId}
+                theme={theme === 'light' ? 'light' : 'dark'}
+              />
+              <VerifiedBonusBadge task={task} submission={submission} />
+            </>
           )}
         </div>
       )}

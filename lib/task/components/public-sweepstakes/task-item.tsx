@@ -42,8 +42,8 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
   const { onTaskComplete, participation, relationship } =
     useGiveawayParticipation();
 
-  const submission = useMemo(
-    () => submissions.find((c) => c.taskId === task.id)?.status,
+  const submission: UserTaskSubmissionSchema | undefined = useMemo(
+    () => submissions.find((c) => c.taskId === task.id),
     [submissions, task.id]
   );
 

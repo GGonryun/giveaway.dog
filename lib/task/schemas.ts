@@ -27,7 +27,8 @@ export const baseTaskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   value: z.number().min(1, 'Minimum value is 1'),
   mandatory: z.boolean(),
-  tasksRequired: z.number()
+  tasksRequired: z.number(),
+  verifiedBonus: z.number().min(0).optional()
 });
 
 export const afterVisitSchema = z.discriminatedUnion('type', [
@@ -173,7 +174,11 @@ export const twitterRetweetImportTaskSchema = baseTaskSchema.extend({
     .string()
     .url('Post URL is required')
     .refine(xStatusRefineUrl, xStatusRefineError),
-  importingAccount: z.string().min(1, 'Importing account is required')
+  importingAccount: z.string().min(1, 'Importing account is required'),
+  verifiedBonus: z
+    .number()
+    .min(1, 'Verified bonus must be at least 1')
+    .nullish()
 });
 
 export type TwitterRetweetImportTaskSchema = z.infer<
@@ -182,7 +187,6 @@ export type TwitterRetweetImportTaskSchema = z.infer<
 
 export const twitterLikeTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_LIKE'),
-
   tweetId: z
     .string()
     .url('Post URL is required')
@@ -197,7 +201,11 @@ export const twitterLikeImportTaskSchema = baseTaskSchema.extend({
     .string()
     .url('Post URL is required')
     .refine(xStatusRefineUrl, xStatusRefineError),
-  importingAccount: z.string().min(1, 'Importing account is required')
+  importingAccount: z.string().min(1, 'Importing account is required'),
+  verifiedBonus: z
+    .number()
+    .min(1, 'Verified bonus must be at least 1')
+    .nullish()
 });
 
 export type TwitterLikeImportTaskSchema = z.infer<
@@ -976,3 +984,30 @@ export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
   BLUESKY_LIKE_IMPORT: true,
   BLUESKY_REPOST_IMPORT: true
 };
+
+export const twitterProofSchema = z.object({
+  source: z.literal('twitter_import'),
+  twitterUserId: z.string(),
+  twitterUsername: z.string(),
+  twitterVerified: z.boolean(),
+  importedAt: z.string(),
+  validatedBy: z.string()
+});
+
+export type TwitterProofSchema = z.infer<typeof twitterProofSchema>;
+
+export const parseTwitterProofSchema = (
+  data: unknown
+): TwitterProofSchema | null => {
+  const parsed = twitterProofSchema.safeParse(data);
+  if (!parsed.success) {
+    console.error('Failed to parse Twitter proof:', parsed.error);
+    return null;
+  }
+  return parsed.data;
+};
+
+// to ensure compliance with the TwitterProofSchema
+export const toTwitterProofSchema = (
+  data: TwitterProofSchema
+): TwitterProofSchema => data;

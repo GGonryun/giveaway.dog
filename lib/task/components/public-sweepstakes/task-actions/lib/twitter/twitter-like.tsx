@@ -16,6 +16,8 @@ import { useTheme } from 'next-themes';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { TwitterEmbed } from './shared';
+import { TaskBadge } from '../../../task-badge';
+import { VerifiedBonusBadge } from './verified-bonus-badge';
 
 export const TwitterLikeTaskActionForm: React.FC<
   TaskActionProps<TwitterLikeTaskSchema | TwitterLikeImportTaskSchema>
@@ -66,10 +68,13 @@ export const TwitterLikeTaskActionForm: React.FC<
               </AlertDescription>
             </Alert>
           ) : (
-            <TwitterEmbed
-              postUrl={task.tweetId}
-              theme={theme === 'light' ? 'light' : 'dark'}
-            />
+            <>
+              <TwitterEmbed
+                postUrl={task.tweetId}
+                theme={theme === 'light' ? 'light' : 'dark'}
+              />
+              <VerifiedBonusBadge task={task} submission={submission} />
+            </>
           )}
         </div>
       )}

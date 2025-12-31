@@ -21,7 +21,8 @@ export const TaskList: React.FC<{
   >(
     participant?.completions.map((completion) => ({
       taskId: completion.task.id,
-      status: completion.status
+      status: completion.status,
+      proof: completion.proof
     })) ?? []
   );
 
@@ -30,7 +31,8 @@ export const TaskList: React.FC<{
       setSubmissions(
         participant.completions.map((completion) => ({
           taskId: completion.task.id,
-          status: completion.status
+          status: completion.status,
+          proof: completion.proof
         }))
       );
     }
@@ -47,7 +49,7 @@ export const TaskList: React.FC<{
       uniqBy(
         [
           ...submissions.filter((c) => c.taskId !== task.id),
-          { taskId: task.id, status }
+          { taskId: task.id, status, proof: null }
         ],
         (c) => c.taskId
       )

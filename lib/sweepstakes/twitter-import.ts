@@ -13,6 +13,7 @@ export type ImportedUser = {
   userId: string;
   twitterUsername: string;
   twitterUserId: string;
+  twitterVerified: boolean;
 };
 
 /**
@@ -54,7 +55,8 @@ export async function importTwitterUsers(
         existing.push({
           userId: existingAccount.userId,
           twitterUsername: twitterUser.username,
-          twitterUserId: twitterUser.id
+          twitterUserId: twitterUser.id,
+          twitterVerified: twitterUser.verified ?? false
         });
         continue;
       }
@@ -99,7 +101,8 @@ export async function importTwitterUsers(
       imported.push({
         userId: created.id,
         twitterUsername: twitterUser.username,
-        twitterUserId: twitterUser.id
+        twitterUserId: twitterUser.id,
+        twitterVerified: twitterUser.verified ?? false
       });
     } catch (error) {
       console.error('Error importing Twitter user', twitterUser, error);

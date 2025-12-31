@@ -9,7 +9,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       title: 'Click for a bonus entry',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['BONUS_TIMED']: {
       id: '',
@@ -17,7 +18,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       title: 'Click for a bonus entry',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['BONUS_LIMITED']: {
       id: '',
@@ -26,7 +28,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0,
-      maxEntrants: 100
+      maxEntrants: 100,
+      verifiedBonus: undefined
     },
     ['BONUS_LOYALTY']: {
       id: '',
@@ -35,7 +38,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0,
-      loyaltyRequired: 3
+      loyaltyRequired: 3,
+      verifiedBonus: undefined
     },
     ['BONUS_COMPLETE_PROFILE']: {
       id: '',
@@ -43,7 +47,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       title: 'Complete your profile',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['VISIT_URL']: {
       id: '',
@@ -53,7 +58,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       href: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['TWITTER_CONNECT']: {
       id: '',
@@ -61,7 +67,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       title: 'Connect to X (Twitter)',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['TWITTER_FOLLOW']: {
       id: '',
@@ -70,7 +77,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       username: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['TWITTER_RETWEET']: {
       id: '',
@@ -79,7 +87,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       tweetId: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['TWITTER_RETWEET_IMPORT']: {
       id: '',
@@ -89,7 +98,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0,
-      importingAccount: ''
+      importingAccount: '',
+      verifiedBonus: undefined
     },
     ['TWITTER_LIKE']: {
       id: '',
@@ -98,7 +108,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       tweetId: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['TWITTER_LIKE_IMPORT']: {
       id: '',
@@ -108,7 +119,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0,
-      importingAccount: ''
+      importingAccount: '',
+      verifiedBonus: undefined
     },
     ['STEAM_WISHLIST']: {
       id: '',
@@ -117,7 +129,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       appId: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['DISCORD_JOIN']: {
       id: '',
@@ -127,7 +140,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       channel: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['TWITCH_FOLLOW']: {
       id: '',
@@ -136,7 +150,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       channel: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['KICK_FOLLOW']: {
       id: '',
@@ -145,7 +160,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       channel: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['SECRET_CODE']: {
       id: '',
@@ -156,7 +172,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       caseSensitive: false,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['YOUTUBE_VISIT']: {
       id: '',
@@ -167,7 +184,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       subConfirmation: false,
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['INSTAGRAM_VISIT']: {
       id: '',
@@ -176,7 +194,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       profileUrl: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['INSTAGRAM_LIKE']: {
       id: '',
@@ -185,7 +204,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       postUrl: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['INSTAGRAM_COMMENT']: {
       id: '',
@@ -194,7 +214,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       postUrl: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['FACEBOOK_VISIT_PAGE']: {
       id: '',
@@ -206,7 +227,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       },
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['FACEBOOK_VIEW_POST']: {
       id: '',
@@ -215,7 +237,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       postUrl: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['TIKTOK_FOLLOW']: {
       id: '',
@@ -224,7 +247,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       profileUrl: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['TIKTOK_LIKE']: {
       id: '',
@@ -233,7 +257,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       postUrl: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['BLUESKY_CONNECT']: {
       id: '',
@@ -241,7 +266,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       title: 'Connect to Bluesky',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['BLUESKY_FOLLOW']: {
       id: '',
@@ -250,7 +276,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       profileUrl: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['BLUESKY_LIKE']: {
       id: '',
@@ -259,7 +286,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       postUrl: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['BLUESKY_REPOST']: {
       id: '',
@@ -268,7 +296,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       postUrl: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['BLUESKY_LIKE_IMPORT']: {
       id: '',
@@ -278,7 +307,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0,
-      importingAccount: ''
+      importingAccount: '',
+      verifiedBonus: undefined
     },
     ['BLUESKY_REPOST_IMPORT']: {
       id: '',
@@ -288,7 +318,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0,
-      importingAccount: ''
+      importingAccount: '',
+      verifiedBonus: undefined
     },
     ['ASK_QUESTION']: {
       id: '',
@@ -299,7 +330,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       instructions: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['SINGLE_CHOICE']: {
       id: '',
@@ -309,7 +341,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       options: ['Option 1', 'Option 2'],
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     },
     ['MULTIPLE_CHOICE']: {
       id: '',
@@ -321,7 +354,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       maxSelections: undefined,
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      verifiedBonus: undefined
     }
   };
 

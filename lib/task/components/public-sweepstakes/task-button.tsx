@@ -6,24 +6,26 @@ import { ChevronDownIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TooltipTrigger } from '@/components/ui/tooltip';
 import { TaskLock } from './task-lock';
-import { CompletionStatus } from '@prisma/client';
 import {
   SUBMISSION_BUTTON_ICON_MAP,
   SUBMISSION_BUTTON_VARIANT_MAP
 } from '../../submission';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 
 export const TaskButton: React.FC<{
   open: boolean;
   task: TaskSchema;
   isLoading: boolean;
   lock: TaskLock;
-  submission: CompletionStatus | undefined;
+  submission: UserTaskSubmissionSchema | undefined;
 }> = ({ open, task, isLoading, lock, submission }) => {
   const { theme } = useTaskTheme();
   const variant = submission
-    ? SUBMISSION_BUTTON_VARIANT_MAP[submission]
+    ? SUBMISSION_BUTTON_VARIANT_MAP[submission.status]
     : 'outline';
-  const Icon = submission ? SUBMISSION_BUTTON_ICON_MAP[submission] : undefined;
+  const Icon = submission
+    ? SUBMISSION_BUTTON_ICON_MAP[submission.status]
+    : undefined;
   return (
     // Note: moving the tooltip trigger from here will break the tooltip's open state management
     <TooltipTrigger asChild>

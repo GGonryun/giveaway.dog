@@ -26,10 +26,6 @@
 
 ---
 
-### @Gore096
-
-Most of the people want proof that the prize is given, maybe it will be useful to have “previous winners” page or something? Just to let people know that the prizes are being given. ( I know that the proof are being posted here on x by the host) but idk, just trying to help.
-
 ### @theejankanator
 
 - Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?

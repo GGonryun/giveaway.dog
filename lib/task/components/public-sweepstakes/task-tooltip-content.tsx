@@ -7,20 +7,21 @@ import {
   SUBMISSION_TOOLTIP_COLOR_MAP,
   SUBMISSION_TOOLTIP_CONTENT
 } from '../../submission';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 
 export const TaskTooltipContent: React.FC<{
-  submission: CompletionStatus | undefined;
+  submission: UserTaskSubmissionSchema | undefined;
   entriesText: string;
   lock: TaskLock;
   open: boolean;
 }> = ({ submission, entriesText, lock, open }) => {
   const { theme } = useTaskTheme();
   const color = submission
-    ? SUBMISSION_TOOLTIP_COLOR_MAP[submission]
+    ? SUBMISSION_TOOLTIP_COLOR_MAP[submission.status]
     : undefined;
 
   const content = submission
-    ? SUBMISSION_TOOLTIP_CONTENT({ entriesText })[submission]
+    ? SUBMISSION_TOOLTIP_CONTENT({ entriesText })[submission.status]
     : null;
 
   return (

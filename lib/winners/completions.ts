@@ -8,8 +8,9 @@ import { RecursiveRequired } from '@/types/index';
 import { User } from 'next-auth';
 import { findUserSweepstakes } from '@/procedures/sweepstakes/shared';
 import { ApplicationError } from '../errors';
-import { SweepstakesWinnerCriteriaSchema } from '@/schemas/giveaway/schemas';
+
 import { SweepstakesCriteriaSchema } from './criteria';
+import { countCompletionValue } from '../task/entries';
 
 export type ExpandedEligibleTaskCompletion = EligibleTaskCompletion & {
   value: number;
@@ -21,9 +22,7 @@ export const expandCompletionsByValue = (
   const expanded: ExpandedEligibleTaskCompletion[] = [];
 
   for (const completion of completions) {
-    const taskSchema = toTaskSchema(completion.task);
-    const value = taskSchema.value;
-    expanded.push({ ...completion, value });
+    expanded.push({ ...completion, value: countCompletionValue(completion) });
   }
 
   return expanded;

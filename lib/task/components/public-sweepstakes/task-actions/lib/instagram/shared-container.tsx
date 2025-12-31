@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
 import { useTaskTheme } from '@/lib/task/components/theme';
+
 import { cn } from '@/lib/utils';
-import { CompletionStatus } from '@prisma/client';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 import { CheckIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -11,7 +12,7 @@ export const ActionContainer: React.FC<{
   action: string;
   description: string;
   isCompleted: boolean;
-  submission: CompletionStatus | undefined;
+  submission: UserTaskSubmissionSchema | undefined;
   isDisabled: boolean;
   onSubmit: () => void;
   onVisit: () => void;

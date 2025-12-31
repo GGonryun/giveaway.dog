@@ -11,15 +11,15 @@ import { CheckIcon, LucideIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { TaskSchema } from '../../../schemas';
 import { useTaskTheme } from '../../theme';
-import { CompletionStatus } from '@prisma/client';
 import { Separator } from '@/components/ui/separator';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 
 export type TaskActionHandlers = {
   onSubmit: (data?: unknown) => void;
   onCancel: () => void;
   isLoading: boolean;
   error?: Failure['data'];
-  submission: CompletionStatus | undefined;
+  submission: UserTaskSubmissionSchema | undefined;
 };
 
 export type TaskActionProps<T extends TaskSchema = TaskSchema> =

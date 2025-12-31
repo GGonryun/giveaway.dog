@@ -17,6 +17,7 @@ import { DeepNullable, DeepPartial } from '@/lib/types';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 import { toTaskSchema } from '@/lib/task/schemas';
 import { Prisma } from '@prisma/client';
+import { countCompletionValue } from '@/lib/task/entries';
 
 const getParticipantSweepstake = procedure()
   .authorization({
@@ -63,8 +64,7 @@ const getParticipantSweepstake = procedure()
     });
 
     const totalEntries = taskCompletions.reduce((sum, completion) => {
-      const taskSchema = toTaskSchema(completion.task);
-      return sum + taskSchema.value;
+      return sum + countCompletionValue(completion);
     }, 0);
 
     const uniqueUserIds = new Set(

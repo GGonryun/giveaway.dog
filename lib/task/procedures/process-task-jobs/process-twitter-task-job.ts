@@ -1,6 +1,7 @@
 import { importTwitterUsers } from '@/lib/sweepstakes/twitter-import';
 import {
   TASK_JOB_DATA_SCHEMA,
+  toTwitterProofSchema,
   TwitterLikeImportTaskSchema,
   TwitterRetweetImportTaskSchema
 } from '@/lib/task/schemas';
@@ -64,7 +65,7 @@ export const processTwitterTaskJob = async <
   let updated = 0;
 
   for (const user of [...imported, ...existing]) {
-    const { userId, twitterUserId, twitterUsername } = user;
+    const { userId, twitterUserId, twitterUsername, twitterVerified } = user;
     const existingCompletion = await db.taskCompletion.findFirst({
       where: {
         participant: { userId },
@@ -75,6 +76,15 @@ export const processTwitterTaskJob = async <
       }
     });
 
+    const userProof = toTwitterProofSchema({
+      source: 'twitter_import',
+      twitterUserId,
+      twitterUsername,
+      twitterVerified,
+      importedAt: new Date().toISOString(),
+      validatedBy: 'job_processor'
+    });
+
     if (existingCompletion) {
       // update only if status is PENDING
       if (existingCompletion.status === 'PENDING') {
@@ -83,7 +93,8 @@ export const processTwitterTaskJob = async <
             id: existingCompletion.id
           },
           data: {
-            status: 'COMPLETED'
+            status: 'COMPLETED',
+            proof: userProof
           }
         });
         updated++;
@@ -111,13 +122,7 @@ export const processTwitterTaskJob = async <
             connect: { id: taskId }
           },
           status: 'COMPLETED',
-          proof: {
-            source: 'twitter_import',
-            twitterUserId,
-            twitterUsername,
-            importedAt: new Date().toISOString(),
-            validatedBy: 'job_processor'
-          }
+          proof: userProof
         }
       });
       created++;

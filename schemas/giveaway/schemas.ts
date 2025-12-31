@@ -264,7 +264,8 @@ export type GiveawaySchema = z.infer<typeof giveawaySchema>;
 
 export const userTaskSubmissionSchema = z.object({
   taskId: z.string(),
-  status: z.nativeEnum(CompletionStatus)
+  status: z.nativeEnum(CompletionStatus),
+  proof: z.unknown()
 });
 
 export type UserTaskSubmissionSchema = z.infer<typeof userTaskSubmissionSchema>;

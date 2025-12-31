@@ -1,12 +1,13 @@
 import { CompletionStatus, Prisma } from '@prisma/client';
 import z from 'zod';
-import { taskSchema, toTaskSchema, toTaskSchemaSafe } from './schemas';
+import { taskSchema, toTaskSchemaSafe } from './schemas';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 export const taskCompletionSchema = z.object({
   id: z.string(),
   completedAt: z.date(),
   status: z.nativeEnum(CompletionStatus),
+  proof: z.unknown(),
   task: taskSchema,
   sweepstake: z.object({
     id: z.string(),
@@ -19,6 +20,7 @@ export type TaskCompletionSchema = z.infer<typeof taskCompletionSchema>;
 export const TASK_COMPLETIONS_SELECT_QUERY = {
   id: true,
   completedAt: true,
+  proof: true,
   task: {
     include: {
       sweepstakes: {
@@ -44,6 +46,7 @@ export const toTaskCompletion = (
   completedAt: completion.completedAt,
   status: completion.status,
   task: toTaskSchemaSafe(completion.task),
+  proof: completion.proof,
   sweepstake: {
     id: completion.task.sweepstakesId,
     name: completion.task.sweepstakes.details?.name ?? DEFAULT_SWEEPSTAKES_NAME

@@ -3,13 +3,16 @@ import {
   ClockIcon,
   LockIcon,
   LucideIcon,
+  ShieldCheck,
   UnlockIcon
 } from 'lucide-react';
 import {
   BonusLimitedTaskSchema,
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema,
-  TaskSchema
+  TaskSchema,
+  TwitterLikeImportTaskSchema,
+  TwitterRetweetImportTaskSchema
 } from '../../schemas';
 import { formatDistanceToNowStrict } from 'date-fns';
 import React from 'react';
@@ -18,19 +21,27 @@ import { cn } from '@/lib/utils';
 import { useTaskTheme } from '../theme';
 import { assertNever } from '@/lib/errors';
 import { CompletionStatus } from '@prisma/client';
+import { SocialXBlueCheckmarkIcon } from '@/lib/integrations/components/icons/x-icon';
+import pluralize from 'pluralize';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 
 const Container: React.PC<{
   Icon?: LucideIcon;
-}> = ({ children, Icon }) => {
+  className?: string;
+  iconClassName?: string;
+  textClassName?: string;
+}> = ({ children, Icon, className, iconClassName, textClassName }) => {
   const { theme } = useTaskTheme();
 
   if (!children || (Array.isArray(children) && children.length === 0))
     return null;
 
   return (
-    <Badge className={cn('text-xs hidden md:inline-flex', theme.action)}>
-      <span className="flex items-center gap-1.5">
-        {Icon && <Icon className="size-3" />}
+    <Badge
+      className={cn('text-xs hidden md:inline-flex', theme.action, className)}
+    >
+      <span className={cn('flex items-center gap-1.5', textClassName)}>
+        {Icon && <Icon className={cn('size-3', iconClassName)} />}
         {children}
       </span>
     </Badge>
@@ -98,8 +109,26 @@ const BonusLoyaltyContent: React.FC<{
   );
 };
 
+const BonusVerifiedContent: React.FC<{
+  task: TwitterLikeImportTaskSchema | TwitterRetweetImportTaskSchema;
+}> = ({ task }) => {
+  if (!task.verifiedBonus) return null;
+  return (
+    <Badge
+      className={cn(
+        'text-xs hidden md:inline-flex bg-white border-twitter-2/20'
+      )}
+    >
+      <span className={cn('flex items-center gap-0.5 text-twitter-2')}>
+        +{task.verifiedBonus} {pluralize('entry', task.verifiedBonus)} for
+        <SocialXBlueCheckmarkIcon className={cn('size-3 mt-[1px]')} />
+      </span>
+    </Badge>
+  );
+};
+
 type TaskBadgeProps<T extends TaskSchema = TaskSchema> = {
-  submission: CompletionStatus | undefined;
+  submission: UserTaskSubmissionSchema | undefined;
   entrants: number;
   loyalty: number;
   task: T;
@@ -124,15 +153,16 @@ export const TaskBadge: React.FC<TaskBadgeProps> = ({
       return <BonusTimedContent task={task} />;
     case 'BONUS_LOYALTY':
       return <BonusLoyaltyContent task={task} loyalty={loyalty} />;
+    case 'TWITTER_RETWEET_IMPORT':
+    case 'TWITTER_LIKE_IMPORT':
+      return <BonusVerifiedContent task={task} />;
     case 'BONUS_TASK':
     case 'BONUS_COMPLETE_PROFILE':
     case 'VISIT_URL':
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
-    case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE':
-    case 'TWITTER_LIKE_IMPORT':
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':
     case 'INSTAGRAM_COMMENT':

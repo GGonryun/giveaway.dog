@@ -21,7 +21,6 @@ import { toBackgroundStyle } from '@/schemas/color';
 import { cn } from '@/lib/utils';
 import { SweepstakesLoginOptions } from './sweepstakes-login-options';
 import { UserDetailsForm } from './states/user-details-form';
-import { DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND } from '@/schemas/giveaway/defaults';
 
 const GiveawayParticipationContent = () => {
   const { state, sweepstakes } = useGiveawayParticipation();

@@ -88,6 +88,10 @@
     --input: oklch(0.9401 0 0);
     --ring: oklch(0 0 0);
 
+    /* Twitter palette */
+    --twitter-1: oklch(0 0 0);
+    --twitter-2: oklch(0.6671 0.1615 245.54);
+
     /* Steam palette */
     --steam-1: oklch(0.2178 0.0145 266.91);
     --steam-2: oklch(0.7725 0.114 236.18);
@@ -302,6 +306,9 @@
     --color-chart-3: var(--chart-3);
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
+
+    --color-twitter-1: var(--twitter-1);
+    --color-twitter-2: var(--twitter-2);
 
     --color-steam-1: var(--steam-1);
     --color-steam-2: var(--steam-2);

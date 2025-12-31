@@ -6,12 +6,13 @@ import { TaskSchema } from '../../schemas';
 import { TaskActionForm } from './task-actions/form';
 import { FailureData } from '@/lib/mrpc/types';
 import { TaskLock } from './task-lock';
-import { CompletionStatus } from '@prisma/client';
+
 import { doesUserHaveAllowedIdentity } from '@/lib/integrations/schemas/providers';
 import { SweepstakesLoginOptions } from '@/components/sweepstakes/sweepstakes-login-options';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 
 export const TaskAction: React.FC<{
-  submission: CompletionStatus | undefined;
+  submission: UserTaskSubmissionSchema | undefined;
   isLoading: boolean;
   task: TaskSchema;
   onSubmit: (data?: unknown) => void;

@@ -1,10 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
-import { ShieldCheck, ZapIcon } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import pluralize from 'pluralize';
 import { TASK_HAS_AUTOMATIC_VALIDATION } from '../../schemas';
-import { ImportBadge } from '../sweepstakes-editor-form/import-badge';
+import { ImportBadge } from '../badges/import-badge';
+import { InstantBadge } from '../badges/instant-badge';
+
 export const EntryMethodBadge: React.FC<{
   type: TaskType;
   errorCount: number;
@@ -19,11 +21,7 @@ export const EntryMethodBadge: React.FC<{
 
   switch (type) {
     case 'BONUS_COMPLETE_PROFILE':
-      return (
-        <Badge variant="info">
-          <ZapIcon /> <span className="hidden sm:inline">Instant</span>
-        </Badge>
-      );
+      return <InstantBadge />;
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':
     case 'BLUESKY_LIKE_IMPORT':
