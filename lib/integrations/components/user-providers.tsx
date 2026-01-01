@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { ProviderSchema } from '../schemas/providers';
 import { PROVIDER_ICON } from './icons/provider-icon';
+import { strings } from '@/lib/strings';
 
 export const UserProviders: React.FC<{
   providers: ProviderSchema[];
@@ -10,6 +11,10 @@ export const UserProviders: React.FC<{
     <div className="flex flex-wrap gap-2">
       {providers.map((provider) => {
         const Icon = PROVIDER_ICON[provider.type];
+        const label =
+          provider.type === 'GOOGLE'
+            ? strings.obfuscate(provider.label)
+            : provider.label;
         return (
           <Badge key={provider.type} variant="outline" asChild>
             <Link
@@ -18,7 +23,7 @@ export const UserProviders: React.FC<{
               rel="noopener noreferrer"
             >
               <Icon className="mr-1" />
-              {provider.label}
+              {label}
             </Link>
           </Badge>
         );

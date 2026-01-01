@@ -155,14 +155,17 @@ export const validateReferral = async (
         maximum
       });
     } else {
-      console.info('[Referral] Maximum referrals reached, user added but no completion created', {
-        userId: participant.userId,
-        referrerUserId: referral.participant.userId,
-        sweepstakesId: participant.sweepstakesId,
-        referralCode,
-        currentReferrals,
-        maximum
-      });
+      console.info(
+        '[Referral] Maximum referrals reached, user added but no completion created',
+        {
+          userId: participant.userId,
+          referrerUserId: referral.participant.userId,
+          sweepstakesId: participant.sweepstakesId,
+          referralCode,
+          currentReferrals,
+          maximum
+        }
+      );
     }
   });
 

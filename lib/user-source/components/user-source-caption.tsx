@@ -1,3 +1,4 @@
+import { ObfuscatedEmail } from '@/components/ui/obfuscated-email';
 import { assertNever } from '@/lib/errors';
 import { UserSchema } from '@/schemas/user';
 
@@ -6,7 +7,11 @@ export const UserSourceCaption: React.FC<{
 }> = ({ user }) => {
   switch (user.source) {
     case 'SIGNUP':
-      return <>{user.email ?? 'No email'}</>;
+      return user.email ? (
+        <ObfuscatedEmail size="xs" canReveal={false} email={user.email} />
+      ) : (
+        <>No email</>
+      );
     case 'TWITTER_IMPORT': {
       const provider = user.providers?.find((p) => p.type === 'TWITTER');
       if (!provider) {

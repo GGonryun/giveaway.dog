@@ -36,6 +36,8 @@ import { TaskPlatformIcon } from '@/lib/task/components/task-platform-icon';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
 import { size } from 'lodash';
+import { ObfuscatedEmail } from '../ui/obfuscated-email';
+import { UNKNOWN_USER_NAME } from '@/lib/settings';
 
 export const TaskCompletionDetailSheetContent: React.FC<{
   entries: UserEntriesSchema[];
@@ -283,9 +285,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
             <DialogDescription>
               Proof submitted by{' '}
               <span className="font-semibold">
-                {selectedTaskCompletion.user.name ??
-                  selectedTaskCompletion.user.email ??
-                  'User'}
+                {selectedTaskCompletion.user.name ?? UNKNOWN_USER_NAME}
               </span>
             </DialogDescription>
           </DialogHeader>
@@ -319,7 +319,7 @@ const UserCompletion: React.FC<{ entry: UserEntriesSchema }> = ({ entry }) => {
         <div>
           <div className="font-medium text-sm">{entry.user.name}</div>
           <div className="text-xs text-muted-foreground">
-            {entry.user.email}
+            <ObfuscatedEmail email={entry.user.email} />
           </div>
         </div>
       </div>

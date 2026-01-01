@@ -38,13 +38,10 @@ import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { UNKNOWN_USER_NAME } from '@/lib/settings';
 import { toMostRecentCompletion } from '@/lib/task/completions';
-import {
-  toParticipantProfile,
-  toSweepstakesEngagement,
-  toTwitterLink
-} from '@/lib/participant/db';
+import { toSweepstakesEngagement, toTwitterLink } from '@/lib/participant/db';
 import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { ObfuscatedEmail } from '../ui/obfuscated-email';
 
 export const UserParticipantSheetContent: React.FC<{
   participant: SweepstakesParticipantSchema | null;
@@ -76,7 +73,7 @@ export const UserParticipantSheetContent: React.FC<{
               </span>
             </SheetTitle>
             <SheetDescription className="flex items-center space-x-2">
-              <span>{participant.user.email}</span>
+              <ObfuscatedEmail email={participant.user.email} />
             </SheetDescription>
             <div className="my-2">
               <UserProviders providers={participant.user.providers} />

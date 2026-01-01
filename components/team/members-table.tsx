@@ -23,6 +23,7 @@ import { RemoveMemberDialog } from './remove-member-dialog';
 import { EditMemberDialog } from './edit-member-dialog';
 import { TeamRole } from '@prisma/client';
 import { formatDistance } from 'date-fns';
+import { ObfuscatedEmail } from '@/components/ui/obfuscated-email';
 
 interface Member {
   id: string;
@@ -146,7 +147,7 @@ export const MembersTable: React.FC<MembersTableProps> = ({
                       {member.user.name || 'Unnamed User'}
                     </div>
                     <div className="text-xs text-muted-foreground/70">
-                      {member.user.email || 'No email'}
+                      <ObfuscatedEmail email={member.user.email} />
                     </div>
                   </div>
                 </TableCell>

@@ -5,6 +5,7 @@ import { Outline } from '@/components/app/outline';
 import { UserDetailsTabs } from '@/components/users/user-details-tabs';
 import { UserParams } from './params';
 import getUser from '@/procedures/user/get-user';
+import { UNKNOWN_USER_NAME } from '@/lib/settings';
 
 interface UserDetailPageProps {
   params: Promise<UserParams>;
@@ -23,7 +24,7 @@ export default async function Layout({
   }
 
   return (
-    <Outline title={user.data.name || user.data.email || 'User'}>
+    <Outline title={user.data.name || UNKNOWN_USER_NAME}>
       <UserDetailsTabs id={userId}>{children}</UserDetailsTabs>
     </Outline>
   );
