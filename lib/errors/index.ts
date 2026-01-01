@@ -46,12 +46,14 @@ export const statusToCode: Record<number, ApplicationErrorCode> = {
 export type ApplicationErrorArgs<TData = unknown> = {
   code: ApplicationErrorCode;
   message: string;
+  silent?: boolean;
   cause?: unknown;
   data?: TData;
 };
 
 export class ApplicationError<T = unknown | undefined> extends Error {
   code: ApplicationErrorCode;
+  silent: boolean;
   data: T;
 
   constructor(error: ApplicationErrorArgs<T>) {
@@ -60,6 +62,7 @@ export class ApplicationError<T = unknown | undefined> extends Error {
     this.code = error.code;
     this.message = error.message;
     this.cause = error.cause;
+    this.silent = error.silent ?? false;
     this.data = error.data as T;
   }
 

@@ -126,12 +126,16 @@ export const verifyYouTubeChannel = procedure()
       } else {
         throw new ApplicationError({
           code: 'BAD_REQUEST',
+          silent: true,
           message:
             'YouTube channel not found. Please check if the channel exists or double check the URL.'
         });
       }
     } catch (error) {
-      console.error('YouTube channel verification error:', error);
+      if (error instanceof ApplicationError) {
+        throw error;
+      }
+
       throw new ApplicationError({
         code: 'INTERNAL_SERVER_ERROR',
         message:

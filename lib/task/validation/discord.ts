@@ -37,6 +37,7 @@ export const checkDiscordJoin = async (
     if (response.status === 404) {
       throw new ApplicationError({
         code: 'VALIDATION_ERROR',
+        silent: true,
         message: 'You are not a member of the required Discord server.',
         cause: await response.text()
       });
@@ -63,6 +64,7 @@ export const checkDiscordJoin = async (
   if (!memberData || !memberData.user) {
     throw new ApplicationError({
       code: 'VALIDATION_ERROR',
+      silent: true,
       message: 'You are not a member of the required Discord server.'
     });
   }

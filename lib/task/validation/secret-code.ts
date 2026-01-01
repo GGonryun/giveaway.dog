@@ -56,6 +56,7 @@ export const checkSecretCode = async (
     if (submittedCode !== input.task.code) {
       throw new ApplicationError({
         code: 'BAD_REQUEST',
+        silent: true,
         message: 'The secret code you entered is incorrect'
       });
     }
@@ -63,6 +64,7 @@ export const checkSecretCode = async (
     if (submittedCode.toLowerCase() !== input.task.code.toLowerCase()) {
       throw new ApplicationError({
         code: 'BAD_REQUEST',
+        silent: true,
         message: 'The secret code you entered is incorrect'
       });
     }
