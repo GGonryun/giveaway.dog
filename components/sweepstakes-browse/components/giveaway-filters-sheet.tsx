@@ -66,7 +66,7 @@ export function GiveawayFiltersSheet() {
       'entrants-desc',
     hideCompleted: searchParams.get('hideCompleted')
       ? searchParams.get('hideCompleted') === 'true'
-      : cookieFilters.hideCompleted ?? false
+      : (cookieFilters.hideCompleted ?? false)
   };
 
   const [filters, setFilters] = useState<GiveawayFilters>(currentFilters);

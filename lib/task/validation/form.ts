@@ -2,6 +2,7 @@ import z from 'zod';
 import {
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema,
+  ReferralLinkTaskSchema,
   TaskSchema
 } from '../schemas';
 import { assertNever } from '@/lib/errors';
@@ -24,6 +25,8 @@ export const refineSweepstakeTasks = async ({
   ctx: z.RefinementCtx;
   maxLoyalty: number;
 }) => {
+  baseValidator({ form, ctx });
+
   form.tasks.forEach((task, index) => {
     const options = { maxLoyalty, task, form, index, ctx };
 
@@ -58,6 +61,8 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
       return bonusTimedValidator({ ...args, task });
     case 'BONUS_LOYALTY':
       return bonusLoyaltyValidator({ ...args, task });
+    case 'REFERRAL_LINK':
+      return referralLinkValidator({ ...args, task });
     case 'BONUS_LIMITED':
     case 'BONUS_TASK':
     case 'BONUS_COMPLETE_PROFILE':
@@ -183,6 +188,39 @@ const bonusTimedValidator = (
       path: ['tasks', index, 'endDate'],
       code: z.ZodIssueCode.custom,
       message
+    });
+  }
+};
+
+const referralLinkValidator = (
+  args: ValidateSweepstakeTaskOptions<ReferralLinkTaskSchema>
+) => {
+  const { form, ctx, index } = args;
+
+  const referralTasks = form.tasks.filter((t) => t.type === 'REFERRAL_LINK');
+
+  if (referralTasks.length > 1) {
+    ctx.addIssue({
+      path: ['tasks', index, 'title'],
+      code: z.ZodIssueCode.custom,
+      message: 'Only one referral link task is allowed per giveaway'
+    });
+  }
+};
+
+const baseValidator = (args: {
+  form: BaseGiveawayFormSchema;
+  ctx: z.RefinementCtx;
+}) => {
+  const { form, ctx } = args;
+
+  const referralTasks = form.tasks.filter((t) => t.type === 'REFERRAL_LINK');
+
+  if (referralTasks.length > 1) {
+    ctx.addIssue({
+      path: ['tasks'],
+      code: z.ZodIssueCode.custom,
+      message: 'Only one referral link task is allowed per giveaway'
     });
   }
 };

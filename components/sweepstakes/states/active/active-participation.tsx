@@ -11,10 +11,7 @@ import { browser } from '@/lib/browser';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PrizeItem } from './prize-item';
 import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';
-import { TaskCompletionSchema } from '@/lib/task/completions';
-import { assertNever } from '@/lib/errors';
-import { parseTwitterProofSchema } from '@/lib/task/schemas';
-import { countParticipantEntries } from '@/lib/task/entries';
+import { toParticipantEntries } from '@/lib/task/entries';
 
 export const ActiveParticipation: React.FC = () => {
   const searchParams = useSearchParams();
@@ -124,7 +121,7 @@ const UserProgressSection: React.FC<{ className?: string }> = ({
     ).length;
     const total = sweepstakes.tasks.length;
     const percentage = total > 0 ? (completed / total) * 100 : 0;
-    const entries = countParticipantEntries(participant.completions);
+    const entries = toParticipantEntries(participant.completions);
 
     return {
       completed,

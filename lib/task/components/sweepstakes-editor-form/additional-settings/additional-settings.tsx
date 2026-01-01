@@ -32,6 +32,7 @@ import { Typography } from '@/components/ui/typography';
 import { AlertCircle } from 'lucide-react';
 import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
+import { MaximumReferralsField } from './lib/maximum-referrals';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -200,6 +201,8 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return <SingleChoiceFormFields />;
       case 'MULTIPLE_CHOICE':
         return <MultipleChoiceFormFields />;
+      case 'REFERRAL_LINK':
+        return <MaximumReferralsField />;
       default:
         throw assertNever(type);
     }

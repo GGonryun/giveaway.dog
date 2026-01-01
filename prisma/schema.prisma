@@ -41,6 +41,7 @@ model User {
   featureFlags  UserFeatureFlag[]
   integrations  Integration[]
   templates     Template[]
+  referred      ReferredUser[]
 }
 
 enum UserEventType {
@@ -610,6 +611,7 @@ model SweepstakesParticipant {
   taskCompletions TaskCompletion[]
   taskProgresses  TaskProgress[]
   formValues      SweepstakesFormValue[]
+  referrals       Referral[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -630,6 +632,7 @@ model Task {
   completions TaskCompletion[]
   progress    TaskProgress[]
   jobs        TaskJob[]
+  referrals   Referral[]
 
   @@unique([sweepstakesId, index])
 }
@@ -669,6 +672,7 @@ enum TaskType {
   BLUESKY_LIKE_IMPORT
   BLUESKY_REPOST
   BLUESKY_REPOST_IMPORT
+  REFERRAL_LINK
 }
 
 model TaskCompletion {
@@ -700,6 +704,41 @@ model TaskProgress {
   updatedAt DateTime @updatedAt
 
   @@unique([participantId, taskId])
+}
+
+model Referral {
+  id   String @id @default(cuid())
+  code String @unique
+
+  // Who created the referral
+  participantId String
+  participant   SweepstakesParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  // Which task this is for
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  // Track successful referrals
+  referredUsers ReferredUser[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([participantId, taskId])
+  @@index([code])
+}
+
+model ReferredUser {
+  id         String   @id @default(cuid())
+  referralId String
+  referral   Referral @relation(fields: [referralId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([referralId, userId])
 }
 
 enum CompletionStatus {

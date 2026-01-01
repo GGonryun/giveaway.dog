@@ -27,8 +27,7 @@ export const baseTaskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   value: z.number().min(1, 'Minimum value is 1'),
   mandatory: z.boolean(),
-  tasksRequired: z.number(),
-  verifiedBonus: z.number().min(0).optional()
+  tasksRequired: z.number()
 });
 
 export const afterVisitSchema = z.discriminatedUnion('type', [
@@ -492,6 +491,13 @@ export type BlueskyRepostImportTaskSchema = z.infer<
   typeof blueskyRepostImportTaskSchema
 >;
 
+export const referralLinkTaskSchema = baseTaskSchema.extend({
+  type: z.literal('REFERRAL_LINK'),
+  maximum: z.number().min(1, 'Maximum referrals must be at least 1').nullish()
+});
+
+export type ReferralLinkTaskSchema = z.infer<typeof referralLinkTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -526,12 +532,14 @@ export const taskSchema = z.discriminatedUnion('type', [
   blueskyLikeTaskSchema,
   blueskyRepostTaskSchema,
   blueskyLikeImportTaskSchema,
-  blueskyRepostImportTaskSchema
+  blueskyRepostImportTaskSchema,
+  referralLinkTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
 
 export const TASK_LABEL: Record<TaskType, string> = {
+  REFERRAL_LINK: 'Refer a Friend',
   BONUS_TASK: 'Bonus',
   BONUS_TIMED: 'Timed Bonus',
   BONUS_LIMITED: 'Limited Bonus',
@@ -614,7 +622,8 @@ export const TASK_INPUT_SCHEMA = {
   BLUESKY_LIKE: z.object({}),
   BLUESKY_REPOST: z.object({}),
   BLUESKY_LIKE_IMPORT: z.object({}),
-  BLUESKY_REPOST_IMPORT: z.object({})
+  BLUESKY_REPOST_IMPORT: z.object({}),
+  REFERRAL_LINK: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export const TASK_JOB_DATA_SCHEMA = {
@@ -663,7 +672,8 @@ export const TASK_JOB_DATA_SCHEMA = {
   BLUESKY_REPOST_IMPORT: z.object({
     runs: z.number().min(0),
     lastProcessedDid: z.string().optional()
-  })
+  }),
+  REFERRAL_LINK: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export type TaskInput<T extends TaskSchema> = T extends { type: infer U }
@@ -717,7 +727,8 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   BLUESKY_LIKE: 'BLUESKY',
   BLUESKY_REPOST: 'BLUESKY',
   BLUESKY_LIKE_IMPORT: 'BLUESKY',
-  BLUESKY_REPOST_IMPORT: 'BLUESKY'
+  BLUESKY_REPOST_IMPORT: 'BLUESKY',
+  REFERRAL_LINK: 'BONUS'
 };
 
 export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
@@ -754,7 +765,8 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   BLUESKY_LIKE: 'BLUESKY',
   BLUESKY_REPOST: 'BLUESKY',
   BLUESKY_LIKE_IMPORT: 'BLUESKY',
-  BLUESKY_REPOST_IMPORT: 'BLUESKY'
+  BLUESKY_REPOST_IMPORT: 'BLUESKY',
+  REFERRAL_LINK: 'ANONYMOUS'
 };
 
 export const TASK_REQUIRED_SCOPES: Record<TaskPlatformSchema, string[]> = {
@@ -821,7 +833,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   BLUESKY_LIKE: 'social',
   BLUESKY_REPOST: 'social',
   BLUESKY_LIKE_IMPORT: 'social',
-  BLUESKY_REPOST_IMPORT: 'social'
+  BLUESKY_REPOST_IMPORT: 'social',
+  REFERRAL_LINK: 'engagement'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',
@@ -863,7 +876,8 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   BLUESKY_LIKE: false,
   BLUESKY_REPOST: false,
   BLUESKY_LIKE_IMPORT: true,
-  BLUESKY_REPOST_IMPORT: true
+  BLUESKY_REPOST_IMPORT: true,
+  REFERRAL_LINK: false
 };
 
 export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
@@ -900,7 +914,46 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   BLUESKY_LIKE: true,
   BLUESKY_REPOST: true,
   BLUESKY_LIKE_IMPORT: true,
-  BLUESKY_REPOST_IMPORT: true
+  BLUESKY_REPOST_IMPORT: true,
+  REFERRAL_LINK: true
+};
+
+export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
+  REFERRAL_LINK: true,
+  BONUS_TASK: false,
+  BONUS_TIMED: false,
+  BONUS_LIMITED: false,
+  BONUS_LOYALTY: false,
+  BONUS_COMPLETE_PROFILE: false,
+  VISIT_URL: false,
+  ASK_QUESTION: false,
+  SINGLE_CHOICE: false,
+  MULTIPLE_CHOICE: false,
+  TWITTER_CONNECT: false,
+  TWITTER_FOLLOW: false,
+  TWITTER_RETWEET: false,
+  TWITTER_RETWEET_IMPORT: false,
+  TWITTER_LIKE: false,
+  TWITTER_LIKE_IMPORT: false,
+  STEAM_WISHLIST: false,
+  DISCORD_JOIN: false,
+  TWITCH_FOLLOW: false,
+  KICK_FOLLOW: false,
+  SECRET_CODE: false,
+  YOUTUBE_VISIT: false,
+  INSTAGRAM_VISIT: false,
+  INSTAGRAM_LIKE: false,
+  INSTAGRAM_COMMENT: false,
+  FACEBOOK_VISIT_PAGE: false,
+  FACEBOOK_VIEW_POST: false,
+  TIKTOK_FOLLOW: false,
+  TIKTOK_LIKE: false,
+  BLUESKY_CONNECT: false,
+  BLUESKY_FOLLOW: false,
+  BLUESKY_LIKE: false,
+  BLUESKY_REPOST: false,
+  BLUESKY_LIKE_IMPORT: false,
+  BLUESKY_REPOST_IMPORT: false
 };
 
 export const userEntriesSchema = z.object({
@@ -982,7 +1035,8 @@ export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
   BLUESKY_LIKE: true,
   BLUESKY_REPOST: true,
   BLUESKY_LIKE_IMPORT: true,
-  BLUESKY_REPOST_IMPORT: true
+  BLUESKY_REPOST_IMPORT: true,
+  REFERRAL_LINK: false
 };
 
 export const twitterProofSchema = z.object({
@@ -1001,7 +1055,6 @@ export const parseTwitterProofSchema = (
 ): TwitterProofSchema | null => {
   const parsed = twitterProofSchema.safeParse(data);
   if (!parsed.success) {
-    console.error('Failed to parse Twitter proof:', parsed.error);
     return null;
   }
   return parsed.data;

@@ -2,10 +2,12 @@
 
 ## Me
 
-- [ ] Add support for generating short links for my sweepstakes, and draw verification
-- [ ] Add a referral task.
+- [ ] Sanitize emails from page for public draws
+- [ ] Allow re-rolls on public picker page.
 
-- [ ] Custom discord bots.
+- [ ] Create a marketing page for "draw verification".
+
+- [ ] Custom discord bot.
 
 ### @Dom on Discord
 
@@ -15,6 +17,7 @@
 ## Me
 
 - [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
+- [ ] Add support for generating short links for my sweepstakes, and draw verification
 
 ### @Gamelooty
 
@@ -55,7 +58,7 @@ it can be confusing to know how your changes are affecting the different preview
 
 - [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
 
-- [ ] Add a Threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads,follow on threads, like a post, reply to a post)
+- [ ] Add a Threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads, follow on threads, like a post, reply to a post)
 - [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, up vote a post, follow a subreddit, login with Reddit)
 - [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
 - [ ] Add a temporary Facebook integration - https://next-auth.js.org/providers/facebook (connect with facebook, follow a page, like a post)

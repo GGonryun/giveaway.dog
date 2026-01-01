@@ -9,7 +9,8 @@ import { findUserSweepstakes } from '@/procedures/sweepstakes/shared';
 import { ApplicationError } from '../errors';
 
 import { SweepstakesCriteriaSchema } from './criteria';
-import { countCompletionValue } from '../task/entries';
+import { toCompletionValue } from '../task/entries';
+import { toTaskSchema } from '../task/schemas';
 
 export type ExpandedEligibleTaskCompletion = EligibleTaskCompletion & {
   value: number;
@@ -21,7 +22,13 @@ export const expandCompletionsByValue = (
   const expanded: ExpandedEligibleTaskCompletion[] = [];
 
   for (const completion of completions) {
-    expanded.push({ ...completion, value: countCompletionValue(completion) });
+    expanded.push({
+      ...completion,
+      value: toCompletionValue({
+        task: toTaskSchema(completion.task),
+        proof: completion.proof
+      })
+    });
   }
 
   return expanded;

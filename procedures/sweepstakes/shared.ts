@@ -172,8 +172,25 @@ export const applySweepstakesChanges = async ({
         }
       });
 
-      // delete existing sweepstakes and all nested properties
+      const referrals = await tx.referral.findMany({
+        where: {
+          task: {
+            sweepstakesId: sweepstakes.id
+          }
+        }
+      });
 
+      const referredUsers = await tx.referredUser.findMany({
+        where: {
+          referral: {
+            task: {
+              sweepstakesId: sweepstakes.id
+            }
+          }
+        }
+      });
+
+      // delete existing sweepstakes and all nested properties
       await tx.sweepstakes.delete({
         where: { id: sweepstakes.id }
       });
@@ -230,10 +247,22 @@ export const applySweepstakesChanges = async ({
         });
       }
 
+      if (referrals.length > 0) {
+        await tx.referral.createMany({
+          data: referrals.map((d) => ({ ...d }))
+        });
+      }
+
+      if (referredUsers.length > 0) {
+        await tx.referredUser.createMany({
+          data: referredUsers.map((d) => ({ ...d }))
+        });
+      }
+
       if (
         input.timing?.startDate &&
         input.status === SweepstakesStatus.ACTIVE &&
-        input.visibility?.visibility !== 'PRIVATE'
+        input.visibility?.visibility === 'PUBLIC'
       ) {
         await tx.sweepstakesJob.upsert({
           where: {

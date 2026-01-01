@@ -85,15 +85,11 @@ const getPublicSweepstakesList = procedure()
     let results = compact(sweepstakes.map(tryToPublicSweepstakes));
 
     if (input?.minEntrants !== undefined) {
-      results = results.filter(
-        (s) => s.participants >= input.minEntrants!
-      );
+      results = results.filter((s) => s.participants >= input.minEntrants!);
     }
 
     if (input?.maxEntrants !== undefined) {
-      results = results.filter(
-        (s) => s.participants <= input.maxEntrants!
-      );
+      results = results.filter((s) => s.participants <= input.maxEntrants!);
     }
 
     return results;

@@ -34,6 +34,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':
+    case 'REFERRAL_LINK':
       return CompletionStatus.COMPLETED;
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':

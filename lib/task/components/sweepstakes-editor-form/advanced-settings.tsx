@@ -23,7 +23,6 @@ import { TaskType } from '@prisma/client';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { SecretCodeCaseSensitiveFormField } from './additional-settings/lib/secret-code-case-sensitive';
-import { VerifiedBonusField } from './additional-settings/lib/verified-bonus';
 import { TwitterVerifiedBonusField } from './additional-settings/lib/twitter-verified-bonus';
 
 export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
@@ -35,7 +34,6 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <SecretCodeCaseSensitiveFormField />
             <MandatoryField />
             <TasksRequiredField />
-            <VerifiedBonusField />
           </>
         );
       case 'FACEBOOK_VISIT_PAGE':
@@ -45,28 +43,11 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <MandatoryField />
             <TasksRequiredField />
             <AfterVisitField />
-            <VerifiedBonusField />
           </>
         );
       case 'TWITTER_FOLLOW':
-        return (
-          <>
-            <MandatoryField />
-            <TasksRequiredField />
-            <RequireConnectionField />
-            <TwitterVerifiedBonusField />
-          </>
-        );
       case 'TWITTER_RETWEET':
       case 'TWITTER_LIKE':
-        return (
-          <>
-            <MandatoryField />
-            <TasksRequiredField />
-            <RequireConnectionField />
-            <TwitterVerifiedBonusField />
-          </>
-        );
       case 'TIKTOK_FOLLOW':
       case 'TIKTOK_LIKE':
         return (
@@ -74,17 +55,10 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <MandatoryField />
             <TasksRequiredField />
             <RequireConnectionField />
-            <VerifiedBonusField />
           </>
         );
+
       case 'TWITTER_CONNECT':
-        return (
-          <>
-            <MandatoryField />
-            <TasksRequiredField />
-            <TwitterVerifiedBonusField />
-          </>
-        );
       case 'STEAM_WISHLIST':
       case 'DISCORD_JOIN':
       case 'TWITCH_FOLLOW':
@@ -110,7 +84,6 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
           <>
             <MandatoryField />
             <TasksRequiredField />
-            <VerifiedBonusField />
           </>
         );
       case 'TWITTER_RETWEET_IMPORT':
@@ -120,7 +93,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <TwitterVerifiedBonusField />
           </>
         );
-
+      case 'REFERRAL_LINK':
       case 'BLUESKY_LIKE_IMPORT':
       case 'BLUESKY_REPOST_IMPORT':
         return null;

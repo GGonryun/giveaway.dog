@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
-import { toSweepstakesState } from '@/lib/sweepstakes';
 import { TemplateListItemSchema } from '../schemas/template';
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
 import {
@@ -18,7 +17,9 @@ import {
   mockParticipant,
   mockParticipation,
   mockPrizes,
+  mockUserReferral,
   onFakeCompleteProfile,
+  onFakeCreateReferral,
   onFakeFormSubmit,
   onFakeLogin,
   onFakeTaskComplete
@@ -94,6 +95,8 @@ export function UseTemplateModal({
             participant={mockParticipant}
             state={'active'}
             className="w-full"
+            referral={mockUserReferral}
+            onCreateReferral={onFakeCreateReferral}
             onTaskComplete={onFakeTaskComplete}
             onCompleteProfile={onFakeCompleteProfile}
             onLogin={onFakeLogin}

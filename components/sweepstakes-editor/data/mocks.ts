@@ -12,6 +12,10 @@ import {
 import { UserSchema } from '@/schemas/user';
 import { IdentityProvider } from '@prisma/client';
 import { toast } from 'sonner';
+import {
+  CreateReferralSchema,
+  UserReferralSchema
+} from '@/lib/referrals/schemas';
 
 export const mockHost: GiveawayHostSchema = {
   id: 'giveaway-dog-id',
@@ -111,6 +115,21 @@ export const mockUserHostRelationship: UserHostRelationshipSchema = {
   loyalty: 5
 };
 
+export const mockUserReferral: UserReferralSchema = {
+  id: 'preview-referral',
+  code: 'PREVIEW123',
+  link: `${process.env.NEXT_PUBLIC_APP_URL}/referral/PREVIEW123`,
+  referrals: [
+    {
+      user: {
+        id: 'preview-user',
+        name: 'Giveaway Dog'
+      },
+      createdAt: new Date('1994-10-21T10:00:00Z')
+    }
+  ]
+};
+
 export const mockWinners: GiveawayPrizeSchema[] = [];
 
 export const mockSweepstakes = {
@@ -147,4 +166,21 @@ export const onFakeCompleteProfile = () => {
 export const onFakeFormSubmit = (_: unknown): Promise<unknown> => {
   toast.success('Form submitted (not implemented in preview)');
   return Promise.resolve();
+};
+
+export const onFakeTaskAction = async (
+  taskId: string,
+  data?: unknown
+): Promise<unknown> => {
+  toast.success(`Task action ${taskId} triggered (not implemented in preview)`);
+  return Promise.resolve(data);
+};
+
+export const onFakeCreateReferral = async (
+  params: CreateReferralSchema
+): Promise<UserReferralSchema> => {
+  toast.success(
+    `Referral created for sweepstakes ${params.sweepstakesId} (not implemented in preview)`
+  );
+  return Promise.resolve(mockUserReferral);
 };

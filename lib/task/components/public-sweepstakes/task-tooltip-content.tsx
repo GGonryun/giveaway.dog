@@ -7,21 +7,21 @@ import {
   SUBMISSION_TOOLTIP_COLOR_MAP,
   SUBMISSION_TOOLTIP_CONTENT
 } from '../../submission';
-import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { TaskSchema } from '../../schemas';
+import pluralize from 'pluralize';
+import { assertNever } from '@/lib/errors';
 
 export const TaskTooltipContent: React.FC<{
-  submission: UserTaskSubmissionSchema | undefined;
-  entriesText: string;
+  status: CompletionStatus | undefined;
+  entries: number;
+  task: TaskSchema;
   lock: TaskLock;
-  open: boolean;
-}> = ({ submission, entriesText, lock, open }) => {
+}> = ({ status, entries, task, lock }) => {
   const { theme } = useTaskTheme();
-  const color = submission
-    ? SUBMISSION_TOOLTIP_COLOR_MAP[submission.status]
-    : undefined;
+  const color = status ? SUBMISSION_TOOLTIP_COLOR_MAP[status] : undefined;
 
-  const content = submission
-    ? SUBMISSION_TOOLTIP_CONTENT({ entriesText })[submission.status]
+  const content = status
+    ? SUBMISSION_TOOLTIP_CONTENT({ entries })[status]
     : null;
 
   return (
@@ -35,11 +35,53 @@ export const TaskTooltipContent: React.FC<{
         <p>{content}</p>
       ) : lock ? (
         <p>{lock.message}</p>
-      ) : open ? (
-        <p>Complete task for {entriesText}.</p>
       ) : (
-        <p>You will earn {entriesText}.</p>
+        <p>{toEntriesText({ task })}</p>
       )}
     </TooltipContent>
   );
+};
+
+const toEntriesText = ({ task }: { task: TaskSchema }) => {
+  switch (task.type) {
+    case 'REFERRAL_LINK':
+      return `Every referral earns ${task.value} ${pluralize('entry', task.value)}.`;
+    case 'BONUS_TASK':
+    case 'BONUS_TIMED':
+    case 'BONUS_LIMITED':
+    case 'BONUS_LOYALTY':
+    case 'BONUS_COMPLETE_PROFILE':
+    case 'VISIT_URL':
+    case 'ASK_QUESTION':
+    case 'SINGLE_CHOICE':
+    case 'MULTIPLE_CHOICE':
+    case 'TWITTER_CONNECT':
+    case 'TWITTER_FOLLOW':
+    case 'TWITTER_RETWEET':
+    case 'TWITTER_RETWEET_IMPORT':
+    case 'TWITTER_LIKE':
+    case 'TWITTER_LIKE_IMPORT':
+    case 'STEAM_WISHLIST':
+    case 'DISCORD_JOIN':
+    case 'TWITCH_FOLLOW':
+    case 'KICK_FOLLOW':
+    case 'SECRET_CODE':
+    case 'YOUTUBE_VISIT':
+    case 'INSTAGRAM_VISIT':
+    case 'INSTAGRAM_LIKE':
+    case 'INSTAGRAM_COMMENT':
+    case 'FACEBOOK_VISIT_PAGE':
+    case 'FACEBOOK_VIEW_POST':
+    case 'TIKTOK_FOLLOW':
+    case 'TIKTOK_LIKE':
+    case 'BLUESKY_CONNECT':
+    case 'BLUESKY_FOLLOW':
+    case 'BLUESKY_LIKE':
+    case 'BLUESKY_REPOST':
+    case 'BLUESKY_LIKE_IMPORT':
+    case 'BLUESKY_REPOST_IMPORT':
+      return `Complete task for ${task.value} ${pluralize('entry', task.value)}.`;
+    default:
+      throw assertNever(task);
+  }
 };

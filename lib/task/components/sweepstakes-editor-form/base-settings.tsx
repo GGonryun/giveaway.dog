@@ -55,6 +55,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'BLUESKY_REPOST':
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
+    case 'REFERRAL_LINK':
       return (
         <BaseSettingsContainer>
           <TitleField />

@@ -191,6 +191,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         arrow: 'bg-primary text-white fill-primary',
         icon: MessageSquareIcon
       };
+    case 'REFERRAL_LINK':
+      return {
+        action:
+          'bg-amber-500 text-amber-100 group-hover:bg-amber-500 hover:bg-amber-500 dark:bg-amber-500 dark:hover:bg-amber-500',
+        symbol: 'bg-amber-500 text-amber-100',
+        arrow: 'bg-amber-500 text-amber-100 fill-amber-500',
+        icon: UsersIcon
+      };
     default:
       throw assertNever(type);
   }

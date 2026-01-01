@@ -91,6 +91,7 @@ export const processTaskJob = async (
       case 'BLUESKY_FOLLOW':
       case 'BLUESKY_LIKE':
       case 'BLUESKY_REPOST':
+      case 'REFERRAL_LINK':
       case 'MULTIPLE_CHOICE':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',

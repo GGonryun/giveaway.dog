@@ -120,6 +120,11 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       id: '4f8e',
       title: 'Get rewarded for your loyalty',
       loyaltyRequired: 10
+    },
+    {
+      ...toDefaultValues('REFERRAL_LINK'),
+      maximum: 5,
+      id: 'f0la'
     }
   ],
   terms: {

@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { toTaskSchema } from '../schemas';
 import { computeTaskStatus } from '../validation/status';
 import { saveTaskProof } from '../validation/proof';
+import { validateReferral } from '../validation/referral';
 
 const submitTask = procedure()
   .authorization({ required: true })
@@ -181,6 +182,12 @@ const submitTask = procedure()
         status: computeTaskStatus(taskConfig),
         proof: saveTaskProof(taskConfig, data)
       }
+    });
+
+    await validateReferral(db, {
+      taskId,
+      participant,
+      completions
     });
 
     return {

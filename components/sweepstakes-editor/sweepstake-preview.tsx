@@ -32,7 +32,9 @@ import {
   onFakeCompleteProfile,
   onFakeTaskComplete,
   onFakeFormSubmit,
-  mockParticipant
+  mockParticipant,
+  mockUserReferral,
+  onFakeCreateReferral
 } from './data/mocks';
 import { TaskSchema } from '@/lib/task/schemas';
 import { useTeams } from '../context/team-provider';
@@ -160,6 +162,7 @@ export const SweepstakesSharedFormPreview: React.FC<{
 
   return (
     <GiveawayParticipation
+      verifyEmail={false}
       sweepstakes={mockSweepstakes}
       host={toSweepstakesHost(activeTeam)}
       participation={mockParticipation}
@@ -167,11 +170,12 @@ export const SweepstakesSharedFormPreview: React.FC<{
       participant={getParticipant(previewState)}
       relationship={getUserHostRelationship(previewState)}
       state={previewState}
+      referral={mockUserReferral}
+      onCreateReferral={onFakeCreateReferral}
       onTaskComplete={onFakeTaskComplete}
       onLogin={onFakeLogin}
       onCompleteProfile={onFakeCompleteProfile}
       onFormSubmit={onFakeFormSubmit}
-      verifyEmail={false}
     />
   );
 };

@@ -11,6 +11,10 @@ import {
 } from '@/schemas/giveaway/schemas';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import {
+  CreateReferralSchema,
+  UserReferralSchema
+} from '@/lib/referrals/schemas';
 
 export interface GiveawayParticipationProps {
   device?: DeviceType;
@@ -24,6 +28,8 @@ export interface GiveawayParticipationProps {
   state: GiveawayState;
   hideBackground?: boolean;
   verifyEmail: boolean;
+  referral?: UserReferralSchema;
+  onCreateReferral: (args: CreateReferralSchema) => Promise<UserReferralSchema>;
   onTaskComplete: (taskId: string, data?: unknown) => Promise<unknown>;
   onLogin: () => void;
   onCompleteProfile: () => void;
@@ -53,10 +59,12 @@ export const GiveawayParticipationProvider: React.FC<
   relationship,
   state = 'active',
   verifyEmail,
+  referral,
   onTaskComplete,
   onLogin,
   onCompleteProfile,
-  onFormSubmit
+  onFormSubmit,
+  onCreateReferral
 }) => {
   const value: GiveawayParticipationContextValue = {
     participation,
@@ -65,6 +73,8 @@ export const GiveawayParticipationProvider: React.FC<
     prizes: winners,
     participant,
     relationship,
+    referral,
+    onCreateReferral,
     state,
     verifyEmail,
     onTaskComplete,

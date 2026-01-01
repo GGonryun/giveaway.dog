@@ -24,7 +24,8 @@ export const VerifiedBonusBadge: React.FC<VerifiedBonusBadgeProps> = ({
   task,
   submission
 }) => {
-  const verifiedBonus = task.verifiedBonus ?? 0;
+  const verifiedBonus =
+    'verifiedBonus' in task && task.verifiedBonus ? task.verifiedBonus : 0;
   if (verifiedBonus === 0) {
     return null;
   }

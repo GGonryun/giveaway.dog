@@ -178,7 +178,10 @@ export const EntryMethods = <
                     ) : null}
                   </DragOverlay>
                 </DndContext>
-                <SelectTaskDialog onSelect={handleSelection} />
+                <SelectTaskDialog
+                  onSelect={handleSelection}
+                  existingTasks={(fields as FieldType[]).map((f) => f.type)}
+                />
               </div>
             </FormControl>
             <FormMessage />

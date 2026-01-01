@@ -10,22 +10,18 @@ import {
   SUBMISSION_BUTTON_ICON_MAP,
   SUBMISSION_BUTTON_VARIANT_MAP
 } from '../../submission';
-import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { CompletionStatus } from '@prisma/client';
 
 export const TaskButton: React.FC<{
   open: boolean;
   task: TaskSchema;
   isLoading: boolean;
   lock: TaskLock;
-  submission: UserTaskSubmissionSchema | undefined;
-}> = ({ open, task, isLoading, lock, submission }) => {
+  status: CompletionStatus | undefined;
+}> = ({ open, task, isLoading, lock, status }) => {
   const { theme } = useTaskTheme();
-  const variant = submission
-    ? SUBMISSION_BUTTON_VARIANT_MAP[submission.status]
-    : 'outline';
-  const Icon = submission
-    ? SUBMISSION_BUTTON_ICON_MAP[submission.status]
-    : undefined;
+  const variant = status ? SUBMISSION_BUTTON_VARIANT_MAP[status] : 'outline';
+  const Icon = status ? SUBMISSION_BUTTON_ICON_MAP[status] : undefined;
   return (
     // Note: moving the tooltip trigger from here will break the tooltip's open state management
     <TooltipTrigger asChild>
@@ -35,7 +31,7 @@ export const TaskButton: React.FC<{
         variant={variant}
         className={cn(
           'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-white hover:text-white group-hover:opacity-70 hover:opacity-70',
-          submission ? '' : theme.action
+          status ? '' : theme.action
         )}
       >
         {isLoading ? (

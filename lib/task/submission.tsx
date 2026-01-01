@@ -1,4 +1,5 @@
 import { ButtonVariant } from '@/components/ui/button';
+import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 import { CompletionStatus } from '@prisma/client';
 import {
   CheckIcon,
@@ -7,6 +8,10 @@ import {
   LucideIcon,
   XIcon
 } from 'lucide-react';
+import { assertNever } from '../errors';
+import { UserReferralSchema } from '../referrals/schemas';
+import { TaskSchema } from './schemas';
+import pluralize from 'pluralize';
 
 export const SUBMISSION_COLOR_MAP: Record<CompletionStatus, string> = {
   COMPLETED:
@@ -24,12 +29,12 @@ export const SUBMISSION_TOOLTIP_COLOR_MAP: Record<CompletionStatus, string> = {
 };
 
 export const SUBMISSION_TOOLTIP_CONTENT = ({
-  entriesText
+  entries
 }: {
-  entriesText: string;
+  entries: number;
 }): Record<CompletionStatus, string> => ({
-  COMPLETED: `You earned ${entriesText}.`,
-  PENDING: `You earned ${entriesText}.`,
+  COMPLETED: `You earned ${entries} ${pluralize('entry', entries)}.`,
+  PENDING: `You earned ${entries} ${pluralize('entry', entries)}.`,
   REJECTED: `Your submission was rejected.`
 });
 
@@ -70,5 +75,61 @@ export const SubmissionTaskContent: React.FC<{
       );
     case 'REJECTED':
       return <p>Your submission was rejected.</p>;
+  }
+};
+
+export const toTaskStatus = (props: {
+  submission: UserTaskSubmissionSchema | undefined;
+  task: TaskSchema;
+  referral: UserReferralSchema | undefined;
+}): CompletionStatus | undefined => {
+  switch (props.task.type) {
+    case 'REFERRAL_LINK':
+      // referrals hide if there is a maximum set and it has been reached
+      if (
+        props.task.maximum &&
+        props.referral &&
+        props.referral.referrals.length >= props.task.maximum
+      ) {
+        return 'COMPLETED';
+      }
+      return undefined;
+    case 'BONUS_TASK':
+    case 'BONUS_TIMED':
+    case 'BONUS_LIMITED':
+    case 'BONUS_LOYALTY':
+    case 'BONUS_COMPLETE_PROFILE':
+    case 'VISIT_URL':
+    case 'ASK_QUESTION':
+    case 'SINGLE_CHOICE':
+    case 'MULTIPLE_CHOICE':
+    case 'TWITTER_CONNECT':
+    case 'TWITTER_FOLLOW':
+    case 'TWITTER_RETWEET':
+    case 'TWITTER_RETWEET_IMPORT':
+    case 'TWITTER_LIKE':
+    case 'TWITTER_LIKE_IMPORT':
+    case 'STEAM_WISHLIST':
+    case 'DISCORD_JOIN':
+    case 'TWITCH_FOLLOW':
+    case 'KICK_FOLLOW':
+    case 'SECRET_CODE':
+    case 'YOUTUBE_VISIT':
+    case 'INSTAGRAM_VISIT':
+    case 'INSTAGRAM_LIKE':
+    case 'INSTAGRAM_COMMENT':
+    case 'FACEBOOK_VISIT_PAGE':
+    case 'FACEBOOK_VIEW_POST':
+    case 'TIKTOK_FOLLOW':
+    case 'TIKTOK_LIKE':
+    case 'BLUESKY_CONNECT':
+    case 'BLUESKY_FOLLOW':
+    case 'BLUESKY_LIKE':
+    case 'BLUESKY_REPOST':
+    case 'BLUESKY_LIKE_IMPORT':
+    case 'BLUESKY_REPOST_IMPORT':
+      return props.submission?.status ?? undefined;
+    default:
+      throw assertNever(props.task);
   }
 };

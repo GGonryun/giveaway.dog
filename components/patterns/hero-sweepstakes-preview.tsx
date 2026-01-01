@@ -9,7 +9,9 @@ import {
   mockPrizes,
   mockSweepstakes,
   mockUserHostRelationship,
+  mockUserReferral,
   onFakeCompleteProfile,
+  onFakeCreateReferral,
   onFakeFormSubmit,
   onFakeLogin,
   onFakeTaskComplete
@@ -31,12 +33,14 @@ export const HeroSweepstakesPreview: React.FC = () => {
       state={state}
       participant={mockParticipant}
       relationship={mockUserHostRelationship}
+      referral={mockUserReferral}
+      verifyEmail={false}
       hideBackground
       onCompleteProfile={onFakeCompleteProfile}
       onLogin={onFakeLogin}
       onTaskComplete={onFakeTaskComplete}
       onFormSubmit={onFakeFormSubmit}
-      verifyEmail={false}
+      onCreateReferral={onFakeCreateReferral}
     />
   );
 };

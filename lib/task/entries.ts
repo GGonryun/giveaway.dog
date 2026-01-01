@@ -1,27 +1,29 @@
 import { assertNever } from '../errors';
 import { TaskCompletionSchema } from './completions';
-import { EligibleTaskCompletion } from './queries';
-import { parseTwitterProofSchema, TaskSchema, toTaskSchema } from './schemas';
+import { parseTwitterProofSchema, TaskSchema } from './schemas';
 
-export const countParticipantEntries = (completions: TaskCompletionSchema[]) =>
+export type CompletionValueArgs = {
+  task: TaskSchema;
+  proof: unknown;
+};
+
+export const toParticipantEntries = (completions: TaskCompletionSchema[]) =>
   completions.reduce(
-    (sum, completion) => sum + countCompletionValue(completion),
+    (sum, completion) =>
+      sum +
+      toCompletionValue({ task: completion.task, proof: completion.proof }),
     0
   );
 
-export const countCompletionValue = (
-  args: EligibleTaskCompletion | TaskCompletionSchema
-) => {
-  const task = 'config' in args.task ? toTaskSchema(args.task) : args.task;
-
-  switch (task.type) {
+export const toCompletionValue = (args: CompletionValueArgs) => {
+  switch (args.task.type) {
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT': {
       const proof = parseTwitterProofSchema(args.proof);
-      if (proof?.twitterVerified && task.verifiedBonus) {
-        return task.value + task.verifiedBonus;
+      if (proof?.twitterVerified && args.task.verifiedBonus) {
+        return args.task.value + args.task.verifiedBonus;
       }
-      return task.value;
+      return args.task.value;
     }
     case 'BONUS_TASK':
     case 'BONUS_TIMED':
@@ -35,7 +37,6 @@ export const countCompletionValue = (
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
-
     case 'TWITTER_LIKE':
     case 'STEAM_WISHLIST':
     case 'DISCORD_JOIN':
@@ -56,8 +57,9 @@ export const countCompletionValue = (
     case 'BLUESKY_REPOST':
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
-      return task.value;
+    case 'REFERRAL_LINK':
+      return args.task.value;
     default:
-      throw assertNever(task);
+      throw assertNever(args.task);
   }
 };

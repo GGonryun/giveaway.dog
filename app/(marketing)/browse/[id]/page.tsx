@@ -6,6 +6,9 @@ import { date } from '@/lib/date';
 import { getUserHostRelationship } from '@/procedures/browse/get-user-host-relationship';
 import { getOrCreateSweepstakesParticipant } from '@/procedures/browse/get-sweepstake-participant';
 import { getSweepstakesPrivacy } from '@/procedures/browse/get-sweepstakes-privacy';
+import { Suspense } from 'react';
+import { ReferralCodeHandler } from '@/components/sweepstakes-browse/referral-code-handler';
+import { getUserReferral } from '@/lib/referrals/procedures/get-user-referral';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -69,6 +72,7 @@ export default async function Page({ params }: PageProps) {
   const participant = await getOrCreateSweepstakesParticipant(options);
   const relationship = await getUserHostRelationship(options);
   const privacy = await getSweepstakesPrivacy(options);
+  const referral = await getUserReferral(options);
 
   if (!sweepstakes.ok) {
     console.warn('Sweepstake not found:', sweepstakes.data.message);
@@ -95,11 +99,22 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
+  if (!referral.ok) {
+    console.warn('User referral fetch error:', referral.data?.message);
+    notFound();
+  }
+
   return (
-    <SweepstakesParticipationPage
-      {...sweepstakes.data}
-      participant={participant.data}
-      relationship={relationship.data}
-    />
+    <>
+      <Suspense fallback={null}>
+        <ReferralCodeHandler />
+      </Suspense>
+      <SweepstakesParticipationPage
+        {...sweepstakes.data}
+        referral={referral.data}
+        participant={participant.data}
+        relationship={relationship.data}
+      />
+    </>
   );
 }

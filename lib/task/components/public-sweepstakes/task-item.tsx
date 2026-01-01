@@ -21,6 +21,8 @@ import { TaskAction } from './task-action';
 import { TaskIcon } from './task-icon';
 import { Tooltip } from '@/components/ui/tooltip';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { toTaskStatus } from '../../submission';
+import { toCompletionValue } from '../../entries';
 
 type TaskItemProps = {
   task: TaskSchema;
@@ -33,19 +35,23 @@ type TaskItemProps = {
 const TaskItemContent: React.FC<TaskItemProps> = ({
   task,
   open,
-  submissions,
+  submissions: allSubmissions,
   onOpen,
   onSubmit
 }) => {
   const router = useRouter();
 
-  const { onTaskComplete, participation, relationship } =
+  const { onTaskComplete, participation, relationship, referral } =
     useGiveawayParticipation();
 
   const submission: UserTaskSubmissionSchema | undefined = useMemo(
-    () => submissions.find((c) => c.taskId === task.id),
-    [submissions, task.id]
+    () => allSubmissions.find((c) => c.taskId === task.id),
+    [allSubmissions, task.id]
   );
+
+  const status = toTaskStatus({ submission, task, referral });
+
+  const entries = toCompletionValue({ task, proof: submission?.proof });
 
   const loyalty = useMemo(() => relationship?.loyalty || 0, [relationship]);
 
@@ -54,17 +60,17 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
     [participation.usersByTask, task.id]
   );
 
-  const lock = getTaskLock({ task, submissions, entrants, loyalty });
+  const lock = getTaskLock({
+    task,
+    submissions: allSubmissions,
+    entrants,
+    loyalty
+  });
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<FailureData | undefined>(undefined);
 
   const taskRef = useRef<HTMLDivElement>(null);
-
-  const entriesText = useMemo(
-    () => `${task.value} ${pluralize('entry', task.value)}`,
-    [task.value]
-  );
 
   useEffect(() => {
     if (open && taskRef.current) {
@@ -120,7 +126,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
           )}
         >
           <div className="flex items-center gap-3 flex-1">
-            <TaskIcon submission={submission} />
+            <TaskIcon status={status} />
             <h4 className="text-left font-medium text-sm sm:text-base group-hover:underline">
               {task.title}
             </h4>
@@ -128,25 +134,27 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
 
           <div className="flex items-center gap-2 p-1.5">
             <TaskBadge
-              submission={submission}
+              open={open}
+              status={status}
               task={task}
               entrants={entrants}
               loyalty={loyalty}
+              referral={referral}
             />
-            <Tooltip>
+            <Tooltip open={open ? true : undefined}>
               <TaskButton
                 open={open}
                 task={task}
                 isLoading={isLoading}
                 lock={lock}
-                submission={submission}
+                status={status}
               />
 
               <TaskTooltipContent
-                submission={submission}
-                entriesText={entriesText}
+                task={task}
+                status={status}
                 lock={lock}
-                open={open}
+                entries={entries}
               />
             </Tooltip>
           </div>

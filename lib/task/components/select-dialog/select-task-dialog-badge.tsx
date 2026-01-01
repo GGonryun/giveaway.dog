@@ -3,10 +3,15 @@ import { TASK_HAS_AUTOMATIC_VALIDATION } from '@/lib/task/schemas';
 import { TaskType } from '@prisma/client';
 import { ImportBadge } from '../badges/import-badge';
 import { VerifiedBadge } from '../badges/verified-badge';
+import { MaxOfOneBadge } from '../badges/max-of-one-badge';
 
-export const SelectTaskDialogBadge: React.FC<{ type: TaskType }> = ({
-  type
-}) => {
+export const SelectTaskDialogBadge: React.FC<{
+  type: TaskType;
+  showMaxOfOne?: boolean;
+}> = ({ type, showMaxOfOne = false }) => {
+  if (showMaxOfOne) {
+    return <MaxOfOneBadge />;
+  }
   switch (type) {
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':
@@ -43,6 +48,7 @@ export const SelectTaskDialogBadge: React.FC<{ type: TaskType }> = ({
     case 'BLUESKY_LIKE':
     case 'BLUESKY_REPOST':
     case 'SECRET_CODE':
+    case 'REFERRAL_LINK':
       return TASK_HAS_AUTOMATIC_VALIDATION[type] ? <VerifiedBadge /> : null;
     default:
       throw assertNever(type);

@@ -20,13 +20,15 @@ import { SelectTaskDialogBadge } from './select-task-dialog-badge';
 import {
   TASK_LABEL,
   TASK_IS_IMPORT,
-  TASK_ALLOW_MANUAL_ADD
+  TASK_ALLOW_MANUAL_ADD,
+  TASK_DUPLICATE_RESTRICTION
 } from '../../schemas';
 import { toTaskTheme } from '../theme';
 
 export const SelectTaskDialog: React.FC<{
   onSelect: (type: TaskType) => void;
-}> = ({ onSelect }) => {
+  existingTasks: TaskType[];
+}> = ({ onSelect, existingTasks }) => {
   const [open, setOpen] = React.useState(false);
 
   const allTaskTypes = widetype.keys(TASK_LABEL);
@@ -74,6 +76,7 @@ export const SelectTaskDialog: React.FC<{
               <SelectTask
                 key={t}
                 type={t}
+                existingTasks={existingTasks}
                 onClick={() => {
                   setOpen(false);
                   onSelect(t);
@@ -90,6 +93,7 @@ export const SelectTaskDialog: React.FC<{
                 <SelectTask
                   key={t}
                   type={t}
+                  existingTasks={existingTasks}
                   onClick={() => {
                     setOpen(false);
                     onSelect(t);
@@ -110,15 +114,25 @@ export const SelectTaskDialog: React.FC<{
   );
 };
 
-const SelectTask: React.FC<{ type: TaskType; onClick: () => void }> = ({
-  type,
-  onClick
-}) => {
+const SelectTask: React.FC<{
+  type: TaskType;
+  onClick: () => void;
+  existingTasks: TaskType[];
+}> = ({ type, onClick, existingTasks }) => {
   const theme = toTaskTheme(type);
+  const isRestricted = TASK_DUPLICATE_RESTRICTION[type];
+  const alreadyExists = existingTasks.includes(type);
+  const isDisabled = isRestricted && alreadyExists;
+
   return (
     <div
-      className="flex items-center justify-between gap-2 cursor-pointer border rounded-lg p-2 hover:bg-accent hover:border-accent/50"
-      onClick={onClick}
+      className={cn(
+        'flex items-center justify-between gap-2 border rounded-lg p-2',
+        isDisabled
+          ? 'opacity-50 cursor-not-allowed'
+          : 'cursor-pointer hover:bg-accent hover:border-accent/50'
+      )}
+      onClick={isDisabled ? undefined : onClick}
     >
       <div className="flex items-center gap-2">
         <div
@@ -136,7 +150,10 @@ const SelectTask: React.FC<{ type: TaskType; onClick: () => void }> = ({
         </div>
       </div>
       <div className="flex items-center gap-1">
-        <SelectTaskDialogBadge type={type} />
+        <SelectTaskDialogBadge
+          type={type}
+          showMaxOfOne={isRestricted && alreadyExists}
+        />
         <Badge variant="secondary" className="p-1 mr-1">
           <ChevronRight strokeWidth={2.5} />
         </Badge>

@@ -9,11 +9,17 @@ import { toSweepstakesState } from '@/lib/sweepstakes';
 import { submitParticipantForm } from '@/lib/custom-fields/procedures/submit-form';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import createReferralCode from '@/lib/referrals/procedures/create-referral-code';
+import {
+  CreateReferralSchema,
+  UserReferralSchema
+} from '@/lib/referrals/schemas';
 
 export type SweepstakesParticipationPageContentProps =
   ParticipantSweepstakeSchema & {
     participant?: SweepstakesParticipantSchema;
     relationship?: UserHostRelationshipSchema;
+    referral?: UserReferralSchema;
   };
 
 export const SweepstakesParticipationPage: React.FC<
@@ -33,6 +39,10 @@ export const SweepstakesParticipationPage: React.FC<
     action: submitParticipantForm
   });
 
+  const createReferralProcedure = useProcedureAsync({
+    action: createReferralCode
+  });
+
   const handleLogin = () => {
     const search = new URLSearchParams([['redirectTo', pathname]]);
     router.push(`/login?${search.toString()}`);
@@ -40,6 +50,10 @@ export const SweepstakesParticipationPage: React.FC<
 
   const handleCompleteProfile = () => {
     router.push('/profile/complete');
+  };
+
+  const handleCreateReferral = async (args: CreateReferralSchema) => {
+    return await createReferralProcedure.run(args);
   };
 
   return (
@@ -56,6 +70,7 @@ export const SweepstakesParticipationPage: React.FC<
       }
       onLogin={handleLogin}
       onCompleteProfile={handleCompleteProfile}
+      onCreateReferral={handleCreateReferral}
       onFormSubmit={async (data) =>
         await submitFormProcedure.run({
           sweepstakesId,

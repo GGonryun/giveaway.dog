@@ -3,13 +3,13 @@ import {
   ClockIcon,
   LockIcon,
   LucideIcon,
-  ShieldCheck,
   UnlockIcon
 } from 'lucide-react';
 import {
   BonusLimitedTaskSchema,
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema,
+  ReferralLinkTaskSchema,
   TaskSchema,
   TwitterLikeImportTaskSchema,
   TwitterRetweetImportTaskSchema
@@ -20,10 +20,12 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useTaskTheme } from '../theme';
 import { assertNever } from '@/lib/errors';
-import { CompletionStatus } from '@prisma/client';
 import { SocialXBlueCheckmarkIcon } from '@/lib/integrations/components/icons/x-icon';
 import pluralize from 'pluralize';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { UserReferralSchema } from '@/lib/referrals/schemas';
+import { toTaskStatus } from '../../submission';
+import { CompletionStatus } from '@prisma/client';
 
 const Container: React.PC<{
   Icon?: LucideIcon;
@@ -127,20 +129,32 @@ const BonusVerifiedContent: React.FC<{
   );
 };
 
+const ReferralLinkContent: React.FC<{
+  task: ReferralLinkTaskSchema;
+  referral: UserReferralSchema | undefined;
+}> = ({ task, referral }) => {
+  if (!task.maximum) return null;
+  return (
+    <Container Icon={UnlockIcon}>
+      {referral?.referrals.length ?? 0} / {task.maximum} referrals
+    </Container>
+  );
+};
+
 type TaskBadgeProps<T extends TaskSchema = TaskSchema> = {
-  submission: UserTaskSubmissionSchema | undefined;
+  open: boolean;
+  status: CompletionStatus | undefined;
   entrants: number;
   loyalty: number;
+  referral: UserReferralSchema | undefined;
   task: T;
 };
 
-export const TaskBadge: React.FC<TaskBadgeProps> = ({
-  submission,
-  task,
-  entrants,
-  loyalty
-}) => {
-  if (submission) return null;
+export const TaskBadge: React.FC<TaskBadgeProps> = (props) => {
+  const { task, entrants, loyalty, referral, status, open } = props;
+
+  if (open) return null;
+  if (status) return null;
 
   if (task.mandatory) {
     return <Container Icon={LockIcon}>Required</Container>;
@@ -156,6 +170,8 @@ export const TaskBadge: React.FC<TaskBadgeProps> = ({
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':
       return <BonusVerifiedContent task={task} />;
+    case 'REFERRAL_LINK':
+      return <ReferralLinkContent task={task} referral={referral} />;
     case 'BONUS_TASK':
     case 'BONUS_COMPLETE_PROFILE':
     case 'VISIT_URL':

@@ -31,6 +31,7 @@ import { TikTokLikeTaskActionForm } from './lib/tiktok/tiktok-like';
 import { AskQuestionTaskActionForm } from './lib/form/ask-question';
 import { SingleChoiceTaskActionForm } from './lib/form/single-choice';
 import { MultipleChoiceTaskActionForm } from './lib/form/multiple-choice';
+import { ReferralLinkTaskActionForm } from './lib/referral/referral-link';
 
 export const TaskActionForm: React.FC<
   TaskActionProps & {
@@ -102,6 +103,8 @@ export const TaskActionForm: React.FC<
     case 'BLUESKY_REPOST':
     case 'BLUESKY_REPOST_IMPORT':
       return <BlueskyRepostTaskActionForm {...props} task={props.task} />;
+    case 'REFERRAL_LINK':
+      return <ReferralLinkTaskActionForm {...props} task={props.task} />;
     default:
       throw assertNever(props.task);
   }

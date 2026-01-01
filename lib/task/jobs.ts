@@ -39,6 +39,7 @@ export const createJobsForTask = (
     case 'BLUESKY_FOLLOW':
     case 'BLUESKY_LIKE':
     case 'BLUESKY_REPOST':
+    case 'REFERRAL_LINK':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':
