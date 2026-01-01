@@ -22,11 +22,10 @@ import { Prisma, PrismaClient, SweepstakesStatus } from '@prisma/client';
 import { toStorableSweepstakesUpdate } from '@/schemas/giveaway/storable';
 import { isUndefined, omitBy } from 'lodash';
 import {
-  TemplateFormSchema,
   TemplateInputSchema,
-  toTemplateFormSchema,
   toTemplateInputSchema
 } from '@/lib/templates/schemas/template';
+import { replaceIdsDeep } from '@/lib/object';
 
 const SWEEPSTAKE_ID_SIZE = 6;
 
@@ -122,10 +121,9 @@ const createFromTemplate = async ({
   const omitted = omitBy(update, isUndefined);
 
   return await db.sweepstakes.create({
-    data: {
-      ...base,
-      ...omitted
-    }
+    data: replaceIdsDeep({ ...base, ...omitted }, () =>
+      nanoid(SWEEPSTAKE_ID_SIZE)
+    )
   });
 };
 
