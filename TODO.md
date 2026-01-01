@@ -2,17 +2,9 @@
 
 ## Me
 
-- [ ] Sanitize emails from page for public draws
-- [ ] Allow re-rolls on public picker page.
-
 - [ ] Create a marketing page for "draw verification".
 
 - [ ] Custom discord bot.
-
-### @Dom on Discord
-
-- [ ] Let hosts submit proof of receipt to increase their trust score.
-- [ ] Upload social proof onto the website.
 
 ## Me
 
@@ -25,6 +17,11 @@
 - [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries (https://www.cloudflare.com/application-services/products/turnstile/)
 
 ---
+
+### @Dom on Discord
+
+- [ ] Let hosts submit proof of receipt to increase their trust score.
+- [ ] Upload social proof onto the website.
 
 ### @theejankanator
 

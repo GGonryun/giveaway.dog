@@ -12,7 +12,16 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Shuffle, Info, Pencil, GiftIcon, Trophy } from 'lucide-react';
+import {
+  Shuffle,
+  Info,
+  Pencil,
+  GiftIcon,
+  Trophy,
+  MoreHorizontal,
+  Eye,
+  BanIcon
+} from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
 import { Label } from '@/components/ui/label';
 import {
@@ -36,6 +45,12 @@ import {
   DialogTitle,
   DialogFooter
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import { Textarea } from '@/components/ui/textarea';
 import { CompleteSweepstakesAlert } from '../sweepstakes-editor/complete-sweepstakes-alert';
 import { BotEnforcementField } from '@/lib/user-quality/bot-enforcement-field';
@@ -52,6 +67,7 @@ import { toQualityTheme } from '@/lib/participant/util';
 import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
 import { rollPrize } from '@/lib/winners/procedures/roll-prize';
 import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';
+import { disqualifyDraw } from '@/lib/winners/procedures/disqualify-draw';
 import { UNKNOWN_EMAIL } from '@/lib/settings';
 import { strings } from '@/lib/strings';
 
@@ -68,6 +84,7 @@ interface PrizeDrawRowProps {
   isEditable: boolean;
   isRolling: boolean;
   onReroll: (drawId: string) => void;
+  onDisqualify: (drawId: string) => void;
   onViewDisqualification: (draw: SweepstakesPrizeSchema['draws'][0]) => void;
   teamSlug: string;
 }
@@ -78,6 +95,7 @@ const PrizeDrawRow = ({
   isEditable,
   isRolling,
   onReroll,
+  onDisqualify,
   onViewDisqualification,
   teamSlug
 }: PrizeDrawRowProps) => {
@@ -158,24 +176,41 @@ const PrizeDrawRow = ({
       </TableCell>
       <TableCell className="text-right">
         {draw.result === PrizeDrawResult.WINNER ? (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onReroll(draw.id)}
-            disabled={isRolling || !isEditable}
-          >
-            <Shuffle className="h-3 w-3 mr-1" />
-            Re-roll
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={isRolling || !isEditable}
+              >
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onDisqualify(draw.id)}>
+                <BanIcon className="h-4 w-4 mr-2" />
+                Disqualify
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onReroll(draw.id)}>
+                <Shuffle className="h-4 w-4 mr-2" />
+                Re-roll
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onViewDisqualification(draw)}
-          >
-            <Info className="h-3 w-3 mr-1" />
-            View
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onViewDisqualification(draw)}>
+                <Eye className="h-4 w-4 mr-2" />
+                View Reason
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </TableCell>
     </TableRow>
@@ -188,6 +223,7 @@ const PrizeCard: React.FC<{
   isRolling: boolean;
   hasEnded: boolean;
   onReroll: (drawId: string) => void;
+  onDisqualify: (drawId: string) => void;
   onViewDisqualification: (draw: SweepstakesPrizeSchema['draws'][0]) => void;
   onPickForSlot: () => void;
   teamSlug: string;
@@ -197,6 +233,7 @@ const PrizeCard: React.FC<{
   isRolling,
   hasEnded,
   onReroll,
+  onDisqualify,
   onViewDisqualification,
   onPickForSlot,
   teamSlug
@@ -246,6 +283,7 @@ const PrizeCard: React.FC<{
                 isEditable={isEditable}
                 isRolling={isRolling}
                 onReroll={onReroll}
+                onDisqualify={onDisqualify}
                 onViewDisqualification={onViewDisqualification}
                 teamSlug={teamSlug}
               />
@@ -269,6 +307,7 @@ const PrizeDraws: React.FC<{
   isEditable?: boolean;
   isRolling?: boolean;
   onReroll: (drawId: string) => void;
+  onDisqualify: (drawId: string) => void;
   onViewDisqualification: (draw: SweepstakesPrizeSchema['draws'][0]) => void;
   teamSlug: string;
 }> = ({
@@ -276,6 +315,7 @@ const PrizeDraws: React.FC<{
   isEditable = false,
   isRolling = false,
   onReroll,
+  onDisqualify,
   onViewDisqualification,
   teamSlug
 }) => {
@@ -292,6 +332,7 @@ const PrizeDraws: React.FC<{
           isEditable={isEditable}
           isRolling={isRolling}
           onReroll={onReroll}
+          onDisqualify={onDisqualify}
           onViewDisqualification={onViewDisqualification}
           teamSlug={teamSlug}
         />
@@ -362,6 +403,9 @@ export const SweepstakesWinners = ({
   const [editedCriteria, setEditedCriteria] =
     useState<SweepstakesWinnerCriteriaSchema>(criteria);
   const [rerollDialogOpen, setRerollDialogOpen] = useState(false);
+  const [actionType, setActionType] = useState<'disqualify' | 'reroll'>(
+    'reroll'
+  );
   const [drawId, setDrawId] = useState<string | null>(null);
   const [disqualificationReason, setDisqualificationReason] = useState('');
   const [viewDisqualificationDialog, setViewDisqualificationDialog] =
@@ -393,16 +437,25 @@ export const SweepstakesWinners = ({
     }
   });
 
+  const disqualifyDrawProcedure = useProcedure({
+    action: disqualifyDraw,
+    onSuccess: () => {
+      router.refresh();
+    }
+  });
+
   const isRolling = useMemo(() => {
     return (
       rollPrizesProcedure.isLoading ||
       rollPrizeProcedure.isLoading ||
-      rerollDrawProcedure.isLoading
+      rerollDrawProcedure.isLoading ||
+      disqualifyDrawProcedure.isLoading
     );
   }, [
     rollPrizesProcedure.isLoading,
     rollPrizeProcedure.isLoading,
-    rerollDrawProcedure.isLoading
+    rerollDrawProcedure.isLoading,
+    disqualifyDrawProcedure.isLoading
   ]);
 
   const { run: runUpdateCriteria, isLoading: isUpdatingCriteria } =
@@ -480,7 +533,15 @@ export const SweepstakesWinners = ({
     });
   };
 
+  const handleDisqualify = (drawId: string) => {
+    setActionType('disqualify');
+    setDrawId(drawId);
+    setDisqualificationReason('');
+    setRerollDialogOpen(true);
+  };
+
   const handleReroll = (drawId: string) => {
+    setActionType('reroll');
     setDrawId(drawId);
     setDisqualificationReason('');
     setRerollDialogOpen(true);
@@ -489,12 +550,21 @@ export const SweepstakesWinners = ({
   const handleRerollSubmit = () => {
     if (!drawId || !disqualificationReason.trim()) return;
 
-    rerollDrawProcedure.run({
-      sweepstakesId,
-      slug,
-      drawId,
-      disqualificationReason
-    });
+    if (actionType === 'disqualify') {
+      disqualifyDrawProcedure.run({
+        sweepstakesId,
+        slug,
+        drawId,
+        disqualificationReason
+      });
+    } else {
+      rerollDrawProcedure.run({
+        sweepstakesId,
+        slug,
+        drawId,
+        disqualificationReason
+      });
+    }
 
     setRerollDialogOpen(false);
     setDrawId(null);
@@ -632,11 +702,15 @@ export const SweepstakesWinners = ({
       <Dialog open={rerollDialogOpen} onOpenChange={setRerollDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Re-roll Winner</DialogTitle>
+            <DialogTitle>
+              {actionType === 'disqualify'
+                ? 'Disqualify User'
+                : 'Disqualify & Re-roll'}
+            </DialogTitle>
             <DialogDescription>
-              Provide a justification for re-rolling this winner. The current
-              winner will be marked as disqualified and this action will be
-              recorded.
+              {actionType === 'disqualify'
+                ? 'Provide a justification for disqualifying this winner. This action will be recorded.'
+                : 'Provide a justification for disqualifying this winner. This action will be recorded and a new winner will be selected.'}
             </DialogDescription>
           </DialogHeader>
 
@@ -670,7 +744,13 @@ export const SweepstakesWinners = ({
               onClick={handleRerollSubmit}
               disabled={!disqualificationReason.trim() || isRolling}
             >
-              {isRolling ? 'Rolling...' : 'Confirm Re-roll'}
+              {isRolling
+                ? actionType === 'disqualify'
+                  ? 'Disqualifying...'
+                  : 'Re-rolling...'
+                : actionType === 'disqualify'
+                  ? 'Disqualify'
+                  : 'Disqualify & Re-roll'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -847,12 +927,32 @@ export const SweepstakesWinners = ({
           </CardContent>
         </Card>
       ) : (
-        isEditable && (
-          <CompleteSweepstakesAlert
-            onCompleteAction={handleCompleteSweepstakes}
-            isCompleting={isCompleting}
-          />
-        )
+        <>
+          {isEditable && (
+            <CompleteSweepstakesAlert
+              onCompleteAction={handleCompleteSweepstakes}
+              isCompleting={isCompleting}
+            />
+          )}
+          <Card>
+            <CardContent className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
+              <div className="text-center sm:text-left">
+                <p className="font-medium">All winners selected</p>
+                <p className="text-sm text-muted-foreground">
+                  Use the public picker to re-roll or showcase your winners
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                onClick={handlePublicDraw}
+                className="w-full sm:w-auto"
+              >
+                <Trophy className="h-4 w-4 mr-2" />
+                Open public picker
+              </Button>
+            </CardContent>
+          </Card>
+        </>
       )}
 
       <div className="space-y-4">
@@ -864,6 +964,7 @@ export const SweepstakesWinners = ({
             isRolling={isRolling}
             hasEnded={hasEnded}
             onReroll={handleReroll}
+            onDisqualify={handleDisqualify}
             onViewDisqualification={handleViewDisqualification}
             onPickForSlot={() => handlePickForSlot(prize.id)}
             teamSlug={activeTeam.slug}

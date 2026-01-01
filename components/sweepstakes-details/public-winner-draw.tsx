@@ -340,7 +340,7 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
                     )}
                     onClick={() => handleCardClick(prizeCard)}
                   >
-                    <CardContent className="p-3 sm:p-4 lg:p-6 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] space-y-2 sm:space-y-3">
+                    <CardContent className="p-3 sm:p-4 lg:p-6 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] space-y-2 sm:space-y-3 relative">
                       {prizeCard.revealed ? (
                         <>
                           <motion.div
