@@ -13,6 +13,12 @@ export async function verifyTurnstileToken(
   token: string
 ): Promise<TurnstileVerificationResponse> {
   const secretKey = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
+  if (isDevelopment && token.includes('DUMMY.TOKEN')) {
+    console.log('Development mode: bypassing Turnstile verification for dummy token');
+    return { success: true };
+  }
 
   if (!secretKey) {
     console.error('CLOUDFLARE_TURNSTILE_SECRET_KEY not configured');

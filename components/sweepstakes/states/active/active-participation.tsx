@@ -12,19 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PrizeItem } from './prize-item';
 import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';
 import { toParticipantEntries } from '@/lib/task/entries';
-import { TurnstileWidget } from '@/components/auth/turnstile-widget';
 
 export const ActiveParticipation: React.FC = () => {
-  const { onTurnstileVerify, isPreview } = useGiveawayParticipation();
-  const siteKey = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
-
-  const handleTurnstileVerify = async (token: string) => {
-    try {
-      await onTurnstileVerify(token);
-    } catch (error) {
-      console.error('Turnstile verification error:', error);
-    }
-  };
   const searchParams = useSearchParams();
   const taskId = useMemo(() => {
     if (searchParams.has('taskId')) return searchParams.get('taskId');
@@ -52,10 +41,6 @@ export const ActiveParticipation: React.FC = () => {
 
   return (
     <div className="space-y-2 relative">
-      {!isPreview && siteKey && (
-        <TurnstileWidget siteKey={siteKey} onVerify={handleTurnstileVerify} />
-      )}
-
       {open && (
         <div
           className="fixed inset-0 h-full bg-foreground/10 z-50 backdrop-blur-[1px]"
