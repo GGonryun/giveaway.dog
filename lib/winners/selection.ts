@@ -26,34 +26,43 @@ export const toUniquePrizeDraw = (
   const { slots, draws } = args;
 
   // filter out completions that have already been included in a draw
-  const uniqueCompletions = args.completions.filter(
+  const eligibleCompletions = args.completions.filter(
     (completion) =>
       !draws.some((draw) => draw.userId === completion.participant.userId)
   );
 
-  const weightedCompletions: WeightedItem<ExpandedEligibleTaskCompletion>[] =
-    uniqueCompletions.map((completion) => ({
-      item: completion,
-      weight: completion.value
-    }));
-
-  const pickedWinners = pickUniqueWeighted(weightedCompletions, slots.length);
-
-  if (pickedWinners.length < slots.length) {
-    throw new ApplicationError({
-      code: 'VALIDATION_ERROR',
-      message: `Not enough eligible participants (${pickedWinners.length}) to fill ${slots.length} empty prize slots`
-    });
-  }
-
   const winnersData: Prisma.PrizeDrawCreateManyInput[] = [];
+  const pickedUserIds = new Set<string>();
 
   for (let i = 0; i < slots.length; i++) {
+    // filter out users that have already been picked in this draw operation
+    const availableCompletions = eligibleCompletions.filter(
+      (completion) => !pickedUserIds.has(completion.participant.userId)
+    );
+
+    if (availableCompletions.length === 0) {
+      throw new ApplicationError({
+        code: 'VALIDATION_ERROR',
+        message: `Not enough eligible participants to fill ${slots.length} empty prize slots`
+      });
+    }
+
+    const weightedCompletions: WeightedItem<ExpandedEligibleTaskCompletion>[] =
+      availableCompletions.map((completion) => ({
+        item: completion,
+        weight: completion.value
+      }));
+
+    const pickedWinners = pickUniqueWeighted(weightedCompletions, 1);
+    const winner = pickedWinners[0];
+
+    pickedUserIds.add(winner.participant.userId);
+
     winnersData.push({
       id: nanoid(),
       prizeId: slots[i].prizeId,
       result: PrizeDrawResult.WINNER,
-      taskCompletionId: pickedWinners[i].id
+      taskCompletionId: winner.id
     });
   }
 

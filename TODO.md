@@ -14,8 +14,8 @@
 
 ### @theejankanator
 
-- Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?
 - Make it easy to collect data about what responses users have provided to questions.
+- Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?
 
 #### @Chizuruthedeaf
 
@@ -28,13 +28,6 @@ it can be confusing to know how your changes are affecting the different preview
 ## Cupara
 
 - [ ] Also, I feel when you modify the terms & conditions the additional terms box should be able to handle formatting as I'm one of many streamers that are very OCD about formatting. If the text looks garbled or looks to run together almost all entrants won't read that part of the terms.
-
-## PJ & Dom
-
-- [ ] Global Black List
-- [ ] Global White List
-- [ ] Team Black List
-- [ ] Team White List
 
 ### Nobody Asked
 
@@ -94,6 +87,13 @@ it can be confusing to know how your changes are affecting the different preview
 
 - [ ] Let hosts submit proof of receipt to increase their trust score.
 - [ ] Upload social proof onto the website.
+
+## PJ & Dom
+
+- [ ] Global Black List
+- [ ] Global White List
+- [ ] Team Black List
+- [ ] Team White List
 
 ## Personal Features
 
