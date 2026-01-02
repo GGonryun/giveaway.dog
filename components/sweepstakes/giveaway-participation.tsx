@@ -59,9 +59,7 @@ const GiveawayParticipationContent = () => {
 };
 
 const GiveawayParticipationContentGate = () => {
-  const { state, sweepstakes, onTurnstileVerify, isPreview } =
-    useGiveawayParticipation();
-  const { requirePreEntryLogin } = sweepstakes.audience;
+  const { onTurnstileVerify, isPreview } = useGiveawayParticipation();
 
   return (
     <TurnstileGate onVerify={onTurnstileVerify} enabled={!isPreview}>
