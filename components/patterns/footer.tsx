@@ -1,10 +1,12 @@
-import { TWITTER_PROFILE_URL } from '@/lib/settings';
+import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
+import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
+import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import {
-  FacebookIcon,
-  InstagramIcon,
-  LinkedinIcon,
-  TwitterIcon
-} from 'lucide-react';
+  BLUESKY_PROFILE_URL,
+  FACEBOOK_PROFILE_URL,
+  TWITTER_PROFILE_URL
+} from '@/lib/settings';
+
 import Link from 'next/link';
 import React from 'react';
 
@@ -34,24 +36,19 @@ interface FooterProps {
 
 const defaultSocialLinks = [
   {
-    icon: <InstagramIcon className="size-5" />,
-    href: '/instagram',
-    label: 'Instagram'
-  },
-  {
-    icon: <FacebookIcon className="size-5" />,
-    href: '/facebook',
+    icon: <SocialFacebookIcon className="size-5" />,
+    href: FACEBOOK_PROFILE_URL,
     label: 'Facebook'
   },
   {
-    icon: <TwitterIcon className="size-5" />,
+    icon: <SocialXIcon className="size-5" />,
     href: TWITTER_PROFILE_URL,
     label: 'Twitter'
   },
   {
-    icon: <LinkedinIcon className="size-5" />,
-    href: '/linkedin',
-    label: 'LinkedIn'
+    icon: <SocialBlueskyIcon className="size-5" />,
+    href: BLUESKY_PROFILE_URL,
+    label: 'Bluesky'
   }
 ];
 
