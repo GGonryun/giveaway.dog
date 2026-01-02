@@ -30,6 +30,7 @@ export interface GiveawayParticipationProps {
   verifyEmail: boolean;
   referral?: UserReferralSchema;
   isPreview: boolean;
+  turnstile?: Date;
   onCreateReferral: (args: CreateReferralSchema) => Promise<UserReferralSchema>;
   onTaskComplete: (taskId: string, data?: unknown) => Promise<unknown>;
   onLogin: () => void;
@@ -63,6 +64,7 @@ export const GiveawayParticipationProvider: React.FC<
   verifyEmail,
   referral,
   isPreview,
+  turnstile,
   onTaskComplete,
   onLogin,
   onCompleteProfile,
@@ -79,6 +81,7 @@ export const GiveawayParticipationProvider: React.FC<
     relationship,
     referral,
     isPreview,
+    turnstile,
     onCreateReferral,
     state,
     verifyEmail,

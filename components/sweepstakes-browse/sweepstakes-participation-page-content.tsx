@@ -21,6 +21,7 @@ export type SweepstakesParticipationPageContentProps =
     participant?: SweepstakesParticipantSchema;
     relationship?: UserHostRelationshipSchema;
     referral?: UserReferralSchema;
+    turnstile?: Date;
   };
 
 export const SweepstakesParticipationPage: React.FC<

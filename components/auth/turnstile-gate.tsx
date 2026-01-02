@@ -27,7 +27,7 @@ export function TurnstileGate({
   if (enabled && siteKey && !isVerified) {
     return (
       <div className="flex flex-col items-center justify-center pt-2 pb-4 space-y-4">
-        <div className="text-center ">
+        <div className="text-center">
           <h3 className="text-lg font-semibold">Security Verification</h3>
           <p className="text-sm text-muted-foreground">
             Please complete the verification to continue
