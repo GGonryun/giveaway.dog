@@ -31,14 +31,14 @@ const verifyTurnstile = procedure()
         update: {
           token: token === 'failed' ? null : token,
           success: verificationResult.success,
-          score: verificationResult.score,
+          score: verificationResult.confidence,
           updatedAt: new Date()
         },
         create: {
           userId: user.id,
           token: token === 'failed' ? null : token,
           success: verificationResult.success,
-          score: verificationResult.score
+          score: verificationResult.confidence
         }
       });
 

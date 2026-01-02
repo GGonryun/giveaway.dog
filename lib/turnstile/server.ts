@@ -10,7 +10,7 @@ export interface TurnstileVerificationResponse {
   'error-codes'?: string[];
   action?: string;
   cdata?: string;
-  score?: number;
+  confidence?: number;
 }
 
 export async function checkTurnstileVerification(): Promise<boolean> {

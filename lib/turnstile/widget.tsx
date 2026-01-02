@@ -1,10 +1,7 @@
 'use client';
 
 import { Turnstile } from '@marsidev/react-turnstile';
-import { useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { AlertCircle, RefreshCw } from 'lucide-react';
 
 interface TurnstileWidgetProps {
   siteKey: string;
@@ -23,11 +20,11 @@ export function TurnstileWidget({ siteKey, onVerify }: TurnstileWidgetProps) {
 
   return (
     <Turnstile
-      key={'enter_giveaway'}
       siteKey={siteKey}
       onSuccess={handleSuccess}
       onError={handleError}
       options={{
+        action: 'enter_giveaway',
         retryInterval: 30e3,
         appearance: 'always',
         size: 'normal'

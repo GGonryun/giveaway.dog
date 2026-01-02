@@ -31,7 +31,8 @@ export const getLastTurnstileCheck = procedure()
         lastVerification &&
         lastVerification.success &&
         lastVerification.token &&
-        lastVerification.updatedAt >= new Date(Date.now() - TURNSTILE_DB_DAYS * 24 * 60 * 60 * 1000)
+        lastVerification.updatedAt >=
+          new Date(Date.now() - TURNSTILE_DB_DAYS * 24 * 60 * 60 * 1000)
       ) {
         return {
           token: lastVerification.token,
@@ -52,7 +53,7 @@ export const getLastTurnstileCheck = procedure()
       if (verificationResult.success) {
         return {
           token: cookie.value,
-          score: verificationResult.score ?? null,
+          score: verificationResult.confidence ?? null,
           lastCheckedAt: new Date()
         };
       }
