@@ -36,6 +36,14 @@ function parseYouTubeChannelUrl(url: string): YouTubeChannelParams | null {
       };
     }
 
+    const directUsernameMatch = pathname.match(/^\/([A-Za-z0-9_\-]+)$/);
+    if (directUsernameMatch) {
+      return {
+        type: 'handle',
+        value: `@${directUsernameMatch[1]}`
+      };
+    }
+
     return null;
   } catch {
     return null;
@@ -57,7 +65,7 @@ export const verifyYouTubeChannel = procedure()
       throw new ApplicationError({
         code: 'BAD_REQUEST',
         message:
-          'Invalid YouTube URL format. Please use either youtube.com/@channel_name or youtube.com/channel/CHANNEL_ID'
+          'Invalid YouTube URL format. Please use youtube.com/@username, youtube.com/username, or youtube.com/channel/CHANNEL_ID'
       });
     }
 

@@ -240,9 +240,9 @@ export const discordJoinTaskSchema = baseTaskSchema.extend({
     .url('Public Channel URL is required')
     .refine((val) => {
       const urlPattern =
-        /^https?:\/\/(www\.)?discord\.com\/channels\/\d+\/\d+$/;
+        /^https?:\/\/(www\.)?(discord\.com|discordapp\.com)\/channels\/\d+\/\d+$/;
       return urlPattern.test(val);
-    }, 'Unexpected URL, should be like https://discord.com/channels/guildId/channelId')
+    }, 'Unexpected URL, should be like https://discord.com/channels/guildId/channelId or https://discordapp.com/channels/guildId/channelId')
 });
 
 export type DiscordJoinTaskSchema = z.infer<typeof discordJoinTaskSchema>;
@@ -292,11 +292,12 @@ export const youtubeVisitTaskSchema = baseTaskSchema.extend({
     .refine((val) => {
       // support either: https://www.youtube.com/@gonryun
       // or https://www.youtube.com/channel/UCbTcSd0aoM0A0sxxz8TBD6w
+      // or https://www.youtube.com/KensonPlays (username without @)
       // or situations where ?sub_confirmation=1 is appended
       const urlPattern =
-        /^https?:\/\/(www\.)?youtube\.com\/(channel\/[A-Za-z0-9_\-]+|@[\w\-]+)(\?sub_confirmation=1)?$/;
+        /^https?:\/\/(www\.)?youtube\.com\/(channel\/[A-Za-z0-9_\-]+|@[\w\-]+|[A-Za-z0-9_\-]+)(\?sub_confirmation=1)?$/;
       return urlPattern.test(val);
-    }, 'Unexpected URL, should be like https://www.youtube.com/@username or https://www.youtube.com/channel/CHANNEL_ID')
+    }, 'Unexpected URL, should be like https://www.youtube.com/@username, https://www.youtube.com/username, or https://www.youtube.com/channel/CHANNEL_ID')
 });
 
 export type YoutubeVisitTaskSchema = z.infer<typeof youtubeVisitTaskSchema>;
