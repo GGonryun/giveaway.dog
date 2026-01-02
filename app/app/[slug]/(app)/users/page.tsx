@@ -1,12 +1,14 @@
-'use server';
-
+import { Suspense } from 'react';
 import { Outline } from '@/components/app/outline';
-import { UsersTable } from './components/users-table';
+import { UsersTableWrapper } from './components/users-table-wrapper';
+import { UsersTableSkeleton } from './components/users-table-skeleton';
 
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@/schemas/pages';
-import { getTeamParticipants } from '@/lib/participant/procedures/get-team-participants';
-import { getTeamTasks } from '@/lib/participant/procedures/get-team-tasks';
+import {
+  parseUsersSearchParams,
+  type UsersSearchParams
+} from './lib/parse-search-params';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -21,33 +23,23 @@ export async function generateMetadata(): Promise<Metadata> {
 
 type Props = {
   params: Promise<TeamPageProps>;
+  searchParams: Promise<UsersSearchParams>;
 };
 
-const Page: React.FC<Props> = async ({ params }) => {
+const Page: React.FC<Props> = async ({ params, searchParams }) => {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
 
-  const participants = await getTeamParticipants({
-    ...resolvedParams
-  });
-
-  const tasks = await getTeamTasks({
-    ...resolvedParams
-  });
-
-  if (!participants.ok) {
-    return <div>Failed to load users: {participants.data.message}</div>;
-  }
-
-  if (!tasks.ok) {
-    return <div>Failed to load tasks: {tasks.data.message}</div>;
-  }
+  const parsedParams = parseUsersSearchParams(resolvedSearchParams);
 
   return (
     <Outline title="Users">
-      <UsersTable
-        participants={participants.data}
-        totalTasks={tasks.data.length}
-      />
+      <Suspense fallback={<UsersTableSkeleton />}>
+        <UsersTableWrapper
+          teamParams={resolvedParams}
+          parsedParams={parsedParams}
+        />
+      </Suspense>
     </Outline>
   );
 };

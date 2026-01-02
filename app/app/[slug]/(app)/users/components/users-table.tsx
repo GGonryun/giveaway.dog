@@ -1,14 +1,8 @@
 'use client';
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader
-} from '@/components/ui/card';
-import { browser } from '@/lib/browser';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -28,11 +22,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreVertical, Eye, UserX, Users, ArrowUpDown } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
-import { FilterBar } from '../../../../../../components/users/filter-bar';
-import { SearchBar } from '../../../../../../components/users/search-bar';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 
 import { useTeams } from '@/components/context/team-provider';
-import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { UserDetailSheet } from '@/components/sweepstakes-details/user-participant-detail-sheet';
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 import { datetime } from '@/lib/date';
@@ -41,14 +34,21 @@ import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
 import { toEngagementTheme, toQualityTheme } from '@/lib/participant/util';
+import { UsersFiltersSheet } from '@/components/users/users-filters-sheet';
 
 interface UsersTableProps {
-  participants: SweepstakesParticipantSchema[];
+  initialData: {
+    participants: SweepstakesParticipantSchema[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  };
   totalTasks: number;
 }
 
 export const UsersTable: React.FC<UsersTableProps> = ({
-  participants: initialParticipants,
+  initialData,
   totalTasks
 }) => {
   const { activeTeam } = useTeams();
@@ -58,232 +58,60 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   const [selectedUser, setSelectedUser] =
     useState<SweepstakesParticipantSchema | null>(null);
   const [showUserSheet, setShowUserSheet] = useState(false);
-
-  const [search, setSearch] = useState(searchParams.get('search') || '');
-  const [sortField, setSortField] = useState(
-    searchParams.get('sortField') || 'lastEntryAt'
-  );
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(
-    (searchParams.get('sortDirection') as 'asc' | 'desc') || 'desc'
-  );
-  const [status, setStatus] = useState(searchParams.get('status') || 'all');
-  const [dateRange, setDateRange] = useState(
-    searchParams.get('dateRange') || 'all'
-  );
-  const [minScore, setMinScore] = useState(
-    Number(searchParams.get('minScore')) || 0
-  );
-  const [maxScore, setMaxScore] = useState(
-    Number(searchParams.get('maxScore')) || 100
-  );
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get('page')) || 1
+  const [searchValue, setSearchValue] = useState(
+    searchParams.get('search') || ''
   );
 
-  useEffect(() => {
-    const params: Record<string, string | null> = {};
+  const handlePageChange = useCallback(
+    (page: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('page', page.toString());
+      router.push(`?${params.toString()}`);
+    },
+    [router, searchParams]
+  );
 
-    if (search && search.trim() !== '') params.search = search;
-    else params.search = null;
-
-    if (sortField !== 'lastEntryAt') params.sortField = sortField;
-    else params.sortField = null;
-
-    if (sortDirection !== 'desc') params.sortDirection = sortDirection;
-    else params.sortDirection = null;
-
-    if (status !== 'all') params.status = status;
-    else params.status = null;
-
-    if (dateRange !== 'all') params.dateRange = dateRange;
-    else params.dateRange = null;
-
-    if (minScore > 0) params.minScore = String(minScore);
-    else params.minScore = null;
-
-    if (maxScore < 100) params.maxScore = String(maxScore);
-    else params.maxScore = null;
-
-    if (currentPage > 1) params.page = String(currentPage);
-    else params.page = null;
-
-    browser.changeParams(params);
-  }, [
-    search,
-    sortField,
-    sortDirection,
-    status,
-    dateRange,
-    minScore,
-    maxScore,
-    currentPage
-  ]);
-
-  const filteredAndSortedUsers = useMemo(() => {
-    let filtered = [...initialParticipants];
-
-    if (search && search.trim() !== '') {
-      const searchLower = search.toLowerCase();
-      filtered = filtered.filter(
-        (participant) =>
-          participant.user.name?.toLowerCase().includes(searchLower) ||
-          participant.user.email?.toLowerCase().includes(searchLower) ||
-          participant.user.id.toLowerCase().includes(searchLower)
-      );
-    }
-
-    if (status && status !== 'all') {
-      filtered = filtered.filter((participant) => 'active' === status);
-    }
-
-    if (dateRange && dateRange !== 'all') {
-      const now = new Date();
-      let dateThreshold: Date;
-
-      switch (dateRange) {
-        case 'today':
-          dateThreshold = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate()
-          );
-          break;
-        case '7d':
-          dateThreshold = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          break;
-        case '30d':
-          dateThreshold = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-          break;
-        case '90d':
-          dateThreshold = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-          break;
-        case '1y':
-          dateThreshold = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
-          break;
-        default:
-          dateThreshold = new Date(0);
+  const handleSearch = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      const params = new URLSearchParams(searchParams.toString());
+      if (searchValue.trim()) {
+        params.set('search', searchValue.trim());
+      } else {
+        params.delete('search');
       }
-
-      filtered = filtered.filter((participant) => {
-        const lastEntry = toMostRecentCompletion(participant.completions) ?? 0;
-        return new Date(lastEntry) >= dateThreshold;
-      });
-    }
-
-    if (minScore !== undefined && minScore > 0) {
-      filtered = filtered.filter(
-        (participant) => participant.user.qualityScore >= minScore
-      );
-    }
-
-    if (maxScore !== undefined && maxScore < 100) {
-      filtered = filtered.filter(
-        (participant) => participant.user.qualityScore <= maxScore
-      );
-    }
-
-    if (sortField) {
-      filtered.sort((a, b) => {
-        let valueA: any, valueB: any;
-
-        const lastEntryA = toMostRecentCompletion(a.completions) ?? 0;
-        const lastEntryB = toMostRecentCompletion(b.completions) ?? 0;
-        const engagementA = toSweepstakesEngagement(a.completions, totalTasks);
-        const engagementB = toSweepstakesEngagement(b.completions, totalTasks);
-
-        switch (sortField) {
-          case 'lastEntryAt':
-            valueA = new Date(lastEntryA);
-            valueB = new Date(lastEntryB);
-            break;
-          case 'qualityScore':
-            valueA = a.user.qualityScore;
-            valueB = b.user.qualityScore;
-            break;
-          case 'engagement':
-            valueA = engagementA;
-            valueB = engagementB;
-            break;
-          case 'status':
-            valueA = 'active';
-            valueB = 'active';
-            break;
-          default:
-            valueA = new Date(lastEntryA);
-            valueB = new Date(lastEntryB);
-        }
-
-        if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
-        if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
-        return 0;
-      });
-    }
-
-    return filtered;
-  }, [
-    initialParticipants,
-    search,
-    status,
-    dateRange,
-    minScore,
-    maxScore,
-    sortField,
-    sortDirection
-  ]);
-
-  const paginatedParticipants = useMemo(() => {
-    const startIndex = (currentPage - 1) * DEFAULT_PAGE_SIZE;
-    return filteredAndSortedUsers.slice(
-      startIndex,
-      startIndex + DEFAULT_PAGE_SIZE
-    );
-  }, [filteredAndSortedUsers, currentPage]);
-
-  const totalUsers = filteredAndSortedUsers.length;
-  const totalPages = Math.ceil(totalUsers / DEFAULT_PAGE_SIZE);
+      params.delete('page');
+      router.push(`?${params.toString()}`);
+    },
+    [router, searchParams, searchValue]
+  );
 
   const handleSort = useCallback(
-    (field: string) => {
-      const newDirection =
-        sortField === field && sortDirection === 'desc' ? 'asc' : 'desc';
-      setSortField(field);
-      setSortDirection(newDirection);
-      setCurrentPage(1);
+    (field: 'lastEntry' | 'qualityScore' | 'name') => {
+      const params = new URLSearchParams(searchParams.toString());
+      const currentSortBy = params.get('sortBy');
+      const currentDirection = params.get('sortDirection');
+
+      if (currentSortBy === field) {
+        params.set(
+          'sortDirection',
+          currentDirection === 'asc' ? 'desc' : 'asc'
+        );
+      } else {
+        params.set('sortBy', field);
+        params.set('sortDirection', 'desc');
+      }
+      params.delete('page');
+      router.push(`?${params.toString()}`);
     },
-    [sortField, sortDirection]
+    [router, searchParams]
   );
-
-  const handleSearch = useCallback((query: string) => {
-    setSearch(query);
-    setCurrentPage(1);
-  }, []);
-
-  const handleFilterChange = useCallback(
-    (newFilters: {
-      query: string;
-      minScore: number;
-      maxScore: number;
-      status: string;
-      dateRange: string;
-    }) => {
-      setStatus(newFilters.status);
-      setDateRange(newFilters.dateRange);
-      setMinScore(newFilters.minScore);
-      setMaxScore(newFilters.maxScore);
-      setCurrentPage(1);
-    },
-    []
-  );
-
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
-  }, []);
 
   const SortButton = ({
     field,
     children
   }: {
-    field: string;
+    field: 'lastEntry' | 'qualityScore' | 'name';
     children: React.ReactNode;
   }) => (
     <Button
@@ -301,25 +129,22 @@ export const UsersTable: React.FC<UsersTableProps> = ({
     <div>
       <div className="w-full space-y-4">
         <div className="flex items-start gap-2">
-          <div className="flex-grow">
-            <SearchBar
-              value={search}
-              onChange={handleSearch}
-              placeholder="Search by name, email, or ID..."
-            />
-          </div>
+          <form onSubmit={handleSearch} className="flex-grow flex gap-2">
+            <div className="relative flex-grow">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search by name, email, or ID..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Button type="submit">Search</Button>
+          </form>
 
           <div className="flex-shrink-0">
-            <FilterBar
-              filters={{
-                query: search,
-                minScore: minScore,
-                maxScore: maxScore,
-                status: status,
-                dateRange: dateRange
-              }}
-              onChange={handleFilterChange}
-            />
+            <UsersFiltersSheet />
           </div>
         </div>
         <div>
@@ -330,14 +155,10 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                   <Users className="h-5 w-5" />
                   <span className="text-lg font-semibold">Users</span>
                   <Badge variant="secondary">
-                    {totalUsers.toLocaleString()} total
+                    {initialData.total.toLocaleString()} total
                   </Badge>
                 </div>
               </div>
-              <CardDescription>
-                Manage and analyze your user base with comprehensive filtering
-                and bulk operations.
-              </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
@@ -349,16 +170,16 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                         <SortButton field="qualityScore">Quality</SortButton>
                       </TableHead>
                       <TableHead className="hidden xl:table-cell text-right">
-                        <SortButton field="engagement">Engagement</SortButton>
+                        Engagement
                       </TableHead>
                       <TableHead className="hidden sm:table-cell text-right">
-                        <SortButton field="lastEntryAt">Last Entry</SortButton>
+                        <SortButton field="lastEntry">Last Entry</SortButton>
                       </TableHead>
                       <TableHead className="w-12"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {paginatedParticipants.map((participant) => {
+                    {initialData.participants.map((participant) => {
                       const lastEntryAt = toMostRecentCompletion(
                         participant.completions
                       );
@@ -486,10 +307,10 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                 </Table>
               </div>
               <TablePagination
-                totalItems={totalUsers}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                pageSize={DEFAULT_PAGE_SIZE}
+                totalItems={initialData.total}
+                currentPage={initialData.page}
+                totalPages={initialData.totalPages}
+                pageSize={initialData.pageSize}
                 onPageChange={handlePageChange}
                 itemName="users"
                 isPending={false}
