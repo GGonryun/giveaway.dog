@@ -256,7 +256,8 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
 
   const turnstileAttempts = await tx.userTurnstile.findMany({
     where: { userId },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
+    take: 10
   });
 
   const metrics: UserScoreMetricsSchema = {
