@@ -103,7 +103,6 @@ export function UseTemplateModal({
             onCompleteProfile={onFakeCompleteProfile}
             onLogin={onFakeLogin}
             onFormSubmit={onFakeFormSubmit}
-            onTurnstileVerify={onFakeTurnstileVerify}
             verifyEmail={false}
           />
         </div>

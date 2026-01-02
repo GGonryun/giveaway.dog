@@ -10,6 +10,7 @@ import { Figtree } from 'next/font/google';
 import { UserMetricsCollector } from '@/components/user-metrics-collector';
 import { environment } from '@/lib/environment';
 import { BLUESKY_EMBED_SCRIPT_URL } from '@/lib/bluesky/embed';
+import { TurnstileProvider } from '@/lib/turnstile/provider';
 
 const figtree = Figtree({
   subsets: ['latin'],
@@ -78,9 +79,11 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider>
-            <UserMetricsCollector />
-            <main>{children}</main>
-            <Toaster />
+            <TurnstileProvider>
+              <UserMetricsCollector />
+              <main>{children}</main>
+              <Toaster />
+            </TurnstileProvider>
           </SessionProvider>
         </ThemeProvider>
         <Analytics />

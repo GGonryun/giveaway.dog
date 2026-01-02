@@ -21,8 +21,7 @@ import { toBackgroundStyle } from '@/schemas/color';
 import { cn } from '@/lib/utils';
 import { SweepstakesLoginOptions } from './sweepstakes-login-options';
 import { UserDetailsForm } from './states/user-details-form';
-import { TurnstileGate } from '@/components/auth/turnstile-gate';
-import { datetime } from '@/lib/date';
+import { TurnstileGate } from '@/lib/turnstile/gate';
 
 const GiveawayParticipationContent = () => {
   const { state, sweepstakes } = useGiveawayParticipation();
@@ -60,18 +59,8 @@ const GiveawayParticipationContent = () => {
 };
 
 const GiveawayParticipationContentGate = () => {
-  const { onTurnstileVerify, isPreview, turnstile } =
-    useGiveawayParticipation();
-
-  const needsTurnstile = React.useMemo(() => {
-    if (isPreview) return false;
-    if (!turnstile) return true;
-
-    return new Date(turnstile) < datetime.daysAgo(7);
-  }, [isPreview, turnstile]);
-
   return (
-    <TurnstileGate onVerify={onTurnstileVerify} enabled={needsTurnstile}>
+    <TurnstileGate>
       <GiveawayParticipationContent />
     </TurnstileGate>
   );

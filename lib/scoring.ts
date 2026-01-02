@@ -15,11 +15,11 @@ import {
   MAX_TASK_ACTIVITY_BONUS,
   MAX_TASK_DIVERSITY_BONUS,
   MAX_TURNSTILE_TRUST_BONUS,
+  MIN_TURNSTILE_TRUST_PENALTY,
   PER_ADDITIONAL_IP_PENALTY,
   PER_DEVICE_STABILITY_BONUS,
   PER_PROVIDER_BONUS,
   PER_TASK_BONUS,
-  TURNSTILE_SUCCESS_BONUS,
   USER_BASE_SCORE,
   UserScoreMetricsSchema
 } from '@/schemas/user-scoring';
@@ -195,18 +195,21 @@ const calculateOverlappingFingerprints = (
     : MAX_FINGERPRINT_CONSISTENCY_PUNISHMENT;
 };
 
-// Turnstile trust - 20 - based on successful verification attempts (+2 per successful verification, up to +20)
+// Turnstile trust - +/-10 - based on Cloudflare risk score from most recent verification
+// Score ranges from 0 (bot) to 1 (human), mapped to -10 to +10
 const calculateTurnstileTrust = (
-  turnstileAttempts: Prisma.UserTurnstileGetPayload<{}>[]
+  turnstileEntry: Prisma.UserTurnstileGetPayload<{}> | null
 ) => {
-  if (turnstileAttempts.length === 0) return 0;
+  if (!turnstileEntry || !turnstileEntry.success || turnstileEntry.score === null) {
+    return 0;
+  }
 
-  const successfulAttempts = turnstileAttempts.filter((t) => t.success).length;
+  // Cloudflare score ranges from 0 (bot) to 1 (human)
+  // Map to -10 (bot) to +10 (human)
+  // Formula: (score * 20) - 10
+  const normalizedScore = turnstileEntry.score * 20 - 10;
 
-  return Math.min(
-    MAX_TURNSTILE_TRUST_BONUS,
-    successfulAttempts * TURNSTILE_SUCCESS_BONUS
-  );
+  return clamp(normalizedScore, MIN_TURNSTILE_TRUST_PENALTY, MAX_TURNSTILE_TRUST_BONUS);
 };
 
 // Example scoring (0–100):
@@ -219,7 +222,7 @@ const calculateTurnstileTrust = (
 // Task activity  	          10      if ≥30 task completed in last 30 days (+1 for every 3 tasks, up to +10)
 // Task diversity             10      if ≥10 unique actions in last 30 days (+1 per additional action, up to +10)
 // Account age	              10      if >7 days old (+1 for each additional 7 days, up to +10)
-// Turnstile trust            20      based on successful verification attempts (+2 per successful verification, up to +20)
+// Turnstile trust            +/-10   based on Cloudflare risk score (0=bot → -10, 1=human → +10)
 // No overlap ip addresses   -30      if shared IP
 // No overlap fingerprints   -30      if shared fingerprint
 export const computeUserQualityScore = async (tx: Tx, userId: string) => {
@@ -254,10 +257,8 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
     select: SELECT_USER_FINGERPRINT_QUERY
   });
 
-  const turnstileAttempts = await tx.userTurnstile.findMany({
-    where: { userId },
-    orderBy: { createdAt: 'desc' },
-    take: 10
+  const turnstileEntry = await tx.userTurnstile.findUnique({
+    where: { userId }
   });
 
   const metrics: UserScoreMetricsSchema = {
@@ -278,7 +279,7 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
       userId,
       fingerprints
     ),
-    turnstileTrust: calculateTurnstileTrust(turnstileAttempts)
+    turnstileTrust: calculateTurnstileTrust(turnstileEntry)
   };
 
   const score = Object.values(metrics).reduce((a, b) => a + b, 0);

@@ -43,7 +43,6 @@ export const HeroSweepstakesPreview: React.FC = () => {
       onTaskComplete={onFakeTaskComplete}
       onFormSubmit={onFakeFormSubmit}
       onCreateReferral={onFakeCreateReferral}
-      onTurnstileVerify={onFakeTurnstileVerify}
     />
   );
 };

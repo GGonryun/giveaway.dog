@@ -15,6 +15,7 @@ import {
   CreateReferralSchema,
   UserReferralSchema
 } from '@/lib/referrals/schemas';
+import { TurnstileStatus } from '@/lib/turnstile/schemas';
 
 export interface GiveawayParticipationProps {
   device?: DeviceType;
@@ -30,13 +31,12 @@ export interface GiveawayParticipationProps {
   verifyEmail: boolean;
   referral?: UserReferralSchema;
   isPreview: boolean;
-  turnstile?: Date;
+  turnstile?: TurnstileStatus;
   onCreateReferral: (args: CreateReferralSchema) => Promise<UserReferralSchema>;
   onTaskComplete: (taskId: string, data?: unknown) => Promise<unknown>;
   onLogin: () => void;
   onCompleteProfile: () => void;
   onFormSubmit: (data: unknown) => Promise<unknown>;
-  onTurnstileVerify: (token: string) => Promise<{ success: boolean }>;
 }
 
 export interface GiveawayParticipationContextValue
@@ -69,8 +69,7 @@ export const GiveawayParticipationProvider: React.FC<
   onLogin,
   onCompleteProfile,
   onFormSubmit,
-  onCreateReferral,
-  onTurnstileVerify
+  onCreateReferral
 }) => {
   const value: GiveawayParticipationContextValue = {
     participation,
@@ -88,8 +87,7 @@ export const GiveawayParticipationProvider: React.FC<
     onTaskComplete,
     onLogin,
     onCompleteProfile,
-    onFormSubmit,
-    onTurnstileVerify
+    onFormSubmit
   };
 
   return (

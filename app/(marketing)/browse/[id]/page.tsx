@@ -9,7 +9,6 @@ import { getSweepstakesPrivacy } from '@/procedures/browse/get-sweepstakes-priva
 import { Suspense } from 'react';
 import { ReferralCodeHandler } from '@/components/sweepstakes-browse/referral-code-handler';
 import { getUserReferral } from '@/lib/referrals/procedures/get-user-referral';
-import { getLastTurnstileCheck } from '@/procedures/user/check-turnstile-status';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -69,14 +68,13 @@ export default async function Page({ params }: PageProps) {
 
   const options = { sweepstakesId: id };
 
-  const [sweepstakes, participant, relationship, privacy, referral, turnstile] =
+  const [sweepstakes, participant, relationship, privacy, referral] =
     await Promise.all([
       getParticipantSweepstake(options),
       getOrCreateSweepstakesParticipant(options),
       getUserHostRelationship(options),
       getSweepstakesPrivacy(options),
-      getUserReferral(options),
-      getLastTurnstileCheck(options)
+      getUserReferral(options)
     ]);
 
   if (!sweepstakes.ok) {
@@ -109,11 +107,6 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
-  if (!turnstile.ok) {
-    console.warn('Turnstile status fetch error:', turnstile.data?.message);
-    notFound();
-  }
-
   return (
     <>
       <Suspense fallback={null}>
@@ -124,7 +117,6 @@ export default async function Page({ params }: PageProps) {
         referral={referral.data}
         participant={participant.data}
         relationship={relationship.data}
-        turnstile={turnstile.data}
       />
     </>
   );

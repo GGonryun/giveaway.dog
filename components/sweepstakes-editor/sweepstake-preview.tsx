@@ -176,7 +176,6 @@ export const SweepstakesSharedFormPreview: React.FC<{
       onCreateReferral={onFakeCreateReferral}
       onTaskComplete={onFakeTaskComplete}
       onLogin={onFakeLogin}
-      onTurnstileVerify={onFakeTurnstileVerify}
       onCompleteProfile={onFakeCompleteProfile}
       onFormSubmit={onFakeFormSubmit}
     />

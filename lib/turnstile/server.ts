@@ -1,12 +1,23 @@
 'use server';
 
-interface TurnstileVerificationResponse {
+import { cookies } from 'next/headers';
+import { TURNSTILE_COOKIE_NAME } from './consts';
+
+export interface TurnstileVerificationResponse {
   success: boolean;
   challenge_ts?: string;
   hostname?: string;
   'error-codes'?: string[];
   action?: string;
   cdata?: string;
+  score?: number;
+}
+
+export async function checkTurnstileVerification(): Promise<boolean> {
+  const cookieStore = await cookies();
+  const cookie = cookieStore.get(TURNSTILE_COOKIE_NAME);
+
+  return !!cookie?.value;
 }
 
 export async function verifyTurnstileToken(
@@ -43,6 +54,8 @@ export async function verifyTurnstileToken(
 
     if (!data.success) {
       console.warn('Turnstile verification failed:', data['error-codes']);
+    } else {
+      console.log('Turnstile verification succeeded:', data);
     }
 
     return data;

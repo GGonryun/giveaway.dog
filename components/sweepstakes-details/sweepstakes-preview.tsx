@@ -189,7 +189,6 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                 onLogin={onFakeLogin}
                 onCompleteProfile={onFakeCompleteProfile}
                 onFormSubmit={onFakeFormSubmit}
-                onTurnstileVerify={onFakeTurnstileVerify}
                 verifyEmail={false}
               />
             </>

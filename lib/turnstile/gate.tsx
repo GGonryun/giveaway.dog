@@ -1,30 +1,27 @@
 'use client';
 
-import React, { useState } from 'react';
-import { TurnstileWidget } from './turnstile-widget';
+import React from 'react';
+import { TurnstileWidget } from './widget';
+import { useTurnstile } from './use-turnstile';
+import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
 
 interface TurnstileGateProps {
-  onVerify: (token: string) => Promise<{ success: boolean }>;
+  sweepstakesId?: string;
   children: React.ReactNode;
   enabled?: boolean;
 }
 
-export function TurnstileGate({
-  onVerify,
-  children,
-  enabled = true
-}: TurnstileGateProps) {
-  const [isVerified, setIsVerified] = useState(false);
+export function TurnstileGate({ children }: TurnstileGateProps) {
+  const { isPreview, sweepstakes } = useGiveawayParticipation();
+
+  const { isVerified, needsVerification, verify } = useTurnstile();
   const siteKey = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
 
   const handleTurnstileVerify = async (token: string) => {
-    const result = await onVerify(token);
-    if (result && result.success) {
-      setIsVerified(true);
-    }
+    await verify(token, sweepstakes.id);
   };
 
-  if (enabled && siteKey && !isVerified) {
+  if (!isPreview && siteKey && needsVerification && !isVerified) {
     return (
       <div className="flex flex-col items-center justify-center pt-2 pb-4 space-y-4">
         <div className="text-center">

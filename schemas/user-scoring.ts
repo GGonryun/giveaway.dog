@@ -41,8 +41,8 @@ export const MAX_TASK_DIVERSITY_BONUS = 10;
 export const MAX_ACCOUNT_AGE_BONUS = 10;
 export const MAX_IP_CONSISTENCY_PUNISHMENT = -30;
 export const MAX_FINGERPRINT_CONSISTENCY_PUNISHMENT = -30;
-export const MAX_TURNSTILE_TRUST_BONUS = 20;
-export const TURNSTILE_SUCCESS_BONUS = 2;
+export const MAX_TURNSTILE_TRUST_BONUS = 10;
+export const MIN_TURNSTILE_TRUST_PENALTY = -10;
 
 export const userScoreMetricsSchema = z.object({
   baseScore: z.number(),
@@ -73,9 +73,9 @@ export const USER_METRIC_TYPE: Record<UserScoreMetricKey, 'quality' | 'risk'> =
     taskActivity: 'quality',
     taskDiversity: 'quality',
     accountAge: 'quality',
+    turnstileTrust: 'quality',
     overlappingIpAddresses: 'risk',
-    overlappingFingerprints: 'risk',
-    turnstileTrust: 'quality'
+    overlappingFingerprints: 'risk'
   };
 
 export const USER_QUALITY_METRICS: UserScoreMetricKey[] = widetype
@@ -155,7 +155,7 @@ export const USER_METRIC_DESCRIPTION: Record<UserScoreMetricKey, string> = {
   overlappingFingerprints:
     'Detects if the user shares device fingerprints with other accounts. Shared fingerprints may indicate potential fraud.',
   turnstileTrust:
-    'Tracks the success rate of invisible bot verifications over time. More successful verifications indicate a human user.'
+    'Tracks the success rate of bot verifications over time. More successful verifications indicate a human user.'
 };
 
 export const userQualitySchema = z.object({
