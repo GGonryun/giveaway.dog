@@ -11,6 +11,9 @@ export interface TurnstileVerificationResponse {
   action?: string;
   cdata?: string;
   confidence?: number;
+  metadata?: {
+    interactive?: boolean;
+  };
 }
 
 export async function checkTurnstileVerification(): Promise<boolean> {
@@ -56,6 +59,12 @@ export async function verifyTurnstileToken(
       console.warn('Turnstile verification failed:', data['error-codes']);
     } else {
       console.log('Turnstile verification succeeded:', data);
+
+      // If metadata.interactive is false, the user passed without interaction
+      // Set confidence to maximum (1.0) as this indicates high trust
+      if (data.metadata?.interactive === false) {
+        data.confidence = 1.0;
+      }
     }
 
     return data;
