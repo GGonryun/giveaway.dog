@@ -64,11 +64,6 @@ export default async function RootLayout({
           crossOrigin="anonymous"
           src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"
         ></script>
-        <script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          async
-          defer
-        ></script>
       </head>
       <body>
         <ThemeProvider
