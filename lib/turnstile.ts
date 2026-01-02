@@ -16,7 +16,6 @@ export async function verifyTurnstileToken(
   const isDevelopment = process.env.NODE_ENV === 'development';
 
   if (isDevelopment && token.includes('DUMMY.TOKEN')) {
-    console.log('Development mode: bypassing Turnstile verification for dummy token');
     return { success: true };
   }
 
