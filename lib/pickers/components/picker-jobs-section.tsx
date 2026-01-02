@@ -33,6 +33,9 @@ interface PickerJobsSectionProps {
 }
 
 const JOB_TYPE_LABEL: Record<PickerJobType, string> = {
+  FETCH_BLUESKY_DATA: 'Bluesky Data',
+  FETCH_BLUESKY_GET_LIKING_USERS: 'Fetch Likes',
+  FETCH_BLUESKY_GET_REPOSTED_BY: 'Fetch Reposts',
   FETCH_TWITTER_DATA: 'Twitter Data',
   FETCH_TWITTER_GET_LIKING_USERS: 'Fetch Likes',
   FETCH_TWITTER_GET_REPOSTED_BY: 'Fetch Reposts',
@@ -41,6 +44,9 @@ const JOB_TYPE_LABEL: Record<PickerJobType, string> = {
 };
 
 const JOB_TYPE_ICON: Record<PickerJobType, React.ElementType> = {
+  FETCH_BLUESKY_DATA: Cog,
+  FETCH_BLUESKY_GET_LIKING_USERS: Heart,
+  FETCH_BLUESKY_GET_REPOSTED_BY: Repeat2,
   FETCH_TWITTER_DATA: Cog,
   FETCH_TWITTER_GET_LIKING_USERS: Heart,
   FETCH_TWITTER_GET_REPOSTED_BY: Repeat2,

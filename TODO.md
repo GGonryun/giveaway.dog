@@ -2,9 +2,27 @@
 
 ## Me
 
-- [ ] Create a marketing page for "draw verification".
-
 - [ ] Custom discord bot.
+
+- [ ] "GiveawayDog is a streamers best friend."
+
+- [ ] i will fix that, turns out the post you tried sharing included an image that was too large and bluesky doesn't let me automate images of that size. {"error":"This file is too large. It is 1.52MB but the maximum size is 976.56KB."}
+
+- [ ] Fix localized names for turkey
+
+## Kenson
+
+- [ ] Not really a question for the interview, but I noticed your "youtube page" action does not work with my legacy username: https://www.youtube.com/KensonPlays - that works to visit my profile, and older youtube channels can be visited via a direct name like that without the @ symbol or /channel/ /c/ prefixes.
+
+- [ ] Also seems like Discord changed the "copy link" url to https://discordapp.com so it fails to validate on the "join discord server" option. You can manually change it to https://discord.com/ and it will still work, but 90% of people will probably just hit 'copy' and 'paste' and expect it to work.
+
+- [ ] Maybe add a way to set a default timezone for your account and have that apply to start and end dates, so its always in your timezone
+
+## Dom
+
+- [ ] Maybe add some indicators when people can't participate in giveaways So they know it's region locked to USA Asia or somathing like this
+
+- [ ] Also any way to add I already reposted i already liked like with follow options?
 
 ## Me
 
@@ -96,6 +114,9 @@ it can be confusing to know how your changes are affecting the different preview
 - [ ] Add a "geo-location" entry method where users have to be in a certain location to get entries.
 
 - [ ] Add back "Validate user" feature validates to make sure that the user email is valid and not disposable.
+
+- [ ] BlueSky picker.
+- [ ] Create a marketing page for "draw verification".
 
 ## Personal Features
 

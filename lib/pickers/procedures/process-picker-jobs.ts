@@ -159,6 +159,13 @@ export type PickerJobWithForm = Prisma.PickerJobGetPayload<{
 
 const processJob = async (db: PrismaClient, job: PickerJobWithForm) => {
   switch (job.type) {
+    case 'FETCH_BLUESKY_DATA':
+    case 'FETCH_BLUESKY_GET_LIKING_USERS':
+    case 'FETCH_BLUESKY_GET_REPOSTED_BY':
+      throw new ApplicationError({
+        code: 'NOT_IMPLEMENTED',
+        message: `The job type ${job.type} is not implemented yet.`
+      });
     case 'FETCH_TWITTER_DATA':
       return await processFetchTwitterDataJob(db, job);
     case 'FETCH_TWITTER_GET_LIKING_USERS':

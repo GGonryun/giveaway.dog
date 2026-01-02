@@ -2,6 +2,7 @@ import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { assertNever } from '@/lib/errors';
 import { PickerTypeSchema } from '../schemas/list';
 import { cn } from '@/lib/utils';
+import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 
 export const PickerTypeLogo: React.FC<{
   type: PickerTypeSchema;
@@ -11,6 +12,10 @@ export const PickerTypeLogo: React.FC<{
   switch (type) {
     case 'TWITTER':
       return <SocialXIcon className={cn(`size-${size || 4}`, className)} />;
+    case 'BLUESKY':
+      return (
+        <SocialBlueskyIcon className={cn(`size-${size || 4}`, className)} />
+      );
     default:
       throw assertNever(type);
   }

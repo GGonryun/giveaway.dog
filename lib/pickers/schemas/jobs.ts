@@ -9,7 +9,7 @@ import {
   retweetedByResponseSchema
 } from '@/lib/integrations/schemas/api';
 import { PickerJobWithChildren } from '../procedures/process-picker-jobs';
-import { assertNever } from '@/lib/errors';
+import { ApplicationError, assertNever } from '@/lib/errors';
 
 export const twitterFetchRequestSchema = z.object({
   tweetId: z.string(),
@@ -81,6 +81,13 @@ export const toTwitterData = (
     const parsed = twitterFetchDataSchema.safeParse(child.data);
 
     switch (child.type) {
+      case 'FETCH_BLUESKY_DATA':
+      case 'FETCH_BLUESKY_GET_LIKING_USERS':
+      case 'FETCH_BLUESKY_GET_REPOSTED_BY':
+        throw new ApplicationError({
+          code: 'NOT_IMPLEMENTED',
+          message: `The job type ${child.type} is not implemented yet.`
+        });
       case 'FETCH_TWITTER_DATA':
         // Ignore
         continue;
