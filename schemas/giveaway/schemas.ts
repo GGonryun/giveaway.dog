@@ -18,6 +18,8 @@ import { aspectRatioSchema } from '@/lib/aspect-ratio/data';
 import { sweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
 import { taskCompletionSchema } from '@/lib/task/completions';
+import countriesData from '@/lib/countries.json';
+import continentsData from '@/lib/continents.json';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -89,6 +91,47 @@ export const regionalRestrictionSchema = z
 export type RegionalRestrictionSchema = z.infer<
   typeof regionalRestrictionSchema
 >;
+
+export const toRegionalRestrictionDescription = (
+  restriction: RegionalRestrictionSchema
+): string | null => {
+  if (
+    !restriction ||
+    !restriction.regions ||
+    restriction.regions.length === 0
+  ) {
+    return null;
+  }
+
+  const regionNames = restriction.regions.map(toRegionName);
+  const regionList = regionNames.join(', ');
+
+  if (restriction.filter === 'INCLUDE') {
+    return `Only available in: ${regionList}`;
+  } else {
+    return `Not available in: ${regionList}`;
+  }
+};
+
+const countryMap = new Map(
+  countriesData.map((country) => [country['alpha-2'], country.name])
+);
+
+const continentMap = new Map(
+  continentsData.map((continent) => [continent['alpha-2'], continent.name])
+);
+
+export const toRegionName = (region: string): string => {
+  const [type, code] = region.split(':');
+
+  if (type === 'country') {
+    return countryMap.get(code) || code;
+  } else if (type === 'continent') {
+    return continentMap.get(code) || code;
+  }
+
+  return region;
+};
 
 export const minimumAgeRestrictionSchema = z
   .object({
