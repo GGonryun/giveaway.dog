@@ -62,6 +62,7 @@ export const SweepstakesParticipationPage: React.FC<
   };
 
   const handleTurnstileVerify = async (token: string) => {
+    console.info('Turnstile token is being handled', token);
     return await verifyTurnstileProcedure.run({
       token,
       sweepstakesId

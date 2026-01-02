@@ -10,16 +10,7 @@
 
 - [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
 
-### @Gamelooty
-
-- [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries (https://www.cloudflare.com/application-services/products/turnstile/)
-
 ---
-
-### @Dom on Discord
-
-- [ ] Let hosts submit proof of receipt to increase their trust score.
-- [ ] Upload social proof onto the website.
 
 ### @theejankanator
 
@@ -98,6 +89,11 @@ it can be confusing to know how your changes are affecting the different preview
 - [ ] BlueSky picker.
 - [ ] Create a marketing page for "draw verification".
 - [ ] Add support for generating short links for my sweepstakes, and draw verification
+
+### @Dom on Discord
+
+- [ ] Let hosts submit proof of receipt to increase their trust score.
+- [ ] Upload social proof onto the website.
 
 ## Personal Features
 
