@@ -109,6 +109,7 @@ const submitTask = procedure()
     if (now > endDate) {
       throw new ApplicationError({
         code: 'FORBIDDEN',
+        silent: true,
         message: 'This giveaway has ended and is no longer accepting entries.'
       });
     }
