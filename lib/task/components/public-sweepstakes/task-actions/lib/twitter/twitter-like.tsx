@@ -17,10 +17,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { TwitterEmbed } from './shared';
 import { VerifiedBonusBadge } from './verified-bonus-badge';
+import { cn } from '@/lib/utils';
 
 export const TwitterLikeTaskActionForm: React.FC<
   TaskActionProps<TwitterLikeTaskSchema | TwitterLikeImportTaskSchema>
-> = ({ onCancel, onSubmit, task, submission, isLoading }) => {
+> = ({ onSubmit, task, submission, isLoading }) => {
   const [userInteracted, setUserInteracted] = useState(false);
   const { theme } = useTheme();
 
@@ -41,15 +42,20 @@ export const TwitterLikeTaskActionForm: React.FC<
     }
   };
 
+  const handleCancel = () => {
+    setUserInteracted(true);
+  };
+
   return (
     <WithProviderConnection
       task={task}
       disabled={false}
-      cancel={{
-        className: 'hidden'
-      }}
       submission={submission}
-      onCancel={onCancel}
+      cancel={{
+        label: 'I already liked it',
+        className: cn(userInteracted ? 'hidden' : 'text-foreground')
+      }}
+      onCancel={handleCancel}
       onSubmit={handleSubmit}
       isLoading={isLoading}
       submit={{

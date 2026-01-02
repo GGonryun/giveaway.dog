@@ -16,10 +16,11 @@ import { useTheme } from 'next-themes';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { TwitterEmbed } from './shared';
 import { VerifiedBonusBadge } from './verified-bonus-badge';
+import { cn } from '@/lib/utils';
 
 export const TwitterRetweetTaskActionForm: React.FC<
   TaskActionProps<TwitterRetweetTaskSchema | TwitterRetweetImportTaskSchema>
-> = ({ onCancel, onSubmit, task, submission, isLoading }) => {
+> = ({ onSubmit, task, submission, isLoading }) => {
   const [userInteracted, setUserInteracted] = useState(false);
   const { theme } = useTheme();
 
@@ -40,15 +41,20 @@ export const TwitterRetweetTaskActionForm: React.FC<
     }
   };
 
+  const handleCancel = () => {
+    setUserInteracted(true);
+  };
+
   return (
     <WithProviderConnection
       task={task}
       disabled={false}
       submission={submission}
       cancel={{
-        className: 'hidden'
+        label: 'I already reposted it',
+        className: cn(userInteracted ? 'hidden' : 'text-foreground')
       }}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       onSubmit={handleSubmit}
       isLoading={isLoading}
       submit={{

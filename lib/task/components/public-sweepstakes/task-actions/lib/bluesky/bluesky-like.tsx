@@ -12,10 +12,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { BlueskyEmbed } from './shared';
 import { blueskyPostRefineUrl } from '@/lib/integrations/schemas/bluesky-helpers';
+import { cn } from '@/lib/utils';
 
 export const BlueskyLikeTaskActionForm: React.FC<
   TaskActionProps<BlueskyLikeTaskSchema | BlueskyLikeImportTaskSchema>
-> = ({ onCancel, onSubmit, task, submission, isLoading }) => {
+> = ({ onSubmit, task, submission, isLoading }) => {
   const [userInteracted, setUserInteracted] = useState(false);
 
   const hasValidUrl =
@@ -32,15 +33,20 @@ export const BlueskyLikeTaskActionForm: React.FC<
     }
   };
 
+  const handleCancel = () => {
+    setUserInteracted(true);
+  };
+
   return (
     <WithProviderConnection
       task={task}
       disabled={false}
       cancel={{
-        className: 'hidden'
+        label: 'I already liked it',
+        className: cn(userInteracted ? 'hidden' : 'text-foreground')
       }}
       submission={submission}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       onSubmit={handleSubmit}
       isLoading={isLoading}
       submit={{
