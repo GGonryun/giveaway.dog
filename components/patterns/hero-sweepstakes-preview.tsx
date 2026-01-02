@@ -36,6 +36,7 @@ export const HeroSweepstakesPreview: React.FC = () => {
       relationship={mockUserHostRelationship}
       referral={mockUserReferral}
       verifyEmail={false}
+      isPreview={true}
       hideBackground
       onCompleteProfile={onFakeCompleteProfile}
       onLogin={onFakeLogin}

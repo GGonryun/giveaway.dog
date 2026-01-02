@@ -15,7 +15,7 @@ import { toParticipantEntries } from '@/lib/task/entries';
 import { TurnstileWidget } from '@/components/auth/turnstile-widget';
 
 export const ActiveParticipation: React.FC = () => {
-  const { onTurnstileVerify } = useGiveawayParticipation();
+  const { onTurnstileVerify, isPreview } = useGiveawayParticipation();
   const siteKey = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
 
   const handleTurnstileVerify = async (token: string) => {
@@ -52,7 +52,9 @@ export const ActiveParticipation: React.FC = () => {
 
   return (
     <div className="space-y-2 relative">
-      {siteKey && <TurnstileWidget siteKey={siteKey} onVerify={handleTurnstileVerify} />}
+      {!isPreview && siteKey && (
+        <TurnstileWidget siteKey={siteKey} onVerify={handleTurnstileVerify} />
+      )}
 
       {open && (
         <div

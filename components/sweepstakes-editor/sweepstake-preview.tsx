@@ -172,6 +172,7 @@ export const SweepstakesSharedFormPreview: React.FC<{
       relationship={getUserHostRelationship(previewState)}
       state={previewState}
       referral={mockUserReferral}
+      isPreview={true}
       onCreateReferral={onFakeCreateReferral}
       onTaskComplete={onFakeTaskComplete}
       onLogin={onFakeLogin}

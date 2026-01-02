@@ -29,6 +29,7 @@ export interface GiveawayParticipationProps {
   hideBackground?: boolean;
   verifyEmail: boolean;
   referral?: UserReferralSchema;
+  isPreview: boolean;
   onCreateReferral: (args: CreateReferralSchema) => Promise<UserReferralSchema>;
   onTaskComplete: (taskId: string, data?: unknown) => Promise<unknown>;
   onLogin: () => void;
@@ -61,6 +62,7 @@ export const GiveawayParticipationProvider: React.FC<
   state = 'active',
   verifyEmail,
   referral,
+  isPreview,
   onTaskComplete,
   onLogin,
   onCompleteProfile,
@@ -76,6 +78,7 @@ export const GiveawayParticipationProvider: React.FC<
     participant,
     relationship,
     referral,
+    isPreview,
     onCreateReferral,
     state,
     verifyEmail,

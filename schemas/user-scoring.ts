@@ -155,7 +155,7 @@ export const USER_METRIC_DESCRIPTION: Record<UserScoreMetricKey, string> = {
   overlappingFingerprints:
     'Detects if the user shares device fingerprints with other accounts. Shared fingerprints may indicate potential fraud.',
   turnstileTrust:
-    'Tracks the success rate of Cloudflare Turnstile (captcha) verifications over time. More successful verifications indicate a human user.'
+    'Tracks the success rate of invisible bot verifications over time. More successful verifications indicate a human user.'
 };
 
 export const userQualitySchema = z.object({

@@ -80,6 +80,7 @@ export const SweepstakesParticipationPage: React.FC<
           data
         })
       }
+      isPreview={false}
       onLogin={handleLogin}
       onCompleteProfile={handleCompleteProfile}
       onCreateReferral={handleCreateReferral}

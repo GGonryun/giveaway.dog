@@ -97,6 +97,7 @@ export function UseTemplateModal({
             state={'active'}
             className="w-full"
             referral={mockUserReferral}
+            isPreview={true}
             onCreateReferral={onFakeCreateReferral}
             onTaskComplete={onFakeTaskComplete}
             onCompleteProfile={onFakeCompleteProfile}

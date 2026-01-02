@@ -183,6 +183,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                 relationship={mockUserHostRelationship}
                 state={previewState}
                 referral={mockUserReferral}
+                isPreview={true}
                 onCreateReferral={onFakeCreateReferral}
                 onTaskComplete={onFakeTaskComplete}
                 onLogin={onFakeLogin}

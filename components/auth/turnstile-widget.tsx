@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
 interface TurnstileWidgetProps {
@@ -14,13 +14,11 @@ export function TurnstileWidget({
   onVerify,
   autoExecute = true
 }: TurnstileWidgetProps) {
-  const [turnstileRef, setTurnstileRef] = useState<TurnstileInstance | null>(
-    null
-  );
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
 
   useEffect(() => {
-    if (autoExecute && turnstileRef) {
-      turnstileRef.execute();
+    if (autoExecute && turnstileRef.current) {
+      turnstileRef.current.execute();
     }
   }, [autoExecute, turnstileRef]);
 
@@ -40,7 +38,7 @@ export function TurnstileWidget({
   return (
     <div className="flex justify-center">
       <Turnstile
-        ref={(ref) => setTurnstileRef(ref ?? null)}
+        ref={turnstileRef}
         siteKey={siteKey}
         onSuccess={handleSuccess}
         onError={handleError}
