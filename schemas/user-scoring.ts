@@ -14,7 +14,8 @@ import {
   Mail,
   MonitorSmartphone,
   MonitorX,
-  StarIcon
+  StarIcon,
+  ShieldCheck
 } from 'lucide-react';
 import z from 'zod';
 
@@ -40,6 +41,8 @@ export const MAX_TASK_DIVERSITY_BONUS = 10;
 export const MAX_ACCOUNT_AGE_BONUS = 10;
 export const MAX_IP_CONSISTENCY_PUNISHMENT = -30;
 export const MAX_FINGERPRINT_CONSISTENCY_PUNISHMENT = -30;
+export const MAX_TURNSTILE_TRUST_BONUS = 20;
+export const TURNSTILE_SUCCESS_BONUS = 2;
 
 export const userScoreMetricsSchema = z.object({
   baseScore: z.number(),
@@ -52,7 +55,8 @@ export const userScoreMetricsSchema = z.object({
   taskDiversity: z.number(),
   accountAge: z.number(),
   overlappingIpAddresses: z.number(),
-  overlappingFingerprints: z.number()
+  overlappingFingerprints: z.number(),
+  turnstileTrust: z.number()
 });
 
 export type UserScoreMetricsSchema = z.infer<typeof userScoreMetricsSchema>;
@@ -70,7 +74,8 @@ export const USER_METRIC_TYPE: Record<UserScoreMetricKey, 'quality' | 'risk'> =
     taskDiversity: 'quality',
     accountAge: 'quality',
     overlappingIpAddresses: 'risk',
-    overlappingFingerprints: 'risk'
+    overlappingFingerprints: 'risk',
+    turnstileTrust: 'quality'
   };
 
 export const USER_QUALITY_METRICS: UserScoreMetricKey[] = widetype
@@ -92,7 +97,8 @@ export const USER_METRIC_LABELS: Record<UserScoreMetricKey, string> = {
   taskDiversity: 'Task Diversity',
   accountAge: 'Account Age',
   overlappingIpAddresses: 'Overlapping IPs',
-  overlappingFingerprints: 'Overlapping Device Fingerprints'
+  overlappingFingerprints: 'Overlapping Device Fingerprints',
+  turnstileTrust: 'Captcha Verification Trust'
 };
 
 export const USER_METRIC_ICONS: Record<UserScoreMetricKey, LucideIcon> = {
@@ -106,7 +112,8 @@ export const USER_METRIC_ICONS: Record<UserScoreMetricKey, LucideIcon> = {
   taskDiversity: FileStack,
   accountAge: Clock,
   overlappingIpAddresses: CloudAlert,
-  overlappingFingerprints: MonitorX
+  overlappingFingerprints: MonitorX,
+  turnstileTrust: ShieldCheck
 };
 
 export const USER_METRIC_MAX: Record<UserScoreMetricKey, number> = {
@@ -120,7 +127,8 @@ export const USER_METRIC_MAX: Record<UserScoreMetricKey, number> = {
   taskDiversity: MAX_TASK_DIVERSITY_BONUS,
   accountAge: MAX_ACCOUNT_AGE_BONUS,
   overlappingIpAddresses: MAX_IP_CONSISTENCY_PUNISHMENT,
-  overlappingFingerprints: MAX_FINGERPRINT_CONSISTENCY_PUNISHMENT
+  overlappingFingerprints: MAX_FINGERPRINT_CONSISTENCY_PUNISHMENT,
+  turnstileTrust: MAX_TURNSTILE_TRUST_BONUS
 };
 
 export const USER_METRIC_DESCRIPTION: Record<UserScoreMetricKey, string> = {
@@ -145,7 +153,9 @@ export const USER_METRIC_DESCRIPTION: Record<UserScoreMetricKey, string> = {
   overlappingIpAddresses:
     'Identifies if the user shares IP addresses with other accounts. Overlapping IPs can be a red flag for fraudulent behavior.',
   overlappingFingerprints:
-    'Detects if the user shares device fingerprints with other accounts. Shared fingerprints may indicate potential fraud.'
+    'Detects if the user shares device fingerprints with other accounts. Shared fingerprints may indicate potential fraud.',
+  turnstileTrust:
+    'Tracks the success rate of Cloudflare Turnstile (captcha) verifications over time. More successful verifications indicate a human user.'
 };
 
 export const userQualitySchema = z.object({
@@ -170,7 +180,8 @@ export const DEFAULT_USER_SCORE_METRICS: UserScoreMetricsSchema = {
   taskDiversity: 0,
   accountAge: 0,
   overlappingIpAddresses: 0,
-  overlappingFingerprints: 0
+  overlappingFingerprints: 0,
+  turnstileTrust: 0
 };
 
 export const toUserQuality = (

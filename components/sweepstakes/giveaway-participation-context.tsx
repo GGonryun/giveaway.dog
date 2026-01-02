@@ -34,6 +34,7 @@ export interface GiveawayParticipationProps {
   onLogin: () => void;
   onCompleteProfile: () => void;
   onFormSubmit: (data: unknown) => Promise<unknown>;
+  onTurnstileVerify: (token: string) => Promise<{ success: boolean }>;
 }
 
 export interface GiveawayParticipationContextValue
@@ -64,7 +65,8 @@ export const GiveawayParticipationProvider: React.FC<
   onLogin,
   onCompleteProfile,
   onFormSubmit,
-  onCreateReferral
+  onCreateReferral,
+  onTurnstileVerify
 }) => {
   const value: GiveawayParticipationContextValue = {
     participation,
@@ -80,7 +82,8 @@ export const GiveawayParticipationProvider: React.FC<
     onTaskComplete,
     onLogin,
     onCompleteProfile,
-    onFormSubmit
+    onFormSubmit,
+    onTurnstileVerify
   };
 
   return (

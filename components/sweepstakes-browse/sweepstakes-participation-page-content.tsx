@@ -14,6 +14,7 @@ import {
   CreateReferralSchema,
   UserReferralSchema
 } from '@/lib/referrals/schemas';
+import verifyTurnstile from '@/procedures/sweepstakes/verify-turnstile';
 
 export type SweepstakesParticipationPageContentProps =
   ParticipantSweepstakeSchema & {
@@ -43,6 +44,10 @@ export const SweepstakesParticipationPage: React.FC<
     action: createReferralCode
   });
 
+  const verifyTurnstileProcedure = useProcedureAsync({
+    action: verifyTurnstile
+  });
+
   const handleLogin = () => {
     const search = new URLSearchParams([['redirectTo', pathname]]);
     router.push(`/login?${search.toString()}`);
@@ -54,6 +59,13 @@ export const SweepstakesParticipationPage: React.FC<
 
   const handleCreateReferral = async (args: CreateReferralSchema) => {
     return await createReferralProcedure.run(args);
+  };
+
+  const handleTurnstileVerify = async (token: string) => {
+    return await verifyTurnstileProcedure.run({
+      token,
+      sweepstakesId
+    });
   };
 
   return (
@@ -77,6 +89,7 @@ export const SweepstakesParticipationPage: React.FC<
           data: data as Record<string, string | boolean>
         })
       }
+      onTurnstileVerify={handleTurnstileVerify}
       verifyEmail
     />
   );

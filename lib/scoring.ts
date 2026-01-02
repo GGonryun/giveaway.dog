@@ -14,10 +14,12 @@ import {
   MAX_PROVIDERS_CONNECTED_BONUS,
   MAX_TASK_ACTIVITY_BONUS,
   MAX_TASK_DIVERSITY_BONUS,
+  MAX_TURNSTILE_TRUST_BONUS,
   PER_ADDITIONAL_IP_PENALTY,
   PER_DEVICE_STABILITY_BONUS,
   PER_PROVIDER_BONUS,
   PER_TASK_BONUS,
+  TURNSTILE_SUCCESS_BONUS,
   USER_BASE_SCORE,
   UserScoreMetricsSchema
 } from '@/schemas/user-scoring';
@@ -193,6 +195,20 @@ const calculateOverlappingFingerprints = (
     : MAX_FINGERPRINT_CONSISTENCY_PUNISHMENT;
 };
 
+// Turnstile trust - 20 - based on successful verification attempts (+2 per successful verification, up to +20)
+const calculateTurnstileTrust = (
+  turnstileAttempts: Prisma.UserTurnstileGetPayload<{}>[]
+) => {
+  if (turnstileAttempts.length === 0) return 0;
+
+  const successfulAttempts = turnstileAttempts.filter((t) => t.success).length;
+
+  return Math.min(
+    MAX_TURNSTILE_TRUST_BONUS,
+    successfulAttempts * TURNSTILE_SUCCESS_BONUS
+  );
+};
+
 // Example scoring (0–100):
 // Signal                	    Weight  Logic
 // Device stability	          20      if ≥100% sessions same fingerprint (+2 per 10% up to +2)
@@ -203,6 +219,7 @@ const calculateOverlappingFingerprints = (
 // Task activity  	          10      if ≥30 task completed in last 30 days (+1 for every 3 tasks, up to +10)
 // Task diversity             10      if ≥10 unique actions in last 30 days (+1 per additional action, up to +10)
 // Account age	              10      if >7 days old (+1 for each additional 7 days, up to +10)
+// Turnstile trust            20      based on successful verification attempts (+2 per successful verification, up to +20)
 // No overlap ip addresses   -30      if shared IP
 // No overlap fingerprints   -30      if shared fingerprint
 export const computeUserQualityScore = async (tx: Tx, userId: string) => {
@@ -237,6 +254,11 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
     select: SELECT_USER_FINGERPRINT_QUERY
   });
 
+  const turnstileAttempts = await tx.userTurnstile.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' }
+  });
+
   const metrics: UserScoreMetricsSchema = {
     baseScore: USER_BASE_SCORE,
     deviceStability: calculateDeviceStability(fingerprints),
@@ -254,7 +276,8 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
     overlappingFingerprints: calculateOverlappingFingerprints(
       userId,
       fingerprints
-    )
+    ),
+    turnstileTrust: calculateTurnstileTrust(turnstileAttempts)
   };
 
   const score = Object.values(metrics).reduce((a, b) => a + b, 0);

@@ -34,7 +34,8 @@ import {
   onFakeFormSubmit,
   mockParticipant,
   mockUserReferral,
-  onFakeCreateReferral
+  onFakeCreateReferral,
+  onFakeTurnstileVerify
 } from './data/mocks';
 import { TaskSchema } from '@/lib/task/schemas';
 import { useTeams } from '../context/team-provider';
@@ -174,6 +175,7 @@ export const SweepstakesSharedFormPreview: React.FC<{
       onCreateReferral={onFakeCreateReferral}
       onTaskComplete={onFakeTaskComplete}
       onLogin={onFakeLogin}
+      onTurnstileVerify={onFakeTurnstileVerify}
       onCompleteProfile={onFakeCompleteProfile}
       onFormSubmit={onFakeFormSubmit}
     />

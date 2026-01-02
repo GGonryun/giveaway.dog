@@ -1,25 +1,17 @@
 ## Roadmap
 
+- [ ] "GiveawayDog is a streamers best friend."
+
 ## Me
 
 - [ ] Custom discord bot.
 
-- [ ] "GiveawayDog is a streamers best friend."
-
-## Dom
-
-- [ ] Maybe add some indicators when people can't participate in giveaways So they know it's region locked to USA Asia or somathing like this
-
-- [ ] Also any way to add I already reposted i already liked like with follow options?
-
 ## Me
 
 - [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
-- [ ] Add support for generating short links for my sweepstakes, and draw verification
 
 ### @Gamelooty
 
-- i also wonder if you have any protection against suspicious looking emails? for example, if someone entered with emails bob1234 and another person as bob12345 (https://truelist.io/)
 - [ ] Add cloudflare captcha checks when someone lands on a giveaway page to reduce bot entries (https://www.cloudflare.com/application-services/products/turnstile/)
 
 ---
@@ -105,6 +97,7 @@ it can be confusing to know how your changes are affecting the different preview
 
 - [ ] BlueSky picker.
 - [ ] Create a marketing page for "draw verification".
+- [ ] Add support for generating short links for my sweepstakes, and draw verification
 
 ## Personal Features
 
