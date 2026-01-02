@@ -9,8 +9,6 @@ interface TurnstileWidgetProps {
 }
 
 export function TurnstileWidget({ siteKey, onVerify }: TurnstileWidgetProps) {
-  const turnstileRef = useRef<TurnstileInstance | null>(null);
-
   const handleSuccess = (token: string) => {
     onVerify(token).catch((error) => {
       console.error('Verification failed:', error);
@@ -24,20 +22,12 @@ export function TurnstileWidget({ siteKey, onVerify }: TurnstileWidgetProps) {
     });
   };
 
-  const handleLoad = () => {
-    if (turnstileRef.current) {
-      turnstileRef.current.execute();
-    }
-  };
-
   return (
     <div className="flex justify-center">
       <Turnstile
-        ref={turnstileRef}
         siteKey={siteKey}
         onSuccess={handleSuccess}
         onError={handleError}
-        onLoad={handleLoad}
         options={{
           theme: 'light',
           size: 'normal'
