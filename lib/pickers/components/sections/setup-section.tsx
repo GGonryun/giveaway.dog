@@ -196,7 +196,7 @@ export const TimingField = () => {
                     field.onChange({
                       startDate: null,
                       endDate: datetime.daysFromNow(3).toISOString(),
-                      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                      timeZone: timezone.current()
                     });
                   } else {
                     field.onChange(null);

@@ -23,6 +23,7 @@ import { useCreateSweepstakesPage } from './use-create-sweepstakes-page';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useCreateTemplate } from '../templates/use-create-template';
+import { timezone } from '@/lib/time';
 
 export const CreateGiveawayButton: React.FC<{
   text?: string;
@@ -50,13 +51,17 @@ export const CreateGiveawayButton: React.FC<{
     createTemplate.run();
   };
 
+  const handleCreateSweepstakes = () => {
+    procedure.run({ ...activeTeam, timezone: timezone.current() });
+  };
+
   return (
     <div className="flex -mt-0.5 w-fit">
       <Button
         size="sm"
         className={cn(showDropdown ? 'rounded-r-none' : '')}
         disabled={procedure.isLoading}
-        onClick={() => procedure.run(activeTeam)}
+        onClick={handleCreateSweepstakes}
       >
         {showIcon ? procedure.isLoading ? <Spinner /> : <PlusIcon /> : null}
         {procedure.isLoading ? 'Creating...' : text}
@@ -75,7 +80,7 @@ export const CreateGiveawayButton: React.FC<{
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuItem
-              onClick={() => procedure.run(activeTeam)}
+              onClick={handleCreateSweepstakes}
               disabled={procedure.isLoading}
             >
               <FileText />

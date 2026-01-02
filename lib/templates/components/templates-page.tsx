@@ -12,6 +12,7 @@ import { DeleteTemplateModal } from './delete-template-modal';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { useRouter } from 'next/navigation';
+import { timezone } from '@/lib/time';
 
 export const TemplatesPage: React.FC<{
   slug: string;
@@ -58,7 +59,11 @@ export const TemplatesPage: React.FC<{
   };
 
   const handleUseTemplate = (item: TemplateListItemSchema) => {
-    create.run({ slug, templateId: item.template.id });
+    create.run({
+      slug,
+      templateId: item.template.id,
+      timezone: timezone.current()
+    });
   };
 
   const handleCustomizeTemplate = (item: TemplateListItemSchema) => {

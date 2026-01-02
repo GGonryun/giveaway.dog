@@ -40,7 +40,6 @@ export const DEFAULT_SWEEPSTAKES_TIMING: Prisma.SweepstakesTimingUncheckedCreate
   {
     startDate: dates.startOfDay(dates.add(Date.now(), { days: 1 })),
     endDate: dates.startOfDay(dates.add(Date.now(), { days: 1, weeks: 1 })),
-    // TODO: set to the user's timezone not the server's!
     timeZone: timezone.current()
   };
 

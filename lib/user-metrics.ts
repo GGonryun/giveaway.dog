@@ -1,5 +1,6 @@
 import { getCookie, setCookie } from 'cookies-next';
 import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
+import { timezone } from './time';
 
 export interface UserMetrics {
   userAgent: string;
@@ -18,7 +19,7 @@ export function collectUserMetrics(): UserMetrics | null {
   return {
     userAgent: navigator.userAgent,
     acceptLanguage: navigator.language,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    timezone: timezone.current(),
     screenWidth: window.screen.width,
     screenHeight: window.screen.height
   };

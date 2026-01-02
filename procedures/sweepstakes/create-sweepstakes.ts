@@ -34,7 +34,8 @@ export const createSweepstakes = procedure()
   .input(
     z.object({
       slug: z.string(),
-      templateId: z.string().optional()
+      templateId: z.string().optional(),
+      timezone: z.string()
     })
   )
   .output(
@@ -64,7 +65,7 @@ export const createSweepstakes = procedure()
         create: DEFAULT_SWEEPSTAKES_DETAILS
       },
       timing: {
-        create: DEFAULT_SWEEPSTAKES_TIMING
+        create: { ...DEFAULT_SWEEPSTAKES_TIMING, timeZone: input.timezone }
       },
       audience: {
         create: DEFAULT_SWEEPSTAKES_AUDIENCE

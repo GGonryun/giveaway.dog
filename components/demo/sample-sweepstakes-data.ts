@@ -17,6 +17,7 @@ import {
   YOUTUBE_CHANNEL_NAME,
   YOUTUBE_CHANNEL_URL
 } from '@/lib/settings';
+import { timezone } from '@/lib/time';
 
 export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   setup: {
@@ -28,7 +29,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   timing: {
     startDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
     endDate: new Date(Date.now() + 128 * 24 * 60 * 60 * 1000),
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    timeZone: timezone.current()
   },
   prizes: [
     {
