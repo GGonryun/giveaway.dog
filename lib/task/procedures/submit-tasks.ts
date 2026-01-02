@@ -139,7 +139,8 @@ const submitTask = procedure()
     if (existingCompletion) {
       throw new ApplicationError({
         code: 'VALIDATION_ERROR',
-        message: 'You have already completed this task.'
+        silent: true,
+        message: 'You have already completed this task. Refresh the page.'
       });
     }
 

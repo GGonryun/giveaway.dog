@@ -59,6 +59,7 @@ export async function checkBlueskyFollow(
   if (!isFollowing) {
     throw new ApplicationError({
       code: 'VALIDATION_ERROR',
+      silent: true,
       message: `User is not following ${targetHandle} on Bluesky`
     });
   }
@@ -92,7 +93,8 @@ export async function checkBlueskyRepost(
 
   if (!hasReposted) {
     throw new ApplicationError({
-      code: 'FORBIDDEN',
+      code: 'VALIDATION_ERROR',
+      silent: true,
       message: 'You have not reposted this Bluesky post yet'
     });
   }

@@ -137,6 +137,7 @@ export const checkTwitchFollow = async (
   if (!followData.data || followData.data.length === 0) {
     throw new ApplicationError({
       code: 'VALIDATION_ERROR',
+      silent: true,
       message: `You must be following ${channelUsername} on Twitch to complete this task.`
     });
   }
