@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
+import { AcceptedFileTypes, FileSize } from '@/lib/files';
 
 export interface FileUploadProps {
   onUpload?: (url: string) => void;
@@ -16,6 +17,8 @@ export interface FileUploadProps {
   size?: 'sm' | 'md' | 'lg' | 'wide';
   className?: string;
   fillPreview?: boolean;
+  maxSize?: FileSize;
+  acceptedFileTypes?: AcceptedFileTypes;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
@@ -24,7 +27,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   initialUrl,
   size = 'md',
   className = '',
-  fillPreview = false
+  fillPreview = false,
+  maxSize = new FileSize(5, 'MB'),
+  acceptedFileTypes = new AcceptedFileTypes(['JPEG', 'PNG', 'GIF'])
 }) => {
   const [preview, setPreview] = useState<string | null>(initialUrl || null);
   const [progress, setProgress] = useState<number>(0);
@@ -82,12 +87,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
   const handleFile = async (file: File) => {
     if (!file) return;
-    if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
-      alert('Only JPEG, PNG, and GIF files are allowed.');
+    if (!acceptedFileTypes.includes(file.type)) {
+      alert(`Only ${acceptedFileTypes.toString()} files are allowed.`);
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size must be less than 5MB.');
+    const maxFileSizeBytes = maxSize.toBytes();
+    if (file.size > maxFileSizeBytes) {
+      alert(`File size must be less than ${maxSize.toString()}.`);
       return;
     }
     const objectUrl = URL.createObjectURL(file);
@@ -183,14 +189,15 @@ export const FileUpload: React.FC<FileUploadProps> = ({
               Drag and drop files here
             </Typography.Text>
             <Typography.Caption className="mt-1 text-center">
-              Up to 5MB. Accepts JPEG, PNG, GIF.
+              Up to {maxSize.toString()}. Accepts {acceptedFileTypes.toString()}
+              .
             </Typography.Caption>
           </div>
         )}
         <Input
           ref={inputRef}
           type="file"
-          accept="image/jpeg,image/png,image/gif"
+          accept={acceptedFileTypes.mimes.join(',')}
           className="hidden"
           onChange={handleInputChange}
           disabled={uploading}

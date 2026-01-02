@@ -28,6 +28,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { BlueskyPostPermissionBanner } from '../bluesky-post-permission-banner';
+import { FileSize } from '@/lib/files';
 
 interface BlueskyContentStepProps {
   integrations: IntegrationsSchema;
@@ -171,6 +172,7 @@ export function BlueskyContentStep({
                       initialUrl={field.value}
                       size="wide"
                       fillPreview
+                      maxSize={new FileSize(976.56, 'KB')}
                     />
                   </FormControl>
                   <FormMessage />
