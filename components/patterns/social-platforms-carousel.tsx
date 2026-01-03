@@ -192,7 +192,7 @@ const PLATFORMS = [
 
 export const SocialPlatformsCarousel = () => {
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       <Carousel
         opts={{
           align: 'start',
