@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 import { Gift, Users } from 'lucide-react';
 import Image from 'next/image';
