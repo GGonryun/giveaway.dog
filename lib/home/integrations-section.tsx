@@ -20,7 +20,7 @@ export const IntegrationsSection = () => {
       <ScrollingTemplatesAnimation />
       <section className="w-full flex items-center justify-center">
         <div className="container mx-auto px-4 py-8 md:py-12">
-          <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
             <OrbitingPlatformsSection />
             <UnifiedPlatformSection />
           </div>

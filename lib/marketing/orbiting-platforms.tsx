@@ -61,7 +61,7 @@ const OUTER_RING_PLATFORMS: Platform[] = [
   { name: 'Kick', icon: '/platforms/kick.svg' },
   { name: 'Snapchat', icon: '/platforms/snapchat.svg' },
   { name: 'Threads', icon: '/platforms/threads.svg' },
-  { name: 'Pinterest', icon: '/platforms/Pinterest.svg' },
+  { name: 'Pinterest', icon: '/platforms/pinterest.svg' },
   { name: 'Tumblr', icon: '/platforms/tumblr.svg' },
   { name: 'Coinbase', icon: '/platforms/coinbase.svg' },
   { name: 'Product Hunt', icon: '/platforms/producthunt.svg' },

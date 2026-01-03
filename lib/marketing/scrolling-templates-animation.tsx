@@ -296,7 +296,7 @@ const TEMPLATES: Template[] = [
   {
     id: 'pinterest-pin',
     label: 'Pin & Save Contest',
-    icon: '/platforms/Pinterest.svg'
+    icon: '/platforms/pinterest.svg'
   },
   {
     id: 'spotify-share',
@@ -336,7 +336,7 @@ const TEMPLATES: Template[] = [
   {
     id: 'pinterest-board',
     label: 'Board Follower Giveaway',
-    icon: '/platforms/Pinterest.svg'
+    icon: '/platforms/pinterest.svg'
   },
   {
     id: 'milestone-10k',

@@ -86,7 +86,7 @@ const PLATFORMS = [
   },
   {
     name: 'Pinterest',
-    icon: '/platforms/Pinterest.svg',
+    icon: '/platforms/pinterest.svg',
     theme: {
       bg: 'black',
       text: 'white'
