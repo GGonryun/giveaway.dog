@@ -589,12 +589,12 @@ export const ScrollingTemplatesAnimation = ({
       <div className="flex flex-col gap-1 py-4">
         <div className="relative">
           <motion.div
-            className="flex"
+            className="flex gap-1"
             animate={{
               x: ['0%', '-50%']
             }}
             transition={{
-              duration: 60,
+              duration: 20,
               repeat: Infinity,
               ease: 'linear'
             }}
@@ -610,12 +610,12 @@ export const ScrollingTemplatesAnimation = ({
 
         <div className="relative ">
           <motion.div
-            className="flex"
+            className="flex gap-1"
             animate={{
               x: ['-50%', '0%']
             }}
             transition={{
-              duration: 60,
+              duration: 20,
               repeat: Infinity,
               ease: 'linear'
             }}
@@ -631,12 +631,12 @@ export const ScrollingTemplatesAnimation = ({
 
         <div className="relative ">
           <motion.div
-            className="flex"
+            className="flex gap-1"
             animate={{
               x: ['0%', '-50%']
             }}
             transition={{
-              duration: 60,
+              duration: 20,
               repeat: Infinity,
               ease: 'linear'
             }}
