@@ -59,13 +59,13 @@ export const Hero = async () => (
           <Title />
           <div />
           <Subtitle />
-          <div className="my-1" />
+          <div className="my-1 sm:my-2 md:my-3 lg:my-3" />
           <CTA />
         </div>
         <div className="flex flex-col w-full items-center gap-0">
-          <div className="my-0 sm:my-1 md:my-1.5 lg:my-2" />
+          <div className="my-1 sm:my-2 md:my-3 lg:my-3" />
           <Hosts />
-          <div className="my-1" />
+          <div className="my-2 sm:my-1.5 md:my-0.5 lg:my-0" />
           <Preview />
         </div>
       </div>
