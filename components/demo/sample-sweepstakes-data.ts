@@ -97,36 +97,36 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       ...toDefaultValues('KICK_FOLLOW'),
       channel: KICK_CHANNEL_URL,
       id: 'bd33'
-    },
-    {
-      ...toDefaultValues('SECRET_CODE'),
-      hint: 'Use code "DEMO2025" to enter the sweepstakes!',
-      code: 'DEMO2025',
-      id: 'ef5b'
-    },
-    {
-      ...toDefaultValues('BONUS_TIMED'),
-      title: "Unlock before it's too late",
-      endDate: datetime.daysFromNow(30).toISOString(),
-      id: '6b3c'
-    },
-    {
-      ...toDefaultValues('BONUS_LIMITED'),
-      title: 'Bonus for the first 100 participants',
-      maxEntrants: 100,
-      id: '90e0'
-    },
-    {
-      ...toDefaultValues('BONUS_LOYALTY'),
-      id: '4f8e',
-      title: 'Get rewarded for your loyalty',
-      loyaltyRequired: 10
-    },
-    {
-      ...toDefaultValues('REFERRAL_LINK'),
-      maximum: 5,
-      id: 'f0la'
     }
+    // {
+    //   ...toDefaultValues('SECRET_CODE'),
+    //   hint: 'Use code "DEMO2025" to enter the sweepstakes!',
+    //   code: 'DEMO2025',
+    //   id: 'ef5b'
+    // },
+    // {
+    //   ...toDefaultValues('BONUS_TIMED'),
+    //   title: "Unlock before it's too late",
+    //   endDate: datetime.daysFromNow(30).toISOString(),
+    //   id: '6b3c'
+    // },
+    // {
+    //   ...toDefaultValues('BONUS_LIMITED'),
+    //   title: 'Bonus for the first 100 participants',
+    //   maxEntrants: 100,
+    //   id: '90e0'
+    // },
+    // {
+    //   ...toDefaultValues('BONUS_LOYALTY'),
+    //   id: '4f8e',
+    //   title: 'Get rewarded for your loyalty',
+    //   loyaltyRequired: 10
+    // },
+    // {
+    //   ...toDefaultValues('REFERRAL_LINK'),
+    //   maximum: 5,
+    //   id: 'f0la'
+    // }
   ],
   terms: {
     type: 'TEMPLATE',
@@ -145,8 +145,8 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
     allowedIdentities: DEFAULT_ALLOWED_IDENTITIES
   },
   design: {
-    displayName: true,
-    displayDescription: true,
+    displayName: false,
+    displayDescription: false,
     aspectRatio: 'VIDEO',
     background: {
       type: 'color',

@@ -65,7 +65,7 @@ export const Hero = async () => (
         <div className="flex flex-col w-full items-center gap-0">
           <div className="my-0 sm:my-1 md:my-1.5 lg:my-2" />
           <Hosts />
-          <div className="my-1 md:my-0" />
+          <div className="my-1" />
           <Preview />
         </div>
       </div>
