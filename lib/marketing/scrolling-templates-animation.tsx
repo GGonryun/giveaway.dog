@@ -231,7 +231,7 @@ const TEMPLATES: Template[] = [
   {
     id: 'pinterest-follow',
     label: 'Pinterest Follow Campaign',
-    icon: '/platforms/Pinterest.svg'
+    icon: '/platforms/pinterest.svg'
   },
   {
     id: 'facebook-group',

@@ -227,6 +227,7 @@ export const SocialPlatformsCarousel = () => {
                 <TooltipContent
                   className={cn(
                     'font-semibold',
+                    'bg-reddit-1 fill-reddit-1', // todo remove when this gets used else where
                     `bg-${platform.theme.bg}`,
                     `text-${platform.theme.text}`,
                     `fill-${platform.theme.bg}`
