@@ -138,7 +138,10 @@ export const PricingSection = () => {
   ];
 
   return (
-    <section id="pricing" className="w-full flex items-center justify-center">
+    <section
+      id="pricing"
+      className="bg-secondary/30 w-full flex items-center justify-center"
+    >
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12 relative">
           <h1 className="mx-auto max-w-2xl text-4xl font-semibold font-outfit tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">

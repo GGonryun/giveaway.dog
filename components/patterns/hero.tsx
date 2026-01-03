@@ -49,7 +49,7 @@ const HOSTS = [
 ];
 
 export const Hero = async () => (
-  <section className="w-full flex flex-col items-center justify-center bg-gradient-to-t from-primary/15 to-transparent">
+  <section className="w-full flex flex-col items-center justify-center bg-gradient-to-t from-primary/15 bg-background">
     <div className="w-full pt-6 sm:pt-10 md:pt-14 lg:pt-18">
       <SocialPlatformsCarousel />
     </div>

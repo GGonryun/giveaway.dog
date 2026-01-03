@@ -5,7 +5,7 @@ import { UnifiedPlatformSection } from '../marketing/unified-platform-visual';
 
 export const IntegrationsSection = () => {
   return (
-    <div className="bg-secondary/30 py-16 md:py-24">
+    <div className="bg-background py-16 md:py-24">
       <div className="text-center mb-6">
         <h1 className="mx-auto max-w-2xl text-4xl font-semibold font-outfit tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">
           Seamlessly integrate your{' '}

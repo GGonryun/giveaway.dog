@@ -1,13 +1,7 @@
-import { Hero } from '@/components/patterns/hero';
-import { FeaturesSection } from '@/components/patterns/features-section';
-import { PricingSection } from '@/components/patterns/pricing-section';
-import { PricingCTA } from '@/components/patterns/pricing-cta';
 import { environment } from '@/lib/environment';
 import { Metadata } from 'next';
-import { auth } from '@/lib/auth/config';
 import { HomePage } from '@/lib/home/page';
 import findUser from '@/procedures/user/find-user';
-import { getUserAuthRedirect } from '@/lib/redirect';
 import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { redirect } from 'next/navigation';
 
