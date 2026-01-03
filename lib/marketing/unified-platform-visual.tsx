@@ -33,7 +33,7 @@ const platforms = [
   }
 ];
 
-export const UnifiedPlatformSection = async () => {
+export const UnifiedPlatformSection = () => {
   return (
     <div className="w-full flex items-center justify-center">
       <div className="relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
