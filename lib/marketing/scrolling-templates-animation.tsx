@@ -543,8 +543,8 @@ const TemplatePill = ({ template }: TemplatePillProps) => {
     <div
       className={cn(
         'flex items-center gap-2 px-3 py-2 rounded-lg',
-        'bg-gradient-to-b from-white to-gray-100',
-        'border border-gray-200',
+        'bg-gradient-to-b from-background to-background/50',
+        'border border-background',
         'shadow-[0_0_0_1px_rgba(171,171,171,0.25),0_1px_2px_0_rgba(0,0,0,0.15),0_2px_5px_-1px_rgba(0,0,0,0.08),0_4px_8px_0_rgba(0,0,0,0.1)]'
       )}
       style={{
@@ -560,7 +560,7 @@ const TemplatePill = ({ template }: TemplatePillProps) => {
           className="object-contain"
         />
       </div>
-      <span className="text-xs font-medium text-gray-700 whitespace-nowrap">
+      <span className="text-xs font-medium text-foreground whitespace-nowrap">
         {template.label}
       </span>
     </div>
