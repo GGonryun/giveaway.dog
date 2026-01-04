@@ -45,8 +45,8 @@ export const getAccountLink = (account: any, profile: any): string | null => {
       if (!label) return null;
       return `https://www.twitch.tv/${label.toLowerCase()}`;
     case 'steam':
-      if (!label) return null;
-      return `https://steamcommunity.com/id/${label.toLowerCase()}/`;
+      if (!account.providerAccountId) return null;
+      return `https://steamcommunity.com/profiles/${account.providerAccountId}`;
     case 'kick':
       if (!label) return null;
       return `https://kick.com/${label.toLowerCase()}`;
