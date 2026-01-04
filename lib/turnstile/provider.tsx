@@ -7,7 +7,10 @@ interface TurnstileProviderProps {
 
 export async function TurnstileProvider({ children }: TurnstileProviderProps) {
   const turnstileResult = await getLastTurnstileCheck({});
-  const initialToken = turnstileResult.ok && turnstileResult.data ? turnstileResult.data.token : null;
+  const initialToken =
+    turnstileResult.ok && turnstileResult.data
+      ? turnstileResult.data.token
+      : null;
 
   return (
     <TurnstileContextProvider initialToken={initialToken}>

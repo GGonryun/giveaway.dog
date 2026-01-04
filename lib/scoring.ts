@@ -200,7 +200,11 @@ const calculateOverlappingFingerprints = (
 const calculateTurnstileTrust = (
   turnstileEntry: Prisma.UserTurnstileGetPayload<{}> | null
 ) => {
-  if (!turnstileEntry || !turnstileEntry.success || turnstileEntry.score === null) {
+  if (
+    !turnstileEntry ||
+    !turnstileEntry.success ||
+    turnstileEntry.score === null
+  ) {
     return 0;
   }
 
@@ -209,7 +213,11 @@ const calculateTurnstileTrust = (
   // Formula: (score * 20) - 10
   const normalizedScore = turnstileEntry.score * 20 - 10;
 
-  return clamp(normalizedScore, MIN_TURNSTILE_TRUST_PENALTY, MAX_TURNSTILE_TRUST_BONUS);
+  return clamp(
+    normalizedScore,
+    MIN_TURNSTILE_TRUST_PENALTY,
+    MAX_TURNSTILE_TRUST_BONUS
+  );
 };
 
 // Example scoring (0–100):
