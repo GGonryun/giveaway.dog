@@ -141,7 +141,7 @@ export const PricingSection = () => {
   return (
     <section
       id="pricing"
-      className="bg-secondary/30 w-full flex items-center justify-center"
+      className="bg-gradient-to-b from-primary/12 to-background w-full flex items-center justify-center"
     >
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12 relative">

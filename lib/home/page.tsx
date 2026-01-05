@@ -9,8 +9,9 @@ export const HomePage = async () => {
   return (
     <div className="flex flex-col w-full">
       <Hero />
-      {/* <FeaturesSection /> */}
       <IntegrationsSection />
+
+      {/* <TemplatesSection /> */}
 
       <PricingSection />
       <div className="container py-16 md:py-24">

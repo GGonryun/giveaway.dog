@@ -36,7 +36,7 @@ const platforms = [
 export const UnifiedPlatformSection = () => {
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
+      <div className="bg-background relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <UnifiedPlatformAnimation />
 
         <div className="relative px-8 py-6 backdrop-blur-sm flex-shrink-0 space-y-2 bg-card">

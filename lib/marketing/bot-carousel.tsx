@@ -168,7 +168,7 @@ export const BotCarouselSection = ({
 }: BotCarouselSectionProps) => {
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
+      <div className="bg-background relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <div className="relative flex-1 flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 -top-50">
             <BotCarousel />

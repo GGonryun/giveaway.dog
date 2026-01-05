@@ -13,8 +13,15 @@ export const IntegrationsSection = async () => {
   const theme = await getServerTheme();
 
   return (
-    <div className="bg-background py-16 md:py-24">
-      <div className="text-center mb-6">
+    <div className="relative bg-background py-16 md:py-24 overflow-hidden">
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `repeating-linear-gradient(0deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 60px),
+                           repeating-linear-gradient(90deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 60px)`,
+        }}
+      />
+      <div className="relative z-10 text-center mb-6">
         <MarketingHeader
           title={{
             text: 'Seamlessly integrate your favorite platforms',
@@ -37,7 +44,7 @@ export const IntegrationsSection = async () => {
       </div>
 
       <ScrollingTemplatesAnimation initialTheme={theme} />
-      <section className="w-full flex items-center justify-center">
+      <section className="relative z-10 w-full flex items-center justify-center">
         <div className="container mx-auto px-4 py-8 md:py-12">
           <div className="grid lg:grid-cols-2 gap-3 max-w-5xl mx-auto">
             <OrbitingPlatformsSection initialTheme={theme} />
