@@ -72,7 +72,8 @@ function BotCarousel() {
 
     const progress = Math.min(progressRef.current / scrollDuration, 1);
     const easedProgress = easeInOutQuint(progress);
-    const newOffset = (startOffsetRef.current + easedProgress * itemHeight) % totalHeight;
+    const newOffset =
+      (startOffsetRef.current + easedProgress * itemHeight) % totalHeight;
 
     setOffset(newOffset);
   });
@@ -182,7 +183,7 @@ export const BotCarouselSection = ({
 
         <div className="relative px-8 py-6 backdrop-blur-sm flex-shrink-0 space-y-2 bg-card">
           <h3 className="text-lg font-semibold text-foreground">
-            Verified Engagement
+            Verified engagement
           </h3>
           <p className="text-muted-foreground text-sm">
             Our automated fraud detection ensures only real humans can enter

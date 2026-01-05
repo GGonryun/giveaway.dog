@@ -283,7 +283,7 @@ export const EntryMethodsCarouselSection = ({
 
         <div className="relative px-8 pt-1 pb-6 backdrop-blur-sm flex-shrink-0 space-y-2 bg-card/95">
           <h3 className="text-lg font-semibold text-foreground">
-            Edit Everything, Instantly
+            Edit everything, instantly
           </h3>
           <p className="text-muted-foreground text-sm">
             Fine-tune your giveaway design, entry methods, and pickers with our
