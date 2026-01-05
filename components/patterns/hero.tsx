@@ -1,15 +1,15 @@
 'use server';
 
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { HeroSweepstakesPreview } from './hero-sweepstakes-preview';
 import { Suspense } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import Image from 'next/image';
 import { SocialPlatformsCarousel } from './social-platforms-carousel';
-import { MarketingHeader, MarketingSubtitle, MarketingTitle } from './shared';
-import type { ResolvedTheme } from '@/lib/theme/get-server-theme';
+import { MarketingHeader } from './shared';
+import { getServerTheme } from '@/lib/theme/get-server-theme';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 const HOST_COUNT = 'over 30';
 const HOSTS = [
@@ -50,50 +50,48 @@ const HOSTS = [
   }
 ];
 
-interface HeroProps {
-  theme: ResolvedTheme;
-}
+export const Hero = async () => {
+  const theme = await getServerTheme();
 
-export const Hero = async ({ theme }: HeroProps) => {
   return (
     <section className="w-full flex flex-col items-center justify-center bg-gradient-to-t from-primary/15 bg-background">
       <div className="w-full pt-6 sm:pt-10 md:pt-14 lg:pt-18">
-        <SocialPlatformsCarousel theme={theme} />
+        <SocialPlatformsCarousel initialTheme={theme} />
       </div>
-    <div className="container flex items-center justify-center">
-      <div className="grid items-center gap-8 pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-12">
-        <MarketingHeader
-          title={{
-            text: 'How creators build bigger communities',
-            highlight: 'bigger communities'
-          }}
-          subtitle={{
-            text: 'Host verified giveaways in under 60 seconds that grow your community without bots or spam.'
-          }}
-          actions={[
-            {
-              label: 'Giveaways',
-              href: '/browse',
-              variant: 'outline'
-            },
-            {
-              label: (
-                <>
-                  Try it for free <ArrowRight />
-                </>
-              ),
-              href: '/demo/sweepstakes'
-            }
-          ]}
-        />
-        <div className="flex flex-col w-full items-center gap-0">
-          <Hosts />
-          <div className="my-2 sm:my-1.5 md:my-0.5 lg:my-0" />
-          <Preview />
+      <div className="container flex items-center justify-center">
+        <div className="grid items-center gap-8 pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-12">
+          <MarketingHeader
+            title={{
+              text: 'How creators build bigger communities',
+              highlight: 'bigger communities'
+            }}
+            subtitle={{
+              text: 'Host verified giveaways in under 60 seconds that grow your community without bots or spam.'
+            }}
+            actions={[
+              {
+                label: 'Giveaways',
+                href: '/browse',
+                variant: 'outline'
+              },
+              {
+                label: (
+                  <>
+                    Try it for free <ArrowRight />
+                  </>
+                ),
+                href: '/demo/sweepstakes'
+              }
+            ]}
+          />
+          <div className="flex flex-col w-full items-center gap-0">
+            <Hosts />
+            <div className="my-2 sm:my-1.5 md:my-0.5 lg:my-0" />
+            <Preview />
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
   );
 };
 

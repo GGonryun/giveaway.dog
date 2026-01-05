@@ -76,6 +76,5 @@ export function getPlatformIcon(
   if (theme === 'dark' && icon.dark) {
     return icon.dark;
   }
-
   return icon.light;
 }

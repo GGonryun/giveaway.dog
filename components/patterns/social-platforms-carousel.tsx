@@ -10,6 +10,9 @@ import {
 } from '@/components/ui/carousel';
 import AutoScroll from 'embla-carousel-auto-scroll';
 import { getPlatformIcon, type PlatformId } from '@/lib/platform-icons';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import type { ResolvedTheme } from '@/lib/theme/get-server-theme';
 
 const PLATFORMS = [
   {
@@ -191,12 +194,25 @@ const PLATFORMS = [
 ];
 
 interface SocialPlatformsCarouselProps {
-  theme: 'light' | 'dark';
+  initialTheme: ResolvedTheme;
 }
 
 export const SocialPlatformsCarousel = ({
-  theme
+  initialTheme
 }: SocialPlatformsCarouselProps) => {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Use initialTheme from server on first render, then switch to client theme
+  const themeValue =
+    mounted && (resolvedTheme === 'dark' || resolvedTheme === 'light')
+      ? resolvedTheme
+      : initialTheme;
+
   return (
     <div className="w-full relative">
       <Carousel
@@ -216,7 +232,7 @@ export const SocialPlatformsCarousel = ({
       >
         <CarouselContent className="ml-0 mr-0">
           {PLATFORMS.concat(PLATFORMS).map((platform, index) => {
-            const iconSrc = getPlatformIcon(platform.id, theme);
+            const iconSrc = getPlatformIcon(platform.id, themeValue);
 
             return (
               <CarouselItem

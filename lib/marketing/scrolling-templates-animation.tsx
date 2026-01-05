@@ -4,6 +4,9 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { getPlatformIcon, type PlatformId } from '@/lib/platform-icons';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import type { ResolvedTheme } from '@/lib/theme/get-server-theme';
 
 interface Template {
   id: string;
@@ -537,10 +540,22 @@ const TEMPLATES: Template[] = [
 
 interface TemplatePillProps {
   template: Template;
-  theme: 'light' | 'dark' | null;
+  initialTheme: ResolvedTheme;
 }
 
-const TemplatePill = ({ template, theme }: TemplatePillProps) => {
+const TemplatePill = ({ template, initialTheme }: TemplatePillProps) => {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const theme =
+    mounted && (resolvedTheme === 'dark' || resolvedTheme === 'light')
+      ? resolvedTheme
+      : initialTheme;
+
   const iconSrc = getPlatformIcon(template.platformId, theme);
 
   return (
@@ -573,12 +588,12 @@ const TemplatePill = ({ template, theme }: TemplatePillProps) => {
 
 interface ScrollingTemplatesAnimationProps {
   className?: string;
-  theme: 'light' | 'dark';
+  initialTheme: ResolvedTheme;
 }
 
 export const ScrollingTemplatesAnimation = ({
   className,
-  theme
+  initialTheme
 }: ScrollingTemplatesAnimationProps) => {
   const templatesPerRow = Math.ceil(TEMPLATES.length / 3);
 
@@ -609,7 +624,7 @@ export const ScrollingTemplatesAnimation = ({
               <TemplatePill
                 key={`row1-${template.id}-${index}`}
                 template={template}
-                theme={theme}
+                initialTheme={initialTheme}
               />
             ))}
           </motion.div>
@@ -631,7 +646,7 @@ export const ScrollingTemplatesAnimation = ({
               <TemplatePill
                 key={`row2-${template.id}-${index}`}
                 template={template}
-                theme={theme}
+                initialTheme={initialTheme}
               />
             ))}
           </motion.div>
@@ -653,7 +668,7 @@ export const ScrollingTemplatesAnimation = ({
               <TemplatePill
                 key={`row3-${template.id}-${index}`}
                 template={template}
-                theme={theme}
+                initialTheme={initialTheme}
               />
             ))}
           </motion.div>

@@ -4,6 +4,9 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { getPlatformIcon, type PlatformId } from '@/lib/platform-icons';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import type { ResolvedTheme } from '@/lib/theme/get-server-theme';
 
 const SIZE_PRESETS = {
   sm: {
@@ -74,7 +77,7 @@ interface OrbitingPlatformsProps {
   size?: 'sm' | 'md' | 'lg';
   centerImage?: string;
   showCenterLogo?: boolean;
-  theme: 'light' | 'dark';
+  initialTheme: ResolvedTheme;
 }
 
 interface OrbitRingProps {
@@ -83,7 +86,7 @@ interface OrbitRingProps {
   iconSize: number;
   animation: 'orbit-cw' | 'orbit-ccw';
   duration: number;
-  theme: 'light' | 'dark';
+  initialTheme: ResolvedTheme;
 }
 
 const OrbitRing = ({
@@ -92,8 +95,19 @@ const OrbitRing = ({
   iconSize,
   animation,
   duration,
-  theme
+  initialTheme
 }: OrbitRingProps) => {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const theme =
+    mounted && (resolvedTheme === 'dark' || resolvedTheme === 'light')
+      ? resolvedTheme
+      : initialTheme;
   return (
     <div
       className="absolute rounded-full border-2 border-border/40 pointer-events-none"
@@ -153,7 +167,7 @@ export const OrbitingPlatforms = ({
   size = 'md',
   centerImage = '/taki.png',
   showCenterLogo = true,
-  theme
+  initialTheme
 }: OrbitingPlatformsProps) => {
   const preset = SIZE_PRESETS[size];
 
@@ -193,7 +207,7 @@ export const OrbitingPlatforms = ({
           iconSize={preset.icon}
           animation="orbit-cw"
           duration={52}
-          theme={theme}
+          initialTheme={initialTheme}
         />
 
         <OrbitRing
@@ -202,7 +216,7 @@ export const OrbitingPlatforms = ({
           iconSize={preset.icon}
           animation="orbit-ccw"
           duration={60}
-          theme={theme}
+          initialTheme={initialTheme}
         />
 
         <OrbitRing
@@ -211,7 +225,7 @@ export const OrbitingPlatforms = ({
           iconSize={preset.icon}
           animation="orbit-cw"
           duration={80}
-          theme={theme}
+          initialTheme={initialTheme}
         />
 
         {showCenterLogo && (
@@ -239,18 +253,22 @@ export const OrbitingPlatforms = ({
 };
 
 interface OrbitingPlatformsSectionProps {
-  theme: 'light' | 'dark';
+  initialTheme: ResolvedTheme;
 }
 
 export const OrbitingPlatformsSection = ({
-  theme
+  initialTheme
 }: OrbitingPlatformsSectionProps) => {
   return (
     <div className="w-full flex items-center justify-center">
       <div className="relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <div className="relative flex-1 flex items-center justify-center overflow-hidden">
           <div className="absolute -top-20 left-1/2 -translate-x-1/2">
-            <OrbitingPlatforms size="lg" showCenterLogo={false} theme={theme} />
+            <OrbitingPlatforms
+              size="lg"
+              showCenterLogo={false}
+              initialTheme={initialTheme}
+            />
           </div>
 
           {/* Manually positioned Taki logo - stays above gradient */}
