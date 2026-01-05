@@ -2,6 +2,11 @@
 
 - [ ] "GiveawayDog is a streamers best friend."
 
+- [ ] Add question entry method types:
+  - [ ] Upload a file
+    - [ ] Update steam follow with a toggle that if enabled requires a photo to be uploaded as proof.
+  - [ ] Pick an image from a gallery
+
 ## Me
 
 - [ ] Custom discord bot.

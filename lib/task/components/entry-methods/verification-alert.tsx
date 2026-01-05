@@ -13,7 +13,7 @@ const VERIFICATION_WARNINGS: Record<
   STEAM_FOLLOW: {
     title: 'Cannot Be Verified',
     description:
-      'Steam follower status is not verifiable. Steam follower status is not verifiable. Hosts may request screenshots or rely on an honor system.'
+      'Steam follower status is not verifiable. Hosts may request screenshots or rely on an honor system.'
   },
   // All other tasks return undefined
   BONUS_TASK: undefined,
