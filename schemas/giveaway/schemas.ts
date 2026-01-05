@@ -440,8 +440,8 @@ export const sweepstakesPrizeSchema = z.object({
   draws: z
     .object({
       id: z.string(),
-      updatedAt: z.date(),
-      createdAt: z.date(),
+      updatedAt: z.coerce.date(),
+      createdAt: z.coerce.date(),
       result: z.enum(['WINNER', 'DISQUALIFIED']),
       disqualificationReason: z.string().nullable(),
       participant: userProfileSchema,
