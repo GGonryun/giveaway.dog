@@ -8,6 +8,7 @@ import { ArrowRightIcon, Check } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { MarketingHeader, MarketingTitle } from './shared';
 
 type PricingTier = {
   title: string;
@@ -144,10 +145,16 @@ export const PricingSection = () => {
     >
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12 relative">
-          <h1 className="mx-auto max-w-2xl text-4xl font-semibold font-outfit tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">
-            Get more views,{' '}
-            <span className="text-primary">with less effort.</span>
-          </h1>
+          <MarketingHeader
+            title={{
+              text: 'Get more views with less effort',
+              highlight: 'with less effort'
+            }}
+            subtitle={{
+              text: 'Flexible pricing options for creators of all sizes.'
+            }}
+            actions={[]}
+          />
         </div>
 
         <div className="flex justify-center mb-8">

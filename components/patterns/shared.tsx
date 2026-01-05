@@ -12,9 +12,11 @@ export const MarketingHeader: React.FC<{
       <MarketingTitle {...title} />
       <div />
       <MarketingSubtitle {...subtitle} />
-      <div className="mt-3 sm:mt-4 md:mt-5 lg:mt-6 mb-0 sm:mb-1 md:mb-2">
-        <MarketingActions actions={actions} />
-      </div>
+      {Boolean(actions.length) && (
+        <div className="mt-3 sm:mt-4 md:mt-5 lg:mt-6 mb-0 sm:mb-1 md:mb-2">
+          <MarketingActions actions={actions} />
+        </div>
+      )}
     </div>
   );
 };
