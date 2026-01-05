@@ -6,26 +6,23 @@ import { procedure } from '@/lib/mrpc/procedures';
 
 import z from 'zod';
 
+const getCacheConfig = ({ user, input }: any) => {
+  if (!user?.id) return undefined; // Don't cache if no user
+  return {
+    keyParts: [`user-host-relationship-${user.id}-${input.sweepstakesId}`],
+    tags: [
+      `user-${user.id}-host-relationship`,
+      `sweepstakes-${input.sweepstakesId}-host`
+    ],
+    revalidate: 3600 // Cache for 1 hour
+  };
+};
+
 export const getUserHostRelationship = procedure()
   .authorization({ required: false })
   .input(z.object({ sweepstakesId: z.string() }))
   .output(userHostRelationshipSchema.optional())
-  .cache(({ user, input }) => {
-    if (!user?.id)
-      return {
-        keyParts: [`user-host-relationship-undefined-${input.sweepstakesId}`],
-        tags: [`sweepstakes-${input.sweepstakesId}-host`],
-        revalidate: 3600 // Cache for 1 hour
-      };
-    return {
-      keyParts: [`user-host-relationship-${user.id}-${input.sweepstakesId}`],
-      tags: [
-        `user-${user.id}-host-relationship`,
-        `sweepstakes-${input.sweepstakesId}-host`
-      ],
-      revalidate: 3600 // Cache for 1 hour
-    };
-  })
+  .cache(getCacheConfig)
   .handler(async ({ db, user, input }) => {
     if (!user?.id) return undefined;
 
