@@ -276,7 +276,7 @@ export const EntryMethodsCarouselSection = ({
 }: EntryMethodsCarouselSectionProps) => {
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 flex flex-col shadow-xl bg-card">
+      <div className="relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 flex flex-col shadow-xl bg-card overflow-hidden">
         <div className="relative flex-1 p-6">
           <EntryMethodsGrid />
         </div>
