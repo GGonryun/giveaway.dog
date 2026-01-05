@@ -5,6 +5,7 @@ import { TiktokLikeTaskSchema } from '@/lib/task/schemas';
 import { AlertCircle, Heart, ExternalLink } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 const EMBED_TIMEOUT = 5000;
 
@@ -167,15 +168,16 @@ export const TikTokLikeTaskActionForm: React.FC<
                   and like the post on TikTok.
                 </AlertDescription>
               </Alert>
-              <Link
-                href={task.postUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Open TikTok Post
-              </Link>
+              <Button variant="link" asChild className="underline">
+                <Link
+                  href={task.postUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Open TikTok Post
+                </Link>
+              </Button>
             </div>
           ) : (
             <>
