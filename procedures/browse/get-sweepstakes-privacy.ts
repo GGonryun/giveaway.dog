@@ -5,6 +5,20 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { VisibilityType } from '@prisma/client';
 import z from 'zod';
 
+const getCacheConfig = ({ user, input }: any) => {
+  // Cache PUBLIC/UNLISTED checks for longer since they don't depend on user
+  // Cache PRIVATE checks per-user since they depend on team membership
+  const userKey = user?.id ? `-user-${user.id}` : '-anonymous';
+  return {
+    keyParts: [`sweepstakes-privacy-${input.sweepstakesId}${userKey}`],
+    tags: [
+      `sweepstakes-${input.sweepstakesId}-privacy`,
+      ...(user?.id ? [`user-${user.id}-privacy`] : [])
+    ],
+    revalidate: 3600 // Cache for 1 hour
+  };
+};
+
 export const getSweepstakesPrivacy = procedure()
   .authorization({
     required: false
@@ -15,19 +29,7 @@ export const getSweepstakesPrivacy = procedure()
     })
   )
   .output(z.boolean())
-  .cache(({ user, input }) => {
-    // Cache PUBLIC/UNLISTED checks for longer since they don't depend on user
-    // Cache PRIVATE checks per-user since they depend on team membership
-    const userKey = user?.id ? `-user-${user.id}` : '-anonymous';
-    return {
-      keyParts: [`sweepstakes-privacy-${input.sweepstakesId}${userKey}`],
-      tags: [
-        `sweepstakes-${input.sweepstakesId}-privacy`,
-        ...(user?.id ? [`user-${user.id}-privacy`] : [])
-      ],
-      revalidate: 3600 // Cache for 1 hour
-    };
-  })
+  .cache(getCacheConfig)
   .handler(async ({ input, db, user }) => {
     // Implement the logic to fetch the sweepstakes visibility
     // For example, you might query the database to get the visibility status

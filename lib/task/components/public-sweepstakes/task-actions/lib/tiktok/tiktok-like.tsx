@@ -2,9 +2,9 @@ import { TaskActionProps } from '../../building-blocks';
 import { useState, useEffect, useRef } from 'react';
 import { WithProviderConnection } from '../provider-connection';
 import { TiktokLikeTaskSchema } from '@/lib/task/schemas';
-import { AlertCircle, Heart } from 'lucide-react';
+import { AlertCircle, Heart, ExternalLink } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const EMBED_TIMEOUT = 5000;
 
@@ -159,13 +159,24 @@ export const TikTokLikeTaskActionForm: React.FC<
               </AlertDescription>
             </Alert>
           ) : embedError ? (
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                Unable to load TikTok embed. Please use the button below to view
-                and like the post on TikTok.
-              </AlertDescription>
-            </Alert>
+            <div className="space-y-3">
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  Unable to load TikTok embed. Please use the link below to view
+                  and like the post on TikTok.
+                </AlertDescription>
+              </Alert>
+              <Link
+                href={task.postUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-full rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Open TikTok Post
+              </Link>
+            </div>
           ) : (
             <>
               {embedHtml && !isLoadingEmbed && (
