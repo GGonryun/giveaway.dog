@@ -126,7 +126,8 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       developer: '',
       value: 1,
       mandatory: false,
-      tasksRequired: 0
+      tasksRequired: 0,
+      requireProof: true
     },
     ['DISCORD_JOIN']: {
       id: '',

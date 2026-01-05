@@ -234,7 +234,8 @@ export const steamFollowTaskSchema = baseTaskSchema.extend({
       const urlPattern =
         /^https?:\/\/store\.steampowered\.com\/(developer|publisher|curator)\/[A-Za-z0-9_\-]+\/?$/;
       return urlPattern.test(val);
-    }, 'Unexpected URL, should be like https://store.steampowered.com/developer/DeveloperName or https://store.steampowered.com/publisher/PublisherName')
+    }, 'Unexpected URL, should be like https://store.steampowered.com/developer/DeveloperName or https://store.steampowered.com/publisher/PublisherName'),
+  requireProof: z.boolean().default(false)
 });
 
 export type SteamFollowTaskSchema = z.infer<typeof steamFollowTaskSchema>;
@@ -624,7 +625,9 @@ export const TASK_INPUT_SCHEMA = {
   TWITTER_LIKE: z.object({}),
   TWITTER_LIKE_IMPORT: z.object({}),
   STEAM_WISHLIST: z.object({}),
-  STEAM_FOLLOW: z.object({}),
+  STEAM_FOLLOW: z.object({
+    mediaUrl: z.optional(z.string().url('Media URL is required'))
+  }),
   DISCORD_JOIN: z.object({}),
   TWITCH_FOLLOW: z.object({}),
   KICK_FOLLOW: z.object({}),

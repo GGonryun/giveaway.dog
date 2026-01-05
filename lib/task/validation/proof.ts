@@ -61,6 +61,14 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
         mediaUrl: parsed.mediaUrl
       };
     }
+    case 'STEAM_FOLLOW': {
+      if (!task.requireProof) return Prisma.JsonNull;
+      const parsed = TASK_INPUT_SCHEMA.STEAM_FOLLOW.parse(data);
+      if (!parsed.mediaUrl) return Prisma.JsonNull;
+      return {
+        mediaUrl: parsed.mediaUrl
+      };
+    }
     case 'FACEBOOK_VIEW_POST':
     case 'BONUS_TASK':
     case 'BONUS_TIMED':
@@ -68,7 +76,6 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'BONUS_LOYALTY':
     case 'BONUS_COMPLETE_PROFILE':
     case 'STEAM_WISHLIST':
-    case 'STEAM_FOLLOW':
     case 'DISCORD_JOIN':
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':

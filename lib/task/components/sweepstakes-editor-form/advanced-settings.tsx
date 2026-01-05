@@ -58,9 +58,15 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
           </>
         );
 
+      case 'STEAM_FOLLOW':
+        return (
+          <>
+            <MandatoryField />
+            <TasksRequiredField />
+          </>
+        );
       case 'TWITTER_CONNECT':
       case 'STEAM_WISHLIST':
-      case 'STEAM_FOLLOW':
       case 'DISCORD_JOIN':
       case 'TWITCH_FOLLOW':
       case 'KICK_FOLLOW':

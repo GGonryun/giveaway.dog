@@ -35,6 +35,7 @@ import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
 import { MaximumReferralsField } from './lib/maximum-referrals';
 import { SteamDeveloperFormField } from './lib/steam-developer';
+import { RequireProofField } from './lib/require-proof';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -129,7 +130,12 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'STEAM_WISHLIST':
         return <SteamAppIdFormField />;
       case 'STEAM_FOLLOW':
-        return <SteamDeveloperFormField />;
+        return (
+          <>
+            <SteamDeveloperFormField />
+            <RequireProofField />
+          </>
+        );
       case 'DISCORD_JOIN':
         return (
           <>

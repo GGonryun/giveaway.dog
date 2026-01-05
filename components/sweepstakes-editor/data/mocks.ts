@@ -89,6 +89,12 @@ export const mockUserProfile: UserSchema = {
       label: 'PreviewUser',
       link: 'https://www.tiktok.com/@previewuser',
       scopes: PROVIDER_REQUIRED_SCOPES.TIKTOK
+    },
+    {
+      type: IdentityProvider.STEAM,
+      label: 'PreviewUser',
+      link: 'https://store.steampowered.com/',
+      scopes: PROVIDER_REQUIRED_SCOPES.STEAM
     }
   ]
 };
