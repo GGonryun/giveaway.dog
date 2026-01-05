@@ -7,7 +7,7 @@ import { IntegrationsSection } from './integrations-section';
 
 export const HomePage = async () => {
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full bg-background ">
       <Hero />
       <IntegrationsSection />
 
