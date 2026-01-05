@@ -8,6 +8,7 @@ import { TwitterConnectTaskActionForm } from './lib/twitter/twitter-connect';
 import { TwitterFollowTaskActionForm } from './lib/twitter/twitter-follow';
 import { TwitterRetweetTaskActionForm } from './lib/twitter/twitter-retweet';
 import { SteamWishlistTaskActionForm } from './lib/steam/steam-wishlist';
+import { SteamFollowTaskActionForm } from './lib/steam/steam-follow';
 import { DiscordJoinTaskActionForm } from './lib/discord/discord-join';
 import { TwitchFollowTaskActionForm } from './lib/twitch/twitch-follow';
 import { KickFollowTaskActionForm } from './lib/kick/kick-follow';
@@ -63,6 +64,8 @@ export const TaskActionForm: React.FC<
       return <TwitterLikeTaskActionForm {...props} task={props.task} />;
     case 'STEAM_WISHLIST':
       return <SteamWishlistTaskActionForm {...props} task={props.task} />;
+    case 'STEAM_FOLLOW':
+      return <SteamFollowTaskActionForm {...props} task={props.task} />;
     case 'DISCORD_JOIN':
       return <DiscordJoinTaskActionForm {...props} task={props.task} />;
     case 'TWITCH_FOLLOW':

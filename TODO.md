@@ -10,6 +10,18 @@
 
 - [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
 
+# Kurozzz
+
+- [ ] Btw is there a way to include Instagram and Facebook profile links on GD profile.
+- [ ] i'll have user's enter their profile information once in the account page and then surface that link for manual verification
+- [ ] i can enhance this by adding a "verify" button after a winner gets selected that either surfaces a tutorial for how to verify user actions or re-runs the automated verification where available to make this easier too. what do you think? would that help as well
+
+# support channel
+
+- [ ] Winners tab appears twice
+- [ ] Search on winners
+- [ ] Show in account tab which giveaways the winner has won.
+
 ---
 
 ### @theejankanator
@@ -83,10 +95,14 @@ it can be confusing to know how your changes are affecting the different preview
 - [ ] Create a marketing page for "draw verification".
 - [ ] Add support for generating short links for my sweepstakes, and draw verification
 
-### @Dom on Discord
+## @Dom on Discord
 
 - [ ] Let hosts submit proof of receipt to increase their trust score.
 - [ ] Upload social proof onto the website.
+
+## KensonPlays
+
+- [ ] add a discord bot to reward users who interact on discord: lightweight that i'm currently experimenting with is granting users with specific roles access to giveaways
 
 ## PJ & Dom
 

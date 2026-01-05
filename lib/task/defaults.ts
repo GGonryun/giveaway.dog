@@ -119,6 +119,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['STEAM_FOLLOW']: {
+      id: '',
+      type: 'STEAM_FOLLOW',
+      title: 'Follow on Steam',
+      developer: '',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
     ['DISCORD_JOIN']: {
       id: '',
       type: 'DISCORD_JOIN',

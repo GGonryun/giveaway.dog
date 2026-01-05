@@ -110,6 +110,7 @@ export const toTaskStatus = (props: {
     case 'TWITTER_LIKE':
     case 'TWITTER_LIKE_IMPORT':
     case 'STEAM_WISHLIST':
+    case 'STEAM_FOLLOW':
     case 'DISCORD_JOIN':
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':

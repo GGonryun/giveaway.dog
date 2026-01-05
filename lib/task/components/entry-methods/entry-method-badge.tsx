@@ -1,22 +1,22 @@
-import { Badge } from '@/components/ui/badge';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
-import { ShieldCheck } from 'lucide-react';
-import pluralize from 'pluralize';
-import { TASK_HAS_AUTOMATIC_VALIDATION } from '../../schemas';
 import { ImportBadge } from '../badges/import-badge';
 import { InstantBadge } from '../badges/instant-badge';
+import { VerificationBadge } from '../badges/verification-badge';
+import { ErrorCountBadge } from '../badges/error-count-badge';
+import { MaxOfOneBadge } from '../badges/max-of-one-badge';
 
 export const EntryMethodBadge: React.FC<{
   type: TaskType;
-  errorCount: number;
-}> = ({ type, errorCount }) => {
-  if (errorCount > 0) {
-    return (
-      <Badge variant="destructive">
-        {errorCount} {pluralize('error', errorCount)}
-      </Badge>
-    );
+  showMaxOfOne?: boolean;
+  numErrors?: number;
+}> = ({ type, showMaxOfOne = false, numErrors = 0 }) => {
+  if (numErrors > 0) {
+    return <ErrorCountBadge numErrors={numErrors} />;
+  }
+
+  if (showMaxOfOne) {
+    return <MaxOfOneBadge />;
   }
 
   switch (type) {
@@ -46,6 +46,7 @@ export const EntryMethodBadge: React.FC<{
     case 'FACEBOOK_VIEW_POST':
     case 'YOUTUBE_VISIT':
     case 'STEAM_WISHLIST':
+    case 'STEAM_FOLLOW':
     case 'DISCORD_JOIN':
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':
@@ -57,12 +58,7 @@ export const EntryMethodBadge: React.FC<{
     case 'BLUESKY_LIKE':
     case 'BLUESKY_REPOST':
     case 'REFERRAL_LINK':
-      return TASK_HAS_AUTOMATIC_VALIDATION[type] ? (
-        <Badge variant="success">
-          <ShieldCheck /> <span className="hidden sm:inline">Verified</span>
-        </Badge>
-      ) : null;
-
+      return <VerificationBadge type={type} />;
     default:
       throw assertNever(type);
   }

@@ -33,13 +33,13 @@ import { AlertCircle } from 'lucide-react';
 import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
 import { MaximumReferralsField } from './lib/maximum-referrals';
+import { SteamDeveloperFormField } from './lib/steam-developer';
 
 export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
       case 'TWITTER_CONNECT':
       case 'BLUESKY_CONNECT':
-
       case 'BONUS_TASK':
         return <></>;
       case 'BONUS_COMPLETE_PROFILE':
@@ -127,6 +127,8 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         );
       case 'STEAM_WISHLIST':
         return <SteamAppIdFormField />;
+      case 'STEAM_FOLLOW':
+        return <SteamDeveloperFormField />;
       case 'DISCORD_JOIN':
         return (
           <>

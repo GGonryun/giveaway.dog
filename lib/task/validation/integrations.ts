@@ -63,6 +63,7 @@ export const validateTask = async <T extends TaskSchema>(
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
     case 'REFERRAL_LINK':
+    case 'STEAM_FOLLOW':
       return Promise.resolve();
     case 'BLUESKY_CONNECT':
       return await checkBlueskyConnect(db, {

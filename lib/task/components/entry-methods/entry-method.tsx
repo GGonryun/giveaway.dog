@@ -30,6 +30,7 @@ import { AdditionalSettings } from '../sweepstakes-editor-form/additional-settin
 import { AdvancedSettings } from '../sweepstakes-editor-form/advanced-settings';
 import { toTaskTheme } from '../theme';
 import { TASK_LABEL } from '../../schemas';
+import { VerificationAlert } from './verification-alert';
 
 export const EntryMethod: React.FC<{
   id: string;
@@ -101,16 +102,12 @@ export const EntryMethod: React.FC<{
                       : theme.symbol
                   )}
                 >
-                  {hasErrors ? (
-                    <AlertCircleIcon className="size-4" />
-                  ) : (
-                    <theme.icon />
-                  )}
+                  {hasErrors ? <AlertCircleIcon /> : <theme.icon />}
                 </div>
                 <p className="flex-1 min-w-0 truncate">{TASK_LABEL[type]}</p>
               </div>
               <div className="flex items-center gap-1 pl-2">
-                <EntryMethodBadge type={type} errorCount={errorCount} />
+                <EntryMethodBadge type={type} numErrors={errorCount} />
 
                 <IconButton
                   onClick={() => {
@@ -129,6 +126,7 @@ export const EntryMethod: React.FC<{
             </div>
           </CollapsibleTrigger>
           <CollapsibleContent className="p-3 pt-1.5 border-t space-y-2">
+            <VerificationAlert type={type} />
             <BaseSettings type={type} />
             <AdditionalSettings type={type} />
             <AdvancedSettings type={type} />

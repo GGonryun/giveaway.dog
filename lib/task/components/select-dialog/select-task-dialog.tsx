@@ -16,7 +16,6 @@ import { PlusIcon, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 import { TaskType } from '@prisma/client';
-import { SelectTaskDialogBadge } from './select-task-dialog-badge';
 import {
   TASK_LABEL,
   TASK_IS_IMPORT,
@@ -24,6 +23,7 @@ import {
   TASK_DUPLICATE_RESTRICTION
 } from '../../schemas';
 import { toTaskTheme } from '../theme';
+import { EntryMethodBadge } from '../entry-methods/entry-method-badge';
 
 export const SelectTaskDialog: React.FC<{
   onSelect: (type: TaskType) => void;
@@ -150,7 +150,7 @@ const SelectTask: React.FC<{
         </div>
       </div>
       <div className="flex items-center gap-1">
-        <SelectTaskDialogBadge
+        <EntryMethodBadge
           type={type}
           showMaxOfOne={isRestricted && alreadyExists}
         />

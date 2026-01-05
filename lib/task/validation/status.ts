@@ -11,6 +11,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'BONUS_COMPLETE_PROFILE':
     case 'VISIT_URL':
     case 'STEAM_WISHLIST':
+    case 'STEAM_FOLLOW':
     case 'DISCORD_JOIN':
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':

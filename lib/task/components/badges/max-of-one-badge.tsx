@@ -1,11 +1,8 @@
-import { Badge } from '@/components/ui/badge';
 import { BanIcon } from 'lucide-react';
+import { SelectTaskBadge } from './select-task-badge';
 
 export const MaxOfOneBadge = () => {
   return (
-    <Badge variant="destructive" className="px-1.5 text-xs">
-      <BanIcon />
-      Max of 1
-    </Badge>
+    <SelectTaskBadge variant="destructive" Icon={BanIcon} label="Max of 1" />
   );
 };

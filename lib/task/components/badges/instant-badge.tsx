@@ -1,8 +1,6 @@
-import { Badge } from '@/components/ui/badge';
 import { ZapIcon } from 'lucide-react';
+import { SelectTaskBadge } from './select-task-badge';
 
 export const InstantBadge = () => (
-  <Badge variant="info">
-    <ZapIcon /> <span className="hidden sm:inline">Instant</span>
-  </Badge>
+  <SelectTaskBadge variant="info" Icon={ZapIcon} label="Instant" />
 );

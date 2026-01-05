@@ -102,6 +102,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         icon: SocialXIcon
       };
     case 'STEAM_WISHLIST':
+    case 'STEAM_FOLLOW':
       return {
         action:
           'bg-steam-1 text-white group-hover:bg-steam-1 hover:bg-steam-1 dark:bg-steam-1 dark:hover:bg-steam-1',

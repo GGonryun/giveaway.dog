@@ -73,6 +73,7 @@ export const processTaskJob = async (
       case 'TWITTER_CONNECT':
       case 'TWITTER_FOLLOW':
       case 'STEAM_WISHLIST':
+      case 'STEAM_FOLLOW':
       case 'TWITCH_FOLLOW':
       case 'YOUTUBE_VISIT':
       case 'TWITTER_LIKE':

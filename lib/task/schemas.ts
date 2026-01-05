@@ -225,6 +225,20 @@ export const steamWishlistTaskSchema = baseTaskSchema.extend({
 
 export type SteamWishlistTaskSchema = z.infer<typeof steamWishlistTaskSchema>;
 
+export const steamFollowTaskSchema = baseTaskSchema.extend({
+  type: z.literal('STEAM_FOLLOW'),
+  developer: z
+    .string()
+    .url('Steam Developer/Publisher URL is required')
+    .refine((val) => {
+      const urlPattern =
+        /^https?:\/\/store\.steampowered\.com\/(developer|publisher|curator)\/[A-Za-z0-9_\-]+\/?$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://store.steampowered.com/developer/DeveloperName or https://store.steampowered.com/publisher/PublisherName')
+});
+
+export type SteamFollowTaskSchema = z.infer<typeof steamFollowTaskSchema>;
+
 export const discordJoinTaskSchema = baseTaskSchema.extend({
   type: z.literal('DISCORD_JOIN'),
   invite: z
@@ -516,6 +530,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   twitterLikeTaskSchema,
   twitterLikeImportTaskSchema,
   steamWishlistTaskSchema,
+  steamFollowTaskSchema,
   discordJoinTaskSchema,
   twitchFollowTaskSchema,
   kickFollowTaskSchema,
@@ -558,6 +573,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   TWITTER_LIKE: 'Like a post on X',
   TWITTER_LIKE_IMPORT: 'Like a post on X',
   STEAM_WISHLIST: 'Steam Wishlist',
+  STEAM_FOLLOW: 'Follow on Steam',
   DISCORD_JOIN: 'Join Discord Server',
   TWITCH_FOLLOW: 'Follow on Twitch',
   YOUTUBE_VISIT: 'Visit YouTube Channel',
@@ -593,6 +609,7 @@ export const TASK_INPUT_SCHEMA = {
   TWITTER_LIKE: z.object({}),
   TWITTER_LIKE_IMPORT: z.object({}),
   STEAM_WISHLIST: z.object({}),
+  STEAM_FOLLOW: z.object({}),
   DISCORD_JOIN: z.object({}),
   TWITCH_FOLLOW: z.object({}),
   KICK_FOLLOW: z.object({}),
@@ -647,6 +664,7 @@ export const TASK_JOB_DATA_SCHEMA = {
     lastProcessedId: z.string().optional()
   }),
   STEAM_WISHLIST: z.object({}),
+  STEAM_FOLLOW: z.object({}),
   DISCORD_JOIN: z.object({}),
   TWITCH_FOLLOW: z.object({}),
   KICK_FOLLOW: z.object({}),
@@ -709,6 +727,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   TWITTER_LIKE: 'TWITTER',
   TWITTER_LIKE_IMPORT: 'TWITTER',
   STEAM_WISHLIST: 'STEAM',
+  STEAM_FOLLOW: 'STEAM',
   YOUTUBE_VISIT: 'YOUTUBE',
   INSTAGRAM_VISIT: 'INSTAGRAM',
   INSTAGRAM_LIKE: 'INSTAGRAM',
@@ -750,6 +769,7 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   TWITTER_LIKE: 'TWITTER',
   TWITTER_LIKE_IMPORT: 'TWITTER',
   STEAM_WISHLIST: 'STEAM',
+  STEAM_FOLLOW: 'STEAM',
   DISCORD_JOIN: 'DISCORD',
   TWITCH_FOLLOW: 'TWITCH',
   KICK_FOLLOW: 'KICK',
@@ -816,6 +836,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   TWITTER_LIKE_IMPORT: 'social',
   DISCORD_JOIN: 'social',
   STEAM_WISHLIST: 'community',
+  STEAM_FOLLOW: 'community',
   TWITCH_FOLLOW: 'social',
   KICK_FOLLOW: 'social',
   YOUTUBE_VISIT: 'social',
@@ -859,6 +880,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   TWITTER_LIKE_IMPORT: true,
   DISCORD_JOIN: false,
   STEAM_WISHLIST: false,
+  STEAM_FOLLOW: false,
   TWITCH_FOLLOW: false,
   KICK_FOLLOW: false,
   YOUTUBE_VISIT: false,
@@ -897,6 +919,7 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   TWITTER_LIKE_IMPORT: true,
   DISCORD_JOIN: true,
   STEAM_WISHLIST: true,
+  STEAM_FOLLOW: true,
   TWITCH_FOLLOW: true,
   KICK_FOLLOW: true,
   YOUTUBE_VISIT: true,
@@ -937,6 +960,7 @@ export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
   TWITTER_LIKE: false,
   TWITTER_LIKE_IMPORT: false,
   STEAM_WISHLIST: false,
+  STEAM_FOLLOW: false,
   DISCORD_JOIN: false,
   TWITCH_FOLLOW: false,
   KICK_FOLLOW: false,
@@ -1002,6 +1026,54 @@ export const toTaskSchemaSafe = (stored: Task): TaskSchema => {
   }
 };
 
+export type TaskVerificationRequirement =
+  | 'automatic'
+  | 'manual'
+  | 'self-reported';
+
+export const TASK_VERIFICATION_REQUIREMENT: Record<
+  TaskType,
+  TaskVerificationRequirement
+> = {
+  VISIT_URL: 'manual',
+  BONUS_TASK: 'manual',
+  TWITTER_CONNECT: 'manual',
+  TWITTER_FOLLOW: 'manual',
+  TWITTER_RETWEET: 'manual',
+  TWITTER_RETWEET_IMPORT: 'automatic',
+  TWITTER_LIKE: 'manual',
+  TWITTER_LIKE_IMPORT: 'automatic',
+  YOUTUBE_VISIT: 'manual',
+  KICK_FOLLOW: 'manual',
+  INSTAGRAM_VISIT: 'manual',
+  INSTAGRAM_LIKE: 'manual',
+  INSTAGRAM_COMMENT: 'manual',
+  FACEBOOK_VISIT_PAGE: 'manual',
+  FACEBOOK_VIEW_POST: 'manual',
+  TIKTOK_FOLLOW: 'automatic',
+  TIKTOK_LIKE: 'automatic',
+  BONUS_LIMITED: 'manual',
+  BONUS_TIMED: 'manual',
+  BONUS_LOYALTY: 'manual',
+  BONUS_COMPLETE_PROFILE: 'manual',
+  STEAM_WISHLIST: 'automatic',
+  STEAM_FOLLOW: 'self-reported',
+  DISCORD_JOIN: 'automatic',
+  TWITCH_FOLLOW: 'automatic',
+  SECRET_CODE: 'automatic',
+  ASK_QUESTION: 'manual',
+  SINGLE_CHOICE: 'manual',
+  MULTIPLE_CHOICE: 'manual',
+  BLUESKY_CONNECT: 'automatic',
+  BLUESKY_FOLLOW: 'automatic',
+  BLUESKY_LIKE: 'automatic',
+  BLUESKY_REPOST: 'automatic',
+  BLUESKY_LIKE_IMPORT: 'automatic',
+  BLUESKY_REPOST_IMPORT: 'automatic',
+  REFERRAL_LINK: 'manual'
+};
+
+// Deprecated: Use TASK_VERIFICATION_REQUIREMENT instead
 export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
   VISIT_URL: false,
   BONUS_TASK: false,
@@ -1025,6 +1097,7 @@ export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
   BONUS_LOYALTY: false,
   BONUS_COMPLETE_PROFILE: false,
   STEAM_WISHLIST: true,
+  STEAM_FOLLOW: false,
   DISCORD_JOIN: true,
   TWITCH_FOLLOW: true,
   SECRET_CODE: true,
