@@ -11,10 +11,18 @@ export const getUserHostRelationship = procedure()
   .input(z.object({ sweepstakesId: z.string() }))
   .output(userHostRelationshipSchema.optional())
   .cache(({ user, input }) => {
-    if (!user?.id) return undefined; // Don't cache if no user
+    if (!user?.id)
+      return {
+        keyParts: [`user-host-relationship-undefined-${input.sweepstakesId}`],
+        tags: [`sweepstakes-${input.sweepstakesId}-host`],
+        revalidate: 3600 // Cache for 1 hour
+      };
     return {
       keyParts: [`user-host-relationship-${user.id}-${input.sweepstakesId}`],
-      tags: [`user-${user.id}-host-relationship`, `sweepstakes-${input.sweepstakesId}-host`],
+      tags: [
+        `user-${user.id}-host-relationship`,
+        `sweepstakes-${input.sweepstakesId}-host`
+      ],
       revalidate: 3600 // Cache for 1 hour
     };
   })
