@@ -15,7 +15,10 @@ const toggleVisibility = procedure()
   .authorization({ required: true })
   .input(toggleVisibilityInput)
   .output(z.object({ visibility: z.nativeEnum(VisibilityType) }))
-  .invalidate(async ({ input }) => [`sweepstakes-${input.sweepstakesId}`])
+  .invalidate(async ({ input }) => [
+    `sweepstakes-${input.sweepstakesId}`,
+    `sweepstakes-${input.sweepstakesId}-privacy` // Invalidate privacy cache when visibility changes
+  ])
   .handler(async ({ db, user, input }) => {
     const sweepstakes = await db.sweepstakes.findUnique({
       where: { id: input.sweepstakesId },

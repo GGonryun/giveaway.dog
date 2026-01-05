@@ -15,6 +15,19 @@ export const getSweepstakesPrivacy = procedure()
     })
   )
   .output(z.boolean())
+  .cache(({ user, input }) => {
+    // Cache PUBLIC/UNLISTED checks for longer since they don't depend on user
+    // Cache PRIVATE checks per-user since they depend on team membership
+    const userKey = user?.id ? `-user-${user.id}` : '-anonymous';
+    return {
+      keyParts: [`sweepstakes-privacy-${input.sweepstakesId}${userKey}`],
+      tags: [
+        `sweepstakes-${input.sweepstakesId}-privacy`,
+        ...(user?.id ? [`user-${user.id}-privacy`] : [])
+      ],
+      revalidate: 3600 // Cache for 1 hour
+    };
+  })
   .handler(async ({ input, db, user }) => {
     // Implement the logic to fetch the sweepstakes visibility
     // For example, you might query the database to get the visibility status
