@@ -586,7 +586,7 @@ export const ScrollingTemplatesAnimation = ({
 
   return (
     <div className={cn('relative w-full overflow-hidden', className)}>
-      <div className="flex flex-col gap-1 py-4">
+      <div className="flex flex-col gap-1 pt-1 pb-2">
         <div className="relative">
           <motion.div
             className="flex gap-1"

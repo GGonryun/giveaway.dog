@@ -8,6 +8,7 @@ import { ArrowRight } from 'lucide-react';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import Image from 'next/image';
 import { SocialPlatformsCarousel } from './social-platforms-carousel';
+import { MarketingHeader, MarketingSubtitle, MarketingTitle } from './shared';
 
 const HOST_COUNT = 'over 30';
 const HOSTS = [
@@ -55,15 +56,31 @@ export const Hero = async () => (
     </div>
     <div className="container flex items-center justify-center">
       <div className="grid items-center gap-8 pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-12">
-        <div className="flex flex-col items-center text-center gap-2">
-          <Title />
-          <div />
-          <Subtitle />
-          <div className="my-1 sm:my-2 md:my-3 lg:my-3" />
-          <CTA />
-        </div>
+        <MarketingHeader
+          title={{
+            text: 'How creators build bigger communities',
+            highlight: 'bigger communities'
+          }}
+          subtitle={{
+            text: 'Host verified giveaways in under 60 seconds that grow your community without bots or spam.'
+          }}
+          actions={[
+            {
+              label: 'Giveaways',
+              href: '/browse',
+              variant: 'outline'
+            },
+            {
+              label: (
+                <>
+                  Try it for free <ArrowRight />
+                </>
+              ),
+              href: '/demo/sweepstakes'
+            }
+          ]}
+        />
         <div className="flex flex-col w-full items-center gap-0">
-          <div className="my-1 sm:my-2 md:my-3 lg:my-3" />
           <Hosts />
           <div className="my-2 sm:my-1.5 md:my-0.5 lg:my-0" />
           <Preview />
@@ -72,51 +89,6 @@ export const Hero = async () => (
     </div>
   </section>
 );
-
-const GlowingPill = () => {
-  return (
-    <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
-      <span className="relative flex h-2 w-2">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-      </span>
-      Unified Sweepstakes Platform
-    </div>
-  );
-};
-
-const Title = () => {
-  return (
-    <h1 className="max-w-xl font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter text-foreground text-balance">
-      How creators build{' '}
-      <span className="text-primary">bigger communities</span>
-    </h1>
-  );
-};
-
-const Subtitle = () => {
-  return (
-    <p className="text-muted-foreground text-base sm:text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto text-pretty">
-      Host verified giveaways in under 60 seconds that grow your community
-      without bots or spam.
-    </p>
-  );
-};
-
-const CTA = () => {
-  return (
-    <div className="flex w-full flex-col justify-center gap-2 sm:flex-row">
-      <Button size="xxl" asChild variant="outline" className="w-full sm:w-auto">
-        <Link href={'/browse'}>Giveaways</Link>
-      </Button>
-      <Button size="xxl" asChild className="w-full sm:w-auto">
-        <Link href={'/demo/sweepstakes'}>
-          Try it for free <ArrowRight />
-        </Link>
-      </Button>
-    </div>
-  );
-};
 
 const Hosts = () => {
   return (
