@@ -51,7 +51,6 @@ export function TurnstileProvider({
       setIsVerified(false);
       setNeedsVerification(true);
       toast.error('Verification failed. Please refresh the page to try again.');
-      console.error('Turnstile verification failed', failure);
     }
   });
 
