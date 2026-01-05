@@ -18,7 +18,7 @@ export const IntegrationsSection = async () => {
         <MarketingHeader
           title={{
             text: 'Seamlessly integrate your favorite platforms',
-            highlight: 'favorite platforms'
+            highlight: 'your favorite platforms'
           }}
           subtitle={{
             text: 'Use verified entries, templates, and integrations to effortlessly connect with your audience across multiple platforms.'
