@@ -33,7 +33,7 @@ const getParticipantSweepstake = procedure()
   .cache(({ input }) => ({
     keyParts: [`participant-sweepstake-${input.sweepstakesId}`],
     tags: [`sweepstakes-${input.sweepstakesId}`, 'participant-sweepstake'],
-    revalidate: 300 // Cache for 5 minutes
+    revalidate: 600 // Cache for 10 minutes
   }))
   .handler(async ({ input, db }) => {
     const sweepstakes = await db.sweepstakes.findFirst({
