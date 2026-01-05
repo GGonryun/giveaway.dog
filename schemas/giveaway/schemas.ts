@@ -341,8 +341,8 @@ const giveawayPrizeSchema = z.object({
       id: z.string(),
       result: z.nativeEnum(PrizeDrawResult),
       disqualificationReason: z.string().nullable(),
-      createdAt: z.date(),
-      updatedAt: z.date(),
+      createdAt: z.coerce.date(),
+      updatedAt: z.coerce.date(),
       task: baseTaskSchema.pick({
         id: true,
         type: true,
