@@ -234,12 +234,12 @@ export const OrbitingPlatformsSection = () => {
     <div className="w-full flex items-center justify-center">
       <div className="relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <div className="relative flex-1 flex items-center justify-center overflow-hidden">
-          <div className="absolute -top-16 left-1/2 -translate-x-1/2">
+          <div className="absolute -top-20 left-1/2 -translate-x-1/2">
             <OrbitingPlatforms size="lg" showCenterLogo={false} />
           </div>
 
           {/* Manually positioned Taki logo - stays above gradient */}
-          <div className="absolute left-1/2 top-40 -translate-x-1/2 z-15">
+          <div className="absolute left-1/2 top-36 -translate-x-1/2 z-15">
             <div className="rounded-full border-2 border-border bg-background shadow-xl flex items-center justify-center w-[72px] h-[72px] opacity-75">
               <Image
                 src="/taki.png"
@@ -261,8 +261,7 @@ export const OrbitingPlatformsSection = () => {
           </h3>
           <p className="text-muted-foreground text-sm">
             Build engagement with your audience across multiple platforms with a
-            variety of entry methods. From social media interactions to email
-            sign-ups, you can create a seamless experience for your
+            variety of entry methods. Create a seamless experience for your
             participants.
           </p>
           <Button
