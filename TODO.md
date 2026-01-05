@@ -2,6 +2,7 @@
 
 - [ ] "GiveawayDog is a streamers best friend."
 
+- [ ] Allow template creation to modify visibility too.
 - [ ] Add question entry method types:
   - [ ] Upload a file
     - [ ] Update steam follow with a toggle that if enabled requires a photo to be uploaded as proof.

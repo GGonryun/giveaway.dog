@@ -14,7 +14,6 @@ import {
   CreateReferralSchema,
   UserReferralSchema
 } from '@/lib/referrals/schemas';
-import verifyTurnstile from '@/lib/turnstile/verify';
 
 export type SweepstakesParticipationPageContentProps =
   ParticipantSweepstakeSchema & {
