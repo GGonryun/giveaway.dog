@@ -58,6 +58,7 @@ export const EntryMethodBadge: React.FC<{
     case 'BLUESKY_LIKE':
     case 'BLUESKY_REPOST':
     case 'REFERRAL_LINK':
+    case 'SUBMIT_MEDIA':
       return <VerificationBadge type={type} />;
     default:
       throw assertNever(type);

@@ -59,6 +59,7 @@ export const toCompletionValue = (args: CompletionValueArgs) => {
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
     case 'REFERRAL_LINK':
+    case 'SUBMIT_MEDIA':
       return args.task.value;
     default:
       throw assertNever(args.task);

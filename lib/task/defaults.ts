@@ -340,6 +340,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       value: 1,
       mandatory: false,
       tasksRequired: 0
+    },
+    ['SUBMIT_MEDIA']: {
+      id: '',
+      type: 'SUBMIT_MEDIA',
+      title: 'Submit media',
+      acceptedTypes: ['IMAGE'],
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
     }
   };
 

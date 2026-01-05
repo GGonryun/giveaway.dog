@@ -55,6 +55,12 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
         choices: parsed.choices
       };
     }
+    case 'SUBMIT_MEDIA': {
+      const parsed = TASK_INPUT_SCHEMA.SUBMIT_MEDIA.parse(data);
+      return {
+        mediaUrl: parsed.mediaUrl
+      };
+    }
     case 'FACEBOOK_VIEW_POST':
     case 'BONUS_TASK':
     case 'BONUS_TIMED':

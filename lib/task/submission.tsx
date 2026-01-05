@@ -129,6 +129,7 @@ export const toTaskStatus = (props: {
     case 'BLUESKY_REPOST':
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
+    case 'SUBMIT_MEDIA':
       return props.submission?.status ?? undefined;
     default:
       throw assertNever(props.task);

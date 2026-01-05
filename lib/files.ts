@@ -3,7 +3,9 @@ import z from 'zod';
 export const fileTypeKey = z.nativeEnum({
   JPEG: 'JPEG',
   PNG: 'PNG',
-  GIF: 'GIF'
+  GIF: 'GIF',
+  WEBP: 'WEBP',
+  SVG: 'SVG'
 } as const);
 
 export type FileTypeKey = z.infer<typeof fileTypeKey>;
@@ -27,6 +29,14 @@ export const FILE_TYPES: Record<FileTypeKey, FileTypeValue> = {
   GIF: {
     mime: 'image/gif',
     label: 'GIF'
+  },
+  WEBP: {
+    mime: 'image/webp',
+    label: 'WEBP'
+  },
+  SVG: {
+    mime: 'image/svg+xml',
+    label: 'SVG'
   }
 };
 

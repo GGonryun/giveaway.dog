@@ -513,6 +513,19 @@ export const referralLinkTaskSchema = baseTaskSchema.extend({
 
 export type ReferralLinkTaskSchema = z.infer<typeof referralLinkTaskSchema>;
 
+export const submitMediaTaskSchema = baseTaskSchema.extend({
+  type: z.literal('SUBMIT_MEDIA'),
+  acceptedTypes: z
+    .array(
+      z.nativeEnum({
+        IMAGE: 'IMAGE'
+      } as const)
+    )
+    .min(1, 'At least one media type is required')
+});
+
+export type SubmitMediaTaskSchema = z.infer<typeof submitMediaTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -523,6 +536,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   askQuestionTaskSchema,
   singleChoiceTaskSchema,
   multipleChoiceTaskSchema,
+  submitMediaTaskSchema,
   twitterConnectTaskSchema,
   twitterFollowTaskSchema,
   twitterRetweetTaskSchema,
@@ -565,6 +579,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   ASK_QUESTION: 'Ask a Question',
   SINGLE_CHOICE: 'Single Choice',
   MULTIPLE_CHOICE: 'Multiple Choice',
+  SUBMIT_MEDIA: 'Submit Media',
   SECRET_CODE: 'Enter Secret Code',
   TWITTER_CONNECT: 'Connect X',
   TWITTER_FOLLOW: 'Follow on X',
@@ -635,6 +650,9 @@ export const TASK_INPUT_SCHEMA = {
   MULTIPLE_CHOICE: z.object({
     choices: z.array(z.string()).min(1, 'Please select at least one option')
   }),
+  SUBMIT_MEDIA: z.object({
+    mediaUrl: z.string().url('Media URL is required')
+  }),
   BLUESKY_CONNECT: z.object({}),
   BLUESKY_FOLLOW: z.object({}),
   BLUESKY_LIKE: z.object({}),
@@ -692,7 +710,8 @@ export const TASK_JOB_DATA_SCHEMA = {
     runs: z.number().min(0),
     lastProcessedDid: z.string().optional()
   }),
-  REFERRAL_LINK: z.object({})
+  REFERRAL_LINK: z.object({}),
+  SUBMIT_MEDIA: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
 export type TaskInput<T extends TaskSchema> = T extends { type: infer U }
@@ -748,7 +767,8 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   BLUESKY_REPOST: 'BLUESKY',
   BLUESKY_LIKE_IMPORT: 'BLUESKY',
   BLUESKY_REPOST_IMPORT: 'BLUESKY',
-  REFERRAL_LINK: 'BONUS'
+  REFERRAL_LINK: 'BONUS',
+  SUBMIT_MEDIA: 'QUESTION'
 };
 
 export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
@@ -787,7 +807,8 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   BLUESKY_REPOST: 'BLUESKY',
   BLUESKY_LIKE_IMPORT: 'BLUESKY',
   BLUESKY_REPOST_IMPORT: 'BLUESKY',
-  REFERRAL_LINK: 'ANONYMOUS'
+  REFERRAL_LINK: 'ANONYMOUS',
+  SUBMIT_MEDIA: 'ANONYMOUS'
 };
 
 export const TASK_REQUIRED_SCOPES: Record<TaskPlatformSchema, string[]> = {
@@ -856,7 +877,8 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   BLUESKY_REPOST: 'social',
   BLUESKY_LIKE_IMPORT: 'social',
   BLUESKY_REPOST_IMPORT: 'social',
-  REFERRAL_LINK: 'engagement'
+  REFERRAL_LINK: 'engagement',
+  SUBMIT_MEDIA: 'engagement'
 };
 export const TASK_CATEGORY_LABEL: Record<TaskCategorySchema, string> = {
   social: 'Social',
@@ -900,7 +922,8 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   BLUESKY_REPOST: false,
   BLUESKY_LIKE_IMPORT: true,
   BLUESKY_REPOST_IMPORT: true,
-  REFERRAL_LINK: false
+  REFERRAL_LINK: false,
+  SUBMIT_MEDIA: false
 };
 
 export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
@@ -939,7 +962,8 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   BLUESKY_REPOST: true,
   BLUESKY_LIKE_IMPORT: true,
   BLUESKY_REPOST_IMPORT: true,
-  REFERRAL_LINK: true
+  REFERRAL_LINK: true,
+  SUBMIT_MEDIA: true
 };
 
 export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
@@ -978,7 +1002,8 @@ export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
   BLUESKY_LIKE: false,
   BLUESKY_REPOST: false,
   BLUESKY_LIKE_IMPORT: false,
-  BLUESKY_REPOST_IMPORT: false
+  BLUESKY_REPOST_IMPORT: false,
+  SUBMIT_MEDIA: false
 };
 
 export const userEntriesSchema = z.object({
@@ -1070,7 +1095,8 @@ export const TASK_VERIFICATION_REQUIREMENT: Record<
   BLUESKY_REPOST: 'automatic',
   BLUESKY_LIKE_IMPORT: 'automatic',
   BLUESKY_REPOST_IMPORT: 'automatic',
-  REFERRAL_LINK: 'manual'
+  REFERRAL_LINK: 'manual',
+  SUBMIT_MEDIA: 'manual'
 };
 
 // Deprecated: Use TASK_VERIFICATION_REQUIREMENT instead
@@ -1110,7 +1136,8 @@ export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
   BLUESKY_REPOST: true,
   BLUESKY_LIKE_IMPORT: true,
   BLUESKY_REPOST_IMPORT: true,
-  REFERRAL_LINK: false
+  REFERRAL_LINK: false,
+  SUBMIT_MEDIA: false
 };
 
 export const twitterProofSchema = z.object({

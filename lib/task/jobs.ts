@@ -44,6 +44,7 @@ export const createJobsForTask = (
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':
+    case 'SUBMIT_MEDIA':
       return [];
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':

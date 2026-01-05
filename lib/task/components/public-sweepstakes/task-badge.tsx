@@ -202,6 +202,7 @@ export const TaskBadge: React.FC<TaskBadgeProps> = (props) => {
     case 'BLUESKY_REPOST':
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
+    case 'SUBMIT_MEDIA':
       return null;
     default:
       throw assertNever(task);

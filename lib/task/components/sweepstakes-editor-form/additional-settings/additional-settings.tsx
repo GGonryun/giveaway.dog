@@ -28,6 +28,7 @@ import { TikTokProfileUrl, TikTokPostUrl } from './lib/tiktok';
 import { AskQuestionFormFields } from './lib/ask-question';
 import { SingleChoiceFormFields } from './lib/single-choice';
 import { MultipleChoiceFormFields } from './lib/multiple-choice';
+import { SubmitMediaFormFields } from './lib/submit-media';
 import { Typography } from '@/components/ui/typography';
 import { AlertCircle } from 'lucide-react';
 import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
@@ -203,6 +204,8 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return <SingleChoiceFormFields />;
       case 'MULTIPLE_CHOICE':
         return <MultipleChoiceFormFields />;
+      case 'SUBMIT_MEDIA':
+        return <SubmitMediaFormFields />;
       case 'REFERRAL_LINK':
         return <MaximumReferralsField />;
       default:

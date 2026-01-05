@@ -97,6 +97,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'REFERRAL_LINK':
       case 'BLUESKY_LIKE_IMPORT':
       case 'BLUESKY_REPOST_IMPORT':
+      case 'SUBMIT_MEDIA':
         return null;
       default:
         throw assertNever(type);

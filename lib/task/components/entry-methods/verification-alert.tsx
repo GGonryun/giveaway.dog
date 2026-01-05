@@ -50,7 +50,8 @@ const VERIFICATION_WARNINGS: Record<
   BLUESKY_REPOST: undefined,
   BLUESKY_LIKE_IMPORT: undefined,
   BLUESKY_REPOST_IMPORT: undefined,
-  REFERRAL_LINK: undefined
+  REFERRAL_LINK: undefined,
+  SUBMIT_MEDIA: undefined
 };
 
 export const VerificationAlert: React.FC<{ type: TaskType }> = ({ type }) => {

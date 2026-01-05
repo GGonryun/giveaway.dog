@@ -96,6 +96,7 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':
+    case 'SUBMIT_MEDIA':
       // no specific validation needed
       return;
     default:

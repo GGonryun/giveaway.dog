@@ -7,7 +7,8 @@ import {
   StarIcon,
   UsersIcon,
   MessageSquareIcon,
-  UserCheck
+  UserCheck,
+  UploadCloud
 } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
 import { TaskType } from '@prisma/client';
@@ -191,6 +192,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-primary text-white',
         arrow: 'bg-primary text-white fill-primary',
         icon: MessageSquareIcon
+      };
+    case 'SUBMIT_MEDIA':
+      return {
+        action:
+          'text-white bg-primary group-hover:bg-primary/80 hover:bg-primary/80 dark:bg-primary dark:hover:bg-primary/80',
+        symbol: 'bg-primary text-white',
+        arrow: 'bg-primary text-white fill-primary',
+        icon: UploadCloud
       };
     case 'REFERRAL_LINK':
       return {

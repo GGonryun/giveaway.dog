@@ -32,6 +32,7 @@ import { TikTokLikeTaskActionForm } from './lib/tiktok/tiktok-like';
 import { AskQuestionTaskActionForm } from './lib/form/ask-question';
 import { SingleChoiceTaskActionForm } from './lib/form/single-choice';
 import { MultipleChoiceTaskActionForm } from './lib/form/multiple-choice';
+import { SubmitMediaTaskActionForm } from './lib/form/submit-media';
 import { ReferralLinkTaskActionForm } from './lib/referral/referral-link';
 
 export const TaskActionForm: React.FC<
@@ -96,6 +97,8 @@ export const TaskActionForm: React.FC<
       return <SingleChoiceTaskActionForm {...props} task={props.task} />;
     case 'MULTIPLE_CHOICE':
       return <MultipleChoiceTaskActionForm {...props} task={props.task} />;
+    case 'SUBMIT_MEDIA':
+      return <SubmitMediaTaskActionForm {...props} task={props.task} />;
     case 'BLUESKY_CONNECT':
       return <BlueskyConnectTaskActionForm {...props} task={props.task} />;
     case 'BLUESKY_FOLLOW':

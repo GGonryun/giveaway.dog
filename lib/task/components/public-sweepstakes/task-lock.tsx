@@ -89,6 +89,7 @@ export const getTaskLock = (args: {
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
     case 'REFERRAL_LINK':
+    case 'SUBMIT_MEDIA':
       return null;
     default:
       throw assertNever(task);
