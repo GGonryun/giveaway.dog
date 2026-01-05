@@ -27,7 +27,7 @@ export const IntegrationsSection = async () => {
             {
               label: (
                 <>
-                  Browse templates <ArrowRight />
+                  Browse integrations <ArrowRight />
                 </>
               ),
               href: '/integrations'
