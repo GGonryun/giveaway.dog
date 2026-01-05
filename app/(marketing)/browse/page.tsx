@@ -80,7 +80,7 @@ export default async function Page({
     );
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense>
       <SweepstakesPageContent
         sweepstakes={sweepstakes.data}
         participation={participation.data}
