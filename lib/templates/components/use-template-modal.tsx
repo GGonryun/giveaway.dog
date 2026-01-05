@@ -22,16 +22,12 @@ import {
   onFakeCreateReferral,
   onFakeFormSubmit,
   onFakeLogin,
-  onFakeTaskComplete,
-  onFakeTurnstileVerify
+  onFakeTaskComplete
 } from '@/components/sweepstakes-editor/data/mocks';
 import { SparklesIcon, Edit, Loader2, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { GiveawaySchema } from '@/schemas/giveaway/schemas';
-import {
-  DEFAULT_DESIGN_DATA,
-  DEFAULT_SWEEPSTAKES_DESIGN
-} from '@/schemas/giveaway/defaults';
+import { DEFAULT_DESIGN_DATA } from '@/schemas/giveaway/defaults';
 
 interface UseTemplateModalProps {
   open: boolean;

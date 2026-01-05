@@ -34,8 +34,7 @@ import {
   onFakeFormSubmit,
   mockParticipant,
   mockUserReferral,
-  onFakeCreateReferral,
-  onFakeTurnstileVerify
+  onFakeCreateReferral
 } from './data/mocks';
 import { TaskSchema } from '@/lib/task/schemas';
 import { useTeams } from '../context/team-provider';

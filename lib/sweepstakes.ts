@@ -5,10 +5,7 @@ import {
 import { assertNever } from './errors';
 import { RequiredFields } from './types';
 import { expandCountries, includesCountryCode } from './countries';
-import {
-  isFormFilled,
-  isProfileComplete
-} from '@/schemas/giveaway/participant';
+import { isFormFilled } from '@/schemas/giveaway/participant';
 import { SweepstakesParticipantSchema } from './participant/schemas';
 
 type ComputeStateOptions = Pick<
@@ -32,8 +29,13 @@ export const toSweepstakesState = (
       return 'winners-pending';
     case 'ERROR':
       return 'error';
-    case 'SCHEDULED':
-      return 'pending';
+    case 'SCHEDULED': {
+      // double check the sweepstakes start date:
+      if (new Date(sweepstakes.timing.startDate) > new Date()) {
+        return 'pending';
+      }
+      return 'active';
+    }
     case 'RUNNING': {
       if (!participant) return 'not-logged-in';
       if (
@@ -45,6 +47,10 @@ export const toSweepstakesState = (
       )
         return 'profile-incomplete';
       if (!isEligible({ ...args, participant })) return 'not-eligible';
+      // double check the sweepstakes end date:
+      if (new Date(sweepstakes.timing.endDate) < new Date()) {
+        return 'winners-pending';
+      }
       return 'active';
     }
     default:

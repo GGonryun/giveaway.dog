@@ -184,11 +184,3 @@ export const onFakeCreateReferral = async (
   );
   return Promise.resolve(mockUserReferral);
 };
-export const onFakeTurnstileVerify = async (
-  token: string
-): Promise<{ success: boolean }> => {
-  toast.success(
-    'Turnstile verification triggered (not implemented in preview)'
-  );
-  return Promise.resolve({ success: true });
-};

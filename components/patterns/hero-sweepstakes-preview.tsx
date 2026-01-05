@@ -14,8 +14,7 @@ import {
   onFakeCreateReferral,
   onFakeFormSubmit,
   onFakeLogin,
-  onFakeTaskComplete,
-  onFakeTurnstileVerify
+  onFakeTaskComplete
 } from '../sweepstakes-editor/data/mocks';
 
 export const HeroSweepstakesPreview: React.FC = () => {

@@ -8,6 +8,8 @@
     - [ ] Update steam follow with a toggle that if enabled requires a photo to be uploaded as proof.
   - [ ] Pick an image from a gallery
 
+  - [ ] Instead of showing an error for tiktok also show a link so users can navigate to the tiktok see gleam & kurozzz (discord) for a good example of this
+
 ## Me
 
 - [ ] Custom discord bot.

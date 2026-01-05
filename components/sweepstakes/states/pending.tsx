@@ -5,11 +5,16 @@ import { Clock, RefreshCw } from 'lucide-react';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
+import { useProcedureAsync } from '@/lib/mrpc/hook';
+import refreshSweepstakes from '@/procedures/browse/refresh-sweepstakes';
+import { useRouter } from 'next/navigation';
 
 export const Pending: React.FC = () => {
   const { sweepstakes } = useGiveawayParticipation();
   const [timeLeft, setTimeLeft] = useState('');
   const [hasStarted, setHasStarted] = useState(false);
+  const router = useRouter();
+  const refreshProcedure = useProcedureAsync({ action: refreshSweepstakes });
 
   useEffect(() => {
     const startDate = new Date(sweepstakes.timing.startDate);
@@ -32,8 +37,11 @@ export const Pending: React.FC = () => {
     return () => clearInterval(interval);
   }, [sweepstakes.timing.startDate]);
 
-  const handleRefresh = () => {
-    window.location.reload();
+  const handleRefresh = async () => {
+    // Invalidate all sweepstakes caches
+    await refreshProcedure.run({ sweepstakesId: sweepstakes.id });
+    // Refresh the current route to get fresh data
+    router.refresh();
   };
 
   return (
@@ -45,11 +53,18 @@ export const Pending: React.FC = () => {
       {hasStarted ? (
         <>
           <p className="text-muted-foreground mb-4">
-            This giveaway is now live. Refresh the page to participate.
+            This giveaway is now live. Click below to refresh the page and
+            participate.
           </p>
-          <Button onClick={handleRefresh} size="lg">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh Page
+          <Button
+            onClick={handleRefresh}
+            size="lg"
+            disabled={refreshProcedure.isLoading}
+          >
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${refreshProcedure.isLoading ? 'animate-spin' : ''}`}
+            />
+            {refreshProcedure.isLoading ? 'Refreshing...' : 'Refresh Page'}
           </Button>
         </>
       ) : (

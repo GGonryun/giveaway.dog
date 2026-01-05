@@ -20,8 +20,7 @@ import {
   onFakeFormSubmit,
   mockParticipant,
   onFakeCreateReferral,
-  mockUserReferral,
-  onFakeTurnstileVerify
+  mockUserReferral
 } from '../sweepstakes-editor/data/mocks';
 import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
@@ -36,7 +35,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '../ui/select';
-import { toSweepstakesState } from '@/lib/sweepstakes';
 import { toBackgroundStyle } from '@/schemas/color';
 import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
 import { useProcedure } from '@/lib/mrpc/hook';
