@@ -3,8 +3,15 @@ import { OrbitingPlatformsSection } from '../marketing/orbiting-platforms';
 import { ScrollingTemplatesAnimation } from '../marketing/scrolling-templates-animation';
 import { UnifiedPlatformSection } from '../marketing/unified-platform-visual';
 import { MarketingHeader } from '@/components/patterns/shared';
+import type { ResolvedTheme } from '../theme/get-server-theme';
 
-export const IntegrationsSection = () => {
+interface IntegrationsSectionProps {
+  theme: ResolvedTheme;
+}
+
+export const IntegrationsSection = async ({
+  theme
+}: IntegrationsSectionProps) => {
   return (
     <div className="bg-background py-16 md:py-24">
       <div className="text-center mb-6">
@@ -29,11 +36,11 @@ export const IntegrationsSection = () => {
         />
       </div>
 
-      <ScrollingTemplatesAnimation />
+      <ScrollingTemplatesAnimation theme={theme} />
       <section className="w-full flex items-center justify-center">
         <div className="container mx-auto px-4 py-8 md:py-12">
           <div className="grid lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
-            <OrbitingPlatformsSection />
+            <OrbitingPlatformsSection theme={theme} />
             <UnifiedPlatformSection />
           </div>
         </div>

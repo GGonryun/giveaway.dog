@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback } from '../ui/avatar';
 import Image from 'next/image';
 import { SocialPlatformsCarousel } from './social-platforms-carousel';
 import { MarketingHeader, MarketingSubtitle, MarketingTitle } from './shared';
+import type { ResolvedTheme } from '@/lib/theme/get-server-theme';
 
 const HOST_COUNT = 'over 30';
 const HOSTS = [
@@ -49,11 +50,16 @@ const HOSTS = [
   }
 ];
 
-export const Hero = async () => (
-  <section className="w-full flex flex-col items-center justify-center bg-gradient-to-t from-primary/15 bg-background">
-    <div className="w-full pt-6 sm:pt-10 md:pt-14 lg:pt-18">
-      <SocialPlatformsCarousel />
-    </div>
+interface HeroProps {
+  theme: ResolvedTheme;
+}
+
+export const Hero = async ({ theme }: HeroProps) => {
+  return (
+    <section className="w-full flex flex-col items-center justify-center bg-gradient-to-t from-primary/15 bg-background">
+      <div className="w-full pt-6 sm:pt-10 md:pt-14 lg:pt-18">
+        <SocialPlatformsCarousel theme={theme} />
+      </div>
     <div className="container flex items-center justify-center">
       <div className="grid items-center gap-8 pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-12">
         <MarketingHeader
@@ -88,7 +94,8 @@ export const Hero = async () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 const Hosts = () => {
   return (

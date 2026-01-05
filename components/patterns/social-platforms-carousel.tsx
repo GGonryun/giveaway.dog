@@ -9,12 +9,12 @@ import {
   CarouselItem
 } from '@/components/ui/carousel';
 import AutoScroll from 'embla-carousel-auto-scroll';
-import { useEffect, useRef, useState } from 'react';
+import { getPlatformIcon, type PlatformId } from '@/lib/platform-icons';
 
 const PLATFORMS = [
   {
     name: 'Twitter/X',
-    icon: '/platforms/x.svg',
+    id: 'x' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -22,7 +22,7 @@ const PLATFORMS = [
   },
   {
     name: 'Bluesky',
-    icon: '/platforms/bluesky.svg',
+    id: 'bluesky' as PlatformId,
     theme: {
       bg: 'bluesky-1',
       text: 'white'
@@ -30,7 +30,7 @@ const PLATFORMS = [
   },
   {
     name: 'Twitch',
-    icon: '/platforms/twitch.svg',
+    id: 'twitch' as PlatformId,
     theme: {
       bg: 'twitch-1',
       text: 'white'
@@ -38,7 +38,7 @@ const PLATFORMS = [
   },
   {
     name: 'TikTok',
-    icon: '/platforms/tiktok.svg',
+    id: 'tiktok' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -46,7 +46,7 @@ const PLATFORMS = [
   },
   {
     name: 'Kick',
-    icon: '/platforms/kick.svg',
+    id: 'kick' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -54,7 +54,7 @@ const PLATFORMS = [
   },
   {
     name: 'Facebook',
-    icon: '/platforms/facebook.svg',
+    id: 'facebook' as PlatformId,
     theme: {
       bg: 'facebook-1',
       text: 'white'
@@ -62,7 +62,7 @@ const PLATFORMS = [
   },
   {
     name: 'Snapchat',
-    icon: '/platforms/snapchat.svg',
+    id: 'snapchat' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -70,7 +70,7 @@ const PLATFORMS = [
   },
   {
     name: 'Threads',
-    icon: '/platforms/threads.svg',
+    id: 'threads' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -78,7 +78,7 @@ const PLATFORMS = [
   },
   {
     name: 'LinkedIn',
-    icon: '/platforms/linkedin.svg',
+    id: 'linkedin' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -86,7 +86,7 @@ const PLATFORMS = [
   },
   {
     name: 'Pinterest',
-    icon: '/platforms/pinterest.svg',
+    id: 'pinterest' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -94,7 +94,7 @@ const PLATFORMS = [
   },
   {
     name: 'Reddit',
-    icon: '/platforms/reddit.svg',
+    id: 'reddit' as PlatformId,
     theme: {
       bg: 'reddit-1',
       text: 'white'
@@ -102,7 +102,7 @@ const PLATFORMS = [
   },
   {
     name: 'Instagram',
-    icon: '/platforms/instagram.svg',
+    id: 'instagram' as PlatformId,
     theme: {
       bg: 'instagram-1',
       text: 'white'
@@ -110,7 +110,7 @@ const PLATFORMS = [
   },
   {
     name: 'YouTube',
-    icon: '/platforms/youtube.svg',
+    id: 'youtube' as PlatformId,
     theme: {
       bg: 'youtube-1',
       text: 'white'
@@ -118,7 +118,7 @@ const PLATFORMS = [
   },
   {
     name: 'Discord',
-    icon: '/platforms/discord.svg',
+    id: 'discord' as PlatformId,
     theme: {
       bg: 'discord-1',
       text: 'white'
@@ -126,7 +126,7 @@ const PLATFORMS = [
   },
   {
     name: 'Tumblr',
-    icon: '/platforms/tumblr.svg',
+    id: 'tumblr' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -134,7 +134,7 @@ const PLATFORMS = [
   },
   {
     name: 'Github',
-    icon: '/platforms/github.svg',
+    id: 'github' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -142,7 +142,7 @@ const PLATFORMS = [
   },
   {
     name: 'Google',
-    icon: '/platforms/google.svg',
+    id: 'google' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -150,7 +150,7 @@ const PLATFORMS = [
   },
   {
     name: 'Patreon',
-    icon: '/platforms/patreon.svg',
+    id: 'patreon' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -158,7 +158,7 @@ const PLATFORMS = [
   },
   {
     name: 'Product Hunt',
-    icon: '/platforms/producthunt.svg',
+    id: 'producthunt' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -166,7 +166,7 @@ const PLATFORMS = [
   },
   {
     name: 'Coinbase',
-    icon: '/platforms/coinbase.svg',
+    id: 'coinbase' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -174,7 +174,7 @@ const PLATFORMS = [
   },
   {
     name: 'Spotify',
-    icon: '/platforms/spotify.svg',
+    id: 'spotify' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -182,7 +182,7 @@ const PLATFORMS = [
   },
   {
     name: 'Steam',
-    icon: '/platforms/steam.svg',
+    id: 'steam' as PlatformId,
     theme: {
       bg: 'black',
       text: 'white'
@@ -190,7 +190,13 @@ const PLATFORMS = [
   }
 ];
 
-export const SocialPlatformsCarousel = () => {
+interface SocialPlatformsCarouselProps {
+  theme: 'light' | 'dark';
+}
+
+export const SocialPlatformsCarousel = ({
+  theme
+}: SocialPlatformsCarouselProps) => {
   return (
     <div className="w-full relative">
       <Carousel
@@ -209,40 +215,44 @@ export const SocialPlatformsCarousel = () => {
         className="w-full"
       >
         <CarouselContent className="ml-0 mr-0">
-          {PLATFORMS.concat(PLATFORMS).map((platform, index) => (
-            <CarouselItem
-              key={`${platform.name}-${index}`}
-              className="basis-auto py-1 pl-4 sm:pl-4 md:pl-6 lg:pl-8"
-            >
-              <Tooltip>
-                <TooltipTrigger className="cursor-pointer opacity-80 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center hover:opacity-100">
-                  <Image
-                    src={platform.icon}
-                    alt={platform.name}
-                    height={48}
-                    width={48}
-                    sizes="32px, 40px, 48px"
-                  />
-                </TooltipTrigger>
-                <TooltipContent
-                  className={cn(
-                    'font-semibold',
-                    'bg-reddit-1 fill-reddit-1', // todo remove when this gets used else where
-                    `bg-${platform.theme.bg}`,
-                    `text-${platform.theme.text}`,
-                    `fill-${platform.theme.bg}`
-                  )}
-                  arrowClassName={cn(
-                    `bg-${platform.theme.bg}`,
-                    `text-${platform.theme.text}`,
-                    `fill-${platform.theme.bg}`
-                  )}
-                >
-                  {platform.name}
-                </TooltipContent>
-              </Tooltip>
-            </CarouselItem>
-          ))}
+          {PLATFORMS.concat(PLATFORMS).map((platform, index) => {
+            const iconSrc = getPlatformIcon(platform.id, theme);
+
+            return (
+              <CarouselItem
+                key={`${platform.name}-${index}`}
+                className="basis-auto py-1 pl-4 sm:pl-4 md:pl-6 lg:pl-8"
+              >
+                <Tooltip>
+                  <TooltipTrigger className="cursor-pointer opacity-80 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center hover:opacity-100">
+                    <Image
+                      src={iconSrc}
+                      alt={platform.name}
+                      height={48}
+                      width={48}
+                      sizes="32px, 40px, 48px"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className={cn(
+                      'font-semibold',
+                      'bg-reddit-1 fill-reddit-1', // todo remove when this gets used else where
+                      `bg-${platform.theme.bg}`,
+                      `text-${platform.theme.text}`,
+                      `fill-${platform.theme.bg}`
+                    )}
+                    arrowClassName={cn(
+                      `bg-${platform.theme.bg}`,
+                      `text-${platform.theme.text}`,
+                      `fill-${platform.theme.bg}`
+                    )}
+                  >
+                    {platform.name}
+                  </TooltipContent>
+                </Tooltip>
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
       </Carousel>
       <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />

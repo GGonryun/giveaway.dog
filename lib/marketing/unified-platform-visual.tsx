@@ -41,7 +41,7 @@ export const UnifiedPlatformSection = () => {
 
         <div className="relative px-8 py-6 backdrop-blur-sm flex-shrink-0 space-y-2 bg-card">
           <h3 className="text-lg font-semibold text-foreground">
-            One Platform, Endless Possibilities
+            Unified Sweepstakes Platform
           </h3>
           <p className="text-muted-foreground text-sm">
             Manage all your giveaways from a single unified dashboard. Track

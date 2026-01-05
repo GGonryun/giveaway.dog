@@ -9,7 +9,10 @@ const getCacheConfig = ({ user, input }: any) => {
   if (!user?.id) return undefined; // Don't cache if no user
   return {
     keyParts: [`user-referral-${user.id}-${input.sweepstakesId}`],
-    tags: [`user-${user.id}-referral`, `sweepstakes-${input.sweepstakesId}-referral`],
+    tags: [
+      `user-${user.id}-referral`,
+      `sweepstakes-${input.sweepstakesId}-referral`
+    ],
     revalidate: 86400 // Cache for 24 hours
   };
 };

@@ -3,542 +3,546 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { getPlatformIcon, type PlatformId } from '@/lib/platform-icons';
 
 interface Template {
   id: string;
   label: string;
-  icon: string;
+  platformId: PlatformId;
 }
 
 const TEMPLATES: Template[] = [
   {
     id: 'twitter-follow',
     label: 'Twitter Follow to Win',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'instagram-follow',
     label: 'Instagram Follow Giveaway',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'youtube-subscribe',
     label: 'YouTube Subscribe to Win',
-    icon: '/platforms/youtube.svg'
+    platformId: 'youtube'
   },
   {
     id: 'twitch-follow',
     label: 'Twitch Channel Boost',
-    icon: '/platforms/twitch.svg'
+    platformId: 'twitch'
   },
   {
     id: 'discord-join',
     label: 'Discord Server Growth',
-    icon: '/platforms/discord.svg'
+    platformId: 'discord'
   },
   {
     id: 'tiktok-follow',
     label: 'TikTok Follow Contest',
-    icon: '/platforms/tiktok.svg'
+    platformId: 'tiktok'
   },
   {
     id: 'reddit-upvote',
     label: 'Reddit Upvote Contest',
-    icon: '/platforms/reddit.svg'
+    platformId: 'reddit'
   },
   {
     id: 'bluesky-follow',
     label: 'Bluesky Follow Contest',
-    icon: '/platforms/bluesky.svg'
+    platformId: 'bluesky'
   },
-  { id: 'twitter-retweet', label: 'Retweet & Enter', icon: '/platforms/x.svg' },
+  { id: 'twitter-retweet', label: 'Retweet & Enter', platformId: 'x' },
   {
     id: 'instagram-like',
     label: 'Like & Tag Friends',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'youtube-comment',
     label: 'Comment & Win',
-    icon: '/platforms/youtube.svg'
+    platformId: 'youtube'
   },
   {
     id: 'twitch-sub',
     label: 'Sub Milestone Celebration',
-    icon: '/platforms/twitch.svg'
+    platformId: 'twitch'
   },
   {
     id: 'discord-active',
     label: 'Active Member Reward',
-    icon: '/platforms/discord.svg'
+    platformId: 'discord'
   },
-  { id: 'tiktok-duet', label: 'Duet Challenge', icon: '/platforms/tiktok.svg' },
+  { id: 'tiktok-duet', label: 'Duet Challenge', platformId: 'tiktok' },
   {
     id: 'reddit-comment',
     label: 'Comment Thread Giveaway',
-    icon: '/platforms/reddit.svg'
+    platformId: 'reddit'
   },
   {
     id: 'facebook-page',
     label: 'Facebook Page Like',
-    icon: '/platforms/facebook.svg'
+    platformId: 'facebook'
   },
   {
     id: 'twitter-quote',
     label: 'Quote Tweet Contest',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'instagram-story',
     label: 'Story Share Contest',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'youtube-watch',
     label: 'Watch Time Contest',
-    icon: '/platforms/youtube.svg'
+    platformId: 'youtube'
   },
   {
     id: 'twitch-raid',
     label: 'Raid Party Giveaway',
-    icon: '/platforms/twitch.svg'
+    platformId: 'twitch'
   },
   {
     id: 'discord-boost',
     label: 'Server Boost Giveaway',
-    icon: '/platforms/discord.svg'
+    platformId: 'discord'
   },
   {
     id: 'tiktok-hashtag',
     label: 'Hashtag Campaign',
-    icon: '/platforms/tiktok.svg'
+    platformId: 'tiktok'
   },
   {
     id: 'linkedin-follow',
     label: 'LinkedIn Follow Campaign',
-    icon: '/platforms/linkedin.svg'
+    platformId: 'linkedin'
   },
   {
     id: 'bluesky-repost',
     label: 'Repost & Win',
-    icon: '/platforms/bluesky.svg'
+    platformId: 'bluesky'
   },
   {
     id: 'twitter-engagement',
     label: 'Twitter Engagement Boost',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'instagram-reel',
     label: 'Reels Challenge',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'youtube-premiere',
     label: 'Premiere Giveaway',
-    icon: '/platforms/youtube.svg'
+    platformId: 'youtube'
   },
   {
     id: 'twitch-bits',
     label: 'Bits Donation Contest',
-    icon: '/platforms/twitch.svg'
+    platformId: 'twitch'
   },
   {
     id: 'discord-event',
     label: 'Event Participation',
-    icon: '/platforms/discord.svg'
+    platformId: 'discord'
   },
   {
     id: 'github-star',
     label: 'GitHub Star Giveaway',
-    icon: '/platforms/github.svg'
+    platformId: 'github'
   },
   {
     id: 'reddit-community',
     label: 'Subreddit Growth',
-    icon: '/platforms/reddit.svg'
+    platformId: 'reddit'
   },
   {
     id: 'facebook-share',
     label: 'Share & Tag Contest',
-    icon: '/platforms/facebook.svg'
+    platformId: 'facebook'
   },
   {
     id: 'tiktok-live',
     label: 'Live Stream Giveaway',
-    icon: '/platforms/tiktok.svg'
+    platformId: 'tiktok'
   },
   {
     id: 'steam-curator',
     label: 'Steam Curator Follow',
-    icon: '/platforms/steam.svg'
+    platformId: 'steam'
   },
   {
     id: 'spotify-follow',
     label: 'Spotify Follow Artist',
-    icon: '/platforms/spotify.svg'
+    platformId: 'spotify'
   },
   {
     id: 'bluesky-engagement',
     label: 'Engagement Boost',
-    icon: '/platforms/bluesky.svg'
+    platformId: 'bluesky'
   },
   {
     id: 'reddit-ama',
     label: 'AMA Participation',
-    icon: '/platforms/reddit.svg'
+    platformId: 'reddit'
   },
   {
     id: 'patreon-join',
     label: 'Patreon Member Reward',
-    icon: '/platforms/patreon.svg'
+    platformId: 'patreon'
   },
   {
     id: 'linkedin-engage',
     label: 'Post Engagement Contest',
-    icon: '/platforms/linkedin.svg'
+    platformId: 'linkedin'
   },
   {
     id: 'photo-contest',
     label: 'Photo Submission Contest',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'video-contest',
     label: 'Video Creation Challenge',
-    icon: '/platforms/youtube.svg'
+    platformId: 'youtube'
   },
   {
     id: 'kick-follow',
     label: 'Kick Channel Follow',
-    icon: '/platforms/kick.svg'
+    platformId: 'kick'
   },
   {
     id: 'threads-follow',
     label: 'Threads Follow Giveaway',
-    icon: '/platforms/threads.svg'
+    platformId: 'threads'
   },
   {
     id: 'github-contributor',
     label: 'Contributor Reward',
-    icon: '/platforms/github.svg'
+    platformId: 'github'
   },
   {
     id: 'steam-review',
     label: 'Game Review Contest',
-    icon: '/platforms/steam.svg'
+    platformId: 'steam'
   },
   {
     id: 'pinterest-follow',
     label: 'Pinterest Follow Campaign',
-    icon: '/platforms/pinterest.svg'
+    platformId: 'pinterest'
   },
   {
     id: 'facebook-group',
     label: 'Group Member Giveaway',
-    icon: '/platforms/facebook.svg'
+    platformId: 'facebook'
   },
   {
     id: 'creative-writing',
     label: 'Creative Writing Contest',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'spotify-playlist',
     label: 'Playlist Follower Contest',
-    icon: '/platforms/spotify.svg'
+    platformId: 'spotify'
   },
   {
     id: 'linkedin-newsletter',
     label: 'Newsletter Subscribe',
-    icon: '/platforms/linkedin.svg'
+    platformId: 'linkedin'
   },
   {
     id: 'fan-art',
     label: 'Fan Art Competition',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'patreon-tier',
     label: 'Tier Upgrade Contest',
-    icon: '/platforms/patreon.svg'
+    platformId: 'patreon'
   },
   {
     id: 'github-issue',
     label: 'Issue Reporter Contest',
-    icon: '/platforms/github.svg'
+    platformId: 'github'
   },
   {
     id: 'kick-sub',
     label: 'Kick Subscription Contest',
-    icon: '/platforms/kick.svg'
+    platformId: 'kick'
   },
   {
     id: 'caption-contest',
     label: 'Caption This Contest',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'steam-keys',
     label: 'Steam Keys Giveaway',
-    icon: '/platforms/steam.svg'
+    platformId: 'steam'
   },
   {
     id: 'threads-repost',
     label: 'Threads Repost Contest',
-    icon: '/platforms/threads.svg'
+    platformId: 'threads'
   },
   {
     id: 'trivia-quiz',
     label: 'Trivia Quiz Giveaway',
-    icon: '/platforms/discord.svg'
+    platformId: 'discord'
   },
   {
     id: 'pinterest-pin',
     label: 'Pin & Save Contest',
-    icon: '/platforms/pinterest.svg'
+    platformId: 'pinterest'
   },
   {
     id: 'spotify-share',
     label: 'Share Track Giveaway',
-    icon: '/platforms/spotify.svg'
+    platformId: 'spotify'
   },
   {
     id: 'email-signup',
     label: 'Email List Growth',
-    icon: '/platforms/google.svg'
+    platformId: 'google'
   },
   {
     id: 'snapchat-add',
     label: 'Snapchat Add Friend',
-    icon: '/platforms/snapchat.svg'
+    platformId: 'snapchat'
   },
   {
     id: 'scavenger-hunt',
     label: 'Social Media Scavenger Hunt',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'patreon-milestone',
     label: 'Supporter Milestone',
-    icon: '/platforms/patreon.svg'
+    platformId: 'patreon'
   },
   {
     id: 'tumblr-follow',
     label: 'Tumblr Follow Blog',
-    icon: '/platforms/tumblr.svg'
+    platformId: 'tumblr'
   },
   {
     id: 'newsletter-sub',
     label: 'Newsletter Subscribe',
-    icon: '/platforms/google.svg'
+    platformId: 'google'
   },
   {
     id: 'pinterest-board',
     label: 'Board Follower Giveaway',
-    icon: '/platforms/pinterest.svg'
+    platformId: 'pinterest'
   },
   {
     id: 'milestone-10k',
     label: '10K Followers Celebration',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'product-launch',
     label: 'Product Launch Contest',
-    icon: '/platforms/producthunt.svg'
+    platformId: 'producthunt'
   },
   {
     id: 'snapchat-story',
     label: 'Story View Contest',
-    icon: '/platforms/snapchat.svg'
+    platformId: 'snapchat'
   },
   {
     id: 'website-visit',
     label: 'Website Traffic Boost',
-    icon: '/platforms/google.svg'
+    platformId: 'google'
   },
   {
     id: 'milestone-50k',
     label: '50K Subscribers Milestone',
-    icon: '/platforms/youtube.svg'
+    platformId: 'youtube'
   },
-  { id: 'tumblr-reblog', label: 'Reblog & Win', icon: '/platforms/tumblr.svg' },
+  { id: 'tumblr-reblog', label: 'Reblog & Win', platformId: 'tumblr' },
   {
     id: 'gaming-tournament',
     label: 'Gaming Tournament',
-    icon: '/platforms/twitch.svg'
+    platformId: 'twitch'
   },
   {
     id: 'product-upvote',
     label: 'Product Hunt Upvote',
-    icon: '/platforms/producthunt.svg'
+    platformId: 'producthunt'
   },
   {
     id: 'referral-contest',
     label: 'Referral Program',
-    icon: '/platforms/google.svg'
+    platformId: 'google'
   },
   {
     id: 'milestone-100k',
     label: '100K Community Celebration',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'esports-bracket',
     label: 'Esports Bracket Challenge',
-    icon: '/platforms/twitch.svg'
+    platformId: 'twitch'
   },
   {
     id: 'birthday-bash',
     label: 'Birthday Bash Giveaway',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'game-keys',
     label: 'Game Keys Giveaway',
-    icon: '/platforms/steam.svg'
+    platformId: 'steam'
   },
   {
     id: 'anniversary',
     label: 'Anniversary Special',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'console-giveaway',
     label: 'Gaming Console Giveaway',
-    icon: '/platforms/twitch.svg'
+    platformId: 'twitch'
   },
   {
     id: 'holiday-christmas',
     label: 'Christmas Giveaway',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'merch-drop',
     label: 'Limited Edition Merch',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'holiday-halloween',
     label: 'Halloween Contest',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'signed-item',
     label: 'Autographed Item Contest',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'holiday-valentine',
     label: "Valentine's Day Special",
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'mystery-box',
     label: 'Mystery Box Giveaway',
-    icon: '/platforms/youtube.svg'
+    platformId: 'youtube'
   },
-  { id: 'black-friday', label: 'Black Friday Deals', icon: '/platforms/x.svg' },
+  { id: 'black-friday', label: 'Black Friday Deals', platformId: 'x' },
   {
     id: 'bundle-deal',
     label: 'Product Bundle Contest',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'cyber-monday',
     label: 'Cyber Monday Contest',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'early-access',
     label: 'Early Access Pass',
-    icon: '/platforms/discord.svg'
+    platformId: 'discord'
   },
-  { id: 'new-year', label: 'New Year Giveaway', icon: '/platforms/x.svg' },
+  { id: 'new-year', label: 'New Year Giveaway', platformId: 'x' },
   {
     id: 'beta-tester',
     label: 'Beta Tester Recruitment',
-    icon: '/platforms/discord.svg'
+    platformId: 'discord'
   },
   {
     id: 'back-to-school',
     label: 'Back to School Contest',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'community-vote',
     label: 'Community Vote Contest',
-    icon: '/platforms/discord.svg'
+    platformId: 'discord'
   },
   {
     id: 'summer-giveaway',
     label: 'Summer Vacation Giveaway',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'poll-winner',
     label: 'Poll Winner Giveaway',
-    icon: '/platforms/x.svg'
+    platformId: 'x'
   },
   {
     id: 'user-generated',
     label: 'User Generated Content',
-    icon: '/platforms/instagram.svg'
+    platformId: 'instagram'
   },
   {
     id: 'testimonial-contest',
     label: 'Testimonial Contest',
-    icon: '/platforms/google.svg'
+    platformId: 'google'
   },
-  { id: 'review-reward', label: 'Review & Win', icon: '/platforms/google.svg' },
+  { id: 'review-reward', label: 'Review & Win', platformId: 'google' },
   {
     id: 'survey-entry',
     label: 'Survey Participation',
-    icon: '/platforms/google.svg'
+    platformId: 'google'
   },
   {
     id: 'feedback-form',
     label: 'Feedback Form Contest',
-    icon: '/platforms/google.svg'
+    platformId: 'google'
   },
   {
     id: 'loyalty-program',
     label: 'Loyalty Program Reward',
-    icon: '/platforms/google.svg'
+    platformId: 'google'
   },
   {
     id: 'vip-access',
     label: 'VIP Access Giveaway',
-    icon: '/platforms/discord.svg'
+    platformId: 'discord'
   },
   {
     id: 'exclusive-content',
     label: 'Exclusive Content Access',
-    icon: '/platforms/patreon.svg'
+    platformId: 'patreon'
   },
   {
     id: 'collab-contest',
     label: 'Creator Collaboration',
-    icon: '/platforms/youtube.svg'
+    platformId: 'youtube'
   },
   {
     id: 'charity-drive',
     label: 'Charity Fundraiser',
-    icon: '/platforms/twitch.svg'
+    platformId: 'twitch'
   },
   {
     id: 'donation-match',
     label: 'Donation Matching Contest',
-    icon: '/platforms/twitch.svg'
+    platformId: 'twitch'
   }
 ];
 
 interface TemplatePillProps {
   template: Template;
+  theme: 'light' | 'dark' | null;
 }
 
-const TemplatePill = ({ template }: TemplatePillProps) => {
+const TemplatePill = ({ template, theme }: TemplatePillProps) => {
+  const iconSrc = getPlatformIcon(template.platformId, theme);
+
   return (
     <div
       className={cn(
@@ -553,7 +557,7 @@ const TemplatePill = ({ template }: TemplatePillProps) => {
     >
       <div className="w-4 h-4 relative flex-shrink-0">
         <Image
-          src={template.icon}
+          src={iconSrc}
           alt={template.label}
           width={16}
           height={16}
@@ -569,10 +573,12 @@ const TemplatePill = ({ template }: TemplatePillProps) => {
 
 interface ScrollingTemplatesAnimationProps {
   className?: string;
+  theme: 'light' | 'dark';
 }
 
 export const ScrollingTemplatesAnimation = ({
-  className
+  className,
+  theme
 }: ScrollingTemplatesAnimationProps) => {
   const templatesPerRow = Math.ceil(TEMPLATES.length / 3);
 
@@ -586,7 +592,7 @@ export const ScrollingTemplatesAnimation = ({
 
   return (
     <div className={cn('relative w-full overflow-hidden', className)}>
-      <div className="flex flex-col gap-1 pt-1 pb-2">
+      <div className="flex flex-col gap-1 py-2">
         <div className="relative">
           <motion.div
             className="flex gap-1"
@@ -603,6 +609,7 @@ export const ScrollingTemplatesAnimation = ({
               <TemplatePill
                 key={`row1-${template.id}-${index}`}
                 template={template}
+                theme={theme}
               />
             ))}
           </motion.div>
@@ -624,6 +631,7 @@ export const ScrollingTemplatesAnimation = ({
               <TemplatePill
                 key={`row2-${template.id}-${index}`}
                 template={template}
+                theme={theme}
               />
             ))}
           </motion.div>
@@ -645,6 +653,7 @@ export const ScrollingTemplatesAnimation = ({
               <TemplatePill
                 key={`row3-${template.id}-${index}`}
                 template={template}
+                theme={theme}
               />
             ))}
           </motion.div>

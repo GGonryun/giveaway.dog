@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { getPlatformIcon, type PlatformId } from '@/lib/platform-icons';
 
 const SIZE_PRESETS = {
   sm: {
@@ -33,39 +34,39 @@ const SIZE_PRESETS = {
 
 interface Platform {
   name: string;
-  icon: string;
+  id: PlatformId;
 }
 
 const INNER_RING_PLATFORMS: Platform[] = [
-  { name: 'Twitter/X', icon: '/platforms/x.svg' },
-  { name: 'Instagram', icon: '/platforms/instagram.svg' },
-  { name: 'Twitch', icon: '/platforms/twitch.svg' },
-  { name: 'Discord', icon: '/platforms/discord.svg' },
-  { name: 'Bluesky', icon: '/platforms/bluesky.svg' },
-  { name: 'Reddit', icon: '/platforms/reddit.svg' },
-  { name: 'YouTube', icon: '/platforms/youtube.svg' },
-  { name: 'TikTok', icon: '/platforms/tiktok.svg' }
+  { name: 'Twitter/X', id: 'x' },
+  { name: 'Instagram', id: 'instagram' },
+  { name: 'Twitch', id: 'twitch' },
+  { name: 'Discord', id: 'discord' },
+  { name: 'Bluesky', id: 'bluesky' },
+  { name: 'Reddit', id: 'reddit' },
+  { name: 'YouTube', id: 'youtube' },
+  { name: 'TikTok', id: 'tiktok' }
 ];
 
 const MIDDLE_RING_PLATFORMS: Platform[] = [
-  { name: 'Facebook', icon: '/platforms/facebook.svg' },
-  { name: 'LinkedIn', icon: '/platforms/linkedin.svg' },
-  { name: 'GitHub', icon: '/platforms/github.svg' },
-  { name: 'Steam', icon: '/platforms/steam.svg' },
-  { name: 'Spotify', icon: '/platforms/spotify.svg' },
-  { name: 'Patreon', icon: '/platforms/patreon.svg' },
-  { name: 'Google', icon: '/platforms/google.svg' }
+  { name: 'Facebook', id: 'facebook' },
+  { name: 'LinkedIn', id: 'linkedin' },
+  { name: 'GitHub', id: 'github' },
+  { name: 'Steam', id: 'steam' },
+  { name: 'Spotify', id: 'spotify' },
+  { name: 'Patreon', id: 'patreon' },
+  { name: 'Google', id: 'google' }
 ];
 
 const OUTER_RING_PLATFORMS: Platform[] = [
-  { name: 'Kick', icon: '/platforms/kick.svg' },
-  { name: 'Snapchat', icon: '/platforms/snapchat.svg' },
-  { name: 'Threads', icon: '/platforms/threads.svg' },
-  { name: 'Pinterest', icon: '/platforms/pinterest.svg' },
-  { name: 'Tumblr', icon: '/platforms/tumblr.svg' },
-  { name: 'Coinbase', icon: '/platforms/coinbase.svg' },
-  { name: 'Product Hunt', icon: '/platforms/producthunt.svg' },
-  { name: 'Twitter', icon: '/platforms/x.svg' }
+  { name: 'Kick', id: 'kick' },
+  { name: 'Snapchat', id: 'snapchat' },
+  { name: 'Threads', id: 'threads' },
+  { name: 'Pinterest', id: 'pinterest' },
+  { name: 'Tumblr', id: 'tumblr' },
+  { name: 'Coinbase', id: 'coinbase' },
+  { name: 'Product Hunt', id: 'producthunt' },
+  { name: 'Twitter', id: 'x' }
 ];
 
 interface OrbitingPlatformsProps {
@@ -73,6 +74,7 @@ interface OrbitingPlatformsProps {
   size?: 'sm' | 'md' | 'lg';
   centerImage?: string;
   showCenterLogo?: boolean;
+  theme: 'light' | 'dark';
 }
 
 interface OrbitRingProps {
@@ -81,6 +83,7 @@ interface OrbitRingProps {
   iconSize: number;
   animation: 'orbit-cw' | 'orbit-ccw';
   duration: number;
+  theme: 'light' | 'dark';
 }
 
 const OrbitRing = ({
@@ -88,7 +91,8 @@ const OrbitRing = ({
   radius,
   iconSize,
   animation,
-  duration
+  duration,
+  theme
 }: OrbitRingProps) => {
   return (
     <div
@@ -105,6 +109,7 @@ const OrbitRing = ({
       {platforms.map((platform, index) => {
         const angle = (360 / platforms.length) * index;
         const randomRotation = Math.floor(Math.random() * 360);
+        const iconSrc = getPlatformIcon(platform.id, theme);
         return (
           <div
             key={`${platform.name}-${index}`}
@@ -129,7 +134,7 @@ const OrbitRing = ({
               }}
             >
               <Image
-                src={platform.icon}
+                src={iconSrc}
                 alt={platform.name}
                 width={iconSize}
                 height={iconSize}
@@ -147,7 +152,8 @@ export const OrbitingPlatforms = ({
   className,
   size = 'md',
   centerImage = '/taki.png',
-  showCenterLogo = true
+  showCenterLogo = true,
+  theme
 }: OrbitingPlatformsProps) => {
   const preset = SIZE_PRESETS[size];
 
@@ -187,6 +193,7 @@ export const OrbitingPlatforms = ({
           iconSize={preset.icon}
           animation="orbit-cw"
           duration={52}
+          theme={theme}
         />
 
         <OrbitRing
@@ -195,6 +202,7 @@ export const OrbitingPlatforms = ({
           iconSize={preset.icon}
           animation="orbit-ccw"
           duration={60}
+          theme={theme}
         />
 
         <OrbitRing
@@ -203,6 +211,7 @@ export const OrbitingPlatforms = ({
           iconSize={preset.icon}
           animation="orbit-cw"
           duration={80}
+          theme={theme}
         />
 
         {showCenterLogo && (
@@ -229,13 +238,19 @@ export const OrbitingPlatforms = ({
   );
 };
 
-export const OrbitingPlatformsSection = () => {
+interface OrbitingPlatformsSectionProps {
+  theme: 'light' | 'dark';
+}
+
+export const OrbitingPlatformsSection = ({
+  theme
+}: OrbitingPlatformsSectionProps) => {
   return (
     <div className="w-full flex items-center justify-center">
       <div className="relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <div className="relative flex-1 flex items-center justify-center overflow-hidden">
           <div className="absolute -top-20 left-1/2 -translate-x-1/2">
-            <OrbitingPlatforms size="lg" showCenterLogo={false} />
+            <OrbitingPlatforms size="lg" showCenterLogo={false} theme={theme} />
           </div>
 
           {/* Manually positioned Taki logo - stays above gradient */}

@@ -11,6 +11,7 @@ import { UserMetricsCollector } from '@/components/user-metrics-collector';
 import { environment } from '@/lib/environment';
 import { BLUESKY_EMBED_SCRIPT_URL } from '@/lib/bluesky/embed';
 import { TurnstileProvider } from '@/lib/turnstile/provider';
+import { THEME_STORAGE_KEY, DEFAULT_THEME } from '@/lib/theme/constants';
 
 const figtree = Figtree({
   subsets: ['latin'],
@@ -68,9 +69,9 @@ export default async function RootLayout({
       <body>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme={DEFAULT_THEME}
           enableSystem
-          storageKey="giveaway-theme"
+          storageKey={THEME_STORAGE_KEY}
           disableTransitionOnChange
         >
           <SessionProvider>
