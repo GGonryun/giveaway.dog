@@ -9,6 +9,14 @@ export const getUserReferral = procedure()
   .authorization({ required: false })
   .input(createReferralSchema.omit({ taskId: true }))
   .output(userReferralSchema.optional())
+  .cache(({ user, input }) => {
+    if (!user?.id) return undefined; // Don't cache if no user
+    return {
+      keyParts: [`user-referral-${user.id}-${input.sweepstakesId}`],
+      tags: [`user-${user.id}-referral`, `sweepstakes-${input.sweepstakesId}-referral`],
+      revalidate: 86400 // Cache for 24 hours
+    };
+  })
   .handler(async ({ db, user, input: { sweepstakesId } }) => {
     if (!user?.id) return undefined;
 

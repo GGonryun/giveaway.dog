@@ -9,6 +9,10 @@ const createReferralCode = procedure()
   .authorization({ required: true })
   .input(createReferralSchema)
   .output(userReferralSchema)
+  .invalidate(async ({ user, input }) => [
+    `user-${user.id}-referral`,
+    `sweepstakes-${input.sweepstakesId}-referral`
+  ])
   .handler(async ({ db, user, input: { taskId, sweepstakesId } }) => {
     const participant = await db.sweepstakesParticipant.findUnique({
       where: {
