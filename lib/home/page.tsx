@@ -10,11 +10,10 @@ export const HomePage = async () => {
     <div className="flex flex-col w-full">
       <Hero />
       {/* <FeaturesSection /> */}
-
       <IntegrationsSection />
 
       <PricingSection />
-      <div className="container">
+      <div className="container py-16 md:py-24">
         <PricingCTA />
       </div>
     </div>

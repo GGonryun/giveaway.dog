@@ -6,6 +6,8 @@ import { ScrollingTemplatesAnimation } from '../marketing/scrolling-templates-an
 import { UnifiedPlatformSection } from '../marketing/unified-platform-visual';
 import { MarketingHeader } from '@/components/patterns/shared';
 import { getServerTheme } from '../theme/get-server-theme';
+import { BotCarouselSection } from '../marketing/bot-carousel';
+import { EntryMethodsCarouselSection } from '../marketing/entry-methods-carousel';
 
 export const IntegrationsSection = async () => {
   const theme = await getServerTheme();
@@ -37,9 +39,11 @@ export const IntegrationsSection = async () => {
       <ScrollingTemplatesAnimation initialTheme={theme} />
       <section className="w-full flex items-center justify-center">
         <div className="container mx-auto px-4 py-8 md:py-12">
-          <div className="grid lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-3 max-w-5xl mx-auto">
             <OrbitingPlatformsSection initialTheme={theme} />
             <UnifiedPlatformSection />
+            <BotCarouselSection initialTheme={theme} />
+            <EntryMethodsCarouselSection />
           </div>
         </div>
       </section>
