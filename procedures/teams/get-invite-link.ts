@@ -17,7 +17,7 @@ const getInviteLink = procedure()
     z.object({
       code: z.string(),
       url: z.string(),
-      expiresAt: z.date().nullable()
+      expiresAt: z.coerce.date().nullable()
     })
   )
   .handler(async ({ db, user, input }) => {

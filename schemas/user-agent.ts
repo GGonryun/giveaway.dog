@@ -37,7 +37,7 @@ export const USER_AGENT_DEVICE_ICON: Record<DeviceTypeSchema, LucideIcon> = {
 
 export const userDeviceActivitySchema = userAgentSchema.extend({
   count: z.number(),
-  lastUsed: z.date()
+  lastUsed: z.coerce.date()
 });
 
 export type UserDeviceActivitySchema = z.infer<typeof userDeviceActivitySchema>;

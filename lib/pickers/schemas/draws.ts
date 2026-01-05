@@ -13,7 +13,7 @@ export type PickerWinnerSchema = z.infer<typeof pickerWinnerSchema>;
 
 export const pickerDrawSchema = z.object({
   drawId: z.string(), // serves as the verification hash
-  drawnAt: z.date(),
+  drawnAt: z.coerce.date(),
   drawNumber: z.number().int().positive(),
   eligibleEntries: z.number().int().nonnegative(),
   winner: pickerWinnerSchema,

@@ -163,8 +163,8 @@ export const userQualitySchema = z.object({
   userId: z.string(),
   score: z.number(),
   metrics: userScoreMetricsSchema,
-  createdAt: z.date(),
-  updatedAt: z.date()
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date()
 });
 
 export type UserQualitySchema = z.infer<typeof userQualitySchema>;

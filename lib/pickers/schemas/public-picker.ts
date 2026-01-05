@@ -26,9 +26,9 @@ export const pickerJobSchema = z.object({
   parentId: z.string().nullable(),
   type: z.nativeEnum(PickerJobType),
   status: z.nativeEnum(PickerJobStatus),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  runAt: z.date().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  runAt: z.coerce.date().nullable(),
   data: z.any().nullable()
 });
 
@@ -47,8 +47,8 @@ export const publicPickerSchema = z.object({
   id: z.string(),
   status: z.nativeEnum(PickerStatus),
   type: z.nativeEnum(PickerType),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
   form: pickerFormSchema({ validateTiming: false }),
   draws: pickerDrawsSchema,
   jobs: z.array(pickerJobSchema),

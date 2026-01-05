@@ -36,7 +36,7 @@ export type UserProfileSchema = z.infer<typeof userProfileSchema>;
 
 export const userSchema = userProfileSchema.extend({
   emailVerified: z.boolean().nullable(),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
   featureFlags: userFeatureFlagKeySchema.array().optional(),
   isAnonymous: z.boolean()
 });

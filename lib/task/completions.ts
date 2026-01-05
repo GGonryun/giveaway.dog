@@ -5,7 +5,7 @@ import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 
 export const taskCompletionSchema = z.object({
   id: z.string(),
-  completedAt: z.date(),
+  completedAt: z.coerce.date(),
   status: z.nativeEnum(CompletionStatus),
   proof: z.unknown(),
   task: taskSchema,

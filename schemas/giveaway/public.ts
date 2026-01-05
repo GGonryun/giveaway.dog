@@ -11,8 +11,8 @@ export const publicSweepstakesSchema = z.object({
   name: z.string(),
   description: z.string(),
   banner: z.string().optional(),
-  startDate: z.date(),
-  endDate: z.date(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
   prizes: z.number(),
   host: z.object({
     id: z.string(),

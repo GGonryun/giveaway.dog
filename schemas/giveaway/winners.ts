@@ -12,7 +12,7 @@ export const winnerLeaderboardSchema = z.object({
       sweepstakesSlug: z.string(),
       teamSlug: z.string(),
       prizeName: z.string().nullable(),
-      wonAt: z.date()
+      wonAt: z.coerce.date()
     })
   )
 });

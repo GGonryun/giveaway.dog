@@ -19,7 +19,7 @@ const getTeamInvitations = procedure()
         id: z.string(),
         email: z.string(),
         role: z.nativeEnum(TeamRole),
-        createdAt: z.date()
+        createdAt: z.coerce.date()
       })
     )
   )

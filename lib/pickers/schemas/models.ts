@@ -15,15 +15,15 @@ export const pickerSchema = z.object({
   twitterPostUrl: z.string().url(),
   twitterPostId: z.string(),
   twitterAuthor: z.string(),
-  startDate: z.date(),
-  endDate: z.date(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
   timeZone: z.string(),
   numberOfWinners: z.number().int().positive(),
-  syncStartedAt: z.date().nullable(),
-  syncCompletedAt: z.date().nullable(),
+  syncStartedAt: z.coerce.date().nullable(),
+  syncCompletedAt: z.coerce.date().nullable(),
   totalEntriesProcessed: z.number().int().nonnegative().default(0),
-  createdAt: z.date(),
-  updatedAt: z.date()
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date()
 });
 
 export type Picker = z.infer<typeof pickerSchema>;
@@ -51,9 +51,9 @@ export const pickerEntrySchema = z.object({
   twitterDisplayName: z.string(),
   twitterProfileImage: z.string().url().nullable(),
   actionType: pickerActionType,
-  timestamp: z.date(),
+  timestamp: z.coerce.date(),
   filtered: z.boolean(),
-  createdAt: z.date()
+  createdAt: z.coerce.date()
 });
 
 export type PickerEntry = z.infer<typeof pickerEntrySchema>;
@@ -82,7 +82,7 @@ export const pickerBlacklistSchema = z.object({
   twitterUserId: z.string(),
   twitterUsername: z.string(),
   reason: z.string().optional(),
-  createdAt: z.date()
+  createdAt: z.coerce.date()
 });
 
 export type PickerBlacklist = z.infer<typeof pickerBlacklistSchema>;
@@ -91,7 +91,7 @@ export const pickerDrawSchema = z.object({
   id: z.string(),
   pickerId: z.string(),
   drawNumber: z.number().int().positive(),
-  drawnAt: z.date(),
+  drawnAt: z.coerce.date(),
   drawnBy: z.string(),
   drawnByUsername: z.string().nullable(),
   filterSettingsSnapshot: pickerFilterSettingsSchema,
@@ -113,9 +113,9 @@ export const pickerWinnerSchema = z.object({
   twitterProfileImage: z.string().url().nullable(),
   verified: z.boolean(),
   position: z.number().int().positive(),
-  selectedAt: z.date(),
+  selectedAt: z.coerce.date(),
   rerolled: z.boolean().default(false),
-  rerolledAt: z.date().nullable(),
+  rerolledAt: z.coerce.date().nullable(),
   rerollReason: z.string().nullable()
 });
 

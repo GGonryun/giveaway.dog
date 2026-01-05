@@ -19,7 +19,7 @@ const getTeamMembers = procedure()
         id: z.string(),
         userId: z.string(),
         role: z.nativeEnum(TeamRole),
-        createdAt: z.date(),
+        createdAt: z.coerce.date(),
         user: z.object({
           id: z.string(),
           name: z.string().nullable(),
