@@ -32,12 +32,12 @@ export function IntegrationLandingPage({
       : platformIcon.light;
 
   return (
-    <div className="my-auto mx-auto flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="my-auto mx-auto flex items-center justify-center">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* Platform Icon */}
           <div className="flex justify-center mb-8">
-            <div className="relative w-24 h-24 rounded-2xl bg-background border-2 border-border shadow-lg flex items-center justify-center">
+            <div className="relative w-24 h-24 rounded-2x border-2 border-border shadow-lg flex items-center justify-center">
               <img
                 src={iconSrc}
                 alt={platformName}
@@ -56,7 +56,6 @@ export function IntegrationLandingPage({
             description={`Save time and grow your ${platformName} presence by scheduling your giveaways in advance. Automate your growth with verifiable entries and bot detection.`}
           />
 
-          {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
             <Button asChild size="lg" className="gap-2 text-lg px-8">
               <Link href="/login">
