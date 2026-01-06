@@ -60,35 +60,20 @@ export const PickerPublishConfirmationModal: React.FC<
                   </AlertDescription>
                 </Alert>
               ) : (
-                <>
-                  <Alert variant="info">
-                    <InfoIcon />
-                    <AlertTitle>
-                      <strong>Note:</strong>
-                    </AlertTitle>
-                    <AlertDescription>
-                      <span>
-                        Once published, a picker will start synchronizing
-                        entries from the connected source. This can{' '}
-                        <strong>take a few hours</strong>. You will be notified{' '}
-                        <strong>via email</strong> when the process is complete.
-                      </span>
-                    </AlertDescription>
-                  </Alert>
-                  <Alert variant="destructive">
-                    <InfoIcon />
-                    <AlertTitle>
-                      <strong>Warning:</strong>
-                    </AlertTitle>
-                    <AlertDescription>
-                      <span>
-                        Your picker <strong>cannot be changed</strong> after
-                        publishing. Make sure to review all settings before
-                        proceeding.
-                      </span>
-                    </AlertDescription>
-                  </Alert>
-                </>
+                <Alert variant="info">
+                  <InfoIcon />
+                  <AlertTitle>
+                    <strong>Note:</strong>
+                  </AlertTitle>
+                  <AlertDescription>
+                    <span>
+                      Once published, a picker will start synchronizing entries
+                      from the connected source. This can{' '}
+                      <strong>take a few hours</strong>. You will be notified{' '}
+                      <strong>via email</strong> when the process is complete.
+                    </span>
+                  </AlertDescription>
+                </Alert>
               )}
             </div>
           </DialogDescription>
@@ -123,7 +108,7 @@ export const PickerPublishConfirmationModal: React.FC<
                 ) : (
                   <>
                     <RocketIcon className="h-4 w-4 mr-2" />
-                    Publish Picker
+                    Publish
                   </>
                 )}
               </Button>

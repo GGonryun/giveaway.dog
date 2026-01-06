@@ -33,7 +33,8 @@ import {
 
 import {
   PICKER_STATUS_LABELS,
-  PICKER_STATUS_DESCRIPTIONS
+  PICKER_STATUS_DESCRIPTIONS,
+  EDITABLE_PICKER_STATUS
 } from '@/lib/pickers/schemas/status';
 import { cn } from '@/lib/utils';
 import { PickerTwitterPreviewEmbed } from './picker-twitter-preview';
@@ -186,7 +187,11 @@ export const PickerOverview: React.FC<{
                 <Pencil className="h-4 w-4" />
               </Button>
             </div>
-            <PickerOverviewMenu picker={picker} hasWinners={hasWinners} />
+            <PickerOverviewMenu
+              picker={picker}
+              hasWinners={hasWinners}
+              teamSlug={teamSlug}
+            />
           </div>
 
           <div
@@ -583,120 +588,73 @@ const IntegrationInfoRow: React.FC<{
 const PickerOverviewMenu: React.FC<{
   picker: PublicPickerSchema;
   hasWinners: boolean;
-}> = ({ picker, hasWinners }) => {
+  teamSlug: string;
+}> = ({ picker, hasWinners, teamSlug }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
+  const isEditable = EDITABLE_PICKER_STATUS[picker.status];
+  const router = useRouter();
 
   return (
     <>
-      <div className="block sm:hidden">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon-sm">
-              <MoreVertical />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onSelect={() => setPreviewOpen(true)}>
-              <Eye className="h-4 w-4 mr-2" />
-              Preview Post
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link
-                href={picker.form.setup.postUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                prefetch={false}
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Open on X
-              </Link>
-            </DropdownMenuItem>
-            {hasWinners && (
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/draws/${picker.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Draw Verification
-                </Link>
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-          <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-0">
-            <DialogHeader className="px-6 pt-6 pb-2">
-              <DialogTitle>Post Preview</DialogTitle>
-            </DialogHeader>
-            <div className="px-6 pb-6">
-              <PickerTwitterPreviewEmbed
-                postUrl={picker.form.setup.postUrl}
-                className="border rounded-lg px-2"
-              />
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-      <div className="hidden sm:flex items-center gap-2">
-        <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 w-8 sm:w-auto p-0 sm:px-3 [&_svg]:mr-0"
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon">
+            <MoreVertical className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {isEditable && (
+            <DropdownMenuItem
+              onSelect={() =>
+                router.push(`/app/${teamSlug}/pickers/${picker.id}/edit`)
+              }
             >
-              <Eye className="h-4 w-4 mr-2" />
-              <span className="hidden lg:inline">Preview Post</span>
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-0">
-            <DialogHeader className="px-6 pt-6 pb-2">
-              <DialogTitle>Post Preview</DialogTitle>
-            </DialogHeader>
-            <div className="px-6 pb-6">
-              <PickerTwitterPreviewEmbed
-                postUrl={picker.form.setup.postUrl}
-                className="border rounded-lg px-2"
-              />
-            </div>
-          </DialogContent>
-        </Dialog>
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-8 w-8 sm:w-auto p-0 sm:px-3 [&_svg]:mr-0"
-          asChild
-        >
-          <Link
-            href={picker.form.setup.postUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            prefetch={false}
-          >
-            <SocialXIcon />
-            <span className="hidden lg:inline">Open on X</span>
-          </Link>
-        </Button>
-        {hasWinners && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-8 w-8 sm:w-auto p-0 sm:px-3 [&_svg]:mr-0"
-            asChild
-          >
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit Picker
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem onSelect={() => setPreviewOpen(true)}>
+            <Eye className="h-4 w-4 mr-2" />
+            Preview Post
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <Link
-              href={`/draws/${picker.id}`}
+              href={picker.form.setup.postUrl}
               target="_blank"
               rel="noopener noreferrer"
+              prefetch={false}
             >
               <ExternalLink className="h-4 w-4 mr-2" />
-              <span className="hidden lg:inline">Draw Verification</span>
+              Open on X
             </Link>
-          </Button>
-        )}
-      </div>
+          </DropdownMenuItem>
+          {hasWinners && (
+            <DropdownMenuItem asChild>
+              <Link
+                href={`/draws/${picker.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Draw Verification
+              </Link>
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="px-6 pt-6 pb-2">
+            <DialogTitle>Post Preview</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-6">
+            <PickerTwitterPreviewEmbed
+              postUrl={picker.form.setup.postUrl}
+              className="border rounded-lg px-2"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

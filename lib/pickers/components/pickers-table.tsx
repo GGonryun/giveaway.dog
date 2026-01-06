@@ -118,11 +118,14 @@ export function PickersTable({ data }: PickersTableProps) {
                           </DropdownMenuItem>
                         )}
                         {isEditable && (
-                          <DropdownMenuItem asChild>
-                            <Link href={router.editRoute(item.pickerId)}>
-                              <Edit className="h-4 w-4 mr-2" />
-                              Edit
-                            </Link>
+                          <DropdownMenuItem
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.navigateToEdit(item.pickerId);
+                            }}
+                          >
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuSeparator />

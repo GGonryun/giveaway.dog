@@ -43,8 +43,8 @@ export const PICKER_FILTER_STATUS_OPTIONS: Record<PickerFilterStatus, string> =
 
 export const EDITABLE_PICKER_STATUS: Record<PickerStatus, boolean> = {
   DRAFT: true,
-  PROCESSING: false,
-  PROCESSED: false,
+  PROCESSING: true,
+  PROCESSED: true,
   COMPLETE: false,
   CANCELLED: false,
   FAILED: false,

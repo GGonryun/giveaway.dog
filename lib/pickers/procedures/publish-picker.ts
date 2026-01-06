@@ -12,6 +12,18 @@ export const publishPicker = procedure()
   .input(publishPickerInputSchema)
   .handler(async ({ input, db }) => {
     await db.$transaction(async (tx) => {
+      const currentPicker = await tx.picker.findUnique({
+        where: {
+          id: input.pickerId
+        },
+        select: {
+          status: true
+        }
+      });
+
+      const wasAlreadyProcessing =
+        currentPicker?.status === PickerStatus.PROCESSING;
+
       await tx.picker.update({
         where: {
           id: input.pickerId
@@ -30,13 +42,15 @@ export const publishPicker = procedure()
         }
       });
 
-      await tx.pickerJob.create({
-        data: publishPickerJobs(input)
-      });
+      if (!wasAlreadyProcessing) {
+        await tx.pickerJob.create({
+          data: publishPickerJobs(input)
+        });
 
-      await tx.pickerAuditLog.createMany({
-        data: publishPickerAuditLogs(input)
-      });
+        await tx.pickerAuditLog.createMany({
+          data: publishPickerAuditLogs(input)
+        });
+      }
     });
 
     return {
