@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { GiveawayFilters } from '@/lib/filters/giveaway-filters';
 
-export const revalidate = 60; // 1 minutes in seconds, must be statically analyzable
+export const revalidate = 300; // 5 minutes in seconds
 
 export const metadata: Metadata = {
   title: 'Browse Active Giveaways & Contests | Giveaway.dog',
