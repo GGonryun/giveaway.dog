@@ -31,6 +31,7 @@ import { DEFAULT_DESIGN_DATA } from '@/schemas/giveaway/defaults';
 
 interface UseTemplateModalProps {
   open: boolean;
+  loading?: boolean;
   onOpenChange: (open: boolean) => void;
   template: TemplateListItemSchema | null;
   onUse: (template: TemplateListItemSchema) => void;
@@ -40,6 +41,7 @@ interface UseTemplateModalProps {
 
 export function UseTemplateModal({
   open,
+  loading,
   onOpenChange,
   template,
   onUse,
@@ -49,6 +51,8 @@ export function UseTemplateModal({
   const [isEditLoading, setIsEditLoading] = useState(false);
 
   if (!template) return null;
+
+  const isLoading = loading || isEditLoading;
 
   const {
     isCustom,
@@ -103,49 +107,83 @@ export function UseTemplateModal({
           />
         </div>
 
-        <DialogFooter className="px-6 py-4 border-t bg-background shrink-0 rounded-b-lg gap-2">
+        <DialogFooter className="px-6 py-4 border-t bg-background shrink-0 rounded-b-lg flex-row justify-between gap-2">
           {isCustom ? (
-            <Button
-              onClick={() => {
-                setIsEditLoading(true);
-                onEdit?.(template);
-              }}
-              size="sm"
-              variant="outline"
-              className="w-full sm:w-auto"
-              disabled={isEditLoading}
-            >
-              {isEditLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Edit className="mr-2" />
-              )}
-              {isEditLoading ? 'Loading...' : 'Edit Template'}
-            </Button>
+            <>
+              <Button
+                onClick={() => {
+                  setIsEditLoading(true);
+                  onEdit?.(template);
+                }}
+                size="sm"
+                variant="outline"
+                className="w-full sm:w-auto"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Edit className="mr-2" />
+                )}
+                {isLoading ? 'Loading...' : 'Edit Template'}
+              </Button>
+              <Button
+                onClick={() => {
+                  onUse(template);
+                }}
+                size="sm"
+                disabled={isLoading}
+                className="w-full sm:w-auto"
+              >
+                {isLoading ? (
+                  <>
+                    Loading... <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    Use Template <ArrowRight />
+                  </>
+                )}
+              </Button>
+            </>
           ) : (
-            <Button
-              onClick={() => {
-                onCustomize(template);
-                onOpenChange(false);
-              }}
-              size="sm"
-              variant="outline"
-              className="w-full sm:w-auto"
-            >
-              <SparklesIcon className="mr-2" />
-              Customize Template
-            </Button>
+            <>
+              <Button
+                onClick={() => {
+                  onCustomize(template);
+                }}
+                size="sm"
+                variant="outline"
+                className="w-full sm:w-auto"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <SparklesIcon className="mr-2" />
+                )}
+                {isLoading ? 'Loading...' : 'Customize Template'}
+              </Button>
+              <Button
+                onClick={() => {
+                  onUse(template);
+                }}
+                size="sm"
+                disabled={isLoading}
+                className="w-full sm:w-auto"
+              >
+                {isLoading ? (
+                  <>
+                    Loading... <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    Use Template <ArrowRight />
+                  </>
+                )}
+              </Button>
+            </>
           )}
-          <Button
-            onClick={() => {
-              onUse(template);
-              onOpenChange(false);
-            }}
-            size="sm"
-            className="w-full sm:w-auto"
-          >
-            Use Template <ArrowRight />
-          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

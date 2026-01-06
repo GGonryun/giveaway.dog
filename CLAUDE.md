@@ -76,7 +76,6 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 app/
 ├── (auth)/
 │   ├── login/
-│   ├── signup/
 │   └── logout/
 ├── (marketing)/
 │   ├── browse/ (for participants)

@@ -8,13 +8,11 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import {
   toQualityType,
-  QUALITY_LABELS,
   QUALITY_DESCRIPTION,
   QUALITY_BADGE_RISK,
   QUALITY_BADGE_TEXT,
   QUALITY_BADGE_VARIANT,
-  QUALITY_ICON,
-  QualityType
+  QUALITY_ICON
 } from '@/schemas/quality';
 
 interface BotUser {
@@ -170,7 +168,7 @@ export const BotCarouselSection = ({
     <div className="w-full flex items-center justify-center">
       <div className="bg-background relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <div className="relative flex-1 flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 -top-50">
+          <div className="absolute inset-0 -top-44">
             <BotCarousel />
           </div>
 
@@ -190,13 +188,6 @@ export const BotCarouselSection = ({
             your giveaways. Protect your audience, maintain fair play, and grow
             your community with verified engagement.
           </p>
-          <Button
-            variant="outline"
-            className="-ml-1 mt-2"
-            onClick={() => alert('Coming soon!')}
-          >
-            Learn More
-          </Button>
         </div>
       </div>
     </div>

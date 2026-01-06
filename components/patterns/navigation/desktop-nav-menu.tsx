@@ -6,9 +6,12 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 export const DesktopNavMenu: React.FC = () => {
   const pathname = usePathname();
@@ -30,6 +33,49 @@ export const DesktopNavMenu: React.FC = () => {
           >
             Giveaways
           </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger
+            className={cn(pathname?.startsWith('/learn') && 'underline')}
+          >
+            Learn
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[280px] gap-2 p-2">
+              <li>
+                <Link
+                  href="/learn/integrations"
+                  className={cn(
+                    'block select-none space-y-1 rounded-sm p-2.5 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+                    isActiveRoute('/learn/integrations') && 'bg-accent'
+                  )}
+                >
+                  <div className="text-xs font-medium leading-none">
+                    Integrations
+                  </div>
+                  <p className="line-clamp-2 text-xs leading-snug text-muted-foreground mt-1">
+                    Connect with your favorite platforms
+                  </p>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/learn/templates"
+                  className={cn(
+                    'block select-none space-y-1 rounded-md p-2.5 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+                    isActiveRoute('/learn/templates') && 'bg-accent'
+                  )}
+                >
+                  <div className="text-xs font-medium leading-none">
+                    Templates
+                  </div>
+                  <p className="line-clamp-2 text-xs leading-snug text-muted-foreground mt-1">
+                    Browse pre-made giveaway templates
+                  </p>
+                </Link>
+              </li>
+            </ul>
+          </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink

@@ -11,7 +11,8 @@ import {
   Music,
   ShieldCheck,
   ImportIcon,
-  ZapIcon
+  ZapIcon,
+  ClockIcon
 } from 'lucide-react';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
@@ -22,6 +23,7 @@ import { SocialFacebookIcon } from '../integrations/components/icons/facebook-ic
 import { SocialTwitchIcon } from '../integrations/components/icons/twitch-icon';
 import { SocialKickIcon } from '../integrations/components/icons/kick-icon';
 import { SocialSteamIcon } from '../integrations/components/icons/steam-icon';
+import { SocialTikTokIcon } from '../integrations/components/icons/tiktok-icon';
 
 interface EntryMethod {
   id: string;
@@ -44,8 +46,8 @@ const entryMethods: EntryMethod[] = [
   {
     id: 'twitter-retweet',
     icon: SocialXIcon,
-    label: 'Repost',
-    enabled: true,
+    label: 'Repost on X',
+    enabled: false,
     theme: 'bg-black text-white',
     badge: 'import'
   },
@@ -73,11 +75,19 @@ const entryMethods: EntryMethod[] = [
     badge: 'automatic'
   },
   {
+    id: 'timed-action',
+    icon: ClockIcon,
+    label: 'Bonus Entries',
+    enabled: false,
+    theme: 'bg-purple-500 text-white'
+  },
+  {
     id: 'steam-wishlist',
     icon: SocialSteamIcon,
     label: 'Wishlist a Game',
     enabled: true,
-    theme: 'bg-steam-1 text-white'
+    theme: 'bg-steam-1 text-white',
+    badge: 'automatic'
   },
   {
     id: 'youtube-subscribe',
@@ -87,27 +97,34 @@ const entryMethods: EntryMethod[] = [
     theme: 'bg-youtube-1 text-white'
   },
   {
-    id: 'facebook-follow',
-    icon: SocialFacebookIcon,
-    label: 'Facebook Follow',
+    id: 'tiktok-share',
+    icon: SocialTikTokIcon,
+    label: 'Share on TikTok',
     enabled: false,
-    theme: 'bg-facebook-1 text-white',
+    theme: 'bg-black text-white',
     badge: 'verified'
   },
   {
-    id: 'instagram-like',
+    id: 'instagram-comment',
     icon: SocialInstagramIcon,
-    label: 'Instagram Like',
+    label: 'Comment on Instagram',
     enabled: true,
     theme: 'bg-instagram-1 text-white',
-    badge: 'verified'
+    badge: 'import'
   },
   {
     id: 'kick-follow',
     icon: SocialKickIcon,
     label: 'Follow on Kick',
     enabled: true,
-    theme: 'bg-kick-1 text-white',
+    theme: 'bg-kick-1 text-white'
+  },
+  {
+    id: 'facebook-follow',
+    icon: SocialFacebookIcon,
+    label: 'Facebook Follow',
+    enabled: false,
+    theme: 'bg-facebook-1 text-white',
     badge: 'verified'
   }
 ];
@@ -115,7 +132,7 @@ const entryMethods: EntryMethod[] = [
 function EntryMethodsGrid() {
   const [methods, setMethods] = useState(entryMethods);
   const [currentPage, setCurrentPage] = useState(0);
-  const methodsPerPage = 5;
+  const methodsPerPage = 6;
   const totalPages = Math.ceil(methods.length / methodsPerPage);
 
   const toggleMethod = (id: string) => {
@@ -290,13 +307,6 @@ export const EntryMethodsCarouselSection = ({
             intuitive visual editor. Make changes on the fly without any coding
             or technical expertise.
           </p>
-          <Button
-            variant="outline"
-            className="-ml-1 mt-2"
-            onClick={() => alert('Coming soon!')}
-          >
-            Learn More
-          </Button>
         </div>
       </div>
     </div>

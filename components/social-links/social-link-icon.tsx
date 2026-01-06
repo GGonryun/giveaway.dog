@@ -13,20 +13,27 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SocialXIcon } from '../../lib/integrations/components/icons/x-icon';
 import { SocialDiscordIcon } from '../../lib/integrations/components/icons/discord-icon';
+import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
+import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
+import { SocialRedditIcon } from '@/lib/integrations/components/icons/reddit-icon';
+import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
+import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
+import { SocialTikTokIcon } from '@/lib/integrations/components/icons/tiktok-icon';
+import { SocialLinkedInIcon } from '@/lib/integrations/components/icons/linked-in-icon';
 
 export const PLATFORM_ICONS: Record<
   SocialPlatform,
   { icon: LucideIcon; label: string }
 > = {
   x: { icon: SocialXIcon, label: 'X (Twitter)' },
-  facebook: { icon: Facebook, label: 'Facebook' },
-  instagram: { icon: Instagram, label: 'Instagram' },
+  facebook: { icon: SocialFacebookIcon, label: 'Facebook' },
+  instagram: { icon: SocialInstagramIcon, label: 'Instagram' },
   discord: { icon: SocialDiscordIcon, label: 'Discord' },
-  reddit: { icon: MessageCircle, label: 'Reddit' },
-  youtube: { icon: Youtube, label: 'YouTube' },
-  twitch: { icon: Video, label: 'Twitch' },
-  tiktok: { icon: Video, label: 'TikTok' },
-  linkedin: { icon: Linkedin, label: 'LinkedIn' },
+  reddit: { icon: SocialRedditIcon, label: 'Reddit' },
+  youtube: { icon: SocialYouTubeIcon, label: 'YouTube' },
+  twitch: { icon: SocialTwitchIcon, label: 'Twitch' },
+  tiktok: { icon: SocialTikTokIcon, label: 'TikTok' },
+  linkedin: { icon: SocialLinkedInIcon, label: 'LinkedIn' },
   website: { icon: Globe, label: 'Website' }
 };
 

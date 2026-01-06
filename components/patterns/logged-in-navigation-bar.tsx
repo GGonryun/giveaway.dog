@@ -177,6 +177,24 @@ export const LoggedInNavigationBar: React.FC<{ user: UserSchema }> = ({
               </Link>
 
               <Link
+                href="/learn/integrations"
+                onClick={closeSheet}
+                className="flex items-center justify-between py-2"
+              >
+                <span className="text-sm text-muted-foreground">
+                  Integrations
+                </span>
+              </Link>
+
+              <Link
+                href="/learn/templates"
+                onClick={closeSheet}
+                className="flex items-center justify-between py-2"
+              >
+                <span className="text-sm text-muted-foreground">Templates</span>
+              </Link>
+
+              <Link
                 href="/pricing"
                 onClick={closeSheet}
                 className="flex items-center justify-between py-2"

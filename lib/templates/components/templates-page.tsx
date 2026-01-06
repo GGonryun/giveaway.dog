@@ -112,6 +112,7 @@ export const TemplatesPage: React.FC<{
       )}
 
       <UseTemplateModal
+        loading={create.isLoading}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         template={selectedTemplate}

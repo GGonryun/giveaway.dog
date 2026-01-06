@@ -61,6 +61,7 @@ export const TemplatesGrid: React.FC<{
 
       <UseTemplateModal
         open={isModalOpen}
+        loading={create.isLoading}
         onOpenChange={setIsModalOpen}
         template={selectedTemplate}
         onUse={handleUseTemplate}

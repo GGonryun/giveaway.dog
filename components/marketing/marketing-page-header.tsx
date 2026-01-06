@@ -1,7 +1,7 @@
 import { Typography } from '../ui/typography';
 
 export const MarketingPageHeader: React.FC<{
-  title: string;
+  title: React.ReactNode;
   description: string;
 }> = ({ title, description }) => {
   return (

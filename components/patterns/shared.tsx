@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { ArrowRightIcon } from 'lucide-react';
 
 export const MarketingHeader: React.FC<{
   title: MarketingTitleProps;
@@ -17,20 +16,6 @@ export const MarketingHeader: React.FC<{
           <MarketingActions actions={actions} />
         </div>
       )}
-    </div>
-  );
-};
-
-export const GlowingPill: React.FC<{ text?: string }> = ({
-  text = 'Unified Sweepstakes Platform'
-}) => {
-  return (
-    <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
-      <span className="relative flex h-2 w-2">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-      </span>
-      {text}
     </div>
   );
 };

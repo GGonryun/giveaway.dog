@@ -63,6 +63,92 @@ export const PLATFORM_ICONS: Record<PlatformId, PlatformIcon> = {
   steam: { light: '/platforms/steam.svg' }
 };
 
+export const PLATFORM_LABELS: Record<PlatformId, string> = {
+  twitter: 'Twitter/X',
+  x: 'Twitter/X',
+  bluesky: 'Bluesky',
+  twitch: 'Twitch',
+  tiktok: 'TikTok',
+  kick: 'Kick',
+  facebook: 'Facebook',
+  snapchat: 'Snapchat',
+  threads: 'Threads',
+  linkedin: 'LinkedIn',
+  pinterest: 'Pinterest',
+  reddit: 'Reddit',
+  instagram: 'Instagram',
+  youtube: 'YouTube',
+  discord: 'Discord',
+  tumblr: 'Tumblr',
+  github: 'GitHub',
+  google: 'Google',
+  patreon: 'Patreon',
+  producthunt: 'Product Hunt',
+  coinbase: 'Coinbase',
+  spotify: 'Spotify',
+  steam: 'Steam'
+};
+
+export const PLATFORM_THEMES: Record<PlatformId, string | undefined> = {
+  twitter: '#1DA1F2',
+  x: '#000000',
+  bluesky: '#0085ff',
+  twitch: '#9146FF',
+  tiktok: '#000000',
+  kick: '#53FC18',
+  facebook: '#1877F2',
+  snapchat: '#FFFC00',
+  threads: '#000000',
+  linkedin: '#0A66C2',
+  pinterest: '#E60023',
+  reddit: '#FF4500',
+  instagram: '#E4405F',
+  youtube: '#FF0000',
+  discord: '#5865F2',
+  tumblr: '#35465C',
+  github: '#181717',
+  google: '#4285F4',
+  patreon: '#FF424D',
+  producthunt: '#DA552F',
+  coinbase: '#0052FF',
+  spotify: '#1DB954',
+  steam: '#171A21'
+};
+
+interface PlatformTooltipTheme {
+  bg: string;
+  text: string;
+}
+
+export const PLATFORM_TOOLTIP_THEMES: Record<
+  PlatformId,
+  PlatformTooltipTheme
+> = {
+  twitter: { bg: 'black', text: 'white' },
+  x: { bg: 'black', text: 'white' },
+  bluesky: { bg: 'bluesky-1', text: 'white' },
+  twitch: { bg: 'twitch-1', text: 'white' },
+  tiktok: { bg: 'black', text: 'white' },
+  kick: { bg: 'black', text: 'white' },
+  facebook: { bg: 'facebook-1', text: 'white' },
+  snapchat: { bg: 'black', text: 'white' },
+  threads: { bg: 'black', text: 'white' },
+  linkedin: { bg: 'black', text: 'white' },
+  pinterest: { bg: 'black', text: 'white' },
+  reddit: { bg: 'reddit-1', text: 'white' },
+  instagram: { bg: 'instagram-1', text: 'white' },
+  youtube: { bg: 'youtube-1', text: 'white' },
+  discord: { bg: 'discord-1', text: 'white' },
+  tumblr: { bg: 'black', text: 'white' },
+  github: { bg: 'black', text: 'white' },
+  google: { bg: 'black', text: 'white' },
+  patreon: { bg: 'black', text: 'white' },
+  producthunt: { bg: 'black', text: 'white' },
+  coinbase: { bg: 'black', text: 'white' },
+  spotify: { bg: 'black', text: 'white' },
+  steam: { bg: 'black', text: 'white' }
+};
+
 export function getPlatformIcon(
   platformId: PlatformId,
   theme?: 'light' | 'dark' | null
@@ -78,3 +164,44 @@ export function getPlatformIcon(
   }
   return icon.light;
 }
+
+export function getPlatformLabel(platformId: PlatformId): string {
+  return PLATFORM_LABELS[platformId] || platformId;
+}
+
+export function getPlatformTheme(platformId: PlatformId): string | undefined {
+  return PLATFORM_THEMES[platformId];
+}
+
+export function getPlatformTooltipTheme(
+  platformId: PlatformId
+): PlatformTooltipTheme {
+  return (
+    PLATFORM_TOOLTIP_THEMES[platformId] || { bg: 'black', text: 'white' }
+  );
+}
+
+export const CAROUSEL_PLATFORMS: PlatformId[] = [
+  'x',
+  'bluesky',
+  'twitch',
+  'tiktok',
+  'kick',
+  'facebook',
+  'snapchat',
+  'threads',
+  'linkedin',
+  'pinterest',
+  'reddit',
+  'instagram',
+  'youtube',
+  'discord',
+  'tumblr',
+  'github',
+  'google',
+  'patreon',
+  'producthunt',
+  'coinbase',
+  'spotify',
+  'steam'
+];

@@ -3,10 +3,15 @@
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { getPlatformIcon, type PlatformId } from '@/lib/platform-icons';
+import {
+  getPlatformIcon,
+  getPlatformLabel,
+  type PlatformId
+} from '@/lib/platform-icons';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import type { ResolvedTheme } from '@/lib/theme/get-server-theme';
+import Link from 'next/link';
 
 const SIZE_PRESETS = {
   sm: {
@@ -35,41 +40,36 @@ const SIZE_PRESETS = {
   }
 } as const;
 
-interface Platform {
-  name: string;
-  id: PlatformId;
-}
-
-const INNER_RING_PLATFORMS: Platform[] = [
-  { name: 'Twitter/X', id: 'x' },
-  { name: 'Instagram', id: 'instagram' },
-  { name: 'Twitch', id: 'twitch' },
-  { name: 'Discord', id: 'discord' },
-  { name: 'Bluesky', id: 'bluesky' },
-  { name: 'Reddit', id: 'reddit' },
-  { name: 'YouTube', id: 'youtube' },
-  { name: 'TikTok', id: 'tiktok' }
+const INNER_RING_PLATFORMS: PlatformId[] = [
+  'x',
+  'instagram',
+  'twitch',
+  'discord',
+  'bluesky',
+  'reddit',
+  'youtube',
+  'tiktok'
 ];
 
-const MIDDLE_RING_PLATFORMS: Platform[] = [
-  { name: 'Facebook', id: 'facebook' },
-  { name: 'LinkedIn', id: 'linkedin' },
-  { name: 'GitHub', id: 'github' },
-  { name: 'Steam', id: 'steam' },
-  { name: 'Spotify', id: 'spotify' },
-  { name: 'Patreon', id: 'patreon' },
-  { name: 'Google', id: 'google' }
+const MIDDLE_RING_PLATFORMS: PlatformId[] = [
+  'facebook',
+  'linkedin',
+  'github',
+  'steam',
+  'spotify',
+  'patreon',
+  'google'
 ];
 
-const OUTER_RING_PLATFORMS: Platform[] = [
-  { name: 'Kick', id: 'kick' },
-  { name: 'Snapchat', id: 'snapchat' },
-  { name: 'Threads', id: 'threads' },
-  { name: 'Pinterest', id: 'pinterest' },
-  { name: 'Tumblr', id: 'tumblr' },
-  { name: 'Coinbase', id: 'coinbase' },
-  { name: 'Product Hunt', id: 'producthunt' },
-  { name: 'Twitter', id: 'x' }
+const OUTER_RING_PLATFORMS: PlatformId[] = [
+  'kick',
+  'snapchat',
+  'threads',
+  'pinterest',
+  'tumblr',
+  'coinbase',
+  'producthunt',
+  'x'
 ];
 
 interface OrbitingPlatformsProps {
@@ -81,7 +81,7 @@ interface OrbitingPlatformsProps {
 }
 
 interface OrbitRingProps {
-  platforms: Platform[];
+  platforms: PlatformId[];
   radius: number;
   iconSize: number;
   animation: 'orbit-cw' | 'orbit-ccw';
@@ -120,13 +120,14 @@ const OrbitRing = ({
         animation: `${animation} ${duration}s linear infinite`
       }}
     >
-      {platforms.map((platform, index) => {
+      {platforms.map((platformId, index) => {
         const angle = (360 / platforms.length) * index;
         const randomRotation = Math.floor(Math.random() * 360);
-        const iconSrc = getPlatformIcon(platform.id, theme);
+        const iconSrc = getPlatformIcon(platformId, theme);
+        const label = getPlatformLabel(platformId);
         return (
           <div
-            key={`${platform.name}-${index}`}
+            key={`${platformId}-${index}`}
             className="absolute"
             style={{
               left: '50%',
@@ -149,7 +150,7 @@ const OrbitRing = ({
             >
               <Image
                 src={iconSrc}
-                alt={platform.name}
+                alt={label}
                 width={iconSize}
                 height={iconSize}
                 className="object-contain"
@@ -263,7 +264,7 @@ export const OrbitingPlatformsSection = ({
     <div className="w-full flex items-center justify-center">
       <div className="bg-background relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <div className="relative flex-1 flex items-center justify-center overflow-hidden">
-          <div className="absolute -top-20 left-1/2 -translate-x-1/2">
+          <div className="absolute -top-14 left-1/2 -translate-x-1/2">
             <OrbitingPlatforms
               size="lg"
               showCenterLogo={false}
@@ -272,7 +273,7 @@ export const OrbitingPlatformsSection = ({
           </div>
 
           {/* Manually positioned Taki logo - stays above gradient */}
-          <div className="absolute left-1/2 top-36 -translate-x-1/2 z-15">
+          <div className="absolute left-1/2 top-46 -translate-x-1/2 z-15">
             <div className="rounded-full border-2 border-border bg-background shadow-xl flex items-center justify-center w-[72px] h-[72px] opacity-75">
               <Image
                 src="/taki.png"
@@ -297,13 +298,6 @@ export const OrbitingPlatformsSection = ({
             variety of entry methods. Create a seamless experience for your
             participants.
           </p>
-          <Button
-            variant="outline"
-            className="-ml-1 mt-2"
-            onClick={() => alert('Coming soon!')}
-          >
-            Learn More
-          </Button>
         </div>
       </div>
     </div>

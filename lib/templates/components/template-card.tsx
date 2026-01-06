@@ -56,7 +56,7 @@ export function TemplateCard({
 
   return (
     <Card
-      className="group hover:shadow-xl transition-all duration-200 overflow-hidden p-0 cursor-pointer hover:scale-[1.02]"
+      className="group hover:shadow-xl transition-all duration-200 overflow-hidden p-0 cursor-pointer hover:scale-[1.02] flex flex-col h-full"
       onClick={handleUse}
     >
       <div className="aspect-video relative">
@@ -74,7 +74,7 @@ export function TemplateCard({
         </Badge>
       </div>
 
-      <CardHeader>
+      <CardHeader className="flex-1">
         <div className="flex justify-between items-start gap-2">
           <div className="flex-1 min-w-0">
             <CardTitle className="mt-1 line-clamp-1">
@@ -109,7 +109,7 @@ export function TemplateCard({
         </div>
       </CardHeader>
 
-      <CardContent className="pb-4">
+      <CardContent className="pb-4 mt-auto">
         <Badge>
           Use Template <ArrowRight />
         </Badge>

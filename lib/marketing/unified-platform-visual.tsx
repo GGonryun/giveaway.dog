@@ -48,13 +48,6 @@ export const UnifiedPlatformSection = () => {
             entries, verify participants, and pick winners across all your
             connected platforms with ease.
           </p>
-          <Button
-            variant="outline"
-            className="-ml-1 mt-2"
-            onClick={() => alert('Coming soon!')}
-          >
-            Learn More
-          </Button>
         </div>
       </div>
     </div>
