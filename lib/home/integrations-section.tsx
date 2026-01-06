@@ -10,7 +10,7 @@ export const IntegrationsSection = async () => {
   const theme = await getServerTheme();
 
   return (
-    <div className="relative pt-16 pb-16 md:pt-24 overflow-hidden">
+    <div className="bg-gradient-to-b from-primary/12 to-background relative pt-16 pb-16 md:pt-24 overflow-hidden">
       <div className="relative z-10 text-center mb-6">
         <MarketingHeader
           title={{

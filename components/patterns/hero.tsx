@@ -54,7 +54,7 @@ export const Hero = async () => {
   const theme = await getServerTheme();
 
   return (
-    <section className="w-full flex flex-col items-center justify-center bg-gradient-to-t from-primary/15 bg-background">
+    <section className="w-full flex flex-col items-center justify-center bg-gradient-to-t from-primary/12 to-background">
       <div className="w-full pb-0 sm:pb-1 md:pb-1.5 lg:pb-2 pt-6 sm:pt-10 md:pt-14 lg:pt-18">
         <SocialPlatformsCarousel initialTheme={theme} />
       </div>
