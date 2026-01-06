@@ -34,6 +34,7 @@ import {
 import { drawPicker } from '../procedures/draw-picker';
 import { redrawPicker } from '../procedures/redraw-picker';
 import { completePicker } from '../procedures/complete-picker';
+import { drawExtraWinner } from '../procedures/draw-extra-winner';
 import { PickerStatus } from '@prisma/client';
 import Link from 'next/link';
 import { PickerDrawSchema } from '../schemas/draws';
@@ -114,6 +115,19 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
     }
   });
 
+  const drawExtraProcedure = useProcedure({
+    action: drawExtraWinner,
+    onSuccess() {
+      toast.success('Extra winner drawn successfully!');
+      router.refresh();
+    },
+    onFailure(error) {
+      toast.error(
+        error.message || 'Failed to draw extra winner. Please try again.'
+      );
+    }
+  });
+
   const handleDraw = () => {
     drawProcedure.run({
       pickerId,
@@ -142,6 +156,10 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
 
   const handleCompletePicker = () => {
     completeProcedure.run({ pickerId });
+  };
+
+  const handleDrawExtra = () => {
+    drawExtraProcedure.run({ pickerId });
   };
 
   const isProcessed = status === PickerStatus.PROCESSED;
@@ -333,7 +351,12 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
           </CardContent>
         </Card>
 
-        <PickerDrawHistory draws={draws} />
+        <PickerDrawHistory
+          draws={draws}
+          onDrawExtra={handleDrawExtra}
+          isDrawingExtra={drawExtraProcedure.isLoading}
+          canDrawExtra={!isComplete}
+        />
 
         <Dialog open={redrawDialogOpen} onOpenChange={setRedrawDialogOpen}>
           <DialogContent>

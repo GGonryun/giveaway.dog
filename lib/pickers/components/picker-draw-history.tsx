@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -23,7 +24,8 @@ import {
   ChevronRight,
   History,
   Trophy,
-  XCircle
+  XCircle,
+  Plus
 } from 'lucide-react';
 import { PickerDrawSchema } from '../schemas/draws';
 import { PickerDrawResult } from '@prisma/client';
@@ -33,11 +35,17 @@ import { cn } from '@/lib/utils';
 interface PickerDrawHistoryProps {
   draws: PickerDrawSchema[];
   showCard?: boolean;
+  onDrawExtra?: () => void;
+  isDrawingExtra?: boolean;
+  canDrawExtra?: boolean;
 }
 
 export const PickerDrawHistory: React.FC<PickerDrawHistoryProps> = ({
   draws,
-  showCard = true
+  showCard = true,
+  onDrawExtra,
+  isDrawingExtra = false,
+  canDrawExtra = false
 }) => {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
@@ -201,13 +209,34 @@ export const PickerDrawHistory: React.FC<PickerDrawHistoryProps> = ({
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <History className="h-5 w-5 text-muted-foreground" />
-          <CardTitle className="text-base">Draw History</CardTitle>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <History className="h-5 w-5 text-muted-foreground" />
+              <CardTitle className="text-base">Draw History</CardTitle>
+            </div>
+            <CardDescription>
+              Complete history of all draws including disqualifications
+            </CardDescription>
+          </div>
+          {canDrawExtra && onDrawExtra && (
+            <Button
+              onClick={onDrawExtra}
+              disabled={isDrawingExtra}
+              size="sm"
+              variant="outline"
+            >
+              {isDrawingExtra ? (
+                <>Drawing...</>
+              ) : (
+                <>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Draw Extra Winner
+                </>
+              )}
+            </Button>
+          )}
         </div>
-        <CardDescription>
-          Complete history of all draws including disqualifications
-        </CardDescription>
       </CardHeader>
       <CardContent>{tableContent}</CardContent>
     </Card>

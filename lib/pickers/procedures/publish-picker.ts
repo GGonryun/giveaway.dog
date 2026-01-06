@@ -22,7 +22,8 @@ export const publishPicker = procedure()
       });
 
       const wasAlreadyProcessing =
-        currentPicker?.status === PickerStatus.PROCESSING;
+        currentPicker?.status === PickerStatus.PROCESSING ||
+        currentPicker?.status === PickerStatus.PROCESSED;
 
       await tx.picker.update({
         where: {
