@@ -14,6 +14,7 @@ import {
   CreateReferralSchema,
   UserReferralSchema
 } from '@/lib/referrals/schemas';
+import updateTask from '@/lib/task/procedures/update-task';
 
 export type SweepstakesParticipationPageContentProps =
   ParticipantSweepstakeSchema & {
@@ -33,6 +34,10 @@ export const SweepstakesParticipationPage: React.FC<
 
   const submitTaskProcedure = useProcedureAsync({
     action: submitTask
+  });
+
+  const updateTaskProcedure = useProcedureAsync({
+    action: updateTask
   });
 
   const submitFormProcedure = useProcedureAsync({
@@ -63,6 +68,13 @@ export const SweepstakesParticipationPage: React.FC<
       className="p-4 py-8 sm:py-16"
       onTaskComplete={async (taskId, data) =>
         await submitTaskProcedure.run({
+          taskId,
+          sweepstakesId,
+          data
+        })
+      }
+      onTaskUpdate={async (taskId, data) =>
+        await updateTaskProcedure.run({
           taskId,
           sweepstakesId,
           data

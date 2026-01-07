@@ -1,6 +1,7 @@
 import { assertNever } from '@/lib/errors';
 import { TASK_INPUT_SCHEMA, TaskSchema } from '../schemas';
 import { Prisma } from '@prisma/client';
+import { INSTAGRAM_USERNAME_QUESTION } from '../components/public-sweepstakes/task-actions/lib/instagram/constants';
 
 export const saveTaskProof = (task: TaskSchema, data: unknown) => {
   switch (task.type) {
@@ -9,17 +10,6 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
       if (task.afterVisit.type !== 'QUESTION') return Prisma.JsonNull;
 
       const parsed = TASK_INPUT_SCHEMA.VISIT_URL.parse(data);
-
-      return {
-        question: task.afterVisit.question,
-        answer: parsed.answer
-      };
-    }
-    case 'FACEBOOK_VISIT_PAGE': {
-      if (!task.afterVisit) return Prisma.JsonNull;
-      if (task.afterVisit.type !== 'QUESTION') return Prisma.JsonNull;
-
-      const parsed = TASK_INPUT_SCHEMA.FACEBOOK_VISIT_PAGE.parse(data);
 
       return {
         question: task.afterVisit.question,
@@ -69,7 +59,25 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
         mediaUrl: parsed.mediaUrl
       };
     }
+    case 'INSTAGRAM_LIKE': {
+      const parsed = TASK_INPUT_SCHEMA.INSTAGRAM_LIKE.parse(data);
+
+      return {
+        question: INSTAGRAM_USERNAME_QUESTION,
+        username: parsed.username
+      };
+    }
+    case 'INSTAGRAM_COMMENT': {
+      const parsed = TASK_INPUT_SCHEMA.INSTAGRAM_COMMENT.parse(data);
+
+      return {
+        question: INSTAGRAM_USERNAME_QUESTION,
+        username: parsed.username
+      };
+    }
+    case 'INSTAGRAM_VISIT':
     case 'FACEBOOK_VIEW_POST':
+    case 'FACEBOOK_VISIT_PAGE':
     case 'BONUS_TASK':
     case 'BONUS_TIMED':
     case 'BONUS_LIMITED':
@@ -84,9 +92,6 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'TWITTER_LIKE':
     case 'TWITTER_RETWEET':
     case 'YOUTUBE_VISIT':
-    case 'INSTAGRAM_VISIT':
-    case 'INSTAGRAM_LIKE':
-    case 'INSTAGRAM_COMMENT':
     case 'TWITTER_RETWEET_IMPORT':
     case 'TWITTER_LIKE_IMPORT':
     case 'TIKTOK_FOLLOW':

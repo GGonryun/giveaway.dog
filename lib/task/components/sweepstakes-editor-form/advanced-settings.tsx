@@ -24,6 +24,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { SecretCodeCaseSensitiveFormField } from './additional-settings/lib/secret-code-case-sensitive';
 import { TwitterVerifiedBonusField } from './additional-settings/lib/twitter-verified-bonus';
+import { RequireProofField } from './additional-settings/lib/require-proof';
 
 export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
@@ -36,7 +37,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <TasksRequiredField />
           </>
         );
-      case 'FACEBOOK_VISIT_PAGE':
+
       case 'VISIT_URL':
         return (
           <>
@@ -57,14 +58,20 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <RequireConnectionField />
           </>
         );
-
       case 'STEAM_FOLLOW':
         return (
           <>
+            <RequireProofField />
+            <RequireConnectionField />
             <MandatoryField />
             <TasksRequiredField />
           </>
         );
+      case 'FACEBOOK_VIEW_POST':
+      case 'FACEBOOK_VISIT_PAGE':
+      case 'INSTAGRAM_VISIT':
+      case 'INSTAGRAM_LIKE':
+      case 'INSTAGRAM_COMMENT':
       case 'TWITTER_CONNECT':
       case 'STEAM_WISHLIST':
       case 'DISCORD_JOIN':
@@ -76,10 +83,6 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'BONUS_COMPLETE_PROFILE':
       case 'BONUS_LIMITED':
       case 'BONUS_LOYALTY':
-      case 'INSTAGRAM_VISIT':
-      case 'INSTAGRAM_LIKE':
-      case 'FACEBOOK_VIEW_POST':
-      case 'INSTAGRAM_COMMENT':
       case 'BLUESKY_CONNECT':
       case 'BLUESKY_FOLLOW':
       case 'BLUESKY_LIKE':

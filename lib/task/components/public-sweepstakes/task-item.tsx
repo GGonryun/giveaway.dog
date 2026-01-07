@@ -41,8 +41,13 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
 }) => {
   const router = useRouter();
 
-  const { onTaskComplete, participation, relationship, referral } =
-    useGiveawayParticipation();
+  const {
+    onTaskComplete,
+    onTaskUpdate,
+    participation,
+    relationship,
+    referral
+  } = useGiveawayParticipation();
 
   const submission: UserTaskSubmissionSchema | undefined = useMemo(
     () => allSubmissions.find((c) => c.taskId === task.id),
@@ -91,6 +96,24 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
       onSubmit?.();
       onOpen(false);
       toast.success('Task completed!');
+      router.refresh();
+    } catch (error) {
+      const failure = toFailureData(error);
+      setError(failure);
+      toast.error(failure.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTaskUpdate = async (data?: unknown) => {
+    try {
+      setError(undefined);
+      setIsLoading(true);
+
+      await onTaskUpdate(task.id, data);
+
+      toast.success('Task updated!');
       router.refresh();
     } catch (error) {
       const failure = toFailureData(error);
@@ -167,6 +190,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
           isLoading={isLoading}
           task={task}
           onSubmit={handleTaskSubmit}
+          onUpdate={handleTaskUpdate}
           onCancel={handleTaskCancel}
           error={error}
           lock={lock}

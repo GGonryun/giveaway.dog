@@ -34,6 +34,7 @@ export interface GiveawayParticipationProps {
   turnstile?: TurnstileStatus;
   onCreateReferral: (args: CreateReferralSchema) => Promise<UserReferralSchema>;
   onTaskComplete: (taskId: string, data?: unknown) => Promise<unknown>;
+  onTaskUpdate: (taskId: string, data?: unknown) => Promise<unknown>;
   onLogin: () => void;
   onCompleteProfile: () => void;
   onFormSubmit: (data: unknown) => Promise<unknown>;
@@ -66,6 +67,7 @@ export const GiveawayParticipationProvider: React.FC<
   isPreview,
   turnstile,
   onTaskComplete,
+  onTaskUpdate,
   onLogin,
   onCompleteProfile,
   onFormSubmit,
@@ -85,6 +87,7 @@ export const GiveawayParticipationProvider: React.FC<
     state,
     verifyEmail,
     onTaskComplete,
+    onTaskUpdate,
     onLogin,
     onCompleteProfile,
     onFormSubmit

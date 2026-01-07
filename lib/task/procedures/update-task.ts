@@ -29,7 +29,7 @@ const submitTask = procedure()
   )
   .handler(async ({ db, user, input: { data, taskId, sweepstakesId } }) => {
     console.info(
-      `User ${user.id} is submitting task ${taskId} for sweepstakes ${sweepstakesId}`
+      `User ${user.id} is updating task ${taskId} for sweepstakes ${sweepstakesId}`
     );
     const tasks = await db.task.findMany({
       where: {
@@ -78,60 +78,45 @@ const submitTask = procedure()
       }
     });
 
-    const existingCompletion = completions.find((c) => c.taskId === taskId);
-    if (existingCompletion) {
+    if (completions.length === 0) {
       throw new ApplicationError({
-        code: 'VALIDATION_ERROR',
+        code: 'CONFLICT',
         silent: true,
-        message: 'You have already completed this task. Refresh the page.'
+        message: 'You have not completed this task yet.'
+      });
+    }
+
+    if (completions.length > 1) {
+      throw new ApplicationError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message:
+          'Multiple completions found for this task. Please contact support.',
+        cause:
+          'Users cannot modify multiple completions of the same task with this procedure.'
+      });
+    }
+
+    const existingCompletion = completions.find((c) => c.taskId === taskId);
+    if (!existingCompletion) {
+      throw new ApplicationError({
+        code: 'CONFLICT',
+        silent: true,
+        message: 'You have not completed this task yet.'
       });
     }
 
     const taskConfig = toTaskSchema(task);
 
     console.info(
-      `Validating mandatory and required tasks for user ${participant.userId} on task ${taskId}`
-    );
-    await validateMandatoryTasks({
-      taskId,
-      tasks,
-      completions
-    });
-
-    console.info(
-      `Validating required tasks ${taskId} for user ${participant.userId}`
-    );
-    await validateRequiredTasks({
-      taskId,
-      tasks,
-      completions
-    });
-
-    console.info(`Validating task ${taskId} for user ${participant.userId}`);
-    await validateTask(db, {
-      task: taskConfig,
-      userId: participant.userId,
-      participantId: participant.id,
-      teamId: task.sweepstakes.teamId,
-      data
-    });
-
-    console.info(
       `Recording completion of task ${taskId} for user ${participant.userId}`
     );
-    await db.taskCompletion.create({
+    await db.taskCompletion.update({
+      where: {
+        id: existingCompletion.id
+      },
       data: {
-        participantId: participant.id,
-        taskId,
-        status: computeTaskStatus(taskConfig),
         proof: saveTaskProof(taskConfig, data)
       }
-    });
-
-    await validateReferral(db, {
-      taskId,
-      participant,
-      completions
     });
 
     return {

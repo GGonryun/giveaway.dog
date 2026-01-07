@@ -18,6 +18,10 @@ export type RequiredFields<T, K extends keyof T> = T extends any
   ? Omit<T, K> & Required<Pick<T, K>>
   : never;
 
+export type OptionalFields<T, K extends keyof T> = T extends any
+  ? Omit<T, K> & Partial<Pick<T, K>>
+  : never;
+
 export type DeepNullable<T> = {
   [P in keyof T]: T[P] extends Array<infer U>
     ? Array<DeepNullable<U>> | null

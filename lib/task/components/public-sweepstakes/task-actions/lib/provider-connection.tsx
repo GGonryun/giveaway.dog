@@ -48,6 +48,16 @@ const useProviderConnection = ({ task }: { task: TaskSchema }) => {
   const requiresConnection =
     !('validation' in task) || task.validation?.type !== 'NONE';
 
+  console.log('useProviderConnection', {
+    task,
+    providerId,
+    providerLabel,
+    provider,
+    isIncomplete,
+    requiresConnection,
+    redirectTo
+  });
+
   const isConnected = !requiresConnection || (provider && !isIncomplete);
 
   return {
@@ -62,9 +72,10 @@ const useProviderConnection = ({ task }: { task: TaskSchema }) => {
 };
 
 export const WithProviderConnection: React.FC<
-  Omit<TaskActionProps<TaskSchema>, 'entrants' | 'loyalty'> &
+  Omit<TaskActionProps<TaskSchema>, 'entrants' | 'loyalty' | 'onUpdate'> &
     Pick<TaskControlsProps, 'submit' | 'cancel' | 'disabled'> & {
       hidden?: boolean;
+      onUpdate?: (data?: unknown) => void;
       render: (ctx: {
         theme: TaskTheme;
         provider: ProviderSchema | undefined;
@@ -73,6 +84,7 @@ export const WithProviderConnection: React.FC<
 > = ({
   render,
   onSubmit,
+  onUpdate,
   onCancel,
   task,
   disabled,
@@ -122,6 +134,7 @@ export const WithProviderConnection: React.FC<
         isLoading={isLoading}
         submit={submit}
         cancel={cancel}
+        onUpdate={onUpdate}
         onSubmit={onSubmit}
         onCancel={onCancel}
       />

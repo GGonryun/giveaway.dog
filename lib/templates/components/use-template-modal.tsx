@@ -22,7 +22,8 @@ import {
   onFakeCreateReferral,
   onFakeFormSubmit,
   onFakeLogin,
-  onFakeTaskComplete
+  onFakeTaskComplete,
+  onFakeTaskUpdate
 } from '@/components/sweepstakes-editor/data/mocks';
 import { SparklesIcon, Edit, Loader2, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
@@ -100,6 +101,7 @@ export function UseTemplateModal({
             isPreview={true}
             onCreateReferral={onFakeCreateReferral}
             onTaskComplete={onFakeTaskComplete}
+            onTaskUpdate={onFakeTaskUpdate}
             onCompleteProfile={onFakeCompleteProfile}
             onLogin={onFakeLogin}
             onFormSubmit={onFakeFormSubmit}

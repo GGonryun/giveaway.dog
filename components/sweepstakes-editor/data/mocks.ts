@@ -163,6 +163,14 @@ export const onFakeTaskComplete = async (
   return Promise.resolve(data);
 };
 
+export const onFakeTaskUpdate = async (
+  taskId: string,
+  data?: unknown
+): Promise<unknown> => {
+  toast.success(`Task ${taskId} updated (not implemented in preview)`);
+  return Promise.resolve(data);
+};
+
 export const onFakeCompleteProfile = () => {
   toast.success(
     'Complete profile action triggered (not implemented in preview)'

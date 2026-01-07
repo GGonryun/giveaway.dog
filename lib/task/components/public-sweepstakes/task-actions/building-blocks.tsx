@@ -7,15 +7,17 @@ import {
 } from '@/components/ui/tooltip';
 import { Failure } from '@/lib/mrpc/types';
 import { cn } from '@/lib/utils';
-import { CheckIcon, LucideIcon } from 'lucide-react';
+import { CheckIcon, LucideIcon, SaveIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { TaskSchema } from '../../../schemas';
 import { useTaskTheme } from '../../theme';
 import { Separator } from '@/components/ui/separator';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { OptionalFields } from '@/lib/types';
 
 export type TaskActionHandlers = {
   onSubmit: (data?: unknown) => void;
+  onUpdate: (data?: unknown) => void;
   onCancel: () => void;
   isLoading: boolean;
   error?: Failure['data'];
@@ -133,36 +135,51 @@ const CustomTooltipButton: React.FC<CustomTooltipButtonProps> = ({
 export type TaskControlsProps = {
   disabled?: boolean;
   help?: string;
+  allowUpdates?: boolean;
   submit?: CustomButtonProps;
+  update?: CustomButtonProps;
   cancel?: CustomButtonProps;
-} & TaskActionHandlers;
+} & OptionalFields<TaskActionHandlers, 'onUpdate'>;
 
 export const TaskControls: React.FC<TaskControlsProps> = ({
+  help = 'Complete above to continue',
   disabled,
   isLoading,
   submit,
   cancel,
-  help = 'Complete above to continue',
+  update,
   submission,
   onSubmit,
+  onUpdate,
   onCancel
 }) => {
-  if (submission) return null;
-
   return (
     <>
       <Separator />
       <TaskContent className="bg-sidebar">
-        <CustomTooltipButton
-          disabled={disabled}
-          isLoading={isLoading}
-          onClick={onSubmit}
-          tooltip={help}
-          defaultIcon={CheckIcon}
-          defaultLabel="Complete Task"
-          defaultVariant="outline"
-          buttonProps={submit}
-        />
+        {!submission ? (
+          <CustomTooltipButton
+            disabled={disabled}
+            isLoading={isLoading}
+            onClick={onSubmit}
+            tooltip={help}
+            defaultIcon={CheckIcon}
+            defaultLabel="Complete Task"
+            defaultVariant="outline"
+            buttonProps={submit}
+          />
+        ) : onUpdate ? (
+          <CustomTooltipButton
+            disabled={disabled}
+            isLoading={isLoading}
+            onClick={onUpdate}
+            tooltip={help}
+            defaultIcon={SaveIcon}
+            defaultLabel="Update Task"
+            defaultVariant="outline"
+            buttonProps={update}
+          />
+        ) : null}
 
         <CustomTooltipButton
           onClick={onCancel}

@@ -20,7 +20,8 @@ import {
   onFakeFormSubmit,
   mockParticipant,
   onFakeCreateReferral,
-  mockUserReferral
+  mockUserReferral,
+  onFakeTaskUpdate
 } from '../sweepstakes-editor/data/mocks';
 import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
@@ -184,6 +185,7 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                 isPreview={true}
                 onCreateReferral={onFakeCreateReferral}
                 onTaskComplete={onFakeTaskComplete}
+                onTaskUpdate={onFakeTaskUpdate}
                 onLogin={onFakeLogin}
                 onCompleteProfile={onFakeCompleteProfile}
                 onFormSubmit={onFakeFormSubmit}

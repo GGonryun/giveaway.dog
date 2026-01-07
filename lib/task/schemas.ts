@@ -48,6 +48,8 @@ export const afterVisitSchema = z.discriminatedUnion('type', [
   })
 ]);
 
+export type AfterVisitSchema = z.infer<typeof afterVisitSchema>;
+
 export const validationSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('NONE')
@@ -235,7 +237,8 @@ export const steamFollowTaskSchema = baseTaskSchema.extend({
         /^https?:\/\/store\.steampowered\.com\/(developer|publisher|curator)\/[A-Za-z0-9_\-]+\/?$/;
       return urlPattern.test(val);
     }, 'Unexpected URL, should be like https://store.steampowered.com/developer/DeveloperName or https://store.steampowered.com/publisher/PublisherName'),
-  requireProof: z.boolean().default(false)
+  requireProof: z.boolean().default(false),
+  validation: validationSchema.default({ type: 'STRICT' }).optional()
 });
 
 export type SteamFollowTaskSchema = z.infer<typeof steamFollowTaskSchema>;
@@ -634,11 +637,13 @@ export const TASK_INPUT_SCHEMA = {
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
   INSTAGRAM_VISIT: z.object({}),
-  INSTAGRAM_LIKE: z.object({}),
-  INSTAGRAM_COMMENT: z.object({}),
-  FACEBOOK_VISIT_PAGE: z.object({
-    answer: z.optional(z.string())
+  INSTAGRAM_LIKE: z.object({
+    username: z.optional(z.string())
   }),
+  INSTAGRAM_COMMENT: z.object({
+    username: z.optional(z.string())
+  }),
+  FACEBOOK_VISIT_PAGE: z.object({}),
   FACEBOOK_VIEW_POST: z.object({}),
   TIKTOK_FOLLOW: z.object({}),
   TIKTOK_LIKE: z.object({}),

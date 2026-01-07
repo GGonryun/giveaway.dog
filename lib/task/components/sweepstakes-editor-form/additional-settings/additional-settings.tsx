@@ -133,7 +133,6 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
         return (
           <>
             <SteamDeveloperFormField />
-            <RequireProofField />
           </>
         );
       case 'DISCORD_JOIN':

@@ -16,6 +16,7 @@ export const TaskAction: React.FC<{
   isLoading: boolean;
   task: TaskSchema;
   onSubmit: (data?: unknown) => void;
+  onUpdate: (data?: unknown) => void;
   onCancel: () => void;
   error: FailureData | undefined;
   entrants: number;
@@ -27,6 +28,7 @@ export const TaskAction: React.FC<{
   isLoading,
   entrants,
   onSubmit,
+  onUpdate,
   onCancel,
   error
 }) => {
@@ -66,6 +68,7 @@ export const TaskAction: React.FC<{
           loyalty={relationship?.loyalty ?? 0}
           isLoading={isLoading}
           submission={submission}
+          onUpdate={onUpdate}
           onSubmit={onSubmit}
           onCancel={onCancel}
         />
