@@ -34,7 +34,7 @@ const getHistoricalSweepstakesList = procedure()
       input?.search ?? 'no-search'
     ],
     tags: ['historical-sweepstakes-list'],
-    revalidate: 300
+    revalidate: 3600 // 1 hour
   }))
   .handler(async ({ db, input }) => {
     const daysAgo = datetime.daysAgo(1);

@@ -19,6 +19,16 @@ const getWinnersLeaderboard = procedure()
       .optional()
   )
   .output(winnerLeaderboardSchema.array())
+  .cache(({ input }) => ({
+    keyParts: [
+      'winners-leaderboard',
+      input?.page?.toString() ?? '1',
+      input?.limit?.toString() ?? WINNERS_PAGE_SIZE.toString(),
+      input?.search ?? 'no-search'
+    ],
+    tags: ['winners-leaderboard'],
+    revalidate: 3600 // 1 hour
+  }))
   .handler(async ({ db, input }) => {
     const page = input?.page ?? 1;
     const limit = input?.limit ?? WINNERS_PAGE_SIZE;

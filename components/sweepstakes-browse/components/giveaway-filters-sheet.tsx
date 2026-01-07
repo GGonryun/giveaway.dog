@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { browser } from '@/lib/browser';
 import {
   Sheet,
   SheetContent,
@@ -47,6 +46,7 @@ const saveFiltersToCookie = (filters: GiveawayFilters) => {
 
 export function GiveawayFiltersSheet() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -73,31 +73,37 @@ export function GiveawayFiltersSheet() {
   }, [searchParams]);
 
   const handleApplyFilters = () => {
-    const paramsObj: Record<string, string | null> = {};
+    const params = new URLSearchParams(searchParams);
 
-    paramsObj.minEntrants =
-      filters.minEntrants !== undefined && filters.minEntrants > 0
-        ? filters.minEntrants.toString()
-        : null;
+    if (filters.minEntrants !== undefined && filters.minEntrants > 0) {
+      params.set('minEntrants', filters.minEntrants.toString());
+    } else {
+      params.delete('minEntrants');
+    }
 
-    paramsObj.maxEntrants =
-      filters.maxEntrants !== undefined && filters.maxEntrants > 0
-        ? filters.maxEntrants.toString()
-        : null;
+    if (filters.maxEntrants !== undefined && filters.maxEntrants > 0) {
+      params.set('maxEntrants', filters.maxEntrants.toString());
+    } else {
+      params.delete('maxEntrants');
+    }
 
-    paramsObj.sortBy =
-      filters.sortBy && filters.sortBy !== 'entrants-desc'
-        ? filters.sortBy
-        : null;
+    if (filters.sortBy && filters.sortBy !== 'entrants-desc') {
+      params.set('sortBy', filters.sortBy);
+    } else {
+      params.delete('sortBy');
+    }
 
-    paramsObj.search = filters.search || null;
+    if (filters.search) {
+      params.set('search', filters.search);
+    } else {
+      params.delete('search');
+    }
 
-    paramsObj.page = null;
+    params.delete('page');
 
     saveFiltersToCookie(filters);
 
-    browser.changeParams(paramsObj);
-    router.refresh();
+    router.push(`${pathname}?${params.toString()}`);
     setIsOpen(false);
   };
 
@@ -107,8 +113,7 @@ export function GiveawayFiltersSheet() {
     };
     setFilters(clearedFilters);
     saveFiltersToCookie(clearedFilters);
-    browser.changeParams(null);
-    router.refresh();
+    router.push(pathname);
     setIsOpen(false);
   };
 
