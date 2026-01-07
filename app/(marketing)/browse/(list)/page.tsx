@@ -49,7 +49,6 @@ type SearchParams = {
   minEntrants?: string;
   maxEntrants?: string;
   sortBy?: string;
-  hideCompleted?: string;
   search?: string;
 };
 
@@ -72,7 +71,6 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
     minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
     maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
     sortBy: params.sortBy as GiveawayFilters['sortBy'],
-    hideCompleted: params.hideCompleted === 'true',
     search: params.search
   };
 

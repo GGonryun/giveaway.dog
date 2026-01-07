@@ -6,13 +6,11 @@ export const giveawayFiltersSchema = z.object({
   sortBy: z
     .enum(['entrants-desc', 'entrants-asc', 'ending-soon', 'newest'])
     .optional(),
-  hideCompleted: z.boolean().optional(),
   search: z.string().optional()
 });
 
 export type GiveawayFilters = z.infer<typeof giveawayFiltersSchema>;
 
 export const defaultFilters: GiveawayFilters = {
-  sortBy: 'entrants-desc',
-  hideCompleted: false
+  sortBy: 'entrants-desc'
 };

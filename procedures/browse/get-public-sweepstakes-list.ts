@@ -22,7 +22,6 @@ const getPublicSweepstakesList = procedure()
       input?.sortBy ?? 'default',
       input?.minEntrants?.toString() ?? 'no-min',
       input?.maxEntrants?.toString() ?? 'no-max',
-      input?.hideCompleted?.toString() ?? 'false',
       input?.search ?? 'no-search'
     ],
     tags: ['public-sweepstakes-list'],

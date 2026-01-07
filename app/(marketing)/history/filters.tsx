@@ -15,7 +15,6 @@ import {
   PaginationPrevious
 } from '@/components/ui/pagination';
 import { AllGiveawaysSearch } from '@/components/sweepstakes-browse/components/all-giveaways-search';
-import { GiveawayFiltersSheet } from '@/components/sweepstakes-browse/components/giveaway-filters-sheet';
 
 export const HistoryFilters: React.FC<{
   children: React.ReactNode;
@@ -58,7 +57,6 @@ export const HistoryFilters: React.FC<{
           />
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
-          <GiveawayFiltersSheet />
           <Button variant="outline" asChild className="flex-1 sm:flex-initial">
             <Link href={'/browse'}>
               <Grid3x3 className="h-4 w-4 mr-2" />

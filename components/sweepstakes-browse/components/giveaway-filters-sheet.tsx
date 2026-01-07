@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/sheet';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -64,9 +63,6 @@ export function GiveawayFiltersSheet() {
       (searchParams.get('sortBy') as GiveawayFilters['sortBy']) ??
       cookieFilters.sortBy ??
       'entrants-desc',
-    hideCompleted: searchParams.get('hideCompleted')
-      ? searchParams.get('hideCompleted') === 'true'
-      : (cookieFilters.hideCompleted ?? false),
     search: searchParams.get('search') ?? cookieFilters.search
   };
 
@@ -94,8 +90,6 @@ export function GiveawayFiltersSheet() {
         ? filters.sortBy
         : null;
 
-    paramsObj.hideCompleted = filters.hideCompleted ? 'true' : null;
-
     paramsObj.search = filters.search || null;
 
     paramsObj.page = null;
@@ -109,8 +103,7 @@ export function GiveawayFiltersSheet() {
 
   const handleClearFilters = () => {
     const clearedFilters = {
-      sortBy: 'entrants-desc' as const,
-      hideCompleted: false
+      sortBy: 'entrants-desc' as const
     };
     setFilters(clearedFilters);
     saveFiltersToCookie(clearedFilters);
@@ -123,7 +116,6 @@ export function GiveawayFiltersSheet() {
     filters.minEntrants !== undefined ||
     filters.maxEntrants !== undefined ||
     (filters.sortBy && filters.sortBy !== 'entrants-desc') ||
-    filters.hideCompleted === true ||
     (filters.search && filters.search !== '');
 
   return (
@@ -205,27 +197,6 @@ export function GiveawayFiltersSheet() {
                 })
               }
             />
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="hideCompleted" className="cursor-pointer">
-                Hide Completed Giveaways
-              </Label>
-              <Switch
-                id="hideCompleted"
-                checked={filters.hideCompleted ?? false}
-                onCheckedChange={(checked) =>
-                  setFilters({
-                    ...filters,
-                    hideCompleted: checked
-                  })
-                }
-              />
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Hide giveaways where you've completed all entry tasks
-            </p>
           </div>
 
           <div className="flex gap-3 pt-4">
