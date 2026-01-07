@@ -75,12 +75,12 @@ export function TemplateCard({
       </div>
 
       <CardHeader className="flex-1">
-        <div className="flex justify-between items-start gap-2">
+        <div className="flex justify-between items-start gap-1">
           <div className="flex-1 min-w-0">
-            <CardTitle className="mt-1 line-clamp-1">
+            <CardTitle className="mt-2 line-clamp-1">
               {item.template.template.name}
             </CardTitle>
-            <CardDescription className="line-clamp-2">
+            <CardDescription className="line-clamp-2 mt-2">
               {item.template.template.description}
             </CardDescription>
           </div>
