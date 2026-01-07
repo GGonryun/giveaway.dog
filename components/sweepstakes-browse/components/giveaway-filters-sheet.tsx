@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { browser } from '@/lib/browser';
 import {
   Sheet,
   SheetContent,
@@ -47,7 +48,6 @@ const saveFiltersToCookie = (filters: GiveawayFilters) => {
 
 export function GiveawayFiltersSheet() {
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -77,32 +77,33 @@ export function GiveawayFiltersSheet() {
   }, [searchParams]);
 
   const handleApplyFilters = () => {
-    const params = new URLSearchParams();
+    const paramsObj: Record<string, string | null> = {};
 
-    if (filters.minEntrants !== undefined && filters.minEntrants > 0) {
-      params.set('minEntrants', filters.minEntrants.toString());
-    }
+    paramsObj.minEntrants =
+      filters.minEntrants !== undefined && filters.minEntrants > 0
+        ? filters.minEntrants.toString()
+        : null;
 
-    if (filters.maxEntrants !== undefined && filters.maxEntrants > 0) {
-      params.set('maxEntrants', filters.maxEntrants.toString());
-    }
+    paramsObj.maxEntrants =
+      filters.maxEntrants !== undefined && filters.maxEntrants > 0
+        ? filters.maxEntrants.toString()
+        : null;
 
-    if (filters.sortBy && filters.sortBy !== 'entrants-desc') {
-      params.set('sortBy', filters.sortBy);
-    }
+    paramsObj.sortBy =
+      filters.sortBy && filters.sortBy !== 'entrants-desc'
+        ? filters.sortBy
+        : null;
 
-    if (filters.hideCompleted) {
-      params.set('hideCompleted', 'true');
-    }
+    paramsObj.hideCompleted = filters.hideCompleted ? 'true' : null;
 
-    if (filters.search) {
-      params.set('search', filters.search);
-    }
+    paramsObj.search = filters.search || null;
+
+    paramsObj.page = null;
 
     saveFiltersToCookie(filters);
 
-    const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname);
+    browser.changeParams(paramsObj);
+    router.refresh();
     setIsOpen(false);
   };
 
@@ -113,7 +114,8 @@ export function GiveawayFiltersSheet() {
     };
     setFilters(clearedFilters);
     saveFiltersToCookie(clearedFilters);
-    router.push(pathname);
+    browser.changeParams(null);
+    router.refresh();
     setIsOpen(false);
   };
 

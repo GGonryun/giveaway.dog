@@ -72,6 +72,7 @@ export function WinnersLeaderboard({
   const handleClearSearch = () => {
     const params = new URLSearchParams(searchParams);
     params.delete('search');
+    params.delete('page');
     const queryString = params.toString();
     router.push(queryString ? `${pathname}?${queryString}` : pathname);
   };
@@ -212,7 +213,13 @@ export function WinnersLeaderboard({
             <PaginationItem>
               <PaginationPrevious
                 href={
-                  currentPage > 1 ? `${pathname}?page=${currentPage - 1}` : '#'
+                  currentPage > 1
+                    ? (() => {
+                        const params = new URLSearchParams(searchParams);
+                        params.set('page', (currentPage - 1).toString());
+                        return `${pathname}?${params.toString()}`;
+                      })()
+                    : '#'
                 }
                 aria-disabled={currentPage <= 1}
                 className={
@@ -228,7 +235,13 @@ export function WinnersLeaderboard({
             <PaginationItem>
               <PaginationNext
                 href={
-                  hasMoreResults ? `${pathname}?page=${currentPage + 1}` : '#'
+                  hasMoreResults
+                    ? (() => {
+                        const params = new URLSearchParams(searchParams);
+                        params.set('page', (currentPage + 1).toString());
+                        return `${pathname}?${params.toString()}`;
+                      })()
+                    : '#'
                 }
                 aria-disabled={!hasMoreResults}
                 className={

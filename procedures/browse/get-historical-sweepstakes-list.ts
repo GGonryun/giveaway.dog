@@ -10,15 +10,37 @@ import { compact } from 'lodash';
 import { datetime } from '@/lib/date';
 import { giveawayFiltersSchema } from '@/lib/filters/giveaway-filters';
 import { HISTORY_PAGE_SIZE } from '@/lib/pagination';
+import { z } from 'zod';
 
 const getHistoricalSweepstakesList = procedure()
   .authorization({
     required: false
   })
-  .input(giveawayFiltersSchema.optional())
+  .input(
+    giveawayFiltersSchema
+      .extend({
+        page: z.number().int().min(1).optional()
+      })
+      .optional()
+  )
   .output(publicSweepstakesSchema.array())
+  .cache(({ input }) => ({
+    keyParts: [
+      'historical-sweepstakes-list',
+      input?.page?.toString() ?? '1',
+      input?.sortBy ?? 'default',
+      input?.minEntrants?.toString() ?? 'no-min',
+      input?.maxEntrants?.toString() ?? 'no-max',
+      input?.hideCompleted?.toString() ?? 'false',
+      input?.search ?? 'no-search'
+    ],
+    tags: ['historical-sweepstakes-list'],
+    revalidate: 300
+  }))
   .handler(async ({ db, input }) => {
     const daysAgo = datetime.daysAgo(1);
+    const page = input?.page ?? 1;
+    const skip = (page - 1) * HISTORY_PAGE_SIZE;
 
     let orderBy: any = {
       timing: {
@@ -62,6 +84,7 @@ const getHistoricalSweepstakesList = procedure()
         }
       },
       orderBy,
+      skip,
       take: HISTORY_PAGE_SIZE
     });
 

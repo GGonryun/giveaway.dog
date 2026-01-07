@@ -35,12 +35,14 @@ export const HistoryFilters: React.FC<{
     } else {
       params.delete('search');
     }
+    params.delete('page');
     router.push(`${pathname}?${params.toString()}`);
   };
 
   const handleClearSearch = () => {
     const params = new URLSearchParams(searchParams);
     params.delete('search');
+    params.delete('page');
     const queryString = params.toString();
     router.push(queryString ? `${pathname}?${queryString}` : pathname);
   };
@@ -82,7 +84,13 @@ export const HistoryFilters: React.FC<{
             <PaginationItem>
               <PaginationPrevious
                 href={
-                  currentPage > 1 ? `${pathname}?page=${currentPage - 1}` : '#'
+                  currentPage > 1
+                    ? (() => {
+                        const params = new URLSearchParams(searchParams);
+                        params.set('page', (currentPage - 1).toString());
+                        return `${pathname}?${params.toString()}`;
+                      })()
+                    : '#'
                 }
                 aria-disabled={currentPage <= 1}
                 className={
@@ -98,7 +106,13 @@ export const HistoryFilters: React.FC<{
             <PaginationItem>
               <PaginationNext
                 href={
-                  hasMoreResults ? `${pathname}?page=${currentPage + 1}` : '#'
+                  hasMoreResults
+                    ? (() => {
+                        const params = new URLSearchParams(searchParams);
+                        params.set('page', (currentPage + 1).toString());
+                        return `${pathname}?${params.toString()}`;
+                      })()
+                    : '#'
                 }
                 aria-disabled={!hasMoreResults}
                 className={

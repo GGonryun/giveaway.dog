@@ -51,6 +51,7 @@ type SearchParams = {
   sortBy?: string;
   hideCompleted?: string;
   search?: string;
+  page?: string;
 };
 
 export default async function Page({
@@ -68,12 +69,14 @@ export default async function Page({
 }
 
 const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
-  const filters: GiveawayFilters = {
+  const page = params.page ? parseInt(params.page) : 1;
+  const filters: GiveawayFilters & { page?: number } = {
     minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
     maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
     sortBy: params.sortBy as GiveawayFilters['sortBy'],
     hideCompleted: params.hideCompleted === 'true',
-    search: params.search
+    search: params.search,
+    page
   };
 
   const sweepstakes = await getHistoricalSweepstakesList(filters);

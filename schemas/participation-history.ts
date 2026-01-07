@@ -11,7 +11,8 @@ export const participationHistoryItemSchema = z.object({
   completedTasks: z.number(),
   lastParticipatedAt: z.string(),
   banner: z.string().nullable(),
-  sweepstakesStatus: derivedSweepstakesStatusSchema
+  sweepstakesStatus: derivedSweepstakesStatusSchema,
+  hasWon: z.boolean()
 });
 
 export type ParticipationHistoryItem = z.infer<

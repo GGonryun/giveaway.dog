@@ -12,11 +12,13 @@ import {
 } from '@/components/ui/table';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { ParticipationHistory } from '@/schemas/participation-history';
-import { Clock, TrendingUp } from 'lucide-react';
+import { Clock, TrendingUp, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { SweepstakesStatusBadge } from '../sweepstakes/status-badge';
 import { toEngagementTheme } from '@/lib/participant/util';
 import { datetime } from '@/lib/date';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 const DEFAULT_PAGE_SIZE = 50;
 
@@ -24,20 +26,28 @@ export const ParticipationHistoryTable: React.FC<{
   history: ParticipationHistory;
 }> = ({ history }) => {
   const [page, setPage] = useState(1);
+  const [showWinsOnly, setShowWinsOnly] = useState(false);
+
+  const filteredData = useMemo(() => {
+    if (showWinsOnly) {
+      return history.filter((item) => item.hasWon);
+    }
+    return history;
+  }, [history, showWinsOnly]);
 
   const paginatedData = useMemo(() => {
-    const total = history.length;
+    const total = filteredData.length;
     const totalPages = Math.ceil(total / DEFAULT_PAGE_SIZE);
     const startIndex = (page - 1) * DEFAULT_PAGE_SIZE;
     const endIndex = startIndex + DEFAULT_PAGE_SIZE;
-    const items = history.slice(startIndex, endIndex);
+    const items = filteredData.slice(startIndex, endIndex);
 
     return {
       items,
       total,
       totalPages
     };
-  }, [history, page]);
+  }, [filteredData, page]);
 
   if (history.length === 0) {
     return (
@@ -54,76 +64,117 @@ export const ParticipationHistoryTable: React.FC<{
     );
   }
 
+  const winsCount = history.filter((item) => item.hasWon).length;
+
   return (
-    <Card className="p-0 overflow-hidden">
-      <CardContent className="p-0">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Giveaway</TableHead>
-                <TableHead>Progress</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Last Activity</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {paginatedData.items.map((item) => (
-                <TableRow key={item.sweepstakesId}>
-                  <TableCell>
-                    <Link
-                      href={`/browse/${item.sweepstakesId}`}
-                      className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
-                    >
-                      <div>
-                        <div className="font-medium text-sm hover:underline">
-                          {item.sweepstakesName}
-                        </div>
-                      </div>
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-16 bg-muted rounded-full h-1.5">
-                        <div
-                          className={`h-1.5 rounded-full transition-all ${toEngagementTheme(item.engagement)}`}
-                          style={{ width: `${item.engagement}%` }}
-                        />
-                      </div>
-                      <span className="text-xs font-medium min-w-[2.5rem]">
-                        {item.engagement}%
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <SweepstakesStatusBadge
-                      status={item.sweepstakesStatus}
-                      startDate={new Date(item.sweepstakesStartDate)}
-                      endDate={new Date(item.sweepstakesEndDate)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-1 text-sm">
-                      <Clock className="h-3 w-3 text-muted-foreground" />
-                      <span>
-                        {datetime.format(item.lastParticipatedAt, 'short')}
-                      </span>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="wins-only"
+            checked={showWinsOnly}
+            onCheckedChange={(checked) => {
+              setShowWinsOnly(checked);
+              setPage(1);
+            }}
+          />
+          <Label htmlFor="wins-only" className="cursor-pointer">
+            Show wins only
+            {winsCount > 0 && (
+              <span className="ml-1.5 text-xs text-muted-foreground">
+                ({winsCount})
+              </span>
+            )}
+          </Label>
         </div>
-        <TablePagination
-          totalItems={paginatedData.total}
-          currentPage={page}
-          totalPages={paginatedData.totalPages}
-          pageSize={DEFAULT_PAGE_SIZE}
-          onPageChange={setPage}
-          itemName="giveaways"
-        />
-      </CardContent>
-    </Card>
+      </div>
+
+      {filteredData.length === 0 && showWinsOnly ? (
+        <Card>
+          <CardContent>
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <Trophy className="h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">
+                You haven't won any giveaways yet.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="p-0 overflow-hidden">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Giveaway</TableHead>
+                    <TableHead>Progress</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Last Activity</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {paginatedData.items.map((item) => (
+                    <TableRow key={item.sweepstakesId}>
+                      <TableCell>
+                        <Link
+                          href={`/browse/${item.sweepstakesId}`}
+                          className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+                        >
+                          <div className="flex items-center gap-2">
+                            {item.hasWon && (
+                              <Trophy className="h-4 w-4 text-yellow-500 flex-shrink-0" />
+                            )}
+                            <div className="font-medium text-sm hover:underline">
+                              {item.sweepstakesName}
+                            </div>
+                          </div>
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-16 bg-muted rounded-full h-1.5">
+                            <div
+                              className={`h-1.5 rounded-full transition-all ${toEngagementTheme(item.engagement)}`}
+                              style={{ width: `${item.engagement}%` }}
+                            />
+                          </div>
+                          <span className="text-xs font-medium min-w-[2.5rem]">
+                            {item.engagement}%
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <SweepstakesStatusBadge
+                          status={item.sweepstakesStatus}
+                          startDate={new Date(item.sweepstakesStartDate)}
+                          endDate={new Date(item.sweepstakesEndDate)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-1 text-sm">
+                          <Clock className="h-3 w-3 text-muted-foreground" />
+                          <span>
+                            {datetime.format(item.lastParticipatedAt, 'short')}
+                          </span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+            <TablePagination
+              totalItems={paginatedData.total}
+              currentPage={page}
+              totalPages={paginatedData.totalPages}
+              pageSize={DEFAULT_PAGE_SIZE}
+              onPageChange={setPage}
+              itemName="giveaways"
+            />
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 };

@@ -38,7 +38,14 @@ const getParticipationHistory = procedure()
               orderBy: {
                 completedAt: 'desc'
               },
-              take: 1
+              take: 1,
+              include: {
+                draws: {
+                  where: {
+                    result: 'WINNER'
+                  }
+                }
+              }
             }
           }
         }
@@ -53,7 +60,8 @@ const getParticipationHistory = procedure()
         const allCompletions = sweepstakes.tasks.flatMap((task) =>
           task.completions.map((completion) => ({
             taskId: task.id,
-            completedAt: completion.completedAt
+            completedAt: completion.completedAt,
+            hasWinningDraw: completion.draws.length > 0
           }))
         );
 
@@ -71,6 +79,8 @@ const getParticipationHistory = procedure()
         const engagement =
           totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
+        const hasWon = allCompletions.some((c) => c.hasWinningDraw);
+
         return {
           sweepstakesId: sweepstakes.id,
           sweepstakesName:
@@ -83,6 +93,7 @@ const getParticipationHistory = procedure()
           lastParticipatedAt: lastParticipation.toISOString(),
           banner: sweepstakes.details?.banner ?? null,
           sweepstakesStatus: toDerivedSweepstakeStatus(sweepstakes),
+          hasWon,
           _sortDate: lastParticipation
         };
       })
