@@ -9,8 +9,7 @@
 # support channel
 
 - [ ] Winners tab appears twice
-- [ ] Search on winners
-- [ ] Show in account tab which giveaways the winner has won.
+
 - [ ] Browse page is loading slowly and has a lot of shared code with the history page.
 
 # Kurozzz
