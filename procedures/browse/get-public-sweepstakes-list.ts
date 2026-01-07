@@ -16,6 +16,18 @@ const getPublicSweepstakesList = procedure()
   })
   .input(giveawayFiltersSchema.optional())
   .output(publicSweepstakesSchema.array())
+  .cache(({ input }) => ({
+    keyParts: [
+      'public-sweepstakes-list',
+      input?.sortBy ?? 'default',
+      input?.minEntrants?.toString() ?? 'no-min',
+      input?.maxEntrants?.toString() ?? 'no-max',
+      input?.hideCompleted?.toString() ?? 'false',
+      input?.search ?? 'no-search'
+    ],
+    tags: ['public-sweepstakes-list'],
+    revalidate: 300
+  }))
   .handler(async ({ db, input }) => {
     const now = new Date();
 
