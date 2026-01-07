@@ -13,7 +13,8 @@ const getWinnersLeaderboard = procedure()
     z
       .object({
         page: z.number().int().min(1).default(1),
-        limit: z.number().int().min(1).max(100).default(WINNERS_PAGE_SIZE)
+        limit: z.number().int().min(1).max(100).default(WINNERS_PAGE_SIZE),
+        search: z.string().optional()
       })
       .optional()
   )
@@ -22,37 +23,69 @@ const getWinnersLeaderboard = procedure()
     const page = input?.page ?? 1;
     const limit = input?.limit ?? WINNERS_PAGE_SIZE;
     const skip = (page - 1) * limit;
+    const search = input?.search?.trim();
 
     // Use raw SQL to efficiently aggregate wins and paginate at database level
-    const winnersWithCounts = await db.$queryRaw<
-      Array<{
-        userId: string;
-        userName: string | null;
-        userEmail: string | null;
-        userImage: string | null;
-        winCount: bigint;
-      }>
-    >`
-      SELECT
-        u.id as "userId",
-        u.name as "userName",
-        u.email as "userEmail",
-        u.image as "userImage",
-        COUNT(DISTINCT d.id) as "winCount"
-      FROM "User" u
-      INNER JOIN "Participant" p ON p."userId" = u.id
-      INNER JOIN "TaskCompletion" tc ON tc."participantId" = p.id
-      INNER JOIN "PrizeDraw" d ON d."taskCompletionId" = tc.id
-      INNER JOIN "Prize" pr ON pr.id = d."prizeId"
-      INNER JOIN "Sweepstakes" s ON s.id = pr."sweepstakesId"
-      INNER JOIN "SweepstakesVisibility" sv ON sv."sweepstakesId" = s.id
-      WHERE d.result = 'WINNER'
-        AND sv.visibility = 'PUBLIC'
-      GROUP BY u.id, u.name, u.email, u.image
-      ORDER BY "winCount" DESC, u.id ASC
-      LIMIT ${limit}
-      OFFSET ${skip}
-    `;
+    const winnersWithCounts = search
+      ? await db.$queryRaw<
+          Array<{
+            userId: string;
+            userName: string | null;
+            userEmail: string | null;
+            userImage: string | null;
+            winCount: bigint;
+          }>
+        >`
+          SELECT
+            u.id as "userId",
+            u.name as "userName",
+            u.email as "userEmail",
+            u.image as "userImage",
+            COUNT(DISTINCT d.id) as "winCount"
+          FROM "User" u
+          INNER JOIN "Participant" p ON p."userId" = u.id
+          INNER JOIN "TaskCompletion" tc ON tc."participantId" = p.id
+          INNER JOIN "PrizeDraw" d ON d."taskCompletionId" = tc.id
+          INNER JOIN "Prize" pr ON pr.id = d."prizeId"
+          INNER JOIN "Sweepstakes" s ON s.id = pr."sweepstakesId"
+          INNER JOIN "SweepstakesVisibility" sv ON sv."sweepstakesId" = s.id
+          WHERE d.result = 'WINNER'
+            AND sv.visibility = 'PUBLIC'
+            AND LOWER(u.name) LIKE LOWER(${`%${search}%`})
+          GROUP BY u.id, u.name, u.email, u.image
+          ORDER BY "winCount" DESC, u.id ASC
+          LIMIT ${limit}
+          OFFSET ${skip}
+        `
+      : await db.$queryRaw<
+          Array<{
+            userId: string;
+            userName: string | null;
+            userEmail: string | null;
+            userImage: string | null;
+            winCount: bigint;
+          }>
+        >`
+          SELECT
+            u.id as "userId",
+            u.name as "userName",
+            u.email as "userEmail",
+            u.image as "userImage",
+            COUNT(DISTINCT d.id) as "winCount"
+          FROM "User" u
+          INNER JOIN "Participant" p ON p."userId" = u.id
+          INNER JOIN "TaskCompletion" tc ON tc."participantId" = p.id
+          INNER JOIN "PrizeDraw" d ON d."taskCompletionId" = tc.id
+          INNER JOIN "Prize" pr ON pr.id = d."prizeId"
+          INNER JOIN "Sweepstakes" s ON s.id = pr."sweepstakesId"
+          INNER JOIN "SweepstakesVisibility" sv ON sv."sweepstakesId" = s.id
+          WHERE d.result = 'WINNER'
+            AND sv.visibility = 'PUBLIC'
+          GROUP BY u.id, u.name, u.email, u.image
+          ORDER BY "winCount" DESC, u.id ASC
+          LIMIT ${limit}
+          OFFSET ${skip}
+        `;
 
     // For each winner, fetch their individual wins
     const userIds = winnersWithCounts.map((w) => w.userId);

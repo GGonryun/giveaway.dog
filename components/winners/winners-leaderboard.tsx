@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   ChevronDown,
   ChevronUp,
@@ -26,18 +26,22 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '@/components/ui/pagination';
-import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 import { WINNERS_PAGE_SIZE } from '@/lib/pagination';
 import { WinnerLeaderboardSchema } from '@/schemas/giveaway/winners';
+import { AllGiveawaysSearch } from '@/components/sweepstakes-browse/components/all-giveaways-search';
 
 export function WinnersLeaderboard({
   winners,
-  currentPage
+  currentPage,
+  currentSearch
 }: {
   winners: WinnerLeaderboardSchema[];
   currentPage: number;
+  currentSearch: string;
 }) {
+  const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [openWinners, setOpenWinners] = useState<Set<string>>(new Set());
   const hasResults = winners.length > 0;
   const hasMoreResults = winners.length === WINNERS_PAGE_SIZE;
@@ -54,6 +58,24 @@ export function WinnersLeaderboard({
     });
   };
 
+  const handleSearch = (query: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (query) {
+      params.set('search', query);
+    } else {
+      params.delete('search');
+    }
+    params.delete('page');
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const handleClearSearch = () => {
+    const params = new URLSearchParams(searchParams);
+    params.delete('search');
+    const queryString = params.toString();
+    router.push(queryString ? `${pathname}?${queryString}` : pathname);
+  };
+
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('en-US', {
       month: 'short',
@@ -63,25 +85,29 @@ export function WinnersLeaderboard({
   };
 
   return (
-    <div className="w-full bg-background py-6 sm:py-12 pb-16 container space-y-8">
-      <MarketingPageHeader
-        title="Winner Leaderboard"
-        description="Top giveaway winners and their prize history"
-      />
-
-      <div className="flex gap-2 w-full items-center justify-center">
-        <Button variant="outline" asChild className="flex-1 sm:flex-initial">
-          <Link href="/browse">
-            <Grid3x3 className="h-4 w-4 mr-2" />
-            Active Giveaways
-          </Link>
-        </Button>
-        <Button variant="outline" asChild className="flex-1 sm:flex-initial">
-          <Link href="/history">
-            <History className="h-4 w-4 mr-2" />
-            History
-          </Link>
-        </Button>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+        <div className="flex-1 w-full">
+          <AllGiveawaysSearch
+            onSearch={handleSearch}
+            onClear={handleClearSearch}
+            defaultValue={currentSearch}
+          />
+        </div>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button variant="outline" asChild className="flex-1 sm:flex-initial">
+            <Link href="/browse">
+              <Grid3x3 className="h-4 w-4 mr-2" />
+              Active Giveaways
+            </Link>
+          </Button>
+          <Button variant="outline" asChild className="flex-1 sm:flex-initial">
+            <Link href="/history">
+              <History className="h-4 w-4 mr-2" />
+              History
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-4">

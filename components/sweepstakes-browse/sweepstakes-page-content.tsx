@@ -1,12 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Grid3x3, History, Trophy } from 'lucide-react';
 
 import { AllGiveawaysGrid } from './components/all-giveaways-grid';
-import { AllGiveawaysSearch } from './components/all-giveaways-search';
 import { GiveawayFiltersSheet } from './components/giveaway-filters-sheet';
 import { HostCTA } from './components/host-cta';
 import { SubscriptionCTA } from './components/subscription-cta';
@@ -23,6 +21,7 @@ import {
   PaginationPrevious
 } from '@/components/ui/pagination';
 import { HISTORY_PAGE_SIZE } from '@/lib/pagination';
+import { AllGiveawaysSearch } from './components/all-giveaways-search';
 
 export const SweepstakesPageContent: React.FC<{
   sweepstakes: PublicSweepstakeSchema[];
@@ -41,7 +40,6 @@ export const SweepstakesPageContent: React.FC<{
   showPagination = false,
   pageSize = HISTORY_PAGE_SIZE
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isHistoryPage = pathname === '/history';
@@ -58,14 +56,6 @@ export const SweepstakesPageContent: React.FC<{
   const hasResults = filteredSweepstakes.length > 0;
   const hasMoreResults = filteredSweepstakes.length === pageSize;
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
-
-  const handleClearSearch = () => {
-    setSearchQuery('');
-  };
-
   return (
     <div className="w-full bg-background py-6 sm:py-12 container space-y-8 sm:space-y-12">
       <div className="mb-8">
@@ -75,10 +65,7 @@ export const SweepstakesPageContent: React.FC<{
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
           <div className="flex-1 w-full">
-            <AllGiveawaysSearch
-              onSearch={handleSearch}
-              onClear={handleClearSearch}
-            />
+            <AllGiveawaysSearch />
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
             {!isHistoryPage && <GiveawayFiltersSheet />}
@@ -114,7 +101,6 @@ export const SweepstakesPageContent: React.FC<{
         <div className="flex flex-col lg:flex-row lg:items-start gap-6">
           <div className="flex-1 min-w-0">
             <AllGiveawaysGrid
-              searchQuery={searchQuery}
               sweepstakes={filteredSweepstakes}
               participation={participation}
             />

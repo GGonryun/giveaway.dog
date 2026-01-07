@@ -92,6 +92,15 @@ const getPublicSweepstakesList = procedure()
       results = results.filter((s) => s.participants <= input.maxEntrants!);
     }
 
+    if (input?.search) {
+      const searchLower = input.search.toLowerCase();
+      results = results.filter(
+        (s) =>
+          s.name.toLowerCase().includes(searchLower) ||
+          s.description.toLowerCase().includes(searchLower)
+      );
+    }
+
     return results;
   });
 

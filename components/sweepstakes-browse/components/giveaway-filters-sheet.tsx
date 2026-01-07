@@ -66,7 +66,8 @@ export function GiveawayFiltersSheet() {
       'entrants-desc',
     hideCompleted: searchParams.get('hideCompleted')
       ? searchParams.get('hideCompleted') === 'true'
-      : (cookieFilters.hideCompleted ?? false)
+      : (cookieFilters.hideCompleted ?? false),
+    search: searchParams.get('search') ?? cookieFilters.search
   };
 
   const [filters, setFilters] = useState<GiveawayFilters>(currentFilters);
@@ -94,6 +95,10 @@ export function GiveawayFiltersSheet() {
       params.set('hideCompleted', 'true');
     }
 
+    if (filters.search) {
+      params.set('search', filters.search);
+    }
+
     saveFiltersToCookie(filters);
 
     const queryString = params.toString();
@@ -116,7 +121,8 @@ export function GiveawayFiltersSheet() {
     filters.minEntrants !== undefined ||
     filters.maxEntrants !== undefined ||
     (filters.sortBy && filters.sortBy !== 'entrants-desc') ||
-    filters.hideCompleted === true;
+    filters.hideCompleted === true ||
+    (filters.search && filters.search !== '');
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -129,7 +135,7 @@ export function GiveawayFiltersSheet() {
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-full sm:max-w-md">
+      <SheetContent side="left" className="w-full sm:max-w-md z-50">
         <SheetHeader>
           <SheetTitle>Filter Giveaways</SheetTitle>
           <SheetDescription>

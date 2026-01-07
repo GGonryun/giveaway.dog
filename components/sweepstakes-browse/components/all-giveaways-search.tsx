@@ -8,13 +8,15 @@ import { Search, X } from 'lucide-react';
 interface AllGiveawaysSearchProps {
   onSearch?: (query: string) => void;
   onClear?: () => void;
+  defaultValue?: string;
 }
 
 export function AllGiveawaysSearch({
   onSearch,
-  onClear
+  onClear,
+  defaultValue
 }: AllGiveawaysSearchProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(defaultValue ?? '');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

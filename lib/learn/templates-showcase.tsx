@@ -8,8 +8,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { STATIC_TEMPLATES } from '@/lib/templates/data/static-templates';
 import { getTemplatePlatforms } from '@/lib/templates/utils/get-template-platforms';
 import { TemplatePlatformIcons } from '@/lib/templates/components/template-platform-icons';

@@ -8,23 +8,13 @@ import { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas'
 
 interface AllGiveawaysGridProps {
   sweepstakes: PublicSweepstakeSchema[];
-  searchQuery?: string;
   participation: PublicSweepstakesParticipationSchema;
 }
 
 export function AllGiveawaysGrid({
-  searchQuery = '',
   sweepstakes = [],
   participation = {}
 }: AllGiveawaysGridProps) {
-  const filteredGiveaways = sweepstakes.filter((giveaway) => {
-    const matchesSearch =
-      searchQuery === '' ||
-      giveaway.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      giveaway.description.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesSearch;
-  });
 
   if (sweepstakes.length === 0) {
     return (
@@ -43,13 +33,13 @@ export function AllGiveawaysGrid({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Typography.Paragraph className="text-sm text-muted-foreground">
-          Showing {filteredGiveaways.length}{' '}
-          {pluralize('giveaway', filteredGiveaways.length)}
+          Showing {sweepstakes.length}{' '}
+          {pluralize('giveaway', sweepstakes.length)}
         </Typography.Paragraph>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredGiveaways.map((sweepstake) => {
+        {sweepstakes.map((sweepstake) => {
           return (
             <div key={sweepstake.id}>
               <GiveawayItem

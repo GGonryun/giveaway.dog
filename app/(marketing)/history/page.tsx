@@ -1,9 +1,11 @@
-import { SweepstakesPageContent } from '@/components/sweepstakes-browse/sweepstakes-page-content';
+import { SweepstakesPageSkeleton } from '@/components/sweepstakes-browse/sweepstakes-page-skeleton';
 import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
 import getHistoricalSweepstakesList from '@/procedures/browse/get-historical-sweepstakes-list';
-import { HISTORY_PAGE_SIZE } from '@/lib/pagination';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
+import { GiveawayFilters } from '@/lib/filters/giveaway-filters';
+import { HistoryFilters } from './filters';
+import { AllGiveawaysGrid } from '@/components/sweepstakes-browse/components/all-giveaways-grid';
 
 export const revalidate = 60;
 
@@ -43,18 +45,40 @@ export const metadata: Metadata = {
   }
 };
 
+type SearchParams = {
+  minEntrants?: string;
+  maxEntrants?: string;
+  sortBy?: string;
+  hideCompleted?: string;
+  search?: string;
+};
+
 export default async function Page({
   searchParams
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
-  const page = parseInt(params.page ?? '1', 10);
-  const sweepstakes = await getHistoricalSweepstakesList({
-    page,
-    limit: HISTORY_PAGE_SIZE
-  });
+
+  return (
+    <Suspense fallback={<SweepstakesPageSkeleton />}>
+      <Wrapper params={params} />
+    </Suspense>
+  );
+}
+
+const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
+  const filters: GiveawayFilters = {
+    minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
+    maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
+    sortBy: params.sortBy as GiveawayFilters['sortBy'],
+    hideCompleted: params.hideCompleted === 'true',
+    search: params.search
+  };
+
+  const sweepstakes = await getHistoricalSweepstakesList(filters);
   const participation = await getPublicSweepstakesParticipation();
+
   if (!sweepstakes.ok)
     return (
       <div>
@@ -70,16 +94,14 @@ export default async function Page({
     );
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SweepstakesPageContent
+    <HistoryFilters
+      hasResults={sweepstakes.data.length > 0}
+      hasMoreResults={sweepstakes.data.length === 20}
+    >
+      <AllGiveawaysGrid
         sweepstakes={sweepstakes.data}
         participation={participation.data}
-        title="Giveaway History"
-        description="Browse historical records of completed giveaways and see past winners"
-        showCTAs={false}
-        showPagination={true}
-        pageSize={HISTORY_PAGE_SIZE}
       />
-    </Suspense>
+    </HistoryFilters>
   );
-}
+};

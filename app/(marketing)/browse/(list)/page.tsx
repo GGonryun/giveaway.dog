@@ -5,6 +5,8 @@ import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { GiveawayFilters } from '@/lib/filters/giveaway-filters';
+import { BrowsePageFilters } from './filters';
+import { AllGiveawaysGrid } from '@/components/sweepstakes-browse/components/all-giveaways-grid';
 
 export const revalidate = 300; // 5 minutes in seconds
 
@@ -49,6 +51,7 @@ type SearchParams = {
   maxEntrants?: string;
   sortBy?: string;
   hideCompleted?: string;
+  search?: string;
 };
 
 export default async function Page({
@@ -70,7 +73,8 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
     minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
     maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
     sortBy: params.sortBy as GiveawayFilters['sortBy'],
-    hideCompleted: params.hideCompleted === 'true'
+    hideCompleted: params.hideCompleted === 'true',
+    search: params.search
   };
 
   const sweepstakes = await getPublicSweepstakesList(filters);
@@ -91,9 +95,14 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
     );
 
   return (
-    <SweepstakesPageContent
-      sweepstakes={sweepstakes.data}
-      participation={participation.data}
-    />
+    <BrowsePageFilters
+      hasResults={sweepstakes.data.length > 0}
+      hasMoreResults={sweepstakes.data.length === 20}
+    >
+      <AllGiveawaysGrid
+        sweepstakes={sweepstakes.data}
+        participation={participation.data}
+      />
+    </BrowsePageFilters>
   );
 };
