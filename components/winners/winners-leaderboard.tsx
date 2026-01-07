@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -45,6 +45,11 @@ export function WinnersLeaderboard({
   const [openWinners, setOpenWinners] = useState<Set<string>>(new Set());
   const hasResults = winners.length > 0;
   const hasMoreResults = winners.length === WINNERS_PAGE_SIZE;
+
+  // Reset open winners when page or search changes
+  useEffect(() => {
+    setOpenWinners(new Set());
+  }, [currentPage, currentSearch]);
 
   const toggleWinner = (userId: string) => {
     setOpenWinners((prev) => {

@@ -3,7 +3,6 @@
 import { AllGiveawaysSearch } from '@/components/sweepstakes-browse/components/all-giveaways-search';
 import { GiveawayFiltersSheet } from '@/components/sweepstakes-browse/components/giveaway-filters-sheet';
 import { Button } from '@/components/ui/button';
-import { browser } from '@/lib/browser';
 import {
   Pagination,
   PaginationContent,
@@ -36,18 +35,15 @@ export const BrowsePageFilters: React.FC<{
       params.delete('search');
     }
     params.delete('page');
-    browser.changeParams(Object.fromEntries(params.entries()));
-    router.refresh();
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   const handleClearSearch = () => {
     const params = new URLSearchParams(searchParams);
     params.delete('search');
     params.delete('page');
-    browser.changeParams(
-      params.size > 0 ? Object.fromEntries(params.entries()) : null
-    );
-    router.refresh();
+    const queryString = params.toString();
+    router.push(queryString ? `${pathname}?${queryString}` : pathname);
   };
 
   return (
