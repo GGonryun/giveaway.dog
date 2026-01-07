@@ -1,4 +1,5 @@
 import { SweepstakesPageContent } from '@/components/sweepstakes-browse/sweepstakes-page-content';
+import { SweepstakesPageSkeleton } from '@/components/sweepstakes-browse/sweepstakes-page-skeleton';
 import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
 import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes-list';
 import { Metadata } from 'next';
@@ -43,18 +44,28 @@ export const metadata: Metadata = {
   }
 };
 
+type SearchParams = {
+  minEntrants?: string;
+  maxEntrants?: string;
+  sortBy?: string;
+  hideCompleted?: string;
+};
+
 export default async function Page({
   searchParams
 }: {
-  searchParams: Promise<{
-    minEntrants?: string;
-    maxEntrants?: string;
-    sortBy?: string;
-    hideCompleted?: string;
-  }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
 
+  return (
+    <Suspense fallback={<SweepstakesPageSkeleton />}>
+      <Wrapper params={params} />
+    </Suspense>
+  );
+}
+
+const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
   const filters: GiveawayFilters = {
     minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
     maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
@@ -80,11 +91,9 @@ export default async function Page({
     );
 
   return (
-    <Suspense>
-      <SweepstakesPageContent
-        sweepstakes={sweepstakes.data}
-        participation={participation.data}
-      />
-    </Suspense>
+    <SweepstakesPageContent
+      sweepstakes={sweepstakes.data}
+      participation={participation.data}
+    />
   );
-}
+};
