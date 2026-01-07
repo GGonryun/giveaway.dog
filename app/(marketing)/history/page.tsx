@@ -78,7 +78,6 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
   };
 
   const sweepstakes = await getHistoricalSweepstakesList(filters);
-  const participation = await getPublicSweepstakesParticipation();
 
   if (!sweepstakes.ok)
     return (
@@ -87,22 +86,12 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
       </div>
     );
 
-  if (!participation.ok)
-    return (
-      <div>
-        [ERROR-{participation.data.code}]: {participation.data.message}
-      </div>
-    );
-
   return (
     <HistoryFilters
       hasResults={sweepstakes.data.length > 0}
       hasMoreResults={sweepstakes.data.length === 20}
     >
-      <AllGiveawaysGrid
-        sweepstakes={sweepstakes.data}
-        participation={participation.data}
-      />
+      <AllGiveawaysGrid sweepstakes={sweepstakes.data} participation={{}} />
     </HistoryFilters>
   );
 };
