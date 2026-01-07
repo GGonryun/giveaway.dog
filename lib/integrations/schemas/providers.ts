@@ -23,9 +23,8 @@ export const PROVIDER_REQUIRED_SCOPES: Record<ProviderTypeSchema, string[]> = {
   YOUTUBE: [],
   INSTAGRAM: [],
   ANONYMOUS: [],
-  BLUESKY: REQUIRED_BLUESKY_SCOPES,
-  // for some reason facebook does not return scopes on sign in or link account
   FACEBOOK: [],
+  BLUESKY: REQUIRED_BLUESKY_SCOPES,
   DISCORD: REQUIRED_DISCORD_SCOPES,
   TWITTER: REQUIRED_TWITTER_SCOPES,
   STEAM: REQUIRED_STEAM_SCOPES,
@@ -84,11 +83,11 @@ export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
   STEAM: true,
   TWITCH: true,
   KICK: true,
+  TIKTOK: true,
   FACEBOOK: true,
-  INSTAGRAM: false,
+  INSTAGRAM: true,
   YOUTUBE: false,
-  EMAIL: false,
-  TIKTOK: true
+  EMAIL: false
 };
 
 export const ENABLED_IDENTITY_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
@@ -100,10 +99,10 @@ export const ENABLED_IDENTITY_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
   TWITCH: true,
   KICK: true,
   TIKTOK: true,
-  FACEBOOK: false,
-  INSTAGRAM: false,
-  YOUTUBE: false,
+  INSTAGRAM: true,
+  FACEBOOK: true,
   ANONYMOUS: true,
+  YOUTUBE: false,
   EMAIL: true
 };
 

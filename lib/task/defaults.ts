@@ -191,7 +191,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
     ['INSTAGRAM_LIKE']: {
       id: '',
       type: 'INSTAGRAM_LIKE',
-      title: 'View our Instagram post',
+      title: 'Like our Instagram post',
       postUrl: '',
       value: 1,
       mandatory: false,

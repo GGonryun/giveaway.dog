@@ -26,6 +26,8 @@ import { IdentityProvider } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
 import { Separator } from '../ui/separator';
 import { BlueskyConnectForm } from '@/lib/auth/components/bluesky-connect-form';
+import { InstagramConnectForm } from '@/lib/auth/components/instagram-connect-form';
+import { FacebookConnectForm } from '@/lib/auth/components/facebook-connect-form';
 
 type LoginButtonType = 'pill' | 'buttons' | 'icons' | 'dots';
 interface LoginOptionsProps {
@@ -72,6 +74,8 @@ export function LoginOptions({
 
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [showBlueskyForm, setShowBlueskyForm] = useState(false);
+  const [showInstagramForm, setShowInstagramForm] = useState(false);
+  const [showFacebookForm, setShowFacebookForm] = useState(false);
 
   const handleEmailSubmit = () => {
     if (!email) {
@@ -103,12 +107,38 @@ export function LoginOptions({
     setErrorMessage(null);
   };
 
+  const handleConnectInstagram = () => {
+    setShowInstagramForm(false);
+    setErrorMessage(null);
+  };
+
+  const handleCancelInstagram = () => {
+    setShowInstagramForm(false);
+    setErrorMessage(null);
+  };
+
+  const handleConnectFacebook = () => {
+    setShowFacebookForm(false);
+    setErrorMessage(null);
+  };
+
+  const handleCancelFacebook = () => {
+    setShowFacebookForm(false);
+    setErrorMessage(null);
+  };
+
   const handleProviderLogin = (provider: IdentityProvider) => {
     if (provider === 'EMAIL') {
       setShowEmailForm(true);
       setErrorMessage(null);
     } else if (provider === 'BLUESKY') {
       setShowBlueskyForm(true);
+      setErrorMessage(null);
+    } else if (provider === 'INSTAGRAM') {
+      setShowInstagramForm(true);
+      setErrorMessage(null);
+    } else if (provider === 'FACEBOOK') {
+      setShowFacebookForm(true);
       setErrorMessage(null);
     } else {
       loginProcedure.run({
@@ -185,6 +215,34 @@ export function LoginOptions({
           redirectTo={redirectTo}
           onConnect={handleConnectBluesky}
           onCancel={handleCancelBluesky}
+        />
+        <AuthError error={errorMessage} />
+      </div>
+    );
+  }
+
+  if (showInstagramForm) {
+    return (
+      <div className={cn('', className)} {...props}>
+        <InstagramConnectForm
+          returnTo={returnTo}
+          redirectTo={redirectTo}
+          onConnect={handleConnectInstagram}
+          onCancel={handleCancelInstagram}
+        />
+        <AuthError error={errorMessage} />
+      </div>
+    );
+  }
+
+  if (showFacebookForm) {
+    return (
+      <div className={cn('', className)} {...props}>
+        <FacebookConnectForm
+          returnTo={returnTo}
+          redirectTo={redirectTo}
+          onConnect={handleConnectFacebook}
+          onCancel={handleCancelFacebook}
         />
         <AuthError error={errorMessage} />
       </div>

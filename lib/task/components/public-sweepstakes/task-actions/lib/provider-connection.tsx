@@ -48,16 +48,6 @@ const useProviderConnection = ({ task }: { task: TaskSchema }) => {
   const requiresConnection =
     !('validation' in task) || task.validation?.type !== 'NONE';
 
-  console.log('useProviderConnection', {
-    task,
-    providerId,
-    providerLabel,
-    provider,
-    isIncomplete,
-    requiresConnection,
-    redirectTo
-  });
-
   const isConnected = !requiresConnection || (provider && !isIncomplete);
 
   return {

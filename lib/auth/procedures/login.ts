@@ -9,6 +9,16 @@ import { signIn } from '../config';
 import { IdentityProvider } from '@prisma/client';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@/lib/integrations/schemas/providers';
 import { redirect } from 'next/navigation';
+import {
+  instagramProfileUrlSchema,
+  extractInstagramUsername,
+  normalizeInstagramUrl
+} from '../schemas/instagram';
+import {
+  facebookProfileUrlSchema,
+  extractFacebookIdentifier,
+  normalizeFacebookUrl
+} from '../schemas/facebook';
 
 const login = procedure()
   .authorization({
@@ -20,12 +30,14 @@ const login = procedure()
       provider: z.nativeEnum(IdentityProvider).optional(),
       email: z.string().optional(),
       blueskyHandle: z.string().optional(),
+      instagramProfileUrl: z.string().optional(),
+      facebookProfileUrl: z.string().optional(),
       revalidate: z.string().optional(),
       returnTo: z.string()
     })
   )
   .handler(async ({ input }) => {
-    const { returnTo, redirectTo, provider, email, blueskyHandle, revalidate } =
+    const { returnTo, redirectTo, provider, email, blueskyHandle, instagramProfileUrl, facebookProfileUrl, revalidate } =
       input;
     // Build query parameters for other providers
     const queryParams = new URLSearchParams();
@@ -53,6 +65,8 @@ const login = procedure()
         email,
         options,
         blueskyHandle,
+        instagramProfileUrl,
+        facebookProfileUrl,
         returnTo
       });
     } catch (error) {
@@ -82,6 +96,8 @@ const signInHandler = async (args: {
   email: string | undefined;
   options: Record<string, string>;
   blueskyHandle: string | undefined;
+  instagramProfileUrl: string | undefined;
+  facebookProfileUrl: string | undefined;
   returnTo: string | undefined;
 }) => {
   const {
@@ -89,6 +105,8 @@ const signInHandler = async (args: {
     email,
     options,
     blueskyHandle,
+    instagramProfileUrl,
+    facebookProfileUrl,
     returnTo
   } = args;
   const provider = parseProvider(rawProvider);
@@ -100,8 +118,6 @@ const signInHandler = async (args: {
     case 'TWITCH':
     case 'STEAM':
     case 'KICK':
-    case 'INSTAGRAM':
-    case 'FACEBOOK':
     case 'TIKTOK':
       return await signIn(
         IDENTITY_PROVIDER_TO_AUTH_PROVIDER[provider],
@@ -114,6 +130,64 @@ const signInHandler = async (args: {
       });
     case 'ANONYMOUS':
       return await signIn('anonymous', options);
+    case 'INSTAGRAM': {
+      if (!instagramProfileUrl) {
+        throw new ApplicationError({
+          code: 'BAD_REQUEST',
+          message: 'Instagram profile URL is required.'
+        });
+      }
+
+      const validationResult = instagramProfileUrlSchema.safeParse(instagramProfileUrl);
+      if (!validationResult.success) {
+        throw new ApplicationError({
+          code: 'VALIDATION_ERROR',
+          message:
+            validationResult.error.errors[0]?.message ||
+            'Invalid Instagram profile URL format'
+        });
+      }
+
+      const normalizedUrl = normalizeInstagramUrl(validationResult.data);
+      const username = extractInstagramUsername(validationResult.data);
+
+      const params = new URLSearchParams();
+      params.append('profileUrl', normalizedUrl);
+      params.append('username', username);
+      if (options.redirectTo) params.append('redirectTo', options.redirectTo);
+
+      const instagramUrl = `/api/instagram/user/link?${params.toString()}`;
+      redirect(instagramUrl);
+    }
+    case 'FACEBOOK': {
+      if (!facebookProfileUrl) {
+        throw new ApplicationError({
+          code: 'BAD_REQUEST',
+          message: 'Facebook profile URL is required.'
+        });
+      }
+
+      const validationResult = facebookProfileUrlSchema.safeParse(facebookProfileUrl);
+      if (!validationResult.success) {
+        throw new ApplicationError({
+          code: 'VALIDATION_ERROR',
+          message:
+            validationResult.error.errors[0]?.message ||
+            'Invalid Facebook profile URL format'
+        });
+      }
+
+      const normalizedUrl = normalizeFacebookUrl(validationResult.data);
+      const identifier = extractFacebookIdentifier(validationResult.data);
+
+      const params = new URLSearchParams();
+      params.append('profileUrl', normalizedUrl);
+      params.append('identifier', identifier);
+      if (options.redirectTo) params.append('redirectTo', options.redirectTo);
+
+      const facebookUrl = `/api/facebook/user/link?${params.toString()}`;
+      redirect(facebookUrl);
+    }
     case 'BLUESKY': {
       if (!blueskyHandle) {
         throw new ApplicationError({

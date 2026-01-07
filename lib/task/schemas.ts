@@ -637,12 +637,8 @@ export const TASK_INPUT_SCHEMA = {
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
   INSTAGRAM_VISIT: z.object({}),
-  INSTAGRAM_LIKE: z.object({
-    username: z.optional(z.string())
-  }),
-  INSTAGRAM_COMMENT: z.object({
-    username: z.optional(z.string())
-  }),
+  INSTAGRAM_LIKE: z.object({}),
+  INSTAGRAM_COMMENT: z.object({}),
   FACEBOOK_VISIT_PAGE: z.object({}),
   FACEBOOK_VIEW_POST: z.object({}),
   TIKTOK_FOLLOW: z.object({}),

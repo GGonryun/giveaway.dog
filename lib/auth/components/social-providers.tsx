@@ -22,11 +22,15 @@ import login from '../procedures/login';
 import { SettingsCard } from '@/components/settings/settings-card';
 import { useState } from 'react';
 import { BlueskyConnectForm } from './bluesky-connect-form';
+import { InstagramConnectForm } from './instagram-connect-form';
+import { FacebookConnectForm } from './facebook-connect-form';
 
 export const SocialProviders = () => {
   const router = useRouter();
   const user = useUser();
   const [showBlueskyInput, setShowBlueskyInput] = useState(false);
+  const [showInstagramInput, setShowInstagramInput] = useState(false);
+  const [showFacebookInput, setShowFacebookInput] = useState(false);
 
   const loginProcedure = useProcedure({
     action: login,
@@ -81,8 +85,10 @@ export const SocialProviders = () => {
                   </div>
                 </div>
 
-                {providerId === 'BLUESKY' &&
-                showBlueskyInput ? null : provider ? (
+                {(providerId === 'BLUESKY' && showBlueskyInput) ||
+                (providerId === 'INSTAGRAM' && showInstagramInput) ||
+                (providerId === 'FACEBOOK' &&
+                  showFacebookInput) ? null : provider ? (
                   <Button
                     variant={isMissing ? 'default' : 'destructive'}
                     size="sm"
@@ -91,6 +97,10 @@ export const SocialProviders = () => {
                       if (isMissing) {
                         if (providerId === 'BLUESKY') {
                           setShowBlueskyInput(true);
+                        } else if (providerId === 'INSTAGRAM') {
+                          setShowInstagramInput(true);
+                        } else if (providerId === 'FACEBOOK') {
+                          setShowFacebookInput(true);
                         } else {
                           loginProcedure.run({
                             provider: providerId,
@@ -122,6 +132,10 @@ export const SocialProviders = () => {
                     onClick={() => {
                       if (providerId === 'BLUESKY') {
                         setShowBlueskyInput(true);
+                      } else if (providerId === 'INSTAGRAM') {
+                        setShowInstagramInput(true);
+                      } else if (providerId === 'FACEBOOK') {
+                        setShowFacebookInput(true);
                       } else {
                         return loginProcedure.run({
                           provider: providerId,
@@ -156,6 +170,22 @@ export const SocialProviders = () => {
                   redirectTo="/account"
                   onConnect={() => setShowBlueskyInput(false)}
                   onCancel={() => setShowBlueskyInput(false)}
+                />
+              )}
+              {providerId === 'INSTAGRAM' && showInstagramInput && (
+                <InstagramConnectForm
+                  returnTo="/account"
+                  redirectTo="/account"
+                  onConnect={() => setShowInstagramInput(false)}
+                  onCancel={() => setShowInstagramInput(false)}
+                />
+              )}
+              {providerId === 'FACEBOOK' && showFacebookInput && (
+                <FacebookConnectForm
+                  returnTo="/account"
+                  redirectTo="/account"
+                  onConnect={() => setShowFacebookInput(false)}
+                  onCancel={() => setShowFacebookInput(false)}
                 />
               )}
             </div>

@@ -95,6 +95,18 @@ export const mockUserProfile: UserSchema = {
       label: 'PreviewUser',
       link: 'https://store.steampowered.com/',
       scopes: PROVIDER_REQUIRED_SCOPES.STEAM
+    },
+    {
+      type: IdentityProvider.INSTAGRAM,
+      label: 'preview.user',
+      link: 'https://www.instagram.com/preview.user/',
+      scopes: PROVIDER_REQUIRED_SCOPES.INSTAGRAM
+    },
+    {
+      type: IdentityProvider.FACEBOOK,
+      label: 'Preview User',
+      link: 'https://www.facebook.com/preview.user',
+      scopes: PROVIDER_REQUIRED_SCOPES.FACEBOOK
     }
   ]
 };

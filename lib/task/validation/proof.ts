@@ -59,22 +59,8 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
         mediaUrl: parsed.mediaUrl
       };
     }
-    case 'INSTAGRAM_LIKE': {
-      const parsed = TASK_INPUT_SCHEMA.INSTAGRAM_LIKE.parse(data);
-
-      return {
-        question: INSTAGRAM_USERNAME_QUESTION,
-        username: parsed.username
-      };
-    }
-    case 'INSTAGRAM_COMMENT': {
-      const parsed = TASK_INPUT_SCHEMA.INSTAGRAM_COMMENT.parse(data);
-
-      return {
-        question: INSTAGRAM_USERNAME_QUESTION,
-        username: parsed.username
-      };
-    }
+    case 'INSTAGRAM_LIKE':
+    case 'INSTAGRAM_COMMENT':
     case 'INSTAGRAM_VISIT':
     case 'FACEBOOK_VIEW_POST':
     case 'FACEBOOK_VISIT_PAGE':

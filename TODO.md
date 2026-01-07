@@ -6,17 +6,16 @@
 
 - [ ] Add the ability for users to select their own prizes.
 
-# Kurozzz
-
-- [ ] Btw is there a way to include Instagram and Facebook profile links on GD profile.
-- [ ] i'll have user's enter their profile information once in the account page and then surface that link for manual verification
-- [ ] i can enhance this by adding a "verify" button after a winner gets selected that either surfaces a tutorial for how to verify user actions or re-runs the automated verification where available to make this easier too. what do you think? would that help as well
-
 # support channel
 
 - [ ] Winners tab appears twice
 - [ ] Search on winners
 - [ ] Show in account tab which giveaways the winner has won.
+- [ ] Browse page is loading slowly and has a lot of shared code with the history page.
+
+# Kurozzz
+
+- [ ] i can enhance this by adding a "verify" button after a winner gets selected that either surfaces a tutorial for how to verify user actions or re-runs the automated verification where available to make this easier too. what do you think? would that help as well
 
 ---
 
