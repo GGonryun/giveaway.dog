@@ -516,6 +516,7 @@ export type ReferralLinkTaskSchema = z.infer<typeof referralLinkTaskSchema>;
 
 export const submitMediaTaskSchema = baseTaskSchema.extend({
   type: z.literal('SUBMIT_MEDIA'),
+  description: z.string().default('Submit the required media as proof.'),
   acceptedTypes: z
     .array(
       z.nativeEnum({

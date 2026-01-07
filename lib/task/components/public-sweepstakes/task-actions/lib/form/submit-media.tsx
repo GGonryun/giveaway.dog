@@ -14,6 +14,7 @@ import { AlertCircleIcon, ImageIcon } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 import { AcceptedFileTypes, FileSize } from '@/lib/files';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
+import { RichTextPreview } from '@/components/ui/rich-text-preview';
 
 export const SubmitMediaTaskActionForm: React.FC<
   TaskActionProps<SubmitMediaTaskSchema>
@@ -43,7 +44,8 @@ export const SubmitMediaTaskActionForm: React.FC<
 
   return (
     <>
-      <TaskContent className="flex-col mt-2">
+      <TaskContent className="flex-col mt-2 gap-0">
+        <RichTextPreview content={task.description} />
         {submission ? (
           <div className="text-sm text-foreground space-y-2">
             <p>You have already submitted your media. Thank you!</p>
@@ -61,15 +63,6 @@ export const SubmitMediaTaskActionForm: React.FC<
           </div>
         ) : (
           <>
-            <Typography.Paragraph className="font-semibold mb-2">
-              Upload your media
-            </Typography.Paragraph>
-            <Typography.Caption className="text-muted-foreground mb-4">
-              Accepted formats: {getAcceptedFileTypes().toString()}
-              {' • '}
-              Max size: 3MB
-            </Typography.Caption>
-
             <FileUpload
               onUpload={setMediaUrl}
               initialUrl={mediaUrl || undefined}
@@ -96,7 +89,6 @@ export const SubmitMediaTaskActionForm: React.FC<
                 <AlertDescription>{error.message}</AlertDescription>
               </Alert>
             )}
-            <Separator />
           </>
         )}
       </TaskContent>

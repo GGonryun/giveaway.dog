@@ -10,7 +10,7 @@ import { DeviceType, GiveawayState } from '@/schemas/giveaway/schemas';
 import { cn } from '@/lib/utils';
 import { date } from '@/lib/date';
 import { getSweepstakesTimingDescription } from './status-badge';
-import { richTextPreviewStyles } from '@/lib/rich-text-styles';
+import { RichTextPreview } from '@/components/ui/rich-text-preview';
 import { PLATFORM_ICONS } from '@/components/social-links/social-link-icon';
 import { parseSocialLinks, type SocialLink } from '@/schemas/social-links';
 
@@ -180,10 +180,7 @@ const DescriptionSection = () => {
 
   return (
     <CardContent>
-      <div
-        className={richTextPreviewStyles}
-        dangerouslySetInnerHTML={{ __html: sweepstakes.setup.description }}
-      />
+      <RichTextPreview content={sweepstakes.setup.description} />
     </CardContent>
   );
 };

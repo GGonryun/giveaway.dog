@@ -346,6 +346,7 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       id: '',
       type: 'SUBMIT_MEDIA',
       title: 'Submit media',
+      description: 'Submit the required media as proof.',
       acceptedTypes: ['IMAGE'],
       value: 1,
       mandatory: false,
