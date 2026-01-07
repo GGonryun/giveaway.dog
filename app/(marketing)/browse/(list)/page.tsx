@@ -1,4 +1,3 @@
-import { SweepstakesPageContent } from '@/components/sweepstakes-browse/sweepstakes-page-content';
 import { SweepstakesPageSkeleton } from '@/components/sweepstakes-browse/sweepstakes-page-skeleton';
 import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
 import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes-list';
@@ -8,7 +7,7 @@ import { GiveawayFilters } from '@/lib/filters/giveaway-filters';
 import { BrowsePageFilters } from './filters';
 import { AllGiveawaysGrid } from '@/components/sweepstakes-browse/components/all-giveaways-grid';
 
-export const revalidate = 300; // 5 minutes in seconds
+export const revalidate = 60; // 1 minute in seconds
 
 export const metadata: Metadata = {
   title: 'Browse Active Giveaways & Contests | Giveaway.dog',
@@ -77,8 +76,10 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
     search: params.search
   };
 
-  const sweepstakes = await getPublicSweepstakesList(filters);
-  const participation = await getPublicSweepstakesParticipation();
+  const [sweepstakes, participation] = await Promise.all([
+    getPublicSweepstakesList(filters),
+    getPublicSweepstakesParticipation()
+  ]);
 
   if (!sweepstakes.ok)
     return (
