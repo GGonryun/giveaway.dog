@@ -77,12 +77,26 @@ function WinnersLoadingSkeleton() {
   );
 }
 
+type SearchParams = {
+  page?: string;
+  search?: string;
+};
+
 export default async function Page({
   searchParams
 }: {
-  searchParams: Promise<{ page?: string; search?: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
+
+  return (
+    <Suspense fallback={<WinnersLoadingSkeleton />}>
+      <Wrapper params={params} />
+    </Suspense>
+  );
+}
+
+const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
   const page = parseInt(params.page ?? '1', 10);
   const search = params.search;
 
@@ -100,12 +114,10 @@ export default async function Page({
     );
 
   return (
-    <Suspense fallback={<WinnersLoadingSkeleton />}>
-      <WinnersLeaderboard
-        winners={winners.data}
-        currentPage={page}
-        currentSearch={search ?? ''}
-      />
-    </Suspense>
+    <WinnersLeaderboard
+      winners={winners.data}
+      currentPage={page}
+      currentSearch={search ?? ''}
+    />
   );
-}
+};
