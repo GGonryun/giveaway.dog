@@ -44,7 +44,7 @@ export const SubmitMediaTaskActionForm: React.FC<
 
   return (
     <>
-      <TaskContent className="flex-col mt-2 gap-0">
+      <TaskContent className="flex-col mt-2 gap-2">
         <RichTextPreview content={task.description} />
         {submission ? (
           <div className="text-sm text-foreground space-y-2">
