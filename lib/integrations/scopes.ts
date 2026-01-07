@@ -1,10 +1,10 @@
-import { IdentityProvider } from '@prisma/client';
 import z from 'zod';
 import { AuthProvider } from './schemas/providers';
 import { widetype } from '../widetype';
 
 export const REQUIRED_DISCORD_SCOPES = [
   'identify',
+  'email',
   'guilds',
   'guilds.members.read'
 ];
