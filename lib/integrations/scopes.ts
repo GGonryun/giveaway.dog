@@ -5,7 +5,6 @@ import { widetype } from '../widetype';
 
 export const REQUIRED_DISCORD_SCOPES = [
   'identify',
-  'email',
   'guilds',
   'guilds.members.read'
 ];

@@ -5,6 +5,14 @@ import { Suspense } from 'react';
 import { WinnersLeaderboard } from '@/components/winners/winners-leaderboard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 
 export const revalidate = 60;
 
@@ -56,23 +64,53 @@ function WinnersLoadingSkeleton() {
           <Skeleton className="h-10 flex-1 sm:flex-initial sm:w-[140px]" />
         </div>
       </div>
-      <div className="space-y-4">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Card key={i}>
-            <CardContent className="py-2">
-              <div className="flex items-center gap-3">
-                <Skeleton className="w-7 h-6" />
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="h-4 w-20" />
-                </div>
-                <Skeleton className="h-8 w-8" />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Card className="p-0 overflow-hidden">
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-16">Rank</TableHead>
+                  <TableHead>Winner</TableHead>
+                  <TableHead className="text-right">Total Wins</TableHead>
+                  <TableHead>Recent Prizes</TableHead>
+                  <TableHead className="w-12"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell>
+                      <Skeleton className="h-5 w-7" />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Skeleton className="h-10 w-10 rounded-full" />
+                        <Skeleton className="h-5 w-32" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-end gap-2">
+                        <Skeleton className="h-4 w-4" />
+                        <Skeleton className="h-5 w-8" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-48" />
+                        <Skeleton className="h-3 w-32" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-8 w-8" />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

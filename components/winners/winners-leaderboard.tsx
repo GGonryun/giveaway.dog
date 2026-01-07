@@ -178,40 +178,32 @@ export function WinnersLeaderboard({
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="space-y-1">
-                              {winner.wins.slice(0, 3).map((win, winIndex) => (
-                                <Link
-                                  key={`${win.sweepstakesId}-${winIndex}`}
-                                  href={`/browse/${win.sweepstakesId}`}
-                                  className="block text-sm hover:underline"
-                                >
-                                  <div className="flex items-start justify-between gap-4">
-                                    <div className="flex-1 min-w-0">
-                                      <div className="truncate">
-                                        {win.sweepstakesName}
+                            {winner.wins.length > 0 && (
+                              <Link
+                                href={`/browse/${winner.wins[0].sweepstakesId}`}
+                                className="block text-sm hover:underline"
+                              >
+                                <div className="flex items-start justify-between gap-4">
+                                  <div className="flex-1 min-w-0">
+                                    <div className="truncate">
+                                      {winner.wins[0].sweepstakesName}
+                                    </div>
+                                    {winner.wins[0].prizeName && (
+                                      <div className="text-xs text-muted-foreground truncate">
+                                        {winner.wins[0].prizeName}
                                       </div>
-                                      {win.prizeName && (
-                                        <div className="text-xs text-muted-foreground truncate">
-                                          {win.prizeName}
-                                        </div>
-                                      )}
-                                    </div>
-                                    <div className="flex items-center gap-1 text-xs text-muted-foreground whitespace-nowrap">
-                                      <Calendar className="h-3 w-3" />
-                                      {formatDate(win.wonAt)}
-                                    </div>
+                                    )}
                                   </div>
-                                </Link>
-                              ))}
-                              {winner.wins.length > 3 && !isExpanded && (
-                                <div className="text-xs text-muted-foreground">
-                                  +{winner.wins.length - 3} more
+                                  <div className="flex items-center gap-1 text-xs text-muted-foreground whitespace-nowrap">
+                                    <Calendar className="h-3 w-3" />
+                                    {formatDate(winner.wins[0].wonAt)}
+                                  </div>
                                 </div>
-                              )}
-                            </div>
+                              </Link>
+                            )}
                           </TableCell>
                           <TableCell>
-                            {winner.wins.length > 3 && (
+                            {winner.wins.length > 1 && (
                               <Button
                                 variant="ghost"
                                 size="sm"

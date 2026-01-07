@@ -6,12 +6,6 @@
 
 - [ ] Add the ability for users to select their own prizes.
 
-# support channel
-
-- [ ] Winners tab appears twice
-
-- [ ] Browse page is loading slowly and has a lot of shared code with the history page.
-
 # Kurozzz
 
 - [ ] i can enhance this by adding a "verify" button after a winner gets selected that either surfaces a tutorial for how to verify user actions or re-runs the automated verification where available to make this easier too. what do you think? would that help as well
