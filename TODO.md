@@ -4,12 +4,7 @@
 
 - [ ] Allow template creation to modify visibility too.
 
-- [ ] Add improvements to the marketing page see (https://www.post-bridge.com/)
-
-- [ ] Add the ability for users to select their own winners.
-- [ ] Add the ability to pick multiple winners on Picker.
-
-## Me
+- [ ] Add the ability for users to select their own prizes.
 
 # Kurozzz
 

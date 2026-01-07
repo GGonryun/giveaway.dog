@@ -18,7 +18,7 @@ export default function PrivacyPage() {
           Privacy Policy
         </Typography.Header>
         <Typography.Paragraph className="text-lg text-muted-foreground">
-          Last updated: Sun, Aug 10, 2025
+          Last updated: Mon, Jan 6, 2026
         </Typography.Paragraph>
       </div>
 
@@ -26,11 +26,40 @@ export default function PrivacyPage() {
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
           1. Information We Collect
         </Typography.Header>
+        <Typography.Paragraph className="mb-4">
+          We collect various types of information in connection with the
+          services we provide, including:
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-4">
+          <strong>Account Information:</strong> We collect information you
+          provide directly to us when you create an account, set up a giveaway,
+          or contact us for support. This includes your name, email address,
+          payment information, and any content you create using our platform.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-4">
+          <strong>Security and Fraud Prevention Information:</strong> To
+          maintain the integrity and security of our platform, we automatically
+          collect certain technical and security-related information, including
+          but not limited to: (a) your IP address(es), both current and
+          historical; (b) approximate geographic location derived from reverse
+          IP geolocation, limited to regional identification; (c) browser
+          fingerprinting data, which may include browser type and version,
+          operating system, device characteristics, screen resolution, installed
+          fonts, plugins, and other browser capabilities; and (d) device
+          identifiers.
+        </Typography.Paragraph>
         <Typography.Paragraph className="mb-6">
-          We collect information you provide directly to us, such as when you
-          create an account, set up a giveaway, or contact us for support. This
-          includes your name, email address, payment information, and any
-          content you create using our platform.
+          This information is collected and processed exclusively for the
+          following legitimate security purposes: verifying user authenticity,
+          detecting and preventing fraudulent activity, protecting against spam
+          and automated bot behavior, identifying multi-account abuse, and
+          maintaining the overall integrity of our platform.{' '}
+          <strong>
+            We do not and will never sell this information to third parties, use
+            it to create user profiles for advertising purposes, or employ it
+            for any purpose other than fraud prevention and security
+            verification.
+          </strong>
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
@@ -39,9 +68,14 @@ export default function PrivacyPage() {
         <Typography.Paragraph className="mb-6">
           We use the information we collect to provide, maintain, and improve
           our services, process transactions, communicate with you, and ensure
-          the security and integrity of our platform. We may also use your
-          information to send you updates about new features or promotional
-          content, which you can opt out of at any time.
+          the security and integrity of our platform. Specifically, we use your
+          information to: verify your identity and authenticate your account;
+          detect, prevent, and investigate fraudulent activity, spam, bots,
+          multi-account abuse, and other security threats; process your
+          giveaways and transactions; provide customer support; analyze usage
+          patterns to improve our services; and comply with legal obligations.
+          We may also use your information to send you updates about new
+          features or promotional content, which you can opt out of at any time.
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
@@ -92,21 +126,47 @@ export default function PrivacyPage() {
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
           7. Data Retention
         </Typography.Header>
-        <Typography.Paragraph className="mb-6">
+        <Typography.Paragraph className="mb-4">
           We retain your personal information for as long as your account is
           active or as needed to provide you services. We may also retain
           certain information as required by law, for legitimate business
           purposes, or to resolve disputes and enforce our agreements.
         </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          <strong>Security Data Retention:</strong> Security-related
+          information, including IP addresses, browser fingerprints, and
+          geolocation data, is retained for a period of ninety (90) days
+          following your last account activity. This retention period allows us
+          to effectively identify patterns of fraudulent behavior while
+          minimizing unnecessary data storage. Security data may be retained for
+          longer periods if required by law, necessary for active fraud
+          investigations, or essential for resolving disputes or enforcing our
+          Terms of Service. Upon expiration of the retention period, such data
+          is automatically deleted from our systems unless subject to a legal
+          hold or active investigation.
+        </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
           8. Your Rights and Choices
         </Typography.Header>
-        <Typography.Paragraph className="mb-6">
+        <Typography.Paragraph className="mb-4">
           You have the right to access, update, or delete your personal
           information. You can also opt out of promotional communications and
           control certain privacy settings through your account dashboard. If
           you wish to delete your account, please contact our support team.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          <strong>Rights Regarding Security Data:</strong> In addition to your
+          general data rights, you have the right to: (a) access
+          security-related data we have collected about your account; (b)
+          request deletion of such data, subject to our legitimate security
+          interests; and (c) receive an explanation of why specific security
+          data is being retained if deletion is not immediately possible. Please
+          note that requests to delete security data may be declined or delayed
+          if your account is subject to an active security investigation, has
+          been flagged for suspicious activity, or if deletion would compromise
+          our ability to detect and prevent fraud. To exercise these rights,
+          please contact us at privacy@giveaway.dog.
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
@@ -120,13 +180,30 @@ export default function PrivacyPage() {
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">
-          10. International Data Transfers
+          10. International Data Transfers and Regulatory Compliance
         </Typography.Header>
-        <Typography.Paragraph className="mb-6">
+        <Typography.Paragraph className="mb-4">
           Your information may be transferred to and processed in countries
           other than your own. We ensure that such transfers comply with
           applicable data protection laws and that appropriate safeguards are in
           place to protect your personal information.
+        </Typography.Paragraph>
+        <Typography.Paragraph className="mb-6">
+          <strong>GDPR and CCPA Compliance:</strong> We are committed to
+          complying with the General Data Protection Regulation (GDPR) for users
+          in the European Economic Area and the California Consumer Privacy Act
+          (CCPA) for California residents. Under these regulations, you have
+          enhanced rights including the right to access your personal
+          information, the right to rectification, the right to erasure (right
+          to be forgotten), the right to restrict processing, the right to data
+          portability, and the right to object to processing. European users
+          also have the right to lodge a complaint with a supervisory authority.
+          California residents have the right to know what personal information
+          is collected, to know whether personal information is sold or
+          disclosed, to opt-out of the sale of personal information (note: we do
+          not sell personal information), and to non-discrimination for
+          exercising privacy rights. To exercise any of these rights, please
+          contact us at privacy@giveaway.dog.
         </Typography.Paragraph>
 
         <Typography.Header level={2} className="text-2xl font-bold mb-4 mt-8">

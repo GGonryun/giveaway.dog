@@ -120,34 +120,32 @@ interface PlatformTooltipTheme {
   text: string;
 }
 
-export const PLATFORM_TOOLTIP_THEMES: Record<
-  PlatformId,
-  PlatformTooltipTheme
-> = {
-  twitter: { bg: 'black', text: 'white' },
-  x: { bg: 'black', text: 'white' },
-  bluesky: { bg: 'bluesky-1', text: 'white' },
-  twitch: { bg: 'twitch-1', text: 'white' },
-  tiktok: { bg: 'black', text: 'white' },
-  kick: { bg: 'black', text: 'white' },
-  facebook: { bg: 'facebook-1', text: 'white' },
-  snapchat: { bg: 'black', text: 'white' },
-  threads: { bg: 'black', text: 'white' },
-  linkedin: { bg: 'black', text: 'white' },
-  pinterest: { bg: 'black', text: 'white' },
-  reddit: { bg: 'reddit-1', text: 'white' },
-  instagram: { bg: 'instagram-1', text: 'white' },
-  youtube: { bg: 'youtube-1', text: 'white' },
-  discord: { bg: 'discord-1', text: 'white' },
-  tumblr: { bg: 'black', text: 'white' },
-  github: { bg: 'black', text: 'white' },
-  google: { bg: 'black', text: 'white' },
-  patreon: { bg: 'black', text: 'white' },
-  producthunt: { bg: 'black', text: 'white' },
-  coinbase: { bg: 'black', text: 'white' },
-  spotify: { bg: 'black', text: 'white' },
-  steam: { bg: 'black', text: 'white' }
-};
+export const PLATFORM_TOOLTIP_THEMES: Record<PlatformId, PlatformTooltipTheme> =
+  {
+    twitter: { bg: 'black', text: 'white' },
+    x: { bg: 'black', text: 'white' },
+    bluesky: { bg: 'bluesky-1', text: 'white' },
+    twitch: { bg: 'twitch-1', text: 'white' },
+    tiktok: { bg: 'black', text: 'white' },
+    kick: { bg: 'black', text: 'white' },
+    facebook: { bg: 'facebook-1', text: 'white' },
+    snapchat: { bg: 'black', text: 'white' },
+    threads: { bg: 'black', text: 'white' },
+    linkedin: { bg: 'black', text: 'white' },
+    pinterest: { bg: 'black', text: 'white' },
+    reddit: { bg: 'reddit-1', text: 'white' },
+    instagram: { bg: 'instagram-1', text: 'white' },
+    youtube: { bg: 'youtube-1', text: 'white' },
+    discord: { bg: 'discord-1', text: 'white' },
+    tumblr: { bg: 'black', text: 'white' },
+    github: { bg: 'black', text: 'white' },
+    google: { bg: 'black', text: 'white' },
+    patreon: { bg: 'black', text: 'white' },
+    producthunt: { bg: 'black', text: 'white' },
+    coinbase: { bg: 'black', text: 'white' },
+    spotify: { bg: 'black', text: 'white' },
+    steam: { bg: 'black', text: 'white' }
+  };
 
 export function getPlatformIcon(
   platformId: PlatformId,
@@ -176,9 +174,7 @@ export function getPlatformTheme(platformId: PlatformId): string | undefined {
 export function getPlatformTooltipTheme(
   platformId: PlatformId
 ): PlatformTooltipTheme {
-  return (
-    PLATFORM_TOOLTIP_THEMES[platformId] || { bg: 'black', text: 'white' }
-  );
+  return PLATFORM_TOOLTIP_THEMES[platformId] || { bg: 'black', text: 'white' };
 }
 
 export const CAROUSEL_PLATFORMS: PlatformId[] = [
