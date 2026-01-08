@@ -13,6 +13,7 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { timezone } from '@/lib/time';
+import { useCreateTemplate } from '@/components/templates/use-create-template';
 
 export const TemplatesPage: React.FC<{
   slug: string;
@@ -53,6 +54,8 @@ export const TemplatesPage: React.FC<{
     }
   });
 
+  const createCustom = useCreateTemplate();
+
   const handleClickTemplate = (item: TemplateListItemSchema) => {
     setSelectedTemplate(item);
     setIsModalOpen(true);
@@ -67,7 +70,7 @@ export const TemplatesPage: React.FC<{
   };
 
   const handleCustomizeTemplate = (item: TemplateListItemSchema) => {
-    router.push(`/app/${slug}/templates/${item.template.id}/use`);
+    createCustom.run({ sourceTemplateId: item.template.id });
   };
 
   const handleEditTemplate = (item: TemplateListItemSchema) => {
@@ -112,7 +115,7 @@ export const TemplatesPage: React.FC<{
       )}
 
       <UseTemplateModal
-        loading={create.isLoading}
+        loading={create.isLoading || createCustom.isLoading}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         template={selectedTemplate}

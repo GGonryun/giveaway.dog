@@ -22,6 +22,10 @@ export function useCreateTemplate() {
 
   return {
     ...procedure,
-    run: () => procedure.run({ slug })
+    run: (options?: { sourceTemplateId?: string }) =>
+      procedure.run({
+        slug,
+        sourceTemplateId: options?.sourceTemplateId
+      })
   };
 }

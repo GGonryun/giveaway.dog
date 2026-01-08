@@ -164,7 +164,7 @@ export function UseTemplateModal({
                 ) : (
                   <SparklesIcon className="mr-2" />
                 )}
-                {isLoading ? 'Loading...' : 'Customize Template'}
+                {isLoading ? 'Creating...' : 'Customize Template'}
               </Button>
               <Button
                 onClick={() => {

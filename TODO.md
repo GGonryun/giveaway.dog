@@ -2,8 +2,6 @@
 
 ## Roadmap
 
-- [ ] Allow template creation to modify visibility too.
-
 - [ ] [PAUSED] Add the ability for users to select their own prizes.
 
 # Kurozzz

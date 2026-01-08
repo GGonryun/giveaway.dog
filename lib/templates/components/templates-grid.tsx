@@ -8,6 +8,7 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { timezone } from '@/lib/time';
+import { useCreateTemplate } from '@/components/templates/use-create-template';
 
 export const TemplatesGrid: React.FC<{
   slug: string;
@@ -25,6 +26,8 @@ export const TemplatesGrid: React.FC<{
     }
   });
 
+  const createCustom = useCreateTemplate();
+
   const handleClickTemplate = (template: TemplateListItemSchema) => {
     setSelectedTemplate(template);
     setIsModalOpen(true);
@@ -39,7 +42,7 @@ export const TemplatesGrid: React.FC<{
   };
 
   const handleCustomizeTemplate = (item: TemplateListItemSchema) => {
-    router.push(`/app/${slug}/templates/${item.template.id}/use`);
+    createCustom.run({ sourceTemplateId: item.template.id });
   };
 
   if (items.length === 0) {
@@ -61,7 +64,7 @@ export const TemplatesGrid: React.FC<{
 
       <UseTemplateModal
         open={isModalOpen}
-        loading={create.isLoading}
+        loading={create.isLoading || createCustom.isLoading}
         onOpenChange={setIsModalOpen}
         template={selectedTemplate}
         onUse={handleUseTemplate}
