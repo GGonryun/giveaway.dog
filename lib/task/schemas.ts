@@ -220,9 +220,9 @@ export const steamWishlistTaskSchema = baseTaskSchema.extend({
     .url('Steam App URL is required')
     .refine((val) => {
       const urlPattern =
-        /^https?:\/\/store\.steampowered\.com\/app\/\d+\/[A-Za-z0-9_\-]+\/?$/;
+        /^https?:\/\/store\.steampowered\.com\/app\/\d+(?:\/[A-Za-z0-9_\-]+)?(?:\/)?(?:\?.*)?$/;
       return urlPattern.test(val);
-    }, 'Unexpected URL, should be like https://store.steampowered.com/app/APP_ID/app_name/')
+    }, 'Unexpected URL, should be like https://store.steampowered.com/app/APP_ID or https://store.steampowered.com/app/APP_ID/app_name')
 });
 
 export type SteamWishlistTaskSchema = z.infer<typeof steamWishlistTaskSchema>;
@@ -234,7 +234,7 @@ export const steamFollowTaskSchema = baseTaskSchema.extend({
     .url('Steam Developer/Publisher URL is required')
     .refine((val) => {
       const urlPattern =
-        /^https?:\/\/store\.steampowered\.com\/(developer|publisher|curator)\/[A-Za-z0-9_\-]+\/?$/;
+        /^https?:\/\/store\.steampowered\.com\/(developer|publisher|curator)\/[A-Za-z0-9_\-]+(?:\/)?(?:\?.*)?$/;
       return urlPattern.test(val);
     }, 'Unexpected URL, should be like https://store.steampowered.com/developer/DeveloperName or https://store.steampowered.com/publisher/PublisherName'),
   requireProof: z.boolean().default(false),
