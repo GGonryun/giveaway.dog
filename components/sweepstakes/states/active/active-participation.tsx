@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PrizeItem } from './prize-item';
 import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';
 import { toParticipantEntries } from '@/lib/task/entries';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export const ActiveParticipation: React.FC = () => {
   const searchParams = useSearchParams();
@@ -20,8 +21,11 @@ export const ActiveParticipation: React.FC = () => {
     return null;
   }, [searchParams]);
 
+  const { allocation } = useGiveawayParticipation();
   const [open, setOpen] = React.useState<string | null>(taskId);
-  const { sweepstakes } = useGiveawayParticipation();
+  const [activeTab, setActiveTab] = React.useState(
+    allocation ? 'tasks' : 'prizes'
+  );
 
   const handleOpen = useCallback(
     (taskId: string | null) => {
@@ -35,9 +39,6 @@ export const ActiveParticipation: React.FC = () => {
     },
     [setOpen]
   );
-
-  const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
-  const hasPrizes = sweepstakes.prizes && sweepstakes.prizes.length > 0;
 
   return (
     <div className="space-y-2 relative">
@@ -53,46 +54,22 @@ export const ActiveParticipation: React.FC = () => {
         <UserProgressSection />
       </div>
 
-      <Tabs defaultValue="tasks" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="tasks">Tasks</TabsTrigger>
           <TabsTrigger value="prizes">Prizes</TabsTrigger>
+          <TabsTrigger value="tasks">Tasks</TabsTrigger>
         </TabsList>
 
         <TabsContent value="tasks">
-          {hasTasks ? (
-            <TaskList open={open} setOpen={handleOpen} />
-          ) : (
-            <div className="text-center py-8">
-              <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-              <h4 className="text-lg font-medium text-muted-foreground mb-2">
-                No Entry Methods
-              </h4>
-              <p className="text-sm text-muted-foreground">
-                Add entry methods in the Tasks step to see them here.
-              </p>
-            </div>
-          )}
+          <TasksContent
+            open={open}
+            setOpen={handleOpen}
+            setActiveTab={setActiveTab}
+          />
         </TabsContent>
 
         <TabsContent value="prizes">
-          {hasPrizes ? (
-            <div className="space-y-2">
-              {sweepstakes.prizes.map((prize, index) => (
-                <PrizeItem key={index} prize={prize} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-              <h4 className="text-lg font-medium text-gray-600 mb-2">
-                No Prizes
-              </h4>
-              <p className="text-sm text-muted-foreground">
-                Add prizes to see them here.
-              </p>
-            </div>
-          )}
+          <PrizesContent />
         </TabsContent>
       </Tabs>
     </div>
@@ -145,6 +122,66 @@ const UserProgressSection: React.FC<{ className?: string }> = ({
           {userProgress.completed}/{userProgress.total} completed
         </Typography>
       </div>
+    </div>
+  );
+};
+
+const TasksContent: React.FC<{
+  open: string | null;
+  setOpen: (open: string | null) => void;
+  setActiveTab: (tab: string) => void;
+}> = (props) => {
+  const { sweepstakes } = useGiveawayParticipation();
+
+  const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
+
+  if (!hasTasks)
+    return (
+      <div className="text-center py-8">
+        <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+        <h4 className="text-lg font-medium text-muted-foreground mb-2">
+          No Entry Methods
+        </h4>
+        <p className="text-sm text-muted-foreground">
+          Add entry methods in the Tasks step to see them here.
+        </p>
+      </div>
+    );
+
+  return <TaskList {...props} />;
+};
+
+const PrizesContent = () => {
+  const { sweepstakes, allocation } = useGiveawayParticipation();
+
+  const hasPrizes = sweepstakes.prizes && sweepstakes.prizes.length > 0;
+  const hasAllocation = !!allocation;
+
+  if (!hasPrizes)
+    return (
+      <div className="text-center py-8">
+        <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+        <h4 className="text-lg font-medium text-gray-600 mb-2">No Prizes</h4>
+        <p className="text-sm text-muted-foreground">
+          Add prizes to see them here.
+        </p>
+      </div>
+    );
+
+  return (
+    <div className="space-y-2">
+      {!hasAllocation && (
+        <Alert variant="warning">
+          <AlertTitle>What prize are you competing for?</AlertTitle>
+          <AlertDescription>
+            You currently do not have an allocation for any prizes. Complete
+            tasks to earn entries and increase your chances of winning!
+          </AlertDescription>
+        </Alert>
+      )}
+      {sweepstakes.prizes.map((prize, index) => (
+        <PrizeItem key={index} prize={prize} />
+      ))}
     </div>
   );
 };

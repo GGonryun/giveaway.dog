@@ -460,3 +460,12 @@ export const sweepstakesPrizeSchema = z.object({
 });
 
 export type SweepstakesPrizeSchema = z.infer<typeof sweepstakesPrizeSchema>;
+
+export const sweepstakesEntryAllocationSchema = z.object({
+  participantId: z.string(),
+  prizeId: z.string()
+});
+
+export type SweepstakesEntryAllocationSchema = z.infer<
+  typeof sweepstakesEntryAllocationSchema
+>;

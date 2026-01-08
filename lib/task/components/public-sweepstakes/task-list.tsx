@@ -9,12 +9,15 @@ import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-part
 import { TaskItem } from './task-item';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 import { computeTaskStatus } from '../../validation/status';
+import { Button } from '@/components/ui/button';
+import pluralize from 'pluralize';
 
 export const TaskList: React.FC<{
   open: string | null;
   setOpen: (open: string | null) => void;
-}> = ({ open, setOpen }) => {
-  const { participant, sweepstakes } = useGiveawayParticipation();
+  setActiveTab: (tab: string) => void;
+}> = ({ open, setOpen, setActiveTab }) => {
+  const { participant, sweepstakes, allocation } = useGiveawayParticipation();
 
   const [submissions, setSubmissions] = React.useState<
     UserTaskSubmissionSchema[]
@@ -62,6 +65,7 @@ export const TaskList: React.FC<{
 
   const hasMandatoryTasks = mandatory.length > 0;
   const hasOptionalTasks = optional.length > 0;
+  const hasAllocation = !!allocation;
 
   const totalOptionalEntries = optional.reduce(
     (sum, task) => sum + task.value,
@@ -82,6 +86,62 @@ export const TaskList: React.FC<{
       id: nanoid()
     }
   ];
+
+  if (!hasAllocation) {
+    return (
+      <div className="relative mt-4">
+        <div
+          className={cn(
+            'absolute inset-0 z-10 flex items-center justify-center left-[-10px] right-[-10px] top-[-10px] bottom-[-10px] p-4',
+            'bg-background/70 backdrop-blur-xs rounded-lg'
+          )}
+        >
+          <div className="text-center p-6 max-w-sm">
+            <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+              <Lock className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="font-semibold text-lg mb-2">
+              What prize are you competing for?
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              First, pick the prize you are trying to win and then{' '}
+              <span className="font-semibold text-foreground">
+                complete {totalOptionalEntries}{' '}
+                {pluralize('entry', totalOptionalEntries)}
+              </span>
+              . You can change your prize selection at any time before the
+              giveaway ends.
+            </p>
+            <Button className="mt-4" onClick={() => setActiveTab('prizes')}>
+              Select Prize
+            </Button>
+          </div>
+        </div>
+
+        <div className="pointer-events-none select-none space-y-2 blur-sm">
+          {[
+            ...mockOptionalTasks,
+            {
+              ...toDefaultValues('KICK_FOLLOW'),
+              id: nanoid()
+            },
+            {
+              ...toDefaultValues('REFERRAL_LINK'),
+              id: nanoid()
+            }
+          ].map((task, index) => (
+            <TaskItem
+              key={index}
+              submissions={[]}
+              open={open === task.id}
+              onOpen={(status) => setOpen(status ? task.id : null)}
+              task={task}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-2">
@@ -117,7 +177,7 @@ export const TaskList: React.FC<{
                 You must complete all required tasks to unlock{' '}
                 <span className="font-semibold text-foreground">
                   {totalOptionalEntries} more{' '}
-                  {totalOptionalEntries === 1 ? 'entry' : 'entries'}
+                  {pluralize('entry', totalOptionalEntries)}
                 </span>
               </p>
             </div>

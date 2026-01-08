@@ -7,7 +7,8 @@ import {
   GiveawayHostSchema,
   GiveawayPrizeSchema,
   GiveawaySchema,
-  DeviceType
+  DeviceType,
+  SweepstakesEntryAllocationSchema
 } from '@/schemas/giveaway/schemas';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
@@ -32,6 +33,7 @@ export interface GiveawayParticipationProps {
   referral?: UserReferralSchema;
   isPreview: boolean;
   turnstile?: TurnstileStatus;
+  allocation?: SweepstakesEntryAllocationSchema;
   onCreateReferral: (args: CreateReferralSchema) => Promise<UserReferralSchema>;
   onTaskComplete: (taskId: string, data?: unknown) => Promise<unknown>;
   onTaskUpdate: (taskId: string, data?: unknown) => Promise<unknown>;
@@ -66,6 +68,7 @@ export const GiveawayParticipationProvider: React.FC<
   referral,
   isPreview,
   turnstile,
+  allocation,
   onTaskComplete,
   onTaskUpdate,
   onLogin,
@@ -83,6 +86,7 @@ export const GiveawayParticipationProvider: React.FC<
     referral,
     isPreview,
     turnstile,
+    allocation,
     onCreateReferral,
     state,
     verifyEmail,
