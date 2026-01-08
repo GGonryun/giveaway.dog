@@ -39,6 +39,10 @@ export const DEFAULT_TEMPLATE_CONTENT = ({
     description: DEFAULT_SWEEPSTAKES_DESCRIPTION,
     banner: ''
   },
+  visibility: {
+    visibility: 'UNLISTED',
+    slug: null
+  },
   audience: {
     requirePreEntryLogin: DEFAULT_REQUIRED_PRE_ENTRY_LOGIN,
     allowedIdentities: DEFAULT_ALLOWED_IDENTITIES,

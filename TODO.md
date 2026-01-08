@@ -1,10 +1,10 @@
-## Roadmap
-
 - [ ] "GiveawayDog is a streamers best friend."
+
+## Roadmap
 
 - [ ] Allow template creation to modify visibility too.
 
-- [ ] Add the ability for users to select their own prizes.
+- [ ] [PAUSED] Add the ability for users to select their own prizes.
 
 # Kurozzz
 

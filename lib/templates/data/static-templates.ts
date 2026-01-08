@@ -30,7 +30,10 @@ const BASIC_TEMPLATE: TemplateDetailsSchema = {
     banner:
       'https://a8mwfsrzadqc10xo.public.blob.vercel-storage.com/73f5c6fa-953d-4a1d-a4b6-3cd03cddb4a7.png'
   },
-
+  visibility: {
+    visibility: 'UNLISTED',
+    slug: null
+  },
   tasks: [
     {
       ...toDefaultValues('VISIT_URL'),
@@ -83,6 +86,10 @@ const TWITTER_TEMPLATE: TemplateDetailsSchema = {
     description: 'Win prizes by engaging with us on X!',
     banner:
       'https://a8mwfsrzadqc10xo.public.blob.vercel-storage.com/aef1ff49-0e3b-4954-8a6b-16036cbc798b.png'
+  },
+  visibility: {
+    visibility: 'UNLISTED',
+    slug: null
   },
   tasks: [
     { ...toDefaultValues('TWITTER_CONNECT'), mandatory: true, id: nanoid() },
@@ -148,6 +155,10 @@ const ANONYMOUS_UPLOAD_TEMPLATE: TemplateDetailsSchema = {
     description: 'Win prizes by engaging with us on X! No account needed',
     banner:
       'https://a8mwfsrzadqc10xo.public.blob.vercel-storage.com/question-marks.jpg'
+  },
+  visibility: {
+    visibility: 'UNLISTED',
+    slug: null
   },
   tasks: [
     {

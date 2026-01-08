@@ -6,7 +6,15 @@ import {
   TaskSchema
 } from '../schemas';
 import { assertNever } from '@/lib/errors';
-import { BaseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import {
+  BaseGiveawayFormSchema,
+  GiveawayFormSchemaOptions
+} from '@/schemas/giveaway/schemas';
+import {
+  PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY,
+  TeamFeatureFlagKeySchema
+} from '@/schemas/feature-flags';
+import { featureFlags } from '@/lib/feature-flags';
 
 export type ValidateSweepstakeTaskOptions<T extends TaskSchema = TaskSchema> = {
   task: T;
@@ -16,16 +24,17 @@ export type ValidateSweepstakeTaskOptions<T extends TaskSchema = TaskSchema> = {
   ctx: z.RefinementCtx;
 };
 
-export const refineSweepstakeTasks = async ({
-  form,
-  ctx,
-  maxLoyalty
-}: {
-  form: BaseGiveawayFormSchema;
+export type RefineSweepstakesTaskArgs = {
   ctx: z.RefinementCtx;
-  maxLoyalty: number;
-}) => {
-  baseValidator({ form, ctx });
+  form: BaseGiveawayFormSchema;
+} & GiveawayFormSchemaOptions;
+
+export const refineSweepstakeTasks = async (
+  args: RefineSweepstakesTaskArgs
+) => {
+  const { form, ctx, maxLoyalty } = args;
+
+  baseValidator(args);
 
   form.tasks.forEach((task, index) => {
     const options = { maxLoyalty, task, form, index, ctx };
@@ -210,11 +219,8 @@ const referralLinkValidator = (
   }
 };
 
-const baseValidator = (args: {
-  form: BaseGiveawayFormSchema;
-  ctx: z.RefinementCtx;
-}) => {
-  const { form, ctx } = args;
+const baseValidator = (args: RefineSweepstakesTaskArgs) => {
+  const { form, ctx, teamFeatureFlags } = args;
 
   const referralTasks = form.tasks.filter((t) => t.type === 'REFERRAL_LINK');
 
@@ -223,6 +229,18 @@ const baseValidator = (args: {
       path: ['tasks'],
       code: z.ZodIssueCode.custom,
       message: 'Only one referral link task is allowed per giveaway'
+    });
+  }
+
+  const hasPublicSweepstakesAccess = featureFlags.parseTeam(
+    teamFeatureFlags,
+    PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
+  );
+  if (!hasPublicSweepstakesAccess && form.visibility.visibility === 'PUBLIC') {
+    ctx.addIssue({
+      path: ['visibility.visibility'],
+      code: z.ZodIssueCode.custom,
+      message: 'Public sweepstakes are not enabled for your team'
     });
   }
 };

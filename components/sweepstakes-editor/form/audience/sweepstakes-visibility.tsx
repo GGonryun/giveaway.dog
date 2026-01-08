@@ -1,8 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import {
+  FieldPath,
+  FieldValues,
+  UseFormReturn,
+  useWatch
+} from 'react-hook-form';
 import {
   FormField,
   FormItem,
@@ -21,8 +25,6 @@ import {
 } from '@/components/ui/select';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import Link from 'next/link';
-import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
-import { featureFlags } from '@/lib/feature-flags';
 import { debounce } from '@/lib/utils';
 import verifySlug from '@/procedures/sweepstakes/verify-slug';
 import { Loader2, CheckCircle2 } from 'lucide-react';
@@ -35,110 +37,100 @@ import { Switch } from '@/components/ui/switch';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { VisibilityType } from '@prisma/client';
 
-const VisibilityTypeField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
-  const { teamFeatureFlags } = useUnifiedFormLayout();
+export const VisibilityTypeField = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => (
+  <FormField
+    control={form.control}
+    name={fieldPath}
+    render={({ field }) => (
+      <FormItem>
+        <div className="flex items-end gap-1">
+          <FormLabel>Visibility Type</FormLabel>
+          <HelpDialog
+            title={'Help: Visibility Type'}
+            content={
+              <>
+                <div>
+                  <span className="font-semibold">Private</span> sweepstakes are
+                  only accessible to other people within your organization. They
+                  will not appear on the public{' '}
+                  <Link
+                    href="/browse"
+                    target="_blank"
+                    className="font-bold underline"
+                  >
+                    browse
+                  </Link>{' '}
+                  page.
+                </div>
+                <br />
+                <div>
+                  <span className="font-semibold">Unlisted</span> sweepstakes
+                  can be accessed by anyone with the direct link, but will not
+                  appear on the public{' '}
+                  <Link
+                    href="/browse"
+                    target="_blank"
+                    className="font-bold underline"
+                  >
+                    browse
+                  </Link>{' '}
+                  page.
+                </div>
+                <br />
+                <div>
+                  <span className="font-bold">Public</span> sweepstakes will
+                  appear on the{' '}
+                  <Link
+                    href="/browse"
+                    target="_blank"
+                    className="font-bold underline"
+                  >
+                    browse
+                  </Link>{' '}
+                  page and can be discovered and accessed by anyone.
+                </div>
+              </>
+            }
+          />
+        </div>
+        <FormControl>
+          <Select value={field.value} onValueChange={field.onChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select visibility type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={VisibilityType.PUBLIC}>Public</SelectItem>
+              <SelectItem value={VisibilityType.PRIVATE}>Private</SelectItem>
+              <SelectItem value={VisibilityType.UNLISTED}>Unlisted</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormControl>
 
-  const hasPublicSweepstakesAccess = featureFlags.parseTeam(
-    teamFeatureFlags,
-    PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
-  );
-  return (
-    <FormField
-      control={form.control}
-      name="visibility.visibility"
-      render={({ field }) => (
-        <FormItem>
-          <div className="flex items-end gap-1">
-            <FormLabel>Visibility Type</FormLabel>
-            <HelpDialog
-              title={'Help: Visibility Type'}
-              content={
-                <>
-                  <div>
-                    <span className="font-semibold">Private</span> sweepstakes
-                    are only accessible to other people within your
-                    organization. They will not appear on the public{' '}
-                    <Link
-                      href="/browse"
-                      target="_blank"
-                      className="font-bold underline"
-                    >
-                      browse
-                    </Link>{' '}
-                    page.
-                  </div>
-                  <br />
-                  <div>
-                    <span className="font-semibold">Unlisted</span> sweepstakes
-                    can be accessed by anyone with the direct link, but will not
-                    appear on the public{' '}
-                    <Link
-                      href="/browse"
-                      target="_blank"
-                      className="font-bold underline"
-                    >
-                      browse
-                    </Link>{' '}
-                    page.
-                  </div>
-                  <br />
-                  <div>
-                    <span className="font-bold">Public</span> sweepstakes will
-                    appear on the{' '}
-                    <Link
-                      href="/browse"
-                      target="_blank"
-                      className="font-bold underline"
-                    >
-                      browse
-                    </Link>{' '}
-                    page and can be discovered and accessed by anyone.
-                  </div>
-                </>
-              }
-            />
-          </div>
-          <FormControl>
-            <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select visibility type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  value={VisibilityType.PUBLIC}
-                  disabled={!hasPublicSweepstakesAccess}
-                >
-                  Public
-                </SelectItem>
-                <SelectItem value={VisibilityType.PRIVATE}>Private</SelectItem>
-                <SelectItem value={VisibilityType.UNLISTED}>
-                  Unlisted
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </FormControl>
-          {!hasPublicSweepstakesAccess && (
-            <FormDescription>
-              You do not have permission to make sweepstakes public.{' '}
-              <Link
-                href="/contact"
-                className="font-semibold underline hover:text-primary"
-              >
-                Contact support
-              </Link>{' '}
-              to enable this feature for your team.
-            </FormDescription>
-          )}
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-};
+        <FormMessage />
+      </FormItem>
+    )}
+  />
+);
 
-const UrlSlugField = () => {
-  const form = useFormContext<GiveawayFormSchema>();
+export const UrlSlugField = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  form,
+  fieldPath
+}: {
+  form: UseFormReturn<TFieldValues>;
+  fieldPath: TName;
+}) => {
   const { id } = useUnifiedFormLayout();
   const [slugStatus, setSlugStatus] = useState<
     'idle' | 'checking' | 'available' | 'unavailable'
@@ -146,7 +138,7 @@ const UrlSlugField = () => {
 
   const currentSlug = useWatch({
     control: form.control,
-    name: 'visibility.slug'
+    name: fieldPath
   });
 
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -179,7 +171,7 @@ const UrlSlugField = () => {
         setSlugStatus('available');
       } else {
         setSlugStatus('unavailable');
-        form.setError('visibility.slug', {
+        form.setError(fieldPath, {
           type: 'manual',
           message: `The slug "${slug}" is already taken. Please choose another one.`
         });
@@ -233,13 +225,13 @@ const UrlSlugField = () => {
     };
   }, []);
 
-  const state = form.getFieldState('visibility.slug');
+  const state = form.getFieldState(fieldPath);
 
   return (
     <SwitchBox className={state.error ? 'border-destructive' : ''}>
       <FormField
         control={form.control}
-        name="visibility.slug"
+        name={fieldPath}
         render={({ field }) => (
           <FormItem>
             <div className="flex flex-row items-start justify-between">
@@ -292,7 +284,7 @@ const UrlSlugField = () => {
         <CollapsibleContent className="flex flex-col gap-1">
           <FormField
             control={form.control}
-            name="visibility.slug"
+            name={fieldPath}
             render={({ field }) => (
               <FormItem>
                 <FormControl className="mt-3">
@@ -323,14 +315,5 @@ const UrlSlugField = () => {
         </CollapsibleContent>
       </Collapsible>
     </SwitchBox>
-  );
-};
-
-export const SweepstakesVisibility = () => {
-  return (
-    <>
-      <VisibilityTypeField />
-      <UrlSlugField />
-    </>
   );
 };

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { RegionalRestriction } from './regional-restriction';
-import { SweepstakesVisibility } from './sweepstakes-visibility';
 
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { AllowedIdentities } from './allowed-identities';
@@ -11,6 +10,7 @@ import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fie
 import { EnableAutomaticProfileEntry } from './enable-automatic-profile-entry';
 import { useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { UrlSlugField, VisibilityTypeField } from './sweepstakes-visibility';
 
 export const Audience = () => {
   const form = useFormContext<GiveawayFormSchema>();
@@ -53,7 +53,8 @@ export const Audience = () => {
         description="Configure who can see your sweepstakes and how they access it"
         className="border-t"
       >
-        <SweepstakesVisibility />
+        <VisibilityTypeField form={form} fieldPath="visibility.visibility" />
+        <UrlSlugField form={form} fieldPath="visibility.slug" />
       </UnifiedSectionHeader>
     </>
   );

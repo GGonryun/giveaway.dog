@@ -3,13 +3,11 @@ import { baseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { Prisma } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
 import { DeepPartial, Nil } from '@/lib/types';
-import { parse } from 'path';
 
 export const baseContentSchema = baseGiveawayFormSchema({
   validate: false
 }).omit({
-  timing: true,
-  visibility: true
+  timing: true
 });
 
 export type BaseContentSchema = z.infer<typeof baseContentSchema>;
@@ -81,7 +79,8 @@ export const toStorableTemplateSchema = (
       design: content.design,
       prizes: content.prizes,
       audience: content.audience,
-      criteria: content.criteria
+      criteria: content.criteria,
+      visibility: content.visibility
     }
   };
 };

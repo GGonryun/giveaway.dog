@@ -70,7 +70,7 @@ export const SweepstakesForm: React.FC<{
 
   const form = useForm<GiveawayFormSchema>({
     resolver: zodResolver(
-      giveawayFormSchema({ validate: !isDemo, maxLoyalty })
+      giveawayFormSchema({ validate: !isDemo, maxLoyalty, teamFeatureFlags })
     ),
     defaultValues,
     mode: 'onChange'

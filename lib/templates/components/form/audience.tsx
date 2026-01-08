@@ -8,6 +8,10 @@ import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fie
 import { RegionalRestriction } from '@/components/sweepstakes-editor/form/audience/regional-restriction';
 import { useFormContext } from 'react-hook-form';
 import { TemplateFormSchema } from '../../schemas/template';
+import {
+  VisibilityTypeField,
+  UrlSlugField
+} from '@/components/sweepstakes-editor/form/audience/sweepstakes-visibility';
 
 export const TemplateAudience = () => {
   const form = useFormContext<TemplateFormSchema>();
@@ -42,6 +46,15 @@ export const TemplateAudience = () => {
           form={form}
           fieldPath="audience.regionalRestriction"
         />
+      </UnifiedSectionHeader>
+
+      <UnifiedSectionHeader
+        label="Visibility"
+        description="Default visibility settings for the template"
+        className="border-t"
+      >
+        <VisibilityTypeField form={form} fieldPath="visibility.visibility" />
+        <UrlSlugField form={form} fieldPath="visibility.slug" />
       </UnifiedSectionHeader>
     </>
   );
