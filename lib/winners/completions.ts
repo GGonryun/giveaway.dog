@@ -97,6 +97,9 @@ export const getEligibleCompletions = async (args: {
     where: {
       task: {
         sweepstakesId
+      },
+      status: {
+        notIn: ['REJECTED']
       }
     },
     include: ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY

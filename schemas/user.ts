@@ -12,8 +12,8 @@ import {
   AUTH_PROVIDER_TO_IDENTITY_PROVIDER,
   providerSchema,
   ProviderSchema,
-  ProviderTypeSchema,
-  providerTypeSchema
+  IdentityProviderSchema,
+  identityProviderSchema
 } from '@/lib/integrations/schemas/providers';
 import { ApplicationError } from '@/lib/errors';
 import { Nil } from '@/lib/types';
@@ -65,8 +65,10 @@ const splitScopes = (scopes: Nil<string>): string[] =>
     .map((s) => s.trim())
     .filter(Boolean) ?? [];
 
-export const parseProvider = (provider: Nil<string>): ProviderTypeSchema => {
-  const result = providerTypeSchema.safeParse(provider);
+export const parseProvider = (
+  provider: Nil<string>
+): IdentityProviderSchema => {
+  const result = identityProviderSchema.safeParse(provider);
   if (result.success) {
     return result.data;
   }

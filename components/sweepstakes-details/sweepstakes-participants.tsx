@@ -25,9 +25,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { MoreVertical, Eye, UserX, Users } from 'lucide-react';
+import { MoreVertical, Eye, UserX, Users, Ban } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { StatusExplanationDialog } from '../users/status-explanation-dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from '@/components/ui/dialog';
+import { useDisqualifyParticipant } from '@/procedures/sweepstakes/use-disqualify-participant';
 
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { datetime } from '@/lib/date';
@@ -47,6 +58,17 @@ export const SweepstakesParticipants: React.FC<{
 }> = ({ participants, slug, sweepstakesId, totalTasks }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
+  const [disqualifyDialogOpen, setDisqualifyDialogOpen] = useState(false);
+  const [selectedParticipantId, setSelectedParticipantId] = useState<
+    string | null
+  >(null);
+  const [selectedParticipantName, setSelectedParticipantName] =
+    useState<string>('');
+  const [disqualificationReason, setDisqualificationReason] = useState('');
+
+  const disqualifyParticipantProcedure = useDisqualifyParticipant({
+    sweepstakesId
+  });
 
   const pageSize = DEFAULT_PAGE_SIZE;
   const totalParticipants = participants.length;
@@ -54,6 +76,29 @@ export const SweepstakesParticipants: React.FC<{
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const handleDisqualifyParticipant = (
+    participant: SweepstakesParticipantSchema
+  ) => {
+    setSelectedParticipantId(participant.id);
+    setSelectedParticipantName(participant.user.name || 'Unknown User');
+    setDisqualificationReason('');
+    setDisqualifyDialogOpen(true);
+  };
+
+  const handleDisqualifySubmit = () => {
+    if (!selectedParticipantId || !disqualificationReason.trim()) return;
+
+    disqualifyParticipantProcedure.run({
+      sweepstakesId,
+      participantId: selectedParticipantId,
+      disqualificationReason
+    });
+
+    setDisqualifyDialogOpen(false);
+    setSelectedParticipantId(null);
+    setDisqualificationReason('');
   };
 
   // Calculate shown entries for pagination
@@ -106,6 +151,7 @@ export const SweepstakesParticipants: React.FC<{
                         sweepstakesId={sweepstakesId}
                         totalTasks={totalTasks}
                         participant={participant}
+                        onDisqualify={handleDisqualifyParticipant}
                       />
                     ))}
                   </TableBody>
@@ -132,6 +178,58 @@ export const SweepstakesParticipants: React.FC<{
         }}
         status="active"
       />
+
+      {/* Disqualify Participant Dialog */}
+      <Dialog
+        open={disqualifyDialogOpen}
+        onOpenChange={setDisqualifyDialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Disqualify Participant</DialogTitle>
+            <DialogDescription>
+              This will reject all task completions for{' '}
+              <span className="font-semibold">{selectedParticipantName}</span>{' '}
+              in this sweepstakes. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="disqualification-reason">
+                Disqualification Reason (required)
+              </Label>
+              <Textarea
+                id="disqualification-reason"
+                placeholder="Enter the reason for disqualifying this participant..."
+                value={disqualificationReason}
+                onChange={(e) => setDisqualificationReason(e.target.value)}
+                rows={4}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDisqualifyDialogOpen(false)}
+              disabled={disqualifyParticipantProcedure.isLoading}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDisqualifySubmit}
+              disabled={
+                !disqualificationReason.trim() ||
+                disqualifyParticipantProcedure.isLoading
+              }
+            >
+              {disqualifyParticipantProcedure.isLoading
+                ? 'Disqualifying...'
+                : 'Disqualify Participant'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
@@ -141,7 +239,8 @@ const SweepstakeParticipant: React.FC<{
   sweepstakesId: string;
   participant: SweepstakesParticipantSchema;
   totalTasks: number | null;
-}> = ({ sweepstakesId, slug, participant, totalTasks }) => {
+  onDisqualify: (participant: SweepstakesParticipantSchema) => void;
+}> = ({ sweepstakesId, slug, participant, totalTasks, onDisqualify }) => {
   const router = useRouter();
 
   const engagement = toSweepstakesEngagement(
@@ -248,12 +347,13 @@ const SweepstakeParticipant: React.FC<{
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600"
-              onClick={() => {
-                alert('Block user action');
+              onClick={(e) => {
+                e.stopPropagation();
+                onDisqualify(participant);
               }}
             >
-              <UserX />
-              Block User
+              <Ban />
+              Disqualify Participant
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

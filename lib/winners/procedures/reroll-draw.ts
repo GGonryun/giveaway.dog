@@ -49,6 +49,13 @@ export const rerollDraw = procedure()
       const draw = await db.prizeDraw.findUnique({
         where: {
           id: drawId
+        },
+        include: {
+          taskCompletion: {
+            select: {
+              participantId: true
+            }
+          }
         }
       });
 
@@ -58,6 +65,8 @@ export const rerollDraw = procedure()
           message: 'Draw not found'
         });
       }
+
+      const participantId = draw.taskCompletion.participantId;
 
       const toPrizeDraw = criteria.allowMultipleWins
         ? toDuplicatePrizeDraw
@@ -71,6 +80,22 @@ export const rerollDraw = procedure()
           data: {
             result: PrizeDrawResult.DISQUALIFIED,
             disqualificationReason: disqualificationReason?.trim()
+          }
+        });
+
+        await tx.taskCompletion.updateMany({
+          where: {
+            participantId: participantId,
+            task: {
+              sweepstakesId: sweepstakesId
+            },
+            status: {
+              not: 'REJECTED'
+            }
+          },
+          data: {
+            status: 'REJECTED',
+            reason: `Participant disqualified: ${disqualificationReason?.trim() || 'No reason provided'}`
           }
         });
 

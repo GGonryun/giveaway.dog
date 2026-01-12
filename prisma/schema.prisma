@@ -690,19 +690,16 @@ enum TaskType {
 }
 
 model TaskCompletion {
-  id String @id @default(cuid())
-
+  id            String                 @id @default(cuid())
   participantId String
   participant   SweepstakesParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-
-  taskId String
-  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
-
-  draws PrizeDraw[]
-
-  completedAt DateTime         @default(now())
-  proof       Json?
-  status      CompletionStatus @default(COMPLETED)
+  taskId        String
+  task          Task                   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  draws         PrizeDraw[]
+  completedAt   DateTime               @default(now())
+  proof         Json?
+  reason        String? // reason for rejection, if applicable
+  status        CompletionStatus       @default(COMPLETED)
 }
 
 model TaskProgress {

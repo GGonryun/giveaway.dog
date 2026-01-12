@@ -16,6 +16,7 @@ const createMockCompletion = (
     completedAt: baseDate,
     proof: { entries: 1 },
     status: 'COMPLETED' as const,
+    reason: null,
     participant: {
       id: `participant-${userId}`,
       userId: `user-${userId}`,

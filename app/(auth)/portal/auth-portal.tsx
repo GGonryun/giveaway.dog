@@ -75,11 +75,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     }
   });
 
-  const {
-    isLoading: isCreating,
-    isPending,
-    run: runCreate
-  } = useProcedure({
+  const { isLoading: isCreating, run: runCreate } = useProcedure({
     action: createProfile,
     onFailure(error) {
       if (error.code === 'CONFLICT') {
@@ -195,7 +191,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     );
   }
 
-  if (status === 'loading' || isCreating || isPending || isVerifying) {
+  if (status === 'loading' || isCreating || isVerifying) {
     return (
       <Card>
         <CardHeader className="text-center">

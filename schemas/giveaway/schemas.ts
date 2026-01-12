@@ -13,7 +13,7 @@ import { timingSchema } from '../timing';
 import { taskSchema, baseTaskSchema } from '@/lib/task/schemas';
 import { allowedUserSourcesSchema } from '@/lib/user-source/schemas';
 import { refineSweepstakeTasks } from '@/lib/task/validation/form';
-import { providerTypeSchema } from '@/lib/integrations/schemas/providers';
+import { identityProviderSchema } from '@/lib/integrations/schemas/providers';
 import { aspectRatioSchema } from '@/lib/aspect-ratio/data';
 import { sweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
@@ -188,7 +188,7 @@ export type SweepstakesWinnerCriteriaSchema = z.infer<
 >;
 
 const giveawayAudienceSchema = z.object({
-  allowedIdentities: providerTypeSchema
+  allowedIdentities: identityProviderSchema
     .array()
     .min(1, 'At least one allowed identity is required'),
   regionalRestriction: regionalRestrictionSchema,

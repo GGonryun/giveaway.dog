@@ -204,6 +204,7 @@ const PrizeDrawRow = ({
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => onViewDisqualification(draw)}>
                 <Eye className="h-4 w-4 mr-2" />

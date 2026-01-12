@@ -14,11 +14,11 @@ import { widetype } from '@/lib/widetype';
 import { IdentityProvider } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
 
-export const providerTypeSchema = z.nativeEnum(IdentityProvider);
+export const identityProviderSchema = z.nativeEnum(IdentityProvider);
 
-export type ProviderTypeSchema = z.infer<typeof providerTypeSchema>;
+export type IdentityProviderSchema = z.infer<typeof identityProviderSchema>;
 
-export const PROVIDER_REQUIRED_SCOPES: Record<ProviderTypeSchema, string[]> = {
+export const PROVIDER_REQUIRED_SCOPES: Record<IdentityProvider, string[]> = {
   EMAIL: [],
   YOUTUBE: [],
   INSTAGRAM: [],
@@ -45,12 +45,14 @@ export const isMissingScopes = (
   );
 };
 
-export const isProviderType = (value: unknown): value is ProviderTypeSchema => {
-  return providerTypeSchema.safeParse(value).success;
+export const isProviderType = (
+  value: unknown
+): value is IdentityProviderSchema => {
+  return identityProviderSchema.safeParse(value).success;
 };
 
 export const providerSchema = z.object({
-  type: providerTypeSchema,
+  type: identityProviderSchema,
   scopes: z.array(z.string()),
   label: z.string(),
   link: z.string().nullish()
@@ -58,7 +60,7 @@ export const providerSchema = z.object({
 
 export type ProviderSchema = z.infer<typeof providerSchema>;
 
-export const IDENTITY_PROVIDER_LABEL: Record<ProviderTypeSchema, string> = {
+export const IDENTITY_PROVIDER_LABEL: Record<IdentityProviderSchema, string> = {
   TWITTER: 'X (Twitter)',
   BLUESKY: 'Bluesky',
   ANONYMOUS: 'Anonymous',
@@ -74,7 +76,7 @@ export const IDENTITY_PROVIDER_LABEL: Record<ProviderTypeSchema, string> = {
   TIKTOK: 'TikTok'
 };
 
-export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
+export const IS_SOCIAL_PROVIDER: Record<IdentityProviderSchema, boolean> = {
   ANONYMOUS: false,
   TWITTER: true,
   BLUESKY: true,
@@ -90,7 +92,10 @@ export const IS_SOCIAL_PROVIDER: Record<ProviderTypeSchema, boolean> = {
   EMAIL: false
 };
 
-export const ENABLED_IDENTITY_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
+export const ENABLED_IDENTITY_PROVIDERS: Record<
+  IdentityProviderSchema,
+  boolean
+> = {
   TWITTER: true,
   BLUESKY: true,
   GOOGLE: true,
@@ -106,7 +111,7 @@ export const ENABLED_IDENTITY_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
   EMAIL: true
 };
 
-const AVAILABLE_LOGIN_PROVIDERS: Record<ProviderTypeSchema, boolean> = {
+const AVAILABLE_LOGIN_PROVIDERS: Record<IdentityProviderSchema, boolean> = {
   TWITTER: true,
   GOOGLE: true,
   BLUESKY: true,
@@ -128,12 +133,12 @@ export const LOGIN_PROVIDERS = widetype
 
 export const SOCIAL_PROVIDERS = Object.entries(IS_SOCIAL_PROVIDER)
   .filter(([, isSocial]) => isSocial)
-  .map(([providerId]) => providerId) as ProviderTypeSchema[];
+  .map(([providerId]) => providerId) as IdentityProviderSchema[];
 
 export const isIdentityProvider = (
   value: unknown
 ): value is IdentityProvider => {
-  return providerTypeSchema.safeParse(value).success;
+  return identityProviderSchema.safeParse(value).success;
 };
 
 // Mapping from IdentityProvider to next-auth provider strings found in lib/auth/config.ts
@@ -197,7 +202,7 @@ export const AUTH_PROVIDER_TO_IDENTITY_PROVIDER: Record<
 
 export const doesUserHaveAllowedIdentity = (
   user: Nil<{ providers: ProviderSchema[] }>,
-  allowedIdentities: ProviderTypeSchema[]
+  allowedIdentities: IdentityProviderSchema[]
 ) => {
   if (!user || !user.providers) {
     return false;

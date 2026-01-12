@@ -11,16 +11,23 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Globe } from 'lucide-react';
+import { Globe, MoreVertical, CheckCircle } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { UserSchema } from '@/schemas/user';
 import { Button } from '../ui/button';
-import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
+
 import { TASK_LABEL, UserEntriesSchema } from '@/lib/task/schemas';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { VerificationInstructionsDialog } from './verification-instructions-dialog';
 
 interface SweepstakesEntriesProps {
   slug: string;
@@ -36,6 +43,9 @@ export const SweepstakesEntries = ({
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
+  const [selectedCompletion, setSelectedCompletion] =
+    useState<UserEntriesSchema | null>(null);
 
   const pageSize = 25;
   const totalEntries = entries.length;
@@ -62,6 +72,15 @@ export const SweepstakesEntries = ({
     );
   };
 
+  const handleVerifyClick = (
+    e: React.MouseEvent,
+    completion: UserEntriesSchema
+  ) => {
+    e.stopPropagation();
+    setSelectedCompletion(completion);
+    setVerifyDialogOpen(true);
+  };
+
   return (
     <>
       <Card className="overflow-hidden p-0 gap-0">
@@ -73,6 +92,7 @@ export const SweepstakesEntries = ({
               <TableHead>Participant</TableHead>
               <TableHead>Country</TableHead>
               <TableHead>Updated</TableHead>
+              <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -143,6 +163,24 @@ export const SweepstakesEntries = ({
                     })}
                   </span>
                 </TableCell>
+
+                <TableCell onClick={(e) => e.stopPropagation()}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={(e) => handleVerifyClick(e, completion)}
+                      >
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Verify Entry
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -158,6 +196,18 @@ export const SweepstakesEntries = ({
           isPending={false}
         />
       </Card>
+
+      {selectedCompletion && (
+        <VerificationInstructionsDialog
+          open={verifyDialogOpen}
+          onOpenChange={setVerifyDialogOpen}
+          taskCompletionId={selectedCompletion.id}
+          sweepstakesId={sweepstakesId}
+          task={selectedCompletion.task}
+          user={selectedCompletion.user}
+          currentStatus={selectedCompletion.status}
+        />
+      )}
     </>
   );
 };

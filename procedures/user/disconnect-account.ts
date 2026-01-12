@@ -3,14 +3,14 @@
 import { ApplicationError } from '@/lib/errors';
 import {
   IDENTITY_PROVIDER_TO_AUTH_PROVIDER,
-  providerTypeSchema
+  identityProviderSchema
 } from '@/lib/integrations/schemas/providers';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 
 export const updateEmail = procedure()
   .authorization({ required: true })
-  .input(z.object({ type: providerTypeSchema }))
+  .input(z.object({ type: identityProviderSchema }))
   .handler(async ({ input, user, db }) => {
     const { type } = input;
 

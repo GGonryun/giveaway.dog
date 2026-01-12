@@ -11,7 +11,7 @@ import { userSchema } from '@/schemas/user';
 import { ApplicationError } from '../errors';
 import { toJsonObject } from '../json';
 import {
-  providerTypeSchema,
+  identityProviderSchema,
   PROVIDER_REQUIRED_SCOPES
 } from '../integrations/schemas/providers';
 import {
@@ -729,7 +729,7 @@ export type TaskSchema = z.infer<typeof taskSchema>;
 
 export type TaskOf<T extends TaskType> = Extract<TaskSchema, { type: T }>;
 
-export const taskPlatformSchema = providerTypeSchema
+export const taskPlatformSchema = identityProviderSchema
   .or(z.literal('WEBSITE'))
   .or(z.literal('BONUS'))
   .or(z.literal('QUESTION'));
@@ -1017,7 +1017,8 @@ export const userEntriesSchema = z.object({
   task: taskSchema,
   status: z.nativeEnum(CompletionStatus),
   proof: z.unknown(),
-  completedAt: z.number()
+  completedAt: z.number(),
+  reason: z.string().optional().nullable()
 });
 
 export type UserEntriesSchema = z.infer<typeof userEntriesSchema>;
@@ -1067,7 +1068,7 @@ export const TASK_VERIFICATION_REQUIREMENT: Record<
 > = {
   VISIT_URL: 'manual',
   BONUS_TASK: 'manual',
-  TWITTER_CONNECT: 'manual',
+  TWITTER_CONNECT: 'automatic',
   TWITTER_FOLLOW: 'manual',
   TWITTER_RETWEET: 'manual',
   TWITTER_RETWEET_IMPORT: 'automatic',
@@ -1102,47 +1103,6 @@ export const TASK_VERIFICATION_REQUIREMENT: Record<
   BLUESKY_REPOST_IMPORT: 'automatic',
   REFERRAL_LINK: 'manual',
   SUBMIT_MEDIA: 'manual'
-};
-
-// Deprecated: Use TASK_VERIFICATION_REQUIREMENT instead
-export const TASK_HAS_AUTOMATIC_VALIDATION: Record<TaskType, boolean> = {
-  VISIT_URL: false,
-  BONUS_TASK: false,
-  TWITTER_CONNECT: false,
-  TWITTER_FOLLOW: false,
-  TWITTER_RETWEET: false,
-  TWITTER_RETWEET_IMPORT: true,
-  TWITTER_LIKE: false,
-  TWITTER_LIKE_IMPORT: true,
-  YOUTUBE_VISIT: false,
-  KICK_FOLLOW: false,
-  INSTAGRAM_VISIT: false,
-  INSTAGRAM_LIKE: false,
-  INSTAGRAM_COMMENT: false,
-  FACEBOOK_VISIT_PAGE: false,
-  FACEBOOK_VIEW_POST: false,
-  TIKTOK_FOLLOW: true,
-  TIKTOK_LIKE: true,
-  BONUS_LIMITED: false,
-  BONUS_TIMED: false,
-  BONUS_LOYALTY: false,
-  BONUS_COMPLETE_PROFILE: false,
-  STEAM_WISHLIST: true,
-  STEAM_FOLLOW: false,
-  DISCORD_JOIN: true,
-  TWITCH_FOLLOW: true,
-  SECRET_CODE: true,
-  ASK_QUESTION: false,
-  SINGLE_CHOICE: false,
-  MULTIPLE_CHOICE: false,
-  BLUESKY_CONNECT: true,
-  BLUESKY_FOLLOW: true,
-  BLUESKY_LIKE: true,
-  BLUESKY_REPOST: true,
-  BLUESKY_LIKE_IMPORT: true,
-  BLUESKY_REPOST_IMPORT: true,
-  REFERRAL_LINK: false,
-  SUBMIT_MEDIA: false
 };
 
 export const twitterProofSchema = z.object({

@@ -17,6 +17,7 @@ import {
   DialogTitle
 } from '../ui/dialog';
 import { Button } from '../ui/button';
+import { Alert, AlertDescription } from '../ui/alert';
 import {
   Globe,
   CheckCircle,
@@ -24,9 +25,11 @@ import {
   XCircle,
   ExternalLink,
   ChevronRight,
-  FileCheck
+  FileCheck,
+  Shield
 } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
+import { VerificationInstructionsDialog } from './verification-instructions-dialog';
 
 import { formatDistanceToNowStrict } from 'date-fns';
 import Link from 'next/link';
@@ -41,7 +44,8 @@ import { UNKNOWN_USER_NAME } from '@/lib/settings';
 
 export const TaskCompletionDetailSheetContent: React.FC<{
   entries: UserEntriesSchema[];
-}> = ({ entries }) => {
+  sweepstakesId: string;
+}> = ({ entries, sweepstakesId }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const taskCompletionId = searchParams.get('active');
@@ -49,6 +53,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
   const [selectedTaskCompletion, setSelectedTaskCompletion] =
     useState<UserEntriesSchema | null>(null);
   const [showProofDialog, setShowProofDialog] = useState(false);
+  const [showVerifyDialog, setShowVerifyDialog] = useState(false);
 
   useEffect(() => {
     if (taskCompletionId) {
@@ -201,7 +206,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
 
             {selectedTaskCompletion.proof &&
             size(selectedTaskCompletion.proof) ? (
-              <div className="border-t border-muted">
+              <div className="border-t border-muted pt-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">
                     Proof Submitted
@@ -219,6 +224,18 @@ export const TaskCompletionDetailSheetContent: React.FC<{
               </div>
             ) : null}
           </div>
+
+          {selectedTaskCompletion.reason && (
+            <Alert variant="destructive">
+              <XCircle className="h-4 w-4" />
+              <AlertDescription>
+                <div className="space-y-1">
+                  <div className="font-semibold text-sm">Rejection Reason:</div>
+                  <div className="text-sm">{selectedTaskCompletion.reason}</div>
+                </div>
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
 
         {/* Recent Completions */}
@@ -265,8 +282,17 @@ export const TaskCompletionDetailSheetContent: React.FC<{
         </div>
       </div>
 
-      {/* Fixed Action Button */}
-      <div className="border-t pt-4 mt-4 flex-shrink-0">
+      {/* Fixed Action Buttons */}
+      <div className="border-t pt-4 mt-4 flex-shrink-0 space-y-2">
+        <Button
+          size="sm"
+          variant="default"
+          className="w-full"
+          onClick={() => setShowVerifyDialog(true)}
+        >
+          <Shield className="h-4 w-4 mr-2" />
+          Verify Entry
+        </Button>
         <Button
           size="sm"
           variant="outline"
@@ -292,6 +318,16 @@ export const TaskCompletionDetailSheetContent: React.FC<{
           <ProofDisplay proof={selectedTaskCompletion.proof} />
         </DialogContent>
       </Dialog>
+
+      <VerificationInstructionsDialog
+        open={showVerifyDialog}
+        onOpenChange={setShowVerifyDialog}
+        taskCompletionId={selectedTaskCompletion.id}
+        sweepstakesId={sweepstakesId}
+        task={selectedTaskCompletion.task}
+        user={selectedTaskCompletion.user}
+        currentStatus={selectedTaskCompletion.status}
+      />
     </>
   );
 };
@@ -344,10 +380,11 @@ const useTaskIdFromPath = (root?: 'entries' | 'winners') => {
   return match ? match[1] : undefined;
 };
 
-export const TaskCompletionDetailSheet: React.PC<{
+export const TaskCompletionDetailSheet: React.FC<{
   sweepstakesId: string;
   slug: string;
   root?: 'entries' | 'winners';
+  children?: React.ReactNode;
 }> = ({ sweepstakesId, slug, root = 'entries', children }) => {
   const router = useRouter();
   const taskId = useTaskIdFromPath(root);

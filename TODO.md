@@ -15,10 +15,6 @@
 - Make it easy to collect data about what responses users have provided to questions.
 - Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?
 
-#### @Chizuruthedeaf
-
-it can be confusing to know how your changes are affecting the different previews, we should switch to different states in the preview depending on which one
-
 ## @TheGamesDetective
 
 - [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate

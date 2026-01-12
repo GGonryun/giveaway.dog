@@ -39,7 +39,12 @@ const Wrapper: React.FC<{
     return <div>Failed to load sweepstakes entry: {details.data.message}</div>;
   }
 
-  return <TaskCompletionDetailSheetContent entries={details.data} />;
+  return (
+    <TaskCompletionDetailSheetContent
+      entries={details.data}
+      sweepstakesId={sweepstakesId}
+    />
+  );
 };
 
 export default Page;

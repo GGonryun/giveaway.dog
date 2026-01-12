@@ -8,7 +8,7 @@ import { SocialSteamIcon } from './steam-icon';
 import { SocialTwitchIcon } from './twitch-icon';
 import {
   IDENTITY_PROVIDER_LABEL,
-  ProviderTypeSchema
+  IdentityProviderSchema
 } from '../../schemas/providers';
 import { SocialKickIcon } from './kick-icon';
 import { SocialYouTubeIcon } from './youtube';
@@ -23,12 +23,12 @@ import {
 } from '@/components/ui/tooltip';
 
 interface ProviderIconProps {
-  type: ProviderTypeSchema;
+  type: IdentityProviderSchema;
   className?: string;
 }
 
 export const PROVIDER_ICON: Record<
-  ProviderTypeSchema,
+  IdentityProviderSchema,
   React.FC<{ className?: string }>
 > = {
   YOUTUBE: SocialYouTubeIcon,
@@ -47,7 +47,7 @@ export const PROVIDER_ICON: Record<
 };
 
 export const PROVIDER_THEME: Record<
-  ProviderTypeSchema,
+  IdentityProviderSchema,
   { bgColor: string; textColor: string; fillColor: string }
 > = {
   YOUTUBE: {

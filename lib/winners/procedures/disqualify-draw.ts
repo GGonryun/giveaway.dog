@@ -33,6 +33,18 @@ export const disqualifyDraw = procedure()
       const draw = await db.prizeDraw.findUnique({
         where: {
           id: drawId
+        },
+        include: {
+          taskCompletion: {
+            select: {
+              participantId: true,
+              task: {
+                select: {
+                  sweepstakesId: true
+                }
+              }
+            }
+          }
         }
       });
 
@@ -43,6 +55,9 @@ export const disqualifyDraw = procedure()
         });
       }
 
+      const participantId = draw.taskCompletion.participantId;
+      const taskSweepstakesId = draw.taskCompletion.task.sweepstakesId;
+
       await db.$transaction(async (tx) => {
         await tx.prizeDraw.update({
           where: {
@@ -51,6 +66,22 @@ export const disqualifyDraw = procedure()
           data: {
             result: PrizeDrawResult.DISQUALIFIED,
             disqualificationReason: disqualificationReason?.trim()
+          }
+        });
+
+        await tx.taskCompletion.updateMany({
+          where: {
+            participantId: participantId,
+            task: {
+              sweepstakesId: taskSweepstakesId
+            },
+            status: {
+              not: 'REJECTED'
+            }
+          },
+          data: {
+            status: 'REJECTED',
+            reason: `Participant disqualified: ${disqualificationReason?.trim() || 'No reason provided'}`
           }
         });
       });

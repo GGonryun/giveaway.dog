@@ -38,7 +38,12 @@ const Wrapper: React.FC<{ sweepstakesId: string; taskId: string }> = async ({
     return <div>Failed to load sweepstakes entry: {details.data.message}</div>;
   }
 
-  return <TaskCompletionDetailSheetContent entries={details.data} />;
+  return (
+    <TaskCompletionDetailSheetContent
+      entries={details.data}
+      sweepstakesId={sweepstakesId}
+    />
+  );
 };
 
 export default Page;
