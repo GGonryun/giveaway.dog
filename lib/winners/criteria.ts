@@ -6,7 +6,8 @@ import { userSourceSchema } from '../user-source/schemas';
 export const sweepstakesCriteriaSchema = z.object({
   minQualityScore: z.number().min(0),
   minTasksCompleted: z.number().min(0),
-  allowMultipleWins: z.boolean(),
+  allowMultipleWins: z.boolean().default(false),
+  allowUserSelection: z.boolean().default(false),
   externalPlatforms: userSourceSchema.nullable()
 });
 
@@ -30,6 +31,5 @@ export const getSweepstakesCriteria = async (args: {
     });
   }
 
-  const parsed = sweepstakesCriteriaSchema.parse(sweepstakes.criteria);
-  return parsed;
+  return sweepstakesCriteriaSchema.parse(sweepstakes.criteria);
 };

@@ -43,7 +43,8 @@ export const SubmitMediaFormFields: React.FC = () => {
                       <strong>Maximum size:</strong> 3MB
                     </div>
                     <div>
-                      <strong>Verification:</strong> All submissions require manual review
+                      <strong>Verification:</strong> All submissions require
+                      manual review
                     </div>
                   </div>
                 }

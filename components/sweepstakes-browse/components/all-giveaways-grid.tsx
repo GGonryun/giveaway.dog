@@ -15,7 +15,6 @@ export function AllGiveawaysGrid({
   sweepstakes = [],
   participation = {}
 }: AllGiveawaysGridProps) {
-
   if (sweepstakes.length === 0) {
     return (
       <div className="text-center py-12">

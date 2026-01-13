@@ -12,7 +12,9 @@ import {
   DEFAULT_WINNER_SELECTION_METHOD,
   DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
   DEFAULT_CLAIM_DEADLINE_DAYS,
-  DEFAULT_GOVERNING_LAW_COUNTRY_CODE
+  DEFAULT_GOVERNING_LAW_COUNTRY_CODE,
+  DEFAULT_ALLOW_USER_SELECTION,
+  DEFAULT_ALLOW_MULTIPLE_WINS
 } from '@/schemas/giveaway/defaults';
 import { IdentityProvider } from '@prisma/client';
 
@@ -58,7 +60,8 @@ const BASIC_TEMPLATE: TemplateDetailsSchema = {
   criteria: {
     minTasksCompleted: 1,
     minQualityScore: 70,
-    allowMultipleWins: false
+    allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS,
+    allowUserSelection: DEFAULT_ALLOW_USER_SELECTION
   },
   terms: {
     type: 'TEMPLATE',
@@ -126,7 +129,8 @@ const TWITTER_TEMPLATE: TemplateDetailsSchema = {
   criteria: {
     minTasksCompleted: 1,
     minQualityScore: 70,
-    allowMultipleWins: false
+    allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS,
+    allowUserSelection: DEFAULT_ALLOW_USER_SELECTION
   },
   terms: {
     type: 'TEMPLATE',
@@ -203,7 +207,8 @@ const ANONYMOUS_UPLOAD_TEMPLATE: TemplateDetailsSchema = {
   criteria: {
     minTasksCompleted: 1,
     minQualityScore: 50,
-    allowMultipleWins: false
+    allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS,
+    allowUserSelection: DEFAULT_ALLOW_USER_SELECTION
   },
   terms: {
     type: 'TEMPLATE',

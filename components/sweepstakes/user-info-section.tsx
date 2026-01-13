@@ -24,7 +24,8 @@ export const UserInfoSection: React.FC<{ className?: string }> = ({
   }, [pathname]);
 
   const { visibleProviders, remainingCount } = useMemo(() => {
-    if (!participant?.user.providers) return { visibleProviders: [], remainingCount: 0 };
+    if (!participant?.user.providers)
+      return { visibleProviders: [], remainingCount: 0 };
 
     const providers = [...participant.user.providers];
     const hasEmail = participant.user.email && participant.user.emailVerified;

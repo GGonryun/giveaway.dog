@@ -7,18 +7,15 @@ import { z } from 'zod';
 export const facebookProfileUrlSchema = z
   .string()
   .min(1, 'Facebook profile URL is required')
-  .refine(
-    (url) => {
-      const normalized = url.toLowerCase().trim();
-      // Match username-based or ID-based profile URLs
-      const usernamePattern =
-        /^(https?:\/\/)?(www\.)?facebook\.com\/([a-zA-Z0-9.]+)\/?$/;
-      const idPattern =
-        /^(https?:\/\/)?(www\.)?facebook\.com\/profile\.php\?id=\d+$/;
-      return usernamePattern.test(normalized) || idPattern.test(normalized);
-    },
-    'Must be a valid Facebook profile URL'
-  );
+  .refine((url) => {
+    const normalized = url.toLowerCase().trim();
+    // Match username-based or ID-based profile URLs
+    const usernamePattern =
+      /^(https?:\/\/)?(www\.)?facebook\.com\/([a-zA-Z0-9.]+)\/?$/;
+    const idPattern =
+      /^(https?:\/\/)?(www\.)?facebook\.com\/profile\.php\?id=\d+$/;
+    return usernamePattern.test(normalized) || idPattern.test(normalized);
+  }, 'Must be a valid Facebook profile URL');
 
 export const facebookLoginFormSchema = z.object({
   facebookProfileUrl: facebookProfileUrlSchema

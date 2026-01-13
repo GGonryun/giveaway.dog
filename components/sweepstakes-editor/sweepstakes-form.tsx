@@ -15,7 +15,7 @@ import {
 } from '@/schemas/giveaway/schemas';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { SweepstakesFormPreview } from './sweepstake-preview';
+import { SweepstakesFormPreview } from './sweepstakes-editor-preview';
 import { useSweepstakesPage } from '../sweepstakes/use-sweepstakes-page';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { useDeleteSweepstakes } from '../sweepstakes/use-delete-sweepstakes';

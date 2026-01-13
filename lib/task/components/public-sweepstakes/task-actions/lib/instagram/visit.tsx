@@ -35,7 +35,11 @@ export const InstagramVisitTaskActionForm: React.FC<
   }, []);
 
   useEffect(() => {
-    if (submission?.proof && typeof submission.proof === 'object' && 'answer' in submission.proof) {
+    if (
+      submission?.proof &&
+      typeof submission.proof === 'object' &&
+      'answer' in submission.proof
+    ) {
       const submittedUsername = submission.proof.answer as string;
       setUsername(submittedUsername);
       setOriginalUsername(submittedUsername);

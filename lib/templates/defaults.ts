@@ -15,7 +15,8 @@ import {
   DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
   DEFAULT_CLAIM_DEADLINE_DAYS,
   DEFAULT_GOVERNING_LAW_COUNTRY_CODE,
-  DEFAULT_DESIGN_DATA
+  DEFAULT_DESIGN_DATA,
+  DEFAULT_ALLOW_USER_SELECTION
 } from '@/schemas/giveaway/defaults';
 import { SweepstakesTermsType } from '@prisma/client';
 
@@ -70,7 +71,8 @@ export const DEFAULT_TEMPLATE_CONTENT = ({
   criteria: {
     minQualityScore: DEFAULT_MIN_QUALITY_SCORE,
     minTasksCompleted: DEFAULT_MIN_TASK_COMPLETED,
-    allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS
+    allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS,
+    allowUserSelection: DEFAULT_ALLOW_USER_SELECTION
   },
   terms: {
     type: SweepstakesTermsType.TEMPLATE,

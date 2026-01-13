@@ -9,6 +9,7 @@ import { IncompleteGiveawaySetup } from '@/components/sweepstakes/fallbacks/empt
 import {
   GiveawayDesignBackgroundSchema,
   GiveawayFormSchema,
+  GiveawayPrizeSchema,
   GiveawaySchema,
   GiveawayState,
   Prize
@@ -26,7 +27,6 @@ import {
 } from '@/schemas/giveaway/defaults';
 import {
   mockParticipation,
-  mockWinners,
   mockUserHostRelationship,
   onFakeLogin,
   onFakeCompleteProfile,
@@ -35,7 +35,9 @@ import {
   mockParticipant,
   mockUserReferral,
   onFakeCreateReferral,
-  onFakeTaskUpdate
+  onFakeTaskUpdate,
+  onFakeAllocate,
+  mockAllocation
 } from './data/mocks';
 import { TaskSchema } from '@/lib/task/schemas';
 import { useTeams } from '../context/team-provider';
@@ -64,6 +66,14 @@ export const SweepstakesSharedFormPreview: React.FC<{
 }> = ({ formValues }) => {
   const { activeTeam } = useTeams();
   const { previewState } = usePreviewState();
+
+  const formPrizes = (formValues?.prizes || []) as Prize[];
+  const mockPrizes: GiveawayPrizeSchema[] = formPrizes.map((prize, index) => ({
+    prizeId: prize.id || `prize-${index + 1}`,
+    prizeName: prize.name || `Prize ${index + 1}`,
+    quota: prize.quota || 1,
+    draws: []
+  }));
 
   const mockSweepstakes: GiveawaySchema | undefined = useMemo(() => {
     try {
@@ -125,7 +135,7 @@ export const SweepstakesSharedFormPreview: React.FC<{
           formFields: toMockFormFields(formValues?.audience?.formFields)
         },
         tasks: (formValues?.tasks || []) as TaskSchema[],
-        prizes: (formValues?.prizes || []) as Prize[],
+        prizes: formPrizes,
         design: {
           displayName: formValues?.design?.displayName !== false,
           displayDescription: formValues?.design?.displayDescription !== false,
@@ -140,7 +150,8 @@ export const SweepstakesSharedFormPreview: React.FC<{
         criteria: {
           minTasksCompleted: formValues?.criteria?.minTasksCompleted || 1,
           minQualityScore: formValues?.criteria?.minQualityScore || 70,
-          allowMultipleWins: formValues?.criteria?.allowMultipleWins || false
+          allowMultipleWins: formValues?.criteria?.allowMultipleWins || false,
+          allowUserSelection: formValues?.criteria?.allowUserSelection || false
         }
       };
     } catch (error) {
@@ -167,12 +178,14 @@ export const SweepstakesSharedFormPreview: React.FC<{
       sweepstakes={mockSweepstakes}
       host={toSweepstakesHost(activeTeam)}
       participation={mockParticipation}
-      prizes={mockWinners}
+      prizes={mockPrizes}
       participant={getParticipant(previewState)}
       relationship={getUserHostRelationship(previewState)}
       state={previewState}
       referral={mockUserReferral}
       isPreview={true}
+      allocation={getAllocation(previewState, mockSweepstakes, mockPrizes)}
+      onAllocate={onFakeAllocate}
       onCreateReferral={onFakeCreateReferral}
       onTaskComplete={onFakeTaskComplete}
       onTaskUpdate={onFakeTaskUpdate}
@@ -238,11 +251,13 @@ const getParticipant = (
     case 'not-eligible':
     case 'winners-announced':
     case 'winners-pending':
+    case 'no-prize-allocation':
     case 'closed':
     case 'canceled':
     case 'error':
       return mockParticipant;
     default:
+      throw assertNever(previewState);
   }
 };
 
@@ -256,10 +271,38 @@ const getUserHostRelationship = (previewState: GiveawayState) => {
     case 'profile-incomplete':
     case 'winners-announced':
     case 'winners-pending':
+    case 'no-prize-allocation':
     case 'closed':
     case 'canceled':
     case 'error':
       return mockUserHostRelationship;
+    default:
+      throw assertNever(previewState);
+  }
+};
+
+const getAllocation = (
+  previewState: GiveawayState,
+  sweepstakes: GiveawaySchema,
+  prizes: GiveawayPrizeSchema[]
+) => {
+  if (!sweepstakes.criteria.allowUserSelection) {
+    return undefined;
+  }
+  switch (previewState) {
+    case 'not-logged-in':
+    case 'profile-incomplete':
+    case 'no-prize-allocation':
+      return undefined;
+    case 'active':
+    case 'pending':
+    case 'not-eligible':
+    case 'winners-announced':
+    case 'winners-pending':
+    case 'closed':
+    case 'canceled':
+    case 'error':
+      return mockAllocation(prizes);
     default:
       throw assertNever(previewState);
   }

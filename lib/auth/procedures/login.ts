@@ -37,8 +37,16 @@ const login = procedure()
     })
   )
   .handler(async ({ input }) => {
-    const { returnTo, redirectTo, provider, email, blueskyHandle, instagramProfileUrl, facebookProfileUrl, revalidate } =
-      input;
+    const {
+      returnTo,
+      redirectTo,
+      provider,
+      email,
+      blueskyHandle,
+      instagramProfileUrl,
+      facebookProfileUrl,
+      revalidate
+    } = input;
     // Build query parameters for other providers
     const queryParams = new URLSearchParams();
     if (redirectTo) queryParams.append('redirectTo', redirectTo);
@@ -138,7 +146,8 @@ const signInHandler = async (args: {
         });
       }
 
-      const validationResult = instagramProfileUrlSchema.safeParse(instagramProfileUrl);
+      const validationResult =
+        instagramProfileUrlSchema.safeParse(instagramProfileUrl);
       if (!validationResult.success) {
         throw new ApplicationError({
           code: 'VALIDATION_ERROR',
@@ -167,7 +176,8 @@ const signInHandler = async (args: {
         });
       }
 
-      const validationResult = facebookProfileUrlSchema.safeParse(facebookProfileUrl);
+      const validationResult =
+        facebookProfileUrlSchema.safeParse(facebookProfileUrl);
       if (!validationResult.success) {
         throw new ApplicationError({
           code: 'VALIDATION_ERROR',

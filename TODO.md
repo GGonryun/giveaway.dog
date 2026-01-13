@@ -2,11 +2,32 @@
 
 ## Roadmap
 
-- [ ] [PAUSED] Add the ability for users to select their own prizes.
+- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
+- [ ] Display user's current entries on the participation page.
+- [ ] Display user's entries in the "Winners Being Selected" and "Winners Announced" states.
 
-# Kurozzz
+```
+If bottom then you can add like this option -
+Completed entries - 10 (The total points of completed entries).
+Remaining entries - 6 (The total points of remaining entries)
 
-- [ ] i can enhance this by adding a "verify" button after a winner gets selected that either surfaces a tutorial for how to verify user actions or re-runs the automated verification where available to make this easier too. what do you think? would that help as well
+For active giveaways.
+Once the giveaway ends -
+Completed entries - 10
+Failed/Missed entries - 6
+if someone completes all the entries then you can show it like this -
+Completed entries - 16 (All)
+
+
+And there will be no failed/missed entry section.
+Though yeah coding might be a hassle lol
+To add all these new tracking things.
+```
+
+- [ ] Add support for better user scoring on twitter
+- [ ] Add global ban list
+- [ ] Add discord bot for discord-specific giveaways.
+- [ ] Add twitch bot for streamer giveaways.
 
 ---
 
@@ -124,8 +145,6 @@
 - [ ] When someone submits an answer we should show them the data they provided.
 
 ## Tech Debt
-
-- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
 
 - [ ] Make it easier to drag things around in the sweepstake editor.
 

@@ -5,7 +5,7 @@ import z from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
 import { getSweepstakesCriteria } from '../criteria';
 import { getEligibleCompletions } from '../completions';
-import { getDrawsInfo } from '../slots';
+import { getDrawsInfo, getPrizeAllocations } from '../slots';
 import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
 import { PrizeDrawResult } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
@@ -44,6 +44,11 @@ export const rerollDraw = procedure()
         user,
         sweepstakesId,
         criteria
+      });
+
+      const allocations = await getPrizeAllocations({
+        db,
+        sweepstakesId
       });
 
       const draw = await db.prizeDraw.findUnique({
@@ -103,7 +108,9 @@ export const rerollDraw = procedure()
           data: toPrizeDraw({
             draws,
             slots: [{ prizeId: draw.prizeId }],
-            completions
+            completions,
+            criteria,
+            allocations
           }).map((d) => ({ ...d, previousDrawId: drawId }))
         });
       });

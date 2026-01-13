@@ -163,12 +163,57 @@ const AllowMultipleWinsField = () => {
   );
 };
 
+const AllowUserSelectionField = () => {
+  const form = useFormContext<GiveawayFormSchema>();
+
+  return (
+    <SwitchBox>
+      <FormField
+        control={form.control}
+        name="criteria.allowUserSelection"
+        render={({ field }) => (
+          <FormItem className="flex flex-row items-center justify-between">
+            <SwitchFormHeader
+              label="Allow Prize Selection"
+              description="Let participants choose which prize they want to compete for."
+              help={{
+                title: 'Help: Prize Selection',
+                content: (
+                  <div className="space-y-2">
+                    <p>
+                      When enabled, participants can choose which specific prize
+                      they want to compete for before completing tasks.
+                    </p>
+                    <p>
+                      This is useful when you have multiple prizes with
+                      different appeal (e.g., gaming console vs. gift card) and
+                      want to let participants self-select their preference.
+                    </p>
+                    <p>
+                      When disabled, winners are randomly assigned prizes from
+                      the available pool.
+                    </p>
+                  </div>
+                )
+              }}
+            />
+            <FormControl>
+              <Switch checked={field.value} onCheckedChange={field.onChange} />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+    </SwitchBox>
+  );
+};
+
 export const WinnerCriteria = () => {
   return (
     <>
       <MinTasksCompletedField />
       <MinQualityScoreField />
       <AllowMultipleWinsField />
+      <AllowUserSelectionField />
     </>
   );
 };

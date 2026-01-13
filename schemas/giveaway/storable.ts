@@ -13,6 +13,7 @@ import { assertNever } from '@/lib/errors';
 import { isStorablePrize, isStorableTask } from './is';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
+  DEFAULT_ALLOW_USER_SELECTION,
   DEFAULT_MIN_QUALITY_SCORE,
   DEFAULT_MIN_TASK_COMPLETED
 } from './defaults';
@@ -274,6 +275,8 @@ export const toStorableCriteria = (
       minQualityScore: criteria.minQualityScore ?? DEFAULT_MIN_QUALITY_SCORE,
       allowMultipleWins:
         criteria.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS,
+      allowUserSelection:
+        criteria.allowUserSelection ?? DEFAULT_ALLOW_USER_SELECTION,
       externalPlatforms: criteria.externalPlatforms || Prisma.JsonNull
     }
   };

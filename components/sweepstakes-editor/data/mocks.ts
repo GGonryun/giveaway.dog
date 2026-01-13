@@ -7,7 +7,8 @@ import {
   GiveawayParticipationSchema,
   UserParticipationSchema,
   GiveawayPrizeSchema,
-  GiveawayHostSchema
+  GiveawayHostSchema,
+  SweepstakesAllocationSchema
 } from '@/schemas/giveaway/schemas';
 import { UserSchema } from '@/schemas/user';
 import { IdentityProvider } from '@prisma/client';
@@ -148,6 +149,31 @@ export const mockUserReferral: UserReferralSchema = {
   ]
 };
 
+export const mockAllocation = (
+  prizes: GiveawayPrizeSchema[]
+): SweepstakesAllocationSchema | undefined => {
+  const [primary] = prizes;
+  if (!primary) {
+    return undefined;
+  }
+
+  return {
+    prize: {
+      id: primary.prizeId,
+      name: primary.prizeName
+    }
+  };
+};
+
+export const onFakeAllocate = async (
+  allocation: Pick<SweepstakesAllocationSchema, 'prize'>
+): Promise<unknown> => {
+  toast.success(
+    `Allocate action for prize ${allocation.prize.name} triggered (not implemented in preview)`
+  );
+  return Promise.resolve();
+};
+
 export const mockWinners: GiveawayPrizeSchema[] = [];
 
 export const mockSweepstakes = {
@@ -156,12 +182,13 @@ export const mockSweepstakes = {
   ...SAMPLE_SWEEPSTAKES_DATA
 };
 
-export const mockPrizes = SAMPLE_SWEEPSTAKES_DATA.prizes.map((p) => ({
-  prizeId: p.id,
-  prizeName: p.name,
-  quota: p.quota,
-  draws: []
-}));
+export const mockPrizes: GiveawayPrizeSchema[] =
+  SAMPLE_SWEEPSTAKES_DATA.prizes.map((p) => ({
+    prizeId: p.id,
+    prizeName: p.name,
+    quota: p.quota,
+    draws: []
+  }));
 
 export const onFakeLogin = () => {
   toast.success('Login action triggered (not implemented in preview)');

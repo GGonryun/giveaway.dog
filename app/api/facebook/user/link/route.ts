@@ -60,7 +60,9 @@ export async function GET(req: NextRequest) {
         }
       },
       data: {
-        label: /^\d+$/.test(identifier) ? `ID: ${identifier}` : `@${identifier}`,
+        label: /^\d+$/.test(identifier)
+          ? `ID: ${identifier}`
+          : `@${identifier}`,
         link: profileUrl,
         updatedAt: new Date()
       }

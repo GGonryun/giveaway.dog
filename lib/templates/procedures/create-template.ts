@@ -85,8 +85,11 @@ export const createTemplate = procedure()
       const templateWithNewIds = replaceIdsDeep(sourceTemplate, () => nanoid());
 
       // Extract content, omit the id field
-      const { id, template: templateSettings, ...contentFields } =
-        templateWithNewIds;
+      const {
+        id,
+        template: templateSettings,
+        ...contentFields
+      } = templateWithNewIds;
 
       // Append "(Copy)" to the name to indicate it's customized
       const storable = toStorableTemplateSchema({

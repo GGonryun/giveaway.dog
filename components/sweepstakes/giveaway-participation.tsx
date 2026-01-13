@@ -42,6 +42,7 @@ const GiveawayParticipationContent = () => {
       return <NotEligible />;
     case 'winners-announced':
       return <WinnersAnnounced />;
+    case 'no-prize-allocation':
     case 'active':
       return <ActiveParticipation />;
     case 'canceled':

@@ -452,10 +452,11 @@ model SweepstakesWinnerCriteria {
   sweepstakesId String      @unique
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
-  minTasksCompleted Int?    @default(1)
-  minQualityScore   Int?    @default(70)
-  allowMultipleWins Boolean @default(false)
-  externalPlatforms Json?
+  minTasksCompleted  Int?    @default(1)
+  minQualityScore    Int?    @default(70)
+  allowMultipleWins  Boolean @default(false)
+  allowUserSelection Boolean @default(false)
+  externalPlatforms  Json?
 }
 
 enum SweepstakesJobType {
@@ -589,7 +590,8 @@ model Prize {
   index Int?
   quota Int?
 
-  draws PrizeDraw[]
+  draws       PrizeDraw[]
+  allocations SweepstakesAllocation[]
 }
 
 enum PrizeDrawResult {
@@ -624,12 +626,26 @@ model SweepstakesParticipant {
   taskProgresses  TaskProgress[]
   formValues      SweepstakesFormValue[]
   referrals       Referral[]
+  allocations     SweepstakesAllocation?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, sweepstakesId])
   @@map("Participant")
+}
+
+model SweepstakesAllocation {
+  id String @id @default(cuid())
+
+  prizeId String
+  prize   Prize  @relation(fields: [prizeId], references: [id], onDelete: Cascade)
+
+  participantId String                 @unique
+  participant   SweepstakesParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Task {

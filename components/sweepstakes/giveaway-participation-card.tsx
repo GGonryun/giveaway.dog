@@ -20,6 +20,7 @@ const SWEEPSTAKE_PARTICIPATION_CARD_THEME: Record<GiveawayState, string> = {
   'profile-incomplete': 'bg-muted',
   'not-eligible': '',
   'winners-announced': '',
+  'no-prize-allocation': '',
   active: '',
   canceled: '',
   closed: '',

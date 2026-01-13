@@ -8,6 +8,11 @@ import {
   parseUserSourceSchema
 } from '@/lib/user-source/schemas';
 import { Prisma } from '@prisma/client';
+import { sweepstakesWinnerCriteriaSchema } from '@/schemas/giveaway/schemas';
+import {
+  DEFAULT_ALLOW_MULTIPLE_WINS,
+  DEFAULT_ALLOW_USER_SELECTION
+} from '@/schemas/giveaway/defaults';
 
 const updateWinnerCriteriaInput = z.object({
   sweepstakesId: z.string(),
@@ -15,20 +20,14 @@ const updateWinnerCriteriaInput = z.object({
   minTasksCompleted: z.number().int().min(1),
   minQualityScore: z.number().int().min(0).max(100),
   allowMultipleWins: z.boolean(),
+  allowUserSelection: z.boolean(),
   externalPlatforms: allowedUserSourcesSchema.nullable().optional()
 });
 
 const updateWinnerCriteria = procedure()
   .authorization({ required: true })
   .input(updateWinnerCriteriaInput)
-  .output(
-    z.object({
-      minTasksCompleted: z.number(),
-      minQualityScore: z.number(),
-      allowMultipleWins: z.boolean(),
-      externalPlatforms: allowedUserSourcesSchema.nullable().optional()
-    })
-  )
+  .output(sweepstakesWinnerCriteriaSchema)
   .handler(async ({ db, user, input }) => {
     const sweepstakes = await db.sweepstakes.findFirst({
       where: {
@@ -62,6 +61,7 @@ const updateWinnerCriteria = procedure()
         minTasksCompleted: input.minTasksCompleted,
         minQualityScore: input.minQualityScore,
         allowMultipleWins: input.allowMultipleWins,
+        allowUserSelection: input.allowUserSelection,
         externalPlatforms: input.externalPlatforms || Prisma.JsonNull
       }
     });
@@ -69,7 +69,10 @@ const updateWinnerCriteria = procedure()
     return {
       minTasksCompleted: updated.minTasksCompleted ?? 1,
       minQualityScore: updated.minQualityScore ?? 70,
-      allowMultipleWins: updated.allowMultipleWins ?? false,
+      allowMultipleWins:
+        updated.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS,
+      allowUserSelection:
+        updated.allowUserSelection ?? DEFAULT_ALLOW_USER_SELECTION,
       externalPlatforms: parseUserSourceSchema(updated.externalPlatforms)
     };
   });

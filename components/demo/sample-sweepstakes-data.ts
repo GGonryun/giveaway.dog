@@ -18,6 +18,12 @@ import {
   YOUTUBE_CHANNEL_URL
 } from '@/lib/settings';
 import { timezone } from '@/lib/time';
+import {
+  DEFAULT_ALLOW_MULTIPLE_WINS,
+  DEFAULT_ALLOW_USER_SELECTION,
+  DEFAULT_MIN_QUALITY_SCORE,
+  DEFAULT_MIN_TASK_COMPLETED
+} from '@/schemas/giveaway/defaults';
 
 export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   setup: {
@@ -158,8 +164,9 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
     slug: 'demo-giveaway'
   },
   criteria: {
-    minTasksCompleted: 1,
-    minQualityScore: 70,
-    allowMultipleWins: false
+    minTasksCompleted: DEFAULT_MIN_TASK_COMPLETED,
+    minQualityScore: DEFAULT_MIN_QUALITY_SCORE,
+    allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS,
+    allowUserSelection: DEFAULT_ALLOW_USER_SELECTION
   }
 };

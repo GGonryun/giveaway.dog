@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useMemo } from 'react';
-import { Plus } from 'lucide-react';
+import { ArrowLeftIcon, EditIcon, Plus, XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGiveawayParticipation } from '../../giveaway-participation-context';
 import { UserInfoSection } from '../../user-info-section';
@@ -13,6 +13,8 @@ import { PrizeItem } from './prize-item';
 import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';
 import { toParticipantEntries } from '@/lib/task/entries';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { doesUserHaveAllowedIdentity } from '@/lib/integrations/schemas/providers';
+import { Button } from '@/components/ui/button';
 
 export const ActiveParticipation: React.FC = () => {
   const searchParams = useSearchParams();
@@ -21,31 +23,65 @@ export const ActiveParticipation: React.FC = () => {
     return null;
   }, [searchParams]);
 
-  const { allocation } = useGiveawayParticipation();
-  const [open, setOpen] = React.useState<string | null>(taskId);
+  const prizeId = useMemo(() => {
+    if (searchParams.has('prizeId')) return searchParams.get('prizeId');
+    return null;
+  }, [searchParams]);
+
+  const { allocation, sweepstakes } = useGiveawayParticipation();
+  const allowUserSelection = sweepstakes.criteria?.allowUserSelection || false;
+
+  const [openTask, setOpenTask] = React.useState<string | null>(taskId);
+  const [openPrize, setOpenPrize] = React.useState<string | null>(prizeId);
   const [activeTab, setActiveTab] = React.useState(
-    allocation ? 'tasks' : 'prizes'
+    allowUserSelection && !allocation ? 'prizes' : 'tasks'
   );
 
-  const handleOpen = useCallback(
+  const handleTaskOpen = useCallback(
     (taskId: string | null) => {
       if (taskId) {
         browser.changeParams({ taskId });
-        setOpen((current) => (current === taskId ? null : taskId));
+        setOpenTask((current) => (current === taskId ? null : taskId));
       } else {
         browser.changeParams({ taskId: null });
-        setOpen(null);
+        setOpenTask(null);
       }
     },
-    [setOpen]
+    [setOpenTask]
+  );
+
+  const handlePrizeOpen = useCallback(
+    (prizeId: string | null) => {
+      if (prizeId) {
+        browser.changeParams({ prizeId });
+        setOpenPrize((current) => (current === prizeId ? null : prizeId));
+      } else {
+        browser.changeParams({ prizeId: null });
+        setOpenPrize(null);
+      }
+    },
+    [setOpenPrize]
+  );
+
+  const handleSetActiveTab = useCallback(
+    (tab: string) => {
+      setActiveTab(tab);
+      // Clear open task/prize when switching tabs
+      handleTaskOpen(null);
+      handlePrizeOpen(null);
+    },
+    [handlePrizeOpen, handleTaskOpen]
   );
 
   return (
     <div className="space-y-2 relative">
-      {open && (
+      {(openTask || openPrize) && (
         <div
           className="fixed inset-0 h-full bg-foreground/10 z-50 backdrop-blur-[1px]"
-          onClick={() => handleOpen(null)}
+          onClick={() => {
+            handleTaskOpen(null);
+            handlePrizeOpen(null);
+          }}
         />
       )}
 
@@ -54,22 +90,30 @@ export const ActiveParticipation: React.FC = () => {
         <UserProgressSection />
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs
+        value={activeTab}
+        onValueChange={handleSetActiveTab}
+        className="w-full"
+      >
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="prizes">Prizes</TabsTrigger>
           <TabsTrigger value="tasks">Tasks</TabsTrigger>
+          <TabsTrigger value="prizes">Prizes</TabsTrigger>
         </TabsList>
 
         <TabsContent value="tasks">
           <TasksContent
-            open={open}
-            setOpen={handleOpen}
-            setActiveTab={setActiveTab}
+            open={openTask}
+            setOpen={handleTaskOpen}
+            setActiveTab={handleSetActiveTab}
           />
         </TabsContent>
 
         <TabsContent value="prizes">
-          <PrizesContent />
+          <PrizesContent
+            openPrize={openPrize}
+            setOpenPrize={handlePrizeOpen}
+            setActiveTab={handleSetActiveTab}
+          />
         </TabsContent>
       </Tabs>
     </div>
@@ -151,11 +195,22 @@ const TasksContent: React.FC<{
   return <TaskList {...props} />;
 };
 
-const PrizesContent = () => {
-  const { sweepstakes, allocation } = useGiveawayParticipation();
+const PrizesContent: React.FC<{
+  openPrize: string | null;
+  setOpenPrize: (prizeId: string | null) => void;
+  setActiveTab: (tab: string) => void;
+}> = ({ openPrize, setOpenPrize, setActiveTab }) => {
+  const { sweepstakes, participant, allocation, onAllocate } =
+    useGiveawayParticipation();
+  const [isAllocating, setIsAllocating] = React.useState(false);
 
+  const isConnected = doesUserHaveAllowedIdentity(
+    participant?.user,
+    sweepstakes.audience.allowedIdentities
+  );
+
+  const allowUserSelection = sweepstakes.criteria?.allowUserSelection || false;
   const hasPrizes = sweepstakes.prizes && sweepstakes.prizes.length > 0;
-  const hasAllocation = !!allocation;
 
   if (!hasPrizes)
     return (
@@ -170,17 +225,53 @@ const PrizesContent = () => {
 
   return (
     <div className="space-y-2">
-      {!hasAllocation && (
+      {allocation ? (
+        <Alert variant="success">
+          <AlertTitle>
+            You are competing for{' '}
+            <span className="font-semibold">{allocation.prize.name}</span>
+          </AlertTitle>
+        </Alert>
+      ) : allowUserSelection ? (
         <Alert variant="warning">
           <AlertTitle>What prize are you competing for?</AlertTitle>
           <AlertDescription>
-            You currently do not have an allocation for any prizes. Complete
-            tasks to earn entries and increase your chances of winning!
+            Pick the prize you are trying to win and then complete tasks. You
+            can change your prize selection at any time before the giveaway
+            ends.
           </AlertDescription>
         </Alert>
-      )}
-      {sweepstakes.prizes.map((prize, index) => (
-        <PrizeItem key={index} prize={prize} />
+      ) : null}
+      {sweepstakes.prizes.map((prize) => (
+        <PrizeItem
+          key={prize.id}
+          prize={prize}
+          isConnected={isConnected}
+          onSeeTasks={() => setActiveTab('tasks')}
+          state={
+            isAllocating
+              ? 'allocating'
+              : !allocation
+                ? 'unallocated'
+                : allocation?.prize.id === prize.id
+                  ? 'allocation'
+                  : 'allocated'
+          }
+          open={openPrize === prize.id}
+          onToggleExpand={() =>
+            setOpenPrize(openPrize === prize.id ? null : prize.id)
+          }
+          onAllocate={
+            allowUserSelection
+              ? async () => {
+                  setIsAllocating(true);
+                  await onAllocate({ prize });
+                  setOpenPrize(null);
+                  setIsAllocating(false);
+                }
+              : undefined
+          }
+        />
       ))}
     </div>
   );

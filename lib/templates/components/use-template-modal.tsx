@@ -13,11 +13,13 @@ import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-partici
 import { TemplateListItemSchema } from '../schemas/template';
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
 import {
+  mockAllocation,
   mockHost,
   mockParticipant,
   mockParticipation,
   mockPrizes,
   mockUserReferral,
+  onFakeAllocate,
   onFakeCompleteProfile,
   onFakeCreateReferral,
   onFakeFormSubmit,
@@ -99,6 +101,8 @@ export function UseTemplateModal({
             className="w-full"
             referral={mockUserReferral}
             isPreview={true}
+            allocation={mockAllocation(mockPrizes)}
+            onAllocate={onFakeAllocate}
             onCreateReferral={onFakeCreateReferral}
             onTaskComplete={onFakeTaskComplete}
             onTaskUpdate={onFakeTaskUpdate}

@@ -5,7 +5,11 @@ import z from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
 import { getSweepstakesCriteria } from '../criteria';
 import { getEligibleCompletions } from '../completions';
-import { getDrawsInfo, getEmptyPrizeSlots } from '../slots';
+import {
+  getDrawsInfo,
+  getEmptyPrizeSlots,
+  getPrizeAllocations
+} from '../slots';
 import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
 
 export const rollPrizes = procedure()
@@ -35,6 +39,11 @@ export const rollPrizes = procedure()
       sweepstakesId
     });
 
+    const allocations = await getPrizeAllocations({
+      db,
+      sweepstakesId
+    });
+
     const completions = await getEligibleCompletions({
       db,
       user,
@@ -50,7 +59,9 @@ export const rollPrizes = procedure()
       data: toPrizeDraw({
         draws,
         slots,
-        completions
+        criteria,
+        completions,
+        allocations
       })
     });
 

@@ -2,7 +2,7 @@
 
 import { useFormContext, useWatch } from 'react-hook-form';
 import { TemplateFormSchema } from '../schemas/template';
-import { SweepstakesSharedFormPreview } from '@/components/sweepstakes-editor/sweepstake-preview';
+import { SweepstakesSharedFormPreview } from '@/components/sweepstakes-editor/sweepstakes-editor-preview';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import {
   DEFAULT_MIN_QUALITY_SCORE,

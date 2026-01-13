@@ -598,6 +598,7 @@ export const SweepstakesWinners = ({
       minTasksCompleted: editedCriteria.minTasksCompleted,
       minQualityScore: editedCriteria.minQualityScore,
       allowMultipleWins: editedCriteria.allowMultipleWins,
+      allowUserSelection: editedCriteria.allowUserSelection,
       externalPlatforms: editedCriteria.externalPlatforms
     });
   };
@@ -674,6 +675,12 @@ export const SweepstakesWinners = ({
                 <span className="text-muted-foreground">Multiple Wins:</span>
                 <Badge variant="secondary">
                   {currentCriteria.allowMultipleWins ? 'Yes' : 'No'}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-muted-foreground">Prize Selection:</span>
+                <Badge variant="secondary">
+                  {currentCriteria.allowUserSelection ? 'Yes' : 'No'}
                 </Badge>
               </div>
               <div className="flex items-center gap-1.5 ml-auto">
@@ -822,6 +829,22 @@ export const SweepstakesWinners = ({
               />
               <Label htmlFor="allowMultipleWins">
                 Allow users to win multiple prizes
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="allowUserSelection"
+                checked={editedCriteria.allowUserSelection}
+                onCheckedChange={(checked) =>
+                  setEditedCriteria((prev) => ({
+                    ...prev,
+                    allowUserSelection: checked
+                  }))
+                }
+              />
+              <Label htmlFor="allowUserSelection">
+                Allow participants to select prizes
               </Label>
             </div>
 

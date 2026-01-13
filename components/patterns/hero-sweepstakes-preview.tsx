@@ -3,6 +3,7 @@
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
 import { toSweepstakesState } from '@/lib/sweepstakes';
 import {
+  mockAllocation,
   mockHost,
   mockParticipant,
   mockParticipation,
@@ -10,6 +11,7 @@ import {
   mockSweepstakes,
   mockUserHostRelationship,
   mockUserReferral,
+  onFakeAllocate,
   onFakeCompleteProfile,
   onFakeCreateReferral,
   onFakeFormSubmit,
@@ -38,6 +40,8 @@ export const HeroSweepstakesPreview: React.FC = () => {
       verifyEmail={false}
       isPreview={true}
       hideBackground
+      allocation={mockAllocation(mockPrizes)}
+      onAllocate={onFakeAllocate}
       onCompleteProfile={onFakeCompleteProfile}
       onLogin={onFakeLogin}
       onTaskComplete={onFakeTaskComplete}

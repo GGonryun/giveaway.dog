@@ -101,3 +101,20 @@ export const getDrawsInfo = async (args: {
     userId: draw.taskCompletion.participant.userId
   }));
 };
+
+export const getPrizeAllocations = async (args: {
+  db: PrismaClient;
+  sweepstakesId: string;
+}) => {
+  const { db, sweepstakesId } = args;
+
+  const allocations = await db.sweepstakesAllocation.findMany({
+    where: {
+      participant: {
+        sweepstakesId
+      }
+    }
+  });
+
+  return allocations;
+};

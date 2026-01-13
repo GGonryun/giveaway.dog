@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import pluralize from 'pluralize';
 import {
   Collapsible,
   CollapsibleContent,

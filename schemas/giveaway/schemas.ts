@@ -167,7 +167,7 @@ export type SweepstakesVisibilitySchema = z.infer<
   typeof sweepstakesVisibilitySchema
 >;
 
-const sweepstakesWinnerCriteriaSchema = z.object({
+export const sweepstakesWinnerCriteriaSchema = z.object({
   minTasksCompleted: z
     .number()
     .int()
@@ -180,6 +180,7 @@ const sweepstakesWinnerCriteriaSchema = z.object({
     .max(100, 'Quality score must be between 0-100')
     .default(70),
   allowMultipleWins: z.boolean().default(false),
+  allowUserSelection: z.boolean().default(false),
   externalPlatforms: allowedUserSourcesSchema.nullable().nullish()
 });
 
@@ -382,6 +383,7 @@ export type GiveawayState =
   | 'profile-incomplete' // User needs to fill out some profile details
   | 'winners-announced' // Winners have been announced
   | 'winners-pending' // Winners are pending announcement
+  | 'no-prize-allocation' // No prize allocation available
   | 'closed' // Giveaway is closed
   | 'canceled' // Giveaway is cancelled
   | 'error'; // An error state
@@ -391,7 +393,8 @@ export const PREVIEW_GIVEAWAY_STATES: GiveawayState[] = [
   'not-logged-in',
   'profile-incomplete',
   'not-eligible',
-  'winners-announced'
+  'winners-announced',
+  'no-prize-allocation'
 ];
 
 // Helper function to convert state to display label
@@ -413,6 +416,8 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
       return 'Winners Pending';
     case 'profile-incomplete':
       return 'Profile Incomplete';
+    case 'no-prize-allocation':
+      return 'No Prize Selected';
     case 'closed':
       return 'Closed';
     case 'canceled':
@@ -461,11 +466,18 @@ export const sweepstakesPrizeSchema = z.object({
 
 export type SweepstakesPrizeSchema = z.infer<typeof sweepstakesPrizeSchema>;
 
-export const sweepstakesEntryAllocationSchema = z.object({
+export const sweepstakesAllocationSchema = z.object({
+  prize: z.object({
+    id: z.string(),
+    name: z.string()
+  })
+});
+
+export type SweepstakesAllocationSchema = z.infer<
+  typeof sweepstakesAllocationSchema
+>;
+
+export const allocatePrizeRequestSchema = z.object({
   participantId: z.string(),
   prizeId: z.string()
 });
-
-export type SweepstakesEntryAllocationSchema = z.infer<
-  typeof sweepstakesEntryAllocationSchema
->;

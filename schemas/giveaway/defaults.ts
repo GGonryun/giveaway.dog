@@ -25,6 +25,7 @@ export const DEFAULT_SPONSOR_NAME = 'Giveaway Sponsor';
 export const DEFAULT_MIN_QUALITY_SCORE = 50;
 export const DEFAULT_MIN_TASK_COMPLETED = 1;
 export const DEFAULT_ALLOW_MULTIPLE_WINS = false;
+export const DEFAULT_ALLOW_USER_SELECTION = false;
 
 export const DEFAULT_ALLOWED_USER_SOURCES: AllowedUserSourcesSchema = [
   'TWITTER_IMPORT'

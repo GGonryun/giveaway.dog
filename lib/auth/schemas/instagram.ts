@@ -9,24 +9,19 @@ import { z } from 'zod';
 export const instagramProfileUrlSchema = z
   .string()
   .min(1, 'Instagram profile URL is required')
-  .refine(
-    (url) => {
-      const normalized = url.toLowerCase().trim();
-      // Match profile URLs only (not posts, reels, etc.)
-      const pattern =
-        /^(https?:\/\/)?(www\.)?instagram\.com\/([a-zA-Z0-9._]+)\/?$/;
-      return pattern.test(normalized);
-    },
-    'Must be a valid Instagram profile URL (e.g., https://instagram.com/username)'
-  );
+  .refine((url) => {
+    const normalized = url.toLowerCase().trim();
+    // Match profile URLs only (not posts, reels, etc.)
+    const pattern =
+      /^(https?:\/\/)?(www\.)?instagram\.com\/([a-zA-Z0-9._]+)\/?$/;
+    return pattern.test(normalized);
+  }, 'Must be a valid Instagram profile URL (e.g., https://instagram.com/username)');
 
 export const instagramLoginFormSchema = z.object({
   instagramProfileUrl: instagramProfileUrlSchema
 });
 
-export type InstagramLoginFormSchema = z.infer<
-  typeof instagramLoginFormSchema
->;
+export type InstagramLoginFormSchema = z.infer<typeof instagramLoginFormSchema>;
 
 // Extract username from Instagram URL
 export const extractInstagramUsername = (url: string): string => {

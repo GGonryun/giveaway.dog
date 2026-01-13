@@ -11,6 +11,7 @@ import { compact } from 'lodash';
 import { toJsonObject } from '@/lib/json';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
+  DEFAULT_ALLOW_USER_SELECTION,
   DEFAULT_MIN_QUALITY_SCORE,
   DEFAULT_MIN_TASK_COMPLETED,
   DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND
@@ -194,6 +195,7 @@ const toCriteriaInput = (
       minQualityScore: DEFAULT_MIN_QUALITY_SCORE,
       minTasksCompleted: DEFAULT_MIN_TASK_COMPLETED,
       allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS,
+      allowUserSelection: DEFAULT_ALLOW_USER_SELECTION,
       externalPlatforms: null
     };
 
@@ -204,6 +206,7 @@ const toCriteriaInput = (
         : DEFAULT_MIN_QUALITY_SCORE,
     minTasksCompleted: data.minTasksCompleted ?? DEFAULT_MIN_TASK_COMPLETED,
     allowMultipleWins: data.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS,
+    allowUserSelection: data.allowUserSelection ?? DEFAULT_ALLOW_USER_SELECTION,
     externalPlatforms: parseUserSourceSchema(data.externalPlatforms)
   };
 };

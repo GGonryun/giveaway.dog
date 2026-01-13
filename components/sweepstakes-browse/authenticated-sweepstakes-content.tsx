@@ -1,6 +1,9 @@
 'use client';
 
-import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
+import {
+  ParticipantSweepstakeSchema,
+  SweepstakesAllocationSchema
+} from '@/schemas/giveaway/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { UserReferralSchema } from '@/lib/referrals/schemas';
@@ -11,6 +14,7 @@ interface AuthenticatedSweepstakesContentProps
   participant?: SweepstakesParticipantSchema;
   relationship?: UserHostRelationshipSchema;
   referral?: UserReferralSchema;
+  allocation?: SweepstakesAllocationSchema;
 }
 
 export const AuthenticatedSweepstakesContent: React.FC<

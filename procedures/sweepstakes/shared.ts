@@ -190,6 +190,14 @@ export const applySweepstakesChanges = async ({
         }
       });
 
+      const allocations = await tx.sweepstakesAllocation.findMany({
+        where: {
+          participant: {
+            sweepstakesId: sweepstakes.id
+          }
+        }
+      });
+
       // delete existing sweepstakes and all nested properties
       await tx.sweepstakes.delete({
         where: { id: sweepstakes.id }
@@ -197,7 +205,11 @@ export const applySweepstakesChanges = async ({
 
       const created = await tx.sweepstakes.create({
         data: toStorableSweepstakes(sweepstakes, input),
-        include: { tasks: true, audience: { include: { formFields: true } } }
+        include: {
+          tasks: true,
+          criteria: true,
+          audience: { include: { formFields: true } }
+        }
       });
 
       // restore retained data - must restore participants before dependent records
@@ -256,6 +268,12 @@ export const applySweepstakesChanges = async ({
       if (referredUsers.length > 0) {
         await tx.referredUser.createMany({
           data: referredUsers.map((d) => ({ ...d }))
+        });
+      }
+
+      if (created.criteria?.allowUserSelection && allocations.length > 0) {
+        await tx.sweepstakesAllocation.createMany({
+          data: allocations.map((d) => ({ ...d }))
         });
       }
 

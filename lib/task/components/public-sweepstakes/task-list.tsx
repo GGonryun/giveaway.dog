@@ -65,6 +65,7 @@ export const TaskList: React.FC<{
 
   const hasMandatoryTasks = mandatory.length > 0;
   const hasOptionalTasks = optional.length > 0;
+  const needsAllocation = sweepstakes.criteria.allowUserSelection;
   const hasAllocation = !!allocation;
 
   const totalOptionalEntries = optional.reduce(
@@ -87,7 +88,7 @@ export const TaskList: React.FC<{
     }
   ];
 
-  if (!hasAllocation) {
+  if (needsAllocation && !hasAllocation) {
     return (
       <div className="relative mt-4">
         <div
