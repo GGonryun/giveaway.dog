@@ -3,27 +3,6 @@
 ## Roadmap
 
 - [ ] If an integration is unhealthy, ask the user to re-authenticate first.
-- [ ] Display user's current entries on the participation page.
-- [ ] Display user's entries in the "Winners Being Selected" and "Winners Announced" states.
-
-```
-If bottom then you can add like this option -
-Completed entries - 10 (The total points of completed entries).
-Remaining entries - 6 (The total points of remaining entries)
-
-For active giveaways.
-Once the giveaway ends -
-Completed entries - 10
-Failed/Missed entries - 6
-if someone completes all the entries then you can show it like this -
-Completed entries - 16 (All)
-
-
-And there will be no failed/missed entry section.
-Though yeah coding might be a hassle lol
-To add all these new tracking things.
-```
-
 - [ ] Add support for better user scoring on twitter
 - [ ] Add global ban list
 - [ ] Add discord bot for discord-specific giveaways.

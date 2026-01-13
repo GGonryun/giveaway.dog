@@ -1,23 +1,20 @@
 'use client';
 
 import React, { useCallback, useMemo } from 'react';
-import { ArrowLeftIcon, EditIcon, Plus, XIcon } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useGiveawayParticipation } from '../../giveaway-participation-context';
-import { UserInfoSection } from '../../user-info-section';
+import { useGiveawayParticipation } from '../giveaway-participation-context';
+import { UserInfoSection } from '../user-info-section';
 import { Typography } from '@/components/ui/typography';
 import { useSearchParams } from 'next/navigation';
 import { browser } from '@/lib/browser';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PrizeItem } from './prize-item';
 import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';
 import { toParticipantEntries } from '@/lib/task/entries';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { doesUserHaveAllowedIdentity } from '@/lib/integrations/schemas/providers';
-import { Button } from '@/components/ui/button';
-import { WinnersPending } from '../winners-pending';
+import { WinnersAnnounced } from './winners-announced';
 
-export const ActiveParticipation: React.FC = () => {
+export const WinnersAnnouncedParticipation: React.FC = () => {
   const searchParams = useSearchParams();
   const taskId = useMemo(() => {
     if (searchParams.has('taskId')) return searchParams.get('taskId');
@@ -29,19 +26,11 @@ export const ActiveParticipation: React.FC = () => {
     return null;
   }, [searchParams]);
 
-  const { allocation, sweepstakes, state } = useGiveawayParticipation();
-  const allowUserSelection = sweepstakes.criteria?.allowUserSelection || false;
-  const isWinnersPending = state === 'winners-pending';
+  const { sweepstakes } = useGiveawayParticipation();
 
   const [openTask, setOpenTask] = React.useState<string | null>(taskId);
   const [openPrize, setOpenPrize] = React.useState<string | null>(prizeId);
-  const [activeTab, setActiveTab] = React.useState(
-    isWinnersPending
-      ? 'prizes'
-      : allowUserSelection && !allocation
-        ? 'prizes'
-        : 'tasks'
-  );
+  const [activeTab, setActiveTab] = React.useState('prizes');
 
   const handleTaskOpen = useCallback(
     (taskId: string | null) => {
@@ -72,7 +61,6 @@ export const ActiveParticipation: React.FC = () => {
   const handleSetActiveTab = useCallback(
     (tab: string) => {
       setActiveTab(tab);
-      // Clear open task/prize when switching tabs
       handleTaskOpen(null);
       handlePrizeOpen(null);
     },
@@ -96,12 +84,6 @@ export const ActiveParticipation: React.FC = () => {
         <UserProgressSection />
       </div>
 
-      {isWinnersPending && (
-        <div className="mb-2">
-          <WinnersPending />
-        </div>
-      )}
-
       <Tabs
         value={activeTab}
         onValueChange={handleSetActiveTab}
@@ -121,11 +103,7 @@ export const ActiveParticipation: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="prizes">
-          <PrizesContent
-            openPrize={openPrize}
-            setOpenPrize={handlePrizeOpen}
-            setActiveTab={handleSetActiveTab}
-          />
+          <WinnersAnnounced />
         </TabsContent>
       </Tabs>
     </div>
@@ -205,93 +183,4 @@ const TasksContent: React.FC<{
     );
 
   return <TaskList {...props} />;
-};
-
-const PrizesContent: React.FC<{
-  openPrize: string | null;
-  setOpenPrize: (prizeId: string | null) => void;
-  setActiveTab: (tab: string) => void;
-}> = ({ openPrize, setOpenPrize, setActiveTab }) => {
-  const { sweepstakes, participant, allocation, onAllocate, state } =
-    useGiveawayParticipation();
-  const [isAllocating, setIsAllocating] = React.useState(false);
-
-  const isConnected = doesUserHaveAllowedIdentity(
-    participant?.user,
-    sweepstakes.audience.allowedIdentities
-  );
-
-  const allowUserSelection = sweepstakes.criteria?.allowUserSelection || false;
-  const isWinnersPending = state === 'winners-pending';
-  const hasPrizes = sweepstakes.prizes && sweepstakes.prizes.length > 0;
-
-  if (!hasPrizes)
-    return (
-      <div className="text-center py-8">
-        <Plus className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-        <h4 className="text-lg font-medium text-gray-600 mb-2">No Prizes</h4>
-        <p className="text-sm text-muted-foreground">
-          Add prizes to see them here.
-        </p>
-      </div>
-    );
-
-  return (
-    <div className="space-y-2">
-      {allocation ? (
-        <Alert variant="success">
-          <AlertTitle>
-            You {isWinnersPending ? 'competed' : 'are competing'} for{' '}
-            <span className="font-semibold">{allocation.prize.name}</span>
-          </AlertTitle>
-          {!isWinnersPending && (
-            <AlertDescription>
-              Complete tasks to earn entries and increase your chances of
-              winning!
-            </AlertDescription>
-          )}
-        </Alert>
-      ) : allowUserSelection && !isWinnersPending ? (
-        <Alert variant="warning">
-          <AlertTitle>What prize are you competing for?</AlertTitle>
-          <AlertDescription>
-            Pick the prize you are trying to win and then complete tasks. You
-            can change your prize selection at any time before the giveaway
-            ends.
-          </AlertDescription>
-        </Alert>
-      ) : null}
-      {sweepstakes.prizes.map((prize) => (
-        <PrizeItem
-          key={prize.id}
-          prize={prize}
-          isConnected={isConnected}
-          onSeeTasks={() => setActiveTab('tasks')}
-          state={
-            isAllocating
-              ? 'allocating'
-              : !allocation
-                ? 'unallocated'
-                : allocation?.prize.id === prize.id
-                  ? 'allocation'
-                  : 'allocated'
-          }
-          open={openPrize === prize.id}
-          onToggleExpand={() =>
-            setOpenPrize(openPrize === prize.id ? null : prize.id)
-          }
-          onAllocate={
-            allowUserSelection && !isWinnersPending
-              ? async () => {
-                  setIsAllocating(true);
-                  await onAllocate({ prize });
-                  setOpenPrize(null);
-                  setIsAllocating(false);
-                }
-              : undefined
-          }
-        />
-      ))}
-    </div>
-  );
 };

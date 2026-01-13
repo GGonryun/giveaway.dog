@@ -2,15 +2,17 @@
 
 import React from 'react';
 import { Hourglass } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export const WinnersPending: React.FC = () => {
   return (
-    <div className="text-center my-4">
-      <Hourglass className="h-12 w-12 mx-auto mb-4 text-yellow-500" />
-      <h3 className="text-lg font-semibold mb-2">Winners Being Selected</h3>
-      <p className="text-muted-foreground">
-        This giveaway has ended and winners are being selected. Check back soon!
-      </p>
-    </div>
+    <Alert variant="warning">
+      <Hourglass className="h-4 w-4" />
+      <AlertTitle>Winners Being Selected</AlertTitle>
+      <AlertDescription>
+        This giveaway has ended and winners are being selected. Check back soon
+        to see the results!
+      </AlertDescription>
+    </Alert>
   );
 };

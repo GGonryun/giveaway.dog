@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Crown, ChevronDown, ChevronRight } from 'lucide-react';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
 import {
@@ -21,9 +21,10 @@ import { PrizeDrawResult } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DisqualificationDialog } from '@/components/sweepstakes-details/disqualification-dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export const WinnersAnnounced: React.FC = () => {
-  const { prizes } = useGiveawayParticipation();
+  const { prizes, allocation, participant } = useGiveawayParticipation();
   const [openPrizes, setOpenPrizes] = useState<Record<string, boolean>>({});
   const [disqualificationDialog, setDisqualificationDialog] = useState(false);
   const [selectedDisqualification, setSelectedDisqualification] = useState<{
@@ -46,19 +47,91 @@ export const WinnersAnnounced: React.FC = () => {
     setDisqualificationDialog(true);
   };
 
+  const userWinStatus = useMemo(() => {
+    if (!participant || !allocation) return null;
+
+    const allocatedPrize = prizes.find((p) => p.prizeId === allocation.prize.id);
+    if (!allocatedPrize) return null;
+
+    const userDraw = allocatedPrize.draws.find(
+      (d) => d.user.id === participant.user.id
+    );
+
+    if (!userDraw) {
+      return { type: 'competed', prize: allocation.prize.name };
+    }
+
+    if (userDraw.result === PrizeDrawResult.WINNER) {
+      return { type: 'won', prize: allocation.prize.name };
+    }
+
+    if (userDraw.result === PrizeDrawResult.DISQUALIFIED) {
+      return {
+        type: 'disqualified',
+        prize: allocation.prize.name,
+        reason: userDraw.disqualificationReason
+      };
+    }
+
+    return { type: 'competed', prize: allocation.prize.name };
+  }, [participant, allocation, prizes]);
+
   return (
-    <div className="space-y-6 w-full mt-2">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="rounded-full bg-yellow-100 p-4">
-          <Crown className="h-8 w-8 text-yellow-600" />
+    <div className="space-y-4 w-full mt-2">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="rounded-full bg-yellow-100 p-3">
+          <Crown className="h-6 w-6 text-yellow-600" />
         </div>
         <div className="text-left">
-          <h3 className="text-xl font-bold">Winners Announced!</h3>
+          <h3 className="text-lg font-bold">Winners Announced!</h3>
           <p className="text-sm text-muted-foreground">
             Congratulations to all the winners of this giveaway!
           </p>
         </div>
       </div>
+
+      {userWinStatus && (
+        <Alert
+          variant={
+            userWinStatus.type === 'won'
+              ? 'default'
+              : userWinStatus.type === 'disqualified'
+                ? 'destructive'
+                : 'default'
+          }
+        >
+          <AlertTitle>
+            {userWinStatus.type === 'won' && (
+              <>
+                🎉 Congratulations! You won{' '}
+                <span className="font-semibold">{userWinStatus.prize}</span>!
+              </>
+            )}
+            {userWinStatus.type === 'disqualified' && (
+              <>
+                You were disqualified from{' '}
+                <span className="font-semibold">{userWinStatus.prize}</span>
+              </>
+            )}
+            {userWinStatus.type === 'competed' && (
+              <>
+                You competed for{' '}
+                <span className="font-semibold">{userWinStatus.prize}</span>
+              </>
+            )}
+          </AlertTitle>
+          {userWinStatus.type === 'disqualified' && userWinStatus.reason && (
+            <AlertDescription>
+              Reason: {userWinStatus.reason}
+            </AlertDescription>
+          )}
+          {userWinStatus.type === 'competed' && (
+            <AlertDescription>
+              Unfortunately, you didn't win this time. Better luck next time!
+            </AlertDescription>
+          )}
+        </Alert>
+      )}
 
       <DisqualificationDialog
         open={disqualificationDialog}

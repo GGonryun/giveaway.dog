@@ -8,12 +8,11 @@ import {
 import { GiveawayParticipationCard } from './giveaway-participation-card';
 
 import { NotEligible } from './states/not-eligible';
-import { WinnersAnnounced } from './states/winners-announced';
+import { WinnersAnnouncedParticipation } from './states/winners-announced-participation';
 import { ActiveParticipation } from './states/active/active-participation';
 import { Cancelled } from './states/cancelled';
 import { Closed } from './states/closed';
 import { Error } from './states/error';
-import { WinnersPending } from './states/winners-pending';
 import { Pending } from './states/pending';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { assertNever } from '@/lib/errors';
@@ -41,7 +40,7 @@ const GiveawayParticipationContent = () => {
     case 'not-eligible':
       return <NotEligible />;
     case 'winners-announced':
-      return <WinnersAnnounced />;
+      return <WinnersAnnouncedParticipation />;
     case 'no-prize-allocation':
     case 'active':
       return <ActiveParticipation />;
@@ -52,7 +51,7 @@ const GiveawayParticipationContent = () => {
     case 'error':
       return <Error />;
     case 'winners-pending':
-      return <WinnersPending />;
+      return <ActiveParticipation />;
 
     default:
       throw assertNever(state);
