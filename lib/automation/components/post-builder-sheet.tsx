@@ -174,7 +174,7 @@ const TwitterForm: React.FC<TwitterFormProps> = ({
           {isSweepstakesLive && (
             <div className="px-4">
               <Alert variant="warning">
-                <AlertCircleIcon className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <AlertCircleIcon />
                 <AlertTitle>Your giveaway is live</AlertTitle>
                 <AlertDescription>
                   This post will be published immediately upon saving.
@@ -271,7 +271,7 @@ const BlueskyForm: React.FC<BlueskyFormProps> = ({
           {isSweepstakesLive && (
             <div className="px-4">
               <Alert variant="warning">
-                <AlertCircleIcon className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <AlertCircleIcon />
                 <AlertTitle>Your giveaway is live</AlertTitle>
                 <AlertDescription>
                   This post will be published immediately upon saving.

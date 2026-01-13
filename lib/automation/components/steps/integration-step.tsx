@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface AutomatedPostIntegrationStep {
   isSweepstakesLive: boolean;
@@ -20,18 +21,13 @@ export function AutomatedPostIntegrationStep({
     <div className="space-y-4">
       {isSweepstakesLive && (
         <div className="px-4">
-          <div className="flex items-start gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-sm font-medium text-yellow-900">
-                Your giveaway is live
-              </p>
-              <p className="text-sm text-yellow-700 mt-1">
-                Your post will go out immediately because your sweepstakes is
-                live
-              </p>
-            </div>
-          </div>
+          <Alert>
+            <AlertCircle />
+            <AlertTitle>Your giveaway is live</AlertTitle>
+            <AlertDescription>
+              Your post will go out immediately because your sweepstakes is live
+            </AlertDescription>
+          </Alert>
         </div>
       )}
 
