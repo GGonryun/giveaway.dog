@@ -65,8 +65,20 @@ export const refreshKickToken = async (
   }
 
   if (!account.refresh_token) {
+    await db.account.update({
+      where: {
+        provider_providerAccountId: {
+          provider: 'kick',
+          providerAccountId: account.providerAccountId
+        }
+      },
+      data: {
+        status: 'ERROR'
+      }
+    });
+
     throw new ApplicationError({
-      code: 'BAD_REQUEST',
+      code: 'UNAUTHORIZED',
       message: 'Token expired and no refresh token available'
     });
   }
@@ -101,8 +113,27 @@ export const refreshKickToken = async (
       refreshTokenLength: account.refresh_token.length,
       refreshTokenPreview: `${account.refresh_token.substring(0, 10)}...`
     });
+
+    // Only set ERROR for auth failures (401, 403), not network issues
+    if (tokenResponse.status === 401 || tokenResponse.status === 403) {
+      await db.account.update({
+        where: {
+          provider_providerAccountId: {
+            provider: 'kick',
+            providerAccountId: account.providerAccountId
+          }
+        },
+        data: {
+          status: 'ERROR'
+        }
+      });
+    }
+
     throw new ApplicationError({
-      code: 'BAD_REQUEST',
+      code:
+        tokenResponse.status === 401 || tokenResponse.status === 403
+          ? 'UNAUTHORIZED'
+          : 'INTERNAL_SERVER_ERROR',
       message: 'Failed to refresh Kick access token',
       cause: JSON.stringify(error),
       data: {
@@ -128,7 +159,8 @@ export const refreshKickToken = async (
       refresh_token: tokens.refresh_token || account.refresh_token,
       expires_at: expiresAt,
       scope: tokens.scope,
-      token_type: tokens.token_type
+      token_type: tokens.token_type,
+      status: 'ACTIVE'
     }
   });
 

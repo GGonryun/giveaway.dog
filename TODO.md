@@ -2,7 +2,8 @@
 
 ## Roadmap
 
-- [ ] If an integration is unhealthy, ask the user to re-authenticate first.
+- [ ] Add integration guard to facebook tasks
+
 - [ ] Add support for better user scoring on twitter
 - [ ] Add global ban list
 - [ ] Add discord bot for discord-specific giveaways.

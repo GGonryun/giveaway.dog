@@ -28,6 +28,7 @@ import { Separator } from '../ui/separator';
 import { BlueskyConnectForm } from '@/lib/auth/components/bluesky-connect-form';
 import { InstagramConnectForm } from '@/lib/auth/components/instagram-connect-form';
 import { FacebookConnectForm } from '@/lib/auth/components/facebook-connect-form';
+import { ProviderSchema } from '@/lib/integrations/schemas/providers';
 
 type LoginButtonType = 'pill' | 'buttons' | 'icons' | 'dots';
 interface LoginOptionsProps {
@@ -38,6 +39,7 @@ interface LoginOptionsProps {
   type?: LoginButtonType;
   allowedIdentities: IdentityProvider[];
   returnTo: string;
+  userProviders?: ProviderSchema[];
 }
 
 export function LoginOptions({
@@ -48,6 +50,7 @@ export function LoginOptions({
   label,
   dividers = false,
   allowedIdentities,
+  userProviders,
   ...props
 }: LoginOptionsProps & React.ComponentProps<'div'>) {
   const searchParams = useSearchParams();
@@ -280,6 +283,7 @@ export function LoginOptions({
           onSubmit={handleProviderLogin}
           identities={allowedIdentities}
           type={type}
+          userProviders={userProviders}
         />
       </Flex.Stack>
     </div>
@@ -290,16 +294,41 @@ const Providers: React.FC<{
   identities: IdentityProvider[];
   onSubmit: (provider: IdentityProvider) => void;
   type?: LoginButtonType;
-}> = ({ identities, onSubmit, type = 'buttons' }) => {
+  userProviders?: ProviderSchema[];
+}> = ({ identities, onSubmit, type = 'buttons', userProviders }) => {
   switch (type) {
     case 'buttons':
-      return <ProviderButtons identities={identities} onSubmit={onSubmit} />;
+      return (
+        <ProviderButtons
+          identities={identities}
+          onSubmit={onSubmit}
+          userProviders={userProviders}
+        />
+      );
     case 'icons':
-      return <ProviderIcons identities={identities} onSubmit={onSubmit} />;
+      return (
+        <ProviderIcons
+          identities={identities}
+          onSubmit={onSubmit}
+          userProviders={userProviders}
+        />
+      );
     case 'dots':
-      return <ProviderDots identities={identities} onSubmit={onSubmit} />;
+      return (
+        <ProviderDots
+          identities={identities}
+          onSubmit={onSubmit}
+          userProviders={userProviders}
+        />
+      );
     case 'pill':
-      return <ProviderPills identities={identities} onSubmit={onSubmit} />;
+      return (
+        <ProviderPills
+          identities={identities}
+          onSubmit={onSubmit}
+          userProviders={userProviders}
+        />
+      );
     default:
       throw assertNever(type);
   }

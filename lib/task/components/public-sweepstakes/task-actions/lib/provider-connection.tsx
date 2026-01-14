@@ -22,6 +22,7 @@ import {
   TASK_IDENTITY_PROVIDER
 } from '@/lib/task/schemas';
 import { LoginOptions } from '@/components/auth/login-options';
+import { AccountStatusAlert } from '@/components/auth/account-status-alert';
 
 const useProviderConnection = ({ task }: { task: TaskSchema }) => {
   const { participant } = useGiveawayParticipation();
@@ -44,17 +45,20 @@ const useProviderConnection = ({ task }: { task: TaskSchema }) => {
   const requiredScopes = TASK_REQUIRED_SCOPES[providerId];
 
   const isIncomplete = isMissingScopes(provider, requiredScopes);
+  const isError = provider?.status === 'ERROR';
 
   const requiresConnection =
     !('validation' in task) || task.validation?.type !== 'NONE';
 
-  const isConnected = !requiresConnection || (provider && !isIncomplete);
+  const isConnected =
+    !requiresConnection || (provider && !isIncomplete && !isError);
 
   return {
     providerId,
     providerLabel,
     provider,
     isIncomplete,
+    isError,
     requiresConnection,
     isConnected,
     redirectTo
@@ -90,12 +94,15 @@ export const WithProviderConnection: React.FC<
     isConnected,
     provider,
     isIncomplete,
+    isError,
     requiresConnection,
     providerId,
     providerLabel
   } = useProviderConnection({
     task
   });
+
+  const { participant } = useGiveawayParticipation();
 
   return (
     <>
@@ -111,9 +118,16 @@ export const WithProviderConnection: React.FC<
               returnTo={redirectTo}
               allowedIdentities={[providerId]}
               type="pill"
+              userProviders={participant?.user.providers}
             />
             {Boolean(provider && isIncomplete) && (
               <IsMissingPermissions providerLabel={providerLabel} />
+            )}
+            {Boolean(provider && isError) && (
+              <AccountStatusAlert
+                status="ERROR"
+                providerLabel={providerLabel}
+              />
             )}
           </>
         )}

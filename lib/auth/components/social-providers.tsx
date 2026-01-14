@@ -24,6 +24,7 @@ import { useState } from 'react';
 import { BlueskyConnectForm } from './bluesky-connect-form';
 import { InstagramConnectForm } from './instagram-connect-form';
 import { FacebookConnectForm } from './facebook-connect-form';
+import { AccountStatusAlert } from '@/components/auth/account-status-alert';
 
 export const SocialProviders = () => {
   const router = useRouter();
@@ -62,6 +63,8 @@ export const SocialProviders = () => {
 
           const provider = user.providers.find((p) => p.type === providerId);
           const isMissing = isMissingScopes(provider, requiredScopes);
+          const isError = provider?.status === 'ERROR';
+          const needsReconnect = isMissing || isError;
           const isConnectingThis = loginProcedure.isLoading;
           const isEnabled = ENABLED_IDENTITY_PROVIDERS[providerId];
 
@@ -90,11 +93,11 @@ export const SocialProviders = () => {
                 (providerId === 'FACEBOOK' &&
                   showFacebookInput) ? null : provider ? (
                   <Button
-                    variant={isMissing ? 'default' : 'destructive'}
+                    variant={needsReconnect ? 'destructive' : 'outline'}
                     size="sm"
                     disabled={isConnectingThis || !isEnabled}
                     onClick={() => {
-                      if (isMissing) {
+                      if (needsReconnect) {
                         if (providerId === 'BLUESKY') {
                           setShowBlueskyInput(true);
                         } else if (providerId === 'INSTAGRAM') {
@@ -117,16 +120,15 @@ export const SocialProviders = () => {
                   >
                     {isConnectingThis ? (
                       <Spinner size="xs" />
-                    ) : isMissing ? (
+                    ) : needsReconnect ? (
                       <UnplugIcon />
                     ) : (
                       <UnlinkIcon />
                     )}
-                    {isMissing ? 'Reconnect' : 'Disconnect'}
+                    {needsReconnect ? 'Reconnect' : 'Disconnect'}
                   </Button>
                 ) : (
                   <Button
-                    variant="outline"
                     size="sm"
                     className="w-full sm:w-[125px]"
                     onClick={() => {
@@ -163,6 +165,12 @@ export const SocialProviders = () => {
               )}
               {Boolean(provider && isMissing) && (
                 <IsMissingPermissions providerLabel={providerLabel} />
+              )}
+              {Boolean(provider && isError) && (
+                <AccountStatusAlert
+                  status="ERROR"
+                  providerLabel={providerLabel}
+                />
               )}
               {providerId === 'BLUESKY' && showBlueskyInput && (
                 <BlueskyConnectForm

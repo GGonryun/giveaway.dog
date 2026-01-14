@@ -55,7 +55,8 @@ export const providerSchema = z.object({
   type: identityProviderSchema,
   scopes: z.array(z.string()),
   label: z.string(),
-  link: z.string().nullish()
+  link: z.string().nullish(),
+  status: z.enum(['ACTIVE', 'ERROR']).default('ACTIVE')
 });
 
 export type ProviderSchema = z.infer<typeof providerSchema>;

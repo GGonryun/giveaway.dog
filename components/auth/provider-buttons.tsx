@@ -6,7 +6,8 @@ import {
 } from '@/lib/integrations/components/icons/provider-icon';
 import {
   IDENTITY_PROVIDER_LABEL,
-  ENABLED_IDENTITY_PROVIDERS
+  ENABLED_IDENTITY_PROVIDERS,
+  ProviderSchema
 } from '@/lib/integrations/schemas/providers';
 import { cn } from '@/lib/utils';
 import { IdentityProvider } from '@prisma/client';
@@ -15,109 +16,144 @@ import React from 'react';
 type ProviderButtonsProps = {
   identities: IdentityProvider[];
   onSubmit: (provider: IdentityProvider) => void;
+  userProviders?: ProviderSchema[];
 };
 
 export const ProviderButtons: React.FC<ProviderButtonsProps> = ({
   identities,
-  onSubmit
+  onSubmit,
+  userProviders
 }: ProviderButtonsProps) => (
   <div className="flex flex-col gap-3 w-full">
-    {identities.map((provider) => (
-      <Button
-        key={provider}
-        variant="outline"
-        name="provider"
-        value={provider}
-        disabled={!ENABLED_IDENTITY_PROVIDERS[provider]}
-        formNoValidate
-        className="w-full justify-center items-center relative"
-        onClick={() => onSubmit(provider)}
-      >
-        <ProviderIcon type={provider} className="absolute left-4 h-4 w-4" />
-        <span>Login with {IDENTITY_PROVIDER_LABEL[provider]}</span>
-      </Button>
-    ))}
+    {identities.map((provider) => {
+      const account = userProviders?.find((p) => p.type === provider);
+      const isError = account?.status === 'ERROR';
+
+      return (
+        <div key={provider} className="space-y-2">
+          <Button
+            variant={isError ? 'destructive' : 'outline'}
+            name="provider"
+            value={provider}
+            disabled={!ENABLED_IDENTITY_PROVIDERS[provider]}
+            formNoValidate
+            className="w-full justify-center items-center relative"
+            onClick={() => onSubmit(provider)}
+          >
+            <ProviderIcon type={provider} className="absolute left-4 h-4 w-4" />
+            <span>
+              {isError ? 'Reconnect' : 'Login with'}{' '}
+              {IDENTITY_PROVIDER_LABEL[provider]}
+            </span>
+          </Button>
+        </div>
+      );
+    })}
   </div>
 );
 
 export const ProviderIcons: React.FC<ProviderButtonsProps> = ({
   identities,
-  onSubmit
+  onSubmit,
+  userProviders
 }) => {
   return (
     <div className="flex flex-row gap-2 w-full items-center justify-center">
-      {identities.map((provider) => (
-        <Button
-          key={provider}
-          variant="outline"
-          size="icon"
-          name="provider"
-          value={provider}
-          disabled={!ENABLED_IDENTITY_PROVIDERS[provider]}
-          formNoValidate
-          aria-label={`Login with ${IDENTITY_PROVIDER_LABEL[provider]}`}
-          onClick={() => onSubmit(provider)}
-        >
-          <ProviderIcon type={provider} />
-        </Button>
-      ))}
+      {identities.map((provider) => {
+        const account = userProviders?.find((p) => p.type === provider);
+        const isError = account?.status === 'ERROR';
+
+        return (
+          <Button
+            key={provider}
+            variant={isError ? 'destructive' : 'outline'}
+            size="icon"
+            name="provider"
+            value={provider}
+            disabled={!ENABLED_IDENTITY_PROVIDERS[provider]}
+            formNoValidate
+            aria-label={`${isError ? 'Reconnect' : 'Login with'} ${IDENTITY_PROVIDER_LABEL[provider]}`}
+            onClick={() => onSubmit(provider)}
+          >
+            <ProviderIcon type={provider} />
+          </Button>
+        );
+      })}
     </div>
   );
 };
 
 export const ProviderDots: React.FC<ProviderButtonsProps> = ({
   identities,
-  onSubmit
+  onSubmit,
+  userProviders
 }) => {
   return (
     <div className="flex flex-wrap flex-row gap-1 w-full items-center justify-center">
-      {identities.map((provider) => (
-        <div key={provider} onClick={() => onSubmit(provider)}>
-          <ThemedProviderIcon type={provider} />
-        </div>
-      ))}
+      {identities.map((provider) => {
+        const account = userProviders?.find((p) => p.type === provider);
+        const isError = account?.status === 'ERROR';
+
+        return (
+          <div
+            key={provider}
+            onClick={() => onSubmit(provider)}
+            className={cn(isError && 'opacity-50')}
+          >
+            <ThemedProviderIcon type={provider} />
+          </div>
+        );
+      })}
     </div>
   );
 };
 
 export const ProviderPills: React.FC<ProviderButtonsProps> = ({
   identities,
-  onSubmit
+  onSubmit,
+  userProviders
 }) => {
   return (
     <div className="flex flex-col gap-3">
       {identities.map((provider) => {
+        const account = userProviders?.find((p) => p.type === provider);
+        const isError = account?.status === 'ERROR';
         const theme = PROVIDER_THEME[provider];
+
         return (
-          <Button
-            key={provider}
-            variant="outline"
-            name="provider"
-            value={provider}
-            disabled={!ENABLED_IDENTITY_PROVIDERS[provider]}
-            formNoValidate
-            className={cn(
-              theme.bgColor,
-              theme.fillColor,
-              theme.textColor,
-              `hover:${theme.bgColor}/80`,
-              `hover:${theme.textColor}/80`,
-              `group-hover:${theme.bgColor}/80`,
-              `group-hover:${theme.textColor}/80`,
-              `focus:${theme.bgColor}/80`,
-              `focus:${theme.textColor}/80`,
-              `dark:hover:${theme.bgColor}/80`,
-              `dark:hover:${theme.textColor}/80`,
-              `dark:focus:${theme.bgColor}/80`,
-              `dark:focus:${theme.textColor}/80`,
-              `dark:group-hover:${theme.bgColor}/80`,
-              `dark:group-hover:${theme.textColor}/80`
-            )}
-            onClick={() => onSubmit(provider)}
-          >
-            <ProviderIcon type={provider} />
-            <span>Login with {IDENTITY_PROVIDER_LABEL[provider]}</span>
-          </Button>
+          <div key={provider} className="space-y-2">
+            <Button
+              variant={isError ? 'destructive' : 'outline'}
+              name="provider"
+              value={provider}
+              disabled={!ENABLED_IDENTITY_PROVIDERS[provider]}
+              formNoValidate
+              className={cn(
+                !isError && theme.bgColor,
+                !isError && theme.fillColor,
+                !isError && theme.textColor,
+                !isError && `hover:${theme.bgColor}/80`,
+                !isError && `hover:${theme.textColor}/80`,
+                !isError && `group-hover:${theme.bgColor}/80`,
+                !isError && `group-hover:${theme.textColor}/80`,
+                !isError && `focus:${theme.bgColor}/80`,
+                !isError && `focus:${theme.textColor}/80`,
+                !isError && `dark:hover:${theme.bgColor}/80`,
+                !isError && `dark:hover:${theme.textColor}/80`,
+                !isError && `dark:focus:${theme.bgColor}/80`,
+                !isError && `dark:focus:${theme.textColor}/80`,
+                !isError && `dark:group-hover:${theme.bgColor}/80`,
+                !isError && `dark:group-hover:${theme.textColor}/80`
+              )}
+              onClick={() => onSubmit(provider)}
+            >
+              <ProviderIcon type={provider} />
+              <span>
+                {isError ? 'Reconnect' : 'Login with'}{' '}
+                {IDENTITY_PROVIDER_LABEL[provider]}
+              </span>
+            </Button>
+          </div>
         );
       })}
     </div>

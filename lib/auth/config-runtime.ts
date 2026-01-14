@@ -103,6 +103,7 @@ export const authConfig = {
             access_token?: string;
             refresh_token?: string;
             expires_at?: number;
+            status?: 'ACTIVE';
           } = {};
 
           if (account.scope) updateData.scope = account.scope;
@@ -111,6 +112,9 @@ export const authConfig = {
           if (account.refresh_token)
             updateData.refresh_token = account.refresh_token;
           if (account.expires_at) updateData.expires_at = account.expires_at;
+
+          // Always reset status to ACTIVE on successful OAuth
+          updateData.status = 'ACTIVE';
 
           if (Object.keys(updateData).length > 0) {
             // if we are connecting an anonymous user, then there's not going to be an account and this will throw.

@@ -56,7 +56,8 @@ export const parseProviders = (providers: UserAccounts[]): ProviderSchema[] =>
       'EMAIL',
     scopes: splitScopes(provider.scope),
     label: provider.label || 'N/A',
-    link: provider.link || ''
+    link: provider.link || '',
+    status: provider.status
   }));
 
 const splitScopes = (scopes: Nil<string>): string[] =>
@@ -109,7 +110,8 @@ const ACCOUNT_SELECT_QUERY = {
   provider: true,
   scope: true,
   label: true,
-  link: true
+  link: true,
+  status: true
 } satisfies Prisma.AccountSelect;
 
 export type UserAccounts = Prisma.AccountGetPayload<{
