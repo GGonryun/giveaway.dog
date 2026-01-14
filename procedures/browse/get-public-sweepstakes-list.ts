@@ -8,7 +8,7 @@ import {
 import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { compact } from 'lodash';
 import { datetime } from '@/lib/date';
-import { giveawayFiltersSchema } from '@/lib/filters/giveaway-filters';
+import { giveawayFiltersSchema, PAGE_SIZE } from '@/lib/filters/giveaway-filters';
 
 const getPublicSweepstakesList = procedure()
   .authorization({
@@ -22,7 +22,8 @@ const getPublicSweepstakesList = procedure()
       input?.sortBy ?? 'default',
       input?.minEntrants?.toString() ?? 'no-min',
       input?.maxEntrants?.toString() ?? 'no-max',
-      input?.search ?? 'no-search'
+      input?.search ?? 'no-search',
+      input?.page?.toString() ?? '1'
     ],
     tags: ['public-sweepstakes-list'],
     revalidate: 300
@@ -112,7 +113,12 @@ const getPublicSweepstakesList = procedure()
       );
     }
 
-    return results;
+    const page = input?.page ?? 1;
+    const pageSize = PAGE_SIZE;
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+
+    return results.slice(start, end);
   });
 
 export default getPublicSweepstakesList;

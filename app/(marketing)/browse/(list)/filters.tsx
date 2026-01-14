@@ -27,6 +27,17 @@ export const BrowsePageFilters: React.FC<{
   const currentPage = parseInt(searchParams.get('page') ?? '1', 10);
   const currentSearch = searchParams.get('search') ?? '';
 
+  const buildPaginationUrl = (page: number): string => {
+    const params = new URLSearchParams(searchParams);
+    if (page === 1) {
+      params.delete('page');
+    } else {
+      params.set('page', page.toString());
+    }
+    const queryString = params.toString();
+    return queryString ? `${pathname}?${queryString}` : pathname;
+  };
+
   const handleSearch = (query: string) => {
     const params = new URLSearchParams(searchParams);
     if (query) {
@@ -77,7 +88,7 @@ export const BrowsePageFilters: React.FC<{
             <PaginationItem>
               <PaginationPrevious
                 href={
-                  currentPage > 1 ? `${pathname}?page=${currentPage - 1}` : '#'
+                  currentPage > 1 ? buildPaginationUrl(currentPage - 1) : '#'
                 }
                 aria-disabled={currentPage <= 1}
                 className={
@@ -92,9 +103,7 @@ export const BrowsePageFilters: React.FC<{
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
-                href={
-                  hasMoreResults ? `${pathname}?page=${currentPage + 1}` : '#'
-                }
+                href={hasMoreResults ? buildPaginationUrl(currentPage + 1) : '#'}
                 aria-disabled={!hasMoreResults}
                 className={
                   !hasMoreResults ? 'pointer-events-none opacity-50' : ''

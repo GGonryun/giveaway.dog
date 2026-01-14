@@ -50,6 +50,7 @@ type SearchParams = {
   maxEntrants?: string;
   sortBy?: string;
   search?: string;
+  page?: string;
 };
 
 export default async function Page({
@@ -71,7 +72,8 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
     minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
     maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
     sortBy: params.sortBy as GiveawayFilters['sortBy'],
-    search: params.search
+    search: params.search,
+    page: params.page ? parseInt(params.page) : 1
   };
 
   const [sweepstakes, participation] = await Promise.all([
