@@ -6,6 +6,7 @@ import getSweepstakesEntryTimeSeries from '@/procedures/sweepstakes/get-sweepsta
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
+import { getSweepstakesAllocations } from '@/lib/allocation/procedures/get-sweepstakes-allocations';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -35,9 +36,10 @@ export default async function Page({ params }: SweepstakesDetailPageProps) {
   );
 }
 
-const Wrapper: React.FC<{ id: string }> = async ({ id }) => {
-  const participant = await getParticipantSweepstake({ sweepstakesId: id });
-  const timeseries = await getSweepstakesEntryTimeSeries({ id });
+const Wrapper: React.FC<{ id: string }> = async ({ id: sweepstakesId }) => {
+  const participant = await getParticipantSweepstake({ sweepstakesId });
+  const timeseries = await getSweepstakesEntryTimeSeries({ sweepstakesId });
+  const allocations = await getSweepstakesAllocations({ sweepstakesId });
 
   if (!participant.ok) {
     return (
@@ -54,7 +56,20 @@ const Wrapper: React.FC<{ id: string }> = async ({ id }) => {
       </div>
     );
   }
+
+  if (!allocations.ok) {
+    return (
+      <div>
+        Failed to load sweepstakes allocations: {allocations.data.message}
+      </div>
+    );
+  }
+
   return (
-    <SweepstakesAnalytics {...participant.data} timeseries={timeseries.data} />
+    <SweepstakesAnalytics
+      {...participant.data}
+      timeseries={timeseries.data}
+      allocations={allocations.data}
+    />
   );
 };

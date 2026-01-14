@@ -2,14 +2,9 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import { validateTask } from '@/lib/task/validation/integrations';
-import { validateMandatoryTasks } from '@/lib/task/validation/mandatory';
-import { validateRequiredTasks } from '@/lib/task/validation/required';
 import { z } from 'zod';
 import { toTaskSchema } from '../schemas';
-import { computeTaskStatus } from '../validation/status';
 import { saveTaskProof } from '../validation/proof';
-import { validateReferral } from '../validation/referral';
 import { validateSweepstakesState } from '../validation/task-state';
 
 const submitTask = procedure()

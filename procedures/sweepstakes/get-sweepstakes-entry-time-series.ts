@@ -14,16 +14,16 @@ const getSweepstakesEntryTimeSeries = procedure()
   })
   .input(
     z.object({
-      id: z.string()
+      sweepstakesId: z.string()
     })
   )
   .output(timeSeriesDataSchema.array())
-  .handler(async ({ input, db }) => {
+  .handler(async ({ input: { sweepstakesId }, db }) => {
     // group taskCompletion by date and count entries and only return the last 7 days.
     const timeSeriesData = await db.taskCompletion.findMany({
       where: {
         task: {
-          sweepstakesId: input.id
+          sweepstakesId
         },
         completedAt: {
           gte: subDays(new Date(), DEFAULT_TIME_SERIES_DURATION)

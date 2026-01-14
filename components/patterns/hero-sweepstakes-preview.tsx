@@ -40,7 +40,6 @@ export const HeroSweepstakesPreview: React.FC = () => {
       verifyEmail={false}
       isPreview={true}
       hideBackground
-      allocation={mockAllocation(mockPrizes)}
       onAllocate={onFakeAllocate}
       onCompleteProfile={onFakeCompleteProfile}
       onLogin={onFakeLogin}

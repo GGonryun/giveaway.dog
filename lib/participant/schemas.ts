@@ -3,11 +3,13 @@ import z from 'zod';
 
 import { taskCompletionSchema } from '../task/completions';
 import { SweepstakesFormFieldType } from '@prisma/client';
+import { sweepstakesAllocationSchema } from '@/schemas/giveaway/schemas';
 
 export const sweepstakesParticipantSchema = z.object({
   id: z.string(),
   user: userSchema,
   completions: taskCompletionSchema.array(),
+  allocation: sweepstakesAllocationSchema.nullish(),
   formValues: z.record(z.string(), z.any())
 });
 

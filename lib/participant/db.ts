@@ -19,6 +19,16 @@ import {
 } from '@/schemas/giveaway/participant';
 import { ApplicationError } from '../errors';
 import { toTaskSchema } from '../task/schemas';
+import { SweepstakesAllocationSchema } from '@/schemas/giveaway/schemas';
+
+const PRIZE_ALLOCATION_SELECT_QUERY = {
+  prize: {
+    select: {
+      name: true,
+      id: true
+    }
+  }
+} satisfies Prisma.SweepstakesAllocationSelect;
 
 export const toParticipantFormValues = (
   formValues: Prisma.SweepstakesFormValueGetPayload<{}>[]
@@ -35,7 +45,8 @@ export const SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY = {
   taskCompletions: {
     select: TASK_COMPLETIONS_SELECT_QUERY
   },
-  formValues: true
+  formValues: true,
+  allocations: { select: PRIZE_ALLOCATION_SELECT_QUERY }
 } satisfies Prisma.SweepstakesParticipantInclude;
 
 export type FindParticipantOptions = {
@@ -259,11 +270,33 @@ export const toSweepstakesParticipant = (
 ): SweepstakesParticipantSchema => ({
   id: participant.id,
   user: toUserSchema(participant.user),
+  allocation: toAllocationSchema(participant.allocations),
   completions: participant.taskCompletions
     .map(toTaskCompletion)
     .sort(sortCompletionsByMostRecent),
   formValues: toParticipantFormValues(participant.formValues)
 });
+
+const toAllocationSchema = (
+  allocation: Prisma.SweepstakesAllocationGetPayload<{
+    select: typeof PRIZE_ALLOCATION_SELECT_QUERY;
+  }> | null
+): SweepstakesAllocationSchema | null => {
+  if (!allocation) {
+    return null;
+  }
+
+  if (!allocation.prize?.name || !allocation.prize?.id) {
+    return null;
+  }
+
+  return {
+    prize: {
+      id: allocation.prize.id,
+      name: allocation.prize.name
+    }
+  };
+};
 
 export const toSweepstakesEngagement = (
   completions: TaskCompletionSchema[],
@@ -308,9 +341,10 @@ export const toTeamParticipant = (
   user: Prisma.UserGetPayload<{
     select: ReturnType<typeof TEAM_PARTICIPANT_USER_SELECT_QUERY>;
   }>
-) => ({
+): SweepstakesParticipantSchema => ({
   id: user.id,
   user: toUserSchema(user),
+  allocation: null,
   completions: user.participation
     .flatMap((p) => p.taskCompletions)
     .map(toTaskCompletion),

@@ -259,6 +259,7 @@ export const submitParticipantForm = procedure()
       success: z.boolean()
     })
   )
+
   .handler(async ({ db, user, input: { sweepstakesId, data } }) => {
     // Get the participant record
     const participant = await db.sweepstakesParticipant.findUnique({

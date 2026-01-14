@@ -6,7 +6,9 @@ import {
   ChevronUp,
   SquareIcon,
   StarIcon,
-  Trophy
+  Trophy,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import pluralize from 'pluralize';
@@ -19,12 +21,15 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '@/components/ui/collapsible';
+import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
+import { Progress } from '@/components/ui/progress';
 
 export const PrizeItem: React.FC<{
   prize: Prize;
   isConnected: boolean;
   open: boolean;
   state: 'allocation' | 'allocated' | 'allocating' | 'unallocated';
+  allocations: AllocationStatisticsSchema | undefined;
   onToggleExpand?: () => void;
   onAllocate?: () => void;
   onSeeTasks?: () => void;
@@ -33,15 +38,32 @@ export const PrizeItem: React.FC<{
   open,
   state,
   isConnected,
+  allocations,
   onToggleExpand,
   onAllocate,
   onSeeTasks
 }) => {
+  console.log('allocations in PrizeItem:', allocations);
   const winnersText = `${prize.quota} ${pluralize('winner', prize.quota)}`;
 
   const isAllocating = state === 'allocating';
   const isAllocation = state === 'allocation';
   const isAllocated = state === 'allocated';
+
+  // Get popularity metrics from allocations
+  const prizeAllocation = allocations?.allocationsByPrize.find(
+    (a) => a.prizeId === prize.id
+  );
+
+  const allocationCount = prizeAllocation?.allocationCount ?? 0;
+  const totalAllocations = allocations?.totalAllocations ?? 0;
+  const popularityPercentage =
+    totalAllocations > 0 ? (allocationCount / totalAllocations) * 100 : 0;
+
+  // Use badge from backend calculations
+  const badge = prizeAllocation?.badge ?? 'none';
+  const isMostPopular = badge === 'popular';
+  const isLeastPopular = badge === 'unpopular';
 
   const prizeRef = useRef<HTMLDivElement>(null);
 
@@ -88,8 +110,14 @@ export const PrizeItem: React.FC<{
             </div>
           </div>
           <div className="px-2 py-2 gap-2 flex items-center justify-between w-full flex-wrap">
-            <div className="text-left">
+            <div className="text-left flex items-center gap-2">
               <h4 className="font-medium text-sm sm:text-base">{prize.name}</h4>
+              {isMostPopular && (
+                <TrendingUp className="h-4 w-4 text-green-600" />
+              )}
+              {isLeastPopular && (
+                <TrendingDown className="h-4 w-4 text-orange-600" />
+              )}
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="warning" className="text-xs border font-bold">
@@ -114,6 +142,35 @@ export const PrizeItem: React.FC<{
                 {winnersText} will receive this prize
               </p>
             </div>
+
+            {totalAllocations > 0 && (
+              <div className="space-y-2">
+                {(isMostPopular || isLeastPopular) && (
+                  <div className="flex items-center gap-2">
+                    {isMostPopular && (
+                      <Badge variant="secondary" className="text-xs">
+                        <TrendingUp className="h-3 w-3 mr-1" />
+                        Most Popular
+                      </Badge>
+                    )}
+                    {isLeastPopular && (
+                      <Badge variant="outline" className="text-xs">
+                        <TrendingDown className="h-3 w-3 mr-1" />
+                        Best Odds
+                      </Badge>
+                    )}
+                  </div>
+                )}
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">Popularity</span>
+                  <span className="text-muted-foreground">
+                    ({allocationCount}/{totalAllocations}){' '}
+                    {popularityPercentage.toFixed(0)}%
+                  </span>
+                </div>
+                <Progress value={popularityPercentage} className="h-2" />
+              </div>
+            )}
 
             {onAllocate && (
               <>

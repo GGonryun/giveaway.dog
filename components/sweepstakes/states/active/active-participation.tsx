@@ -29,9 +29,11 @@ export const ActiveParticipation: React.FC = () => {
     return null;
   }, [searchParams]);
 
-  const { allocation, sweepstakes, state } = useGiveawayParticipation();
+  const { sweepstakes, state, participant } = useGiveawayParticipation();
   const allowUserSelection = sweepstakes.criteria?.allowUserSelection || false;
   const isWinnersPending = state === 'winners-pending';
+
+  const allocation = useMemo(() => participant?.allocation, [participant]);
 
   const [openTask, setOpenTask] = React.useState<string | null>(taskId);
   const [openPrize, setOpenPrize] = React.useState<string | null>(prizeId);
@@ -212,9 +214,11 @@ const PrizesContent: React.FC<{
   setOpenPrize: (prizeId: string | null) => void;
   setActiveTab: (tab: string) => void;
 }> = ({ openPrize, setOpenPrize, setActiveTab }) => {
-  const { sweepstakes, participant, allocation, onAllocate, state } =
+  const { sweepstakes, participant, allocations, state, onAllocate } =
     useGiveawayParticipation();
   const [isAllocating, setIsAllocating] = React.useState(false);
+
+  const allocation = useMemo(() => participant?.allocation, [participant]);
 
   const isConnected = doesUserHaveAllowedIdentity(
     participant?.user,
@@ -266,6 +270,7 @@ const PrizesContent: React.FC<{
           key={prize.id}
           prize={prize}
           isConnected={isConnected}
+          allocations={allocations}
           onSeeTasks={() => setActiveTab('tasks')}
           state={
             isAllocating

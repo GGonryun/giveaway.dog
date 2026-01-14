@@ -136,6 +136,7 @@ export const mockUserParticipation: UserParticipationSchema = {
 export const mockParticipant: SweepstakesParticipantSchema = {
   id: 'preview-participant',
   user: mockUserProfile,
+  allocation: null,
   completions: [],
   formValues: {}
 };

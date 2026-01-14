@@ -24,13 +24,18 @@ import { DisqualificationDialog } from '@/components/sweepstakes-details/disqual
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export const WinnersAnnounced: React.FC = () => {
-  const { prizes, allocation, participant } = useGiveawayParticipation();
+  const { prizes, participant } = useGiveawayParticipation();
+
   const [openPrizes, setOpenPrizes] = useState<Record<string, boolean>>({});
   const [disqualificationDialog, setDisqualificationDialog] = useState(false);
   const [selectedDisqualification, setSelectedDisqualification] = useState<{
     name: string;
     reason: string;
   } | null>(null);
+
+  const allocation = useMemo(() => {
+    return participant?.allocation;
+  }, [participant]);
 
   const togglePrize = (prizeId: string) => {
     setOpenPrizes((prev) => ({
@@ -50,7 +55,9 @@ export const WinnersAnnounced: React.FC = () => {
   const userWinStatus = useMemo(() => {
     if (!participant || !allocation) return null;
 
-    const allocatedPrize = prizes.find((p) => p.prizeId === allocation.prize.id);
+    const allocatedPrize = prizes.find(
+      (p) => p.prizeId === allocation.prize.id
+    );
     if (!allocatedPrize) return null;
 
     const userDraw = allocatedPrize.draws.find(
@@ -121,9 +128,7 @@ export const WinnersAnnounced: React.FC = () => {
             )}
           </AlertTitle>
           {userWinStatus.type === 'disqualified' && userWinStatus.reason && (
-            <AlertDescription>
-              Reason: {userWinStatus.reason}
-            </AlertDescription>
+            <AlertDescription>Reason: {userWinStatus.reason}</AlertDescription>
           )}
           {userWinStatus.type === 'competed' && (
             <AlertDescription>

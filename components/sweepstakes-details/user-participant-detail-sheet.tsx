@@ -8,7 +8,8 @@ import {
   Activity,
   Eye,
   ChevronRight,
-  ExternalLinkIcon
+  ExternalLinkIcon,
+  Award
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTeams } from '../context/team-provider';
@@ -236,6 +237,26 @@ export const UserParticipantSheetContent: React.FC<{
             </div>
           </div>
         </div>
+
+        {/* Allocation Section */}
+        {participant.allocation && (
+          <div className="space-y-2">
+            <h4 className="text-base font-medium">Prize Allocation</h4>
+            <div className="rounded-lg border bg-muted p-4">
+              <div className="flex items-center space-x-3">
+                <Award className="h-5 w-5 text-primary" />
+                <div>
+                  <div className="font-medium">
+                    {participant.allocation.prize.name}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Selected Prize
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">

@@ -8,13 +8,14 @@ import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { UserReferralSchema } from '@/lib/referrals/schemas';
 import { SweepstakesParticipationPage } from './sweepstakes-participation-page-content';
+import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
 
 interface AuthenticatedSweepstakesContentProps
   extends ParticipantSweepstakeSchema {
   participant?: SweepstakesParticipantSchema;
   relationship?: UserHostRelationshipSchema;
   referral?: UserReferralSchema;
-  allocation?: SweepstakesAllocationSchema;
+  allocations?: AllocationStatisticsSchema;
 }
 
 export const AuthenticatedSweepstakesContent: React.FC<

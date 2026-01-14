@@ -7,7 +7,7 @@ import { getUserReferral } from '@/lib/referrals/procedures/get-user-referral';
 import { AuthenticatedSweepstakesContent } from '@/components/sweepstakes-browse/authenticated-sweepstakes-content';
 import { Suspense } from 'react';
 import { ReferralCodeHandler } from '@/components/sweepstakes-browse/referral-code-handler';
-import { getAllocatedPrize } from '@/lib/allocation/procedures/get-allocated-prize';
+import { getSweepstakesAllocations } from '@/lib/allocation/procedures/get-sweepstakes-allocations';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -24,14 +24,14 @@ export default async function AuthenticatedPage({ params }: PageProps) {
     relationship,
     privacy,
     referral,
-    allocation
+    allocations
   ] = await Promise.all([
     getParticipantSweepstake(options),
     getOrCreateSweepstakesParticipant(options),
     getUserHostRelationship(options),
     getSweepstakesPrivacy(options),
     getUserReferral(options),
-    getAllocatedPrize(options)
+    getSweepstakesAllocations(options)
   ]);
 
   if (!sweepstakes.ok) {
@@ -64,8 +64,11 @@ export default async function AuthenticatedPage({ params }: PageProps) {
     notFound();
   }
 
-  if (!allocation.ok) {
-    console.warn('User allocation fetch error:', allocation.data?.message);
+  if (!allocations.ok) {
+    console.warn(
+      'Sweepstakes allocations fetch error:',
+      allocations.data?.message
+    );
     notFound();
   }
 
@@ -79,7 +82,7 @@ export default async function AuthenticatedPage({ params }: PageProps) {
         participant={participant.data}
         relationship={relationship.data}
         referral={referral.data}
-        allocation={allocation.data}
+        allocations={allocations.data}
       />
     </>
   );

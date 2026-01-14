@@ -179,12 +179,15 @@ export const SweepstakesSharedFormPreview: React.FC<{
       host={toSweepstakesHost(activeTeam)}
       participation={mockParticipation}
       prizes={mockPrizes}
-      participant={getParticipant(previewState)}
-      relationship={getUserHostRelationship(previewState)}
+      participant={getPreviewParticipant(
+        mockSweepstakes,
+        mockPrizes,
+        previewState
+      )}
+      relationship={getPreviewRelationship(previewState)}
       state={previewState}
       referral={mockUserReferral}
       isPreview={true}
-      allocation={getAllocation(previewState, mockSweepstakes, mockPrizes)}
       onAllocate={onFakeAllocate}
       onCreateReferral={onFakeCreateReferral}
       onTaskComplete={onFakeTaskComplete}
@@ -239,29 +242,39 @@ const toMockFormFields = (fields?: DeepNil<SweepstakesFormFieldSchema>[]) => {
   });
 };
 
-const getParticipant = (
+export const getPreviewParticipant = (
+  sweepstakes: GiveawaySchema,
+  prizes: GiveawayPrizeSchema[],
   previewState: GiveawayState
 ): SweepstakesParticipantSchema | undefined => {
   switch (previewState) {
     case 'not-logged-in':
     case 'profile-incomplete':
       return undefined;
+    case 'no-prize-allocation':
+      return {
+        ...mockParticipant,
+        allocation: null
+      };
     case 'active':
     case 'pending':
     case 'not-eligible':
     case 'winners-announced':
     case 'winners-pending':
-    case 'no-prize-allocation':
     case 'closed':
     case 'canceled':
-    case 'error':
-      return mockParticipant;
+    case 'error': {
+      if (!sweepstakes.criteria.allowUserSelection) {
+        return { ...mockParticipant, allocation: null };
+      }
+      return { ...mockParticipant, allocation: mockAllocation(prizes) };
+    }
     default:
       throw assertNever(previewState);
   }
 };
 
-const getUserHostRelationship = (previewState: GiveawayState) => {
+export const getPreviewRelationship = (previewState: GiveawayState) => {
   switch (previewState) {
     case 'not-logged-in':
       return undefined;
@@ -276,33 +289,6 @@ const getUserHostRelationship = (previewState: GiveawayState) => {
     case 'canceled':
     case 'error':
       return mockUserHostRelationship;
-    default:
-      throw assertNever(previewState);
-  }
-};
-
-const getAllocation = (
-  previewState: GiveawayState,
-  sweepstakes: GiveawaySchema,
-  prizes: GiveawayPrizeSchema[]
-) => {
-  if (!sweepstakes.criteria.allowUserSelection) {
-    return undefined;
-  }
-  switch (previewState) {
-    case 'not-logged-in':
-    case 'profile-incomplete':
-    case 'no-prize-allocation':
-      return undefined;
-    case 'active':
-    case 'pending':
-    case 'not-eligible':
-    case 'winners-announced':
-    case 'winners-pending':
-    case 'closed':
-    case 'canceled':
-    case 'error':
-      return mockAllocation(prizes);
     default:
       throw assertNever(previewState);
   }

@@ -101,7 +101,6 @@ export function UseTemplateModal({
             className="w-full"
             referral={mockUserReferral}
             isPreview={true}
-            allocation={mockAllocation(mockPrizes)}
             onAllocate={onFakeAllocate}
             onCreateReferral={onFakeCreateReferral}
             onTaskComplete={onFakeTaskComplete}

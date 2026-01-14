@@ -45,6 +45,10 @@ import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { useTeams } from '../context/team-provider';
 import { PickerDrawResult } from '@prisma/client';
+import {
+  getPreviewParticipant,
+  getPreviewRelationship
+} from '../sweepstakes-editor/sweepstakes-editor-preview';
 
 export const SweepstakesPreview: React.FC<
   ParticipantSweepstakeSchema & { teamFeatureFlags: TeamFeatureFlagKeySchema[] }
@@ -145,6 +149,14 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
     [sweepstakes.design.background]
   );
 
+  const participant = useMemo(() => {
+    return getPreviewParticipant(sweepstakes, winners, previewState);
+  }, [previewState, sweepstakes, winners]);
+
+  const userHostRelationship = useMemo(() => {
+    return getPreviewRelationship(previewState);
+  }, [previewState]);
+
   return (
     <Card
       className="p-0"
@@ -180,12 +192,11 @@ const ScreenPreview: React.FC<ParticipantSweepstakeSchema> = ({
                 host={host}
                 participation={mockParticipation}
                 prizes={winners}
-                participant={mockParticipant}
-                relationship={mockUserHostRelationship}
+                participant={participant}
+                relationship={userHostRelationship}
                 state={previewState}
                 referral={mockUserReferral}
                 isPreview={true}
-                allocation={mockAllocation(winners)}
                 onAllocate={onFakeAllocate}
                 onCreateReferral={onFakeCreateReferral}
                 onTaskComplete={onFakeTaskComplete}

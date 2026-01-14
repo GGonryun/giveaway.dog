@@ -20,14 +20,16 @@ import {
 import updateTask from '@/lib/task/procedures/update-task';
 import { allocatePrize } from '@/lib/allocation/procedures/allocate-prize';
 import { ApplicationError } from '@/lib/errors';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { Nil } from '@/lib/types';
+import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
 
 export type SweepstakesParticipationPageContentProps =
   ParticipantSweepstakeSchema & {
     participant?: SweepstakesParticipantSchema;
     relationship?: UserHostRelationshipSchema;
     referral?: UserReferralSchema;
-    allocation?: SweepstakesAllocationSchema;
+    allocations?: AllocationStatisticsSchema;
   };
 
 export const SweepstakesParticipationPage: React.FC<
@@ -38,8 +40,17 @@ export const SweepstakesParticipationPage: React.FC<
   const state = toSweepstakesState(props);
 
   const [allocation, setAllocation] = useState<
-    SweepstakesAllocationSchema | undefined
-  >(props.allocation);
+    Nil<SweepstakesAllocationSchema>
+  >(props.participant?.allocation);
+
+  const participant = useMemo(
+    () =>
+      ({
+        ...props.participant,
+        allocation
+      }) as SweepstakesParticipantSchema,
+    [props.participant, allocation]
+  );
 
   const sweepstakesId = props.sweepstakes.id;
 
@@ -97,11 +108,11 @@ export const SweepstakesParticipationPage: React.FC<
   return (
     <GiveawayParticipation
       {...props}
+      participant={participant}
       className="p-4 py-8 sm:py-16"
       isPreview={false}
       state={state}
       verifyEmail
-      allocation={allocation}
       onAllocate={handleAllocation}
       onLogin={handleLogin}
       onCompleteProfile={handleCompleteProfile}

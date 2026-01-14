@@ -17,7 +17,7 @@ export const TaskList: React.FC<{
   setOpen: (open: string | null) => void;
   setActiveTab: (tab: string) => void;
 }> = ({ open, setOpen, setActiveTab }) => {
-  const { participant, sweepstakes, allocation } = useGiveawayParticipation();
+  const { participant, sweepstakes } = useGiveawayParticipation();
 
   const [submissions, setSubmissions] = React.useState<
     UserTaskSubmissionSchema[]
@@ -66,7 +66,7 @@ export const TaskList: React.FC<{
   const hasMandatoryTasks = mandatory.length > 0;
   const hasOptionalTasks = optional.length > 0;
   const needsAllocation = sweepstakes.criteria.allowUserSelection;
-  const hasAllocation = !!allocation;
+  const hasAllocation = !!participant?.allocation;
 
   const totalOptionalEntries = optional.reduce(
     (sum, task) => sum + task.value,

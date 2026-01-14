@@ -17,6 +17,7 @@ import {
   UserReferralSchema
 } from '@/lib/referrals/schemas';
 import { TurnstileStatus } from '@/lib/turnstile/schemas';
+import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
 
 export interface GiveawayParticipationProps {
   device?: DeviceType;
@@ -33,7 +34,7 @@ export interface GiveawayParticipationProps {
   referral?: UserReferralSchema;
   isPreview: boolean;
   turnstile?: TurnstileStatus;
-  allocation?: SweepstakesAllocationSchema;
+  allocations?: AllocationStatisticsSchema;
   onCreateReferral: (args: CreateReferralSchema) => Promise<UserReferralSchema>;
   onAllocate: (
     args: Pick<SweepstakesAllocationSchema, 'prize'>
@@ -71,7 +72,7 @@ export const GiveawayParticipationProvider: React.FC<
   referral,
   isPreview,
   turnstile,
-  allocation,
+  allocations,
   onTaskComplete,
   onTaskUpdate,
   onLogin,
@@ -90,9 +91,9 @@ export const GiveawayParticipationProvider: React.FC<
     referral,
     isPreview,
     turnstile,
-    allocation,
     state,
     verifyEmail,
+    allocations,
     onCreateReferral,
     onTaskComplete,
     onTaskUpdate,
