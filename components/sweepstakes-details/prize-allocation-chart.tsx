@@ -63,7 +63,7 @@ export const PrizeAllocationChart: React.FC<{
 
       <CardContent className="pt-2">
         {hasAllocations ? (
-          <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[350px]">
+          <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[400px]">
             <PieChart>
               <ChartTooltip
                 content={({ active, payload }) => {
@@ -104,15 +104,33 @@ export const PrizeAllocationChart: React.FC<{
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius={100}
-                label={({ name, percent }) =>
-                  `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`
-                }
+                innerRadius={60}
+                outerRadius={90}
+                paddingAngle={2}
               >
                 {chartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Pie>
+              <Legend
+                verticalAlign="bottom"
+                height={36}
+                content={({ payload }) => (
+                  <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+                    {payload?.map((entry, index) => (
+                      <div key={`legend-${index}`} className="flex items-center gap-2">
+                        <div
+                          className="h-3 w-3 rounded-sm"
+                          style={{ backgroundColor: entry.color }}
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          {entry.value}: {((chartData[index].value / totalAllocations) * 100).toFixed(0)}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              />
             </PieChart>
           </ChartContainer>
         ) : (
