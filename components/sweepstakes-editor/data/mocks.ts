@@ -52,59 +52,69 @@ export const mockUserProfile: UserSchema = {
   providers: [
     {
       type: IdentityProvider.TWITTER,
+      status: 'ACTIVE',
       label: 'preview_user',
       link: 'https://x.com/thegiveawaydog',
       scopes: PROVIDER_REQUIRED_SCOPES.TWITTER
     },
     {
       type: IdentityProvider.BLUESKY,
+      status: 'ACTIVE',
       label: 'giveawaydog.bsky.social',
       scopes: PROVIDER_REQUIRED_SCOPES.BLUESKY
     },
     {
       type: IdentityProvider.GOOGLE,
+      status: 'ACTIVE',
       label: 'preview.user@gmail.com',
       link: 'https://myaccount.google.com/',
       scopes: PROVIDER_REQUIRED_SCOPES.GOOGLE
     },
     {
       type: IdentityProvider.DISCORD,
+      status: 'ACTIVE',
       label: 'PreviewUser#1234',
       link: 'https://discord.com/channels/@me',
       scopes: PROVIDER_REQUIRED_SCOPES.DISCORD
     },
     {
       type: IdentityProvider.TWITCH,
+      status: 'ACTIVE',
       label: 'PreviewUser',
       link: 'https://www.twitch.tv/twitch',
       scopes: PROVIDER_REQUIRED_SCOPES.TWITCH
     },
     {
       type: IdentityProvider.KICK,
+      status: 'ACTIVE',
       label: 'PreviewUser',
       link: 'https://kick.com/kick',
       scopes: PROVIDER_REQUIRED_SCOPES.KICK
     },
     {
       type: IdentityProvider.TIKTOK,
+      status: 'ACTIVE',
       label: 'PreviewUser',
       link: 'https://www.tiktok.com/@previewuser',
       scopes: PROVIDER_REQUIRED_SCOPES.TIKTOK
     },
     {
       type: IdentityProvider.STEAM,
+      status: 'ACTIVE',
       label: 'PreviewUser',
       link: 'https://store.steampowered.com/',
       scopes: PROVIDER_REQUIRED_SCOPES.STEAM
     },
     {
       type: IdentityProvider.INSTAGRAM,
+      status: 'ACTIVE',
       label: 'preview.user',
       link: 'https://www.instagram.com/preview.user/',
       scopes: PROVIDER_REQUIRED_SCOPES.INSTAGRAM
     },
     {
       type: IdentityProvider.FACEBOOK,
+      status: 'ACTIVE',
       label: 'Preview User',
       link: 'https://www.facebook.com/preview.user',
       scopes: PROVIDER_REQUIRED_SCOPES.FACEBOOK
