@@ -13,6 +13,11 @@ export const getSweepstakesAllocations = procedure()
     })
   )
   .output(allocationStatisticsSchema)
+  .cache(({ input }) => ({
+    keyParts: [`sweepstakes-allocations-${input.sweepstakesId}`],
+    tags: [`sweepstakes-${input.sweepstakesId}`, 'sweepstakes-allocations'],
+    revalidate: 600 // Cache for 10 minutes
+  }))
   .handler(async ({ db, input: { sweepstakesId } }) => {
     // Fetch total allocations
     const totalAllocations = await db.sweepstakesAllocation.count({
