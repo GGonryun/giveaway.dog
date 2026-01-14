@@ -2,11 +2,6 @@
 
 ## Roadmap
 
-- [ ] Prize allocation statistics
-  - [x] In the dashboard under statistics.
-  - [x] In the participants tab for a given sweepstakes.
-  - [x] In the public prize tab so users can pick prize based on popularity.
-  - [ ] In the winners tab under the prizes so hosts can see prize popularity during/after a giveaway.
 - [ ] Add integration guard to facebook tasks
 
 - [ ] Add support for better user scoring on twitter
