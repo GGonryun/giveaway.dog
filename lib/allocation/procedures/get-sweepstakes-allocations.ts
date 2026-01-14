@@ -5,7 +5,7 @@ import { allocationStatisticsSchema as allocationStatisticsSchema } from '../sch
 
 export const getSweepstakesAllocations = procedure()
   .authorization({
-    required: true
+    required: false
   })
   .input(
     z.object({
