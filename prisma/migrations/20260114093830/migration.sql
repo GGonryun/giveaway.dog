@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "SweepstakesJobType" ADD VALUE 'RANDOMLY_ASSIGN_PRIZES';

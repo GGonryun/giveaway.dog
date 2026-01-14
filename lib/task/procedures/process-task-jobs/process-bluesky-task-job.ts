@@ -125,6 +125,31 @@ export const processBlueskyTaskJob = async <
     `[${type}] Created ${created} and updated ${updated} task completions for task job ${job.id}`
   );
 
+  // Schedule prize allocation job if participants were created
+  if (created > 0) {
+    await db.sweepstakesJob.upsert({
+      where: {
+        sweepstakesId_type: {
+          sweepstakesId,
+          type: 'RANDOMLY_ASSIGN_PRIZES'
+        }
+      },
+      create: {
+        sweepstakesId,
+        type: 'RANDOMLY_ASSIGN_PRIZES',
+        status: 'PENDING',
+        runAt: datetime.minutesFromNow(1)
+      },
+      update: {
+        status: 'PENDING',
+        runAt: datetime.minutesFromNow(1)
+      }
+    });
+    console.info(
+      `[${type}] Scheduled RANDOMLY_ASSIGN_PRIZES job for sweepstakes ${sweepstakesId}`
+    );
+  }
+
   const nextRunAt = datetime.minutesFromNow(
     parsed.data.runs * 5 + BLUESKY_API_RATE_LIMIT_MINUTES
   );

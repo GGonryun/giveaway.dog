@@ -64,6 +64,8 @@ async function processSweepstakesJob({
         code: 'NOT_IMPLEMENTED',
         message: `Sweepstakes job type ${job.type} is not implemented`
       });
+    case 'RANDOMLY_ASSIGN_PRIZES':
+      return processRandomlyAssignPrizes({ db, job });
     default:
   }
 }
@@ -169,5 +171,90 @@ const processNotifyPublishDiscord = async ({
 
   console.info(
     `Successfully sent Discord notification for sweepstakes ${sweepstakes.id}`
+  );
+};
+
+const processRandomlyAssignPrizes = async ({
+  db,
+  job
+}: {
+  db: PrismaClient;
+  job: Prisma.SweepstakesJobGetPayload<{}>;
+}) => {
+  const sweepstakes = await db.sweepstakes.findUnique({
+    where: { id: job.sweepstakesId },
+    select: {
+      criteria: true,
+      prizes: { select: { id: true } }
+    }
+  });
+
+  if (!sweepstakes) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: `Sweepstakes with id ${job.sweepstakesId} not found`
+    });
+  }
+
+  const shouldAssignPrizes =
+    sweepstakes.criteria?.allowUserSelection === true &&
+    sweepstakes.prizes.length > 0;
+
+  if (!shouldAssignPrizes) {
+    console.info(
+      `Sweepstakes ${job.sweepstakesId} does not require random prize assignment`
+    );
+    await db.sweepstakesJob.update({
+      where: { id: job.id },
+      data: { status: SweepstakesJobStatus.COMPLETED }
+    });
+    return;
+  }
+
+  // Find participants without allocations
+  const participantsWithoutAllocations = await db.sweepstakesParticipant.findMany({
+    where: {
+      sweepstakesId: job.sweepstakesId,
+      allocations: null
+    },
+    select: {
+      id: true
+    }
+  });
+
+  if (participantsWithoutAllocations.length === 0) {
+    console.info(
+      `No participants without allocations for sweepstakes ${job.sweepstakesId}`
+    );
+    await db.sweepstakesJob.update({
+      where: { id: job.id },
+      data: { status: SweepstakesJobStatus.COMPLETED }
+    });
+    return;
+  }
+
+  // Create random allocations
+  const allocationsToCreate = participantsWithoutAllocations.map((participant) => {
+    const randomPrize = sweepstakes.prizes[
+      Math.floor(Math.random() * sweepstakes.prizes.length)
+    ];
+    return {
+      participantId: participant.id,
+      prizeId: randomPrize.id
+    };
+  });
+
+  await db.sweepstakesAllocation.createMany({
+    data: allocationsToCreate,
+    skipDuplicates: true
+  });
+
+  await db.sweepstakesJob.update({
+    where: { id: job.id },
+    data: { status: SweepstakesJobStatus.COMPLETED }
+  });
+
+  console.info(
+    `Successfully assigned random prizes to ${allocationsToCreate.length} participants for sweepstakes ${job.sweepstakesId}`
   );
 };

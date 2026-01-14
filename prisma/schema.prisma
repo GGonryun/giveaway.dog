@@ -469,6 +469,7 @@ model SweepstakesWinnerCriteria {
 enum SweepstakesJobType {
   NOTIFY_PUBLISH_ON_DISCORD
   NOTIFY_PUBLISH_ON_TWITTER
+  RANDOMLY_ASSIGN_PRIZES
 }
 
 enum SweepstakesJobStatus {
