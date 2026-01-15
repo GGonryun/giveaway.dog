@@ -288,7 +288,8 @@ export const DEFAULT_BLUESKY_SCORE_METRICS: BlueskyScoreMetrics = {
   following: 0,
   posts: 0,
   giveawaysEntered: 0,
-  accountAge: 0
+  accountAge: 0,
+  bannedAccount: 0
 };
 
 // Helper functions to convert platform-specific metrics

@@ -7,6 +7,7 @@ import {
   ImageIcon,
   LayoutDashboard,
   LucideIcon,
+  ShieldAlert,
   StarIcon,
   Trophy,
   UserPlus,
@@ -49,7 +50,8 @@ export const blueskyScoreMetricsSchema = z.object({
   following: z.number(),
   posts: z.number(),
   giveawaysEntered: z.number(),
-  accountAge: z.number()
+  accountAge: z.number(),
+  bannedAccount: z.number()
 });
 
 export type BlueskyScoreMetrics = z.infer<typeof blueskyScoreMetricsSchema>;
@@ -64,6 +66,7 @@ export const BLUESKY_FOLLOWING_MAX = 7.5;
 export const BLUESKY_POSTS_MAX = 7.5;
 export const BLUESKY_GIVEAWAYS_MAX = 7.5;
 export const BLUESKY_ACCOUNT_AGE_MAX = 15;
+export const BLUESKY_BANNED_PENALTY = -100;
 
 export const BLUESKY_METRIC_MAX: Record<BlueskyMetricKey, number> = {
   baseScore: PLATFORM_BASE_SCORE,
@@ -75,7 +78,8 @@ export const BLUESKY_METRIC_MAX: Record<BlueskyMetricKey, number> = {
   following: BLUESKY_FOLLOWING_MAX,
   posts: BLUESKY_POSTS_MAX,
   giveawaysEntered: BLUESKY_GIVEAWAYS_MAX,
-  accountAge: BLUESKY_ACCOUNT_AGE_MAX
+  accountAge: BLUESKY_ACCOUNT_AGE_MAX,
+  bannedAccount: 0
 };
 
 export const BLUESKY_METRIC_LABELS: Record<BlueskyMetricKey, string> = {
@@ -88,7 +92,8 @@ export const BLUESKY_METRIC_LABELS: Record<BlueskyMetricKey, string> = {
   following: 'Following',
   posts: 'Post Activity',
   giveawaysEntered: 'Giveaways Entered',
-  accountAge: 'Account Age'
+  accountAge: 'Account Age',
+  bannedAccount: 'Account Status'
 };
 
 export const BLUESKY_METRIC_ICONS: Record<BlueskyMetricKey, LucideIcon> = {
@@ -101,7 +106,8 @@ export const BLUESKY_METRIC_ICONS: Record<BlueskyMetricKey, LucideIcon> = {
   following: UserPlus,
   posts: Activity,
   giveawaysEntered: Trophy,
-  accountAge: Clock
+  accountAge: Clock,
+  bannedAccount: ShieldAlert
 };
 
 export const BLUESKY_METRIC_DESCRIPTION: Record<BlueskyMetricKey, string> = {
@@ -124,7 +130,9 @@ export const BLUESKY_METRIC_DESCRIPTION: Record<BlueskyMetricKey, string> = {
   giveawaysEntered:
     `Number of giveaways entered on our platform. Consistent participation indicates a legitimate user interested in giveaways. Awards +1 point per ${GIVEAWAYS_ENTERED_THRESHOLD} giveaways entered (max +${BLUESKY_GIVEAWAYS_MAX} points).`,
   accountAge:
-    `Older accounts are generally more trustworthy. Account age helps distinguish between established users and newly created bot accounts. Awards +1 point per ${BLUESKY_ACCOUNT_AGE_MONTHS_PER_POINT} months of account age (max +${BLUESKY_ACCOUNT_AGE_MAX} points).`
+    `Older accounts are generally more trustworthy. Account age helps distinguish between established users and newly created bot accounts. Awards +1 point per ${BLUESKY_ACCOUNT_AGE_MONTHS_PER_POINT} months of account age (max +${BLUESKY_ACCOUNT_AGE_MAX} points).`,
+  bannedAccount:
+    `Accounts that have been suspended or banned by Bluesky are flagged as high risk. This is a strong negative indicator that applies ${BLUESKY_BANNED_PENALTY} points.`
 };
 
 export const BLUESKY_METRIC_TYPE: Record<
@@ -140,7 +148,8 @@ export const BLUESKY_METRIC_TYPE: Record<
   following: 'quality',
   posts: 'quality',
   giveawaysEntered: 'quality',
-  accountAge: 'quality'
+  accountAge: 'quality',
+  bannedAccount: 'risk'
 };
 
 export const BLUESKY_QUALITY_METRICS: BlueskyMetricKey[] = widetype

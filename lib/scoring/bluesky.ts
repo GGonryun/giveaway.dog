@@ -49,7 +49,8 @@ export const computeBlueskyUserScore = async (
       following: calculateBlueskyFollowing(data.followsCount ?? 0),
       posts: calculateBlueskyPosts(data.postsCount ?? 0),
       giveawaysEntered: calculateGiveawaysEntered(giveawaysEntered),
-      accountAge: calculateBlueskyAccountAge(data.createdAt)
+      accountAge: calculateBlueskyAccountAge(data.createdAt),
+      bannedAccount: 0 // Future: check ban status
     };
 
     const score = Object.values(metrics).reduce((a, b) => a + b, 0);
@@ -78,17 +79,16 @@ const createBasicQualityRecord = async (tx: Tx, userId: string) => {
       score: USER_BASE_SCORE,
       metrics: {
         baseScore: USER_BASE_SCORE,
-        deviceStability: 0,
-        ipConsistency: 0,
-        geoConsistency: 0,
-        providersConnected: 0,
-        emailVerified: 0,
-        taskActivity: 0,
-        taskDiversity: 0,
+        profileAvatar: 0,
+        profileBanner: 0,
+        handleQuality: 0,
+        description: 0,
+        followers: 0,
+        following: 0,
+        posts: 0,
+        giveawaysEntered: 0,
         accountAge: 0,
-        overlappingIpAddresses: 0,
-        overlappingFingerprints: 0,
-        turnstileTrust: 0
+        bannedAccount: 0
       }
     }
   });
