@@ -71,6 +71,14 @@ export namespace datetime {
     return date;
   };
 
+  export const monthsSince = (date: Date): number => {
+    const now = new Date();
+    return (
+      (now.getFullYear() - date.getFullYear()) * 12 +
+      (now.getMonth() - date.getMonth())
+    );
+  };
+
   export const toTimeZoneDisplay = (timeZone: string) => {
     try {
       const date = new Date();

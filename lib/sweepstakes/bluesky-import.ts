@@ -1,12 +1,17 @@
 import { PrismaClient, UserSource } from '@prisma/client';
-import { USER_BASE_SCORE } from '@/schemas/user-scoring';
 import { nanoid } from 'nanoid';
 import { BlueskyUserSchema } from '../integrations/procedures/get-bluesky-likes';
+import {
+  EnhancedBlueskyProfile,
+  getBatchBlueskyProfiles
+} from '../integrations/procedures/get-bluesky-profile';
+import { Agent } from '@atproto/api';
 
 export interface ImportBlueskyParticipantsInput {
   sweepstakesId: string;
   taskId: string;
   blueskyUsers: BlueskyUserSchema[];
+  agent: Agent;
 }
 
 export type ImportedBlueskyUser = {
@@ -30,14 +35,22 @@ export async function importBlueskyUsers(
   db: PrismaClient,
   input: ImportBlueskyParticipantsInput
 ) {
-  const { blueskyUsers } = input;
+  const { blueskyUsers, agent } = input;
 
   const imported: ImportedBlueskyUser[] = [];
   const existing: ImportedBlueskyUser[] = [];
 
   console.info(`Importing ${blueskyUsers.length} Bluesky users`);
+
+  // Batch fetch enhanced profiles for all users
+  const dids = blueskyUsers.map((u) => u.did);
+  const enhancedProfiles = await getBatchBlueskyProfiles(agent, dids);
+
   for (const blueskyUser of blueskyUsers) {
     try {
+      // Get enhanced profile data (fallback to basic if not available)
+      const enhanced = enhancedProfiles.get(blueskyUser.did) || blueskyUser;
+
       const existingAccount = await db.account.findUnique({
         where: {
           provider_providerAccountId: {
@@ -54,6 +67,20 @@ export async function importBlueskyUsers(
           blueskyHandle: blueskyUser.handle,
           blueskyDid: blueskyUser.did
         });
+
+        // Create/update scoring request for existing user with latest platform data
+        await db.userScoringRequest.upsert({
+          where: { userId: existingAccount.userId },
+          create: {
+            userId: existingAccount.userId,
+            data: enhanced as any
+          },
+          update: {
+            data: enhanced as any,
+            updatedAt: new Date()
+          }
+        });
+
         continue;
       }
 
@@ -72,25 +99,15 @@ export async function importBlueskyUsers(
               label: blueskyUser.handle,
               link: `https://bsky.app/profile/${blueskyUser.handle}`
             }
-          },
-          quality: {
-            create: {
-              score: USER_BASE_SCORE,
-              metrics: {
-                baseScore: USER_BASE_SCORE,
-                deviceStability: 0,
-                ipConsistency: 0,
-                geoConsistency: 0,
-                providersConnected: 0,
-                emailVerified: 0,
-                taskActivity: 0,
-                taskDiversity: 0,
-                accountAge: 0,
-                overlappingIpAddresses: 0,
-                overlappingFingerprints: 0
-              }
-            }
           }
+        }
+      });
+
+      // Create scoring request with enhanced platform data for immediate processing
+      await db.userScoringRequest.create({
+        data: {
+          userId: created.id,
+          data: enhanced as any
         }
       });
 

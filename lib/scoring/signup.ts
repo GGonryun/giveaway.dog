@@ -24,8 +24,8 @@ import {
   UserScoreMetricsSchema
 } from '@/schemas/user-scoring';
 import { Prisma } from '@prisma/client';
-import { datetime } from './date';
-import { Tx } from './prisma';
+import { datetime } from '../date';
+import { Tx } from '../prisma';
 import { clamp } from 'lodash';
 
 const SELECT_USER_FINGERPRINT_QUERY = {
@@ -220,6 +220,10 @@ const calculateTurnstileTrust = (
   );
 };
 
+// ============================================================================
+// Signup User Scoring (Original Logic)
+// ============================================================================
+
 // Example scoring (0–100):
 // Signal                	    Weight  Logic
 // Device stability	          20      if ≥100% sessions same fingerprint (+2 per 10% up to +2)
@@ -233,7 +237,7 @@ const calculateTurnstileTrust = (
 // Turnstile trust            +/-10   based on Cloudflare risk score (0=bot → -10, 1=human → +10)
 // No overlap ip addresses   -30      if shared IP
 // No overlap fingerprints   -30      if shared fingerprint
-export const computeUserQualityScore = async (tx: Tx, userId: string) => {
+export const computeSignupUserScore = async (tx: Tx, userId: string) => {
   const user = await tx.user.findUnique({
     where: { id: userId },
     include: INCLUDE_USER_ACCOUNTS_QUERY

@@ -2,7 +2,6 @@
 
 import { Tx } from '@/lib/prisma';
 import { ApplicationError } from '@/lib/errors';
-import { getLatestTeamBlueskyCredentials } from '@/lib/bluesky/get-latest-team-bluesky-agent';
 import { Agent } from '@atproto/api';
 
 export interface BlueskyUserSchema {
@@ -10,11 +9,18 @@ export interface BlueskyUserSchema {
   handle: string;
   displayName?: string;
   avatar?: string;
+  // Enhanced fields for risk scoring (optional for backward compatibility)
+  description?: string;
+  banner?: string;
+  followersCount?: number;
+  followsCount?: number;
+  postsCount?: number;
+  createdAt?: string;
 }
 
 export interface BlueskyLikesRequest {
   postUrl: string;
-  teamId: string;
+  agent: Agent;
   cursor?: string;
 }
 
@@ -27,7 +33,7 @@ export const getBlueskyLikes = async (
   tx: Tx,
   input: BlueskyLikesRequest
 ): Promise<BlueskyLikesResponse> => {
-  const { agent } = await getLatestTeamBlueskyCredentials(tx, input.teamId);
+  const { agent } = input;
 
   const uri = await convertBskyUrlToUri(agent, input.postUrl);
 

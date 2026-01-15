@@ -1,5 +1,4 @@
 import { PrismaClient, UserSource } from '@prisma/client';
-import { USER_BASE_SCORE } from '@/schemas/user-scoring';
 import { nanoid } from 'nanoid';
 import { TwitterUserSchema } from '../integrations/schemas/api';
 
@@ -58,6 +57,20 @@ export async function importTwitterUsers(
           twitterUserId: twitterUser.id,
           twitterVerified: twitterUser.verified ?? false
         });
+
+        // Create/update scoring request for existing user with latest platform data
+        await db.userScoringRequest.upsert({
+          where: { userId: existingAccount.userId },
+          create: {
+            userId: existingAccount.userId,
+            data: twitterUser
+          },
+          update: {
+            data: twitterUser,
+            updatedAt: new Date()
+          }
+        });
+
         continue;
       }
 
@@ -76,25 +89,15 @@ export async function importTwitterUsers(
               label: twitterUser.username,
               link: `https://x.com/${twitterUser.username}`
             }
-          },
-          quality: {
-            create: {
-              score: USER_BASE_SCORE,
-              metrics: {
-                baseScore: USER_BASE_SCORE,
-                deviceStability: 0,
-                ipConsistency: 0,
-                geoConsistency: 0,
-                providersConnected: 0, // Twitter account
-                emailVerified: 0,
-                taskActivity: 0,
-                taskDiversity: 0,
-                accountAge: 0,
-                overlappingIpAddresses: 0,
-                overlappingFingerprints: 0
-              }
-            }
           }
+        }
+      });
+
+      // Create scoring request with platform data for immediate processing
+      await db.userScoringRequest.create({
+        data: {
+          userId: created.id,
+          data: twitterUser
         }
       });
 

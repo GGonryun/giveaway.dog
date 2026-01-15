@@ -2,10 +2,10 @@
 
 ## Roadmap
 
-- [ ] Add integration guard to facebook tasks
-
-- [ ] Add support for better user scoring on twitter
+- [ ] Add rich text editor for custom terms & conditions
 - [ ] Add global ban list
+- [ ] Add integration guard to facebook tasks
+- [ ] Add support for a preferred contact method on user profiles.
 - [ ] Add discord bot for discord-specific giveaways.
 - [ ] Add twitch bot for streamer giveaways.
 

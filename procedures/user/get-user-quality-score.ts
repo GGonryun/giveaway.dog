@@ -16,6 +16,13 @@ const getUserQualityScore = procedure()
       where: {
         userId: input.userId
       },
+      include: {
+        user: {
+          select: {
+            source: true
+          }
+        }
+      },
       orderBy: {
         // Get the most recent quality score
         createdAt: 'desc'

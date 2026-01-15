@@ -2,7 +2,6 @@
 
 import { Tx } from '@/lib/prisma';
 import { ApplicationError } from '@/lib/errors';
-import { getLatestTeamBlueskyCredentials } from '@/lib/bluesky/get-latest-team-bluesky-agent';
 import { Agent } from '@atproto/api';
 
 export interface BlueskyUserSchema {
@@ -14,7 +13,7 @@ export interface BlueskyUserSchema {
 
 export interface BlueskyRepostsRequest {
   postUrl: string;
-  teamId: string;
+  agent: Agent;
   cursor?: string;
 }
 
@@ -27,7 +26,7 @@ export const getBlueskyReposts = async (
   tx: Tx,
   input: BlueskyRepostsRequest
 ): Promise<BlueskyRepostsResponse> => {
-  const { agent } = await getLatestTeamBlueskyCredentials(tx, input.teamId);
+  const { agent } = input;
 
   const uri = await convertBskyUrlToUri(agent, input.postUrl);
 

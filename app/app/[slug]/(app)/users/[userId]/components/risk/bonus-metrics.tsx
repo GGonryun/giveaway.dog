@@ -8,7 +8,7 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import {
-  USER_RISK_METRICS,
+  USER_BONUS_METRICS,
   USER_METRIC_LABELS,
   USER_METRIC_ICONS,
   USER_METRIC_DESCRIPTION,
@@ -17,30 +17,31 @@ import {
   USER_METRIC_MAX
 } from '@/schemas/user-scoring';
 import { useState } from 'react';
-import { QUALITY_BADGE_RISK, toQualityType } from '@/schemas/quality';
 import { QualityBadge } from './quality-badge';
 import { MetricIcon, MetricLayout } from './metric-layout';
 
-interface RiskMetricsProps {
+interface BonusMetricsProps {
   metrics: UserScoreMetricsSchema;
 }
 
-export function RiskMetrics({ metrics }: RiskMetricsProps) {
+export function BonusMetrics({ metrics }: BonusMetricsProps) {
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
+
+  if (USER_BONUS_METRICS.length === 0) return null;
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          Risk Indicators
+          Quality Bonus
         </CardTitle>
         <CardDescription>
-          Individual factors affecting user quality
+          Foundational points assigned to all users
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-2 md:gap-4 grid-cols-1 xl:grid-cols-2 items-start">
-        {USER_RISK_METRICS.map((key) => (
-          <RiskMetric
+        {USER_BONUS_METRICS.map((key) => (
+          <BonusMetric
             key={key}
             metric={{
               key: key,
@@ -55,7 +56,7 @@ export function RiskMetrics({ metrics }: RiskMetricsProps) {
   );
 }
 
-const RiskMetric: React.FC<{
+const BonusMetric: React.FC<{
   open: boolean;
   onOpenChange: (open: boolean) => void;
   metric: {
@@ -64,16 +65,12 @@ const RiskMetric: React.FC<{
   };
 }> = ({ metric: { key, value }, open, onOpenChange }) => {
   const Icon = USER_METRIC_ICONS[key];
+  const label = USER_METRIC_LABELS[key];
   const max = USER_METRIC_MAX[key];
 
-  const positiveMax = Math.abs(max);
-  const positiveValue = Math.abs(value);
-  const percentage = Math.min(
-    ((positiveMax - positiveValue) / positiveMax) * 100,
-    100
-  );
-
-  const type = toQualityType(percentage);
+  // For bonus metrics, always show as excellent since they're foundational
+  const type = 'excellent';
+  const badge = 'Granted';
 
   return (
     <MetricLayout
@@ -83,14 +80,14 @@ const RiskMetric: React.FC<{
       description={USER_METRIC_DESCRIPTION[key]}
       badge={
         <QualityBadge type={type} className="w-16">
-          {QUALITY_BADGE_RISK[type]}
+          {badge}
         </QualityBadge>
       }
       content={
         <div className="text-left flex-1">
-          <div className="text-sm font-medium">{USER_METRIC_LABELS[key]}</div>
+          <div className="text-sm font-medium">{label}</div>
           <div className="text-sm text-muted-foreground">
-            Impact: {value} points
+            Bonus: +{value} points (max: +{max})
           </div>
         </div>
       }

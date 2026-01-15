@@ -8,14 +8,14 @@ import {
   CardContent
 } from '@/components/ui/card';
 import {
-  USER_QUALITY_METRICS,
-  USER_METRIC_LABELS,
-  USER_METRIC_ICONS,
-  USER_METRIC_MAX,
-  USER_METRIC_DESCRIPTION,
-  UserScoreMetricsSchema,
-  UserScoreMetricKey
-} from '@/schemas/user-scoring';
+  BLUESKY_QUALITY_METRICS,
+  BLUESKY_METRIC_LABELS,
+  BLUESKY_METRIC_ICONS,
+  BLUESKY_METRIC_MAX,
+  BLUESKY_METRIC_DESCRIPTION,
+  BlueskyScoreMetrics,
+  BlueskyMetricKey
+} from '@/schemas/platform-scoring';
 import {
   QUALITY_BADGE_TEXT,
   QUALITY_THEME,
@@ -29,9 +29,9 @@ import { useState } from 'react';
 import { QualityBadge } from './quality-badge';
 import { MetricIcon, MetricLayout } from './metric-layout';
 
-export const QualityMetrics: React.FC<{ metrics: UserScoreMetricsSchema }> = ({
-  metrics
-}) => {
+export const BlueskyQualityMetrics: React.FC<{
+  metrics: BlueskyScoreMetrics;
+}> = ({ metrics }) => {
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
 
   return (
@@ -40,12 +40,14 @@ export const QualityMetrics: React.FC<{ metrics: UserScoreMetricsSchema }> = ({
         <CardTitle className="flex items-center gap-2">
           Quality Indicators
         </CardTitle>
-        <CardDescription>Detailed analysis of quality factors</CardDescription>
+        <CardDescription>
+          Platform-specific quality indicators from Bluesky profile
+        </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-2 md:gap-4 grid-cols-1 xl:grid-cols-2 items-start">
-        {USER_QUALITY_METRICS.map((key: UserScoreMetricKey) => {
+        {BLUESKY_QUALITY_METRICS.map((key: BlueskyMetricKey) => {
           return (
-            <QualityMetric
+            <BlueskyMetric
               key={key}
               open={expandedMetric === key}
               onOpenChange={(isOpen) => setExpandedMetric(isOpen ? key : null)}
@@ -61,18 +63,18 @@ export const QualityMetrics: React.FC<{ metrics: UserScoreMetricsSchema }> = ({
   );
 };
 
-const QualityMetric: React.FC<{
+const BlueskyMetric: React.FC<{
   open: boolean;
   onOpenChange: (open: boolean) => void;
   metric: {
-    key: UserScoreMetricKey;
+    key: BlueskyMetricKey;
     value: number;
   };
 }> = ({ open, onOpenChange, metric: { key, value } }) => {
-  const max = USER_METRIC_MAX[key];
-  const label = USER_METRIC_LABELS[key];
-  const Icon = USER_METRIC_ICONS[key];
-  const percentage = Math.min((value / max) * 100, 100);
+  const max = BLUESKY_METRIC_MAX[key];
+  const label = BLUESKY_METRIC_LABELS[key];
+  const Icon = BLUESKY_METRIC_ICONS[key];
+  const percentage = max > 0 ? Math.min((value / max) * 100, 100) : 0;
   const type = toQualityType(percentage);
   const badge = QUALITY_BADGE_TEXT[type];
   const theme = QUALITY_THEME[type];
@@ -83,7 +85,7 @@ const QualityMetric: React.FC<{
       open={open}
       icon={<MetricIcon type={type} icon={Icon} />}
       onOpenChange={onOpenChange}
-      description={USER_METRIC_DESCRIPTION[key]}
+      description={BLUESKY_METRIC_DESCRIPTION[key]}
       badge={
         <div className="flex flex-col items-center gap-1 w-16">
           <div className="text-sm font-medium">

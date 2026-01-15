@@ -12,6 +12,8 @@ import { takeUntil } from '@/lib/arrays';
 import { Tx } from '@/lib/prisma';
 import { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-likes';
 import { BLUESKY_API_RATE_LIMIT_MINUTES } from '@/lib/pickers/data/settings';
+import { getLatestTeamBlueskyCredentials } from '@/lib/bluesky/get-latest-team-bluesky-agent';
+import { Agent } from '@atproto/api';
 
 export const processBlueskyTaskJob = async <
   T extends BlueskyLikeImportTaskSchema | BlueskyRepostImportTaskSchema
@@ -19,7 +21,7 @@ export const processBlueskyTaskJob = async <
   db: PrismaClient,
   task: T,
   job: TaskJobWithRelations,
-  action: (tx: Tx) => Promise<{ data?: BlueskyUserSchema[] }>
+  action: (tx: Tx, agent: Agent) => Promise<{ data?: BlueskyUserSchema[] }>
 ) => {
   const { taskId, data } = job;
   const { sweepstakesId } = job.task;
@@ -35,7 +37,11 @@ export const processBlueskyTaskJob = async <
     });
   }
 
-  const response = await action(db);
+  // Get Bluesky agent for API calls
+  const teamId = job.task.sweepstakes.teamId;
+  const { agent } = await getLatestTeamBlueskyCredentials(db, teamId!);
+
+  const response = await action(db, agent);
 
   console.info(
     `[${type}] Fetched ${response.data?.length ?? 0} users in task job ${job.id}`
@@ -53,7 +59,8 @@ export const processBlueskyTaskJob = async <
   const { imported, existing } = await importBlueskyUsers(db, {
     sweepstakesId,
     taskId,
-    blueskyUsers
+    blueskyUsers,
+    agent
   });
 
   console.info(

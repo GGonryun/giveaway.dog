@@ -10,12 +10,11 @@ export const processBlueskyLikeTaskJob = async (
   job: TaskJobWithRelations
 ) => {
   const { postUrl } = task;
-  const teamId = job.task.sweepstakes.teamId;
 
-  return processBlueskyTaskJob(db, task, job, async (tx) => {
+  return processBlueskyTaskJob(db, task, job, async (tx, agent) => {
     const response = await getBlueskyLikes(tx, {
       postUrl,
-      teamId: teamId!
+      agent
     });
 
     return {

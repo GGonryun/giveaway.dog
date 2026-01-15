@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 
 import React from 'react';
 import { RiskMetrics } from './risk-metrics';
+import { BonusMetrics } from './bonus-metrics';
 import {
   toQualityType,
   QUALITY_THEME,
@@ -13,17 +14,57 @@ import {
   QUALITY_ICON,
   QUALITY_ALERT_VARIANT
 } from '@/schemas/quality';
-import { UserQualitySchema } from '@/schemas/user-scoring';
+import { UserQualitySchema, UserScoreMetricsSchema } from '@/schemas/user-scoring';
 import { QualityMetrics } from './quality-metrics';
 import { QualityBadge } from './quality-badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { TwitterQualityMetrics } from './twitter-quality-metrics';
+import { BlueskyQualityMetrics } from './bluesky-quality-metrics';
+import {
+  TwitterScoreMetrics,
+  BlueskyScoreMetrics
+} from '@/schemas/platform-scoring';
 
-export const UserQualityBreakdown: React.FC<{ quality: UserQualitySchema }> = ({
-  quality
-}) => {
+export const UserQualityBreakdown: React.FC<{
+  quality: UserQualitySchema;
+}> = ({ quality }) => {
   const type = toQualityType(quality.score);
   const theme = QUALITY_THEME[type];
   const label = QUALITY_LABELS[type];
+
+  // Determine which metrics component to render based on quality type
+  const renderMetrics = () => {
+    switch (quality.type) {
+      case 'SIGNUP':
+      case 'ANONYMOUS':
+      case 'MANUAL_IMPORT':
+      case 'DISCORD_IMPORT':
+        return (
+          <>
+            <QualityMetrics metrics={quality.metrics as UserScoreMetricsSchema} />
+            <BonusMetrics metrics={quality.metrics as UserScoreMetricsSchema} />
+            <RiskMetrics metrics={quality.metrics as UserScoreMetricsSchema} />
+          </>
+        );
+
+      case 'TWITTER_IMPORT':
+        return (
+          <TwitterQualityMetrics
+            metrics={quality.metrics as TwitterScoreMetrics}
+          />
+        );
+
+      case 'BLUESKY_IMPORT':
+        return (
+          <BlueskyQualityMetrics
+            metrics={quality.metrics as BlueskyScoreMetrics}
+          />
+        );
+
+      default:
+        return <div>Unknown quality type</div>;
+    }
+  };
 
   return (
     <div className="space-y-2">
@@ -52,8 +93,7 @@ export const UserQualityBreakdown: React.FC<{ quality: UserQualitySchema }> = ({
           </CardContent>
         </Card>
 
-        <QualityMetrics metrics={quality.metrics} />
-        <RiskMetrics metrics={quality.metrics} />
+        {renderMetrics()}
       </div>
     </div>
   );
