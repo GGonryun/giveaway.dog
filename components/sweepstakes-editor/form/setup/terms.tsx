@@ -46,6 +46,7 @@ import {
 } from '@/schemas/giveaway/defaults';
 import { date } from '@/lib/date';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
+import { MinimalTiptap } from '@/components/ui/minimal-tiptap';
 
 const OPTIONS: Record<SweepstakesTermsType, string> = {
   [SweepstakesTermsType.TEMPLATE]: 'Default',
@@ -193,7 +194,6 @@ export const TermsAndConditions = () => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Terms & Conditions</FormLabel>
-
           <FormControl>
             <div className="space-y-2">
               <div className="flex gap-2">
@@ -220,13 +220,12 @@ export const TermsAndConditions = () => {
                   defaultValue={livePreview}
                 />
               ) : (
-                <Textarea
-                  rows={12}
-                  placeholder={stringifyTerms()}
-                  value={field.value.text}
+                <MinimalTiptap
+                  content={field.value.text}
                   onChange={(e) => {
-                    form.setValue('terms.text', e.currentTarget.value);
+                    form.setValue('terms.text', e);
                   }}
+                  placeholder="Enter a description"
                 />
               )}
             </div>

@@ -1,12 +1,13 @@
-- [ ] "GiveawayDog is a streamers best friend."
-
 ## Roadmap
 
-- [ ] Add rich text editor for custom terms & conditions
-- [ ] Add global ban list
-- [ ] Add integration guard to facebook tasks
+- [ ] Global/Team blacklist/whitelist for users.
+
+- [ ] Add integration guard to facebook tasks.
+
 - [ ] Add support for a preferred contact method on user profiles.
+
 - [ ] Add discord bot for discord-specific giveaways.
+
 - [ ] Add twitch bot for streamer giveaways.
 
 ---
@@ -142,4 +143,7 @@
 ---
 
 Other:
-Give @CuparaGaming access to github repo.
+
+- [ ] Give @CuparaGaming access to github repo.
+
+- [ ] "GiveawayDog is a streamers best friend."
