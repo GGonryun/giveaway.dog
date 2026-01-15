@@ -101,7 +101,8 @@ export const checkSteamWishlist = async (
       code: 'VALIDATION_ERROR',
       message:
         'Please ensure in your Steam profile privacy settings that you have \"My profile\" and \"Game details\" set to public',
-      cause: PRIVATE_STEAM_WISHLIST_ERROR
+      cause: PRIVATE_STEAM_WISHLIST_ERROR,
+      silent: true
     });
   }
 

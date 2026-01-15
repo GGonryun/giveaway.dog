@@ -77,7 +77,8 @@ export async function checkBlueskyLike(
   if (!hasLiked) {
     throw new ApplicationError({
       code: 'FORBIDDEN',
-      message: 'You have not liked this Bluesky post yet'
+      message: 'You have not liked this Bluesky post yet',
+      silent: true
     });
   }
 }
