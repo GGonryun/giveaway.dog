@@ -45,10 +45,12 @@ export const SweepstakesParticipationPage: React.FC<
 
   const participant = useMemo(
     () =>
-      ({
-        ...props.participant,
-        allocation
-      }) as SweepstakesParticipantSchema,
+      props.participant
+        ? {
+            ...props.participant,
+            allocation
+          }
+        : undefined,
     [props.participant, allocation]
   );
 
