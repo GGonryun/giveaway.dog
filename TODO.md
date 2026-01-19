@@ -1,12 +1,14 @@
 ## Roadmap
 
-- [ ] Global/Team blacklist/whitelist for users.
+- [ ] Add discord bot for discord-specific giveaways.
+
+- [ ] Add an "I already completed this task" to tiktok
 
 - [ ] Add integration guard to facebook tasks.
 
-- [ ] Add support for a preferred contact method on user profiles.
+- [ ] Global/Team blacklist/whitelist for users.
 
-- [ ] Add discord bot for discord-specific giveaways.
+- [ ] Add support for a preferred contact method on user profiles.
 
 - [ ] Add twitch bot for streamer giveaways.
 

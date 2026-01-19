@@ -1,13 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -20,12 +14,12 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
 import { IntegrationSchema, hasFeature } from '../schemas';
-import { IntegrationStatusBadge } from './integration-status-badge';
 import { IntegrationStatusAlert } from './integration-status-alert';
 import { TwitterConnectDialog } from './twitter-connect-dialog';
 import { TwitterDisconnectDialog } from './twitter-disconnect-dialog';
 import { IDENTITY_PROVIDER_LABEL } from '../schemas/providers';
 import { twitterFeatures, TwitterFeatureSchema } from '../scopes';
+import { IntegrationCardHeader } from './integration-card-header';
 
 interface TwitterCardProps {
   integration?: IntegrationSchema;
@@ -85,28 +79,14 @@ export function TwitterCard({ integration }: TwitterCardProps) {
 
   return (
     <Card className="relative flex flex-col">
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-muted">
-              <SocialXIcon className="h-6 w-6" />
-            </div>
-            <div>
-              <CardTitle className="text-base">
-                {IDENTITY_PROVIDER_LABEL.TWITTER}
-              </CardTitle>
-              <CardDescription className="text-xs mt-0.5">
-                {integration
-                  ? `@${integration.label}`
-                  : 'Social media platform'}
-              </CardDescription>
-            </div>
-          </div>
-          {integration && (
-            <IntegrationStatusBadge status={integration.status} />
-          )}
-        </div>
-      </CardHeader>
+      <IntegrationCardHeader
+        icon={<SocialXIcon className="h-6 w-6" />}
+        title={IDENTITY_PROVIDER_LABEL.TWITTER}
+        description={
+          integration ? `@${integration.label}` : 'Social media platform'
+        }
+        integration={integration}
+      />
       <CardContent className="space-y-3 flex-1 flex flex-col ">
         {integration ? (
           <>

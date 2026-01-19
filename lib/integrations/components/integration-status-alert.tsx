@@ -17,8 +17,18 @@ export const IntegrationStatusAlert: React.FC<{
           </AlertDescription>
         </Alert>
       );
+    case 'PENDING':
+      return (
+        <Alert variant="warning">
+          <AlertCircleIcon />
+          <AlertDescription>
+            Please complete the setup to activate the integration.
+          </AlertDescription>
+        </Alert>
+      );
     case 'ACTIVE':
       return null;
+
     default:
       throw assertNever(status);
   }

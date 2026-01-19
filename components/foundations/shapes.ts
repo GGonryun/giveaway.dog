@@ -1,5 +1,7 @@
 export const shapes = {
   size: {
+    '3xs': 'h-2 w-2 min-h-2 min-w-2',
+    '2xs': 'h-3 w-3 min-h-3 min-w-3',
     xs: 'h-4 w-4 min-h-4 min-w-4',
     sm: 'h-6 w-6 min-h-6 min-w-6',
     md: 'h-8 w-8 min-h-8 min-w-8',

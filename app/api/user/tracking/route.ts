@@ -5,10 +5,10 @@ import { ip } from '@/lib/ip';
 import { UserAgentSchema } from '@/schemas/user-agent';
 import { Nil } from '@/lib/types';
 import { MAX_TRACKING_REQUESTS_PER_RUN } from '@/schemas/user-scoring';
+import { isValidCronSecret } from '@/lib/jobs/util';
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isValidCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

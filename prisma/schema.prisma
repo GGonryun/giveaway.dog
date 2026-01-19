@@ -214,6 +214,7 @@ model Account {
 }
 
 enum IntegrationStatus {
+  PENDING
   ACTIVE
   ERROR
 }
@@ -221,13 +222,14 @@ enum IntegrationStatus {
 enum IntegrationProvider {
   TWITTER
   BLUESKY
+  DISCORD
 }
 
 model Integration {
-  id         String              @id @default(cuid())
-  provider   IntegrationProvider
-  account_id String
+  id       String              @id @default(cuid())
+  provider IntegrationProvider
 
+  account_id    String
   teamId        String?
   team          Team?             @relation(fields: [teamId], references: [id], onDelete: Cascade)
   status        IntegrationStatus @default(ACTIVE)
@@ -242,17 +244,22 @@ model Integration {
   id_token      String?
   session_state String?
   label         String?
+  settings      Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  stateId String? @unique
+  state   State?  @relation(fields: [stateId], references: [id])
 
   @@unique([provider, account_id])
 }
 
 model State {
-  id        String   @id @default(cuid())
-  value     Json
-  expiresAt DateTime
+  id          String       @id @default(cuid())
+  value       Json
+  expiresAt   DateTime?
+  integration Integration?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

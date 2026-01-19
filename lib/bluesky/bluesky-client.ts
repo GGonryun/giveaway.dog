@@ -64,7 +64,8 @@ export async function getBlueskyClient() {
       },
       async get(key: string) {
         const record = await prisma.state.findUnique({ where: { id: key } });
-        if (!record || record.expiresAt < new Date()) return undefined;
+        if (!record?.expiresAt || record.expiresAt < new Date())
+          return undefined;
         return record.value as any;
       },
       async del(key: string) {

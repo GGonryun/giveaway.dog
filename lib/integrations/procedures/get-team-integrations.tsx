@@ -24,7 +24,11 @@ export const getTeamIntegrations = procedure()
       where: { slug: input.slug },
       select: {
         id: true,
-        integrations: true
+        integrations: {
+          include: {
+            state: true
+          }
+        }
       }
     });
 
@@ -42,6 +46,8 @@ export const getTeamIntegrations = procedure()
       account_id: i.account_id,
       label: i.label ?? DEFAULT_INTEGRATION_LABEL,
       status: i.status,
-      scopes: i.scope ? i.scope.split(' ') : []
+      scopes: i.scope ? i.scope.split(' ') : [],
+      settings: i.settings,
+      state: i.state
     }));
   });

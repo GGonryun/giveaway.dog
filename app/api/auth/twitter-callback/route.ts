@@ -38,6 +38,14 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    if (!state.expiresAt) {
+      throw new ApplicationError({
+        code: 'BAD_REQUEST',
+        message: 'State has no expiration',
+        data: 'invalid_state'
+      });
+    }
+
     if (state.expiresAt < new Date()) {
       throw new ApplicationError({
         code: 'BAD_REQUEST',

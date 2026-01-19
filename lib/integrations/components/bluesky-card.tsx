@@ -1,13 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink } from 'lucide-react';
@@ -18,7 +12,6 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
 import { IntegrationSchema, hasFeature } from '../schemas';
-import { IntegrationStatusBadge } from './integration-status-badge';
 import { IntegrationStatusAlert } from './integration-status-alert';
 import { BlueskyDisconnectDialog } from './bluesky-disconnect-dialog';
 import { BlueskyConnectDialog } from './bluesky-connect-dialog';
@@ -28,6 +21,7 @@ import {
   toBlueskyScope,
   type BlueskyFeatureSchema
 } from '../scopes';
+import { IntegrationCardHeader } from './integration-card-header';
 
 interface BlueskyCardProps {
   integration?: IntegrationSchema;
@@ -80,28 +74,16 @@ export function BlueskyCard({ integration }: BlueskyCardProps) {
   return (
     <>
       <Card className="relative flex flex-col">
-        <CardHeader>
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-muted">
-                <SocialBlueskyIcon className="h-6 w-6" />
-              </div>
-              <div>
-                <CardTitle className="text-base">
-                  {IDENTITY_PROVIDER_LABEL.BLUESKY}
-                </CardTitle>
-                <CardDescription className="text-xs mt-0.5">
-                  {integration
-                    ? `@${integration.label}`
-                    : 'Decentralized social network'}
-                </CardDescription>
-              </div>
-            </div>
-            {integration && (
-              <IntegrationStatusBadge status={integration.status} />
-            )}
-          </div>
-        </CardHeader>
+        <IntegrationCardHeader
+          icon={<SocialBlueskyIcon className="h-6 w-6" />}
+          title={IDENTITY_PROVIDER_LABEL.BLUESKY}
+          description={
+            integration
+              ? `@${integration.label}`
+              : 'Decentralized social network'
+          }
+          integration={integration}
+        />
 
         <CardContent className="space-y-3 flex-1 flex flex-col">
           {integration ? (

@@ -8,7 +8,7 @@ import {
 } from '../scopes';
 import { Nil } from '@/lib/types';
 
-export const DEFAULT_INTEGRATION_LABEL = 'My Integration';
+export const DEFAULT_INTEGRATION_LABEL = 'MISSING_NO';
 export const TWITTER_TEAM_APP_CLIENT_ID =
   process.env.TWITTER_TEAM_APP_CLIENT_ID;
 export const TWITTER_TEAM_APP_CLIENT_SECRET =
@@ -22,7 +22,15 @@ export const integrationSchema = z.object({
   account_id: z.string(),
   provider: z.nativeEnum(IntegrationProvider),
   status: z.nativeEnum(IntegrationStatus),
-  scopes: z.array(z.string()).optional()
+  scopes: z.array(z.string()).optional(),
+  settings: z.unknown().optional(),
+  state: z
+    .object({
+      id: z.string(),
+      value: z.unknown(),
+      expiresAt: z.coerce.date().nullish()
+    })
+    .nullish()
 });
 
 export type IntegrationSchema = z.infer<typeof integrationSchema>;

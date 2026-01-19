@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { MAX_SCORING_REQUESTS_PER_RUN } from '@/schemas/user-scoring';
 import { computeUserQualityScore } from '@/lib/scoring';
+import { isValidCronSecret } from '@/lib/jobs/util';
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isValidCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
