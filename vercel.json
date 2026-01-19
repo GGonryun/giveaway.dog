@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/user/scoring",
-      "schedule": "0 * * * *"
+      "schedule": "*/43 * * * *"
     },
     {
       "path": "/api/jobs/process",
