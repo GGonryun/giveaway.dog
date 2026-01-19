@@ -1,5 +1,4 @@
 import { IntegrationStatus } from '@prisma/client';
-import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { toEphemeralChannelResponse } from '../messages';
 import { DiscordApplicationCommandInteractionSchema } from '../schema';
