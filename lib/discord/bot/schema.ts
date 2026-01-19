@@ -2,16 +2,16 @@ import z from 'zod';
 import { ApplicationError } from '../../errors';
 
 export const discordUserSchema = z.object({
-  avatar: z.string().nullable(),
-  avatar_decoration_data: z.any().nullable(),
+  avatar: z.string().nullish(),
+  avatar_decoration_data: z.any().nullish(),
   bot: z.boolean().optional(),
-  clan: z.any().nullable(),
-  collectibles: z.any().nullable(),
+  clan: z.any().nullish(),
+  collectibles: z.any().nullish(),
   discriminator: z.string(),
-  display_name_styles: z.any().nullable(),
-  global_name: z.string().nullable(),
+  display_name_styles: z.any().nullish(),
+  global_name: z.string().nullish(),
   id: z.string(),
-  primary_guild: z.any().nullable(),
+  primary_guild: z.any().nullish(),
   public_flags: z.number(),
   system: z.boolean().optional(),
   username: z.string()
@@ -21,14 +21,14 @@ export const discordChannelSchema = z.object({
   flags: z.number(),
   guild_id: z.string(),
   id: z.string(),
-  last_message_id: z.string().optional(),
+  last_message_id: z.string().nullish(),
   name: z.string(),
   nsfw: z.boolean(),
-  parent_id: z.string().nullable(),
+  parent_id: z.string().nullish(),
   permissions: z.string(),
   position: z.number(),
   rate_limit_per_user: z.number(),
-  topic: z.string().nullable(),
+  topic: z.string().nullish(),
   type: z.number()
 });
 
@@ -39,21 +39,21 @@ export const discordGuildSchema = z.object({
 });
 
 export const discordMemberSchema = z.object({
-  avatar: z.string().nullable(),
-  banner: z.string().nullable(),
-  collectibles: z.any().nullable(),
-  communication_disabled_until: z.string().nullable(),
+  avatar: z.string().nullish(),
+  banner: z.string().nullish(),
+  collectibles: z.any().nullish(),
+  communication_disabled_until: z.string().nullish(),
   deaf: z.boolean(),
-  display_name_styles: z.any().nullable(),
+  display_name_styles: z.any().nullish(),
   flags: z.number(),
   joined_at: z.string(),
   mute: z.boolean(),
-  nick: z.string().nullable(),
+  nick: z.string().nullish(),
   pending: z.boolean(),
   permissions: z.string(),
-  premium_since: z.string().nullable(),
+  premium_since: z.string().nullish(),
   roles: z.array(z.string()),
-  unusual_dm_activity_until: z.string().nullable(),
+  unusual_dm_activity_until: z.string().nullish(),
   user: discordUserSchema
 });
 

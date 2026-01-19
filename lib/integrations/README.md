@@ -45,6 +45,12 @@ curl -X POST "https://discord.com/api/v10/applications/$DISCORD_BOT_APPLICATION_
 }'
 ```
 
+##### Saved Commands
+
+```JSON
+{"id":"1462676123593871556","application_id":"1400366638649446450","version":"1462676123593871557","default_member_permissions":null,"type":1,"name":"connect","name_localizations":null,"description":"Connect this Discord server to Giveaway Dog","description_localizations":null,"dm_permission":true,"contexts":null,"integration_types":[0,1],"options":[{"type":3,"name":"key","name_localizations":null,"description":"Your Giveaway Dog connection key","description_localizations":null,"required":true}],"nsfw":false}
+```
+
 **Note:** Global commands can take up to 1 hour to appear in all servers.
 
 #### List Global Commands
