@@ -1,13 +1,16 @@
-import InboundEmailClient, { PostEmailsRequest } from '@inboundemail/sdk';
+import Inbound from 'inboundemail';
 
 export const newEmailClient = ({ secret }: { secret?: string }) => {
   if (!secret) {
     throw new Error('InboundEmailProvider requires a secret');
   }
-  const inbound = new InboundEmailClient(secret);
+  const inbound = new Inbound({
+    apiKey: secret
+  });
 
   return {
-    send: (options: PostEmailsRequest) => inbound.emails.send(options)
+    send: (options: Inbound.Emails.EmailSendParams) =>
+      inbound.emails.send(options)
   };
 };
 

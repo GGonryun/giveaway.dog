@@ -11,17 +11,17 @@ export const InboundEmailProvider = ({ secret }: { secret?: string }) => {
   }) => {
     const client = newEmailClient({ secret });
 
-    const result = await client.send({
-      from: NO_REPLY_EMAIL,
-      to: email,
-      ...getMagicLinkEmailContent({ url })
-    });
+    try {
+      const result = await client.send({
+        from: NO_REPLY_EMAIL,
+        to: email,
+        ...getMagicLinkEmailContent({ url })
+      });
 
-    if (result.error) {
-      console.error('Failed to send email:', result.error);
-    } else {
       console.info('Email sent successfully!');
-      console.info('Email ID:', result.data?.id);
+      console.info('Email ID:', result.id);
+    } catch (error) {
+      console.error('Failed to send email:', error);
     }
   };
 
