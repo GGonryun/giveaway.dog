@@ -570,6 +570,31 @@ export function getVerificationInstructions(args: {
         ]
       };
 
+    case 'DISCORD_INTERACTION_IMPORT':
+      return {
+        title: 'Verify Discord Interaction (Automatic)',
+        description: `This task is automatically verified when users interact via Discord`,
+        steps: [
+          {
+            step: 1,
+            instruction:
+              'Users click the button in your Discord message to enter the giveaway',
+            note: 'Role verification happens automatically when they click'
+          },
+          {
+            step: 2,
+            instruction:
+              'The system imports their Discord profile and creates a PENDING entry',
+            note: 'You can manually approve or reject entries if needed'
+          },
+          {
+            step: 3,
+            instruction:
+              'If automatic verification is unavailable, manually verify by checking Discord message interactions'
+          }
+        ]
+      };
+
     case 'TWITCH_FOLLOW':
       return {
         title: 'Verify Twitch Follow (Automatic)',

@@ -139,6 +139,17 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['DISCORD_INTERACTION_IMPORT']: {
+      id: '',
+      type: 'DISCORD_INTERACTION_IMPORT',
+      title: 'Interact on Discord',
+      importingAccount: '',
+      roles: [],
+      link: '',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
     ['TWITCH_FOLLOW']: {
       id: '',
       type: 'TWITCH_FOLLOW',

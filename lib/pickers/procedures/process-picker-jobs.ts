@@ -34,7 +34,7 @@ import { getDisqualificationReason } from '../schemas/public-picker';
 import { environment } from '@/lib/environment';
 
 const MAX_RESULTS_PER_RUN = 100;
-const MAX_JOBS_PER_RUN = 10;
+const MAX_JOBS_PER_RUN = 5;
 
 export const processPickerJobs = procedure()
   .authorization({

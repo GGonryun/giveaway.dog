@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Settings, ExternalLink, Hash } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
 import { startDiscordInstall } from '@/lib/discord/procedures/start-discord-install';
 import { disconnectDiscord } from '@/lib/discord/procedures/disconnect-discord';
@@ -15,10 +15,8 @@ import { useActiveTeam } from '@/components/team/use-active-team-page';
 import { IntegrationSchema } from '../../integrations/schemas';
 import { IntegrationStatusAlert } from '../../integrations/components/integration-status-alert';
 import { IDENTITY_PROVIDER_LABEL } from '../../integrations/schemas/providers';
-import { DiscordSettingsDialog } from './discord-settings-dialog';
 import { DiscordRegistrationDialog } from './discord-registration-dialog';
 import { DiscordDisconnectDialog } from './discord-disconnect-dialog';
-import { discordIntegrationSettings } from '@/lib/discord/integration/schemas';
 import { IntegrationCardHeader } from '@/lib/integrations/components/integration-card-header';
 
 interface DiscordCardProps {
@@ -30,13 +28,6 @@ export function DiscordCard({ integration }: DiscordCardProps) {
   const router = useRouter();
   const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
   const [registrationDialogOpen, setRegistrationDialogOpen] = useState(false);
-  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
-
-  const discordSettings = useMemo(() => {
-    if (!integration?.settings) return null;
-    const result = discordIntegrationSettings.safeParse(integration.settings);
-    return result.success ? result.data : null;
-  }, [integration?.settings]);
 
   const install = useProcedure({
     action: startDiscordInstall,
@@ -111,34 +102,24 @@ export function DiscordCard({ integration }: DiscordCardProps) {
                   </div>
 
                   <div className="space-y-2 pt-2 mt-auto">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSettingsDialogOpen(true)}
-                      className="w-full"
-                    >
-                      <Settings className="h-3.5 w-3.5 mr-1.5" />
-                      Settings
-                    </Button>
                     <div className="flex gap-2">
-                      {discordSettings?.channel?.id &&
-                        integration.account_id && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1"
-                            asChild
+                      {integration.account_id && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          asChild
+                        >
+                          <a
+                            href={`https://discord.com/channels/${integration.account_id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
-                            <a
-                              href={`https://discord.com/channels/${integration.account_id}/${discordSettings.channel.id}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-                              Channel
-                            </a>
-                          </Button>
-                        )}
+                            <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
+                            Guild
+                          </a>
+                        </Button>
+                      )}
                       <Button
                         variant="destructive"
                         size="sm"
@@ -175,14 +156,6 @@ export function DiscordCard({ integration }: DiscordCardProps) {
           slug={slug}
           open={registrationDialogOpen}
           onOpenChange={setRegistrationDialogOpen}
-          integration={integration}
-        />
-      )}
-
-      {isActive && (
-        <DiscordSettingsDialog
-          open={settingsDialogOpen}
-          onOpenChange={setSettingsDialogOpen}
           integration={integration}
         />
       )}

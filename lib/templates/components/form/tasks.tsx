@@ -6,5 +6,5 @@ import { TemplateFormSchema } from '../../schemas/template';
 
 export const TemplateTasks = () => {
   const form = useFormContext<TemplateFormSchema>();
-  return <EntryMethods form={form} fieldPath="tasks" />;
+  return <EntryMethods form={form} fieldPath="tasks" action="create" />;
 };

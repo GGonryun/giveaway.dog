@@ -66,6 +66,14 @@ export class ApplicationError<T = unknown | undefined> extends Error {
     this.data = error.data as T;
   }
 
+  static toMessage(error: unknown): string {
+    if (error instanceof ApplicationError) {
+      return error.message;
+    }
+
+    return 'An unknown error occurred...';
+  }
+
   toJSON(): object {
     return {
       code: this.code,

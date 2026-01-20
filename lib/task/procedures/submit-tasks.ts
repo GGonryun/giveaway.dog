@@ -21,12 +21,7 @@ const submitTask = procedure()
       data: z.any().optional()
     })
   )
-  .output(
-    z.object({
-      sweepstakesId: z.string(),
-      sweepstakesSlug: z.string().nullable().optional()
-    })
-  )
+  .output(z.boolean())
   .handler(async ({ db, user, input: { data, taskId, sweepstakesId } }) => {
     console.info(
       `User ${user.id} is submitting task ${taskId} for sweepstakes ${sweepstakesId}`
@@ -134,10 +129,7 @@ const submitTask = procedure()
       completions
     });
 
-    return {
-      sweepstakesId: task.sweepstakes.id,
-      sweepstakesSlug: task.sweepstakes.visibility?.slug
-    };
+    return true;
   });
 
 export default submitTask;

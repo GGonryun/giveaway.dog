@@ -2,10 +2,10 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
-import { processTaskJob } from './process-job';
+import { processTaskJob } from './process-task-job';
 import { taskJobInclude } from './types';
 
-const MAX_JOBS_PER_RUN = 10;
+const MAX_JOBS_PER_RUN = 5;
 
 export const processTaskJobs = procedure()
   .authorization({ required: false })

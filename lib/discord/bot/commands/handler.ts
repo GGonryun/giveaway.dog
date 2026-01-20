@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyDiscordRequest } from '../verify';
 import { handlePingCommand } from './ping';
 import { handleApplicationCommandRequest } from './application';
+import { handleButtonInteraction } from './button';
 import { toEphemeralChannelMessage } from '../messages';
 
 export const POST = async (request: NextRequest) => {
@@ -14,6 +15,8 @@ export const POST = async (request: NextRequest) => {
         return handlePingCommand();
       case 2: // APPLICATION_COMMAND
         return handleApplicationCommandRequest({ body });
+      case 3: // MESSAGE_COMPONENT
+        return handleButtonInteraction({ body });
       default:
         throw assertNever(body);
     }

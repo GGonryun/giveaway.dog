@@ -97,7 +97,7 @@ export const handleConnectCommand = async (
       embeds: [
         {
           title: 'Successfully Connected!',
-          description: `Giveaway.dog is now connected to your team!\n\nGiveaways will be posted in <#${channelId}>.\n\nYou can now update your settings any time at ${INTEGRATIONS_SETUP_URL({ slug })}.`,
+          description: `Giveaway.dog is now connected to your team!\n\nYou can now update your settings any time.\n\n[Manage your integration here](${INTEGRATIONS_SETUP_URL({ slug })})`,
           color: 0x00ff00
         }
       ]

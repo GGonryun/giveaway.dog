@@ -16,6 +16,11 @@ export default {
       },
       {
         protocol: 'https',
+        hostname: 'cdn.discordapp.com',
+        search: ''
+      },
+      {
+        protocol: 'https',
         hostname: 'pbs.twimg.com',
         search: ''
       },

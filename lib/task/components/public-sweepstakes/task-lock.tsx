@@ -71,6 +71,7 @@ export const getTaskLock = (args: {
     case 'INSTAGRAM_LIKE':
     case 'INSTAGRAM_COMMENT':
     case 'DISCORD_JOIN':
+    case 'DISCORD_INTERACTION_IMPORT':
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':

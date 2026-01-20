@@ -9,7 +9,7 @@ import { useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
 export const SweepstakeFormContent: React.FC = () => {
-  const { currentStep } = useUnifiedFormLayout();
+  const { currentStep, action } = useUnifiedFormLayout();
   const form = useFormContext<GiveawayFormSchema>();
 
   return (
@@ -17,7 +17,7 @@ export const SweepstakeFormContent: React.FC = () => {
       {currentStep === 'setup' && <Setup />}
       {currentStep === 'audience' && <Audience />}
       {currentStep === 'tasks' && (
-        <EntryMethods form={form} fieldPath="tasks" />
+        <EntryMethods form={form} fieldPath="tasks" action={action} />
       )}
       {currentStep === 'selection' && <Selection />}
       {currentStep === 'prizes' && <Prizes />}

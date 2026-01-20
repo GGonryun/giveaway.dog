@@ -112,6 +112,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         icon: SocialSteamIcon
       };
     case 'DISCORD_JOIN':
+    case 'DISCORD_INTERACTION_IMPORT':
       return {
         action:
           'bg-discord-1 text-white group-hover:bg-discord-1 hover:bg-discord-1 dark:bg-discord-1 dark:hover:bg-discord-1',

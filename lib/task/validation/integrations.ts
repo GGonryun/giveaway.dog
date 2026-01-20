@@ -62,6 +62,7 @@ export const validateTask = async <T extends TaskSchema>(
     case 'TIKTOK_LIKE':
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
+    case 'DISCORD_INTERACTION_IMPORT':
     case 'REFERRAL_LINK':
     case 'SUBMIT_MEDIA':
     case 'STEAM_FOLLOW':

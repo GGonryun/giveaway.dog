@@ -265,6 +265,24 @@ export const discordJoinTaskSchema = baseTaskSchema.extend({
 
 export type DiscordJoinTaskSchema = z.infer<typeof discordJoinTaskSchema>;
 
+export const discordInteractionImportTaskSchema = baseTaskSchema.extend({
+  type: z.literal('DISCORD_INTERACTION_IMPORT'),
+  importingAccount: z.string().optional(),
+  roles: z.array(z.string()).optional(),
+  link: z
+    .string()
+    .url('Discord Message Link is required')
+    .refine((val) => {
+      const urlPattern =
+        /^https?:\/\/(www\.)?(discord\.com|discordapp\.com)\/channels\/\d+\/\d+\/\d+$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://discord.com/channels/{guildId}/{channelId}/{messageId} or https://discordapp.com/channels/{guildId}/{channelId}/{messageId}')
+});
+
+export type DiscordInteractionImportTaskSchema = z.infer<
+  typeof discordInteractionImportTaskSchema
+>;
+
 export const twitchFollowTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITCH_FOLLOW'),
   channel: z
@@ -551,6 +569,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   steamWishlistTaskSchema,
   steamFollowTaskSchema,
   discordJoinTaskSchema,
+  discordInteractionImportTaskSchema,
   twitchFollowTaskSchema,
   kickFollowTaskSchema,
   secretCodeTaskSchema,
@@ -595,6 +614,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   STEAM_WISHLIST: 'Steam Wishlist',
   STEAM_FOLLOW: 'Follow on Steam',
   DISCORD_JOIN: 'Join Discord Server',
+  DISCORD_INTERACTION_IMPORT: 'Interact on Discord',
   TWITCH_FOLLOW: 'Follow on Twitch',
   YOUTUBE_VISIT: 'Visit YouTube Channel',
   KICK_FOLLOW: 'Follow on Kick',
@@ -633,6 +653,7 @@ export const TASK_INPUT_SCHEMA = {
     mediaUrl: z.optional(z.string().url('Media URL is required'))
   }),
   DISCORD_JOIN: z.object({}),
+  DISCORD_INTERACTION_IMPORT: z.object({}),
   TWITCH_FOLLOW: z.object({}),
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
@@ -689,6 +710,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   STEAM_WISHLIST: z.object({}),
   STEAM_FOLLOW: z.object({}),
   DISCORD_JOIN: z.object({}),
+  DISCORD_INTERACTION_IMPORT: z.object({}),
   TWITCH_FOLLOW: z.object({}),
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
@@ -761,6 +783,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   TIKTOK_FOLLOW: 'TIKTOK',
   TIKTOK_LIKE: 'TIKTOK',
   DISCORD_JOIN: 'DISCORD',
+  DISCORD_INTERACTION_IMPORT: 'DISCORD',
   TWITCH_FOLLOW: 'TWITCH',
   KICK_FOLLOW: 'KICK',
   ASK_QUESTION: 'QUESTION',
@@ -796,6 +819,7 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   STEAM_WISHLIST: 'STEAM',
   STEAM_FOLLOW: 'STEAM',
   DISCORD_JOIN: 'DISCORD',
+  DISCORD_INTERACTION_IMPORT: 'DISCORD',
   TWITCH_FOLLOW: 'TWITCH',
   KICK_FOLLOW: 'KICK',
   YOUTUBE_VISIT: 'YOUTUBE',
@@ -861,6 +885,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   TWITTER_LIKE: 'social',
   TWITTER_LIKE_IMPORT: 'social',
   DISCORD_JOIN: 'social',
+  DISCORD_INTERACTION_IMPORT: 'social',
   STEAM_WISHLIST: 'community',
   STEAM_FOLLOW: 'community',
   TWITCH_FOLLOW: 'social',
@@ -906,6 +931,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   TWITTER_LIKE: false,
   TWITTER_LIKE_IMPORT: true,
   DISCORD_JOIN: false,
+  DISCORD_INTERACTION_IMPORT: true,
   STEAM_WISHLIST: false,
   STEAM_FOLLOW: false,
   TWITCH_FOLLOW: false,
@@ -946,6 +972,7 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   TWITTER_LIKE: true,
   TWITTER_LIKE_IMPORT: true,
   DISCORD_JOIN: true,
+  DISCORD_INTERACTION_IMPORT: true,
   STEAM_WISHLIST: true,
   STEAM_FOLLOW: true,
   TWITCH_FOLLOW: true,
@@ -991,6 +1018,7 @@ export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
   STEAM_WISHLIST: false,
   STEAM_FOLLOW: false,
   DISCORD_JOIN: false,
+  DISCORD_INTERACTION_IMPORT: false,
   TWITCH_FOLLOW: false,
   KICK_FOLLOW: false,
   SECRET_CODE: false,
@@ -1090,6 +1118,7 @@ export const TASK_VERIFICATION_REQUIREMENT: Record<
   STEAM_WISHLIST: 'automatic',
   STEAM_FOLLOW: 'self-reported',
   DISCORD_JOIN: 'automatic',
+  DISCORD_INTERACTION_IMPORT: 'automatic',
   TWITCH_FOLLOW: 'automatic',
   SECRET_CODE: 'automatic',
   ASK_QUESTION: 'manual',

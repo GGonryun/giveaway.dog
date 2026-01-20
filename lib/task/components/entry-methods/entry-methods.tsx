@@ -35,6 +35,7 @@ import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-
 import { TaskType } from '@prisma/client';
 import { uniq } from 'lodash';
 import { TaskSchema } from '@/lib/task/schemas';
+import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };
 
@@ -50,10 +51,12 @@ export const EntryMethods = <
   TName extends TaskArrayPath<TFieldValues> = TaskArrayPath<TFieldValues>
 >({
   form,
-  fieldPath
+  fieldPath,
+  action
 }: {
   form: UseFormReturn<TFieldValues>;
   fieldPath: TName;
+  action: UnifiedFormAction;
 }) => {
   const [active, setActive] = useState<ActiveEntry | null>(null);
   const [open, setOpen] = useState<string[]>([]);
@@ -151,6 +154,7 @@ export const EntryMethods = <
                       return (
                         <EntryMethod
                           {...typedField}
+                          action={action}
                           key={field.id}
                           index={index}
                           open={open.includes(field.id)}
@@ -167,6 +171,7 @@ export const EntryMethods = <
                     {active ? (
                       <EntryMethod
                         id={active.id}
+                        action={action}
                         index={active.index}
                         type={active.type}
                         open={open.includes(active.id)}

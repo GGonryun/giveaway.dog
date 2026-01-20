@@ -17,6 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import { AutomatedPostIntegrationStep } from './steps/integration-step';
 import { TwitterContentStep } from './steps/twitter-content-step';
 import { BlueskyContentStep } from './steps/bluesky-content-step';
+import { DiscordContentStep } from './steps/discord-content-step';
 import { useForm, FormProvider, FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -25,7 +26,9 @@ import {
   postToTwitterRequestSchema,
   PostToTwitterRequestSchema,
   postToBlueskyRequestSchema,
-  PostToBlueskyRequestSchema
+  PostToBlueskyRequestSchema,
+  postToDiscordRequestSchema,
+  PostToDiscordRequestSchema
 } from '../schemas';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AutomatedPostJobType } from '@prisma/client';
@@ -45,7 +48,13 @@ interface PostBuilderSheetProps {
   onSave: () => void;
 }
 
-type PlatformType = 'TWITTER' | 'BLUESKY' | null;
+type PlatformType = 'TWITTER' | 'BLUESKY' | 'DISCORD' | null;
+
+const PLATFORM_SHEET_TITLE: Record<Exclude<PlatformType, null>, string> = {
+  TWITTER: 'Create Twitter post',
+  BLUESKY: 'Create Bluesky post',
+  DISCORD: 'Create Discord post'
+};
 
 interface SheetContentWrapperProps {
   selectedPlatform: PlatformType;
@@ -59,9 +68,8 @@ const SheetContentWrapper: React.FC<SheetContentWrapperProps> = ({
   children
 }) => {
   const getSheetTitle = () => {
-    if (selectedPlatform === 'TWITTER') return 'Create Twitter post';
-    if (selectedPlatform === 'BLUESKY') return 'Create Bluesky post';
-    return 'Create automated post';
+    if (!selectedPlatform) return 'Create automated post';
+    return PLATFORM_SHEET_TITLE[selectedPlatform];
   };
 
   return (
@@ -293,6 +301,99 @@ const BlueskyForm: React.FC<BlueskyFormProps> = ({
   );
 };
 
+interface DiscordFormProps {
+  integrations: IntegrationsSchema;
+  sweepstakes: GiveawaySchema;
+  liveUrl: string;
+  slug: string;
+  onSuccess: () => void;
+}
+
+const DiscordForm: React.FC<DiscordFormProps> = ({
+  integrations,
+  sweepstakes,
+  liveUrl,
+  slug,
+  onSuccess
+}) => {
+  const router = useRouter();
+
+  const discordIntegrations = integrations.filter(
+    (i) => i.provider === 'DISCORD' && i.status === 'ACTIVE'
+  );
+
+  const isSweepstakesLive = sweepstakes.status === 'RUNNING';
+
+  const discordDefaultValues: PostToDiscordRequestSchema = {
+    channelId: '',
+    integrationId: discordIntegrations[0]?.id ?? '',
+    roles: [],
+    tasks: []
+  };
+
+  const schedule = useProcedure({
+    action: scheduleAutomatedPostJob,
+    onSuccess: () => {
+      toast.success('Discord post scheduled successfully');
+      router.refresh();
+      onSuccess();
+    }
+  });
+
+  const form = useForm<PostToDiscordRequestSchema>({
+    resolver: zodResolver(postToDiscordRequestSchema),
+    defaultValues: discordDefaultValues,
+    mode: 'onChange'
+  });
+
+  const handleSubmit = (request: PostToDiscordRequestSchema) => {
+    schedule.run({
+      sweepstakesId: sweepstakes.id,
+      type: AutomatedPostJobType.POST_TO_DISCORD,
+      request
+    });
+  };
+
+  const handleSubmitInvalid = (
+    errors: FieldErrors<PostToDiscordRequestSchema>
+  ) => {
+    console.warn('Form submission errors:', errors);
+  };
+
+  return (
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit, handleSubmitInvalid)}
+        className="flex flex-col h-full"
+      >
+        <SheetContentWrapper
+          selectedPlatform="DISCORD"
+          isLoading={schedule.isLoading}
+        >
+          {isSweepstakesLive && (
+            <div className="px-4">
+              <Alert variant="warning">
+                <AlertCircleIcon />
+                <AlertTitle>Your giveaway is live</AlertTitle>
+                <AlertDescription>
+                  This post will be published immediately upon saving.
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
+
+          <DiscordContentStep
+            integrations={discordIntegrations}
+            isSubmitting={schedule.isLoading}
+            hasDiscordIntegration={discordIntegrations.length > 0}
+            slug={slug}
+          />
+        </SheetContentWrapper>
+      </form>
+    </FormProvider>
+  );
+};
+
 export function PostBuilderSheet({
   open,
   onOpenChange,
@@ -346,6 +447,18 @@ export function PostBuilderSheet({
       );
     }
 
+    if (selectedPlatform === 'DISCORD') {
+      return (
+        <DiscordForm
+          integrations={integrations}
+          sweepstakes={sweepstakes}
+          liveUrl={liveUrl}
+          slug={slug}
+          onSuccess={handleSuccess}
+        />
+      );
+    }
+
     return (
       <SheetContentWrapper
         selectedPlatform={selectedPlatform}
@@ -355,6 +468,7 @@ export function PostBuilderSheet({
           isSweepstakesLive={isSweepstakesLive}
           onSelectTwitter={() => handleSelectPlatform('TWITTER')}
           onSelectBluesky={() => handleSelectPlatform('BLUESKY')}
+          onSelectDiscord={() => handleSelectPlatform('DISCORD')}
         />
       </SheetContentWrapper>
     );

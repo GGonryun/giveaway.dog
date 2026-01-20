@@ -16,6 +16,8 @@ export const validateAutomatedPostRequest = async (args: {
       return validatePostToTwitterRequest(args);
     case 'POST_TO_BLUESKY':
       return validatePostToBlueskyRequest(args);
+    case 'POST_TO_DISCORD':
+      return validatePostToDiscordRequest(args);
     default:
       throw assertNever(args.input);
   }
@@ -69,6 +71,32 @@ const validatePostToBlueskyRequest = async ({
     throw new ApplicationError({
       code: 'PRECONDITION_FAILED',
       message: 'Bluesky integration not found or not active'
+    });
+  }
+};
+
+const validatePostToDiscordRequest = async ({
+  db,
+  input,
+  teamId
+}: {
+  db: PrismaClient;
+  input: ScheduleAutomatedPostRequest;
+  teamId: string;
+}) => {
+  const discordIntegration = await db.integration.findFirst({
+    where: {
+      id: input.request.integrationId,
+      teamId,
+      provider: IdentityProvider.DISCORD,
+      status: IntegrationStatus.ACTIVE
+    }
+  });
+
+  if (!discordIntegration) {
+    throw new ApplicationError({
+      code: 'PRECONDITION_FAILED',
+      message: 'Discord integration not found or not active'
     });
   }
 };

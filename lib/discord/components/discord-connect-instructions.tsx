@@ -3,39 +3,19 @@
 import { useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Terminal, Copy, Eye, EyeOff, RotateCcw } from 'lucide-react';
+import { Terminal, Copy, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { IntegrationSchema } from '../../integrations/schemas';
-import { useProcedure } from '@/lib/mrpc/hook';
-import { useRouter } from 'next/navigation';
-import { useActiveTeam } from '@/components/team/use-active-team-page';
-import { regenerateDiscordKey } from '../procedures/regenerate-discord-key';
-import { Spinner } from '@/components/ui/spinner';
 
 interface DiscordConnectInstructionsProps {
   integration: IntegrationSchema;
-  showRegenerateButton?: boolean;
 }
 
 export function DiscordConnectInstructions({
-  integration,
-  showRegenerateButton = false
+  integration
 }: DiscordConnectInstructionsProps) {
-  const { slug } = useActiveTeam();
-  const router = useRouter();
   const [showKey, setShowKey] = useState(false);
-  const [registrationKey, setRegistrationKey] = useState(
-    () => integration.state?.id || integration.id
-  );
-
-  const regenerate = useProcedure({
-    action: regenerateDiscordKey,
-    onSuccess(newKey) {
-      setRegistrationKey(newKey);
-      toast.success('Registration key regenerated successfully');
-      router.refresh();
-    }
-  });
+  const registrationKey = integration.state?.id || integration.id;
 
   const handleCopyConnectCommand = () => {
     navigator.clipboard.writeText(`/connect`);
@@ -45,10 +25,6 @@ export function DiscordConnectInstructions({
   const handleCopyRegistrationKey = () => {
     navigator.clipboard.writeText(registrationKey);
     toast.success('Registration key copied to clipboard');
-  };
-
-  const handleRegenerateKey = () => {
-    regenerate.run({ integrationId: integration.id, slug });
   };
 
   return (
@@ -75,7 +51,6 @@ export function DiscordConnectInstructions({
               variant="outline"
               size="icon"
               onClick={() => setShowKey(!showKey)}
-              disabled={regenerate.isLoading}
               title={showKey ? 'Hide key' : 'Show key'}
             >
               {showKey ? (
@@ -87,24 +62,12 @@ export function DiscordConnectInstructions({
             <Button
               variant="outline"
               size="icon"
-              disabled={regenerate.isLoading}
               onClick={handleCopyRegistrationKey}
               title="Copy key"
             >
               <Copy className="h-4 w-4" />
             </Button>
           </div>
-          {showRegenerateButton && (
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={handleRegenerateKey}
-              disabled={regenerate.isLoading}
-            >
-              {regenerate.isLoading ? <Spinner size="2xs" /> : <RotateCcw />}
-              {regenerate.isLoading ? 'Regenerating...' : 'Regenerate Key'}
-            </Button>
-          )}
         </div>
       </AlertDescription>
     </Alert>

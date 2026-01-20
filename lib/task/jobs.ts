@@ -17,6 +17,7 @@ export const createJobsForTask = (
     case 'BONUS_COMPLETE_PROFILE':
     case 'BONUS_TIMED':
     case 'DISCORD_JOIN':
+    case 'DISCORD_INTERACTION_IMPORT':
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':

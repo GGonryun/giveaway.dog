@@ -69,6 +69,7 @@ export const WithProviderConnection: React.FC<
   Omit<TaskActionProps<TaskSchema>, 'entrants' | 'loyalty' | 'onUpdate'> &
     Pick<TaskControlsProps, 'submit' | 'cancel' | 'disabled'> & {
       hidden?: boolean;
+      hideControls?: boolean;
       onUpdate?: (data?: unknown) => void;
       render: (ctx: {
         theme: TaskTheme;
@@ -85,7 +86,8 @@ export const WithProviderConnection: React.FC<
   isLoading,
   submit,
   submission,
-  cancel
+  cancel,
+  hideControls
 }) => {
   const { theme } = useTaskTheme();
 
@@ -132,16 +134,18 @@ export const WithProviderConnection: React.FC<
           </>
         )}
       </TaskContent>
-      <TaskControls
-        disabled={disabled || (requiresConnection && !provider)}
-        submission={submission}
-        isLoading={isLoading}
-        submit={submit}
-        cancel={cancel}
-        onUpdate={onUpdate}
-        onSubmit={onSubmit}
-        onCancel={onCancel}
-      />
+      {!hideControls && (
+        <TaskControls
+          disabled={disabled || (requiresConnection && !provider)}
+          submission={submission}
+          isLoading={isLoading}
+          submit={submit}
+          cancel={cancel}
+          onUpdate={onUpdate}
+          onSubmit={onSubmit}
+          onCancel={onCancel}
+        />
+      )}
     </>
   );
 };

@@ -1,5 +1,6 @@
 import { GiveawaySchema } from '@/schemas/giveaway/schemas';
 import { date } from '../date';
+import { Prisma } from '@prisma/client';
 
 export const generateTweetText = ({
   sweepstakes,

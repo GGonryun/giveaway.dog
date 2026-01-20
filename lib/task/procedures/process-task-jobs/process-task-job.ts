@@ -95,6 +95,7 @@ export const processTaskJob = async (
       case 'REFERRAL_LINK':
       case 'MULTIPLE_CHOICE':
       case 'SUBMIT_MEDIA':
+      case 'DISCORD_INTERACTION_IMPORT':
         throw new ApplicationError({
           code: 'NOT_IMPLEMENTED',
           message: `Job processing not implemented for task type: ${task.type}`

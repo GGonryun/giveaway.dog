@@ -31,16 +31,18 @@ import { AdvancedSettings } from '../sweepstakes-editor-form/advanced-settings';
 import { toTaskTheme } from '../theme';
 import { TASK_LABEL } from '../../schemas';
 import { VerificationAlert } from './verification-alert';
+import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 
 export const EntryMethod: React.FC<{
   id: string;
   index: number;
   type: TaskType;
   open: boolean;
+  action: UnifiedFormAction;
   onOpenChange: (open: boolean) => void;
   onRemove: () => void;
   onCopy: () => void;
-}> = ({ onRemove, onCopy, open, onOpenChange, type, id, index }) => {
+}> = ({ onRemove, onCopy, open, onOpenChange, action, type, id, index }) => {
   const theme = useMemo(() => toTaskTheme(type), [type]);
   const form = useFormContext<GiveawayFormSchema>();
   const taskErrors = form.formState.errors.tasks?.[index];
@@ -128,7 +130,7 @@ export const EntryMethod: React.FC<{
           <CollapsibleContent className="p-3 pt-1.5 border-t space-y-2">
             <VerificationAlert type={type} />
             <BaseSettings type={type} />
-            <AdditionalSettings type={type} />
+            <AdditionalSettings type={type} action={action} />
             <AdvancedSettings type={type} />
           </CollapsibleContent>
         </Collapsible>

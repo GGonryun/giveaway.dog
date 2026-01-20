@@ -35,9 +35,17 @@ import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
 import { MaximumReferralsField } from './lib/maximum-referrals';
 import { SteamDeveloperFormField } from './lib/steam-developer';
-import { RequireProofField } from './lib/require-proof';
+import { DiscordImportingAccountField } from './lib/discord-importing-account';
+import { DiscordRolesField } from './lib/discord-roles';
+import { DiscordMessageLinkField } from './lib/discord-message-link';
+import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import Link from 'next/link';
 
-export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
+export const AdditionalSettings: React.FC<{
+  type: TaskType;
+  action: UnifiedFormAction;
+}> = ({ type, action }) => {
   const content = useCallback(() => {
     switch (type) {
       case 'TWITTER_CONNECT':
@@ -127,6 +135,32 @@ export const AdditionalSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <BlueskyPostUrlField />
           </>
         );
+      case 'DISCORD_INTERACTION_IMPORT':
+        return action === 'edit' ? (
+          <>
+            <DiscordImportingAccountField />
+            <DiscordRolesField />
+            <DiscordMessageLinkField />
+          </>
+        ) : (
+          <Alert variant="destructive">
+            <AlertCircle />
+            <AlertTitle>Automatic Discord Interaction Task</AlertTitle>
+            <AlertDescription>
+              This task is automatically created when posting to Discord with
+              interaction tracking enabled. It cannot be created manually.
+              <Link
+                // TODO: create a knowledge base article about this
+                href={`${process.env.NEXT_PUBLIC_APP_URL}/contact`}
+                target="_blank"
+                className="underline mt-1"
+              >
+                Learn more about Discord Interaction Tracking.
+              </Link>
+            </AlertDescription>
+          </Alert>
+        );
+
       case 'STEAM_WISHLIST':
         return <SteamAppIdFormField />;
       case 'STEAM_FOLLOW':

@@ -102,9 +102,26 @@ export const discordApplicationCommandInteractionSchema =
     user: discordUserSchema.optional()
   });
 
+export const discordButtonInteractionSchema = baseInteractionSchema.extend({
+  type: z.literal(3),
+  channel: discordChannelSchema.optional(),
+  data: z.object({
+    custom_id: z.string(),
+    component_type: z.number()
+  }),
+  guild_id: z.string().optional(),
+  member: discordMemberSchema.optional(),
+  user: discordUserSchema.optional(),
+  message: z.object({
+    id: z.string(),
+    channel_id: z.string()
+  })
+});
+
 export const discordInteractionSchema = z.discriminatedUnion('type', [
   discordPingInteractionSchema,
-  discordApplicationCommandInteractionSchema
+  discordApplicationCommandInteractionSchema,
+  discordButtonInteractionSchema
 ]);
 
 export type DiscordUserSchema = z.infer<typeof discordUserSchema>;
@@ -122,6 +139,9 @@ export type DiscordPingInteractionSchema = z.infer<
 >;
 export type DiscordApplicationCommandInteractionSchema = z.infer<
   typeof discordApplicationCommandInteractionSchema
+>;
+export type DiscordButtonInteractionSchema = z.infer<
+  typeof discordButtonInteractionSchema
 >;
 export type DiscordInteractionSchema = z.infer<typeof discordInteractionSchema>;
 

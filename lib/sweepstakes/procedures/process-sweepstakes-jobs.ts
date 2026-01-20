@@ -1,14 +1,19 @@
 'use server';
 
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError, assertNever } from '@/lib/errors';
 import { html } from '@/lib/html';
 import { procedure } from '@/lib/mrpc/procedures';
 import { DEFAULT_TEAM_NAME } from '@/lib/team/data';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { Prisma, PrismaClient, SweepstakesJobStatus } from '@prisma/client';
 import { z } from 'zod';
+import { toSweepstakesUrl } from '../util';
+import { updateDiscordMessage } from '@/lib/discord/api/update-discord-message';
+import { toPostToDiscordResponseSchema } from '@/lib/automation/schemas';
+import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
+import { toGiveawayExpiredEmbed } from '@/lib/discord/embeds';
 
-const MAX_JOBS_PER_RUN = 10;
+const MAX_JOBS_PER_RUN = 5;
 
 export const processSweepstakesJobs = procedure()
   .authorization({ required: false })
@@ -36,11 +41,19 @@ export const processSweepstakesJobs = procedure()
     });
 
     console.info(`Found ${pending.length} sweepstakes jobs to process`);
+
     for (const job of pending) {
       try {
         await processSweepstakesJob({ db, job });
       } catch (error) {
         console.error(`Failed to process sweepstakes job ${job.id}`, error);
+        await db.sweepstakesJob.update({
+          where: { id: job.id },
+          data: {
+            status: SweepstakesJobStatus.FAILED,
+            error: ApplicationError.toMessage(error)
+          }
+        });
       }
     }
 
@@ -57,20 +70,116 @@ async function processSweepstakesJob({
   job: Prisma.SweepstakesJobGetPayload<{}>;
 }) {
   switch (job.type) {
+    case 'PROCESS_ACTIVATION':
+      return processSweepstakesActivation({ db, job });
+    case 'PROCESS_EXPIRATION':
+      return processSweepstakesExpiration({ db, job });
+    case 'PROCESS_COMPLETION':
+      return processSweepstakesCompletion({ db, job });
+    case 'RANDOMLY_ASSIGN_PRIZES':
+      return processRandomlyAssignPrizes({ db, job });
+    // deprecated jobs
     case 'NOTIFY_PUBLISH_ON_DISCORD':
-      return processNotifyPublishDiscord({ db, job });
     case 'NOTIFY_PUBLISH_ON_TWITTER':
       throw new ApplicationError({
         code: 'NOT_IMPLEMENTED',
         message: `Sweepstakes job type ${job.type} is not implemented`
       });
-    case 'RANDOMLY_ASSIGN_PRIZES':
-      return processRandomlyAssignPrizes({ db, job });
     default:
+      throw assertNever(job.type);
   }
 }
 
-const processNotifyPublishDiscord = async ({
+const processRandomlyAssignPrizes = async ({
+  db,
+  job
+}: {
+  db: PrismaClient;
+  job: Prisma.SweepstakesJobGetPayload<{}>;
+}) => {
+  const sweepstakes = await db.sweepstakes.findUnique({
+    where: { id: job.sweepstakesId },
+    select: {
+      criteria: true,
+      prizes: { select: { id: true } }
+    }
+  });
+
+  if (!sweepstakes) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: `Sweepstakes with id ${job.sweepstakesId} not found`
+    });
+  }
+
+  const shouldAssignPrizes =
+    sweepstakes.criteria?.allowUserSelection === true &&
+    sweepstakes.prizes.length > 0;
+
+  if (!shouldAssignPrizes) {
+    console.info(
+      `Sweepstakes ${job.sweepstakesId} does not require random prize assignment`
+    );
+    await db.sweepstakesJob.update({
+      where: { id: job.id },
+      data: { status: SweepstakesJobStatus.COMPLETED }
+    });
+    return;
+  }
+
+  // Find participants without allocations
+  const participantsWithoutAllocations =
+    await db.sweepstakesParticipant.findMany({
+      where: {
+        sweepstakesId: job.sweepstakesId,
+        allocations: null
+      },
+      select: {
+        id: true
+      }
+    });
+
+  if (participantsWithoutAllocations.length === 0) {
+    console.info(
+      `No participants without allocations for sweepstakes ${job.sweepstakesId}`
+    );
+    await db.sweepstakesJob.update({
+      where: { id: job.id },
+      data: { status: SweepstakesJobStatus.COMPLETED }
+    });
+    return;
+  }
+
+  // Create random allocations
+  const allocationsToCreate = participantsWithoutAllocations.map(
+    (participant) => {
+      const randomPrize =
+        sweepstakes.prizes[
+          Math.floor(Math.random() * sweepstakes.prizes.length)
+        ];
+      return {
+        participantId: participant.id,
+        prizeId: randomPrize.id
+      };
+    }
+  );
+
+  await db.sweepstakesAllocation.createMany({
+    data: allocationsToCreate,
+    skipDuplicates: true
+  });
+
+  await db.sweepstakesJob.update({
+    where: { id: job.id },
+    data: { status: SweepstakesJobStatus.COMPLETED }
+  });
+
+  console.info(
+    `Successfully assigned random prizes to ${allocationsToCreate.length} participants for sweepstakes ${job.sweepstakesId}`
+  );
+};
+
+const processSweepstakesActivation = async ({
   db,
   job
 }: {
@@ -103,7 +212,7 @@ const processNotifyPublishDiscord = async ({
     });
   }
 
-  const sweepstakesUrl = `${process.env.NEXT_PUBLIC_APP_URL}/browse/${sweepstakes.visibility?.slug ?? sweepstakes.id}`;
+  const sweepstakesUrl = toSweepstakesUrl(sweepstakes);
 
   const description = sweepstakes.details?.description
     ? html.toMarkdown(sweepstakes.details.description)
@@ -174,7 +283,28 @@ const processNotifyPublishDiscord = async ({
   );
 };
 
-const processRandomlyAssignPrizes = async ({
+const processSweepstakesCompletion = async ({
+  db,
+  job
+}: {
+  db: PrismaClient;
+  job: Prisma.SweepstakesJobGetPayload<{}>;
+}) => {
+  // For now, completing a sweepstakes is just marking the job as completed.
+  // Additional logic can be added here as needed.
+  await db.sweepstakesJob.update({
+    where: { id: job.id },
+    data: { status: SweepstakesJobStatus.COMPLETED }
+  });
+
+  console.info(
+    `Sweepstakes ${job.sweepstakesId} marked as completed in job ${job.id}`
+  );
+
+--- TODO: `If there's an automated discord post we should update the message to indicate completion.` ---
+};
+
+const processSweepstakesExpiration = async ({
   db,
   job
 }: {
@@ -183,10 +313,7 @@ const processRandomlyAssignPrizes = async ({
 }) => {
   const sweepstakes = await db.sweepstakes.findUnique({
     where: { id: job.sweepstakesId },
-    select: {
-      criteria: true,
-      prizes: { select: { id: true } }
-    }
+    select: SWEEPSTAKES_DISCORD_POST_SELECT_QUERY
   });
 
   if (!sweepstakes) {
@@ -196,65 +323,52 @@ const processRandomlyAssignPrizes = async ({
     });
   }
 
-  const shouldAssignPrizes =
-    sweepstakes.criteria?.allowUserSelection === true &&
-    sweepstakes.prizes.length > 0;
-
-  if (!shouldAssignPrizes) {
-    console.info(
-      `Sweepstakes ${job.sweepstakesId} does not require random prize assignment`
-    );
-    await db.sweepstakesJob.update({
-      where: { id: job.id },
-      data: { status: SweepstakesJobStatus.COMPLETED }
+  if (sweepstakes.status === 'COMPLETED') {
+    throw new ApplicationError({
+      code: 'CONFLICT',
+      message: `Sweepstakes ${sweepstakes.id} is already expired`
     });
-    return;
   }
 
-  // Find participants without allocations
-  const participantsWithoutAllocations = await db.sweepstakesParticipant.findMany({
-    where: {
-      sweepstakesId: job.sweepstakesId,
-      allocations: null
-    },
-    select: {
-      id: true
+  if (sweepstakes.status === 'DRAFT') {
+    throw new ApplicationError({
+      code: 'CONFLICT',
+      message: `Sweepstakes ${sweepstakes.id} is still in draft status and cannot process expiration`
+    });
+  }
+
+  // if there is a post to discord, update the message to indicate the sweepstakes has ended
+  const post = sweepstakes.posts.find((p) => p.type === 'POST_TO_DISCORD');
+  if (post?.status === 'COMPLETED') {
+    // then we need to update the message to say the giveaway has expired.
+    console.info(
+      `Updating Discord message for sweepstakes ${sweepstakes.id} to indicate expiration`
+    );
+
+    const response = toPostToDiscordResponseSchema(post.response);
+    if (!response.channelId) {
+      throw new ApplicationError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Post to Discord job for sweepstakes ${sweepstakes.id} is missing channelId in response`
+      });
     }
-  });
 
-  if (participantsWithoutAllocations.length === 0) {
-    console.info(
-      `No participants without allocations for sweepstakes ${job.sweepstakesId}`
-    );
-    await db.sweepstakesJob.update({
-      where: { id: job.id },
-      data: { status: SweepstakesJobStatus.COMPLETED }
+    if (!response.messageId) {
+      throw new ApplicationError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Post to Discord job for sweepstakes ${sweepstakes.id} is missing messageId in response`
+      });
+    }
+
+    await updateDiscordMessage({
+      channelId: response.channelId,
+      messageId: response.messageId,
+      embed: toGiveawayExpiredEmbed(sweepstakes)
     });
-    return;
   }
-
-  // Create random allocations
-  const allocationsToCreate = participantsWithoutAllocations.map((participant) => {
-    const randomPrize = sweepstakes.prizes[
-      Math.floor(Math.random() * sweepstakes.prizes.length)
-    ];
-    return {
-      participantId: participant.id,
-      prizeId: randomPrize.id
-    };
-  });
-
-  await db.sweepstakesAllocation.createMany({
-    data: allocationsToCreate,
-    skipDuplicates: true
-  });
 
   await db.sweepstakesJob.update({
     where: { id: job.id },
     data: { status: SweepstakesJobStatus.COMPLETED }
   });
-
-  console.info(
-    `Successfully assigned random prizes to ${allocationsToCreate.length} participants for sweepstakes ${job.sweepstakesId}`
-  );
 };

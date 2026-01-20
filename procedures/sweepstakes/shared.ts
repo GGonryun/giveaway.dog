@@ -279,14 +279,13 @@ export const applySweepstakesChanges = async ({
 
       if (
         input.timing?.startDate &&
-        input.status === SweepstakesStatus.ACTIVE &&
-        input.visibility?.visibility === 'PUBLIC'
+        input.status === SweepstakesStatus.ACTIVE
       ) {
         await tx.sweepstakesJob.upsert({
           where: {
             sweepstakesId_type: {
               sweepstakesId: sweepstakes.id,
-              type: SweepstakesJobType.NOTIFY_PUBLISH_ON_DISCORD
+              type: SweepstakesJobType.PROCESS_ACTIVATION
             }
           },
           update: {
@@ -294,9 +293,29 @@ export const applySweepstakesChanges = async ({
           },
           create: {
             sweepstakesId: sweepstakes.id,
-            type: SweepstakesJobType.NOTIFY_PUBLISH_ON_DISCORD,
+            type: SweepstakesJobType.PROCESS_ACTIVATION,
             status: SweepstakesJobStatus.PENDING,
             runAt: input.timing.startDate
+          }
+        });
+      }
+
+      if (input.timing?.endDate && input.status === SweepstakesStatus.ACTIVE) {
+        await tx.sweepstakesJob.upsert({
+          where: {
+            sweepstakesId_type: {
+              sweepstakesId: sweepstakes.id,
+              type: SweepstakesJobType.PROCESS_EXPIRATION
+            }
+          },
+          update: {
+            runAt: input.timing.endDate
+          },
+          create: {
+            sweepstakesId: sweepstakes.id,
+            type: SweepstakesJobType.PROCESS_EXPIRATION,
+            status: SweepstakesJobStatus.PENDING,
+            runAt: input.timing.endDate
           }
         });
       }

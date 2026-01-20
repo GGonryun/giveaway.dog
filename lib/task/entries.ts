@@ -41,6 +41,7 @@ export const toCompletionValue = (args: CompletionValueArgs) => {
     case 'STEAM_WISHLIST':
     case 'STEAM_FOLLOW':
     case 'DISCORD_JOIN':
+    case 'DISCORD_INTERACTION_IMPORT':
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':

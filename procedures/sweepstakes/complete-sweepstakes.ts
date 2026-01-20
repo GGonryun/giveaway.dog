@@ -3,7 +3,11 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
 import z from 'zod';
-import { PrizeDrawResult } from '@prisma/client';
+import {
+  PrizeDrawResult,
+  SweepstakesJobStatus,
+  SweepstakesJobType
+} from '@prisma/client';
 
 const completeSweepstakes = procedure()
   .authorization({ required: true })
@@ -65,13 +69,33 @@ const completeSweepstakes = procedure()
       });
     }
 
-    await db.sweepstakes.update({
-      where: {
-        id: input.sweepstakesId
-      },
-      data: {
-        status: 'COMPLETED'
-      }
+    await db.$transaction(async (tx) => {
+      await tx.sweepstakes.update({
+        where: {
+          id: input.sweepstakesId
+        },
+        data: {
+          status: 'COMPLETED'
+        }
+      });
+
+      await tx.sweepstakesJob.upsert({
+        where: {
+          sweepstakesId_type: {
+            sweepstakesId: sweepstakes.id,
+            type: SweepstakesJobType.PROCESS_COMPLETION
+          }
+        },
+        update: {
+          runAt: new Date()
+        },
+        create: {
+          sweepstakesId: sweepstakes.id,
+          type: SweepstakesJobType.PROCESS_COMPLETION,
+          status: SweepstakesJobStatus.PENDING,
+          runAt: new Date()
+        }
+      });
     });
 
     return { success: true };

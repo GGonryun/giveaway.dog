@@ -97,35 +97,12 @@ export const SocialProviders = () => {
                     size="sm"
                     disabled={isConnectingThis || !isEnabled}
                     onClick={() => {
-                      if (needsReconnect) {
-                        if (providerId === 'BLUESKY') {
-                          setShowBlueskyInput(true);
-                        } else if (providerId === 'INSTAGRAM') {
-                          setShowInstagramInput(true);
-                        } else if (providerId === 'FACEBOOK') {
-                          setShowFacebookInput(true);
-                        } else {
-                          loginProcedure.run({
-                            provider: providerId,
-                            redirectTo: '/account',
-                            returnTo: '/account',
-                            revalidate: 'true'
-                          });
-                        }
-                      } else {
-                        disconnectAccountProcedure.run(provider);
-                      }
+                      disconnectAccountProcedure.run(provider);
                     }}
                     className="w-full sm:w-[125px]"
                   >
-                    {isConnectingThis ? (
-                      <Spinner size="xs" />
-                    ) : needsReconnect ? (
-                      <UnplugIcon />
-                    ) : (
-                      <UnlinkIcon />
-                    )}
-                    {needsReconnect ? 'Reconnect' : 'Disconnect'}
+                    {isConnectingThis ? <Spinner size="xs" /> : <UnlinkIcon />}
+                    Disconnect
                   </Button>
                 ) : (
                   <Button

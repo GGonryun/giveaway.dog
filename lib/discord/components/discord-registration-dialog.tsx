@@ -101,10 +101,7 @@ export function DiscordRegistrationDialog({
             </AlertDescription>
           </Alert>
 
-          <DiscordConnectInstructions
-            integration={integration}
-            showRegenerateButton={false}
-          />
+          <DiscordConnectInstructions integration={integration} />
 
           <Alert variant="default">
             <Info className="h-4 w-4" />

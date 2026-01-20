@@ -5,7 +5,6 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { Prisma, PrismaClient, SweepstakesStatus } from '@prisma/client';
 import { z } from 'zod';
 import {
-  AutomatedPostJobSchema,
   PostToTwitterJobSchema,
   PostToBlueskyJobSchema,
   toAutomatedPostJobSchema
@@ -19,7 +18,9 @@ import {
   toStorableTask
 } from '@/schemas/giveaway/storable';
 
-const MAX_JOBS_PER_RUN = 10;
+import { processPostToDiscord } from '@/lib/discord/procedures/process-post-to-discord';
+
+const MAX_JOBS_PER_RUN = 5;
 
 export const processAutomatedPostJobs = procedure()
   .authorization({ required: false })
@@ -74,6 +75,8 @@ async function processAutomatedPostJob({
       return processPostToTwitter({ db, job: parsed });
     case 'POST_TO_BLUESKY':
       return processPostToBluesky({ db, job: parsed });
+    case 'POST_TO_DISCORD':
+      return processPostToDiscord({ db, job: parsed });
     default:
       throw assertNever(parsed);
   }

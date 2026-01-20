@@ -31,6 +31,7 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { AutomatedPostJobType } from '@prisma/client';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
+import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
 
 interface AutomatedPostDetailsProps {
   job: AutomatedPostJobSchema;
@@ -38,12 +39,20 @@ interface AutomatedPostDetailsProps {
 
 const JOB_TYPE_ICON: Record<AutomatedPostJobType, React.ElementType> = {
   POST_TO_TWITTER: SocialXIcon,
-  POST_TO_BLUESKY: SocialBlueskyIcon
+  POST_TO_BLUESKY: SocialBlueskyIcon,
+  POST_TO_DISCORD: SocialDiscordIcon
 };
 
 const JOB_TYPE_LABEL: Record<AutomatedPostJobType, string> = {
   POST_TO_TWITTER: 'Twitter (X)',
-  POST_TO_BLUESKY: 'Bluesky'
+  POST_TO_BLUESKY: 'Bluesky',
+  POST_TO_DISCORD: 'Discord'
+};
+
+const TASK_LABEL: Record<'REPOST' | 'LIKE' | 'INTERACTION', string> = {
+  REPOST: 'Repost',
+  LIKE: 'Like',
+  INTERACTION: 'Interaction'
 };
 
 export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
@@ -119,7 +128,7 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
               View details about your scheduled {jobLabel} post
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 pt-4">
+          <div className="space-y-4">
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">Status:</span>
               <AutomatedPostStatusBadge status={job.status} />
@@ -142,18 +151,20 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
               <div className="text-sm font-medium">Content</div>
               <div className="p-3 bg-muted rounded-lg">
                 <p className="text-sm whitespace-pre-wrap">
-                  {job.request.text}
+                  {job.type === 'POST_TO_DISCORD'
+                    ? 'New Giveaway!'
+                    : job.request.text}
                 </p>
               </div>
             </div>
 
-            {job.request.imageUrl && (
+            {job.type !== 'POST_TO_DISCORD' && job.request.imageUrl && (
               <div className="space-y-2">
                 <div className="text-sm font-medium">Image</div>
                 <div className="border rounded-lg overflow-hidden">
                   <img
                     src={job.request.imageUrl}
-                    alt="Tweet image"
+                    alt="Post image"
                     className="w-full h-auto max-h-64 object-contain bg-muted"
                   />
                 </div>
@@ -168,6 +179,7 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
                     <Badge key={index} variant="secondary">
                       {task === 'REPOST' && 'Repost'}
                       {task === 'LIKE' && 'Like'}
+                      {task === 'INTERACTION' && 'Interaction'}
                     </Badge>
                   ))}
                 </div>
@@ -213,12 +225,24 @@ const ExternalLinkButton: React.FC<{
   job: AutomatedPostJobSchema;
   hideLabel?: boolean;
 }> = ({ job, hideLabel = false }) => {
-  const href =
-    job.type === 'POST_TO_BLUESKY'
-      ? job.response?.postUrl
-      : job.response?.tweetUrl;
-  const label =
-    job.type === 'POST_TO_BLUESKY' ? 'View Post on Bluesky' : 'View Tweet on X';
+  let href: string | undefined;
+  let label: string;
+
+  switch (job.type) {
+    case 'POST_TO_BLUESKY':
+      href = job.response?.postUrl;
+      label = 'View Post on Bluesky';
+      break;
+    case 'POST_TO_DISCORD':
+      href = job.response?.messageUrl;
+      label = 'View Message on Discord';
+      break;
+    case 'POST_TO_TWITTER':
+    default:
+      href = job.response?.tweetUrl;
+      label = 'View Tweet on X';
+      break;
+  }
 
   if (!href) return null;
 
