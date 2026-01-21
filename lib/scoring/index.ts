@@ -3,6 +3,7 @@ import { Tx } from '../prisma';
 import { computeSignupUserScore } from './signup';
 import { computeTwitterUserScore } from './twitter';
 import { computeBlueskyUserScore } from './bluesky';
+import { computeDiscordUserScore } from './discord';
 import { assertNever } from '../errors';
 
 // Routes to appropriate scoring function based on user source
@@ -24,8 +25,11 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
     case UserSource.SIGNUP:
     case UserSource.ANONYMOUS:
     case UserSource.MANUAL_IMPORT:
-    case UserSource.DISCORD_IMPORT:
       await computeSignupUserScore(tx, userId);
+      break;
+
+    case UserSource.DISCORD_IMPORT:
+      await computeDiscordUserScore(tx, userId, scoringRequest?.data);
       break;
 
     case UserSource.TWITTER_IMPORT:

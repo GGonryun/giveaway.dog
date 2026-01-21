@@ -2,4 +2,5 @@
 export * from './shared';
 export * from './twitter';
 export * from './bluesky';
+export * from './discord';
 export * from './signup';

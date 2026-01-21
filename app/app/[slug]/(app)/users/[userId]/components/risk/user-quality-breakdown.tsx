@@ -20,10 +20,12 @@ import { QualityBadge } from './quality-badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { TwitterQualityMetrics } from './twitter-quality-metrics';
 import { BlueskyQualityMetrics } from './bluesky-quality-metrics';
+import { DiscordQualityMetrics } from './discord-quality-metrics';
 import {
   TwitterScoreMetrics,
-  BlueskyScoreMetrics
-} from '@/schemas/platform-scoring';
+  BlueskyScoreMetrics,
+  DiscordScoreMetrics
+} from '@/lib/scoring/schemas';
 
 export const UserQualityBreakdown: React.FC<{
   quality: UserQualitySchema;
@@ -38,13 +40,19 @@ export const UserQualityBreakdown: React.FC<{
       case 'SIGNUP':
       case 'ANONYMOUS':
       case 'MANUAL_IMPORT':
-      case 'DISCORD_IMPORT':
         return (
           <>
             <QualityMetrics metrics={quality.metrics as UserScoreMetricsSchema} />
             <BonusMetrics metrics={quality.metrics as UserScoreMetricsSchema} />
             <RiskMetrics metrics={quality.metrics as UserScoreMetricsSchema} />
           </>
+        );
+
+      case 'DISCORD_IMPORT':
+        return (
+          <DiscordQualityMetrics
+            metrics={quality.metrics as DiscordScoreMetrics}
+          />
         );
 
       case 'TWITTER_IMPORT':

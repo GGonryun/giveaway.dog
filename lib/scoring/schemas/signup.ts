@@ -26,6 +26,10 @@ import {
   blueskyScoreMetricsSchema,
   BlueskyScoreMetrics
 } from './bluesky';
+import {
+  discordScoreMetricsSchema,
+  DiscordScoreMetrics
+} from './discord';
 
 export const USER_BASE_SCORE = 30;
 export const MAX_SCORING_REQUESTS_PER_RUN = 15;
@@ -216,7 +220,7 @@ export const discordImportUserQualitySchema = z.object({
   id: z.string(),
   userId: z.string(),
   score: z.number(),
-  metrics: userScoreMetricsSchema,
+  metrics: discordScoreMetricsSchema,
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date()
 });
@@ -292,6 +296,17 @@ export const DEFAULT_BLUESKY_SCORE_METRICS: BlueskyScoreMetrics = {
   bannedAccount: 0
 };
 
+// Fallback metrics for Discord imports with base score
+export const DEFAULT_DISCORD_SCORE_METRICS: DiscordScoreMetrics = {
+  baseScore: USER_BASE_SCORE,
+  profileAvatar: 0,
+  profileBanner: 0,
+  serverTenure: 0,
+  nitroBooster: 0,
+  unusualDmActivity: 0,
+  communicationDisabled: 0
+};
+
 // Helper functions to convert platform-specific metrics
 const toTwitterImportQuality = (
   data: Prisma.UserQualityGetPayload<{
@@ -353,12 +368,11 @@ const toSignupUserQuality = (
   data: Prisma.UserQualityGetPayload<{
     include: { user: { select: { source: true } } };
   }>,
-  type: 'SIGNUP' | 'ANONYMOUS' | 'MANUAL_IMPORT' | 'DISCORD_IMPORT'
+  type: 'SIGNUP' | 'ANONYMOUS' | 'MANUAL_IMPORT'
 ):
   | SignupUserQualitySchema
   | AnonymousUserQualitySchema
-  | ManualImportUserQualitySchema
-  | DiscordImportUserQualitySchema => {
+  | ManualImportUserQualitySchema => {
   const userMetrics = userScoreMetricsSchema.partial().safeParse(data.metrics);
 
   if (!userMetrics.success) {
@@ -382,6 +396,34 @@ const toSignupUserQuality = (
   return { ...baseData, type };
 };
 
+const toDiscordImportQuality = (
+  data: Prisma.UserQualityGetPayload<{
+    include: { user: { select: { source: true } } };
+  }>
+): DiscordImportUserQualitySchema => {
+  const discordMetrics = discordScoreMetricsSchema.safeParse(data.metrics);
+
+  if (!discordMetrics.success) {
+    console.error(
+      'Invalid Discord metrics for DISCORD_IMPORT user:',
+      discordMetrics.error
+    );
+    console.error('Metrics data:', data.metrics);
+  }
+
+  return {
+    type: 'DISCORD_IMPORT' as const,
+    id: data.id,
+    userId: data.userId,
+    score: clamp(data.score, 0, 100),
+    metrics: discordMetrics.success
+      ? discordMetrics.data
+      : DEFAULT_DISCORD_SCORE_METRICS,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt
+  };
+};
+
 export const toUserQuality = (
   data: Prisma.UserQualityGetPayload<{
     include: { user: { select: { source: true } } };
@@ -401,7 +443,7 @@ export const toUserQuality = (
     case 'MANUAL_IMPORT':
       return toSignupUserQuality(data, 'MANUAL_IMPORT');
     case 'DISCORD_IMPORT':
-      return toSignupUserQuality(data, 'DISCORD_IMPORT');
+      return toDiscordImportQuality(data);
     default:
       throw assertNever(userSource);
   }

@@ -1,6 +1,9 @@
 import db from '@/lib/prisma';
 import { ApplicationError } from '@/lib/errors';
-import type { DiscordButtonInteractionSchema } from '../schema';
+import type {
+  DiscordButtonInteractionSchema,
+  DiscordMemberSchema
+} from '../schema';
 import { DISCORD_RESPONSE_FLAG } from '../messages';
 import { toSweepstakesUrl } from '@/lib/sweepstakes/util';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
@@ -9,6 +12,18 @@ import { toSweepstakesEmbed } from '../../embeds';
 import { toExpiredSweepstakeComponents } from '../../api/util';
 import { toTaskSchema } from '@/lib/task/schemas';
 import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
+import type { DiscordScoringData } from '@/lib/scoring/schemas';
+
+const toDiscordScoringData = (member: DiscordMemberSchema): DiscordScoringData => ({
+  userId: member.user.id,
+  username: member.user.username,
+  avatar: member.avatar || member.user.avatar,
+  banner: member.banner,
+  joinedAt: member.joined_at,
+  premiumSince: member.premium_since,
+  communicationDisabledUntil: member.communication_disabled_until,
+  unusualDmActivityUntil: member.unusual_dm_activity_until
+});
 
 export const processTaskEntry = async ({
   body,
@@ -117,6 +132,20 @@ export const processTaskEntry = async ({
           content: "You've already entered this giveaway!"
         };
       }
+
+      if (body.member) {
+        await db.userScoringRequest.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            data: toDiscordScoringData(body.member)
+          },
+          update: {
+            data: toDiscordScoringData(body.member),
+            updatedAt: new Date()
+          }
+        });
+      }
     }
 
     const userRoleIds = body.member?.roles || [];
@@ -171,6 +200,13 @@ export const processTaskEntry = async ({
               label: body.member.user.username
             }
           }
+        }
+      });
+
+      await db.userScoringRequest.create({
+        data: {
+          userId: user.id,
+          data: toDiscordScoringData(body.member)
         }
       });
     }

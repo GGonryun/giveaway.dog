@@ -136,19 +136,14 @@ export const AdditionalSettings: React.FC<{
           </>
         );
       case 'DISCORD_INTERACTION_IMPORT':
-        return action === 'edit' ? (
-          <>
-            <DiscordImportingAccountField />
-            <DiscordRolesField />
-            <DiscordMessageLinkField />
-          </>
-        ) : (
+        return (
           <Alert variant="destructive">
             <AlertCircle />
             <AlertTitle>Automatic Discord Interaction Task</AlertTitle>
             <AlertDescription>
               This task is automatically created when posting to Discord with
-              interaction tracking enabled. It cannot be created manually.
+              interaction tracking enabled. It cannot be created or edited
+              manually.
               <Link
                 // TODO: create a knowledge base article about this
                 href={`${process.env.NEXT_PUBLIC_APP_URL}/contact`}
