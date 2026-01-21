@@ -6,7 +6,10 @@ interface RichTextPreviewProps {
   className?: string;
 }
 
-export function RichTextPreview({ content, className }: RichTextPreviewProps) {
+export function MinimalTipTapPreview({
+  content,
+  className
+}: RichTextPreviewProps) {
   if (!content) return null;
 
   return (

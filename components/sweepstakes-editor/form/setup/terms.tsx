@@ -46,7 +46,7 @@ import {
 } from '@/schemas/giveaway/defaults';
 import { date } from '@/lib/date';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
-import { MinimalTiptap } from '@/components/ui/minimal-tiptap';
+import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';
 
 const OPTIONS: Record<SweepstakesTermsType, string> = {
   [SweepstakesTermsType.TEMPLATE]: 'Default',

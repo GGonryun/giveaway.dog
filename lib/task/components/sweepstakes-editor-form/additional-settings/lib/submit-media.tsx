@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { MinimalTiptap } from '@/components/ui/minimal-tiptap';
+import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 
 export const SubmitMediaFormFields: React.FC = () => {

@@ -17,7 +17,7 @@ import {
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { date } from '@/lib/date';
 import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
-import { RichTextPreview } from '../ui/rich-text-preview';
+import { MinimalTipTapPreview } from '../ui/minimal-tiptap-preview';
 
 interface TermsModalProps {
   children: React.ReactNode;
@@ -32,7 +32,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({ children }) => {
     if (terms.type === 'CUSTOM') {
       return (
         <div className="whitespace-pre-wrap text-sm leading-relaxed font-mono">
-          <RichTextPreview content={terms.text} />
+          <MinimalTipTapPreview content={terms.text} />
         </div>
       );
     }

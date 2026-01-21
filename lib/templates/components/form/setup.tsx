@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { TemplateFormSchema } from '../../schemas/template';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { FileUpload } from '@/components/ui/file-upload';
-import { MinimalTiptap } from '@/components/ui/minimal-tiptap';
+import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 
 export const TemplateSetup = () => {

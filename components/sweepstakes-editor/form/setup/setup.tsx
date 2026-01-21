@@ -25,7 +25,7 @@ import {
 import { timezone } from '@/lib/time';
 
 import { FileUpload } from '@/components/ui/file-upload';
-import { MinimalTiptap } from '@/components/ui/minimal-tiptap';
+import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 

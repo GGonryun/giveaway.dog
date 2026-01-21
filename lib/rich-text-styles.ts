@@ -21,5 +21,6 @@ export const richTextEditorStyles = [
 
 export const richTextPreviewStyles = [
   richTextStyles,
-  'text-sm sm:text-base'
+  'text-sm sm:text-base',
+  '[&_a]:break-all'
 ].join(' ');
