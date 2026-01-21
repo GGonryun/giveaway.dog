@@ -1,5 +1,8 @@
 // TODO: fix any
-export const getAccountLabel = (account: any, profile: any): string | null => {
+export const getAccountLabel = (
+  account: any,
+  profile: undefined | any
+): string | null => {
   switch (account.provider) {
     case 'google':
     case 'email':
@@ -34,7 +37,10 @@ export const getAccountLabel = (account: any, profile: any): string | null => {
   }
 };
 
-export const getAccountLink = (account: any, profile: any): string | null => {
+export const getAccountLink = (
+  account: any,
+  profile: undefined | any
+): string | null => {
   const label = getAccountLabel(account, profile);
 
   switch (account.provider) {

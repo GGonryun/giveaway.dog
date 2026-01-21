@@ -1,7 +1,16 @@
 import { Account, Profile, Session } from 'next-auth';
 import prisma from '@/lib/prisma';
 import { getAccountLabel, getAccountLink } from './get-account-data';
-import { Prisma } from '@prisma/client';
+import { Prisma, UserSource } from '@prisma/client';
+
+const SUPPORTS_AUTO_MERGE_PROVIDERS: Record<UserSource, boolean> = {
+  TWITTER_IMPORT: true,
+  BLUESKY_IMPORT: true,
+  DISCORD_IMPORT: true,
+  SIGNUP: false,
+  ANONYMOUS: false,
+  MANUAL_IMPORT: false
+};
 
 export const tryAutoMerge = async (args: {
   existing: Prisma.AccountGetPayload<{
@@ -12,14 +21,17 @@ export const tryAutoMerge = async (args: {
   session: Session | null;
 }) => {
   const { existing, account, session, profile } = args;
-  console.info('tryAutoMerge called for account:', account, existing, session);
+  console.info('tryAutoMerge called for account:', account);
+  console.info('Existing account user source:', existing);
+  console.info('Session user:', session);
+  console.info('Profile data:', profile);
 
   // If the existing account's user source is not from an import, do
   // not merge. Otherwise the import account merge would have matching
   // provider/providerAccountId and we want to complete a full upgrade
   if (
-    existing.user?.source !== 'TWITTER_IMPORT' &&
-    existing.user?.source !== 'BLUESKY_IMPORT'
+    existing.user?.source &&
+    !SUPPORTS_AUTO_MERGE_PROVIDERS[existing.user.source]
   ) {
     if (
       existing.provider === account.provider &&
@@ -45,7 +57,7 @@ export const tryAutoMerge = async (args: {
     }
     console.info(
       'Not merging, existing account user source is:',
-      existing.user?.source
+      existing.user.source
     );
     return false;
   }
@@ -110,8 +122,8 @@ export const tryAutoMerge = async (args: {
           token_type: account.token_type,
           scope: account.scope,
           id_token: account.id_token,
-          label: getAccountLabel(account, profile.data),
-          link: getAccountLink(account, profile.data)
+          label: getAccountLabel(account, profile.data ?? profile),
+          link: getAccountLink(account, profile.data ?? profile)
         }
         // reassign the task completions to the new user
       });
