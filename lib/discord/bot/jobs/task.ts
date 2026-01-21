@@ -14,7 +14,9 @@ import { toTaskSchema } from '@/lib/task/schemas';
 import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
 import type { DiscordScoringData } from '@/lib/scoring/schemas';
 
-const toDiscordScoringData = (member: DiscordMemberSchema): DiscordScoringData => ({
+const toDiscordScoringData = (
+  member: DiscordMemberSchema
+): DiscordScoringData => ({
   userId: member.user.id,
   username: member.user.username,
   avatar: member.avatar || member.user.avatar,
@@ -46,7 +48,7 @@ export const processTaskEntry = async ({
       };
     }
 
-    const data = await prisma.task.findUnique({
+    const data = await db.task.findUnique({
       where: { id: taskId },
       include: {
         sweepstakes: {
