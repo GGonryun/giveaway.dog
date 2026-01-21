@@ -2,7 +2,12 @@
 
 import { ApplicationError, assertNever } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import { Prisma, PrismaClient, SweepstakesStatus } from '@prisma/client';
+import {
+  AutomatedPostJobStatus,
+  Prisma,
+  PrismaClient,
+  SweepstakesStatus
+} from '@prisma/client';
 import { z } from 'zod';
 import {
   PostToTwitterJobSchema,
@@ -53,6 +58,15 @@ export const processAutomatedPostJobs = procedure()
         await processAutomatedPostJob({ db, job });
       } catch (error) {
         console.error(`Failed to process automated post job ${job.id}`, error);
+        await db.automatedPostJob.update({
+          where: { id: job.id },
+          data: {
+            status: AutomatedPostJobStatus.FAILED,
+            response: {
+              error: ApplicationError.toMessage(error)
+            }
+          }
+        });
       }
     }
 

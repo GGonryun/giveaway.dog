@@ -11,8 +11,8 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
   const command = toDiscordInteraction(body);
-  // sleep for 3 seconds to ensure the job has time to process before responding
-  await time.wait(3000);
+  // sleep for 1 seconds to ensure the job has time to process before responding
+  await time.wait(1000);
 
   const result = await handleDiscordJob(command);
 

@@ -58,37 +58,52 @@ export const discordBotTokenSchema = z
   .string()
   .min(1, 'Discord bot token is required');
 
-export type DiscordMessageComponent = {
-  type: 1;
-  components: {
-    type: number;
-    style?: number;
-    label?: string;
-    custom_id?: string;
-    url?: string;
-  }[];
+type DiscordButtonComponent = {
+  type: number;
+  style: number;
+  label?: string;
+  custom_id?: string; // REQUIRED unless style === 5 (Link)
+  url?: string; // REQUIRED if style === 5
+  disabled?: boolean;
+  emoji?: {
+    id?: string;
+    name?: string;
+    animated?: boolean;
+  };
+};
+export type DiscordMessageComponent = DiscordButtonComponent;
+
+export type DiscordActionRow = {
+  type: 1; // Action Row
+  components: DiscordMessageComponent[];
+};
+
+export type DiscordEmbedField = {
+  name: string;
+  value: string;
+  inline?: boolean;
 };
 
 export type DiscordMessageEmbed = {
   title: string;
   description: string;
-  fields: Array<{ name: string; value: string; inline?: boolean }>;
+  fields: Array<DiscordEmbedField>;
   image?: { url: string };
   author?: { name: string; icon_url?: string };
   color?: number;
   timestamp?: string;
-  url: string;
+  url?: string;
 };
 
 export type PostDiscordMessageOptions = {
   channelId: string;
   embed: DiscordMessageEmbed;
-  components: DiscordMessageComponent[];
+  components: DiscordActionRow[];
 };
 
 export type UpdateDiscordMessageOptions = {
   channelId: string;
   messageId: string;
   embed: DiscordMessageEmbed;
-  components?: DiscordMessageComponent[];
+  components?: DiscordActionRow[];
 };

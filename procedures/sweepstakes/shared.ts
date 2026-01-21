@@ -208,6 +208,7 @@ export const applySweepstakesChanges = async ({
         include: {
           tasks: true,
           criteria: true,
+          prizes: true,
           audience: { include: { formFields: true } }
         }
       });
@@ -272,8 +273,12 @@ export const applySweepstakesChanges = async ({
       }
 
       if (created.criteria?.allowUserSelection && allocations.length > 0) {
+        // we only want to retain prizes that still exist
+        const prizeIds = new Set(created.prizes?.map((p) => p.id));
         await tx.sweepstakesAllocation.createMany({
-          data: allocations.map((d) => ({ ...d }))
+          data: allocations
+            .map((d) => ({ ...d }))
+            .filter((a) => prizeIds.has(a.prizeId))
         });
       }
 

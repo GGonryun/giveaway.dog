@@ -14,6 +14,7 @@ import { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-lik
 import { BLUESKY_API_RATE_LIMIT_MINUTES } from '@/lib/pickers/data/settings';
 import { getLatestTeamBlueskyCredentials } from '@/lib/bluesky/get-latest-team-bluesky-agent';
 import { Agent } from '@atproto/api';
+import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
 
 export const processBlueskyTaskJob = async <
   T extends BlueskyLikeImportTaskSchema | BlueskyRepostImportTaskSchema
@@ -134,27 +135,10 @@ export const processBlueskyTaskJob = async <
 
   // Schedule prize allocation job if participants were created
   if (created > 0) {
-    await db.sweepstakesJob.upsert({
-      where: {
-        sweepstakesId_type: {
-          sweepstakesId,
-          type: 'RANDOMLY_ASSIGN_PRIZES'
-        }
-      },
-      create: {
-        sweepstakesId,
-        type: 'RANDOMLY_ASSIGN_PRIZES',
-        status: 'PENDING',
-        runAt: datetime.minutesFromNow(1)
-      },
-      update: {
-        status: 'PENDING',
-        runAt: datetime.minutesFromNow(1)
-      }
+    await scheduleRandomlyAssignPrizesJob({
+      db,
+      sweepstakesId
     });
-    console.info(
-      `[${type}] Scheduled RANDOMLY_ASSIGN_PRIZES job for sweepstakes ${sweepstakesId}`
-    );
   }
 
   const nextRunAt = datetime.minutesFromNow(

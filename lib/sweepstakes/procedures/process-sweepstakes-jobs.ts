@@ -11,7 +11,11 @@ import { toSweepstakesUrl } from '../util';
 import { updateDiscordMessage } from '@/lib/discord/api/update-discord-message';
 import { toPostToDiscordResponseSchema } from '@/lib/automation/schemas';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
-import { toGiveawayExpiredEmbed } from '@/lib/discord/embeds';
+import {
+  getSweepstakesActivity,
+  toSweepstakesEmbed
+} from '@/lib/discord/embeds';
+import { toExpiredSweepstakeComponents } from '@/lib/discord/api/util';
 
 const MAX_JOBS_PER_RUN = 5;
 
@@ -212,7 +216,7 @@ const processSweepstakesActivation = async ({
     });
   }
 
-  const sweepstakesUrl = toSweepstakesUrl(sweepstakes);
+  const sweepstakesUrl = toSweepstakesUrl({ sweepstakes, forcePath: true });
 
   const description = sweepstakes.details?.description
     ? html.toMarkdown(sweepstakes.details.description)
@@ -283,27 +287,6 @@ const processSweepstakesActivation = async ({
   );
 };
 
-const processSweepstakesCompletion = async ({
-  db,
-  job
-}: {
-  db: PrismaClient;
-  job: Prisma.SweepstakesJobGetPayload<{}>;
-}) => {
-  // For now, completing a sweepstakes is just marking the job as completed.
-  // Additional logic can be added here as needed.
-  await db.sweepstakesJob.update({
-    where: { id: job.id },
-    data: { status: SweepstakesJobStatus.COMPLETED }
-  });
-
-  console.info(
-    `Sweepstakes ${job.sweepstakesId} marked as completed in job ${job.id}`
-  );
-
---- TODO: `If there's an automated discord post we should update the message to indicate completion.` ---
-};
-
 const processSweepstakesExpiration = async ({
   db,
   job
@@ -363,7 +346,90 @@ const processSweepstakesExpiration = async ({
     await updateDiscordMessage({
       channelId: response.channelId,
       messageId: response.messageId,
-      embed: toGiveawayExpiredEmbed(sweepstakes)
+      embed: await toSweepstakesEmbed({
+        sweepstakes,
+        db
+      }),
+      components: toExpiredSweepstakeComponents({
+        sweepstakes
+      })
+    });
+  }
+
+  await db.sweepstakesJob.update({
+    where: { id: job.id },
+    data: { status: SweepstakesJobStatus.COMPLETED }
+  });
+};
+
+const processSweepstakesCompletion = async ({
+  db,
+  job
+}: {
+  db: PrismaClient;
+  job: Prisma.SweepstakesJobGetPayload<{}>;
+}) => {
+  // For now, completing a sweepstakes is just marking the job as completed.
+  // Additional logic can be added here as needed.
+  await db.sweepstakesJob.update({
+    where: { id: job.id },
+    data: { status: SweepstakesJobStatus.COMPLETED }
+  });
+
+  console.info(
+    `Sweepstakes ${job.sweepstakesId} marked as completed in job ${job.id}`
+  );
+
+  const sweepstakes = await db.sweepstakes.findUnique({
+    where: { id: job.sweepstakesId },
+    select: SWEEPSTAKES_DISCORD_POST_SELECT_QUERY
+  });
+
+  if (!sweepstakes) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: `Sweepstakes with id ${job.sweepstakesId} not found`
+    });
+  }
+
+  if (sweepstakes.status !== 'COMPLETED') {
+    throw new ApplicationError({
+      code: 'CONFLICT',
+      message: `Sweepstakes ${sweepstakes.id} is not completed yet`
+    });
+  }
+
+  // if there is a post to discord, update the message to indicate the sweepstakes has ended
+  const post = sweepstakes.posts.find((p) => p.type === 'POST_TO_DISCORD');
+  if (post?.status === 'COMPLETED') {
+    // then we need to update the message to say the giveaway has expired.
+    console.info(
+      `Updating Discord message for sweepstakes ${sweepstakes.id} to indicate expiration`
+    );
+
+    const response = toPostToDiscordResponseSchema(post.response);
+    if (!response.channelId) {
+      throw new ApplicationError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Post to Discord job for sweepstakes ${sweepstakes.id} is missing channelId in response`
+      });
+    }
+
+    if (!response.messageId) {
+      throw new ApplicationError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Post to Discord job for sweepstakes ${sweepstakes.id} is missing messageId in response`
+      });
+    }
+
+    await updateDiscordMessage({
+      channelId: response.channelId,
+      messageId: response.messageId,
+      embed: await toSweepstakesEmbed({
+        sweepstakes,
+        db
+      }),
+      components: toExpiredSweepstakeComponents({ sweepstakes })
     });
   }
 

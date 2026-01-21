@@ -20,9 +20,16 @@ export const SWEEPSTAKE_TIMING_INCLUDE_QUERY = {
 export const toDerivedSweepstakeStatus = ({
   status,
   timing
-}: Prisma.SweepstakesGetPayload<{
-  include: typeof SWEEPSTAKE_TIMING_INCLUDE_QUERY;
-}>): z.infer<typeof derivedSweepstakesStatusSchema> => {
+}:
+  | Prisma.SweepstakesGetPayload<{
+      include: typeof SWEEPSTAKE_TIMING_INCLUDE_QUERY;
+    }>
+  | Prisma.SweepstakesGetPayload<{
+      select: {
+        status: true;
+        timing: true;
+      };
+    }>): z.infer<typeof derivedSweepstakesStatusSchema> => {
   const now = new Date();
 
   if (status === 'DRAFT' || !timing) {
@@ -171,3 +178,13 @@ export const SWEEPSTAKES_TAB_OPTIONS: Record<SweepstakesTabSchema, string> = {
 export const isSweepstakesTab = (tab: string): tab is SweepstakesTabSchema => {
   return sweepstakesTabSchema.safeParse(tab).success;
 };
+
+export const SWEEPSTAKES_STATUS_LABEL: Record<DerivedSweepstakeStatus, string> =
+  {
+    DRAFT: 'Draft',
+    COMPLETED: 'Completed',
+    RUNNING: 'Running',
+    SCHEDULED: 'Scheduled',
+    EXPIRED: 'Expired',
+    ERROR: 'Error'
+  };

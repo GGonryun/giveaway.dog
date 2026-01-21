@@ -7,13 +7,37 @@ export const SWEEPSTAKES_DISCORD_POST_SELECT_QUERY = {
   teamId: true,
   details: true,
   timing: true,
-  prizes: true,
   status: true,
   posts: true,
   team: {
     select: {
       name: true,
       logo: true
+    }
+  },
+  prizes: {
+    select: {
+      name: true,
+      quota: true,
+      draws: {
+        select: {
+          result: true,
+          taskCompletion: {
+            select: {
+              participant: {
+                select: {
+                  user: {
+                    select: {
+                      id: true,
+                      name: true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 } satisfies Prisma.SweepstakesSelect;

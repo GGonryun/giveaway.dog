@@ -13,6 +13,7 @@ import { ApplicationError } from '@/lib/errors';
 import { takeUntil } from '@/lib/arrays';
 import { Tx } from '@/lib/prisma';
 import { TwitterUserSchema } from '@/lib/integrations/schemas/api';
+import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
 
 export const processTwitterTaskJob = async <
   T extends TwitterLikeImportTaskSchema | TwitterRetweetImportTaskSchema
@@ -135,27 +136,10 @@ export const processTwitterTaskJob = async <
 
   // Schedule prize allocation job if participants were created
   if (created > 0) {
-    await db.sweepstakesJob.upsert({
-      where: {
-        sweepstakesId_type: {
-          sweepstakesId,
-          type: 'RANDOMLY_ASSIGN_PRIZES'
-        }
-      },
-      create: {
-        sweepstakesId,
-        type: 'RANDOMLY_ASSIGN_PRIZES',
-        status: 'PENDING',
-        runAt: datetime.minutesFromNow(1)
-      },
-      update: {
-        status: 'PENDING',
-        runAt: datetime.minutesFromNow(1)
-      }
+    await scheduleRandomlyAssignPrizesJob({
+      db,
+      sweepstakesId
     });
-    console.info(
-      `[${type}] Scheduled RANDOMLY_ASSIGN_PRIZES job for sweepstakes ${sweepstakesId}`
-    );
   }
 
   const nextRunAt = datetime.minutesFromNow(

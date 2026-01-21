@@ -1,12 +1,14 @@
-import prisma from '@/lib/prisma';
+import db from '@/lib/prisma';
 import { ApplicationError } from '@/lib/errors';
 import type { DiscordButtonInteractionSchema } from '../schema';
-import { getDiscordGuildRoles } from '@/lib/discord/api/get-discord-guild-roles';
 import { DISCORD_RESPONSE_FLAG } from '../messages';
 import { toSweepstakesUrl } from '@/lib/sweepstakes/util';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
 import { updateDiscordMessage } from '../../api/update-discord-message';
-import { toGiveawayExpiredEmbed } from '@/lib/automation/util';
+import { toSweepstakesEmbed } from '../../embeds';
+import { toExpiredSweepstakeComponents } from '../../api/util';
+import { toTaskSchema } from '@/lib/task/schemas';
+import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
 
 export const processTaskEntry = async ({
   body,
@@ -29,7 +31,7 @@ export const processTaskEntry = async ({
       };
     }
 
-    const task = await prisma.task.findUnique({
+    const data = await prisma.task.findUnique({
       where: { id: taskId },
       include: {
         sweepstakes: {
@@ -38,19 +40,47 @@ export const processTaskEntry = async ({
       }
     });
 
-    if (!task) {
+    if (!data) {
       return {
         content: 'This giveaway task no longer exists.',
         flags: DISCORD_RESPONSE_FLAG.EPHEMERAL
       };
     }
 
-    if (task.sweepstakes.status === 'COMPLETED') {
+    const { sweepstakes, ...rest } = data;
+    const sweepstakesId = sweepstakes.id;
+    const task = toTaskSchema(rest);
+
+    if (task.type !== 'DISCORD_INTERACTION_IMPORT') {
+      return {
+        content: 'This task is not a Discord interaction entry task.',
+        flags: DISCORD_RESPONSE_FLAG.EPHEMERAL
+      };
+    }
+
+    if (sweepstakes.status === 'DRAFT') {
+      return {
+        content: 'This giveaway is not yet active.',
+        flags: DISCORD_RESPONSE_FLAG.EPHEMERAL
+      };
+    }
+    const endDate = sweepstakes.timing?.endDate;
+
+    if (
+      sweepstakes.status === 'COMPLETED' ||
+      !endDate ||
+      new Date(endDate) < new Date()
+    ) {
       await updateDiscordMessage({
         channelId: body.message.channel_id,
         messageId: body.message.id,
-        embed: toGiveawayExpiredEmbed(task.sweepstakes),
-        components: []
+        embed: await toSweepstakesEmbed({
+          sweepstakes,
+          db
+        }),
+        components: toExpiredSweepstakeComponents({
+          sweepstakes
+        })
       });
       return {
         content: 'This giveaway has already ended.',
@@ -58,23 +88,8 @@ export const processTaskEntry = async ({
       };
     }
 
-    if (task.sweepstakes.status === 'DRAFT') {
-      return {
-        content: 'This giveaway is not yet active.',
-        flags: DISCORD_RESPONSE_FLAG.EPHEMERAL
-      };
-    }
-
-    const endDate = task.sweepstakes.timing?.endDate;
-    if (!endDate || new Date(endDate) < new Date()) {
-      return {
-        content: 'This giveaway has already ended.',
-        flags: DISCORD_RESPONSE_FLAG.EPHEMERAL
-      };
-    }
-
     // Find user by Discord account
-    let user = await prisma.user.findFirst({
+    let user = await db.user.findFirst({
       where: {
         accounts: {
           some: {
@@ -87,11 +102,11 @@ export const processTaskEntry = async ({
 
     // Check if user already has a completion for this task
     if (user) {
-      const existingCompletion = await prisma.taskCompletion.findFirst({
+      const existingCompletion = await db.taskCompletion.findFirst({
         where: {
           taskId,
           participant: {
-            sweepstakesId: task.sweepstakesId,
+            sweepstakesId,
             userId: user.id
           }
         }
@@ -105,8 +120,7 @@ export const processTaskEntry = async ({
     }
 
     const userRoleIds = body.member?.roles || [];
-    const taskData = task.config as any;
-    const requiredRoleIds = taskData.roles || [];
+    const requiredRoleIds = task.roles || [];
 
     const hasEveryoneRole = requiredRoleIds.includes(body.guild_id);
     const hasRequiredRoles =
@@ -115,21 +129,8 @@ export const processTaskEntry = async ({
       requiredRoleIds.some((roleId: string) => userRoleIds.includes(roleId));
 
     if (!hasRequiredRoles) {
-      let roleNames: string[] = [];
-      try {
-        const roles = await getDiscordGuildRoles(body.guild_id);
-        roleNames = requiredRoleIds
-          .map((id: string) => roles.find((r) => r.id === id)?.name)
-          .filter((name: string | undefined): name is string => Boolean(name));
-      } catch (error) {
-        console.error('Failed to fetch role names:', error);
-      }
-
-      const roleList =
-        roleNames.length > 0 ? roleNames.join(', ') : 'the required role';
-
       return {
-        content: `You need ${roleList} to enter this giveaway.`
+        content: `You are missing one or more required roles to enter this giveaway.`
       };
     }
 
@@ -150,7 +151,7 @@ export const processTaskEntry = async ({
         ? `https://cdn.discordapp.com/avatars/${body.member.user.id}/${body.member.user.avatar}.png`
         : null;
 
-      user = await prisma.user.create({
+      user = await db.user.create({
         data: {
           name: displayName,
           image: avatarUrl,
@@ -166,7 +167,8 @@ export const processTaskEntry = async ({
               token_type: 'bearer',
               scope: '',
               id_token: null,
-              session_state: null
+              session_state: null,
+              label: body.member.user.username
             }
           }
         }
@@ -180,19 +182,19 @@ export const processTaskEntry = async ({
     }
 
     try {
-      await prisma.taskCompletion.create({
+      await db.taskCompletion.create({
         data: {
           participant: {
             connectOrCreate: {
               where: {
                 userId_sweepstakesId: {
                   userId: user.id,
-                  sweepstakesId: task.sweepstakesId
+                  sweepstakesId
                 }
               },
               create: {
                 userId: user.id,
-                sweepstakesId: task.sweepstakesId
+                sweepstakesId
               }
             }
           },
@@ -218,10 +220,24 @@ export const processTaskEntry = async ({
       throw error;
     }
 
-    const giveawayUrl = toSweepstakesUrl(task.sweepstakes);
+    const giveawayUrl = toSweepstakesUrl({ sweepstakes, forcePath: true });
+
+    await updateDiscordMessage({
+      channelId: body.message.channel_id,
+      messageId: body.message.id,
+      embed: await toSweepstakesEmbed({
+        db,
+        sweepstakes
+      })
+    });
+
+    await scheduleRandomlyAssignPrizesJob({
+      db,
+      sweepstakesId
+    });
 
     return {
-      content: `You're entry is confirmed! Unlock bonus entries 👉 ${giveawayUrl}`
+      content: `Your entry is confirmed!\n[Click here for bonus entries](${giveawayUrl})`
     };
   } catch (error) {
     console.error('Error processing task entry:', error);

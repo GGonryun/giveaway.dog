@@ -15,6 +15,8 @@ export async function postDiscordMessage(
     });
   }
 
+  console.info('Posting message to Discord channel', JSON.stringify(options));
+
   const response = await fetch(
     `https://discord.com/api/v10/channels/${options.channelId}/messages`,
     {
@@ -57,7 +59,7 @@ export async function postDiscordMessage(
     throw new ApplicationError({
       code: 'BAD_REQUEST',
       message: 'Invalid message data sent to Discord',
-      data: errorData
+      data: JSON.stringify(errorData)
     });
   }
 

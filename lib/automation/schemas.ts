@@ -191,3 +191,7 @@ export const toPostToDiscordResponseSchema = (
   }
   return parsed.data;
 };
+
+export const asPostToDiscordResponseSchema = (
+  data: PostToDiscordResponseSchema
+) => data;

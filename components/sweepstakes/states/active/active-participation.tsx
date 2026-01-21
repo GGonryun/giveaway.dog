@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useMemo } from 'react';
-import { ArrowLeftIcon, EditIcon, Plus, XIcon } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGiveawayParticipation } from '../../giveaway-participation-context';
 import { UserInfoSection } from '../../user-info-section';
@@ -14,7 +14,6 @@ import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';
 import { toParticipantEntries } from '@/lib/task/entries';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { doesUserHaveAllowedIdentity } from '@/lib/integrations/schemas/providers';
-import { Button } from '@/components/ui/button';
 import { WinnersPending } from '../winners-pending';
 
 export const ActiveParticipation: React.FC = () => {

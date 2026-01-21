@@ -1,13 +1,16 @@
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
-import { PostToDiscordJobSchema } from '@/lib/automation/schemas';
+import {
+  asPostToDiscordResponseSchema,
+  PostToDiscordJobSchema
+} from '@/lib/automation/schemas';
 import { ApplicationError } from '@/lib/errors';
 import { toDefaultValues } from '@/lib/task/defaults';
 import { toStorableTask } from '@/schemas/giveaway/storable';
 import { PrismaClient, SweepstakesStatus } from '@prisma/client';
 import { nanoid } from 'nanoid';
-import { toDiscordSweepstakesButtons } from '../api/util';
+import { toActiveSweepstakeComponents } from '../api/util';
 import { postDiscordMessage } from '../api/post-discord-message';
-import { toGiveawayStartEmbed } from '../embeds';
+import { toSweepstakesEmbed } from '../embeds';
 
 export const processPostToDiscord = async ({
   db,
@@ -73,8 +76,12 @@ export const processPostToDiscord = async ({
 
     const messageResponse = await postDiscordMessage({
       channelId: job.request.channelId,
-      embed: toGiveawayStartEmbed(sweepstakes),
-      components: toDiscordSweepstakesButtons({
+      embed: await toSweepstakesEmbed({
+        sweepstakes,
+        job,
+        db
+      }),
+      components: toActiveSweepstakeComponents({
         taskId,
         sweepstakes
       })
@@ -106,10 +113,11 @@ export const processPostToDiscord = async ({
       where: { id: job.id },
       data: {
         status: 'COMPLETED',
-        response: {
+        response: asPostToDiscordResponseSchema({
+          channelId: job.request.channelId,
           messageId: messageResponse.id,
           messageUrl
-        }
+        })
       }
     });
 
