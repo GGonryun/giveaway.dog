@@ -51,8 +51,7 @@ export const EntryMethods = <
   TName extends TaskArrayPath<TFieldValues> = TaskArrayPath<TFieldValues>
 >({
   form,
-  fieldPath,
-  action
+  fieldPath
 }: {
   form: UseFormReturn<TFieldValues>;
   fieldPath: TName;
@@ -154,7 +153,6 @@ export const EntryMethods = <
                       return (
                         <EntryMethod
                           {...typedField}
-                          action={action}
                           key={field.id}
                           index={index}
                           open={open.includes(field.id)}
@@ -171,7 +169,6 @@ export const EntryMethods = <
                     {active ? (
                       <EntryMethod
                         id={active.id}
-                        action={action}
                         index={active.index}
                         type={active.type}
                         open={open.includes(active.id)}

@@ -35,17 +35,12 @@ import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
 import { MaximumReferralsField } from './lib/maximum-referrals';
 import { SteamDeveloperFormField } from './lib/steam-developer';
-import { DiscordImportingAccountField } from './lib/discord-importing-account';
-import { DiscordRolesField } from './lib/discord-roles';
-import { DiscordMessageLinkField } from './lib/discord-message-link';
-import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
 
 export const AdditionalSettings: React.FC<{
   type: TaskType;
-  action: UnifiedFormAction;
-}> = ({ type, action }) => {
+}> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
       case 'TWITTER_CONNECT':

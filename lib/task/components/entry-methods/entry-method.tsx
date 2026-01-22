@@ -38,11 +38,10 @@ export const EntryMethod: React.FC<{
   index: number;
   type: TaskType;
   open: boolean;
-  action: UnifiedFormAction;
   onOpenChange: (open: boolean) => void;
   onRemove: () => void;
   onCopy: () => void;
-}> = ({ onRemove, onCopy, open, onOpenChange, action, type, id, index }) => {
+}> = ({ onRemove, onCopy, open, onOpenChange, type, id, index }) => {
   const theme = useMemo(() => toTaskTheme(type), [type]);
   const form = useFormContext<GiveawayFormSchema>();
   const taskErrors = form.formState.errors.tasks?.[index];
@@ -130,7 +129,7 @@ export const EntryMethod: React.FC<{
           <CollapsibleContent className="p-3 pt-1.5 border-t space-y-2">
             <VerificationAlert type={type} />
             <BaseSettings type={type} />
-            <AdditionalSettings type={type} action={action} />
+            <AdditionalSettings type={type} />
             <AdvancedSettings type={type} />
           </CollapsibleContent>
         </Collapsible>

@@ -11,7 +11,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { TaskType } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
-import { BlueskyProfileUrlField } from './additional-settings/lib/bluesky-profile-url';
 
 export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   switch (type) {
