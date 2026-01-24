@@ -115,9 +115,17 @@ export type PublicSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
   include: typeof PUBLIC_SWEEPSTAKES_PAYLOAD;
 }>;
 
-export const TEAM_SWEEPSTAKES_PAYLOAD: Prisma.SweepstakesInclude = {
-  team: true
-} as const;
+export const TEAM_SWEEPSTAKES_PAYLOAD = {
+  team: {
+    include: {
+      members: {
+        include: {
+          user: { select: USER_SCHEMA_SELECT_QUERY }
+        }
+      }
+    }
+  }
+} satisfies Prisma.SweepstakesInclude;
 
 export type TeamSweepstakesGetPayload = Prisma.SweepstakesGetPayload<{
   include: typeof TEAM_SWEEPSTAKES_PAYLOAD;

@@ -11,6 +11,7 @@ import { ApplicationError } from '../errors';
 import { SweepstakesCriteriaSchema } from './criteria';
 import { toCompletionValue } from '../task/entries';
 import { toTaskSchema } from '../task/schemas';
+import { TeamPermission } from '../permissions';
 
 export type ExpandedEligibleTaskCompletion = EligibleTaskCompletion & {
   value: number;
@@ -89,7 +90,8 @@ export const getEligibleCompletions = async (args: {
   await findUserSweepstakes({
     db,
     user,
-    id: sweepstakesId
+    id: sweepstakesId,
+    permission: TeamPermission.VIEW_SWEEPSTAKES
   });
 
   // Get all task completions for this sweepstakes

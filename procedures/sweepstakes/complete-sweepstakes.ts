@@ -18,7 +18,6 @@ const completeSweepstakes = procedure()
     })
   )
   .output(z.object({ success: z.boolean() }))
-
   .handler(async ({ db, user, input }) => {
     const sweepstakes = await db.sweepstakes.findUnique({
       where: {

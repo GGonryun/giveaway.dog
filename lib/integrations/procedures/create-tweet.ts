@@ -12,6 +12,7 @@ import { uploadImage } from './upload-image';
 
 interface CreateTweetInput extends CreateTweetRequest {
   teamId: string;
+  integrationId: string;
   imageUrl?: string;
 }
 
@@ -31,7 +32,12 @@ export const createTweet = async (
   };
 
   if (input.imageUrl) {
-    const mediaId = await uploadImage(tx, input.teamId, input.imageUrl);
+    const mediaId = await uploadImage(
+      tx,
+      input.teamId,
+      input.imageUrl,
+      input.integrationId
+    );
     tweetData.media = {
       media_ids: [mediaId]
     };
@@ -40,6 +46,7 @@ export const createTweet = async (
   return twitterApiRequest({
     tx,
     teamId: input.teamId,
+    integrationId: input.integrationId,
     endpoint: 'https://api.x.com/2/tweets',
     method: 'POST',
     body: tweetData,

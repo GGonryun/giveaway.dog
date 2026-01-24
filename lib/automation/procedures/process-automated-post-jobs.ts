@@ -144,6 +144,7 @@ const processPostToTwitter = async ({
 
     const tweetResult = await createTweet(db, {
       teamId: sweepstakes.teamId,
+      integrationId: job.request.integrationId,
       text: job.request.text,
       imageUrl: job.request.imageUrl
     });

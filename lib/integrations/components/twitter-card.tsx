@@ -74,7 +74,9 @@ export function TwitterCard({ integration }: TwitterCardProps) {
   };
 
   const handleDisconnect = () => {
-    disconnect.run({ slug });
+    if (integration) {
+      disconnect.run({ slug, integrationId: integration.id });
+    }
   };
 
   return (

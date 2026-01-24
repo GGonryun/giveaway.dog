@@ -4,9 +4,10 @@ import { nanoid } from 'nanoid';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { ApplicationError } from '@/lib/errors';
-import { findUserSweepstakesQuery } from './shared';
+import { findUserSweepstakesQuery, findUserTeam } from './shared';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { Prisma } from '@prisma/client';
+import { TeamPermission } from '@/lib/permissions';
 
 const copySweepstakes = procedure()
   .authorization({ required: true })
@@ -44,17 +45,12 @@ const copySweepstakes = procedure()
       });
     }
 
-    const team = await db.team.findUnique({
-      where: { id: original.teamId },
-      select: { slug: true }
+    const { team } = await findUserTeam({
+      db,
+      user,
+      id: original.teamId,
+      permission: TeamPermission.UPDATE_SWEEPSTAKES
     });
-
-    if (!team?.slug) {
-      throw new ApplicationError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Team not found.'
-      });
-    }
 
     const newId = nanoid(6);
 

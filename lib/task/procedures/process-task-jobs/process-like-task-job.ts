@@ -16,6 +16,7 @@ export const processLikeTaskJob = async (
     async (tx) =>
       await getLikingUsers(tx, {
         teamId: job.task.sweepstakes.teamId,
+        integrationId: task.importingAccount,
         tweetId: task.tweetId,
         maxResults: 100
       })

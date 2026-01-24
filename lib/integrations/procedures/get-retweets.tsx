@@ -12,7 +12,11 @@ import { ApplicationError } from '@/lib/errors';
 
 export const getRetweetedBy = async (
   tx: Tx,
-  input: RetweetedByRequest & { maxResults: number; teamId: string | null }
+  input: RetweetedByRequest & {
+    maxResults: number;
+    teamId: string | null;
+    integrationId?: string;
+  }
 ): Promise<RetweetedByResponse> => {
   if (!input.teamId)
     throw new ApplicationError({
@@ -35,6 +39,7 @@ export const getRetweetedBy = async (
   return twitterApiRequest({
     tx,
     teamId: input.teamId,
+    integrationId: input.integrationId,
     endpoint: `https://api.x.com/2/tweets/${tweetId}/retweeted_by`,
     params,
     responseSchema: retweetedByResponseSchema

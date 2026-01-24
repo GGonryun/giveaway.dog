@@ -11,9 +11,11 @@ const EXPIRY_BUFFER_SECONDS = 300;
 export const getLatestTwitterAccessToken = async (
   tx: Tx,
   {
-    teamId
+    teamId,
+    integrationId
   }: {
     teamId: string;
+    integrationId?: string;
   }
 ) => {
   if (!TWITTER_TEAM_APP_CLIENT_ID || !TWITTER_TEAM_APP_CLIENT_SECRET) {
@@ -23,9 +25,17 @@ export const getLatestTwitterAccessToken = async (
     });
   }
 
-  const integration = await tx.integration.findFirst({
-    where: { teamId, provider: IntegrationProvider.TWITTER }
-  });
+  const integration = integrationId
+    ? await tx.integration.findFirst({
+        where: {
+          id: integrationId,
+          teamId,
+          provider: IntegrationProvider.TWITTER
+        }
+      })
+    : await tx.integration.findFirst({
+        where: { teamId, provider: IntegrationProvider.TWITTER }
+      });
 
   if (!integration) {
     throw new ApplicationError({

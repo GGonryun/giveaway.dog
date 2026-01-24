@@ -5,6 +5,8 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { VisibilityType } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
 import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
+import { findUserSweepstakes } from './shared';
+import { TeamPermission } from '@/lib/permissions';
 
 const toggleVisibilityInput = z.object({
   sweepstakesId: z.string(),
@@ -20,34 +22,12 @@ const toggleVisibility = procedure()
     `sweepstakes-${input.sweepstakesId}-privacy` // Invalidate privacy cache when visibility changes
   ])
   .handler(async ({ db, user, input }) => {
-    const sweepstakes = await db.sweepstakes.findUnique({
-      where: { id: input.sweepstakesId },
-      select: {
-        teamId: true,
-        team: {
-          select: {
-            members: {
-              where: { userId: user.id },
-              select: { id: true }
-            }
-          }
-        }
-      }
+    const { sweepstakes } = await findUserSweepstakes({
+      db,
+      user,
+      id: input.sweepstakesId,
+      permission: TeamPermission.UPDATE_SWEEPSTAKES
     });
-
-    if (!sweepstakes || !sweepstakes.team) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Sweepstakes not found'
-      });
-    }
-
-    if (sweepstakes.team.members.length === 0) {
-      throw new ApplicationError({
-        code: 'FORBIDDEN',
-        message: 'You do not have permission to modify this sweepstakes'
-      });
-    }
 
     // Check if user is trying to set visibility to PUBLIC
     if (input.visibility === VisibilityType.PUBLIC) {

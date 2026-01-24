@@ -3,7 +3,8 @@
 import z from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
-import { findUserSweepstakesQuery } from './shared';
+import { findUserSweepstakes } from './shared';
+import { TeamPermission } from '@/lib/permissions';
 
 export const disqualifyParticipant = procedure()
   .authorization({ required: true })
@@ -16,11 +17,11 @@ export const disqualifyParticipant = procedure()
   )
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ db, input, user }) => {
-    const sweepstakes = await db.sweepstakes.findUnique({
-      where: findUserSweepstakesQuery({
-        id: input.sweepstakesId,
-        userId: user.id
-      })
+    const { sweepstakes } = await findUserSweepstakes({
+      db,
+      user,
+      id: input.sweepstakesId,
+      permission: TeamPermission.UPDATE_SWEEPSTAKES
     });
 
     if (!sweepstakes) {

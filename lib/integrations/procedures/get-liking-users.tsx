@@ -12,7 +12,11 @@ import { ApplicationError } from '@/lib/errors';
 
 export const getLikingUsers = async (
   tx: Tx,
-  input: LikingUsersRequest & { maxResults: number; teamId: string | null }
+  input: LikingUsersRequest & {
+    maxResults: number;
+    teamId: string | null;
+    integrationId?: string;
+  }
 ): Promise<LikingUsersResponse> => {
   if (!input.teamId)
     throw new ApplicationError({
@@ -35,6 +39,7 @@ export const getLikingUsers = async (
   return twitterApiRequest({
     tx,
     teamId: input.teamId,
+    integrationId: input.integrationId,
     endpoint: `https://api.x.com/2/tweets/${tweetId}/liking_users`,
     params,
     responseSchema: likingUsersResponseSchema

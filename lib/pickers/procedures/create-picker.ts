@@ -2,7 +2,10 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import { findUserTeamQuery } from '@/procedures/sweepstakes/shared';
+import {
+  findUserTeam,
+  findUserTeamQuery
+} from '@/procedures/sweepstakes/shared';
 import { ApplicationError } from '@/lib/errors';
 import {
   DEFAULT_PICKER_FORM,
@@ -11,6 +14,7 @@ import {
 } from '../data/defaults';
 import { UNKNOWN_USER_NAME } from '@/lib/settings';
 import { nanoid } from 'nanoid';
+import { TeamPermission } from '@/lib/permissions';
 
 export const createPicker = procedure()
   .authorization({
@@ -27,16 +31,12 @@ export const createPicker = procedure()
     })
   )
   .handler(async ({ db, input, user }) => {
-    const team = await db.team.findUnique({
-      where: findUserTeamQuery({ slug: input.slug, userId: user.id })
+    const { team } = await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.UPDATE_PICKERS
     });
-
-    if (!team?.id) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Team does not exist or you do not have access to it.'
-      });
-    }
 
     const created = await db.picker.create({
       data: {

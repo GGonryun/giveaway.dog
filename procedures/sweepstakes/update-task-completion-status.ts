@@ -4,7 +4,8 @@ import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { ApplicationError } from '@/lib/errors';
 import { CompletionStatus } from '@prisma/client';
-import { findUserSweepstakesQuery } from './shared';
+import { findUserSweepstakes, findUserSweepstakesQuery } from './shared';
+import { TeamPermission } from '@/lib/permissions';
 
 export const updateTaskCompletionStatus = procedure()
   .authorization({ required: true })
@@ -18,19 +19,12 @@ export const updateTaskCompletionStatus = procedure()
   )
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ db, input, user }) => {
-    const sweepstakes = await db.sweepstakes.findUnique({
-      where: findUserSweepstakesQuery({
-        id: input.sweepstakesId,
-        userId: user.id
-      })
+    const { sweepstakes } = await findUserSweepstakes({
+      db,
+      user,
+      id: input.sweepstakesId,
+      permission: TeamPermission.UPDATE_SWEEPSTAKES
     });
-
-    if (!sweepstakes) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Sweepstakes not found or you do not have access.'
-      });
-    }
 
     const taskCompletion = await db.taskCompletion.findFirst({
       where: {

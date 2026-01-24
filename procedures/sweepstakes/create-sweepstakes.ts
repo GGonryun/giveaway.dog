@@ -16,7 +16,7 @@ import {
   DEFAULT_SWEEPSTAKES_VISIBILITY,
   DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
 } from '@/schemas/giveaway/defaults';
-import { findUserTeamQuery } from './shared';
+import { findUserTeam } from './shared';
 import { getTemplateById } from '@/lib/templates/data/static-templates';
 import { Prisma, PrismaClient, SweepstakesStatus } from '@prisma/client';
 import { toStorableSweepstakesUpdate } from '@/schemas/giveaway/storable';
@@ -26,6 +26,7 @@ import {
   toTemplateInputSchema
 } from '@/lib/templates/schemas/template';
 import { replaceIdsDeep } from '@/lib/object';
+import { TeamPermission } from '@/lib/permissions';
 
 const SWEEPSTAKE_ID_SIZE = 6;
 
@@ -44,8 +45,11 @@ export const createSweepstakes = procedure()
     })
   )
   .handler(async ({ db, input, user }) => {
-    const team = await db.team.findUnique({
-      where: findUserTeamQuery({ slug: input.slug, userId: user.id })
+    const { team } = await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.UPDATE_SWEEPSTAKES
     });
 
     console.info('Creating sweepstakes for team:', team?.id);

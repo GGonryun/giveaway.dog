@@ -38,7 +38,6 @@ import {
   DialogTitle,
   DialogFooter
 } from '@/components/ui/dialog';
-import { useDisqualifyParticipant } from '@/procedures/sweepstakes/use-disqualify-participant';
 
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
 import { datetime } from '@/lib/date';
@@ -49,6 +48,19 @@ import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toEngagementTheme, toQualityTheme } from '@/lib/participant/util';
+import { useProcedure } from '@/lib/mrpc/hook';
+import { disqualifyParticipant } from '@/procedures/sweepstakes/disqualify-participant';
+
+const useDisqualifyParticipant = () => {
+  const router = useRouter();
+
+  return useProcedure({
+    action: disqualifyParticipant,
+    onSuccess: () => {
+      router.refresh();
+    }
+  });
+};
 
 export const SweepstakesParticipants: React.FC<{
   slug: string;
@@ -66,9 +78,7 @@ export const SweepstakesParticipants: React.FC<{
     useState<string>('');
   const [disqualificationReason, setDisqualificationReason] = useState('');
 
-  const disqualifyParticipantProcedure = useDisqualifyParticipant({
-    sweepstakesId
-  });
+  const disqualifyParticipantProcedure = useDisqualifyParticipant();
 
   const pageSize = DEFAULT_PAGE_SIZE;
   const totalParticipants = participants.length;

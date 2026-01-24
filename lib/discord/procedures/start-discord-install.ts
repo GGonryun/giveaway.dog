@@ -1,26 +1,21 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { ApplicationError } from '@/lib/errors';
 import z from 'zod';
-import { findUserTeamQuery } from '@/procedures/sweepstakes/shared';
-import { datetime } from '@/lib/date';
+import { findUserTeam } from '@/procedures/sweepstakes/shared';
+import { TeamPermission } from '@/lib/permissions';
 
 export const startDiscordInstall = procedure()
   .authorization({ required: true })
   .input(z.object({ slug: z.string() }))
   .output(z.string())
   .handler(async ({ input, user, db }) => {
-    const team = await db.team.findUnique({
-      where: findUserTeamQuery({ slug: input.slug, userId: user.id })
+    const { team } = await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.UPDATE_INTEGRATIONS
     });
-
-    if (!team) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Team not found'
-      });
-    }
 
     const stateValue = {
       teamId: team.id,

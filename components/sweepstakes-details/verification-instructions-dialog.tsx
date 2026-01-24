@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { ExternalLink, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import { TASK_VERIFICATION_REQUIREMENT, TaskSchema } from '@/lib/task/schemas';
 import {
@@ -24,11 +23,71 @@ import {
   getProviderLink,
   getProviderLabel
 } from '@/lib/task/verification/utils';
-import { useUpdateTaskCompletionStatus } from '@/procedures/sweepstakes/use-update-task-completion-status';
-import { useReverifyTaskCompletion } from '@/procedures/sweepstakes/use-reverify-task-completion';
 import { CompletionStatus } from '@prisma/client';
 import { UserSchema } from '@/schemas/user';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
+import { useRouter } from 'next/navigation';
+import { useProcedure } from '@/lib/mrpc/hook';
+import { updateTaskCompletionStatus } from '@/procedures/sweepstakes/update-task-completion-status';
+import { toast } from 'sonner';
+import { reverifyTaskCompletion } from '@/procedures/sweepstakes/reverify-task-completion';
+
+const useUpdateTaskCompletionStatus = ({
+  sweepstakesId
+}: {
+  sweepstakesId: string;
+}) => {
+  const router = useRouter();
+
+  const procedure = useProcedure({
+    action: updateTaskCompletionStatus,
+    onSuccess: () => {
+      toast.success('Task completion status updated');
+      router.refresh();
+    },
+    onFailure: (error) => {
+      toast.error(`Failed to update status: ${error.message}`);
+    }
+  });
+
+  return {
+    ...procedure,
+    run: (input: {
+      taskCompletionId: string;
+      status: CompletionStatus;
+      reason?: string;
+    }) => procedure.run({ ...input, sweepstakesId })
+  };
+};
+
+const useReverifyTaskCompletion = ({
+  sweepstakesId
+}: {
+  sweepstakesId: string;
+}) => {
+  const router = useRouter();
+
+  const procedure = useProcedure({
+    action: reverifyTaskCompletion,
+    onSuccess: (data: any) => {
+      if (data.success) {
+        toast.success('Task completion re-verified successfully');
+      } else {
+        toast.error(`Re-verification failed: ${data.error}`);
+      }
+      router.refresh();
+    },
+    onFailure: (error) => {
+      toast.error(`Failed to re-verify: ${error.message}`);
+    }
+  });
+
+  return {
+    ...procedure,
+    run: (input: { taskCompletionId: string }) =>
+      procedure.run({ ...input, sweepstakesId })
+  };
+};
 
 interface VerificationInstructionsDialogProps {
   open: boolean;

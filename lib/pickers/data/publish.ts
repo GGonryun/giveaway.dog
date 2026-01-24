@@ -71,7 +71,8 @@ export const publishPickerJobs = ({
             runAt,
             data: toTwitterFetchRequest({
               polling: isPolling(form.timing),
-              tweetId: extractTweetId(form.setup.postUrl)
+              tweetId: extractTweetId(form.setup.postUrl),
+              integrationId: form.setup.integrationId
             })
           },
           form.actions.repost && {
@@ -81,7 +82,8 @@ export const publishPickerJobs = ({
             runAt,
             data: toTwitterFetchRequest({
               polling: isPolling(form.timing),
-              tweetId: extractTweetId(form.setup.postUrl)
+              tweetId: extractTweetId(form.setup.postUrl),
+              integrationId: form.setup.integrationId
             })
           },
           form.actions.quote && {
@@ -91,7 +93,8 @@ export const publishPickerJobs = ({
             runAt,
             data: toTwitterFetchRequest({
               polling: isPolling(form.timing),
-              tweetId: extractTweetId(form.setup.postUrl)
+              tweetId: extractTweetId(form.setup.postUrl),
+              integrationId: form.setup.integrationId
             })
           },
           form.actions.reply && {
@@ -101,7 +104,8 @@ export const publishPickerJobs = ({
             runAt,
             data: toTwitterFetchRequest({
               polling: isPolling(form.timing),
-              tweetId: extractTweetId(form.setup.postUrl)
+              tweetId: extractTweetId(form.setup.postUrl),
+              integrationId: form.setup.integrationId
             })
           }
         ])

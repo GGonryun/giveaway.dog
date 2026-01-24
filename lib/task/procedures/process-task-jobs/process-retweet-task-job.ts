@@ -16,6 +16,7 @@ export const processRetweetTaskJob = async (
     async (tx) =>
       await getRetweetedBy(tx, {
         teamId: job.task.sweepstakes.teamId,
+        integrationId: task.importingAccount,
         tweetId: task.tweetId,
         maxResults: 100
       })

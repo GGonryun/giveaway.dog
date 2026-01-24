@@ -6,7 +6,8 @@ import { uploadMediaResponseSchema } from '../schemas/api';
 export async function uploadImage(
   tx: Tx,
   teamId: string,
-  imageUrl: string
+  imageUrl: string,
+  integrationId: string
 ): Promise<string> {
   const imageResponse = await fetch(imageUrl);
   if (!imageResponse.ok) {
@@ -25,6 +26,7 @@ export async function uploadImage(
   const uploadResult = await twitterApiRequest({
     tx,
     teamId,
+    integrationId,
     endpoint: 'https://api.x.com/2/media/upload',
     method: 'POST',
     body: {

@@ -21,7 +21,11 @@ const conversationIdResponseSchema = z.object({
 
 export const getRepliesTo = async (
   tx: Tx,
-  input: RepliedByRequest & { maxResults: number; teamId: string }
+  input: RepliedByRequest & {
+    maxResults: number;
+    teamId: string;
+    integrationId?: string;
+  }
 ): Promise<RepliedByResponse> => {
   const tweetId = extractTweetId(input.tweetId);
 
@@ -33,6 +37,7 @@ export const getRepliesTo = async (
   const conversationResponse = await twitterApiRequest({
     tx,
     teamId: input.teamId,
+    integrationId: input.integrationId,
     endpoint: 'https://api.x.com/2/tweets',
     params: conversationParams,
     responseSchema: conversationIdResponseSchema
@@ -66,6 +71,7 @@ export const getRepliesTo = async (
   const response = await twitterApiRequest({
     tx,
     teamId: input.teamId,
+    integrationId: input.integrationId,
     endpoint: 'https://api.x.com/2/tweets/search/recent',
     params: searchParams,
     responseSchema: repliedByResponseSchema

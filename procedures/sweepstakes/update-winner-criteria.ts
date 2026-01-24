@@ -13,6 +13,8 @@ import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
   DEFAULT_ALLOW_USER_SELECTION
 } from '@/schemas/giveaway/defaults';
+import { findUserSweepstakes } from './shared';
+import { TeamPermission } from '@/lib/permissions';
 
 const updateWinnerCriteriaInput = z.object({
   sweepstakesId: z.string(),
@@ -29,29 +31,12 @@ const updateWinnerCriteria = procedure()
   .input(updateWinnerCriteriaInput)
   .output(sweepstakesWinnerCriteriaSchema)
   .handler(async ({ db, user, input }) => {
-    const sweepstakes = await db.sweepstakes.findFirst({
-      where: {
-        id: input.sweepstakesId,
-        team: {
-          slug: input.slug,
-          members: {
-            some: {
-              userId: user.id
-            }
-          }
-        }
-      },
-      include: {
-        team: true
-      }
+    await findUserSweepstakes({
+      db,
+      user,
+      id: input.sweepstakesId,
+      permission: TeamPermission.UPDATE_SWEEPSTAKES
     });
-
-    if (!sweepstakes || !sweepstakes.team) {
-      throw new ApplicationError({
-        code: 'FORBIDDEN',
-        message: 'You do not have permission to update this sweepstakes'
-      });
-    }
 
     const updated = await db.sweepstakesWinnerCriteria.update({
       where: {

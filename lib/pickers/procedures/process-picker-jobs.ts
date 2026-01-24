@@ -299,6 +299,7 @@ const processFetchTwitterGetLikingUsersJob = async (
         teamId: job.picker.teamId,
         tweetId: request.tweetId,
         paginationToken: request.paginationToken,
+        integrationId: request.integrationId,
         maxResults: MAX_RESULTS_PER_RUN
       })
   );
@@ -315,6 +316,7 @@ const processFetchTwitterGetRepostedByJob = async (
         teamId: job.picker.teamId,
         tweetId: request.tweetId,
         paginationToken: request.paginationToken,
+        integrationId: request.integrationId,
         maxResults: MAX_RESULTS_PER_RUN
       })
   );
@@ -331,6 +333,7 @@ const processFetchTwitterGetQuotedPostsJob = async (
         teamId: job.picker.teamId,
         tweetId: request.tweetId,
         paginationToken: request.paginationToken,
+        integrationId: request.integrationId,
         maxResults: MAX_RESULTS_PER_RUN
       })
   );
@@ -348,6 +351,7 @@ const processFetchTwitterGetRepliesJob = async (
         teamId: job.picker.teamId,
         tweetId: request.tweetId,
         paginationToken: request.paginationToken,
+        integrationId: request.integrationId,
         maxResults: MAX_RESULTS_PER_RUN
       })
   );
@@ -401,6 +405,7 @@ const twitterJobProcessor = async <
             runAt: datetime.hoursFromNow(1.5),
             data: toTwitterFetchRequest({
               tweetId: request.tweetId,
+              integrationId: request.integrationId,
               polling: true
             })
           }
@@ -415,7 +420,8 @@ const twitterJobProcessor = async <
             runAt: datetime.minutesFromNow(TWITTER_API_RATE_LIMIT_MINUTES + 5),
             data: toTwitterFetchRequest({
               tweetId: request.tweetId,
-              paginationToken: response.meta.next_token
+              paginationToken: response.meta.next_token,
+              integrationId: request.integrationId
             })
           }
         });

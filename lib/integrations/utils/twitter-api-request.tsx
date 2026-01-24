@@ -8,6 +8,7 @@ import { z } from 'zod';
 interface TwitterApiRequestOptions<T> {
   tx: Tx;
   teamId: string;
+  integrationId?: string;
   endpoint: string;
   method?: 'GET' | 'POST';
   params?: URLSearchParams;
@@ -19,6 +20,7 @@ interface TwitterApiRequestOptions<T> {
 export async function twitterApiRequest<T>({
   tx,
   teamId,
+  integrationId,
   endpoint,
   method = 'GET',
   params,
@@ -26,7 +28,10 @@ export async function twitterApiRequest<T>({
   formData,
   responseSchema
 }: TwitterApiRequestOptions<T>): Promise<T> {
-  const { access_token } = await getLatestTwitterAccessToken(tx, { teamId });
+  const { access_token } = await getLatestTwitterAccessToken(tx, {
+    teamId,
+    integrationId
+  });
 
   const url = params ? `${endpoint}?${params.toString()}` : endpoint;
 

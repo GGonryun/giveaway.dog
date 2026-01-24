@@ -13,6 +13,7 @@ import { ApplicationError, assertNever } from '@/lib/errors';
 
 export const twitterFetchRequestSchema = z.object({
   tweetId: z.string(),
+  integrationId: z.string().optional(),
   polling: z.boolean().optional(),
   paginationToken: z.string().optional(),
   maxResults: z.number().optional()
@@ -28,11 +29,11 @@ export const twitterFetchDataSchema = z.object({
   error: z.any().optional()
 });
 
+export type TwitterFetchDataSchema = z.infer<typeof twitterFetchDataSchema>;
+
 export const toTwitterFetchData = (
   data: TwitterFetchDataSchema
 ): TwitterFetchDataSchema => data;
-
-export type TwitterFetchDataSchema = z.infer<typeof twitterFetchDataSchema>;
 
 export const toTwitterFetchRequest = (
   request: TwitterFetchRequestSchema

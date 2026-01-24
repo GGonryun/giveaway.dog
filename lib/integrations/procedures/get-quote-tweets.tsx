@@ -11,7 +11,11 @@ import { extractTweetId } from '../schemas/twitter';
 
 export const getQuoteTweets = async (
   tx: Tx,
-  input: QuoteTweetsRequest & { maxResults: number; teamId: string }
+  input: QuoteTweetsRequest & {
+    maxResults: number;
+    teamId: string;
+    integrationId?: string;
+  }
 ): Promise<QuoteTweetsResponse> => {
   const params = new URLSearchParams({
     max_results: '100',
@@ -30,6 +34,7 @@ export const getQuoteTweets = async (
   return twitterApiRequest({
     tx,
     teamId: input.teamId,
+    integrationId: input.integrationId,
     endpoint: `https://api.x.com/2/tweets/${tweetId}/quote_tweets`,
     params,
     responseSchema: quoteTweetsResponseSchema

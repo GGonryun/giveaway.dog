@@ -15,6 +15,7 @@ import {
 import { User } from 'next-auth';
 import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { RecursiveRequired } from '@/types/index';
+import { assertMembershipPermission, TeamPermission } from '@/lib/permissions';
 
 export const findUserSweepstakesQuery = ({
   userId,
@@ -33,29 +34,51 @@ export const findUserSweepstakesQuery = ({
   }
 });
 
-export const findUserTeamQuery = ({
-  slug,
-  userId
-}: {
-  slug: string;
-  userId: string;
-}): Prisma.TeamWhereUniqueInput => ({
-  slug,
-  members: {
-    some: {
-      userId
+type TeamQuery =
+  | {
+      slug: string;
     }
+  | {
+      id: string;
+    };
+
+export const findUserTeamQuery = (
+  args: {
+    userId: string;
+  } & TeamQuery
+): Prisma.TeamWhereUniqueInput => {
+  const { userId } = args;
+  if ('slug' in args) {
+    return {
+      slug: args.slug,
+      members: {
+        some: {
+          userId
+        }
+      }
+    };
+  } else {
+    return {
+      id: args.id,
+      members: {
+        some: {
+          userId
+        }
+      }
+    };
   }
-});
+};
 
 export const findUserSweepstakes = async ({
   db,
   user,
-  id
+  id,
+  permission
 }: {
   db: PrismaClient;
   user: RecursiveRequired<User>;
   id: string;
+  permission: TeamPermission;
 }) => {
   const sweepstakes = await db.sweepstakes.findUnique({
     where: findUserSweepstakesQuery({
@@ -75,7 +98,41 @@ export const findUserSweepstakes = async ({
       message: 'Sweepstakes not found'
     });
   }
-  return { sweepstakes, team };
+
+  const membership = team.members.find((m) => m.userId === user.id);
+
+  assertMembershipPermission(membership, permission);
+
+  return { sweepstakes, team, membership };
+};
+
+export const findUserTeam = async (
+  args: {
+    db: PrismaClient;
+    user: RecursiveRequired<User>;
+    permission: TeamPermission;
+  } & TeamQuery
+) => {
+  const { db, user, permission } = args;
+  const team = await db.team.findUnique({
+    where: findUserTeamQuery({ ...args, userId: args.user.id }),
+    include: {
+      members: true
+    }
+  });
+
+  if (!team) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: 'Team not found'
+    });
+  }
+
+  const membership = team.members.find((m) => m.userId === user.id);
+
+  assertMembershipPermission(membership, permission);
+
+  return { team, membership };
 };
 
 export const applySweepstakesChanges = async ({
@@ -90,7 +147,8 @@ export const applySweepstakesChanges = async ({
   const { sweepstakes, team } = await findUserSweepstakes({
     db,
     user,
-    id: input.id
+    id: input.id,
+    permission: TeamPermission.UPDATE_SWEEPSTAKES
   });
 
   // Check if user is trying to change visibility to PUBLIC
