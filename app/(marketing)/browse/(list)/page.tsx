@@ -3,7 +3,7 @@ import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/
 import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes-list';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { GiveawayFilters } from '@/lib/filters/giveaway-filters';
+import { BrowseStatus, GiveawayFilters } from '@/lib/filters/giveaway-filters';
 import { BrowsePageFilters } from './filters';
 import { AllGiveawaysGrid } from '@/components/sweepstakes-browse/components/all-giveaways-grid';
 
@@ -51,6 +51,7 @@ type SearchParams = {
   sortBy?: string;
   search?: string;
   page?: string;
+  showStatuses?: string;
 };
 
 export default async function Page({
@@ -67,13 +68,20 @@ export default async function Page({
   );
 }
 
+const parseShowStatuses = (value?: string): BrowseStatus[] | undefined => {
+  if (!value) return undefined;
+  const statuses = value.split(',').filter(Boolean) as BrowseStatus[];
+  return statuses.length > 0 ? statuses : undefined;
+};
+
 const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
   const filters: GiveawayFilters = {
     minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
     maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
     sortBy: params.sortBy as GiveawayFilters['sortBy'],
     search: params.search,
-    page: params.page ? parseInt(params.page) : 1
+    page: params.page ? parseInt(params.page) : 1,
+    showStatuses: parseShowStatuses(params.showStatuses)
   };
 
   const [sweepstakes, participation] = await Promise.all([

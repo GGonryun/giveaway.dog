@@ -21,28 +21,13 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { GiveawayFilters } from '@/lib/filters/giveaway-filters';
-
-const FILTERS_COOKIE_NAME = 'giveaway-filters';
-
-const getFiltersFromCookie = (): Partial<GiveawayFilters> => {
-  if (typeof document === 'undefined') return {};
-  const cookie = document.cookie
-    .split('; ')
-    .find((row) => row.startsWith(`${FILTERS_COOKIE_NAME}=`));
-  if (!cookie) return {};
-  try {
-    return JSON.parse(decodeURIComponent(cookie.split('=')[1]));
-  } catch {
-    return {};
-  }
-};
-
-const saveFiltersToCookie = (filters: GiveawayFilters) => {
-  if (typeof document === 'undefined') return;
-  const maxAge = 60 * 60 * 24 * 30; // 30 days
-  document.cookie = `${FILTERS_COOKIE_NAME}=${encodeURIComponent(JSON.stringify(filters))}; path=/; max-age=${maxAge}; SameSite=Lax`;
-};
+import {
+  ALL_BROWSE_STATUSES,
+  BrowseStatus,
+  BROWSE_STATUS_LABELS,
+  GiveawayFilters
+} from '@/lib/filters/giveaway-filters';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export function GiveawayFiltersSheet() {
   const router = useRouter();
@@ -50,20 +35,24 @@ export function GiveawayFiltersSheet() {
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
 
-  const cookieFilters = getFiltersFromCookie();
+  const parseShowStatuses = (value: string | null): BrowseStatus[] => {
+    if (!value) return ALL_BROWSE_STATUSES;
+    const statuses = value.split(',').filter(Boolean) as BrowseStatus[];
+    return statuses.length > 0 ? statuses : ALL_BROWSE_STATUSES;
+  };
 
   const currentFilters: GiveawayFilters = {
     minEntrants: searchParams.get('minEntrants')
       ? parseInt(searchParams.get('minEntrants')!)
-      : cookieFilters.minEntrants,
+      : undefined,
     maxEntrants: searchParams.get('maxEntrants')
       ? parseInt(searchParams.get('maxEntrants')!)
-      : cookieFilters.maxEntrants,
+      : undefined,
     sortBy:
       (searchParams.get('sortBy') as GiveawayFilters['sortBy']) ??
-      cookieFilters.sortBy ??
       'entrants-desc',
-    search: searchParams.get('search') ?? cookieFilters.search
+    search: searchParams.get('search') ?? undefined,
+    showStatuses: parseShowStatuses(searchParams.get('showStatuses'))
   };
 
   const [filters, setFilters] = useState<GiveawayFilters>(currentFilters);
@@ -99,29 +88,41 @@ export function GiveawayFiltersSheet() {
       params.delete('search');
     }
 
-    params.delete('page');
+    const showStatuses = filters.showStatuses ?? ALL_BROWSE_STATUSES;
+    const isAllSelected = showStatuses.length === ALL_BROWSE_STATUSES.length;
+    if (!isAllSelected && showStatuses.length > 0) {
+      params.set('showStatuses', showStatuses.join(','));
+    } else {
+      params.delete('showStatuses');
+    }
 
-    saveFiltersToCookie(filters);
+    params.delete('page');
 
     router.push(`${pathname}?${params.toString()}`);
     setIsOpen(false);
   };
 
   const handleClearFilters = () => {
-    const clearedFilters = {
-      sortBy: 'entrants-desc' as const
-    };
-    setFilters(clearedFilters);
-    saveFiltersToCookie(clearedFilters);
+    setFilters({ sortBy: 'entrants-desc' });
     router.push(pathname);
     setIsOpen(false);
   };
 
+  const currentShowStatuses = filters.showStatuses ?? ALL_BROWSE_STATUSES;
   const hasActiveFilters =
     filters.minEntrants !== undefined ||
     filters.maxEntrants !== undefined ||
     (filters.sortBy && filters.sortBy !== 'entrants-desc') ||
-    (filters.search && filters.search !== '');
+    (filters.search && filters.search !== '') ||
+    currentShowStatuses.length !== ALL_BROWSE_STATUSES.length;
+
+  const toggleShowStatus = (status: BrowseStatus) => {
+    const current = filters.showStatuses ?? ALL_BROWSE_STATUSES;
+    const newStatuses = current.includes(status)
+      ? current.filter((s) => s !== status)
+      : [...current, status];
+    setFilters({ ...filters, showStatuses: newStatuses });
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -202,6 +203,27 @@ export function GiveawayFiltersSheet() {
                 })
               }
             />
+          </div>
+
+          <div className="space-y-3">
+            <Label>Show Statuses</Label>
+            <div className="space-y-2">
+              {ALL_BROWSE_STATUSES.map((status) => (
+                <div key={status} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`show-${status}`}
+                    checked={currentShowStatuses.includes(status)}
+                    onCheckedChange={() => toggleShowStatus(status)}
+                  />
+                  <Label
+                    htmlFor={`show-${status}`}
+                    className="text-sm font-normal cursor-pointer"
+                  >
+                    {BROWSE_STATUS_LABELS[status]}
+                  </Label>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="flex gap-3 pt-4">

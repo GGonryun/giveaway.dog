@@ -8,7 +8,10 @@ import {
 import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { compact } from 'lodash';
 import { datetime } from '@/lib/date';
-import { giveawayFiltersSchema, PAGE_SIZE } from '@/lib/filters/giveaway-filters';
+import {
+  giveawayFiltersSchema,
+  PAGE_SIZE
+} from '@/lib/filters/giveaway-filters';
 
 const getPublicSweepstakesList = procedure()
   .authorization({
@@ -23,7 +26,8 @@ const getPublicSweepstakesList = procedure()
       input?.minEntrants?.toString() ?? 'no-min',
       input?.maxEntrants?.toString() ?? 'no-max',
       input?.search ?? 'no-search',
-      input?.page?.toString() ?? '1'
+      input?.page?.toString() ?? '1',
+      input?.showStatuses?.sort().join(',') ?? 'all'
     ],
     tags: ['public-sweepstakes-list'],
     revalidate: 300
@@ -111,6 +115,11 @@ const getPublicSweepstakesList = procedure()
           s.name.toLowerCase().includes(searchLower) ||
           s.description.toLowerCase().includes(searchLower)
       );
+    }
+
+    if (input?.showStatuses && input.showStatuses.length > 0) {
+      const showSet = new Set(input.showStatuses);
+      results = results.filter((s) => showSet.has(s.status as any));
     }
 
     const page = input?.page ?? 1;
