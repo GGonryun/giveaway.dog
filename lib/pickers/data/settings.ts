@@ -1,2 +1,3 @@
 export const TWITTER_API_RATE_LIMIT_MINUTES = 15;
 export const BLUESKY_API_RATE_LIMIT_MINUTES = 15;
+export const TWITTER_API_RUN_OFFSET = 2;

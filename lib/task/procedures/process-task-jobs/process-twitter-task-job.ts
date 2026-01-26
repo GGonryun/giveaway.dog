@@ -8,7 +8,10 @@ import {
 import { PrismaClient } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 import { datetime } from '@/lib/date';
-import { TWITTER_API_RATE_LIMIT_MINUTES } from '@/lib/pickers/data/settings';
+import {
+  TWITTER_API_RATE_LIMIT_MINUTES,
+  TWITTER_API_RUN_OFFSET
+} from '@/lib/pickers/data/settings';
 import { ApplicationError } from '@/lib/errors';
 import { takeUntil } from '@/lib/arrays';
 import { Tx } from '@/lib/prisma';
@@ -143,7 +146,7 @@ export const processTwitterTaskJob = async <
   }
 
   const nextRunAt = datetime.minutesFromNow(
-    parsed.data.runs * 5 + TWITTER_API_RATE_LIMIT_MINUTES
+    parsed.data.runs * TWITTER_API_RUN_OFFSET + TWITTER_API_RATE_LIMIT_MINUTES
   );
 
   await db.taskJob.update({
