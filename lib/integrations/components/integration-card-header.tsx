@@ -1,9 +1,5 @@
 import { ReactNode } from 'react';
-import {
-  CardHeader,
-  CardTitle,
-  CardDescription
-} from '@/components/ui/card';
+import { CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { IntegrationStatusBadge } from './integration-status-badge';
 import { IntegrationSchema } from '../schemas';
 

@@ -103,7 +103,9 @@ export const BrowsePageFilters: React.FC<{
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
-                href={hasMoreResults ? buildPaginationUrl(currentPage + 1) : '#'}
+                href={
+                  hasMoreResults ? buildPaginationUrl(currentPage + 1) : '#'
+                }
                 aria-disabled={!hasMoreResults}
                 className={
                   !hasMoreResults ? 'pointer-events-none opacity-50' : ''

@@ -63,15 +63,22 @@ export const PrizeAllocationChart: React.FC<{
 
       <CardContent className="pt-2">
         {hasAllocations ? (
-          <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[400px]">
+          <ChartContainer
+            config={chartConfig}
+            className="mx-auto aspect-square max-h-[400px]"
+          >
             <PieChart>
               <ChartTooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0];
-                    const percentage = totalAllocations > 0
-                      ? ((data.value as number / totalAllocations) * 100).toFixed(1)
-                      : '0';
+                    const percentage =
+                      totalAllocations > 0
+                        ? (
+                            ((data.value as number) / totalAllocations) *
+                            100
+                          ).toFixed(1)
+                        : '0';
 
                     return (
                       <div className="rounded-lg border bg-background p-2 shadow-sm">
@@ -118,13 +125,21 @@ export const PrizeAllocationChart: React.FC<{
                 content={({ payload }) => (
                   <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
                     {payload?.map((entry, index) => (
-                      <div key={`legend-${index}`} className="flex items-center gap-2">
+                      <div
+                        key={`legend-${index}`}
+                        className="flex items-center gap-2"
+                      >
                         <div
                           className="h-3 w-3 rounded-sm"
                           style={{ backgroundColor: entry.color }}
                         />
                         <span className="text-sm text-muted-foreground">
-                          {entry.value}: {((chartData[index].value / totalAllocations) * 100).toFixed(0)}%
+                          {entry.value}:{' '}
+                          {(
+                            (chartData[index].value / totalAllocations) *
+                            100
+                          ).toFixed(0)}
+                          %
                         </span>
                       </div>
                     ))}

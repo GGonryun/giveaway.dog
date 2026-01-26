@@ -71,7 +71,9 @@ export const TaskActionForm: React.FC<
     case 'DISCORD_JOIN':
       return <DiscordJoinTaskActionForm {...props} task={props.task} />;
     case 'DISCORD_INTERACTION_IMPORT':
-      return <DiscordInteractionImportTaskActionForm {...props} task={props.task} />;
+      return (
+        <DiscordInteractionImportTaskActionForm {...props} task={props.task} />
+      );
     case 'TWITCH_FOLLOW':
       return <TwitchFollowTaskActionForm {...props} task={props.task} />;
     case 'KICK_FOLLOW':

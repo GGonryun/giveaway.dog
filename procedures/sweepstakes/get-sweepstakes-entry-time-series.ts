@@ -20,7 +20,10 @@ const getSweepstakesEntryTimeSeries = procedure()
   .output(timeSeriesDataSchema.array())
   .cache(({ input }) => ({
     keyParts: [`sweepstakes-entry-time-series-${input.sweepstakesId}`],
-    tags: [`sweepstakes-${input.sweepstakesId}`, 'sweepstakes-entry-time-series'],
+    tags: [
+      `sweepstakes-${input.sweepstakesId}`,
+      'sweepstakes-entry-time-series'
+    ],
     revalidate: 600 // Cache for 10 minutes
   }))
   .handler(async ({ input: { sweepstakesId }, db }) => {

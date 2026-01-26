@@ -132,32 +132,19 @@ export const TWITTER_METRIC_ICONS: Record<TwitterMetricKey, LucideIcon> = {
 };
 
 export const TWITTER_METRIC_DESCRIPTION: Record<TwitterMetricKey, string> = {
-  baseScore:
-    `The foundational score assigned to all users, representing their initial trustworthiness on the platform. Fixed at +${PLATFORM_BASE_SCORE} points.`,
-  profileImage:
-    `Users with a profile image appear more legitimate and trustworthy. Complete profiles indicate genuine engagement. Awards +${TWITTER_PROFILE_IMAGE_BONUS} points when set.`,
-  profileBanner:
-    `Profile banners show account customization effort. Users who personalize their accounts are more likely to be authentic. Awards +${TWITTER_PROFILE_BANNER_BONUS} points when set.`,
-  locationSet:
-    `A set location adds credibility to the user profile. Geographic information helps verify account authenticity. Awards +${TWITTER_LOCATION_BONUS} points when set.`,
-  usernameQuality:
-    `Having a username set indicates an active account. Awards +${TWITTER_USERNAME_QUALITY_BONUS} points.`,
-  description:
-    `A detailed bio description indicates a real person behind the account. Longer descriptions show genuine user investment. Awards +1 point per ${TWITTER_DESCRIPTION_CHARS_PER_POINT} characters (max +${TWITTER_DESCRIPTION_MAX} points).`,
-  followers:
-    `Follower count reflects social proof and account legitimacy. Higher follower counts generally indicate established accounts. Awards +1 point per ${TWITTER_FOLLOWERS_PER_POINT} followers (max +${TWITTER_FOLLOWERS_MAX} points).`,
-  following:
-    `Following count shows platform engagement. Accounts that follow others demonstrate active participation in the community. Awards +1 point per ${TWITTER_FOLLOWING_PER_POINT} accounts followed (max +${TWITTER_FOLLOWING_MAX} points).`,
-  tweets:
-    `Tweet activity demonstrates active platform usage. Regular posting indicates a genuine, engaged user rather than a bot. Awards +1 point per ${TWITTER_TWEETS_PER_POINT} tweets posted (max +${TWITTER_TWEETS_MAX} points).`,
-  giveawaysEntered:
-    `Number of giveaways entered on our platform. Consistent participation indicates a legitimate user interested in giveaways. Awards +1 point per ${GIVEAWAYS_ENTERED_THRESHOLD} giveaways entered (max +${TWITTER_GIVEAWAYS_MAX} points).`,
-  accountAge:
-    `Older accounts are generally more trustworthy. Account age helps distinguish between established users and newly created bot accounts. Awards +1 point per ${TWITTER_ACCOUNT_AGE_MONTHS_PER_POINT} months of account age (max +${TWITTER_ACCOUNT_AGE_MAX} points).`,
-  verified:
-    `Twitter verification badge indicates the account has been authenticated by the platform. Verified users receive a significant trust boost of +${TWITTER_VERIFIED_BONUS} points.`,
-  bannedAccount:
-    `Accounts that have been suspended or banned by Twitter are flagged as high risk. This is a strong negative indicator that applies ${TWITTER_BANNED_PENALTY} points.`
+  baseScore: `The foundational score assigned to all users, representing their initial trustworthiness on the platform. Fixed at +${PLATFORM_BASE_SCORE} points.`,
+  profileImage: `Users with a profile image appear more legitimate and trustworthy. Complete profiles indicate genuine engagement. Awards +${TWITTER_PROFILE_IMAGE_BONUS} points when set.`,
+  profileBanner: `Profile banners show account customization effort. Users who personalize their accounts are more likely to be authentic. Awards +${TWITTER_PROFILE_BANNER_BONUS} points when set.`,
+  locationSet: `A set location adds credibility to the user profile. Geographic information helps verify account authenticity. Awards +${TWITTER_LOCATION_BONUS} points when set.`,
+  usernameQuality: `Having a username set indicates an active account. Awards +${TWITTER_USERNAME_QUALITY_BONUS} points.`,
+  description: `A detailed bio description indicates a real person behind the account. Longer descriptions show genuine user investment. Awards +1 point per ${TWITTER_DESCRIPTION_CHARS_PER_POINT} characters (max +${TWITTER_DESCRIPTION_MAX} points).`,
+  followers: `Follower count reflects social proof and account legitimacy. Higher follower counts generally indicate established accounts. Awards +1 point per ${TWITTER_FOLLOWERS_PER_POINT} followers (max +${TWITTER_FOLLOWERS_MAX} points).`,
+  following: `Following count shows platform engagement. Accounts that follow others demonstrate active participation in the community. Awards +1 point per ${TWITTER_FOLLOWING_PER_POINT} accounts followed (max +${TWITTER_FOLLOWING_MAX} points).`,
+  tweets: `Tweet activity demonstrates active platform usage. Regular posting indicates a genuine, engaged user rather than a bot. Awards +1 point per ${TWITTER_TWEETS_PER_POINT} tweets posted (max +${TWITTER_TWEETS_MAX} points).`,
+  giveawaysEntered: `Number of giveaways entered on our platform. Consistent participation indicates a legitimate user interested in giveaways. Awards +1 point per ${GIVEAWAYS_ENTERED_THRESHOLD} giveaways entered (max +${TWITTER_GIVEAWAYS_MAX} points).`,
+  accountAge: `Older accounts are generally more trustworthy. Account age helps distinguish between established users and newly created bot accounts. Awards +1 point per ${TWITTER_ACCOUNT_AGE_MONTHS_PER_POINT} months of account age (max +${TWITTER_ACCOUNT_AGE_MAX} points).`,
+  verified: `Twitter verification badge indicates the account has been authenticated by the platform. Verified users receive a significant trust boost of +${TWITTER_VERIFIED_BONUS} points.`,
+  bannedAccount: `Accounts that have been suspended or banned by Twitter are flagged as high risk. This is a strong negative indicator that applies ${TWITTER_BANNED_PENALTY} points.`
 };
 
 export const TWITTER_METRIC_TYPE: Record<

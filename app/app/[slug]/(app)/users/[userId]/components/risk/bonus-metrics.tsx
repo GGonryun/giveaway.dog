@@ -32,9 +32,7 @@ export function BonusMetrics({ metrics }: BonusMetricsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          Quality Bonus
-        </CardTitle>
+        <CardTitle className="flex items-center gap-2">Quality Bonus</CardTitle>
         <CardDescription>
           Foundational points assigned to all users
         </CardDescription>

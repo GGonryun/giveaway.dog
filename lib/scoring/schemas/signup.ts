@@ -18,18 +18,9 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import z from 'zod';
-import {
-  twitterScoreMetricsSchema,
-  TwitterScoreMetrics
-} from './twitter';
-import {
-  blueskyScoreMetricsSchema,
-  BlueskyScoreMetrics
-} from './bluesky';
-import {
-  discordScoreMetricsSchema,
-  DiscordScoreMetrics
-} from './discord';
+import { twitterScoreMetricsSchema, TwitterScoreMetrics } from './twitter';
+import { blueskyScoreMetricsSchema, BlueskyScoreMetrics } from './bluesky';
+import { discordScoreMetricsSchema, DiscordScoreMetrics } from './discord';
 
 export const USER_BASE_SCORE = 30;
 export const MAX_SCORING_REQUESTS_PER_RUN = 15;

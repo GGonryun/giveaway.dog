@@ -111,28 +111,17 @@ export const BLUESKY_METRIC_ICONS: Record<BlueskyMetricKey, LucideIcon> = {
 };
 
 export const BLUESKY_METRIC_DESCRIPTION: Record<BlueskyMetricKey, string> = {
-  baseScore:
-    `The foundational score assigned to all users, representing their initial trustworthiness on the platform. Fixed at +${PLATFORM_BASE_SCORE} points.`,
-  profileAvatar:
-    `Users with a profile avatar appear more legitimate and trustworthy. Complete profiles indicate genuine engagement on the platform. Awards +${BLUESKY_PROFILE_AVATAR_BONUS} points when set.`,
-  profileBanner:
-    `Profile banners show account customization effort. Users who personalize their accounts are more likely to be authentic. Awards +${BLUESKY_PROFILE_BANNER_BONUS} points when set.`,
-  handleQuality:
-    `Having a handle set indicates an active account. Awards +${BLUESKY_HANDLE_QUALITY_BONUS} points.`,
-  description:
-    `A detailed bio description indicates a real person behind the account. Longer descriptions show genuine user investment. Awards +1 point per ${BLUESKY_DESCRIPTION_CHARS_PER_POINT} characters (max +${BLUESKY_DESCRIPTION_MAX} points).`,
-  followers:
-    `Follower count reflects social proof and account legitimacy. Higher follower counts generally indicate established accounts. Awards +1 point per ${BLUESKY_FOLLOWERS_PER_POINT} followers (max +${BLUESKY_FOLLOWERS_MAX} points).`,
-  following:
-    `Following count shows platform engagement. Accounts that follow others demonstrate active participation in the community. Awards +1 point per ${BLUESKY_FOLLOWING_PER_POINT} accounts followed (max +${BLUESKY_FOLLOWING_MAX} points).`,
-  posts:
-    `Post activity demonstrates active platform usage. Regular posting indicates a genuine, engaged user rather than a bot. Awards +1 point per ${BLUESKY_POSTS_PER_POINT} posts (max +${BLUESKY_POSTS_MAX} points).`,
-  giveawaysEntered:
-    `Number of giveaways entered on our platform. Consistent participation indicates a legitimate user interested in giveaways. Awards +1 point per ${GIVEAWAYS_ENTERED_THRESHOLD} giveaways entered (max +${BLUESKY_GIVEAWAYS_MAX} points).`,
-  accountAge:
-    `Older accounts are generally more trustworthy. Account age helps distinguish between established users and newly created bot accounts. Awards +1 point per ${BLUESKY_ACCOUNT_AGE_MONTHS_PER_POINT} months of account age (max +${BLUESKY_ACCOUNT_AGE_MAX} points).`,
-  bannedAccount:
-    `Accounts that have been suspended or banned by Bluesky are flagged as high risk. This is a strong negative indicator that applies ${BLUESKY_BANNED_PENALTY} points.`
+  baseScore: `The foundational score assigned to all users, representing their initial trustworthiness on the platform. Fixed at +${PLATFORM_BASE_SCORE} points.`,
+  profileAvatar: `Users with a profile avatar appear more legitimate and trustworthy. Complete profiles indicate genuine engagement on the platform. Awards +${BLUESKY_PROFILE_AVATAR_BONUS} points when set.`,
+  profileBanner: `Profile banners show account customization effort. Users who personalize their accounts are more likely to be authentic. Awards +${BLUESKY_PROFILE_BANNER_BONUS} points when set.`,
+  handleQuality: `Having a handle set indicates an active account. Awards +${BLUESKY_HANDLE_QUALITY_BONUS} points.`,
+  description: `A detailed bio description indicates a real person behind the account. Longer descriptions show genuine user investment. Awards +1 point per ${BLUESKY_DESCRIPTION_CHARS_PER_POINT} characters (max +${BLUESKY_DESCRIPTION_MAX} points).`,
+  followers: `Follower count reflects social proof and account legitimacy. Higher follower counts generally indicate established accounts. Awards +1 point per ${BLUESKY_FOLLOWERS_PER_POINT} followers (max +${BLUESKY_FOLLOWERS_MAX} points).`,
+  following: `Following count shows platform engagement. Accounts that follow others demonstrate active participation in the community. Awards +1 point per ${BLUESKY_FOLLOWING_PER_POINT} accounts followed (max +${BLUESKY_FOLLOWING_MAX} points).`,
+  posts: `Post activity demonstrates active platform usage. Regular posting indicates a genuine, engaged user rather than a bot. Awards +1 point per ${BLUESKY_POSTS_PER_POINT} posts (max +${BLUESKY_POSTS_MAX} points).`,
+  giveawaysEntered: `Number of giveaways entered on our platform. Consistent participation indicates a legitimate user interested in giveaways. Awards +1 point per ${GIVEAWAYS_ENTERED_THRESHOLD} giveaways entered (max +${BLUESKY_GIVEAWAYS_MAX} points).`,
+  accountAge: `Older accounts are generally more trustworthy. Account age helps distinguish between established users and newly created bot accounts. Awards +1 point per ${BLUESKY_ACCOUNT_AGE_MONTHS_PER_POINT} months of account age (max +${BLUESKY_ACCOUNT_AGE_MAX} points).`,
+  bannedAccount: `Accounts that have been suspended or banned by Bluesky are flagged as high risk. This is a strong negative indicator that applies ${BLUESKY_BANNED_PENALTY} points.`
 };
 
 export const BLUESKY_METRIC_TYPE: Record<

@@ -14,7 +14,10 @@ import {
   QUALITY_ICON,
   QUALITY_ALERT_VARIANT
 } from '@/schemas/quality';
-import { UserQualitySchema, UserScoreMetricsSchema } from '@/schemas/user-scoring';
+import {
+  UserQualitySchema,
+  UserScoreMetricsSchema
+} from '@/schemas/user-scoring';
 import { QualityMetrics } from './quality-metrics';
 import { QualityBadge } from './quality-badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -42,7 +45,9 @@ export const UserQualityBreakdown: React.FC<{
       case 'MANUAL_IMPORT':
         return (
           <>
-            <QualityMetrics metrics={quality.metrics as UserScoreMetricsSchema} />
+            <QualityMetrics
+              metrics={quality.metrics as UserScoreMetricsSchema}
+            />
             <BonusMetrics metrics={quality.metrics as UserScoreMetricsSchema} />
             <RiskMetrics metrics={quality.metrics as UserScoreMetricsSchema} />
           </>
