@@ -11,22 +11,50 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { TablePagination } from '@/components/ui/table-pagination';
-import { ParticipationHistory } from '@/schemas/participation-history';
-import { Clock, TrendingUp, Trophy } from 'lucide-react';
+import {
+  ParticipationHistory,
+  ParticipationHistoryItem
+} from '@/schemas/participation-history';
+import {
+  Clock,
+  Eye,
+  LogOut,
+  MoreHorizontal,
+  TrendingUp,
+  Trophy
+} from 'lucide-react';
 import Link from 'next/link';
 import { SweepstakesStatusBadge } from '../sweepstakes/status-badge';
 import { toEngagementTheme } from '@/lib/participant/util';
 import { datetime } from '@/lib/date';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { WithdrawParticipationDialog } from './withdraw-participation-dialog';
+import { useRouter } from 'next/navigation';
+import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 
 const DEFAULT_PAGE_SIZE = 50;
+
+const isWithdrawable = (status: DerivedSweepstakeStatus) =>
+  status === 'RUNNING' || status === 'SCHEDULED';
 
 export const ParticipationHistoryTable: React.FC<{
   history: ParticipationHistory;
 }> = ({ history }) => {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const [showWinsOnly, setShowWinsOnly] = useState(false);
+  const [withdrawDialog, setWithdrawDialog] = useState<{
+    open: boolean;
+    item: ParticipationHistoryItem | null;
+  }>({ open: false, item: null });
 
   const filteredData = useMemo(() => {
     if (showWinsOnly) {
@@ -111,6 +139,7 @@ export const ParticipationHistoryTable: React.FC<{
                     <TableHead>Progress</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Last Activity</TableHead>
+                    <TableHead className="w-[50px]"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -159,6 +188,38 @@ export const ParticipationHistoryTable: React.FC<{
                           </span>
                         </div>
                       </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem asChild>
+                              <Link href={`/browse/${item.sweepstakesId}`}>
+                                <Eye className="mr-2 h-4 w-4" />
+                                View
+                              </Link>
+                            </DropdownMenuItem>
+                            {isWithdrawable(item.sweepstakesStatus) && (
+                              <DropdownMenuItem
+                                className="text-destructive"
+                                onClick={() =>
+                                  setWithdrawDialog({ open: true, item })
+                                }
+                              >
+                                <LogOut className="mr-2 h-4 w-4" />
+                                Withdraw
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -174,6 +235,21 @@ export const ParticipationHistoryTable: React.FC<{
             />
           </CardContent>
         </Card>
+      )}
+
+      {withdrawDialog.item && (
+        <WithdrawParticipationDialog
+          open={withdrawDialog.open}
+          onOpenChange={(open) =>
+            setWithdrawDialog({ ...withdrawDialog, open })
+          }
+          sweepstakesId={withdrawDialog.item.sweepstakesId}
+          sweepstakesName={withdrawDialog.item.sweepstakesName}
+          onSuccess={() => {
+            setWithdrawDialog({ open: false, item: null });
+            router.refresh();
+          }}
+        />
       )}
     </div>
   );
