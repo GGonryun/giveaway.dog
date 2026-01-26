@@ -3,7 +3,6 @@ import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-inte
 import type { Metadata } from 'next';
 import { getUnvalidatedPickerForm } from '@/lib/pickers/procedures/get-unvalidated-picker-form';
 import { PickerPageProps } from '@/schemas/pages';
-import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -30,11 +29,6 @@ export default async function CreatePickerPage({
     console.error('Error loading picker form:', picker);
     return <div>Error loading picker form: {picker.data.message}</div>;
   }
-  const flags = await getTeamFeatureFlags({ slug });
-  if (!flags.ok) {
-    console.error('Error loading team feature flags:', flags);
-    return <div>Error loading team feature flags: {flags.data.message}</div>;
-  }
 
   const integrationsResult = await getTeamIntegrations({ slug });
   if (!integrationsResult.ok) {
@@ -45,10 +39,6 @@ export default async function CreatePickerPage({
   }
 
   return (
-    <PickerForm
-      picker={picker.data}
-      teamFeatureFlags={flags.data}
-      integrations={integrationsResult.data}
-    />
+    <PickerForm picker={picker.data} integrations={integrationsResult.data} />
   );
 }

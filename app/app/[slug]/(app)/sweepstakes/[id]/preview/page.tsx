@@ -5,7 +5,6 @@ import { SweepstakesLoadingSkeleton } from '@/components/sweepstakes-details/swe
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
-import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
 import { SweepstakesPageProps } from '@/schemas/pages';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -36,14 +35,9 @@ const Wrapper: React.FC<{ params: Promise<SweepstakesPageProps> }> = async ({
 }) => {
   const { id, slug } = await params;
   const result = await getParticipantSweepstake({ sweepstakesId: id });
-  const featureFlagsResult = await getTeamFeatureFlags({ slug });
-
-  const featureFlags = featureFlagsResult.ok ? featureFlagsResult.data : [];
 
   if (!result.ok) {
     return <div>Failed to load sweepstakes details: {result.data.message}</div>;
   }
-  return (
-    <SweepstakesPreview {...result.data} teamFeatureFlags={featureFlags} />
-  );
+  return <SweepstakesPreview {...result.data} />;
 };

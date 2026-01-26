@@ -24,7 +24,6 @@ import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
 import publishSweepstakes from '@/procedures/sweepstakes/publish-sweepstakes';
 import { PreviewStateContext } from './contexts/preview-state-context';
 
-import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
 import { UnifiedFormLayoutContextProvider } from '../patterns/form-layout/use-unified-form-layout';
 import { IntegrationsSchema } from '@/lib/integrations/schemas';
 import {
@@ -44,13 +43,11 @@ import { useSweepstakesDetailsPage } from '../sweepstakes/use-sweepstakes-detail
 
 export const SweepstakesForm: React.FC<{
   sweepstakes: GiveawayFormSchema;
-  teamFeatureFlags: TeamFeatureFlagKeySchema[];
   integrations: IntegrationsSchema;
   maxLoyalty: number;
   isDemo?: boolean;
 }> = ({
   sweepstakes: defaultValues,
-  teamFeatureFlags,
   integrations,
   maxLoyalty,
   isDemo = false
@@ -70,7 +67,7 @@ export const SweepstakesForm: React.FC<{
 
   const form = useForm<GiveawayFormSchema>({
     resolver: zodResolver(
-      giveawayFormSchema({ validate: !isDemo, maxLoyalty, teamFeatureFlags })
+      giveawayFormSchema({ validate: !isDemo, maxLoyalty })
     ),
     defaultValues,
     mode: 'onChange'
@@ -97,7 +94,6 @@ export const SweepstakesForm: React.FC<{
           id={id}
           step={step}
           action={action}
-          teamFeatureFlags={teamFeatureFlags}
           integrations={integrations}
         />
       </FormProvider>
@@ -108,10 +104,9 @@ export const SweepstakesForm: React.FC<{
 const FormContent: React.FC<{
   id: string;
   step: SweepstakeStep;
-  teamFeatureFlags: TeamFeatureFlagKeySchema[];
   integrations: IntegrationsSchema;
   action: UnifiedFormAction;
-}> = ({ id, teamFeatureFlags, integrations, action, step }) => {
+}> = ({ id, integrations, action, step }) => {
   const detailsPage = useSweepstakesDetailsPage();
   const sweepstakesPage = useSweepstakesPage();
 
@@ -246,7 +241,6 @@ const FormContent: React.FC<{
           onSave={handleSaveChanges}
           form={<SweepstakeFormContent />}
           preview={<SweepstakesFormPreview />}
-          teamFeatureFlags={teamFeatureFlags}
           integrations={integrations}
           previewFooter={<SweepstakesPreviewFooter />}
           type={'sweepstake'}

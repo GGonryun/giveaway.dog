@@ -20,8 +20,6 @@ import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
 import { taskCompletionSchema } from '@/lib/task/completions';
 import countriesData from '@/lib/countries.json';
 import continentsData from '@/lib/continents.json';
-import { TeamFeatureFlagKeySchema } from '../feature-flags';
-
 export type DeviceType = 'mobile' | 'desktop';
 
 export const prizeSchema = z.object({
@@ -281,13 +279,11 @@ export type BaseGiveawayFormSchema = z.infer<
 export type GiveawayFormSchemaOptions = {
   validate: boolean;
   maxLoyalty: number;
-  teamFeatureFlags: TeamFeatureFlagKeySchema[];
 };
 
 export const giveawayFormSchema = ({
   validate,
-  maxLoyalty,
-  teamFeatureFlags
+  maxLoyalty
 }: GiveawayFormSchemaOptions) => {
   if (!validate) {
     return baseGiveawayFormSchema({ validate });
@@ -298,8 +294,7 @@ export const giveawayFormSchema = ({
       validate,
       maxLoyalty,
       form,
-      ctx,
-      teamFeatureFlags
+      ctx
     });
   });
 };

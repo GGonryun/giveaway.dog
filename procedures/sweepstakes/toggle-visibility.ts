@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
 import { VisibilityType } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
-import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { findUserSweepstakes } from './shared';
 import { TeamPermission } from '@/lib/permissions';
 
@@ -36,23 +35,6 @@ const toggleVisibility = procedure()
           code: 'FORBIDDEN',
           message:
             'Sweepstakes must belong to a team to be made public. Please contact support at /support for assistance.'
-        });
-      }
-
-      const hasPublicSweepstakesFlag = await db.teamFeatureFlag.findUnique({
-        where: {
-          key_teamId: {
-            key: PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY,
-            teamId: sweepstakes.teamId
-          }
-        }
-      });
-
-      if (!hasPublicSweepstakesFlag) {
-        throw new ApplicationError({
-          code: 'FORBIDDEN',
-          message:
-            'Your team does not have permission to make sweepstakes public. Please contact support at /support to enable this feature for your team.'
         });
       }
     }

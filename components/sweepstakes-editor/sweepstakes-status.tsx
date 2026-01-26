@@ -41,11 +41,6 @@ import {
   DerivedSweepstakeStatus,
   EDITABLE_DERIVED_STATUS
 } from '@/schemas/sweepstakes';
-import {
-  PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY,
-  TeamFeatureFlagKeySchema
-} from '@/schemas/feature-flags';
-import { featureFlags } from '@/lib/feature-flags';
 
 interface SweepstakesStatusProps {
   sweepstakesId: string;
@@ -56,7 +51,6 @@ interface SweepstakesStatusProps {
   visibility?: VisibilityType;
   sweepstakesUrl?: string;
   hasAllWinnersSelected?: boolean;
-  teamFeatureFlags: TeamFeatureFlagKeySchema[];
   onPickWinners?: () => void;
   onGenerateQR?: () => void;
   onCompleteSweepstakes: () => void;
@@ -72,7 +66,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   timeZone,
   visibility = VisibilityType.PRIVATE,
   sweepstakesUrl = '',
-  teamFeatureFlags,
   onPickWinners,
   onGenerateQR,
   onCompleteSweepstakes,
@@ -81,10 +74,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
   className
 }) => {
   const router = useRouter();
-  const hasPublicSweepstakesAccess = featureFlags.parseTeam(
-    teamFeatureFlags,
-    PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
-  );
 
   const isEditable = EDITABLE_DERIVED_STATUS[status];
 
@@ -201,11 +190,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {hasPublicSweepstakesAccess && (
-                    <SelectItem value={VisibilityType.PUBLIC}>
-                      Public
-                    </SelectItem>
-                  )}
+                  <SelectItem value={VisibilityType.PUBLIC}>Public</SelectItem>
                   <SelectItem value={VisibilityType.UNLISTED}>
                     Unlisted
                   </SelectItem>
@@ -246,11 +231,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {hasPublicSweepstakesAccess && (
-                    <SelectItem value={VisibilityType.PUBLIC}>
-                      Public
-                    </SelectItem>
-                  )}
+                  <SelectItem value={VisibilityType.PUBLIC}>Public</SelectItem>
                   <SelectItem value={VisibilityType.UNLISTED}>
                     Unlisted
                   </SelectItem>
@@ -285,18 +266,13 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
               <Select
                 value={visibility}
                 onValueChange={handleVisibilityChange}
-                disabled={isTogglingVisibility || !hasPublicSweepstakesAccess}
+                disabled={isTogglingVisibility}
               >
                 <SelectTrigger className="w-full sm:w-34 shrink-0 bg-white">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem
-                    value={VisibilityType.PUBLIC}
-                    disabled={!hasPublicSweepstakesAccess}
-                  >
-                    Public
-                  </SelectItem>
+                  <SelectItem value={VisibilityType.PUBLIC}>Public</SelectItem>
                   <SelectItem value={VisibilityType.UNLISTED}>
                     Unlisted
                   </SelectItem>

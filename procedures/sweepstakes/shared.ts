@@ -13,7 +13,6 @@ import {
   VisibilityType
 } from '@prisma/client';
 import { User } from 'next-auth';
-import { PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { RecursiveRequired } from '@/types/index';
 import { assertMembershipPermission, TeamPermission } from '@/lib/permissions';
 
@@ -158,23 +157,6 @@ export const applySweepstakesChanges = async ({
         code: 'FORBIDDEN',
         message:
           'Sweepstakes must belong to a team to be made public. Please contact support at /support for assistance.'
-      });
-    }
-
-    const hasPublicSweepstakesFlag = await db.teamFeatureFlag.findUnique({
-      where: {
-        key_teamId: {
-          key: PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY,
-          teamId: team.id
-        }
-      }
-    });
-
-    if (!hasPublicSweepstakesFlag) {
-      throw new ApplicationError({
-        code: 'FORBIDDEN',
-        message:
-          'Your team does not have permission to make sweepstakes public. Please contact support at /support to enable this feature for your team.'
       });
     }
   }

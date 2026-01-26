@@ -4,7 +4,6 @@ export const SETTINGS_TAB_OPTIONS = {
   profile: 'Profile',
   socials: 'Socials',
   team: 'Team',
-  features: 'Features',
   integrations: 'Integrations'
 } as const;
 
@@ -14,7 +13,6 @@ export const settingsTabSchema = z.enum([
   'profile',
   'socials',
   'team',
-  'features',
   'integrations'
 ]);
 

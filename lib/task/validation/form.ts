@@ -10,11 +10,6 @@ import {
   BaseGiveawayFormSchema,
   GiveawayFormSchemaOptions
 } from '@/schemas/giveaway/schemas';
-import {
-  PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY,
-  TeamFeatureFlagKeySchema
-} from '@/schemas/feature-flags';
-import { featureFlags } from '@/lib/feature-flags';
 
 export type ValidateSweepstakeTaskOptions<T extends TaskSchema = TaskSchema> = {
   task: T;
@@ -221,7 +216,7 @@ const referralLinkValidator = (
 };
 
 const baseValidator = (args: RefineSweepstakesTaskArgs) => {
-  const { form, ctx, teamFeatureFlags } = args;
+  const { form, ctx } = args;
 
   const referralTasks = form.tasks.filter((t) => t.type === 'REFERRAL_LINK');
 
@@ -230,18 +225,6 @@ const baseValidator = (args: RefineSweepstakesTaskArgs) => {
       path: ['tasks'],
       code: z.ZodIssueCode.custom,
       message: 'Only one referral link task is allowed per giveaway'
-    });
-  }
-
-  const hasPublicSweepstakesAccess = featureFlags.parseTeam(
-    teamFeatureFlags,
-    PUBLIC_SWEEPSTAKES_FEATURE_FLAG_KEY
-  );
-  if (!hasPublicSweepstakesAccess && form.visibility.visibility === 'PUBLIC') {
-    ctx.addIssue({
-      path: ['visibility.visibility'],
-      code: z.ZodIssueCode.custom,
-      message: 'Public sweepstakes are not enabled for your team'
     });
   }
 };

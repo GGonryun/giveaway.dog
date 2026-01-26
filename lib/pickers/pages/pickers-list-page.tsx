@@ -9,9 +9,6 @@ import { CreatePickerButton } from '../components/create-picker-button';
 import { PickersTable } from '../components/pickers-table';
 import { PickersTabs } from '../components/pickers-tabs';
 import { getPickersList } from '../procedures/get-pickers-list';
-import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
-import { PICKERS_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
-import { PickersFeatureDisabledCTA } from '../components/pickers-feature-disabled-cta';
 
 type PickersListPageProps = {
   params: Promise<TeamPageProps>;
@@ -25,28 +22,6 @@ export const PickersListPage: React.FC<PickersListPageProps> = async (
   const resolvedSearchParams = await props.searchParams;
 
   const filters = toPickersFilter(resolvedSearchParams);
-
-  const featureFlagsResult = await getTeamFeatureFlags({ slug });
-
-  if (!featureFlagsResult.ok) {
-    return (
-      <Outline title="Pickers">
-        <div>Error loading team settings</div>
-      </Outline>
-    );
-  }
-
-  const pickersEnabled = featureFlagsResult.data.includes(
-    PICKERS_FEATURE_FLAG_KEY
-  );
-
-  if (!pickersEnabled) {
-    return (
-      <Outline title="Pickers">
-        <PickersFeatureDisabledCTA slug={slug} />
-      </Outline>
-    );
-  }
 
   return (
     <Outline title="Pickers" action={<CreatePickerButton />}>

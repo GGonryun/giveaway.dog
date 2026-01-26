@@ -7,7 +7,6 @@ import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { notFound } from 'next/navigation';
 import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
 import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
-import getTeamFeatureFlags from '@/procedures/teams/get-team-feature-flags';
 import { SweepstakesPageProps } from '@/schemas/pages';
 import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
 import { getPublishedSweepstakes } from '@/procedures/sweepstakes/get-published-sweepstakes';
@@ -18,14 +17,12 @@ export const SweepstakeFormPage = async ({
   params: Promise<SweepstakesPageProps>;
 }) => {
   const { id, slug } = await params;
-  const [form, info, teamFeatureFlags, integrations, completed] =
-    await Promise.all([
-      getSweepstakesForm({ id }),
-      getSweepstakesStatus({ id }),
-      getTeamFeatureFlags({ slug }),
-      getTeamIntegrations({ slug }),
-      getPublishedSweepstakes({ slug }) // new line to get maxLoyalty
-    ]);
+  const [form, info, integrations, completed] = await Promise.all([
+    getSweepstakesForm({ id }),
+    getSweepstakesStatus({ id }),
+    getTeamIntegrations({ slug }),
+    getPublishedSweepstakes({ slug }) // new line to get maxLoyalty
+  ]);
 
   if (!form.ok) {
     if (form.data.code === 'NOT_FOUND') notFound();
@@ -35,12 +32,6 @@ export const SweepstakeFormPage = async ({
   if (!info.ok) {
     if (info.data.code === 'NOT_FOUND') notFound();
     return <div>Failed to load sweepstakes info: {info.data.code}</div>;
-  }
-
-  if (!teamFeatureFlags.ok) {
-    return (
-      <div>Failed to load team feature flags: {teamFeatureFlags.data.code}</div>
-    );
   }
 
   if (!integrations.ok) {
@@ -71,7 +62,6 @@ export const SweepstakeFormPage = async ({
        */}
       <SweepstakesForm
         sweepstakes={form.data as GiveawayFormSchema}
-        teamFeatureFlags={teamFeatureFlags.data}
         integrations={integrations.data}
         maxLoyalty={completed.data.count}
       />

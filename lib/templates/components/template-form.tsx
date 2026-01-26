@@ -38,7 +38,6 @@ import { TemplatePreviewFooter } from './template-preview-footer';
 import { PreviewStateContext } from '@/components/sweepstakes-editor/contexts/preview-state-context';
 import { GiveawayState } from '@/schemas/giveaway/schemas';
 import { IntegrationsSchema } from '@/lib/integrations/schemas';
-import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
 import { TemplatePublishConfirmationModal } from './template-publish-confirmation-modal';
 import { TemplateCancelConfirmationModal } from './template-cancel-confirmation-modal';
 import { deleteTemplate } from '../procedures/delete-template';
@@ -52,9 +51,8 @@ const ACTION_BANNER_TITLES: Record<UnifiedFormAction, string> = {
 
 export const TemplateForm: React.FC<{
   template: TemplateInputSchema;
-  teamFeatureFlags: TeamFeatureFlagKeySchema[];
   integrations: IntegrationsSchema;
-}> = ({ template: defaultValues, teamFeatureFlags, integrations }) => {
+}> = ({ template: defaultValues, integrations }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const params = useParams();
@@ -83,7 +81,6 @@ export const TemplateForm: React.FC<{
           slug={slug}
           step={step}
           action={action}
-          teamFeatureFlags={teamFeatureFlags}
           integrations={integrations}
         />
       </FormProvider>
@@ -96,9 +93,8 @@ const FormContent: React.FC<{
   slug: string;
   step: TemplateStep;
   action: UnifiedFormAction;
-  teamFeatureFlags: TeamFeatureFlagKeySchema[];
   integrations: IntegrationsSchema;
-}> = ({ templateId, slug, step, action, teamFeatureFlags, integrations }) => {
+}> = ({ templateId, slug, step, action, integrations }) => {
   const router = useRouter();
 
   const [showIssues, setShowIssues] = useState(false);
@@ -184,7 +180,6 @@ const FormContent: React.FC<{
         onSave={handleSaveChanges}
         form={<TemplateFormContent />}
         preview={<TemplatePreview />}
-        teamFeatureFlags={teamFeatureFlags}
         integrations={integrations}
         previewFooter={<TemplatePreviewFooter />}
         type={'template'}

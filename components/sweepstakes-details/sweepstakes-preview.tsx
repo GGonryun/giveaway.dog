@@ -39,7 +39,6 @@ import {
   SelectValue
 } from '../ui/select';
 import { toBackgroundStyle } from '@/schemas/color';
-import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
 import { useProcedure } from '@/lib/mrpc/hook';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
@@ -50,10 +49,10 @@ import {
   getPreviewRelationship
 } from '../sweepstakes-editor/sweepstakes-editor-preview';
 
-export const SweepstakesPreview: React.FC<
-  ParticipantSweepstakeSchema & { teamFeatureFlags: TeamFeatureFlagKeySchema[] }
-> = (props) => {
-  const { sweepstakes, prizes, teamFeatureFlags = [] } = props;
+export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
+  props
+) => {
+  const { sweepstakes, prizes } = props;
   const browse = useBrowseSweepstakesPage();
   const detailsPage = useSweepstakesDetailsPage();
   const router = useRouter();
@@ -104,7 +103,6 @@ export const SweepstakesPreview: React.FC<
           visibility={sweepstakes.visibility.visibility}
           sweepstakesUrl={liveUrl}
           hasAllWinnersSelected={hasAllWinnersSelected}
-          teamFeatureFlags={teamFeatureFlags}
           onPickWinners={() => {
             detailsPage.setTab(sweepstakes.id, 'winners');
           }}

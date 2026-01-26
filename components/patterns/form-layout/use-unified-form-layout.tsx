@@ -10,7 +10,6 @@ import {
   UniformFormType,
   BannerConfig
 } from './types';
-import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
 import { useFormErrors } from './use-form-issues';
 import { browser } from '@/lib/browser';
 import { useFormContext } from 'react-hook-form';
@@ -19,7 +18,6 @@ import { IntegrationsSchema } from '@/lib/integrations/schemas';
 
 export type UnifiedFormLayoutState<TSteps extends string> = {
   id: string;
-  teamFeatureFlags: TeamFeatureFlagKeySchema[];
   integrations: IntegrationsSchema;
   title: string;
   type: UniformFormType;
@@ -58,7 +56,6 @@ export const UnifiedFormLayoutContext = React.createContext<
   type: 'sweepstake',
   id: '',
   disabled: false,
-  teamFeatureFlags: [],
   integrations: [],
   currentStep: '',
   isLoadingLayout: false,
@@ -99,7 +96,6 @@ export type UnifiedFormLayoutContextProps<TSteps extends string> =
 
 export const UnifiedFormLayoutContextProvider = <T extends string>({
   id,
-  teamFeatureFlags,
   integrations,
   defaultStep,
   title,
@@ -168,7 +164,6 @@ export const UnifiedFormLayoutContextProvider = <T extends string>({
     <UnifiedFormLayoutContext.Provider
       value={{
         id,
-        teamFeatureFlags,
         integrations,
         type,
         title,

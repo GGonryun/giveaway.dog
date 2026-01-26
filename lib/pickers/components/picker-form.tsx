@@ -12,8 +12,6 @@ import React, { useCallback, useState } from 'react';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
-import { TeamFeatureFlagKeySchema } from '@/schemas/feature-flags';
-
 import { MobileSuspense } from '@/components/ui/mobile-suspense';
 import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 import {
@@ -50,14 +48,12 @@ import { IntegrationsSchema } from '@/lib/integrations/schemas';
 
 export interface PickerFormProps {
   picker: Omit<PickerUnvalidatedFormSchema, 'id'>;
-  teamFeatureFlags: TeamFeatureFlagKeySchema[];
   integrations?: IntegrationsSchema;
   isDemo?: boolean;
 }
 
 export const PickerForm: React.FC<PickerFormProps> = ({
   picker,
-  teamFeatureFlags,
   integrations,
   isDemo = false
 }) => {
@@ -86,7 +82,6 @@ export const PickerForm: React.FC<PickerFormProps> = ({
           step={isPickerStepKey(step) ? step : 'setup'}
           pickerId={pickerId}
           action={action}
-          teamFeatureFlags={teamFeatureFlags}
           integrations={integrations}
         />
       </FormProvider>
@@ -98,7 +93,6 @@ interface FormContentProps {
   step: PickerStep;
   pickerId: string;
   action: UnifiedFormAction;
-  teamFeatureFlags: TeamFeatureFlagKeySchema[];
   integrations?: IntegrationsSchema;
 }
 
@@ -106,7 +100,6 @@ const FormContent: React.FC<FormContentProps> = ({
   pickerId,
   step,
   action,
-  teamFeatureFlags,
   integrations
 }) => {
   const page = usePickersPage();
@@ -239,7 +232,6 @@ const FormContent: React.FC<FormContentProps> = ({
           type={'picker'}
           action={action}
           id={pickerId}
-          teamFeatureFlags={teamFeatureFlags}
           integrations={integrations || []}
           stepOrder={PICKER_STEP_ORDER}
           stepsToFields={PICKER_STEP_TO_FIELD_MAP}
