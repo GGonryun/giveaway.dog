@@ -9,13 +9,19 @@ import { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas'
 interface AllGiveawaysGridProps {
   sweepstakes: PublicSweepstakeSchema[];
   participation: PublicSweepstakesParticipationSchema;
+  hideEntered?: boolean;
 }
 
 export function AllGiveawaysGrid({
   sweepstakes = [],
-  participation = {}
+  participation = {},
+  hideEntered = false
 }: AllGiveawaysGridProps) {
-  if (sweepstakes.length === 0) {
+  const filteredSweepstakes = hideEntered
+    ? sweepstakes.filter((s) => !participation[s.id])
+    : sweepstakes;
+
+  if (filteredSweepstakes.length === 0) {
     return (
       <div className="text-center py-12">
         <Typography.Header level={3} className="text-xl font-semibold mb-2">
@@ -32,13 +38,13 @@ export function AllGiveawaysGrid({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Typography.Paragraph className="text-sm text-muted-foreground">
-          Showing {sweepstakes.length}{' '}
-          {pluralize('giveaway', sweepstakes.length)}
+          Showing {filteredSweepstakes.length}{' '}
+          {pluralize('giveaway', filteredSweepstakes.length)}
         </Typography.Paragraph>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {sweepstakes.map((sweepstake) => {
+        {filteredSweepstakes.map((sweepstake) => {
           return (
             <div key={sweepstake.id}>
               <GiveawayItem

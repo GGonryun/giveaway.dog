@@ -52,6 +52,7 @@ type SearchParams = {
   search?: string;
   page?: string;
   showStatuses?: string;
+  hideEntered?: string;
 };
 
 export default async function Page({
@@ -81,7 +82,8 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
     sortBy: params.sortBy as GiveawayFilters['sortBy'],
     search: params.search,
     page: params.page ? parseInt(params.page) : 1,
-    showStatuses: parseShowStatuses(params.showStatuses)
+    showStatuses: parseShowStatuses(params.showStatuses),
+    hideEntered: params.hideEntered === 'true'
   };
 
   const [sweepstakes, participation] = await Promise.all([
@@ -111,6 +113,7 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
       <AllGiveawaysGrid
         sweepstakes={sweepstakes.data}
         participation={participation.data}
+        hideEntered={filters.hideEntered}
       />
     </BrowsePageFilters>
   );

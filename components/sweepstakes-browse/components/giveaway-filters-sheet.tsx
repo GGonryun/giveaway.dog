@@ -28,6 +28,7 @@ import {
   GiveawayFilters
 } from '@/lib/filters/giveaway-filters';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 
 export function GiveawayFiltersSheet() {
   const router = useRouter();
@@ -52,7 +53,8 @@ export function GiveawayFiltersSheet() {
       (searchParams.get('sortBy') as GiveawayFilters['sortBy']) ??
       'entrants-desc',
     search: searchParams.get('search') ?? undefined,
-    showStatuses: parseShowStatuses(searchParams.get('showStatuses'))
+    showStatuses: parseShowStatuses(searchParams.get('showStatuses')),
+    hideEntered: searchParams.get('hideEntered') === 'true'
   };
 
   const [filters, setFilters] = useState<GiveawayFilters>(currentFilters);
@@ -96,6 +98,12 @@ export function GiveawayFiltersSheet() {
       params.delete('showStatuses');
     }
 
+    if (filters.hideEntered) {
+      params.set('hideEntered', 'true');
+    } else {
+      params.delete('hideEntered');
+    }
+
     params.delete('page');
 
     router.push(`${pathname}?${params.toString()}`);
@@ -114,7 +122,8 @@ export function GiveawayFiltersSheet() {
     filters.maxEntrants !== undefined ||
     (filters.sortBy && filters.sortBy !== 'entrants-desc') ||
     (filters.search && filters.search !== '') ||
-    currentShowStatuses.length !== ALL_BROWSE_STATUSES.length;
+    currentShowStatuses.length !== ALL_BROWSE_STATUSES.length ||
+    filters.hideEntered;
 
   const toggleShowStatus = (status: BrowseStatus) => {
     const current = filters.showStatuses ?? ALL_BROWSE_STATUSES;
@@ -224,6 +233,19 @@ export function GiveawayFiltersSheet() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Label htmlFor="hideEntered" className="cursor-pointer">
+              Hide participation
+            </Label>
+            <Switch
+              id="hideEntered"
+              checked={filters.hideEntered ?? false}
+              onCheckedChange={(checked) =>
+                setFilters({ ...filters, hideEntered: checked })
+              }
+            />
           </div>
 
           <div className="flex gap-3 pt-4">
