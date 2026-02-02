@@ -225,7 +225,7 @@ class ProcedureBuilder<
             output: data
           });
           for (const tag of tagsToInvalidate) {
-            revalidateTag(tag);
+            revalidateTag(tag, 'max');
           }
         }
 

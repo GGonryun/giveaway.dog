@@ -97,8 +97,8 @@
     "@tiptap/react": "^3.6.6",
     "@tiptap/starter-kit": "^3.6.6",
     "@types/node": "20.17.6",
-    "@types/react": "19.0.0",
-    "@types/react-dom": "19.0.0",
+    "@types/react": "19.2.10",
+    "@types/react-dom": "19.2.3",
     "@vercel/analytics": "^1.4.1",
     "@vercel/blob": "^1.1.1",
     "@vercel/functions": "^3.1.0",
@@ -121,7 +121,7 @@
     "lucide-react": "^0.559.0",
     "motion": "^12.23.24",
     "nanoid": "^5.1.5",
-    "next": "15.5.7",
+    "next": "16.1.6",
     "next-auth": "5.0.0-beta.26",
     "next-auth-steam": "^0.4.0",
     "next-themes": "^0.4.6",
@@ -132,13 +132,14 @@
     "prettier": "^3.4.2",
     "prop-types": "^15.8.1",
     "qrcode.react": "^4.2.0",
-    "react": "19.0.1",
+    "react": "19.2.4",
     "react-day-picker": "9.8.0",
-    "react-dom": "19.0.1",
+    "react-dom": "19.2.4",
     "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.54.2",
     "react-resizable-panels": "^3.0.4",
     "recharts": "^3.1.2",
+    "scrapebadger": "^0.1.7",
     "server-only": "^0.0.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^2.6.0",
@@ -149,6 +150,7 @@
     "typescript": "5.7.2",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
+    "workflow": "4.0.1-beta.50",
     "zod": "^3.24.1"
   },
   "overrides": {
@@ -171,5 +173,11 @@
     "prisma": "^6.19.0",
     "tsx": "^4.20.6",
     "vitest": "^4.0.16"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.10",
+      "@types/react-dom": "19.2.3"
+    }
   }
 }

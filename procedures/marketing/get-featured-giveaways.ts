@@ -1,6 +1,6 @@
 'use server';
 
-import { unstable_cacheTag as cacheTag } from 'next/cache';
+import { cacheTag } from 'next/cache';
 import { simulateNetworkDelay } from '@/lib/simulate';
 
 interface FeaturedGiveaway {
