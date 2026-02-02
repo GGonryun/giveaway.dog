@@ -1,5 +1,10 @@
 ## Roadmap
 
+- [ ] Twitter v2
+
+- [ ] more secrets per task
+- [ ] do not post unlisted giveaways on discord
+
 - [ ] Add discord bot for discord-specific giveaways.
 
 - [ ] Add an "I already completed this task" to tiktok

@@ -14,6 +14,10 @@ export const usePickersPage = () => {
     () => `/app/${activeTeam.slug}/pickers`,
     [activeTeam]
   );
+  const selectTypePath = useMemo(
+    () => `${listPath}/create`,
+    [listPath]
+  );
   const createPath = useCallback(
     (id: string) => `${listPath}/${id}/create`,
     [listPath]
@@ -22,6 +26,7 @@ export const usePickersPage = () => {
   const navigateTo = (
     route:
       | { path: 'list' }
+      | { path: 'select-type' }
       | {
           path: 'create';
           id: string;
@@ -30,6 +35,9 @@ export const usePickersPage = () => {
     switch (route.path) {
       case 'list':
         router.push(listPath);
+        break;
+      case 'select-type':
+        router.push(selectTypePath);
         break;
       case 'create':
         router.push(createPath(route.id));

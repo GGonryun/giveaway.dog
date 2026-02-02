@@ -3,10 +3,7 @@
 import { PlusIcon } from 'lucide-react';
 
 import { useTeams } from '@/components/context/team-provider';
-import { createPicker } from '../procedures/create-picker';
-import { useProcedure } from '@/lib/mrpc/hook';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
 import { usePickersPage } from '../hooks/use-pickers-page';
 
 export const CreatePickerButton: React.FC<{
@@ -16,25 +13,11 @@ export const CreatePickerButton: React.FC<{
   const { activeTeam } = useTeams();
   const { navigateTo } = usePickersPage();
 
-  const procedure = useProcedure({
-    action: createPicker,
-    onSuccess: (data) => {
-      navigateTo({
-        path: 'create',
-        id: data.id
-      });
-    }
-  });
-
   return (
     <div className="flex -mt-0.5 w-fit">
-      <Button
-        size="sm"
-        disabled={procedure.isLoading}
-        onClick={() => procedure.run(activeTeam)}
-      >
-        {showIcon ? procedure.isLoading ? <Spinner /> : <PlusIcon /> : null}
-        {procedure.isLoading ? 'Creating...' : text}
+      <Button size="sm" onClick={() => navigateTo({ path: 'select-type' })}>
+        {showIcon ? <PlusIcon /> : null}
+        {text}
       </Button>
     </div>
   );

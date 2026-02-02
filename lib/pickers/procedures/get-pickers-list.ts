@@ -5,6 +5,7 @@ import z from 'zod';
 import { pickersListSchema, listPickersFilterSchema } from '../schemas/list';
 import { parsePickerFormSchema } from '../schemas/form';
 import { DEFAULT_PICKER_NAME } from '../data/defaults';
+import { PickerType } from '@prisma/client';
 
 export const getPickersList = procedure()
   .authorization({
@@ -17,37 +18,62 @@ export const getPickersList = procedure()
   )
   .output(pickersListSchema)
   .handler(async ({ input, db }) => {
-    const data = await db.picker.findMany({
-      where: {
-        team: {
-          slug: input.slug
+    const [oldPickers, twitterPickers] = await Promise.all([
+      db.picker.findMany({
+        where: {
+          team: {
+            slug: input.slug
+          },
+          status: input.status !== 'ALL' ? input.status : undefined
         },
-        status: input.status !== 'ALL' ? input.status : undefined
-      },
-      orderBy: {
-        updatedAt: 'desc'
-      },
-      include: {
-        form: {
-          select: {
-            data: true
+        include: {
+          form: {
+            select: {
+              data: true
+            }
           }
         }
-      }
+      }),
+      db.twitterPicker.findMany({
+        where: {
+          team: {
+            slug: input.slug
+          },
+          status: input.status !== 'ALL' ? input.status : undefined
+        }
+      })
+    ]);
+
+    const oldPickersFormatted = oldPickers.map((picker) => {
+      const form = parsePickerFormSchema(picker.form, {
+        validate: false
+      });
+      return {
+        pickerId: picker.id,
+        status: picker.status,
+        type: picker.type,
+        updatedAt: picker.updatedAt,
+        createdAt: picker.createdAt,
+        name: form.setup?.name || DEFAULT_PICKER_NAME
+      };
     });
 
+    const twitterPickersFormatted = twitterPickers.map((picker) => {
+      return {
+        pickerId: picker.id,
+        status: picker.status,
+        type: PickerType.TWITTER,
+        updatedAt: picker.updatedAt,
+        createdAt: picker.createdAt,
+        name: picker.id
+      };
+    });
+
+    const allPickers = [...oldPickersFormatted, ...twitterPickersFormatted].sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+    );
+
     return {
-      pickers: data.map((picker) => {
-        const form = parsePickerFormSchema(picker.form, {
-          validate: false
-        });
-        return {
-          pickerId: picker.id,
-          status: picker.status,
-          type: picker.type,
-          updatedAt: picker.updatedAt,
-          name: form.setup?.name || DEFAULT_PICKER_NAME
-        };
-      })
+      pickers: allPickers.map(({ createdAt, ...picker }) => picker)
     };
   });

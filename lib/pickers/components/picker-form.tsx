@@ -26,7 +26,6 @@ import {
   PICKER_STEP_TO_FIELD_MAP,
   PICKER_FIELD_TO_STEP_MAP
 } from '../data/steps';
-import { usePickersPage } from '../hooks/use-pickers-page';
 import { PickerCancelConfirmationModal } from './picker-cancel-confirmation-modal';
 import { PickerPublishConfirmationModal } from './picker-publish-confirmation-modal';
 import { ActionsSection } from './sections/actions-section';
@@ -45,6 +44,7 @@ import {
 import { PickerTwitterPreview } from './picker-twitter-preview';
 import { publishPicker } from '../procedures/publish-picker';
 import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { usePickersPage } from '../hooks/use-pickers-page';
 
 export interface PickerFormProps {
   picker: Omit<PickerUnvalidatedFormSchema, 'id'>;

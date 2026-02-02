@@ -793,13 +793,14 @@ model Team {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  integrations Integration[]
-  members      Membership[]
-  sweepstakes  Sweepstakes[]
-  pickers      Picker[]
-  inviteLink   TeamInviteLink?
-  inviteEmails TeamInviteEmail[]
-  templates    Template[]
+  integrations   Integration[]
+  members        Membership[]
+  sweepstakes    Sweepstakes[]
+  pickers        Picker[]
+  inviteLink     TeamInviteLink?
+  inviteEmails   TeamInviteEmail[]
+  templates      Template[]
+  twitterPickers TwitterPicker[]
 }
 
 enum TemplateType {
@@ -888,6 +889,87 @@ enum PickerStatus {
   SUSPENDED // paused by user or system, can be retried
   CANCELLED // cancelled by user, cannot be retried
   FAILED // failed due to error
+}
+
+model TwitterPickerUser {
+  id              String              @id @default(cuid())
+  twitterPickerId String
+  twitterPicker   TwitterPicker       @relation(fields: [twitterPickerId], references: [id], onDelete: Cascade)
+  draws           TwitterPickerDraw[]
+  userId          String
+  username        String?
+  name            String?
+  description     String?
+  url             String?
+  location        String?
+  profileImageUrl String?
+  bannerImageUrl  String?
+  createdAt       DateTime?
+  canDm           Boolean?
+  followersCount  Int?
+  followingCount  Int?
+  tweetCount      Int?
+  verified        Boolean?
+}
+
+model TwitterPost {
+  id              String          @id @default(cuid())
+  tweetId         String
+  text            String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  userId          String?
+  username        String?
+  favoriteCount   Int?
+  retweetCount    Int?
+  replyCount      Int?
+  viewCount       Int?
+  quoteCount      Int?
+  conversationId  String?
+  inReplyToUserId String?
+  isQuoteStatus   Boolean?
+  lang            String?
+  media           Json?
+  urls            Json?
+  hashtags        Json?
+  mentions        Json?
+  pickers         TwitterPicker[]
+}
+
+model TwitterPickerDraw {
+  id String @id @default(cuid())
+
+  picker   TwitterPicker?    @relation(fields: [pickerId], references: [id])
+  pickerId String?
+  userId   String
+  user     TwitterPickerUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TwitterPicker {
+  id                  String              @id @default(cuid())
+  seed                Int
+  tweetId             String?
+  tweet               TwitterPost?        @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  teamId              String
+  team                Team                @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  minPostCount        Int?
+  minAccountAgeDays   Int?
+  minFollowersCount   Int?
+  minFollowingCount   Int?
+  requireProfileImage Boolean?
+  requireBannerImage  Boolean?
+  requireLocation     Boolean?
+  requireBio          Boolean?
+  runAt               DateTime?
+  status              PickerStatus        @default(DRAFT)
+  users               TwitterPickerUser[]
+  winners             Int
+  draws               TwitterPickerDraw[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
 }
 
 enum PickerType {
