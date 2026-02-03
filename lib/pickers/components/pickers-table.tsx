@@ -55,9 +55,9 @@ export function PickersTable({ data }: PickersTableProps) {
 
   const handleRowClick = (item: PickersListItemSchema) => () => {
     if (item.status === 'DRAFT') {
-      router.navigateToEdit(item.pickerId);
+      router.navigateToEdit(item.pickerId, item.isV2);
     } else {
-      router.navigateToDetails(item.pickerId);
+      router.navigateToDetails(item.pickerId, item.isV2);
     }
   };
 
@@ -111,7 +111,7 @@ export function PickersTable({ data }: PickersTableProps) {
                       <DropdownMenuContent align="end">
                         {item.status !== 'DRAFT' && (
                           <DropdownMenuItem asChild>
-                            <Link href={router.detailsRoute(item.pickerId)}>
+                            <Link href={router.detailsRoute(item.pickerId, item.isV2)}>
                               <Eye className="h-4 w-4 mr-2" />
                               View Details
                             </Link>
@@ -121,7 +121,7 @@ export function PickersTable({ data }: PickersTableProps) {
                           <DropdownMenuItem
                             onClick={(e) => {
                               e.stopPropagation();
-                              router.navigateToEdit(item.pickerId);
+                              router.navigateToEdit(item.pickerId, item.isV2);
                             }}
                           >
                             <Edit className="h-4 w-4 mr-2" />

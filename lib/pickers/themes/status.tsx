@@ -7,11 +7,15 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
-  Pause
+  Pause,
+  CircleDashed,
+  Clock
 } from 'lucide-react';
 
 export const STATUS_ICONS: Record<PickerStatus, LucideIcon> = {
   DRAFT: FileEdit,
+  CREATED: CircleDashed,
+  SCHEDULED: Clock,
   PROCESSING: Loader2,
   PROCESSED: CheckCircle2,
   COMPLETE: CheckCircle2,
@@ -24,6 +28,9 @@ export const STATUS_COLORS: Record<
   PickerStatus,
   { badge: 'default' | 'secondary' | 'destructive' | 'outline'; text: string }
 > = {
+  DRAFT: { badge: 'secondary', text: 'text-gray-600 dark:text-gray-400' },
+  CREATED: { badge: 'default', text: 'text-gray-600 dark:text-gray-400' },
+  SCHEDULED: { badge: 'default', text: 'text-gray-600 dark:text-gray-400' },
   PROCESSING: { badge: 'default', text: 'text-blue-600 dark:text-blue-400' },
   PROCESSED: {
     badge: 'outline',
@@ -35,12 +42,13 @@ export const STATUS_COLORS: Record<
     text: 'text-gray-600 dark:text-gray-400'
   },
   FAILED: { badge: 'destructive', text: 'text-red-600 dark:text-red-400' },
-  DRAFT: { badge: 'secondary', text: 'text-gray-600 dark:text-gray-400' },
   SUSPENDED: { badge: 'outline', text: 'text-yellow-600 dark:text-yellow-400' }
 };
 
 export const STATUS_LABEL: Record<PickerStatus, string> = {
   DRAFT: 'Draft',
+  CREATED: 'Created',
+  SCHEDULED: 'Scheduled',
   PROCESSING: 'Processing',
   PROCESSED: 'Processed',
   COMPLETE: 'Complete',
@@ -51,6 +59,8 @@ export const STATUS_LABEL: Record<PickerStatus, string> = {
 
 export const STATUS_BADGE_VARIANT: Record<PickerStatus, BadgeVariants> = {
   DRAFT: 'secondary',
+  CREATED: 'default',
+  SCHEDULED: 'default',
   PROCESSING: 'info',
   PROCESSED: 'success',
   COMPLETE: 'success',

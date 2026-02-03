@@ -9,10 +9,18 @@ export const deletePicker = procedure()
   })
   .input(
     z.object({
-      pickerId: z.string()
+      pickerId: z.string(),
+      isV2: z.boolean().optional()
     })
   )
-  .handler(async ({ input: { pickerId }, db }) => {
+  .handler(async ({ input: { pickerId, isV2 }, db }) => {
+    if (isV2) {
+      return await db.twitterPicker.deleteMany({
+        where: {
+          id: pickerId
+        }
+      });
+    }
     return await db.picker.deleteMany({
       where: {
         id: pickerId

@@ -54,7 +54,8 @@ export const getPickersList = procedure()
         type: picker.type,
         updatedAt: picker.updatedAt,
         createdAt: picker.createdAt,
-        name: form.setup?.name || DEFAULT_PICKER_NAME
+        name: form.setup?.name || DEFAULT_PICKER_NAME,
+        isV2: false
       };
     });
 
@@ -65,7 +66,8 @@ export const getPickersList = procedure()
         type: PickerType.TWITTER,
         updatedAt: picker.updatedAt,
         createdAt: picker.createdAt,
-        name: picker.id
+        name: picker.id,
+        isV2: true
       };
     });
 

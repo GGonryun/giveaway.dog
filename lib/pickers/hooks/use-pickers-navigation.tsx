@@ -7,17 +7,22 @@ export const usePickersNavigation = () => {
   const { activeTeam } = useTeams();
   const updateParams = useUpdateParams();
 
-  const editRoute = (id: string) =>
-    `/app/${activeTeam.slug}/pickers/${id}/edit`;
+  const editRoute = (pickerId: string, isV2?: boolean) =>
+    isV2
+      ? `/app/${activeTeam.slug}/pickers/x/${pickerId}/edit`
+      : `/app/${activeTeam.slug}/pickers/twitter/${pickerId}/edit`;
 
-  const detailsRoute = (id: string) => `/app/${activeTeam.slug}/pickers/${id}`;
+  const detailsRoute = (pickerId: string, isV2?: boolean) =>
+    isV2
+      ? `/app/${activeTeam.slug}/pickers/x/${pickerId}`
+      : `/app/${activeTeam.slug}/pickers/twitter/${pickerId}`;
 
-  const navigateToDetails = (id: string) => {
-    router.push(detailsRoute(id));
+  const navigateToDetails = (pickerId: string, isV2?: boolean) => {
+    router.push(detailsRoute(pickerId, isV2));
   };
 
-  const navigateToEdit = (id: string) => {
-    router.push(editRoute(id));
+  const navigateToEdit = (pickerId: string, isV2?: boolean) => {
+    router.push(editRoute(pickerId, isV2));
   };
 
   return {

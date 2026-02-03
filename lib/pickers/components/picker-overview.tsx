@@ -606,7 +606,7 @@ const PickerOverviewMenu: React.FC<{
           {isEditable && (
             <DropdownMenuItem
               onSelect={() =>
-                router.push(`/app/${teamSlug}/pickers/${picker.id}/edit`)
+                router.push(`/app/${teamSlug}/pickers/twitter/${picker.id}/edit`)
               }
             >
               <Pencil className="h-4 w-4 mr-2" />

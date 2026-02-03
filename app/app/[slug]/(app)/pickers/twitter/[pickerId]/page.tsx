@@ -23,5 +23,5 @@ export default async function PickerDetailPage({
   params
 }: PickerDetailPageProps) {
   const { slug, pickerId } = await params;
-  redirect(`/app/${slug}/pickers/${pickerId}/${DEFAULT_PICKER_TAB}`);
+  redirect(`/app/${slug}/pickers/twitter/${pickerId}/${DEFAULT_PICKER_TAB}`);
 }

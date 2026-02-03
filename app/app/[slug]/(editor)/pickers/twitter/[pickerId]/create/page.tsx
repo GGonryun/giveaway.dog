@@ -2,7 +2,6 @@ import { PickerForm } from '@/lib/pickers/components/picker-form';
 import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
 import type { Metadata } from 'next';
 import { getUnvalidatedPickerForm } from '@/lib/pickers/procedures/get-unvalidated-picker-form';
-import { PickerPageProps } from '@/schemas/pages';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -16,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 interface CreatePickerPageProps {
-  params: Promise<PickerPageProps>;
+  params: Promise<{ slug: string; pickerId: string }>;
 }
 
 export default async function CreatePickerPage({

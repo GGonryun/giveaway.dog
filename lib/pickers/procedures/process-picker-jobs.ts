@@ -495,7 +495,7 @@ const sendPickerReadyEmail = async (
   );
 
   const baseUrl = environment.appUrl();
-  const pickerUrl = `${baseUrl}/app/${picker.team.slug}/pickers/${picker.id}/draw`;
+  const pickerUrl = `${baseUrl}/app/${picker.team.slug}/pickers/twitter/${picker.id}/draw`;
 
   try {
     const emailClient = newEmailClient({

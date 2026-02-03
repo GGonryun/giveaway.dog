@@ -1,4 +1,6 @@
-export default {
+import { withWorkflow } from 'workflow/next';
+
+export default withWorkflow({
   experimental: {
     useCache: true
   },
@@ -31,4 +33,4 @@ export default {
       }
     ]
   }
-};
+});

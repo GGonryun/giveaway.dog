@@ -6,16 +6,15 @@ import { MAX_PICKER_SCHEDULE_DAYS } from '@/lib/settings';
 import { DeepPartial } from '@/lib/types';
 import { z } from 'zod';
 
-// Define filters schema inline (duplicated from v1 for independence)
 const twitterUserFiltersSchema = z.object({
   minimumPostCount: z.number().nullable().default(null),
   minimumAccountAgeDays: z.number().nullable().default(null),
   minimumFollowers: z.number().nullable().default(null),
-  minimumFollowing: z.number().nullable().default(null)
-});
-
-// Define requirements schema inline (duplicated from v1 for independence)
-const twitterUserRequirementsSchema = z.object({
+  minimumFollowing: z.number().nullable().default(null),
+  lastPostWithin: z
+    .enum(['PAST_DAY', 'PAST_WEEK', 'PAST_MONTH'])
+    .nullable()
+    .default(null),
   hasProfileImage: z.boolean().default(false),
   hasBanner: z.boolean().default(false),
   hasLocation: z.boolean().default(false),
@@ -34,40 +33,33 @@ const timingSchema = ({
 }: {
   validate: boolean;
   maxDurationDays: number;
-}) => {
-  const runAt = validate
-    ? z.string().refine((date) => new Date(date) > new Date(), {
-        message: 'Run date must be in the future'
-      })
-    : z.string();
-  const obj = z.object({
-    runAt,
-    timeZone: z.string()
-  });
-  if (!validate) return obj;
-  return obj.superRefine((data, ctx) => {
-    const startDate = new Date();
-    const runAtDate = new Date(data.runAt);
-    if (startDate && runAtDate <= startDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Run date must be in the future',
-        path: ['runAt']
-      });
-    }
-    if (startDate) {
+}) =>
+  z
+    .object({
+      runAt: z.string(),
+      timeZone: z.string()
+    })
+    .superRefine((data, ctx) => {
+      if (!validate) return;
+      const startDate = new Date();
+      const runAtDate = new Date(data.runAt);
+      if (runAtDate <= startDate) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Run date must be in the future',
+          path: ['runAt']
+        });
+      }
       const maxEndDate = new Date(startDate);
       maxEndDate.setDate(maxEndDate.getDate() + maxDurationDays);
-      if (new Date(runAtDate) > maxEndDate) {
+      if (runAtDate > maxEndDate) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Duration cannot exceed ${maxDurationDays} days`,
           path: ['runAt']
         });
       }
-    }
-  });
-};
+    });
 
 // New form schema mapping directly to TwitterPicker fields
 export const twitterV2PickerFormSchema = ({
@@ -77,15 +69,35 @@ export const twitterV2PickerFormSchema = ({
 }) =>
   z.object({
     setup: z.object({
-      postUrl: z
-        .string()
-        .min(1, 'Post URL is required')
-        .url('Please enter a valid URL')
-        .refine(xStatusRefineUrl, {
-          message: xStatusRefineError
+      postUrls: z
+        .array(
+          z.object({
+            url: z
+              .string()
+              .min(1, 'Post URL is required')
+              .url('Please enter a valid URL')
+              .refine(xStatusRefineUrl, {
+                message: xStatusRefineError
+              })
+          })
+        )
+        .min(1, 'At least one post URL is required')
+        .superRefine((urls, ctx) => {
+          const seen = new Map<string, number>();
+          urls.forEach(({ url }, index) => {
+            const tweetId = extractTweetIdFromUrl(url);
+            if (!tweetId) return;
+            if (seen.has(tweetId)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'This post is already added',
+                path: [index, 'url']
+              });
+            } else {
+              seen.set(tweetId, index);
+            }
+          });
         })
-      // No name field - TwitterPicker doesn't need it
-      // No integrationId - v2 uses ScrapeBadger API
     }),
     actions: pickerActionsSchema.refine((data) => data.repost, {
       message: 'Repost action must be enabled for V2 pickers'
@@ -99,10 +111,7 @@ export const twitterV2PickerFormSchema = ({
     winners: z.object({
       quota: z.number().min(1, 'Must have at least 1 winner').default(1)
     }),
-    // These map directly to TwitterPicker.minPostCount, minAccountAgeDays, etc.
-    filters: twitterUserFiltersSchema,
-    // These map directly to TwitterPicker.requireProfileImage, requireBannerImage, etc.
-    requirements: twitterUserRequirementsSchema
+    filters: twitterUserFiltersSchema
   });
 
 export type TwitterV2PickerFormSchema = z.infer<
@@ -110,9 +119,6 @@ export type TwitterV2PickerFormSchema = z.infer<
 >;
 
 export type TwitterUserFiltersSchema = z.infer<typeof twitterUserFiltersSchema>;
-export type TwitterUserRequirementsSchema = z.infer<
-  typeof twitterUserRequirementsSchema
->;
 
 // Unvalidated schema for partial/draft data
 export type TwitterV2PickerUnvalidatedFormSchema =

@@ -105,7 +105,7 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
       toast.success(
         'Picker marked as complete! No further changes can be made.'
       );
-      router.push(`/app/${teamSlug}/pickers/${pickerId}/overview`);
+      router.push(`/app/${teamSlug}/pickers/twitter/${pickerId}/overview`);
       router.refresh();
     },
     onFailure(error) {
@@ -192,7 +192,7 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
               <div className="pt-2">
                 <Button variant="outline" asChild>
                   <Link
-                    href={`/app/${teamSlug}/pickers/${pickerId}/participants`}
+                    href={`/app/${teamSlug}/pickers/twitter/${pickerId}/participants`}
                   >
                     View Progress
                   </Link>
@@ -229,7 +229,7 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
               <div className="pt-2">
                 <Button asChild>
                   <Link
-                    href={`/app/${teamSlug}/pickers/${pickerId}/participants`}
+                    href={`/app/${teamSlug}/pickers/twitter/${pickerId}/participants`}
                   >
                     Go to Participants
                   </Link>
@@ -287,7 +287,7 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
                 <Button
                   variant="outline"
                   onClick={() =>
-                    router.push(`/app/${teamSlug}/pickers/${pickerId}/overview`)
+                    router.push(`/app/${teamSlug}/pickers/twitter/${pickerId}/overview`)
                   }
                   className="w-full sm:w-auto"
                 >
@@ -519,7 +519,7 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
             <Button
               variant="outline"
               onClick={() =>
-                router.push(`/app/${teamSlug}/pickers/${pickerId}`)
+                router.push(`/app/${teamSlug}/pickers/twitter/${pickerId}`)
               }
               disabled={drawProcedure.isLoading}
             >

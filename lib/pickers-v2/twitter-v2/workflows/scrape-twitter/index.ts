@@ -1,4 +1,6 @@
+import { sleep } from '@workflow/core';
 import { ScrapingProgressRequest } from '../../schemas/workflow';
+import { processItem, finalizeProgress } from './steps';
 
 export async function scrapeTwitterWorkflow({
   tweetId,
@@ -6,10 +8,16 @@ export async function scrapeTwitterWorkflow({
   runDate
 }: ScrapingProgressRequest) {
   'use workflow';
-  console.log('Scraping Twitter workflow started for tweetId:', tweetId);
-  // for (let i = 0; i < items.length; i++) {
-  //   await processItem(items[i], i + 1, items.length);
-  //   await sleep('1s');
-  // }
-  // await finalizeProgress();
+  console.log(
+    'Scraping Twitter workflow started for tweetId:',
+    tweetId,
+    pickerId,
+    runDate
+  );
+  const MAX = 10;
+  for (let i = 0; i < MAX; i++) {
+    await processItem(MAX, i + 1);
+    await sleep('5s');
+  }
+  await finalizeProgress();
 }

@@ -882,6 +882,8 @@ model ImageMetadata {
 
 enum PickerStatus {
   DRAFT // created, but not yet ready to start syncing
+  CREATED // ready to start syncing
+  SCHEDULED // waiting for scheduled time to start
   PROCESSING // actively syncing data
   PROCESSED // finished syncing data
   COMPLETE // all done
@@ -913,11 +915,11 @@ model TwitterPickerUser {
 }
 
 model TwitterPost {
-  id              String          @id @default(cuid())
+  id              String        @id @default(cuid())
   tweetId         String
   text            String?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
   userId          String?
   username        String?
   favoriteCount   Int?
@@ -933,7 +935,8 @@ model TwitterPost {
   urls            Json?
   hashtags        Json?
   mentions        Json?
-  pickers         TwitterPicker[]
+  pickerId        String
+  picker          TwitterPicker @relation(fields: [pickerId], references: [id], onDelete: Cascade)
 }
 
 model TwitterPickerDraw {
@@ -948,13 +951,18 @@ model TwitterPickerDraw {
   updatedAt DateTime @updatedAt
 }
 
+enum LastPostedType {
+  PAST_DAY
+  PAST_WEEK
+  PAST_MONTH
+}
+
 model TwitterPicker {
   id                  String              @id @default(cuid())
-  seed                Int
-  tweetId             String?
-  tweet               TwitterPost?        @relation(fields: [tweetId], references: [id], onDelete: Cascade)
   teamId              String
   team                Team                @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  tweetUrls           String[]
+  tweets              TwitterPost[]
   minPostCount        Int?
   minAccountAgeDays   Int?
   minFollowersCount   Int?
@@ -963,6 +971,7 @@ model TwitterPicker {
   requireBannerImage  Boolean?
   requireLocation     Boolean?
   requireBio          Boolean?
+  lastPostWithin      LastPostedType?
   runAt               DateTime?
   status              PickerStatus        @default(DRAFT)
   users               TwitterPickerUser[]

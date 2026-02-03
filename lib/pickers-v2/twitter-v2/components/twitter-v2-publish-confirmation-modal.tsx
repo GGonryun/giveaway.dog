@@ -15,20 +15,20 @@ import { Spinner } from '@/components/ui/spinner';
 import Link from 'next/link';
 import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 
-interface PickerPublishConfirmationModalProps {
+interface TwitterV2PublishConfirmationModalProps {
   open: boolean;
   onClose: () => void;
-  onContinueEditing: (fieldName?: string) => void;
   onCancel: () => void;
   onSave: () => void;
   onPublish: () => void;
   isUpdating: boolean;
   isPublishing: boolean;
+  isScheduled: boolean;
   action: UnifiedFormAction;
 }
 
-export const PickerPublishConfirmationModal: React.FC<
-  PickerPublishConfirmationModalProps
+export const TwitterV2PublishConfirmationModal: React.FC<
+  TwitterV2PublishConfirmationModalProps
 > = ({
   open,
   onClose,
@@ -37,6 +37,7 @@ export const PickerPublishConfirmationModal: React.FC<
   onPublish,
   isUpdating,
   isPublishing,
+  isScheduled,
   action
 }) => {
   const isDemo = action === 'demo';
@@ -59,7 +60,7 @@ export const PickerPublishConfirmationModal: React.FC<
                     or exit to learn more about pricing.
                   </AlertDescription>
                 </Alert>
-              ) : (
+              ) : isScheduled ? (
                 <Alert variant="info">
                   <InfoIcon />
                   <AlertTitle>
@@ -68,9 +69,21 @@ export const PickerPublishConfirmationModal: React.FC<
                   <AlertDescription>
                     <span>
                       Once published, a picker will start synchronizing entries
-                      from the connected source. This can{' '}
-                      <strong>take a few hours</strong>. You will be notified{' '}
+                      from the connected source. You will be notified{' '}
                       <strong>via email</strong> when the process is complete.
+                    </span>
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <Alert variant="warning">
+                  <InfoIcon />
+                  <AlertTitle>
+                    <strong>Note:</strong>
+                  </AlertTitle>
+                  <AlertDescription>
+                    <span>
+                      Once published, a picker will start synchronizing entries
+                      from the connected source <strong>immediately</strong>.
                     </span>
                   </AlertDescription>
                 </Alert>

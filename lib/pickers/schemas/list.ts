@@ -15,7 +15,8 @@ export const pickersListItemSchema = z.object({
   status: pickerStatusSchema,
   type: pickerTypeSchema,
   updatedAt: z.coerce.date(),
-  name: z.string()
+  name: z.string(),
+  isV2: z.boolean().optional()
 });
 
 export type PickersListItemSchema = z.infer<typeof pickersListItemSchema>;

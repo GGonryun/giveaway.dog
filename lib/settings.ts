@@ -19,6 +19,7 @@ export const DEFAULT_TIME_SERIES_DURATION = 7;
 export const DEFAULT_PAGE_SIZE = 10;
 export const MAX_SWEEPSTAKE_DURATION_DAYS = 90;
 export const MAX_PICKER_SCHEDULE_DAYS = 14;
+export const MAX_TWITTER_V2_PICKER_POSTS = 5;
 export const DEFAULT_SWEEPSTAKES_DETAILS_TAB: SweepstakesTabSchema = 'preview';
 export const DEFAULT_USER_DETAILS_TAB: UserDetailsTabSchema = 'overview';
 export const DEFAULT_ACCOUNT_TAB: AccountTabSchema = 'profile';

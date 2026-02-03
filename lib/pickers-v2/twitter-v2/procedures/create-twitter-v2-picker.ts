@@ -5,7 +5,7 @@ import z from 'zod';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
 import { nanoid } from 'nanoid';
 import { TeamPermission } from '@/lib/permissions';
-import { PickerStatus } from '@prisma/client';
+import { LastPostedType, PickerStatus } from '@prisma/client';
 
 export const createTwitterPicker = procedure()
   .authorization({
@@ -34,13 +34,14 @@ export const createTwitterPicker = procedure()
         id: nanoid(10),
         teamId: team.id,
         status: PickerStatus.DRAFT,
-        seed: Math.floor(Math.random() * 1000000),
+        tweetUrls: [],
         winners: 1,
-        minPostCount: null,
-        minAccountAgeDays: null,
-        minFollowersCount: null,
-        minFollowingCount: null,
-        requireProfileImage: false,
+        minPostCount: 100,
+        minAccountAgeDays: 100,
+        minFollowersCount: 100,
+        minFollowingCount: 100,
+        lastPostWithin: LastPostedType.PAST_MONTH,
+        requireProfileImage: true,
         requireBannerImage: false,
         requireLocation: false,
         requireBio: false,

@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation';
 
 interface DeletePickerModalProps {
   onClose: () => void;
-  picker: Pick<PickersListItemSchema, 'pickerId' | 'name'> | null;
+  picker: Pick<PickersListItemSchema, 'pickerId' | 'name' | 'isV2'> | null;
 }
 
 export const DeletePickerModal: React.FC<DeletePickerModalProps> = ({

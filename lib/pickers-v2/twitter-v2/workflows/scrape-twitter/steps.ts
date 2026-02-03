@@ -1,7 +1,7 @@
 import { getWritable, sleep } from '@workflow/core';
 import { ScrapingProgressUpdate } from '../../schemas/workflow';
 
-export async function processItem(max: number, current: number, total: number) {
+export async function processItem(max: number, current: number) {
   'use step';
   const writable = getWritable<ScrapingProgressUpdate>();
   const writer = writable.getWriter();
@@ -11,7 +11,7 @@ export async function processItem(max: number, current: number, total: number) {
   await writer.write({
     max,
     current,
-    progress: Math.round((current / total) * 100)
+    progress: Math.round((current / max) * 100)
   });
   writer.releaseLock();
 }

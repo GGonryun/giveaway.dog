@@ -10,7 +10,7 @@ import { createPicker } from '../procedures/create-picker';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { GemIcon, type LucideIcon } from 'lucide-react';
-import { createTwitterPicker } from '@/lib/pickers-v2/twitter-v2/procedures/create-twitter-picker';
+import { createTwitterPicker } from '@/lib/pickers-v2/twitter-v2/procedures/create-twitter-v2-picker';
 
 interface SelectPickerTypeProps {
   slug: string;
@@ -74,13 +74,13 @@ export const SelectPickerType: React.FC<SelectPickerTypeProps> = ({ slug }) => {
     legacy: useProcedure({
       action: createPicker,
       onSuccess: (data) => {
-        router.push(`/app/${slug}/pickers/${data.id}/create`);
+        router.push(`/app/${slug}/pickers/twitter/${data.id}/create`);
       }
     }),
     'twitter-v2': useProcedure({
       action: createTwitterPicker,
       onSuccess: (data) => {
-        router.push(`/app/${slug}/pickers/${data.id}/create`);
+        router.push(`/app/${slug}/pickers/x/${data.id}/create`);
       }
     })
   };
