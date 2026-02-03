@@ -1,5 +1,5 @@
 import { getScrapeBadgerClient } from '../client';
-import { Tweet } from 'scrapebadger';
+import type { Tweet } from 'scrapebadger';
 
 export const getTweet = async ({
   tweetId

@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { getTweet } from '@/lib/scrapebadger/procedures/get-tweet';
 import { Prisma } from '@prisma/client';
-import { Tweet } from 'scrapebadger';
+import type { Tweet } from 'scrapebadger';
 import { FatalError } from 'workflow';
 
 export async function storeTweetData({

@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { getRetweeters } from '@/lib/scrapebadger/procedures/get-retweeters';
 import { Prisma } from '@prisma/client';
-import { User } from 'scrapebadger';
+import type { User } from 'scrapebadger';
 import { FatalError } from 'workflow';
 
 export async function storeRetweeters({
