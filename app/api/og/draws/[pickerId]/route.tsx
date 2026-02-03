@@ -6,8 +6,6 @@ import {
   toPublicPicker
 } from '@/lib/pickers/schemas/public-picker';
 
-export const dynamic = 'force-dynamic';
-
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ pickerId: string }> }
@@ -21,7 +19,7 @@ export async function GET(
     });
 
     if (!picker) {
-      return new ImageResponse(
+      const response = new ImageResponse(
         <div
           style={{
             height: '100%',
@@ -40,6 +38,10 @@ export async function GET(
           height: 630
         }
       );
+
+      response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=60');
+
+      return response;
     }
 
     let publicPicker;
@@ -47,7 +49,7 @@ export async function GET(
       publicPicker = toPublicPicker(picker);
     } catch (error) {
       console.error('[OG Image] Error parsing picker data', error);
-      return new ImageResponse(
+      const response = new ImageResponse(
         <div
           style={{
             height: '100%',
@@ -88,6 +90,10 @@ export async function GET(
           height: 630
         }
       );
+
+      response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=60');
+
+      return response;
     }
 
     const draws = publicPicker.draws.draws;
@@ -97,7 +103,7 @@ export async function GET(
     const hasWinners = winningDraws.length > 0;
 
     if (!hasWinners) {
-      return new ImageResponse(
+      const response = new ImageResponse(
         <div
           style={{
             height: '100%',
@@ -149,12 +155,16 @@ export async function GET(
           height: 630
         }
       );
+
+      response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=60');
+
+      return response;
     }
 
     const winner = winningDraws[0].winner;
     const winnerCount = winningDraws.length;
 
-    return new ImageResponse(
+    const response = new ImageResponse(
       <div
         style={{
           height: '100%',
@@ -300,10 +310,17 @@ export async function GET(
         height: 630
       }
     );
+
+    response.headers.set(
+      'Cache-Control',
+      'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400'
+    );
+
+    return response;
   } catch (error) {
     console.error('[OG Image] Error generating picker image', error);
 
-    return new ImageResponse(
+    const response = new ImageResponse(
       <div
         style={{
           height: '100%',
@@ -322,5 +339,9 @@ export async function GET(
         height: 630
       }
     );
+
+    response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=60');
+
+    return response;
   }
 }

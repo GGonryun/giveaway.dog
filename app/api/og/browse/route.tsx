@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export async function GET() {
-  return new ImageResponse(
+  const response = new ImageResponse(
     <div
       style={{
         height: '100%',
@@ -61,4 +61,11 @@ export async function GET() {
       height: 630
     }
   );
+
+  response.headers.set(
+    'Cache-Control',
+    'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400'
+  );
+
+  return response;
 }
