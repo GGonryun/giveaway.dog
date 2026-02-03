@@ -6,7 +6,6 @@ import {
   toPublicPicker
 } from '@/lib/pickers/schemas/public-picker';
 
-export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(
