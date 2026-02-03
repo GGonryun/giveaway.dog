@@ -52,55 +52,6 @@ export const updateTwitterV2Picker = procedure()
       });
     }
 
-    for (const { url: postUrl } of data.setup.postUrls) {
-      const extractedTweetId = extractTweetId(postUrl);
-      const username = extractUsernameFromTweetUrl(postUrl);
-
-      if (!extractedTweetId || extractedTweetId === postUrl) {
-        continue;
-      }
-
-      try {
-        const tweetData = await getTweet({ tweetId: extractedTweetId });
-
-        const existingPost = await db.twitterPost.findFirst({
-          where: { tweetId: extractedTweetId, pickerId }
-        });
-
-        const postData = {
-          text: tweetData.text || null,
-          userId: tweetData.user_id || null,
-          username: username || tweetData.username || null,
-          favoriteCount: tweetData.favorite_count || null,
-          retweetCount: tweetData.retweet_count || null,
-          replyCount: tweetData.reply_count || null,
-          viewCount: tweetData.view_count || null,
-          quoteCount: tweetData.quote_count || null,
-          conversationId: tweetData.conversation_id || null,
-          inReplyToUserId: tweetData.in_reply_to_user_id || null,
-          isQuoteStatus: tweetData.is_quote_status || null,
-          lang: tweetData.lang || null
-        };
-
-        if (existingPost) {
-          await db.twitterPost.update({
-            where: { id: existingPost.id },
-            data: postData
-          });
-        } else {
-          await db.twitterPost.create({
-            data: {
-              tweetId: extractedTweetId,
-              pickerId,
-              ...postData
-            }
-          });
-        }
-      } catch (error) {
-        console.error(`Error fetching tweet data for ${postUrl}:`, error);
-      }
-    }
-
     await db.twitterPicker.update({
       where: { id: pickerId },
       data: {

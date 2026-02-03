@@ -895,8 +895,8 @@ enum PickerStatus {
 
 model TwitterPickerUser {
   id              String              @id @default(cuid())
-  twitterPickerId String
-  twitterPicker   TwitterPicker       @relation(fields: [twitterPickerId], references: [id], onDelete: Cascade)
+  pickerId        String
+  picker          TwitterPicker       @relation(fields: [pickerId], references: [id], onDelete: Cascade)
   draws           TwitterPickerDraw[]
   userId          String
   username        String?
@@ -915,37 +915,29 @@ model TwitterPickerUser {
 }
 
 model TwitterPost {
-  id              String        @id @default(cuid())
-  tweetId         String
-  text            String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  userId          String?
-  username        String?
-  favoriteCount   Int?
-  retweetCount    Int?
-  replyCount      Int?
-  viewCount       Int?
-  quoteCount      Int?
-  conversationId  String?
-  inReplyToUserId String?
-  isQuoteStatus   Boolean?
-  lang            String?
-  media           Json?
-  urls            Json?
-  hashtags        Json?
-  mentions        Json?
-  pickerId        String
-  picker          TwitterPicker @relation(fields: [pickerId], references: [id], onDelete: Cascade)
+  id            String        @id @default(cuid())
+  tweetId       String
+  text          String?
+  createdAt     DateTime
+  userId        String?
+  username      String?
+  favoriteCount Int?
+  retweetCount  Int?
+  replyCount    Int?
+  viewCount     Int?
+  quoteCount    Int?
+  pickerId      String
+  picker        TwitterPicker @relation(fields: [pickerId], references: [id], onDelete: Cascade)
 }
 
 model TwitterPickerDraw {
   id String @id @default(cuid())
 
-  picker   TwitterPicker?    @relation(fields: [pickerId], references: [id])
-  pickerId String?
-  userId   String
-  user     TwitterPickerUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  picker       TwitterPicker?    @relation(fields: [pickerId], references: [id])
+  pickerId     String?
+  userId       String
+  user         TwitterPickerUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  disqualified String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -959,6 +951,7 @@ enum LastPostedType {
 
 model TwitterPicker {
   id                  String              @id @default(cuid())
+  runId               String? // the associated workflow
   teamId              String
   team                Team                @relation(fields: [teamId], references: [id], onDelete: Cascade)
   tweetUrls           String[]

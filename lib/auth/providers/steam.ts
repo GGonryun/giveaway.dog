@@ -34,8 +34,9 @@ export interface SteamProfile extends Record<string, any> {
   commentpermission: boolean;
 }
 
-export interface SteamProviderOptions
-  extends Partial<OAuthUserConfig<SteamProfile>> {
+export interface SteamProviderOptions extends Partial<
+  OAuthUserConfig<SteamProfile>
+> {
   request: Request | undefined;
   callbackUrl: string | URL;
   clientSecret: string;

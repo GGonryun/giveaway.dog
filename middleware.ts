@@ -3,7 +3,9 @@ import { authConfigMiddleware } from './lib/auth/config-middleware';
 
 // Don't invoke Middleware on some paths
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|.well-known/workflow/*).*)'
+  ]
 };
 
 export default NextAuth(authConfigMiddleware).auth;

@@ -14,10 +14,7 @@ export const usePickersPage = () => {
     () => `/app/${activeTeam.slug}/pickers`,
     [activeTeam]
   );
-  const selectTypePath = useMemo(
-    () => `${listPath}/create`,
-    [listPath]
-  );
+  const selectTypePath = useMemo(() => `${listPath}/create`, [listPath]);
   const createPath = useCallback(
     (id: string) => `${listPath}/${id}/create`,
     [listPath]

@@ -42,7 +42,7 @@ export const PickerCancelConfirmationModal: React.FC<
 
   return (
     <Dialog open={Boolean(open)} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[550px]">
+      <DialogContent className="sm:max-w-125">
         <DialogHeader>
           <DialogTitle>You're exiting the Picker Editor</DialogTitle>
           <DialogDescription>

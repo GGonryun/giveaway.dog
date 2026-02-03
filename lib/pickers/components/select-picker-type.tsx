@@ -60,7 +60,7 @@ const PICKER_TYPES: PickerTypeConfig[] = [
     buttonText: 'Create New Picker',
     action: createTwitterPicker,
     badge: {
-      text: 'Pro Tier',
+      text: 'Pro',
       Icon: GemIcon
     }
   }
@@ -114,7 +114,10 @@ export const SelectPickerType: React.FC<SelectPickerTypeProps> = ({ slug }) => {
                 className="p-6 hover:border-primary transition-colors relative"
               >
                 {pickerType.badge && (
-                  <Badge className="absolute top-4 right-4" variant="default">
+                  <Badge
+                    className="absolute top-4 right-4 flex items-center"
+                    variant="default"
+                  >
                     {pickerType.badge.Icon && <pickerType.badge.Icon />}
                     {pickerType.badge.text}
                   </Badge>

@@ -287,7 +287,9 @@ export const PickerDrawInterface: React.FC<PickerDrawInterfaceProps> = ({
                 <Button
                   variant="outline"
                   onClick={() =>
-                    router.push(`/app/${teamSlug}/pickers/twitter/${pickerId}/overview`)
+                    router.push(
+                      `/app/${teamSlug}/pickers/twitter/${pickerId}/overview`
+                    )
                   }
                   className="w-full sm:w-auto"
                 >

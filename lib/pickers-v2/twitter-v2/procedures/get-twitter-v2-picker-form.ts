@@ -25,7 +25,10 @@ export const getTwitterV2PickerForm = procedure()
 
     return {
       setup: {
-        postUrls: picker.tweetUrls.length > 0 ? picker.tweetUrls.map((url) => ({ url })) : [{ url: '' }]
+        postUrls:
+          picker.tweetUrls.length > 0
+            ? picker.tweetUrls.map((url) => ({ url }))
+            : [{ url: '' }]
       },
       actions: {
         repost: true, // V2 always requires repost

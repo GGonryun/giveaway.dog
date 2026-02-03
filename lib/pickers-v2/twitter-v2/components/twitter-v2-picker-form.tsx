@@ -18,7 +18,7 @@ import {
 } from '../data/steps';
 import { TwitterV2SetupSection } from './sections/setup-section';
 import { TwitterV2FiltersSection } from './sections/filters-section';
-import { deletePicker } from '@/lib/pickers/procedures/delete-picker';
+import { deleteTwitterV2Picker } from '../procedures/delete-twitter-v2-picker';
 import { useProcedure } from '@/lib/mrpc/hook';
 import {
   DEFAULT_TWITTER_V2_PICKER_FORM,
@@ -29,8 +29,8 @@ import {
   twitterV2PickerFormSchema,
   TwitterV2PickerUnvalidatedFormSchema
 } from '../schemas/form';
-import { usePickersPage } from '@/lib/pickers/hooks/use-pickers-page';
-import { PickerCancelConfirmationModal } from '@/lib/pickers/components/picker-cancel-confirmation-modal';
+import { useTwitterV2PickersPage } from '../hooks/use-twitter-v2-pickers-page';
+import { TwitterV2CancelConfirmationModal } from './twitter-v2-cancel-confirmation-modal';
 import { TwitterV2PublishConfirmationModal } from './twitter-v2-publish-confirmation-modal';
 import { TwitterV2PickerPreview } from './twitter-v2-picker-preview';
 import { updateTwitterV2Picker } from '../procedures/update-twitter-v2-picker';
@@ -78,7 +78,7 @@ interface FormContentProps {
 
 const FormContent: React.FC<FormContentProps> = ({ pickerId, action }) => {
   const router = useRouter();
-  const page = usePickersPage();
+  const page = useTwitterV2PickersPage();
   const team = useActiveTeam();
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
@@ -87,7 +87,7 @@ const FormContent: React.FC<FormContentProps> = ({ pickerId, action }) => {
   const form = useFormContext<TwitterV2PickerFormSchema>();
 
   const deleteProcedure = useProcedure({
-    action: deletePicker,
+    action: deleteTwitterV2Picker,
     onSuccess: () => {
       toast.success('Picker deleted successfully!');
       page.navigateTo({ path: 'list' });
@@ -107,7 +107,7 @@ const FormContent: React.FC<FormContentProps> = ({ pickerId, action }) => {
     onSuccess: () => {
       toast.success('Picker published successfully!');
       setShowPublishModal(false);
-      router.push(`/app/${team.slug}/pickers/x/${pickerId}/overview`);
+      router.push(`/app/${team.slug}/pickers/x/${pickerId}`);
     }
   });
 
@@ -117,12 +117,7 @@ const FormContent: React.FC<FormContentProps> = ({ pickerId, action }) => {
 
   const handlePublish = useCallback(() => {
     if (action === 'demo') return;
-
-    publishProcedure.run({
-      pickerId,
-      slug: team.slug,
-      data: form.getValues()
-    });
+    publishProcedure.run({ pickerId, slug: team.slug, data: form.getValues() });
   }, [action, form, pickerId, team.slug, publishProcedure]);
 
   const handleSubmitInvalid = useCallback(async () => {
@@ -167,7 +162,7 @@ const FormContent: React.FC<FormContentProps> = ({ pickerId, action }) => {
     }
 
     if (action === 'create') {
-      deleteProcedure.run({ pickerId, isV2: true });
+      deleteProcedure.run({ pickerId });
     } else {
       page.navigateTo({ path: 'list' });
     }
@@ -206,7 +201,7 @@ const FormContent: React.FC<FormContentProps> = ({ pickerId, action }) => {
         />
       </form>
 
-      <PickerCancelConfirmationModal
+      <TwitterV2CancelConfirmationModal
         onClose={() => setShowCancelModal(false)}
         open={showCancelModal}
         isLoading={isLoading}

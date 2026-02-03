@@ -10,8 +10,7 @@ import { UserReferralSchema } from '@/lib/referrals/schemas';
 import { SweepstakesParticipationPage } from './sweepstakes-participation-page-content';
 import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
 
-interface AuthenticatedSweepstakesContentProps
-  extends ParticipantSweepstakeSchema {
+interface AuthenticatedSweepstakesContentProps extends ParticipantSweepstakeSchema {
   participant?: SweepstakesParticipantSchema;
   relationship?: UserHostRelationshipSchema;
   referral?: UserReferralSchema;

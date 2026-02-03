@@ -71,9 +71,10 @@ export const getPickersList = procedure()
       };
     });
 
-    const allPickers = [...oldPickersFormatted, ...twitterPickersFormatted].sort(
-      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-    );
+    const allPickers = [
+      ...oldPickersFormatted,
+      ...twitterPickersFormatted
+    ].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
     return {
       pickers: allPickers.map(({ createdAt, ...picker }) => picker)

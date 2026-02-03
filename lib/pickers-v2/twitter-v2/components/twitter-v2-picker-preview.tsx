@@ -235,7 +235,8 @@ export const TwitterV2PickerPreviewEmbed: React.FC<{
 export const TwitterV2PickerPreview: React.FC<{ className?: string }> = ({
   className
 }) => {
-  const { control, getFieldState } = useFormContext<TwitterV2PickerFormSchema>();
+  const { control, getFieldState } =
+    useFormContext<TwitterV2PickerFormSchema>();
   const postUrls = useWatch({ control, name: 'setup.postUrls' });
 
   const activeUrls = postUrls
@@ -260,7 +261,11 @@ export const TwitterV2PickerPreview: React.FC<{ className?: string }> = ({
         ) : (
           <div className="flex flex-col gap-6 w-full max-w-xl my-auto">
             {activeUrls.map(({ url, hasError, index }) => (
-              <TwitterV2EmbedItem key={index} postUrl={url} hasError={hasError} />
+              <TwitterV2EmbedItem
+                key={index}
+                postUrl={url}
+                hasError={hasError}
+              />
             ))}
           </div>
         )}

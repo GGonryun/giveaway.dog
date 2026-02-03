@@ -408,7 +408,7 @@ export const PickerOverview: React.FC<{
                         href={picker.form.setup.postUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary hover:underline text-xs truncate max-w-[200px] block"
+                        className="text-primary hover:underline text-xs truncate max-w-50 block"
                       >
                         {new URL(picker.form.setup.postUrl).pathname}
                       </a>
@@ -606,7 +606,9 @@ const PickerOverviewMenu: React.FC<{
           {isEditable && (
             <DropdownMenuItem
               onSelect={() =>
-                router.push(`/app/${teamSlug}/pickers/twitter/${picker.id}/edit`)
+                router.push(
+                  `/app/${teamSlug}/pickers/twitter/${picker.id}/edit`
+                )
               }
             >
               <Pencil className="h-4 w-4 mr-2" />
@@ -643,7 +645,7 @@ const PickerOverviewMenu: React.FC<{
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-0">
+        <DialogContent className="max-w-[95vw] sm:max-w-150 max-h-[90vh] overflow-y-auto p-0">
           <DialogHeader className="px-6 pt-6 pb-2">
             <DialogTitle>Post Preview</DialogTitle>
           </DialogHeader>

@@ -182,7 +182,9 @@ export const PickerWinnerSection: React.FC<PickerWinnerSectionProps> = ({
             </div>
             <div className="flex flex-col md:flex-row items-center gap-2">
               <Button variant="link" size="sm" asChild>
-                <Link href={`/app/${teamSlug}/pickers/twitter/${pickerId}/draw`}>
+                <Link
+                  href={`/app/${teamSlug}/pickers/twitter/${pickerId}/draw`}
+                >
                   <TrophyIcon className="h-3 w-3 mr-1" />
                   View Draw Details
                 </Link>

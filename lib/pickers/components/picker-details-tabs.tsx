@@ -12,7 +12,9 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-const tabRegex = new RegExp('^/app/[^/]+/pickers/(?:twitter|x)/[^/]+(?:/([^/]+))?');
+const tabRegex = new RegExp(
+  '^/app/[^/]+/pickers/(?:twitter|twitter-v2|x)/[^/]+(?:/([^/]+))?'
+);
 
 const matchPickerTab = (path: string): PickerTabSchema | null => {
   const data = tabRegex.exec(path)?.[1];
@@ -46,7 +48,11 @@ export const PickerDetailsTabs: React.PC<{ pickerId: string }> = ({
     if (isPickerTab(value)) {
       const slug = pathname.split('/')[2];
       const pickerType = pathname.split('/')[4];
-      router.push(`/app/${slug}/pickers/${pickerType}/${pickerId}/${value}`);
+      // Normalize twitter-v2 to x
+      const normalizedType = pickerType === 'twitter-v2' ? 'x' : pickerType;
+      router.push(
+        `/app/${slug}/pickers/${normalizedType}/${pickerId}/${value}`
+      );
       setTab(value);
     } else {
       toast.error('Something went wrong. Contact support. (Error: CAM001)');

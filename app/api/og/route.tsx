@@ -4,56 +4,54 @@ export const runtime = 'edge';
 
 export async function GET() {
   return new ImageResponse(
-    (
+    <div
+      style={{
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+        backgroundImage:
+          'linear-gradient(to bottom right, #f0f9ff, #e0f2fe, #bae6fd)'
+      }}
+    >
       <div
         style={{
-          height: '100%',
-          width: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#fff',
-          backgroundImage:
-            'linear-gradient(to bottom right, #f0f9ff, #e0f2fe, #bae6fd)'
+          gap: '20px'
         }}
       >
-        <div
+        <h1
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '20px'
+            fontSize: '80px',
+            fontWeight: 'bold',
+            background:
+              'linear-gradient(to bottom right, #0ea5e9, #3b82f6, #6366f1)',
+            backgroundClip: 'text',
+            color: 'transparent',
+            margin: 0,
+            padding: 0
           }}
         >
-          <h1
-            style={{
-              fontSize: '80px',
-              fontWeight: 'bold',
-              background:
-                'linear-gradient(to bottom right, #0ea5e9, #3b82f6, #6366f1)',
-              backgroundClip: 'text',
-              color: 'transparent',
-              margin: 0,
-              padding: 0
-            }}
-          >
-            Giveaway.dog
-          </h1>
-          <p
-            style={{
-              fontSize: '32px',
-              color: '#64748b',
-              margin: 0,
-              textAlign: 'center',
-              maxWidth: '800px'
-            }}
-          >
-            Create and Host Viral Giveaways & Contests
-          </p>
-        </div>
+          Giveaway.dog
+        </h1>
+        <p
+          style={{
+            fontSize: '32px',
+            color: '#64748b',
+            margin: 0,
+            textAlign: 'center',
+            maxWidth: '800px'
+          }}
+        >
+          Create and Host Viral Giveaways & Contests
+        </p>
       </div>
-    ),
+    </div>,
     {
       width: 1200,
       height: 630

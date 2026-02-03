@@ -46,14 +46,12 @@ export interface GiveawayParticipationProps {
   onFormSubmit: (data: unknown) => Promise<unknown>;
 }
 
-export interface GiveawayParticipationContextValue
-  extends GiveawayParticipationProps {}
+export interface GiveawayParticipationContextValue extends GiveawayParticipationProps {}
 
 const GiveawayParticipationContext =
   createContext<GiveawayParticipationContextValue | null>(null);
 
-export interface GiveawayParticipationProviderProps
-  extends GiveawayParticipationProps {
+export interface GiveawayParticipationProviderProps extends GiveawayParticipationProps {
   children: ReactNode;
 }
 

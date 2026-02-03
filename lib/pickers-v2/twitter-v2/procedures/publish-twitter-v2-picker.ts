@@ -4,14 +4,8 @@ import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { twitterV2PickerFormSchema } from '../schemas/form';
 import { ApplicationError } from '@/lib/errors';
-import {
-  extractTweetId,
-  extractUsernameFromTweetUrl
-} from '@/lib/integrations/schemas/twitter';
-import { getTweet } from '@/lib/scrapebadger/procedures/get-tweet';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
 import { TeamPermission } from '@/lib/permissions';
-import { PickerStatus } from '@prisma/client';
 
 export const publishTwitterV2Picker = procedure()
   .authorization({
@@ -36,7 +30,7 @@ export const publishTwitterV2Picker = procedure()
     });
 
     const picker = await db.twitterPicker.findUnique({
-      where: { id: pickerId }
+      where: { id: pickerId, teamId: team.id }
     });
 
     if (!picker) {
@@ -46,31 +40,23 @@ export const publishTwitterV2Picker = procedure()
       });
     }
 
-    if (picker.teamId !== team.id) {
+    const base = process.env.NEXT_PUBLIC_APP_URL;
+    const response = await fetch(`${base}/api/workflows/twitter/scrape/start`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.CRON_SECRET}`
+      },
+      body: JSON.stringify({ pickerId, slug, data })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
       throw new ApplicationError({
-        code: 'FORBIDDEN',
-        message: 'You do not have permission to publish this picker'
+        code: 'CONFLICT',
+        message: error.error || 'Failed to start scrape workflow'
       });
     }
-
-    await db.twitterPicker.update({
-      where: { id: pickerId },
-      data: {
-        status: PickerStatus.PROCESSING,
-        tweetUrls: data.setup.postUrls.map((item) => item.url),
-        winners: data.winners.quota,
-        minPostCount: data.filters.minimumPostCount,
-        minAccountAgeDays: data.filters.minimumAccountAgeDays,
-        minFollowersCount: data.filters.minimumFollowers,
-        minFollowingCount: data.filters.minimumFollowing,
-        requireProfileImage: data.filters.hasProfileImage,
-        requireBannerImage: data.filters.hasBanner,
-        requireLocation: data.filters.hasLocation,
-        requireBio: data.filters.hasDescription,
-        lastPostWithin: data.filters.lastPostWithin,
-        runAt: data.timing?.runAt ? new Date(data.timing.runAt) : null
-      }
-    });
 
     return { success: true };
   });

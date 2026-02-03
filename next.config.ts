@@ -1,6 +1,7 @@
+import { NextConfig } from 'next';
 import { withWorkflow } from 'workflow/next';
 
-export default withWorkflow({
+const nextConfig: NextConfig = {
   experimental: {
     useCache: true
   },
@@ -33,4 +34,6 @@ export default withWorkflow({
       }
     ]
   }
-});
+};
+
+export default withWorkflow(nextConfig);

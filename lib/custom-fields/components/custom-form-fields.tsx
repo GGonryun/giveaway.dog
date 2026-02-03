@@ -60,8 +60,8 @@ type FieldType = SweepstakesFormFieldSchema & { id: string };
 
 export const CustomFormFields = <
   TFieldValues extends FieldValues,
-  TName extends
-    FormFieldArrayPath<TFieldValues> = FormFieldArrayPath<TFieldValues>
+  TName extends FormFieldArrayPath<TFieldValues> =
+    FormFieldArrayPath<TFieldValues>
 >({
   form,
   fieldPath
