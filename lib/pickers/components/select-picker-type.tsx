@@ -25,6 +25,7 @@ interface PickerTypeConfig {
   features: string[];
   buttonText: string;
   action: typeof createPicker | typeof createTwitterPicker;
+  disabled?: boolean;
   badge?: {
     text: string;
     Icon?: LucideIcon;
@@ -59,6 +60,7 @@ const PICKER_TYPES: PickerTypeConfig[] = [
     ],
     buttonText: 'Create New Picker',
     action: createTwitterPicker,
+    disabled: true,
     badge: {
       text: 'Pro',
       Icon: GemIcon
@@ -142,7 +144,7 @@ export const SelectPickerType: React.FC<SelectPickerTypeProps> = ({ slug }) => {
                   <Button
                     className="mt-auto"
                     onClick={() => handleCreate(pickerType.id)}
-                    disabled={isLoading}
+                    disabled={isLoading || pickerType.disabled}
                   >
                     {isCreating ? (
                       <>
