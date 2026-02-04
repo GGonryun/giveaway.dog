@@ -164,8 +164,8 @@ export async function POST(request: NextRequest) {
       userId: user.id
     }));
 
-    // Ensure minimum 5 second delay
-    const minDelay = 5000;
+    // Ensure minimum random delay between 3–10 seconds
+    const minDelay = (3 + Math.random() * 7) * 1000;
     const delayPromise = new Promise((resolve) => {
       const elapsed = Date.now() - startTime;
       const remaining = Math.max(0, minDelay - elapsed);
