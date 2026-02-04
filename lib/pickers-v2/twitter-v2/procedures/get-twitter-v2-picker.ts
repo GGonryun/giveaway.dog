@@ -37,6 +37,7 @@ export const getTwitterV2Picker = procedure()
 
     return {
       ...picker,
+      teamId: picker.teamId,
       users: usersWithEligibility,
       draws: picker.draws
     };

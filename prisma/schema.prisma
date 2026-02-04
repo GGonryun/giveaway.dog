@@ -959,8 +959,8 @@ enum LastPostedType {
 model TwitterPicker {
   id                  String              @id @default(cuid())
   runId               String? // the associated workflow
-  teamId              String
-  team                Team                @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId              String?
+  team                Team?               @relation(fields: [teamId], references: [id], onDelete: Cascade)
   tweetUrls           String[]
   tweets              TwitterPost[]
   minPostCount        Int?

@@ -39,7 +39,7 @@ export type TwitterV2PickerDrawSchema = z.infer<
 export const twitterV2PickerSchema = z.object({
   id: z.string(),
   runId: z.string().nullable(),
-  teamId: z.string(),
+  teamId: z.string().nullish(),
   tweetUrls: z.array(z.string()),
   status: z.nativeEnum(PickerStatus),
   winners: z.number(),
