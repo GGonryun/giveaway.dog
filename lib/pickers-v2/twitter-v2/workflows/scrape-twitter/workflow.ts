@@ -45,7 +45,7 @@ export async function scrapeTwitterWorkflow({
 
     await updatePickerStatus({ pickerId, status: 'COMPLETE' });
     await writeProgress({
-      max: retweets,
+      max: progress,
       current: retweets,
       status: 'COMPLETE'
     });
