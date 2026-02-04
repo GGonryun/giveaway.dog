@@ -5,9 +5,3 @@ declare module 'scrapebadger' {
   export const ScrapeBadger: typeof import('scrapebadger/dist/index.d.ts').ScrapeBadger;
   // repeat for any other types you need
 }
-
-// // types/scrapebadger.d.ts
-// declare module 'scrapebadger' {
-//   export * from 'scrapebadger/dist/index';
-//   export { default } from 'scrapebadger/dist/index';
-// }

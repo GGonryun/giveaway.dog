@@ -11,6 +11,10 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { GemIcon, type LucideIcon } from 'lucide-react';
 import { createTwitterPicker } from '@/lib/pickers-v2/twitter-v2/procedures/create-twitter-v2-picker';
+import { useActiveTeam } from '@/components/team/use-active-team-page';
+import { TeamTier } from '@prisma/client';
+import { hasMinimumTeamTier, TEAM_TIER_LABEL } from '@/lib/team/util';
+import { cn } from '@/lib/utils';
 
 interface SelectPickerTypeProps {
   slug: string;
@@ -25,11 +29,7 @@ interface PickerTypeConfig {
   features: string[];
   buttonText: string;
   action: typeof createPicker | typeof createTwitterPicker;
-  disabled?: boolean;
-  badge?: {
-    text: string;
-    Icon?: LucideIcon;
-  };
+  minimumTier: TeamTier;
 }
 
 const PICKER_TYPES: PickerTypeConfig[] = [
@@ -44,6 +44,7 @@ const PICKER_TYPES: PickerTypeConfig[] = [
       'Multiple action types',
       'Follower verification'
     ],
+    minimumTier: TeamTier.FREE,
     buttonText: 'Create Legacy Picker',
     action: createPicker
   },
@@ -60,15 +61,12 @@ const PICKER_TYPES: PickerTypeConfig[] = [
     ],
     buttonText: 'Create New Picker',
     action: createTwitterPicker,
-    disabled: true,
-    badge: {
-      text: 'Pro',
-      Icon: GemIcon
-    }
+    minimumTier: TeamTier.PRO
   }
 ];
 
 export const SelectPickerType: React.FC<SelectPickerTypeProps> = ({ slug }) => {
+  const team = useActiveTeam();
   const router = useRouter();
   const [selectedType, setSelectedType] = useState<PickerTypeId | null>(null);
 
@@ -109,19 +107,26 @@ export const SelectPickerType: React.FC<SelectPickerTypeProps> = ({ slug }) => {
             const procedure = procedures[pickerType.id];
             const isCreating =
               selectedType === pickerType.id && procedure.isLoading;
+            const hasTier = hasMinimumTeamTier({
+              tier: pickerType.minimumTier,
+              team
+            });
 
             return (
               <Card
                 key={pickerType.id}
-                className="p-6 hover:border-primary transition-colors relative"
+                className={cn(
+                  'p-6 hover:border-primary transition-colors relative',
+                  !hasTier ? 'border border-primary' : ''
+                )}
               >
-                {pickerType.badge && (
+                {!hasTier && (
                   <Badge
                     className="absolute top-4 right-4 flex items-center"
                     variant="default"
                   >
-                    {pickerType.badge.Icon && <pickerType.badge.Icon />}
-                    {pickerType.badge.text}
+                    <GemIcon />
+                    {TEAM_TIER_LABEL[pickerType.minimumTier]}
                   </Badge>
                 )}
                 <div className="flex flex-col h-full">
@@ -144,15 +149,21 @@ export const SelectPickerType: React.FC<SelectPickerTypeProps> = ({ slug }) => {
                   <Button
                     className="mt-auto"
                     onClick={() => handleCreate(pickerType.id)}
-                    disabled={isLoading || pickerType.disabled}
+                    variant={hasTier ? 'outline' : 'default'}
+                    disabled={isLoading || !hasTier}
                   >
                     {isCreating ? (
                       <>
                         <Spinner />
                         Creating...
                       </>
-                    ) : (
+                    ) : hasTier ? (
                       pickerType.buttonText
+                    ) : (
+                      <>
+                        <GemIcon />
+                        Upgrade to Pro
+                      </>
                     )}
                   </Button>
                 </div>

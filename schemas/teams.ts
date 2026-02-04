@@ -1,13 +1,14 @@
-import { Prisma, TeamRole } from '@prisma/client';
+import { Prisma, TeamRole, TeamTier } from '@prisma/client';
 import z from 'zod';
 
-export const selectUserDetails = {
+export const GET_TEAM_SELECT = {
   select: {
     id: true,
     name: true,
     slug: true,
     logo: true,
     links: true,
+    tier: true,
     members: {
       select: { id: true, role: true, userId: true }
     }
@@ -16,7 +17,7 @@ export const selectUserDetails = {
 
 export const toDetailedUserTeam = (
   user: { id: string },
-  team: Prisma.TeamGetPayload<typeof selectUserDetails>
+  team: Prisma.TeamGetPayload<typeof GET_TEAM_SELECT>
 ): DetailedUserTeam => {
   const role = team.members.find((m) => m.userId === user.id)?.role;
   return {
@@ -25,6 +26,7 @@ export const toDetailedUserTeam = (
     slug: team.slug,
     logo: team.logo,
     links: team.links,
+    tier: team.tier,
     memberCount: team.members.length,
     role: role || TeamRole.BLOCKED // Default to BLOCKED if no role found
   };
@@ -37,6 +39,7 @@ export const detailedUserTeamSchema = z.object({
   logo: z.string(), // image URL
   links: z.any().optional(),
   memberCount: z.number().min(0),
+  tier: z.nativeEnum(TeamTier),
   role: z.nativeEnum(TeamRole)
 });
 

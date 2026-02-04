@@ -2,7 +2,7 @@
 
 import { TeamsProvider } from '@/components/context/team-provider';
 import { DetailedUserTeam } from '@/schemas/teams';
-import { TeamRole } from '@prisma/client';
+import { TeamRole, TeamTier } from '@prisma/client';
 
 const MOCK_TEAM: DetailedUserTeam = {
   id: 'demo-team-id',
@@ -10,7 +10,8 @@ const MOCK_TEAM: DetailedUserTeam = {
   slug: 'demo-team',
   logo: '🎮',
   memberCount: 1,
-  role: TeamRole.OWNER
+  role: TeamRole.OWNER,
+  tier: TeamTier.ALPHA
 };
 
 export function MockTeamProvider({ children }: { children: React.ReactNode }) {

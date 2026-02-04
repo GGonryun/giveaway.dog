@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { TeamPermission } from '@/lib/permissions';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
-import { IntegrationProvider } from '@prisma/client';
+import { IntegrationProvider, TeamTier } from '@prisma/client';
 import z from 'zod';
 
 export const disconnectTwitter = procedure()
@@ -21,7 +21,8 @@ export const disconnectTwitter = procedure()
       db,
       user,
       slug: input.slug,
-      permission: TeamPermission.UPDATE_INTEGRATIONS
+      permission: TeamPermission.UPDATE_INTEGRATIONS,
+      tier: TeamTier.FREE
     });
 
     await db.integration.delete({

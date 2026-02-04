@@ -148,6 +148,26 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
             </div>
           </div>
 
+          {picker.tweetUrls.length > 0 && (
+            <div className="space-y-3 pt-4 border-t">
+              <div className="text-sm font-medium">Source Posts</div>
+              <div className="flex flex-col gap-2">
+                {picker.tweetUrls.map((url, index) => (
+                  <a
+                    key={index}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-primary hover:underline flex items-center gap-1"
+                  >
+                    <SocialXIcon className="h-3.5 w-3.5" />
+                    {url}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
           {hasRequirements && (
             <div className="space-y-3 pt-4 border-t">
               <div className="flex items-center gap-2 text-sm font-medium">

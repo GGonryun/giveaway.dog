@@ -5,6 +5,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { findUserSweepstakes, findUserTeam } from './shared';
 import { TeamPermission } from '@/lib/permissions';
+import { TeamTier } from '@prisma/client';
 
 const deleteSweepstakes = procedure()
   .authorization({ required: true })
@@ -24,7 +25,8 @@ const deleteSweepstakes = procedure()
       db,
       user,
       id: input.id,
-      permission: TeamPermission.DELETE_SWEEPSTAKES
+      permission: TeamPermission.DELETE_SWEEPSTAKES,
+      tier: TeamTier.FREE
     });
 
     // TODO: when deleting a draft there may be extra resources such as images that need to get removed from vercel storage.

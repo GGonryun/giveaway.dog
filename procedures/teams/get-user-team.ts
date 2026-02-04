@@ -30,6 +30,7 @@ const getUserTeam = procedure()
         slug: true,
         logo: true,
         links: true,
+        tier: true,
         members: {
           select: { id: true, role: true, userId: true }
         }

@@ -4,7 +4,11 @@ import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { TeamPermission } from '@/lib/permissions';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
-import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
+import {
+  IntegrationProvider,
+  IntegrationStatus,
+  TeamTier
+} from '@prisma/client';
 import z from 'zod';
 
 export const verifyDiscordInstall = procedure()
@@ -15,7 +19,8 @@ export const verifyDiscordInstall = procedure()
       db,
       user,
       slug: input.slug,
-      permission: TeamPermission.UPDATE_INTEGRATIONS
+      permission: TeamPermission.UPDATE_INTEGRATIONS,
+      tier: TeamTier.FREE
     });
 
     const integration = await db.integration.findFirst({

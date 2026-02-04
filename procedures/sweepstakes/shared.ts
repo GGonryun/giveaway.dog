@@ -10,11 +10,13 @@ import {
   SweepstakesJobStatus,
   SweepstakesJobType,
   SweepstakesStatus,
+  TeamTier,
   VisibilityType
 } from '@prisma/client';
 import { User } from 'next-auth';
 import { RecursiveRequired } from '@/types/index';
 import { assertMembershipPermission, TeamPermission } from '@/lib/permissions';
+import { assertMinimumTeamTier } from '@/lib/team/util';
 
 export const findUserSweepstakesQuery = ({
   userId,
@@ -72,12 +74,14 @@ export const findUserSweepstakes = async ({
   db,
   user,
   id,
-  permission
+  permission,
+  tier
 }: {
   db: PrismaClient;
   user: RecursiveRequired<User>;
   id: string;
   permission: TeamPermission;
+  tier: TeamTier;
 }) => {
   const sweepstakes = await db.sweepstakes.findUnique({
     where: findUserSweepstakesQuery({
@@ -101,6 +105,7 @@ export const findUserSweepstakes = async ({
   const membership = team.members.find((m) => m.userId === user.id);
 
   assertMembershipPermission(membership, permission);
+  assertMinimumTeamTier({ tier, team });
 
   return { sweepstakes, team, membership };
 };
@@ -110,9 +115,10 @@ export const findUserTeam = async (
     db: PrismaClient;
     user: RecursiveRequired<User>;
     permission: TeamPermission;
+    tier: TeamTier;
   } & TeamQuery
 ) => {
-  const { db, user, permission } = args;
+  const { db, user, permission, tier } = args;
   const team = await db.team.findUnique({
     where: findUserTeamQuery({ ...args, userId: args.user.id }),
     include: {
@@ -130,6 +136,7 @@ export const findUserTeam = async (
   const membership = team.members.find((m) => m.userId === user.id);
 
   assertMembershipPermission(membership, permission);
+  assertMinimumTeamTier({ tier, team });
 
   return { team, membership };
 };
@@ -147,7 +154,8 @@ export const applySweepstakesChanges = async ({
     db,
     user,
     id: input.id,
-    permission: TeamPermission.UPDATE_SWEEPSTAKES
+    permission: TeamPermission.UPDATE_SWEEPSTAKES,
+    tier: TeamTier.FREE
   });
 
   // Check if user is trying to change visibility to PUBLIC

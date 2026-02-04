@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
-import { VisibilityType } from '@prisma/client';
+import { TeamTier, VisibilityType } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
 import { findUserSweepstakes } from './shared';
 import { TeamPermission } from '@/lib/permissions';
@@ -25,7 +25,8 @@ const toggleVisibility = procedure()
       db,
       user,
       id: input.sweepstakesId,
-      permission: TeamPermission.UPDATE_SWEEPSTAKES
+      permission: TeamPermission.UPDATE_SWEEPSTAKES,
+      tier: TeamTier.FREE
     });
 
     // Check if user is trying to set visibility to PUBLIC

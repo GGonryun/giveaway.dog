@@ -18,7 +18,12 @@ import {
 } from '@/schemas/giveaway/defaults';
 import { findUserTeam } from './shared';
 import { getTemplateById } from '@/lib/templates/data/static-templates';
-import { Prisma, PrismaClient, SweepstakesStatus } from '@prisma/client';
+import {
+  Prisma,
+  PrismaClient,
+  SweepstakesStatus,
+  TeamTier
+} from '@prisma/client';
 import { toStorableSweepstakesUpdate } from '@/schemas/giveaway/storable';
 import { isUndefined, omitBy } from 'lodash';
 import {
@@ -49,7 +54,8 @@ export const createSweepstakes = procedure()
       db,
       user,
       slug: input.slug,
-      permission: TeamPermission.UPDATE_SWEEPSTAKES
+      permission: TeamPermission.UPDATE_SWEEPSTAKES,
+      tier: TeamTier.FREE
     });
 
     console.info('Creating sweepstakes for team:', team?.id);

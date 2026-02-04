@@ -12,6 +12,7 @@ export async function writeProgress({
   status: PickerStatus;
 }) {
   'use step';
+
   const writable = getWritable<TwitterScrapeProgress>();
   const writer = writable.getWriter();
   try {

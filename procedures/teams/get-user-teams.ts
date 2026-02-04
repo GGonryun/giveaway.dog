@@ -2,7 +2,7 @@
 
 import {
   detailedUserTeamSchema,
-  selectUserDetails,
+  GET_TEAM_SELECT,
   toDetailedUserTeam
 } from '@/schemas/teams';
 import { procedure } from '@/lib/mrpc/procedures';
@@ -13,7 +13,7 @@ const getUserTeams = procedure()
   .output(detailedUserTeamSchema.array())
   .handler(async ({ db, user }) => {
     const query = await db.team.findMany({
-      ...selectUserDetails,
+      ...GET_TEAM_SELECT,
       where: {
         members: {
           some: {

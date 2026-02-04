@@ -16,6 +16,7 @@ import {
   type TwitterFeatureSchema
 } from '../scopes';
 import { TeamPermission } from '@/lib/permissions';
+import { TeamTier } from '@prisma/client';
 
 export const connectTwitter = procedure()
   .authorization({
@@ -37,7 +38,8 @@ export const connectTwitter = procedure()
       db,
       user,
       slug: input.slug,
-      permission: TeamPermission.UPDATE_INTEGRATIONS
+      permission: TeamPermission.UPDATE_INTEGRATIONS,
+      tier: TeamTier.FREE
     });
 
     if (!TWITTER_TEAM_APP_CLIENT_ID || !TWITTER_REDIRECT_URI) {

@@ -14,7 +14,7 @@ export async function generateMetadata({
   const { pickerId } = await params;
 
   const baseUrl = environment.appUrl();
-  const ogImageUrl = `${baseUrl}/api/og/draws/${pickerId}`;
+  const ogImageUrl = `${baseUrl}/api/og/pickers/x/${pickerId}`;
 
   return {
     title: 'X Picker Results | Giveaway.dog',

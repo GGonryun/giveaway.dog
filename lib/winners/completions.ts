@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, TeamTier } from '@prisma/client';
 import {
   ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY,
   EligibleTaskCompletion
@@ -91,7 +91,8 @@ export const getEligibleCompletions = async (args: {
     db,
     user,
     id: sweepstakesId,
-    permission: TeamPermission.VIEW_SWEEPSTAKES
+    permission: TeamPermission.VIEW_SWEEPSTAKES,
+    tier: TeamTier.FREE
   });
 
   // Get all task completions for this sweepstakes

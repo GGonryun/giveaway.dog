@@ -4,7 +4,7 @@ import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { TeamPermission } from '@/lib/permissions';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
-import { IntegrationProvider } from '@prisma/client';
+import { IntegrationProvider, TeamTier } from '@prisma/client';
 import z from 'zod';
 
 export const getDiscordChannels = procedure()
@@ -30,7 +30,8 @@ export const getDiscordChannels = procedure()
       db,
       user,
       slug: input.slug,
-      permission: TeamPermission.VIEW_INTEGRATIONS
+      permission: TeamPermission.VIEW_INTEGRATIONS,
+      tier: TeamTier.FREE
     });
 
     const integration = await db.integration.findFirst({

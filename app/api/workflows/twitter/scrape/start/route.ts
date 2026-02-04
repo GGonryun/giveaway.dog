@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
   const tweetUrls = data.setup.postUrls.map((item) => item.url);
 
-  const runDate = data.timing?.runAt ? new Date(data.timing.runAt) : new Date();
+  const runDate = data.timing?.runAt ? new Date(data.timing.runAt) : undefined;
 
   const result = await start(scrapeTwitterWorkflow, [
     {

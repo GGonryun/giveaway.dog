@@ -7,7 +7,7 @@ import {
   allowedUserSourcesSchema,
   parseUserSourceSchema
 } from '@/lib/user-source/schemas';
-import { Prisma } from '@prisma/client';
+import { Prisma, TeamTier } from '@prisma/client';
 import { sweepstakesWinnerCriteriaSchema } from '@/schemas/giveaway/schemas';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
@@ -35,7 +35,8 @@ const updateWinnerCriteria = procedure()
       db,
       user,
       id: input.sweepstakesId,
-      permission: TeamPermission.UPDATE_SWEEPSTAKES
+      permission: TeamPermission.UPDATE_SWEEPSTAKES,
+      tier: TeamTier.FREE
     });
 
     const updated = await db.sweepstakesWinnerCriteria.update({

@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { ApplicationError } from '@/lib/errors';
-import { CompletionStatus } from '@prisma/client';
+import { CompletionStatus, TeamTier } from '@prisma/client';
 import { findUserSweepstakes, findUserSweepstakesQuery } from './shared';
 import { TeamPermission } from '@/lib/permissions';
 
@@ -23,7 +23,8 @@ export const updateTaskCompletionStatus = procedure()
       db,
       user,
       id: input.sweepstakesId,
-      permission: TeamPermission.UPDATE_SWEEPSTAKES
+      permission: TeamPermission.UPDATE_SWEEPSTAKES,
+      tier: TeamTier.FREE
     });
 
     const taskCompletion = await db.taskCompletion.findFirst({

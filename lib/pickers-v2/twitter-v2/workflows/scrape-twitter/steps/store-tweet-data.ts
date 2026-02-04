@@ -1,8 +1,7 @@
 import prisma from '@/lib/prisma';
 import { getTweet } from '@/lib/scrapebadger/procedures/get-tweet';
-import { Prisma } from '@prisma/client';
-import type { Tweet } from 'scrapebadger';
 import { FatalError } from 'workflow';
+import { toTwitterPost } from '../shared';
 
 export async function storeTweetData({
   tweetId,
@@ -26,23 +25,3 @@ export async function storeTweetData({
     );
   }
 }
-
-const toTwitterPost = ({
-  pickerId,
-  tweet
-}: {
-  pickerId: string;
-  tweet: Tweet;
-}): Prisma.TwitterPostCreateInput => ({
-  picker: { connect: { id: pickerId } },
-  tweetId: tweet.id,
-  text: tweet.text,
-  createdAt: tweet.created_at ? new Date(tweet.created_at) : new Date(),
-  userId: tweet.user_id,
-  username: tweet.username ?? tweet.user_name,
-  favoriteCount: Number(tweet.favorite_count),
-  retweetCount: Number(tweet.retweet_count),
-  replyCount: Number(tweet.reply_count),
-  viewCount: Number(tweet.view_count),
-  quoteCount: Number(tweet.quote_count)
-});

@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
-import { IntegrationProvider } from '@prisma/client';
+import { IntegrationProvider, TeamTier } from '@prisma/client';
 import { TeamPermission } from '@/lib/permissions';
 
 export const disconnectBluesky = procedure()
@@ -14,7 +14,8 @@ export const disconnectBluesky = procedure()
       db,
       user,
       slug: input.slug,
-      permission: TeamPermission.UPDATE_INTEGRATIONS
+      permission: TeamPermission.UPDATE_INTEGRATIONS,
+      tier: TeamTier.FREE
     });
 
     await db.integration.deleteMany({

@@ -6,7 +6,7 @@ import z from 'zod';
 import { ApplicationError } from '@/lib/errors';
 import { findUserSweepstakesQuery, findUserTeam } from './shared';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
-import { Prisma } from '@prisma/client';
+import { Prisma, TeamTier } from '@prisma/client';
 import { TeamPermission } from '@/lib/permissions';
 
 const copySweepstakes = procedure()
@@ -49,7 +49,8 @@ const copySweepstakes = procedure()
       db,
       user,
       id: original.teamId,
-      permission: TeamPermission.UPDATE_SWEEPSTAKES
+      permission: TeamPermission.UPDATE_SWEEPSTAKES,
+      tier: TeamTier.FREE
     });
 
     const newId = nanoid(6);

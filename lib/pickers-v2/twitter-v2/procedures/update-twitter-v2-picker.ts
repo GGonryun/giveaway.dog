@@ -4,13 +4,9 @@ import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { twitterV2PickerFormSchema } from '../schemas/form';
 import { ApplicationError } from '@/lib/errors';
-import {
-  extractTweetId,
-  extractUsernameFromTweetUrl
-} from '@/lib/integrations/schemas/twitter';
-import { getTweet } from '@/lib/scrapebadger/procedures/get-tweet';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
 import { TeamPermission } from '@/lib/permissions';
+import { TeamTier } from '@prisma/client';
 
 export const updateTwitterV2Picker = procedure()
   .authorization({
@@ -31,7 +27,8 @@ export const updateTwitterV2Picker = procedure()
       db,
       user,
       slug,
-      permission: TeamPermission.UPDATE_PICKERS
+      permission: TeamPermission.UPDATE_PICKERS,
+      tier: TeamTier.PRO
     });
 
     const picker = await db.twitterPicker.findUnique({

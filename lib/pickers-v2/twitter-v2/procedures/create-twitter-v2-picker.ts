@@ -5,8 +5,7 @@ import z from 'zod';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
 import { nanoid } from 'nanoid';
 import { TeamPermission } from '@/lib/permissions';
-import { LastPostedType, PickerStatus } from '@prisma/client';
-import { ApplicationError } from '@/lib/errors';
+import { LastPostedType, PickerStatus, TeamTier } from '@prisma/client';
 
 export const createTwitterPicker = procedure()
   .authorization({
@@ -23,37 +22,33 @@ export const createTwitterPicker = procedure()
     })
   )
   .handler(async ({ db, input, user }) => {
-    throw new ApplicationError({
-      code: 'NOT_IMPLEMENTED',
-      message: 'Twitter V2 picker creation is not yet implemented'
+    const { team } = await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.UPDATE_PICKERS,
+      tier: TeamTier.PRO
     });
 
-    // const { team } = await findUserTeam({
-    //   db,
-    //   user,
-    //   slug: input.slug,
-    //   permission: TeamPermission.UPDATE_PICKERS
-    // });
+    const created = await db.twitterPicker.create({
+      data: {
+        id: nanoid(10),
+        teamId: team.id,
+        status: PickerStatus.DRAFT,
+        tweetUrls: [],
+        winners: 1,
+        minPostCount: 100,
+        minAccountAgeDays: 100,
+        minFollowersCount: 100,
+        minFollowingCount: 100,
+        lastPostWithin: LastPostedType.PAST_MONTH,
+        requireProfileImage: true,
+        requireBannerImage: false,
+        requireLocation: false,
+        requireBio: false,
+        runAt: null
+      }
+    });
 
-    // const created = await db.twitterPicker.create({
-    //   data: {
-    //     id: nanoid(10),
-    //     teamId: team.id,
-    //     status: PickerStatus.DRAFT,
-    //     tweetUrls: [],
-    //     winners: 1,
-    //     minPostCount: 100,
-    //     minAccountAgeDays: 100,
-    //     minFollowersCount: 100,
-    //     minFollowingCount: 100,
-    //     lastPostWithin: LastPostedType.PAST_MONTH,
-    //     requireProfileImage: true,
-    //     requireBannerImage: false,
-    //     requireLocation: false,
-    //     requireBio: false,
-    //     runAt: null
-    //   }
-    // });
-
-    // return created;
+    return created;
   });

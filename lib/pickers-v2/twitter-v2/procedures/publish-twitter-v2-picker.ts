@@ -6,6 +6,7 @@ import { twitterV2PickerFormSchema } from '../schemas/form';
 import { ApplicationError } from '@/lib/errors';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
 import { TeamPermission } from '@/lib/permissions';
+import { TeamTier } from '@prisma/client';
 
 export const publishTwitterV2Picker = procedure()
   .authorization({
@@ -26,7 +27,8 @@ export const publishTwitterV2Picker = procedure()
       db,
       user,
       slug,
-      permission: TeamPermission.UPDATE_PICKERS
+      permission: TeamPermission.UPDATE_PICKERS,
+      tier: TeamTier.FREE
     });
 
     const picker = await db.twitterPicker.findUnique({

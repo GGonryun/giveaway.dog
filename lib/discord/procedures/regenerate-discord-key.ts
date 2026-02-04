@@ -3,6 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { TeamPermission } from '@/lib/permissions';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
+import { TeamTier } from '@prisma/client';
 import z from 'zod';
 
 export const regenerateDiscordKey = procedure()
@@ -14,7 +15,8 @@ export const regenerateDiscordKey = procedure()
       db,
       user,
       slug: input.slug,
-      permission: TeamPermission.UPDATE_INTEGRATIONS
+      permission: TeamPermission.UPDATE_INTEGRATIONS,
+      tier: TeamTier.FREE
     });
 
     const integration = await db.integration.findFirst({

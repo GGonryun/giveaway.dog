@@ -5,6 +5,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
 import { findUserSweepstakes } from './shared';
 import { TeamPermission } from '@/lib/permissions';
+import { TeamTier } from '@prisma/client';
 
 export const disqualifyParticipant = procedure()
   .authorization({ required: true })
@@ -21,7 +22,8 @@ export const disqualifyParticipant = procedure()
       db,
       user,
       id: input.sweepstakesId,
-      permission: TeamPermission.UPDATE_SWEEPSTAKES
+      permission: TeamPermission.UPDATE_SWEEPSTAKES,
+      tier: TeamTier.FREE
     });
 
     if (!sweepstakes) {

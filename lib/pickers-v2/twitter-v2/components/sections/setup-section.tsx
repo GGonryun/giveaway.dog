@@ -32,14 +32,20 @@ import { datetime } from '@/lib/date';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Gem, Trash2, Plus } from 'lucide-react';
+import { useActiveTeam } from '@/components/team/use-active-team-page';
+import { hasMinimumTeamTier } from '@/lib/team/util';
+import { TeamTier } from '@prisma/client';
 
 export const TwitterV2SetupSection: React.FC = () => {
+  const team = useActiveTeam();
   const form = useFormContext<TwitterV2PickerFormSchema>();
 
   const { fields, append, remove } = useFieldArray<TwitterV2PickerFormSchema>({
     control: form.control,
     name: 'setup.postUrls'
   });
+
+  const hasTier = hasMinimumTeamTier({ team, tier: TeamTier.ELITE });
 
   return (
     <UnifiedSectionHeader
@@ -89,14 +95,18 @@ export const TwitterV2SetupSection: React.FC = () => {
               type="button"
               className="self-start mt-1 w-full relative"
               onClick={() => append({ url: '' })}
-              disabled={fields.length >= MAX_TWITTER_V2_PICKER_POSTS}
+              disabled={
+                fields.length >= MAX_TWITTER_V2_PICKER_POSTS || !hasTier
+              }
             >
               <Plus className="h-4 w-4" />
               Add Post
-              <Badge variant="secondary" className="absolute right-2">
-                <Gem className="h-3 w-3" />
-                Elite
-              </Badge>
+              {!hasTier && (
+                <Badge variant="secondary" className="absolute right-2">
+                  <Gem className="h-3 w-3" />
+                  Elite
+                </Badge>
+              )}
             </Button>
             <FormMessage />
           </FormItem>

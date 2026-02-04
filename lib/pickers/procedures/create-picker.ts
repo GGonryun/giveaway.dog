@@ -15,6 +15,7 @@ import {
 import { UNKNOWN_USER_NAME } from '@/lib/settings';
 import { nanoid } from 'nanoid';
 import { TeamPermission } from '@/lib/permissions';
+import { TeamTier } from '@prisma/client';
 
 export const createPicker = procedure()
   .authorization({
@@ -35,7 +36,8 @@ export const createPicker = procedure()
       db,
       user,
       slug: input.slug,
-      permission: TeamPermission.UPDATE_PICKERS
+      permission: TeamPermission.UPDATE_PICKERS,
+      tier: TeamTier.FREE
     });
 
     const created = await db.picker.create({

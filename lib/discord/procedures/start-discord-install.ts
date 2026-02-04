@@ -4,6 +4,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { findUserTeam } from '@/procedures/sweepstakes/shared';
 import { TeamPermission } from '@/lib/permissions';
+import { TeamTier } from '@prisma/client';
 
 export const startDiscordInstall = procedure()
   .authorization({ required: true })
@@ -14,7 +15,8 @@ export const startDiscordInstall = procedure()
       db,
       user,
       slug: input.slug,
-      permission: TeamPermission.UPDATE_INTEGRATIONS
+      permission: TeamPermission.UPDATE_INTEGRATIONS,
+      tier: TeamTier.FREE
     });
 
     const stateValue = {
