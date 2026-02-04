@@ -84,10 +84,6 @@ interface WinnerData {
     name: string;
     profileUrl: string;
   };
-  metrics: {
-    totalRetweets: number;
-    validParticipants: number;
-  };
 }
 
 export const PublicXPickerForm: React.FC = () => {
@@ -531,7 +527,6 @@ export const PublicXPickerForm: React.FC = () => {
             winners={winnerData.winners}
             drawId={winnerData.drawId}
             postAuthor={winnerData.postAuthor}
-            metrics={winnerData.metrics}
           />
         )}
       </form>

@@ -29,10 +29,6 @@ interface WinnersResultModalProps {
     name: string;
     profileUrl: string;
   };
-  metrics: {
-    totalRetweets: number;
-    validParticipants: number;
-  };
 }
 
 export const WinnersResultModal: React.FC<WinnersResultModalProps> = ({
@@ -40,8 +36,7 @@ export const WinnersResultModal: React.FC<WinnersResultModalProps> = ({
   onClose,
   winners,
   drawId,
-  postAuthor,
-  metrics
+  postAuthor
 }) => {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://giveaway.dog';
   const drawUrl = `${baseUrl}/pickers/x/${drawId}`;
@@ -142,14 +137,6 @@ ${drawUrl} `;
               >
                 @{postAuthor.username}
               </a>
-            </div>
-
-            <div className="flex justify-center gap-4 text-sm text-muted-foreground">
-              <span>{metrics.totalRetweets.toLocaleString()} Retweets</span>
-              <span>•</span>
-              <span>
-                {metrics.validParticipants.toLocaleString()} Valid Participants
-              </span>
             </div>
 
             <div className="text-center">

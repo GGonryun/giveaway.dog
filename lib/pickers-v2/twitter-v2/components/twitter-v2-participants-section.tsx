@@ -39,7 +39,8 @@ export const TwitterV2ParticipantsSection = ({
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const eligible = participants.filter((p) => !p.ineligible);
   const filteredParticipants = showFiltered ? participants : eligible;
-  const displayCount = isUnverified && totalCount ? totalCount : eligible.length;
+  const displayCount =
+    isUnverified && totalCount ? totalCount : eligible.length;
 
   const handleFilterToggle = (checked: boolean) => {
     if (isUnverified) {
@@ -95,9 +96,9 @@ export const TwitterV2ParticipantsSection = ({
             <div className="border rounded-lg overflow-hidden relative">
               {isUnverified ? (
                 <div className="relative">
-                  <div className="blur-[2px] pointer-events-none select-none">
+                  <div className="blur-[3px] pointer-events-none select-none">
                     <TwitterV2ParticipantsTable
-                      participants={filteredParticipants.slice(0, 10)}
+                      participants={filteredParticipants.slice(0, 7)}
                     />
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center bg-background/85">
