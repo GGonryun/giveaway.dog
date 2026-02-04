@@ -532,7 +532,11 @@ const PickerStatusSection: React.FC<PickerStatusSectionProps> = ({
               participants.
             </p>
           </CardTitle>
-          <Button onClick={() => onDraw()} disabled={isDrawing}>
+          <Button
+            variant="success"
+            onClick={() => onDraw()}
+            disabled={isDrawing}
+          >
             {isDrawing ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
             ) : (
