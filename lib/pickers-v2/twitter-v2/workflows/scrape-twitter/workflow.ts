@@ -16,7 +16,6 @@ export async function scrapeTwitterWorkflow({
 }) {
   'use workflow';
 
-  let retweets = 0;
   try {
     if (runDate) {
       await updatePickerStatus({ pickerId, status: 'SCHEDULED' });
@@ -29,7 +28,7 @@ export async function scrapeTwitterWorkflow({
       tweetIds.map((tweetId) => storeTweetData({ tweetId, pickerId }))
     );
 
-    retweets = tweets.reduce(
+    const retweets = tweets.reduce(
       (acc, tweet) => acc + (tweet.retweetCount || 0),
       0
     );
@@ -45,10 +44,15 @@ export async function scrapeTwitterWorkflow({
     }
 
     await updatePickerStatus({ pickerId, status: 'COMPLETE' });
+    await writeProgress({
+      max: retweets,
+      current: retweets,
+      status: 'COMPLETE'
+    });
   } catch (error) {
     await updatePickerStatus({ pickerId, status: 'FAILED' });
   } finally {
-    await finalizeProgress(retweets);
+    await finalizeProgress();
   }
 }
 

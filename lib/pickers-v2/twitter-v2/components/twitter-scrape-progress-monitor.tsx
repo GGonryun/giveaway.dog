@@ -23,6 +23,8 @@ export const TwitterScrapeProgressMonitor: React.FC<
   const [error, setError] = useState<string | null>(null);
   const [isComplete, setIsComplete] = useState(false);
   const isConnectingRef = useRef(false);
+  const refreshCountRef = useRef(0);
+  const [refreshLimitReached, setRefreshLimitReached] = useState(false);
 
   const shouldMonitor =
     status === 'CREATED' ||
@@ -31,14 +33,21 @@ export const TwitterScrapeProgressMonitor: React.FC<
     status === 'DRAFT';
 
   useEffect(() => {
-    if (shouldMonitor && !runId) {
+    if (shouldMonitor && !runId && !refreshLimitReached) {
       const intervalId = setInterval(() => {
-        router.refresh();
+        refreshCountRef.current += 1;
+
+        if (refreshCountRef.current >= 5) {
+          setRefreshLimitReached(true);
+          clearInterval(intervalId);
+        } else {
+          router.refresh();
+        }
       }, 5000);
 
       return () => clearInterval(intervalId);
     }
-  }, [shouldMonitor, runId, router]);
+  }, [shouldMonitor, runId, router, refreshLimitReached]);
 
   const connectToStream = useCallback(async () => {
     if (!shouldMonitor || !runId || isConnectingRef.current) {
@@ -132,16 +141,34 @@ export const TwitterScrapeProgressMonitor: React.FC<
 
   if (shouldMonitor && !runId) {
     return (
-      <Card className="border-yellow-500/50 bg-yellow-500/5">
+      <Card
+        className={
+          refreshLimitReached
+            ? 'border-orange-500/50 bg-orange-500/5'
+            : 'border-yellow-500/50 bg-yellow-500/5'
+        }
+      >
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-yellow-600">
-            <Loader2 className="h-5 w-5 animate-spin" />
+          <CardTitle
+            className={
+              refreshLimitReached
+                ? 'flex items-center gap-2 text-orange-600'
+                : 'flex items-center gap-2 text-yellow-600'
+            }
+          >
+            {refreshLimitReached ? (
+              <AlertCircle className="h-5 w-5" />
+            ) : (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            )}
             Initializing Draw
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Starting up the draw process... This will begin processing shortly.
+            {refreshLimitReached
+              ? 'Initialization is taking longer than expected. Please refresh the page manually to check the status.'
+              : 'Starting up the draw process... This will begin processing shortly.'}
           </p>
         </CardContent>
       </Card>
