@@ -4,17 +4,22 @@ import { ApplicationError, assertNever } from '@/lib/errors';
 import { html } from '@/lib/html';
 import { procedure } from '@/lib/mrpc/procedures';
 import { DEFAULT_TEAM_NAME } from '@/lib/team/data';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
-import { Prisma, PrismaClient, SweepstakesJobStatus } from '@prisma/client';
+import {
+  DEFAULT_SWEEPSTAKES_NAME,
+  DEFAULT_SWEEPSTAKES_VISIBILITY
+} from '@/schemas/giveaway/defaults';
+import {
+  Prisma,
+  PrismaClient,
+  SweepstakesJobStatus,
+  VisibilityType
+} from '@prisma/client';
 import { z } from 'zod';
 import { toSweepstakesUrl } from '../util';
 import { updateDiscordMessage } from '@/lib/discord/api/update-discord-message';
 import { toPostToDiscordResponseSchema } from '@/lib/automation/schemas';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
-import {
-  getSweepstakesActivity,
-  toSweepstakesEmbed
-} from '@/lib/discord/embeds';
+import { toSweepstakesEmbed } from '@/lib/discord/embeds';
 import { toExpiredSweepstakeComponents } from '@/lib/discord/api/util';
 
 const MAX_JOBS_PER_RUN = 5;
@@ -214,6 +219,17 @@ const processSweepstakesActivation = async ({
       code: 'NOT_FOUND',
       message: `Sweepstakes with id ${job.sweepstakesId} not found`
     });
+  }
+
+  if (sweepstakes.visibility?.visibility !== VisibilityType.PUBLIC) {
+    await db.sweepstakesJob.update({
+      where: { id: job.id },
+      data: { status: SweepstakesJobStatus.COMPLETED }
+    });
+    console.info(
+      `Sweepstakes ${sweepstakes.id} is not public, skipping Discord notification`
+    );
+    return;
   }
 
   const sweepstakesUrl = toSweepstakesUrl({ sweepstakes, forcePath: true });
