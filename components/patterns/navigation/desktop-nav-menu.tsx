@@ -78,6 +78,33 @@ export const DesktopNavMenu: React.FC = () => {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
+          <NavigationMenuTrigger
+            className={cn(pathname?.startsWith('/pickers') && 'underline')}
+          >
+            Tools
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[280px] gap-2 p-2">
+              <li>
+                <Link
+                  href="/pickers/x"
+                  className={cn(
+                    'block select-none space-y-1 rounded-sm p-2.5 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+                    isActiveRoute('/pickers/x') && 'bg-accent'
+                  )}
+                >
+                  <div className="text-xs font-medium leading-none">
+                    X Picker
+                  </div>
+                  <p className="line-clamp-2 text-xs leading-snug text-muted-foreground mt-1">
+                    Pick a winner for your giveaway from a list of people
+                  </p>
+                </Link>
+              </li>
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
           <NavigationMenuLink
             href="/pricing"
             className={cn(

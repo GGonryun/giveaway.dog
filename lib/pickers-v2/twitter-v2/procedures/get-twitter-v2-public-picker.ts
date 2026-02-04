@@ -3,7 +3,10 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { ApplicationError } from '@/lib/errors';
-import { twitterV2PickerSchema } from '../schemas/details';
+import {
+  twitterV2PickerSchema,
+  calculateTwitterV2PickerStats
+} from '../schemas/details';
 
 export const getTwitterV2PublicPicker = procedure()
   .authorization({
@@ -16,7 +19,8 @@ export const getTwitterV2PublicPicker = procedure()
       where: { id: input.pickerId },
       include: {
         users: true,
-        draws: true
+        draws: true,
+        tweets: true
       }
     });
 
@@ -43,10 +47,18 @@ export const getTwitterV2PublicPicker = procedure()
       };
     });
 
+    const stats = calculateTwitterV2PickerStats({
+      teamId: picker.teamId,
+      users: usersWithEligibility,
+      tweets: picker.tweets
+    });
+
     return {
       ...picker,
       users: usersWithEligibility,
-      draws: picker.draws
+      draws: picker.draws,
+      tweets: picker.tweets,
+      stats
     };
   });
 

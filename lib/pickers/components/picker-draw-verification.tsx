@@ -36,6 +36,7 @@ export const PickerDrawVerification: React.FC<{
   const StatusIcon = STATUS_ICONS[picker.status];
 
   const participants = picker.users || [];
+  const isUnverified = !picker.teamId;
 
   return (
     <Card>
@@ -89,7 +90,7 @@ export const PickerDrawVerification: React.FC<{
             </div>
             <div className="text-center p-4 rounded-lg border bg-muted/50">
               <p className="text-3xl font-bold">
-                {picker.stats.uniqueParticipants}
+                {isUnverified ? '??' : picker.stats.uniqueParticipants}
               </p>
               <p className="text-sm text-muted-foreground mt-1">Participants</p>
             </div>
@@ -223,7 +224,10 @@ export const PickerDrawVerification: React.FC<{
         )}
 
         {participants.length > 0 && (
-          <ParticipantsSection participants={participants} />
+          <ParticipantsSection
+            participants={participants}
+            isUnverified={isUnverified}
+          />
         )}
 
         {picker.logs && picker.logs.length > 0 && (

@@ -940,8 +940,8 @@ model TwitterPost {
 model TwitterPickerDraw {
   id String @id @default(cuid())
 
-  picker       TwitterPicker?    @relation(fields: [pickerId], references: [id])
-  pickerId     String?
+  picker       TwitterPicker     @relation(fields: [pickerId], references: [id])
+  pickerId     String
   userId       String
   user         TwitterPickerUser @relation(fields: [userId], references: [id], onDelete: Cascade)
   disqualified String?

@@ -195,6 +195,14 @@ export const LoggedInNavigationBar: React.FC<{ user: UserSchema }> = ({
               </Link>
 
               <Link
+                href="/pickers/x"
+                onClick={closeSheet}
+                className="flex items-center justify-between py-2"
+              >
+                <span className="text-sm text-muted-foreground">X Picker</span>
+              </Link>
+
+              <Link
                 href="/pricing"
                 onClick={closeSheet}
                 className="flex items-center justify-between py-2"

@@ -45,6 +45,7 @@ export type PickerStatsSchema = z.infer<typeof pickerStatsSchema>;
 
 export const publicPickerSchema = z.object({
   id: z.string(),
+  teamId: z.string().nullable(),
   status: z.nativeEnum(PickerStatus),
   type: z.nativeEnum(PickerType),
   createdAt: z.coerce.date(),
@@ -84,6 +85,7 @@ export const toPublicPicker = (
   const data = parseEligiblePickerData(picker, form);
   return {
     id: picker.id,
+    teamId: picker.teamId,
     status: picker.status,
     type: picker.type,
     createdAt: picker.createdAt,

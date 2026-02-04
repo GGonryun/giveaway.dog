@@ -13,6 +13,7 @@ export interface MobileNavLinks {
 export const MobileNavLinks: React.FC<MobileNavLinks> = ({ onLinkClick }) => {
   const pathname = usePathname();
   const [learnExpanded, setLearnExpanded] = useState(false);
+  const [toolsExpanded, setToolsExpanded] = useState(false);
 
   const isActiveRoute = (path: string) => {
     return pathname === path;
@@ -74,6 +75,41 @@ export const MobileNavLinks: React.FC<MobileNavLinks> = ({ onLinkClick }) => {
               onClick={onLinkClick}
             >
               <span>Templates</span>
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col">
+        <button
+          onClick={() => setToolsExpanded(!toolsExpanded)}
+          className={cn(
+            'flex items-center justify-between font-medium py-2 text-left',
+            pathname?.startsWith('/pickers') && 'text-primary'
+          )}
+        >
+          <span>Tools</span>
+          <ChevronDown
+            className={cn(
+              'h-4 w-4 transition-transform',
+              toolsExpanded && 'rotate-180'
+            )}
+          />
+        </button>
+        {toolsExpanded && (
+          <div className="flex flex-col gap-3 pl-6 mt-2">
+            <Link
+              href="/pickers/x"
+              className={cn(
+                'flex items-center justify-between py-2 text-sm',
+                isActiveRoute('/pickers/x')
+                  ? 'text-primary font-medium'
+                  : 'text-muted-foreground'
+              )}
+              onClick={onLinkClick}
+            >
+              <span>X Picker</span>
               <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           </div>

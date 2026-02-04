@@ -4,7 +4,14 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Users, CheckCircle2, Calendar, Filter, UserCheck } from 'lucide-react';
+import {
+  Users,
+  CheckCircle2,
+  Calendar,
+  Filter,
+  UserCheck,
+  HelpCircle
+} from 'lucide-react';
 import { formatDistance } from 'date-fns';
 import { TwitterV2PickerSchema } from '../schemas/details';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
@@ -13,6 +20,14 @@ import { TwitterV2ParticipantsSection } from './twitter-v2-participants-section'
 import { TwitterV2DrawHistorySection } from './twitter-v2-draw-history-section';
 import { DisqualificationReasonModal } from './twitter-v2-disqualification-reason-modal';
 import { TwitterScrapeProgressMonitor } from './twitter-scrape-progress-monitor';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
 
 interface TwitterV2PublicViewProps {
   picker: TwitterV2PickerSchema;
@@ -35,6 +50,7 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
 
   const winners = picker.draws.filter((d) => !d.disqualified);
   const eligibleUsers = picker.users.filter((u) => !u.ineligible);
+  const isPublicGiveaway = !picker.teamId;
 
   const hasRequirements =
     picker.minPostCount !== null ||
@@ -99,17 +115,60 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-3 gap-4 text-center">
-            <div className="p-4 rounded-lg bg-muted">
+            <div className="p-4 rounded-lg bg-muted relative">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="absolute top-2 right-2 text-muted-foreground hover:text-foreground">
+                    <HelpCircle className="h-4 w-4" />
+                  </button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>About Participants</DialogTitle>
+                    <DialogDescription>
+                      We automatically filter participants who are ineligible,
+                      have profiles hidden, or are part of our{' '}
+                      <Link
+                        href="/user/verify"
+                        className="underline font-medium text-primary"
+                      >
+                        global ban list
+                      </Link>
+                      .
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
               <div className="text-2xl font-bold">
-                {isComplete ? picker.users.length : '-'}
+                {isComplete ? picker.stats.totalParticipants : '-'}
               </div>
-              <div className="text-sm text-muted-foreground">Participants</div>
+              <div className="text-sm text-muted-foreground">
+                Participants
+              </div>
             </div>
-            <div className="p-4 rounded-lg bg-muted">
+            <div className="p-4 rounded-lg bg-muted relative">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="absolute top-2 right-2 text-muted-foreground hover:text-foreground">
+                    <HelpCircle className="h-4 w-4" />
+                  </button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>About Eligible Participants</DialogTitle>
+                    <DialogDescription>
+                      These are the participants eligible for winning based on
+                      the criteria set by the host.
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
               <div className="text-2xl font-bold">
-                {isComplete ? eligibleUsers.length : '-'}
+                {isComplete ? picker.stats.estimatedEligible : '-'}
               </div>
-              <div className="text-sm text-muted-foreground">Eligible</div>
+              <div className="text-sm text-muted-foreground">
+                Eligible
+              </div>
             </div>
             <div className="p-4 rounded-lg bg-muted">
               <div className="text-2xl font-bold">
@@ -231,7 +290,11 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
         isComplete={isComplete}
       />
 
-      <TwitterV2ParticipantsSection participants={picker.users} />
+      <TwitterV2ParticipantsSection
+        participants={picker.users}
+        isUnverified={isPublicGiveaway}
+        totalCount={picker.stats.totalParticipants}
+      />
 
       <div className="text-center text-muted-foreground">
         <p>

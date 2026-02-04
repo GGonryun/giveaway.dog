@@ -8,6 +8,7 @@ import { TWITTER_POST_URL } from '@/lib/settings';
 
 const MOCK_PICKER_DATA: PublicPickerSchema = {
   id: 'mock-picker-id',
+  teamId: 'mock-team-id',
   status: PickerStatus.COMPLETE,
   type: PickerType.TWITTER,
   createdAt: new Date('2024-06-15T10:00:00Z'),
