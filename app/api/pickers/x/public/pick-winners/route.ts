@@ -208,9 +208,7 @@ export async function POST(request: NextRequest) {
       return {
         pickerId,
         tweet,
-        winners: selectedWinners,
-        totalRetweeters: users.length,
-        validParticipants: eligibleUsers.length
+        winners: selectedWinners
       };
     });
 
@@ -233,10 +231,6 @@ export async function POST(request: NextRequest) {
           username: result.tweet.username || 'TheGiveawayDog',
           name: 'Giveaway Dog',
           profileUrl: `https://x.com/${result.tweet.username || 'TheGiveawayDog'}`
-        },
-        metrics: {
-          totalRetweets: result.tweet.retweetCount || 0,
-          validParticipants: result.validParticipants
         }
       }
     });
