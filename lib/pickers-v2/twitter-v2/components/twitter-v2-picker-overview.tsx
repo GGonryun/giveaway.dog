@@ -498,15 +498,15 @@ const PickerStatusSection: React.FC<PickerStatusSectionProps> = ({
   isDrawing
 }) => {
   const shouldShowProgress =
-    picker.runId &&
-    (picker.status === 'CREATED' ||
-      picker.status === 'PROCESSING' ||
-      picker.status === 'SCHEDULED');
+    picker.status === 'DRAFT' ||
+    picker.status === 'CREATED' ||
+    picker.status === 'PROCESSING' ||
+    picker.status === 'SCHEDULED';
   const statusConfig = STATUS_COLORS[picker.status];
   const StatusIcon = STATUS_ICONS[picker.status];
   const hasDrawn = picker.draws && picker.draws.length > 0;
 
-  if (shouldShowProgress && picker.runId) {
+  if (shouldShowProgress) {
     return (
       <TwitterScrapeProgressMonitor
         pickerId={picker.id}

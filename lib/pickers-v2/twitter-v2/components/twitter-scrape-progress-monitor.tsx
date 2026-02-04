@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 interface TwitterScrapeProgressMonitorProps {
   pickerId: string;
-  runId: string;
+  runId: string | null;
   status: PickerStatus;
 }
 
@@ -25,10 +25,23 @@ export const TwitterScrapeProgressMonitor: React.FC<
   const isConnectingRef = useRef(false);
 
   const shouldMonitor =
-    status === 'CREATED' || status === 'PROCESSING' || status === 'SCHEDULED';
+    status === 'CREATED' ||
+    status === 'PROCESSING' ||
+    status === 'SCHEDULED' ||
+    status === 'DRAFT';
+
+  useEffect(() => {
+    if (shouldMonitor && !runId) {
+      const intervalId = setInterval(() => {
+        router.refresh();
+      }, 5000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [shouldMonitor, runId, router]);
 
   const connectToStream = useCallback(async () => {
-    if (!shouldMonitor || isConnectingRef.current) {
+    if (!shouldMonitor || !runId || isConnectingRef.current) {
       return;
     }
 
@@ -108,13 +121,31 @@ export const TwitterScrapeProgressMonitor: React.FC<
   }, [runId, shouldMonitor, router]);
 
   useEffect(() => {
-    if (shouldMonitor && !isComplete) {
+    if (shouldMonitor && !isComplete && runId) {
       connectToStream();
     }
-  }, [shouldMonitor, isComplete, connectToStream]);
+  }, [shouldMonitor, isComplete, runId, connectToStream]);
 
   if (!shouldMonitor) {
     return null;
+  }
+
+  if (shouldMonitor && !runId) {
+    return (
+      <Card className="border-yellow-500/50 bg-yellow-500/5">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-yellow-600">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            Initializing Draw
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Starting up the draw process... This will begin processing shortly.
+          </p>
+        </CardContent>
+      </Card>
+    );
   }
 
   if (error) {
