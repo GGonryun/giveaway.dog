@@ -124,7 +124,7 @@ const TitleSection = () => {
           by{' '}
           <Link
             href={`/browse?hosts=${host.slug}`}
-            className="font-semibold hover:text-primary hover:underline transition-colors"
+            className="font-semibold underline hover:text-primary hover:underline transition-colors"
           >
             {host.name}
           </Link>

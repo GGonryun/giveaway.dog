@@ -1,8 +1,10 @@
 ## Roadmap
 
-- [ ] more secrets per task
+- [ ] Velora App Integration
 
-- [ ] Twitter v2
+- [ ] Twitter v2 import task
+
+- [ ] Bluesky Picker
 
 - [ ] Add discord bot for discord-specific giveaways.
 
@@ -16,6 +18,14 @@
 
 - [ ] Add twitch bot for streamer giveaways.
 
+- [ ] Global Black List
+
+- [ ] Global White List
+
+- [ ] Team Black List
+
+- [ ] Team White List
+
 ---
 
 ### @theejankanator
@@ -27,14 +37,9 @@
 
 - [ ] Suggestion for analytics: graph showing the number of users per day, the number of visits, and conversion rate
 
-## Cupara
-
-- [ ] Also, I feel when you modify the terms & conditions the additional terms box should be able to handle formatting as I'm one of many streamers that are very OCD about formatting. If the text looks garbled or looks to run together almost all entrants won't read that part of the terms.
-
 ### Nobody Asked
 
 - [ ] Add question entry method types:
-  - [ ] Upload a file
   - [ ] Pick an image from a gallery
 
 - [ ] If I am the owner of a giveaway, display a special "editor" button that takes me to the team sweepstakes overview so I can edit it quickly.
@@ -93,13 +98,6 @@
 ## KensonPlays
 
 - [ ] add a discord bot to reward users who interact on discord: lightweight that i'm currently experimenting with is granting users with specific roles access to giveaways
-
-## PJ & Dom
-
-- [ ] Global Black List
-- [ ] Global White List
-- [ ] Team Black List
-- [ ] Team White List
 
 ## Personal Features
 

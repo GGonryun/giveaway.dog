@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  ParticipantSweepstakeSchema,
-  SweepstakesAllocationSchema
-} from '@/schemas/giveaway/schemas';
+import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { UserReferralSchema } from '@/lib/referrals/schemas';
