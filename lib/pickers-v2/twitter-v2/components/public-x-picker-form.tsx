@@ -72,6 +72,7 @@ const LAST_POST_OPTIONS = [
 
 interface WinnerData {
   drawId: string;
+  postId?: string;
   winners: Array<{
     id: string;
     username: string;
@@ -526,6 +527,7 @@ export const PublicXPickerForm: React.FC = () => {
             onClose={() => setShowResults(false)}
             winners={winnerData.winners}
             drawId={winnerData.drawId}
+            postId={winnerData.postId}
             postAuthor={winnerData.postAuthor}
           />
         )}

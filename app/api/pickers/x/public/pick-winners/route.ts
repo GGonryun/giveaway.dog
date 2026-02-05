@@ -218,6 +218,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: {
         drawId: result.pickerId,
+        postId: tweetId,
         winners: result.winners.map((user) => ({
           id: user.userId,
           username: user.username || 'unknown',

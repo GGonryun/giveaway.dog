@@ -24,6 +24,7 @@ interface WinnersResultModalProps {
   onClose: () => void;
   winners: Winner[];
   drawId: string;
+  postId?: string;
   postAuthor: {
     username: string;
     name: string;
@@ -36,6 +37,7 @@ export const WinnersResultModal: React.FC<WinnersResultModalProps> = ({
   onClose,
   winners,
   drawId,
+  postId,
   postAuthor
 }) => {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://giveaway.dog';
@@ -44,12 +46,14 @@ export const WinnersResultModal: React.FC<WinnersResultModalProps> = ({
   const winnersText = winners.map((w) => `@${w.username}`).join(' ');
   const shareText = `Congrats ${winnersText} you won our giveaway! 
 
-Follow for more @thegiveawaydog
-
 ${drawUrl} `;
 
   const handleShare = () => {
-    const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+    const params = new URLSearchParams({ text: shareText });
+    if (postId) {
+      params.set('in_reply_to', postId);
+    }
+    const twitterIntentUrl = `https://twitter.com/intent/tweet?${params.toString()}`;
     window.open(twitterIntentUrl, '_blank');
   };
 
