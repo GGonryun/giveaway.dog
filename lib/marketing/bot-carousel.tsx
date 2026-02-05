@@ -166,20 +166,20 @@ export const BotCarouselSection = ({
 }: BotCarouselSectionProps) => {
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="bg-background relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
+      <div className="bg-background relative h-120 w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <div className="relative flex-1 flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 -top-44">
             <BotCarousel />
           </div>
 
           {/* Top fade gradient */}
-          <div className="absolute inset-x-0 top-0 h-40 pointer-events-none z-10 bg-gradient-to-b from-background/90 via-background/5 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-40 pointer-events-none z-10 bg-linear-to-b from-background/90 via-background/5 to-transparent" />
 
           {/* Bottom fade gradient - creates soft transition where animation meets text */}
-          <div className="absolute inset-x-0 bottom-0 h-56 pointer-events-none z-10 bg-gradient-to-t from-background/95 via-background/5 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-56 pointer-events-none z-10 bg-linear-to-t from-background/95 via-background/5 to-transparent" />
         </div>
 
-        <div className="relative px-8 py-6 backdrop-blur-sm flex-shrink-0 space-y-2 bg-card">
+        <div className="relative px-8 py-6 backdrop-blur-sm shrink-0 space-y-2 bg-card">
           <h3 className="text-lg font-semibold text-foreground">
             Verified engagement
           </h3>

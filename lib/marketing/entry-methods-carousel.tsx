@@ -247,7 +247,7 @@ function EntryMethodsGrid() {
                 )}
 
                 {/* Toggle indicator */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div
                     className={`
                     h-5 w-9 rounded-full transition-all duration-200 flex items-center
@@ -279,7 +279,7 @@ function EntryMethodsGrid() {
       </div>
 
       {/* Bottom fade gradient */}
-      <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none bg-gradient-to-t from-background via-background/50 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none bg-linear-to-t from-background via-background/50 to-transparent" />
     </div>
   );
 }
@@ -293,12 +293,12 @@ export const EntryMethodsCarouselSection = ({
 }: EntryMethodsCarouselSectionProps) => {
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="bg-background relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 flex flex-col shadow-xl overflow-hidden">
+      <div className="bg-background relative h-120 w-full rounded-3xl max-w-lg border border-border/40 flex flex-col shadow-xl overflow-hidden">
         <div className="relative flex-1 p-6">
           <EntryMethodsGrid />
         </div>
 
-        <div className="relative px-8 pt-1 pb-6 backdrop-blur-sm flex-shrink-0 space-y-2 bg-card/95">
+        <div className="relative px-8 pt-1 pb-6 backdrop-blur-sm shrink-0 space-y-2 bg-card/95">
           <h3 className="text-lg font-semibold text-foreground">
             Edit everything, instantly
           </h3>

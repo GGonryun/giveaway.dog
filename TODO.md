@@ -1,9 +1,8 @@
 ## Roadmap
 
-- [ ] Twitter v2
-
 - [ ] more secrets per task
-- [ ] do not post unlisted giveaways on discord
+
+- [ ] Twitter v2
 
 - [ ] Add discord bot for discord-specific giveaways.
 

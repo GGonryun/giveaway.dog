@@ -283,7 +283,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
       </div>
 
       {/* Fixed Action Buttons */}
-      <div className="border-t pt-4 mt-4 flex-shrink-0 space-y-2">
+      <div className="border-t pt-4 mt-4 shrink-0 space-y-2">
         <Button
           size="sm"
           variant="default"

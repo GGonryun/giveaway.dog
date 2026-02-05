@@ -41,7 +41,7 @@ export const DesktopNavMenu: React.FC = () => {
             Learn
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[280px] gap-2 p-2">
+            <ul className="grid w-70 gap-2 p-2">
               <li>
                 <Link
                   href="/learn/integrations"
@@ -84,7 +84,7 @@ export const DesktopNavMenu: React.FC = () => {
             Tools
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[280px] gap-2 p-2">
+            <ul className="grid w-70 gap-2 p-2">
               <li>
                 <Link
                   href="/pickers/x"

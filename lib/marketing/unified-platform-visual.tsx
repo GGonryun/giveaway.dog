@@ -36,7 +36,7 @@ const platforms = [
 export const UnifiedPlatformSection = () => {
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="bg-background relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
+      <div className="bg-background relative h-120 w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <UnifiedPlatformAnimation />
 
         <div className="relative px-8 py-6 backdrop-blur-sm shrink-0 space-y-2 bg-card">
@@ -179,7 +179,7 @@ const UnifiedPlatformAnimation = () => {
       </div>
 
       {/* Bottom fade gradient - creates soft transition where animation meets text */}
-      <div className="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-10 bg-gradient-to-t from-background/95 via-background/60 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-10 bg-linear-to-t from-background/95 via-background/60 to-transparent" />
     </div>
   );
 };

@@ -262,7 +262,7 @@ export const OrbitingPlatformsSection = ({
 }: OrbitingPlatformsSectionProps) => {
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="bg-background relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
+      <div className="bg-background relative h-120 w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <div className="relative flex-1 flex items-center justify-center overflow-hidden">
           <div className="absolute -top-14 left-1/2 -translate-x-1/2">
             <OrbitingPlatforms
@@ -274,7 +274,7 @@ export const OrbitingPlatformsSection = ({
 
           {/* Manually positioned Taki logo - stays above gradient */}
           <div className="absolute left-1/2 top-46 -translate-x-1/2 z-15">
-            <div className="rounded-full border-2 border-border bg-background shadow-xl flex items-center justify-center w-[72px] h-[72px] opacity-75">
+            <div className="rounded-full border-2 border-border bg-background shadow-xl flex items-center justify-center w-18 h-18 opacity-75">
               <Image
                 src="/taki.png"
                 alt="Giveaway Dog"
@@ -286,10 +286,10 @@ export const OrbitingPlatformsSection = ({
           </div>
 
           {/* Bottom fade gradient - creates soft transition where animation meets text */}
-          <div className="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-10 bg-gradient-to-t from-background/95 via-background/60 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-10 bg-linear-to-t from-background/95 via-background/60 to-transparent" />
         </div>
 
-        <div className="relative px-8 py-6 backdrop-blur-sm flex-shrink-0 space-y-2 bg-card">
+        <div className="relative px-8 py-6 backdrop-blur-sm shrink-0 space-y-2 bg-card">
           <h3 className="text-lg font-semibold text-foreground">
             100+ entry methods
           </h3>
