@@ -14,7 +14,7 @@ export default function PublicXPickerPage() {
       <div className="mb-8">
         <MarketingPageHeader
           title="X Picker"
-          description="Use our X integration to fetch and select winners from reposts."
+          description="Select a winner from users who reposted your giveaway on X."
         />
       </div>
       <PublicXPickerForm />
