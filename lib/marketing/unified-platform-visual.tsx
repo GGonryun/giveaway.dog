@@ -39,7 +39,7 @@ export const UnifiedPlatformSection = () => {
       <div className="bg-background relative h-[480px] w-full rounded-3xl max-w-lg border border-border/40 overflow-hidden flex flex-col shadow-xl">
         <UnifiedPlatformAnimation />
 
-        <div className="relative px-8 py-6 backdrop-blur-sm flex-shrink-0 space-y-2 bg-card">
+        <div className="relative px-8 py-6 backdrop-blur-sm shrink-0 space-y-2 bg-card">
           <h3 className="text-lg font-semibold text-foreground">
             Unified giveaway platform
           </h3>
@@ -57,8 +57,8 @@ export const UnifiedPlatformSection = () => {
 const UnifiedPlatformAnimation = () => {
   return (
     <div className="relative flex-1 flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none z-[1]" />
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-[5]">
+      <div className="absolute inset-0 pointer-events-none z-1" />
+      <svg className="absolute inset-0 w-full h-full pointer-events-none z-5">
         <defs>
           <style>{`
               @keyframes travelLineFromRight {
@@ -85,11 +85,11 @@ const UnifiedPlatformAnimation = () => {
         </defs>
 
         <GraphLine x1="15%" y1="50%" x2="50%" y2="50%" animated />
-        <GraphLine x1="50%" y1="50%" x2="85%" y2="17%" animated />
-        <GraphLine x1="50%" y1="50%" x2="85%" y2="31%" animated />
+        <GraphLine x1="50%" y1="50%" x2="85%" y2="10%" animated />
+        <GraphLine x1="50%" y1="50%" x2="85%" y2="30%" animated />
         <GraphLine x1="50%" y1="50%" x2="85%" y2="50%" animated />
-        <GraphLine x1="50%" y1="50%" x2="85%" y2="69%" animated />
-        <GraphLine x1="50%" y1="50%" x2="85%" y2="83%" animated />
+        <GraphLine x1="50%" y1="50%" x2="85%" y2="70%" animated />
+        <GraphLine x1="50%" y1="50%" x2="85%" y2="90%" animated />
       </svg>
 
       <div
@@ -101,7 +101,7 @@ const UnifiedPlatformAnimation = () => {
         }}
       >
         <div className="relative w-32 h-40 rounded-xl border-2 border-border bg-background shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl group-hover:border-primary/30 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+          <div className="absolute inset-0 bg-linear-to-br from-primary/10 to-primary/5" />
           <div className="relative p-2 flex flex-col h-full">
             <div className="flex items-center gap-1.5 mb-2">
               <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
