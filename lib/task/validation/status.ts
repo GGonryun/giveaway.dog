@@ -20,6 +20,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'TWITTER_LIKE':
     case 'TWITTER_RETWEET':
     case 'SECRET_CODE':
+    case 'SECRET_CODE_V2':
     case 'YOUTUBE_VISIT':
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':

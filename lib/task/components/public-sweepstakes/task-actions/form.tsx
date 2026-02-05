@@ -79,6 +79,7 @@ export const TaskActionForm: React.FC<
     case 'KICK_FOLLOW':
       return <KickFollowTaskActionForm {...props} task={props.task} />;
     case 'SECRET_CODE':
+    case 'SECRET_CODE_V2':
       return <SecretCodeTaskActionForm {...props} task={props.task} />;
     case 'YOUTUBE_VISIT':
       return <YouTubeVisitTaskActionForm {...props} task={props.task} />;

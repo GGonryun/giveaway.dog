@@ -116,6 +116,7 @@ export const toTaskStatus = (props: {
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':
+    case 'SECRET_CODE_V2':
     case 'YOUTUBE_VISIT':
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':

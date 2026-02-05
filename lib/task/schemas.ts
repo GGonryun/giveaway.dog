@@ -318,6 +318,17 @@ export const secretCodeTaskSchema = baseTaskSchema.extend({
 
 export type SecretCodeTaskSchema = z.infer<typeof secretCodeTaskSchema>;
 
+export const secretCodeV2TaskSchema = baseTaskSchema.extend({
+  type: z.literal('SECRET_CODE_V2'),
+  codes: z
+    .array(z.string().min(1, 'Secret code is required'))
+    .min(1, 'At least one secret code is required'),
+  caseSensitive: z.boolean().nullish().default(false),
+  hint: z.string().optional()
+});
+
+export type SecretCodeV2TaskSchema = z.infer<typeof secretCodeV2TaskSchema>;
+
 export const youtubeVisitTaskSchema = baseTaskSchema.extend({
   type: z.literal('YOUTUBE_VISIT'),
   channelName: z.string().optional(),
@@ -573,6 +584,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   twitchFollowTaskSchema,
   kickFollowTaskSchema,
   secretCodeTaskSchema,
+  secretCodeV2TaskSchema,
   youtubeVisitTaskSchema,
   instagramVisitTaskSchema,
   instagramLikeTaskSchema,
@@ -605,6 +617,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   MULTIPLE_CHOICE: 'Multiple Choice',
   SUBMIT_MEDIA: 'Submit Media',
   SECRET_CODE: 'Enter Secret Code',
+  SECRET_CODE_V2: 'Enter Secret Code',
   TWITTER_CONNECT: 'Connect X',
   TWITTER_FOLLOW: 'Follow on X',
   TWITTER_RETWEET: 'Repost on X',
@@ -667,6 +680,9 @@ export const TASK_INPUT_SCHEMA = {
   SECRET_CODE: z.object({
     code: z.string().min(1, 'Secret code is required')
   }),
+  SECRET_CODE_V2: z.object({
+    code: z.string().min(1, 'Secret code is required')
+  }),
   ASK_QUESTION: z.object({
     answer: z.string().min(1, 'Answer is required')
   }),
@@ -722,6 +738,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   TIKTOK_FOLLOW: z.object({}),
   TIKTOK_LIKE: z.object({}),
   SECRET_CODE: z.object({}),
+  SECRET_CODE_V2: z.object({}),
   ASK_QUESTION: z.object({}),
   SINGLE_CHOICE: z.object({}),
   MULTIPLE_CHOICE: z.object({}),
@@ -765,6 +782,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   BONUS_LOYALTY: 'BONUS',
   BONUS_COMPLETE_PROFILE: 'BONUS',
   SECRET_CODE: 'BONUS',
+  SECRET_CODE_V2: 'BONUS',
   VISIT_URL: 'WEBSITE',
   TWITTER_CONNECT: 'TWITTER',
   TWITTER_FOLLOW: 'TWITTER',
@@ -810,6 +828,7 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   SINGLE_CHOICE: 'ANONYMOUS',
   MULTIPLE_CHOICE: 'ANONYMOUS',
   SECRET_CODE: 'ANONYMOUS',
+  SECRET_CODE_V2: 'ANONYMOUS',
   TWITTER_CONNECT: 'TWITTER',
   TWITTER_FOLLOW: 'TWITTER',
   TWITTER_RETWEET: 'TWITTER',
@@ -878,6 +897,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   BONUS_COMPLETE_PROFILE: 'engagement',
   VISIT_URL: 'engagement',
   SECRET_CODE: 'engagement',
+  SECRET_CODE_V2: 'engagement',
   TWITTER_CONNECT: 'social',
   TWITTER_FOLLOW: 'social',
   TWITTER_RETWEET: 'social',
@@ -924,6 +944,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   BONUS_COMPLETE_PROFILE: false,
   VISIT_URL: false,
   SECRET_CODE: false,
+  SECRET_CODE_V2: false,
   TWITTER_CONNECT: false,
   TWITTER_FOLLOW: false,
   TWITTER_RETWEET: false,
@@ -964,7 +985,8 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   BONUS_LOYALTY: true,
   BONUS_COMPLETE_PROFILE: false,
   VISIT_URL: true,
-  SECRET_CODE: true,
+  SECRET_CODE: false,
+  SECRET_CODE_V2: true,
   TWITTER_CONNECT: true,
   TWITTER_FOLLOW: true,
   TWITTER_RETWEET: true,
@@ -1022,6 +1044,7 @@ export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
   TWITCH_FOLLOW: false,
   KICK_FOLLOW: false,
   SECRET_CODE: false,
+  SECRET_CODE_V2: false,
   YOUTUBE_VISIT: false,
   INSTAGRAM_VISIT: false,
   INSTAGRAM_LIKE: false,
@@ -1121,6 +1144,7 @@ export const TASK_VERIFICATION_REQUIREMENT: Record<
   DISCORD_INTERACTION_IMPORT: 'automatic',
   TWITCH_FOLLOW: 'automatic',
   SECRET_CODE: 'automatic',
+  SECRET_CODE_V2: 'automatic',
   ASK_QUESTION: 'manual',
   SINGLE_CHOICE: 'manual',
   MULTIPLE_CHOICE: 'manual',

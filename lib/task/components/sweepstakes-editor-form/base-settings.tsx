@@ -38,6 +38,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':
+    case 'SECRET_CODE_V2':
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':
     case 'INSTAGRAM_COMMENT':

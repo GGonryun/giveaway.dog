@@ -1,18 +1,21 @@
-import { Separator } from '@/components/ui/separator';
 import {
   TaskActionProps,
   TaskContent,
   TaskControls
 } from '../../building-blocks';
 import { useMemo, useState } from 'react';
-import { SecretCodeTaskSchema, TaskInput } from '@/lib/task/schemas';
+import {
+  SecretCodeTaskSchema,
+  SecretCodeV2TaskSchema,
+  TaskInput
+} from '@/lib/task/schemas';
 import { Input } from '@/components/ui/input';
 import { Typography } from '@/components/ui/typography';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircleIcon } from 'lucide-react';
 
 export const SecretCodeTaskActionForm: React.FC<
-  TaskActionProps<SecretCodeTaskSchema>
+  TaskActionProps<SecretCodeTaskSchema | SecretCodeV2TaskSchema>
 > = ({ onCancel, onSubmit, submission, isLoading, task, error }) => {
   const [code, setCode] = useState('');
 

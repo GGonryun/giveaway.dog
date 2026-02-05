@@ -11,6 +11,7 @@ import { HrefFormField } from './lib/href';
 import { KickFollowFormField } from './lib/kick-follow';
 import { LabelFormField } from './lib/label';
 import { SecretCodeFormField } from './lib/secret-code';
+import { SecretCodesFormField } from './lib/secret-codes';
 import { TweetIdFormField } from './lib/tweet-id';
 import { TwitchFollowFormField } from './lib/twitch-follow';
 import { TwitterUsernameFormField } from './lib/twitter-username';
@@ -50,7 +51,7 @@ export const AdditionalSettings: React.FC<{
       case 'BONUS_COMPLETE_PROFILE':
         return (
           <div className="flex items-start gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 dark:border-blue-900 dark:bg-blue-950">
-            <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
             <div className="space-y-1">
               <Typography.Paragraph
                 size="sm"
@@ -101,6 +102,13 @@ export const AdditionalSettings: React.FC<{
         return (
           <>
             <SecretCodeFormField />
+            <SecretHintFormField />
+          </>
+        );
+      case 'SECRET_CODE_V2':
+        return (
+          <>
+            <SecretCodesFormField />
             <SecretHintFormField />
           </>
         );

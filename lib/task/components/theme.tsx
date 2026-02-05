@@ -82,6 +82,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         icon: EarthIcon
       };
     case 'SECRET_CODE':
+    case 'SECRET_CODE_V2':
       return {
         action:
           'bg-green-600 text-green-100 group-hover:bg-green-600 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-600',

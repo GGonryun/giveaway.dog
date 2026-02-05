@@ -22,6 +22,12 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
         code: parsed.code
       };
     }
+    case 'SECRET_CODE_V2': {
+      const parsed = TASK_INPUT_SCHEMA.SECRET_CODE_V2.parse(data);
+      return {
+        code: parsed.code
+      };
+    }
     case 'ASK_QUESTION': {
       const parsed = TASK_INPUT_SCHEMA.ASK_QUESTION.parse(data);
       return {

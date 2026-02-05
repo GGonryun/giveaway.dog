@@ -30,6 +30,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {
     switch (type) {
       case 'SECRET_CODE':
+      case 'SECRET_CODE_V2':
         return (
           <>
             <SecretCodeCaseSensitiveFormField />

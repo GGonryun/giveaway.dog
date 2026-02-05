@@ -621,6 +621,7 @@ export function getVerificationInstructions(args: {
       };
 
     case 'SECRET_CODE':
+    case 'SECRET_CODE_V2':
       return {
         title: 'Verify Secret Code (Automatic)',
         description: `This task is automatically verified when user enters the code`,

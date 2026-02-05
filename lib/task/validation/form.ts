@@ -3,6 +3,7 @@ import {
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema,
   ReferralLinkTaskSchema,
+  SecretCodeV2TaskSchema,
   TaskSchema
 } from '../schemas';
 import { assertNever } from '@/lib/errors';
@@ -67,6 +68,8 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
       return bonusLoyaltyValidator({ ...args, task });
     case 'REFERRAL_LINK':
       return referralLinkValidator({ ...args, task });
+    case 'SECRET_CODE_V2':
+      return secretCodeV2Validator({ ...args, task });
     case 'BONUS_LIMITED':
     case 'BONUS_TASK':
     case 'BONUS_COMPLETE_PROFILE':
@@ -211,6 +214,24 @@ const referralLinkValidator = (
       path: ['tasks', index, 'title'],
       code: z.ZodIssueCode.custom,
       message: 'Only one referral link task is allowed per giveaway'
+    });
+  }
+};
+
+const secretCodeV2Validator = (
+  args: ValidateSweepstakeTaskOptions<SecretCodeV2TaskSchema>
+) => {
+  console.log('Running secretCodeV2Validator');
+
+  const { task, index, ctx } = args;
+
+  const hasEmptyCode = task.codes.some((code) => !code || code.trim() === '');
+
+  if (hasEmptyCode) {
+    ctx.addIssue({
+      path: ['tasks', index, 'codes'],
+      code: z.ZodIssueCode.custom,
+      message: 'All secret codes must be filled in'
     });
   }
 };

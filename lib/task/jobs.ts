@@ -21,6 +21,7 @@ export const createJobsForTask = (
     case 'TWITCH_FOLLOW':
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':
+    case 'SECRET_CODE_V2':
     case 'STEAM_WISHLIST':
     case 'STEAM_FOLLOW':
     case 'BONUS_LIMITED':

@@ -4,7 +4,7 @@ import { checkSteamWishlist } from './steam';
 import { checkDiscordJoin } from './discord';
 import { TaskSchema } from '../schemas';
 import { checkTwitchFollow } from './twitch';
-import { checkSecretCode } from './secret-code';
+import { checkSecretCode, checkSecretCodeV2 } from './secret-code';
 import {
   checkBonusCompleteProfile,
   checkBonusLimited,
@@ -121,6 +121,11 @@ export const validateTask = async <T extends TaskSchema>(
       });
     case 'SECRET_CODE':
       return await checkSecretCode(db, {
+        ...input,
+        task: input.task
+      });
+    case 'SECRET_CODE_V2':
+      return await checkSecretCodeV2(db, {
         ...input,
         task: input.task
       });

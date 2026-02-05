@@ -54,6 +54,7 @@ export const EntryMethodBadge: React.FC<{
     case 'TIKTOK_FOLLOW':
     case 'TIKTOK_LIKE':
     case 'SECRET_CODE':
+    case 'SECRET_CODE_V2':
     case 'BLUESKY_CONNECT':
     case 'BLUESKY_FOLLOW':
     case 'BLUESKY_LIKE':

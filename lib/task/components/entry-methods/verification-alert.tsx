@@ -36,6 +36,7 @@ const VERIFICATION_WARNINGS: Record<
   TWITCH_FOLLOW: undefined,
   KICK_FOLLOW: undefined,
   SECRET_CODE: undefined,
+  SECRET_CODE_V2: undefined,
   YOUTUBE_VISIT: undefined,
   INSTAGRAM_VISIT: undefined,
   INSTAGRAM_LIKE: undefined,

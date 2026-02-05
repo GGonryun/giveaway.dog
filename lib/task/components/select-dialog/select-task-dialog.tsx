@@ -49,7 +49,7 @@ export const SelectTaskDialog: React.FC<{
           Add Entry Method
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-full sm:w-[600px] flex flex-col">
+      <SheetContent side="left" className="w-full sm:w-150 flex flex-col">
         <SheetHeader className="text-left pb-0 hidden">
           <SheetTitle>Entry Methods</SheetTitle>
           <SheetDescription>

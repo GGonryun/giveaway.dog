@@ -179,6 +179,17 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['SECRET_CODE_V2']: {
+      id: '',
+      type: 'SECRET_CODE_V2',
+      title: 'Enter the secret code',
+      codes: ['MY_SECRET_CODE'],
+      hint: 'Check our announcement channel for the code!',
+      value: 1,
+      caseSensitive: false,
+      mandatory: false,
+      tasksRequired: 0
+    },
     ['YOUTUBE_VISIT']: {
       id: '',
       type: 'YOUTUBE_VISIT',
