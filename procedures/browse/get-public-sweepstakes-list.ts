@@ -27,7 +27,8 @@ const getPublicSweepstakesList = procedure()
       input?.maxEntrants?.toString() ?? 'no-max',
       input?.search ?? 'no-search',
       input?.page?.toString() ?? '1',
-      input?.showStatuses?.sort().join(',') ?? 'all'
+      input?.showStatuses?.sort().join(',') ?? 'all',
+      input?.hosts?.sort().join(',') ?? 'all-hosts'
     ],
     tags: ['public-sweepstakes-list'],
     revalidate: 300
@@ -120,6 +121,11 @@ const getPublicSweepstakesList = procedure()
     if (input?.showStatuses && input.showStatuses.length > 0) {
       const showSet = new Set(input.showStatuses);
       results = results.filter((s) => showSet.has(s.status as any));
+    }
+
+    if (input?.hosts && input.hosts.length > 0) {
+      const hostSet = new Set(input.hosts);
+      results = results.filter((s) => hostSet.has(s.host.slug));
     }
 
     const page = input?.page ?? 1;

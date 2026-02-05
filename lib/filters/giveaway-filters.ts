@@ -32,7 +32,8 @@ export const giveawayFiltersSchema = z.object({
   search: z.string().optional(),
   page: z.number().int().min(1).optional(),
   showStatuses: z.array(browseStatusSchema).optional(),
-  hideEntered: z.boolean().optional()
+  hideEntered: z.boolean().optional(),
+  hosts: z.array(z.string()).optional()
 });
 
 export type GiveawayFilters = z.infer<typeof giveawayFiltersSchema>;

@@ -29,8 +29,20 @@ import {
 } from '@/lib/filters/giveaway-filters';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
+import { MultiSelect, MultiSelectOption } from '@/components/ui/multi-select';
+import { useMemo } from 'react';
 
-export function GiveawayFiltersSheet() {
+type BrowseHost = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+export function GiveawayFiltersSheet({
+  availableHosts = []
+}: {
+  availableHosts?: BrowseHost[];
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -41,6 +53,21 @@ export function GiveawayFiltersSheet() {
     const statuses = value.split(',').filter(Boolean) as BrowseStatus[];
     return statuses.length > 0 ? statuses : ALL_BROWSE_STATUSES;
   };
+
+  const parseHosts = (value: string | null): string[] => {
+    if (!value) return [];
+    const hosts = value.split(',').filter(Boolean);
+    return hosts;
+  };
+
+  const hostOptions: MultiSelectOption[] = useMemo(
+    () =>
+      availableHosts.map((host) => ({
+        label: host.name,
+        value: host.slug
+      })),
+    [availableHosts]
+  );
 
   const currentFilters: GiveawayFilters = {
     minEntrants: searchParams.get('minEntrants')
@@ -54,7 +81,8 @@ export function GiveawayFiltersSheet() {
       'entrants-desc',
     search: searchParams.get('search') ?? undefined,
     showStatuses: parseShowStatuses(searchParams.get('showStatuses')),
-    hideEntered: searchParams.get('hideEntered') === 'true'
+    hideEntered: searchParams.get('hideEntered') === 'true',
+    hosts: parseHosts(searchParams.get('hosts'))
   };
 
   const [filters, setFilters] = useState<GiveawayFilters>(currentFilters);
@@ -104,6 +132,12 @@ export function GiveawayFiltersSheet() {
       params.delete('hideEntered');
     }
 
+    if (filters.hosts && filters.hosts.length > 0) {
+      params.set('hosts', filters.hosts.join(','));
+    } else {
+      params.delete('hosts');
+    }
+
     params.delete('page');
 
     router.push(`${pathname}?${params.toString()}`);
@@ -117,13 +151,15 @@ export function GiveawayFiltersSheet() {
   };
 
   const currentShowStatuses = filters.showStatuses ?? ALL_BROWSE_STATUSES;
+  const currentHosts = filters.hosts ?? [];
   const hasActiveFilters =
     filters.minEntrants !== undefined ||
     filters.maxEntrants !== undefined ||
     (filters.sortBy && filters.sortBy !== 'entrants-desc') ||
     (filters.search && filters.search !== '') ||
     currentShowStatuses.length !== ALL_BROWSE_STATUSES.length ||
-    filters.hideEntered;
+    filters.hideEntered ||
+    currentHosts.length > 0;
 
   const toggleShowStatus = (status: BrowseStatus) => {
     const current = filters.showStatuses ?? ALL_BROWSE_STATUSES;
@@ -247,6 +283,21 @@ export function GiveawayFiltersSheet() {
               }
             />
           </div>
+
+          {availableHosts.length > 0 && (
+            <div className="space-y-3">
+              <Label>Hosts</Label>
+              <MultiSelect
+                options={hostOptions}
+                defaultValue={currentHosts}
+                onValueChange={(value) =>
+                  setFilters({ ...filters, hosts: value })
+                }
+                placeholder="Select hosts..."
+                maxCount={2}
+              />
+            </div>
+          )}
 
           <div className="flex gap-3 pt-4">
             <Button onClick={handleApplyFilters} className="flex-1">

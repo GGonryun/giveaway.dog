@@ -16,11 +16,18 @@ import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 
+export type BrowseHost = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
 export const BrowsePageFilters: React.FC<{
   children: React.ReactNode;
   hasResults: boolean;
   hasMoreResults: boolean;
-}> = ({ hasResults, hasMoreResults, children }) => {
+  availableHosts: BrowseHost[];
+}> = ({ hasResults, hasMoreResults, children, availableHosts }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -68,7 +75,7 @@ export const BrowsePageFilters: React.FC<{
           />
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
-          <GiveawayFiltersSheet />
+          <GiveawayFiltersSheet availableHosts={availableHosts} />
           <Button variant="outline" asChild className="flex-1 sm:flex-initial">
             <Link href={'/history'}>
               <HistoryIcon className="h-4 w-4 mr-2" />

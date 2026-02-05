@@ -1,6 +1,7 @@
 import { SweepstakesPageSkeleton } from '@/components/sweepstakes-browse/sweepstakes-page-skeleton';
 import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
 import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes-list';
+import getBrowseHosts from '@/procedures/browse/get-browse-hosts';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { BrowseStatus, GiveawayFilters } from '@/lib/filters/giveaway-filters';
@@ -53,6 +54,7 @@ type SearchParams = {
   page?: string;
   showStatuses?: string;
   hideEntered?: string;
+  hosts?: string;
 };
 
 export default async function Page({
@@ -75,6 +77,12 @@ const parseShowStatuses = (value?: string): BrowseStatus[] | undefined => {
   return statuses.length > 0 ? statuses : undefined;
 };
 
+const parseHosts = (value?: string): string[] | undefined => {
+  if (!value) return undefined;
+  const hosts = value.split(',').filter(Boolean);
+  return hosts.length > 0 ? hosts : undefined;
+};
+
 const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
   const filters: GiveawayFilters = {
     minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
@@ -83,12 +91,14 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
     search: params.search,
     page: params.page ? parseInt(params.page) : 1,
     showStatuses: parseShowStatuses(params.showStatuses),
-    hideEntered: params.hideEntered === 'true'
+    hideEntered: params.hideEntered === 'true',
+    hosts: parseHosts(params.hosts)
   };
 
-  const [sweepstakes, participation] = await Promise.all([
+  const [sweepstakes, participation, hosts] = await Promise.all([
     getPublicSweepstakesList(filters),
-    getPublicSweepstakesParticipation()
+    getPublicSweepstakesParticipation(),
+    getBrowseHosts()
   ]);
 
   if (!sweepstakes.ok)
@@ -105,10 +115,18 @@ const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
       </div>
     );
 
+  if (!hosts.ok)
+    return (
+      <div>
+        [ERROR-{hosts.data.code}]: {hosts.data.message}
+      </div>
+    );
+
   return (
     <BrowsePageFilters
       hasResults={sweepstakes.data.length > 0}
       hasMoreResults={sweepstakes.data.length === 20}
+      availableHosts={hosts.data}
     >
       <AllGiveawaysGrid
         sweepstakes={sweepstakes.data}
