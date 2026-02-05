@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { ClockIcon, CalendarIcon, FileCheck } from 'lucide-react';
@@ -120,7 +121,13 @@ const TitleSection = () => {
       </h1>
       <p className="text-sm sm:text-base text-muted-foreground flex items-center gap-1 flex-wrap">
         <span>
-          by <span className="font-semibold">{host.name}</span>
+          by{' '}
+          <Link
+            href={`/browse?hosts=${host.slug}`}
+            className="font-semibold hover:text-primary hover:underline transition-colors"
+          >
+            {host.name}
+          </Link>
         </span>
         {socialLinks.length > 0 && (
           <span className="flex items-center gap-1">
