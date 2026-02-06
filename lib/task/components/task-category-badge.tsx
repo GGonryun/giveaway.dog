@@ -1,9 +1,8 @@
-import { TaskType } from '@prisma/client';
-
 import {
   TASK_CATEGORY,
   TaskCategorySchema,
-  TASK_CATEGORY_LABEL
+  TASK_CATEGORY_LABEL,
+  TaskType
 } from '@/lib/task/schemas';
 import { Badge } from '@/components/ui/badge';
 

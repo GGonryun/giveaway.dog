@@ -1,4 +1,3 @@
-import { TaskType } from '@prisma/client';
 import {
   Globe2Icon,
   HatGlassesIcon,
@@ -7,7 +6,7 @@ import {
   StarIcon
 } from 'lucide-react';
 
-import { TASK_PLATFORM } from '@/lib/task/schemas';
+import { TASK_PLATFORM, TaskType } from '@/lib/task/schemas';
 import { assertNever } from '@/lib/errors';
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
 import { SocialGoogleIcon } from '@/lib/integrations/components/icons/google-icon';

@@ -15,12 +15,12 @@ import { widetype } from '@/lib/widetype';
 import { PlusIcon, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-import { TaskType } from '@prisma/client';
 import {
   TASK_LABEL,
   TASK_IS_IMPORT,
   TASK_ALLOW_MANUAL_ADD,
-  TASK_DUPLICATE_RESTRICTION
+  TASK_DUPLICATE_RESTRICTION,
+  TaskType
 } from '../../schemas';
 import { toTaskTheme } from '../theme';
 import { EntryMethodBadge } from '../entry-methods/entry-method-badge';

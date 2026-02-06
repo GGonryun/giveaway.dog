@@ -19,8 +19,6 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ArrayContext } from '@/components/hooks/use-array-context';
 
-import { TaskType } from '@prisma/client';
-
 import { FieldError, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { IconButton } from '@/components/sweepstakes-editor/form/icon-button';
@@ -29,9 +27,8 @@ import { BaseSettings } from '../sweepstakes-editor-form/base-settings';
 import { AdditionalSettings } from '../sweepstakes-editor-form/additional-settings/additional-settings';
 import { AdvancedSettings } from '../sweepstakes-editor-form/advanced-settings';
 import { toTaskTheme } from '../theme';
-import { TASK_LABEL } from '../../schemas';
+import { TASK_LABEL, TaskType } from '../../schemas';
 import { VerificationAlert } from './verification-alert';
-import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 
 export const EntryMethod: React.FC<{
   id: string;

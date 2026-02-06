@@ -1,5 +1,4 @@
-import { TaskType } from '@prisma/client';
-import { TaskOf } from './schemas';
+import { TaskOf, TaskType } from './schemas';
 
 export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
   const defaults: { [key in TaskType]: TaskOf<key> } = {

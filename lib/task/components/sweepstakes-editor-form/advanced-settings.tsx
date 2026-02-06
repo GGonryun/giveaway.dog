@@ -19,12 +19,12 @@ import {
 } from '@/components/patterns/form-layout/switch-form-header';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
-import { TaskType } from '@prisma/client';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { SecretCodeCaseSensitiveFormField } from './additional-settings/lib/secret-code-case-sensitive';
 import { TwitterVerifiedBonusField } from './additional-settings/lib/twitter-verified-bonus';
 import { RequireProofField } from './additional-settings/lib/require-proof';
+import { TaskType } from '../../schemas';
 
 export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {

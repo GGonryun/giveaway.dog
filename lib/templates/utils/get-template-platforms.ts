@@ -1,5 +1,8 @@
-import { TaskType } from '@prisma/client';
-import { TASK_PLATFORM, TaskPlatformSchema } from '@/lib/task/schemas';
+import {
+  TASK_PLATFORM,
+  TaskPlatformSchema,
+  TaskType
+} from '@/lib/task/schemas';
 import { TemplateDetailsSchema } from '../schemas/template';
 
 export function getTemplatePlatforms(

@@ -1,6 +1,5 @@
-import { TaskType } from '@prisma/client';
 import { ShieldCheck } from 'lucide-react';
-import { TASK_VERIFICATION_REQUIREMENT } from '../../schemas';
+import { TASK_VERIFICATION_REQUIREMENT, TaskType } from '../../schemas';
 import { SelectTaskBadge } from './select-task-badge';
 import { assertNever } from '@/lib/errors';
 

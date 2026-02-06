@@ -1,6 +1,6 @@
-import { TaskType } from '@prisma/client';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { ShieldOffIcon } from 'lucide-react';
+import { TaskType } from '../../schemas';
 
 const VERIFICATION_WARNINGS: Record<
   TaskType,

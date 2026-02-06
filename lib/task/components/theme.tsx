@@ -11,7 +11,7 @@ import {
   UploadCloud
 } from 'lucide-react';
 import { assertNever } from '@/lib/errors';
-import { TaskType } from '@prisma/client';
+
 import React from 'react';
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
 import { SocialSteamIcon } from '@/lib/integrations/components/icons/steam-icon';
@@ -23,6 +23,7 @@ import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagr
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
 import { SocialTikTokIcon } from '@/lib/integrations/components/icons/tiktok-icon';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
+import { TaskType } from '../schemas';
 
 export type TaskTheme = {
   action: string;

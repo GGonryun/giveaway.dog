@@ -1,6 +1,5 @@
 import { assertNever } from '@/lib/errors';
 import { useCallback } from 'react';
-import { TaskType } from '@prisma/client';
 import { StartDateField } from './lib/start-date';
 import { EndDateField } from './lib/end-date';
 import { YouTubeChannelUrlFormField } from './lib/youtube-channel-url';
@@ -38,6 +37,7 @@ import { MaximumReferralsField } from './lib/maximum-referrals';
 import { SteamDeveloperFormField } from './lib/steam-developer';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
+import { TaskType } from '@/lib/task/schemas';
 
 export const AdditionalSettings: React.FC<{
   type: TaskType;

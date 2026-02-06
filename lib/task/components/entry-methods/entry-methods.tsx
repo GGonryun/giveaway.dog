@@ -6,7 +6,7 @@ import {
   ArrayPath,
   FieldArray
 } from 'react-hook-form';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EntryMethod } from './entry-method';
 import { SelectTaskDialog } from '../select-dialog/select-task-dialog';
 import { toDefaultValues } from '@/lib/task/defaults';
@@ -32,9 +32,8 @@ import {
 } from '@/components/ui/form';
 import { nanoid } from 'nanoid';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
-import { TaskType } from '@prisma/client';
 import { uniq } from 'lodash';
-import { TaskSchema } from '@/lib/task/schemas';
+import { TaskSchema, TaskType } from '@/lib/task/schemas';
 import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };
