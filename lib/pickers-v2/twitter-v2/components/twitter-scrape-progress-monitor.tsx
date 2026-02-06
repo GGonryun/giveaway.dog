@@ -34,18 +34,28 @@ export const TwitterScrapeProgressMonitor: React.FC<
 
   useEffect(() => {
     if (shouldMonitor && !runId && !refreshLimitReached) {
-      const intervalId = setInterval(() => {
-        refreshCountRef.current += 1;
+      let timeoutId: NodeJS.Timeout;
 
-        if (refreshCountRef.current >= 5) {
-          setRefreshLimitReached(true);
-          clearInterval(intervalId);
-        } else {
-          router.refresh();
-        }
-      }, 5000);
+      const scheduleRefresh = () => {
+        const retryCount = refreshCountRef.current;
+        const doublings = Math.floor(retryCount / 3);
+        const interval = 1000 * Math.pow(2, doublings);
 
-      return () => clearInterval(intervalId);
+        timeoutId = setTimeout(() => {
+          refreshCountRef.current += 1;
+
+          if (refreshCountRef.current >= 15) {
+            setRefreshLimitReached(true);
+          } else {
+            router.refresh();
+            scheduleRefresh();
+          }
+        }, interval);
+      };
+
+      scheduleRefresh();
+
+      return () => clearTimeout(timeoutId);
     }
   }, [shouldMonitor, runId, router, refreshLimitReached]);
 
