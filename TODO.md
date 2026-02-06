@@ -2,10 +2,6 @@
 
 - [ ] Velora App Integration
 
-- [ ] Twitter v2 import task
-
-- [ ] Bluesky Picker
-
 - [ ] Add discord bot for discord-specific giveaways.
 
 - [ ] Add an "I already completed this task" to tiktok
@@ -21,6 +17,8 @@
 - [ ] Add Polls
 
 - [ ] Add Leaderboards
+
+- [ ] Bluesky Picker
 
 ---
 

@@ -134,20 +134,6 @@ export const processTaskEntry = async ({
           content: "You've already entered this giveaway!"
         };
       }
-
-      if (body.member) {
-        await db.userScoringRequest.upsert({
-          where: { userId: user.id },
-          create: {
-            userId: user.id,
-            data: toDiscordScoringData(body.member)
-          },
-          update: {
-            data: toDiscordScoringData(body.member),
-            updatedAt: new Date()
-          }
-        });
-      }
     }
 
     const userRoleIds = body.member?.roles || [];
@@ -272,6 +258,18 @@ export const processTaskEntry = async ({
     await scheduleRandomlyAssignPrizesJob({
       db,
       sweepstakesId
+    });
+
+    await db.userScoringRequest.upsert({
+      where: { userId: user.id },
+      create: {
+        userId: user.id,
+        data: toDiscordScoringData(body.member)
+      },
+      update: {
+        data: toDiscordScoringData(body.member),
+        updatedAt: new Date()
+      }
     });
 
     return {
