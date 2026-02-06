@@ -12,8 +12,8 @@ import { datetime } from '@/lib/date';
 import { ApplicationError } from '@/lib/errors';
 import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
 
-const SCRAPEBADGER_RUN_OFFSET = 1;
-const MAX_RUN_OFFSET = 60;
+const SCRAPEBADGER_RUN_OFFSET = 5;
+const MAX_RUN_OFFSET = 360;
 
 export const processRetweetV2TaskJob = async (
   db: PrismaClient,
@@ -141,9 +141,24 @@ export const processRetweetV2TaskJob = async (
     });
   }
 
-  const nextRunAt = datetime.minutesFromNow(
+  const endDate = job.task.sweepstakes.timing?.endDate;
+  const now = new Date();
+
+  if (endDate && now >= endDate) {
+    console.info(
+      `Task job ${job.id} completed, sweepstakes has ended - not scheduling next run`
+    );
+    return;
+  }
+
+  let nextRunAt = datetime.minutesFromNow(
     Math.min(parsed.data.runs * SCRAPEBADGER_RUN_OFFSET, MAX_RUN_OFFSET)
   );
+
+  if (endDate && nextRunAt > endDate) {
+    nextRunAt = endDate;
+    console.info(`Approaching end date, scheduling final run at ${nextRunAt}`);
+  }
 
   await db.taskJob.create({
     data: {

@@ -67,8 +67,6 @@ export const fetchAllRetweetersForTweet = async ({
   };
 };
 
-const BATCH_SIZES = [1, 2, 4, 8, 16, 20];
-
 export const fetchRetweetersUntilUser = async ({
   tweetId,
   stopAtUserId,
@@ -90,19 +88,17 @@ export const fetchRetweetersUntilUser = async ({
   );
 
   while (hasMore && users.length < maxUsers && !foundStopUser) {
-    const batchSize = BATCH_SIZES[Math.min(batchIndex, BATCH_SIZES.length - 1)];
     console.info(
-      `Fetching retweeters batch ${batchIndex + 1}, batchSize=${batchSize}, current count=${users.length}`
+      `Fetching retweeters batch ${batchIndex + 1}, current count=${users.length}`
     );
     const response = await client.twitter.tweets.getRetweeters(tweetId, {
-      cursor,
-      count: batchSize
+      cursor
     });
     batchIndex++;
 
     const batch = response.data || [];
     console.info(
-      `Fetched retweeters batch ${batchIndex + 1}, batchSize=${batchSize}, found=${batch.length}`
+      `Fetched retweeters batch ${batchIndex}, found=${batch.length}`
     );
 
     if (stopAtUserId) {

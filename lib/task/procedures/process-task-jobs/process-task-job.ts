@@ -8,6 +8,8 @@ import { processBlueskyRepostTaskJob } from './process-bluesky-repost-task-job';
 import { processRetweetTaskJob } from './process-retweet-task-job';
 import { processRetweetV2TaskJob } from './process-retweet-v2-task-job';
 
+const END_DATE_BUFFER_MINUTES = 15;
+
 export const processTaskJob = async (
   db: PrismaClient,
   job: TaskJobWithRelations
@@ -45,17 +47,20 @@ export const processTaskJob = async (
   }
 
   const task = toTaskSchema(job.task);
-  // if the sweepstakes has ended, cancel the job.
-  if (timing?.endDate && timing.endDate < new Date()) {
-    console.info(
-      `Sweepstakes ${job.task.sweepstakes.id} has ended, deleting task job ${job.id}`
-    );
+  if (timing?.endDate) {
+    const bufferMs = END_DATE_BUFFER_MINUTES * 60 * 1000;
+    const endDateWithBuffer = new Date(timing.endDate.getTime() + bufferMs);
+    if (endDateWithBuffer < new Date()) {
+      console.info(
+        `Sweepstakes ${job.task.sweepstakes.id} has ended (past ${END_DATE_BUFFER_MINUTES}min buffer), deleting task job ${job.id}`
+      );
 
-    await db.taskJob.delete({
-      where: { id: job.id }
-    });
+      await db.taskJob.delete({
+        where: { id: job.id }
+      });
 
-    return;
+      return;
+    }
   }
 
   switch (task.type) {
