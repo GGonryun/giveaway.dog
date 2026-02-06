@@ -9,8 +9,8 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { TaskType } from '@prisma/client';
 import { assertNever } from '@/lib/errors';
+import { TaskType } from '../../schemas';
 
 export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   switch (type) {
