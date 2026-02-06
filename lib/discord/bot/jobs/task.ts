@@ -273,7 +273,7 @@ export const processTaskEntry = async ({
     });
 
     return {
-      content: `Your entry is confirmed!\n[Click here for bonus entries](${giveawayUrl})`
+      content: `Your entry is confirmed!`
     };
   } catch (error) {
     console.error('Error processing task entry:', error);
