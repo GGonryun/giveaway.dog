@@ -12,16 +12,12 @@ import {
   selectRandomUnique
 } from '@/lib/pickers-v2/twitter-v2/utils/picker-utils';
 import { createId } from '@paralleldrive/cuid2';
-import {
-  pickerRatelimit,
-  pickerHourlyRatelimit
-} from '@/lib/ratelimit';
+import { pickerRatelimit, pickerHourlyRatelimit } from '@/lib/ratelimit';
 
 export async function POST(request: NextRequest) {
   try {
     const ip =
-      request.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
-      'unknown';
+      request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
 
     const [perMinute, perHour] = await Promise.all([
       pickerRatelimit.limit(ip),
@@ -114,20 +110,20 @@ export async function POST(request: NextRequest) {
 
     const pickerData = shouldCreatePicker
       ? {
-      id: pickerId,
-      tweetUrls: [postUrl],
-      winners: winnersCount,
-      minPostCount: filters.minimumPostCount,
-      minAccountAgeDays: filters.minimumAccountAgeDays,
-      minFollowersCount: filters.minimumFollowers,
-      minFollowingCount: filters.minimumFollowing,
-      requireProfileImage: filters.hasProfileImage,
-      requireBannerImage: filters.hasBanner,
-      requireLocation: filters.hasLocation,
-      requireBio: filters.hasDescription,
-      lastPostWithin: filters.lastPostWithin,
-      status: 'COMPLETE' as const
-    }
+          id: pickerId,
+          tweetUrls: [postUrl],
+          winners: winnersCount,
+          minPostCount: filters.minimumPostCount,
+          minAccountAgeDays: filters.minimumAccountAgeDays,
+          minFollowersCount: filters.minimumFollowers,
+          minFollowingCount: filters.minimumFollowing,
+          requireProfileImage: filters.hasProfileImage,
+          requireBannerImage: filters.hasBanner,
+          requireLocation: filters.hasLocation,
+          requireBio: filters.hasDescription,
+          lastPostWithin: filters.lastPostWithin,
+          status: 'COMPLETE' as const
+        }
       : null;
 
     const twitterPostData = shouldCreatePicker
@@ -224,8 +220,7 @@ export async function POST(request: NextRequest) {
           username: user.username || 'unknown',
           name: user.name || 'Unknown User',
           profileImageUrl:
-            user.profileImageUrl ||
-            `https://avatar.vercel.sh/${user.username}`,
+            user.profileImageUrl || `https://avatar.vercel.sh/${user.username}`,
           profileUrl: `https://x.com/${user.username}`
         })),
         postAuthor: {

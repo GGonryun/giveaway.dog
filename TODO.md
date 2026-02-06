@@ -18,13 +18,9 @@
 
 - [ ] Add twitch bot for streamer giveaways.
 
-- [ ] Global Black List
+- [ ] Add Polls
 
-- [ ] Global White List
-
-- [ ] Team Black List
-
-- [ ] Team White List
+- [ ] Add Leaderboards
 
 ---
 

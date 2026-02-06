@@ -4,7 +4,7 @@ import {
   BlueskyLikeImportTaskSchema,
   BlueskyRepostImportTaskSchema
 } from '@/lib/task/schemas';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, TaskJobStatus } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 import { datetime } from '@/lib/date';
 import { ApplicationError } from '@/lib/errors';
@@ -145,9 +145,10 @@ export const processBlueskyTaskJob = async <
     parsed.data.runs * 5 + BLUESKY_API_RATE_LIMIT_MINUTES
   );
 
-  await db.taskJob.update({
-    where: { id: job.id },
+  await db.taskJob.create({
     data: {
+      taskId: job.taskId,
+      status: TaskJobStatus.PENDING,
       runAt: nextRunAt,
       data: {
         runs: parsed.data.runs + 1,

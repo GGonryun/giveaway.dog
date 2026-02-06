@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { SocialXBlueCheckmarkIcon } from '@/lib/integrations/components/icons/x-icon';
 import {
   TwitterRetweetImportTaskSchema,
+  TwitterRetweetV2TaskSchema,
   TwitterLikeImportTaskSchema,
   TwitterRetweetTaskSchema,
   TwitterLikeTaskSchema,
@@ -15,6 +16,7 @@ interface VerifiedBonusBadgeProps {
   task:
     | TwitterRetweetTaskSchema
     | TwitterRetweetImportTaskSchema
+    | TwitterRetweetV2TaskSchema
     | TwitterLikeTaskSchema
     | TwitterLikeImportTaskSchema;
   submission: UserTaskSubmissionSchema | undefined;

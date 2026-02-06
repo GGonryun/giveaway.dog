@@ -1,5 +1,25 @@
 import { Prisma } from '@prisma/client';
 import { Tweet, User } from 'scrapebadger';
+import { TwitterUserSchema } from '../integrations/schemas/api';
+
+export const toTwitterUserSchema = (user: User): TwitterUserSchema => ({
+  id: user.id,
+  name: user.name,
+  username: user.username,
+  created_at: user.created_at ? new Date(user.created_at) : new Date(),
+  description: user.description,
+  location: user.location,
+  profile_image_url: user.profile_image_url,
+  profile_banner_url: user.banner_image_url,
+  protected: false,
+  verified: user.verified,
+  verified_type: user.verified_type,
+  public_metrics: {
+    followers_count: user.followers_count,
+    following_count: user.following_count,
+    tweet_count: user.tweet_count
+  }
+});
 
 export const toTwitterPickerUsers = ({
   pickerId,

@@ -4,7 +4,7 @@ export const twitterUserSchema = z.object({
   id: z.string(),
   name: z.string(),
   username: z.string(),
-  created_at: z.string().optional(),
+  created_at: z.coerce.date().optional(),
   description: z.string().optional(),
   location: z.string().optional(),
   profile_image_url: z.string().optional(),
@@ -16,8 +16,7 @@ export const twitterUserSchema = z.object({
     .object({
       followers_count: z.number(),
       following_count: z.number(),
-      tweet_count: z.number(),
-      listed_count: z.number()
+      tweet_count: z.number()
     })
     .optional()
 });

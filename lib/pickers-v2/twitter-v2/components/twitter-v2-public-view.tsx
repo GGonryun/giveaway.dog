@@ -142,9 +142,7 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
               <div className="text-2xl font-bold">
                 {isComplete ? picker.stats.totalParticipants : '-'}
               </div>
-              <div className="text-sm text-muted-foreground">
-                Participants
-              </div>
+              <div className="text-sm text-muted-foreground">Participants</div>
             </div>
             <div className="p-4 rounded-lg bg-muted relative">
               <Dialog>
@@ -166,9 +164,7 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
               <div className="text-2xl font-bold">
                 {isComplete ? picker.stats.estimatedEligible : '-'}
               </div>
-              <div className="text-sm text-muted-foreground">
-                Eligible
-              </div>
+              <div className="text-sm text-muted-foreground">Eligible</div>
             </div>
             <div className="p-4 rounded-lg bg-muted">
               <div className="text-2xl font-bold">

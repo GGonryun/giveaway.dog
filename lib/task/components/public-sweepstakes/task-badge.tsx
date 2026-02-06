@@ -123,7 +123,7 @@ const BonusVerifiedContent: React.FC<{
     >
       <span className={cn('flex items-center gap-0.5 text-twitter-2')}>
         +{task.verifiedBonus} {pluralize('entry', task.verifiedBonus)} for
-        <SocialXBlueCheckmarkIcon className={cn('size-3 mt-[1px]')} />
+        <SocialXBlueCheckmarkIcon className={cn('size-3 mt-px')} />
       </span>
     </Badge>
   );
@@ -178,6 +178,7 @@ export const TaskBadge: React.FC<TaskBadgeProps> = (props) => {
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':
     case 'TWITTER_RETWEET':
+    case 'TWITTER_RETWEET_IMPORT_V2':
     case 'TWITTER_LIKE':
     case 'INSTAGRAM_VISIT':
     case 'INSTAGRAM_LIKE':

@@ -475,9 +475,10 @@ export function getVerificationInstructions(args: {
         ]
       };
     case 'TWITTER_RETWEET_IMPORT':
+    case 'TWITTER_RETWEET_IMPORT_V2':
     case 'TWITTER_LIKE_IMPORT':
       return {
-        title: `Verify Twitter/X ${task.type === 'TWITTER_RETWEET_IMPORT' ? 'Retweet' : 'Like'} (Import)`,
+        title: `Verify Twitter/X ${task.type === 'TWITTER_RETWEET_IMPORT' || task.type === 'TWITTER_RETWEET_IMPORT_V2' ? 'Retweet' : 'Like'} (Import)`,
         description: `This task is automatically verified via Twitter/X import`,
         steps: [
           {

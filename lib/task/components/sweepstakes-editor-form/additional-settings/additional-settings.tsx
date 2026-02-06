@@ -130,6 +130,12 @@ export const AdditionalSettings: React.FC<{
             <ImportingTweetIdValidation />
           </>
         );
+      case 'TWITTER_RETWEET_IMPORT_V2':
+        return (
+          <>
+            <TweetIdFormField />
+          </>
+        );
       case 'BLUESKY_LIKE_IMPORT':
       case 'BLUESKY_REPOST_IMPORT':
         return (

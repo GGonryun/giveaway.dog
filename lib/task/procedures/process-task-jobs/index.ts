@@ -4,6 +4,8 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
 import { processTaskJob } from './process-task-job';
 import { taskJobInclude } from './types';
+import { TaskJobStatus } from '@prisma/client';
+import { isRetryableApplicationError } from '@/lib/errors';
 
 const MAX_JOBS_PER_RUN = 5;
 
@@ -21,6 +23,9 @@ export const processTaskJobs = procedure()
       where: {
         runAt: {
           lte: now
+        },
+        status: {
+          in: [TaskJobStatus.PENDING]
         }
       },
       orderBy: {
@@ -33,9 +38,40 @@ export const processTaskJobs = procedure()
     console.info(`Found ${pending.length} task jobs to process`);
     for (const job of pending) {
       try {
+        await db.taskJob.update({
+          where: { id: job.id },
+          data: {
+            status: TaskJobStatus.IN_PROGRESS
+          }
+        });
         await processTaskJob(db, job);
+        await db.taskJob.update({
+          where: { id: job.id },
+          data: {
+            status: TaskJobStatus.COMPLETED
+          }
+        });
       } catch (error) {
-        console.error(`Failed to process job ${job.id}`, error);
+        if (isRetryableApplicationError(error)) {
+          const retryAfter = new Date(error.data.retryAfter);
+          console.warn('Retrying job', job.id, retryAfter);
+          await db.taskJob.update({
+            where: { id: job.id },
+            data: {
+              status: TaskJobStatus.PENDING,
+              runAt: retryAfter
+            }
+          });
+        } else {
+          console.error(`Failed to process job ${job.id}`, error);
+          await db.taskJob.update({
+            where: { id: job.id },
+            data: {
+              status: TaskJobStatus.FAILED,
+              data: JSON.stringify(error ?? {})
+            }
+          });
+        }
       }
     }
 

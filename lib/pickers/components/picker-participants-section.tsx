@@ -37,7 +37,8 @@ export const ParticipantsSection = ({
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const eligible = participants.filter((p: any) => !p.ineligible);
   const filteredParticipants = showFiltered ? participants : eligible;
-  const displayCount = isUnverified && totalCount ? totalCount : eligible.length;
+  const displayCount =
+    isUnverified && totalCount ? totalCount : eligible.length;
 
   const handleFilterToggle = (checked: boolean) => {
     if (isUnverified) {

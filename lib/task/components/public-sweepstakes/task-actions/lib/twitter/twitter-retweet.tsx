@@ -10,7 +10,8 @@ import {
 } from '@/lib/integrations/schemas/twitter';
 import {
   TwitterRetweetImportTaskSchema,
-  TwitterRetweetTaskSchema
+  TwitterRetweetTaskSchema,
+  TwitterRetweetV2TaskSchema
 } from '@/lib/task/schemas';
 import { useTheme } from 'next-themes';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -19,7 +20,11 @@ import { VerifiedBonusBadge } from './verified-bonus-badge';
 import { cn } from '@/lib/utils';
 
 export const TwitterRetweetTaskActionForm: React.FC<
-  TaskActionProps<TwitterRetweetTaskSchema | TwitterRetweetImportTaskSchema>
+  TaskActionProps<
+    | TwitterRetweetTaskSchema
+    | TwitterRetweetImportTaskSchema
+    | TwitterRetweetV2TaskSchema
+  >
 > = ({ onSubmit, task, submission, isLoading }) => {
   const [userInteracted, setUserInteracted] = useState(false);
   const { theme } = useTheme();

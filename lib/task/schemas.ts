@@ -186,6 +186,18 @@ export type TwitterRetweetImportTaskSchema = z.infer<
   typeof twitterRetweetImportTaskSchema
 >;
 
+export const twitterRetweetV2ImportTaskSchema = baseTaskSchema.extend({
+  type: z.literal('TWITTER_RETWEET_IMPORT_V2'),
+  tweetId: z
+    .string()
+    .url('Post URL is required')
+    .refine(xStatusRefineUrl, xStatusRefineError)
+});
+
+export type TwitterRetweetV2TaskSchema = z.infer<
+  typeof twitterRetweetV2ImportTaskSchema
+>;
+
 export const twitterLikeTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_LIKE'),
   tweetId: z
@@ -575,6 +587,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   twitterFollowTaskSchema,
   twitterRetweetTaskSchema,
   twitterRetweetImportTaskSchema,
+  twitterRetweetV2ImportTaskSchema,
   twitterLikeTaskSchema,
   twitterLikeImportTaskSchema,
   steamWishlistTaskSchema,
@@ -622,6 +635,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   TWITTER_FOLLOW: 'Follow on X',
   TWITTER_RETWEET: 'Repost on X',
   TWITTER_RETWEET_IMPORT: 'Repost on X',
+  TWITTER_RETWEET_IMPORT_V2: 'Repost on X (v2)',
   TWITTER_LIKE: 'Like a post on X',
   TWITTER_LIKE_IMPORT: 'Like a post on X',
   STEAM_WISHLIST: 'Steam Wishlist',
@@ -659,6 +673,7 @@ export const TASK_INPUT_SCHEMA = {
   TWITTER_FOLLOW: z.object({}),
   TWITTER_RETWEET: z.object({}),
   TWITTER_RETWEET_IMPORT: z.object({}),
+  TWITTER_RETWEET_IMPORT_V2: z.object({}),
   TWITTER_LIKE: z.object({}),
   TWITTER_LIKE_IMPORT: z.object({}),
   STEAM_WISHLIST: z.object({}),
@@ -716,6 +731,11 @@ export const TASK_JOB_DATA_SCHEMA = {
   TWITTER_RETWEET: z.object({}),
   TWITTER_RETWEET_IMPORT: z.object({
     runs: z.number().min(0),
+    lastProcessedId: z.string().optional()
+  }),
+  TWITTER_RETWEET_IMPORT_V2: z.object({
+    runs: z.number().min(0),
+    nextCursor: z.string().optional(),
     lastProcessedId: z.string().optional()
   }),
   TWITTER_LIKE: z.object({}),
@@ -788,6 +808,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   TWITTER_FOLLOW: 'TWITTER',
   TWITTER_RETWEET: 'TWITTER',
   TWITTER_RETWEET_IMPORT: 'TWITTER',
+  TWITTER_RETWEET_IMPORT_V2: 'TWITTER',
   TWITTER_LIKE: 'TWITTER',
   TWITTER_LIKE_IMPORT: 'TWITTER',
   STEAM_WISHLIST: 'STEAM',
@@ -833,6 +854,7 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   TWITTER_FOLLOW: 'TWITTER',
   TWITTER_RETWEET: 'TWITTER',
   TWITTER_RETWEET_IMPORT: 'TWITTER',
+  TWITTER_RETWEET_IMPORT_V2: 'TWITTER',
   TWITTER_LIKE: 'TWITTER',
   TWITTER_LIKE_IMPORT: 'TWITTER',
   STEAM_WISHLIST: 'STEAM',
@@ -902,6 +924,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   TWITTER_FOLLOW: 'social',
   TWITTER_RETWEET: 'social',
   TWITTER_RETWEET_IMPORT: 'social',
+  TWITTER_RETWEET_IMPORT_V2: 'social',
   TWITTER_LIKE: 'social',
   TWITTER_LIKE_IMPORT: 'social',
   DISCORD_JOIN: 'social',
@@ -949,6 +972,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   TWITTER_FOLLOW: false,
   TWITTER_RETWEET: false,
   TWITTER_RETWEET_IMPORT: true,
+  TWITTER_RETWEET_IMPORT_V2: true,
   TWITTER_LIKE: false,
   TWITTER_LIKE_IMPORT: true,
   DISCORD_JOIN: false,
@@ -991,6 +1015,7 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   TWITTER_FOLLOW: true,
   TWITTER_RETWEET: true,
   TWITTER_RETWEET_IMPORT: true,
+  TWITTER_RETWEET_IMPORT_V2: true,
   TWITTER_LIKE: true,
   TWITTER_LIKE_IMPORT: true,
   DISCORD_JOIN: true,
@@ -1035,6 +1060,7 @@ export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
   TWITTER_FOLLOW: false,
   TWITTER_RETWEET: false,
   TWITTER_RETWEET_IMPORT: false,
+  TWITTER_RETWEET_IMPORT_V2: false,
   TWITTER_LIKE: false,
   TWITTER_LIKE_IMPORT: false,
   STEAM_WISHLIST: false,
@@ -1123,6 +1149,7 @@ export const TASK_VERIFICATION_REQUIREMENT: Record<
   TWITTER_FOLLOW: 'manual',
   TWITTER_RETWEET: 'manual',
   TWITTER_RETWEET_IMPORT: 'automatic',
+  TWITTER_RETWEET_IMPORT_V2: 'automatic',
   TWITTER_LIKE: 'manual',
   TWITTER_LIKE_IMPORT: 'automatic',
   YOUTUBE_VISIT: 'manual',

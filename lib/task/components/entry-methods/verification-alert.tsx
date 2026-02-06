@@ -29,6 +29,7 @@ const VERIFICATION_WARNINGS: Record<
   TWITTER_FOLLOW: undefined,
   TWITTER_RETWEET: undefined,
   TWITTER_RETWEET_IMPORT: undefined,
+  TWITTER_RETWEET_IMPORT_V2: undefined,
   TWITTER_LIKE: undefined,
   TWITTER_LIKE_IMPORT: undefined,
   STEAM_WISHLIST: undefined,

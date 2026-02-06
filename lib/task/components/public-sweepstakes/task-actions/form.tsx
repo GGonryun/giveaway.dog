@@ -60,6 +60,7 @@ export const TaskActionForm: React.FC<
       return <TwitterFollowTaskActionForm {...props} task={props.task} />;
     case 'TWITTER_RETWEET':
     case 'TWITTER_RETWEET_IMPORT':
+    case 'TWITTER_RETWEET_IMPORT_V2':
       return <TwitterRetweetTaskActionForm {...props} task={props.task} />;
     case 'TWITTER_LIKE':
     case 'TWITTER_LIKE_IMPORT':

@@ -1,134 +1,114 @@
-import {
-  ApplicationError,
-  assertNever,
-  isRetryableApplicationError
-} from '@/lib/errors';
-import { processRetweetTaskJob } from './process-retweet-task-job';
+import { ApplicationError, assertNever } from '@/lib/errors';
 import { toTaskSchema } from '@/lib/task/schemas';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, TaskJobStatus } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 import { processLikeTaskJob } from './process-like-task-job';
 import { processBlueskyLikeTaskJob } from './process-bluesky-like-task-job';
 import { processBlueskyRepostTaskJob } from './process-bluesky-repost-task-job';
+import { processRetweetTaskJob } from './process-retweet-task-job';
+import { processRetweetV2TaskJob } from './process-retweet-v2-task-job';
 
 export const processTaskJob = async (
   db: PrismaClient,
   job: TaskJobWithRelations
 ) => {
-  try {
-    console.info(`Processing task job ${job.id}`, job);
+  console.info(`Processing task job ${job.id}`, job);
 
-    const { timing, status } = job.task.sweepstakes;
-    if (status !== 'ACTIVE') {
-      console.info(
-        `Sweepstakes ${job.task.sweepstakes.id} is not active, deleting task job ${job.id}`
-      );
+  const { timing, status } = job.task.sweepstakes;
+  if (status !== 'ACTIVE') {
+    console.info(
+      `Sweepstakes ${job.task.sweepstakes.id} is not active, deleting task job ${job.id}`
+    );
 
-      await db.taskJob.delete({
-        where: { id: job.id }
+    await db.taskJob.delete({
+      where: { id: job.id }
+    });
+
+    return;
+  }
+
+  // if the sweepstakes has a start date in the future, reschedule the job.
+  if (timing?.startDate && timing.startDate > new Date()) {
+    console.info(
+      `Sweepstakes ${job.task.sweepstakes.id} has not started yet, rescheduling task job ${job.id} to ${timing.startDate}`
+    );
+
+    await db.taskJob.update({
+      where: { id: job.id },
+      data: {
+        runAt: timing.startDate,
+        status: TaskJobStatus.PENDING
+      }
+    });
+
+    return;
+  }
+
+  const task = toTaskSchema(job.task);
+  // if the sweepstakes has ended, cancel the job.
+  if (timing?.endDate && timing.endDate < new Date()) {
+    console.info(
+      `Sweepstakes ${job.task.sweepstakes.id} has ended, deleting task job ${job.id}`
+    );
+
+    await db.taskJob.delete({
+      where: { id: job.id }
+    });
+
+    return;
+  }
+
+  switch (task.type) {
+    case 'BONUS_TASK':
+    case 'BONUS_COMPLETE_PROFILE':
+    case 'BONUS_TIMED':
+    case 'BONUS_LIMITED':
+    case 'BONUS_LOYALTY':
+    case 'DISCORD_JOIN':
+    case 'KICK_FOLLOW':
+    case 'VISIT_URL':
+    case 'TWITTER_CONNECT':
+    case 'TWITTER_FOLLOW':
+    case 'STEAM_WISHLIST':
+    case 'STEAM_FOLLOW':
+    case 'TWITCH_FOLLOW':
+    case 'YOUTUBE_VISIT':
+    case 'TWITTER_LIKE':
+    case 'SECRET_CODE':
+    case 'SECRET_CODE_V2':
+    case 'TWITTER_RETWEET':
+    case 'INSTAGRAM_VISIT':
+    case 'INSTAGRAM_LIKE':
+    case 'INSTAGRAM_COMMENT':
+    case 'FACEBOOK_VISIT_PAGE':
+    case 'FACEBOOK_VIEW_POST':
+    case 'TIKTOK_FOLLOW':
+    case 'TIKTOK_LIKE':
+    case 'ASK_QUESTION':
+    case 'SINGLE_CHOICE':
+    case 'BLUESKY_CONNECT':
+    case 'BLUESKY_FOLLOW':
+    case 'BLUESKY_LIKE':
+    case 'BLUESKY_REPOST':
+    case 'REFERRAL_LINK':
+    case 'MULTIPLE_CHOICE':
+    case 'SUBMIT_MEDIA':
+    case 'DISCORD_INTERACTION_IMPORT':
+      throw new ApplicationError({
+        code: 'NOT_IMPLEMENTED',
+        message: `Job processing not implemented for task type: ${task.type}`
       });
-
-      return;
-    }
-
-    // if the sweepstakes has a start date in the future, reschedule the job.
-    if (timing?.startDate && timing.startDate > new Date()) {
-      console.info(
-        `Sweepstakes ${job.task.sweepstakes.id} has not started yet, rescheduling task job ${job.id} to ${timing.startDate}`
-      );
-
-      await db.taskJob.update({
-        where: { id: job.id },
-        data: {
-          runAt: timing.startDate
-        }
-      });
-
-      return;
-    }
-
-    const task = toTaskSchema(job.task);
-    // if the sweepstakes has ended, cancel the job.
-    if (timing?.endDate && timing.endDate < new Date()) {
-      console.info(
-        `[${task.type}] Sweepstakes ${job.task.sweepstakes.id} has ended, deleting task job ${job.id}`
-      );
-
-      await db.taskJob.delete({
-        where: { id: job.id }
-      });
-
-      return;
-    }
-
-    switch (task.type) {
-      case 'BONUS_TASK':
-      case 'BONUS_COMPLETE_PROFILE':
-      case 'BONUS_TIMED':
-      case 'BONUS_LIMITED':
-      case 'BONUS_LOYALTY':
-      case 'DISCORD_JOIN':
-      case 'KICK_FOLLOW':
-      case 'VISIT_URL':
-      case 'TWITTER_CONNECT':
-      case 'TWITTER_FOLLOW':
-      case 'STEAM_WISHLIST':
-      case 'STEAM_FOLLOW':
-      case 'TWITCH_FOLLOW':
-      case 'YOUTUBE_VISIT':
-      case 'TWITTER_LIKE':
-      case 'SECRET_CODE':
-      case 'SECRET_CODE_V2':
-      case 'TWITTER_RETWEET':
-      case 'INSTAGRAM_VISIT':
-      case 'INSTAGRAM_LIKE':
-      case 'INSTAGRAM_COMMENT':
-      case 'FACEBOOK_VISIT_PAGE':
-      case 'FACEBOOK_VIEW_POST':
-      case 'TIKTOK_FOLLOW':
-      case 'TIKTOK_LIKE':
-      case 'ASK_QUESTION':
-      case 'SINGLE_CHOICE':
-      case 'BLUESKY_CONNECT':
-      case 'BLUESKY_FOLLOW':
-      case 'BLUESKY_LIKE':
-      case 'BLUESKY_REPOST':
-      case 'REFERRAL_LINK':
-      case 'MULTIPLE_CHOICE':
-      case 'SUBMIT_MEDIA':
-      case 'DISCORD_INTERACTION_IMPORT':
-        throw new ApplicationError({
-          code: 'NOT_IMPLEMENTED',
-          message: `Job processing not implemented for task type: ${task.type}`
-        });
-      case 'TWITTER_RETWEET_IMPORT':
-        return await processRetweetTaskJob(db, task, job);
-      case 'TWITTER_LIKE_IMPORT':
-        return await processLikeTaskJob(db, task, job);
-      case 'BLUESKY_LIKE_IMPORT':
-        return await processBlueskyLikeTaskJob(db, task, job);
-      case 'BLUESKY_REPOST_IMPORT':
-        return await processBlueskyRepostTaskJob(db, task, job);
-      default:
-        throw assertNever(task);
-    }
-  } catch (error) {
-    if (isRetryableApplicationError(error)) {
-      const retryAfter = new Date(error.data.retryAfter);
-
-      await db.taskJob.update({
-        where: { id: job.id },
-        data: {
-          runAt: retryAfter
-        }
-      });
-      console.warn('Retrying job', job.id, retryAfter);
-    } else {
-      await db.taskJob.delete({
-        where: { id: job.id }
-      });
-      // TODO: we need to alert somehow that a job has failed permanently and been deleted
-      console.error(`Failed to process job ${job.id}`, error);
-    }
+    case 'TWITTER_RETWEET_IMPORT_V2':
+      return await processRetweetV2TaskJob(db, task, job);
+    case 'TWITTER_RETWEET_IMPORT':
+      return await processRetweetTaskJob(db, task, job);
+    case 'TWITTER_LIKE_IMPORT':
+      return await processLikeTaskJob(db, task, job);
+    case 'BLUESKY_LIKE_IMPORT':
+      return await processBlueskyLikeTaskJob(db, task, job);
+    case 'BLUESKY_REPOST_IMPORT':
+      return await processBlueskyRepostTaskJob(db, task, job);
+    default:
+      throw assertNever(task);
   }
 };

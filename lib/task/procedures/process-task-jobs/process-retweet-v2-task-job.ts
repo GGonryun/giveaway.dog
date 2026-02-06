@@ -1,59 +1,59 @@
+import { fetchRetweetersUntilUser } from '@/lib/scrapebadger/procedures/get-retweeters';
+import { extractTweetId, toTwitterUserSchema } from '@/lib/scrapebadger/utils';
 import { importTwitterUsers } from '@/lib/sweepstakes/twitter-import';
 import {
   TASK_JOB_DATA_SCHEMA,
   toTwitterProofSchema,
-  TwitterLikeImportTaskSchema,
-  TwitterRetweetImportTaskSchema
+  TwitterRetweetV2TaskSchema
 } from '@/lib/task/schemas';
-import { PrismaClient, TaskJobStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 import { datetime } from '@/lib/date';
-import {
-  TWITTER_API_RATE_LIMIT_MINUTES,
-  TWITTER_API_RUN_OFFSET
-} from '@/lib/pickers/data/settings';
 import { ApplicationError } from '@/lib/errors';
-import { takeUntil } from '@/lib/arrays';
-import { Tx } from '@/lib/prisma';
-import { TwitterUserSchema } from '@/lib/integrations/schemas/api';
 import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
 
-export const processTwitterTaskJob = async <
-  T extends TwitterLikeImportTaskSchema | TwitterRetweetImportTaskSchema
->(
+const SCRAPEBADGER_RUN_OFFSET = 1;
+const MAX_RUN_OFFSET = 60;
+
+export const processRetweetV2TaskJob = async (
   db: PrismaClient,
-  task: T,
-  job: TaskJobWithRelations,
-  action: (tx: Tx) => Promise<{ data?: TwitterUserSchema[] }>
+  task: TwitterRetweetV2TaskSchema,
+  job: TaskJobWithRelations
 ) => {
   const { taskId, data } = job;
   const { sweepstakesId } = job.task;
-  const { type } = task;
 
-  const parsed = TASK_JOB_DATA_SCHEMA[type].safeParse(data);
+  const parsed = TASK_JOB_DATA_SCHEMA.TWITTER_RETWEET_IMPORT_V2.safeParse(data);
   if (!parsed.success) {
     throw new ApplicationError({
       code: 'INTERNAL_SERVER_ERROR',
-      message: `Invalid task job data for Twitter import task`,
+      message: `Invalid task job data for Twitter V2 import task`,
       cause: parsed.error,
       data: task
     });
   }
 
-  const response = await action(db);
+  const tweetId = extractTweetId(task.tweetId);
+  if (!tweetId) {
+    throw new ApplicationError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Could not extract tweet ID from URL',
+      data: task
+    });
+  }
+
+  const response = await fetchRetweetersUntilUser({
+    tweetId,
+    stopAtUserId: parsed.data.lastProcessedId
+  });
 
   console.info(
-    `[${type}] Fetched ${response.data?.length ?? 0} users in task job ${job.id}`
+    `Fetched ${response.users?.length ?? 0} users in task job ${job.id}`
   );
 
-  const twitterUsers = takeUntil(
-    response.data,
-    (user) => user.id === parsed.data.lastProcessedId
-  );
+  const twitterUsers = (response.users || []).map(toTwitterUserSchema);
 
-  console.info(
-    `[${type}] Processing ${twitterUsers.length} users task job ${job.id}`
-  );
+  console.info(`Processing ${twitterUsers.length} users task job ${job.id}`);
 
   const { imported, existing } = await importTwitterUsers(db, {
     sweepstakesId,
@@ -62,7 +62,7 @@ export const processTwitterTaskJob = async <
   });
 
   console.info(
-    `[${type}] Imported ${imported.length} users, ${existing.length} existing users for task job ${job.id}`
+    `Imported ${imported.length} users, ${existing.length} existing users for task job ${job.id}`
   );
 
   let created = 0;
@@ -90,7 +90,6 @@ export const processTwitterTaskJob = async <
     });
 
     if (existingCompletion) {
-      // update only if status is PENDING
       if (existingCompletion.status === 'PENDING') {
         await db.taskCompletion.update({
           where: {
@@ -102,8 +101,6 @@ export const processTwitterTaskJob = async <
           }
         });
         updated++;
-      } else {
-        // ignore if already completed
       }
     } else {
       await db.taskCompletion.create({
@@ -134,10 +131,9 @@ export const processTwitterTaskJob = async <
   }
 
   console.info(
-    `[${type}] Created ${created} and updated ${updated} task completions for task job ${job.id}`
+    `Created ${created} and updated ${updated} task completions for task job ${job.id}`
   );
 
-  // Schedule prize allocation job if participants were created
   if (created > 0) {
     await scheduleRandomlyAssignPrizesJob({
       db,
@@ -146,21 +142,21 @@ export const processTwitterTaskJob = async <
   }
 
   const nextRunAt = datetime.minutesFromNow(
-    parsed.data.runs * TWITTER_API_RUN_OFFSET + TWITTER_API_RATE_LIMIT_MINUTES
+    Math.min(parsed.data.runs * SCRAPEBADGER_RUN_OFFSET, MAX_RUN_OFFSET)
   );
 
   await db.taskJob.create({
     data: {
       taskId: job.taskId,
-      status: TaskJobStatus.PENDING,
       runAt: nextRunAt,
       data: {
         runs: parsed.data.runs + 1,
-        lastProcessedId: response.data?.at(0)?.id
+        lastProcessedId:
+          response.users?.at(0)?.id ?? parsed.data.lastProcessedId
       }
     }
   });
   console.info(
-    `[${type}] Task job ${job.id} completed, scheduling next run at ${nextRunAt}`
+    `Task job ${job.id} completed, scheduling next run at ${nextRunAt}`
   );
 };

@@ -90,6 +90,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       tasksRequired: 0,
       importingAccount: ''
     },
+    ['TWITTER_RETWEET_IMPORT_V2']: {
+      id: '',
+      type: 'TWITTER_RETWEET_IMPORT_V2',
+      title: 'Repost our sweepstakes',
+      tweetId: '',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
     ['TWITTER_LIKE']: {
       id: '',
       type: 'TWITTER_LIKE',

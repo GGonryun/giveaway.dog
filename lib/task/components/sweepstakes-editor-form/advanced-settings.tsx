@@ -104,6 +104,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
             <TwitterVerifiedBonusField />
           </>
         );
+      case 'TWITTER_RETWEET_IMPORT_V2':
       case 'REFERRAL_LINK':
       case 'BLUESKY_LIKE_IMPORT':
       case 'BLUESKY_REPOST_IMPORT':

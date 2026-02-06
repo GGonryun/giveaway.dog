@@ -40,6 +40,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'SUBMIT_MEDIA':
       return CompletionStatus.COMPLETED;
     case 'TWITTER_RETWEET_IMPORT':
+    case 'TWITTER_RETWEET_IMPORT_V2':
     case 'TWITTER_LIKE_IMPORT':
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':

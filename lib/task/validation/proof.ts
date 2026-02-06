@@ -86,6 +86,7 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'TWITTER_RETWEET':
     case 'YOUTUBE_VISIT':
     case 'TWITTER_RETWEET_IMPORT':
+    case 'TWITTER_RETWEET_IMPORT_V2':
     case 'TWITTER_LIKE_IMPORT':
     case 'TIKTOK_FOLLOW':
     case 'TIKTOK_LIKE':

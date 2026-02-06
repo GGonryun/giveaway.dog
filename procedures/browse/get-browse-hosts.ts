@@ -55,7 +55,10 @@ const getBrowseHosts = procedure()
       }
     });
 
-    const uniqueHosts = new Map<string, { id: string; name: string; slug: string }>();
+    const uniqueHosts = new Map<
+      string,
+      { id: string; name: string; slug: string }
+    >();
 
     for (const s of sweepstakes) {
       if (s.team && !uniqueHosts.has(s.team.id)) {

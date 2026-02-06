@@ -23,6 +23,7 @@ export const EntryMethodBadge: React.FC<{
     case 'BONUS_COMPLETE_PROFILE':
       return <InstantBadge />;
     case 'TWITTER_RETWEET_IMPORT':
+    case 'TWITTER_RETWEET_IMPORT_V2':
     case 'TWITTER_LIKE_IMPORT':
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
