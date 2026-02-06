@@ -101,6 +101,9 @@ export const fetchRetweetersUntilUser = async ({
     batchIndex++;
 
     const batch = response.data || [];
+    console.info(
+      `Fetched retweeters batch ${batchIndex + 1}, batchSize=${batchSize}, found=${batch.length}`
+    );
 
     if (stopAtUserId) {
       const stopIndex = batch.findIndex(
