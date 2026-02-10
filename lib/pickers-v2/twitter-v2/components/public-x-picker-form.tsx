@@ -34,6 +34,8 @@ import { ProgressModal } from './progress-modal';
 import { WinnersResultModal } from './winners-result-modal';
 import { RateLimitModal } from './rate-limit-modal';
 import { toast } from 'sonner';
+import { useUser } from '@/components/context/user-provider';
+import { UserSchema } from '@/schemas/user';
 
 const publicPickerFormSchema = z.object({
   postUrl: z
@@ -91,7 +93,7 @@ export const PublicXPickerForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [upgradeFeature, setUpgradeFeature] = useState<
-    'multiple-posts' | 'schedule'
+    'multiple-posts' | 'schedule' | 'more-winners'
   >('multiple-posts');
   const [showSearching, setShowSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -225,11 +227,17 @@ export const PublicXPickerForm: React.FC = () => {
                     <Input
                       type="number"
                       min={1}
-                      max={100}
+                      max={10}
                       {...field}
-                      onChange={(e) =>
-                        field.onChange(parseInt(e.target.value) || 1)
-                      }
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 1;
+                        if (value > 10) {
+                          setUpgradeFeature('more-winners');
+                          setUpgradeModalOpen(true);
+                        } else {
+                          field.onChange(value);
+                        }
+                      }}
                     />
                   </FormControl>
                   <FormDescription>

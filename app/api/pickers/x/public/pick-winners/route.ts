@@ -13,8 +13,10 @@ import {
 } from '@/lib/pickers-v2/twitter-v2/utils/picker-utils';
 import { createId } from '@paralleldrive/cuid2';
 import { pickerRatelimit, pickerHourlyRatelimit } from '@/lib/ratelimit';
+import { auth } from '@/lib/auth/config';
 
 export async function POST(request: NextRequest) {
+  const session = await auth();
   try {
     const ip =
       request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
@@ -98,7 +100,7 @@ export async function POST(request: NextRequest) {
       tweet = await getTweet({ tweetId });
       const fetchedUsers = await fetchAllRetweetersForTweet({
         tweetId,
-        maxUsers: 50
+        maxApiCalls: session ? 5 : 3 // Limit API calls for unauthenticated users to reduce load
       });
       users = fetchedUsers.users;
       pickerId = createId();

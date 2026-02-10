@@ -2,6 +2,7 @@ import { compact } from 'lodash';
 import { getScrapeBadgerClient } from '../client';
 import { User } from 'scrapebadger';
 
+const DEFAULT_MAX_API_CALLS = 10;
 const DEFAULT_MAX_USERS = 5000;
 
 export const getRetweeters = async ({
@@ -19,26 +20,28 @@ export const getRetweeters = async ({
 
 export const fetchAllRetweetersForTweet = async ({
   tweetId,
-  maxUsers = DEFAULT_MAX_USERS
+  maxApiCalls = DEFAULT_MAX_API_CALLS
 }: {
   tweetId: string;
-  maxUsers?: number;
+  maxApiCalls?: number;
 }): Promise<{ users: User[]; nextCursor?: string; hasMore: boolean }> => {
   const client = getScrapeBadgerClient();
   const users: User[] = [];
   let cursor: string | undefined;
   let hasMore = true;
+  let apiCallCount = 0;
 
   console.info(
-    `Fetching retweeters for tweet ${tweetId} with maxUsers=${maxUsers}`
+    `Fetching retweeters for tweet ${tweetId} with maxApiCalls=${maxApiCalls}`
   );
 
-  while (hasMore && users.length < maxUsers) {
-    console.info(`Fetching retweeters batch, current count=${users.length}`);
+  while (hasMore && apiCallCount < maxApiCalls) {
+    console.info(`Fetching retweeters batch ${apiCallCount + 1}, current user count=${users.length}`);
     const response = await client.twitter.tweets.getRetweeters(tweetId, {
       cursor,
       count: 20
     });
+    apiCallCount++;
 
     users.push(...(response.data || []));
 
@@ -46,20 +49,15 @@ export const fetchAllRetweetersForTweet = async ({
     cursor = response.nextCursor;
 
     console.info(
-      `Fetched ${users.length} retweeters so far, hasMore=${hasMore}`
+      `Fetched ${users.length} retweeters so far (${apiCallCount} API calls), hasMore=${hasMore}`
     );
     if (!hasMore || !cursor) {
       console.info('No more retweeters to fetch, exiting loop');
       break;
     }
-
-    if (users.length >= maxUsers) {
-      users.splice(maxUsers);
-      break;
-    }
   }
 
-  console.info(`Finished fetching retweeters, total count=${users.length}`);
+  console.info(`Finished fetching retweeters, total count=${users.length}, API calls=${apiCallCount}`);
   return {
     users,
     nextCursor: cursor,

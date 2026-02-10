@@ -15,7 +15,7 @@ import { Gem } from 'lucide-react';
 interface UpgradeModalProps {
   open: boolean;
   onClose: () => void;
-  feature: 'multiple-posts' | 'schedule';
+  feature: 'multiple-posts' | 'schedule' | 'more-winners';
 }
 
 export const UpgradeModal: React.FC<UpgradeModalProps> = ({
@@ -33,6 +33,11 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
       title: 'Schedule Your Picker',
       description:
         'Create an account and upgrade to PRO to unlock the ability to schedule your picker for later. Set a specific date and time for your drawing to run automatically.'
+    },
+    'more-winners': {
+      title: 'Pick More Winners',
+      description:
+        'Upgrade to PRO to pick more than 10 winners. The free plan is limited to 10 winners per draw.'
     }
   };
 

@@ -96,7 +96,7 @@ export const DesktopNavMenu: React.FC = () => {
                   <div className="text-xs font-medium leading-none">
                     X Picker
                   </div>
-                  <p className="line-clamp-2 text-xs leading-snug text-muted-foreground mt-1">
+                  <p className="line-clamp-2 text-xs leading-snug  mt-1">
                     Pick a winner for your giveaway from a list of people
                   </p>
                 </Link>

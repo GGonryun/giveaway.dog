@@ -22,8 +22,8 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({ open }) => {
       return;
     }
 
-    const duration = 5000;
-    const maxProgress = 89;
+    const duration = Math.random() * 5000 + 4000; // Random duration between 4-9 seconds
+    const maxProgress = 92;
     const intervalTime = 100;
     const steps = duration / intervalTime;
     const progressPerStep = maxProgress / steps;
