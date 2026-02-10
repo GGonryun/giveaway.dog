@@ -3,13 +3,10 @@
 import { HeroSweepstakesPreview } from './hero-sweepstakes-preview';
 import { Suspense } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { Avatar, AvatarFallback } from '../ui/avatar';
-import Image from 'next/image';
 import { SocialPlatformsCarousel } from './social-platforms-carousel';
 import { MarketingHeader } from './shared';
 import { getServerTheme } from '@/lib/theme/get-server-theme';
-import { Button } from '../ui/button';
-import Link from 'next/link';
+import { AvatarGroupEasterEgg } from './avatar-group-easter-egg';
 
 const HOST_COUNT = 'over 30';
 const HOSTS = [
@@ -54,7 +51,7 @@ export const Hero = async () => {
   const theme = await getServerTheme();
 
   return (
-    <section className="w-full flex flex-col items-center justify-center bg-gradient-to-t from-primary/15 to-background">
+    <section className="w-full flex flex-col items-center justify-center bg-linear-to-t from-primary/15 to-background">
       <div className="w-full pb-0 sm:pb-1 md:pb-1.5 lg:pb-2 pt-6 sm:pt-10 md:pt-14 lg:pt-18">
         <SocialPlatformsCarousel initialTheme={theme} />
       </div>
@@ -98,46 +95,13 @@ export const Hero = async () => {
 const Hosts = () => {
   return (
     <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3">
-      <AvatarGroup />
+      <AvatarGroupEasterEgg hosts={HOSTS} />
       <div className="text-lg text-muted-foreground/80">
         Chosen by{' '}
         <span className="font-semibold text-foreground">{HOST_COUNT}</span>{' '}
         giveaway hosts
       </div>
     </div>
-  );
-};
-
-const AvatarGroup = () => (
-  <div className="flex flex-row -space-x-2">
-    {HOSTS.map((host) => (
-      <BorderedAvatar
-        key={host.label}
-        src={host.image}
-        fallback={host.fallback}
-      />
-    ))}
-  </div>
-);
-
-const BorderedAvatar = ({
-  src,
-  fallback
-}: {
-  src: string;
-  fallback: string;
-}) => {
-  return (
-    <Avatar className="border-4 border-background w-12 h-12">
-      <Image
-        src={src}
-        alt={fallback}
-        width={48}
-        height={48}
-        className="aspect-square w-full h-full"
-      />
-      <AvatarFallback>{fallback}</AvatarFallback>
-    </Avatar>
   );
 };
 

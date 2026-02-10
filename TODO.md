@@ -1,7 +1,5 @@
 ## Roadmap
 
-- [ ] Velora App Integration
-
 - [ ] Add support for a preferred contact method on user profiles.
 
 - [ ] Add twitch bot for streamer giveaways.
