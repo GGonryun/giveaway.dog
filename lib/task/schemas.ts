@@ -557,6 +557,20 @@ export const veloraConnectTaskSchema = baseTaskSchema.extend({
 
 export type VeloraConnectTaskSchema = z.infer<typeof veloraConnectTaskSchema>;
 
+export const veloraFollowTaskSchema = baseTaskSchema.extend({
+  type: z.literal('VELORA_FOLLOW'),
+  profileUrl: z
+    .string()
+    .url('Velora Profile URL is required')
+    .refine((val) => {
+      // urls look like: https://velora.tv/gonryun
+      const urlPattern = /^https?:\/\/(www\.)?velora\.tv\/[A-Za-z0-9_.\-]+\/?$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://velora.tv/username')
+});
+
+export type VeloraFollowTaskSchema = z.infer<typeof veloraFollowTaskSchema>;
+
 export const referralLinkTaskSchema = baseTaskSchema.extend({
   type: z.literal('REFERRAL_LINK'),
   maximum: z.number().min(1, 'Maximum referrals must be at least 1').nullish()
@@ -619,6 +633,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   blueskyLikeImportTaskSchema,
   blueskyRepostImportTaskSchema,
   veloraConnectTaskSchema,
+  veloraFollowTaskSchema,
   referralLinkTaskSchema
 ]);
 
@@ -665,7 +680,8 @@ export const TASK_LABEL: Record<TaskType, string> = {
   BLUESKY_REPOST: 'Repost on Bluesky',
   BLUESKY_LIKE_IMPORT: 'Like a post on Bluesky',
   BLUESKY_REPOST_IMPORT: 'Repost on Bluesky',
-  VELORA_CONNECT: 'Connect Velora'
+  VELORA_CONNECT: 'Connect Velora',
+  VELORA_FOLLOW: 'Follow on Velora'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -725,6 +741,7 @@ export const TASK_INPUT_SCHEMA = {
   BLUESKY_LIKE_IMPORT: z.object({}),
   BLUESKY_REPOST_IMPORT: z.object({}),
   VELORA_CONNECT: z.object({}),
+  VELORA_FOLLOW: z.object({}),
   REFERRAL_LINK: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
@@ -784,6 +801,7 @@ export const TASK_JOB_DATA_SCHEMA = {
     lastProcessedDid: z.string().optional()
   }),
   VELORA_CONNECT: z.object({}),
+  VELORA_FOLLOW: z.object({}),
   REFERRAL_LINK: z.object({}),
   SUBMIT_MEDIA: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
@@ -845,6 +863,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   BLUESKY_LIKE_IMPORT: 'BLUESKY',
   BLUESKY_REPOST_IMPORT: 'BLUESKY',
   VELORA_CONNECT: 'VELORA',
+  VELORA_FOLLOW: 'VELORA',
   REFERRAL_LINK: 'BONUS',
   SUBMIT_MEDIA: 'QUESTION'
 };
@@ -889,6 +908,7 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   BLUESKY_LIKE_IMPORT: 'BLUESKY',
   BLUESKY_REPOST_IMPORT: 'BLUESKY',
   VELORA_CONNECT: 'VELORA',
+  VELORA_FOLLOW: 'VELORA',
   REFERRAL_LINK: 'ANONYMOUS',
   SUBMIT_MEDIA: 'ANONYMOUS'
 };
@@ -964,6 +984,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   BLUESKY_LIKE_IMPORT: 'social',
   BLUESKY_REPOST_IMPORT: 'social',
   VELORA_CONNECT: 'social',
+  VELORA_FOLLOW: 'social',
   REFERRAL_LINK: 'engagement',
   SUBMIT_MEDIA: 'engagement'
 };
@@ -1013,6 +1034,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   BLUESKY_LIKE_IMPORT: true,
   BLUESKY_REPOST_IMPORT: true,
   VELORA_CONNECT: false,
+  VELORA_FOLLOW: false,
   REFERRAL_LINK: false,
   SUBMIT_MEDIA: false
 };
@@ -1057,6 +1079,7 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   BLUESKY_LIKE_IMPORT: true,
   BLUESKY_REPOST_IMPORT: true,
   VELORA_CONNECT: true,
+  VELORA_FOLLOW: true,
   REFERRAL_LINK: true,
   SUBMIT_MEDIA: true
 };
@@ -1102,6 +1125,7 @@ export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
   BLUESKY_LIKE_IMPORT: false,
   BLUESKY_REPOST_IMPORT: false,
   VELORA_CONNECT: false,
+  VELORA_FOLLOW: false,
   SUBMIT_MEDIA: false
 };
 
@@ -1199,6 +1223,7 @@ export const TASK_VERIFICATION_REQUIREMENT: Record<
   BLUESKY_LIKE_IMPORT: 'automatic',
   BLUESKY_REPOST_IMPORT: 'automatic',
   VELORA_CONNECT: 'automatic',
+  VELORA_FOLLOW: 'automatic',
   REFERRAL_LINK: 'manual',
   SUBMIT_MEDIA: 'manual'
 };

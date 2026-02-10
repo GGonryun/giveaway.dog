@@ -28,9 +28,12 @@ export const VeloraProfileSchema = z.object({
   updatedAt: z.string(),
   creator: VeloraCreatorSchema.nullable().optional(),
   accentColor: z.string().nullable(),
-  profileCustomization: z.object({
-    accentColor: z.string().nullable()
-  }).nullable().optional()
+  profileCustomization: z
+    .object({
+      accentColor: z.string().nullable()
+    })
+    .nullable()
+    .optional()
 });
 
 export type VeloraProfile = z.infer<typeof VeloraProfileSchema>;
@@ -76,7 +79,9 @@ export function VeloraProvider(
         });
         if (!response.ok) {
           const text = await response.text();
-          throw new Error(`Velora userinfo failed: ${response.status} - ${text}`);
+          throw new Error(
+            `Velora userinfo failed: ${response.status} - ${text}`
+          );
         }
         return response.json();
       }

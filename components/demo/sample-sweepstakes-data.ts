@@ -14,6 +14,7 @@ import {
   TIKTOK_PROFILE_URL,
   TWITCH_CHANNEL_URL,
   TWITTER_PROFILE_URL,
+  VELORA_CHANNEL_URL,
   YOUTUBE_CHANNEL_NAME,
   YOUTUBE_CHANNEL_URL
 } from '@/lib/settings';
@@ -77,6 +78,11 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       ...toDefaultValues('FACEBOOK_VIEW_POST'),
       postUrl: FACEBOOK_POST_URL,
       id: 'b2c4'
+    },
+    {
+      ...toDefaultValues('VELORA_FOLLOW'),
+      profileUrl: VELORA_CHANNEL_URL,
+      id: '47az'
     },
     {
       ...toDefaultValues('TIKTOK_FOLLOW'),

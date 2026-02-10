@@ -189,6 +189,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         icon: SocialBlueskyIcon
       };
     case 'VELORA_CONNECT':
+    case 'VELORA_FOLLOW':
       return {
         action:
           'bg-velora-1 text-white group-hover:bg-velora-1 group-hover:text-white hover:bg-velora-1 hover:text-white dark:bg-velora-1 dark:hover:text-white dark:hover:bg-velora-1',

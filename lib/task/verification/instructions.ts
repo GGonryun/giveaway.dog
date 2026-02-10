@@ -763,6 +763,29 @@ export function getVerificationInstructions(args: {
         ]
       };
 
+    case 'VELORA_FOLLOW':
+      return {
+        title: 'Verify Velora Follow (Automatic)',
+        description: `This task is automatically verified via Velora API`,
+        steps: [
+          {
+            step: 1,
+            instruction: 'This task is automatically verified via Velora API',
+            note: 'The system checks if the user follows your Velora account'
+          },
+          {
+            step: 2,
+            instruction:
+              'You can re-verify by clicking the "Re-verify Automatically" button'
+          },
+          {
+            step: 3,
+            instruction:
+              'If automatic verification is unavailable, manually check your Velora followers'
+          }
+        ]
+      };
+
     default:
       throw assertNever(task);
   }

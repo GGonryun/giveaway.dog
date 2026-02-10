@@ -118,6 +118,13 @@ export const mockUserProfile: UserSchema = {
       label: 'Preview User',
       link: 'https://www.facebook.com/preview.user',
       scopes: PROVIDER_REQUIRED_SCOPES.FACEBOOK
+    },
+    {
+      type: IdentityProvider.VELORA,
+      status: 'ACTIVE',
+      label: 'PreviewUser',
+      link: 'https://velora.tv/previewuser',
+      scopes: PROVIDER_REQUIRED_SCOPES.VELORA
     }
   ]
 };

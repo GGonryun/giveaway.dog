@@ -291,6 +291,15 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['VELORA_FOLLOW']: {
+      id: '',
+      type: 'VELORA_FOLLOW',
+      title: 'Follow us on Velora',
+      profileUrl: '',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
     ['BLUESKY_FOLLOW']: {
       id: '',
       type: 'BLUESKY_FOLLOW',

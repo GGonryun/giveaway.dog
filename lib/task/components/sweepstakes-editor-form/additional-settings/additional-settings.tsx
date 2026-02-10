@@ -33,6 +33,7 @@ import { Typography } from '@/components/ui/typography';
 import { AlertCircle } from 'lucide-react';
 import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
+import { VeloraFollowFormField } from './lib/velora-follow';
 import { MaximumReferralsField } from './lib/maximum-referrals';
 import { SteamDeveloperFormField } from './lib/steam-developer';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -235,6 +236,8 @@ export const AdditionalSettings: React.FC<{
             <BlueskyProfileUrlField />
           </>
         );
+      case 'VELORA_FOLLOW':
+        return <VeloraFollowFormField />;
       case 'BLUESKY_LIKE':
       case 'BLUESKY_REPOST':
         return (

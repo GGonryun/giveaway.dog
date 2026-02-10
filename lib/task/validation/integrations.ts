@@ -21,7 +21,7 @@ import {
   checkBlueskyLike,
   checkBlueskyRepost
 } from './bluesky';
-import { checkVeloraConnect } from './velora';
+import { checkVeloraConnect, checkVeloraFollow } from './velora';
 
 export type ValidateTaskInput<T extends TaskSchema> = {
   task: T;
@@ -76,6 +76,11 @@ export const validateTask = async <T extends TaskSchema>(
       });
     case 'VELORA_CONNECT':
       return await checkVeloraConnect(db, {
+        ...input,
+        task: input.task
+      });
+    case 'VELORA_FOLLOW':
+      return await checkVeloraFollow(db, {
         ...input,
         task: input.task
       });

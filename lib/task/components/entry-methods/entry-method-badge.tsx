@@ -61,6 +61,7 @@ export const EntryMethodBadge: React.FC<{
     case 'BLUESKY_LIKE':
     case 'BLUESKY_REPOST':
     case 'VELORA_CONNECT':
+    case 'VELORA_FOLLOW':
     case 'REFERRAL_LINK':
     case 'SUBMIT_MEDIA':
       return <VerificationBadge type={type} />;
