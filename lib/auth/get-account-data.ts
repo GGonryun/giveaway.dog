@@ -32,6 +32,10 @@ export const getAccountLabel = (
       );
     case 'bluesky':
       return profile?.handle || null;
+    case 'velora':
+      return (
+        profile?.username || profile?.display_name || profile?.name || null
+      );
     default:
       return null;
   }
@@ -71,6 +75,9 @@ export const getAccountLink = (
     case 'bluesky':
       if (!label) return null;
       return `https://bsky.app/profile/${label}`;
+    case 'velora':
+      if (!label) return null;
+      return `https://velora.tv/${label}`;
     default:
       return null;
   }

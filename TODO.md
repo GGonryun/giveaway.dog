@@ -2,14 +2,6 @@
 
 - [ ] Velora App Integration
 
-- [ ] Add discord bot for discord-specific giveaways.
-
-- [ ] Add an "I already completed this task" to tiktok
-
-- [ ] Add integration guard to facebook tasks.
-
-- [ ] Global/Team blacklist/whitelist for users.
-
 - [ ] Add support for a preferred contact method on user profiles.
 
 - [ ] Add twitch bot for streamer giveaways.

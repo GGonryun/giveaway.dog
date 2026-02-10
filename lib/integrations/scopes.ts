@@ -99,6 +99,8 @@ export const REQUIRED_TWITCH_SCOPES = [
 
 export const REQUIRED_KICK_SCOPES = ['user:read'];
 
+export const REQUIRED_VELORA_SCOPES = ['user:read'];
+
 export const REQUIRED_FACEBOOK_SCOPES = ['email', 'user_link'];
 
 export const REQUIRED_TIKTOK_SCOPES = ['user.info.basic'];
@@ -190,5 +192,6 @@ export const VERIFIED_EMAIL_PROVIDERS: Record<AuthProvider, boolean> = {
   kick: false,
   tiktok: false,
   youtube: false,
+  velora: false,
   anonymous: false
 };

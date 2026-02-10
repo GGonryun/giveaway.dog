@@ -43,7 +43,6 @@ export const PrizeItem: React.FC<{
   onAllocate,
   onSeeTasks
 }) => {
-  console.log('allocations in PrizeItem:', allocations);
   const winnersText = `${prize.quota} ${pluralize('winner', prize.quota)}`;
 
   const isAllocating = state === 'allocating';

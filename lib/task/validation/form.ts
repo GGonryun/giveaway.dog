@@ -222,8 +222,6 @@ const referralLinkValidator = (
 const secretCodeV2Validator = (
   args: ValidateSweepstakeTaskOptions<SecretCodeV2TaskSchema>
 ) => {
-  console.log('Running secretCodeV2Validator');
-
   const { task, index, ctx } = args;
 
   const hasEmptyCode = task.codes.some((code) => !code || code.trim() === '');

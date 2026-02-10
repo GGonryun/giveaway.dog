@@ -12,6 +12,7 @@ import { SocialTikTokIcon } from '@/lib/integrations/components/icons/tiktok-ico
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
 import { Globe2Icon } from 'lucide-react';
+import { SocialVeloraIcon } from '@/lib/integrations/components/icons/velora-icon';
 
 interface PlatformIconProps {
   platform: TaskPlatformSchema;
@@ -47,6 +48,8 @@ const PlatformIcon: React.FC<PlatformIconProps> = ({
       return <SocialFacebookIcon className={className} />;
     case 'TIKTOK':
       return <SocialTikTokIcon className={className} />;
+    case 'VELORA':
+      return <SocialVeloraIcon className={className} />;
     case 'BONUS':
     case 'QUESTION':
     case 'EMAIL':

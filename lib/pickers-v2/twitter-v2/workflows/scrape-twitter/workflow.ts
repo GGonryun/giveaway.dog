@@ -79,15 +79,15 @@ async function scrapeTwitterReposts({
       cursor,
       pickerId
     });
-    console.log(
+    console.info(
       `Scraped ${retweeters.data.length} retweeters for tweet ${tweetId}`
     );
     current += retweeters.data.length;
     hasMore = retweeters.hasMore;
     cursor = retweeters.nextCursor;
-    console.log(`Resulting cursor: ${cursor}, hasMore: ${hasMore}`);
+    console.info(`Resulting cursor: ${cursor}, hasMore: ${hasMore}`);
     await writeProgress({ max, current, status: 'PROCESSING' });
-    console.log(`Progress: ${current}/${max}`);
+    console.info(`Progress: ${current}/${max}`);
   }
 
   return current;

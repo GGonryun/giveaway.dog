@@ -21,6 +21,7 @@ import {
   TooltipContent,
   TooltipTrigger
 } from '@/components/ui/tooltip';
+import { SocialVeloraIcon } from './velora-icon';
 
 interface ProviderIconProps {
   type: IdentityProviderSchema;
@@ -43,6 +44,7 @@ export const PROVIDER_ICON: Record<
   INSTAGRAM: SocialInstagramIcon,
   FACEBOOK: SocialFacebookIcon,
   TIKTOK: SocialTikTokIcon,
+  VELORA: SocialVeloraIcon,
   ANONYMOUS: HatGlassesIcon
 };
 
@@ -109,6 +111,11 @@ export const PROVIDER_THEME: Record<
     bgColor: 'bg-black',
     textColor: 'text-white',
     fillColor: 'fill-black'
+  },
+  VELORA: {
+    bgColor: 'bg-purple-600',
+    textColor: 'text-white',
+    fillColor: 'fill-purple-600'
   },
   ANONYMOUS: {
     bgColor: 'bg-gray-700',

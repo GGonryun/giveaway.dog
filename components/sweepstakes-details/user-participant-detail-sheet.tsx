@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import {
   MapPin,
   Calendar,
-  Activity,
   Eye,
   ChevronRight,
   ExternalLinkIcon,
@@ -325,7 +324,7 @@ export const UserParticipantSheetContent: React.FC<{
       </div>
 
       {/* Fixed Action Button */}
-      <div className="border-t pt-4 mt-4 flex-shrink-0">
+      <div className="border-t pt-4 mt-4 shrink-0">
         <Button size="sm" className="w-full" asChild>
           <Link href={`/app/${activeTeam.slug}/users/${participant.user.id}`}>
             <Eye className="h-4 w-4 mr-2" />

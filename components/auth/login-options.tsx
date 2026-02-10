@@ -13,7 +13,12 @@ import {
   ProviderPills
 } from '@/components/auth/provider-buttons';
 import { AuthError } from '@/components/auth/auth-error';
-import { AlertCircle, ArrowLeftIcon } from 'lucide-react';
+import {
+  AlertCircle,
+  ArrowDown,
+  ArrowLeftIcon,
+  ArrowRight
+} from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import { Typography } from '../ui/typography';
@@ -40,6 +45,7 @@ interface LoginOptionsProps {
   allowedIdentities: IdentityProvider[];
   returnTo: string;
   userProviders?: ProviderSchema[];
+  maxVisible?: number;
 }
 
 export function LoginOptions({
@@ -51,6 +57,7 @@ export function LoginOptions({
   dividers = false,
   allowedIdentities,
   userProviders,
+  maxVisible,
   ...props
 }: LoginOptionsProps & React.ComponentProps<'div'>) {
   const searchParams = useSearchParams();
@@ -59,6 +66,7 @@ export function LoginOptions({
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [email, setEmail] = useState('');
+  const [showAll, setShowAll] = useState(false);
   const loginProcedure = useProcedure({
     action: login,
     onSuccess() {
@@ -281,10 +289,25 @@ export function LoginOptions({
         )}
         <Providers
           onSubmit={handleProviderLogin}
-          identities={allowedIdentities}
+          identities={
+            maxVisible && !showAll
+              ? allowedIdentities.slice(0, maxVisible)
+              : allowedIdentities
+          }
           type={type}
           userProviders={userProviders}
         />
+        {maxVisible && !showAll && allowedIdentities.length > maxVisible && (
+          <Button
+            variant="ghost"
+            className="w-full text-muted-foreground"
+            onClick={() => setShowAll(true)}
+          >
+            <ArrowDown />
+            More ways to sign in
+            <ArrowDown />
+          </Button>
+        )}
       </Flex.Stack>
     </div>
   );

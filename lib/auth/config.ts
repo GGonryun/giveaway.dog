@@ -16,12 +16,14 @@ import { SteamProvider } from './providers/steam';
 import { InboundEmailProvider } from './providers/inbound';
 import { KickProvider } from './providers/kick';
 import { FacebookProvider } from './providers/facebook';
+import { VeloraProvider } from './providers/velora';
 
 import {
   REQUIRED_DISCORD_SCOPES,
   REQUIRED_TWITCH_SCOPES,
   REQUIRED_KICK_SCOPES,
-  REQUIRED_FACEBOOK_SCOPES
+  REQUIRED_FACEBOOK_SCOPES,
+  REQUIRED_VELORA_SCOPES
 } from '../integrations/scopes';
 import { UserSource } from '@prisma/client';
 import prisma from '@/lib/prisma';
@@ -30,6 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
   ...authConfig,
   providers: [
     TikTokProvider({
+      allowDangerousEmailAccountLinking: true,
       clientId: process.env.TIKTOK_CLIENT_ID,
       clientSecret: process.env.TIKTOK_CLIENT_SECRET,
 
@@ -130,6 +133,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       authorization: `https://discord.com/api/oauth2/authorize?scope=${REQUIRED_DISCORD_SCOPES.join('+')}`
     }),
     TwitchProvider({
+      allowDangerousEmailAccountLinking: true,
       clientId: process.env.TWITCH_CLIENT_ID,
       clientSecret: process.env.TWITCH_CLIENT_SECRET,
       authorization: {
@@ -146,6 +150,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       }
     }),
     KickProvider({
+      allowDangerousEmailAccountLinking: true,
       clientId: process.env.KICK_CLIENT_ID,
       clientSecret: process.env.KICK_CLIENT_SECRET,
       authorization: {
@@ -154,10 +159,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
         }
       }
     }),
+    VeloraProvider({
+      allowDangerousEmailAccountLinking: true,
+      clientId: process.env.VELORA_CLIENT_ID,
+      clientSecret: process.env.VELORA_CLIENT_SECRET,
+      authorization: {
+        params: {
+          scope: REQUIRED_VELORA_SCOPES.join(' ')
+        }
+      }
+    }),
     InboundEmailProvider({
       secret: process.env.INBOUND_SECRET
     }),
     InstagramProvider({
+      allowDangerousEmailAccountLinking: true,
       clientId: process.env.INSTAGRAM_CLIENT_ID!,
       clientSecret: process.env.INSTAGRAM_CLIENT_SECRET!
     })

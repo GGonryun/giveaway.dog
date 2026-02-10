@@ -57,6 +57,7 @@ export function LoginForm({
             returnTo={'/login'}
             redirectTo={redirectTo}
             allowedIdentities={LOGIN_PROVIDERS}
+            maxVisible={5}
           />
         </CardContent>
       </Card>

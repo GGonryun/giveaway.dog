@@ -18,6 +18,7 @@ import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagr
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
 import { SocialTikTokIcon } from '@/lib/integrations/components/icons/tiktok-icon';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
+import { SocialVeloraIcon } from '@/lib/integrations/components/icons/velora-icon';
 
 export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
   const platform = TASK_PLATFORM[type];
@@ -53,6 +54,8 @@ export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
       return <SocialFacebookIcon className="h-4 w-4 text-facebook-1" />;
     case 'TIKTOK':
       return <SocialTikTokIcon className="h-4 w-4 text-black" />;
+    case 'VELORA':
+      return <SocialVeloraIcon className="h-4 w-4 text-facebook-1" />;
     case 'ANONYMOUS':
       return <HatGlassesIcon className="h-4 w-4 text-gray-500" />;
     case 'QUESTION':

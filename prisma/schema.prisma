@@ -375,6 +375,7 @@ enum IdentityProvider {
   FACEBOOK
   TIKTOK
   ANONYMOUS
+  VELORA
 }
 
 model SweepstakesAudience {
