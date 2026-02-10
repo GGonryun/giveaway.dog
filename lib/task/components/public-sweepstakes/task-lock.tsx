@@ -91,6 +91,7 @@ export const getTaskLock = (args: {
     case 'BLUESKY_REPOST':
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
+    case 'VELORA_CONNECT':
     case 'REFERRAL_LINK':
     case 'SUBMIT_MEDIA':
       return null;

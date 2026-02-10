@@ -380,7 +380,7 @@ export function getVerificationInstructions(args: {
         steps: [
           {
             step: 1,
-            instruction: 'Check your referral tracking system for new signups'
+            instruction: 'Check your referral tracking system for new sign-ups'
           },
           {
             step: 2,
@@ -735,6 +735,30 @@ export function getVerificationInstructions(args: {
             step: 3,
             instruction:
               'If automatic verification is unavailable, manually check your Bluesky post reposts'
+          }
+        ]
+      };
+
+    case 'VELORA_CONNECT':
+      return {
+        title: 'Verify Velora Connection (Automatic)',
+        description: `This task is automatically verified via Velora API`,
+        steps: [
+          {
+            step: 1,
+            instruction:
+              'This task is automatically verified when the user connects their Velora account',
+            note: 'The system validates the Velora account is connected and accessible'
+          },
+          {
+            step: 2,
+            instruction:
+              'Check if the user has a Velora username in their profile'
+          },
+          {
+            step: 3,
+            instruction:
+              'If automatic verification failed, manually verify their Velora profile exists'
           }
         ]
       };

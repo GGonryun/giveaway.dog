@@ -132,6 +132,7 @@ export const toTaskStatus = (props: {
     case 'BLUESKY_REPOST':
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
+    case 'VELORA_CONNECT':
     case 'SUBMIT_MEDIA':
       return props.submission?.status ?? undefined;
     default:

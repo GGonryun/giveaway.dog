@@ -10,7 +10,6 @@ interface IntegrationPageProps {
 
 const PLATFORM_NAMES: Record<PlatformId, string> = {
   x: 'X (Twitter)',
-  twitter: 'X (Twitter)',
   bluesky: 'Bluesky',
   discord: 'Discord',
   youtube: 'YouTube',
@@ -31,6 +30,7 @@ const PLATFORM_NAMES: Record<PlatformId, string> = {
   threads: 'Threads',
   pinterest: 'Pinterest',
   tumblr: 'Tumblr',
+  velora: 'Velora',
   google: 'Google'
 };
 

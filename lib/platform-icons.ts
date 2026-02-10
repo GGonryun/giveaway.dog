@@ -1,5 +1,6 @@
+import { widetype } from './widetype';
+
 export type PlatformId =
-  | 'twitter'
   | 'x'
   | 'bluesky'
   | 'twitch'
@@ -21,7 +22,8 @@ export type PlatformId =
   | 'producthunt'
   | 'coinbase'
   | 'spotify'
-  | 'steam';
+  | 'steam'
+  | 'velora';
 
 interface PlatformIcon {
   light: string;
@@ -29,7 +31,6 @@ interface PlatformIcon {
 }
 
 export const PLATFORM_ICONS: Record<PlatformId, PlatformIcon> = {
-  twitter: { light: '/platforms/x.svg' },
   x: { light: '/platforms/x.svg' },
   bluesky: { light: '/platforms/bluesky.svg' },
   twitch: { light: '/platforms/twitch.svg' },
@@ -60,11 +61,11 @@ export const PLATFORM_ICONS: Record<PlatformId, PlatformIcon> = {
   producthunt: { light: '/platforms/producthunt.svg' },
   coinbase: { light: '/platforms/coinbase.svg' },
   spotify: { light: '/platforms/spotify.svg' },
-  steam: { light: '/platforms/steam.svg' }
+  steam: { light: '/platforms/steam.svg' },
+  velora: { light: '/platforms/velora.png' }
 };
 
 export const PLATFORM_LABELS: Record<PlatformId, string> = {
-  twitter: 'Twitter/X',
   x: 'Twitter/X',
   bluesky: 'Bluesky',
   twitch: 'Twitch',
@@ -86,11 +87,11 @@ export const PLATFORM_LABELS: Record<PlatformId, string> = {
   producthunt: 'Product Hunt',
   coinbase: 'Coinbase',
   spotify: 'Spotify',
+  velora: 'Velora',
   steam: 'Steam'
 };
 
 export const PLATFORM_THEMES: Record<PlatformId, string | undefined> = {
-  twitter: '#1DA1F2',
   x: '#000000',
   bluesky: '#0085ff',
   twitch: '#9146FF',
@@ -112,7 +113,8 @@ export const PLATFORM_THEMES: Record<PlatformId, string | undefined> = {
   producthunt: '#DA552F',
   coinbase: '#0052FF',
   spotify: '#1DB954',
-  steam: '#171A21'
+  steam: '#171A21',
+  velora: '#dca62c'
 };
 
 interface PlatformTooltipTheme {
@@ -122,7 +124,6 @@ interface PlatformTooltipTheme {
 
 export const PLATFORM_TOOLTIP_THEMES: Record<PlatformId, PlatformTooltipTheme> =
   {
-    twitter: { bg: 'black', text: 'white' },
     x: { bg: 'black', text: 'white' },
     bluesky: { bg: 'bluesky-1', text: 'white' },
     twitch: { bg: 'twitch-1', text: 'white' },
@@ -144,7 +145,8 @@ export const PLATFORM_TOOLTIP_THEMES: Record<PlatformId, PlatformTooltipTheme> =
     producthunt: { bg: 'black', text: 'white' },
     coinbase: { bg: 'black', text: 'white' },
     spotify: { bg: 'black', text: 'white' },
-    steam: { bg: 'black', text: 'white' }
+    steam: { bg: 'black', text: 'white' },
+    velora: { bg: 'velora-1', text: 'black' }
   };
 
 export function getPlatformIcon(
@@ -177,27 +179,32 @@ export function getPlatformTooltipTheme(
   return PLATFORM_TOOLTIP_THEMES[platformId] || { bg: 'black', text: 'white' };
 }
 
-export const CAROUSEL_PLATFORMS: PlatformId[] = [
-  'x',
-  'bluesky',
-  'twitch',
-  'tiktok',
-  'kick',
-  'facebook',
-  'snapchat',
-  'threads',
-  'linkedin',
-  'pinterest',
-  'reddit',
-  'instagram',
-  'youtube',
-  'discord',
-  'tumblr',
-  'github',
-  'google',
-  'patreon',
-  'producthunt',
-  'coinbase',
-  'spotify',
-  'steam'
-];
+export const SHOW_ON_CAROUSEL: Record<PlatformId, boolean> = {
+  x: true,
+  bluesky: true,
+  twitch: true,
+  tiktok: true,
+  kick: true,
+  facebook: true,
+  snapchat: true,
+  threads: true,
+  linkedin: true,
+  pinterest: true,
+  reddit: true,
+  instagram: true,
+  youtube: true,
+  discord: true,
+  tumblr: true,
+  github: true,
+  google: true,
+  patreon: true,
+  producthunt: true,
+  coinbase: true,
+  spotify: true,
+  steam: true,
+  velora: true
+};
+
+export const CAROUSEL_PLATFORMS = widetype
+  .keys(SHOW_ON_CAROUSEL)
+  .filter((platformId) => SHOW_ON_CAROUSEL[platformId]);

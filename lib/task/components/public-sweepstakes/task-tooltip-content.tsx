@@ -84,6 +84,7 @@ const toEntriesText = ({ task }: { task: TaskSchema }) => {
     case 'BLUESKY_REPOST':
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
+    case 'VELORA_CONNECT':
     case 'SUBMIT_MEDIA':
       return `Complete task for ${task.value} ${pluralize('entry', task.value)}.`;
     default:

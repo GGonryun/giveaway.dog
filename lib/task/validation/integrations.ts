@@ -21,6 +21,7 @@ import {
   checkBlueskyLike,
   checkBlueskyRepost
 } from './bluesky';
+import { checkVeloraConnect } from './velora';
 
 export type ValidateTaskInput<T extends TaskSchema> = {
   task: T;
@@ -70,6 +71,11 @@ export const validateTask = async <T extends TaskSchema>(
       return Promise.resolve();
     case 'BLUESKY_CONNECT':
       return await checkBlueskyConnect(db, {
+        ...input,
+        task: input.task
+      });
+    case 'VELORA_CONNECT':
+      return await checkVeloraConnect(db, {
         ...input,
         task: input.task
       });

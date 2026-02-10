@@ -1,12 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { PlatformId, PLATFORM_ICONS } from '@/lib/platform-icons';
+import {
+  PlatformId,
+  PLATFORM_ICONS,
+  PLATFORM_TOOLTIP_THEMES
+} from '@/lib/platform-icons';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
+import { cn } from '../utils';
 
 interface IntegrationLandingPageProps {
   platform: PlatformId;
@@ -37,27 +42,38 @@ export function IntegrationLandingPage({
         <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* Platform Icon */}
           <div className="flex justify-center mb-8">
-            <div className="relative w-24 h-24 rounded-2x border-2 border-border shadow-lg flex items-center justify-center">
-              <img
-                src={iconSrc}
-                alt={platformName}
-                className="w-16 h-16 object-contain"
-              />
-            </div>
+            <img
+              src={iconSrc}
+              alt={platformName}
+              className="size-40 sm:size-48 md:size-56 lg:size-64 object-contain"
+            />
           </div>
 
           <MarketingPageHeader
             title={
               <>
                 Create giveaways with{' '}
-                <span className="text-primary">{platformName}</span>
+                <span
+                  className={cn(
+                    `bg-${PLATFORM_TOOLTIP_THEMES[platform].bg} text-${PLATFORM_TOOLTIP_THEMES[platform].text} px-2 rounded-md`
+                  )}
+                >
+                  {platformName}
+                </span>
               </>
             }
             description={`Save time and grow your ${platformName} presence by scheduling your giveaways in advance. Automate your growth with verifiable entries and bot detection.`}
           />
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-            <Button asChild size="lg" className="gap-2 text-lg px-8">
+            <Button
+              asChild
+              size="lg"
+              className={cn(
+                'gap-2 text-lg px-8',
+                `bg-${PLATFORM_TOOLTIP_THEMES[platform].bg} text-${PLATFORM_TOOLTIP_THEMES[platform].text} hover:bg-${PLATFORM_TOOLTIP_THEMES[platform].bg} hover:text-${PLATFORM_TOOLTIP_THEMES[platform].text}`
+              )}
+            >
               <Link href="/login">
                 Get Started
                 <ArrowRight className="h-5 w-5" />

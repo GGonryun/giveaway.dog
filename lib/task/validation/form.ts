@@ -106,6 +106,7 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':
     case 'SUBMIT_MEDIA':
+    case 'VELORA_CONNECT':
       // no specific validation needed
       return;
     default:

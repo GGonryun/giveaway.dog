@@ -48,6 +48,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'TIKTOK_FOLLOW':
     case 'TIKTOK_LIKE':
     case 'BLUESKY_CONNECT':
+    case 'VELORA_CONNECT':
     case 'BONUS_LOYALTY':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':

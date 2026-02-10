@@ -46,6 +46,7 @@ export const AdditionalSettings: React.FC<{
     switch (type) {
       case 'TWITTER_CONNECT':
       case 'BLUESKY_CONNECT':
+      case 'VELORA_CONNECT':
       case 'BONUS_TASK':
         return <></>;
       case 'BONUS_COMPLETE_PROFILE':
