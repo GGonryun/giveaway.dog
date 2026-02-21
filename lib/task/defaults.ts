@@ -167,6 +167,17 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['TWITCH_CHAT_IMPORT']: {
+      id: '',
+      type: 'TWITCH_CHAT_IMPORT',
+      title: 'Enter via Twitch Chat',
+      importingAccount: '',
+      channelUrl: '',
+      trigger: '!giveaway',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
     ['KICK_FOLLOW']: {
       id: '',
       type: 'KICK_FOLLOW',

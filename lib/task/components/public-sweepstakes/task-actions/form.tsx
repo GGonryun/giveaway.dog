@@ -37,6 +37,7 @@ import { SingleChoiceTaskActionForm } from './lib/form/single-choice';
 import { MultipleChoiceTaskActionForm } from './lib/form/multiple-choice';
 import { SubmitMediaTaskActionForm } from './lib/form/submit-media';
 import { ReferralLinkTaskActionForm } from './lib/referral/referral-link';
+import { TwitchChatImportTaskActionForm } from './lib/twitch/twitch-chat-import';
 
 export const TaskActionForm: React.FC<
   TaskActionProps & {
@@ -79,6 +80,8 @@ export const TaskActionForm: React.FC<
       );
     case 'TWITCH_FOLLOW':
       return <TwitchFollowTaskActionForm {...props} task={props.task} />;
+    case 'TWITCH_CHAT_IMPORT':
+      return <TwitchChatImportTaskActionForm {...props} task={props.task} />;
     case 'KICK_FOLLOW':
       return <KickFollowTaskActionForm {...props} task={props.task} />;
     case 'SECRET_CODE':

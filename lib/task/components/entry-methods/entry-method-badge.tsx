@@ -28,6 +28,7 @@ export const EntryMethodBadge: React.FC<{
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
     case 'DISCORD_INTERACTION_IMPORT':
+    case 'TWITCH_CHAT_IMPORT':
       return <ImportBadge />;
     case 'BONUS_LIMITED':
     case 'BONUS_TIMED':

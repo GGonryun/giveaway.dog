@@ -188,6 +188,7 @@ export const TaskBadge: React.FC<TaskBadgeProps> = (props) => {
     case 'DISCORD_JOIN':
     case 'DISCORD_INTERACTION_IMPORT':
     case 'TWITCH_FOLLOW':
+    case 'TWITCH_CHAT_IMPORT':
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':
     case 'SECRET_CODE_V2':

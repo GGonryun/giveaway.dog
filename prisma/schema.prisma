@@ -15,6 +15,7 @@ enum UserSource {
   BLUESKY_IMPORT
   MANUAL_IMPORT
   DISCORD_IMPORT
+  TWITCH_IMPORT
 }
 
 model User {
@@ -223,6 +224,7 @@ enum IntegrationProvider {
   TWITTER
   BLUESKY
   DISCORD
+  TWITCH
 }
 
 model Integration {
@@ -231,11 +233,11 @@ model Integration {
 
   account_id    String
   teamId        String?
-  team          Team?             @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  status        IntegrationStatus @default(ACTIVE)
+  team          Team?                  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  status        IntegrationStatus      @default(ACTIVE)
   // the user who created the integration
   ownerId       String?
-  owner         User?             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner         User?                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   refresh_token String?
   access_token  String?
   expires_at    Int?
@@ -245,6 +247,7 @@ model Integration {
   session_state String?
   label         String?
   settings      Json?
+  subscriptions EventSubSubscription[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -253,6 +256,25 @@ model Integration {
   state   State?  @relation(fields: [stateId], references: [id])
 
   @@unique([provider, account_id])
+}
+
+model EventSubSubscription {
+  id                     String      @id @default(cuid()) // your DB PK
+  twitch_id              String      @unique // Twitch subscription ID
+  integrationId          String
+  integration            Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+  type                   String
+  version                String
+  status                 String
+  broadcaster_user_id    String
+  cost                   Int
+  callback               String
+  method                 String
+  created_at             DateTime
+  last_event_received_at DateTime?
+
+  @@index([integrationId])
+  @@index([status])
 }
 
 model State {
@@ -465,9 +487,8 @@ model SweepstakesWinnerCriteria {
 }
 
 enum SweepstakesJobType {
-  NOTIFY_PUBLISH_ON_DISCORD // TODO: deprecate
-  NOTIFY_PUBLISH_ON_TWITTER // TODO: deprecate
   PROCESS_ACTIVATION
+  PROCESS_MODIFICATION
   PROCESS_EXPIRATION
   PROCESS_COMPLETION
   RANDOMLY_ASSIGN_PRIZES

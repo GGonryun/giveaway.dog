@@ -35,6 +35,7 @@ const VERIFICATION_WARNINGS: Record<
   STEAM_WISHLIST: undefined,
   DISCORD_JOIN: undefined,
   TWITCH_FOLLOW: undefined,
+  TWITCH_CHAT_IMPORT: undefined,
   KICK_FOLLOW: undefined,
   SECRET_CODE: undefined,
   SECRET_CODE_V2: undefined,

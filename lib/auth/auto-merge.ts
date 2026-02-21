@@ -7,6 +7,7 @@ const SUPPORTS_AUTO_MERGE_PROVIDERS: Record<UserSource, boolean> = {
   TWITTER_IMPORT: true,
   BLUESKY_IMPORT: true,
   DISCORD_IMPORT: true,
+  TWITCH_IMPORT: true,
   SIGNUP: false,
   ANONYMOUS: false,
   MANUAL_IMPORT: false

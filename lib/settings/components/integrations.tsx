@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { TwitterCard } from '@/lib/integrations/components/twitter-card';
 import { BlueskyCard } from '@/lib/integrations/components/bluesky-card';
 import { DiscordCard } from '@/lib/discord/components/discord-card';
+import { TwitchCard } from '@/lib/twitch/components/twitch-card';
 import { PlaceholderCard } from '@/lib/integrations/components/placeholder-card';
 import { IntegrationsSchema } from '@/lib/integrations/schemas';
 import { IntegrationProvider } from '@prisma/client';
@@ -45,6 +46,12 @@ export const TeamIntegrationSettings: React.FC<{
         message: `Discord OAuth completed for ${guild || 'your server'}. Complete installation by running /connect in your server.`
       });
       setTimeout(() => setStatusMessage(null), 10000);
+    } else if (success === 'twitch_connected' && username) {
+      setStatusMessage({
+        type: 'success',
+        message: `Successfully connected Twitch channel ${username}`
+      });
+      setTimeout(() => setStatusMessage(null), 5000);
     } else if (error) {
       const errorMessages: Record<string, string> = {
         missing_parameters: 'Missing required OAuth parameters',
@@ -92,6 +99,12 @@ export const TeamIntegrationSettings: React.FC<{
           <DiscordCard
             integration={integrations.find(
               (i) => i.provider === IntegrationProvider.DISCORD
+            )}
+          />
+
+          <TwitchCard
+            integration={integrations.find(
+              (i) => i.provider === IntegrationProvider.TWITCH
             )}
           />
 

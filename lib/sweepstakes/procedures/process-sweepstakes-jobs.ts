@@ -2,20 +2,16 @@
 
 import { ApplicationError, assertNever } from '@/lib/errors';
 import { html } from '@/lib/html';
-import { procedure } from '@/lib/mrpc/procedures';
 import { DEFAULT_TEAM_NAME } from '@/lib/team/data';
-import {
-  DEFAULT_SWEEPSTAKES_NAME,
-  DEFAULT_SWEEPSTAKES_VISIBILITY
-} from '@/schemas/giveaway/defaults';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import {
   Prisma,
   PrismaClient,
   SweepstakesJobStatus,
   VisibilityType
 } from '@prisma/client';
-import { z } from 'zod';
 import { toSweepstakesUrl } from '../util';
+import db from '@/lib/prisma';
 import { updateDiscordMessage } from '@/lib/discord/api/update-discord-message';
 import { toPostToDiscordResponseSchema } from '@/lib/automation/schemas';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
@@ -24,52 +20,45 @@ import { toExpiredSweepstakeComponents } from '@/lib/discord/api/util';
 
 const MAX_JOBS_PER_RUN = 5;
 
-export const processSweepstakesJobs = procedure()
-  .authorization({ required: false })
-  .output(
-    z.object({
-      processed: z.number()
-    })
-  )
-  .handler(async ({ db }) => {
-    const now = new Date();
+export const processSweepstakesJobs = async () => {
+  const now = new Date();
 
-    const pending = await db.sweepstakesJob.findMany({
-      where: {
-        runAt: {
-          lte: now
-        },
-        status: {
-          in: ['PENDING']
-        }
+  const pending = await db.sweepstakesJob.findMany({
+    where: {
+      runAt: {
+        lte: now
       },
-      orderBy: {
-        createdAt: 'asc'
-      },
-      take: MAX_JOBS_PER_RUN
-    });
-
-    console.info(`Found ${pending.length} sweepstakes jobs to process`);
-
-    for (const job of pending) {
-      try {
-        await processSweepstakesJob({ db, job });
-      } catch (error) {
-        console.error(`Failed to process sweepstakes job ${job.id}`, error);
-        await db.sweepstakesJob.update({
-          where: { id: job.id },
-          data: {
-            status: SweepstakesJobStatus.FAILED,
-            error: ApplicationError.toMessage(error)
-          }
-        });
+      status: {
+        in: ['PENDING']
       }
-    }
-
-    return {
-      processed: pending.length
-    };
+    },
+    orderBy: {
+      createdAt: 'asc'
+    },
+    take: MAX_JOBS_PER_RUN
   });
+
+  console.info(`Found ${pending.length} sweepstakes jobs to process`);
+
+  for (const job of pending) {
+    try {
+      await processSweepstakesJob({ db, job });
+    } catch (error) {
+      console.error(`Failed to process sweepstakes job ${job.id}`, error);
+      await db.sweepstakesJob.update({
+        where: { id: job.id },
+        data: {
+          status: SweepstakesJobStatus.FAILED,
+          error: ApplicationError.toMessage(error)
+        }
+      });
+    }
+  }
+
+  return {
+    processed: pending.length
+  };
+};
 
 async function processSweepstakesJob({
   db,
@@ -81,19 +70,14 @@ async function processSweepstakesJob({
   switch (job.type) {
     case 'PROCESS_ACTIVATION':
       return processSweepstakesActivation({ db, job });
+    case 'PROCESS_MODIFICATION':
+      return processSweepstakesModification({ db, job });
     case 'PROCESS_EXPIRATION':
       return processSweepstakesExpiration({ db, job });
     case 'PROCESS_COMPLETION':
       return processSweepstakesCompletion({ db, job });
     case 'RANDOMLY_ASSIGN_PRIZES':
       return processRandomlyAssignPrizes({ db, job });
-    // deprecated jobs
-    case 'NOTIFY_PUBLISH_ON_DISCORD':
-    case 'NOTIFY_PUBLISH_ON_TWITTER':
-      throw new ApplicationError({
-        code: 'NOT_IMPLEMENTED',
-        message: `Sweepstakes job type ${job.type} is not implemented`
-      });
     default:
       throw assertNever(job.type);
   }
@@ -232,6 +216,41 @@ const processSweepstakesActivation = async ({
     return;
   }
 
+  // if the sweepstakes end date has already been reached
+  // complete job.
+  if (
+    sweepstakes.timing?.endDate &&
+    new Date(sweepstakes.timing.endDate) <= new Date()
+  ) {
+    await db.sweepstakesJob.update({
+      where: { id: job.id },
+      data: { status: SweepstakesJobStatus.COMPLETED }
+    });
+    console.info(
+      `Sweepstakes ${sweepstakes.id} has already ended, completing job`
+    );
+    return;
+  }
+
+  // if the sweepstakes start date hasn't been reached
+  // reschedule job for the future
+  if (
+    sweepstakes.timing?.startDate &&
+    new Date(sweepstakes.timing.startDate) > new Date()
+  ) {
+    await db.sweepstakesJob.update({
+      where: { id: job.id },
+      data: {
+        status: SweepstakesJobStatus.PENDING,
+        runAt: sweepstakes.timing.startDate
+      }
+    });
+    console.info(
+      `Sweepstakes ${sweepstakes.id} has not started yet, rescheduling job`
+    );
+    return;
+  }
+
   const sweepstakesUrl = toSweepstakesUrl({ sweepstakes, forcePath: true });
 
   const description = sweepstakes.details?.description
@@ -301,6 +320,20 @@ const processSweepstakesActivation = async ({
   console.info(
     `Successfully sent Discord notification for sweepstakes ${sweepstakes.id}`
   );
+};
+
+const processSweepstakesModification = async ({
+  db,
+  job
+}: {
+  db: PrismaClient;
+  job: Prisma.SweepstakesJobGetPayload<{}>;
+}) => {
+  // instantly complete for now, not used
+  await db.sweepstakesJob.update({
+    where: { id: job.id },
+    data: { status: SweepstakesJobStatus.COMPLETED }
+  });
 };
 
 const processSweepstakesExpiration = async ({

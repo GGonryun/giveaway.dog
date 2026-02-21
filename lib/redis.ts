@@ -7,4 +7,4 @@ const redis = new Redis({
   token: url.password
 });
 
-export default redis;
+export { redis };

@@ -37,6 +37,7 @@ export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
     case 'STEAM_FOLLOW':
     case 'DISCORD_JOIN':
     case 'TWITCH_FOLLOW':
+    case 'TWITCH_CHAT_IMPORT':
     case 'KICK_FOLLOW':
     case 'SECRET_CODE':
     case 'SECRET_CODE_V2':

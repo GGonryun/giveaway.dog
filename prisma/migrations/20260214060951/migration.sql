@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "SweepstakesJobType" ADD VALUE 'PROCESS_MODIFICATION';

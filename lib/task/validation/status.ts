@@ -47,6 +47,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'BLUESKY_LIKE_IMPORT':
     case 'BLUESKY_REPOST_IMPORT':
     case 'DISCORD_INTERACTION_IMPORT':
+    case 'TWITCH_CHAT_IMPORT':
       return CompletionStatus.PENDING;
     default:
       throw assertNever(task);

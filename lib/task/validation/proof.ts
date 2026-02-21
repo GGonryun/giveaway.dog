@@ -1,7 +1,6 @@
 import { assertNever } from '@/lib/errors';
 import { TASK_INPUT_SCHEMA, TaskSchema } from '../schemas';
 import { Prisma } from '@prisma/client';
-import { INSTAGRAM_USERNAME_QUESTION } from '../components/public-sweepstakes/task-actions/lib/instagram/constants';
 
 export const saveTaskProof = (task: TaskSchema, data: unknown) => {
   switch (task.type) {
@@ -79,6 +78,7 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'DISCORD_JOIN':
     case 'DISCORD_INTERACTION_IMPORT':
     case 'TWITCH_FOLLOW':
+    case 'TWITCH_CHAT_IMPORT':
     case 'KICK_FOLLOW':
     case 'TWITTER_CONNECT':
     case 'TWITTER_FOLLOW':

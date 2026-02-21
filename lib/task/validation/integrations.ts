@@ -53,6 +53,7 @@ export const validateTask = async <T extends TaskSchema>(
     case 'TWITTER_RETWEET_IMPORT_V2':
     case 'TWITTER_LIKE':
     case 'TWITTER_LIKE_IMPORT':
+    case 'TWITCH_CHAT_IMPORT':
     case 'YOUTUBE_VISIT':
     case 'KICK_FOLLOW':
     case 'INSTAGRAM_VISIT':

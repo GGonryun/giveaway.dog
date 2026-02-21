@@ -30,7 +30,8 @@ const USER_SOURCE_LABELS: Record<UserSource, string> = {
   TWITTER_IMPORT: 'Twitter Import',
   BLUESKY_IMPORT: 'Bluesky Import',
   MANUAL_IMPORT: 'Manual Import',
-  DISCORD_IMPORT: 'Discord Import'
+  DISCORD_IMPORT: 'Discord Import',
+  TWITCH_IMPORT: 'Twitch Import'
 };
 
 export function UsersFiltersSheet() {

@@ -111,6 +111,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'BLUESKY_LIKE_IMPORT':
       case 'BLUESKY_REPOST_IMPORT':
       case 'DISCORD_INTERACTION_IMPORT':
+      case 'TWITCH_CHAT_IMPORT':
       case 'SUBMIT_MEDIA':
         return null;
       default:

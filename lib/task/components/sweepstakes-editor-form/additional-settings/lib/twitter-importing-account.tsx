@@ -13,19 +13,15 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
-import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
-import { extractUsernameFromTweetUrl } from '@/lib/integrations/schemas/twitter';
 import { hasFeature, type IntegrationSchema } from '@/lib/integrations/schemas';
+import { extractUsernameFromTweetUrl } from '@/lib/integrations/schemas/twitter';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { AlertCircle, RefreshCw, Info } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-
 import { useState } from 'react';
-
 import { useFormContext, useWatch } from 'react-hook-form';
 
-// Helper function to filter Twitter integrations with import tasks feature
 function getTwitterIntegrationsWithImportTasks(
   integrations: IntegrationSchema[] | undefined
 ): IntegrationSchema[] {
@@ -40,19 +36,6 @@ function getTwitterIntegrationsWithImportTasks(
   );
 }
 
-// Helper function to filter Bluesky integrations with full access feature
-function getBlueskyIntegrationsWithFullAccess(
-  integrations: IntegrationSchema[] | undefined
-): IntegrationSchema[] {
-  return (
-    integrations?.filter((i) => {
-      if (i.provider !== 'BLUESKY' || i.status !== 'ACTIVE') return false;
-      return hasFeature(i as typeof i & { provider: 'BLUESKY' }, 'FULL_ACCESS');
-    }) || []
-  );
-}
-
-// Helper function to check if there are Twitter integrations without import tasks permission
 function hasTwitterWithoutImportTasks(
   integrations: IntegrationSchema[] | undefined
 ): boolean {
@@ -64,19 +47,7 @@ function hasTwitterWithoutImportTasks(
   );
 }
 
-// Helper function to check if there are Bluesky integrations without full access permission
-function hasBlueskyWithoutFullAccess(
-  integrations: IntegrationSchema[] | undefined
-): boolean {
-  return (
-    integrations?.some((i) => {
-      if (i.provider !== 'BLUESKY' || i.status !== 'ACTIVE') return false;
-      return !hasFeature({ ...i, provider: 'BLUESKY' }, 'FULL_ACCESS');
-    }) || false
-  );
-}
-
-export const ImportingAccountField: React.FC = () => {
+export const TwitterImportingAccountField: React.FC = () => {
   const index = useArrayContext();
   const form = useFormContext<GiveawayFormSchema>();
   const params = useParams();
@@ -84,90 +55,71 @@ export const ImportingAccountField: React.FC = () => {
   const slug = params.slug as string;
   const { integrations } = useUnifiedFormLayout<SweepstakeStep>();
 
-  const taskType = useWatch({
-    control: form.control,
-    name: `tasks.${index}.type`
-  });
-
-  const isBluesky =
-    taskType === 'BLUESKY_LIKE_IMPORT' || taskType === 'BLUESKY_REPOST_IMPORT';
-  const providerName = isBluesky ? 'Bluesky' : 'X';
-  const Icon = isBluesky ? SocialBlueskyIcon : SocialXIcon;
-
-  const platformIntegrations = isBluesky
-    ? getBlueskyIntegrationsWithFullAccess(integrations)
-    : getTwitterIntegrationsWithImportTasks(integrations);
-
-  const hasPlatformButNoPermission = isBluesky
-    ? hasBlueskyWithoutFullAccess(integrations)
-    : hasTwitterWithoutImportTasks(integrations);
+  const twitterIntegrations =
+    getTwitterIntegrationsWithImportTasks(integrations);
+  const hasTwitterButNoPermission = hasTwitterWithoutImportTasks(integrations);
 
   return (
-    <>
-      <FormField
-        control={form.control}
-        name={`tasks.${index}.importingAccount`}
-        render={({ field }) => (
-          <FormItem>
-            <SwitchFormHeader
-              className="mb-1"
-              label="Integration"
-              help={{
-                title: 'Help: Integration',
-                content: (
-                  <p>
-                    Specify the {providerName} account that will be used to
-                    import entries. This account must own the post being
-                    validated.
-                  </p>
-                )
-              }}
-            />
-            {platformIntegrations.length === 0 ? (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="flex flex-col gap-2">
-                  <p>
-                    {hasPlatformButNoPermission
-                      ? `Your ${providerName} integration doesn't have import permissions. Please add the "Import Tasks" permission.`
-                      : `No ${providerName} integrations found. You need to connect a ${providerName} account to use import tasks.`}
-                  </p>
-                  <Button asChild variant="outline" size="sm" className="w-fit">
-                    <Link href={`/app/${slug}/settings/integrations`}>
-                      <Icon className="h-4 w-4 mr-2" />
-                      {hasPlatformButNoPermission
-                        ? 'Add Permissions'
-                        : `Connect ${providerName}`}
-                    </Link>
-                  </Button>
-                </AlertDescription>
-              </Alert>
-            ) : (
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value ?? undefined}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your account" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {platformIntegrations.map((integration) => (
-                      <SelectItem key={integration.id} value={integration.id}>
-                        <div className="flex items-center gap-2">
-                          <Icon className="h-4 w-4" />
-                          {integration.label}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-            )}
-          </FormItem>
-        )}
-      />
-    </>
+    <FormField
+      control={form.control}
+      name={`tasks.${index}.importingAccount`}
+      render={({ field }) => (
+        <FormItem>
+          <SwitchFormHeader
+            className="mb-1"
+            label="Integration"
+            help={{
+              title: 'Help: Integration',
+              content: (
+                <p>
+                  Specify the X account that will be used to import entries.
+                  This account must own the post being validated.
+                </p>
+              )
+            }}
+          />
+          {twitterIntegrations.length === 0 ? (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="flex flex-col gap-2">
+                <p>
+                  {hasTwitterButNoPermission
+                    ? 'Your X integration doesn\'t have import permissions. Please add the "Import Tasks" permission.'
+                    : 'No X integrations found. You need to connect an X account to use import tasks.'}
+                </p>
+                <Button asChild variant="outline" size="sm" className="w-fit">
+                  <Link href={`/app/${slug}/settings/integrations`}>
+                    <SocialXIcon className="h-4 w-4 mr-2" />
+                    {hasTwitterButNoPermission ? 'Add Permissions' : 'Connect X'}
+                  </Link>
+                </Button>
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <FormControl>
+              <Select
+                onValueChange={field.onChange}
+                value={field.value ?? undefined}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your account" />
+                </SelectTrigger>
+                <SelectContent>
+                  {twitterIntegrations.map((integration) => (
+                    <SelectItem key={integration.id} value={integration.id}>
+                      <div className="flex items-center gap-2">
+                        <SocialXIcon className="h-4 w-4" />
+                        {integration.label}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormControl>
+          )}
+        </FormItem>
+      )}
+    />
   );
 };
 

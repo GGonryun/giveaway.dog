@@ -24,10 +24,12 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { TwitterQualityMetrics } from './twitter-quality-metrics';
 import { BlueskyQualityMetrics } from './bluesky-quality-metrics';
 import { DiscordQualityMetrics } from './discord-quality-metrics';
+import { TwitchQualityMetrics } from './twitch-quality-metrics';
 import {
   TwitterScoreMetrics,
   BlueskyScoreMetrics,
-  DiscordScoreMetrics
+  DiscordScoreMetrics,
+  TwitchScoreMetrics
 } from '@/lib/scoring/schemas';
 
 export const UserQualityBreakdown: React.FC<{
@@ -71,6 +73,13 @@ export const UserQualityBreakdown: React.FC<{
         return (
           <BlueskyQualityMetrics
             metrics={quality.metrics as BlueskyScoreMetrics}
+          />
+        );
+
+      case 'TWITCH_IMPORT':
+        return (
+          <TwitchQualityMetrics
+            metrics={quality.metrics as TwitchScoreMetrics}
           />
         );
 

@@ -308,6 +308,39 @@ export const twitchFollowTaskSchema = baseTaskSchema.extend({
 
 export type TwitchFollowTaskSchema = z.infer<typeof twitchFollowTaskSchema>;
 
+export const twitchChatImportTaskSchema = baseTaskSchema.extend({
+  type: z.literal('TWITCH_CHAT_IMPORT'),
+  importingAccount: z.string().min(1, 'Importing account is required'),
+  channelUrl: z.string(),
+  trigger: z
+    .string()
+    .min(1, 'Chat command is required')
+    .refine((val) => {
+      // must start with ! and contain only letters, numbers, and underscores
+      const commandPattern = /^![A-Za-z0-9_]+$/;
+      return commandPattern.test(val);
+    }, 'Unexpected command, should start with ! and contain only letters, numbers, and underscores'),
+  rateLimit: z
+    .object({
+      max: z.number(),
+      window: z.object({
+        value: z.number(),
+        unit: z.union([
+          z.literal('ms'),
+          z.literal('s'),
+          z.literal('m'),
+          z.literal('h'),
+          z.literal('d')
+        ])
+      })
+    })
+    .nullish()
+});
+
+export type TwitchChatImportTaskSchema = z.infer<
+  typeof twitchChatImportTaskSchema
+>;
+
 export const kickFollowTaskSchema = baseTaskSchema.extend({
   type: z.literal('KICK_FOLLOW'),
   channel: z
@@ -615,6 +648,7 @@ export const taskSchema = z.discriminatedUnion('type', [
   discordJoinTaskSchema,
   discordInteractionImportTaskSchema,
   twitchFollowTaskSchema,
+  twitchChatImportTaskSchema,
   kickFollowTaskSchema,
   secretCodeTaskSchema,
   secretCodeV2TaskSchema,
@@ -665,6 +699,7 @@ export const TASK_LABEL: Record<TaskType, string> = {
   DISCORD_JOIN: 'Join Discord Server',
   DISCORD_INTERACTION_IMPORT: 'Interact on Discord',
   TWITCH_FOLLOW: 'Follow on Twitch',
+  TWITCH_CHAT_IMPORT: 'Chat on Twitch',
   YOUTUBE_VISIT: 'Visit YouTube Channel',
   KICK_FOLLOW: 'Follow on Kick',
   INSTAGRAM_VISIT: 'Visit Instagram Profile',
@@ -707,6 +742,7 @@ export const TASK_INPUT_SCHEMA = {
   DISCORD_JOIN: z.object({}),
   DISCORD_INTERACTION_IMPORT: z.object({}),
   TWITCH_FOLLOW: z.object({}),
+  TWITCH_CHAT_IMPORT: z.object({}),
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
   INSTAGRAM_VISIT: z.object({}),
@@ -774,6 +810,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   DISCORD_JOIN: z.object({}),
   DISCORD_INTERACTION_IMPORT: z.object({}),
   TWITCH_FOLLOW: z.object({}),
+  TWITCH_CHAT_IMPORT: z.object({}),
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
   INSTAGRAM_VISIT: z.object({}),
@@ -852,6 +889,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   DISCORD_JOIN: 'DISCORD',
   DISCORD_INTERACTION_IMPORT: 'DISCORD',
   TWITCH_FOLLOW: 'TWITCH',
+  TWITCH_CHAT_IMPORT: 'TWITCH',
   KICK_FOLLOW: 'KICK',
   ASK_QUESTION: 'QUESTION',
   SINGLE_CHOICE: 'QUESTION',
@@ -892,6 +930,7 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   DISCORD_JOIN: 'DISCORD',
   DISCORD_INTERACTION_IMPORT: 'DISCORD',
   TWITCH_FOLLOW: 'TWITCH',
+  TWITCH_CHAT_IMPORT: 'TWITCH',
   KICK_FOLLOW: 'KICK',
   YOUTUBE_VISIT: 'YOUTUBE',
   INSTAGRAM_VISIT: 'INSTAGRAM',
@@ -965,6 +1004,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   STEAM_WISHLIST: 'community',
   STEAM_FOLLOW: 'community',
   TWITCH_FOLLOW: 'social',
+  TWITCH_CHAT_IMPORT: 'social',
   KICK_FOLLOW: 'social',
   YOUTUBE_VISIT: 'social',
   INSTAGRAM_VISIT: 'social',
@@ -1015,6 +1055,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   STEAM_WISHLIST: false,
   STEAM_FOLLOW: false,
   TWITCH_FOLLOW: false,
+  TWITCH_CHAT_IMPORT: true,
   KICK_FOLLOW: false,
   YOUTUBE_VISIT: false,
   INSTAGRAM_VISIT: false,
@@ -1060,6 +1101,7 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   STEAM_WISHLIST: true,
   STEAM_FOLLOW: true,
   TWITCH_FOLLOW: true,
+  TWITCH_CHAT_IMPORT: true,
   KICK_FOLLOW: true,
   YOUTUBE_VISIT: true,
   INSTAGRAM_VISIT: true,
@@ -1107,6 +1149,7 @@ export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
   DISCORD_JOIN: false,
   DISCORD_INTERACTION_IMPORT: false,
   TWITCH_FOLLOW: false,
+  TWITCH_CHAT_IMPORT: false,
   KICK_FOLLOW: false,
   SECRET_CODE: false,
   SECRET_CODE_V2: false,
@@ -1211,6 +1254,7 @@ export const TASK_VERIFICATION_REQUIREMENT: Record<
   DISCORD_JOIN: 'automatic',
   DISCORD_INTERACTION_IMPORT: 'automatic',
   TWITCH_FOLLOW: 'automatic',
+  TWITCH_CHAT_IMPORT: 'automatic',
   SECRET_CODE: 'automatic',
   SECRET_CODE_V2: 'automatic',
   ASK_QUESTION: 'manual',

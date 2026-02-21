@@ -125,6 +125,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         icon: SocialDiscordIcon
       };
     case 'TWITCH_FOLLOW':
+    case 'TWITCH_CHAT_IMPORT':
       return {
         action:
           'bg-twitch-1 text-white group-hover:bg-twitch-1 hover:bg-twitch-1 dark:bg-twitch-1 dark:hover:bg-twitch-1',

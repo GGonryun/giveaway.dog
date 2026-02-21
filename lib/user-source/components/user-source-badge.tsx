@@ -7,6 +7,7 @@ import { USER_SOURCE_ICON } from './user-source-icon';
 export const USER_SOURCE_BADGE_VARIANTS: Record<UserSource, BadgeVariants> = {
   TWITTER_IMPORT: 'secondary',
   BLUESKY_IMPORT: 'secondary',
+  TWITCH_IMPORT: 'secondary',
   SIGNUP: 'default',
   DISCORD_IMPORT: 'secondary',
   MANUAL_IMPORT: 'secondary',
@@ -24,6 +25,7 @@ export const UserSourceBadge: React.FC<{ source: UserSource }> = ({
       case 'TWITTER_IMPORT':
       case 'BLUESKY_IMPORT':
       case 'DISCORD_IMPORT':
+      case 'TWITCH_IMPORT':
       case 'MANUAL_IMPORT':
         return (
           <Badge variant={variant} className="text-xs p-0.5 [&>svg]:size-2">

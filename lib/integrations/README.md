@@ -1,3 +1,62 @@
+## Twitch
+
+### Authorizing the Bot to the App
+
+Request the correct permissions from Twitch as the bot user:
+
+```bash
+https://id.twitch.tv/oauth2/authorize?client_id=TWITCH_CLIENT_ID&redirect_uri=http://localhost:3000/api/twitch/callback&response_type=code&scope=user:write:chat%20user:read:chat%20user:bot%20chat:read%20chat:edit%20channel:bot
+```
+
+Exchange the authorization code for an access token:
+
+```bash
+curl -X POST 'https://id.twitch.tv/oauth2/token' \
+  -d 'client_id=TWITCH_CLIENT_ID' \
+  -d 'client_secret=TWITCH_CLIENT_SECRET' \
+  -d 'code=AUTH_CODE_FROM_RESPONSE' \
+  -d 'grant_type=authorization_code' \
+  -d 'redirect_uri=http://localhost:3000/api/twitch/callback'
+```
+
+### Getting Twitch User ID
+
+Getting User Auth Token
+
+```bash
+https://id.twitch.tv/oauth2/authorize?client_id=TWITCH_CLIENT_ID&redirect_uri=http://localhost:3000/api/twitch/callback&response_type=token&scope='user:read:chat user:bot'
+```
+
+After authorizing, you will be redirected to the redirect_uri with the access token in the URL fragment. Extract the access token from the URL.
+Use the access token to get the user ID:
+
+```bash
+curl -X GET "https://api.twitch.tv/helix/users?login=TWITCH_BOT_USERNAME" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+-H "Client-Id: TWITCH_CLIENT_ID"
+```
+
+Your data will look like this:
+
+```json
+{
+  "data": [
+    {
+      "id": "1430741885",
+      "login": "giveawaydog",
+      "display_name": "GiveawayDog",
+      "type": "",
+      "broadcaster_type": "",
+      "description": "",
+      "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/33d6ab73-b3ee-49b6-9e8e-74bd6bafcb6a-profile_image-300x300.png",
+      "offline_image_url": "",
+      "view_count": 0,
+      "created_at": "2026-01-22T06:38:58Z"
+    }
+  ]
+}
+```
+
 ## Discord
 
 ### Managing Discord Application Commands

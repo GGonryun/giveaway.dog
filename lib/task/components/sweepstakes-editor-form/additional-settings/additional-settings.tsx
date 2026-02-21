@@ -13,15 +13,18 @@ import { SecretCodeFormField } from './lib/secret-code';
 import { SecretCodesFormField } from './lib/secret-codes';
 import { TweetIdFormField } from './lib/tweet-id';
 import { TwitchFollowFormField } from './lib/twitch-follow';
+import { TwitchChatImportFormField } from './lib/twitch-chat-command';
+import { TwitchChannelUrlDisplay } from './lib/twitch-channel-url-display';
 import { TwitterUsernameFormField } from './lib/twitter-username';
 import { SecretHintFormField } from './lib/secret-hint';
 import { SteamAppIdFormField } from './lib/steam-app-id';
 import { MaxEntrantsField } from './lib/max-entrants';
 import { LoyaltyRequiredField } from './lib/bonus-loyalty';
 import {
-  ImportingAccountField,
+  TwitterImportingAccountField,
   ImportingTweetIdValidation
-} from './lib/importing-account';
+} from './lib/twitter-importing-account';
+import { BlueskyImportingAccountField } from './lib/bluesky-importing-account';
 import { InstagramProfileUrl, InstagramPostUrl } from './lib/instagram';
 import { FacebookPageUrl, FacebookPostUrl } from './lib/facebook';
 import { TikTokProfileUrl, TikTokPostUrl } from './lib/tiktok';
@@ -39,6 +42,8 @@ import { SteamDeveloperFormField } from './lib/steam-developer';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
 import { TaskType } from '@/lib/task/schemas';
+import { TwitchImportingAccountField } from './lib/twitch-importing-account';
+import { TwitchRateLimitField } from './lib/twitch-rate-limit';
 
 export const AdditionalSettings: React.FC<{
   type: TaskType;
@@ -127,7 +132,7 @@ export const AdditionalSettings: React.FC<{
       case 'TWITTER_RETWEET_IMPORT':
         return (
           <>
-            <ImportingAccountField />
+            <TwitterImportingAccountField />
             <TweetIdFormField />
             <ImportingTweetIdValidation />
           </>
@@ -142,7 +147,7 @@ export const AdditionalSettings: React.FC<{
       case 'BLUESKY_REPOST_IMPORT':
         return (
           <>
-            <ImportingAccountField />
+            <BlueskyImportingAccountField />
             <BlueskyPostUrlField />
           </>
         );
@@ -184,6 +189,15 @@ export const AdditionalSettings: React.FC<{
         );
       case 'TWITCH_FOLLOW':
         return <TwitchFollowFormField />;
+      case 'TWITCH_CHAT_IMPORT':
+        return (
+          <>
+            <TwitchImportingAccountField />
+            <TwitchChannelUrlDisplay />
+            <TwitchChatImportFormField />
+            <TwitchRateLimitField />
+          </>
+        );
       case 'KICK_FOLLOW':
         return <KickFollowFormField />;
       case 'YOUTUBE_VISIT':

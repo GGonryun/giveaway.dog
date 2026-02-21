@@ -97,6 +97,116 @@ export const REQUIRED_TWITCH_SCOPES = [
   'user:read:follows'
 ];
 
+export const twitchFeatureSchema = z.union([
+  z.literal('USER_PROFILE'),
+  z.literal('MODERATION_READ'),
+  z.literal('CHAT_COMMANDS'),
+  z.literal('CHANNEL_REDEMPTIONS')
+]);
+
+export type TwitchFeatureSchema = z.infer<typeof twitchFeatureSchema>;
+
+export const TWITCH_SCOPE_GROUPS: Record<TwitchFeatureSchema, string[]> = {
+  USER_PROFILE: ['user:read:email'],
+  MODERATION_READ: ['moderation:read'],
+  CHAT_COMMANDS: [],
+  CHANNEL_REDEMPTIONS: ['channel:read:redemptions']
+};
+
+export function getScopesForTwitchFeatures(
+  features: TwitchFeatureSchema[]
+): string[] {
+  const scopesSet = new Set<string>();
+
+  for (const feature of features) {
+    const scopes = TWITCH_SCOPE_GROUPS[feature];
+    for (const scope of scopes) {
+      scopesSet.add(scope);
+    }
+  }
+
+  return Array.from(scopesSet);
+}
+
+export const TWITCH_FEATURE_EVENTSUB: Record<
+  TwitchFeatureSchema,
+  { type: string; version: string; requiresBot: boolean } | null
+> = {
+  USER_PROFILE: null,
+  MODERATION_READ: null,
+  CHAT_COMMANDS: {
+    type: 'channel.chat.message',
+    version: '1',
+    requiresBot: true
+  },
+  CHANNEL_REDEMPTIONS: {
+    type: 'channel.channel_points_custom_reward_redemption.add',
+    version: '1',
+    requiresBot: false
+  }
+};
+
+export const TWITCH_FEATURE_LABEL: Record<TwitchFeatureSchema, string> = {
+  USER_PROFILE: 'User Profile',
+  MODERATION_READ: 'Moderation Access',
+  CHAT_COMMANDS: 'Chat Commands',
+  CHANNEL_REDEMPTIONS: 'Channel Point Redemptions'
+};
+
+export const TWITCH_FEATURE_DESCRIPTION: Record<TwitchFeatureSchema, string> = {
+  USER_PROFILE: 'Access your basic profile information and email.',
+  MODERATION_READ: 'Read moderation data and bot status.',
+  CHAT_COMMANDS:
+    'Allow viewers to enter giveaways by typing a command in chat.',
+  CHANNEL_REDEMPTIONS:
+    'Allow viewers to enter giveaways by redeeming channel points.'
+};
+
+export const TWITCH_FEATURE_REQUIREMENTS: Record<TwitchFeatureSchema, boolean> =
+  {
+    USER_PROFILE: true,
+    MODERATION_READ: true,
+    CHAT_COMMANDS: true,
+    CHANNEL_REDEMPTIONS: false
+  };
+
+export const TWITCH_FEATURE_OPTION: Record<TwitchFeatureSchema, boolean> = {
+  USER_PROFILE: true,
+  MODERATION_READ: true,
+  CHAT_COMMANDS: true,
+  CHANNEL_REDEMPTIONS: true
+};
+
+export const twitchFeatures = (
+  currentFeatures: TwitchFeatureSchema[]
+): IntegrationFeatureConfig[] =>
+  widetype
+    .entries(TWITCH_FEATURE_OPTION)
+    .filter(([_, value]) => value)
+    .map(([key]) => ({
+      id: key,
+      label: TWITCH_FEATURE_LABEL[key],
+      description: TWITCH_FEATURE_DESCRIPTION[key],
+      required: TWITCH_FEATURE_REQUIREMENTS[key],
+      alreadyGranted: currentFeatures.includes(key)
+    }));
+
+export function getEventSubTypesForTwitchFeatures(
+  features: TwitchFeatureSchema[]
+): Array<{ type: string; version: string; requiresBot: boolean }> {
+  const allFeatures: TwitchFeatureSchema[] = ['CHAT_COMMANDS', ...features];
+  const uniqueFeatures = Array.from(new Set(allFeatures));
+
+  return uniqueFeatures
+    .map((feature) => TWITCH_FEATURE_EVENTSUB[feature])
+    .filter(
+      (
+        eventsub
+      ): eventsub is { type: string; version: string; requiresBot: boolean } =>
+        eventsub !== null
+    );
+}
+
 export const REQUIRED_KICK_SCOPES = ['user:read'];
 
 export const REQUIRED_VELORA_SCOPES = ['user:read'];

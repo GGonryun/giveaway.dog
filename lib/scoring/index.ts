@@ -4,6 +4,7 @@ import { computeSignupUserScore } from './signup';
 import { computeTwitterUserScore } from './twitter';
 import { computeBlueskyUserScore } from './bluesky';
 import { computeDiscordUserScore } from './discord';
+import { computeTwitchUserScore } from './twitch';
 import { assertNever } from '../errors';
 
 // Routes to appropriate scoring function based on user source
@@ -40,6 +41,9 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
       await computeBlueskyUserScore(tx, userId, scoringRequest?.data);
       break;
 
+    case UserSource.TWITCH_IMPORT:
+      await computeTwitchUserScore(tx, userId);
+      break;
     default:
       throw assertNever(user.source);
   }

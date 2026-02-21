@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Globe, MoreVertical, CheckCircle } from 'lucide-react';
+import { Globe, MoreVertical, CheckCircle, Trash2 } from 'lucide-react';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { UserSchema } from '@/schemas/user';
@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { VerificationInstructionsDialog } from './verification-instructions-dialog';
+import { DeleteEntryDialog } from './delete-entry-dialog';
 
 interface SweepstakesEntriesProps {
   slug: string;
@@ -44,6 +45,7 @@ export const SweepstakesEntries = ({
 
   const [currentPage, setCurrentPage] = useState(1);
   const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCompletion, setSelectedCompletion] =
     useState<UserEntriesSchema | null>(null);
 
@@ -79,6 +81,15 @@ export const SweepstakesEntries = ({
     e.stopPropagation();
     setSelectedCompletion(completion);
     setVerifyDialogOpen(true);
+  };
+
+  const handleDeleteClick = (
+    e: React.MouseEvent,
+    completion: UserEntriesSchema
+  ) => {
+    e.stopPropagation();
+    setSelectedCompletion(completion);
+    setDeleteDialogOpen(true);
   };
 
   return (
@@ -178,6 +189,13 @@ export const SweepstakesEntries = ({
                         <CheckCircle className="h-4 w-4 mr-2" />
                         Verify Entry
                       </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={(e) => handleDeleteClick(e, completion)}
+                        className="text-destructive focus:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete Entry
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -198,15 +216,24 @@ export const SweepstakesEntries = ({
       </Card>
 
       {selectedCompletion && (
-        <VerificationInstructionsDialog
-          open={verifyDialogOpen}
-          onOpenChange={setVerifyDialogOpen}
-          taskCompletionId={selectedCompletion.id}
-          sweepstakesId={sweepstakesId}
-          task={selectedCompletion.task}
-          user={selectedCompletion.user}
-          currentStatus={selectedCompletion.status}
-        />
+        <>
+          <VerificationInstructionsDialog
+            open={verifyDialogOpen}
+            onOpenChange={setVerifyDialogOpen}
+            taskCompletionId={selectedCompletion.id}
+            sweepstakesId={sweepstakesId}
+            task={selectedCompletion.task}
+            user={selectedCompletion.user}
+            currentStatus={selectedCompletion.status}
+          />
+          <DeleteEntryDialog
+            open={deleteDialogOpen}
+            onOpenChange={setDeleteDialogOpen}
+            completion={selectedCompletion}
+            sweepstakesId={sweepstakesId}
+            onDeleted={() => router.refresh()}
+          />
+        </>
       )}
     </>
   );

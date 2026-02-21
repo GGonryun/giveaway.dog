@@ -26,7 +26,8 @@ export const getTeamIntegrations = procedure()
         id: true,
         integrations: {
           include: {
-            state: true
+            state: true,
+            subscriptions: true
           }
         }
       }
@@ -48,6 +49,7 @@ export const getTeamIntegrations = procedure()
       status: i.status,
       scopes: i.scope ? i.scope.split(' ') : [],
       settings: i.settings,
-      state: i.state
+      state: i.state,
+      subscriptions: i.subscriptions
     }));
   });

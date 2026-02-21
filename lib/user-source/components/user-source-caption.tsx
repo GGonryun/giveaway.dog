@@ -26,8 +26,20 @@ export const UserSourceCaption: React.FC<{
       }
       return <>@{provider.label}</>;
     }
-    case 'DISCORD_IMPORT':
-      return <>Imported from Discord</>;
+    case 'DISCORD_IMPORT': {
+      const provider = user.providers?.find((p) => p.type === 'DISCORD');
+      if (!provider) {
+        return <>Imported from Discord</>;
+      }
+      return <>@{provider.label}</>;
+    }
+    case 'TWITCH_IMPORT': {
+      const provider = user.providers?.find((p) => p.type === 'TWITCH');
+      if (!provider) {
+        return <>Imported from Twitch</>;
+      }
+      return <>@{provider.label}</>;
+    }
     case 'MANUAL_IMPORT':
       return <>Manually imported</>;
     case 'ANONYMOUS':

@@ -36,7 +36,9 @@ export const fetchAllRetweetersForTweet = async ({
   );
 
   while (hasMore && apiCallCount < maxApiCalls) {
-    console.info(`Fetching retweeters batch ${apiCallCount + 1}, current user count=${users.length}`);
+    console.info(
+      `Fetching retweeters batch ${apiCallCount + 1}, current user count=${users.length}`
+    );
     const response = await client.twitter.tweets.getRetweeters(tweetId, {
       cursor,
       count: 20
@@ -57,7 +59,9 @@ export const fetchAllRetweetersForTweet = async ({
     }
   }
 
-  console.info(`Finished fetching retweeters, total count=${users.length}, API calls=${apiCallCount}`);
+  console.info(
+    `Finished fetching retweeters, total count=${users.length}, API calls=${apiCallCount}`
+  );
   return {
     users,
     nextCursor: cursor,

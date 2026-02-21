@@ -3,8 +3,10 @@ import z from 'zod';
 import {
   TWITTER_SCOPE_GROUPS,
   BLUESKY_SCOPE_GROUPS,
+  TWITCH_SCOPE_GROUPS,
   type TwitterFeatureSchema,
-  type BlueskyFeatureSchema
+  type BlueskyFeatureSchema,
+  type TwitchFeatureSchema
 } from '../scopes';
 import { Nil } from '@/lib/types';
 
@@ -30,7 +32,25 @@ export const integrationSchema = z.object({
       value: z.unknown(),
       expiresAt: z.coerce.date().nullish()
     })
-    .nullish()
+    .nullish(),
+  subscriptions: z
+    .array(
+      z.object({
+        id: z.string(),
+        twitch_id: z.string(),
+        integrationId: z.string(),
+        type: z.string(),
+        version: z.string(),
+        status: z.string(),
+        broadcaster_user_id: z.string(),
+        cost: z.number(),
+        callback: z.string(),
+        method: z.string(),
+        created_at: z.coerce.date(),
+        last_event_received_at: z.coerce.date().nullable()
+      })
+    )
+    .optional()
 });
 
 export type IntegrationSchema = z.infer<typeof integrationSchema>;
@@ -53,6 +73,11 @@ type BlueskyIntegration = IntegrationSchema & {
   provider: typeof IntegrationProvider.BLUESKY;
 };
 
+// Type for Twitch integration
+type TwitchIntegration = IntegrationSchema & {
+  provider: typeof IntegrationProvider.TWITCH;
+};
+
 // Function overloads for type safety
 export function hasFeature(
   integration: Nil<TwitterIntegration>,
@@ -63,8 +88,12 @@ export function hasFeature(
   feature: BlueskyFeatureSchema
 ): boolean;
 export function hasFeature(
+  integration: Nil<TwitchIntegration>,
+  feature: TwitchFeatureSchema
+): boolean;
+export function hasFeature(
   integration: Nil<IntegrationSchema>,
-  feature: TwitterFeatureSchema | BlueskyFeatureSchema
+  feature: TwitterFeatureSchema | BlueskyFeatureSchema | TwitchFeatureSchema
 ): boolean {
   if (!integration?.scopes) return false;
 
@@ -87,6 +116,14 @@ export function hasFeature(
     if (!integration.scopes) return false;
     const blueskyFeature = feature as BlueskyFeatureSchema;
     const requiredScopes = BLUESKY_SCOPE_GROUPS[blueskyFeature];
+    if (!requiredScopes) return false;
+    return requiredScopes.every((scope) => integration.scopes!.includes(scope));
+  }
+
+  if (integration.provider === IntegrationProvider.TWITCH) {
+    if (!integration.scopes) return false;
+    const twitchFeature = feature as TwitchFeatureSchema;
+    const requiredScopes = TWITCH_SCOPE_GROUPS[twitchFeature];
     if (!requiredScopes) return false;
     return requiredScopes.every((scope) => integration.scopes!.includes(scope));
   }

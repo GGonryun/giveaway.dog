@@ -353,6 +353,31 @@ export const applySweepstakesChanges = async ({
         });
       }
 
+      if (
+        input.timing?.startDate &&
+        input.timing?.endDate &&
+        input.status === SweepstakesStatus.ACTIVE
+      ) {
+        await tx.sweepstakesJob.upsert({
+          where: {
+            sweepstakesId_type: {
+              sweepstakesId: sweepstakes.id,
+              type: SweepstakesJobType.PROCESS_MODIFICATION
+            }
+          },
+          update: {
+            status: SweepstakesJobStatus.PENDING,
+            runAt: new Date()
+          },
+          create: {
+            sweepstakesId: sweepstakes.id,
+            type: SweepstakesJobType.PROCESS_MODIFICATION,
+            status: SweepstakesJobStatus.PENDING,
+            runAt: new Date()
+          }
+        });
+      }
+
       if (input.timing?.endDate && input.status === SweepstakesStatus.ACTIVE) {
         await tx.sweepstakesJob.upsert({
           where: {

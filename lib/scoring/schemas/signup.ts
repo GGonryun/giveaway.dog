@@ -21,6 +21,7 @@ import z from 'zod';
 import { twitterScoreMetricsSchema, TwitterScoreMetrics } from './twitter';
 import { blueskyScoreMetricsSchema, BlueskyScoreMetrics } from './bluesky';
 import { discordScoreMetricsSchema, DiscordScoreMetrics } from './discord';
+import { twitchScoreMetricsSchema, TwitchScoreMetrics } from './twitch';
 
 export const USER_BASE_SCORE = 30;
 export const MAX_SCORING_REQUESTS_PER_RUN = 15;
@@ -216,6 +217,16 @@ export const discordImportUserQualitySchema = z.object({
   updatedAt: z.coerce.date()
 });
 
+export const twitchImportUserQualitySchema = z.object({
+  type: z.literal('TWITCH_IMPORT'),
+  id: z.string(),
+  userId: z.string(),
+  score: z.number(),
+  metrics: twitchScoreMetricsSchema,
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date()
+});
+
 // Discriminated union schema - enables proper type narrowing based on 'type' field
 export const userQualitySchema = z.discriminatedUnion('type', [
   signupUserQualitySchema,
@@ -223,7 +234,8 @@ export const userQualitySchema = z.discriminatedUnion('type', [
   twitterUserQualitySchema,
   blueskyUserQualitySchema,
   manualImportUserQualitySchema,
-  discordImportUserQualitySchema
+  discordImportUserQualitySchema,
+  twitchImportUserQualitySchema
 ]);
 
 export type UserQualitySchema = z.infer<typeof userQualitySchema>;
@@ -238,6 +250,9 @@ export type ManualImportUserQualitySchema = z.infer<
 >;
 export type DiscordImportUserQualitySchema = z.infer<
   typeof discordImportUserQualitySchema
+>;
+export type TwitchImportUserQualitySchema = z.infer<
+  typeof twitchImportUserQualitySchema
 >;
 
 export const DEFAULT_USER_SCORE_METRICS: UserScoreMetricsSchema = {
@@ -296,6 +311,11 @@ export const DEFAULT_DISCORD_SCORE_METRICS: DiscordScoreMetrics = {
   nitroBooster: 0,
   unusualDmActivity: 0,
   communicationDisabled: 0
+};
+
+// Fallback metrics for Twitch imports with base score
+export const DEFAULT_TWITCH_SCORE_METRICS: TwitchScoreMetrics = {
+  baseScore: USER_BASE_SCORE
 };
 
 // Helper functions to convert platform-specific metrics
@@ -415,6 +435,34 @@ const toDiscordImportQuality = (
   };
 };
 
+const toTwitchImportQuality = (
+  data: Prisma.UserQualityGetPayload<{
+    include: { user: { select: { source: true } } };
+  }>
+): TwitchImportUserQualitySchema => {
+  const twitchMetrics = twitchScoreMetricsSchema.safeParse(data.metrics);
+
+  if (!twitchMetrics.success) {
+    console.error(
+      'Invalid Twitch metrics for TWITCH_IMPORT user:',
+      twitchMetrics.error
+    );
+    console.error('Metrics data:', data.metrics);
+  }
+
+  return {
+    type: 'TWITCH_IMPORT' as const,
+    id: data.id,
+    userId: data.userId,
+    score: clamp(data.score, 0, 100),
+    metrics: twitchMetrics.success
+      ? twitchMetrics.data
+      : DEFAULT_TWITCH_SCORE_METRICS,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt
+  };
+};
+
 export const toUserQuality = (
   data: Prisma.UserQualityGetPayload<{
     include: { user: { select: { source: true } } };
@@ -435,6 +483,8 @@ export const toUserQuality = (
       return toSignupUserQuality(data, 'MANUAL_IMPORT');
     case 'DISCORD_IMPORT':
       return toDiscordImportQuality(data);
+    case 'TWITCH_IMPORT':
+      return toTwitchImportQuality(data);
     default:
       throw assertNever(userSource);
   }

@@ -9,12 +9,14 @@ import {
   LucideIcon,
   VerifiedIcon
 } from 'lucide-react';
+import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
 
 export const USER_SOURCE_ICON: Record<UserSource, LucideIcon> = {
   TWITTER_IMPORT: SocialXIcon,
   BLUESKY_IMPORT: SocialBlueskyIcon,
   SIGNUP: VerifiedIcon,
   DISCORD_IMPORT: SocialDiscordIcon,
+  TWITCH_IMPORT: SocialTwitchIcon,
   MANUAL_IMPORT: EditIcon,
   ANONYMOUS: HatGlassesIcon
 };

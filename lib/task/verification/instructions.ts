@@ -738,6 +738,29 @@ export function getVerificationInstructions(args: {
           }
         ]
       };
+    case 'TWITCH_CHAT_IMPORT':
+      return {
+        title: 'Verify Twitch Chat Command (Automatic)',
+        description: `This task is automatically verified via Twitch Chat`,
+        steps: [
+          {
+            step: 1,
+            instruction:
+              'This task is automatically verified when the user sends the specified command in your Twitch chat',
+            note: 'The system listens for the command and marks the task as complete'
+          },
+          {
+            step: 2,
+            instruction:
+              'Check the proof section to see if the command was detected'
+          },
+          {
+            step: 3,
+            instruction:
+              'If verification failed, ensure the user sent the exact command as specified'
+          }
+        ]
+      };
 
     case 'VELORA_CONNECT':
       return {

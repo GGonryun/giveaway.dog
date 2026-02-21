@@ -48,6 +48,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
     referral
   } = useGiveawayParticipation();
 
+  // TODO: render all submissions in task list items
   const submission: UserTaskSubmissionSchema | undefined = useMemo(
     () => allSubmissions.find((c) => c.taskId === task.id),
     [allSubmissions, task.id]
