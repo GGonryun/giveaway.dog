@@ -2,16 +2,16 @@ import { useTeams } from '@/components/context/team-provider';
 import { useUpdateParams } from '@/components/hooks/use-update-params';
 import { useRouter } from 'next/navigation';
 
-export const usePickersNavigation = () => {
+export const usePickersV2Navigation = () => {
   const router = useRouter();
   const { activeTeam } = useTeams();
   const updateParams = useUpdateParams();
 
   const editRoute = (pickerId: string) =>
-    `/app/${activeTeam.slug}/pickers/twitter/${pickerId}/edit`;
+    `/app/${activeTeam.slug}/pickers/x/${pickerId}/edit`;
 
   const detailsRoute = (pickerId: string) =>
-    `/app/${activeTeam.slug}/pickers/twitter/${pickerId}`;
+    `/app/${activeTeam.slug}/pickers/x/${pickerId}`;
 
   const navigateToDetails = (pickerId: string) => {
     router.push(detailsRoute(pickerId));

@@ -10,18 +10,17 @@ import { Button } from '@/components/ui/button';
 import { AlertTriangleIcon, Trash2Icon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { PickersListItemSchema } from '../schemas/list';
-import { DEFAULT_PICKER_NAME } from '../data/defaults';
+import { PickersV2ListItemSchema } from '../schemas/list';
 import { useProcedure } from '@/lib/mrpc/hook';
-import { deletePicker } from '../procedures/delete-picker';
+import { deleteTwitterV2PickerFromList } from '../procedures/delete-twitter-v2-picker-from-list';
 import { useRouter } from 'next/navigation';
 
-interface DeletePickerModalProps {
+interface DeletePickerV2ModalProps {
   onClose: () => void;
-  picker: Pick<PickersListItemSchema, 'pickerId' | 'name'> | null;
+  picker: Pick<PickersV2ListItemSchema, 'pickerId' | 'name'> | null;
 }
 
-export const DeletePickerModal: React.FC<DeletePickerModalProps> = ({
+export const DeletePickerV2Modal: React.FC<DeletePickerV2ModalProps> = ({
   onClose,
   picker
 }) => {
@@ -29,7 +28,7 @@ export const DeletePickerModal: React.FC<DeletePickerModalProps> = ({
   const [confirmText, setConfirmText] = useState('');
 
   const deleteProcedure = useProcedure({
-    action: deletePicker,
+    action: deleteTwitterV2PickerFromList,
     onSuccess() {
       toast.success('Picker deleted');
       router.refresh();
@@ -38,7 +37,7 @@ export const DeletePickerModal: React.FC<DeletePickerModalProps> = ({
   });
 
   const isConfirmDisabled = useMemo(() => {
-    const name = picker?.name || DEFAULT_PICKER_NAME;
+    const name = picker?.name || '';
     return (
       confirmText.toLowerCase() !== name.toLowerCase() ||
       deleteProcedure.isLoading
@@ -59,14 +58,11 @@ export const DeletePickerModal: React.FC<DeletePickerModalProps> = ({
     }
   };
 
-  const name = useMemo(
-    () => picker?.name || DEFAULT_PICKER_NAME,
-    [picker?.name]
-  );
+  const name = useMemo(() => picker?.name || '', [picker?.name]);
 
   return (
     <Dialog open={Boolean(picker)} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-125">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-destructive">
             <AlertTriangleIcon className="h-5 w-5" />

@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 
-export const deletePicker = procedure()
+export const deleteTwitterV2PickerFromList = procedure()
   .authorization({
     required: true
   })
@@ -13,7 +13,7 @@ export const deletePicker = procedure()
     })
   )
   .handler(async ({ input: { pickerId }, db }) => {
-    return await db.picker.deleteMany({
+    return await db.twitterPicker.deleteMany({
       where: {
         id: pickerId
       }

@@ -30,7 +30,7 @@
     "prisma:generate:production": "dotenv -e .env.prod -- npx prisma generate",
     "docker:psql:local": "docker run --name psql -e POSTGRES_PASSWORD=prisma -e POSTGRES_USER=prisma -e POSTGRES_DB=prisma -d -p 5432:5432 postgres",
     "docker:compose:up": "docker-compose up -d",
-    "rollback": "dotenv -e .env.prod -- npx prisma migrate resolve --rolled-back \"20251228233756\""
+    "rollback": "dotenv -e .env.prod -- npx prisma migrate resolve --rolled-back \"20260214060735\""
   },
   "dependencies": {
     "@atproto/api": "^0.18.8",

@@ -15,8 +15,7 @@ export const pickersListItemSchema = z.object({
   status: pickerStatusSchema,
   type: pickerTypeSchema,
   updatedAt: z.coerce.date(),
-  name: z.string(),
-  isV2: z.boolean().optional()
+  name: z.string()
 });
 
 export type PickersListItemSchema = z.infer<typeof pickersListItemSchema>;
@@ -29,7 +28,8 @@ export type PickersListSchema = z.infer<typeof pickersListSchema>;
 
 export const listPickersFilterSchema = z
   .object({
-    status: pickerFilterStatusSchema
+    status: pickerFilterStatusSchema,
+    type: pickerTypeSchema
   })
   .partial();
 
@@ -38,6 +38,7 @@ export type ListPickersFilterSchema = z.infer<typeof listPickersFilterSchema>;
 export const toPickersFilter = (s: unknown): ListPickersFilterSchema => {
   const obj = s as Record<string, string>;
   return {
-    status: (obj.status as PickerFilterStatus) || 'ALL'
+    status: (obj.status as PickerFilterStatus) || 'ALL',
+    type: obj.type ? (obj.type as PickerTypeSchema) : undefined
   };
 };

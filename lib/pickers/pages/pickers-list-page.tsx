@@ -8,7 +8,8 @@ import { ListPickersFilterSchema, toPickersFilter } from '../schemas/list';
 import { CreatePickerButton } from '../components/create-picker-button';
 import { PickersTable } from '../components/pickers-table';
 import { PickersTabs } from '../components/pickers-tabs';
-import { getPickersList } from '../procedures/get-pickers-list';
+import { getPickersLegacyList } from '../procedures/get-pickers-legacy-list';
+import { getPickersV2List } from '@/lib/pickers-v2/twitter-v2/procedures/get-pickers-v2-list';
 
 type PickersListPageProps = {
   params: Promise<TeamPageProps>;
@@ -41,14 +42,29 @@ const PickersWrapper: React.FC<{
   filters: ListPickersFilterSchema;
   slug: string;
 }> = async ({ filters, slug }) => {
-  const list = await getPickersList({
-    ...filters,
-    slug: slug
-  });
+  const [legacyList, v2List] = await Promise.all([
+    getPickersLegacyList({
+      status: filters.status,
+      type: filters.type,
+      slug: slug
+    }),
+    getPickersV2List({
+      status: filters.status,
+      slug: slug
+    })
+  ]);
 
-  if (!list.ok) {
-    return <div>Error loading pickers: {list.data.message}</div>;
+  if (!legacyList.ok) {
+    return <div>Error loading legacy pickers: {legacyList.data.message}</div>;
   }
 
-  return <PickersTable data={list.data} />;
+  if (!v2List.ok) {
+    return <div>Error loading v2 pickers: {v2List.data.message}</div>;
+  }
+
+  const allPickers = [...legacyList.data.pickers, ...v2List.data.pickers].sort(
+    (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+  );
+
+  return <PickersTable data={{ pickers: allPickers }} />;
 };

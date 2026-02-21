@@ -1,0 +1,89 @@
+import { Suspense } from 'react';
+import { Outline } from '@/components/app/outline';
+import { TeamPageProps } from '@/schemas/pages';
+import {
+  ListPickersV2FilterSchema,
+  toPickersV2Filter
+} from '@/lib/pickers-v2/twitter-v2/schemas/list';
+import { CreatePickerV2Button } from '@/lib/pickers-v2/twitter-v2/components/create-picker-v2-button';
+import { PickersV2Table } from '@/lib/pickers-v2/twitter-v2/components/pickers-v2-table';
+import { PickersTabs } from '@/lib/pickers/components/pickers-tabs';
+import { getPickersV2List } from '@/lib/pickers-v2/twitter-v2/procedures/get-pickers-v2-list';
+import { XPickersUpgradeCTA } from '@/lib/pickers-v2/twitter-v2/components/x-pickers-upgrade-cta';
+import { hasMinimumTeamTier } from '@/lib/team/util';
+import { TeamTier } from '@prisma/client';
+import db from '@/lib/prisma';
+import { auth } from '@/lib/auth/config';
+
+type XPickersPageProps = {
+  params: Promise<TeamPageProps>;
+  searchParams: Promise<ListPickersV2FilterSchema>;
+};
+
+export default async function XPickersPage(props: XPickersPageProps) {
+  const { slug } = await props.params;
+  const resolvedSearchParams = await props.searchParams;
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return <div>Unauthorized</div>;
+  }
+
+  const team = await db.team.findFirst({
+    where: {
+      slug,
+      members: {
+        some: {
+          userId: session.user.id
+        }
+      }
+    },
+    select: {
+      tier: true
+    }
+  });
+
+  if (!team) {
+    return <div>Team not found</div>;
+  }
+
+  const hasProTier = hasMinimumTeamTier({
+    tier: TeamTier.PRO,
+    team
+  });
+
+  if (!hasProTier) {
+    return <XPickersUpgradeCTA slug={slug} />;
+  }
+
+  const filters = toPickersV2Filter(resolvedSearchParams);
+
+  return (
+    <Outline title="X Picker" action={<CreatePickerV2Button />}>
+      <PickersTabs filters={filters}>
+        <Suspense
+          fallback={<div>Loading pickers...</div>}
+          key={JSON.stringify(filters)}
+        >
+          <PickersWrapper filters={filters} slug={slug} />
+        </Suspense>
+      </PickersTabs>
+    </Outline>
+  );
+}
+
+const PickersWrapper: React.FC<{
+  filters: ListPickersV2FilterSchema;
+  slug: string;
+}> = async ({ filters, slug }) => {
+  const list = await getPickersV2List({
+    ...filters,
+    slug: slug
+  });
+
+  if (!list.ok) {
+    return <div>Error loading pickers: {list.data.message}</div>;
+  }
+
+  return <PickersV2Table data={list.data} />;
+};

@@ -45,6 +45,5 @@ export const TWITCH_BONUS_METRICS: TwitchMetricKey[] = widetype
   .keys(TWITCH_METRIC_TYPE)
   .filter((key) => TWITCH_METRIC_TYPE[key] === 'bonus');
 
-export const TWITCH_METRIC_KEYS: TwitchMetricKey[] = widetype.keys(
-  TWITCH_METRIC_LABELS
-);
+export const TWITCH_METRIC_KEYS: TwitchMetricKey[] =
+  widetype.keys(TWITCH_METRIC_LABELS);

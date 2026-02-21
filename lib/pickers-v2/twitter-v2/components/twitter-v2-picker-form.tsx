@@ -99,7 +99,7 @@ const FormContent: React.FC<FormContentProps> = ({ pickerId, action }) => {
     onSuccess: () => {
       toast.success('Picker saved successfully!');
       form.reset(form.getValues());
-      router.push(`/app/${team.slug}/pickers`);
+      router.push(`/app/${team.slug}/pickers/x`);
     }
   });
 

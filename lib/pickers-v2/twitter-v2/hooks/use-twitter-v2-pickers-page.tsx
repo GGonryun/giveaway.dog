@@ -11,7 +11,7 @@ export const useTwitterV2PickersPage = () => {
   const { activeTeam } = useTeams();
 
   const listPath = useMemo(
-    () => `/app/${activeTeam.slug}/pickers`,
+    () => `/app/${activeTeam.slug}/pickers/x`,
     [activeTeam]
   );
   const selectTypePath = useMemo(() => `${listPath}/create`, [listPath]);

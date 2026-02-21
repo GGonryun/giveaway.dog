@@ -23,37 +23,35 @@ import { Eye, Edit, Trash2, MoreHorizontal, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
-import { PickersListItemSchema, PickersListSchema } from '../schemas/list';
-import { usePickersNavigation } from '../hooks/use-pickers-navigation';
-import { DEFAULT_PICKER_NAME } from '../data/defaults';
-import { CreatePickerButton } from './create-picker-button';
-import { DeletePickerModal } from './delete-picker-modal';
-import { EDITABLE_PICKER_STATUS } from '../schemas/status';
-import { PickerStatusBadge } from './picker-status-badge';
+import { PickersV2ListItemSchema, PickersV2ListSchema } from '../schemas/list';
+import { usePickersV2Navigation } from '../hooks/use-pickers-v2-navigation';
+import { CreatePickerV2Button } from './create-picker-v2-button';
+import { EDITABLE_PICKER_STATUS } from '@/lib/pickers/schemas/status';
+import { PickerStatusBadge } from '@/lib/pickers/components/picker-status-badge';
 import { datetime } from '@/lib/date';
-import { PickerTypeLogo } from './picker-type-logo';
+import { PickerTypeLogo } from '@/lib/pickers/components/picker-type-logo';
+import { DeletePickerV2Modal } from './delete-picker-v2-modal';
 
-interface PickersTableProps {
-  data: PickersListSchema;
+interface PickersV2TableProps {
+  data: PickersV2ListSchema;
 }
 
-export function PickersTable({ data }: PickersTableProps) {
+export function PickersV2Table({ data }: PickersV2TableProps) {
   const { pickers } = data;
-  const router = usePickersNavigation();
+  const router = usePickersV2Navigation();
 
   const totalCount = pickers.length;
   const currentPage = 1;
   const totalPages = Math.ceil(totalCount / DEFAULT_PAGE_SIZE);
 
-  const [deleteModal, setDeleteModal] = useState<PickersListItemSchema | null>(
-    null
-  );
+  const [deleteModal, setDeleteModal] =
+    useState<PickersV2ListItemSchema | null>(null);
 
   const handleDeleteModalClose = () => {
     setDeleteModal(null);
   };
 
-  const handleRowClick = (item: PickersListItemSchema) => () => {
+  const handleRowClick = (item: PickersV2ListItemSchema) => () => {
     if (item.status === 'DRAFT') {
       router.navigateToEdit(item.pickerId);
     } else {
@@ -87,7 +85,7 @@ export function PickersTable({ data }: PickersTableProps) {
                       <div className="flex items-center space-x-2">
                         <PickerTypeLogo type={item.type} />
                         <div className="font-medium group-hover:text-primary group-hover:underline line-clamp-1">
-                          {item.name || DEFAULT_PICKER_NAME}
+                          {item.name}
                         </div>
                       </div>
                     </div>
@@ -152,7 +150,7 @@ export function PickersTable({ data }: PickersTableProps) {
           <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-4">
             <Calendar className="h-8 w-8 opacity-50" />
             <p>No pickers found</p>
-            <CreatePickerButton text="Create Your First Picker" />
+            <CreatePickerV2Button text="Create Your First Picker" />
           </div>
         )}
         <TablePagination
@@ -169,7 +167,7 @@ export function PickersTable({ data }: PickersTableProps) {
         />
       </Card>
 
-      <DeletePickerModal
+      <DeletePickerV2Modal
         onClose={handleDeleteModalClose}
         picker={deleteModal}
       />

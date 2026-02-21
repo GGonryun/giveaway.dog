@@ -6,9 +6,9 @@ import { useTeams } from '@/components/context/team-provider';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useProcedure } from '@/lib/mrpc/hook';
-import { createPicker } from '../procedures/create-picker';
+import { createTwitterPicker } from '../procedures/create-twitter-v2-picker';
 
-export const CreatePickerButton: React.FC<{
+export const CreatePickerV2Button: React.FC<{
   text?: string;
   showIcon?: boolean;
 }> = ({ text = 'Create', showIcon = true }) => {
@@ -16,9 +16,9 @@ export const CreatePickerButton: React.FC<{
   const router = useRouter();
 
   const createProcedure = useProcedure({
-    action: createPicker,
+    action: createTwitterPicker,
     onSuccess: (data) => {
-      router.push(`/app/${activeTeam.slug}/pickers/twitter/${data.id}/create`);
+      router.push(`/app/${activeTeam.slug}/pickers/x/${data.id}/create`);
     }
   });
 

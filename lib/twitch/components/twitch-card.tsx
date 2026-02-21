@@ -52,12 +52,16 @@ export function TwitchCard({ integration }: TwitchCardProps) {
   const disconnect = useProcedure({
     action: disconnectTwitch,
     onSuccess() {
-      toast.success(`${IDENTITY_PROVIDER_LABEL.TWITCH} disconnected successfully`);
+      toast.success(
+        `${IDENTITY_PROVIDER_LABEL.TWITCH} disconnected successfully`
+      );
       setDisconnectDialogOpen(false);
       router.refresh();
     },
     onFailure(error) {
-      toast.error(`Failed to disconnect ${IDENTITY_PROVIDER_LABEL.TWITCH}: ${error.message}`);
+      toast.error(
+        `Failed to disconnect ${IDENTITY_PROVIDER_LABEL.TWITCH}: ${error.message}`
+      );
     }
   });
 

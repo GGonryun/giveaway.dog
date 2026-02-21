@@ -90,7 +90,9 @@ export const TwitterImportingAccountField: React.FC = () => {
                 <Button asChild variant="outline" size="sm" className="w-fit">
                   <Link href={`/app/${slug}/settings/integrations`}>
                     <SocialXIcon className="h-4 w-4 mr-2" />
-                    {hasTwitterButNoPermission ? 'Add Permissions' : 'Connect X'}
+                    {hasTwitterButNoPermission
+                      ? 'Add Permissions'
+                      : 'Connect X'}
                   </Link>
                 </Button>
               </AlertDescription>

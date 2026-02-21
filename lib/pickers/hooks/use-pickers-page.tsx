@@ -11,7 +11,7 @@ export const usePickersPage = () => {
   const { activeTeam } = useTeams();
 
   const listPath = useMemo(
-    () => `/app/${activeTeam.slug}/pickers`,
+    () => `/app/${activeTeam.slug}/pickers/twitter`,
     [activeTeam]
   );
   const selectTypePath = useMemo(() => `${listPath}/create`, [listPath]);

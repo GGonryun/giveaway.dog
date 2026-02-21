@@ -36,7 +36,9 @@ export const getBotAccessToken = async (): Promise<string | null> => {
   return refreshBotToken();
 };
 
-export const invalidateAndRefreshBotToken = async (): Promise<string | null> => {
+export const invalidateAndRefreshBotToken = async (): Promise<
+  string | null
+> => {
   await redis.del(BOT_TOKEN_CACHE_KEY);
   return refreshBotToken();
 };

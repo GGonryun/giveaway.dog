@@ -47,6 +47,9 @@ export const sendChatMessage = async (
 
   if (!response.ok) {
     const body = await response.text();
-    console.error(`[Twitch] Failed to send chat message: ${response.status}`, body);
+    console.error(
+      `[Twitch] Failed to send chat message: ${response.status}`,
+      body
+    );
   }
 };

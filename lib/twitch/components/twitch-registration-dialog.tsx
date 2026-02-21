@@ -96,8 +96,8 @@ export function TwitchRegistrationDialog({
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Run this command in your Twitch chat, or go to Creator
-              Dashboard &rarr; Settings &rarr; Moderation
+              Run this command in your Twitch chat, or go to Creator Dashboard
+              &rarr; Settings &rarr; Moderation
             </p>
           </AlertDescription>
         </Alert>

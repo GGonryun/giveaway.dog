@@ -35,7 +35,8 @@ export const TwitchIntegrationCheck: React.FC = () => {
   const slug = params.slug as string;
   const { integrations } = useUnifiedFormLayout<SweepstakeStep>();
 
-  const twitchIntegrations = getTwitchIntegrationsWithChatCommands(integrations);
+  const twitchIntegrations =
+    getTwitchIntegrationsWithChatCommands(integrations);
   const hasTwitchButNoPermission = hasTwitchWithoutChatCommands(integrations);
 
   if (twitchIntegrations.length === 0) {
@@ -51,9 +52,7 @@ export const TwitchIntegrationCheck: React.FC = () => {
           <Button asChild variant="outline" size="sm" className="w-fit">
             <Link href={`/app/${slug}/settings/integrations`}>
               <SocialTwitchIcon className="h-4 w-4 mr-2" />
-              {hasTwitchButNoPermission
-                ? 'Add Permissions'
-                : 'Connect Twitch'}
+              {hasTwitchButNoPermission ? 'Add Permissions' : 'Connect Twitch'}
             </Link>
           </Button>
         </AlertDescription>
