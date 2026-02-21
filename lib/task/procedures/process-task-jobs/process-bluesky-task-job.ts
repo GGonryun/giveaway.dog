@@ -11,7 +11,7 @@ import { ApplicationError } from '@/lib/errors';
 import { takeUntil } from '@/lib/arrays';
 import { Tx } from '@/lib/prisma';
 import { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-likes';
-import { BLUESKY_API_RATE_LIMIT_MINUTES } from '@/lib/pickers/data/settings';
+import { BLUESKY_API_RATE_LIMIT_MINUTES } from '@/lib/pickers/twitter/data/settings';
 import { getLatestTeamBlueskyCredentials } from '@/lib/bluesky/get-latest-team-bluesky-agent';
 import { Agent } from '@atproto/api';
 import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';

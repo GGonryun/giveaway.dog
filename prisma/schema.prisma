@@ -975,6 +975,7 @@ enum PickerType {
   BLUESKY
 }
 
+// the legacy picker type, actually the twitter picker, the existing twitter picker is the X picker.
 model Picker {
   id        String           @id @default(cuid())
   createdAt DateTime         @default(now())

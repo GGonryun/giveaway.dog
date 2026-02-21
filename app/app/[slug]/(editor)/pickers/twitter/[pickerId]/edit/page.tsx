@@ -1,6 +1,6 @@
 'use server';
 
-import { EditPickerPage } from '@/lib/pickers/pages/edit-picker-page';
+import { EditPickerPage } from '@/lib/pickers/twitter/pages/edit-picker-page';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {

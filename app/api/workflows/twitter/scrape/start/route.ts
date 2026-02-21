@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isValidCronSecret } from '@/lib/jobs/util';
 import { PickerStatus } from '@prisma/client';
 import { start } from 'workflow/api';
-import { twitterScrapeRequest } from '@/lib/pickers-v2/twitter-v2/schemas/workflow';
-import { scrapeTwitterWorkflow } from '@/lib/pickers-v2/twitter-v2/workflows/scrape-twitter/workflow';
+import { twitterScrapeRequest } from '@/lib/pickers/x/schemas/workflow';
+import { scrapeTwitterWorkflow } from '@/lib/pickers/x/workflows/scrape-twitter/workflow';
 import { extractTweetId } from '@/lib/integrations/schemas/twitter';
 import { getWorld } from 'workflow/runtime';
 

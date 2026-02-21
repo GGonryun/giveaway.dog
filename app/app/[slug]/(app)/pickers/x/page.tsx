@@ -4,12 +4,12 @@ import { TeamPageProps } from '@/schemas/pages';
 import {
   ListPickersV2FilterSchema,
   toPickersV2Filter
-} from '@/lib/pickers-v2/twitter-v2/schemas/list';
-import { CreatePickerV2Button } from '@/lib/pickers-v2/twitter-v2/components/create-picker-v2-button';
-import { PickersV2Table } from '@/lib/pickers-v2/twitter-v2/components/pickers-v2-table';
-import { PickersTabs } from '@/lib/pickers/components/pickers-tabs';
-import { getPickersV2List } from '@/lib/pickers-v2/twitter-v2/procedures/get-pickers-v2-list';
-import { XPickersUpgradeCTA } from '@/lib/pickers-v2/twitter-v2/components/x-pickers-upgrade-cta';
+} from '@/lib/pickers/x/schemas/list';
+import { CreatePickerV2Button } from '@/lib/pickers/x/components/create-picker-v2-button';
+import { PickersV2Table } from '@/lib/pickers/x/components/pickers-v2-table';
+import { PickersTabs } from '@/lib/pickers/twitter/components/pickers-tabs';
+import { getPickersV2List } from '@/lib/pickers/x/procedures/get-pickers-v2-list';
+import { XPickersUpgradeCTA } from '@/lib/pickers/x/components/x-pickers-upgrade-cta';
 import { hasMinimumTeamTier } from '@/lib/team/util';
 import { TeamTier } from '@prisma/client';
 import db from '@/lib/prisma';

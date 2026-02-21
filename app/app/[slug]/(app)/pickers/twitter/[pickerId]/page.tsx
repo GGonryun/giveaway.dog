@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { DEFAULT_PICKER_TAB } from '@/lib/pickers/schemas/tabs';
+import { DEFAULT_PICKER_TAB } from '@/lib/pickers/twitter/schemas/tabs';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {

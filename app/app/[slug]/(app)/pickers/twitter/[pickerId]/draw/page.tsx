@@ -1,5 +1,5 @@
-import { PickerDrawInterface } from '@/lib/pickers/components/picker-draw-interface';
-import { getPublicPicker } from '@/lib/pickers/procedures/get-public-picker';
+import { PickerDrawInterface } from '@/lib/pickers/twitter/components/picker-draw-interface';
+import { getPublicPicker } from '@/lib/pickers/twitter/procedures/get-public-picker';
 
 interface PageProps {
   params: Promise<{ slug: string; pickerId: string }>;

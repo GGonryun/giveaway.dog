@@ -1,4 +1,4 @@
-import { PublicXPickerForm } from '@/lib/pickers-v2/twitter-v2/components/public-x-picker-form';
+import { PublicXPickerForm } from '@/lib/pickers/x/components/public-x-picker-form';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 import type { Metadata } from 'next';
 

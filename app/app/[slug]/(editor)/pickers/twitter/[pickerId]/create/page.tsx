@@ -1,7 +1,7 @@
-import { PickerForm } from '@/lib/pickers/components/picker-form';
+import { PickerForm } from '@/lib/pickers/twitter/components/picker-form';
 import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
 import type { Metadata } from 'next';
-import { getUnvalidatedPickerForm } from '@/lib/pickers/procedures/get-unvalidated-picker-form';
+import { getUnvalidatedPickerForm } from '@/lib/pickers/twitter/procedures/get-unvalidated-picker-form';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

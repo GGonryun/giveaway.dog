@@ -1,4 +1,4 @@
-import { SelectPickerType } from '@/lib/pickers/components/select-picker-type';
+import { SelectPickerType } from '@/lib/pickers/twitter/components/select-picker-type';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {

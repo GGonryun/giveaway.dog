@@ -1,4 +1,4 @@
-import { CreateTwitterV2PickerPage } from '@/lib/pickers-v2/twitter-v2/pages/create-twitter-v2-picker-page';
+import { CreateTwitterV2PickerPage } from '@/lib/pickers/x/pages/create-twitter-v2-picker-page';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {

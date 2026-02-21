@@ -10,7 +10,7 @@ import {
 import {
   getDisqualificationReason,
   selectRandomUnique
-} from '@/lib/pickers-v2/twitter-v2/utils/picker-utils';
+} from '@/lib/pickers/x/utils/picker-utils';
 import { createId } from '@paralleldrive/cuid2';
 import { pickerRatelimit, pickerHourlyRatelimit } from '@/lib/ratelimit';
 import { auth } from '@/lib/auth/config';

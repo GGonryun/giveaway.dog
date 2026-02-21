@@ -4,11 +4,11 @@ import { TeamPageProps } from '@/schemas/pages';
 import {
   ListPickersFilterSchema,
   toPickersFilter
-} from '@/lib/pickers/schemas/list';
-import { CreatePickerButton } from '@/lib/pickers/components/create-picker-button';
-import { PickersTable } from '@/lib/pickers/components/pickers-table';
-import { PickersTabs } from '@/lib/pickers/components/pickers-tabs';
-import { getPickersLegacyList } from '@/lib/pickers/procedures/get-pickers-legacy-list';
+} from '@/lib/pickers/twitter/schemas/list';
+import { CreatePickerButton } from '@/lib/pickers/twitter/components/create-picker-button';
+import { PickersTable } from '@/lib/pickers/twitter/components/pickers-table';
+import { PickersTabs } from '@/lib/pickers/twitter/components/pickers-tabs';
+import { getPickersLegacyList } from '@/lib/pickers/twitter/procedures/get-pickers-legacy-list';
 
 type TwitterPickersPageProps = {
   params: Promise<TeamPageProps>;

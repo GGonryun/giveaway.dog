@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { processPickerJobs } from '@/lib/pickers/procedures/process-picker-jobs';
+import { processPickerJobs } from '@/lib/pickers/twitter/procedures/process-picker-jobs';
 import { processTaskJobs } from '@/lib/task/procedures/process-task-jobs';
 import { processSweepstakesJobs } from '@/lib/sweepstakes/procedures/process-sweepstakes-jobs';
 import { processAutomatedPostJobs } from '@/lib/automation/procedures/process-automated-post-jobs';

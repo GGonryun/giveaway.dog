@@ -11,7 +11,7 @@ import { datetime } from '@/lib/date';
 import {
   TWITTER_API_RATE_LIMIT_MINUTES,
   TWITTER_API_RUN_OFFSET
-} from '@/lib/pickers/data/settings';
+} from '@/lib/pickers/twitter/data/settings';
 import { ApplicationError } from '@/lib/errors';
 import { takeUntil } from '@/lib/arrays';
 import { Tx } from '@/lib/prisma';
