@@ -1,5 +1,3 @@
-'use server';
-
 import { ApplicationError } from './errors';
 import z from 'zod';
 import { DEVELOPMENT_GEO } from '@/schemas/fingerprint';
