@@ -10,7 +10,22 @@ export const VeloraCreatorSchema = z.object({
   status: z.string(),
   tier: z.string(),
   followerCount: z.number(),
-  totalStreamHours: z.number()
+  totalStreamHours: z.number(),
+  totalRevenue: z.string().optional(),
+  stripeConnectAccountId: z.string().nullable().optional(),
+  stripeOnboardingComplete: z.boolean().optional(),
+  youtubeChannelId: z.string().nullable().optional(),
+  youtubeRefreshToken: z.string().nullable().optional(),
+  totalViews: z.number().optional(),
+  subscriptionPrice: z.number().optional(),
+  revenueSharePercentage: z.string().optional(),
+  socialLinks: z.any().nullable().optional(),
+  streamSettings: z.any().nullable().optional(),
+  emoteSlots: z.number().optional(),
+  channelEmoteSlots: z.number().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+  approvedAt: z.string().nullable().optional()
 });
 
 export const VeloraProfileSchema = z.object({
@@ -23,17 +38,27 @@ export const VeloraProfileSchema = z.object({
   status: z.string(),
   streamingEnabled: z.boolean(),
   followerCount: z.number(),
-  followingCount: z.number(),
+  followingCount: z.number().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
   creator: VeloraCreatorSchema.nullable().optional(),
-  accentColor: z.string().nullable(),
+  accentColor: z.string().nullable().optional(),
   profileCustomization: z
     .object({
       accentColor: z.string().nullable()
     })
     .nullable()
-    .optional()
+    .optional(),
+  developerAccess: z.boolean().optional(),
+  developerTier: z.string().nullable().optional(),
+  rateLimitOverride: z.any().nullable().optional(),
+  youtubeConnected: z.boolean().optional(),
+  totalViews: z.number().optional(),
+  totalStreamHours: z.number().optional(),
+  staffBadgeVisible: z.boolean().optional(),
+  emailVerifiedAt: z.string().nullable().optional(),
+  preferences: z.any().nullable().optional(),
+  canMonetize: z.boolean().optional()
 });
 
 export type VeloraProfile = z.infer<typeof VeloraProfileSchema>;
