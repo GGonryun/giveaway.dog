@@ -1,21 +1,21 @@
 import { TeamPageProps } from '@/schemas/pages';
 import { PickerComingSoonCTA } from '@/lib/pickers/shared/components/picker-coming-soon-cta';
 
-type DiscordPickersPageProps = {
+type TwitchPickersPageProps = {
   params: Promise<TeamPageProps>;
 };
 
-export default async function DiscordPickersPage(
-  props: DiscordPickersPageProps
+export default async function TwitchPickersPage(
+  props: TwitchPickersPageProps
 ) {
   const { slug } = await props.params;
 
   return (
     <PickerComingSoonCTA
       slug={slug}
-      title="Discord Picker"
-      description="Pick winners from your Discord server giveaways"
-      platform="discord"
+      title="Twitch Picker"
+      description="Pick winners from your Twitch stream giveaways"
+      platform="twitch"
     />
   );
 }

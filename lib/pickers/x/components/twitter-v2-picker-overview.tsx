@@ -42,7 +42,10 @@ import { TwitterV2PickerSchema } from '../schemas/details';
 import { TwitterScrapeProgressMonitor } from './twitter-scrape-progress-monitor';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { STATUS_COLORS, STATUS_ICONS } from '@/lib/pickers/shared/themes/status';
+import {
+  STATUS_COLORS,
+  STATUS_ICONS
+} from '@/lib/pickers/shared/themes/status';
 import Link from 'next/link';
 import { extractTweetId } from '../utils/extract-tweet-id';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

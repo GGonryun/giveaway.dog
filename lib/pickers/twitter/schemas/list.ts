@@ -4,10 +4,7 @@ import {
   PickerFilterStatus,
   pickerStatusSchema
 } from '../../shared/schemas/status';
-import {
-  pickerTypeSchema,
-  PickerTypeSchema
-} from '../../shared/schemas/list';
+import { pickerTypeSchema, PickerTypeSchema } from '../../shared/schemas/list';
 
 export const pickersListItemSchema = z.object({
   pickerId: z.string(),

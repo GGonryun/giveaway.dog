@@ -58,6 +58,10 @@ const groups = ({ slug }: { slug: string }) => {
             {
               name: 'Discord',
               url: `/app/${slug}/pickers/discord`
+            },
+            {
+              name: 'Twitch',
+              url: `/app/${slug}/pickers/twitch`
             }
           ]
         },

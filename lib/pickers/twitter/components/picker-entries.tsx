@@ -13,10 +13,7 @@ import {
 } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import {
-  PickerEntry,
-  PickerFilterSettings
-} from '../schemas/models';
+import { PickerEntry, PickerFilterSettings } from '../schemas/models';
 import { format } from 'date-fns';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import {

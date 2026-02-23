@@ -9,7 +9,10 @@ export default async function PickersPage({ params }: PickersPageProps) {
   const { slug } = await params;
 
   return (
-    <Outline title="All Pickers">
+    <Outline
+      title="All Pickers"
+      className="my-auto mx-auto flex items-center justify-center"
+    >
       <SelectPickerList slug={slug} />
     </Outline>
   );
