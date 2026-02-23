@@ -104,6 +104,7 @@ export namespace ip {
       } else {
         const response = await fetch(`http://ipwho.is/${ip}`);
         const locationData = await response.json();
+        console.info('ip', locationData);
         const parsed = ipSchema.safeParse(locationData);
         if (!parsed.success) {
           console.warn('Failed to parse IP location data', parsed.error);
