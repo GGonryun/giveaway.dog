@@ -48,12 +48,15 @@ const PortalPage: React.FC<{
     );
   }
 
-  const result = await trackUser({
-    type: UserEventType.LOGIN
-  });
+  // Skip tracking for revalidation flows
+  if (!revalidate) {
+    const result = await trackUser({
+      type: UserEventType.LOGIN
+    });
 
-  if (!result.ok) {
-    notFound();
+    if (!result.ok) {
+      notFound();
+    }
   }
 
   if (!signup && !revalidate) {
