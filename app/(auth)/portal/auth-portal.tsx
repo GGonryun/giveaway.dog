@@ -145,7 +145,11 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     token,
     email,
     revalidate,
-    runVerification
+    runVerification,
+    redirect,
+    runCreate,
+    provider,
+    redirectTo
   ]);
 
   if (revalidate) {
