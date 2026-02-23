@@ -87,10 +87,15 @@ export namespace ip {
 
   export const geolocation = async (ip: string | null) => {
     try {
-      if (process.env.NODE_ENV === 'development' || ip === DEVELOPMENT_GEO.ip)
+      if (
+        process.env.NODE_ENV === 'development' ||
+        !ip ||
+        ip === DEVELOPMENT_GEO.ip
+      ) {
         return DEVELOPMENT_GEO;
+      }
 
-      if (isIP(ip || '') === 0) {
+      if (isIP(ip) === 0) {
         console.warn(`Invalid IP address: ${ip}`);
         throw new ApplicationError({
           code: 'BAD_GATEWAY',

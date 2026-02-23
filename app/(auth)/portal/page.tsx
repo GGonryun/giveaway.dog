@@ -1,5 +1,5 @@
 import { AuthPortal, PortalLayout } from './auth-portal';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import trackUser from '@/procedures/user/track-user';
 import { Metadata } from 'next';
@@ -50,12 +50,13 @@ const PortalPage: React.FC<{
 
   // Skip tracking for revalidation flows
   if (!revalidate) {
-    const result = await trackUser({
-      type: UserEventType.LOGIN
-    });
-
-    if (!result.ok) {
-      notFound();
+    try {
+      await trackUser({
+        type: UserEventType.LOGIN
+      });
+    } catch (error) {
+      // Log the error but don't block the user from continuing
+      console.warn('Failed to track user login:', error);
     }
   }
 
