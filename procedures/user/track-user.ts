@@ -45,6 +45,16 @@ const trackUser = procedure()
         ? `${userMetrics.screenWidth}x${userMetrics.screenHeight}`
         : UNKNOWN_SCREEN;
 
+    console.info('tracking user event', {
+      userId: user.id,
+      type: input.type,
+      userAgent,
+      acceptLanguage,
+      timeZone,
+      screen,
+      geo
+    });
+
     return await db.$transaction(async (tx) => {
       await tx.userEvent.create({
         data: {
