@@ -15,8 +15,7 @@ import {
 import Link from 'next/link';
 import { UserSchema } from '@/schemas/user';
 import { UNKNOWN_USER_NAME } from '@/lib/settings';
-import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
-import { featureFlags } from '@/lib/feature-flags';
+import { UserAccountType } from '@prisma/client';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -31,7 +30,7 @@ import { useLogout } from '@/lib/auth/hooks/use-logout';
 import { useTheme } from 'next-themes';
 
 export const UserDropdownMenu: React.FC<{ user: UserSchema }> = ({ user }) => {
-  const isHost = featureFlags.parseUser(user, HOST_DASHBOARD_FEATURE_FLAG_KEY);
+  const isHost = user.accountType === UserAccountType.HOST;
   const logout = useLogout();
   const { theme, setTheme } = useTheme();
 

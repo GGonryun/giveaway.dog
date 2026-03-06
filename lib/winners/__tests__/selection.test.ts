@@ -36,6 +36,8 @@ const createMockCompletion = (
         updatedAt: baseDate,
         source: 'SIGNUP' as const,
         username: `user${userId}`,
+        onboarded: true,
+        accountType: 'PARTICIPANT' as const,
         quality: [
           {
             id: `quality-${userId}`,

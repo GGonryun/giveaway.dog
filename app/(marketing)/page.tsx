@@ -1,8 +1,8 @@
 import { environment } from '@/lib/environment';
 import { Metadata } from 'next';
 import { HomePage } from '@/lib/home/page';
-import findUser from '@/procedures/user/find-user';
-import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
+import { auth } from '@/lib/auth/config';
+import { UserAccountType } from '@prisma/client';
 import { redirect } from 'next/navigation';
 
 const appUrl = environment.appUrl();
@@ -47,15 +47,14 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  // if the user is logged out redirect to /home
-  const user = await findUser({ self: true });
+  const session = await auth();
 
-  if (!user.ok || !user.data) {
+  if (!session?.user) {
     return <HomePage />;
   }
 
-  // if user has the host flag enabled redirect to /dashboard
-  if (user.data.featureFlags?.includes(HOST_DASHBOARD_FEATURE_FLAG_KEY)) {
+  // if user has host account type redirect to /dashboard
+  if (session.user.accountType === UserAccountType.HOST) {
     return redirect('/app');
   } else {
     return redirect('/browse');

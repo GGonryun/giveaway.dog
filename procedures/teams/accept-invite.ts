@@ -2,9 +2,8 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
-import { TeamRole } from '@prisma/client';
+import { TeamRole, UserAccountType } from '@prisma/client';
 import z from 'zod';
-import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 
 const acceptInvite = procedure()
   .authorization({ required: true })
@@ -78,18 +77,9 @@ const acceptInvite = procedure()
         }
       });
 
-      await tx.userFeatureFlag.upsert({
-        where: {
-          key_userId: {
-            userId: user.id,
-            key: HOST_DASHBOARD_FEATURE_FLAG_KEY
-          }
-        },
-        create: {
-          userId: user.id,
-          key: HOST_DASHBOARD_FEATURE_FLAG_KEY
-        },
-        update: {}
+      await tx.user.update({
+        where: { id: user.id },
+        data: { accountType: UserAccountType.HOST }
       });
 
       if (emailInvite) {

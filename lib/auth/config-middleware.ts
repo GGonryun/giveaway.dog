@@ -49,6 +49,8 @@ export const authConfigMiddleware = {
       const isLoggedIn = !!auth?.user;
 
       const isLogoutRoute = nextUrl.pathname.startsWith('/logout');
+      const isOnboardingRoute = nextUrl.pathname.startsWith('/onboarding');
+      const isPortalRoute = nextUrl.pathname.startsWith('/portal');
 
       const isConnectionRoute = connectionRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)
@@ -64,11 +66,31 @@ export const authConfigMiddleware = {
       if (isConnectionRoute && isLoggedIn)
         return Response.redirect(new URL('/', nextUrl));
 
+      // Check if user needs onboarding
+      if (isLoggedIn && !isOnboardingRoute && !isPortalRoute) {
+        const userOnboarded = auth.user?.onboarded;
+
+        // If user is not onboarded, redirect to onboarding
+        if (userOnboarded === false) {
+          return Response.redirect(new URL('/onboarding', nextUrl));
+        }
+      }
+
+      // Check if user is trying to access host dashboard without HOST account type
+      const isHostDashboard = nextUrl.pathname.startsWith('/app');
+      if (isLoggedIn && isHostDashboard && !isOnboardingRoute && !isPortalRoute) {
+        const isHost = auth.user?.accountType === 'HOST';
+
+        if (!isHost) {
+          return Response.redirect(new URL('/', nextUrl));
+        }
+      }
+
       if (isSensitiveRoute) return isLoggedIn;
 
       return true;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger }) {
       if (user && user?.id) {
         token.id = user?.id;
       }
@@ -77,14 +99,45 @@ export const authConfigMiddleware = {
         token.provider = account.provider;
       }
 
+      // Fetch user data on login or update
+      if (trigger === 'signIn' || trigger === 'update') {
+        if (token.id) {
+          const userData = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: {
+              onboarded: true,
+              accountType: true,
+              username: true
+            }
+          });
+
+          if (userData) {
+            token.onboarded = userData.onboarded;
+            token.accountType = userData.accountType;
+            token.username = userData.username;
+          }
+        }
+      }
+
       return token;
     },
     session({ token, session }) {
-      if (token?.id && session?.user) {
-        session.user.id = token.id as string;
-      }
-      if (token?.provider && session.user) {
-        session.user.provider = token.provider as string;
+      if (session?.user) {
+        const user = session.user as typeof session.user & {
+          onboarded?: boolean;
+          accountType?: typeof token.accountType;
+          username?: string | null;
+        };
+
+        user.id = (token?.id as string) ?? user.id;
+        user.provider =
+          (token?.provider as string | undefined) ?? user.provider;
+        user.onboarded =
+          (token?.onboarded as boolean | undefined) ?? user.onboarded;
+        user.accountType =
+          (token?.accountType as typeof user.accountType) ?? user.accountType;
+        user.username =
+          (token?.username as string | null | undefined) ?? user.username;
       }
       return session;
     }

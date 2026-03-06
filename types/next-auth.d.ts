@@ -1,17 +1,31 @@
-import NextAuth, { DefaultSession } from 'next-auth';
+import { DefaultSession } from 'next-auth';
+import { UserAccountType } from '@prisma/client';
 
 declare module 'next-auth' {
   interface Session {
     user: {
       id: string;
       provider?: string;
+      onboarded?: boolean;
+      accountType?: UserAccountType;
+      username?: string | null;
     } & DefaultSession['user'];
   }
-  interface User extends DefaultSession['user'] {
+
+  interface User {
     id: string | null;
+    onboarded?: boolean;
+    accountType?: UserAccountType;
+    username?: string | null;
   }
+}
+
+declare module 'next-auth/jwt' {
   interface JWT {
-    id: string | null;
+    id?: string | null;
     provider?: string;
+    onboarded?: boolean;
+    accountType?: UserAccountType;
+    username?: string | null;
   }
 }

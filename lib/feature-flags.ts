@@ -1,16 +1,19 @@
-import { UserFeatureFlagKeySchema } from '@/schemas/feature-flags';
+import { UserAccountType } from '@prisma/client';
+import {
+  UserFeatureFlagKeySchema,
+  HOST_DASHBOARD_FEATURE_FLAG_KEY
+} from '@/schemas/feature-flags';
 import { Nil } from './types';
 
 export namespace featureFlags {
   export const parseUser = (
-    input:
-      | Nil<{ featureFlags?: UserFeatureFlagKeySchema[] }>
-      | Nil<UserFeatureFlagKeySchema[]>,
+    input: Nil<{ accountType?: UserAccountType }>,
     flag: UserFeatureFlagKeySchema
   ): boolean => {
     if (!input) return false;
-    if (Array.isArray(input)) return input.includes(flag);
-    if (!input?.featureFlags) return false;
-    return input.featureFlags.includes(flag);
+    if (flag === HOST_DASHBOARD_FEATURE_FLAG_KEY) {
+      return input.accountType === UserAccountType.HOST;
+    }
+    return true;
   };
 }

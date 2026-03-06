@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  MenuIcon,
-  UserIcon,
-  Home,
-  Settings,
-  User,
-  History,
-  LogOut,
-  Gift
-} from 'lucide-react';
+import { MenuIcon, UserIcon, Home, User, History, Gift } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -18,8 +9,6 @@ import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { UserSchema } from '@/schemas/user';
-import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
-import { featureFlags } from '@/lib/feature-flags';
 import { NavigationHeader } from './navigation-header';
 import { DesktopNavMenu } from './navigation/desktop-nav-menu';
 import { MobileThemeToggle } from './navigation/mobile-theme-toggle';
@@ -57,8 +46,8 @@ export const LoggedInNavigationBar: React.FC<{ user: UserSchema }> = ({
   user
 }) => {
   const isHost = useMemo(
-    () => featureFlags.parseUser(user, HOST_DASHBOARD_FEATURE_FLAG_KEY),
-    [user?.featureFlags]
+    () => user.accountType === 'HOST',
+    [user?.accountType]
   );
   const [open, setOpen] = useState(false);
   const logout = useLogout();

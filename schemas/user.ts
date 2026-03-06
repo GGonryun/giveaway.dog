@@ -1,9 +1,10 @@
-import { IdentityProvider, Prisma, UserSource } from '@prisma/client';
-import z from 'zod';
 import {
-  userFeatureFlagKeySchema,
-  parseUserFeatureFlags
-} from './feature-flags';
+  IdentityProvider,
+  Prisma,
+  UserSource,
+  UserAccountType
+} from '@prisma/client';
+import z from 'zod';
 import { UNKNOWN_USER_AGENT, UNKNOWN_USER_COUNTRY_CODE } from '@/lib/settings';
 
 import { clamp } from 'lodash';
@@ -29,7 +30,10 @@ export const userProfileSchema = z.object({
   birthday: z.coerce.date().nullable(),
   qualityScore: z.number(),
   providers: providerSchema.array(),
-  source: z.nativeEnum(UserSource)
+  source: z.nativeEnum(UserSource),
+  username: z.string().nullable().optional(),
+  onboarded: z.boolean().optional(),
+  accountType: z.nativeEnum(UserAccountType).optional()
 });
 
 export type UserProfileSchema = z.infer<typeof userProfileSchema>;
@@ -37,7 +41,6 @@ export type UserProfileSchema = z.infer<typeof userProfileSchema>;
 export const userSchema = userProfileSchema.extend({
   emailVerified: z.boolean().nullable(),
   createdAt: z.coerce.date(),
-  featureFlags: userFeatureFlagKeySchema.array().optional(),
   isAnonymous: z.boolean()
 });
 
@@ -157,7 +160,9 @@ export const USER_SCHEMA_SELECT_QUERY = {
   accounts: {
     select: ACCOUNT_SELECT_QUERY
   },
-  featureFlags: true
+  onboarded: true,
+  accountType: true,
+  username: true
 } satisfies Prisma.UserSelect;
 
 export const toUserSchema = (
@@ -175,7 +180,9 @@ export const toUserSchema = (
   qualityScore: clamp(user.quality[0]?.score ?? 0, 0, 100),
   emailVerified: !!user.emailVerified,
   providers: parseProviders(user.accounts),
-  featureFlags: parseUserFeatureFlags(user.featureFlags),
+  onboarded: user.onboarded,
+  accountType: user.accountType,
+  username: user.username,
   isAnonymous: user.accounts.length === 0
 });
 

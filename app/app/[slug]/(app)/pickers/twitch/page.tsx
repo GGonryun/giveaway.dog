@@ -5,9 +5,7 @@ type TwitchPickersPageProps = {
   params: Promise<TeamPageProps>;
 };
 
-export default async function TwitchPickersPage(
-  props: TwitchPickersPageProps
-) {
+export default async function TwitchPickersPage(props: TwitchPickersPageProps) {
   const { slug } = await props.params;
 
   return (

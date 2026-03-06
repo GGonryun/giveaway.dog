@@ -1,7 +1,6 @@
 import getUser from '@/procedures/user/get-user';
 import { UserProvider } from '@/components/context/user-provider';
 import { redirect } from 'next/navigation';
-import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 
 export default async function Layout({
   children
@@ -12,10 +11,6 @@ export default async function Layout({
   if (!user.ok) {
     console.error(`Failed to get user`);
     redirect(`/app`);
-  }
-
-  if (!user.data.featureFlags?.includes(HOST_DASHBOARD_FEATURE_FLAG_KEY)) {
-    redirect('/');
   }
 
   return <UserProvider value={user.data}>{children}</UserProvider>;

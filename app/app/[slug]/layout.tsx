@@ -4,7 +4,6 @@ import getUserTeams from '@/procedures/teams/get-user-teams';
 import { TeamsProvider } from '@/components/context/team-provider';
 import { UserProvider } from '@/components/context/user-provider';
 import { redirect } from 'next/navigation';
-import { HOST_DASHBOARD_FEATURE_FLAG_KEY } from '@/schemas/feature-flags';
 import { TeamPageProps } from '@/schemas/pages';
 
 export default async function Layout({
@@ -25,10 +24,6 @@ export default async function Layout({
       `Failed to get user context for slug: ${resolvedParams.slug}`
     );
     redirect(`/app`);
-  }
-
-  if (!user.data.featureFlags?.includes(HOST_DASHBOARD_FEATURE_FLAG_KEY)) {
-    redirect('/');
   }
 
   return (

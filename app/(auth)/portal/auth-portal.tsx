@@ -52,12 +52,15 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [verificationSuccess, setVerificationSuccess] = useState(false);
 
+  const [accountType, setAccountType] = useState<string | null>(null);
+
   const redirect = useMemo(
     () =>
       getUserAuthRedirect({
-        redirectTo: redirectTo || ''
+        redirectTo: redirectTo || '',
+        accountType: accountType as any
       }),
-    [redirectTo]
+    [redirectTo, accountType]
   );
 
   // Email verification procedure
@@ -125,6 +128,12 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     if (revalidate) {
       router.push(redirect);
       return;
+    }
+
+    // Set account type if available for redirect logic
+    const userAccountType = session.user?.accountType;
+    if (userAccountType) {
+      setAccountType(userAccountType);
     }
 
     // Always try to create a profile for new users, or redirect if profile exists
