@@ -187,7 +187,7 @@ function EntryMethodsGrid() {
 
       {/* List */}
       <div className="absolute inset-x-0 top-8 bottom-0 flex flex-col gap-2  px-1">
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {currentMethods.map((method, index) => {
             const Icon = method.icon;
             return (

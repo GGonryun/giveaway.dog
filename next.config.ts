@@ -2,6 +2,7 @@ import { NextConfig } from 'next';
 import { withWorkflow } from 'workflow/next';
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ['*.ngrok-free.app'],
   experimental: {
     useCache: true
   },
