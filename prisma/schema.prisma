@@ -46,7 +46,6 @@ model User {
   agents        UserAgent[]
   quality       UserQuality[]
   fingerprints  UserFingerprint[]
-  featureFlags  UserFeatureFlag[]
   integrations  Integration[]
   templates     Template[]
   referred      ReferredUser[]
@@ -318,17 +317,6 @@ model EmailSubscription {
   email     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model UserFeatureFlag {
-  id        String   @id @default(cuid())
-  key       String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([key, userId])
 }
 
 // WARNING: sweepstakes objects are too complex to update directly, instead we delete
