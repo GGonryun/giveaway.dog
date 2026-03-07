@@ -38,12 +38,12 @@ export function OnboardingForm({
       <Card>
         <CardHeader className="text-center mb-2">
           <CardTitle className="text-xl">
-            {step === 1 ? 'Choose Your Path' : 'Complete Your Profile'}
+            {step === 1 ? 'Welcome to Giveaway.dog' : 'Complete Your Profile'}
           </CardTitle>
           <CardDescription>
             {step === 1
-              ? 'Select how you want to use Giveaway.dog'
-              : 'Set up your username and profile picture'}
+              ? 'How would you like to use Giveaway.dog?'
+              : 'What should we call you?'}
           </CardDescription>
         </CardHeader>
 

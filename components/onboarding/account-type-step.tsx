@@ -23,13 +23,6 @@ export const AccountTypeStep: React.FC<AccountTypeStepProps> = ({ onNext }) => {
 
   return (
     <div className="grid gap-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-semibold">Welcome to Giveaway.dog!</h2>
-        <p className="text-muted-foreground">
-          How would you like to use Giveaway.dog?
-        </p>
-      </div>
-
       <div className="grid gap-3">
         {Object.entries(ACCOUNT_TYPE_OPTIONS).map(([type, config]) => {
           const accountType = type as UserAccountType;
@@ -44,7 +37,7 @@ export const AccountTypeStep: React.FC<AccountTypeStepProps> = ({ onNext }) => {
               )}
               onClick={() => setSelectedType(accountType)}
             >
-              <CardContent className="p-6">
+              <CardContent className="px-6 py-2">
                 <div className="flex items-start gap-4">
                   <div className="text-4xl">{config.emoji}</div>
                   <div className="flex-1 space-y-1">

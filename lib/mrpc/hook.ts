@@ -16,6 +16,7 @@ export function useProcedure<TSuccess>(args: {
 }): {
   isLoading: boolean;
   isPending: boolean;
+  isSubmitting: boolean;
   run: () => void;
   reset: () => void;
 };
@@ -26,6 +27,7 @@ export function useProcedure<TInput, TSuccess>(args: {
 }): {
   isLoading: boolean;
   isPending: boolean;
+  isSubmitting: boolean;
   run: (input: TInput) => void;
   reset: () => void;
 };
@@ -43,15 +45,19 @@ export function useProcedure<TInput, TSuccess>({
 }): {
   isLoading: boolean;
   isPending: boolean;
+  // a strange state that is set to false when the action finishes because of a failure.
+  isSubmitting: boolean;
   run: ((input: TInput) => void) | (() => void);
   reset: () => void;
 } {
   const [isPending, setIsPending] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, startTransition] = useTransition();
 
   const handleAction = useCallback(
     (input: any) => {
       startTransition(async () => {
+        setIsSubmitting(true);
         try {
           const result = await action(input);
 
@@ -63,12 +69,14 @@ export function useProcedure<TInput, TSuccess>({
           if (result.ok) {
             onSuccess?.(result.data);
           } else {
+            setIsSubmitting(false);
             onFailure?.(result.data);
           }
         } catch (error: any) {
           if (isNextRedirect(error)) {
             throw error;
           }
+          setIsSubmitting(false);
           onFailure({
             code: 'UNKNOWN_HTTP_ERROR',
             message: parseError(error)
@@ -83,9 +91,10 @@ export function useProcedure<TInput, TSuccess>({
 
   const reset = useCallback(() => {
     setIsPending(true);
+    setIsSubmitting(false);
   }, []);
 
-  return { isLoading, isPending, reset, run: handleAction };
+  return { isLoading, isPending, isSubmitting, reset, run: handleAction };
 }
 
 export function useProcedureAsync<TSuccess>(args: {

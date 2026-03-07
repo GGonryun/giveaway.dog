@@ -66,8 +66,13 @@ export const authConfigMiddleware = {
       if (isConnectionRoute && isLoggedIn)
         return Response.redirect(new URL('/', nextUrl));
 
-      // Check if user needs onboarding
-      if (isLoggedIn && !isOnboardingRoute && !isPortalRoute) {
+      // Check if user needs onboarding (only for specific routes)
+      const onboardingRequiredRoutes = ['/account', '/app', '/browse', '/pickers'];
+      const requiresOnboarding = onboardingRequiredRoutes.some((r) =>
+        nextUrl.pathname.startsWith(r)
+      );
+
+      if (isLoggedIn && requiresOnboarding && !isOnboardingRoute && !isPortalRoute) {
         const userOnboarded = auth.user?.onboarded;
 
         // If user is not onboarded, redirect to onboarding

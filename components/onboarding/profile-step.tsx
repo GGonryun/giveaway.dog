@@ -96,19 +96,12 @@ export const ProfileStep: React.FC<ProfileStepProps> = ({
     });
   };
 
-  if (procedure.isLoading)
+  if (procedure.isLoading || procedure.isSubmitting)
     return <LoadingState text="Setting up your profile..." />;
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-6">
-        <div className="text-center space-y-2">
-          <h2 className="text-2xl font-semibold">Set Up Your Profile</h2>
-          <p className="text-muted-foreground">
-            Choose a username and optionally upload a profile picture
-          </p>
-        </div>
-
         <div className="grid gap-4">
           <FormField
             control={form.control}
@@ -172,7 +165,11 @@ export const ProfileStep: React.FC<ProfileStepProps> = ({
         <div className="grid gap-2">
           <Button
             type="submit"
-            disabled={procedure.isLoading || !form.formState.isValid}
+            disabled={
+              procedure.isLoading ||
+              procedure.isSubmitting ||
+              !form.formState.isValid
+            }
             className="w-full"
           >
             <User className="mr-2 h-4 w-4" />
