@@ -18,6 +18,7 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import { useAccountPage } from '@/components/account/use-account-page';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import { CheckCircle } from 'lucide-react';
+import { UserAccountType } from '@prisma/client';
 
 interface AuthPortalProps {
   // Email verification props
@@ -52,13 +53,13 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [verificationSuccess, setVerificationSuccess] = useState(false);
 
-  const [accountType, setAccountType] = useState<string | null>(null);
+  const [accountType, setAccountType] = useState<UserAccountType | null>(null);
 
   const redirect = useMemo(
     () =>
       getUserAuthRedirect({
         redirectTo: redirectTo || '',
-        accountType: accountType as any
+        accountType: accountType ?? undefined
       }),
     [redirectTo, accountType]
   );
