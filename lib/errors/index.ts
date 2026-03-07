@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 export type ApplicationErrorCode =
   | 'BAD_REQUEST'
   | 'UNAUTHORIZED'
@@ -43,6 +45,15 @@ export const statusToCode: Record<number, ApplicationErrorCode> = {
   504: 'GATEWAY_TIMEOUT'
 };
 
+export const codeToStatus: Record<ApplicationErrorCode, number> =
+  Object.entries(statusToCode).reduce(
+    (acc, [status, code]) => {
+      acc[code] = parseInt(status);
+      return acc;
+    },
+    {} as Record<ApplicationErrorCode, number>
+  );
+
 export type ApplicationErrorArgs<TData = unknown> = {
   code: ApplicationErrorCode;
   message: string;
@@ -72,6 +83,40 @@ export class ApplicationError<T = unknown | undefined> extends Error {
     }
 
     return 'An unknown error occurred...';
+  }
+
+  static toNextResponse(error: unknown): NextResponse {
+    if (isApplicationError(error)) {
+      const status = codeToStatus[error.code] || 500;
+
+      return new NextResponse(
+        JSON.stringify({
+          error: {
+            code: error.code,
+            message: error.message,
+            data: error.data
+          }
+        }),
+        {
+          status,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    // For unknown errors, return a generic 500 response
+    return new NextResponse(
+      JSON.stringify({
+        error: {
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'An unexpected error occurred'
+        }
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
   }
 
   toJSON(): object {

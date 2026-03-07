@@ -4,6 +4,13 @@ import { del } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { isImageSafe } from '@/lib/content-moderation';
+import z from 'zod';
+import { ApplicationError } from '@/lib/errors';
+import { fileUpload } from '@/lib/ratelimit';
+
+const tokenPayloadSchema = z.object({
+  userId: z.string().nullish()
+});
 
 export async function POST(request: Request): Promise<NextResponse> {
   const body = (await request.json()) as HandleUploadBody;
@@ -17,6 +24,30 @@ export async function POST(request: Request): Promise<NextResponse> {
 
         if (!session) throw new Error('Unauthorized: No active session found');
 
+        if (fileUpload.global) {
+          const { success, reset } = await fileUpload.global.limit('global');
+          if (!success) {
+            throw new ApplicationError({
+              message: 'Global upload limit reached. Please try again later.',
+              code: 'TOO_MANY_REQUESTS',
+              data: { retryAfter: reset - Date.now() }
+            });
+          }
+        }
+
+        if (fileUpload.user) {
+          const { success, reset } = await fileUpload.user.limit(
+            session.user.id
+          );
+          if (!success) {
+            throw new ApplicationError({
+              message: 'Upload limit reached. Please try again later.',
+              code: 'TOO_MANY_REQUESTS',
+              data: { retryAfter: reset - Date.now() }
+            });
+          }
+        }
+
         return {
           allowedContentTypes: [
             'image/jpeg',
@@ -28,12 +59,24 @@ export async function POST(request: Request): Promise<NextResponse> {
           ],
           addRandomSuffix: true,
           tokenPayload: JSON.stringify({
-            userId: session.user?.id
+            userId: session.user.id
           })
         };
       },
-      onUploadCompleted: async ({ blob }) => {
+      onUploadCompleted: async ({ blob, tokenPayload }) => {
         console.info('Upload completed for', blob.url);
+        const payload = tokenPayloadSchema.parse(
+          JSON.parse(tokenPayload ?? '{}')
+        );
+
+        if (!payload?.userId) {
+          // Delete the uploaded blob immediately if userId is missing
+          await del(blob.url);
+          throw new ApplicationError({
+            message: 'Unauthorized: Missing user ID in token payload',
+            code: 'UNAUTHORIZED'
+          });
+        }
 
         // Check for explicit content using Google Cloud Vision
         const moderation = await isImageSafe(blob.url);
@@ -45,10 +88,12 @@ export async function POST(request: Request): Promise<NextResponse> {
           await del(blob.url);
 
           // Throw error to prevent saving metadata and inform client
-          throw new Error(
-            moderation.reason ||
-              'Upload rejected: Inappropriate content detected'
-          );
+          throw new ApplicationError({
+            message:
+              moderation.reason ||
+              'Upload rejected: Inappropriate content detected',
+            code: 'UNPROCESSABLE_CONTENT'
+          });
         }
 
         // Only save to database if content is safe
@@ -66,10 +111,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     return NextResponse.json(jsonResponse);
   } catch (error) {
-    console.error('Upload error:', (error as Error).message);
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 400 }
-    );
+    console.error('Upload error:', JSON.stringify(error));
+    return ApplicationError.toNextResponse(error);
   }
 }

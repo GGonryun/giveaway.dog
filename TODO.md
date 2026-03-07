@@ -10,6 +10,10 @@
 
 - [ ] Bluesky Picker
 
+- [ ] Add Discord improvements
+
+- [ ] Add LinkedIn Task
+
 ---
 
 ### @theejankanator

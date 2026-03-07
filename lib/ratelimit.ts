@@ -36,3 +36,18 @@ export const newVersionedRateLimiter = ({
     prefix: `${prefix}:${version}`
   });
 };
+
+export const fileUpload = {
+  global: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(10, '1 h'),
+    analytics: true,
+    prefix: 'file-upload:global'
+  }),
+  user: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(20, '1 d'),
+    analytics: true,
+    prefix: 'file-upload:user'
+  })
+};
