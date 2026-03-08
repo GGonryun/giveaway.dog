@@ -24,7 +24,18 @@ import {
 } from '@/components/ui/select';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import {
+  Plus,
+  X,
+  BadgeCheck,
+  MessageCircle,
+  Repeat2,
+  Heart,
+  Eye,
+  ClockIcon,
+  ExternalLink,
+  ImageIcon
+} from 'lucide-react';
 import { UpgradeModal } from './upgrade-modal';
 import {
   SwitchBox,
@@ -34,8 +45,8 @@ import { ProgressModal } from './progress-modal';
 import { WinnersResultModal } from './winners-result-modal';
 import { RateLimitModal } from './rate-limit-modal';
 import { toast } from 'sonner';
-import { useUser } from '@/components/context/user-provider';
-import { UserSchema } from '@/schemas/user';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useRouter, usePathname } from 'next/navigation';
 
 const publicPickerFormSchema = z.object({
   postUrl: z
@@ -89,6 +100,23 @@ interface WinnerData {
   };
 }
 
+interface TweetData {
+  id: string;
+  text: string;
+  username: string;
+  profileImageUrl: string;
+  isBlueVerified: boolean;
+  media?: Array<{
+    url: string;
+    altText?: string;
+  }>;
+  replyCount: number | null;
+  retweetCount: number | null;
+  favoriteCount: number | null;
+  viewCount: number | null;
+  createdAt: string;
+}
+
 export const PublicXPickerForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
@@ -100,6 +128,10 @@ export const PublicXPickerForm: React.FC = () => {
   const [winnerData, setWinnerData] = useState<WinnerData | null>(null);
   const [rateLimitSeconds, setRateLimitSeconds] = useState(0);
   const [showRateLimit, setShowRateLimit] = useState(false);
+  const [currentStep, setCurrentStep] = useState<1 | 2>(1);
+  const [tweetData, setTweetData] = useState<TweetData | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const form = useForm<PublicPickerFormSchema>({
     resolver: zodResolver(publicPickerFormSchema),
@@ -122,46 +154,74 @@ export const PublicXPickerForm: React.FC = () => {
 
   const onSubmit = async (data: PublicPickerFormSchema) => {
     setIsSubmitting(true);
-    setShowSearching(true);
 
-    try {
-      const response = await fetch('/api/pickers/x/public/pick-winners', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          postUrl: data.postUrl,
-          winnersCount: data.winnersCount,
-          filters: data.filters
-        })
-      });
+    if (currentStep === 1) {
+      try {
+        const response = await fetch('/api/pickers/x/public/load-tweet', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            postUrl: data.postUrl
+          })
+        });
 
-      if (response.status === 429) {
+        const result = await response.json();
+
+        if (result.success) {
+          setTweetData(result.data);
+          setCurrentStep(2);
+        } else {
+          toast.error(result.error || 'Failed to load tweet. Please try again.');
+        }
+      } catch (error) {
+        toast.error('An error occurred. Please try again.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      setShowSearching(true);
+
+      try {
+        const response = await fetch('/api/pickers/x/public/pick-winners', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            postUrl: data.postUrl,
+            winnersCount: data.winnersCount,
+            filters: data.filters
+          })
+        });
+
+        if (response.status === 429) {
+          setShowSearching(false);
+          const retryAfter = parseInt(
+            response.headers.get('Retry-After') || '60'
+          );
+          setRateLimitSeconds(retryAfter);
+          setShowRateLimit(true);
+          return;
+        }
+
+        const result = await response.json();
+
         setShowSearching(false);
-        const retryAfter = parseInt(
-          response.headers.get('Retry-After') || '60'
-        );
-        setRateLimitSeconds(retryAfter);
-        setShowRateLimit(true);
-        return;
+
+        if (result.success) {
+          setWinnerData(result.data);
+          setShowResults(true);
+        } else {
+          toast.error('Failed to pick winners. Please try again.');
+        }
+      } catch (error) {
+        setShowSearching(false);
+        toast.error('An error occurred. Please try again.');
+      } finally {
+        setIsSubmitting(false);
       }
-
-      const result = await response.json();
-
-      setShowSearching(false);
-
-      if (result.success) {
-        setWinnerData(result.data);
-        setShowResults(true);
-      } else {
-        toast.error('Failed to pick winners. Please try again.');
-      }
-    } catch (error) {
-      setShowSearching(false);
-      toast.error('An error occurred. Please try again.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -196,6 +256,7 @@ export const PublicXPickerForm: React.FC = () => {
                     <Input
                       placeholder="https://x.com/username/status/..."
                       {...field}
+                      disabled={currentStep === 2}
                     />
                   </FormControl>
                   <FormDescription>
@@ -206,9 +267,152 @@ export const PublicXPickerForm: React.FC = () => {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Processing...' : 'Pick Winners'}
-            </Button>
+            {currentStep === 1 ? (
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? 'Loading...' : 'Load Tweet'}
+              </Button>
+            ) : (
+              <div className="space-y-4">
+                {tweetData && (
+                  <Card className="bg-muted/50">
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage
+                              src={
+                                tweetData.profileImageUrl ||
+                                `https://avatar.vercel.sh/${tweetData.username}`
+                              }
+                              alt={`@${tweetData.username}`}
+                            />
+                            <AvatarFallback>
+                              {tweetData.username?.[0]?.toUpperCase() || 'U'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-1 min-w-0">
+                                <a
+                                  href={`https://x.com/${tweetData.username}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-sm font-medium truncate hover:underline"
+                                >
+                                  @{tweetData.username || 'unknown'}
+                                </a>
+                                {tweetData.isBlueVerified && (
+                                  <BadgeCheck className="h-4 w-4 text-blue-500 shrink-0" />
+                                )}
+                              </div>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setCurrentStep(1);
+                                  setTweetData(null);
+                                  router.replace(pathname, { scroll: false });
+                                }}
+                              >
+                                <X className="h-3 w-3 mr-1" />
+                                Change
+                              </Button>
+                            </div>
+                            {tweetData.text && (
+                              <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">
+                                {tweetData.text}
+                              </p>
+                            )}
+                            {tweetData.media && tweetData.media.length > 0 && (
+                              <div className="grid grid-cols-2 gap-2 mt-3">
+                                {tweetData.media.map((media, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="relative aspect-video rounded-md overflow-hidden bg-muted group"
+                                  >
+                                    <img
+                                      src={media.url}
+                                      alt={media.altText || 'Tweet image'}
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                      <ImageIcon className="h-8 w-8 text-white" />
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            <div className="flex flex-wrap gap-4 text-xs text-muted-foreground mt-3">
+                              {tweetData.replyCount !== null && (
+                                <span className="flex items-center gap-1">
+                                  <MessageCircle className="h-3 w-3 mb-px" />
+                                  {tweetData.replyCount}
+                                </span>
+                              )}
+                              {tweetData.retweetCount !== null && (
+                                <span className="flex items-center gap-1">
+                                  <Repeat2 className="h-3 w-3 mb-px" />
+                                  {tweetData.retweetCount}
+                                </span>
+                              )}
+                              {tweetData.favoriteCount !== null && (
+                                <span className="flex items-center gap-1">
+                                  <Heart className="h-3 w-3 mb-px" />
+                                  {tweetData.favoriteCount}
+                                </span>
+                              )}
+                              {tweetData.viewCount !== null && (
+                                <span className="flex items-center gap-1">
+                                  <Eye className="h-3 w-3 mb-px" />
+                                  {tweetData.viewCount.toLocaleString()}
+                                </span>
+                              )}
+                            </div>
+                            {tweetData.createdAt && (
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground mt-2">
+                                <span className="flex items-center gap-1">
+                                  <ClockIcon className="h-3 w-3 mb-px" />
+                                  {new Date(tweetData.createdAt).toLocaleString(
+                                    'en-US',
+                                    {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric',
+                                      hour: 'numeric',
+                                      minute: '2-digit',
+                                      hour12: true
+                                    }
+                                  )}
+                                </span>
+                                <span>•</span>
+                                <a
+                                  href={`https://x.com/${tweetData.username}/status/${tweetData.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="underline flex items-center gap-1"
+                                >
+                                  Link to Post
+                                  <ExternalLink className="h-3 w-3 mb-px" />
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Processing...' : 'Pick Winners'}
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
 
