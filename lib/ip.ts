@@ -3,6 +3,24 @@ import z from 'zod';
 import { DEVELOPMENT_GEO } from '@/schemas/fingerprint';
 import { Prisma } from '@prisma/client';
 import { Nil } from './types';
+import https from 'https';
+
+const httpsGet = (url: string): Promise<unknown> =>
+  new Promise((resolve, reject) => {
+    https
+      .get(url, { headers: { Accept: 'application/json' } }, (res) => {
+        let data = '';
+        res.on('data', (chunk) => (data += chunk));
+        res.on('end', () => {
+          try {
+            resolve(JSON.parse(data));
+          } catch (e) {
+            reject(e);
+          }
+        });
+      })
+      .on('error', reject);
+  });
 
 export namespace ip {
   export const ipSchema = z.object({
@@ -102,10 +120,7 @@ export namespace ip {
           message: "Couldn't determine your IP address"
         });
       } else {
-        const response = await fetch(`https://ipwho.is/${ip}`, {
-          cache: 'no-store'
-        });
-        const locationData = await response.json();
+        const locationData = await httpsGet(`https://ipwho.is/${ip}`);
         console.info('ip', locationData);
         const parsed = ipSchema.safeParse(locationData);
         if (!parsed.success) {
