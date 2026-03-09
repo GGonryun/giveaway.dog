@@ -30,6 +30,7 @@ import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
+import { LoadTweetModal } from './load-tweet-modal';
 import { ProgressModal } from './progress-modal';
 import { WinnersResultModal } from './winners-result-modal';
 import { RateLimitModal } from './rate-limit-modal';
@@ -116,6 +117,7 @@ interface TweetData {
 
 export const PublicXPickerForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showLoadingTweet, setShowLoadingTweet] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [upgradeFeature, setUpgradeFeature] = useState<
     'multiple-posts' | 'schedule' | 'more-winners'
@@ -157,6 +159,7 @@ export const PublicXPickerForm: React.FC = () => {
     setIsSubmitting(true);
 
     if (currentStep === 1) {
+      setShowLoadingTweet(true);
       try {
         const response = await fetch('/api/pickers/x/public/load-tweet', {
           method: 'POST',
@@ -191,6 +194,7 @@ export const PublicXPickerForm: React.FC = () => {
       } catch (error) {
         toast.error('An error occurred. Please try again.');
       } finally {
+        setShowLoadingTweet(false);
         setIsSubmitting(false);
       }
     } else {
@@ -678,6 +682,8 @@ export const PublicXPickerForm: React.FC = () => {
           onClose={() => setUpgradeModalOpen(false)}
           feature={upgradeFeature}
         />
+
+        <LoadTweetModal open={showLoadingTweet} />
 
         <ProgressModal
           open={showSearching}

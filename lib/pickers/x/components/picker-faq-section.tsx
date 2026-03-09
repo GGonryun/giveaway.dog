@@ -43,7 +43,7 @@ const faqs = [
 
 export function PickerFaqSection() {
   return (
-    <section className="w-full py-12">
+    <section className="w-full mb-12">
       <div className="max-w-3xl mx-auto">
         <MarketingPageHeader
           title="Frequently Asked Questions"
