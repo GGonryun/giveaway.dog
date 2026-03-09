@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getTweet } from '@/lib/scrapebadger/procedures/get-tweet';
-import { getUser } from '@/lib/scrapebadger/procedures/get-user';
+import { getTweetCached } from '@/lib/scrapebadger/procedures/get-tweet-cached';
+import { getUserCached } from '@/lib/scrapebadger/procedures/get-user-cached';
+import {
+  calculateApiCalls,
+  estimateDuration
+} from '@/lib/pickers/x/utils/calculate-api-calls';
+import type { Tweet } from 'scrapebadger';
+import { auth } from '@/lib/auth/config';
+import { ApplicationError } from '@/lib/errors';
+import { checkAndConsumeCredits } from '@/lib/scrapebadger/credits';
+import { CREDIT_COSTS } from '@/lib/scrapebadger/settings';
 
 const loadTweetSchema = z.object({
   postUrl: z
@@ -35,9 +44,24 @@ function extractTweetId(url: string): string | null {
 }
 
 export async function POST(request: NextRequest) {
+  const session = await auth();
+  const userId = session?.user?.id || null;
+
   try {
     const body = await request.json();
-    const { postUrl } = loadTweetSchema.parse(body);
+    const parseResult = loadTweetSchema.safeParse(body);
+
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: parseResult.error.errors[0]?.message || 'Invalid request'
+        },
+        { status: 400 }
+      );
+    }
+
+    const { postUrl } = parseResult.data;
 
     const tweetId = extractTweetId(postUrl);
     if (!tweetId) {
@@ -50,50 +74,54 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const tweet = await getTweet({ tweetId });
+    // Charge credits upfront for this endpoint call
+    await checkAndConsumeCredits(userId, CREDIT_COSTS.LOAD_TWEET_ENDPOINT);
 
-    const user = await getUser({ username: tweet.username });
+    const tweet = await getTweetCached({ tweetId, userId });
+    const user = await getUserCached({ username: tweet.username, userId });
 
-    console.log('[load-tweet] Loaded tweet:', tweet, user);
+    const profileImageUrl = user.profile_image_url ?? null;
+    const isBlueVerified = user.is_blue_verified ?? false;
+
+    const retweetCount = Number(tweet.retweet_count) || 0;
+    const apiCalls = calculateApiCalls(retweetCount);
+    const estimatedDurationMs = estimateDuration(apiCalls);
+
+    const tweetData = {
+      id: tweet.id,
+      text: tweet.text,
+      username: tweet.username ?? tweet.user_name ?? null,
+      profileImageUrl,
+      favoriteCount: Number(tweet.favorite_count) ?? null,
+      retweetCount,
+      replyCount: Number(tweet.reply_count) ?? null,
+      viewCount: Number(tweet.view_count) ?? null,
+      quoteCount: Number(tweet.quote_count) ?? null,
+      createdAt: tweet.created_at
+        ? new Date(tweet.created_at).toISOString()
+        : new Date().toISOString(),
+      isBlueVerified,
+      userId: tweet.user_id ?? null,
+      media: (
+        tweet.media?.filter(
+          (m: Tweet['media'][number]) => m.type === 'photo'
+        ) ?? []
+      ).map((m: Tweet['media'][number]) => ({
+        url: m.url!,
+        width: m.width!,
+        height: m.height!,
+        altText: m.alt_text ?? null
+      })),
+      estimatedDurationMs
+    };
 
     return NextResponse.json({
       success: true,
-      data: {
-        id: tweet.id,
-        text: tweet.text,
-        username: tweet.username,
-        profileImageUrl: user.profileImageUrl,
-        isBlueVerified: user.is_blue_verified,
-        media: tweet.media?.map((m: { url: string; altText?: string }) => ({
-          url: m.url,
-          altText: m.altText
-        })),
-        replyCount: tweet.replyCount,
-        retweetCount: tweet.retweetCount,
-        favoriteCount: tweet.favoriteCount,
-        viewCount: tweet.viewCount,
-        createdAt: tweet.createdAt
-      }
+      data: tweetData
     });
   } catch (error) {
     console.error('[load-tweet] Error loading tweet:', error);
 
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: error.errors[0]?.message || 'Invalid request'
-        },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to load tweet. Please try again.'
-      },
-      { status: 500 }
-    );
+    return ApplicationError.toNextResponse(error);
   }
 }

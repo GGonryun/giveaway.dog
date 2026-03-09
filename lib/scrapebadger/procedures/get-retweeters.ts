@@ -18,7 +18,7 @@ export const getRetweeters = async ({
   });
 };
 
-export const fetchAllRetweetersForTweet = async ({
+export const getRetweetersUntil = async ({
   tweetId,
   maxApiCalls = DEFAULT_MAX_API_CALLS
 }: {

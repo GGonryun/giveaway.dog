@@ -8,8 +8,9 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ExternalLink, Share2 } from 'lucide-react';
+import { ExternalLink, Share2, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 interface Winner {
   id: string;
@@ -30,6 +31,8 @@ interface WinnersResultModalProps {
     name: string;
     profileUrl: string;
   };
+  onReRoll?: () => void;
+  isReRolling?: boolean;
 }
 
 export const WinnersResultModal: React.FC<WinnersResultModalProps> = ({
@@ -38,7 +41,9 @@ export const WinnersResultModal: React.FC<WinnersResultModalProps> = ({
   winners,
   drawId,
   postId,
-  postAuthor
+  postAuthor,
+  onReRoll,
+  isReRolling = false
 }) => {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://giveaway.dog';
   const drawUrl = `${baseUrl}/pickers/x/${drawId}`;
@@ -102,23 +107,38 @@ ${drawUrl} `;
             </div>
           )}
 
-          <div className="flex gap-2">
-            {isSingleWinner && winner && (
-              <Button asChild variant="outline" className="flex-1">
-                <a
-                  href={winner.profileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  View Profile
-                </a>
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              {isSingleWinner && winner && (
+                <Button asChild variant="outline" className="flex-1">
+                  <a
+                    href={winner.profileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    View Profile
+                  </a>
+                </Button>
+              )}
+              <Button onClick={handleShare} className="flex-1">
+                <Share2 className="h-4 w-4 mr-2" />
+                Share
+              </Button>
+            </div>
+            {onReRoll && (
+              <Button
+                onClick={onReRoll}
+                variant="outline"
+                className="w-full"
+                disabled={isReRolling}
+              >
+                <RefreshCw
+                  className={`h-4 w-4 mr-2 ${isReRolling ? 'animate-spin' : ''}`}
+                />
+                {isReRolling ? 'Re-rolling...' : 'Re-roll Winners'}
               </Button>
             )}
-            <Button onClick={handleShare} className="flex-1">
-              <Share2 className="h-4 w-4 mr-2" />
-              Share
-            </Button>
           </div>
 
           <div className="space-y-3 pt-4 border-t">

@@ -1,10 +1,14 @@
 import { Redis } from '@upstash/redis';
 
-const url = new URL(process.env.REDIS_URL!);
+const redisUrl = process.env.REDIS_URL!;
+const url = new URL(redisUrl);
 
 const redis = new Redis({
-  url: `https://${url.hostname}`,
-  token: url.password
+  url:
+    url.protocol === 'http:'
+      ? `${url.protocol}//${url.hostname}:${url.port}`
+      : `https://${url.hostname}`,
+  token: url.password || ''
 });
 
 export { redis };

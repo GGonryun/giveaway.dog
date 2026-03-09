@@ -89,6 +89,30 @@ export class ApplicationError<T = unknown | undefined> extends Error {
     if (isApplicationError(error)) {
       const status = codeToStatus[error.code] || 500;
 
+      // Special handling for rate limiting with retry information
+      if (
+        error.code === 'TOO_MANY_REQUESTS' &&
+        isRetryableApplicationError(error)
+      ) {
+        const retryAfterSeconds = Math.ceil(
+          (error.data.retryAfter - Date.now()) / 1000
+        );
+
+        return NextResponse.json(
+          {
+            success: false,
+            error: error.message,
+            ...error.data
+          },
+          {
+            status: 429,
+            headers: {
+              'Retry-After': String(retryAfterSeconds)
+            }
+          }
+        );
+      }
+
       return new NextResponse(
         JSON.stringify({
           error: {

@@ -96,7 +96,7 @@ export const UsageSection = () => {
           <Card className="bg-background border-2">
             <CardContent className="p-8 text-center">
               <div className="text-5xl font-bold mb-3 text-foreground tabular-nums">
-                <TickingCounter startValue={5336} interval={30000} />
+                <TickingCounter startValue={12719} interval={30000} />
               </div>
               <div className="text-sm uppercase tracking-wide text-muted-foreground font-medium">
                 Unique participants
@@ -108,7 +108,7 @@ export const UsageSection = () => {
           <Card className="bg-background border-2">
             <CardContent className="p-8 text-center">
               <div className="text-5xl font-bold mb-3 text-foreground tabular-nums">
-                <TickingCounter startValue={111848} />
+                <TickingCounter startValue={931828} />
               </div>
               <div className="text-sm uppercase tracking-wide text-muted-foreground font-medium">
                 Tasks completed
@@ -120,7 +120,7 @@ export const UsageSection = () => {
           <Card className="bg-background border-2">
             <CardContent className="p-8 text-center">
               <div className="text-5xl font-bold mb-3 text-foreground tabular-nums">
-                <TickingCounter startValue={248} interval={60000} />
+                <TickingCounter startValue={571} interval={60000} />
               </div>
               <div className="text-sm uppercase tracking-wide text-muted-foreground font-medium">
                 Prizes given away

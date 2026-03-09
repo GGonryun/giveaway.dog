@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Gem } from 'lucide-react';
+import { PUBLIC_PICKER_MAX_WINNERS } from '../constants';
 
 interface UpgradeModalProps {
   open: boolean;
@@ -36,8 +37,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
     },
     'more-winners': {
       title: 'Pick More Winners',
-      description:
-        'Upgrade to PRO to pick more than 10 winners. The free plan is limited to 10 winners per draw.'
+      description: `Upgrade to PRO to pick more than ${PUBLIC_PICKER_MAX_WINNERS} winners. The free plan is limited to ${PUBLIC_PICKER_MAX_WINNERS} winners per draw.`
     }
   };
 

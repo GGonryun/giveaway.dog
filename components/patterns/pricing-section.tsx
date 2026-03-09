@@ -34,8 +34,8 @@ const sharedFeatures = {
 };
 
 // Pricing constants
-const MONTHLY_PRICE = 5;
-const YEARLY_DISCOUNT_RATE = 0.4; // 40% off
+const MONTHLY_PRICE = 20;
+const YEARLY_DISCOUNT_RATE = 0.25; // 25% off
 const YEARLY_PRICE_PER_MONTH = MONTHLY_PRICE * (1 - YEARLY_DISCOUNT_RATE);
 const YEARLY_TOTAL = YEARLY_PRICE_PER_MONTH * 12;
 const YEARLY_SAVINGS = (MONTHLY_PRICE - YEARLY_PRICE_PER_MONTH) * 12;
@@ -43,7 +43,7 @@ const YEARLY_SAVINGS = (MONTHLY_PRICE - YEARLY_PRICE_PER_MONTH) * 12;
 const GradientText: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => (
-  <span className="bg-gradient-to-r from-primary via-black dark:via-white to-primary bg-clip-text text-transparent font-bold animate-gradient">
+  <span className="bg-linear-to-r from-primary via-black dark:via-white to-primary bg-clip-text text-transparent font-bold animate-gradient">
     {children}
   </span>
 );
@@ -64,9 +64,9 @@ export const PricingSection = () => {
       price: 'Free',
       priceSubtext: 'No credit card required',
       buttonSubtext: 'Try it now!',
-      buttonText: 'Request Access',
-      buttonLink: '/contact',
-      buttonIcon: <ArrowRightIcon />,
+      buttonText: 'Get Started for Free',
+      buttonLink: '/login',
+      buttonIcon: null,
       buttonVariant: 'outline',
       features: [
         sharedFeatures.team,
@@ -141,7 +141,7 @@ export const PricingSection = () => {
   return (
     <section
       id="pricing"
-      className="bg-gradient-to-b from-primary/12 to-background w-full flex items-center justify-center"
+      className="bg-linear-to-b from-primary/12 to-background w-full flex items-center justify-center"
     >
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12 relative">
@@ -221,7 +221,7 @@ export const PricingSection = () => {
                 <div
                   className={cn(
                     'mt-4',
-                    billingCycle === 'yearly' ? 'min-h-[90px]' : 'min-h-[75px]'
+                    billingCycle === 'yearly' ? 'min-h-22.5' : 'min-h-18.75'
                   )}
                 >
                   {typeof tier.price === 'number' ? (
@@ -262,7 +262,7 @@ export const PricingSection = () => {
                 <div className="space-y-2.5 lg:space-y-3 flex-1">
                   {tier.features.map((feature, index) => (
                     <div key={index} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                      <Check className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                       <div>{feature}</div>
                     </div>
                   ))}

@@ -67,12 +67,22 @@ export const authConfigMiddleware = {
         return Response.redirect(new URL('/', nextUrl));
 
       // Check if user needs onboarding (only for specific routes)
-      const onboardingRequiredRoutes = ['/account', '/app', '/browse', '/pickers'];
+      const onboardingRequiredRoutes = [
+        '/account',
+        '/app',
+        '/browse',
+        '/pickers'
+      ];
       const requiresOnboarding = onboardingRequiredRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)
       );
 
-      if (isLoggedIn && requiresOnboarding && !isOnboardingRoute && !isPortalRoute) {
+      if (
+        isLoggedIn &&
+        requiresOnboarding &&
+        !isOnboardingRoute &&
+        !isPortalRoute
+      ) {
         const userOnboarded = auth.user?.onboarded;
 
         // If user is not onboarded, redirect to onboarding
@@ -83,7 +93,12 @@ export const authConfigMiddleware = {
 
       // Check if user is trying to access host dashboard without HOST account type
       const isHostDashboard = nextUrl.pathname.startsWith('/app');
-      if (isLoggedIn && isHostDashboard && !isOnboardingRoute && !isPortalRoute) {
+      if (
+        isLoggedIn &&
+        isHostDashboard &&
+        !isOnboardingRoute &&
+        !isPortalRoute
+      ) {
         const isHost = auth.user?.accountType === 'HOST';
 
         if (!isHost) {

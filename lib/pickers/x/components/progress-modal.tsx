@@ -11,9 +11,13 @@ import { useEffect, useState } from 'react';
 
 interface ProgressModalProps {
   open: boolean;
+  estimatedDurationMs?: number;
 }
 
-export const ProgressModal: React.FC<ProgressModalProps> = ({ open }) => {
+export const ProgressModal: React.FC<ProgressModalProps> = ({
+  open,
+  estimatedDurationMs
+}) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -22,7 +26,8 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({ open }) => {
       return;
     }
 
-    const duration = Math.random() * 5000 + 4000; // Random duration between 4-9 seconds
+    // Use estimated duration if provided, otherwise fallback to random 4-9 seconds
+    const duration = estimatedDurationMs ?? Math.random() * 5000 + 4000;
     const maxProgress = 92;
     const intervalTime = 100;
     const steps = duration / intervalTime;
@@ -39,7 +44,7 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({ open }) => {
     }, intervalTime);
 
     return () => clearInterval(interval);
-  }, [open]);
+  }, [open, estimatedDurationMs]);
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>

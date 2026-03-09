@@ -1,19 +1,6 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { redis } from './redis';
-
-export const pickerRatelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(1, '1 m'),
-  analytics: true,
-  prefix: 'picker:minute'
-});
-
-export const pickerHourlyRatelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(5, '1 h'),
-  analytics: true,
-  prefix: 'picker:hour'
-});
+import { SCRAPEBADGER_CREDIT_LIMIT } from './scrapebadger/settings';
 
 export const newVersionedRateLimiter = ({
   prefix,
@@ -51,3 +38,13 @@ export const fileUpload = {
     prefix: 'file-upload:user'
   })
 };
+
+// Single rate limiter for ScrapeBadger credits
+// Anonymous users share a pool using key 'anonymous'
+// Authenticated users get individual pools using their userId
+export const scrapeBadgerCredits = new Ratelimit({
+  redis,
+  limiter: Ratelimit.fixedWindow(SCRAPEBADGER_CREDIT_LIMIT, '1 d'),
+  analytics: true,
+  prefix: 'scrapebadger:credits'
+});
