@@ -57,8 +57,7 @@ export namespace ip {
       abbr: z.string(),
       is_dst: z.boolean(),
       offset: z.number(),
-      utc: z.string(),
-      current_time: z.string()
+      utc: z.string()
     }),
     currency: z
       .object({
