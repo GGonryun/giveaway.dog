@@ -1,4 +1,4 @@
-import { fetchRetweetersUntilUser } from '@/lib/scrapebadger/procedures/get-retweeters';
+import { getRetweetersUntilUser } from '@/lib/scrapebadger/procedures/get-retweeters';
 import { extractTweetId, toTwitterUserSchema } from '@/lib/scrapebadger/utils';
 import { importTwitterUsers } from '@/lib/sweepstakes/twitter-import';
 import {
@@ -42,7 +42,7 @@ export const processRetweetV2TaskJob = async (
     });
   }
 
-  const response = await fetchRetweetersUntilUser({
+  const response = await getRetweetersUntilUser({
     tweetId,
     stopAtUserId: parsed.data.lastProcessedId
   });

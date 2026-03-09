@@ -1,9 +1,7 @@
 import { sleep } from 'workflow';
-import { finalizeProgress } from './steps/finalize-progress';
 import { storeRetweeters } from './steps/store-retweeters';
 import { storeTweetData } from './steps/store-tweet-data';
 import { updatePickerStatus } from './steps/update-picker-status';
-import { writeProgress } from './steps/write-progress';
 
 export async function scrapeTwitterWorkflow({
   tweetIds,
@@ -44,15 +42,8 @@ export async function scrapeTwitterWorkflow({
     }
 
     await updatePickerStatus({ pickerId, status: 'COMPLETE' });
-    await writeProgress({
-      max: progress,
-      current: retweets,
-      status: 'COMPLETE'
-    });
   } catch (error) {
     await updatePickerStatus({ pickerId, status: 'FAILED' });
-  } finally {
-    await finalizeProgress();
   }
 }
 
@@ -80,13 +71,12 @@ async function scrapeTwitterReposts({
       pickerId
     });
     console.info(
-      `Scraped ${retweeters.data.length} retweeters for tweet ${tweetId}`
+      `Scraped ${retweeters.users.length} retweeters for tweet ${tweetId}`
     );
-    current += retweeters.data.length;
+    current += retweeters.users.length;
     hasMore = retweeters.hasMore;
     cursor = retweeters.nextCursor;
     console.info(`Resulting cursor: ${cursor}, hasMore: ${hasMore}`);
-    await writeProgress({ max, current, status: 'PROCESSING' });
     console.info(`Progress: ${current}/${max}`);
   }
 

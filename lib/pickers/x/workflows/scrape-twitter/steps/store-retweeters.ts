@@ -1,5 +1,8 @@
 import prisma from '@/lib/prisma';
-import { getRetweeters } from '@/lib/scrapebadger/procedures/get-retweeters';
+import {
+  getRetweeters,
+  getRetweetersUntil
+} from '@/lib/scrapebadger/procedures/get-retweeters';
 import { FatalError } from 'workflow';
 import { toTwitterPickerUsers } from '../shared';
 
@@ -15,15 +18,16 @@ export async function storeRetweeters({
   'use step';
 
   try {
-    const retweeters = await getRetweeters({
+    const retweeters = await getRetweetersUntil({
       tweetId,
-      cursor
+      cursor,
+      maxApiCalls: 5
     });
 
     await prisma.twitterPickerUser.createMany({
       data: toTwitterPickerUsers({
         pickerId,
-        users: retweeters.data
+        users: retweeters.users
       }),
       skipDuplicates: true
     });

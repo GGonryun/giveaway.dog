@@ -29,7 +29,7 @@ export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
   const replyToId = postUrl.split('/').pop() || '';
 
   const handleShare = () => {
-    const tweetText = `🎉 Congratulations to @${username} for winning our giveaway!\n\nVerify the draw: ${window.location.origin}/pickers/twitter/${pickerId}`;
+    const tweetText = `🎉 Congratulations to @${username} for winning our giveaway!\n\n${window.location.origin}/pickers/twitter/${pickerId}`;
     const twitterUrl = `https://twitter.com/intent/tweet?in_reply_to=${replyToId}&text=${encodeURIComponent(tweetText)}`;
     window.open(twitterUrl, '_blank', 'noopener,noreferrer');
   };
@@ -56,7 +56,7 @@ export const PickerWinnerCard: React.FC<PickerWinnerCardProps> = ({
               <div className="flex items-center gap-2">
                 <span className="font-semibold truncate">{name}</span>
                 <svg
-                  className="h-4 w-4 flex-shrink-0"
+                  className="h-4 w-4 shrink-0"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
                   fill="currentColor"

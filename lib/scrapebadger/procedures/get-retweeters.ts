@@ -11,7 +11,6 @@ export const getRetweeters = async ({
 }: {
   tweetId: string;
   cursor?: string;
-  maxUsers?: string;
 }) => {
   return await getScrapeBadgerClient().twitter.tweets.getRetweeters(tweetId, {
     cursor
@@ -20,14 +19,16 @@ export const getRetweeters = async ({
 
 export const getRetweetersUntil = async ({
   tweetId,
+  cursor: startCursor,
   maxApiCalls = DEFAULT_MAX_API_CALLS
 }: {
   tweetId: string;
+  cursor?: string;
   maxApiCalls?: number;
 }): Promise<{ users: User[]; nextCursor?: string; hasMore: boolean }> => {
   const client = getScrapeBadgerClient();
   const users: User[] = [];
-  let cursor: string | undefined;
+  let cursor: string | undefined = startCursor;
   let hasMore = true;
   let apiCallCount = 0;
 
@@ -69,7 +70,7 @@ export const getRetweetersUntil = async ({
   };
 };
 
-export const fetchRetweetersUntilUser = async ({
+export const getRetweetersUntilUser = async ({
   tweetId,
   stopAtUserId,
   maxUsers = DEFAULT_MAX_USERS
@@ -144,4 +145,46 @@ export const fetchRetweetersUntilUser = async ({
     nextCursor: foundStopUser ? undefined : cursor,
     hasMore: hasMore && !foundStopUser
   };
+};
+
+export const getAllRetweeters = async ({
+  tweetId
+}: {
+  tweetId: string;
+}): Promise<User[]> => {
+  const client = getScrapeBadgerClient();
+  const users: User[] = [];
+  let cursor: string | undefined;
+  let hasMore = true;
+  let batchIndex = 0;
+
+  console.info(`[getAllRetweeters] Starting fetch for tweet ${tweetId}`);
+
+  while (hasMore) {
+    const response = await client.twitter.tweets.getRetweeters(tweetId, {
+      cursor
+    });
+    batchIndex++;
+
+    const batch = response.data || [];
+    users.push(...batch);
+
+    console.info(
+      `[getAllRetweeters] Batch ${batchIndex}: fetched ${batch.length} users (total: ${users.length})`
+    );
+
+    hasMore = response.hasMore || false;
+    cursor = response.nextCursor;
+
+    if (!hasMore || !cursor) {
+      console.info('[getAllRetweeters] No more retweeters to fetch');
+      break;
+    }
+  }
+
+  console.info(
+    `[getAllRetweeters] Completed: ${users.length} total retweeters for tweet ${tweetId}`
+  );
+
+  return compact(users);
 };

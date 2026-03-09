@@ -24,7 +24,8 @@ import {
   ChevronDown,
   ChevronUp,
   History,
-  XCircle
+  XCircle,
+  Share2
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -46,6 +47,7 @@ import {
   STATUS_COLORS,
   STATUS_ICONS
 } from '@/lib/pickers/shared/themes/status';
+import { shouldShowProgress } from '@/lib/pickers/shared/utils/status';
 import Link from 'next/link';
 import { extractTweetId } from '../utils/extract-tweet-id';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -275,7 +277,7 @@ export const TwitterV2PickerOverview: React.FC<
             isDrawing={isDrawing}
           />
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <StatCard
               label="Total Actions"
               value={stats.totalEntries}
@@ -500,16 +502,12 @@ const PickerStatusSection: React.FC<PickerStatusSectionProps> = ({
   onDraw,
   isDrawing
 }) => {
-  const shouldShowProgress =
-    picker.status === 'DRAFT' ||
-    picker.status === 'CREATED' ||
-    picker.status === 'PROCESSING' ||
-    picker.status === 'SCHEDULED';
+  const showProgress = shouldShowProgress(picker.status);
   const statusConfig = STATUS_COLORS[picker.status];
   const StatusIcon = STATUS_ICONS[picker.status];
   const hasDrawn = picker.draws && picker.draws.length > 0;
 
-  if (shouldShowProgress) {
+  if (showProgress) {
     return (
       <TwitterScrapeProgressMonitor
         pickerId={picker.id}
@@ -598,6 +596,39 @@ const WinnersSection: React.FC<WinnersSectionProps> = ({
   onDisqualify,
   isDrawing
 }) => {
+  const handleShare = () => {
+    const winnerUsernames = winners
+      .map((draw) => {
+        const user = picker.users.find((u) => u.id === draw.userId);
+        return user?.username;
+      })
+      .filter(Boolean);
+
+    const winnersText =
+      winnerUsernames.length === 1
+        ? `@${winnerUsernames[0]}`
+        : winnerUsernames.length === 2
+          ? `@${winnerUsernames[0]} and @${winnerUsernames[1]}`
+          : `${winnerUsernames
+              .slice(0, -1)
+              .map((u) => `@${u}`)
+              .join(
+                ', '
+              )}, and @${winnerUsernames[winnerUsernames.length - 1]}`;
+
+    const firstTweetId = picker.tweetUrls[0]
+      ? extractTweetId(picker.tweetUrls[0])
+      : null;
+
+    const tweetText = `🎉 Congratulations to ${winnersText} for winning our giveaway!\n\n${window.location.origin}/pickers/x/${picker.id}`;
+
+    const twitterUrl = firstTweetId
+      ? `https://twitter.com/intent/tweet?in_reply_to=${firstTweetId}&text=${encodeURIComponent(tweetText)}`
+      : `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+
+    window.open(twitterUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <Card className="border-yellow-500/50 bg-yellow-500/5">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -607,19 +638,25 @@ const WinnersSection: React.FC<WinnersSectionProps> = ({
             Winners ({winners.length})
           </div>
         </CardTitle>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onDrawExtra}
-          disabled={isDrawing}
-        >
-          {isDrawing ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-          ) : (
-            <Plus className="h-4 w-4 mr-2" />
-          )}
-          Draw Extra
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleShare}>
+            <Share2 className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Share</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onDrawExtra}
+            disabled={isDrawing}
+          >
+            {isDrawing ? (
+              <Loader2 className="h-4 w-4 sm:mr-2 animate-spin" />
+            ) : (
+              <Plus className="h-4 w-4 sm:mr-2" />
+            )}
+            <span className="hidden sm:inline">Draw Extra</span>
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 items-stretch">
