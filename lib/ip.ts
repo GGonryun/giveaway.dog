@@ -102,7 +102,9 @@ export namespace ip {
           message: "Couldn't determine your IP address"
         });
       } else {
-        const response = await fetch(`http://ipwho.is/${ip}`);
+        const response = await fetch(`https://ipwho.is/${ip}`, {
+          cache: 'no-store'
+        });
         const locationData = await response.json();
         console.info('ip', locationData);
         const parsed = ipSchema.safeParse(locationData);
