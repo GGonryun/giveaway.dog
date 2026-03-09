@@ -17,21 +17,11 @@ const updateAccountType = procedure()
   .handler(async ({ input, user, db }) => {
     const { accountType } = input;
 
-    const existingUser = await db.user.findUnique({
-      where: { id: user.id }
-    });
-
-    if (!existingUser?.onboarded) {
-      throw new ApplicationError({
-        code: 'PRECONDITION_FAILED',
-        message: 'User must complete onboarding first'
-      });
-    }
-
     try {
       const updatedUser = await db.user.update({
         where: { id: user.id },
         data: {
+          onboarded: true,
           accountType
         }
       });
