@@ -944,7 +944,6 @@ model TwitterPicker {
   id                  String              @id @default(cuid())
   runId               String? // the associated workflow
   teamId              String?
-  userId              String? // the user who created the picker, used for attribution and auditing purposes, not necessarily the same as the team owner
   team                Team?               @relation(fields: [teamId], references: [id], onDelete: Cascade)
   tweetUrls           String[]
   tweets              TwitterPost[]
