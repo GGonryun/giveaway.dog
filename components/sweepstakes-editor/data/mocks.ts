@@ -125,6 +125,13 @@ export const mockUserProfile: UserSchema = {
       label: 'PreviewUser',
       link: 'https://velora.tv/previewuser',
       scopes: PROVIDER_REQUIRED_SCOPES.VELORA
+    },
+    {
+      type: IdentityProvider.LINKEDIN,
+      status: 'ACTIVE',
+      label: 'Preview User',
+      link: 'https://www.linkedin.com/in/previewuser/',
+      scopes: PROVIDER_REQUIRED_SCOPES.LINKEDIN
     }
   ]
 };

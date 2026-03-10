@@ -24,6 +24,7 @@ import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook
 import { SocialTikTokIcon } from '@/lib/integrations/components/icons/tiktok-icon';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { SocialVeloraIcon } from '@/lib/integrations/components/icons/velora-icon';
+import { SocialLinkedInIcon } from '@/lib/integrations/components/icons/linked-in-icon';
 import { TaskType } from '../schemas';
 
 export type TaskTheme = {
@@ -197,6 +198,14 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         symbol: 'bg-white text-velora-1',
         arrow: 'bg-velora-1 text-white fill-velora-1',
         icon: SocialVeloraIcon
+      };
+    case 'LINKEDIN_CONNECT':
+      return {
+        action:
+          'bg-linkedin-1 text-white group-hover:bg-linkedin-1 group-hover:text-white hover:bg-linkedin-1 hover:text-white dark:bg-linkedin-1 dark:hover:text-white dark:hover:bg-linkedin-1',
+        symbol: 'bg-white text-linkedin-1',
+        arrow: 'bg-linkedin-1 text-white fill-linkedin-1',
+        icon: SocialLinkedInIcon
       };
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':

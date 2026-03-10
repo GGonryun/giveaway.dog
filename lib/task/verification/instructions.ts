@@ -809,6 +809,30 @@ export function getVerificationInstructions(args: {
         ]
       };
 
+    case 'LINKEDIN_CONNECT':
+      return {
+        title: 'Verify LinkedIn Connection (Automatic)',
+        description: `This task is automatically verified via LinkedIn API`,
+        steps: [
+          {
+            step: 1,
+            instruction:
+              'This task is automatically verified when the user connects their LinkedIn account',
+            note: 'The system validates the LinkedIn account is connected and accessible'
+          },
+          {
+            step: 2,
+            instruction:
+              'Check if the user has a LinkedIn username in their profile'
+          },
+          {
+            step: 3,
+            instruction:
+              'If automatic verification failed, manually verify their LinkedIn profile exists'
+          }
+        ]
+      };
+
     default:
       throw assertNever(task);
   }

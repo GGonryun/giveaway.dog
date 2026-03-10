@@ -97,6 +97,7 @@ export const processTaskJob = async (
     case 'BLUESKY_REPOST':
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
+    case 'LINKEDIN_CONNECT':
     case 'REFERRAL_LINK':
     case 'MULTIPLE_CHOICE':
     case 'SUBMIT_MEDIA':

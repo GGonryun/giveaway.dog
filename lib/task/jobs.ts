@@ -45,6 +45,7 @@ export const createJobsForTask = (
     case 'BLUESKY_REPOST':
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
+    case 'LINKEDIN_CONNECT':
     case 'REFERRAL_LINK':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':

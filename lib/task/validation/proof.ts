@@ -98,6 +98,7 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'BLUESKY_REPOST_IMPORT':
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
+    case 'LINKEDIN_CONNECT':
     case 'REFERRAL_LINK':
       return Prisma.JsonNull;
     default:

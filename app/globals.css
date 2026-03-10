@@ -131,6 +131,9 @@
     /* Velora Palette */
     --velora-1: oklch(0.7563 0.1431 82.65);
 
+    /* LinkedIn Palette */
+    --linkedin-1: oklch(0.5313 0.1301 243.65);
+
     /* Chart palette */
     --chart-1: oklch(0.7459 0.1483 156.4499);
     --chart-2: oklch(0.5393 0.2713 286.7462);
@@ -343,6 +346,8 @@
     --color-reddit-1: var(--reddit-1);
 
     --color-velora-1: var(--velora-1);
+
+    --color-linkedin-1: var(--linkedin-1);
 
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);

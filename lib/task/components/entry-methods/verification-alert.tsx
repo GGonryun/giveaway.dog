@@ -55,6 +55,7 @@ const VERIFICATION_WARNINGS: Record<
   BLUESKY_REPOST_IMPORT: undefined,
   VELORA_CONNECT: undefined,
   VELORA_FOLLOW: undefined,
+  LINKEDIN_CONNECT: undefined,
   DISCORD_INTERACTION_IMPORT: undefined,
   REFERRAL_LINK: undefined,
   SUBMIT_MEDIA: undefined

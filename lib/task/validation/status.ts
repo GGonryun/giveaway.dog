@@ -35,6 +35,7 @@ export const computeTaskStatus = (task: TaskSchema) => {
     case 'BLUESKY_REPOST':
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
+    case 'LINKEDIN_CONNECT':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':
     case 'MULTIPLE_CHOICE':

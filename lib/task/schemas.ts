@@ -625,6 +625,14 @@ export const submitMediaTaskSchema = baseTaskSchema.extend({
 
 export type SubmitMediaTaskSchema = z.infer<typeof submitMediaTaskSchema>;
 
+export const linkedInConnectTaskSchema = baseTaskSchema.extend({
+  type: z.literal('LINKEDIN_CONNECT')
+});
+
+export type LinkedInConnectTaskSchema = z.infer<
+  typeof linkedInConnectTaskSchema
+>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -668,7 +676,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   blueskyRepostImportTaskSchema,
   veloraConnectTaskSchema,
   veloraFollowTaskSchema,
-  referralLinkTaskSchema
+  referralLinkTaskSchema,
+  linkedInConnectTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -716,7 +725,8 @@ export const TASK_LABEL: Record<TaskType, string> = {
   BLUESKY_LIKE_IMPORT: 'Like a post on Bluesky',
   BLUESKY_REPOST_IMPORT: 'Repost on Bluesky',
   VELORA_CONNECT: 'Connect Velora',
-  VELORA_FOLLOW: 'Follow on Velora'
+  VELORA_FOLLOW: 'Follow on Velora',
+  LINKEDIN_CONNECT: 'Connect LinkedIn'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -778,6 +788,7 @@ export const TASK_INPUT_SCHEMA = {
   BLUESKY_REPOST_IMPORT: z.object({}),
   VELORA_CONNECT: z.object({}),
   VELORA_FOLLOW: z.object({}),
+  LINKEDIN_CONNECT: z.object({}),
   REFERRAL_LINK: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
@@ -839,6 +850,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   }),
   VELORA_CONNECT: z.object({}),
   VELORA_FOLLOW: z.object({}),
+  LINKEDIN_CONNECT: z.object({}),
   REFERRAL_LINK: z.object({}),
   SUBMIT_MEDIA: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
@@ -902,6 +914,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   BLUESKY_REPOST_IMPORT: 'BLUESKY',
   VELORA_CONNECT: 'VELORA',
   VELORA_FOLLOW: 'VELORA',
+  LINKEDIN_CONNECT: 'LINKEDIN',
   REFERRAL_LINK: 'BONUS',
   SUBMIT_MEDIA: 'QUESTION'
 };
@@ -948,6 +961,7 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   BLUESKY_REPOST_IMPORT: 'BLUESKY',
   VELORA_CONNECT: 'VELORA',
   VELORA_FOLLOW: 'VELORA',
+  LINKEDIN_CONNECT: 'LINKEDIN',
   REFERRAL_LINK: 'ANONYMOUS',
   SUBMIT_MEDIA: 'ANONYMOUS'
 };
@@ -1026,6 +1040,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   BLUESKY_REPOST_IMPORT: 'social',
   VELORA_CONNECT: 'social',
   VELORA_FOLLOW: 'social',
+  LINKEDIN_CONNECT: 'social',
   REFERRAL_LINK: 'engagement',
   SUBMIT_MEDIA: 'engagement'
 };
@@ -1077,6 +1092,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   BLUESKY_REPOST_IMPORT: true,
   VELORA_CONNECT: false,
   VELORA_FOLLOW: false,
+  LINKEDIN_CONNECT: false,
   REFERRAL_LINK: false,
   SUBMIT_MEDIA: false
 };
@@ -1123,6 +1139,7 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   BLUESKY_REPOST_IMPORT: true,
   VELORA_CONNECT: true,
   VELORA_FOLLOW: true,
+  LINKEDIN_CONNECT: true,
   REFERRAL_LINK: true,
   SUBMIT_MEDIA: true
 };
@@ -1170,6 +1187,7 @@ export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
   BLUESKY_REPOST_IMPORT: false,
   VELORA_CONNECT: false,
   VELORA_FOLLOW: false,
+  LINKEDIN_CONNECT: false,
   SUBMIT_MEDIA: false
 };
 
@@ -1270,7 +1288,8 @@ export const TASK_VERIFICATION_REQUIREMENT: Record<
   VELORA_CONNECT: 'automatic',
   VELORA_FOLLOW: 'automatic',
   REFERRAL_LINK: 'manual',
-  SUBMIT_MEDIA: 'manual'
+  SUBMIT_MEDIA: 'manual',
+  LINKEDIN_CONNECT: 'automatic'
 };
 
 export const twitterProofSchema = z.object({

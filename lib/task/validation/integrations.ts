@@ -80,6 +80,8 @@ export const validateTask = async <T extends TaskSchema>(
         ...input,
         task: input.task
       });
+    case 'LINKEDIN_CONNECT':
+      return Promise.resolve();
     case 'VELORA_FOLLOW':
       return await checkVeloraFollow(db, {
         ...input,

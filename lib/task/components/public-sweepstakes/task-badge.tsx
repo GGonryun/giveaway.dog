@@ -208,6 +208,7 @@ export const TaskBadge: React.FC<TaskBadgeProps> = (props) => {
     case 'BLUESKY_REPOST_IMPORT':
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
+    case 'LINKEDIN_CONNECT':
     case 'SUBMIT_MEDIA':
       return null;
     default:

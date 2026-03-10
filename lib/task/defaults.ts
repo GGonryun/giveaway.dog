@@ -302,6 +302,14 @@ export const toDefaultValues = <T extends TaskType>(type: T): TaskOf<T> => {
       mandatory: false,
       tasksRequired: 0
     },
+    ['LINKEDIN_CONNECT']: {
+      id: '',
+      type: 'LINKEDIN_CONNECT',
+      title: 'Connect to LinkedIn',
+      value: 1,
+      mandatory: false,
+      tasksRequired: 0
+    },
     ['VELORA_FOLLOW']: {
       id: '',
       type: 'VELORA_FOLLOW',
