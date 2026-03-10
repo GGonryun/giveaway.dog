@@ -976,6 +976,7 @@ export const TASK_PLATFORM_LABEL: Record<TaskPlatformSchema, string> = {
   FACEBOOK: 'Facebook',
   TIKTOK: 'TikTok',
   VELORA: 'Velora',
+  LINKEDIN: 'LinkedIn',
   ANONYMOUS: 'Anonymous'
 };
 

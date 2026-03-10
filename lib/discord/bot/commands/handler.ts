@@ -8,15 +8,19 @@ export const POST = async (request: NextRequest) => {
     const body = await verifyDiscordRequest(request);
 
     switch (body.type) {
-      case 1: { // PING
+      case 1: {
+        // PING
         const { handlePingCommand } = await import('./ping');
         return handlePingCommand();
       }
-      case 2: { // APPLICATION_COMMAND
-        const { handleApplicationCommandRequest } = await import('./application');
+      case 2: {
+        // APPLICATION_COMMAND
+        const { handleApplicationCommandRequest } =
+          await import('./application');
         return handleApplicationCommandRequest({ body });
       }
-      case 3: { // MESSAGE_COMPONENT
+      case 3: {
+        // MESSAGE_COMPONENT
         const { handleButtonInteraction } = await import('./button');
         return handleButtonInteraction({ body });
       }

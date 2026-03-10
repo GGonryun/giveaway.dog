@@ -9,7 +9,8 @@ import {
   REQUIRED_KICK_SCOPES,
   REQUIRED_TIKTOK_SCOPES,
   REQUIRED_BLUESKY_SCOPES,
-  REQUIRED_VELORA_SCOPES
+  REQUIRED_VELORA_SCOPES,
+  REQUIRED_LINKEDIN_SCOPES
 } from '../scopes';
 import { widetype } from '@/lib/widetype';
 import { IdentityProvider } from '@prisma/client';
@@ -33,7 +34,8 @@ export const PROVIDER_REQUIRED_SCOPES: Record<IdentityProvider, string[]> = {
   TWITCH: REQUIRED_TWITCH_SCOPES,
   KICK: REQUIRED_KICK_SCOPES,
   TIKTOK: REQUIRED_TIKTOK_SCOPES,
-  VELORA: REQUIRED_VELORA_SCOPES
+  VELORA: REQUIRED_VELORA_SCOPES,
+  LINKEDIN: REQUIRED_LINKEDIN_SCOPES
 };
 
 export const isMissingScopes = (
@@ -77,7 +79,8 @@ export const IDENTITY_PROVIDER_LABEL: Record<IdentityProviderSchema, string> = {
   INSTAGRAM: 'Instagram',
   FACEBOOK: 'Facebook',
   TIKTOK: 'TikTok',
-  VELORA: 'Velora'
+  VELORA: 'Velora',
+  LINKEDIN: 'LinkedIn'
 };
 
 export const IS_SOCIAL_PROVIDER: Record<IdentityProviderSchema, boolean> = {
@@ -94,6 +97,7 @@ export const IS_SOCIAL_PROVIDER: Record<IdentityProviderSchema, boolean> = {
   INSTAGRAM: true,
   YOUTUBE: false,
   VELORA: true,
+  LINKEDIN: true,
   EMAIL: false
 };
 
@@ -114,6 +118,7 @@ export const ENABLED_IDENTITY_PROVIDERS: Record<
   ANONYMOUS: true,
   YOUTUBE: false,
   VELORA: true,
+  LINKEDIN: true,
   EMAIL: true
 };
 
@@ -130,6 +135,7 @@ const AVAILABLE_LOGIN_PROVIDERS: Record<IdentityProviderSchema, boolean> = {
   INSTAGRAM: false,
   YOUTUBE: false,
   VELORA: true,
+  LINKEDIN: true,
   EMAIL: true,
   ANONYMOUS: false
 };
@@ -163,6 +169,7 @@ export const authProviderSchema = z.union([
   z.literal('youtube'),
   z.literal('email'),
   z.literal('velora'),
+  z.literal('linkedin'),
   z.literal('anonymous')
 ]);
 
@@ -195,6 +202,7 @@ export const IDENTITY_PROVIDER_TO_AUTH_PROVIDER: Record<
   INSTAGRAM: 'instagram',
   YOUTUBE: 'youtube',
   VELORA: 'velora',
+  LINKEDIN: 'linkedin',
   EMAIL: 'email',
   ANONYMOUS: 'anonymous'
 };

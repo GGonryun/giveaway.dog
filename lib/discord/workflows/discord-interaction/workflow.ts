@@ -22,7 +22,10 @@ export async function discordInteractionWorkflow({
     await patchDiscordWebhook({
       applicationId: body.application_id,
       token: body.token,
-      message: { content: taskResult.content, flags: DISCORD_RESPONSE_FLAG.EPHEMERAL }
+      message: {
+        content: taskResult.content,
+        flags: DISCORD_RESPONSE_FLAG.EPHEMERAL
+      }
     });
     return;
   }

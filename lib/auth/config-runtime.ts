@@ -14,8 +14,8 @@ export const authConfig = {
   events: {
     async linkAccount({ user, account, profile }) {
       console.info('linkAccount event for provider:', account, user, profile);
-      const label = getAccountLabel(account, profile);
-      const link = getAccountLink(account, profile);
+      const label = getAccountLabel(account, profile, user);
+      const link = getAccountLink(account, profile, user);
       const provider = parseAuthProvider(account.provider);
 
       await prisma.$transaction(async (tx) => {

@@ -391,6 +391,7 @@ enum IdentityProvider {
   INSTAGRAM
   FACEBOOK
   TIKTOK
+  LINKEDIN
   ANONYMOUS
   VELORA
 }

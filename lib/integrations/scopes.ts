@@ -213,6 +213,8 @@ export const REQUIRED_VELORA_SCOPES = ['user:read'];
 
 export const REQUIRED_FACEBOOK_SCOPES = ['email', 'user_link'];
 
+export const REQUIRED_LINKEDIN_SCOPES = ['openid', 'profile', 'email', 'r_profile_basicinfo'];
+
 export const REQUIRED_TIKTOK_SCOPES = ['user.info.basic'];
 
 export const REQUIRED_BLUESKY_SCOPES = ['atproto', 'transition:generic'];
@@ -303,5 +305,6 @@ export const VERIFIED_EMAIL_PROVIDERS: Record<AuthProvider, boolean> = {
   tiktok: false,
   youtube: false,
   velora: false,
+  linkedin: true,
   anonymous: false
 };

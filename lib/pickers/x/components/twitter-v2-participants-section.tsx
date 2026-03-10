@@ -64,7 +64,9 @@ export const TwitterV2ParticipantsSection = ({
                 Participants
                 <Badge variant="secondary" className="ml-2">
                   <span className="sm:hidden">{displayCount}</span>
-                  <span className="hidden sm:inline">{displayCount} {pluralize('participant', displayCount)}</span>
+                  <span className="hidden sm:inline">
+                    {displayCount} {pluralize('participant', displayCount)}
+                  </span>
                 </Badge>
               </CardTitle>
 

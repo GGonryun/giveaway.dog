@@ -9,6 +9,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
 import TwitchProvider from 'next-auth/providers/twitch';
 import InstagramProvider from 'next-auth/providers/instagram';
+import LinkedInProvider from 'next-auth/providers/linkedin';
 import TikTokProvider from 'next-auth/providers/tiktok';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -23,7 +24,8 @@ import {
   REQUIRED_TWITCH_SCOPES,
   REQUIRED_KICK_SCOPES,
   REQUIRED_FACEBOOK_SCOPES,
-  REQUIRED_VELORA_SCOPES
+  REQUIRED_VELORA_SCOPES,
+  REQUIRED_LINKEDIN_SCOPES
 } from '../integrations/scopes';
 import { UserSource } from '@prisma/client';
 import prisma from '@/lib/prisma';
@@ -176,6 +178,44 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       allowDangerousEmailAccountLinking: true,
       clientId: process.env.INSTAGRAM_CLIENT_ID!,
       clientSecret: process.env.INSTAGRAM_CLIENT_SECRET!
+    }),
+    LinkedInProvider({
+      allowDangerousEmailAccountLinking: true,
+      clientId: process.env.LINKEDIN_CLIENT_ID,
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+      authorization: { params: { scope: REQUIRED_LINKEDIN_SCOPES.join(' ') } },
+      async profile(profile, tokens) {
+        let linkedInProfileUrl: string | null = null;
+        try {
+          const res = await fetch('https://api.linkedin.com/rest/identityMe', {
+            headers: {
+              Authorization: `Bearer ${tokens.access_token}`,
+              'LinkedIn-Version': '202411'
+            }
+          });
+          if (res.ok) {
+            const data = await res.json();
+            console.log('LinkedIn identity data', data);
+            linkedInProfileUrl = data.basicInfo?.profileUrl ?? null;
+          } else {
+            const body = await res.text();
+            console.error('Failed to fetch LinkedIn identity', {
+              status: res.status,
+              statusText: res.statusText,
+              body
+            });
+          }
+        } catch (error) {
+          console.error('Failed to fetch LinkedIn identity', error);
+        }
+        return {
+          id: profile.sub as string,
+          name: profile.name as string,
+          email: profile.email as string,
+          image: profile.picture as string,
+          linkedInProfileUrl
+        };
+      }
     })
   ]
 }));

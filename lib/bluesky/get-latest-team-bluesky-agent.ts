@@ -51,7 +51,8 @@ export async function getLatestTeamBlueskyCredentials(
   if (!integration.account_id) {
     throw new ApplicationError({
       code: 'UNAUTHORIZED',
-      message: 'Bluesky account ID not found. Please reconnect your Bluesky integration.'
+      message:
+        'Bluesky account ID not found. Please reconnect your Bluesky integration.'
     });
   }
 

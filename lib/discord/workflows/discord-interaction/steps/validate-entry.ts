@@ -27,12 +27,18 @@ export async function validateEntry({
   'use step';
 
   if (!body.guild_id) {
-    return { valid: false, content: 'This interaction must be used in a server.' };
+    return {
+      valid: false,
+      content: 'This interaction must be used in a server.'
+    };
   }
 
   const discordUserId = body.member?.user?.id || body.user?.id;
   if (!discordUserId) {
-    return { valid: false, content: 'Unable to identify your Discord account.' };
+    return {
+      valid: false,
+      content: 'Unable to identify your Discord account.'
+    };
   }
 
   const userRoleIds = body.member?.roles || [];
@@ -45,12 +51,16 @@ export async function validateEntry({
   if (!hasRequiredRoles) {
     return {
       valid: false,
-      content: 'You are missing one or more required roles to enter this giveaway.'
+      content:
+        'You are missing one or more required roles to enter this giveaway.'
     };
   }
 
   if (!body.member) {
-    return { valid: false, content: 'You must be a member of this server to enter.' };
+    return {
+      valid: false,
+      content: 'You must be a member of this server to enter.'
+    };
   }
 
   const user = await db.user.findFirst({

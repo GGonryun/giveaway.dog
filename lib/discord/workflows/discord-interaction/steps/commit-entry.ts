@@ -5,7 +5,9 @@ import type {
 } from '../../../bot/schema';
 import type { DiscordScoringData } from '@/lib/scoring/schemas';
 
-const toDiscordScoringData = (member: DiscordMemberSchema): DiscordScoringData => ({
+const toDiscordScoringData = (
+  member: DiscordMemberSchema
+): DiscordScoringData => ({
   userId: member.user.id,
   username: member.user.username,
   avatar: member.avatar || member.user.avatar,
@@ -119,7 +121,9 @@ export async function commitEntry({
       'code' in error &&
       (error as { code: string }).code === 'P2002'
     ) {
-      console.log('Duplicate entry detected (P2002) — confirmation already sent, ignoring.');
+      console.log(
+        'Duplicate entry detected (P2002) — confirmation already sent, ignoring.'
+      );
     } else {
       throw error;
     }

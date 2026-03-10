@@ -1,13 +1,4 @@
-import {
-  Facebook,
-  Instagram,
-  Linkedin,
-  Youtube,
-  Globe,
-  MessageCircle,
-  Video,
-  type LucideIcon
-} from 'lucide-react';
+import { Globe, type LucideIcon } from 'lucide-react';
 import { type SocialPlatform } from '@/schemas/social-links';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';

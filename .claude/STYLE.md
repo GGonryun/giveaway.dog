@@ -132,7 +132,7 @@ const { environment } = context;
 **Single-line when it fits.** Remove newlines after opening `{`/`[` to keep object/array literals on one line. Omit braces on single-line `if`/`else`; use braces if it doesn't fit on one line.
 
 ```ts
-const obj = { x: 1, y: "a" };
+const obj = { x: 1, y: 'a' };
 if (condition) return;
 if (condition) {
   // longer logic

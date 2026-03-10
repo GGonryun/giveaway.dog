@@ -46,7 +46,11 @@ export async function fetchTask({
 
   const endDate = (sweepstakes.timing as { endDate?: string } | null)?.endDate;
 
-  if (sweepstakes.status === 'COMPLETED' || !endDate || new Date(endDate) < new Date()) {
+  if (
+    sweepstakes.status === 'COMPLETED' ||
+    !endDate ||
+    new Date(endDate) < new Date()
+  ) {
     return { status: 'ended', sweepstakesId: sweepstakes.id };
   }
 

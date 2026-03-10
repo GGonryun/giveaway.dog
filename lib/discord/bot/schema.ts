@@ -164,7 +164,9 @@ export const discordFollowupMessageSchema = z.object({
 });
 
 export type DiscordEmbedSchema = z.infer<typeof discordEmbedSchema>;
-export type DiscordFollowupMessage = z.infer<typeof discordFollowupMessageSchema>;
+export type DiscordFollowupMessage = z.infer<
+  typeof discordFollowupMessageSchema
+>;
 
 export const toDiscordInteraction = (
   data: unknown

@@ -128,6 +128,7 @@ const signInHandler = async (args: {
     case 'KICK':
     case 'TIKTOK':
     case 'VELORA':
+    case 'LINKEDIN':
       return await signIn(
         IDENTITY_PROVIDER_TO_AUTH_PROVIDER[provider],
         options

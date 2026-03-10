@@ -1,7 +1,8 @@
 // TODO: fix any
 export const getAccountLabel = (
   account: any,
-  profile: undefined | any
+  profile: undefined | any,
+  user?: any
 ): string | null => {
   switch (account.provider) {
     case 'google':
@@ -36,6 +37,13 @@ export const getAccountLabel = (
       return (
         profile?.username || profile?.display_name || profile?.name || null
       );
+    case 'linkedin': {
+      if (user?.linkedInProfileUrl) {
+        const slug = new URL(user.linkedInProfileUrl).pathname.split('/').filter(Boolean).at(-1);
+        if (slug) return slug;
+      }
+      return profile?.name || profile?.email || null;
+    }
     default:
       return null;
   }
@@ -43,8 +51,10 @@ export const getAccountLabel = (
 
 export const getAccountLink = (
   account: any,
-  profile: undefined | any
+  profile: undefined | any,
+  user?: any
 ): string | null => {
+  console.info('Generating account link for provider:', account, profile);
   const label = getAccountLabel(account, profile);
 
   switch (account.provider) {
@@ -78,6 +88,8 @@ export const getAccountLink = (
     case 'velora':
       if (!label) return null;
       return `https://velora.tv/${label}`;
+    case 'linkedin':
+      return user?.linkedInProfileUrl ?? null;
     default:
       return null;
   }
