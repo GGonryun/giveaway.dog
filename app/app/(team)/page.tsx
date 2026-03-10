@@ -2,6 +2,10 @@ import { EmojiLogo } from '@/components/patterns/emoji-logo';
 import { TeamPickerForm } from '@/components/team/team-picker-form';
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import getUserTeams from '@/procedures/teams/get-user-teams';
+import { getLastTeamSlugFromServerCookies } from '@/lib/team/cookies';
 
 export const metadata: Metadata = {
   title: 'Dashboard | Giveaway.dog',
@@ -14,7 +18,25 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
-export default async function TeamPickerPage() {
+export default async function TeamPickerPage({
+  searchParams
+}: {
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const resolvedParams = await searchParams;
+
+  if (!resolvedParams.step) {
+    const cookieStore = await cookies();
+    const lastSlug = getLastTeamSlugFromServerCookies(cookieStore);
+
+    if (lastSlug) {
+      const teams = await getUserTeams();
+      if (teams.ok && teams.data.some((t) => t.slug === lastSlug)) {
+        redirect(`/app/${lastSlug}`);
+      }
+    }
+  }
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
