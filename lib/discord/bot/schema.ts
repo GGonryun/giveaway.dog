@@ -145,6 +145,27 @@ export type DiscordButtonInteractionSchema = z.infer<
 >;
 export type DiscordInteractionSchema = z.infer<typeof discordInteractionSchema>;
 
+export const discordEmbedSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  color: z.number().optional(),
+  footer: z
+    .object({
+      text: z.string().optional(),
+      icon_url: z.string().optional()
+    })
+    .optional()
+});
+
+export const discordFollowupMessageSchema = z.object({
+  content: z.string().optional(),
+  embeds: z.array(discordEmbedSchema).optional(),
+  flags: z.number().optional()
+});
+
+export type DiscordEmbedSchema = z.infer<typeof discordEmbedSchema>;
+export type DiscordFollowupMessage = z.infer<typeof discordFollowupMessageSchema>;
+
 export const toDiscordInteraction = (
   data: unknown
 ): DiscordInteractionSchema => {

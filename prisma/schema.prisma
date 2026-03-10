@@ -237,7 +237,7 @@ model Integration {
   id       String              @id @default(cuid())
   provider IntegrationProvider
 
-  account_id    String
+  account_id    String?
   teamId        String?
   team          Team?                  @relation(fields: [teamId], references: [id], onDelete: Cascade)
   status        IntegrationStatus      @default(ACTIVE)

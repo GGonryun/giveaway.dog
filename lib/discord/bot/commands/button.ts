@@ -1,29 +1,22 @@
 import { NextResponse } from 'next/server';
 import { toDeferredEphemeralChannelMessage } from '../messages';
 import type { DiscordButtonInteractionSchema } from '../schema';
-import { scheduleDiscordJob } from '../jobs';
 import { toSplitActionId } from '../util';
+import { start } from 'workflow/api';
+import { discordInteractionWorkflow } from '../../workflows/discord-interaction/workflow';
 
 export async function handleButtonInteraction({
   body
 }: {
   body: DiscordButtonInteractionSchema;
 }) {
-  const { action, operation, taskId } = toSplitActionId(body);
+  const { action, taskId } = toSplitActionId(body);
 
   if (action === 'task') {
-    if (operation === 'enter' && taskId) {
-      void scheduleDiscordJob(body);
-      return NextResponse.json(
-        toDeferredEphemeralChannelMessage(
-          'Processing your entry... Please wait.'
-        )
-      );
-    } else if (operation === 'distractor') {
-      return NextResponse.json(
-        toDeferredEphemeralChannelMessage('Oops! Try clicking the Join button.')
-      );
-    }
+    void start(discordInteractionWorkflow, [{ body, taskId }]);
+    return NextResponse.json(
+      toDeferredEphemeralChannelMessage('Processing your entry... Please wait.')
+    );
   }
 
   return NextResponse.json(

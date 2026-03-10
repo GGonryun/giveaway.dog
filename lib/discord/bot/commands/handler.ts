@@ -1,9 +1,6 @@
 import { ApplicationError, assertNever } from '@/lib/errors';
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyDiscordRequest } from '../verify';
-import { handlePingCommand } from './ping';
-import { handleApplicationCommandRequest } from './application';
-import { handleButtonInteraction } from './button';
 import { toEphemeralChannelMessage } from '../messages';
 
 export const POST = async (request: NextRequest) => {
@@ -11,12 +8,18 @@ export const POST = async (request: NextRequest) => {
     const body = await verifyDiscordRequest(request);
 
     switch (body.type) {
-      case 1: // PING
+      case 1: { // PING
+        const { handlePingCommand } = await import('./ping');
         return handlePingCommand();
-      case 2: // APPLICATION_COMMAND
+      }
+      case 2: { // APPLICATION_COMMAND
+        const { handleApplicationCommandRequest } = await import('./application');
         return handleApplicationCommandRequest({ body });
-      case 3: // MESSAGE_COMPONENT
+      }
+      case 3: { // MESSAGE_COMPONENT
+        const { handleButtonInteraction } = await import('./button');
         return handleButtonInteraction({ body });
+      }
       default:
         throw assertNever(body);
     }

@@ -32,12 +32,19 @@ export const startDiscordInstall = procedure()
       select: { id: true }
     });
 
+    await db.integration.deleteMany({
+      where: {
+        teamId: team.id,
+        provider: 'DISCORD',
+        status: 'PENDING'
+      }
+    });
+
     await db.integration.create({
       data: {
         teamId: team.id,
         ownerId: user.id,
         provider: 'DISCORD',
-        account_id: '',
         status: 'PENDING',
         stateId: state.id,
         settings: {}

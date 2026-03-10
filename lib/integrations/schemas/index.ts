@@ -21,7 +21,7 @@ export const integrationSchema = z.object({
   id: z.string(),
   label: z.string(),
   url: z.string().url().nullable(),
-  account_id: z.string(),
+  account_id: z.string().nullable(),
   provider: z.nativeEnum(IntegrationProvider),
   status: z.nativeEnum(IntegrationStatus),
   scopes: z.array(z.string()).optional(),
