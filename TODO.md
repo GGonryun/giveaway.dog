@@ -6,20 +6,15 @@
 
 - [ ] Add Polls
 
-- [ ] Add Leaderboards
-
 - [ ] Bluesky Picker
 
-- [ ] Add Discord improvements
-
-- [ ] Add LinkedIn Task
+- [ ] Add the "Tribunal" and blacklisting
 
 ---
 
 ### @theejankanator
 
 - Make it easy to collect data about what responses users have provided to questions.
-- Just curious is there a way to create a function where they could put their entries into different games under one giveaway with creating a giveaway for every individual game?
 
 ## @TheGamesDetective
 
@@ -34,7 +29,6 @@
 
 - [ ] Add a Threads integration - https://authjs.dev/getting-started/providers/threads (connect with threads, follow on threads, like a post, reply to a post)
 - [ ] Add Reddit integration - https://next-auth.js.org/providers/reddit (visit a subreddit, up vote a post, follow a subreddit, login with Reddit)
-- [ ] Add LinkedIn integration - https://next-auth.js.org/providers/linkedin (share on linked in, follow a page, login with LinkedIn)
 - [ ] Add a temporary Facebook integration - https://next-auth.js.org/providers/facebook (connect with facebook, follow a page, like a post)
 - [ ] Add a Snapchat integration - https://developers.snap.com/api/marketing-api/Ads-API/authentication (connect with snapchat, follow on snapchat)
 - [ ] Add a Pinterest integration - https://next-auth.js.org/providers/pinterest (connect with pinterest, follow on pinterest, save a pin)
@@ -74,8 +68,6 @@
 
 - [ ] Add back "Validate user" feature validates to make sure that the user email is valid and not disposable.
 
-- [ ] BlueSky picker.
-- [ ] Create a marketing page for "draw verification".
 - [ ] Add support for generating short links for my sweepstakes, and draw verification
 
 ## @Dom on Discord
