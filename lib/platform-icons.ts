@@ -132,7 +132,7 @@ export const PLATFORM_TOOLTIP_THEMES: Record<PlatformId, PlatformTooltipTheme> =
     facebook: { bg: 'facebook-1', text: 'white' },
     snapchat: { bg: 'black', text: 'white' },
     threads: { bg: 'black', text: 'white' },
-    linkedin: { bg: 'black', text: 'white' },
+    linkedin: { bg: 'linkedin-1', text: 'white' },
     pinterest: { bg: 'black', text: 'white' },
     reddit: { bg: 'reddit-1', text: 'white' },
     instagram: { bg: 'instagram-1', text: 'white' },
