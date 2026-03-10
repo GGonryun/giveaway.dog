@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   PROVIDER_THEME,
@@ -17,14 +18,16 @@ type ProviderButtonsProps = {
   identities: IdentityProvider[];
   onSubmit: (provider: IdentityProvider) => void;
   userProviders?: ProviderSchema[];
+  lastUsedProvider?: IdentityProvider;
 };
 
 export const ProviderButtons: React.FC<ProviderButtonsProps> = ({
   identities,
   onSubmit,
-  userProviders
+  userProviders,
+  lastUsedProvider
 }: ProviderButtonsProps) => (
-  <div className="flex flex-col gap-3 w-full">
+  <div className="flex flex-col gap-2 w-full">
     {identities.map((provider) => {
       const account = userProviders?.find((p) => p.type === provider);
       const isError = account?.status === 'ERROR';
@@ -45,6 +48,14 @@ export const ProviderButtons: React.FC<ProviderButtonsProps> = ({
               {isError ? 'Reconnect' : 'Login with'}{' '}
               {IDENTITY_PROVIDER_LABEL[provider]}
             </span>
+            {provider === lastUsedProvider && (
+              <Badge
+                variant="info"
+                className="absolute -top-2 -right-2 text-xs "
+              >
+                Last used
+              </Badge>
+            )}
           </Button>
         </div>
       );

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import {
   ProviderDots,
@@ -13,17 +13,16 @@ import {
   ProviderPills
 } from '@/components/auth/provider-buttons';
 import { AuthError } from '@/components/auth/auth-error';
-import {
-  AlertCircle,
-  ArrowDown,
-  ArrowLeftIcon,
-  ArrowRight
-} from 'lucide-react';
+import { AlertCircle, ArrowDown, ArrowLeftIcon } from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import { Typography } from '../ui/typography';
 import { Flex } from '../ui/flex';
 import login from '@/lib/auth/procedures/login';
+import {
+  getLastLoginProviderCookie,
+  setLastLoginProviderCookie
+} from '@/lib/auth/cookies';
 import { Alert, AlertDescription } from '../ui/alert';
 import { toAuthErrorDescription } from '@/lib/auth/util';
 import { useSearchParams } from 'next/navigation';
@@ -67,6 +66,22 @@ export function LoginOptions({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [showAll, setShowAll] = useState(false);
+  const [lastUsedProvider, setLastUsedProvider] =
+    useState<IdentityProvider | null>(null);
+
+  useEffect(() => {
+    setLastUsedProvider(getLastLoginProviderCookie());
+  }, []);
+
+  const orderedIdentities = useMemo(() => {
+    if (!lastUsedProvider || !allowedIdentities.includes(lastUsedProvider)) {
+      return allowedIdentities;
+    }
+    return [
+      lastUsedProvider,
+      ...allowedIdentities.filter((p) => p !== lastUsedProvider)
+    ];
+  }, [allowedIdentities, lastUsedProvider]);
   const loginProcedure = useProcedure({
     action: login,
     onSuccess() {
@@ -139,6 +154,7 @@ export function LoginOptions({
   };
 
   const handleProviderLogin = (provider: IdentityProvider) => {
+    setLastLoginProviderCookie(provider);
     if (provider === 'EMAIL') {
       setShowEmailForm(true);
       setErrorMessage(null);
@@ -291,13 +307,14 @@ export function LoginOptions({
           onSubmit={handleProviderLogin}
           identities={
             maxVisible && !showAll
-              ? allowedIdentities.slice(0, maxVisible)
-              : allowedIdentities
+              ? orderedIdentities.slice(0, maxVisible)
+              : orderedIdentities
           }
           type={type}
           userProviders={userProviders}
+          lastUsedProvider={lastUsedProvider ?? undefined}
         />
-        {maxVisible && !showAll && allowedIdentities.length > maxVisible && (
+        {maxVisible && !showAll && orderedIdentities.length > maxVisible && (
           <Button
             variant="ghost"
             className="w-full text-muted-foreground"
@@ -318,7 +335,14 @@ const Providers: React.FC<{
   onSubmit: (provider: IdentityProvider) => void;
   type?: LoginButtonType;
   userProviders?: ProviderSchema[];
-}> = ({ identities, onSubmit, type = 'buttons', userProviders }) => {
+  lastUsedProvider?: IdentityProvider;
+}> = ({
+  identities,
+  onSubmit,
+  type = 'buttons',
+  userProviders,
+  lastUsedProvider
+}) => {
   switch (type) {
     case 'buttons':
       return (
@@ -326,6 +350,7 @@ const Providers: React.FC<{
           identities={identities}
           onSubmit={onSubmit}
           userProviders={userProviders}
+          lastUsedProvider={lastUsedProvider}
         />
       );
     case 'icons':
