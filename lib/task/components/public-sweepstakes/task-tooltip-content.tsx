@@ -88,6 +88,7 @@ const toEntriesText = ({ task }: { task: TaskSchema }) => {
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
     case 'LINKEDIN_CONNECT':
+    case 'LINKEDIN_FOLLOW':
     case 'SUBMIT_MEDIA':
       return `Complete task for ${task.value} ${pluralize('entry', task.value)}.`;
     default:

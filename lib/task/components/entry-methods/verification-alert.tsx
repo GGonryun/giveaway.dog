@@ -56,6 +56,7 @@ const VERIFICATION_WARNINGS: Record<
   VELORA_CONNECT: undefined,
   VELORA_FOLLOW: undefined,
   LINKEDIN_CONNECT: undefined,
+  LINKEDIN_FOLLOW: undefined,
   DISCORD_INTERACTION_IMPORT: undefined,
   REFERRAL_LINK: undefined,
   SUBMIT_MEDIA: undefined

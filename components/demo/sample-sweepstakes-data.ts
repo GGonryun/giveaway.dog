@@ -10,6 +10,7 @@ import {
   FACEBOOK_POST_URL,
   INSTAGRAM_PROFILE_URL,
   KICK_CHANNEL_URL,
+  LINKEDIN_PROFILE_URL,
   STEAM_APP_ID_URL,
   TIKTOK_PROFILE_URL,
   TWITCH_CHANNEL_URL,
@@ -78,6 +79,11 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
       ...toDefaultValues('FACEBOOK_VIEW_POST'),
       postUrl: FACEBOOK_POST_URL,
       id: 'b2c4'
+    },
+    {
+      ...toDefaultValues('LINKEDIN_FOLLOW'),
+      profileUrl: LINKEDIN_PROFILE_URL,
+      id: 'c3d5'
     },
     {
       ...toDefaultValues('VELORA_FOLLOW'),

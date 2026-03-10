@@ -99,6 +99,7 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
     case 'LINKEDIN_CONNECT':
+    case 'LINKEDIN_FOLLOW':
     case 'REFERRAL_LINK':
       return Prisma.JsonNull;
     default:

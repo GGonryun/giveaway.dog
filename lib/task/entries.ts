@@ -65,6 +65,7 @@ export const toCompletionValue = (args: CompletionValueArgs) => {
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
     case 'LINKEDIN_CONNECT':
+    case 'LINKEDIN_FOLLOW':
     case 'REFERRAL_LINK':
     case 'SUBMIT_MEDIA':
       return args.task.value;

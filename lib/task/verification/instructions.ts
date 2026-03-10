@@ -833,6 +833,26 @@ export function getVerificationInstructions(args: {
         ]
       };
 
+    case 'LINKEDIN_FOLLOW':
+      return {
+        title: 'Verify LinkedIn Follow (Manual)',
+        description: `This task requires manual verification`,
+        steps: [
+          {
+            step: 1,
+            instruction: 'Ask the user for their LinkedIn profile URL or username'
+          },
+          {
+            step: 2,
+            instruction: `Check your LinkedIn followers at ${task.profileUrl}`
+          },
+          {
+            step: 3,
+            instruction: 'Confirm the user appears in your followers list'
+          }
+        ]
+      };
+
     default:
       throw assertNever(task);
   }

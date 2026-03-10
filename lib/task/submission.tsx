@@ -136,6 +136,7 @@ export const toTaskStatus = (props: {
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
     case 'LINKEDIN_CONNECT':
+    case 'LINKEDIN_FOLLOW':
     case 'SUBMIT_MEDIA':
       return props.submission?.status ?? undefined;
     default:

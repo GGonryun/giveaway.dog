@@ -46,6 +46,7 @@ export const createJobsForTask = (
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
     case 'LINKEDIN_CONNECT':
+    case 'LINKEDIN_FOLLOW':
     case 'REFERRAL_LINK':
     case 'ASK_QUESTION':
     case 'SINGLE_CHOICE':

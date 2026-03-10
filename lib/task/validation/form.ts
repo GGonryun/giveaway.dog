@@ -110,6 +110,7 @@ const typeValidator = (args: ValidateSweepstakeTaskOptions) => {
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
     case 'LINKEDIN_CONNECT':
+    case 'LINKEDIN_FOLLOW':
       return;
     default:
       throw assertNever(task);

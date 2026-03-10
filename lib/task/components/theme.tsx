@@ -200,6 +200,7 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
         icon: SocialVeloraIcon
       };
     case 'LINKEDIN_CONNECT':
+    case 'LINKEDIN_FOLLOW':
       return {
         action:
           'bg-linkedin-1 text-white group-hover:bg-linkedin-1 group-hover:text-white hover:bg-linkedin-1 hover:text-white dark:bg-linkedin-1 dark:hover:text-white dark:hover:bg-linkedin-1',

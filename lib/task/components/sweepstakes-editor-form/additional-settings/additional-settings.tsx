@@ -37,6 +37,7 @@ import { AlertCircle } from 'lucide-react';
 import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
 import { VeloraFollowFormField } from './lib/velora-follow';
+import { LinkedInFollowFormField } from './lib/linkedin-follow';
 import { MaximumReferralsField } from './lib/maximum-referrals';
 import { SteamDeveloperFormField } from './lib/steam-developer';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -56,6 +57,8 @@ export const AdditionalSettings: React.FC<{
       case 'LINKEDIN_CONNECT':
       case 'BONUS_TASK':
         return <></>;
+      case 'LINKEDIN_FOLLOW':
+        return <LinkedInFollowFormField />;
       case 'BONUS_COMPLETE_PROFILE':
         return (
           <div className="flex items-start gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 dark:border-blue-900 dark:bg-blue-950">

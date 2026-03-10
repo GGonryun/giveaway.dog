@@ -59,3 +59,5 @@ export const TIKTOK_PROFILE_URL = 'https://www.tiktok.com/@giveawaydog';
 export const BLUESKY_PROFILE_URL =
   'https://bsky.app/profile/giveawaydog.bsky.social';
 export const VELORA_CHANNEL_URL = 'https://velora.tv/gonryun';
+export const LINKEDIN_PROFILE_URL =
+  'https://www.linkedin.com/company/giveaway-dog';

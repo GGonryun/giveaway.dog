@@ -209,6 +209,7 @@ export const TaskBadge: React.FC<TaskBadgeProps> = (props) => {
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
     case 'LINKEDIN_CONNECT':
+    case 'LINKEDIN_FOLLOW':
     case 'SUBMIT_MEDIA':
       return null;
     default:

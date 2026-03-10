@@ -20,6 +20,7 @@ import {
   blueskyProfileRefineError,
   blueskyProfileRefineUrl
 } from '../integrations/schemas/bluesky-helpers';
+import { profile } from 'console';
 
 export const baseTaskSchema = z.object({
   id: z.string(),
@@ -633,6 +634,21 @@ export type LinkedInConnectTaskSchema = z.infer<
   typeof linkedInConnectTaskSchema
 >;
 
+export const linkedInFollowTaskSchema = baseTaskSchema.extend({
+  type: z.literal('LINKEDIN_FOLLOW'),
+  profileUrl: z
+    .string()
+    .url('LinkedIn Profile URL is required')
+    .refine((val) => {
+      // https://www.linkedin.com/company/giveaway-dog
+      const urlPattern =
+        /^https?:\/\/(www\.)?linkedin\.com\/(company|in)\/[A-Za-z0-9_-]+\/?$/;
+      return urlPattern.test(val);
+    }, 'Unexpected URL, should be like https://www.linkedin.com/company/giveaway-dog or https://www.linkedin.com/in/username')
+});
+
+export type LinkedInFollowTaskSchema = z.infer<typeof linkedInFollowTaskSchema>;
+
 export const taskSchema = z.discriminatedUnion('type', [
   bonusTaskSchema,
   bonusTimedTaskSchema,
@@ -677,7 +693,8 @@ export const taskSchema = z.discriminatedUnion('type', [
   veloraConnectTaskSchema,
   veloraFollowTaskSchema,
   referralLinkTaskSchema,
-  linkedInConnectTaskSchema
+  linkedInConnectTaskSchema,
+  linkedInFollowTaskSchema
 ]);
 
 export type TaskType = z.infer<typeof taskSchema>['type'];
@@ -726,7 +743,8 @@ export const TASK_LABEL: Record<TaskType, string> = {
   BLUESKY_REPOST_IMPORT: 'Repost on Bluesky',
   VELORA_CONNECT: 'Connect Velora',
   VELORA_FOLLOW: 'Follow on Velora',
-  LINKEDIN_CONNECT: 'Connect LinkedIn'
+  LINKEDIN_CONNECT: 'Connect LinkedIn',
+  LINKEDIN_FOLLOW: 'Follow on LinkedIn'
 };
 
 export const TASK_INPUT_SCHEMA = {
@@ -789,6 +807,7 @@ export const TASK_INPUT_SCHEMA = {
   VELORA_CONNECT: z.object({}),
   VELORA_FOLLOW: z.object({}),
   LINKEDIN_CONNECT: z.object({}),
+  LINKEDIN_FOLLOW: z.object({}),
   REFERRAL_LINK: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
@@ -851,6 +870,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   VELORA_CONNECT: z.object({}),
   VELORA_FOLLOW: z.object({}),
   LINKEDIN_CONNECT: z.object({}),
+  LINKEDIN_FOLLOW: z.object({}),
   REFERRAL_LINK: z.object({}),
   SUBMIT_MEDIA: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
@@ -915,6 +935,7 @@ export const TASK_PLATFORM: Record<TaskType, TaskPlatformSchema> = {
   VELORA_CONNECT: 'VELORA',
   VELORA_FOLLOW: 'VELORA',
   LINKEDIN_CONNECT: 'LINKEDIN',
+  LINKEDIN_FOLLOW: 'LINKEDIN',
   REFERRAL_LINK: 'BONUS',
   SUBMIT_MEDIA: 'QUESTION'
 };
@@ -962,6 +983,7 @@ export const TASK_IDENTITY_PROVIDER: Record<TaskType, IdentityProvider> = {
   VELORA_CONNECT: 'VELORA',
   VELORA_FOLLOW: 'VELORA',
   LINKEDIN_CONNECT: 'LINKEDIN',
+  LINKEDIN_FOLLOW: 'LINKEDIN',
   REFERRAL_LINK: 'ANONYMOUS',
   SUBMIT_MEDIA: 'ANONYMOUS'
 };
@@ -1041,6 +1063,7 @@ export const TASK_CATEGORY: Record<TaskType, TaskCategorySchema> = {
   VELORA_CONNECT: 'social',
   VELORA_FOLLOW: 'social',
   LINKEDIN_CONNECT: 'social',
+  LINKEDIN_FOLLOW: 'social',
   REFERRAL_LINK: 'engagement',
   SUBMIT_MEDIA: 'engagement'
 };
@@ -1093,6 +1116,7 @@ export const TASK_IS_IMPORT: Record<TaskType, boolean> = {
   VELORA_CONNECT: false,
   VELORA_FOLLOW: false,
   LINKEDIN_CONNECT: false,
+  LINKEDIN_FOLLOW: false,
   REFERRAL_LINK: false,
   SUBMIT_MEDIA: false
 };
@@ -1140,6 +1164,7 @@ export const TASK_ALLOW_MANUAL_ADD: Record<TaskType, boolean> = {
   VELORA_CONNECT: true,
   VELORA_FOLLOW: true,
   LINKEDIN_CONNECT: true,
+  LINKEDIN_FOLLOW: true,
   REFERRAL_LINK: true,
   SUBMIT_MEDIA: true
 };
@@ -1188,6 +1213,7 @@ export const TASK_DUPLICATE_RESTRICTION: Record<TaskType, boolean> = {
   VELORA_CONNECT: false,
   VELORA_FOLLOW: false,
   LINKEDIN_CONNECT: false,
+  LINKEDIN_FOLLOW: false,
   SUBMIT_MEDIA: false
 };
 
@@ -1289,7 +1315,8 @@ export const TASK_VERIFICATION_REQUIREMENT: Record<
   VELORA_FOLLOW: 'automatic',
   REFERRAL_LINK: 'manual',
   SUBMIT_MEDIA: 'manual',
-  LINKEDIN_CONNECT: 'automatic'
+  LINKEDIN_CONNECT: 'automatic',
+  LINKEDIN_FOLLOW: 'manual'
 };
 
 export const twitterProofSchema = z.object({

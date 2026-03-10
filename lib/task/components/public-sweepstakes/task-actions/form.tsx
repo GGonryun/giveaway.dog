@@ -27,6 +27,7 @@ import { BlueskyRepostTaskActionForm } from './lib/bluesky/bluesky-repost';
 import { VeloraConnectTaskActionForm } from './lib/velora/velora-connect';
 import { VeloraFollowTaskActionForm } from './lib/velora/velora-follow';
 import { LinkedInConnectTaskActionForm } from './lib/linkedin/linkedin-connect';
+import { LinkedInFollowTaskActionForm } from './lib/linkedin/linkedin-follow';
 import { InstagramLikeTaskActionForm } from './lib/instagram/like';
 import { InstagramCommentTaskActionForm } from './lib/instagram/comment';
 import { FacebookVisitPageTaskActionForm } from './lib/facebook/visit-page';
@@ -128,6 +129,8 @@ export const TaskActionForm: React.FC<
       return <VeloraFollowTaskActionForm {...props} task={props.task} />;
     case 'LINKEDIN_CONNECT':
       return <LinkedInConnectTaskActionForm {...props} task={props.task} />;
+    case 'LINKEDIN_FOLLOW':
+      return <LinkedInFollowTaskActionForm {...props} task={props.task} />;
     case 'REFERRAL_LINK':
       return <ReferralLinkTaskActionForm {...props} task={props.task} />;
     default:

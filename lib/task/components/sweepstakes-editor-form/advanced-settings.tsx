@@ -90,6 +90,7 @@ export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
       case 'BLUESKY_REPOST':
       case 'VELORA_CONNECT':
       case 'LINKEDIN_CONNECT':
+      case 'LINKEDIN_FOLLOW':
       case 'VELORA_FOLLOW':
       case 'ASK_QUESTION':
       case 'SINGLE_CHOICE':

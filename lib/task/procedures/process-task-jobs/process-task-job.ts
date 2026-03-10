@@ -98,6 +98,7 @@ export const processTaskJob = async (
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
     case 'LINKEDIN_CONNECT':
+    case 'LINKEDIN_FOLLOW':
     case 'REFERRAL_LINK':
     case 'MULTIPLE_CHOICE':
     case 'SUBMIT_MEDIA':
