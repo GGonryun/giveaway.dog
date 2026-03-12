@@ -49,6 +49,7 @@ export const mockUserProfile: UserSchema = {
   createdAt: new Date('2023-01-15T10:00:00Z'),
   qualityScore: 85,
   isAnonymous: false,
+  preferredContactMethod: null,
   providers: [
     {
       type: IdentityProvider.TWITTER,

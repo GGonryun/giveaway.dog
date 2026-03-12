@@ -24,32 +24,33 @@ enum UserAccountType {
 }
 
 model User {
-  id            String                   @id @default(cuid())
-  name          String?
-  email         String?                  @unique
-  emailVerified DateTime?
-  username      String? // used to satisfy next-auth schema
-  birthday      DateTime?
-  image         String?
-  emoji         String?
-  onboarded     Boolean                  @default(false)
-  accountType   UserAccountType          @default(PARTICIPANT)
-  createdAt     DateTime                 @default(now())
-  updatedAt     DateTime                 @updatedAt
-  source        UserSource               @default(SIGNUP)
-  accounts      Account[]
-  sessions      Session[]
-  teams         Membership[]
-  events        UserEvent[]
-  participation SweepstakesParticipant[]
-  ips           UserIpAddress[]
-  agents        UserAgent[]
-  quality       UserQuality[]
-  fingerprints  UserFingerprint[]
-  integrations  Integration[]
-  templates     Template[]
-  referred      ReferredUser[]
-  turnstiles    UserTurnstile[]
+  id                     String                   @id @default(cuid())
+  name                   String?
+  email                  String?                  @unique
+  emailVerified          DateTime?
+  username               String? // used to satisfy next-auth schema
+  birthday               DateTime?
+  image                  String?
+  emoji                  String?
+  onboarded              Boolean                  @default(false)
+  accountType            UserAccountType          @default(PARTICIPANT)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  source                 UserSource               @default(SIGNUP)
+  preferredContactMethod IdentityProvider?
+  accounts               Account[]
+  sessions               Session[]
+  teams                  Membership[]
+  events                 UserEvent[]
+  participation          SweepstakesParticipant[]
+  ips                    UserIpAddress[]
+  agents                 UserAgent[]
+  quality                UserQuality[]
+  fingerprints           UserFingerprint[]
+  integrations           Integration[]
+  templates              Template[]
+  referred               ReferredUser[]
+  turnstiles             UserTurnstile[]
 }
 
 enum UserEventType {

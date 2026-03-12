@@ -14,14 +14,17 @@ export const updateProfile = procedure()
     })
   )
   .handler(async ({ input, user, db }) => {
-    const { name, image } = input;
+    const { name, image, preferredContactMethod } = input;
 
     try {
       const updatedUser = await db.user.update({
         where: { id: user.id },
         data: {
           ...(name && { name }),
-          ...(image !== undefined && { image })
+          ...(image !== undefined && { image }),
+          ...(preferredContactMethod !== undefined && {
+            preferredContactMethod
+          })
         }
       });
 

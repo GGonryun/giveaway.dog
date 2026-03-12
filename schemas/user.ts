@@ -33,7 +33,8 @@ export const userProfileSchema = z.object({
   source: z.nativeEnum(UserSource),
   username: z.string().nullable().optional(),
   onboarded: z.boolean().optional(),
-  accountType: z.nativeEnum(UserAccountType).optional()
+  accountType: z.nativeEnum(UserAccountType).optional(),
+  preferredContactMethod: identityProviderSchema.nullable()
 });
 
 export type UserProfileSchema = z.infer<typeof userProfileSchema>;
@@ -96,7 +97,8 @@ export const updateUserProfileSchema = z.object({
       'Username can only contain letters, numbers, spaces, hyphens, and underscores'
     )
     .optional(),
-  image: z.string().url().nullable().optional()
+  image: z.string().url().nullable().optional(),
+  preferredContactMethod: identityProviderSchema.nullable().optional()
 });
 
 export const blueskyHandleSchema = z
@@ -162,7 +164,8 @@ export const USER_SCHEMA_SELECT_QUERY = {
   },
   onboarded: true,
   accountType: true,
-  username: true
+  username: true,
+  preferredContactMethod: true
 } satisfies Prisma.UserSelect;
 
 export const toUserSchema = (
@@ -183,6 +186,7 @@ export const toUserSchema = (
   onboarded: user.onboarded,
   accountType: user.accountType,
   username: user.username,
+  preferredContactMethod: user.preferredContactMethod ?? null,
   isAnonymous: user.accounts.length === 0
 });
 

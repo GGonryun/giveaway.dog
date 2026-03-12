@@ -38,6 +38,7 @@ const createMockCompletion = (
         username: `user${userId}`,
         onboarded: true,
         accountType: 'PARTICIPANT' as const,
+        preferredContactMethod: null,
         quality: [
           {
             id: `quality-${userId}`,
