@@ -18,7 +18,6 @@ import {
 import z from 'zod';
 
 import {
-  BLUESKY_DESCRIPTION_CHARS_PER_POINT,
   GIVEAWAYS_ENTERED_THRESHOLD,
   PLATFORM_BASE_SCORE,
   TWITTER_ACCOUNT_AGE_MONTHS_PER_POINT,
@@ -38,13 +37,13 @@ export const twitterScoringDataSchema = z.object({
   profile_image_url: z.string().optional(),
   profile_banner_url: z.string().optional(),
   verified: z.boolean().optional(),
-  verified_type: z.string().optional(),
+  verified_type: z.string().nullable().optional(),
   public_metrics: z
     .object({
       followers_count: z.number(),
       following_count: z.number(),
       tweet_count: z.number(),
-      listed_count: z.number()
+      listed_count: z.number().optional()
     })
     .optional()
 });
