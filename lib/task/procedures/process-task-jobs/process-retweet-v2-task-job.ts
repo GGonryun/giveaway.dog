@@ -147,13 +147,6 @@ export const processRetweetV2TaskJob = async (
   const endDate = job.task.sweepstakes.timing?.endDate;
   const now = new Date();
 
-  if (endDate && now >= endDate) {
-    console.info(
-      `Task job ${job.id} completed, sweepstakes has ended - not scheduling next run`
-    );
-    return;
-  }
-
   const firstSeenId = isContinuation
     ? parsed.data.firstSeenId
     : response.users?.at(0)?.id;
@@ -176,6 +169,13 @@ export const processRetweetV2TaskJob = async (
         }
       }
     });
+    return;
+  }
+
+  if (endDate && now >= endDate) {
+    console.info(
+      `Task job ${job.id} completed, sweepstakes has ended - not scheduling next run`
+    );
     return;
   }
 
