@@ -42,13 +42,16 @@ export const processRetweetV2TaskJob = async (
     });
   }
 
+  const isContinuation = !!parsed.data.nextCursor;
+
   const response = await getRetweetersUntilUser({
     tweetId,
-    stopAtUserId: parsed.data.lastProcessedId
+    stopAtUserId: parsed.data.lastProcessedId,
+    cursor: parsed.data.nextCursor
   });
 
   console.info(
-    `Fetched ${response.users?.length ?? 0} users in task job ${job.id}`
+    `Fetched ${response.users?.length ?? 0} users in task job ${job.id} (continuation=${isContinuation})`
   );
 
   const twitterUsers = (response.users || []).map(toTwitterUserSchema);
@@ -151,6 +154,31 @@ export const processRetweetV2TaskJob = async (
     return;
   }
 
+  const firstSeenId = isContinuation
+    ? parsed.data.firstSeenId
+    : response.users?.at(0)?.id;
+
+  const scanComplete = !response.hasMore || !response.nextCursor;
+
+  if (!scanComplete) {
+    console.info(
+      `Scan incomplete for task job ${job.id}, scheduling continuation with cursor`
+    );
+    await db.taskJob.create({
+      data: {
+        taskId: job.taskId,
+        runAt: new Date(),
+        data: {
+          runs: parsed.data.runs,
+          nextCursor: response.nextCursor,
+          lastProcessedId: parsed.data.lastProcessedId,
+          firstSeenId
+        }
+      }
+    });
+    return;
+  }
+
   let nextRunAt = datetime.minutesFromNow(
     Math.min(parsed.data.runs * SCRAPEBADGER_RUN_OFFSET, MAX_RUN_OFFSET)
   );
@@ -166,12 +194,11 @@ export const processRetweetV2TaskJob = async (
       runAt: nextRunAt,
       data: {
         runs: parsed.data.runs + 1,
-        lastProcessedId:
-          response.users?.at(0)?.id ?? parsed.data.lastProcessedId
+        lastProcessedId: firstSeenId ?? parsed.data.lastProcessedId
       }
     }
   });
   console.info(
-    `Task job ${job.id} completed, scheduling next run at ${nextRunAt}`
+    `Task job ${job.id} scan complete, scheduling next run at ${nextRunAt}`
   );
 };

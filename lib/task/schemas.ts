@@ -828,7 +828,8 @@ export const TASK_JOB_DATA_SCHEMA = {
   TWITTER_RETWEET_IMPORT_V2: z.object({
     runs: z.number().min(0),
     nextCursor: z.string().optional(),
-    lastProcessedId: z.string().optional()
+    lastProcessedId: z.string().optional(),
+    firstSeenId: z.string().optional()
   }),
   TWITTER_LIKE: z.object({}),
   TWITTER_LIKE_IMPORT: z.object({

@@ -3,7 +3,7 @@ import { getScrapeBadgerClient } from '../client';
 import { User } from 'scrapebadger';
 
 const DEFAULT_MAX_API_CALLS = 10;
-const DEFAULT_MAX_USERS = 5000;
+const DEFAULT_MAX_USERS = 500;
 
 export const getRetweeters = async ({
   tweetId,
@@ -73,15 +73,17 @@ export const getRetweetersUntil = async ({
 export const getRetweetersUntilUser = async ({
   tweetId,
   stopAtUserId,
+  cursor: startCursor,
   maxUsers = DEFAULT_MAX_USERS
 }: {
   tweetId: string;
   stopAtUserId?: string;
+  cursor?: string;
   maxUsers?: number;
 }): Promise<{ users: User[]; nextCursor?: string; hasMore: boolean }> => {
   const client = getScrapeBadgerClient();
   const users: User[] = [];
-  let cursor: string | undefined;
+  let cursor: string | undefined = startCursor;
   let hasMore = true;
   let foundStopUser = false;
   let batchIndex = 0;
