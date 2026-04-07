@@ -54,7 +54,7 @@ const updateWinnerCriteria = procedure()
 
     return {
       minTasksCompleted: updated.minTasksCompleted ?? 1,
-      minQualityScore: updated.minQualityScore ?? 70,
+      minQualityScore: updated.minQualityScore ?? 50,
       allowMultipleWins:
         updated.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS,
       allowUserSelection:

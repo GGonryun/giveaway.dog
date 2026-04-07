@@ -19,10 +19,9 @@ import {
   PER_ADDITIONAL_IP_PENALTY,
   PER_DEVICE_STABILITY_BONUS,
   PER_PROVIDER_BONUS,
-  PER_TASK_BONUS,
-  USER_BASE_SCORE,
-  UserScoreMetricsSchema
+  PER_TASK_BONUS
 } from '@/schemas/user-scoring';
+import { QualityType } from '@/schemas/quality';
 import { Prisma } from '@prisma/client';
 import { datetime } from '../date';
 import { Tx } from '../prisma';
@@ -273,8 +272,7 @@ export const computeSignupUserScore = async (tx: Tx, userId: string) => {
     where: { userId }
   });
 
-  const metrics: UserScoreMetricsSchema = {
-    baseScore: USER_BASE_SCORE,
+  const signals: Record<string, number> = {
     deviceStability: calculateDeviceStability(fingerprints),
     ipConsistency: calculateIpConsistency(ipAddresses),
     geoConsistency: calculateGeoConsistency(ipAddresses),
@@ -294,13 +292,46 @@ export const computeSignupUserScore = async (tx: Tx, userId: string) => {
     turnstileTrust: calculateTurnstileTrust(turnstileEntry)
   };
 
-  const score = Object.values(metrics).reduce((a, b) => a + b, 0);
+  const bucket = classifySignals(signals);
 
   await tx.userQuality.create({
     data: {
       userId,
-      score: clamp(score, 0, 100),
-      metrics
+      score: BUCKET_SCORES[bucket]
     }
   });
 };
+
+const BUCKET_SCORES: Record<QualityType, number> = {
+  banned: 10,
+  suspicious: 45,
+  neutral: 55,
+  good: 75,
+  trusted: 95
+};
+
+function classifySignals(signals: Record<string, number>): QualityType {
+  const botLikely = signals.turnstileTrust < -5;
+  const sharedInfra =
+    signals.overlappingIpAddresses < 0 ||
+    signals.overlappingFingerprints < 0;
+
+  if (botLikely) return 'banned';
+  if (sharedInfra) return 'suspicious';
+
+  const checks = [
+    signals.emailVerified > 0,
+    signals.accountAge > 0,
+    signals.providersConnected >= 4,
+    signals.taskActivity > 0,
+    signals.deviceStability >= 10,
+    signals.ipConsistency >= 10,
+    signals.turnstileTrust > 0
+  ];
+
+  const score = checks.reduce((sum, pass) => sum + (pass ? 1 : -3), 0);
+
+  if (score >= 3) return 'trusted';
+  if (score >= -1) return 'good';
+  return 'neutral';
+}

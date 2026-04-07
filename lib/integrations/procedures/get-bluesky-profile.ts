@@ -2,9 +2,18 @@
 
 import { ApplicationError } from '@/lib/errors';
 import { Agent } from '@atproto/api';
-import { BlueskyScoringData } from '@/schemas/platform-scoring';
-
-export interface EnhancedBlueskyProfile extends BlueskyScoringData {}
+export interface EnhancedBlueskyProfile {
+  did: string;
+  handle: string;
+  displayName?: string;
+  description?: string;
+  avatar?: string;
+  banner?: string;
+  followersCount?: number;
+  followsCount?: number;
+  postsCount?: number;
+  createdAt?: string;
+}
 
 /**
  * Fetches enhanced Bluesky profile data including metrics for risk scoring.

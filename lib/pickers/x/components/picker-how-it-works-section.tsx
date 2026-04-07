@@ -38,6 +38,7 @@ export function PickerHowItWorksSection() {
     <section className="w-full mt-32 mb-12">
       <MarketingPageHeader
         title="How It Works"
+        component="h2"
         description="Select random winners from your X giveaway in four simple steps"
       />
 

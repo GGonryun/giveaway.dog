@@ -45,8 +45,7 @@ const createMockCompletion = (
             createdAt: baseDate,
             updatedAt: baseDate,
             userId: `user-${userId}`,
-            score: 100,
-            metrics: {}
+            score: 100
           }
         ]
       }

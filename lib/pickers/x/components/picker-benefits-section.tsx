@@ -39,6 +39,7 @@ export function PickerBenefitsSection() {
   return (
     <section className="w-full mb-12">
       <MarketingPageHeader
+        component="h2"
         title="Why Use Our Tool?"
         description="The fastest, fairest way to select winners from your X giveaways"
       />

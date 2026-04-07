@@ -1,8 +1,4 @@
 import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
-import {
-  DEFAULT_USER_SCORE_METRICS,
-  UserScoreMetricsSchema
-} from '@/schemas/user-scoring';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { nanoid } from 'nanoid';
 
@@ -340,7 +336,7 @@ function createUserQuality(
   userIndex: number,
   allUsers: { ipId: string; agentId: string; fingerprintId: string }[]
 ): Prisma.UserQualityCreateInput {
-  const metrics: UserScoreMetricsSchema = { ...DEFAULT_USER_SCORE_METRICS };
+  const metrics: Record<string, number> = {};
 
   const accountAgeDays = Math.floor(Math.random() * 365);
   metrics.accountAge = Math.min(10, Math.floor(accountAgeDays / 7));
@@ -431,8 +427,7 @@ function createUserQuality(
 
   return {
     user: { connect: { id: userId } },
-    score,
-    metrics
+    score
   };
 }
 
@@ -632,7 +627,7 @@ function createSweepstake(
     criteria: {
       create: {
         minTasksCompleted: 1,
-        minQualityScore: 70,
+        minQualityScore: 50,
         allowMultipleWins: false
       }
     },

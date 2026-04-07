@@ -1,58 +1,107 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import {
   MapPin,
   Calendar,
   Activity,
   Mail,
   CircleXIcon,
-  CircleCheckIcon
+  CircleCheckIcon,
+  SquareArrowOutUpRight
 } from 'lucide-react';
 import { datetime } from '@/lib/date';
 import { UserSchema } from '@/schemas/user';
 import { ObfuscatedEmail } from '@/components/ui/obfuscated-email';
+import {
+  toQualityType,
+  QUALITY_LABELS,
+  QUALITY_BADGE_VARIANT
+} from '@/schemas/quality';
 
 export const ProfileInformationCard: React.FC<{
   user: UserSchema;
   lastEntryAt: Date | null;
   providers: React.ReactNode;
-}> = ({ user, providers, lastEntryAt }) => {
+  slug: string;
+  totalEntries: number;
+  engagement: number;
+}> = ({ user, providers, lastEntryAt, slug, totalEntries, engagement }) => {
+  const qualityType = toQualityType(user.qualityScore);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{user.name}</CardTitle>
+        <CardTitle className="flex items-center justify-between gap-2">
+          <span>{user.name}</span>
+          <Badge variant={QUALITY_BADGE_VARIANT[qualityType]}>
+            {QUALITY_LABELS[qualityType]}
+          </Badge>
+        </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-start gap-2">{providers}</div>
-
-        <div className="space-y-2">
-          <div className="flex items-center space-x-2 text-sm">
-            <Mail className="h-4 w-4 text-muted-foreground" />
-            <span className="flex items-center gap-1">
-              <ObfuscatedEmail email={user.email} />
-              {user.emailVerified ? (
-                <CircleCheckIcon className="h-3 w-3 text-success" />
-              ) : (
-                <CircleXIcon className="h-3 w-3 text-destructive" />
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Identity info */}
+          <div className="md:col-span-2 space-y-3">
+            <div className="flex items-start gap-2">{providers}</div>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2 text-sm">
+                <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+                <span className="flex items-center gap-1">
+                  <ObfuscatedEmail email={user.email} />
+                  {user.emailVerified ? (
+                    <CircleCheckIcon className="h-3 w-3 text-success" />
+                  ) : (
+                    <CircleXIcon className="h-3 w-3 text-destructive" />
+                  )}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2 text-sm">
+                <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
+                <span>{user.countryCode}</span>
+              </div>
+              <div className="flex items-center space-x-2 text-sm">
+                <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
+                <span>Joined {datetime.format(user.createdAt, 'short')}</span>
+              </div>
+              {lastEntryAt && (
+                <div className="flex items-center space-x-2 text-sm">
+                  <Activity className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <span>
+                    Last active {datetime.format(lastEntryAt, 'short')}
+                  </span>
+                </div>
               )}
-            </span>
-          </div>
-          <div className="flex items-center space-x-2 text-sm">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span>{user.countryCode}</span>
-          </div>
-          <div className="flex items-center space-x-2 text-sm">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span>Joined {datetime.format(user.createdAt, 'short')}</span>
-          </div>
-          {lastEntryAt && (
-            <div className="flex items-center space-x-2 text-sm">
-              <Activity className="h-4 w-4 text-muted-foreground" />
-              <span>Last active {datetime.format(lastEntryAt, 'short')}</span>
             </div>
-          )}
+          </div>
+
+          {/* Participation stats */}
+          <div className="flex flex-col gap-3">
+            <div className="bg-muted rounded-lg p-3 flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold">{totalEntries}</div>
+                <div className="text-xs text-muted-foreground">
+                  Total Entries
+                </div>
+              </div>
+              <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                <Link href={`/app/${slug}/users/${user.id}/entries`}>
+                  <SquareArrowOutUpRight className="text-muted-foreground" />
+                </Link>
+              </Button>
+            </div>
+            <div className="bg-muted rounded-lg p-3">
+              <div className="text-2xl font-bold text-blue-600">
+                {engagement}%
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Task Engagement
+              </div>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>

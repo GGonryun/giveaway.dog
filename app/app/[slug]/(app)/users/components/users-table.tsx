@@ -33,7 +33,8 @@ import { UserSourceCaption } from '@/lib/user-source/components/user-source-capt
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
-import { toEngagementTheme, toQualityTheme } from '@/lib/participant/util';
+import { toEngagementTheme } from '@/lib/participant/util';
+import { toQualityType, QUALITY_LABELS, QUALITY_BADGE_VARIANT } from '@/schemas/quality';
 import { UsersFiltersSheet } from '@/components/users/users-filters-sheet';
 
 interface UsersTableProps {
@@ -215,21 +216,11 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                             </div>
                           </TableCell>
                           <TableCell className="hidden lg:table-cell text-right">
-                            <div className="flex items-center justify-end space-x-2">
-                              <div className="w-16 bg-muted rounded-full h-1.5">
-                                <div
-                                  className={`h-1.5 rounded-full transition-all ${toQualityTheme(
-                                    participant.user.qualityScore
-                                  )}`}
-                                  style={{
-                                    width: `${participant.user.qualityScore}%`
-                                  }}
-                                />
-                              </div>
-                              <span className="text-xs font-medium min-w-[2rem]">
-                                {participant.user.qualityScore}
-                              </span>
-                            </div>
+                            <Badge
+                              variant={QUALITY_BADGE_VARIANT[toQualityType(participant.user.qualityScore)]}
+                            >
+                              {QUALITY_LABELS[toQualityType(participant.user.qualityScore)]}
+                            </Badge>
                           </TableCell>
                           <TableCell className="hidden xl:table-cell text-right">
                             <div className="flex items-center justify-end space-x-2">

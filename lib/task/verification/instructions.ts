@@ -840,7 +840,8 @@ export function getVerificationInstructions(args: {
         steps: [
           {
             step: 1,
-            instruction: 'Ask the user for their LinkedIn profile URL or username'
+            instruction:
+              'Ask the user for their LinkedIn profile URL or username'
           },
           {
             step: 2,

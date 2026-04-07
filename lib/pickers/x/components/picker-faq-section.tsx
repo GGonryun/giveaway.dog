@@ -46,6 +46,7 @@ export function PickerFaqSection() {
     <section className="w-full mb-12">
       <div className="max-w-3xl mx-auto">
         <MarketingPageHeader
+          component="h2"
           title="Frequently Asked Questions"
           description="Common questions about our X giveaway picker tool"
         />

@@ -23,16 +23,14 @@ import {
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import { StatusExplanationDialog } from '../users/status-explanation-dialog';
-import { userAgent } from '@/lib/devices';
-import {
-  USER_AGENT_DEVICE_ICON,
-  USER_AGENT_DEVICE_LABEL
-} from '@/schemas/user-agent';
 import { Separator } from '../ui/separator';
 import { datetime } from '@/lib/date';
 import { cn } from '@/lib/utils';
-import { toQualityTextColor, toQualityProgressColor } from '@/schemas/quality';
-import { Progress } from '../ui/progress';
+import {
+  toQualityType,
+  QUALITY_LABELS,
+  QUALITY_BADGE_VARIANT
+} from '@/schemas/quality';
 import { UserProviders } from '@/lib/integrations/components/user-providers';
 import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
@@ -105,7 +103,18 @@ export const UserParticipantSheetContent: React.FC<{
         {/* User Details Header and Basic Info */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="text-base font-medium">User Details</h4>
+            <div className="flex items-center gap-2">
+              <h4 className="text-base font-medium">User Details</h4>
+              <Badge
+                variant={
+                  QUALITY_BADGE_VARIANT[
+                    toQualityType(participant.user.qualityScore)
+                  ]
+                }
+              >
+                {QUALITY_LABELS[toQualityType(participant.user.qualityScore)]}
+              </Badge>
+            </div>
             <Button
               variant="ghost"
               size="sm"
@@ -157,85 +166,7 @@ export const UserParticipantSheetContent: React.FC<{
           </div>
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h4 className="text-base font-medium">Quality Score</h4>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="mr-1 w-32"
-              onClick={() => {
-                router.push(
-                  `/app/${activeTeam.slug}/users/${participant.user.id}/risk`
-                );
-              }}
-            >
-              <Eye />
-              See Report
-            </Button>
-          </div>
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-1">
-              <div
-                className={cn(
-                  'text-3xl font-bold',
-                  toQualityTextColor(participant.user.qualityScore)
-                )}
-              >
-                {participant.user.qualityScore}
-              </div>
-              <div className="text-muted-foreground">/100</div>
-            </div>
-            <Progress
-              value={participant.user.qualityScore}
-              indicatorClassName={toQualityProgressColor(
-                participant.user.qualityScore
-              )}
-              className="h-2"
-            />
-          </div>
-        </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h4 className="text-base font-medium">Recent Devices</h4>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="mr-1 w-32"
-              onClick={() => {
-                router.push(
-                  `/app/${activeTeam.slug}/users/${participant.user.id}/devices`
-                );
-              }}
-            >
-              <Eye />
-              See Devices
-            </Button>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-start space-x-2 text-sm">
-              {(() => {
-                const deviceInfo = userAgent.parse(participant.user.userAgent);
-                const label =
-                  USER_AGENT_DEVICE_LABEL[deviceInfo.device] || 'Unknown';
-                const DeviceIcon = USER_AGENT_DEVICE_ICON[deviceInfo.device];
-
-                return (
-                  <>
-                    <DeviceIcon className="h-4 w-4 text-muted-foreground mt-0.5" />
-                    <div>
-                      <div className="font-medium">{label}</div>
-                      <div className="text-muted-foreground text-xs">
-                        {deviceInfo.os} • {deviceInfo.browser}
-                      </div>
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
-          </div>
-        </div>
 
         {/* Allocation Section */}
         {participant.allocation && (

@@ -192,17 +192,13 @@ export const toUserSchema = (
 
 export const userDetailsTabSchema = z.union([
   z.literal('overview'),
-  z.literal('entries'),
-  z.literal('devices'),
-  z.literal('risk')
+  z.literal('entries')
 ]);
 
 export type UserDetailsTabSchema = z.infer<typeof userDetailsTabSchema>;
 
 export const USER_DETAILS_TAB_OPTIONS: Record<UserDetailsTabSchema, string> = {
   overview: 'Overview',
-  devices: 'Devices',
-  risk: 'Risk',
   entries: 'Entries'
 };
 

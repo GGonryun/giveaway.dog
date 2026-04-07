@@ -39,7 +39,10 @@ export const getAccountLabel = (
       );
     case 'linkedin': {
       if (user?.linkedInProfileUrl) {
-        const slug = new URL(user.linkedInProfileUrl).pathname.split('/').filter(Boolean).at(-1);
+        const slug = new URL(user.linkedInProfileUrl).pathname
+          .split('/')
+          .filter(Boolean)
+          .at(-1);
         if (slug) return slug;
       }
       return profile?.name || profile?.email || null;

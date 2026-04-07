@@ -1,13 +1,9 @@
 import { UserSource } from '@prisma/client';
 import { Tx } from '../prisma';
 import { computeSignupUserScore } from './signup';
-import { computeTwitterUserScore } from './twitter';
-import { computeBlueskyUserScore } from './bluesky';
-import { computeDiscordUserScore } from './discord';
-import { computeTwitchUserScore } from './twitch';
+import { computeImportedUserScore } from './imported';
 import { assertNever } from '../errors';
 
-// Routes to appropriate scoring function based on user source
 export const computeUserQualityScore = async (tx: Tx, userId: string) => {
   const user = await tx.user.findUnique({
     where: { id: userId },
@@ -16,12 +12,6 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
 
   if (!user) return;
 
-  // Check for pending scoring request with platform data
-  const scoringRequest = await tx.userScoringRequest.findUnique({
-    where: { userId }
-  });
-
-  // Route to appropriate scorer based on user source
   switch (user.source) {
     case UserSource.SIGNUP:
     case UserSource.ANONYMOUS:
@@ -30,20 +20,12 @@ export const computeUserQualityScore = async (tx: Tx, userId: string) => {
       break;
 
     case UserSource.DISCORD_IMPORT:
-      await computeDiscordUserScore(tx, userId, scoringRequest?.data);
-      break;
-
     case UserSource.TWITTER_IMPORT:
-      await computeTwitterUserScore(tx, userId, scoringRequest?.data);
-      break;
-
     case UserSource.BLUESKY_IMPORT:
-      await computeBlueskyUserScore(tx, userId, scoringRequest?.data);
+    case UserSource.TWITCH_IMPORT:
+      await computeImportedUserScore(tx, userId);
       break;
 
-    case UserSource.TWITCH_IMPORT:
-      await computeTwitchUserScore(tx, userId);
-      break;
     default:
       throw assertNever(user.source);
   }

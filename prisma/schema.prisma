@@ -61,7 +61,6 @@ enum UserEventType {
 model UserScoringRequest {
   id        String   @id @default(cuid())
   userId    String   @unique
-  data      Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -71,7 +70,6 @@ model UserQuality {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   score     Int      @default(0)
-  metrics   Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -477,7 +475,7 @@ model SweepstakesWinnerCriteria {
   sweepstakes   Sweepstakes @relation(fields: [sweepstakesId], references: [id], onDelete: Cascade)
 
   minTasksCompleted  Int?    @default(1)
-  minQualityScore    Int?    @default(70)
+  minQualityScore    Int?    @default(50)
   allowMultipleWins  Boolean @default(false)
   allowUserSelection Boolean @default(false)
   externalPlatforms  Json?

@@ -60,8 +60,7 @@ export const processBlueskyTaskJob = async <
   const { imported, existing } = await importBlueskyUsers(db, {
     sweepstakesId,
     taskId,
-    blueskyUsers,
-    agent
+    blueskyUsers
   });
 
   console.info(

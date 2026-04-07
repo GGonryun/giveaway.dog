@@ -35,7 +35,7 @@ Read every changed file as if you are an attacker who has the source code and is
 **What you look for:**
 
 - **Injection vectors**: every place user input touches a query, command, path, or template — is it parameterized or sanitized?
-- **Authentication gaps**: every server action and API route is a public endpoint. Is auth checked? Is it checked *before* any work is done, not after?
+- **Authentication gaps**: every server action and API route is a public endpoint. Is auth checked? Is it checked _before_ any work is done, not after?
 - **Authorization gaps (IDOR)**: every query filtered by a user-supplied ID — does it also verify the requesting user owns that resource?
 - **Trust boundary violations**: data crossing from untrusted (user input, URL params, headers) to trusted (DB queries, file paths, external API calls) without validation
 - **Secret exposure**: env vars in client bundles (`NEXT_PUBLIC_` on server-only secrets); secrets in logs; secrets in error responses; secrets in git
@@ -55,10 +55,10 @@ Read every changed file as if you are the developer who owns the feature that ju
 **What you look for:**
 
 - **Implicit contracts broken**: did this change alter a function signature, return shape, or error behavior that callers depend on — even callers not in the diff?
-- **Database schema drift**: does the application code now assume a column or relation that hasn't been migrated yet? Or does it assume the *old* schema?
+- **Database schema drift**: does the application code now assume a column or relation that hasn't been migrated yet? Or does it assume the _old_ schema?
 - **Type contract violations**: exported types changed in a way that will silently break consuming code (structural compatibility doesn't mean semantic compatibility)
 - **Environment assumptions**: does this work in all environments — local, CI, staging, production? Does it assume a file exists, a service is running, or an env var is set that won't be in all environments?
-- **Test coverage gap**: what behaviors were added or changed that have zero test coverage? Not "low coverage" — *zero*. These are the places bugs hide in the dark
+- **Test coverage gap**: what behaviors were added or changed that have zero test coverage? Not "low coverage" — _zero_. These are the places bugs hide in the dark
 - **The change that wasn't in the diff**: read `git blame` mentally — what adjacent code now has a broken assumption because of this change?
 - **Rollback safety**: if this ships and needs to be rolled back, does a rollback break anything? (especially DB migrations — are they reversible?)
 
@@ -73,9 +73,11 @@ After all three passes are complete, produce:
 ### Findings
 
 **🔴 BLOCKING** — Will cause a defect, security vulnerability, or regression in production. Do not ship until resolved.
+
 > Include: pass number, file + line, exact problem, exact fix with code
 
 **🟠 HIGH RISK** — Very likely to cause a problem under realistic conditions. Strongly recommend fixing before ship.
+
 > Include: pass number, file + line, scenario that triggers it, fix
 
 **🟡 CONCERN** — May cause a problem under specific conditions. Fix before next release if not now.
@@ -87,6 +89,7 @@ After all three passes are complete, produce:
 ### Triple-Check Summary
 
 For each changed file, a one-line verdict:
+
 ```
 src/lib/auth.ts        ✅ CLEAN — all three passes clear
 src/app/api/users/route.ts  🔴 BLOCKED — Pass 2: IDOR on line 34

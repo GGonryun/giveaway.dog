@@ -63,7 +63,7 @@ import { DisqualificationDialog } from './disqualification-dialog';
 import { TASK_LABEL } from '@/lib/task/schemas';
 import { USER_SOURCE_LABEL } from '@/lib/user-source/data';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import { toQualityTheme } from '@/lib/participant/util';
+import { toQualityType, QUALITY_LABELS, QUALITY_BADGE_VARIANT } from '@/schemas/quality';
 import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
 import { rollPrize } from '@/lib/winners/procedures/roll-prize';
 import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';
@@ -149,23 +149,11 @@ const PrizeDrawRow = ({
         </Button>
       </TableCell>
       <TableCell>
-        <div className="flex items-center gap-2">
-          <div className="flex-1">
-            <div className="w-full bg-muted rounded-full h-2">
-              <div
-                className={`h-2 rounded-full transition-all ${toQualityTheme(
-                  draw.participant.qualityScore
-                )}`}
-                style={{
-                  width: `${draw.participant.qualityScore}%`
-                }}
-              />
-            </div>
-          </div>
-          <span className="text-xs font-medium">
-            {draw.participant.qualityScore}
-          </span>
-        </div>
+        <Badge
+          variant={QUALITY_BADGE_VARIANT[toQualityType(draw.participant.qualityScore)]}
+        >
+          {QUALITY_LABELS[toQualityType(draw.participant.qualityScore)]}
+        </Badge>
       </TableCell>
       <TableCell>
         {draw.result === PrizeDrawResult.WINNER ? (

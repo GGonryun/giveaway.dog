@@ -93,8 +93,7 @@ export async function discordInteractionWorkflow({
 
     await scheduleRewards({
       sweepstakesId: taskResult.sweepstakesId,
-      userId,
-      member: body.member
+      userId
     });
   }
 }

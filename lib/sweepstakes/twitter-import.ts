@@ -61,14 +61,8 @@ export async function importTwitterUsers(
         // Create/update scoring request for existing user with latest platform data
         await db.userScoringRequest.upsert({
           where: { userId: existingAccount.userId },
-          create: {
-            userId: existingAccount.userId,
-            data: twitterUser
-          },
-          update: {
-            data: twitterUser,
-            updatedAt: new Date()
-          }
+          create: { userId: existingAccount.userId },
+          update: { updatedAt: new Date() }
         });
 
         continue;
@@ -95,10 +89,7 @@ export async function importTwitterUsers(
 
       // Create scoring request with platform data for immediate processing
       await db.userScoringRequest.create({
-        data: {
-          userId: created.id,
-          data: twitterUser
-        }
+        data: { userId: created.id }
       });
 
       imported.push({

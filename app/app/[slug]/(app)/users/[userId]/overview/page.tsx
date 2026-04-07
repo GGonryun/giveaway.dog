@@ -7,6 +7,15 @@ import { UserParams } from '../params';
 import getUser from '@/procedures/user/get-user';
 import { getTeamParticipant } from '@/lib/participant/procedures/get-team-participant';
 import { getTeamTasks } from '@/lib/participant/procedures/get-team-tasks';
+import { getUserSignals } from '@/procedures/user/get-user-signals';
+import type { UserSignals } from '@/procedures/user/get-user-signals';
+
+const IMPORTED_SOURCES = [
+  'TWITTER_IMPORT',
+  'BLUESKY_IMPORT',
+  'DISCORD_IMPORT',
+  'TWITCH_IMPORT'
+] as const;
 
 interface PageProps {
   params: Promise<UserParams>;
@@ -39,11 +48,21 @@ const Wrapper: React.FC<UserParams> = async ({ userId, slug }) => {
     return <div>Error loading tasks: {tasks.data.message}</div>;
   }
 
+  const isImported = (IMPORTED_SOURCES as readonly string[]).includes(
+    participant.data.user.source
+  );
+
+  let signals: UserSignals | null = null;
+  if (!isImported) {
+    signals = await getUserSignals(userId);
+  }
+
   return (
     <UserDetailsOverview
       slug={slug}
       participant={participant.data}
       totalTasks={tasks.data.length}
+      signals={signals}
     />
   );
 };

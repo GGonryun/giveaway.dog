@@ -12,21 +12,21 @@ import {
 import z from 'zod';
 
 export const qualityTypeSchema = z.enum([
-  'excellent',
+  'trusted',
   'good',
-  'fair',
-  'weak',
-  'poor'
+  'neutral',
+  'suspicious',
+  'banned'
 ]);
 
 export type QualityType = z.infer<typeof qualityTypeSchema>;
 
 export const QUALITY_THRESHOLDS: Record<QualityType, number> = {
-  excellent: 90,
+  trusted: 90,
   good: 70,
-  fair: 50,
-  weak: 40,
-  poor: 0
+  neutral: 50,
+  suspicious: 30,
+  banned: 0
 };
 
 export const toQualityType = (score: number): QualityType => {
@@ -35,7 +35,7 @@ export const toQualityType = (score: number): QualityType => {
       return quality;
     }
   }
-  return 'poor';
+  return 'banned';
 };
 
 export const toQualityProgressColor = (score: number): string => {
@@ -58,23 +58,23 @@ export type QualityColor = {
 };
 
 export const QUALITY_BADGE_VARIANT: Record<QualityType, BadgeVariants> = {
-  excellent: 'success',
+  trusted: 'success',
   good: 'info',
-  fair: 'warning',
-  weak: 'warning',
-  poor: 'destructive'
+  neutral: 'warning',
+  suspicious: 'warning',
+  banned: 'destructive'
 };
 
 export const QUALITY_ALERT_VARIANT: Record<QualityType, AlertVariant> = {
-  excellent: 'success',
+  trusted: 'success',
   good: 'info',
-  fair: 'warning',
-  weak: 'warning',
-  poor: 'destructive'
+  neutral: 'warning',
+  suspicious: 'warning',
+  banned: 'destructive'
 };
 
 export const QUALITY_THEME: Record<QualityType, QualityColor> = {
-  excellent: {
+  trusted: {
     bg: 'bg-green-100 dark:bg-green-800',
     border: 'border-green-700',
     base: 'bg-green-500 dark:bg-green-800',
@@ -86,19 +86,19 @@ export const QUALITY_THEME: Record<QualityType, QualityColor> = {
     base: 'bg-blue-500 dark:bg-blue-800',
     text: 'text-blue-800 dark:text-blue-200'
   },
-  fair: {
+  neutral: {
     bg: 'bg-yellow-100 dark:bg-yellow-800',
     border: 'border-yellow-700',
     base: 'bg-yellow-500 dark:bg-yellow-800',
     text: 'text-yellow-800 dark:text-yellow-200'
   },
-  weak: {
+  suspicious: {
     bg: 'bg-orange-100 dark:bg-orange-800',
     border: 'border-orange-700',
     base: 'bg-orange-500 dark:bg-orange-800',
     text: 'text-orange-800 dark:text-orange-200'
   },
-  poor: {
+  banned: {
     bg: 'bg-red-100 dark:bg-red-800',
     border: 'border-red-700',
     base: 'bg-red-500 dark:bg-red-800',
@@ -107,42 +107,44 @@ export const QUALITY_THEME: Record<QualityType, QualityColor> = {
 };
 
 export const QUALITY_BADGE_TEXT: Record<QualityType, string> = {
-  excellent: 'Excellent',
+  trusted: 'Trusted',
   good: 'Good',
-  fair: 'Fair',
-  weak: 'Weak',
-  poor: 'Poor'
+  neutral: 'Neutral',
+  suspicious: 'Suspicious',
+  banned: 'Banned'
 };
 
 export const QUALITY_BADGE_RISK: Record<QualityType, string> = {
-  excellent: 'No Risk',
+  trusted: 'No Risk',
   good: 'No Risk',
-  fair: 'Low Risk',
-  weak: 'Medium Risk',
-  poor: 'High Risk'
+  neutral: 'Low Risk',
+  suspicious: 'Medium Risk',
+  banned: 'High Risk'
 };
 
 export const QUALITY_LABELS: Record<QualityType, string> = {
-  excellent: 'Excellent Quality',
-  good: 'High Quality',
-  fair: 'Medium Quality',
-  weak: 'Low Quality',
-  poor: 'Bot-like Activity'
+  trusted: 'Trusted',
+  good: 'Good',
+  neutral: 'Neutral',
+  suspicious: 'Suspicious',
+  banned: 'Banned'
 };
 
 export const QUALITY_DESCRIPTION: Record<QualityType, string> = {
-  poor: 'This user exhibits bot-like activity. Exercise extreme caution.',
-  weak: 'This user has multiple risk factors. Review their activity and details carefully.',
-  fair: 'This user has some risk factors. Consider reviewing their activity and details.',
+  banned: 'This user exhibits bot-like activity. Exercise extreme caution.',
+  suspicious:
+    'This user has multiple risk factors. Review their activity and details carefully.',
+  neutral:
+    'This user has no significant risk factors, but also no strong quality indicators. Use your judgment when selecting them as a winner.',
   good: 'This user has low risk factors. They are generally trustworthy.',
-  excellent:
+  trusted:
     'This user has excellent quality indicators. They are highly trustworthy.'
 };
 
 export const QUALITY_ICON: Record<QualityType, LucideIcon> = {
-  excellent: ShieldCheck,
+  trusted: ShieldCheck,
   good: Shield,
-  fair: CircleAlert,
-  weak: TriangleAlert,
-  poor: OctagonXIcon
+  neutral: CircleAlert,
+  suspicious: TriangleAlert,
+  banned: OctagonXIcon
 };

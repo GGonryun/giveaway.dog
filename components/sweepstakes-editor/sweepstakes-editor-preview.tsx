@@ -149,7 +149,7 @@ export const SweepstakesSharedFormPreview: React.FC<{
         },
         criteria: {
           minTasksCompleted: formValues?.criteria?.minTasksCompleted || 1,
-          minQualityScore: formValues?.criteria?.minQualityScore || 70,
+          minQualityScore: formValues?.criteria?.minQualityScore || 50,
           allowMultipleWins: formValues?.criteria?.allowMultipleWins || false,
           allowUserSelection: formValues?.criteria?.allowUserSelection || false
         }

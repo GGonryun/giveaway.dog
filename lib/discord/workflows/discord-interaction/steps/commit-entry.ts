@@ -3,20 +3,6 @@ import type {
   DiscordButtonInteractionSchema,
   DiscordMemberSchema
 } from '../../../bot/schema';
-import type { DiscordScoringData } from '@/lib/scoring/schemas';
-
-const toDiscordScoringData = (
-  member: DiscordMemberSchema
-): DiscordScoringData => ({
-  userId: member.user.id,
-  username: member.user.username,
-  avatar: member.avatar || member.user.avatar,
-  banner: member.banner,
-  joinedAt: member.joined_at,
-  premiumSince: member.premium_since,
-  communicationDisabledUntil: member.communication_disabled_until,
-  unusualDmActivityUntil: member.unusual_dm_activity_until
-});
 
 export async function commitEntry({
   body,
@@ -69,10 +55,7 @@ export async function commitEntry({
     });
 
     await db.userScoringRequest.create({
-      data: {
-        userId: user.id,
-        data: toDiscordScoringData(member)
-      }
+      data: { userId: user.id }
     });
 
     userId = user.id;

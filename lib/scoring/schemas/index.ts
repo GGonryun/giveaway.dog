@@ -1,7 +1,2 @@
-// Re-export all scoring schemas from their respective modules
-export * from './shared';
-export * from './twitter';
-export * from './bluesky';
-export * from './discord';
-export * from './twitch';
+export * from './imported';
 export * from './signup';

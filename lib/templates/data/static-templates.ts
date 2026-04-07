@@ -59,7 +59,7 @@ const BASIC_TEMPLATE: TemplateDetailsSchema = {
   },
   criteria: {
     minTasksCompleted: 1,
-    minQualityScore: 70,
+    minQualityScore: 50,
     allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS,
     allowUserSelection: DEFAULT_ALLOW_USER_SELECTION
   },
@@ -128,7 +128,7 @@ const TWITTER_TEMPLATE: TemplateDetailsSchema = {
   },
   criteria: {
     minTasksCompleted: 1,
-    minQualityScore: 70,
+    minQualityScore: 50,
     allowMultipleWins: DEFAULT_ALLOW_MULTIPLE_WINS,
     allowUserSelection: DEFAULT_ALLOW_USER_SELECTION
   },
