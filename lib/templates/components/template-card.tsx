@@ -54,6 +54,13 @@ export function TemplateCard({
     e.stopPropagation();
   };
 
+  const plainDescription = item.template.template.description
+    ? item.template.template.description
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+    : '';
+
   return (
     <Card
       className="group hover:shadow-xl transition-all duration-200 overflow-hidden p-0 cursor-pointer hover:scale-[1.02] flex flex-col h-full"
@@ -80,8 +87,8 @@ export function TemplateCard({
             <CardTitle className="mt-2 line-clamp-1">
               {item.template.template.name}
             </CardTitle>
-            <CardDescription className="line-clamp-2 mt-2">
-              {item.template.template.description}
+            <CardDescription className="line-clamp-2 mt-2 wrap-break-word">
+              {plainDescription}
             </CardDescription>
           </div>
           {item.isCustom && (
