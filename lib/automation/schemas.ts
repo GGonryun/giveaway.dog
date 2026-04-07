@@ -6,16 +6,12 @@ import {
 import z from 'zod';
 import { ApplicationError } from '../errors';
 
-export const postToTwitterRequestSchema = z.object({
+const postToTwitterRequestSchema = z.object({
   integrationId: z.string().min(1, 'Please select an account'),
   text: z.string().min(1, 'Tweet content is required').max(280),
   imageUrl: z.string().optional(),
   tasks: z.array(z.union([z.literal('REPOST'), z.literal('LIKE')])).default([])
 });
-
-export type PostToTwitterRequestSchema = z.infer<
-  typeof postToTwitterRequestSchema
->;
 
 export const postToBlueskyRequestSchema = z.object({
   integrationId: z.string().min(1, 'Please select an account'),
@@ -54,15 +50,6 @@ const baseRequestSchema = z.object({
   sweepstakesId: z.string()
 });
 
-const scheduleAutomatedTwitterPostRequestSchema = baseRequestSchema.extend({
-  type: z.literal(AutomatedPostJobType.POST_TO_TWITTER),
-  request: postToTwitterRequestSchema
-});
-
-export type ScheduleAutomatedTwitterPostRequestSchema = z.infer<
-  typeof scheduleAutomatedTwitterPostRequestSchema
->;
-
 const scheduleAutomatedBlueskyPostRequestSchema = baseRequestSchema.extend({
   type: z.literal(AutomatedPostJobType.POST_TO_BLUESKY),
   request: postToBlueskyRequestSchema
@@ -82,7 +69,6 @@ export type ScheduleAutomatedDiscordPostRequestSchema = z.infer<
 >;
 
 export const scheduleAutomatedPostSchema = z.discriminatedUnion('type', [
-  scheduleAutomatedTwitterPostRequestSchema,
   scheduleAutomatedBlueskyPostRequestSchema,
   scheduleAutomatedDiscordPostRequestSchema
 ]);

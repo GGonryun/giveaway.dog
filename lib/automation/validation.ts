@@ -12,40 +12,12 @@ export const validateAutomatedPostRequest = async (args: {
   teamId: string;
 }) => {
   switch (args.input.type) {
-    case 'POST_TO_TWITTER':
-      return validatePostToTwitterRequest(args);
     case 'POST_TO_BLUESKY':
       return validatePostToBlueskyRequest(args);
     case 'POST_TO_DISCORD':
       return validatePostToDiscordRequest(args);
     default:
       throw assertNever(args.input);
-  }
-};
-
-const validatePostToTwitterRequest = async ({
-  db,
-  input,
-  teamId
-}: {
-  db: PrismaClient;
-  input: ScheduleAutomatedPostRequest;
-  teamId: string;
-}) => {
-  const twitterIntegration = await db.integration.findFirst({
-    where: {
-      id: input.request.integrationId,
-      teamId,
-      provider: IdentityProvider.TWITTER,
-      status: IntegrationStatus.ACTIVE
-    }
-  });
-
-  if (!twitterIntegration) {
-    throw new ApplicationError({
-      code: 'PRECONDITION_FAILED',
-      message: 'Twitter integration not found or not active'
-    });
   }
 };
 

@@ -15,16 +15,13 @@ import { IntegrationsSchema, hasFeature } from '@/lib/integrations/schemas';
 import { AlertCircleIcon, SendIcon } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { AutomatedPostIntegrationStep } from './steps/integration-step';
-import { TwitterContentStep } from './steps/twitter-content-step';
 import { BlueskyContentStep } from './steps/bluesky-content-step';
 import { DiscordContentStep } from './steps/discord-content-step';
 import { useForm, FormProvider, FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { generateTweetText, generateSkeetText } from '../util';
+import { generateSkeetText } from '../util';
 import {
-  postToTwitterRequestSchema,
-  PostToTwitterRequestSchema,
   postToBlueskyRequestSchema,
   PostToBlueskyRequestSchema,
   postToDiscordRequestSchema,
@@ -48,10 +45,9 @@ interface PostBuilderSheetProps {
   onSave: () => void;
 }
 
-type PlatformType = 'TWITTER' | 'BLUESKY' | 'DISCORD' | null;
+type PlatformType = 'BLUESKY' | 'DISCORD' | null;
 
 const PLATFORM_SHEET_TITLE: Record<Exclude<PlatformType, null>, string> = {
-  TWITTER: 'Create Twitter post',
   BLUESKY: 'Create Bluesky post',
   DISCORD: 'Create Discord post'
 };
@@ -104,103 +100,6 @@ const SheetContentWrapper: React.FC<SheetContentWrapperProps> = ({
         </SheetFooter>
       )}
     </>
-  );
-};
-
-interface TwitterFormProps {
-  integrations: IntegrationsSchema;
-  sweepstakes: GiveawaySchema;
-  liveUrl: string;
-  slug: string;
-  onSuccess: () => void;
-}
-
-const TwitterForm: React.FC<TwitterFormProps> = ({
-  integrations,
-  sweepstakes,
-  liveUrl,
-  slug,
-  onSuccess
-}) => {
-  const router = useRouter();
-
-  const twitterIntegrations = integrations.filter(
-    (i) => i.provider === 'TWITTER' && i.status === 'ACTIVE'
-  );
-  const validTwitterIntegrations = twitterIntegrations.filter((i) =>
-    hasFeature({ ...i, provider: 'TWITTER' }, 'POST_TWEETS')
-  );
-
-  const isSweepstakesLive = sweepstakes.status === 'RUNNING';
-
-  const twitterDefaultValues: PostToTwitterRequestSchema = {
-    imageUrl: undefined,
-    text: generateTweetText({ sweepstakes, liveUrl }),
-    integrationId: validTwitterIntegrations[0]?.id ?? '',
-    tasks: ['REPOST', 'LIKE']
-  };
-
-  const schedule = useProcedure({
-    action: scheduleAutomatedPostJob,
-    onSuccess: () => {
-      toast.success('Twitter post scheduled successfully');
-      router.refresh();
-      onSuccess();
-    }
-  });
-
-  const form = useForm<PostToTwitterRequestSchema>({
-    resolver: zodResolver(postToTwitterRequestSchema),
-    defaultValues: twitterDefaultValues,
-    mode: 'onChange'
-  });
-
-  const handleSubmit = (request: PostToTwitterRequestSchema) => {
-    schedule.run({
-      sweepstakesId: sweepstakes.id,
-      type: AutomatedPostJobType.POST_TO_TWITTER,
-      request
-    });
-  };
-
-  const handleSubmitInvalid = (
-    errors: FieldErrors<PostToTwitterRequestSchema>
-  ) => {
-    console.warn('Form submission errors:', errors);
-  };
-
-  return (
-    <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit, handleSubmitInvalid)}
-        className="flex flex-col h-full"
-      >
-        <SheetContentWrapper
-          selectedPlatform="TWITTER"
-          isLoading={schedule.isLoading}
-        >
-          {isSweepstakesLive && (
-            <div className="px-4">
-              <Alert variant="warning">
-                <AlertCircleIcon />
-                <AlertTitle>Your giveaway is live</AlertTitle>
-                <AlertDescription>
-                  This post will be published immediately upon saving.
-                </AlertDescription>
-              </Alert>
-            </div>
-          )}
-
-          <TwitterContentStep
-            integrations={validTwitterIntegrations}
-            isSubmitting={schedule.isLoading}
-            hasTwitterIntegration={twitterIntegrations.length > 0}
-            hasPostingPermission={validTwitterIntegrations.length > 0}
-            slug={slug}
-          />
-        </SheetContentWrapper>
-      </form>
-    </FormProvider>
   );
 };
 
@@ -423,18 +322,6 @@ export function PostBuilderSheet({
   };
 
   const renderForm = () => {
-    if (selectedPlatform === 'TWITTER') {
-      return (
-        <TwitterForm
-          integrations={integrations}
-          sweepstakes={sweepstakes}
-          liveUrl={liveUrl}
-          slug={slug}
-          onSuccess={handleSuccess}
-        />
-      );
-    }
-
     if (selectedPlatform === 'BLUESKY') {
       return (
         <BlueskyForm
@@ -466,7 +353,6 @@ export function PostBuilderSheet({
       >
         <AutomatedPostIntegrationStep
           isSweepstakesLive={isSweepstakesLive}
-          onSelectTwitter={() => handleSelectPlatform('TWITTER')}
           onSelectBluesky={() => handleSelectPlatform('BLUESKY')}
           onSelectDiscord={() => handleSelectPlatform('DISCORD')}
         />

@@ -4,7 +4,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { TwitterCard } from '@/lib/integrations/components/twitter-card';
 import { BlueskyCard } from '@/lib/integrations/components/bluesky-card';
 import { DiscordCard } from '@/lib/discord/components/discord-card';
 import { TwitchCard } from '@/lib/twitch/components/twitch-card';
@@ -27,10 +26,10 @@ export const TeamIntegrationSettings: React.FC<{
     const username = searchParams.get('username');
     const handle = searchParams.get('handle');
 
-    if (success === 'twitter_connected' && username) {
+    if (success === 'twitch_connected' && username) {
       setStatusMessage({
         type: 'success',
-        message: `Successfully connected Twitter account @${username}`
+        message: `Successfully connected Twitch channel ${username}`
       });
       setTimeout(() => setStatusMessage(null), 5000);
     } else if (success === 'bluesky_connected' && handle) {
@@ -46,12 +45,6 @@ export const TeamIntegrationSettings: React.FC<{
         message: `Discord OAuth completed for ${guild || 'your server'}. Complete installation by running /connect in your server.`
       });
       setTimeout(() => setStatusMessage(null), 10000);
-    } else if (success === 'twitch_connected' && username) {
-      setStatusMessage({
-        type: 'success',
-        message: `Successfully connected Twitch channel ${username}`
-      });
-      setTimeout(() => setStatusMessage(null), 5000);
     } else if (error) {
       const errorMessages: Record<string, string> = {
         missing_parameters: 'Missing required OAuth parameters',
@@ -83,13 +76,6 @@ export const TeamIntegrationSettings: React.FC<{
       <div>
         <h2 className="text-lg font-semibold mb-4">Available Integrations</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {integrations
-            .filter((i) => i.provider === IntegrationProvider.TWITTER)
-            .map((integration) => (
-              <TwitterCard key={integration.id} integration={integration} />
-            ))}
-          <TwitterCard />
-
           <BlueskyCard
             integration={integrations.find(
               (i) => i.provider === IntegrationProvider.BLUESKY
