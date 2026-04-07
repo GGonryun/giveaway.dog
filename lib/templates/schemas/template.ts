@@ -13,8 +13,14 @@ export const baseContentSchema = baseGiveawayFormSchema({
 export type BaseContentSchema = z.infer<typeof baseContentSchema>;
 
 export const templateSettingsSchema = z.object({
-  name: z.string().min(3, 'Name must be at least 3 characters'),
-  description: z.string().min(3, 'Description must be at least 3 characters'),
+  name: z
+    .string()
+    .min(3, 'Name must be at least 3 characters')
+    .max(80, 'Name must be at most 80 characters'),
+  description: z
+    .string()
+    .min(3, 'Description must be at least 3 characters')
+    .max(300, 'Description must be at most 300 characters'),
   image: z.string().url('Must be a valid image URL')
 });
 

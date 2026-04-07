@@ -57,7 +57,7 @@ export const convertSweepstakesToTemplate = procedure()
         name: parsed.setup?.name
           ? `${parsed.setup?.name ?? DEFAULT_TEMPLATE_NAME} Template`
           : DEFAULT_TEMPLATE_NAME,
-        description: parsed.setup?.description ?? '',
+        description: '',
         image: parsed.setup?.banner || DEFAULT_TEMPLATE_IMAGE,
         type: 'SWEEPSTAKES',
         content: {

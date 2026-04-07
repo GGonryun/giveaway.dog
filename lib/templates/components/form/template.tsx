@@ -31,8 +31,15 @@ export const TemplateDetails = () => {
           <FormItem>
             <FormLabel>Template Name</FormLabel>
             <FormControl>
-              <Input placeholder="e.g., Social Media Giveaway" {...field} />
+              <Input
+                placeholder="e.g., Social Media Giveaway"
+                maxLength={80}
+                {...field}
+              />
             </FormControl>
+            <div className="flex justify-end text-xs text-muted-foreground">
+              {(field.value ?? '').length}/80
+            </div>
             <FormMessage />
           </FormItem>
         )}
@@ -47,9 +54,13 @@ export const TemplateDetails = () => {
             <FormControl>
               <Textarea
                 placeholder="Brief description of this template"
+                maxLength={300}
                 {...field}
               />
             </FormControl>
+            <div className="flex justify-end text-xs text-muted-foreground">
+              {(field.value ?? '').length}/300
+            </div>
             <FormMessage />
           </FormItem>
         )}

@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Dialog,
   DialogContent,
@@ -73,7 +75,7 @@ export const DeleteTemplateModal: React.FC<DeleteTemplateModalProps> = ({
 
   return (
     <Dialog open={Boolean(template)} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-125">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-destructive">
             <AlertTriangleIcon className="h-5 w-5" />
