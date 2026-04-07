@@ -112,7 +112,7 @@ export function UseTemplateModal({
           />
         </div>
 
-        <DialogFooter className="px-6 py-4 border-t bg-background shrink-0 rounded-b-lg flex-row justify-between gap-2">
+        <DialogFooter className="px-6 py-4 border-t bg-background shrink-0 rounded-b-lg flex flex-col-reverse sm:flex-row sm:justify-between gap-2">
           {isCustom ? (
             <>
               <Button
