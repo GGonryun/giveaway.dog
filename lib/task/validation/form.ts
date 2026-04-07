@@ -4,7 +4,8 @@ import {
   BonusTimedTaskSchema,
   ReferralLinkTaskSchema,
   SecretCodeV2TaskSchema,
-  TaskSchema
+  TaskSchema,
+  TASK_IS_DEPRECATED
 } from '../schemas';
 import { assertNever } from '@/lib/errors';
 import {
@@ -42,6 +43,14 @@ export const refineSweepstakeTasks = async (
 
 const globalValidator = (args: ValidateSweepstakeTaskOptions) => {
   const { task, form, index, ctx } = args;
+
+  if (TASK_IS_DEPRECATED[task.type]) {
+    ctx.addIssue({
+      path: ['tasks', index, 'type'],
+      code: z.ZodIssueCode.custom,
+      message: `Task type "${task.type}" is no longer supported and cannot be used in new giveaways`
+    });
+  }
 
   if (
     task.tasksRequired !== undefined &&

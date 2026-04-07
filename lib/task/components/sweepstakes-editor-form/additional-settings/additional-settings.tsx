@@ -135,11 +135,21 @@ export const AdditionalSettings: React.FC<{
       case 'TWITTER_LIKE_IMPORT':
       case 'TWITTER_RETWEET_IMPORT':
         return (
-          <>
-            <TwitterImportingAccountField />
-            <TweetIdFormField />
-            <ImportingTweetIdValidation />
-          </>
+          <Alert variant="destructive">
+            <AlertCircle />
+            <AlertTitle>Deprecated Task</AlertTitle>
+            <AlertDescription>
+              This task is no longer officially supported and will not process
+              new entries.
+              <Link
+                href={`/learn/integrations/x/tasks/${type === 'TWITTER_LIKE_IMPORT' ? 'like-import' : 'retweet-import'}`}
+                target="_blank"
+                className="underline mt-1 block"
+              >
+                Learn more about deprecated X tasks.
+              </Link>
+            </AlertDescription>
+          </Alert>
         );
       case 'TWITTER_RETWEET_IMPORT_V2':
         return (

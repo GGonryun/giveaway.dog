@@ -20,7 +20,8 @@ import {
   TASK_IS_IMPORT,
   TASK_ALLOW_MANUAL_ADD,
   TASK_DUPLICATE_RESTRICTION,
-  TaskType
+  TaskType,
+  TASK_IS_DEPRECATED
 } from '../../schemas';
 import { toTaskTheme } from '../theme';
 import { EntryMethodBadge } from '../entry-methods/entry-method-badge';
@@ -33,10 +34,12 @@ export const SelectTaskDialog: React.FC<{
 
   const allTaskTypes = widetype.keys(TASK_LABEL);
   const regularTasks = allTaskTypes.filter(
-    (t) => !TASK_IS_IMPORT[t] && TASK_ALLOW_MANUAL_ADD[t]
+    (t) =>
+      !TASK_IS_IMPORT[t] && TASK_ALLOW_MANUAL_ADD[t] && !TASK_IS_DEPRECATED[t]
   );
   const importTasks = allTaskTypes.filter(
-    (t) => TASK_IS_IMPORT[t] && TASK_ALLOW_MANUAL_ADD[t]
+    (t) =>
+      TASK_IS_IMPORT[t] && TASK_ALLOW_MANUAL_ADD[t] && !TASK_IS_DEPRECATED[t]
   );
 
   return (
