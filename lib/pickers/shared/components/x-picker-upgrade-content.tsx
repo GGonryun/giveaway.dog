@@ -2,7 +2,14 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { GemIcon, Sparkles, Zap, Shield, LucideIcon } from 'lucide-react';
+import {
+  GemIcon,
+  Sparkles,
+  Zap,
+  Shield,
+  LucideIcon,
+  ArrowRight
+} from 'lucide-react';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 
 interface UpgradeBenefit {
@@ -86,7 +93,9 @@ export const XPickerUpgradeContent: React.FC<XPickerUpgradeContentProps> = ({
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link href="/pickers/x">Try our free Twitter picker</Link>
+            <Link href="/pickers/x">
+              Try for free <ArrowRight />
+            </Link>
           </Button>
         </div>
       </div>
