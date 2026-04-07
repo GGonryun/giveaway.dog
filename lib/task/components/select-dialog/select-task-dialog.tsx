@@ -35,7 +35,9 @@ export const SelectTaskDialog: React.FC<{
   const regularTasks = allTaskTypes.filter(
     (t) => !TASK_IS_IMPORT[t] && TASK_ALLOW_MANUAL_ADD[t]
   );
-  const importTasks = allTaskTypes.filter((t) => TASK_IS_IMPORT[t]);
+  const importTasks = allTaskTypes.filter(
+    (t) => TASK_IS_IMPORT[t] && TASK_ALLOW_MANUAL_ADD[t]
+  );
 
   return (
     <Sheet onOpenChange={setOpen} open={open}>

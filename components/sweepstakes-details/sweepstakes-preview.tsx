@@ -279,7 +279,7 @@ const StateSelector: React.FC<StateSelectorProps> = ({
       value={previewState}
       onValueChange={(value) => setPreviewState(value as GiveawayState)}
     >
-      <SelectTrigger className="w-[180px] h-8">
+      <SelectTrigger className="w-45 h-8">
         <SelectValue placeholder="Select state" />
       </SelectTrigger>
       <SelectContent>

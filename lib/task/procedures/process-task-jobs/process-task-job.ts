@@ -2,10 +2,8 @@ import { ApplicationError, assertNever } from '@/lib/errors';
 import { toTaskSchema } from '@/lib/task/schemas';
 import { PrismaClient, TaskJobStatus } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
-import { processLikeTaskJob } from './process-like-task-job';
 import { processBlueskyLikeTaskJob } from './process-bluesky-like-task-job';
 import { processBlueskyRepostTaskJob } from './process-bluesky-repost-task-job';
-import { processRetweetTaskJob } from './process-retweet-task-job';
 import { processRetweetV2TaskJob } from './process-retweet-v2-task-job';
 
 const END_DATE_BUFFER_MINUTES = 15;
@@ -111,9 +109,11 @@ export const processTaskJob = async (
     case 'TWITTER_RETWEET_IMPORT_V2':
       return await processRetweetV2TaskJob(db, task, job);
     case 'TWITTER_RETWEET_IMPORT':
-      return await processRetweetTaskJob(db, task, job);
     case 'TWITTER_LIKE_IMPORT':
-      return await processLikeTaskJob(db, task, job);
+      throw new ApplicationError({
+        code: 'NOT_IMPLEMENTED',
+        message: `Job processing for task type ${task.type} is no longer supported`
+      });
     case 'BLUESKY_LIKE_IMPORT':
       return await processBlueskyLikeTaskJob(db, task, job);
     case 'BLUESKY_REPOST_IMPORT':
