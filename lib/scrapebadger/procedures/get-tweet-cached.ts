@@ -6,11 +6,9 @@ import type { Tweet } from 'scrapebadger';
 const CACHE_TTL_SECONDS = 60 * 60;
 
 export const getTweetCached = async ({
-  tweetId,
-  userId
+  tweetId
 }: {
   tweetId: string;
-  userId: string | null;
 }): Promise<Tweet> => {
   const cacheKey = `scrapebadger:tweet:${tweetId}`;
 
@@ -22,9 +20,7 @@ export const getTweetCached = async ({
     return cached;
   }
 
-  console.info(
-    `[ScrapeBadger] Fetching fresh tweet data for ${tweetId} (user: ${userId || 'anonymous'})`
-  );
+  console.info(`[ScrapeBadger] Fetching fresh tweet data for ${tweetId}`);
 
   const tweet = await getTweet({ tweetId });
 

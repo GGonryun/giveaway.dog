@@ -7,10 +7,16 @@ import {
   estimateDuration
 } from '@/lib/pickers/x/utils/calculate-api-calls';
 import type { Tweet } from 'scrapebadger';
-import { auth } from '@/lib/auth/config';
 import { ApplicationError } from '@/lib/errors';
 import { checkAndConsumeCredits } from '@/lib/scrapebadger/credits';
 import { CREDIT_COSTS } from '@/lib/scrapebadger/settings';
+import prisma from '@/lib/prisma';
+import {
+  X_PICKER_LIKES_KEY,
+  X_PICKER_RETWEETS_KEY,
+  X_PICKER_REPLIES_KEY,
+  X_PICKER_QUOTES_KEY
+} from '@/lib/pickers/x/constants';
 
 const loadTweetSchema = z.object({
   postUrl: z
@@ -44,9 +50,6 @@ function extractTweetId(url: string): string | null {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await auth();
-  const userId = session?.user?.id || null;
-
   try {
     const body = await request.json();
     const parseResult = loadTweetSchema.safeParse(body);
@@ -75,15 +78,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Charge credits upfront for this endpoint call
-    await checkAndConsumeCredits(userId, CREDIT_COSTS.LOAD_TWEET_ENDPOINT);
+    await checkAndConsumeCredits(request.headers, CREDIT_COSTS.LOAD_TWEET_ENDPOINT);
 
-    const tweet = await getTweetCached({ tweetId, userId });
-    const user = await getUserCached({ username: tweet.username, userId });
+    const tweet = await getTweetCached({ tweetId });
+    const user = await getUserCached({ username: tweet.username });
 
     const profileImageUrl = user.profile_image_url ?? null;
     const isBlueVerified = user.is_blue_verified ?? false;
 
     const retweetCount = Number(tweet.retweet_count) || 0;
+    const likeCount = Number(tweet.favorite_count) || 0;
+    const replyCount = Number(tweet.reply_count) || 0;
+    const quoteCount = Number(tweet.quote_count) || 0;
     const apiCalls = calculateApiCalls(retweetCount);
     const estimatedDurationMs = estimateDuration(apiCalls);
 
@@ -92,11 +98,11 @@ export async function POST(request: NextRequest) {
       text: tweet.text,
       username: tweet.username ?? tweet.user_name ?? null,
       profileImageUrl,
-      favoriteCount: Number(tweet.favorite_count) ?? null,
+      favoriteCount: likeCount,
       retweetCount,
-      replyCount: Number(tweet.reply_count) ?? null,
+      replyCount,
       viewCount: Number(tweet.view_count) ?? null,
-      quoteCount: Number(tweet.quote_count) ?? null,
+      quoteCount,
       createdAt: tweet.created_at
         ? new Date(tweet.created_at).toISOString()
         : new Date().toISOString(),
@@ -114,6 +120,29 @@ export async function POST(request: NextRequest) {
       })),
       estimatedDurationMs
     };
+
+    prisma.$transaction([
+      prisma.siteMetric.upsert({
+        where: { key: X_PICKER_LIKES_KEY },
+        create: { key: X_PICKER_LIKES_KEY, value: likeCount },
+        update: { value: { increment: likeCount } }
+      }),
+      prisma.siteMetric.upsert({
+        where: { key: X_PICKER_RETWEETS_KEY },
+        create: { key: X_PICKER_RETWEETS_KEY, value: retweetCount },
+        update: { value: { increment: retweetCount } }
+      }),
+      prisma.siteMetric.upsert({
+        where: { key: X_PICKER_REPLIES_KEY },
+        create: { key: X_PICKER_REPLIES_KEY, value: replyCount },
+        update: { value: { increment: replyCount } }
+      }),
+      prisma.siteMetric.upsert({
+        where: { key: X_PICKER_QUOTES_KEY },
+        create: { key: X_PICKER_QUOTES_KEY, value: quoteCount },
+        update: { value: { increment: quoteCount } }
+      })
+    ]).catch(() => {});
 
     return NextResponse.json({
       success: true,

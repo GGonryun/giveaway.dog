@@ -4,6 +4,7 @@ import { PickerHowItWorksSection } from '@/lib/pickers/x/components/picker-how-i
 import { PickerBenefitsSection } from '@/lib/pickers/x/components/picker-benefits-section';
 import { PickerFaqSection } from '@/lib/pickers/x/components/picker-faq-section';
 import { HostCTA } from '@/components/sweepstakes-browse/components/host-cta';
+import { PickerLiveEngagementSection } from '@/lib/pickers/x/components/picker-live-engagement-section';
 import { environment } from '@/lib/environment';
 import type { Metadata } from 'next';
 
@@ -60,20 +61,24 @@ export default function PublicXPickerPage() {
         />
       </div>
 
-      <div className="max-w-2xl mx-auto mb-12">
+      <div className="max-w-3xl mx-auto mb-24">
         <PublicXPickerForm />
       </div>
 
-      <div className="max-w-2xl mx-auto mb-12">
+      <div className="max-w-3xl mx-auto mb-24">
         <PickerHowItWorksSection />
       </div>
 
-      <div className="max-w-2xl mx-auto mb-12">
+      <div className="max-w-3xl mx-auto mb-24">
         <PickerBenefitsSection />
       </div>
 
-      <div className="max-w-3xl mx-auto mb-12">
+      <div className="max-w-3xl mx-auto mb-24">
         <PickerFaqSection />
+      </div>
+
+      <div className="max-w-3xl mx-auto mb-24">
+        <PickerLiveEngagementSection />
       </div>
 
       <div className="max-w-3xl mx-auto">

@@ -6,11 +6,9 @@ import type { User } from 'scrapebadger';
 const CACHE_TTL_SECONDS = 60 * 60 * 24;
 
 export const getUserCached = async ({
-  username,
-  userId
+  username
 }: {
   username: string;
-  userId: string | null;
 }): Promise<User> => {
   const cacheKey = `scrapebadger:user:${username.toLowerCase()}`;
 
@@ -22,9 +20,7 @@ export const getUserCached = async ({
     return cached;
   }
 
-  console.info(
-    `[ScrapeBadger] Fetching fresh user data for ${username} (user: ${userId || 'anonymous'})`
-  );
+  console.info(`[ScrapeBadger] Fetching fresh user data for ${username}`);
 
   const user = await getUser({ username });
 

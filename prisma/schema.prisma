@@ -964,3 +964,8 @@ model TwitterPicker {
   updatedAt           DateTime            @updatedAt
 }
 
+model SiteMetric {
+  key       String   @id
+  value     BigInt   @default(0)
+  updatedAt DateTime @updatedAt
+}

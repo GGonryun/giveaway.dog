@@ -11,15 +11,11 @@ import {
 } from '@/lib/pickers/x/utils/picker-utils';
 import { createId } from '@paralleldrive/cuid2';
 import { fetchRetweetersWithCoverage } from '@/lib/pickers/x/utils/fetch-retweeters-with-coverage';
-import { auth } from '@/lib/auth/config';
 import { ApplicationError } from '@/lib/errors';
 import { checkAndConsumeCredits } from '@/lib/scrapebadger/credits';
 import { CREDIT_COSTS } from '@/lib/scrapebadger/settings';
 
 export async function POST(request: NextRequest) {
-  const session = await auth();
-  const userId = session?.user?.id || null;
-
   try {
     const body = await request.json();
     const { postUrl, winnersCount, filters } = body;
@@ -33,10 +29,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Charge credits upfront for this endpoint call
-    await checkAndConsumeCredits(userId, CREDIT_COSTS.PICK_WINNERS_ENDPOINT);
+    await checkAndConsumeCredits(request.headers, CREDIT_COSTS.PICK_WINNERS_ENDPOINT);
 
     // Fetch tweet and retweeters (uses Redis cache)
-    const result = await fetchRetweetersWithCoverage(tweetId, userId);
+    const result = await fetchRetweetersWithCoverage(tweetId);
     const { tweet, users } = result;
 
     if (users.length === 0) {
@@ -75,18 +71,14 @@ export async function POST(request: NextRequest) {
       return !getDisqualificationReason(user, pickerData);
     });
 
-    if (eligibleUsers.length === 0) {
+    if (eligibleUsers.length < winnersCount) {
       throw new ApplicationError({
         code: 'BAD_REQUEST',
-        message:
-          'No users match the specified filters. Try adjusting your requirements.'
+        message: `Not enough eligible entries. Only ${eligibleUsers.length} of ${users.length} users passed your filters, but you requested ${winnersCount} winners. Try relaxing your filter requirements.`
       });
     }
 
-    const selectedWinners = selectRandomUnique(
-      eligibleUsers,
-      Math.min(winnersCount, eligibleUsers.length)
-    );
+    const selectedWinners = selectRandomUnique(eligibleUsers, winnersCount);
 
     const drawsData = selectedWinners.map((user) => ({
       id: createId(),

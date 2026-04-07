@@ -34,12 +34,10 @@ import { LoadTweetModal } from './load-tweet-modal';
 import { ProgressModal } from './progress-modal';
 import { WinnersResultModal } from './winners-result-modal';
 import { RateLimitModal } from './rate-limit-modal';
-import { SettingsLockedModal } from './settings-locked-modal';
+import { PickWinnersErrorModal } from './pick-winners-error-modal';
 import { toast } from 'sonner';
 import { useRouter, usePathname } from 'next/navigation';
 import { TweetPreviewCard } from './tweet-preview-card';
-import { PUBLIC_PICKER_MAX_WINNERS } from '../constants';
-import { useSession } from 'next-auth/react';
 
 const publicPickerFormSchema = z.object({
   postUrl: z
@@ -54,7 +52,7 @@ const publicPickerFormSchema = z.object({
         message: 'Please enter a valid X (Twitter) post URL'
       }
     ),
-  winnersCount: z.number().min(1).max(PUBLIC_PICKER_MAX_WINNERS),
+  winnersCount: z.number().min(1),
   filters: z.object({
     minimumPostCount: z.number().nullable(),
     minimumAccountAgeDays: z.number().nullable(),
@@ -120,7 +118,7 @@ export const PublicXPickerForm: React.FC = () => {
   const [showLoadingTweet, setShowLoadingTweet] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [upgradeFeature, setUpgradeFeature] = useState<
-    'multiple-posts' | 'schedule' | 'more-winners'
+    'multiple-posts' | 'schedule'
   >('multiple-posts');
   const [showSearching, setShowSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -130,11 +128,9 @@ export const PublicXPickerForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
   const [tweetData, setTweetData] = useState<TweetData | null>(null);
   const [isReRolling, setIsReRolling] = useState(false);
-  const [showSettingsLocked, setShowSettingsLocked] = useState(false);
+  const [showPickError, setShowPickError] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { status } = useSession();
-  const isAuthenticated = status === 'authenticated';
 
   const form = useForm<PublicPickerFormSchema>({
     resolver: zodResolver(publicPickerFormSchema),
@@ -231,7 +227,7 @@ export const PublicXPickerForm: React.FC = () => {
           setWinnerData(result.data);
           setShowResults(true);
         } else {
-          toast.error('Failed to pick winners. Please try again.');
+          setShowPickError(true);
         }
       } catch (error) {
         setShowSearching(false);
@@ -275,7 +271,7 @@ export const PublicXPickerForm: React.FC = () => {
       if (result.success) {
         setWinnerData(result.data);
       } else {
-        toast.error('Failed to re-roll winners. Please try again.');
+        setShowPickError(true);
       }
     } catch (error) {
       toast.error('An error occurred. Please try again.');
@@ -361,12 +357,6 @@ export const PublicXPickerForm: React.FC = () => {
         </Card>
 
         <Card className="border-2 relative">
-          {!isAuthenticated && (
-            <div
-              className="absolute inset-0 z-10 cursor-pointer"
-              onClick={() => setShowSettingsLocked(true)}
-            />
-          )}
           <CardHeader>
             <CardTitle className="text-lg">Draw Settings</CardTitle>
           </CardHeader>
@@ -381,17 +371,9 @@ export const PublicXPickerForm: React.FC = () => {
                     <Input
                       type="number"
                       min={1}
-                      max={PUBLIC_PICKER_MAX_WINNERS}
                       {...field}
-                      disabled={!isAuthenticated}
                       onChange={(e) => {
-                        const value = parseInt(e.target.value) || 1;
-                        if (value > PUBLIC_PICKER_MAX_WINNERS) {
-                          setUpgradeFeature('more-winners');
-                          setUpgradeModalOpen(true);
-                        } else {
-                          field.onChange(value);
-                        }
+                        field.onChange(parseInt(e.target.value) || 1);
                       }}
                     />
                   </FormControl>
@@ -411,7 +393,6 @@ export const PublicXPickerForm: React.FC = () => {
                 />
                 <Switch
                   checked={false}
-                  disabled={!isAuthenticated}
                   onClick={() => {
                     setUpgradeFeature('schedule');
                     setUpgradeModalOpen(true);
@@ -423,12 +404,6 @@ export const PublicXPickerForm: React.FC = () => {
         </Card>
 
         <Card className="border-2 relative">
-          {!isAuthenticated && (
-            <div
-              className="absolute inset-0 z-10 cursor-pointer"
-              onClick={() => setShowSettingsLocked(true)}
-            />
-          )}
           <CardHeader>
             <CardTitle className="text-lg">Filters & Requirements</CardTitle>
           </CardHeader>
@@ -696,9 +671,9 @@ export const PublicXPickerForm: React.FC = () => {
           retryAfterSeconds={rateLimitSeconds}
         />
 
-        <SettingsLockedModal
-          open={showSettingsLocked}
-          onClose={() => setShowSettingsLocked(false)}
+        <PickWinnersErrorModal
+          open={showPickError}
+          onClose={() => setShowPickError(false)}
         />
 
         {winnerData && (

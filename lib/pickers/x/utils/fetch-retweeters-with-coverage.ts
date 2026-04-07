@@ -23,10 +23,9 @@ interface FetchRetweetersResult {
 }
 
 export async function fetchRetweetersWithCoverage(
-  tweetId: string,
-  userId: string | null
+  tweetId: string
 ): Promise<FetchRetweetersResult> {
-  const tweet = await getTweetCached({ tweetId, userId });
+  const tweet = await getTweetCached({ tweetId });
 
   const retweetCount = Number(tweet.retweet_count) || 0;
   const maxApiCalls = calculateApiCalls(retweetCount);
@@ -38,8 +37,7 @@ export async function fetchRetweetersWithCoverage(
 
   const fetchedUsers = await getRetweetersUntilCached({
     tweetId,
-    maxApiCalls,
-    userId
+    maxApiCalls
   });
 
   const duration = performance.now() - startTime;

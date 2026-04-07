@@ -20,6 +20,7 @@ import { TwitterV2ParticipantsSection } from './twitter-v2-participants-section'
 import { TwitterV2DrawHistorySection } from './twitter-v2-draw-history-section';
 import { DisqualificationReasonModal } from './twitter-v2-disqualification-reason-modal';
 import { TwitterScrapeProgressMonitor } from './twitter-scrape-progress-monitor';
+import { HostCTA } from '@/components/sweepstakes-browse/components/host-cta';
 import {
   Dialog,
   DialogContent,
@@ -68,7 +69,7 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
   };
 
   return (
-    <div className="container max-w-4xl py-8 space-y-6">
+    <div className="container max-w-4xl py-8 mt-8 space-y-6">
       <div className="text-center space-y-2">
         <MarketingPageHeader
           title={isComplete ? 'Draw Verification' : 'Upcoming Draw'}
@@ -291,6 +292,10 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
         isUnverified={isPublicGiveaway}
         totalCount={picker.stats.totalParticipants}
       />
+
+      <div className="mt-16 mb-8">
+        <HostCTA />
+      </div>
 
       <div className="text-center text-muted-foreground">
         <p>

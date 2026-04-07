@@ -1,8 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 import { Shield, Zap, Sliders, DollarSign, Users } from 'lucide-react';
-import { PUBLIC_PICKER_MAX_WINNERS } from '../constants';
-
 const benefits = [
   {
     icon: Shield,
@@ -25,7 +23,7 @@ const benefits = [
   {
     icon: DollarSign,
     title: 'Free to Use',
-    description: `Pick up to ${PUBLIC_PICKER_MAX_WINNERS} winners for free. No credit card required, no hidden fees, no surprises.`
+    description: `Pick as many winners as you want for free. No credit card required, no hidden fees, no surprises.`
   },
   {
     icon: Users,
@@ -37,7 +35,7 @@ const benefits = [
 
 export function PickerBenefitsSection() {
   return (
-    <section className="w-full mb-12">
+    <section className="w-full">
       <MarketingPageHeader
         component="h2"
         title="Why Use Our Tool?"

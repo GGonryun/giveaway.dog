@@ -13,12 +13,10 @@ interface RetweetersResult {
 
 export const getRetweetersUntilCached = async ({
   tweetId,
-  maxApiCalls,
-  userId
+  maxApiCalls
 }: {
   tweetId: string;
   maxApiCalls: number;
-  userId: string | null;
 }): Promise<RetweetersResult> => {
   const cacheKey = `scrapebadger:retweeters:${tweetId}:${maxApiCalls}`;
 
@@ -31,7 +29,7 @@ export const getRetweetersUntilCached = async ({
   }
 
   console.info(
-    `[ScrapeBadger] Fetching fresh retweeters for tweet ${tweetId} (${maxApiCalls} calls, user: ${userId || 'anonymous'})`
+    `[ScrapeBadger] Fetching fresh retweeters for tweet ${tweetId} (${maxApiCalls} calls)`
   );
 
   const result = await getRetweetersUntil({

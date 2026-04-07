@@ -7,8 +7,6 @@ import {
   AccordionTrigger
 } from '@/components/ui/accordion';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
-import { PUBLIC_PICKER_MAX_WINNERS } from '../constants';
-
 const faqs = [
   {
     question: 'How are winners selected from X retweets?',
@@ -32,7 +30,7 @@ const faqs = [
   },
   {
     question: 'How many winners can I pick for free?',
-    answer: `You can pick up to ${PUBLIC_PICKER_MAX_WINNERS} winners for free with our public picker tool. No account required, no credit card needed. For unlimited winners, advanced features, and saved history, upgrade to our Pro plan.`
+    answer: `You can pick as many winners as you want for free with our public picker tool. No account required, no credit card needed. For advanced features and saved history, upgrade to our Pro plan.`
   },
   {
     question: 'Do I need to connect my X account to use this?',
@@ -43,7 +41,7 @@ const faqs = [
 
 export function PickerFaqSection() {
   return (
-    <section className="w-full mb-12">
+    <section className="w-full">
       <div className="max-w-3xl mx-auto">
         <MarketingPageHeader
           component="h2"

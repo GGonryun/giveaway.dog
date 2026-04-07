@@ -35,7 +35,7 @@ const steps = [
 
 export function PickerHowItWorksSection() {
   return (
-    <section className="w-full mt-32 mb-12">
+    <section className="w-full">
       <MarketingPageHeader
         title="How It Works"
         component="h2"

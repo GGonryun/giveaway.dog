@@ -11,12 +11,10 @@ import {
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Gem } from 'lucide-react';
-import { PUBLIC_PICKER_MAX_WINNERS } from '../constants';
-
 interface UpgradeModalProps {
   open: boolean;
   onClose: () => void;
-  feature: 'multiple-posts' | 'schedule' | 'more-winners';
+  feature: 'multiple-posts' | 'schedule';
 }
 
 export const UpgradeModal: React.FC<UpgradeModalProps> = ({
@@ -35,10 +33,6 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
       description:
         'Create an account and upgrade to PRO to unlock the ability to schedule your picker for later. Set a specific date and time for your drawing to run automatically.'
     },
-    'more-winners': {
-      title: 'Pick More Winners',
-      description: `Upgrade to PRO to pick more than ${PUBLIC_PICKER_MAX_WINNERS} winners. The free plan is limited to ${PUBLIC_PICKER_MAX_WINNERS} winners per draw.`
-    }
   };
 
   return (
