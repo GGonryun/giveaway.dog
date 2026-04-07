@@ -7,7 +7,7 @@ import {
 } from '@/lib/pickers/x/schemas/list';
 import { CreatePickerV2Button } from '@/lib/pickers/x/components/create-picker-v2-button';
 import { PickersV2Table } from '@/lib/pickers/x/components/pickers-v2-table';
-import { PickersTabs } from '@/lib/pickers/twitter/components/pickers-tabs';
+import { PickersV2Tabs } from '@/lib/pickers/x/components/pickers-v2-tabs';
 import { getPickersV2List } from '@/lib/pickers/x/procedures/get-pickers-v2-list';
 import { XPickersUpgradeCTA } from '@/lib/pickers/x/components/x-pickers-upgrade-cta';
 import { hasMinimumTeamTier } from '@/lib/team/util';
@@ -60,14 +60,14 @@ export default async function XPickersPage(props: XPickersPageProps) {
 
   return (
     <Outline title="X Picker" action={<CreatePickerV2Button />}>
-      <PickersTabs filters={filters}>
+      <PickersV2Tabs filters={filters}>
         <Suspense
           fallback={<div>Loading pickers...</div>}
           key={JSON.stringify(filters)}
         >
           <PickersWrapper filters={filters} slug={slug} />
         </Suspense>
-      </PickersTabs>
+      </PickersV2Tabs>
     </Outline>
   );
 }

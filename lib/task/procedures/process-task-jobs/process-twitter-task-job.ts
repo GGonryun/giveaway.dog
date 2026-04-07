@@ -8,10 +8,8 @@ import {
 import { PrismaClient, TaskJobStatus } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 import { datetime } from '@/lib/date';
-import {
-  TWITTER_API_RATE_LIMIT_MINUTES,
-  TWITTER_API_RUN_OFFSET
-} from '@/lib/pickers/twitter/data/settings';
+const TWITTER_API_RATE_LIMIT_MINUTES = 15;
+const TWITTER_API_RUN_OFFSET = 5;
 import { ApplicationError } from '@/lib/errors';
 import { takeUntil } from '@/lib/arrays';
 import { Tx } from '@/lib/prisma';

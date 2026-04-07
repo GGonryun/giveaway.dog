@@ -48,10 +48,6 @@ const groups = ({ slug }: { slug: string }) => {
           icon: MousePointerClickIcon,
           items: [
             {
-              name: 'Twitter',
-              url: `/app/${slug}/pickers/twitter`
-            },
-            {
               name: 'X',
               url: `/app/${slug}/pickers/x`
             },

@@ -2,24 +2,24 @@
 
 import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
 import { useState } from 'react';
-import { ListPickersFilterSchema } from '../schemas/list';
-import { PICKER_FILTER_STATUS_OPTIONS } from '../../shared/schemas/status';
+import { ListPickersV2FilterSchema } from '../schemas/list';
+import { PICKER_FILTER_STATUS_OPTIONS } from '@/lib/pickers/shared/schemas/status';
+import { PickerFilterStatus } from '@/lib/pickers/shared/schemas/status';
 
-export const PickersTabs: React.PC<{
-  filters: ListPickersFilterSchema;
+export const PickersV2Tabs: React.PC<{
+  filters: ListPickersV2FilterSchema;
 }> = ({ filters, children }) => {
   const page = useSweepstakesPage();
-  const [tab, setTab] = useState<ListPickersFilterSchema['status']>(
-    filters.status
+  const [tab, setTab] = useState<PickerFilterStatus>(
+    filters.status ?? 'ALL'
   );
 
   return (
     <Tabs
       value={tab}
       onValueChange={(value) => {
-        setTab(value as ListPickersFilterSchema['status']);
+        setTab(value as PickerFilterStatus);
         page.updateParams((params) => {
           params.set('status', value);
         });

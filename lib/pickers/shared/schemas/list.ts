@@ -1,6 +1,5 @@
 import z from 'zod';
-import { PickerType } from '@prisma/client';
 
-export const pickerTypeSchema = z.nativeEnum(PickerType);
+export const pickerTypeSchema = z.enum(['TWITTER', 'BLUESKY']);
 
 export type PickerTypeSchema = z.infer<typeof pickerTypeSchema>;

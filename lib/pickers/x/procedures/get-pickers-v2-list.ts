@@ -6,7 +6,6 @@ import {
   pickersV2ListSchema,
   listPickersV2FilterSchema
 } from '../schemas/list';
-import { PickerType } from '@prisma/client';
 
 export const getPickersV2List = procedure()
   .authorization({
@@ -35,7 +34,7 @@ export const getPickersV2List = procedure()
       return {
         pickerId: picker.id,
         status: picker.status,
-        type: PickerType.TWITTER,
+        type: 'TWITTER' as const,
         updatedAt: picker.updatedAt,
         name: picker.id
       };

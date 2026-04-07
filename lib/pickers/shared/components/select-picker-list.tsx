@@ -30,14 +30,6 @@ export const SelectPickerList: React.FC<SelectPickerListProps> = ({ slug }) => {
 
   const PICKER_LIST_OPTIONS: PickerListOption[] = [
     {
-      id: 'twitter',
-      title: 'Twitter (Legacy)',
-      description:
-        'Legacy X (Twitter) pickers with full API integration support.',
-      icon: SocialXIcon,
-      path: 'twitter'
-    },
-    {
       id: 'x',
       title: 'X',
       description: 'Modern X picker powered by Twitter 2.0 API.',

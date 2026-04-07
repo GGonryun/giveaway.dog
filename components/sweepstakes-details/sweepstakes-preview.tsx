@@ -13,17 +13,14 @@ import { useIsMobile } from '../hooks/use-mobile';
 import { QRCodeModal } from '../patterns/qr-code-modal';
 import {
   mockParticipation,
-  mockUserHostRelationship,
   onFakeLogin,
   onFakeTaskComplete,
   onFakeCompleteProfile,
   onFakeFormSubmit,
-  mockParticipant,
   onFakeCreateReferral,
   mockUserReferral,
   onFakeTaskUpdate,
-  onFakeAllocate,
-  mockAllocation
+  onFakeAllocate
 } from '../sweepstakes-editor/data/mocks';
 import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
@@ -43,7 +40,7 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { useTeams } from '../context/team-provider';
-import { PickerDrawResult } from '@prisma/client';
+import { PrizeDrawResult } from '@prisma/client';
 import {
   getPreviewParticipant,
   getPreviewRelationship
@@ -79,7 +76,7 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   const selectedWinners = prizes.reduce(
     (sum, prize) =>
       sum +
-      prize.draws.filter((d) => d.result === PickerDrawResult.WINNER).length,
+      prize.draws.filter((d) => d.result === PrizeDrawResult.WINNER).length,
     0
   );
   const hasAllWinnersSelected = selectedWinners >= totalPrizeSlots;

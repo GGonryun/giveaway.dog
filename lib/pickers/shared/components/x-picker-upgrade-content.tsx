@@ -34,16 +34,10 @@ export const X_PICKER_BENEFITS: UpgradeBenefit[] = [
 
 interface XPickerUpgradeContentProps {
   slug: string;
-  showSecondaryAction?: boolean;
-  onSecondaryAction?: () => void;
-  secondaryActionLabel?: string;
 }
 
 export const XPickerUpgradeContent: React.FC<XPickerUpgradeContentProps> = ({
-  slug,
-  showSecondaryAction = true,
-  onSecondaryAction,
-  secondaryActionLabel = 'View Legacy Pickers'
+  slug: _slug
 }) => {
   return (
     <div className="text-center space-y-6">
@@ -91,27 +85,10 @@ export const XPickerUpgradeContent: React.FC<XPickerUpgradeContentProps> = ({
               Upgrade to Pro
             </Link>
           </Button>
-          {showSecondaryAction && (
-            <Button
-              asChild={!onSecondaryAction}
-              variant="outline"
-              size="lg"
-              onClick={onSecondaryAction}
-            >
-              {onSecondaryAction ? (
-                secondaryActionLabel
-              ) : (
-                <Link href={`/app/${slug}/pickers/twitter`}>
-                  {secondaryActionLabel}
-                </Link>
-              )}
-            </Button>
-          )}
+          <Button asChild variant="outline" size="lg">
+            <Link href="/pickers/x">Try our free Twitter picker</Link>
+          </Button>
         </div>
-
-        <p className="text-xs text-muted-foreground pt-2">
-          Legacy Twitter pickers are still available on the free tier
-        </p>
       </div>
     </div>
   );
