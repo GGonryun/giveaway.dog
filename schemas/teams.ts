@@ -48,12 +48,12 @@ export type DetailedUserTeam = z.infer<typeof detailedUserTeamSchema>;
 export const createTeamInputSchema = z.object({
   name: z
     .string()
-    .min(5, 'Team name must be at least 5 characters')
+    .min(3, 'Team name must be at least 3 characters')
     .max(20, 'Team name must be less than 20 characters')
     .trim(),
   slug: z
     .string()
-    .min(5, 'Team slug must be at least 5 characters')
+    .min(3, 'Team slug must be at least 3 characters')
     .max(20, 'Team slug must be less than 20 characters')
     .regex(
       /^[a-z0-9-]+$/,
