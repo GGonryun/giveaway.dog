@@ -24,7 +24,18 @@ export const userProfileSchema = z.object({
   name: z.string().nullable(),
   email: z.string().email().nullable(),
   emailVerified: z.boolean().nullable(),
-  image: z.string().url().nullable(),
+  image: z
+    .string()
+    .nullable()
+    .transform((v) => {
+      if (!v) return null;
+      try {
+        new URL(v);
+        return v;
+      } catch {
+        return null;
+      }
+    }),
   countryCode: z.string().nullable(),
   userAgent: z.string().nullable(),
   birthday: z.coerce.date().nullable(),
