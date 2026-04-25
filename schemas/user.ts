@@ -179,13 +179,23 @@ export const USER_SCHEMA_SELECT_QUERY = {
   preferredContactMethod: true
 } satisfies Prisma.UserSelect;
 
+const sanitizeUrl = (value: Nil<string>): string | null => {
+  if (!value) return null;
+  try {
+    new URL(value);
+    return value;
+  } catch {
+    return null;
+  }
+};
+
 export const toUserSchema = (
   user: Prisma.UserGetPayload<{ select: typeof USER_SCHEMA_SELECT_QUERY }>
 ): UserSchema => ({
   id: user.id,
   email: user.email,
   name: user.name,
-  image: user.image,
+  image: sanitizeUrl(user.image),
   source: user.source,
   birthday: user.birthday,
   createdAt: user.createdAt,
