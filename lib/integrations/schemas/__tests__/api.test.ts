@@ -129,17 +129,26 @@ describe('twitterUserSchema', () => {
       ).toBe(false);
     });
 
-    it('rejects incomplete public metrics', () => {
-      const result = twitterUserSchema.safeParse({
-        ...user(),
-        public_metrics: { followers_count: 1, following_count: 2 }
-      });
+    it.each(['followers_count', 'following_count', 'tweet_count'])(
+      'rejects public metrics without %s',
+      (field) => {
+        const public_metrics: Record<string, unknown> = {
+          followers_count: 1,
+          following_count: 2,
+          tweet_count: 3
+        };
+        delete public_metrics[field];
 
-      expect(result.error?.issues[0].path).toEqual([
-        'public_metrics',
-        'tweet_count'
-      ]);
-    });
+        const result = twitterUserSchema.safeParse({
+          ...user(),
+          public_metrics
+        });
+
+        expect(result.error?.issues.map((issue) => issue.path)).toEqual([
+          ['public_metrics', field]
+        ]);
+      }
+    );
   });
 });
 
@@ -270,13 +279,16 @@ describe('tweetSchema', () => {
   });
 });
 
-describe('quoteTweetsResponseSchema', () => {
+describe.each([
+  ['quoteTweetsResponseSchema', quoteTweetsResponseSchema],
+  ['repliedByResponseSchema', repliedByResponseSchema]
+])('%s', (_name, schema) => {
   it('accepts an empty response', () => {
-    expect(quoteTweetsResponseSchema.parse({})).toEqual({});
+    expect(schema.parse({})).toEqual({});
   });
 
   it('parses tweets, included users and pagination metadata', () => {
-    const parsed = quoteTweetsResponseSchema.parse({
+    const parsed = schema.parse({
       data: [tweet()],
       includes: { users: [fullUser()] },
       meta: { result_count: 1, next_token: 'next' }
@@ -292,19 +304,27 @@ describe('quoteTweetsResponseSchema', () => {
   });
 
   it('accepts includes without users', () => {
-    expect(quoteTweetsResponseSchema.parse({ includes: {} })).toEqual({
+    expect(schema.parse({ includes: {} })).toEqual({
       includes: {}
     });
   });
 
-  it('rejects meta without a result count', () => {
-    const result = quoteTweetsResponseSchema.safeParse({ meta: {} });
+  it('accepts a final page without a next token', () => {
+    expect(schema.parse({ meta: { result_count: 0 } })).toEqual({
+      meta: { result_count: 0 }
+    });
+  });
 
-    expect(result.error?.issues[0].path).toEqual(['meta', 'result_count']);
+  it('rejects meta without a result count', () => {
+    const result = schema.safeParse({ meta: {} });
+
+    expect(result.error?.issues.map((issue) => issue.path)).toEqual([
+      ['meta', 'result_count']
+    ]);
   });
 
   it('rejects an invalid included user', () => {
-    const result = quoteTweetsResponseSchema.safeParse({
+    const result = schema.safeParse({
       includes: { users: [{ id: '1' }] }
     });
 
@@ -313,6 +333,14 @@ describe('quoteTweetsResponseSchema', () => {
       'users',
       0,
       'name'
+    ]);
+  });
+
+  it('rejects users in place of tweets', () => {
+    const result = schema.safeParse({ data: [user()] });
+
+    expect(result.error?.issues.map((issue) => issue.path)).toEqual([
+      ['data', 0, 'text']
     ]);
   });
 });
@@ -330,12 +358,6 @@ describe('repliedByResponseSchema', () => {
       includes: { users: [user()] },
       meta: { result_count: 1 }
     });
-  });
-
-  it('rejects an invalid reply', () => {
-    const result = repliedByResponseSchema.safeParse({ data: [{ id: '1' }] });
-
-    expect(result.error?.issues[0].path).toEqual(['data', 0, 'text']);
   });
 });
 
@@ -487,14 +509,29 @@ describe('createTweetResponseSchema', () => {
     ).toBe(false);
   });
 
-  it('requires the edit history ids', () => {
+  it.each(['id', 'text', 'edit_history_tweet_ids'])(
+    'requires data.%s',
+    (field) => {
+      const data: Record<string, unknown> = response().data;
+      delete data[field];
+
+      const result = createTweetResponseSchema.safeParse({ data });
+
+      expect(result.error?.issues.map((issue) => issue.path)).toEqual([
+        ['data', field]
+      ]);
+    }
+  );
+
+  it('rejects numeric edit history ids', () => {
     const result = createTweetResponseSchema.safeParse({
-      data: { id: '1', text: 'Hello' }
+      data: { id: '1', text: 'Hello', edit_history_tweet_ids: [1] }
     });
 
     expect(result.error?.issues[0].path).toEqual([
       'data',
-      'edit_history_tweet_ids'
+      'edit_history_tweet_ids',
+      0
     ]);
   });
 });

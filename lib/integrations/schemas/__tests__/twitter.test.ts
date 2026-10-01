@@ -33,7 +33,9 @@ describe('xProfileRefineUrl', () => {
     ['an @ prefixed username', 'https://x.com/@giveawaydog'],
     ['a status url', 'https://x.com/giveawaydog/status/123'],
     ['a plain username', 'giveawaydog'],
-    ['a missing scheme', 'x.com/giveawaydog']
+    ['a missing scheme', 'x.com/giveawaydog'],
+    ['leading whitespace', ' https://x.com/giveawaydog'],
+    ['a url embedded in text', 'see https://x.com/giveawaydog']
   ])('rejects %s', (_case, url) => {
     expect(xProfileRefineUrl(url)).toBe(false);
   });
@@ -50,7 +52,8 @@ describe('xStatusRefineUrl', () => {
     'https://x.com/giveawaydog/status/1234567890',
     'http://x.com/giveawaydog/status/1',
     'https://www.x.com/giveawaydog/status/1234567890',
-    'https://x.com/abcdefghijklmno/status/1'
+    'https://x.com/abcdefghijklmno/status/1',
+    'https://x.com/a/status/1'
   ])('accepts %s', (url) => {
     expect(xStatusRefineUrl(url)).toBe(true);
   });
@@ -69,7 +72,9 @@ describe('xStatusRefineUrl', () => {
     ['a twitter.com host', 'https://twitter.com/giveawaydog/status/123'],
     ['a statuses path', 'https://x.com/giveawaydog/statuses/123'],
     ['a profile url', 'https://x.com/giveawaydog'],
-    ['a bare tweet id', '1234567890']
+    ['a bare tweet id', '1234567890'],
+    ['leading whitespace', ' https://x.com/giveawaydog/status/123'],
+    ['a url embedded in text', 'see https://x.com/giveawaydog/status/123']
   ])('rejects %s', (_case, url) => {
     expect(xStatusRefineUrl(url)).toBe(false);
   });
@@ -115,6 +120,22 @@ describe('extractTweetId', () => {
 
     expect(extractTweetId(url)).toBe(url);
   });
+
+  it('returns a status url with a trailing slash unchanged', () => {
+    const url = 'https://x.com/giveawaydog/status/1234567890/';
+
+    expect(extractTweetId(url)).toBe(url);
+  });
+
+  it('returns a status url with a photo suffix unchanged', () => {
+    const url = 'https://x.com/giveawaydog/status/1234567890/photo/1';
+
+    expect(extractTweetId(url)).toBe(url);
+  });
+
+  it('returns the id from a status url with a single character username', () => {
+    expect(extractTweetId('https://x.com/a/status/987')).toBe('987');
+  });
 });
 
 describe('extractUsernameFromTweetUrl', () => {
@@ -122,6 +143,16 @@ describe('extractUsernameFromTweetUrl', () => {
     expect(
       extractUsernameFromTweetUrl('https://x.com/giveaway_dog/status/123')
     ).toBe('giveaway_dog');
+  });
+
+  it('returns a single character username', () => {
+    expect(extractUsernameFromTweetUrl('https://x.com/a/status/123')).toBe('a');
+  });
+
+  it('returns a 15 character username', () => {
+    expect(
+      extractUsernameFromTweetUrl('https://x.com/abcdefghijklmno/status/1')
+    ).toBe('abcdefghijklmno');
   });
 
   it('returns the username even when the url has a query string', () => {
@@ -172,11 +203,16 @@ describe('extractUsernameFromProfileUrl', () => {
     ).toBe('abcdefghijklmnop');
   });
 
+  it('accepts a single character username', () => {
+    expect(extractUsernameFromProfileUrl('https://x.com/a')).toBe('a');
+  });
+
   it.each([
     'https://x.com/abcdefghijklmnopq',
     'https://x.com/giveawaydog/',
     'https://x.com/giveawaydog/status/1',
     'https://twitter.com/giveawaydog',
+    ' https://x.com/giveawaydog',
     'giveawaydog',
     ''
   ])('returns null for %j', (url) => {

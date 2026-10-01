@@ -200,8 +200,13 @@ describe('notifyDiscordNewGiveaway', () => {
 
       await expect(
         notifyDiscordNewGiveaway('team-1', giveaway())
-      ).rejects.toThrow(TypeError);
+      ).rejects.toThrow(
+        new TypeError(
+          "Cannot read properties of null (reading 'notifyOnNewGiveaway')"
+        )
+      );
       expect(fetchMock).not.toHaveBeenCalled();
+      expect(prismaMock.integration.update).not.toHaveBeenCalled();
     });
   });
 
@@ -236,12 +241,37 @@ describe('notifyDiscordNewGiveaway', () => {
 
       await notifyDiscordNewGiveaway('team-1', giveaway());
 
-      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+        'https://discord.com/api/v10/channels/chan-1/messages',
+        'https://discord.com/api/v10/channels/chan-3/messages'
+      ]);
       expect(prismaMock.integration.update).toHaveBeenCalledTimes(1);
       expect(prismaMock.integration.update).toHaveBeenCalledWith({
         where: { id: 'int-1' },
         data: { status: 'ERROR' }
       });
+    });
+
+    it('marks only the failing integration as errored', async () => {
+      fetchMock
+        .mockResolvedValueOnce(okResponse())
+        .mockResolvedValueOnce(new Response('gone', { status: 404 }));
+
+      await notifyDiscordNewGiveaway('team-1', giveaway());
+
+      expect(prismaMock.integration.update.mock.calls).toEqual([
+        [{ where: { id: 'int-3' }, data: { status: 'ERROR' } }]
+      ]);
+    });
+
+    it('stops notifying the remaining channels when marking a failure as errored fails', async () => {
+      fetchMock.mockResolvedValueOnce(new Response('nope', { status: 401 }));
+      prismaMock.integration.update.mockRejectedValue(new Error('db down'));
+
+      await expect(
+        notifyDiscordNewGiveaway('team-1', giveaway())
+      ).rejects.toThrow('db down');
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
   });
 

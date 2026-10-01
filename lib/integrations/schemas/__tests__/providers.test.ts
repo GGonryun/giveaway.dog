@@ -131,6 +131,12 @@ describe('isMissingScopes', () => {
       true
     );
   });
+
+  it('returns false when a mixed-case required scope is granted exactly', () => {
+    expect(isMissingScopes(provider({ scopes: ['Email'] }), ['Email'])).toBe(
+      false
+    );
+  });
 });
 
 describe('isProviderType', () => {

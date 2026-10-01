@@ -170,6 +170,15 @@ describe('integrationSchema', () => {
       );
     });
 
+    it('accepts a state without an expiry', () => {
+      expect(
+        integrationSchema.parse({
+          ...twitter(),
+          state: { id: 'state-1', value: 'v' }
+        }).state
+      ).toEqual({ id: 'state-1', value: 'v' });
+    });
+
     it('keeps a null state expiry as null', () => {
       expect(
         integrationSchema.parse({
