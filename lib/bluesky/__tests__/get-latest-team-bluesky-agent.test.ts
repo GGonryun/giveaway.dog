@@ -121,6 +121,32 @@ describe('getLatestTeamBlueskyCredentials', () => {
       expect(credentials.handle).toBeNull();
     });
 
+    it('returns a null handle when the integration label is undefined', async () => {
+      prismaMock.integration.findFirst.mockResolvedValue(
+        integration({ label: undefined })
+      );
+
+      const credentials = await getLatestTeamBlueskyCredentials(
+        asPrismaClient(),
+        'team-1'
+      );
+
+      expect(credentials.handle).toBeNull();
+    });
+
+    it('keeps an empty integration label as the handle', async () => {
+      prismaMock.integration.findFirst.mockResolvedValue(
+        integration({ label: '' })
+      );
+
+      const credentials = await getLatestTeamBlueskyCredentials(
+        asPrismaClient(),
+        'team-1'
+      );
+
+      expect(credentials.handle).toBe('');
+    });
+
     it('does not change the integration status on success', async () => {
       prismaMock.integration.findFirst.mockResolvedValue(integration());
 

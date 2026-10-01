@@ -284,6 +284,14 @@ describe('getLastTurnstileCheck', () => {
     });
   });
 
+  it('ignores unknown input keys', async () => {
+    const result = await getLastTurnstileCheck({
+      extra: true
+    } as unknown as Parameters<typeof getLastTurnstileCheck>[0]);
+
+    expect(expectOk(result)).toBeUndefined();
+  });
+
   it('rejects input that is not an object', async () => {
     const result = await getLastTurnstileCheck(
       null as unknown as Parameters<typeof getLastTurnstileCheck>[0]

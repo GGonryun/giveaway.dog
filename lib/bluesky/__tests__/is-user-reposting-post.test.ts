@@ -210,6 +210,30 @@ describe('isUserRepostingPost', () => {
         depth: 0
       });
     });
+
+    it('keeps a hash fragment in the record key', async () => {
+      await isUserRepostingPost(asPrismaClient(), {
+        userId: 'user-1',
+        postUrl: `${POST_URL}#reply`
+      });
+
+      expect(m.agent.getPostThread).toHaveBeenCalledWith({
+        uri: `${POST_URI}#reply`,
+        depth: 0
+      });
+    });
+
+    it('accepts any host name that ends in bsky.app', async () => {
+      await isUserRepostingPost(asPrismaClient(), {
+        userId: 'user-1',
+        postUrl: 'https://notbsky.app/profile/alice.bsky.social/post/3kabc'
+      });
+
+      expect(m.agent.getPostThread).toHaveBeenCalledWith({
+        uri: POST_URI,
+        depth: 0
+      });
+    });
   });
 
   describe('when the check fails', () => {
@@ -223,6 +247,20 @@ describe('isUserRepostingPost', () => {
 
       const cause = expectWrappedFailure(error);
       expect(cause).toBeInstanceOf(ApplicationError);
+      expect(cause.code).toBe('BAD_REQUEST');
+      expect(cause.message).toBe('Invalid Bluesky post URL');
+      expect(m.agent.getProfile).not.toHaveBeenCalled();
+    });
+
+    it('wraps a profile URL without a post segment as an invalid URL', async () => {
+      const error = await captureError(
+        isUserRepostingPost(asPrismaClient(), {
+          userId: 'user-1',
+          postUrl: 'https://bsky.app/profile/alice.bsky.social'
+        })
+      );
+
+      const cause = expectWrappedFailure(error);
       expect(cause.code).toBe('BAD_REQUEST');
       expect(cause.message).toBe('Invalid Bluesky post URL');
       expect(m.agent.getProfile).not.toHaveBeenCalled();

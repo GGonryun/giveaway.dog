@@ -130,6 +130,26 @@ describe('getLatestBlueskyCredentials', () => {
 
       expect(credentials.handle).toBeNull();
     });
+
+    it('keeps an empty account label as the handle', async () => {
+      prismaMock.account.findFirst.mockResolvedValue(account({ label: '' }));
+
+      const credentials = await getLatestBlueskyCredentials(
+        asPrismaClient(),
+        'user-1'
+      );
+
+      expect(credentials.handle).toBe('');
+    });
+
+    it('does not log anything on success', async () => {
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      prismaMock.account.findFirst.mockResolvedValue(account());
+
+      await getLatestBlueskyCredentials(asPrismaClient(), 'user-1');
+
+      expect(errorSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('when the user has no bluesky account', () => {

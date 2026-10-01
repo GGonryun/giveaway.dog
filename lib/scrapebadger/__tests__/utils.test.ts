@@ -211,6 +211,47 @@ describe('toTwitterPickerUsers', () => {
 
     expect(row.createdAt).toEqual(NOW);
   });
+
+  it('passes through missing optional fields as undefined', () => {
+    const [row] = toTwitterPickerUsers({
+      pickerId: 'picker-1',
+      users: [
+        {
+          id: '1',
+          name: 'Bare',
+          username: 'bare',
+          created_at: '2020-01-01T00:00:00.000Z'
+        } as ScrapeBadgerUser
+      ]
+    });
+
+    expect(row).toEqual({
+      pickerId: 'picker-1',
+      userId: '1',
+      username: 'bare',
+      name: 'Bare',
+      description: undefined,
+      url: undefined,
+      location: undefined,
+      profileImageUrl: undefined,
+      bannerImageUrl: undefined,
+      createdAt: new Date('2020-01-01T00:00:00.000Z'),
+      canDm: undefined,
+      followersCount: undefined,
+      followingCount: undefined,
+      tweetCount: undefined,
+      verified: undefined
+    });
+  });
+
+  it('ignores banner_image_url for the banner column', () => {
+    const [row] = toTwitterPickerUsers({
+      pickerId: 'picker-1',
+      users: [buildUser({ profile_banner_url: undefined })]
+    });
+
+    expect(row.bannerImageUrl).toBeUndefined();
+  });
 });
 
 describe('toTwitterPost', () => {
@@ -332,8 +373,23 @@ describe('extractTweetId', () => {
     'https://example.com/alice/status/1',
     'https://x.com/alice',
     'https://x.com/i/web/status/123',
-    'https://bsky.app/profile/alice/post/abc'
+    'https://bsky.app/profile/alice/post/abc',
+    'https://x.com/alice/status/abc',
+    'https://twitter.com/alice/status/abc',
+    'https://x.com/alice/likes/123'
   ])('returns null for %j', (url) => {
     expect(extractTweetId(url)).toBeNull();
+  });
+
+  it('matches look-alike hosts because the patterns are not anchored', () => {
+    expect(extractTweetId('https://notx.com/alice/status/123')).toBe('123');
+  });
+
+  it('stops the t.co short code at the next path segment', () => {
+    expect(extractTweetId('https://t.co/abc/def')).toBe('abc');
+  });
+
+  it('keeps only the leading digits of the status id', () => {
+    expect(extractTweetId('https://x.com/alice/status/123abc')).toBe('123');
   });
 });

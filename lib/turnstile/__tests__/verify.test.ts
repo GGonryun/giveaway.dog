@@ -62,6 +62,23 @@ describe('verifyTurnstile', () => {
 
       expectFailure(result, 'UNPROCESSABLE_CONTENT');
     });
+
+    it('accepts an empty token and still sends it to Cloudflare', async () => {
+      cloudflareResponds({
+        success: false,
+        'error-codes': ['missing-input-response']
+      });
+
+      const result = await verifyTurnstile({ token: '' });
+
+      expect(expectOk(result)).toEqual({ success: false, verified: true });
+      expect(fetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: JSON.stringify({ secret: 'secret-1', response: '' })
+        })
+      );
+    });
   });
 
   describe('when the user is signed out', () => {

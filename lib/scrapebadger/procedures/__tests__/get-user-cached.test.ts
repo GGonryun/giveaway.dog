@@ -89,6 +89,24 @@ describe('getUserCached', () => {
       );
     });
 
+    it('treats an empty string cache entry as a miss', async () => {
+      m.redis.get.mockResolvedValue('');
+
+      const result = await getUserCached({ username: 'alice' });
+
+      expect(m.getByUsername).toHaveBeenCalledTimes(1);
+      expect(result).toBe(user);
+    });
+
+    it('propagates cache write failures', async () => {
+      m.redis.get.mockResolvedValue(null);
+      m.redis.set.mockRejectedValue(new Error('redis down'));
+
+      await expect(getUserCached({ username: 'alice' })).rejects.toThrow(
+        'redis down'
+      );
+    });
+
     it('does not cache anything when the API call fails', async () => {
       m.redis.get.mockResolvedValue(null);
       m.getByUsername.mockRejectedValue(new Error('suspended'));

@@ -96,6 +96,18 @@ describe('verifyTurnstileToken', () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
+    it('does not accept dummy tokens in the test environment', async () => {
+      vi.stubEnv('NODE_ENV', 'test');
+      fetchMock.mockResolvedValue(
+        jsonResponse({ success: false, 'error-codes': ['invalid-input'] })
+      );
+
+      const result = await verifyTurnstileToken('XXXX.DUMMY.TOKEN.XXXX');
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(result.success).toBe(false);
+    });
+
     it('does not accept dummy tokens outside development', async () => {
       fetchMock.mockResolvedValue(
         jsonResponse({ success: false, 'error-codes': ['invalid-input'] })

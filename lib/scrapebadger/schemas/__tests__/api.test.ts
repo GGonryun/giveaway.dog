@@ -64,6 +64,41 @@ describe('scrapeBadgerUserSchema', () => {
       }).success
     ).toBe(false);
   });
+
+  it.each([
+    ['id', 1],
+    ['username', 1],
+    ['name', 1],
+    ['created_at', 1],
+    ['followers_count', '1'],
+    ['following_count', '1'],
+    ['tweet_count', '1'],
+    ['description', 1],
+    ['location', 1],
+    ['profile_image_url', 1],
+    ['profile_banner_url', 1],
+    ['verified', 'true']
+  ])('rejects a %s of the wrong type', (key, value) => {
+    expect(
+      scrapeBadgerUserSchema.safeParse({ ...minimalUser, [key]: value }).success
+    ).toBe(false);
+  });
+
+  it.each([
+    'created_at',
+    'followers_count',
+    'following_count',
+    'tweet_count',
+    'description',
+    'location',
+    'profile_image_url',
+    'profile_banner_url',
+    'verified'
+  ])('rejects null for %s', (key) => {
+    expect(
+      scrapeBadgerUserSchema.safeParse({ ...minimalUser, [key]: null }).success
+    ).toBe(false);
+  });
 });
 
 describe('scrapeBadgerRetweeterSchema', () => {
@@ -134,17 +169,82 @@ describe('scrapeBadgerRetweeterSchema', () => {
     expect(parsed[key as keyof typeof parsed]).toBeNull();
   });
 
-  it.each(['followers_count', 'verified', 'can_dm', 'withheld_in_countries'])(
-    'rejects null for %s',
-    (key) => {
-      expect(
-        scrapeBadgerRetweeterSchema.safeParse({
-          ...minimalRetweeter,
-          [key]: null
-        }).success
-      ).toBe(false);
-    }
-  );
+  it.each([
+    'followers_count',
+    'following_count',
+    'tweet_count',
+    'listed_count',
+    'favourites_count',
+    'media_count',
+    'verified',
+    'is_blue_verified',
+    'protected',
+    'possibly_sensitive',
+    'can_dm',
+    'has_custom_timelines',
+    'is_translator',
+    'withheld_in_countries',
+    'created_at',
+    'created_at_datetime',
+    'default_profile',
+    'default_profile_image'
+  ])('rejects null for %s', (key) => {
+    expect(
+      scrapeBadgerRetweeterSchema.safeParse({
+        ...minimalRetweeter,
+        [key]: null
+      }).success
+    ).toBe(false);
+  });
+
+  it.each([
+    ['id', 1],
+    ['username', 1],
+    ['name', 1],
+    ['description', 1],
+    ['location', 1],
+    ['url', 1],
+    ['profile_image_url', 1],
+    ['profile_banner_url', 1],
+    ['followers_count', '1'],
+    ['following_count', '1'],
+    ['tweet_count', '1'],
+    ['listed_count', '1'],
+    ['favourites_count', '1'],
+    ['media_count', '1'],
+    ['verified', 'yes'],
+    ['verified_type', 1],
+    ['is_blue_verified', 'yes'],
+    ['created_at', 1],
+    ['created_at_datetime', 1],
+    ['default_profile', 'yes'],
+    ['default_profile_image', 'yes'],
+    ['protected', 'yes'],
+    ['possibly_sensitive', 'yes'],
+    ['followed_by', 'yes'],
+    ['following', 'yes'],
+    ['follow_request_sent', 'yes'],
+    ['blocking', 'yes'],
+    ['blocked_by', 'yes'],
+    ['muting', 'yes'],
+    ['notifications', 'yes'],
+    ['can_dm', 'yes'],
+    ['has_custom_timelines', 'yes'],
+    ['has_extended_profile', 'yes'],
+    ['is_translator', 'yes'],
+    ['is_translation_enabled', 'yes'],
+    ['professional_type', 1],
+    ['advertiser_account_type', 1],
+    ['pinned_tweet_ids', '1'],
+    ['withheld_in_countries', [1]]
+  ])('rejects a %s of the wrong type', (key, value) => {
+    expect(
+      scrapeBadgerRetweeterSchema.safeParse({
+        ...minimalRetweeter,
+        [key]: value
+      }).success
+    ).toBe(false);
+  });
 
   it('accepts the optional date and profile flags', () => {
     const parsed = scrapeBadgerRetweeterSchema.parse({
@@ -165,11 +265,17 @@ describe('scrapeBadgerRetweeterSchema', () => {
     });
   });
 
-  it('rejects a retweeter without a username', () => {
-    expect(
-      scrapeBadgerRetweeterSchema.safeParse({ id: '1', name: 'Bob' }).success
-    ).toBe(false);
-  });
+  it.each(['id', 'username', 'name'])(
+    'rejects a retweeter without %s',
+    (key) => {
+      const retweeter: Record<string, unknown> = { ...minimalRetweeter };
+      delete retweeter[key];
+
+      expect(scrapeBadgerRetweeterSchema.safeParse(retweeter).success).toBe(
+        false
+      );
+    }
+  );
 
   it('rejects non-string pinned tweet ids', () => {
     expect(
@@ -207,6 +313,21 @@ describe('scrapeBadgerTweetRetweetersSchema', () => {
   it('rejects a page without data', () => {
     expect(
       scrapeBadgerTweetRetweetersSchema.safeParse({ next_cursor: 'x' }).success
+    ).toBe(false);
+  });
+
+  it('rejects a non-string cursor', () => {
+    expect(
+      scrapeBadgerTweetRetweetersSchema.safeParse({ data: [], next_cursor: 2 })
+        .success
+    ).toBe(false);
+  });
+
+  it('rejects page data that is not an array', () => {
+    expect(
+      scrapeBadgerTweetRetweetersSchema.safeParse({
+        data: { id: '1', username: 'bob', name: 'Bob' }
+      }).success
     ).toBe(false);
   });
 
@@ -302,6 +423,54 @@ describe('scrapeBadgerTweetDetailSchema', () => {
         ...minimalTweet,
         media: 'photo'
       }).success
+    ).toBe(false);
+  });
+
+  it.each([
+    ['id', 1],
+    ['text', 1],
+    ['created_at', 1],
+    ['user_id', 1],
+    ['username', 1],
+    ['favorite_count', '1'],
+    ['retweet_count', '1'],
+    ['reply_count', '1'],
+    ['view_count', '1'],
+    ['quote_count', '1'],
+    ['conversation_id', 1],
+    ['in_reply_to_user_id', 1],
+    ['is_quote_status', 'yes'],
+    ['lang', 1],
+    ['possibly_sensitive', 'yes'],
+    ['media', 'x'],
+    ['urls', 'x'],
+    ['hashtags', 'x'],
+    ['user_mentions', 'x']
+  ])('rejects a %s of the wrong type', (key, value) => {
+    expect(
+      scrapeBadgerTweetDetailSchema.safeParse({ ...minimalTweet, [key]: value })
+        .success
+    ).toBe(false);
+  });
+
+  it.each([
+    'favorite_count',
+    'retweet_count',
+    'reply_count',
+    'quote_count',
+    'conversation_id',
+    'in_reply_to_user_id',
+    'is_quote_status',
+    'lang',
+    'possibly_sensitive',
+    'media',
+    'urls',
+    'hashtags',
+    'user_mentions'
+  ])('rejects null for %s', (key) => {
+    expect(
+      scrapeBadgerTweetDetailSchema.safeParse({ ...minimalTweet, [key]: null })
+        .success
     ).toBe(false);
   });
 });

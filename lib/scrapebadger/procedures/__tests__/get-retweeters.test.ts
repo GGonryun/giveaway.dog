@@ -403,6 +403,50 @@ describe('scrapebadger retweeter procedures', () => {
       expect(result.users).toHaveLength(5);
     });
 
+    it('does not truncate to maxUsers when the last page still has a cursor', async () => {
+      m.getRetweeters.mockResolvedValue(
+        page(users(1, 5), { nextCursor: 'c-2', hasMore: false })
+      );
+
+      const result = await getRetweetersUntilUser({
+        tweetId: 't-1',
+        maxUsers: 3
+      });
+
+      expect(m.getRetweeters).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({
+        users: users(1, 5),
+        nextCursor: 'c-2',
+        hasMore: false
+      });
+    });
+
+    it('stops at exactly maxUsers without requesting another page', async () => {
+      m.getRetweeters.mockResolvedValue(
+        page(users(1, 3), { nextCursor: 'c-2', hasMore: true })
+      );
+
+      const result = await getRetweetersUntilUser({
+        tweetId: 't-1',
+        maxUsers: 3
+      });
+
+      expect(m.getRetweeters).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({
+        users: users(1, 3),
+        nextCursor: 'c-2',
+        hasMore: true
+      });
+    });
+
+    it('propagates API errors', async () => {
+      m.getRetweeters.mockRejectedValue(new Error('rate limited'));
+
+      await expect(
+        getRetweetersUntilUser({ tweetId: 't-1', stopAtUserId: '1' })
+      ).rejects.toThrow('rate limited');
+    });
+
     it('does not truncate to maxUsers when the stop user is found', async () => {
       m.getRetweeters.mockResolvedValue(
         page(users(1, 5), { nextCursor: 'c-2', hasMore: true })

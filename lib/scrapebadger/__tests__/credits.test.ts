@@ -114,6 +114,25 @@ describe('checkAndConsumeCredits', () => {
       });
     });
 
+    it('reports the credits that remain in the error data', async () => {
+      const reset = NOW.getTime() + 30_000;
+      m.limit.mockResolvedValue({ success: false, remaining: 3, reset });
+
+      const error = await captureError(
+        checkAndConsumeCredits(new Headers(), 4)
+      );
+
+      expect(error.message).toBe(
+        'Insufficient credits. Need 4, have 3. Resets in 30 seconds.'
+      );
+      expect(error.data).toEqual({
+        creditsNeeded: 4,
+        creditsRemaining: 3,
+        retryAfter: reset,
+        retryAfterISO: '2026-03-01T10:00:30.000Z'
+      });
+    });
+
     it('rounds partial seconds up in the message', async () => {
       m.limit.mockResolvedValue({
         success: false,
