@@ -8,7 +8,6 @@ import TwitterProvider from 'next-auth/providers/twitter';
 import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
 import TwitchProvider from 'next-auth/providers/twitch';
-import InstagramProvider from 'next-auth/providers/instagram';
 import LinkedInProvider from 'next-auth/providers/linkedin';
 import TikTokProvider from 'next-auth/providers/tiktok';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -16,14 +15,12 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { SteamProvider } from './providers/steam';
 import { InboundEmailProvider } from './providers/inbound';
 import { KickProvider } from './providers/kick';
-import { FacebookProvider } from './providers/facebook';
 import { VeloraProvider } from './providers/velora';
 
 import {
   REQUIRED_DISCORD_SCOPES,
   REQUIRED_TWITCH_SCOPES,
   REQUIRED_KICK_SCOPES,
-  REQUIRED_FACEBOOK_SCOPES,
   REQUIRED_VELORA_SCOPES,
   REQUIRED_LINKEDIN_SCOPES
 } from '../integrations/scopes';
@@ -91,16 +88,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       request,
       callbackUrl: `${process.env.NEXTAUTH_URL}/api/auth/steam-callback`,
       clientSecret: process.env.STEAM_SECRET!
-    }),
-    FacebookProvider({
-      allowDangerousEmailAccountLinking: true,
-      clientId: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      authorization: {
-        params: {
-          scope: REQUIRED_FACEBOOK_SCOPES.join(' ')
-        }
-      }
     }),
     TwitterProvider({
       allowDangerousEmailAccountLinking: true,
@@ -173,11 +160,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
     }),
     InboundEmailProvider({
       secret: process.env.INBOUND_SECRET
-    }),
-    InstagramProvider({
-      allowDangerousEmailAccountLinking: true,
-      clientId: process.env.INSTAGRAM_CLIENT_ID!,
-      clientSecret: process.env.INSTAGRAM_CLIENT_SECRET!
     }),
     LinkedInProvider({
       allowDangerousEmailAccountLinking: true,

@@ -211,8 +211,6 @@ export const REQUIRED_KICK_SCOPES = ['user:read'];
 
 export const REQUIRED_VELORA_SCOPES = ['user:read'];
 
-export const REQUIRED_FACEBOOK_SCOPES = ['email', 'user_link'];
-
 export const REQUIRED_LINKEDIN_SCOPES = [
   'openid',
   'profile',

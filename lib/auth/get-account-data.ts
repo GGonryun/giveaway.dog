@@ -25,8 +25,6 @@ export const getAccountLabel = (
       return profile?.name || null;
     case 'kick':
       return profile?.username || profile?.name || null;
-    case 'facebook':
-      return profile?.name || profile?.email || null;
     case 'tiktok':
       return (
         profile?.username || profile?.display_name || profile?.name || null
@@ -79,9 +77,6 @@ export const getAccountLink = (
     case 'google':
       if (!label) return null;
       return `mailto:${label}`;
-    case 'facebook':
-      if (!profile?.link) return null;
-      return profile.link;
     case 'tiktok':
       if (!profile?.profile_deep_link) return null;
       return profile.profile_deep_link;
