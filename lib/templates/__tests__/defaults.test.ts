@@ -77,19 +77,22 @@ describe('DEFAULT_TEMPLATE_CONTENT', () => {
     ]);
   });
 
-  it('gives each form field a distinct non-empty id', () => {
+  it('gives each form field a distinct nanoid', () => {
     const ids = content.audience.formFields.map((field) => field.id);
 
-    expect(ids.every((id) => id.length > 0)).toBe(true);
+    for (const id of ids) {
+      expect(id).toMatch(/^[A-Za-z0-9_-]{21}$/);
+    }
     expect(new Set(ids).size).toBe(3);
   });
 
-  it('generates new form field ids on every call', () => {
+  it('generates a new id for every form field on every call', () => {
     const other = DEFAULT_TEMPLATE_CONTENT({ sponsorName: 'Acme Inc' });
+    const previousIds = content.audience.formFields.map((field) => field.id);
 
-    expect(other.audience.formFields.map((field) => field.id)).not.toEqual(
-      content.audience.formFields.map((field) => field.id)
-    );
+    for (const field of other.audience.formFields) {
+      expect(previousIds).not.toContain(field.id);
+    }
   });
 
   it('produces form fields that satisfy the form field schema', () => {

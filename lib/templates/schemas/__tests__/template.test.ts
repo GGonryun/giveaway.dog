@@ -75,6 +75,9 @@ const dbTemplate = (
   ...overrides
 });
 
+const without = (value: object, key: string) =>
+  Object.fromEntries(Object.entries(value).filter(([name]) => name !== key));
+
 const issuePaths = (result: { error?: ZodError }) =>
   (result.error?.issues ?? []).map((issue) => issue.path.join('.'));
 
@@ -154,6 +157,13 @@ describe('templateSettingsSchema', () => {
     expect(result.error?.issues[0].message).toBe(
       'Name must be at most 80 characters'
     );
+  });
+
+  it('accepts the shortest allowed description', () => {
+    expect(
+      templateSettingsSchema.safeParse({ ...settings, description: 'abc' })
+        .success
+    ).toBe(true);
   });
 
   it('accepts the longest allowed description', () => {
@@ -264,6 +274,20 @@ describe('databaseTemplateSchema', () => {
 
     expect(issuePaths(result)).toEqual(['content.prizes']);
   });
+
+  it.each([
+    'id',
+    'name',
+    'description',
+    'image',
+    'content',
+    'teamId',
+    'createdById'
+  ] as const)('rejects a row without %s', (key) => {
+    const result = databaseTemplateSchema.safeParse(without(dbTemplate(), key));
+
+    expect(issuePaths(result)).toEqual([key]);
+  });
 });
 
 describe('storedTemplateSchema', () => {
@@ -310,6 +334,14 @@ describe('templateInputSchema', () => {
 
   it('rejects undefined', () => {
     expect(templateInputSchema.safeParse(undefined).success).toBe(false);
+  });
+
+  it('rejects null', () => {
+    expect(templateInputSchema.safeParse(null).success).toBe(false);
+  });
+
+  it('rejects primitives', () => {
+    expect(templateInputSchema.safeParse('tpl-1').success).toBe(false);
   });
 });
 
@@ -592,6 +624,42 @@ describe('templateListItemSchema', () => {
 
   it('accepts a list item with nullable creator name and image', () => {
     expect(templateListItemSchema.safeParse(item).success).toBe(true);
+  });
+
+  it.each(['teamId', 'team', 'createdBy', 'isCustom', 'template'] as const)(
+    'rejects an item without %s',
+    (key) => {
+      const result = templateListItemSchema.safeParse(without(item, key));
+
+      expect(issuePaths(result)).toEqual([key]);
+    }
+  );
+
+  it.each(['name', 'slug'] as const)('rejects a team without %s', (key) => {
+    const result = templateListItemSchema.safeParse({
+      ...item,
+      team: without(item.team, key)
+    });
+
+    expect(issuePaths(result)).toEqual([`team.${key}`]);
+  });
+
+  it.each(['id', 'image'] as const)('rejects a creator without %s', (key) => {
+    const result = templateListItemSchema.safeParse({
+      ...item,
+      createdBy: without(item.createdBy, key)
+    });
+
+    expect(issuePaths(result)).toEqual([`createdBy.${key}`]);
+  });
+
+  it('rejects a non-boolean isCustom flag', () => {
+    const result = templateListItemSchema.safeParse({
+      ...item,
+      isCustom: 'true'
+    });
+
+    expect(issuePaths(result)).toEqual(['isCustom']);
   });
 
   it('rejects a team without a logo', () => {

@@ -68,7 +68,9 @@ describe('getTemplates', () => {
         {} as unknown as Parameters<typeof getTemplates>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
 
     it('returns UNPROCESSABLE_CONTENT for a non-string search', async () => {
@@ -79,7 +81,10 @@ describe('getTemplates', () => {
         search: 5
       } as unknown as Parameters<typeof getTemplates>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
+      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
   });
 
@@ -219,6 +224,16 @@ describe('getTemplates', () => {
       expect(data.map((item) => item.template.id)).toEqual(['tpl-2']);
     });
 
+    it('matches template descriptions case-insensitively', async () => {
+      arrangeTeam();
+
+      const data = expectOk(
+        await getTemplates({ slug: 'acme', search: 'cold' })
+      );
+
+      expect(data.map((item) => item.template.id)).toEqual(['tpl-2']);
+    });
+
     it('keeps templates that match by either name or description', async () => {
       arrangeTeam();
 
@@ -297,7 +312,11 @@ describe('getTemplates', () => {
       signIn();
       prismaMock.team.findUnique.mockRejectedValue(knownRequestError('P2025'));
 
-      expectFailure(await getTemplates({ slug: 'acme' }), 'NOT_FOUND');
+      const result = await getTemplates({ slug: 'acme' });
+
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
     });
   });
 });

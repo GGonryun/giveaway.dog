@@ -44,7 +44,10 @@ describe('getTemplateForm', () => {
         slug: 'acme'
       } as unknown as Parameters<typeof getTemplateForm>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
+      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
   });
 
@@ -201,7 +204,11 @@ describe('getTemplateForm', () => {
       signIn();
       prismaMock.team.findUnique.mockRejectedValue(knownRequestError('P2025'));
 
-      expectFailure(await getTemplateForm(input), 'NOT_FOUND');
+      const result = await getTemplateForm(input);
+
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
     });
   });
 });

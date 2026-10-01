@@ -45,7 +45,9 @@ describe('updateTemplate', () => {
         template: settings
       } as unknown as Parameters<typeof updateTemplate>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(prismaMock.template.findUnique).not.toHaveBeenCalled();
     });
 
@@ -56,7 +58,10 @@ describe('updateTemplate', () => {
         null as unknown as Parameters<typeof updateTemplate>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
+      expect(prismaMock.template.findUnique).not.toHaveBeenCalled();
     });
   });
 
@@ -182,7 +187,11 @@ describe('updateTemplate', () => {
       prismaMock.template.findUnique.mockResolvedValue(existing);
       prismaMock.template.update.mockRejectedValue(knownRequestError('P2025'));
 
-      expectFailure(await updateTemplate(input), 'NOT_FOUND');
+      const result = await updateTemplate(input);
+
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
     });
   });
 });

@@ -2,10 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { createTemplate } from '../create-template';
 import { getTemplateById } from '../../data/static-templates';
 import {
+  DEFAULT_TEMPLATE_CONTENT,
   DEFAULT_TEMPLATE_DESCRIPTION,
   DEFAULT_TEMPLATE_IMAGE,
   DEFAULT_TEMPLATE_NAME
 } from '../../defaults';
+import { toStorableTemplateSchema } from '../../schemas/template';
 import { knownRequestError, prismaMock } from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
@@ -96,7 +98,9 @@ describe('createTemplate', () => {
         {} as unknown as Parameters<typeof createTemplate>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
   });
@@ -166,6 +170,28 @@ describe('createTemplate', () => {
         'terms',
         'visibility'
       ]);
+    });
+
+    it('stores the default template content', async () => {
+      signIn();
+      prismaMock.team.findUnique.mockResolvedValue(team);
+      echoCreate();
+      const expected = toStorableTemplateSchema(
+        DEFAULT_TEMPLATE_CONTENT({ sponsorName: 'Acme Inc' })
+      ).content;
+
+      await createTemplate({ slug: 'acme' });
+
+      expect(createdArgs().data.content).toEqual({
+        ...expected,
+        audience: {
+          ...expected.audience,
+          formFields: expected.audience?.formFields?.map((field) => ({
+            ...field,
+            id: expect.any(String)
+          }))
+        }
+      });
     });
 
     it('uses the team name as the sponsor name', async () => {
@@ -284,6 +310,23 @@ describe('createTemplate', () => {
         visibility: source?.visibility,
         terms: source?.terms,
         setup: source?.setup
+      });
+    });
+
+    it('returns the full created record for a copy', async () => {
+      signIn();
+      prismaMock.team.findUnique.mockResolvedValue(team);
+      echoCreate();
+
+      const data = expectOk(
+        await createTemplate({ slug: 'acme', sourceTemplateId: 'x-giveaway' })
+      );
+
+      expect(data).toEqual({
+        ...createdArgs().data,
+        type: 'SWEEPSTAKES',
+        createdAt: new Date('2024-01-01T00:00:00.000Z'),
+        updatedAt: new Date('2024-01-01T00:00:00.000Z')
       });
     });
 
@@ -428,7 +471,11 @@ describe('createTemplate', () => {
       prismaMock.team.findUnique.mockResolvedValue(team);
       prismaMock.template.create.mockRejectedValue(knownRequestError('P2025'));
 
-      expectFailure(await createTemplate({ slug: 'acme' }), 'NOT_FOUND');
+      const result = await createTemplate({ slug: 'acme' });
+
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
     });
 
     it('returns UNPROCESSABLE_CONTENT when the created record has no id', async () => {

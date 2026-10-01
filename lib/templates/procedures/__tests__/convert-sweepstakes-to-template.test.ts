@@ -128,7 +128,10 @@ describe('convertSweepstakesToTemplate', () => {
         slug: 'acme'
       } as unknown as Parameters<typeof convertSweepstakesToTemplate>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
+      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
   });
 
@@ -415,7 +418,11 @@ describe('convertSweepstakesToTemplate', () => {
       arrange();
       prismaMock.template.create.mockRejectedValue(knownRequestError('P2025'));
 
-      expectFailure(await convertSweepstakesToTemplate(input), 'NOT_FOUND');
+      const result = await convertSweepstakesToTemplate(input);
+
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
     });
   });
 });

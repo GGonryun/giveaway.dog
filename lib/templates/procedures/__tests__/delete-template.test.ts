@@ -27,7 +27,9 @@ describe('deleteTemplate', () => {
         templateId: 'tpl-1'
       } as unknown as Parameters<typeof deleteTemplate>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(prismaMock.template.findUnique).not.toHaveBeenCalled();
     });
   });
@@ -107,7 +109,9 @@ describe('deleteTemplate', () => {
 
       const result = await deleteTemplate(input);
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: [A-Za-z0-9_-]{6}$/
+      );
       expect(prismaMock.template.delete).not.toHaveBeenCalled();
     });
   });

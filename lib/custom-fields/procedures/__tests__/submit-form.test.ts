@@ -176,7 +176,9 @@ describe('submitParticipantForm', () => {
         data: { age: 21 }
       } as unknown as Parameters<typeof submitParticipantForm>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(
         prismaMock.sweepstakesParticipant.findUnique
       ).not.toHaveBeenCalled();
@@ -323,7 +325,9 @@ describe('submitParticipantForm', () => {
 
       const result = await submit({ username: 'neo', unknown: 'x' });
 
-      expectFailure(result, 'BAD_REQUEST');
+      expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
+        'Invalid field ID: unknown'
+      );
       expect(prismaMock.$transaction).not.toHaveBeenCalled();
       expect(prismaMock.user.update).not.toHaveBeenCalled();
     });
@@ -437,7 +441,9 @@ describe('submitParticipantForm', () => {
 
       const result = await submit({ twitter: ' https://x.com/neo ' });
 
-      expectFailure(result, 'BAD_REQUEST');
+      expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
+        'Invalid Twitter profile URL format. Please use https://x.com/username'
+      );
     });
 
     it('rejects a boolean value as an invalid profile URL', async () => {
@@ -445,7 +451,9 @@ describe('submitParticipantForm', () => {
 
       const result = await submit({ twitter: true });
 
-      expectFailure(result, 'BAD_REQUEST');
+      expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
+        'Invalid Twitter profile URL format. Please use https://x.com/username'
+      );
     });
 
     it('looks up connected twitter accounts by username or link', async () => {
@@ -488,7 +496,9 @@ describe('submitParticipantForm', () => {
 
       const result = await submit({ twitter: 'https://x.com/neo' });
 
-      expectFailure(result, 'FORBIDDEN');
+      expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+        'This Twitter profile (@neo) belongs to another user. You can only use your own connected accounts.'
+      );
     });
 
     it("accepts a profile connected to the caller's own account", async () => {
@@ -529,6 +539,19 @@ describe('submitParticipantForm', () => {
         'This Twitter profile has already been used in this sweepstakes'
       );
       expect(prismaMock.sweepstakesFormValue.upsert).not.toHaveBeenCalled();
+    });
+
+    it('rejects a profile already used when the submitted URL differs only in case', async () => {
+      arrange();
+      prismaMock.sweepstakesFormValue.findMany.mockResolvedValue([
+        { value: 'https://x.com/neo' }
+      ]);
+
+      const result = await submit({ twitter: 'https://x.com/Neo' });
+
+      expect(expectFailure(result, 'CONFLICT').message).toBe(
+        'This Twitter profile has already been used in this sweepstakes'
+      );
     });
 
     it('accepts a profile when only different profiles were used', async () => {
@@ -618,7 +641,9 @@ describe('submitParticipantForm', () => {
 
       const result = await submit({ username: 'neo' });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
       expect(prismaMock.user.update).not.toHaveBeenCalled();
     });
 
@@ -687,12 +712,30 @@ describe('submitParticipantForm', () => {
       });
     });
 
+    it('stores the completion proof as a JSON null rather than a database null', async () => {
+      arrange({ tasks: [task('t-profile', profileTaskConfig)] });
+
+      await submit({ username: 'neo' });
+
+      const [{ data }] = prismaMock.taskCompletion.create.mock.calls[0];
+      expect(data.proof).toBe(Prisma.JsonNull);
+      expect(data.proof).not.toBe(Prisma.DbNull);
+    });
+
     it('completes the profile task even when no values were submitted', async () => {
       arrange({ tasks: [task('t-profile', profileTaskConfig)] });
 
       await submit({});
 
       expect(prismaMock.taskCompletion.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.taskCompletion.create).toHaveBeenCalledWith({
+        data: {
+          participantId: PARTICIPANT_ID,
+          taskId: 't-profile',
+          status: 'COMPLETED',
+          proof: Prisma.JsonNull
+        }
+      });
     });
 
     it('uses only the first profile completion task', async () => {
