@@ -80,7 +80,7 @@ describe('getLatestTwitterAccessToken', () => {
     });
 
     it('throws INTERNAL_SERVER_ERROR when the client secret is missing', async () => {
-      const { mod } = await loadUnconfigured({
+      const { ApplicationErrorClass, mod } = await loadUnconfigured({
         clientId: 'twitter-client-id',
         clientSecret: ''
       });
@@ -89,6 +89,7 @@ describe('getLatestTwitterAccessToken', () => {
         mod.getLatestTwitterAccessToken(asPrismaClient(), { teamId: 'team-1' })
       );
 
+      expect(error).toBeInstanceOf(ApplicationErrorClass);
       expect(error).toMatchObject({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Twitter OAuth not configured'
@@ -156,6 +157,21 @@ describe('getLatestTwitterAccessToken', () => {
       expect(fetchMock).not.toHaveBeenCalled();
       expect(prismaMock.integration.update).not.toHaveBeenCalled();
     });
+
+    it('throws BAD_REQUEST when the access token is an empty string', async () => {
+      prismaMock.integration.findFirst.mockResolvedValue(
+        buildIntegration({ access_token: '' })
+      );
+
+      const error = await captureError(getToken());
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'No access token available'
+      });
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
   });
 
   describe('when the stored token is still valid', () => {
@@ -205,6 +221,35 @@ describe('getLatestTwitterAccessToken', () => {
           expiresAt: '2026-01-01T02:00:59.000Z'
         }
       );
+    });
+
+    it('logs a lifetime of exactly two hours as 120 minutes', async () => {
+      prismaMock.integration.findFirst.mockResolvedValue(
+        buildIntegration({ expires_at: NOW_SECONDS + 7200 })
+      );
+
+      await getToken();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Twitter Token] Using existing token',
+        expect.objectContaining({ expiresIn: '120 minutes' })
+      );
+    });
+
+    it('truncates the current time to whole seconds when checking expiry', async () => {
+      vi.setSystemTime(new Date(NOW.getTime() + 999));
+      const expiresAt = NOW_SECONDS + EXPIRY_BUFFER_SECONDS + 1;
+      prismaMock.integration.findFirst.mockResolvedValue(
+        buildIntegration({ expires_at: expiresAt })
+      );
+
+      const result = await getToken();
+
+      expect(result).toEqual({
+        access_token: 'twitter-access-token',
+        expires_at: expiresAt
+      });
+      expect(fetchMock).not.toHaveBeenCalled();
     });
   });
 
@@ -365,6 +410,58 @@ describe('getLatestTwitterAccessToken', () => {
       );
     });
 
+    it('keeps the existing refresh token when twitter returns an empty one', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({
+          access_token: 'new-access-token',
+          refresh_token: '',
+          expires_in: 7200
+        })
+      );
+
+      await getToken();
+
+      expect(prismaMock.integration.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            refresh_token: 'twitter-refresh-token-xyz'
+          })
+        })
+      );
+    });
+
+    it('computes the new expiry from the current time truncated to whole seconds', async () => {
+      vi.setSystemTime(new Date(NOW.getTime() + 999));
+      fetchMock.mockResolvedValue(
+        jsonResponse({ access_token: 'new-access-token', expires_in: 7200 })
+      );
+
+      const result = await getToken();
+
+      expect(result.expires_at).toBe(NOW_SECONDS + 7200);
+      expect(prismaMock.integration.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ expires_at: NOW_SECONDS + 7200 })
+        })
+      );
+    });
+
+    it('rejects with the database error when storing the new tokens fails', async () => {
+      const dbError = new Error('database unavailable');
+      prismaMock.integration.update.mockRejectedValue(dbError);
+      fetchMock.mockResolvedValue(
+        jsonResponse({ access_token: 'new-access-token', expires_in: 7200 })
+      );
+
+      const error = await captureError(getToken());
+
+      expect(error).toBe(dbError);
+      expect(console.info).not.toHaveBeenCalledWith(
+        '[Twitter Token] Token refreshed successfully',
+        expect.anything()
+      );
+    });
+
     it('logs the new expiry after refreshing', async () => {
       fetchMock.mockResolvedValue(
         jsonResponse({ access_token: 'new-access-token', expires_in: 7199 })
@@ -427,6 +524,18 @@ describe('getLatestTwitterAccessToken', () => {
         });
       }
     );
+
+    it('rejects with the database error when marking the integration as ERROR fails', async () => {
+      const dbError = new Error('database unavailable');
+      prismaMock.integration.update.mockRejectedValue(dbError);
+      fetchMock.mockResolvedValue(
+        jsonResponse({ error: 'invalid_request' }, { status: 401 })
+      );
+
+      const error = await captureError(getToken());
+
+      expect(error).toBe(dbError);
+    });
 
     it('logs the failure with a truncated refresh token preview', async () => {
       fetchMock.mockResolvedValue(

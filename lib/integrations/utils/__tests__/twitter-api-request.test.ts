@@ -295,6 +295,22 @@ describe('twitterApiRequest', () => {
       });
     });
 
+    it('truncates a fractional reset header to whole seconds', async () => {
+      fetchMock.mockResolvedValue(
+        rateLimited({ 'x-rate-limit-reset': `${NOW_SECONDS + 600}.9` })
+      );
+
+      const error = await captureError(request());
+
+      expect(error).toMatchObject({
+        code: 'TOO_MANY_REQUESTS',
+        data: {
+          retryAfter: (NOW_SECONDS + 600) * 1000,
+          retryAfterISO: '2026-01-01T00:10:00.000Z'
+        }
+      });
+    });
+
     it('defaults the retry time to fifteen minutes from now without a reset header', async () => {
       fetchMock.mockResolvedValue(rateLimited({}));
 

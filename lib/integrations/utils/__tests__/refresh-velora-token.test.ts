@@ -119,6 +119,21 @@ describe('refreshVeloraToken', () => {
       expect(fetchMock).not.toHaveBeenCalled();
       expect(prismaMock.account.update).not.toHaveBeenCalled();
     });
+
+    it('throws BAD_REQUEST when the access token is an empty string', async () => {
+      prismaMock.account.findFirst.mockResolvedValue(
+        veloraAccount({ access_token: '' })
+      );
+
+      const error = await captureError(refresh());
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'No access token available'
+      });
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
   });
 
   describe('when the stored token is still valid', () => {
@@ -168,6 +183,35 @@ describe('refreshVeloraToken', () => {
           expiresAt: '2026-01-01T01:00:59.000Z'
         }
       );
+    });
+
+    it('logs a lifetime of exactly one hour as 60 minutes', async () => {
+      prismaMock.account.findFirst.mockResolvedValue(
+        veloraAccount({ expires_at: NOW_SECONDS + 3600 })
+      );
+
+      await refresh();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Velora Token] Using existing token',
+        expect.objectContaining({ expiresIn: '60 minutes' })
+      );
+    });
+
+    it('truncates the current time to whole seconds when checking expiry', async () => {
+      vi.setSystemTime(new Date(NOW.getTime() + 999));
+      const expiresAt = NOW_SECONDS + EXPIRY_BUFFER_SECONDS + 1;
+      prismaMock.account.findFirst.mockResolvedValue(
+        veloraAccount({ expires_at: expiresAt })
+      );
+
+      const result = await refresh();
+
+      expect(result).toEqual({
+        access_token: 'current-access-token',
+        expires_at: expiresAt
+      });
+      expect(fetchMock).not.toHaveBeenCalled();
     });
   });
 
@@ -244,6 +288,18 @@ describe('refreshVeloraToken', () => {
         data: { status: 'ERROR' }
       });
       expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it('rejects with the database error when marking an account without a refresh token fails', async () => {
+      const dbError = new Error('database unavailable');
+      prismaMock.account.findFirst.mockResolvedValue(
+        expiredAccount({ refresh_token: null })
+      );
+      prismaMock.account.update.mockRejectedValue(dbError);
+
+      const error = await captureError(refresh());
+
+      expect(error).toBe(dbError);
     });
 
     it('posts a JSON refresh request to velora', async () => {
@@ -368,6 +424,58 @@ describe('refreshVeloraToken', () => {
       );
     });
 
+    it('keeps the existing refresh token when velora returns an empty one', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({
+          access_token: 'new-access-token',
+          refresh_token: '',
+          expires_in: 600
+        })
+      );
+
+      await refresh();
+
+      expect(prismaMock.account.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            refresh_token: 'refresh-token-abcdefghij'
+          })
+        })
+      );
+    });
+
+    it('computes the new expiry from the current time truncated to whole seconds', async () => {
+      vi.setSystemTime(new Date(NOW.getTime() + 999));
+      fetchMock.mockResolvedValue(
+        jsonResponse({ access_token: 'new-access-token', expires_in: 600 })
+      );
+
+      const result = await refresh();
+
+      expect(result.expires_at).toBe(NOW_SECONDS + 600);
+      expect(prismaMock.account.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ expires_at: NOW_SECONDS + 600 })
+        })
+      );
+    });
+
+    it('rejects with the database error when storing the new tokens fails', async () => {
+      const dbError = new Error('database unavailable');
+      prismaMock.account.update.mockRejectedValue(dbError);
+      fetchMock.mockResolvedValue(
+        jsonResponse({ access_token: 'new-access-token', expires_in: 600 })
+      );
+
+      const error = await captureError(refresh());
+
+      expect(error).toBe(dbError);
+      expect(console.info).not.toHaveBeenCalledWith(
+        '[Velora Token] Token refreshed successfully',
+        expect.anything()
+      );
+    });
+
     it('logs the new expiry after refreshing', async () => {
       fetchMock.mockResolvedValue(
         jsonResponse({ access_token: 'new-access-token', expires_in: 3599 })
@@ -430,6 +538,18 @@ describe('refreshVeloraToken', () => {
         });
       }
     );
+
+    it('rejects with the database error when marking the account as ERROR fails', async () => {
+      const dbError = new Error('database unavailable');
+      prismaMock.account.update.mockRejectedValue(dbError);
+      fetchMock.mockResolvedValue(
+        jsonResponse({ error: 'invalid_grant' }, { status: 401 })
+      );
+
+      const error = await captureError(refresh());
+
+      expect(error).toBe(dbError);
+    });
 
     it.each([400, 429, 500])(
       'leaves the account status untouched for status %i',
