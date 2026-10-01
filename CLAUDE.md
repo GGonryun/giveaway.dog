@@ -107,6 +107,18 @@ lib/
 - Use `pnpm run type-check` for TypeScript verification
 - Use `pnpm run test:run` to run the unit tests one time (Vitest)
 - Use `pnpm run test:coverage` to run the unit tests and measure the code coverage
+- Use `pnpm vitest run --project frontend` to run only the component tests, and `pnpm vitest run --project server` to run only the server tests
+- Use `pnpm vitest run -u <path>` to update snapshots after an intended UI change. Review the snapshot diff before you commit it
+
+### Frontend Tests
+
+- **Location**: Put component and hook tests in a `__tests__/` folder next to the code, named `<name>.test.tsx`
+- **Environment**: Files that end in `.test.tsx` run in jsdom (the `frontend` project). Files that end in `.test.ts` run in Node (the `server` project)
+- **Setup**: `test/setup-dom.ts` loads the jest-dom matchers, cleans up after each test and stubs `matchMedia`, `ResizeObserver`, `IntersectionObserver` and `scrollIntoView`
+- **Libraries**: Use `@testing-library/react` with role queries (`screen.getByRole`) and `@testing-library/user-event` for interactions. Use `renderHook` for hooks
+- **Snapshots**: Use `toMatchSnapshot()` for representative states. Keep snapshots deterministic: freeze time with `vi.setSystemTime`, mock `Math.random` and id generators, and do not snapshot Radix-generated ids
+- **Mocks**: Mock `next/navigation`, `next/link`, `next/image`, `next-auth/react` and server actions with `vi.mock` in the test file
+- **Pattern**: See `components/ui/__tests__/button.test.tsx`
 - Use `pnpm run format` to automatically format all files
 - Use `pnpm run format:check` to check if files need formatting
 - Use `pnpm run verify` to run lint, format check, type check, and unit tests in sequence
