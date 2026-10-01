@@ -166,8 +166,6 @@ export const UserParticipantSheetContent: React.FC<{
           </div>
         </div>
 
-
-
         {/* Allocation Section */}
         {participant.allocation && (
           <div className="space-y-2">

@@ -10,10 +10,27 @@ import {
 } from '@/lib/platform-icons';
 import type { ResolvedTheme } from '@/lib/theme/get-server-theme';
 
-const PLATFORM_BADGES: Partial<Record<PlatformId, { label: string; badgeClassName: string; borderClassName: string }>> = {
-  discord: { label: 'Popular',  badgeClassName: 'bg-discord-1 text-white', borderClassName: 'border-discord-1' },
-  reddit:  { label: 'New',      badgeClassName: 'bg-reddit-1 text-white',  borderClassName: 'border-reddit-1'  },
-  twitch:  { label: 'Trending', badgeClassName: 'bg-twitch-1 text-white',  borderClassName: 'border-twitch-1'  }
+const PLATFORM_BADGES: Partial<
+  Record<
+    PlatformId,
+    { label: string; badgeClassName: string; borderClassName: string }
+  >
+> = {
+  discord: {
+    label: 'Popular',
+    badgeClassName: 'bg-discord-1 text-white',
+    borderClassName: 'border-discord-1'
+  },
+  reddit: {
+    label: 'New',
+    badgeClassName: 'bg-reddit-1 text-white',
+    borderClassName: 'border-reddit-1'
+  },
+  twitch: {
+    label: 'Trending',
+    badgeClassName: 'bg-twitch-1 text-white',
+    borderClassName: 'border-twitch-1'
+  }
 };
 
 const DEFAULT_PLATFORM_IDS: PlatformId[] = [
@@ -60,7 +77,9 @@ export const SupportedIntegrations = ({
         return (
           <div key={platformId} className="relative">
             {badge && (
-              <span className={`wiggle-timer absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap ${badge.badgeClassName}`}>
+              <span
+                className={`wiggle-timer absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap ${badge.badgeClassName}`}
+              >
                 {badge.label}
               </span>
             )}

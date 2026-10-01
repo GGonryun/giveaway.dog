@@ -21,7 +21,10 @@ import {
 export function calculateApiCalls(retweetCount: number): number {
   const targetUsers = retweetCount * COVERAGE_TARGET;
   const minCallsForCoverage = Math.ceil(targetUsers / USERS_PER_REQUEST);
-  const count = Math.min(MAXIMUM_REPOST_CALLS, Math.max(MINIMUM_REPOST_CALLS, minCallsForCoverage));
+  const count = Math.min(
+    MAXIMUM_REPOST_CALLS,
+    Math.max(MINIMUM_REPOST_CALLS, minCallsForCoverage)
+  );
   console.info(
     `Calculated API calls: retweetCount=${retweetCount}, targetUsers=${Math.floor(
       targetUsers

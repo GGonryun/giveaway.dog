@@ -71,7 +71,8 @@ export const RateLimitModal: React.FC<RateLimitModalProps> = ({
             Rate Limit Reached
           </DialogTitle>
           <DialogDescription>
-            You&apos;ve reached your rate limit. Upgrade to PRO for higher limits.
+            You&apos;ve reached your rate limit. Upgrade to PRO for higher
+            limits.
           </DialogDescription>
         </DialogHeader>
 

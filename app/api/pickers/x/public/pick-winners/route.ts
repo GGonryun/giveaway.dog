@@ -29,7 +29,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Charge credits upfront for this endpoint call
-    await checkAndConsumeCredits(request.headers, CREDIT_COSTS.PICK_WINNERS_ENDPOINT);
+    await checkAndConsumeCredits(
+      request.headers,
+      CREDIT_COSTS.PICK_WINNERS_ENDPOINT
+    );
 
     // Fetch tweet and retweeters (uses Redis cache)
     const result = await fetchRetweetersWithCoverage(tweetId);

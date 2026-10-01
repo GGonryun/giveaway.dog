@@ -22,7 +22,10 @@ export const UserDetailsOverview: React.FC<{
         providers={<UserProviders providers={participant.user.providers} />}
         slug={slug}
         totalEntries={participant.completions.length}
-        engagement={toSweepstakesEngagement(participant.completions, totalTasks)}
+        engagement={toSweepstakesEngagement(
+          participant.completions,
+          totalTasks
+        )}
       />
       {signals && <AccountSignalsCard signals={signals} />}
     </div>

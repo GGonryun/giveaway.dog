@@ -34,7 +34,11 @@ import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
 import { toEngagementTheme } from '@/lib/participant/util';
-import { toQualityType, QUALITY_LABELS, QUALITY_BADGE_VARIANT } from '@/schemas/quality';
+import {
+  toQualityType,
+  QUALITY_LABELS,
+  QUALITY_BADGE_VARIANT
+} from '@/schemas/quality';
 import { UsersFiltersSheet } from '@/components/users/users-filters-sheet';
 
 interface UsersTableProps {
@@ -217,9 +221,17 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                           </TableCell>
                           <TableCell className="hidden lg:table-cell text-right">
                             <Badge
-                              variant={QUALITY_BADGE_VARIANT[toQualityType(participant.user.qualityScore)]}
+                              variant={
+                                QUALITY_BADGE_VARIANT[
+                                  toQualityType(participant.user.qualityScore)
+                                ]
+                              }
                             >
-                              {QUALITY_LABELS[toQualityType(participant.user.qualityScore)]}
+                              {
+                                QUALITY_LABELS[
+                                  toQualityType(participant.user.qualityScore)
+                                ]
+                              }
                             </Badge>
                           </TableCell>
                           <TableCell className="hidden xl:table-cell text-right">

@@ -19,7 +19,13 @@ import {
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Users, Gem, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  ChevronDown,
+  Users,
+  Gem,
+  ChevronLeft,
+  ChevronRight
+} from 'lucide-react';
 import pluralize from 'pluralize';
 import { useState } from 'react';
 import { TwitterV2ParticipantsTable } from './twitter-v2-participants-table';
