@@ -30,11 +30,12 @@ const redirectDigest = (url: string) => `NEXT_REDIRECT;replace;${url};307;`;
 
 describe('facebook user link GET', () => {
   let consoleWarn: ReturnType<typeof vi.spyOn>;
+  let consoleInfo: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
-    vi.spyOn(console, 'info').mockImplementation(() => {});
+    consoleInfo = vi.spyOn(console, 'info').mockImplementation(() => {});
     consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     m.auth.mockReset();
     m.auth.mockResolvedValue(createSession());
@@ -46,6 +47,17 @@ describe('facebook user link GET', () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
+  });
+
+  it('logs the start of the link request with the resolved redirect target', async () => {
+    await GET(
+      request({ profileUrl: PROFILE_URL, identifier: 'jane.doe' })
+    ).catch(() => undefined);
+
+    expect(consoleInfo).toHaveBeenCalledWith('Facebook link request started', {
+      identifier: 'jane.doe',
+      redirectTo: '/account'
+    });
   });
 
   describe('when required parameters are missing', () => {
@@ -126,6 +138,18 @@ describe('facebook user link GET', () => {
       });
     });
 
+    it('logs a warning', async () => {
+      m.auth.mockResolvedValue(null);
+
+      await GET(
+        request({ profileUrl: PROFILE_URL, identifier: 'jane.doe' })
+      ).catch(() => undefined);
+
+      expect(consoleWarn).toHaveBeenCalledWith(
+        'Facebook link failed - not authenticated'
+      );
+    });
+
     it('does not query accounts', async () => {
       m.auth.mockResolvedValue(null);
 
@@ -193,6 +217,41 @@ describe('facebook user link GET', () => {
       );
     });
 
+    it('labels an identifier that starts with digits with an at sign', async () => {
+      await GET(
+        request({ profileUrl: PROFILE_URL, identifier: '123abc' })
+      ).catch(() => undefined);
+
+      expect(prismaMock.account.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ label: '@123abc' })
+        })
+      );
+    });
+
+    it('labels an identifier that ends with digits with an at sign', async () => {
+      await GET(
+        request({ profileUrl: PROFILE_URL, identifier: 'jane123' })
+      ).catch(() => undefined);
+
+      expect(prismaMock.account.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ label: '@jane123' })
+        })
+      );
+    });
+
+    it('logs the re-link', async () => {
+      await GET(
+        request({ profileUrl: PROFILE_URL, identifier: 'jane.doe' })
+      ).catch(() => undefined);
+
+      expect(consoleInfo).toHaveBeenCalledWith(
+        'Facebook account re-linked - updating existing account',
+        { userId: TEST_USER.id, identifier: 'jane.doe' }
+      );
+    });
+
     it('redirects to redirectTo after updating', async () => {
       await expect(
         GET(
@@ -253,10 +312,43 @@ describe('facebook user link GET', () => {
       });
     });
 
+    it('labels an identifier that ends with digits with an at sign', async () => {
+      await GET(
+        request({ profileUrl: PROFILE_URL, identifier: 'jane123' })
+      ).catch(() => undefined);
+
+      expect(prismaMock.account.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ label: '@jane123' })
+      });
+    });
+
     it('redirects to the account page by default', async () => {
       await expect(
         GET(request({ profileUrl: PROFILE_URL, identifier: 'jane.doe' }))
       ).rejects.toMatchObject({ digest: redirectDigest('/account') });
+    });
+
+    it('redirects to the account page when redirectTo is empty', async () => {
+      await expect(
+        GET(
+          request({
+            profileUrl: PROFILE_URL,
+            identifier: 'jane.doe',
+            redirectTo: ''
+          })
+        )
+      ).rejects.toMatchObject({ digest: redirectDigest('/account') });
+    });
+
+    it('logs the new link', async () => {
+      await GET(
+        request({ profileUrl: PROFILE_URL, identifier: 'jane.doe' })
+      ).catch(() => undefined);
+
+      expect(consoleInfo).toHaveBeenCalledWith(
+        'Facebook account linked to user',
+        { userId: TEST_USER.id, identifier: 'jane.doe' }
+      );
     });
 
     it('redirects to an absolute redirectTo as given', async () => {

@@ -64,11 +64,12 @@ const linkedAccount = (userId: string | null) => ({
 
 describe('bluesky user callback GET', () => {
   let consoleWarn: ReturnType<typeof vi.spyOn>;
+  let consoleInfo: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
-    vi.spyOn(console, 'info').mockImplementation(() => {});
+    consoleInfo = vi.spyOn(console, 'info').mockImplementation(() => {});
     consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     m.auth.mockReset();
     m.auth.mockResolvedValue(null);
@@ -132,6 +133,40 @@ describe('bluesky user callback GET', () => {
 
       expect(m.Agent).toHaveBeenCalledWith(BLUESKY_SESSION);
       expect(m.getProfile).toHaveBeenCalledWith({ actor: DID });
+    });
+
+    it('logs the start of the callback for a signed-out visitor', async () => {
+      await GET(request());
+
+      expect(consoleInfo).toHaveBeenCalledWith(
+        'Bluesky OAuth callback started',
+        { hasSession: false, sessionUserId: undefined, redirectTo: '' }
+      );
+    });
+
+    it('logs the start of the callback for a signed-in user', async () => {
+      m.auth.mockResolvedValue(createSession());
+
+      await GET(request('/app/acme')).catch(() => undefined);
+
+      expect(consoleInfo).toHaveBeenCalledWith(
+        'Bluesky OAuth callback started',
+        {
+          hasSession: true,
+          sessionUserId: TEST_USER.id,
+          redirectTo: '/app/acme'
+        }
+      );
+    });
+
+    it('logs the fetched profile', async () => {
+      await GET(request());
+
+      expect(consoleInfo).toHaveBeenCalledWith('Bluesky profile fetched', {
+        did: DID,
+        handle: HANDLE,
+        displayName: 'Alice'
+      });
     });
 
     it('looks up the Bluesky account by DID including its user', async () => {
@@ -243,6 +278,15 @@ describe('bluesky user callback GET', () => {
       expect(prismaMock.user.create).not.toHaveBeenCalled();
     });
 
+    it('logs the sign in with the resolved redirect target', async () => {
+      await GET(request());
+
+      expect(consoleInfo).toHaveBeenCalledWith(
+        'Bluesky OAuth complete - signing in user',
+        { userId: 'user-9', redirectTo: '/browse' }
+      );
+    });
+
     it('resolves to undefined when sign in returns without redirecting', async () => {
       await expect(GET(request())).resolves.toBeUndefined();
     });
@@ -323,6 +367,23 @@ describe('bluesky user callback GET', () => {
       });
     });
 
+    it('follows an absolute stored redirect target to another origin', async () => {
+      await expect(
+        GET(request('https://evil.example/phish'))
+      ).rejects.toMatchObject({
+        digest: redirectDigest('https://evil.example/phish')
+      });
+    });
+
+    it('logs the completed link with the fallback redirect target', async () => {
+      await GET(request()).catch(() => undefined);
+
+      expect(consoleInfo).toHaveBeenCalledWith(
+        'Bluesky account linking complete - redirecting',
+        { userId: TEST_USER.id, redirectTo: '/account' }
+      );
+    });
+
     it('does not create a user, update the user, or sign in', async () => {
       await GET(request()).catch(() => undefined);
 
@@ -386,6 +447,17 @@ describe('bluesky user callback GET', () => {
       expect(m.signIn).toHaveBeenCalledWith('bluesky-direct', {
         userId: 'new-user',
         redirectTo: '/browse/giveaway-1'
+      });
+    });
+
+    it('logs the created user', async () => {
+      await GET(request());
+
+      expect(consoleInfo).toHaveBeenCalledWith('New Bluesky user created', {
+        userId: 'new-user',
+        handle: HANDLE,
+        did: DID,
+        displayName: 'Alice'
       });
     });
 

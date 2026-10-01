@@ -30,11 +30,12 @@ const redirectDigest = (url: string) => `NEXT_REDIRECT;replace;${url};307;`;
 
 describe('instagram user link GET', () => {
   let consoleWarn: ReturnType<typeof vi.spyOn>;
+  let consoleInfo: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
-    vi.spyOn(console, 'info').mockImplementation(() => {});
+    consoleInfo = vi.spyOn(console, 'info').mockImplementation(() => {});
     consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     m.auth.mockReset();
     m.auth.mockResolvedValue(createSession());
@@ -46,6 +47,17 @@ describe('instagram user link GET', () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
+  });
+
+  it('logs the start of the link request with the resolved redirect target', async () => {
+    await GET(request({ profileUrl: PROFILE_URL, username: 'jane_doe' })).catch(
+      () => undefined
+    );
+
+    expect(consoleInfo).toHaveBeenCalledWith('Instagram link request started', {
+      username: 'jane_doe',
+      redirectTo: '/account'
+    });
   });
 
   describe('when required parameters are missing', () => {
@@ -126,6 +138,18 @@ describe('instagram user link GET', () => {
       });
     });
 
+    it('logs a warning', async () => {
+      m.auth.mockResolvedValue(null);
+
+      await GET(
+        request({ profileUrl: PROFILE_URL, username: 'jane_doe' })
+      ).catch(() => undefined);
+
+      expect(consoleWarn).toHaveBeenCalledWith(
+        'Instagram link failed - not authenticated'
+      );
+    });
+
     it('does not query accounts', async () => {
       m.auth.mockResolvedValue(null);
 
@@ -193,6 +217,17 @@ describe('instagram user link GET', () => {
       );
     });
 
+    it('logs the re-link', async () => {
+      await GET(
+        request({ profileUrl: PROFILE_URL, username: 'jane_doe' })
+      ).catch(() => undefined);
+
+      expect(consoleInfo).toHaveBeenCalledWith(
+        'Instagram account re-linked - updating existing account',
+        { userId: TEST_USER.id, username: 'jane_doe' }
+      );
+    });
+
     it('redirects to redirectTo after updating', async () => {
       await expect(
         GET(
@@ -237,6 +272,29 @@ describe('instagram user link GET', () => {
       await expect(
         GET(request({ profileUrl: PROFILE_URL, username: 'jane_doe' }))
       ).rejects.toMatchObject({ digest: redirectDigest('/account') });
+    });
+
+    it('redirects to the account page when redirectTo is empty', async () => {
+      await expect(
+        GET(
+          request({
+            profileUrl: PROFILE_URL,
+            username: 'jane_doe',
+            redirectTo: ''
+          })
+        )
+      ).rejects.toMatchObject({ digest: redirectDigest('/account') });
+    });
+
+    it('logs the new link', async () => {
+      await GET(
+        request({ profileUrl: PROFILE_URL, username: 'jane_doe' })
+      ).catch(() => undefined);
+
+      expect(consoleInfo).toHaveBeenCalledWith(
+        'Instagram account linked to user',
+        { userId: TEST_USER.id, username: 'jane_doe' }
+      );
     });
 
     it('redirects to an absolute redirectTo as given', async () => {

@@ -139,6 +139,25 @@ describe('bluesky user authorize GET', () => {
       );
     });
 
+    it('logs the redirect targets given in the query', async () => {
+      await GET(
+        request({
+          handle: 'alice.bsky.social',
+          redirectTo: '/browse/123',
+          returnTo: '/login'
+        })
+      );
+
+      expect(consoleInfo).toHaveBeenCalledWith(
+        'Bluesky authorization started',
+        {
+          handle: 'alice.bsky.social',
+          redirectTo: '/browse/123',
+          returnTo: '/login'
+        }
+      );
+    });
+
     it('logs the host of the generated authorization URL', async () => {
       await GET(request({ handle: 'alice.bsky.social' }));
 
@@ -201,6 +220,21 @@ describe('bluesky user authorize GET', () => {
 
       expect(res.headers.get('location')).toBe(
         'https://auth.giveaway.dog/?error=bluesky_auth_failed'
+      );
+    });
+
+    it('replaces an existing error parameter on returnTo', async () => {
+      m.authorize.mockRejectedValue(new Error('handle not found'));
+
+      const res = await GET(
+        request({
+          handle: 'alice.bsky.social',
+          returnTo: '/login?error=old&next=1'
+        })
+      );
+
+      expect(res.headers.get('location')).toBe(
+        `${APP_URL}/login?error=bluesky_auth_failed&next=1`
       );
     });
 

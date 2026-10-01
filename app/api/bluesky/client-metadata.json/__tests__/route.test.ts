@@ -24,6 +24,9 @@ describe('bluesky client-metadata.json GET', () => {
       const res = await GET();
 
       expect(res.status).toBe(500);
+      expect(await res.json()).toEqual({
+        error: 'NEXTAUTH_URL not configured'
+      });
     });
 
     it('does not set the cache header on the error response', async () => {

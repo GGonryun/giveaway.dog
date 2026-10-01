@@ -1,7 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
+import { ZodError } from 'zod';
 import { prismaMock, knownRequestError } from '@/test/prisma';
+import { ApplicationError } from '@/lib/errors';
 
 const m = vi.hoisted(() => ({
   twitterOAuthCallback: vi.fn()
@@ -389,6 +391,126 @@ describe('twitter-callback GET', () => {
         failure
       );
     });
+  });
+
+  describe('when a failure is handled', () => {
+    const loggedError = () =>
+      consoleError.mock.calls.find(
+        ([label]: unknown[]) => label === 'Twitter OAuth callback error:'
+      )?.[1];
+
+    it.each([
+      {
+        scenario: 'the state record does not exist',
+        arrange: () => prismaMock.state.findUnique.mockResolvedValue(null),
+        params: validParams,
+        expected: {
+          code: 'NOT_FOUND',
+          message: 'State not found',
+          data: 'invalid_state'
+        }
+      },
+      {
+        scenario: 'the state record has no expiration',
+        arrange: () =>
+          prismaMock.state.findUnique.mockResolvedValue(
+            stateRecord({ expiresAt: null })
+          ),
+        params: validParams,
+        expected: {
+          code: 'BAD_REQUEST',
+          message: 'State has no expiration',
+          data: 'invalid_state'
+        }
+      },
+      {
+        scenario: 'the state record has expired',
+        arrange: () =>
+          prismaMock.state.findUnique.mockResolvedValue(
+            stateRecord({ expiresAt: new Date(NOW.getTime() - 1) })
+          ),
+        params: validParams,
+        expected: {
+          code: 'BAD_REQUEST',
+          message: 'State has expired',
+          data: 'expired_state'
+        }
+      },
+      {
+        scenario: 'Twitter returns an error parameter',
+        arrange: () => undefined,
+        params: { ...validParams, error: 'access_denied' },
+        expected: {
+          code: 'BAD_REQUEST',
+          message: 'Twitter OAuth error',
+          data: 'access_denied'
+        }
+      },
+      {
+        scenario: 'the code parameter is missing',
+        arrange: () => undefined,
+        params: { state: 'acme:state-1' },
+        expected: {
+          code: 'BAD_REQUEST',
+          message: 'Missing code or state',
+          data: 'missing_code'
+        }
+      },
+      {
+        scenario: 'the stored state value is invalid',
+        arrange: () =>
+          prismaMock.state.findUnique.mockResolvedValue(
+            stateRecord({ value: { teamId: 'team-1' } })
+          ),
+        params: validParams,
+        expected: {
+          code: 'BAD_REQUEST',
+          message: 'Failed to parse state',
+          data: 'parse_error',
+          cause: expect.any(ZodError)
+        }
+      },
+      {
+        scenario: 'the OAuth procedure returns a failure',
+        arrange: () =>
+          m.twitterOAuthCallback.mockResolvedValue({
+            ok: false,
+            data: { code: 'BAD_REQUEST', message: 'Token exchange failed' }
+          }),
+        params: validParams,
+        expected: {
+          code: 'BAD_REQUEST',
+          message: 'Twitter OAuth callback failed',
+          data: 'oauth_failed'
+        }
+      },
+      {
+        scenario: 'the OAuth procedure returns an unexpected payload',
+        arrange: () =>
+          m.twitterOAuthCallback.mockResolvedValue({
+            ok: true,
+            data: { success: true }
+          }),
+        params: validParams,
+        expected: {
+          code: 'VALIDATION_ERROR',
+          message: 'Invalid callback result format',
+          data: 'validation_error',
+          cause: expect.any(ZodError)
+        }
+      }
+    ])(
+      'logs the application error when $scenario',
+      async ({ arrange, params, expected }) => {
+        arrange();
+
+        await GET(request(params));
+
+        const logged = loggedError();
+        expect(logged).toBeInstanceOf(ApplicationError);
+        expect(logged).toMatchObject(expected);
+      }
+    );
   });
 
   describe('when deleting the state record fails', () => {

@@ -177,6 +177,30 @@ describe('parseUsersSearchParams', () => {
     });
   });
 
+  describe('numeric parsing', () => {
+    const numericFields = [
+      'page',
+      'pageSize',
+      'minQualityScore',
+      'maxQualityScore'
+    ] as const;
+
+    it.each(numericFields)(
+      'parses a hexadecimal prefixed %s as base 16',
+      (field) => {
+        expect(parseUsersSearchParams({ [field]: '0x1A' })[field]).toBe(26);
+      }
+    );
+
+    it.each(numericFields)('truncates a decimal %s', (field) => {
+      expect(parseUsersSearchParams({ [field]: '7.9' })[field]).toBe(7);
+    });
+
+    it.each(numericFields)('ignores leading whitespace in %s', (field) => {
+      expect(parseUsersSearchParams({ [field]: '  12' })[field]).toBe(12);
+    });
+  });
+
   describe('sorting', () => {
     it.each(['lastEntry', 'qualityScore', 'name'] as const)(
       'keeps the %s sort field',

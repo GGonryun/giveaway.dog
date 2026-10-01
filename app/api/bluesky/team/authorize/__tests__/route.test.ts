@@ -288,6 +288,22 @@ describe('bluesky team authorize GET', () => {
       );
     });
 
+    it('replaces an existing error parameter on returnTo', async () => {
+      const res = await GET(
+        request({ ...validParams, returnTo: '/app/acme?error=old&tab=social' })
+      );
+
+      expect(res.headers.get('location')).toBe(
+        `${APP_URL}/app/acme?error=bluesky_auth_failed&tab=social`
+      );
+    });
+
+    it('does not set the team context cookies', async () => {
+      const res = await GET(request(validParams));
+
+      expect(res.headers.getSetCookie()).toEqual([]);
+    });
+
     it('follows an absolute returnTo to another origin', async () => {
       const res = await GET(
         request({ ...validParams, returnTo: 'https://evil.example/phish' })

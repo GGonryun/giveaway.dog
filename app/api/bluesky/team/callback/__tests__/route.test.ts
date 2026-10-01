@@ -178,6 +178,17 @@ describe('bluesky team callback GET', () => {
       );
     });
 
+    it('logs a null description when Bluesky sends none', async () => {
+      await GET(request({ error: 'access_denied' }));
+
+      expect(consoleError).toHaveBeenCalledWith(
+        'Bluesky OAuth callback error:',
+        expect.objectContaining({
+          data: { error: 'access_denied', errorDescription: null }
+        })
+      );
+    });
+
     it('does not look up the team', async () => {
       await GET(request({ error: 'access_denied' }));
 
@@ -251,6 +262,23 @@ describe('bluesky team callback GET', () => {
       expect(prismaMock.integration.findFirst).toHaveBeenCalledWith({
         where: { account_id: DID, provider: IntegrationProvider.BLUESKY }
       });
+    });
+
+    it('uses the OAuth session DID rather than the profile DID', async () => {
+      m.getProfile.mockResolvedValue({
+        data: { did: 'did:plc:profile', handle: 'acme.bsky.social' }
+      });
+
+      await GET(request());
+
+      expect(prismaMock.integration.findFirst).toHaveBeenCalledWith({
+        where: { account_id: DID, provider: IntegrationProvider.BLUESKY }
+      });
+      expect(prismaMock.integration.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ account_id: DID })
+        })
+      );
     });
 
     it('redirects with a generic message when the OAuth exchange throws', async () => {
@@ -363,6 +391,12 @@ describe('bluesky team callback GET', () => {
       const res = await GET(request());
 
       expect(prismaMock.integration.update).toHaveBeenCalledTimes(1);
+      expect(prismaMock.integration.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'integration-1' },
+          data: expect.objectContaining({ teamId: TEAM.id })
+        })
+      );
       expect(res.headers.get('location')).toBe(
         `${INTEGRATIONS}?success=bluesky_connected&handle=acme.bsky.social`
       );
@@ -402,6 +436,18 @@ describe('bluesky team callback GET', () => {
       expect(res.status).toBe(307);
       expect(res.headers.get('location')).toBe(
         `${INTEGRATIONS}?success=bluesky_connected&handle=acme.bsky.social`
+      );
+    });
+
+    it('interpolates the handle into the redirect without encoding it', async () => {
+      m.getProfile.mockResolvedValue({
+        data: { did: DID, handle: 'a&b=c', displayName: 'Acme Inc' }
+      });
+
+      const res = await GET(request());
+
+      expect(res.headers.get('location')).toBe(
+        `${INTEGRATIONS}?success=bluesky_connected&handle=a&b=c`
       );
     });
 
@@ -447,6 +493,70 @@ describe('bluesky team callback GET', () => {
 
       await expect(GET(request())).rejects.toThrow('Invalid URL');
     });
+  });
+
+  describe('when a failure is handled', () => {
+    const loggedError = () =>
+      consoleError.mock.calls.find(
+        ([label]: unknown[]) => label === 'Bluesky OAuth callback error:'
+      )?.[1];
+
+    it.each([
+      {
+        scenario: 'the slug cookie is missing',
+        arrange: () => undefined,
+        cookies: { bluesky_team_scope: 'atproto' } as Record<string, string>,
+        expected: {
+          code: 'BAD_REQUEST',
+          message: 'Team context not found'
+        }
+      },
+      {
+        scenario: 'the scope cookie is missing',
+        arrange: () => undefined,
+        cookies: { bluesky_team_slug: 'acme' } as Record<string, string>,
+        expected: {
+          code: 'BAD_REQUEST',
+          message: 'Bluesky scope not found'
+        }
+      },
+      {
+        scenario: 'the team does not exist',
+        arrange: () => prismaMock.team.findUnique.mockResolvedValue(null),
+        cookies: undefined,
+        expected: { code: 'NOT_FOUND', message: 'Team not found' }
+      },
+      {
+        scenario: 'the user is not a team member',
+        arrange: () => prismaMock.user.findFirst.mockResolvedValue(null),
+        cookies: undefined,
+        expected: {
+          code: 'FORBIDDEN',
+          message: 'User is not a member of the team'
+        }
+      },
+      {
+        scenario: 'the integration does not exist',
+        arrange: () => prismaMock.integration.findFirst.mockResolvedValue(null),
+        cookies: undefined,
+        expected: {
+          code: 'NOT_FOUND',
+          message: 'Bluesky integration not found',
+          cause: `No Bluesky integration found for account ID ${DID}`
+        }
+      }
+    ])(
+      'logs the application error when $scenario',
+      async ({ arrange, cookies, expected }) => {
+        arrange();
+
+        await GET(request(undefined, cookies));
+
+        const logged = loggedError();
+        expect(logged).toBeInstanceOf(ApplicationError);
+        expect(logged).toMatchObject(expected);
+      }
+    );
   });
 
   it('does not clear the team context cookies on failure', async () => {
