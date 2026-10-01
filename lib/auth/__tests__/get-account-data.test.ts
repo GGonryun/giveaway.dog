@@ -232,6 +232,12 @@ describe('getAccountLink', () => {
       );
     });
 
+    it('keeps an at sign that is not at the start of the username', () => {
+      expect(getAccountLink(account('twitter'), { username: 'ja@ck' })).toBe(
+        'https://x.com/ja@ck'
+      );
+    });
+
     it('returns null without a username', () => {
       expect(getAccountLink(account('twitter'), {})).toBeNull();
     });

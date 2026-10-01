@@ -32,6 +32,24 @@ describe('isNextRedirect', () => {
     expect(isNextRedirect(err)).toBe(false);
   });
 
+  it('returns false when NEXT_REDIRECT appears later in the digest', () => {
+    const err = redirectError(
+      'X_NEXT_REDIRECT;replace;/x;307;',
+      'NEXT_REDIRECT'
+    );
+
+    expect(isNextRedirect(err)).toBe(false);
+  });
+
+  it('returns false when NEXT_REDIRECT appears later in the message', () => {
+    const err = redirectError(
+      'NEXT_REDIRECT;replace;/x;307;',
+      'Error: NEXT_REDIRECT'
+    );
+
+    expect(isNextRedirect(err)).toBe(false);
+  });
+
   it('returns false when the digest is not a string', () => {
     const err = redirectError(42, 'NEXT_REDIRECT');
 

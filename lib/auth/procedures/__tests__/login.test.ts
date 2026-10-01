@@ -82,7 +82,9 @@ describe('login', () => {
         provider: 'MYSPACE' as unknown as IdentityProvider
       });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*provider/
+      );
       expect(mocks.signIn).not.toHaveBeenCalled();
     });
 
@@ -212,7 +214,9 @@ describe('login', () => {
         instagramProfileUrl: ''
       });
 
-      expectFailure(result, 'BAD_REQUEST');
+      expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
+        'Instagram profile URL is required.'
+      );
     });
 
     it('rejects a url that is not a profile', async () => {
@@ -337,6 +341,19 @@ describe('login', () => {
       expect(mocks.redirect).toHaveBeenCalledWith(
         `/api/bluesky/user/authorize?${params.toString()}`
       );
+    });
+
+    it('passes the handle to the authorize route without changing its case', async () => {
+      await expect(
+        run({
+          provider: IdentityProvider.BLUESKY,
+          blueskyHandle: 'Alice.Bsky.Social'
+        })
+      ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
+
+      const [url] = mocks.redirect.mock.calls[0];
+      const params = new URLSearchParams(url.split('?').slice(1).join('?'));
+      expect(params.get('handle')).toBe('Alice.Bsky.Social');
     });
 
     it('omits an empty returnTo from the authorize route', async () => {

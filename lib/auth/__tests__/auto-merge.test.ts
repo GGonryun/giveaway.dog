@@ -365,6 +365,26 @@ describe('tryAutoMerge', () => {
       });
     });
 
+    it('merges with undefined user filters when the existing account has no user', async () => {
+      const result = await run(mergeArgs({ existing: existingAccount(null) }));
+
+      expect(result).toBe('/account?merged=true');
+      expect(prismaMock.sweepstakesParticipant.deleteMany).toHaveBeenCalledWith(
+        {
+          where: { userId: undefined, sweepstakesId: { in: ['sw-1', 'sw-2'] } }
+        }
+      );
+      expect(prismaMock.sweepstakesParticipant.updateMany).toHaveBeenCalledWith(
+        {
+          where: { userId: undefined },
+          data: { userId: SESSION_USER_ID }
+        }
+      );
+      expect(prismaMock.user.delete).toHaveBeenCalledWith({
+        where: { id: undefined }
+      });
+    });
+
     it('returns false and logs when the merge transaction fails', async () => {
       const error = new Error('constraint');
       prismaMock.user.delete.mockRejectedValue(error);

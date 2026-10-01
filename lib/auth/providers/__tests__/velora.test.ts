@@ -79,15 +79,37 @@ describe('VeloraCreatorSchema', () => {
     expect(VeloraCreatorSchema.parse(full)).toEqual(full);
   });
 
-  it.each(['id', 'slug', 'channelName', 'status', 'tier'])(
-    'requires the %s field',
-    (field) => {
-      const rest: Record<string, unknown> = { ...creator };
-      delete rest[field];
+  it.each([
+    'id',
+    'slug',
+    'channelName',
+    'status',
+    'tier',
+    'bannerUrl',
+    'followerCount',
+    'totalStreamHours'
+  ])('requires the %s field', (field) => {
+    const rest: Record<string, unknown> = { ...creator };
+    delete rest[field];
 
-      expect(VeloraCreatorSchema.safeParse(rest).success).toBe(false);
-    }
-  );
+    expect(VeloraCreatorSchema.safeParse(rest).success).toBe(false);
+  });
+
+  it.each([
+    ['totalRevenue', 100],
+    ['stripeOnboardingComplete', 'yes'],
+    ['totalViews', '3'],
+    ['subscriptionPrice', '499'],
+    ['revenueSharePercentage', 50],
+    ['emoteSlots', '5'],
+    ['channelEmoteSlots', '2'],
+    ['createdAt', 0],
+    ['approvedAt', 0]
+  ])('rejects a wrongly typed %s', (field, value) => {
+    expect(
+      VeloraCreatorSchema.safeParse({ ...creator, [field]: value }).success
+    ).toBe(false);
+  });
 
   it('requires description to be present even if null', () => {
     const rest: Record<string, unknown> = { ...creator };
@@ -133,6 +155,65 @@ describe('VeloraProfileSchema', () => {
     };
 
     expect(VeloraProfileSchema.parse(profile)).toEqual(profile);
+  });
+
+  it('accepts a fully populated profile with nullable fields set to null', () => {
+    const profile = {
+      id: 'u-1',
+      username: 'velo',
+      email: 'v@example.com',
+      displayName: 'Velo',
+      bio: 'Streamer',
+      role: 'USER',
+      status: 'ACTIVE',
+      streamingEnabled: true,
+      followerCount: 4,
+      followingCount: 2,
+      createdAt: '2024-01-01',
+      updatedAt: '2024-01-02',
+      creator: null,
+      accentColor: null,
+      profileCustomization: null,
+      developerAccess: false,
+      developerTier: null,
+      rateLimitOverride: null,
+      youtubeConnected: false,
+      totalViews: 10,
+      totalStreamHours: 1,
+      staffBadgeVisible: false,
+      emailVerifiedAt: null,
+      preferences: null,
+      canMonetize: true
+    };
+
+    expect(VeloraProfileSchema.parse(profile)).toEqual(profile);
+  });
+
+  it.each([
+    ['role', 1],
+    ['status', 1],
+    ['streamingEnabled', 'yes'],
+    ['followerCount', '4'],
+    ['followingCount', '2'],
+    ['createdAt', 0],
+    ['updatedAt', 0],
+    ['accentColor', 1],
+    ['developerAccess', 'no'],
+    ['developerTier', 1],
+    ['youtubeConnected', 'no'],
+    ['totalViews', '10'],
+    ['totalStreamHours', '1'],
+    ['staffBadgeVisible', 'no'],
+    ['emailVerifiedAt', 0],
+    ['canMonetize', 'yes']
+  ])('rejects a wrongly typed %s', (field, value) => {
+    expect(
+      VeloraProfileSchema.safeParse({
+        id: 'u-1',
+        username: 'velo',
+        [field]: value
+      }).success
+    ).toBe(false);
   });
 
   it('strips unknown keys', () => {

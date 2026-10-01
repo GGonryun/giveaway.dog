@@ -44,6 +44,10 @@ describe('facebookProfileUrlSchema', () => {
       ]);
     });
 
+    it('reports only the format message for a single character', () => {
+      expect(messagesFor('a')).toEqual([INVALID_MESSAGE]);
+    });
+
     it.each([
       'https://facebook.com/',
       'https://facebook.com/groups/123',

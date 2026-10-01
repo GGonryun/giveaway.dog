@@ -61,7 +61,9 @@ describe('logout', () => {
     it('rejects a non-string redirect path', async () => {
       const result = await logout(42 as unknown as string);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(mocks.signOut).not.toHaveBeenCalled();
     });
 

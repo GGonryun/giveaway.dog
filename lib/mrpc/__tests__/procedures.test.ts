@@ -67,7 +67,9 @@ describe('procedure', () => {
 
       const result = await run();
 
-      expectFailure(result, 'UNAUTHORIZED');
+      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
+        'Invalid session'
+      );
     });
 
     it('returns UNAUTHORIZED when the session has expired', async () => {
@@ -78,7 +80,9 @@ describe('procedure', () => {
 
       const result = await run();
 
-      expectFailure(result, 'UNAUTHORIZED');
+      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
+        'Invalid session'
+      );
     });
 
     it('returns UNAUTHORIZED when the session expiry is not a valid date', async () => {
@@ -89,7 +93,9 @@ describe('procedure', () => {
 
       const result = await run();
 
-      expectFailure(result, 'UNAUTHORIZED');
+      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
+        'Invalid session'
+      );
     });
 
     it('treats a session expiring at exactly the current time as invalid', async () => {
@@ -102,7 +108,9 @@ describe('procedure', () => {
 
       const result = await run();
 
-      expectFailure(result, 'UNAUTHORIZED');
+      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
+        'Invalid session'
+      );
     });
 
     it('accepts a session expiring one millisecond in the future', async () => {
@@ -294,7 +302,9 @@ describe('procedure', () => {
         typeof run
       >[0]);
 
-      expectFailure(result, 'UNAUTHORIZED');
+      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
+        'Invalid session'
+      );
     });
   });
 
@@ -448,6 +458,24 @@ describe('procedure', () => {
       );
     });
 
+    it('passes the session user to the handler through the cache wrapper', async () => {
+      const session = signIn();
+      const handler = vi.fn(async () => 'cached');
+      const run = procedure()
+        .authorization({ required: true })
+        .input(z.object({ id: z.string() }))
+        .cache({ keyParts: ['k'], tags: ['t'] })
+        .handler(handler);
+
+      await run({ id: 'abc' });
+
+      expect(handler).toHaveBeenCalledWith({
+        db: prismaMock,
+        user: session.user,
+        input: { id: 'abc' }
+      });
+    });
+
     it('returns the cached value without calling the handler on a cache hit', async () => {
       nextCacheMock.unstable_cache.mockImplementation(
         () => async () => 'from-cache'
@@ -545,6 +573,11 @@ describe('procedure', () => {
       await run();
 
       expect(nextCacheMock.unstable_cache).toHaveBeenCalledTimes(1);
+      expect(nextCacheMock.unstable_cache).toHaveBeenCalledWith(
+        expect.any(Function),
+        undefined,
+        { tags: ['kept'], revalidate: undefined }
+      );
     });
   });
 
@@ -737,7 +770,7 @@ describe('procedure', () => {
 
       const result = await run();
 
-      expectFailure(result, 'FORBIDDEN');
+      expect(expectFailure(result, 'FORBIDDEN').message).toBe('No');
       expect(console.error).not.toHaveBeenCalled();
     });
 
@@ -780,7 +813,9 @@ describe('procedure', () => {
 
       const result = await run();
 
-      expectFailure(result, 'BAD_REQUEST');
+      expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
+        'Invalid data provided. Please check your input and try again. If the problem persists, contact support.'
+      );
     });
 
     it('maps a prisma error thrown by the db client to a failure', async () => {
@@ -796,7 +831,9 @@ describe('procedure', () => {
 
       const result = await run();
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
       expect(prismaMock.user.findUniqueOrThrow).toHaveBeenCalledWith({
         where: { id: TEST_USER.id }
       });

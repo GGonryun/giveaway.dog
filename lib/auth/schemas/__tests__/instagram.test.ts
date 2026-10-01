@@ -43,6 +43,10 @@ describe('instagramProfileUrlSchema', () => {
       ]);
     });
 
+    it('reports only the format message for a single character', () => {
+      expect(messagesFor('a')).toEqual([INVALID_MESSAGE]);
+    });
+
     it.each([
       'https://instagram.com/',
       'https://instagram.com/p/abc123',
