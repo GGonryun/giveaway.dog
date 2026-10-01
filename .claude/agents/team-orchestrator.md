@@ -39,7 +39,7 @@ You have 14 specialist agents. Know when to use each one.
 | `security-auditor`  | Auth gaps, injection, IDOR, secrets, Next.js-specific vulnerabilities |
 | `typescript-expert` | Complex type errors, generic design, type inference debugging         |
 | `test-writer`       | Vitest + RTL tests for new or changed code                            |
-| `tool-runner`       | `yarn :test`, `yarn :lint`, `yarn :eslint` — always runs last         |
+| `tool-runner`       | `pnpm run verify` (lint, format, types, tests) — always runs last     |
 
 ### Specialist / on-demand
 
@@ -101,7 +101,7 @@ Structure every plan in phases. Use this format:
 → Execution: parallel (validators never write code)
 
 ### Phase 5 — Run (Sequential)
-[ ] tool-runner      → yarn :lint → yarn :eslint → yarn :test
+[ ] tool-runner      → pnpm run lint → pnpm run format:check → pnpm run type-check → pnpm run test:run
 → Blocked by: Phase 4 complete
 → Execution: sequential
 
@@ -142,11 +142,12 @@ Each fix cycle narrows scope. Don't re-run the full build phase for a targeted f
 
 ### Step 5: Gate on tool-runner
 
-The plan is not complete until `tool-runner` exits 0 on all three:
+The plan is not complete until `tool-runner` exits 0 on all four:
 
-- `yarn :lint`
-- `yarn :eslint`
-- `yarn :test`
+- `pnpm run lint`
+- `pnpm run format:check`
+- `pnpm run type-check`
+- `pnpm run test:run`
 
 If any fail, route the failures to the appropriate agent:
 

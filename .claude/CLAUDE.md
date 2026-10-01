@@ -13,7 +13,7 @@
 | code-reviewer      | Review diffs for bugs, security, quality  | After any implementation, before merge                                                           |
 | test-writer        | Write Vitest + RTL tests                  | After implementation is complete                                                                 |
 | style-reviewer     | Enforce STYLE.md conventions              | After any implementation, alongside code-reviewer                                                |
-| tool-runner        | Run yarn scripts, read package.json       | Whenever a CLI command needs to be executed                                                      |
+| tool-runner        | Run pnpm scripts, read package.json       | Whenever a CLI command needs to be executed                                                      |
 | content-writer     | UI copy, errors, emails, microcopy        | Any user-facing text needs writing or reviewing                                                  |
 | typescript-expert  | Generics, type inference, type design     | Complex type errors or non-trivial type design                                                   |
 | security-auditor   | Vulnerability audits, auth, data exposure | Before deploy, after auth/API/input handling work                                                |
@@ -75,7 +75,7 @@ Phase 5 (Sequential, after Phase 4):
   - code-reviewer     → review all changes
   - style-reviewer    → check STYLE.md conformance
   - test-writer       → write tests for new code
-  - tool-runner       → run yarn :lint, yarn :eslint, yarn :test
+  - tool-runner       → run pnpm run lint, pnpm run format:check, pnpm run type-check, pnpm run test:run
 ```
 
 ## Invocation Quality Standard
