@@ -20,6 +20,7 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 
 - **Always run linting**: Use `pnpm run lint` before committing changes
 - **Type checking**: Use `pnpm run type-check` to verify TypeScript compilation
+- **Unit tests**: Use `pnpm run test:run` before committing changes
 - **Never run builds for testing**: Builds are slow and not necessary for verification
 - **Prefer linting/type-check over builds** for quick verification
 
@@ -102,12 +103,22 @@ lib/
 
 ### Testing & Verification
 
-- Use `pnpm run lint` for code linting
+- Use `pnpm run lint` for code linting (ESLint)
 - Use `pnpm run type-check` for TypeScript verification
+- Use `pnpm run test:run` to run the unit tests one time (Vitest)
 - Use `pnpm run format` to automatically format all files
 - Use `pnpm run format:check` to check if files need formatting
+- Use `pnpm run verify` to run lint, format check, type check, and unit tests in sequence
 - Never use `pnpm run build` for testing changes
 - Check IDE diagnostics for immediate feedback
+
+### Continuous Integration
+
+- **Workflow**: `.github/workflows/ci.yml` runs on each pull request and on each push to `main`
+- **Checks**: `Lint` (ESLint) and `Unit tests` (Vitest). Merge a pull request only when the two checks pass
+- **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`
+- **ESLint baseline**: `eslint-suppressions.json` records the errors that existed when ESLint was added. New errors fail the check. Do not add entries to this file to hide new errors
+- **After you fix a recorded error**: Run `pnpm run lint:prune` and commit `eslint-suppressions.json`. If you do not, ESLint stops with exit code 2
 
 ### Authentication Flow
 
