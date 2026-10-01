@@ -95,6 +95,12 @@ describe('getRetweetedBy', () => {
       expect(lastRequest().params?.get('pagination_token')).toBe('page-2');
     });
 
+    it('ignores an empty pagination token', async () => {
+      await getRetweetedBy(tx, { ...baseInput, paginationToken: '' });
+
+      expect(lastRequest().params?.has('pagination_token')).toBe(false);
+    });
+
     it('extracts the tweet id from an x.com status url', async () => {
       await getRetweetedBy(tx, {
         ...baseInput,

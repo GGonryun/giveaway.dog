@@ -96,6 +96,14 @@ describe('createTweet', () => {
       });
     });
 
+    it('forwards the text verbatim including surrounding whitespace', async () => {
+      await createTweet(tx, { ...baseInput, text: '  spaced out \n' });
+
+      expect(apiMock.mock.calls[0][0].body).toEqual({
+        text: '  spaced out \n'
+      });
+    });
+
     it('forwards text longer than 280 characters without validation', async () => {
       const text = 'x'.repeat(300);
 
@@ -140,6 +148,13 @@ describe('createTweet', () => {
         integrationId: 'int-1',
         responseSchema: uploadMediaResponseSchema
       });
+    });
+
+    it('uploads the image within the same transaction', async () => {
+      await createTweet(tx, imageInput);
+
+      expect(apiMock.mock.calls[0][0].tx).toBe(tx);
+      expect(apiMock.mock.calls[1][0].tx).toBe(tx);
     });
 
     it('attaches the uploaded media id to the tweet body', async () => {

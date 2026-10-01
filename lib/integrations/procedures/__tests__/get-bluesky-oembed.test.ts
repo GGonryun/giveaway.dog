@@ -105,8 +105,19 @@ describe('getBlueskyOEmbed', () => {
       const [label, err] = consoleError.mock.calls[0];
       expect(label).toBe('Error fetching Bluesky oEmbed:');
       expect(err).toBeInstanceOf(ApplicationError);
-      expect((err as ApplicationError).message).toBe(
-        'Failed to fetch post from Bluesky'
+      expect(err).toMatchObject({
+        code: 'BAD_GATEWAY',
+        message: 'Failed to fetch post from Bluesky'
+      });
+    });
+
+    it('returns BAD_GATEWAY for a non-ok response even when the body is valid oembed json', async () => {
+      fetchMock.mockResolvedValue(jsonResponse(oembed, { status: 404 }));
+
+      const result = await getBlueskyOEmbed({ postUrl: POST_URL });
+
+      expect(expectFailure(result, 'BAD_GATEWAY').message).toBe(
+        'Unable to load Bluesky post preview'
       );
     });
 
@@ -132,14 +143,19 @@ describe('getBlueskyOEmbed', () => {
   });
 
   describe('when the oembed payload is incomplete', () => {
-    it('returns UNPROCESSABLE_CONTENT when html is missing', async () => {
-      fetchMock.mockResolvedValue(jsonResponse({ ...oembed, html: undefined }));
+    it.each(['html', 'author_name', 'author_url'])(
+      'returns UNPROCESSABLE_CONTENT when %s is missing',
+      async (field) => {
+        fetchMock.mockResolvedValue(
+          jsonResponse({ ...oembed, [field]: undefined })
+        );
 
-      const result = await getBlueskyOEmbed({ postUrl: POST_URL });
+        const result = await getBlueskyOEmbed({ postUrl: POST_URL });
 
-      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
-        /^Output validation failed: /
-      );
-    });
+        expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+          /^Output validation failed: /
+        );
+      }
+    );
   });
 });

@@ -34,7 +34,9 @@ describe('disconnectBluesky', () => {
         {} as unknown as Parameters<typeof disconnectBluesky>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
 
@@ -97,7 +99,9 @@ describe('disconnectBluesky', () => {
 
       const result = await disconnectBluesky({ slug: 'acme' });
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff/
+      );
     });
   });
 });

@@ -58,6 +58,18 @@ describe('getBlueskyReposts', () => {
       });
       expect(mocks.getProfile).not.toHaveBeenCalled();
     });
+
+    it('throws BAD_REQUEST for a non-bluesky url', async () => {
+      await expect(
+        getBlueskyReposts(tx, {
+          agent: mocks.agent,
+          postUrl: 'https://x.com/acme/status/1'
+        })
+      ).rejects.toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'Invalid Bluesky post URL'
+      });
+    });
   });
 
   describe('when resolving the post author', () => {
@@ -67,6 +79,27 @@ describe('getBlueskyReposts', () => {
       expect(mocks.getProfile).toHaveBeenCalledWith({
         actor: 'acme.bsky.social'
       });
+    });
+
+    it('accepts any url that contains the bsky.app profile post path', async () => {
+      await getBlueskyReposts(tx, {
+        agent: mocks.agent,
+        postUrl: 'https://evil-bsky.app/profile/acme/post/3kpost'
+      });
+
+      expect(mocks.getProfile).toHaveBeenCalledWith({ actor: 'acme' });
+    });
+
+    it('takes the first path segment after profile as the handle', async () => {
+      await getBlueskyReposts(tx, {
+        agent: mocks.agent,
+        postUrl: 'https://bsky.app/profile/acme/post/3kpost/post/other'
+      });
+
+      expect(mocks.getProfile).toHaveBeenCalledWith({ actor: 'acme' });
+      expect(mocks.getRepostedBy.mock.calls[0][0].uri).toBe(
+        'at://did:plc:acme/app.bsky.feed.post/3kpost'
+      );
     });
 
     it('throws NOT_FOUND when the profile lookup is unsuccessful', async () => {
@@ -106,6 +139,17 @@ describe('getBlueskyReposts', () => {
       await getBlueskyReposts(tx, {
         agent: mocks.agent,
         postUrl: `${POST_URL}?utm=1`
+      });
+
+      expect(mocks.getRepostedBy.mock.calls[0][0].uri).toBe(
+        'at://did:plc:acme/app.bsky.feed.post/3kpost'
+      );
+    });
+
+    it('stops the record key at a trailing path segment', async () => {
+      await getBlueskyReposts(tx, {
+        agent: mocks.agent,
+        postUrl: `${POST_URL}/reposted-by`
       });
 
       expect(mocks.getRepostedBy.mock.calls[0][0].uri).toBe(

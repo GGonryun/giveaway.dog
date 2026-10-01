@@ -93,7 +93,9 @@ describe('connectTwitter', () => {
         features: ['DELETE_TWEETS']
       } as unknown as Parameters<typeof connectTwitter>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
 
@@ -102,7 +104,10 @@ describe('connectTwitter', () => {
         features: ['GET_PROFILE']
       } as unknown as Parameters<typeof connectTwitter>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
+      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
   });
 
@@ -352,7 +357,9 @@ describe('connectTwitter', () => {
         features: ['GET_PROFILE']
       });
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff/
+      );
     });
   });
 

@@ -70,7 +70,10 @@ describe('getBlueskyLikes', () => {
           agent: mocks.agent,
           postUrl: 'https://x.com/acme/status/1'
         })
-      ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+      ).rejects.toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'Invalid Bluesky post URL'
+      });
     });
   });
 
@@ -99,6 +102,18 @@ describe('getBlueskyLikes', () => {
       });
 
       expect(mocks.getProfile).toHaveBeenCalledWith({ actor: 'acme' });
+    });
+
+    it('takes the first path segment after profile as the handle', async () => {
+      await getBlueskyLikes(tx, {
+        agent: mocks.agent,
+        postUrl: 'https://bsky.app/profile/acme/post/3kpost/post/other'
+      });
+
+      expect(mocks.getProfile).toHaveBeenCalledWith({ actor: 'acme' });
+      expect(mocks.getLikes.mock.calls[0][0].uri).toBe(
+        'at://did:plc:acme/app.bsky.feed.post/3kpost'
+      );
     });
 
     it('throws NOT_FOUND when the profile lookup is unsuccessful', async () => {

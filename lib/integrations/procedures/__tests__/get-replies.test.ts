@@ -98,12 +98,31 @@ describe('getRepliesTo', () => {
     });
 
     it('returns an empty result when the conversation id is an empty string', async () => {
-      apiMock.mockResolvedValueOnce(conversation(''));
+      apiMock.mockResolvedValueOnce({
+        data: [{ id: '100', conversation_id: '' }]
+      });
 
       const result = await getRepliesTo(tx, baseInput);
 
       expect(result).toEqual({ data: [], meta: { result_count: 0 } });
       expect(apiMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('uses the conversation id of the first returned tweet', async () => {
+      apiMock
+        .mockResolvedValueOnce({
+          data: [
+            { id: '100', conversation_id: 'conv-first' },
+            { id: '101', conversation_id: 'conv-second' }
+          ]
+        })
+        .mockResolvedValueOnce({ data: [] });
+
+      await getRepliesTo(tx, baseInput);
+
+      expect(requestAt(1).params?.get('query')).toBe(
+        'conversation_id:conv-first'
+      );
     });
 
     it('propagates errors from the conversation lookup', async () => {
@@ -175,6 +194,16 @@ describe('getRepliesTo', () => {
       expect(requestAt(1).params?.has('pagination_token')).toBe(false);
     });
 
+    it('ignores an empty pagination token', async () => {
+      apiMock
+        .mockResolvedValueOnce(conversation('conv-1'))
+        .mockResolvedValueOnce({ data: [] });
+
+      await getRepliesTo(tx, { ...baseInput, paginationToken: '' });
+
+      expect(requestAt(1).params?.has('next_token')).toBe(false);
+    });
+
     it('keeps only direct replies to the requested tweet', async () => {
       apiMock
         .mockResolvedValueOnce(conversation('conv-1'))
@@ -196,6 +225,24 @@ describe('getRepliesTo', () => {
       const result = await getRepliesTo(tx, baseInput);
 
       expect(result.data?.map((t) => t.id)).toEqual(['201', '206']);
+    });
+
+    it('ignores retweet references to the requested tweet', async () => {
+      apiMock
+        .mockResolvedValueOnce(conversation('conv-1'))
+        .mockResolvedValueOnce({
+          data: [
+            {
+              ...reply('207'),
+              referenced_tweets: [{ type: 'retweeted', id: '100' }]
+            }
+          ]
+        });
+
+      const result = await getRepliesTo(tx, baseInput);
+
+      expect(result.data).toEqual([]);
+      expect(result.meta).toEqual({ result_count: 0 });
     });
 
     it('uses the first replied_to reference when a tweet has several', async () => {
@@ -255,7 +302,7 @@ describe('getRepliesTo', () => {
     it('returns undefined data and a zero count when the search has no data', async () => {
       apiMock
         .mockResolvedValueOnce(conversation('conv-1'))
-        .mockResolvedValueOnce({ meta: { result_count: 0 } });
+        .mockResolvedValueOnce({ meta: { result_count: 7 } });
 
       const result = await getRepliesTo(tx, baseInput);
 

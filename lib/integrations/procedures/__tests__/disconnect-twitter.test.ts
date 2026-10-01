@@ -5,10 +5,13 @@ import { prismaMock, knownRequestError } from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
 
-const team = (role: TeamRole = TeamRole.OWNER) => ({
+const team = (
+  role: TeamRole = TeamRole.OWNER,
+  tier: TeamTier = TeamTier.PRO
+) => ({
   id: 'team-1',
   slug: 'acme',
-  tier: TeamTier.PRO,
+  tier,
   members: [{ id: 'm-1', userId: TEST_USER.id, role }]
 });
 
@@ -36,7 +39,9 @@ describe('disconnectTwitter', () => {
         slug: 'acme'
       } as unknown as Parameters<typeof disconnectTwitter>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
 
@@ -83,6 +88,30 @@ describe('disconnectTwitter', () => {
           provider: IntegrationProvider.TWITTER
         }
       });
+    });
+
+    it('allows a member of a FREE tier team to disconnect', async () => {
+      prismaMock.team.findUnique.mockResolvedValue(
+        team(TeamRole.MEMBER, TeamTier.FREE)
+      );
+
+      const result = await disconnectTwitter(input);
+
+      expect(expectOk(result)).toEqual({ success: true });
+      expect(prismaMock.integration.delete).toHaveBeenCalledTimes(1);
+    });
+
+    it('returns FORBIDDEN when the team tier is not recognised', async () => {
+      prismaMock.team.findUnique.mockResolvedValue(
+        team(TeamRole.OWNER, 'LEGACY' as TeamTier)
+      );
+
+      const result = await disconnectTwitter(input);
+
+      expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+        'This feature requires a team with at least the FREE tier.'
+      );
+      expect(prismaMock.integration.delete).not.toHaveBeenCalled();
     });
 
     it('returns success after deleting', async () => {

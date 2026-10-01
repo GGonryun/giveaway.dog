@@ -82,6 +82,12 @@ describe('getQuoteTweets', () => {
     expect(lastRequest().params?.get('pagination_token')).toBe('qt-next');
   });
 
+  it('ignores an empty pagination token', async () => {
+    await getQuoteTweets(tx, { ...baseInput, paginationToken: '' });
+
+    expect(lastRequest().params?.has('pagination_token')).toBe(false);
+  });
+
   it('extracts the tweet id from an x.com status url', async () => {
     await getQuoteTweets(tx, {
       ...baseInput,

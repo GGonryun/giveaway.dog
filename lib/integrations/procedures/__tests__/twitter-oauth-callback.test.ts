@@ -64,6 +64,7 @@ describe('twitterOAuthCallback', () => {
     vi.useRealTimers();
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
+    vi.restoreAllMocks();
   });
 
   describe('when the caller is not signed in', () => {
@@ -87,7 +88,9 @@ describe('twitterOAuthCallback', () => {
         state: input.state
       } as unknown as Parameters<typeof twitterOAuthCallback>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
@@ -192,6 +195,25 @@ describe('twitterOAuthCallback', () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
     });
+
+    it('logs the body of a failed exchange', async () => {
+      const consoleError = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+      fetchMock.mockResolvedValueOnce(
+        new Response('{"error":"invalid_grant"}', {
+          status: 400,
+          statusText: 'Bad Request'
+        })
+      );
+
+      await twitterOAuthCallback(input);
+
+      expect(consoleError).toHaveBeenCalledWith(
+        'Twitter token exchange failed:',
+        '{"error":"invalid_grant"}'
+      );
+    });
   });
 
   describe('when fetching the X account', () => {
@@ -226,6 +248,22 @@ describe('twitterOAuthCallback', () => {
       expect(failure.data).toBe('expired');
       expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
       expect(prismaMock.integration.create).not.toHaveBeenCalled();
+    });
+
+    it('logs the body of a failed user lookup', async () => {
+      const consoleError = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+      fetchMock.mockResolvedValueOnce(
+        new Response('expired', { status: 401, statusText: 'Unauthorized' })
+      );
+
+      await twitterOAuthCallback(input);
+
+      expect(consoleError).toHaveBeenCalledWith(
+        'Twitter user fetch failed:',
+        'expired'
+      );
     });
 
     it('returns INTERNAL_SERVER_ERROR when the user payload has no data', async () => {
@@ -346,6 +384,37 @@ describe('twitterOAuthCallback', () => {
       expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
         /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff/
       );
+    });
+  });
+
+  describe('when the clock is part way through a second', () => {
+    beforeEach(() => {
+      signIn();
+      vi.setSystemTime(new Date('2026-01-01T00:00:00.900Z'));
+      fetchMock
+        .mockResolvedValueOnce(jsonResponse(tokens))
+        .mockResolvedValueOnce(jsonResponse(me));
+    });
+
+    it('rounds the current time down when creating the expiry', async () => {
+      prismaMock.integration.findFirst.mockResolvedValue(null);
+
+      await twitterOAuthCallback(input);
+
+      expect(prismaMock.integration.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ expires_at: NOW_SECONDS + 7200 })
+      });
+    });
+
+    it('rounds the current time down when updating the expiry', async () => {
+      prismaMock.integration.findFirst.mockResolvedValue({ id: 'int-9' });
+
+      await twitterOAuthCallback(input);
+
+      expect(prismaMock.integration.update).toHaveBeenCalledWith({
+        where: { id: 'int-9' },
+        data: expect.objectContaining({ expires_at: NOW_SECONDS + 7200 })
+      });
     });
   });
 

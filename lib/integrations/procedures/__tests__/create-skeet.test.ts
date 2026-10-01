@@ -200,6 +200,19 @@ describe('createSkeet', () => {
       expect(Array.from(bytes as Uint8Array)).toEqual([1, 2, 3]);
     });
 
+    it('uploads the image once with no upload options', async () => {
+      fetchMock.mockResolvedValue(new Response(new Uint8Array([1, 2, 3])));
+
+      await createSkeet(tx, {
+        teamId: 'team-1',
+        text: 'hi',
+        imageUrl: IMAGE_URL
+      });
+
+      expect(mocks.uploadBlob).toHaveBeenCalledTimes(1);
+      expect(mocks.uploadBlob.mock.calls[0]).toHaveLength(1);
+    });
+
     it('embeds the uploaded blob with empty alt text', async () => {
       fetchMock.mockResolvedValue(new Response(new Uint8Array([1, 2, 3])));
 

@@ -44,7 +44,9 @@ describe('getTwitterOEmbed', () => {
         theme: 'dark'
       });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
@@ -54,7 +56,9 @@ describe('getTwitterOEmbed', () => {
         theme: 'blue'
       } as unknown as Parameters<typeof getTwitterOEmbed>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(fetchMock).not.toHaveBeenCalled();
     });
   });
@@ -144,8 +148,22 @@ describe('getTwitterOEmbed', () => {
       const [label, err] = consoleError.mock.calls[0];
       expect(label).toBe('Error fetching Twitter oEmbed:');
       expect(err).toBeInstanceOf(ApplicationError);
-      expect((err as ApplicationError).message).toBe(
-        'Failed to fetch tweet from Twitter'
+      expect(err).toMatchObject({
+        code: 'BAD_GATEWAY',
+        message: 'Failed to fetch tweet from Twitter'
+      });
+    });
+
+    it('returns BAD_GATEWAY for a non-ok response even when the body is valid oembed json', async () => {
+      fetchMock.mockResolvedValue(jsonResponse(oembed, { status: 500 }));
+
+      const result = await getTwitterOEmbed({
+        postUrl: POST_URL,
+        theme: 'dark'
+      });
+
+      expect(expectFailure(result, 'BAD_GATEWAY').message).toBe(
+        'Unable to load tweet preview'
       );
     });
 
@@ -177,17 +195,22 @@ describe('getTwitterOEmbed', () => {
   });
 
   describe('when the oembed payload is incomplete', () => {
-    it('returns UNPROCESSABLE_CONTENT when the url is missing', async () => {
-      fetchMock.mockResolvedValue(jsonResponse({ ...oembed, url: undefined }));
+    it.each(['html', 'author_name', 'author_url', 'url'])(
+      'returns UNPROCESSABLE_CONTENT when %s is missing',
+      async (field) => {
+        fetchMock.mockResolvedValue(
+          jsonResponse({ ...oembed, [field]: undefined })
+        );
 
-      const result = await getTwitterOEmbed({
-        postUrl: POST_URL,
-        theme: 'dark'
-      });
+        const result = await getTwitterOEmbed({
+          postUrl: POST_URL,
+          theme: 'dark'
+        });
 
-      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
-        /^Output validation failed: /
-      );
-    });
+        expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+          /^Output validation failed: /
+        );
+      }
+    );
   });
 });

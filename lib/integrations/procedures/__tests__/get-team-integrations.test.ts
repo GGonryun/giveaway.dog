@@ -73,7 +73,9 @@ describe('getTeamIntegrations', () => {
         slug: 42
       } as unknown as Parameters<typeof getTeamIntegrations>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
 
@@ -140,7 +142,31 @@ describe('getTeamIntegrations', () => {
 
       const [mapped] = expectOk(await getTeamIntegrations({ slug: 'acme' }));
 
+      expect(mapped.provider).toBe(IntegrationProvider.BLUESKY);
       expect(mapped.url).toBe('https://bsky.app/profile/acme.bsky.social');
+    });
+
+    it('passes each row provider through unchanged', async () => {
+      withIntegrations([
+        integration({ id: 'int-d', provider: IntegrationProvider.DISCORD }),
+        integration({ id: 'int-t', provider: IntegrationProvider.TWITCH })
+      ]);
+
+      const mapped = expectOk(await getTeamIntegrations({ slug: 'acme' }));
+
+      expect(mapped.map((i) => i.provider)).toEqual([
+        IntegrationProvider.DISCORD,
+        IntegrationProvider.TWITCH
+      ]);
+    });
+
+    it('keeps an empty label instead of using the default label', async () => {
+      withIntegrations([integration({ label: '' })]);
+
+      const [mapped] = expectOk(await getTeamIntegrations({ slug: 'acme' }));
+
+      expect(mapped.label).toBe('');
+      expect(mapped.url).toBeNull();
     });
 
     it('returns a null url for providers without a profile url', async () => {
