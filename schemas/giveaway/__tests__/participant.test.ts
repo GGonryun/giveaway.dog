@@ -419,13 +419,38 @@ describe('toParticipantFormFields', () => {
   it('throws a validation error for a field without a type', () => {
     expect(() =>
       toParticipantFormFields([stored({ id: 'field-9', type: null })])
-    ).toThrow('Invalid form field data for field ID field-9');
+    ).toThrow(
+      expect.objectContaining({
+        code: 'VALIDATION_ERROR',
+        message: 'Invalid form field data for field ID field-9'
+      })
+    );
   });
 
-  it('throws a validation error for a field with an empty label', () => {
-    expect(() => toParticipantFormFields([stored({ label: '' })])).toThrow(
-      ApplicationError
-    );
+  it('throws a validation error with the zod cause for a field with an empty label', () => {
+    let error: unknown;
+    try {
+      toParticipantFormFields([stored({ label: '' })]);
+    } catch (caught) {
+      error = caught;
+    }
+
+    expect(error).toBeInstanceOf(ApplicationError);
+    expect(error).toMatchObject({
+      code: 'VALIDATION_ERROR',
+      message: 'Invalid form field data for field ID field-1'
+    });
+    expect((error as ApplicationError).cause).toBeInstanceOf(z.ZodError);
+  });
+
+  it('validates every field and reports the first invalid one', () => {
+    expect(() =>
+      toParticipantFormFields([
+        stored(),
+        stored({ id: 'field-2', label: '' }),
+        stored({ id: 'field-3', label: '' })
+      ])
+    ).toThrow('Invalid form field data for field ID field-2');
   });
 });
 
@@ -556,6 +581,23 @@ describe('toParticipantForm', () => {
       ).toMatchObject({ value: 'https://x.com/typed', isCustom: true });
     });
 
+    it('uses the twitter link when another provider is linked first', () => {
+      expect(
+        toParticipantForm(
+          [twitterField()],
+          user({
+            providers: [
+              {
+                ...twitterProvider('https://bsky.app/profile/jane'),
+                type: 'BLUESKY'
+              },
+              twitterProvider('https://x.com/jane')
+            ]
+          })
+        )[0]
+      ).toMatchObject({ value: 'https://x.com/jane', isCustom: false });
+    });
+
     it('ignores links from other providers', () => {
       expect(
         toParticipantForm(
@@ -609,6 +651,14 @@ describe('isProfileComplete', () => {
     expect(
       isProfileComplete([emailField(), usernameField()], user(), { other: 1 })
     ).toBe(true);
+  });
+
+  it('returns false when a required field after a filled one is missing', () => {
+    expect(
+      isProfileComplete([emailField(), usernameField()], user({ name: null }), {
+        other: 1
+      })
+    ).toBe(false);
   });
 
   it('always requires the email field', () => {

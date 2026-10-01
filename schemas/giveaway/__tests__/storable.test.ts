@@ -386,6 +386,13 @@ describe('toStorableSweepstakesUpdate', () => {
       ]);
     });
 
+    it('keeps the required flag of a username field', () => {
+      expect(
+        formFieldsOf([{ id: 'f1', type: 'USERNAME', required: true }])?.[0]
+          ?.required
+      ).toBe(true);
+    });
+
     it.each(['AGE', 'TWITTER'] as const)(
       'defaults the required flag of a %s field to false',
       (type) => {
@@ -466,6 +473,14 @@ describe('toStorableSweepstakesUpdate', () => {
           }
         }
       });
+    });
+
+    it('stores the name and description display flags independently', () => {
+      expect(
+        toStorableSweepstakesUpdate({
+          design: { displayName: true, displayDescription: false }
+        }).design?.create?.data
+      ).toMatchObject({ displayName: true, displayDescription: false });
     });
   });
 
@@ -637,6 +652,13 @@ describe('toStorableCriteria', () => {
     expect(
       toStorableCriteria({ externalPlatforms: [] })?.create?.externalPlatforms
     ).toEqual([]);
+  });
+
+  it('stores the multiple wins and user selection flags independently', () => {
+    expect(
+      toStorableCriteria({ allowMultipleWins: true, allowUserSelection: false })
+        ?.create
+    ).toMatchObject({ allowMultipleWins: true, allowUserSelection: false });
   });
 
   it('keeps zero and false values', () => {

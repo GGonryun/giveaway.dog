@@ -28,10 +28,10 @@ const storedUser = (id: string): StoredUser => ({
   preferredContactMethod: null
 });
 
-const completion = (participantId: string): Completion => ({
-  id: `completion-${participantId}`,
+const completion = (taskId: string, participantId: string): Completion => ({
+  id: `completion-${taskId}-${participantId}`,
   participantId,
-  taskId: 'task-1',
+  taskId,
   completedAt: CREATED_AT,
   proof: null,
   reason: null,
@@ -51,7 +51,9 @@ const task = (id: string, participantIds: string[]): Task => ({
   sweepstakesId: 'sweep-1',
   index: 0,
   config: null,
-  completions: participantIds.map(completion)
+  completions: participantIds.map((participantId) =>
+    completion(id, participantId)
+  )
 });
 
 const sweepstakes = (overrides: Partial<Payload> = {}): Payload => ({
@@ -200,6 +202,14 @@ describe('tryToPublicSweepstakes', () => {
         prizes: 0,
         participants: 0
       });
+    });
+
+    it('reports zero prizes when the prizes relation has no length', () => {
+      expect(
+        tryToPublicSweepstakes(
+          sweepstakes({ prizes: {} as unknown as Payload['prizes'] })
+        )?.prizes
+      ).toBe(0);
     });
 
     it('turns a null slug and banner into undefined', () => {

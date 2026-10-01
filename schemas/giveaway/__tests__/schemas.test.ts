@@ -115,6 +115,13 @@ describe('prizeSchema', () => {
     expect(prizeSchema.parse(prize)).toEqual(prize);
   });
 
+  it('accepts a name of exactly 100 characters', () => {
+    expect(
+      prizeSchema.safeParse({ id: 'p1', name: 'a'.repeat(100), quota: 1 })
+        .success
+    ).toBe(true);
+  });
+
   it('rejects a name shorter than 3 characters', () => {
     const result = prizeSchema.safeParse({ id: 'p1', name: 'ab', quota: 1 });
 
@@ -408,6 +415,14 @@ describe('toRegionalRestrictionDescription', () => {
       })
     ).toBe('Not available in: Canada');
   });
+
+  it('describes a restriction without a filter as an exclusion', () => {
+    expect(
+      toRegionalRestrictionDescription({
+        regions: ['country:CA']
+      } as unknown as RegionalRestrictionSchema)
+    ).toBe('Not available in: Canada');
+  });
 });
 
 describe('minimumAgeRestrictionSchema', () => {
@@ -465,6 +480,12 @@ describe('visibility shape of the giveaway form', () => {
 
   it.each([null, undefined])('accepts a %s slug', (slug) => {
     expect(visibility.parse({ visibility: 'UNLISTED', slug }).slug).toBe(slug);
+  });
+
+  it.each([3, 50])('accepts a slug of exactly %s characters', (length) => {
+    const slug = 'a'.repeat(length);
+
+    expect(visibility.parse({ visibility: 'PUBLIC', slug }).slug).toBe(slug);
   });
 
   it('rejects a slug shorter than 3 characters', () => {
@@ -557,6 +578,13 @@ describe('sweepstakesWinnerCriteriaSchema', () => {
     expect(messagesOf(result)).toEqual(['Quality score must be between 0-100']);
   });
 
+  it('accepts a quality score of exactly 100', () => {
+    expect(
+      sweepstakesWinnerCriteriaSchema.parse({ minQualityScore: 100 })
+        .minQualityScore
+    ).toBe(100);
+  });
+
   it('rejects a quality score above 100', () => {
     const result = sweepstakesWinnerCriteriaSchema.safeParse({
       minQualityScore: 101
@@ -636,6 +664,15 @@ describe('audience shape of the giveaway form', () => {
     ).toEqual([
       { id: 'f1', label: 'Username', type: 'USERNAME', required: false }
     ]);
+  });
+
+  it('validates the regional restriction', () => {
+    const result = audience.safeParse({
+      allowedIdentities: ['EMAIL'],
+      regionalRestriction: { regions: [], filter: 'INCLUDE' }
+    });
+
+    expect(pathsOf(result)).toEqual([['regionalRestriction', 'regions']]);
   });
 
   it('requires at least one allowed identity', () => {
@@ -904,6 +941,14 @@ describe('baseGiveawayFormSchema', () => {
       ['setup', 'name'],
       ['setup', 'description']
     ]);
+  });
+
+  it('accepts a setup name and description of exactly 3 characters', () => {
+    const result = baseGiveawayFormSchema({ validate: false }).safeParse(
+      validForm({ setup: { name: 'abc', description: 'def', banner: '' } })
+    );
+
+    expect(result.success).toBe(true);
   });
 
   it('accepts an end date in the past when validation is off', () => {

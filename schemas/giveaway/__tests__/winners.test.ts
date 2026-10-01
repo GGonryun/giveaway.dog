@@ -56,6 +56,12 @@ describe('winnerLeaderboardSchema', () => {
     expect(result.error?.issues.map((i) => i.path)).toEqual([['userName']]);
   });
 
+  it('rejects a win count that is not a number', () => {
+    const result = winnerLeaderboardSchema.safeParse(entry({ winCount: '1' }));
+
+    expect(result.error?.issues.map((i) => i.path)).toEqual([['winCount']]);
+  });
+
   it('rejects a win timestamp that cannot be parsed', () => {
     const result = winnerLeaderboardSchema.safeParse(
       entry({ wins: [win({ wonAt: 'not a date' })] })

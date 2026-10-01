@@ -680,6 +680,22 @@ describe('toSweepstakesInput', () => {
       });
     });
 
+    it('reads the multiple wins and user selection flags independently', () => {
+      const input = toSweepstakesInput(
+        emptyPayload({
+          criteria: criteria({
+            allowMultipleWins: true,
+            allowUserSelection: false
+          })
+        })
+      );
+
+      expect(input.criteria).toMatchObject({
+        allowMultipleWins: true,
+        allowUserSelection: false
+      });
+    });
+
     it('keeps a minimum quality score of zero', () => {
       const input = toSweepstakesInput(
         emptyPayload({ criteria: criteria({ minQualityScore: 0 }) })
@@ -762,6 +778,12 @@ describe('toDesignInput', () => {
     expect(
       toDesignInput(design({ displayName: false, displayDescription: false }))
     ).toMatchObject({ displayName: false, displayDescription: false });
+  });
+
+  it('reads the name and description display flags independently', () => {
+    expect(
+      toDesignInput(design({ displayName: true, displayDescription: false }))
+    ).toMatchObject({ displayName: true, displayDescription: false });
   });
 
   it('returns the shared default background for an unknown background type', () => {
