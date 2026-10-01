@@ -58,7 +58,10 @@ describe('getSweepstakesAllocations', () => {
 
       const result = await getSweepstakesAllocations({ sweepstakesId: 'sw-1' });
 
-      expect(result.ok).toBe(true);
+      expect(expectOk(result)).toEqual({
+        totalAllocations: 0,
+        allocationsByPrize: []
+      });
     });
 
     it('returns UNPROCESSABLE_CONTENT when sweepstakesId is missing', async () => {
@@ -193,6 +196,58 @@ describe('getSweepstakesAllocations', () => {
         allocationCount: 4,
         badge: 'none'
       });
+    });
+  });
+
+  describe('grouping', () => {
+    it('omits prizes that have no allocations', async () => {
+      arrange({
+        total: 2,
+        groups: [group('p-1', 2)],
+        prizes: [prize('p-1', 'A'), prize('p-2', 'B')]
+      });
+
+      const data = expectOk(
+        await getSweepstakesAllocations({ sweepstakesId: 'sw-1' })
+      );
+
+      expect(data.allocationsByPrize.map((a) => a.prizeId)).toEqual(['p-1']);
+    });
+
+    it('keeps the order of the grouped query rather than the prize list', async () => {
+      arrange({
+        total: 3,
+        groups: [group('p-2', 1), group('p-1', 2)],
+        prizes: [prize('p-1', 'A'), prize('p-2', 'B')]
+      });
+
+      const data = expectOk(
+        await getSweepstakesAllocations({ sweepstakesId: 'sw-1' })
+      );
+
+      expect(data.allocationsByPrize).toEqual([
+        {
+          prizeId: 'p-2',
+          prizeName: 'B',
+          allocationCount: 1,
+          badge: 'unpopular'
+        },
+        { prizeId: 'p-1', prizeName: 'A', allocationCount: 2, badge: 'popular' }
+      ]);
+    });
+
+    it('reports the counted total even when it differs from the grouped counts', async () => {
+      arrange({
+        total: 10,
+        groups: [group('p-1', 2)],
+        prizes: [prize('p-1', 'A')]
+      });
+
+      const data = expectOk(
+        await getSweepstakesAllocations({ sweepstakesId: 'sw-1' })
+      );
+
+      expect(data.totalAllocations).toBe(10);
     });
   });
 
@@ -351,8 +406,22 @@ describe('getSweepstakesAllocations', () => {
 
       const result = await getSweepstakesAllocations({ sweepstakesId: 'sw-1' });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
       expect(prismaMock.sweepstakesAllocation.groupBy).not.toHaveBeenCalled();
+      expect(prismaMock.prize.findMany).not.toHaveBeenCalled();
+    });
+
+    it('maps a generic error from the prize query to INTERNAL_SERVER_ERROR with its message', async () => {
+      arrange({ total: 1, groups: [group('p-1', 1)], prizes: [] });
+      prismaMock.prize.findMany.mockRejectedValue(new Error('prizes offline'));
+
+      const result = await getSweepstakesAllocations({ sweepstakesId: 'sw-1' });
+
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
+        'prizes offline'
+      );
     });
   });
 });

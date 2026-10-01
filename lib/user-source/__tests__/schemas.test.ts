@@ -127,6 +127,15 @@ describe('user source schemas', () => {
       expect(parseUserSourceSchema([])).toEqual([]);
     });
 
+    it('returns a parsed copy rather than the input array', () => {
+      const input = ['SIGNUP', 'TWITCH_IMPORT'];
+
+      const result = parseUserSourceSchema(input);
+
+      expect(result).toEqual(input);
+      expect(result).not.toBe(input);
+    });
+
     it('throws a VALIDATION_ERROR for an invalid list', () => {
       const error = catchError(() => parseUserSourceSchema(['NOPE']));
 

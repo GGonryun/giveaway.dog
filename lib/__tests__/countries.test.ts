@@ -141,6 +141,10 @@ describe('countries', () => {
     it('returns false for country regions', () => {
       expect(isContinent('country:EU')).toBe(false);
     });
+
+    it('requires a colon right after the continent prefix', () => {
+      expect(isContinent('continental:EU' as Continent)).toBe(false);
+    });
   });
 
   describe('isCountry', () => {
@@ -150,6 +154,10 @@ describe('countries', () => {
 
     it('returns false for continent regions', () => {
       expect(isCountry('continent:NA')).toBe(false);
+    });
+
+    it('requires a colon right after the country prefix', () => {
+      expect(isCountry('countryside:US' as Country)).toBe(false);
     });
   });
 

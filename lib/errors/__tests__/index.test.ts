@@ -186,6 +186,7 @@ describe('errors', () => {
 
         expect(response.status).toBe(429);
         expect(response.headers.get('Retry-After')).toBe('3');
+        expect(response.headers.get('Content-Type')).toBe('application/json');
         expect(await response.json()).toEqual({
           success: false,
           error: 'Slow down',

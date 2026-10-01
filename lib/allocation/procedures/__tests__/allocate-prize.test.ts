@@ -50,7 +50,9 @@ describe('allocatePrize', () => {
         prizeId: 'prize-1'
       } as unknown as Parameters<typeof allocatePrize>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      const failure = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(failure.message).toMatch(/^Input validation failed: /);
+      expect(failure.message).toContain('participantId');
       expect(prismaMock.sweepstakesAllocation.upsert).not.toHaveBeenCalled();
     });
   });
@@ -131,7 +133,9 @@ describe('allocatePrize', () => {
 
       const result = await allocatePrize(validInput);
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: [A-Za-z0-9_-]{6}$/
+      );
     });
 
     it('maps a generic error to INTERNAL_SERVER_ERROR with its message', async () => {
