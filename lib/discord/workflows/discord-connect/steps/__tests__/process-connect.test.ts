@@ -52,6 +52,12 @@ const withData = (
     data: { id: 'command-1', name: 'connect', type: 1, ...data }
   });
 
+const splitGuildIds = () =>
+  commandInteraction({
+    guild: discordGuild({ id: 'guild-object' }),
+    guild_id: 'guild-top-level'
+  });
+
 describe('processConnect', () => {
   const fetchMock = vi.fn<typeof fetch>();
   const consoleError = vi.fn();
@@ -260,6 +266,25 @@ describe('processConnect', () => {
           }
         }
       });
+    });
+
+    it('fetches the guild named by the guild object rather than the top-level guild id', async () => {
+      await processConnect({ body: splitGuildIds() });
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://discord.com/api/v10/guilds/guild-object',
+        expect.any(Object)
+      );
+    });
+
+    it('stores the guild object id rather than the top-level guild id as the account id', async () => {
+      await processConnect({ body: splitGuildIds() });
+
+      expect(prismaMock.integration.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ account_id: 'guild-object' })
+        })
+      );
     });
 
     it('returns a success embed linking to the team integrations page', async () => {

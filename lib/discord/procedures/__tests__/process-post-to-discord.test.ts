@@ -186,6 +186,14 @@ describe('processPostToDiscord', () => {
     it('resolves to undefined', async () => {
       await expect(run()).resolves.toBeUndefined();
     });
+
+    it('logs the posted message id and the job id', async () => {
+      await run();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[processPostToDiscord] Successfully posted message msg-1 for job job-1'
+      );
+    });
   });
 
   describe('when the job requests an interaction task', () => {
@@ -251,6 +259,18 @@ describe('processPostToDiscord', () => {
       const [jobOrder] =
         prismaMock.automatedPostJob.update.mock.invocationCallOrder;
       expect(taskOrder).toBeLessThan(jobOrder);
+    });
+
+    it('creates the task on the id of the loaded sweepstakes record', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        discordPostSweepstakes({ id: 'sweep-from-db' })
+      );
+
+      await run(interactionJob());
+
+      expect(prismaMock.sweepstakes.update).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { id: 'sweep-from-db' } })
+      );
     });
 
     it('uses index zero when the sweepstakes has no tasks yet', async () => {
@@ -391,6 +411,15 @@ describe('processPostToDiscord', () => {
         run(buildJob({ tasks: ['INTERACTION'] }))
       ).rejects.toMatchObject({ code: 'NOT_FOUND' });
       expect(prismaMock.sweepstakes.update).not.toHaveBeenCalled();
+    });
+
+    it('does not log a success message when the post fails', async () => {
+      fetchMock.mockResolvedValue(jsonResponse({}, { status: 403 }));
+
+      await expect(run()).rejects.toMatchObject({ code: 'FORBIDDEN' });
+      expect(console.info).not.toHaveBeenCalledWith(
+        expect.stringContaining('Successfully posted message')
+      );
     });
   });
 

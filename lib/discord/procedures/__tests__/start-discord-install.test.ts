@@ -66,6 +66,21 @@ describe('startDiscordInstall', () => {
       });
     });
 
+    it('stores the slug of the team record rather than the requested slug', async () => {
+      prismaMock.team.findUnique.mockResolvedValue({
+        ...teamWithRole(),
+        slug: 'acme-from-db'
+      });
+
+      await startDiscordInstall({ slug: 'acme' });
+
+      expect(prismaMock.state.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: { value: expect.objectContaining({ teamSlug: 'acme-from-db' }) }
+        })
+      );
+    });
+
     it('removes previously pending discord integrations of the team', async () => {
       await startDiscordInstall({ slug: 'acme' });
 
@@ -147,7 +162,9 @@ describe('startDiscordInstall', () => {
 
       const result = await startDiscordInstall({ slug: 'acme' });
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff/
+      );
       expect(prismaMock.state.create).toHaveBeenCalled();
     });
 

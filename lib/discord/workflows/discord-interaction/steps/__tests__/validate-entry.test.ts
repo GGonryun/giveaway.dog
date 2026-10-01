@@ -47,6 +47,31 @@ describe('validateEntry', () => {
         valid: false,
         content: 'Unable to identify your Discord account.'
       });
+      expect(prismaMock.user.findFirst).not.toHaveBeenCalled();
+    });
+
+    it('identifies a member without a user object by the top-level user id', async () => {
+      prismaMock.user.findFirst.mockResolvedValue(null);
+      const member = {
+        ...discordMember(),
+        user: undefined
+      } as unknown as ReturnType<typeof discordMember>;
+
+      const result = await validateEntry(
+        args({
+          body: buttonInteraction({
+            member,
+            user: discordUser({ id: 'top-level' })
+          })
+        })
+      );
+
+      expect(result).toEqual({
+        valid: true,
+        discordUserId: 'top-level',
+        member,
+        existingUserId: null
+      });
     });
 
     it('rejects a non-member user even when no roles are required', async () => {

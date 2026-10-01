@@ -121,7 +121,8 @@ describe('fetchTask', () => {
       );
 
       await expect(fetchTask({ taskId: 'task-1' })).rejects.toMatchObject({
-        code: 'INTERNAL_SERVER_ERROR'
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to parse task config'
       });
     });
   });
@@ -167,6 +168,21 @@ describe('fetchTask', () => {
       expect(result).toEqual({ status: 'ended', sweepstakesId: 'sweep-1' });
     });
 
+    it('reports the id of the related sweepstakes record when ended', async () => {
+      prismaMock.task.findUnique.mockResolvedValue({
+        ...storedTaskWith({ timing: { endDate: PAST } }),
+        sweepstakesId: 'sweep-column',
+        sweepstakes: { id: 'sweep-relation', status: 'ACTIVE', timing: null }
+      });
+
+      const result = await fetchTask({ taskId: 'task-1' });
+
+      expect(result).toEqual({
+        status: 'ended',
+        sweepstakesId: 'sweep-relation'
+      });
+    });
+
     it('reports an end date one millisecond in the past as ended', async () => {
       prismaMock.task.findUnique.mockResolvedValue(
         storedTaskWith({
@@ -195,6 +211,27 @@ describe('fetchTask', () => {
         roles: ['r-1', 'r-2'],
         sweepstakesId: 'sweep-1'
       });
+    });
+
+    it('returns the id of the related sweepstakes record rather than the task column', async () => {
+      prismaMock.task.findUnique.mockResolvedValue({
+        ...storedTaskWith(),
+        sweepstakesId: 'sweep-column',
+        sweepstakes: {
+          id: 'sweep-relation',
+          status: 'ACTIVE',
+          timing: { endDate: FUTURE }
+        }
+      });
+
+      const result = await fetchTask({ taskId: 'task-1' });
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          status: 'active',
+          sweepstakesId: 'sweep-relation'
+        })
+      );
     });
 
     it('returns an empty role list when the task has no roles', async () => {

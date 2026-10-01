@@ -109,6 +109,22 @@ describe('regenerateDiscordKey', () => {
       });
     });
 
+    it('stores the slug of the team record rather than the requested slug', async () => {
+      prismaMock.team.findUnique.mockResolvedValue({
+        ...teamWithRole(),
+        slug: 'acme-from-db'
+      });
+      prismaMock.integration.findFirst.mockResolvedValue(null);
+
+      await regenerateDiscordKey(input);
+
+      expect(prismaMock.state.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: { value: expect.objectContaining({ teamSlug: 'acme-from-db' }) }
+        })
+      );
+    });
+
     it('points the integration at the new state and returns the new state id', async () => {
       prismaMock.integration.findFirst.mockResolvedValue({
         id: 'integration-1',

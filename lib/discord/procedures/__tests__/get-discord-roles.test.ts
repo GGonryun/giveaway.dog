@@ -113,6 +113,21 @@ describe('getDiscordRoles', () => {
       );
     });
 
+    it('requests a guild named null when the integration has no guild id yet', async () => {
+      prismaMock.integration.findFirst.mockResolvedValue({
+        ...integration,
+        account_id: null
+      });
+      fetchMock.mockResolvedValue(jsonResponse([]));
+
+      await getDiscordRoles(input);
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://discord.com/api/v10/guilds/null/roles',
+        expect.any(Object)
+      );
+    });
+
     it('sends the literal string undefined when the bot token is not configured', async () => {
       vi.stubEnv('DISCORD_BOT_TOKEN', undefined);
       fetchMock.mockResolvedValue(jsonResponse([]));
