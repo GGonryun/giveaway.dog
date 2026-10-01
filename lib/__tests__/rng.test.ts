@@ -50,14 +50,14 @@ describe('rng', () => {
       ]).toEqual([10, 9, 6]);
     });
 
-    it('always returns an integer within the range with real randomness', () => {
-      const results = Array.from({ length: 200 }, () =>
-        rng.randomBetween(1, 3)
-      );
+    it('maps equal slices of the random range onto each integer in the range', () => {
+      const draws = [0, 0.33, 0.34, 0.66, 0.67, 0.99];
+      const random = vi.spyOn(Math, 'random');
+      draws.forEach((draw) => random.mockReturnValueOnce(draw));
 
-      expect(
-        results.every((n) => Number.isInteger(n) && n >= 1 && n <= 3)
-      ).toBe(true);
+      expect(draws.map(() => rng.randomBetween(1, 3))).toEqual([
+        1, 1, 2, 2, 3, 3
+      ]);
     });
   });
 
@@ -118,7 +118,12 @@ describe('rng', () => {
       expect(random).not.toHaveBeenCalled();
     });
 
-    it('keeps every element with real randomness', () => {
+    it('keeps every element for a varied draw sequence', () => {
+      const draws = [0.1, 0.9, 0.4, 0.7, 0.2, 0.5, 0.8, 0.3];
+      let call = 0;
+      vi.spyOn(Math, 'random').mockImplementation(
+        () => draws[call++ % draws.length]
+      );
       const input = Array.from({ length: 50 }, (_, i) => i);
 
       expect([...rng.shuffleArray(input)].sort((a, b) => a - b)).toEqual(input);

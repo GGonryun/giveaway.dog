@@ -61,6 +61,51 @@ const remoteGeo = {
   }
 };
 
+const fullGeo = {
+  ...remoteGeo,
+  currency: {
+    code: 'USD',
+    name: 'US Dollar',
+    symbol: '$',
+    plural: 'US dollars',
+    exchange_rate: 1
+  },
+  security: {
+    anonymous: false,
+    proxy: false,
+    vpn: true,
+    tor: false,
+    hosting: false
+  },
+  rate: { limit: 10000, remaining: 9999 }
+};
+
+const withPath = (
+  path: string,
+  update: (target: Record<string, unknown>, key: string) => void
+) => {
+  const [section, key] = path.split('.');
+  const copy: Record<string, unknown> = { ...fullGeo };
+  if (key === undefined) {
+    update(copy, section);
+    return copy;
+  }
+  const nested = { ...(copy[section] as Record<string, unknown>) };
+  update(nested, key);
+  copy[section] = nested;
+  return copy;
+};
+
+const withoutPath = (path: string) =>
+  withPath(path, (target, key) => {
+    delete target[key];
+  });
+
+const withValueAt = (path: string, value: unknown) =>
+  withPath(path, (target, key) => {
+    target[key] = value;
+  });
+
 const catchError = (promise: Promise<unknown>) =>
   promise.then(
     () => {
@@ -115,28 +160,35 @@ describe('ip.geolocation', () => {
   });
 
   describe('when the ip is invalid', () => {
-    it.each(['not-an-ip', '256.1.1.1', '1.2.3', '1.2.3.4 '])(
-      'rejects %s with BAD_GATEWAY',
-      async (value) => {
-        const error = await catchError(ip.geolocation(value));
+    const invalidIps = [
+      'not-an-ip',
+      '256.1.1.1',
+      '1.2.3',
+      '1.2.3.4 ',
+      'a1.2.3.4',
+      '1.2.3.4.5',
+      '1:2:3:4:5:6:7',
+      'g1:2:3:4:5:6:7:8',
+      '::zz'
+    ];
 
-        expectBadGateway(error);
+    it.each(invalidIps)('rejects %s with BAD_GATEWAY', async (value) => {
+      const error = await catchError(ip.geolocation(value));
+
+      expectBadGateway(error);
+    });
+
+    it.each(invalidIps)(
+      'rejects %s before calling the geolocation service',
+      async (value) => {
+        await catchError(ip.geolocation(value));
+
+        expect(console.warn).toHaveBeenCalledWith(
+          `Invalid IP address: ${value}`
+        );
+        expect(m.get).not.toHaveBeenCalled();
       }
     );
-
-    it('warns about the invalid ip', async () => {
-      await catchError(ip.geolocation('not-an-ip'));
-
-      expect(console.warn).toHaveBeenCalledWith(
-        'Invalid IP address: not-an-ip'
-      );
-    });
-
-    it('does not call the geolocation service', async () => {
-      await catchError(ip.geolocation('not-an-ip'));
-
-      expect(m.get).not.toHaveBeenCalled();
-    });
   });
 
   describe('when the ip is valid', () => {
@@ -177,27 +229,9 @@ describe('ip.geolocation', () => {
     });
 
     it('keeps the optional currency, security and rate sections', async () => {
-      const full = {
-        ...remoteGeo,
-        currency: {
-          code: 'USD',
-          name: 'US Dollar',
-          symbol: '$',
-          plural: 'US dollars',
-          exchange_rate: 1
-        },
-        security: {
-          anonymous: false,
-          proxy: false,
-          vpn: true,
-          tor: false,
-          hosting: false
-        },
-        rate: { limit: 10000, remaining: 9999 }
-      };
-      respondWithJson(full);
+      respondWithJson(fullGeo);
 
-      await expect(ip.geolocation('203.0.113.7')).resolves.toEqual(full);
+      await expect(ip.geolocation('203.0.113.7')).resolves.toEqual(fullGeo);
     });
 
     it('assembles a response body delivered in several chunks', async () => {
@@ -233,6 +267,42 @@ describe('ip.geolocation', () => {
 
       expect(m.get).toHaveBeenCalledWith(
         'https://ipwho.is/x/../admin?ab:cd::',
+        expect.anything(),
+        expect.any(Function)
+      );
+    });
+
+    it.each(['255.255.255.255', '249.240.199.0', '0.0.0.0'])(
+      'treats the IPv4 boundary address %s as valid',
+      async (value) => {
+        respondWithJson({ ...remoteGeo, ip: value });
+
+        await ip.geolocation(value);
+
+        expect(m.get).toHaveBeenCalledWith(
+          `https://ipwho.is/${value}`,
+          expect.anything(),
+          expect.any(Function)
+        );
+      }
+    );
+
+    it.each([
+      ['an unspecified IPv6 address', '::'],
+      ['a full IPv6 address with short groups', '1:2:3:4:5:6:7:8'],
+      ['a string ending in a double colon', 'evil::'],
+      ['a string with a hex group and double colon in the middle', '1::g'],
+      [
+        'a path that starts with a hex group and double colon',
+        'a::/../admin?x=1'
+      ]
+    ])('treats %s as IPv6', async (_label, value) => {
+      respondWithJson(remoteGeo);
+
+      await ip.geolocation(value);
+
+      expect(m.get).toHaveBeenCalledWith(
+        `https://ipwho.is/${value}`,
         expect.anything(),
         expect.any(Function)
       );
@@ -279,12 +349,30 @@ describe('ip.geolocation', () => {
       expectBadGateway(error);
     });
 
+    it('neither logs nor validates a body that is not JSON', async () => {
+      respondWith(['<html>rate limited</html>']);
+
+      await catchError(ip.geolocation('203.0.113.7'));
+
+      expect(console.info).not.toHaveBeenCalled();
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+
     it('rejects with BAD_GATEWAY when the request errors', async () => {
       failWith(new Error('ECONNRESET'));
 
       const error = await catchError(ip.geolocation('203.0.113.7'));
 
       expectBadGateway(error);
+    });
+
+    it('neither logs nor validates anything when the request errors', async () => {
+      failWith(new Error('ECONNRESET'));
+
+      await catchError(ip.geolocation('203.0.113.7'));
+
+      expect(console.info).not.toHaveBeenCalled();
+      expect(console.warn).not.toHaveBeenCalled();
     });
 
     it('does not attach the underlying network error as the cause', async () => {
@@ -348,19 +436,104 @@ describe('ip.ipSchema', () => {
     expect(ip.ipSchema.safeParse(remoteGeo).success).toBe(true);
   });
 
+  it('accepts data with every optional section', () => {
+    expect(ip.ipSchema.safeParse(fullGeo).success).toBe(true);
+  });
+
+  it.each(['currency', 'security', 'rate'])(
+    'accepts data without the optional %s section',
+    (section) => {
+      expect(ip.ipSchema.safeParse(withoutPath(section)).success).toBe(true);
+    }
+  );
+
   it.each([
     'ip',
     'success',
+    'type',
+    'continent',
+    'continent_code',
+    'country',
     'country_code',
+    'region',
+    'region_code',
+    'city',
+    'latitude',
+    'longitude',
+    'is_eu',
+    'postal',
+    'calling_code',
+    'capital',
+    'borders',
     'flag',
     'connection',
     'timezone'
-  ] as const)('requires %s', (key) => {
-    const rest: Record<string, unknown> = { ...remoteGeo };
-    delete rest[key];
-
-    expect(ip.ipSchema.safeParse(rest).success).toBe(false);
+  ])('requires the top level %s field', (path) => {
+    expect(ip.ipSchema.safeParse(withoutPath(path)).success).toBe(false);
   });
+
+  it.each([
+    'flag.img',
+    'flag.emoji',
+    'flag.emoji_unicode',
+    'connection.asn',
+    'connection.org',
+    'connection.isp',
+    'connection.domain',
+    'timezone.id',
+    'timezone.abbr',
+    'timezone.is_dst',
+    'timezone.offset',
+    'timezone.utc',
+    'currency.code',
+    'currency.name',
+    'currency.symbol',
+    'currency.plural',
+    'currency.exchange_rate',
+    'security.anonymous',
+    'security.proxy',
+    'security.vpn',
+    'security.tor',
+    'security.hosting',
+    'rate.limit',
+    'rate.remaining'
+  ])('requires the nested %s field', (path) => {
+    expect(ip.ipSchema.safeParse(withoutPath(path)).success).toBe(false);
+  });
+
+  it.each([
+    'latitude',
+    'longitude',
+    'connection.asn',
+    'timezone.offset',
+    'currency.exchange_rate',
+    'rate.limit',
+    'rate.remaining'
+  ])('rejects a numeric string for the number field %s', (path) => {
+    expect(ip.ipSchema.safeParse(withValueAt(path, '1')).success).toBe(false);
+  });
+
+  it.each([
+    'success',
+    'is_eu',
+    'timezone.is_dst',
+    'security.anonymous',
+    'security.proxy',
+    'security.vpn',
+    'security.tor',
+    'security.hosting'
+  ])('rejects a string for the boolean field %s', (path) => {
+    expect(ip.ipSchema.safeParse(withValueAt(path, 'true')).success).toBe(
+      false
+    );
+  });
+
+  it.each(['ip', 'country_code', 'flag.emoji', 'timezone.id', 'currency.code'])(
+    'rejects a number for the string field %s',
+    (path) => {
+      expect(ip.ipSchema.safeParse(withValueAt(path, 1)).success).toBe(false);
+    }
+  );
 
   it('rejects an invalid optional security section', () => {
     expect(

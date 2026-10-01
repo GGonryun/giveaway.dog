@@ -58,6 +58,24 @@ describe('html.toMarkdown', () => {
         '```\na\n\nb\n```'
       );
     });
+
+    it('collapses exactly three newlines inside code blocks to two', () => {
+      expect(html.toMarkdown('<pre><code>a\n\n\nb</code></pre>')).toBe(
+        '```\na\n\nb\n```'
+      );
+    });
+
+    it('collapses every run of three or more newlines', () => {
+      expect(html.toMarkdown('<pre><code>a\n\n\nb\n\n\n\nc</code></pre>')).toBe(
+        '```\na\n\nb\n\nc\n```'
+      );
+    });
+
+    it('keeps two consecutive newlines inside code blocks', () => {
+      expect(html.toMarkdown('<pre><code>a\n\nb</code></pre>')).toBe(
+        '```\na\n\nb\n```'
+      );
+    });
   });
 
   describe('whitespace handling', () => {
@@ -71,6 +89,14 @@ describe('html.toMarkdown', () => {
 
     it('trims surrounding whitespace', () => {
       expect(html.toMarkdown('   <p>  padded  </p>   ')).toBe('padded');
+    });
+
+    it('trims a leading non breaking space that the converter keeps', () => {
+      expect(html.toMarkdown('<p>&nbsp;x</p>')).toBe('x');
+    });
+
+    it('trims the hard break markup produced by a leading line break', () => {
+      expect(html.toMarkdown('<br>x')).toBe('x');
     });
 
     it('drops empty paragraphs between content', () => {

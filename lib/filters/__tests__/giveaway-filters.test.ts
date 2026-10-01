@@ -90,6 +90,34 @@ describe('giveawayFiltersSchema', () => {
     expect(giveawayFiltersSchema.safeParse(input).success).toBe(false);
   });
 
+  it('accepts zero as the lowest maxEntrants', () => {
+    expect(giveawayFiltersSchema.parse({ maxEntrants: 0 })).toEqual({
+      maxEntrants: 0
+    });
+  });
+
+  it('accepts an empty search string', () => {
+    expect(giveawayFiltersSchema.parse({ search: '' })).toEqual({
+      search: ''
+    });
+  });
+
+  it('accepts hideEntered set to false', () => {
+    expect(giveawayFiltersSchema.parse({ hideEntered: false })).toEqual({
+      hideEntered: false
+    });
+  });
+
+  it('does not cap entrant counts or the page number', () => {
+    const filters = {
+      minEntrants: 1_000_000,
+      maxEntrants: Number.MAX_SAFE_INTEGER,
+      page: 100_000
+    };
+
+    expect(giveawayFiltersSchema.parse(filters)).toEqual(filters);
+  });
+
   it('does not enforce minEntrants to be at most maxEntrants', () => {
     expect(
       giveawayFiltersSchema.safeParse({ minEntrants: 10, maxEntrants: 1 })

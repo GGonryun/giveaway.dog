@@ -29,6 +29,14 @@ describe('strings.replace', () => {
     expect(strings.replace(target, value, '_')).toBe(expected);
   });
 
+  it('treats braces literally instead of as a quantifier', () => {
+    expect(strings.replace('a{2} aa', 'a{2}', 'X')).toBe('X aa');
+  });
+
+  it('treats a dot literally instead of matching any character', () => {
+    expect(strings.replace('axb a.b', 'a.b', 'X')).toBe('axb X');
+  });
+
   it('converts numeric values and replacements to strings', () => {
     expect(strings.replace('Win 1 of 1 prizes', 1, 3)).toBe(
       'Win 3 of 3 prizes'

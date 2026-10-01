@@ -135,6 +135,20 @@ describe('timezone.localTime', () => {
     ).toBe('2025-11-21T09:30:00.000Z');
   });
 
+  it('converts a negative half hour offset', () => {
+    expect(
+      timezone
+        .localTime('2025-11-21T15:00:00', 'America/St_Johns')
+        .toISOString()
+    ).toBe('2025-11-21T18:30:00.000Z');
+  });
+
+  it('keeps the wall time for a zone with a zero offset', () => {
+    expect(
+      timezone.localTime('2025-11-21T15:00:00', 'Africa/Abidjan').toISOString()
+    ).toBe('2025-11-21T15:00:00.000Z');
+  });
+
   it('ignores an existing Z suffix and treats the time as local', () => {
     expect(
       timezone.localTime('2025-11-21T15:00:00.000Z', 'Asia/Tokyo').toISOString()
