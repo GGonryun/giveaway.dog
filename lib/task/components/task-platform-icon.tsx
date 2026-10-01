@@ -61,8 +61,6 @@ export const TaskPlatformIcon: React.FC<{ type: TaskType }> = ({ type }) => {
       return <SocialLinkedInIcon className="h-4 w-4 text-[#0A66C2]" />;
     case 'ANONYMOUS':
       return <HatGlassesIcon className="h-4 w-4 text-gray-500" />;
-    case 'QUESTION':
-      return <MessageSquareIcon className="h-4 w-4 text-gray-500" />;
     default:
       throw assertNever(platform);
   }
