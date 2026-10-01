@@ -165,6 +165,30 @@ describe('twitterV2PickerUserSchema', () => {
     expect(twitterV2PickerUserSchema.parse(user()).createdAt).toBeNull();
   });
 
+  it('accepts a user with every nullable field set to null', () => {
+    const nulls = {
+      username: null,
+      name: null,
+      description: null,
+      url: null,
+      location: null,
+      profileImageUrl: null,
+      bannerImageUrl: null,
+      createdAt: null,
+      canDm: null,
+      followersCount: null,
+      followingCount: null,
+      tweetCount: null,
+      verified: null
+    };
+
+    expect(twitterV2PickerUserSchema.parse({ ...user(), ...nulls })).toEqual({
+      id: 'pu-1',
+      userId: 'x-1',
+      ...nulls
+    });
+  });
+
   it('rejects a null ineligibility reason', () => {
     expect(
       twitterV2PickerUserSchema.safeParse({ ...user(), ineligible: null })
@@ -243,6 +267,30 @@ describe('twitterV2PickerSchema', () => {
     expect(
       twitterV2PickerSchema.safeParse({ ...picker, teamId: null }).success
     ).toBe(true);
+  });
+
+  it('keeps a null run date instead of coercing it', () => {
+    expect(twitterV2PickerSchema.parse(picker).runAt).toBeNull();
+  });
+
+  it('keeps the nullable picker settings as null', () => {
+    expect(twitterV2PickerSchema.parse(picker)).toMatchObject({
+      runId: null,
+      minPostCount: null,
+      minAccountAgeDays: null,
+      minFollowersCount: null,
+      minFollowingCount: null,
+      requireProfileImage: null,
+      requireBannerImage: null,
+      requireLocation: null,
+      requireBio: null
+    });
+  });
+
+  it('accepts a draft picker without tweet urls', () => {
+    expect(
+      twitterV2PickerSchema.parse({ ...picker, tweetUrls: [] }).tweetUrls
+    ).toEqual([]);
   });
 
   it('coerces a scheduled run date', () => {

@@ -126,16 +126,21 @@ describe('publishTwitterV2Picker', () => {
           data: buildFormInput()
         } as unknown as PublishInput);
 
-        expectFailure(result, 'UNPROCESSABLE_CONTENT');
+        expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+          /^Input validation failed: [\s\S]*"slug"/
+        );
       });
     });
 
     describe('team and picker checks', () => {
       it('looks the team up by slug among the caller memberships', async () => {
-        await publishTwitterV2Picker(input());
+        await publishTwitterV2Picker(input({ slug: 'dog-team' }));
 
         expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
-          where: { slug: 'acme', members: { some: { userId: TEST_USER.id } } },
+          where: {
+            slug: 'dog-team',
+            members: { some: { userId: TEST_USER.id } }
+          },
           include: { members: true }
         });
       });
@@ -171,10 +176,10 @@ describe('publishTwitterV2Picker', () => {
       });
 
       it('looks the picker up within the team', async () => {
-        await publishTwitterV2Picker(input());
+        await publishTwitterV2Picker(input({ pickerId: 'picker-42' }));
 
         expect(prismaMock.twitterPicker.findUnique).toHaveBeenCalledWith({
-          where: { id: 'picker-1', teamId: 'team-1' }
+          where: { id: 'picker-42', teamId: 'team-1' }
         });
       });
 
@@ -327,7 +332,9 @@ describe('publishTwitterV2Picker', () => {
 
         const result = await publishTwitterV2Picker(input());
 
-        expectFailure(result, 'INTERNAL_SERVER_ERROR');
+        expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+          /JSON/
+        );
       });
 
       it('returns INTERNAL_SERVER_ERROR when the request itself fails', async () => {

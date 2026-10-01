@@ -93,17 +93,19 @@ describe('getTwitterV2PublicPicker', () => {
         {} as unknown as Parameters<typeof getTwitterV2PublicPicker>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"pickerId"/
+      );
       expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
     });
 
     it('loads the picker with its users, draws and tweets', async () => {
       mockPicker();
 
-      await getTwitterV2PublicPicker({ pickerId: 'picker-1' });
+      await getTwitterV2PublicPicker({ pickerId: 'picker-42' });
 
       expect(prismaMock.twitterPicker.findUnique).toHaveBeenCalledWith({
-        where: { id: 'picker-1' },
+        where: { id: 'picker-42' },
         include: { users: true, draws: true, tweets: true }
       });
     });
@@ -125,7 +127,9 @@ describe('getTwitterV2PublicPicker', () => {
 
       const result = await getTwitterV2PublicPicker({ pickerId: 'picker-1' });
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: [\w-]{6}$/
+      );
     });
 
     it('fails output validation for a malformed picker row', async () => {

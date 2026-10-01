@@ -61,16 +61,21 @@ describe('updateTwitterV2Picker', () => {
           data: buildFormInput()
         } as unknown as UpdateInput);
 
-        expectFailure(result, 'UNPROCESSABLE_CONTENT');
+        expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+          /^Input validation failed: [\s\S]*"pickerId"/
+        );
       });
     });
 
     describe('team and picker checks', () => {
       it('looks the team up by slug among the caller memberships', async () => {
-        await updateTwitterV2Picker(input());
+        await updateTwitterV2Picker(input({ slug: 'dog-team' }));
 
         expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
-          where: { slug: 'acme', members: { some: { userId: TEST_USER.id } } },
+          where: {
+            slug: 'dog-team',
+            members: { some: { userId: TEST_USER.id } }
+          },
           include: { members: true }
         });
       });
@@ -112,10 +117,10 @@ describe('updateTwitterV2Picker', () => {
       });
 
       it('looks the picker up by id only', async () => {
-        await updateTwitterV2Picker(input());
+        await updateTwitterV2Picker(input({ pickerId: 'picker-42' }));
 
         expect(prismaMock.twitterPicker.findUnique).toHaveBeenCalledWith({
-          where: { id: 'picker-1' }
+          where: { id: 'picker-42' }
         });
       });
 
@@ -150,7 +155,9 @@ describe('updateTwitterV2Picker', () => {
 
         const result = await updateTwitterV2Picker(input());
 
-        expectFailure(result, 'FORBIDDEN');
+        expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+          'You do not have permission to update this picker'
+        );
       });
     });
 
@@ -158,6 +165,7 @@ describe('updateTwitterV2Picker', () => {
       it('maps the form to picker columns', async () => {
         await updateTwitterV2Picker(
           input({
+            pickerId: 'picker-42',
             data: {
               ...buildFormInput(),
               setup: {
@@ -171,7 +179,7 @@ describe('updateTwitterV2Picker', () => {
         );
 
         expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith({
-          where: { id: 'picker-1' },
+          where: { id: 'picker-42' },
           data: {
             tweetUrls: ['https://x.com/a/status/1', 'https://x.com/b/status/2'],
             winners: 2,
@@ -264,6 +272,41 @@ describe('updateTwitterV2Picker', () => {
         });
       });
 
+      it.each([
+        ['hasProfileImage', 'requireProfileImage'],
+        ['hasBanner', 'requireBannerImage'],
+        ['hasLocation', 'requireLocation'],
+        ['hasDescription', 'requireBio']
+      ] as const)(
+        'maps only the %s flag to the %s column',
+        async (flag, column) => {
+          const form = buildFormInput();
+
+          await updateTwitterV2Picker(
+            input({
+              data: {
+                ...form,
+                filters: {
+                  ...form.filters,
+                  hasProfileImage: false,
+                  hasBanner: false,
+                  hasLocation: false,
+                  hasDescription: false,
+                  [flag]: true
+                }
+              }
+            })
+          );
+
+          expect(updateData()).toMatchObject({
+            requireProfileImage: column === 'requireProfileImage',
+            requireBannerImage: column === 'requireBannerImage',
+            requireLocation: column === 'requireLocation',
+            requireBio: column === 'requireBio'
+          });
+        }
+      );
+
       it('does not change the picker status', async () => {
         await updateTwitterV2Picker(input());
 
@@ -283,7 +326,9 @@ describe('updateTwitterV2Picker', () => {
 
         const result = await updateTwitterV2Picker(input());
 
-        expectFailure(result, 'NOT_FOUND');
+        expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+          'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+        );
       });
     });
   });

@@ -29,7 +29,9 @@ describe('createTwitterPicker', () => {
         {} as unknown as Parameters<typeof createTwitterPicker>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"slug"/
+      );
       expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
 
@@ -37,10 +39,13 @@ describe('createTwitterPicker', () => {
       prismaMock.team.findUnique.mockResolvedValue(buildTeam());
       prismaMock.twitterPicker.create.mockResolvedValue(buildPicker());
 
-      await createTwitterPicker({ slug: 'acme' });
+      await createTwitterPicker({ slug: 'dog-team' });
 
       expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
-        where: { slug: 'acme', members: { some: { userId: TEST_USER.id } } },
+        where: {
+          slug: 'dog-team',
+          members: { some: { userId: TEST_USER.id } }
+        },
         include: { members: true }
       });
     });
@@ -187,7 +192,9 @@ describe('createTwitterPicker', () => {
 
       const result = await createTwitterPicker({ slug: 'acme' });
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: [\w-]{6}$/
+      );
     });
   });
 });

@@ -42,7 +42,9 @@ describe('disqualifyTwitterV2Winner', () => {
         reason: 'Bot account'
       } as unknown as Parameters<typeof disqualifyTwitterV2Winner>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"drawId"/
+      );
     });
 
     it('returns NOT_FOUND when the draw does not exist', async () => {
@@ -61,12 +63,12 @@ describe('disqualifyTwitterV2Winner', () => {
       prismaMock.twitterPickerDraw.findUnique.mockResolvedValue(buildDraw());
 
       await disqualifyTwitterV2Winner({
-        drawId: 'draw-1',
+        drawId: 'draw-42',
         reason: 'Bot account'
       });
 
       expect(prismaMock.twitterPickerDraw.findUnique).toHaveBeenCalledWith({
-        where: { id: 'draw-1' }
+        where: { id: 'draw-42' }
       });
     });
 
@@ -74,12 +76,12 @@ describe('disqualifyTwitterV2Winner', () => {
       prismaMock.twitterPickerDraw.findUnique.mockResolvedValue(buildDraw());
 
       await disqualifyTwitterV2Winner({
-        drawId: 'draw-1',
+        drawId: 'draw-42',
         reason: 'Bot account'
       });
 
       expect(prismaMock.twitterPickerDraw.update).toHaveBeenCalledWith({
-        where: { id: 'draw-1' },
+        where: { id: 'draw-42' },
         data: { disqualified: 'Bot account' }
       });
     });
@@ -134,7 +136,9 @@ describe('disqualifyTwitterV2Winner', () => {
         reason: 'Bot account'
       });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
     });
   });
 });

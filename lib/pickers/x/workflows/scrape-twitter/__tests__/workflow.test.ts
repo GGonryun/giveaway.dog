@@ -224,6 +224,28 @@ describe('scrapeTwitterWorkflow', () => {
       expect(lastTweetOrder).toBeLessThan(firstRetweeterOrder);
     });
 
+    it('stores each tweet as a post of the picker', async () => {
+      setupTweets({
+        '1': { retweetCount: 1, pages: [{ users: [], hasMore: false }] },
+        '2': { retweetCount: 1, pages: [{ users: [], hasMore: false }] }
+      });
+
+      await scrapeTwitterWorkflow({
+        tweetIds: ['1', '2'],
+        pickerId: 'picker-1'
+      });
+
+      expect(
+        prismaMock.twitterPost.create.mock.calls.map(([args]) => ({
+          picker: args.data.picker,
+          tweetId: args.data.tweetId
+        }))
+      ).toEqual([
+        { picker: { connect: { id: 'picker-1' } }, tweetId: '1' },
+        { picker: { connect: { id: 'picker-1' } }, tweetId: '2' }
+      ]);
+    });
+
     it('follows retweeter cursors until there are no more pages', async () => {
       setupTweets({
         '1': {

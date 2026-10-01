@@ -186,6 +186,12 @@ export const DISQUALIFICATION_CASES: DisqualificationCase[] = [
     reason: 'Minimum 1 followers required'
   },
   {
+    name: 'a followers count equal to the minimum',
+    picker: { minFollowersCount: 50 },
+    user: { followersCount: 50 },
+    reason: undefined
+  },
+  {
     name: 'too few following',
     picker: { minFollowingCount: 20 },
     user: { followingCount: 19 },
@@ -196,6 +202,12 @@ export const DISQUALIFICATION_CASES: DisqualificationCase[] = [
     picker: { minFollowingCount: 1 },
     user: { followingCount: null },
     reason: 'Minimum 1 following required'
+  },
+  {
+    name: 'a following count equal to the minimum',
+    picker: { minFollowingCount: 20 },
+    user: { followingCount: 20 },
+    reason: undefined
   },
   {
     name: 'an account younger than the minimum age',
@@ -240,15 +252,33 @@ export const DISQUALIFICATION_CASES: DisqualificationCase[] = [
     reason: 'Banner image required'
   },
   {
+    name: 'an empty banner image url',
+    picker: { requireBannerImage: true },
+    user: { bannerImageUrl: '' },
+    reason: 'Banner image required'
+  },
+  {
     name: 'a missing location',
     picker: { requireLocation: true },
     user: { location: null },
     reason: 'Location required'
   },
   {
+    name: 'an empty location',
+    picker: { requireLocation: true },
+    user: { location: '' },
+    reason: 'Location required'
+  },
+  {
     name: 'a missing bio',
     picker: { requireBio: true },
     user: { description: null },
+    reason: 'Bio required'
+  },
+  {
+    name: 'an empty bio',
+    picker: { requireBio: true },
+    user: { description: '' },
     reason: 'Bio required'
   },
   {

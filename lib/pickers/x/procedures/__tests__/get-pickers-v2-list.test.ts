@@ -30,7 +30,9 @@ describe('getPickersV2List', () => {
           {} as unknown as Parameters<typeof getPickersV2List>[0]
         );
 
-        expectFailure(result, 'UNPROCESSABLE_CONTENT');
+        expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+          /^Input validation failed: [\s\S]*"slug"/
+        );
         expect(prismaMock.twitterPicker.findMany).not.toHaveBeenCalled();
       });
 
@@ -40,7 +42,9 @@ describe('getPickersV2List', () => {
           status: 'archived'
         } as unknown as Parameters<typeof getPickersV2List>[0]);
 
-        expectFailure(result, 'UNPROCESSABLE_CONTENT');
+        expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+          /^Input validation failed: [\s\S]*"status"/
+        );
       });
     });
 
@@ -77,6 +81,10 @@ describe('getPickersV2List', () => {
 
         expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
         expect(prismaMock.membership.findFirst).not.toHaveBeenCalled();
+        expect(prismaMock.twitterPicker.findMany).toHaveBeenCalledWith({
+          where: { team: { slug: 'someone-elses-team' }, status: undefined },
+          orderBy: { createdAt: 'desc' }
+        });
       });
     });
 

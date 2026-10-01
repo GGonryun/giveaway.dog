@@ -70,7 +70,9 @@ describe('drawTwitterV2Picker', () => {
           count: '2'
         } as unknown as Parameters<typeof drawTwitterV2Picker>[0]);
 
-        expectFailure(result, 'UNPROCESSABLE_CONTENT');
+        expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+          /^Input validation failed: [\s\S]*"count"/
+        );
         expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
       });
     });
@@ -79,10 +81,10 @@ describe('drawTwitterV2Picker', () => {
       it('loads the picker with its users and draws', async () => {
         prismaMock.twitterPicker.findUnique.mockResolvedValue(null);
 
-        await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        await drawTwitterV2Picker({ pickerId: 'picker-42' });
 
         expect(prismaMock.twitterPicker.findUnique).toHaveBeenCalledWith({
-          where: { id: 'picker-1' },
+          where: { id: 'picker-42' },
           include: { users: true, draws: true }
         });
       });
@@ -294,7 +296,9 @@ describe('drawTwitterV2Picker', () => {
 
         const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
 
-        expectFailure(result, 'INTERNAL_SERVER_ERROR');
+        expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+          /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: [\w-]{6}$/
+        );
       });
     });
   });

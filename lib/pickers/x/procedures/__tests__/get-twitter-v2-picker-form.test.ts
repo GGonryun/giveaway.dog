@@ -27,16 +27,18 @@ describe('getTwitterV2PickerForm', () => {
         {} as unknown as Parameters<typeof getTwitterV2PickerForm>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"pickerId"/
+      );
     });
 
     it('loads the picker by id', async () => {
       prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
 
-      await getTwitterV2PickerForm({ pickerId: 'picker-1' });
+      await getTwitterV2PickerForm({ pickerId: 'picker-42' });
 
       expect(prismaMock.twitterPicker.findUnique).toHaveBeenCalledWith({
-        where: { id: 'picker-1' }
+        where: { id: 'picker-42' }
       });
     });
 
@@ -131,6 +133,35 @@ describe('getTwitterV2PickerForm', () => {
         hasDescription: false
       });
     });
+
+    it.each([
+      ['requireProfileImage', 'hasProfileImage'],
+      ['requireBannerImage', 'hasBanner'],
+      ['requireLocation', 'hasLocation'],
+      ['requireBio', 'hasDescription']
+    ] as const)(
+      'maps only the %s column to the %s flag',
+      async (column, flag) => {
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(
+          buildPicker({
+            requireProfileImage: false,
+            requireBannerImage: false,
+            requireLocation: false,
+            requireBio: false,
+            [column]: true
+          })
+        );
+
+        const result = await getTwitterV2PickerForm({ pickerId: 'picker-1' });
+
+        expect(expectOk(result).filters).toMatchObject({
+          hasProfileImage: flag === 'hasProfileImage',
+          hasBanner: flag === 'hasBanner',
+          hasLocation: flag === 'hasLocation',
+          hasDescription: flag === 'hasDescription'
+        });
+      }
+    );
 
     it('does not check that the caller owns the picker', async () => {
       prismaMock.twitterPicker.findUnique.mockResolvedValue(

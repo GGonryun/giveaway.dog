@@ -336,6 +336,27 @@ describe('getDisqualificationReason', () => {
       );
     });
 
+    it('treats an empty banner image url as missing', () => {
+      expect(
+        getDisqualificationReason(
+          { bannerImageUrl: '' },
+          { requireBannerImage: true }
+        )
+      ).toBe('Banner image required');
+    });
+
+    it('treats an empty location as missing', () => {
+      expect(
+        getDisqualificationReason({ location: '' }, { requireLocation: true })
+      ).toBe('Location required');
+    });
+
+    it('treats an empty bio as missing', () => {
+      expect(
+        getDisqualificationReason({ description: '' }, { requireBio: true })
+      ).toBe('Bio required');
+    });
+
     it('accepts a user with every profile field when all are required', () => {
       expect(
         getDisqualificationReason(

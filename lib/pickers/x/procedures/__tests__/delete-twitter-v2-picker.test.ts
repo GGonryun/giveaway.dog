@@ -43,17 +43,19 @@ describe('deleteTwitterV2Picker', () => {
         pickerId: 42
       } as unknown as Parameters<typeof deleteTwitterV2Picker>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"pickerId"/
+      );
       expect(prismaMock.twitterPicker.delete).not.toHaveBeenCalled();
     });
 
     it('deletes the picker by id', async () => {
       prismaMock.twitterPicker.delete.mockResolvedValue(buildPicker());
 
-      await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+      await deleteTwitterV2Picker({ pickerId: 'picker-42' });
 
       expect(prismaMock.twitterPicker.delete).toHaveBeenCalledWith({
-        where: { id: 'picker-1' }
+        where: { id: 'picker-42' }
       });
     });
 
@@ -97,6 +99,30 @@ describe('deleteTwitterV2Picker', () => {
 
       expectOk(result);
       expect(mocks.cancel).toHaveBeenCalledWith('run-123');
+    });
+
+    it('returns the deleted picker with its run id after cancelling the run', async () => {
+      const deleted = buildPicker({ runId: 'run-123' });
+      prismaMock.twitterPicker.delete.mockResolvedValue(deleted);
+      mocks.cancel.mockResolvedValue(undefined);
+
+      const result = await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+
+      expect(expectOk(result)).toEqual(deleted);
+    });
+
+    it('cancels the run only after deleting the picker', async () => {
+      prismaMock.twitterPicker.delete.mockResolvedValue(
+        buildPicker({ runId: 'run-123' })
+      );
+      mocks.cancel.mockResolvedValue(undefined);
+
+      await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+
+      const [deleteOrder] =
+        prismaMock.twitterPicker.delete.mock.invocationCallOrder;
+      const [cancelOrder] = mocks.cancel.mock.invocationCallOrder;
+      expect(deleteOrder).toBeLessThan(cancelOrder);
     });
 
     it('returns INTERNAL_SERVER_ERROR after deleting when the cancel fails', async () => {

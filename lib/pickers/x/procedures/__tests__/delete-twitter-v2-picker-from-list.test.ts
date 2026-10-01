@@ -28,17 +28,19 @@ describe('deleteTwitterV2PickerFromList', () => {
         {} as unknown as Parameters<typeof deleteTwitterV2PickerFromList>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"pickerId"/
+      );
       expect(prismaMock.twitterPicker.deleteMany).not.toHaveBeenCalled();
     });
 
     it('deletes the picker by id', async () => {
       prismaMock.twitterPicker.deleteMany.mockResolvedValue({ count: 1 });
 
-      await deleteTwitterV2PickerFromList({ pickerId: 'picker-1' });
+      await deleteTwitterV2PickerFromList({ pickerId: 'picker-42' });
 
       expect(prismaMock.twitterPicker.deleteMany).toHaveBeenCalledWith({
-        where: { id: 'picker-1' }
+        where: { id: 'picker-42' }
       });
     });
 
@@ -81,7 +83,9 @@ describe('deleteTwitterV2PickerFromList', () => {
         pickerId: 'picker-1'
       });
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: [\w-]{6}$/
+      );
     });
   });
 });
