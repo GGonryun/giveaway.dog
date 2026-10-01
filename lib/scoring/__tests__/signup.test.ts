@@ -270,6 +270,12 @@ describe('computeSignupUserScore', () => {
       );
     });
 
+    it('fails one hour short of 14 days because partial days are floored', async () => {
+      expect(
+        await scoreFor({ ...sixPassingScenario(), ageInDays: 14 - 1 / 24 })
+      ).toBe(SCORE.good);
+    });
+
     it('fails at exactly 7 days old', async () => {
       expect(await scoreFor({ ...sixPassingScenario(), ageInDays: 7 })).toBe(
         SCORE.good
@@ -363,6 +369,21 @@ describe('computeSignupUserScore', () => {
       expect(
         await scoreFor({ ...sixPassingScenario(), fingerprintCounts: [5, 5] })
       ).toBe(SCORE.trusted);
+    });
+
+    it('measures stability from the most-used fingerprint', async () => {
+      expect(
+        await scoreFor({ ...sixPassingScenario(), fingerprintCounts: [1, 9] })
+      ).toBe(SCORE.trusted);
+    });
+
+    it('fails when the top fingerprint covers 49% of sessions because each 10% step is floored', async () => {
+      expect(
+        await scoreFor({
+          ...sixPassingScenario(),
+          fingerprintCounts: [49, 26, 25]
+        })
+      ).toBe(SCORE.good);
     });
 
     it('fails when the top fingerprint is below half the sessions', async () => {

@@ -124,6 +124,37 @@ describe('userProfileSchema', () => {
 
       expect(parsed.username).toBeNull();
     });
+
+    it('accepts null for every nullable profile field', () => {
+      const parsed = userProfileSchema.parse({
+        ...validProfile,
+        name: null,
+        email: null,
+        emailVerified: null,
+        image: null,
+        countryCode: null,
+        userAgent: null,
+        birthday: null,
+        preferredContactMethod: null
+      });
+
+      expect(parsed).toMatchObject({
+        name: null,
+        email: null,
+        emailVerified: null,
+        image: null,
+        countryCode: null,
+        userAgent: null,
+        birthday: null,
+        preferredContactMethod: null
+      });
+    });
+
+    it('accepts an empty provider list', () => {
+      expect(
+        userProfileSchema.parse({ ...validProfile, providers: [] }).providers
+      ).toEqual([]);
+    });
   });
 
   describe('image transform', () => {
@@ -198,6 +229,47 @@ describe('userProfileSchema', () => {
       });
 
       expect(result.success).toBe(false);
+      expect(result.error?.issues[0].path).toEqual(['accountType']);
+    });
+
+    it('rejects a quality score given as a string', () => {
+      const result = userProfileSchema.safeParse({
+        ...validProfile,
+        qualityScore: '72'
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0].path).toEqual(['qualityScore']);
+    });
+
+    it('rejects a non-boolean emailVerified', () => {
+      const result = userProfileSchema.safeParse({
+        ...validProfile,
+        emailVerified: '2026-01-16T00:00:00.000Z'
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0].path).toEqual(['emailVerified']);
+    });
+
+    it('rejects a provider with an unknown type', () => {
+      const result = userProfileSchema.safeParse({
+        ...validProfile,
+        providers: [{ type: 'MYSPACE', scopes: [], label: 'Old' }]
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0].path).toEqual(['providers', 0, 'type']);
+    });
+
+    it('rejects a missing id', () => {
+      const result = userProfileSchema.safeParse({
+        ...validProfile,
+        id: undefined
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0].path).toEqual(['id']);
     });
   });
 });
@@ -319,9 +391,35 @@ describe('parseProviders', () => {
   });
 
   it('throws instead of falling back to EMAIL for an unknown auth provider', () => {
-    expect(() => parseProviders([account({ provider: 'myspace' })])).toThrow(
+    let caught: unknown;
+    try {
+      parseProviders([account({ provider: 'myspace' })]);
+    } catch (error) {
+      caught = error;
+    }
+
+    expect(caught).toBeInstanceOf(ApplicationError);
+    expect(caught).toMatchObject({
+      code: 'VALIDATION_ERROR',
+      message: 'Unsupported provider unknown'
+    });
+  });
+
+  it('rejects an uppercase identity provider name because only auth provider ids are mapped', () => {
+    expect(() => parseProviders([account({ provider: 'GOOGLE' })])).toThrow(
       'Unsupported provider unknown'
     );
+  });
+
+  it.each([
+    ['email', 'EMAIL'],
+    ['anonymous', 'ANONYMOUS'],
+    ['bluesky', 'BLUESKY'],
+    ['linkedin', 'LINKEDIN']
+  ])('maps the auth provider %s to %s', (provider, expected) => {
+    const [result] = parseProviders([account({ provider })]);
+
+    expect(result.type).toBe(expected);
   });
 });
 
@@ -546,6 +644,30 @@ describe('toUserSchema', () => {
         username: 'jane_doe',
         preferredContactMethod: 'GOOGLE',
         isAnonymous: false
+      });
+    });
+
+    it('passes the onboarding fields through unchanged', () => {
+      const user = toUserSchema(
+        buildUserPayload({
+          onboarded: false,
+          accountType: 'HOST',
+          username: null,
+          name: null,
+          email: null,
+          birthday: null,
+          source: 'DISCORD_IMPORT'
+        })
+      );
+
+      expect(user).toMatchObject({
+        onboarded: false,
+        accountType: 'HOST',
+        username: null,
+        name: null,
+        email: null,
+        birthday: null,
+        source: 'DISCORD_IMPORT'
       });
     });
 

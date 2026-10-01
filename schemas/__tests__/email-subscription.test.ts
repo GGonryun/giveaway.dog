@@ -55,7 +55,12 @@ describe('emailSubscriptionSchema', () => {
 
   describe('when the email is missing', () => {
     it('rejects a missing email', () => {
-      expect(emailSubscriptionSchema.safeParse({}).success).toBe(false);
+      const result = emailSubscriptionSchema.safeParse({});
+
+      expect(result.success).toBe(false);
+      expect(result.error?.issues).toMatchObject([
+        { path: ['email'], message: 'Required' }
+      ]);
     });
 
     it('rejects a non-string email', () => {

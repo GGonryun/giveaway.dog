@@ -91,13 +91,18 @@ describe('platform records', () => {
   });
 
   it('uses the expected placeholder URLs', () => {
-    expect(PLATFORM_PLACEHOLDERS.x).toBe('https://x.com/username');
-    expect(PLATFORM_PLACEHOLDERS.discord).toBe('https://discord.gg/invite');
-    expect(PLATFORM_PLACEHOLDERS.reddit).toBe('https://reddit.com/r/subreddit');
-    expect(PLATFORM_PLACEHOLDERS.linkedin).toBe(
-      'https://linkedin.com/company/name'
-    );
-    expect(PLATFORM_PLACEHOLDERS.website).toBe('https://example.com');
+    expect(PLATFORM_PLACEHOLDERS).toEqual({
+      x: 'https://x.com/username',
+      facebook: 'https://facebook.com/username',
+      instagram: 'https://instagram.com/username',
+      discord: 'https://discord.gg/invite',
+      reddit: 'https://reddit.com/r/subreddit',
+      youtube: 'https://youtube.com/@channel',
+      twitch: 'https://twitch.tv/channel',
+      tiktok: 'https://tiktok.com/@username',
+      linkedin: 'https://linkedin.com/company/name',
+      website: 'https://example.com'
+    });
   });
 });
 

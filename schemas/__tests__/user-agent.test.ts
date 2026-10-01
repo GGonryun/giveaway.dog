@@ -177,6 +177,12 @@ describe('toUserDeviceActivity', () => {
     });
   });
 
+  it('keeps empty os and browser strings for an unknown device', () => {
+    expect(
+      toUserDeviceActivity(row({ device: 'smart-tv', os: '', browser: '' }))
+    ).toMatchObject({ device: 'unknown', os: '', browser: '' });
+  });
+
   it('keeps empty os and browser strings', () => {
     expect(toUserDeviceActivity(row({ os: '', browser: '' }))).toMatchObject({
       os: '',

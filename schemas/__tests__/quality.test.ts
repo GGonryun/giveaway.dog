@@ -122,21 +122,38 @@ describe('quality display records', () => {
   });
 
   it('defines a full theme for each quality', () => {
-    expect(QUALITY_THEME.trusted).toEqual({
-      bg: 'bg-green-100 dark:bg-green-800',
-      border: 'border-green-700',
-      base: 'bg-green-500 dark:bg-green-800',
-      text: 'text-green-800 dark:text-green-200'
+    expect(QUALITY_THEME).toEqual({
+      trusted: {
+        bg: 'bg-green-100 dark:bg-green-800',
+        border: 'border-green-700',
+        base: 'bg-green-500 dark:bg-green-800',
+        text: 'text-green-800 dark:text-green-200'
+      },
+      good: {
+        bg: 'bg-blue-100 dark:bg-blue-800',
+        border: 'border-blue-700',
+        base: 'bg-blue-500 dark:bg-blue-800',
+        text: 'text-blue-800 dark:text-blue-200'
+      },
+      neutral: {
+        bg: 'bg-yellow-100 dark:bg-yellow-800',
+        border: 'border-yellow-700',
+        base: 'bg-yellow-500 dark:bg-yellow-800',
+        text: 'text-yellow-800 dark:text-yellow-200'
+      },
+      suspicious: {
+        bg: 'bg-orange-100 dark:bg-orange-800',
+        border: 'border-orange-700',
+        base: 'bg-orange-500 dark:bg-orange-800',
+        text: 'text-orange-800 dark:text-orange-200'
+      },
+      banned: {
+        bg: 'bg-red-100 dark:bg-red-800',
+        border: 'border-red-700',
+        base: 'bg-red-500 dark:bg-red-800',
+        text: 'text-red-800 dark:text-red-200'
+      }
     });
-    expect(QUALITY_THEME.banned).toEqual({
-      bg: 'bg-red-100 dark:bg-red-800',
-      border: 'border-red-700',
-      base: 'bg-red-500 dark:bg-red-800',
-      text: 'text-red-800 dark:text-red-200'
-    });
-    expect(QUALITY_THEME.good.border).toBe('border-blue-700');
-    expect(QUALITY_THEME.neutral.bg).toBe('bg-yellow-100 dark:bg-yellow-800');
-    expect(QUALITY_THEME.suspicious.border).toBe('border-orange-700');
   });
 
   it('labels each quality with the same text for badges and labels', () => {
