@@ -7,6 +7,8 @@ import { expectFailure, expectOk } from '@/test/result';
 import {
   callerMembershipWhere,
   callerTeam,
+  expectOutputFailure,
+  inputIssuePaths,
   NOT_A_MEMBER_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
@@ -39,7 +41,8 @@ describe('getTeamInvitations', () => {
         {} as unknown as Parameters<typeof getTeamInvitations>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
   });
 
@@ -185,7 +188,49 @@ describe('getTeamInvitations', () => {
 
       const result = await getTeamInvitations({ slug: 'acme' });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expectOutputFailure(result);
+    });
+
+    it('accepts invitation timestamps serialized as ISO strings', async () => {
+      signIn();
+      prismaMock.team.findFirst.mockResolvedValue(
+        callerTeam(TeamRole.OWNER, {
+          inviteEmails: [
+            {
+              id: 'i-1',
+              email: 'a@example.com',
+              role: TeamRole.GUEST,
+              createdAt: '2030-01-01T00:00:00.000Z'
+            }
+          ]
+        })
+      );
+
+      const result = await getTeamInvitations({ slug: 'acme' });
+
+      expect(expectOk(result)).toEqual([
+        {
+          id: 'i-1',
+          email: 'a@example.com',
+          role: TeamRole.GUEST,
+          createdAt: '2030-01-01T00:00:00.000Z'
+        }
+      ]);
+    });
+
+    it('fails when an invitation has no creation date', async () => {
+      signIn();
+      prismaMock.team.findFirst.mockResolvedValue(
+        callerTeam(TeamRole.OWNER, {
+          inviteEmails: [
+            { id: 'i-1', email: 'a@example.com', role: TeamRole.GUEST }
+          ]
+        })
+      );
+
+      const result = await getTeamInvitations({ slug: 'acme' });
+
+      expectOutputFailure(result);
     });
   });
 });

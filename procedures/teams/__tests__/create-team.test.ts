@@ -5,6 +5,11 @@ import { MAX_USER_TEAMS } from '@/lib/settings';
 import { prismaMock, knownRequestError } from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
+import {
+  expectOutputFailure,
+  inputIssues,
+  PRISMA_INTERNAL_ERROR_MESSAGE
+} from './fixtures-procedures-teams';
 
 type CreateTeamInput = Parameters<typeof createTeam>[0];
 
@@ -92,7 +97,13 @@ describe('createTeam', () => {
         logo: 1
       } as unknown as CreateTeamInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssues(result)).toEqual([
+        expect.objectContaining({
+          path: ['logo'],
+          message: 'Expected string, received number'
+        })
+      ]);
+      expect(prismaMock.membership.count).not.toHaveBeenCalled();
     });
 
     it('rejects a missing name', async () => {
@@ -100,7 +111,29 @@ describe('createTeam', () => {
         slug: 'acme'
       } as unknown as CreateTeamInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssues(result)).toEqual([
+        expect.objectContaining({ path: ['name'], message: 'Required' })
+      ]);
+    });
+
+    it('rejects a missing slug', async () => {
+      const result = await createTeam({
+        name: 'Acme Team'
+      } as unknown as CreateTeamInput);
+
+      expect(inputIssues(result)).toEqual([
+        expect.objectContaining({ path: ['slug'], message: 'Required' })
+      ]);
+    });
+
+    it('reports every failing rule of the name and slug at once', async () => {
+      const result = await createTeam({ name: 'a', slug: 'A_' });
+
+      expect(inputIssues(result).map((issue) => issue.message)).toEqual([
+        'Team name must be at least 3 characters',
+        'Team slug must be at least 3 characters',
+        'Team slug can only contain lowercase letters, numbers, and hyphens'
+      ]);
     });
   });
 
@@ -208,7 +241,12 @@ describe('createTeam', () => {
         validInput({ name: `${'n'.repeat(19)}  ` })
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssues(result)).toEqual([
+        expect.objectContaining({
+          path: ['name'],
+          message: 'Team name must be less than 20 characters'
+        })
+      ]);
     });
 
     it('fails output validation when the created record has no slug', async () => {
@@ -216,9 +254,7 @@ describe('createTeam', () => {
 
       const result = await createTeam(validInput());
 
-      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
-        'Output validation failed'
-      );
+      expectOutputFailure(result);
     });
   });
 
@@ -286,7 +322,9 @@ describe('createTeam', () => {
 
       const result = await createTeam(validInput());
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        PRISMA_INTERNAL_ERROR_MESSAGE
+      );
     });
   });
 });

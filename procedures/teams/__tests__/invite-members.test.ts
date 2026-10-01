@@ -7,6 +7,9 @@ import { expectFailure, expectOk } from '@/test/result';
 import {
   callerMembershipWhere,
   callerTeam,
+  inputIssuePaths,
+  inputIssues,
+  PRISMA_INTERNAL_ERROR_MESSAGE,
   NOT_A_MEMBER_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
@@ -103,7 +106,7 @@ describe('inviteMembers', () => {
         } as unknown as InviteInput['invitations'][number])
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['invitations', 0, 'role']]);
     });
 
     it('rejects a missing invitations list', async () => {
@@ -111,7 +114,16 @@ describe('inviteMembers', () => {
         slug: 'acme'
       } as unknown as InviteInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['invitations']]);
+    });
+
+    it('rejects input without a slug', async () => {
+      const result = await inviteMembers({
+        invitations: [invitation('a@example.com')]
+      } as unknown as InviteInput);
+
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
 
     it('rejects the whole batch when any email is invalid', async () => {
@@ -119,7 +131,12 @@ describe('inviteMembers', () => {
         request(invitation('a@example.com'), invitation('bad'))
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssues(result)).toEqual([
+        expect.objectContaining({
+          path: ['invitations', 1, 'email'],
+          message: 'Invalid email address'
+        })
+      ]);
       expect(prismaMock.teamInviteEmail.create).not.toHaveBeenCalled();
     });
   });
@@ -353,17 +370,64 @@ describe('inviteMembers', () => {
 
       expect(expectOk(result).invited).toEqual(['known@example.com']);
     });
+  });
 
-    it('does not normalize the email casing', async () => {
-      await inviteMembers(request(invitation('Mixed@Example.com')));
+  describe('when the email has mixed casing', () => {
+    const MIXED = 'Mixed@Example.com';
+
+    beforeEach(() => {
+      signIn();
+      prismaMock.team.findFirst.mockResolvedValue(
+        callerTeam(TeamRole.ADMIN, teamDetails)
+      );
+      setupNewInvitees();
+    });
+
+    it('looks the user up with the email exactly as typed', async () => {
+      await inviteMembers(request(invitation(MIXED)));
+
+      expect(prismaMock.user.findUnique).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { email: MIXED } })
+      );
+    });
+
+    it('looks the pending invitation up with the email exactly as typed', async () => {
+      await inviteMembers(request(invitation(MIXED)));
+
+      expect(prismaMock.teamInviteEmail.findUnique).toHaveBeenCalledWith({
+        where: { teamId_email: { teamId: 'team-1', email: MIXED } }
+      });
+    });
+
+    it('stores the invitation without normalizing the email', async () => {
+      await inviteMembers(request(invitation(MIXED)));
 
       expect(prismaMock.teamInviteEmail.create).toHaveBeenCalledWith({
-        data: {
-          teamId: 'team-1',
-          email: 'Mixed@Example.com',
-          role: TeamRole.MEMBER
-        }
+        data: { teamId: 'team-1', email: MIXED, role: TeamRole.MEMBER }
       });
+    });
+
+    it('sends the email to the address exactly as typed', async () => {
+      await inviteMembers(request(invitation(MIXED)));
+
+      expect(inbound.send).toHaveBeenCalledWith(
+        expect.objectContaining({ to: MIXED })
+      );
+    });
+
+    it('reports the address exactly as typed', async () => {
+      const result = await inviteMembers(request(invitation(MIXED)));
+
+      expect(expectOk(result).invited).toEqual([MIXED]);
+    });
+
+    it('treats differently cased addresses as separate invitations', async () => {
+      const result = await inviteMembers(
+        request(invitation(MIXED), invitation('mixed@example.com'))
+      );
+
+      expect(expectOk(result).invited).toEqual([MIXED, 'mixed@example.com']);
+      expect(prismaMock.teamInviteEmail.create).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -596,7 +660,9 @@ describe('inviteMembers', () => {
         request(invitation('new@example.com'))
       );
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        PRISMA_INTERNAL_ERROR_MESSAGE
+      );
       expect(inbound.send).not.toHaveBeenCalled();
     });
   });

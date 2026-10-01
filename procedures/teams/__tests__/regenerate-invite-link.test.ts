@@ -7,6 +7,9 @@ import { expectFailure, expectOk } from '@/test/result';
 import {
   callerMembershipWhere,
   callerTeam,
+  inputIssuePaths,
+  inputIssues,
+  PRISMA_NOT_FOUND_MESSAGE,
   NOT_A_MEMBER_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
@@ -41,7 +44,23 @@ describe('regenerateInviteLink', () => {
         slug: null
       } as unknown as Parameters<typeof regenerateInviteLink>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssues(result)).toEqual([
+        expect.objectContaining({
+          path: ['slug'],
+          message: 'Expected string, received null'
+        })
+      ]);
+    });
+
+    it('rejects input without a slug', async () => {
+      signIn();
+
+      const result = await regenerateInviteLink(
+        {} as unknown as Parameters<typeof regenerateInviteLink>[0]
+      );
+
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
   });
 
@@ -219,7 +238,9 @@ describe('regenerateInviteLink', () => {
 
       const result = await regenerateInviteLink({ slug: 'acme' });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
       expect(prismaMock.teamInviteLink.create).not.toHaveBeenCalled();
     });
 

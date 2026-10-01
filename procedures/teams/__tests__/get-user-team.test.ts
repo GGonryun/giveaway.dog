@@ -4,7 +4,11 @@ import getUserTeam from '../get-user-team';
 import { prismaMock } from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
-import { callerMembershipWhere } from './fixtures-procedures-teams';
+import {
+  callerMembershipWhere,
+  expectOutputFailure,
+  inputIssuePaths
+} from './fixtures-procedures-teams';
 
 const navigation = vi.hoisted(() => ({
   redirect: vi.fn((url: string) => {
@@ -59,7 +63,8 @@ describe('getUserTeam', () => {
         {} as unknown as Parameters<typeof getUserTeam>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
   });
 
@@ -132,7 +137,7 @@ describe('getUserTeam', () => {
 
       const result = await getUserTeam({ slug: 'acme' });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expectOutputFailure(result);
     });
   });
 

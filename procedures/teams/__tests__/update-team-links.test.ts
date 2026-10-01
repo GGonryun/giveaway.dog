@@ -7,6 +7,8 @@ import { expectFailure, expectOk } from '@/test/result';
 import {
   callerMembershipWhere,
   callerTeam,
+  inputIssuePaths,
+  PRISMA_NOT_FOUND_MESSAGE,
   NOT_A_MEMBER_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
@@ -42,7 +44,16 @@ describe('updateTeamLinks', () => {
         links: [{ platform: 'myspace', url: 'https://myspace.com/acme' }]
       } as unknown as LinksInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['links', 0, 'platform']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
+    });
+
+    it('rejects input without a slug', async () => {
+      const result = await updateTeamLinks({
+        links
+      } as unknown as LinksInput);
+
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
       expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
 
@@ -63,7 +74,7 @@ describe('updateTeamLinks', () => {
         links: { platform: 'x', url: 'https://x.com/acme' }
       } as unknown as LinksInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['links']]);
     });
   });
 
@@ -157,7 +168,9 @@ describe('updateTeamLinks', () => {
 
       const result = await updateTeamLinks({ slug: 'acme', links });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

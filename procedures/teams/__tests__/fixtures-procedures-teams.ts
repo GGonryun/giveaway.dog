@@ -1,5 +1,8 @@
+import { expect } from 'vitest';
 import { TeamRole } from '@prisma/client';
 import { TEST_USER } from '@/test/session';
+import { expectFailure } from '@/test/result';
+import type { Result } from '@/lib/mrpc/types';
 
 export const SLUG = 'acme';
 export const TEAM_ID = 'team-1';
@@ -16,6 +19,12 @@ export const rolesExcept = (...allowed: TeamRole[]) =>
   ALL_ROLES.filter((role) => !allowed.includes(role));
 
 export const NOT_A_MEMBER_MESSAGE = 'You are not a member of this team';
+
+export const PRISMA_NOT_FOUND_MESSAGE =
+  'Unable to process your request. The item may no longer exist. Give us a minute before you try again.';
+
+export const PRISMA_INTERNAL_ERROR_MESSAGE =
+  /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: .{6}$/;
 
 export const permissionDeniedMessage = (permission: string) =>
   `You do not have permission to perform this action. Required permission: ${permission}`;
@@ -40,3 +49,26 @@ export const callerTeam = (
   members: role ? [callerMembership(role)] : [],
   ...extra
 });
+
+export type InputIssue = {
+  code: string;
+  path: (string | number)[];
+  message: string;
+};
+
+const INPUT_FAILURE_PREFIX = 'Input validation failed: ';
+
+export const inputIssues = <T>(result: Result<T>): InputIssue[] => {
+  const failure = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+  expect(failure.message.startsWith(INPUT_FAILURE_PREFIX)).toBe(true);
+  return JSON.parse(failure.message.slice(INPUT_FAILURE_PREFIX.length));
+};
+
+export const inputIssuePaths = <T>(result: Result<T>) =>
+  inputIssues(result).map((issue) => issue.path);
+
+export const expectOutputFailure = <T>(result: Result<T>) => {
+  const failure = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+  expect(failure.message.startsWith('Output validation failed: ')).toBe(true);
+  return failure;
+};

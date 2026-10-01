@@ -7,6 +7,8 @@ import { expectFailure, expectOk } from '@/test/result';
 import {
   callerMembershipWhere,
   callerTeam,
+  inputIssuePaths,
+  PRISMA_NOT_FOUND_MESSAGE,
   NOT_A_MEMBER_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
@@ -48,6 +50,15 @@ describe('updateTeamName', () => {
       expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
         'String must contain at most 100 character(s)'
       );
+    });
+
+    it('rejects input without a slug', async () => {
+      const result = await updateTeamName({
+        name: 'New Name'
+      } as unknown as Parameters<typeof updateTeamName>[0]);
+
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
 
     it('accepts a single character name', async () => {
@@ -159,7 +170,9 @@ describe('updateTeamName', () => {
 
       const result = await updateTeamName({ slug: 'acme', name: 'New Name' });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

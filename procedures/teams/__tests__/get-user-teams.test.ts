@@ -4,6 +4,10 @@ import getUserTeams from '../get-user-teams';
 import { prismaMock, knownRequestError } from '@/test/prisma';
 import { authMock, createSession, signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
+import {
+  expectOutputFailure,
+  PRISMA_INTERNAL_ERROR_MESSAGE
+} from './fixtures-procedures-teams';
 
 const teamRecord = (
   id: string,
@@ -42,7 +46,10 @@ describe('getUserTeams', () => {
 
       const result = await getUserTeams();
 
-      expectFailure(result, 'UNAUTHORIZED');
+      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
+        'Invalid session'
+      );
+      expect(prismaMock.team.findMany).not.toHaveBeenCalled();
     });
   });
 
@@ -157,9 +164,7 @@ describe('getUserTeams', () => {
 
       const result = await getUserTeams();
 
-      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
-        'Output validation failed'
-      );
+      expectOutputFailure(result);
     });
 
     it('maps an unknown prisma error to INTERNAL_SERVER_ERROR', async () => {
@@ -167,7 +172,9 @@ describe('getUserTeams', () => {
 
       const result = await getUserTeams();
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        PRISMA_INTERNAL_ERROR_MESSAGE
+      );
     });
   });
 });

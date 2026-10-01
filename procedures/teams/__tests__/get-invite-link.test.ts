@@ -7,6 +7,8 @@ import { expectFailure, expectOk } from '@/test/result';
 import {
   callerMembershipWhere,
   callerTeam,
+  expectOutputFailure,
+  inputIssuePaths,
   NOT_A_MEMBER_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
@@ -44,7 +46,8 @@ describe('getInviteLink', () => {
         {} as unknown as Parameters<typeof getInviteLink>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
   });
 
@@ -211,7 +214,7 @@ describe('getInviteLink', () => {
 
       const result = await getInviteLink({ slug: 'acme' });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expectOutputFailure(result);
     });
   });
 });

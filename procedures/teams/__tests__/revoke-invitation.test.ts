@@ -7,6 +7,8 @@ import { expectFailure, expectOk } from '@/test/result';
 import {
   callerMembershipWhere,
   callerTeam,
+  inputIssuePaths,
+  PRISMA_NOT_FOUND_MESSAGE,
   NOT_A_MEMBER_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
@@ -39,7 +41,18 @@ describe('revokeInvitation', () => {
         slug: 'acme'
       } as unknown as Parameters<typeof revokeInvitation>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['invitationId']]);
+    });
+
+    it('rejects input without a slug', async () => {
+      signIn();
+
+      const result = await revokeInvitation({
+        invitationId: 'inv-1'
+      } as unknown as Parameters<typeof revokeInvitation>[0]);
+
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
   });
 
@@ -165,7 +178,9 @@ describe('revokeInvitation', () => {
 
       const result = await revokeInvitation(input);
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

@@ -4,6 +4,11 @@ import selectTeam from '../select-team';
 import { prismaMock, knownRequestError } from '@/test/prisma';
 import { authMock, createSession, signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
+import {
+  expectOutputFailure,
+  inputIssuePaths,
+  PRISMA_NOT_FOUND_MESSAGE
+} from './fixtures-procedures-teams';
 
 const teamRecord = (id: string, role: TeamRole) => ({
   id,
@@ -20,9 +25,12 @@ describe('selectTeam', () => {
     it('rejects unauthenticated callers without loading teams', async () => {
       const result = await selectTeam({ id: 'alpha' });
 
-      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
-        'Invalid session'
-      );
+      expect(expectFailure(result, 'UNAUTHORIZED')).toEqual({
+        code: 'UNAUTHORIZED',
+        message: 'Invalid session',
+        cause: undefined,
+        data: undefined
+      });
       expect(prismaMock.team.findMany).not.toHaveBeenCalled();
     });
 
@@ -33,7 +41,7 @@ describe('selectTeam', () => {
         {} as unknown as Parameters<typeof selectTeam>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['id']]);
       expect(prismaMock.team.findMany).not.toHaveBeenCalled();
     });
   });
@@ -76,7 +84,12 @@ describe('selectTeam', () => {
     it('returns NOT_FOUND when no team has the id', async () => {
       const result = await selectTeam({ id: 'missing' });
 
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe('Team not found');
+      expect(expectFailure(result, 'NOT_FOUND')).toEqual({
+        code: 'NOT_FOUND',
+        message: 'Team not found',
+        cause: undefined,
+        data: undefined
+      });
     });
 
     it('returns NOT_FOUND for a team where the caller is blocked', async () => {
@@ -85,10 +98,16 @@ describe('selectTeam', () => {
       expect(expectFailure(result, 'NOT_FOUND').message).toBe('Team not found');
     });
 
+    it('loads the teams only once', async () => {
+      await selectTeam({ id: 'alpha' });
+
+      expect(prismaMock.team.findMany).toHaveBeenCalledTimes(1);
+    });
+
     it('matches on id rather than slug', async () => {
       const result = await selectTeam({ id: 'slug-alpha' });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe('Team not found');
     });
   });
 
@@ -115,8 +134,7 @@ describe('selectTeam', () => {
 
       expect(expectFailure(result, 'NOT_FOUND')).toEqual({
         code: 'NOT_FOUND',
-        message:
-          'Unable to process your request. The item may no longer exist. Give us a minute before you try again.',
+        message: PRISMA_NOT_FOUND_MESSAGE,
         cause: 'Failed to retrieve user teams',
         data: undefined
       });
@@ -146,8 +164,7 @@ describe('selectTeam', () => {
 
       const result = await selectTeam({ id: 'alpha' });
 
-      const failure = expectFailure(result, 'UNPROCESSABLE_CONTENT');
-      expect(failure.message).toContain('Output validation failed');
+      const failure = expectOutputFailure(result);
       expect(failure.cause).toBe('Failed to retrieve user teams');
     });
   });

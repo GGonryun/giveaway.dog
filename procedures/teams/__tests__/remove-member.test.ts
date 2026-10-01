@@ -5,7 +5,9 @@ import { prismaMock, knownRequestError } from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
 import {
+  inputIssuePaths,
   NOT_A_MEMBER_MESSAGE,
+  PRISMA_NOT_FOUND_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
 } from './fixtures-procedures-teams';
@@ -32,7 +34,18 @@ describe('removeMember', () => {
       slug: 'acme'
     } as unknown as Parameters<typeof removeMember>[0]);
 
-    expectFailure(result, 'UNPROCESSABLE_CONTENT');
+    expect(inputIssuePaths(result)).toEqual([['membershipId']]);
+  });
+
+  it('rejects input without a slug', async () => {
+    signIn();
+
+    const result = await removeMember({
+      membershipId: 'm-2'
+    } as unknown as Parameters<typeof removeMember>[0]);
+
+    expect(inputIssuePaths(result)).toEqual([['slug']]);
+    expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
   });
 
   it('removes a regular member when the caller is an admin', async () => {
@@ -89,7 +102,9 @@ describe('removeMember', () => {
 
     const result = await removeMember({ slug: 'acme', membershipId: 'm-2' });
 
-    expectFailure(result, 'NOT_FOUND');
+    expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+      PRISMA_NOT_FOUND_MESSAGE
+    );
   });
 
   describe('team lookup', () => {
@@ -276,7 +291,9 @@ describe('removeMember', () => {
 
       const result = await removeMember({ slug: 'acme', membershipId: 'm-2' });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

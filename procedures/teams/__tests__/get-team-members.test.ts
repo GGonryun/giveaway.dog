@@ -6,6 +6,8 @@ import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
 import {
   callerMembershipWhere,
+  expectOutputFailure,
+  inputIssuePaths,
   NOT_A_MEMBER_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
@@ -57,7 +59,8 @@ describe('getTeamMembers', () => {
         {} as unknown as Parameters<typeof getTeamMembers>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
   });
 
@@ -228,7 +231,72 @@ describe('getTeamMembers', () => {
 
       const result = await getTeamMembers({ slug: 'acme' });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expectOutputFailure(result);
+    });
+
+    it('fails when a member role is unknown', async () => {
+      signIn();
+      prismaMock.team.findFirst.mockResolvedValue(
+        teamWith([
+          memberRow(
+            'm-1',
+            TEST_USER.id,
+            TeamRole.OWNER,
+            '2030-01-01T00:00:00Z'
+          ),
+          {
+            ...memberRow('m-2', 'user-2', TeamRole.MEMBER, '2030-01-02T00:00Z'),
+            role: 'SUPERUSER' as TeamRole
+          }
+        ])
+      );
+
+      const result = await getTeamMembers({ slug: 'acme' });
+
+      expectOutputFailure(result);
+    });
+  });
+
+  describe('optional member data', () => {
+    beforeEach(() => {
+      signIn();
+    });
+
+    it('lists members whose user has no name, email, image or emoji', async () => {
+      prismaMock.team.findFirst.mockResolvedValue(
+        teamWith([
+          memberRow('m-1', TEST_USER.id, TeamRole.OWNER, '2030-01-01T00:00Z'),
+          memberRow('m-2', 'user-2', TeamRole.MEMBER, '2030-01-02T00:00Z', {
+            name: null,
+            email: null
+          })
+        ])
+      );
+
+      const result = await getTeamMembers({ slug: 'acme' });
+
+      expect(expectOk(result)[1].user).toEqual({
+        id: 'user-2',
+        name: null,
+        email: null,
+        image: null,
+        emoji: null
+      });
+    });
+
+    it('accepts membership timestamps serialized as ISO strings', async () => {
+      prismaMock.team.findFirst.mockResolvedValue(
+        teamWith([
+          {
+            ...memberRow('m-1', TEST_USER.id, TeamRole.ADMIN, '2030-01-01'),
+            createdAt: '2030-01-01T00:00:00.000Z' as unknown as Date
+          }
+        ])
+      );
+
+      const result = await getTeamMembers({ slug: 'acme' });
+
+      expect(expectOk(result)[0].createdAt).toBe('2030-01-01T00:00:00.000Z');
     });
   });
 });

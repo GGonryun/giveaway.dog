@@ -7,6 +7,8 @@ import { expectFailure, expectOk } from '@/test/result';
 import {
   callerMembershipWhere,
   callerTeam,
+  inputIssuePaths,
+  PRISMA_NOT_FOUND_MESSAGE,
   NOT_A_MEMBER_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
@@ -46,6 +48,15 @@ describe('updateTeamLogo', () => {
       const failure = expectFailure(result, 'UNPROCESSABLE_CONTENT');
       expect(failure.message).toContain('Team logo must be a valid URL');
       expect(failure.message).not.toContain('Team logo URL is required');
+    });
+
+    it('rejects input without a slug', async () => {
+      const result = await updateTeamLogo({
+        logo: LOGO
+      } as unknown as Parameters<typeof updateTeamLogo>[0]);
+
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
 
     it('accepts non-http url schemes', async () => {
@@ -138,7 +149,9 @@ describe('updateTeamLogo', () => {
 
       const result = await updateTeamLogo({ slug: 'acme', logo: LOGO });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

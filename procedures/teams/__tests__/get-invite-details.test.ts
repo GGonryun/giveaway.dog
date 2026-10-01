@@ -4,6 +4,10 @@ import getInviteDetails from '../get-invite-details';
 import { prismaMock } from '@/test/prisma';
 import { signIn } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
+import {
+  expectOutputFailure,
+  inputIssuePaths
+} from './fixtures-procedures-teams';
 
 const team = {
   name: 'Acme',
@@ -22,7 +26,7 @@ describe('getInviteDetails', () => {
         {} as unknown as Parameters<typeof getInviteDetails>[0]
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['code']]);
       expect(prismaMock.teamInviteLink.findUnique).not.toHaveBeenCalled();
     });
   });
@@ -169,9 +173,7 @@ describe('getInviteDetails', () => {
 
       const result = await getInviteDetails({ code: 'link-1' });
 
-      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
-        'Output validation failed'
-      );
+      expectOutputFailure(result);
     });
 
     it('fails when the email invite has an unknown role', async () => {
@@ -184,7 +186,7 @@ describe('getInviteDetails', () => {
 
       const result = await getInviteDetails({ code: 'email-1' });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expectOutputFailure(result);
     });
   });
 });

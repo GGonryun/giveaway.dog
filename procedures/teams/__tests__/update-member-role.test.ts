@@ -7,6 +7,8 @@ import { expectFailure, expectOk } from '@/test/result';
 import {
   callerMembershipWhere,
   callerTeam,
+  inputIssuePaths,
+  PRISMA_NOT_FOUND_MESSAGE,
   NOT_A_MEMBER_MESSAGE,
   permissionDeniedMessage,
   rolesExcept
@@ -51,7 +53,7 @@ describe('updateMemberRole', () => {
         role: 'SUPERUSER'
       } as unknown as UpdateInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['role']]);
       expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
 
@@ -63,7 +65,19 @@ describe('updateMemberRole', () => {
         role: TeamRole.MEMBER
       } as unknown as UpdateInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssuePaths(result)).toEqual([['membershipId']]);
+    });
+
+    it('rejects input without a slug', async () => {
+      signIn();
+
+      const result = await updateMemberRole({
+        membershipId: 'm-target',
+        role: TeamRole.MEMBER
+      } as unknown as UpdateInput);
+
+      expect(inputIssuePaths(result)).toEqual([['slug']]);
+      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
   });
 
@@ -304,7 +318,9 @@ describe('updateMemberRole', () => {
 
       const result = await updateMemberRole(input());
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

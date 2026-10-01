@@ -1,9 +1,19 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TeamRole, UserAccountType } from '@prisma/client';
 import acceptInvite from '../accept-invite';
-import { prismaMock, knownRequestError } from '@/test/prisma';
+import {
+  prismaMock,
+  knownRequestError,
+  createPrismaMock,
+  type PrismaMock
+} from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
+import {
+  inputIssues,
+  PRISMA_INTERNAL_ERROR_MESSAGE,
+  PRISMA_NOT_FOUND_MESSAGE
+} from './fixtures-procedures-teams';
 
 const team = {
   id: 'team-1',
@@ -54,9 +64,9 @@ describe('acceptInvite', () => {
         {} as unknown as Parameters<typeof acceptInvite>[0]
       );
 
-      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
-        'Input validation failed'
-      );
+      expect(inputIssues(result)).toEqual([
+        expect.objectContaining({ path: ['code'], message: 'Required' })
+      ]);
       expect(prismaMock.teamInviteLink.findUnique).not.toHaveBeenCalled();
     });
 
@@ -67,7 +77,12 @@ describe('acceptInvite', () => {
         code: 42
       } as unknown as Parameters<typeof acceptInvite>[0]);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(inputIssues(result)).toEqual([
+        expect.objectContaining({
+          path: ['code'],
+          message: 'Expected string, received number'
+        })
+      ]);
     });
   });
 
@@ -334,6 +349,71 @@ describe('acceptInvite', () => {
     });
   });
 
+  describe('transaction boundary', () => {
+    let tx: PrismaMock;
+
+    beforeEach(() => {
+      signIn();
+      tx = createPrismaMock();
+      prismaMock.$transaction.mockImplementation(
+        async (callback: (client: PrismaMock) => Promise<unknown>) =>
+          callback(tx)
+      );
+      prismaMock.teamInviteLink.findUnique.mockResolvedValue(null);
+      prismaMock.teamInviteEmail.findFirst.mockResolvedValue(emailInvite());
+      prismaMock.membership.findFirst.mockResolvedValue(null);
+    });
+
+    it('creates the membership through the transaction client', async () => {
+      await acceptInvite({ code: 'email-1' });
+
+      expect(tx.membership.create).toHaveBeenCalledWith({
+        data: { userId: TEST_USER.id, teamId: 'team-1', role: TeamRole.ADMIN }
+      });
+      expect(prismaMock.membership.create).not.toHaveBeenCalled();
+    });
+
+    it('promotes the account through the transaction client', async () => {
+      await acceptInvite({ code: 'email-1' });
+
+      expect(tx.user.update).toHaveBeenCalledWith({
+        where: { id: TEST_USER.id },
+        data: { accountType: UserAccountType.HOST }
+      });
+      expect(prismaMock.user.update).not.toHaveBeenCalled();
+    });
+
+    it('deletes the email invitation through the transaction client', async () => {
+      await acceptInvite({ code: 'email-1' });
+
+      expect(tx.teamInviteEmail.delete).toHaveBeenCalledWith({
+        where: { id: 'email-1' }
+      });
+      expect(prismaMock.teamInviteEmail.delete).not.toHaveBeenCalled();
+    });
+
+    it('performs the writes in order: membership, account, invitation', async () => {
+      await acceptInvite({ code: 'email-1' });
+
+      const [create] = tx.membership.create.mock.invocationCallOrder;
+      const [update] = tx.user.update.mock.invocationCallOrder;
+      const [remove] = tx.teamInviteEmail.delete.mock.invocationCallOrder;
+      expect(create).toBeLessThan(update);
+      expect(update).toBeLessThan(remove);
+    });
+
+    it('returns the transaction failure when a write inside it fails', async () => {
+      tx.user.update.mockRejectedValue(new Error('tx aborted'));
+
+      const result = await acceptInvite({ code: 'email-1' });
+
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
+        'tx aborted'
+      );
+      expect(tx.teamInviteEmail.delete).not.toHaveBeenCalled();
+    });
+  });
+
   describe('when the database fails', () => {
     beforeEach(() => {
       signIn();
@@ -350,7 +430,7 @@ describe('acceptInvite', () => {
       const result = await acceptInvite({ code: 'link-1' });
 
       expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
-        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: .{6}$/
+        PRISMA_INTERNAL_ERROR_MESSAGE
       );
     });
 
@@ -370,7 +450,7 @@ describe('acceptInvite', () => {
       const result = await acceptInvite({ code: 'link-1' });
 
       expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+        PRISMA_NOT_FOUND_MESSAGE
       );
     });
 
