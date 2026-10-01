@@ -129,6 +129,18 @@ describe('delete-eventsub-subscription', () => {
       });
     });
 
+    describe('when twitch rejects the deletion with a client error', () => {
+      it('throws for a 401 instead of treating it like a 404', async () => {
+        fetchMock.mockResolvedValue(textResponse('unauthorized', 401));
+
+        await expect(deleteEventSubSubscription(args)).rejects.toMatchObject({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to delete EventSub subscription'
+        });
+        expect(prismaMock.eventSubSubscription.delete).not.toHaveBeenCalled();
+      });
+    });
+
     describe('when the database delete fails', () => {
       it('propagates the prisma error', async () => {
         fetchMock.mockResolvedValue(emptyResponse(204));
@@ -170,6 +182,25 @@ describe('delete-eventsub-subscription', () => {
 
         expect(fetchMock).not.toHaveBeenCalled();
         expect(prismaMock.eventSubSubscription.delete).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when there is a single subscription', () => {
+      it('deletes it on twitch and in the database', async () => {
+        routeFetch(() => emptyResponse(204));
+
+        await deleteAllEventSubSubscriptions([
+          eventSubRecord({ id: 'db-only', twitch_id: 'twitch-only' })
+        ]);
+
+        expect(
+          fetchMock.mock.calls
+            .filter(([, init]) => init?.method === 'DELETE')
+            .map(([url]) => url)
+        ).toEqual([`${EVENTSUB_URL}?id=twitch-only`]);
+        expect(prismaMock.eventSubSubscription.delete).toHaveBeenCalledWith({
+          where: { id: 'db-only' }
+        });
       });
     });
 

@@ -142,6 +142,13 @@ describe('twitch webhook POST handler', () => {
       );
 
       expect(response.status).toBe(200);
+      expect(console.info).toHaveBeenCalledWith(
+        'Processing Twitch chat message event:',
+        expect.objectContaining({
+          chatter_user_id: 'bot-1',
+          message_id: 'message-1'
+        })
+      );
       expect(redisMock.get).not.toHaveBeenCalled();
     });
 
@@ -215,6 +222,15 @@ describe('twitch webhook POST handler', () => {
       await expect(response.json()).resolves.toEqual({
         error: 'Unknown message type'
       });
+    });
+
+    it('logs the received message type', async () => {
+      await POST(webhookRequest({ messageType: 'mystery', body: {} }));
+
+      expect(console.info).toHaveBeenCalledWith(
+        'Received Twitch webhook request with message type:',
+        'mystery'
+      );
     });
   });
 

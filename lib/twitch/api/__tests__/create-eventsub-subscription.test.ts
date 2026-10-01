@@ -274,6 +274,26 @@ describe('createEventSubSubscriptionsForFeatures', () => {
       expect(createCalls()).toHaveLength(0);
     });
 
+    it('stores the version twitch reports rather than the requested one', async () => {
+      routeFetch({
+        list: () =>
+          jsonResponse(
+            subscriptionList([
+              twitchSubscription({ id: 'twitch-existing', version: '2' })
+            ])
+          )
+      });
+
+      await createEventSubSubscriptionsForFeatures({
+        ...baseArgs,
+        features: []
+      });
+
+      expect(prismaMock.eventSubSubscription.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ version: '2' })
+      });
+    });
+
     it('stores an empty callback and method when twitch omits them', async () => {
       routeFetch({
         list: () =>
@@ -438,6 +458,58 @@ describe('createEventSubSubscriptionsForFeatures', () => {
           method: 'webhook',
           created_at: new Date('2026-01-01T00:00:00.000Z')
         }
+      });
+    });
+
+    it('stores the first subscription when twitch returns several', async () => {
+      routeFetch({
+        create: () =>
+          jsonResponse(
+            subscriptionList([
+              twitchSubscription({ id: 'first-created' }),
+              twitchSubscription({ id: 'second-created' })
+            ])
+          )
+      });
+
+      await createEventSubSubscriptionsForFeatures({
+        ...baseArgs,
+        features: []
+      });
+
+      expect(prismaMock.eventSubSubscription.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.eventSubSubscription.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ twitch_id: 'first-created' })
+      });
+    });
+
+    it('stores the type, version and broadcaster that twitch returned', async () => {
+      routeFetch({
+        create: () =>
+          jsonResponse(
+            subscriptionList([
+              twitchSubscription({
+                id: 'created',
+                type: 'channel.follow',
+                version: '2',
+                condition: { broadcaster_user_id: 'broadcaster-from-twitch' }
+              })
+            ])
+          )
+      });
+
+      await createEventSubSubscriptionsForFeatures({
+        ...baseArgs,
+        features: []
+      });
+
+      expect(prismaMock.eventSubSubscription.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          twitch_id: 'created',
+          type: 'channel.follow',
+          version: '2',
+          broadcaster_user_id: 'broadcaster-from-twitch'
+        })
       });
     });
 

@@ -273,6 +273,16 @@ describe('twitchOAuthCallback', () => {
       });
     });
 
+    it('rounds the token expiry down to whole seconds', async () => {
+      vi.setSystemTime(new Date('2026-10-01T12:00:00.900Z'));
+
+      await twitchOAuthCallback(input());
+
+      expect(prismaMock.integration.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ expires_at: NOW_SECONDS + 14400 })
+      });
+    });
+
     it('does not update any integration', async () => {
       await twitchOAuthCallback(input());
 
@@ -322,6 +332,17 @@ describe('twitchOAuthCallback', () => {
           settings: expectedSettings,
           status: 'ACTIVE'
         }
+      });
+    });
+
+    it('rounds the refreshed token expiry down to whole seconds', async () => {
+      vi.setSystemTime(new Date('2026-10-01T12:00:00.900Z'));
+
+      await twitchOAuthCallback(input());
+
+      expect(prismaMock.integration.update).toHaveBeenCalledWith({
+        where: { id: 'integration-existing' },
+        data: expect.objectContaining({ expires_at: NOW_SECONDS + 14400 })
       });
     });
 
@@ -465,8 +486,10 @@ describe('twitchOAuthCallback', () => {
   });
 
   describe('when twitch oauth is not configured', () => {
-    it('returns INTERNAL_SERVER_ERROR without calling twitch', async () => {
+    it('returns INTERNAL_SERVER_ERROR without calling twitch when only the client secret is missing', async () => {
       vi.resetModules();
+      vi.stubEnv('TWITCH_CLIENT_ID', 'client-id');
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.test');
       vi.stubEnv('TWITCH_CLIENT_SECRET', '');
       const isolated = await import('../twitch-oauth-callback');
       signIn();

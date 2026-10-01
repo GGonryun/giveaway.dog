@@ -57,6 +57,15 @@ describe('twitchEventSubSubscriptionSchema', () => {
 
     expect(result.success).toBe(false);
   });
+
+  it('rejects a subscription without an id', () => {
+    const result = twitchEventSubSubscriptionSchema.safeParse({
+      type: 'channel.chat.message',
+      status: 'enabled'
+    });
+
+    expect(result.success).toBe(false);
+  });
 });
 
 describe('botStatusSchema', () => {
@@ -93,6 +102,18 @@ describe('botStatusSchema', () => {
 
     expect(result.success).toBe(false);
   });
+
+  it.each(['isModded', 'botUserId', 'botUsername'])(
+    'rejects a bot status without %s',
+    (field) => {
+      const result = botStatusSchema.safeParse({
+        ...botStatus,
+        [field]: undefined
+      });
+
+      expect(result.success).toBe(false);
+    }
+  );
 
   it('rejects a non boolean isModded', () => {
     const result = botStatusSchema.safeParse({

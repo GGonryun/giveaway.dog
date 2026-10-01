@@ -161,6 +161,23 @@ describe('connectTwitch', () => {
       expect(url.searchParams.get('state')).toBe('stored-slug:state-1');
     });
 
+    it('stores the slug of the stored team rather than the input in the state', async () => {
+      prismaMock.team.findUnique.mockResolvedValue({
+        id: 'team-1',
+        slug: 'stored-slug'
+      });
+
+      await connectTwitch({ slug: 'acme' } as ConnectInput);
+
+      expect(prismaMock.state.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            value: expect.objectContaining({ teamSlug: 'stored-slug' })
+          })
+        })
+      );
+    });
+
     it('maps a prisma error while storing state to INTERNAL_SERVER_ERROR', async () => {
       prismaMock.state.create.mockRejectedValue(knownRequestError('P2002'));
 

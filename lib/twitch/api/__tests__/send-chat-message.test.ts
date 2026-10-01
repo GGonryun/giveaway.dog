@@ -220,6 +220,37 @@ describe('sendChatMessage', () => {
     });
   });
 
+  describe('when the token refresh response has no access token', () => {
+    it('skips the reply when no token was cached', async () => {
+      redisMock.get.mockResolvedValue(null);
+      routeFetch({
+        chat: () => emptyResponse(204),
+        refresh: () => jsonResponse({ expires_in: 3600 })
+      });
+
+      await sendChatMessage('broadcaster-1', 'hello');
+
+      expect(chatCalls()).toHaveLength(0);
+      expect(console.info).toHaveBeenCalledWith(
+        '[Twitch] No bot token configured, skipping chat reply'
+      );
+    });
+
+    it('skips the retry after a 401', async () => {
+      routeFetch({
+        chat: () => textResponse('expired', 401),
+        refresh: () => jsonResponse({ expires_in: 3600 })
+      });
+
+      await sendChatMessage('broadcaster-1', 'hello');
+
+      expect(chatCalls()).toHaveLength(1);
+      expect(console.info).toHaveBeenCalledWith(
+        '[Twitch] Bot token refresh failed, skipping chat reply'
+      );
+    });
+  });
+
   describe('when twitch rejects the message for another reason', () => {
     beforeEach(() => {
       routeFetch({ chat: () => textResponse('bot is banned', 403) });

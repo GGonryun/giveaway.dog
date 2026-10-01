@@ -127,14 +127,19 @@ describe('verifyTwitchRequest', () => {
       expect(error).toMatchObject({ code: 'UNAUTHORIZED', message });
     });
 
-    it('treats an empty header as missing', async () => {
-      const error = await verifyError(buildRequest({ messageId: '' }));
+    it.each([
+      ['messageId', 'Missing Twitch message ID header'],
+      ['timestamp', 'Missing Twitch timestamp header'],
+      ['signature', 'Missing Twitch signature header'],
+      ['messageType', 'Missing Twitch message type header']
+    ] as const)(
+      'treats an empty %s header as missing',
+      async (header, message) => {
+        const error = await verifyError(buildRequest({ [header]: '' }));
 
-      expect(error).toMatchObject({
-        code: 'UNAUTHORIZED',
-        message: 'Missing Twitch message ID header'
-      });
-    });
+        expect(error).toMatchObject({ code: 'UNAUTHORIZED', message });
+      }
+    );
 
     it('reports the message id first when every header is missing', async () => {
       const error = await verifyError(

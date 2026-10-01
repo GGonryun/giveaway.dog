@@ -42,6 +42,12 @@ describe('handleRevocation', () => {
       expect(prismaMock.integration.update).not.toHaveBeenCalled();
     });
 
+    it('does not log a revocation', async () => {
+      await handleRevocation(revocationBody);
+
+      expect(console.log).not.toHaveBeenCalled();
+    });
+
     it('responds with ok', async () => {
       const response = await handleRevocation(revocationBody);
 
@@ -80,6 +86,14 @@ describe('handleRevocation', () => {
 
     it('keeps the integration status when other subscriptions remain', async () => {
       prismaMock.eventSubSubscription.count.mockResolvedValue(2);
+
+      await handleRevocation(revocationBody);
+
+      expect(prismaMock.integration.update).not.toHaveBeenCalled();
+    });
+
+    it('keeps the integration status when exactly one subscription remains', async () => {
+      prismaMock.eventSubSubscription.count.mockResolvedValue(1);
 
       await handleRevocation(revocationBody);
 

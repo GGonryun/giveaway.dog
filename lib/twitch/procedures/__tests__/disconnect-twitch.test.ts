@@ -153,6 +153,26 @@ describe('disconnectTwitch', () => {
       });
     });
 
+    describe('and the integration has a single subscription', () => {
+      it('deletes the subscription record as well as the integration', async () => {
+        prismaMock.integration.findFirst.mockResolvedValue(
+          integration([
+            eventSubRecord({ id: 'db-only', twitch_id: 'twitch-only' })
+          ])
+        );
+        routeFetch(() => emptyResponse(204));
+
+        await disconnectTwitch({ slug: 'acme' });
+
+        expect(prismaMock.eventSubSubscription.delete).toHaveBeenCalledWith({
+          where: { id: 'db-only' }
+        });
+        expect(prismaMock.integration.delete).toHaveBeenCalledWith({
+          where: { id: 'integration-1' }
+        });
+      });
+    });
+
     describe('and the integration has subscriptions', () => {
       beforeEach(() => {
         prismaMock.integration.findFirst.mockResolvedValue(

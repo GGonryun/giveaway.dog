@@ -169,6 +169,92 @@ describe('channelChatMessageEventSubSchema', () => {
   });
 
   it.each([
+    [
+      'a text fragment with a cheermote',
+      { ...textFragment, cheermote: cheermoteFragment.cheermote }
+    ],
+    [
+      'a text fragment with a mention',
+      { ...textFragment, mention: mentionFragment.mention }
+    ],
+    [
+      'an emote fragment with a cheermote',
+      { ...emoteFragment, cheermote: cheermoteFragment.cheermote }
+    ],
+    [
+      'an emote fragment with a mention',
+      { ...emoteFragment, mention: mentionFragment.mention }
+    ],
+    [
+      'a mention fragment with an emote',
+      { ...mentionFragment, emote: emoteFragment.emote }
+    ],
+    [
+      'a mention fragment with a cheermote',
+      { ...mentionFragment, cheermote: cheermoteFragment.cheermote }
+    ],
+    [
+      'a cheermote fragment with an emote',
+      { ...cheermoteFragment, emote: emoteFragment.emote }
+    ],
+    [
+      'a cheermote fragment with a mention',
+      { ...cheermoteFragment, mention: mentionFragment.mention }
+    ],
+    [
+      'an emote whose format is not a list',
+      { ...emoteFragment, emote: { ...emoteFragment.emote, format: 'static' } }
+    ],
+    [
+      'an emote without an owner',
+      {
+        ...emoteFragment,
+        emote: { id: '25', emote_set_id: '0', format: ['static'] }
+      }
+    ],
+    [
+      'a cheermote whose bits are not a number',
+      {
+        ...cheermoteFragment,
+        cheermote: { prefix: 'Cheer', bits: '100', tier: 1 }
+      }
+    ],
+    [
+      'a mention without a user id',
+      {
+        ...mentionFragment,
+        mention: { user_login: 'viewer', user_name: 'Viewer' }
+      }
+    ]
+  ])('rejects %s', (_label, fragment) => {
+    const result = channelChatMessageEventSubSchema.safeParse(
+      chatEventSub({
+        event: { message: { text: 'x', fragments: [fragment] } }
+      })
+    );
+
+    expect(result.success).toBe(false);
+  });
+
+  it.each([
+    'broadcaster_user_id',
+    'broadcaster_user_login',
+    'broadcaster_user_name',
+    'chatter_user_id',
+    'chatter_user_login',
+    'chatter_user_name',
+    'message_id',
+    'message',
+    'badges'
+  ])('rejects an event without %s', (field) => {
+    const result = channelChatMessageEventSubSchema.safeParse(
+      chatEventSub({ event: { [field]: undefined } })
+    );
+
+    expect(result.success).toBe(false);
+  });
+
+  it.each([
     ['status', { status: 'authorization_revoked' }],
     ['type', { type: 'channel.follow' }],
     ['version', { version: '2' }],
@@ -331,6 +417,30 @@ describe('eventSubSubscriptionSchema', () => {
 
     expect(result.success).toBe(false);
   });
+
+  it.each([
+    'id',
+    'status',
+    'type',
+    'version',
+    'condition',
+    'created_at',
+    'transport'
+  ])('rejects a subscription without %s', (field) => {
+    const result = eventSubSubscriptionSchema.safeParse(
+      twitchSubscription({ [field]: undefined })
+    );
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a numeric version', () => {
+    const result = eventSubSubscriptionSchema.safeParse(
+      twitchSubscription({ version: 1 })
+    );
+
+    expect(result.success).toBe(false);
+  });
 });
 
 describe('eventSubSubscriptionsListSchema', () => {
@@ -363,14 +473,26 @@ describe('eventSubSubscriptionsListSchema', () => {
     expect(result.success).toBe(false);
   });
 
-  it('rejects a list without total cost fields', () => {
-    const result = eventSubSubscriptionsListSchema.safeParse({
-      total: 0,
-      data: []
+  it('keeps unknown list keys', () => {
+    const parsed = eventSubSubscriptionsListSchema.parse({
+      ...subscriptionList([]),
+      extra: 'value'
     });
 
-    expect(result.success).toBe(false);
+    expect(parsed).toHaveProperty('extra', 'value');
   });
+
+  it.each(['total', 'data', 'max_total_cost', 'total_cost'])(
+    'rejects a list without %s',
+    (field) => {
+      const result = eventSubSubscriptionsListSchema.safeParse({
+        ...subscriptionList([]),
+        [field]: undefined
+      });
+
+      expect(result.success).toBe(false);
+    }
+  );
 
   it('rejects a list containing an invalid subscription', () => {
     const result = eventSubSubscriptionsListSchema.safeParse(

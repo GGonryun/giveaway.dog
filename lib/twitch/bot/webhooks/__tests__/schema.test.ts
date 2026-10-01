@@ -79,6 +79,25 @@ describe('twitchChatMessageEventSchema', () => {
 
     expect(result.success).toBe(false);
   });
+
+  it.each([
+    ['a numeric message type', { message_type: 1 }],
+    [
+      'a numeric channel points reward id',
+      { channel_points_custom_reward_id: 7 }
+    ],
+    ['badges that are not a list', { badges: 'vip' }],
+    [
+      'fragments that are not a list',
+      { message: { text: 'x', fragments: 'x' } }
+    ]
+  ])('rejects %s', (_label, overrides) => {
+    const result = twitchChatMessageEventSchema.safeParse(
+      chatMessageEvent(overrides)
+    );
+
+    expect(result.success).toBe(false);
+  });
 });
 
 describe('twitchEventSubNotificationSchema', () => {
@@ -162,6 +181,34 @@ describe('twitchSubscriptionVerificationSchema', () => {
 
     expect(result.success).toBe(false);
   });
+
+  it.each([
+    'id',
+    'type',
+    'version',
+    'status',
+    'condition',
+    'transport',
+    'created_at'
+  ])('rejects a verification subscription without %s', (field) => {
+    const result = twitchSubscriptionVerificationSchema.safeParse({
+      challenge: 'challenge-1',
+      subscription: subscriptionPayload({ [field]: undefined })
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a verification condition with non string values', () => {
+    const result = twitchSubscriptionVerificationSchema.safeParse({
+      challenge: 'challenge-1',
+      subscription: subscriptionPayload({
+        condition: { broadcaster_user_id: 1 }
+      })
+    });
+
+    expect(result.success).toBe(false);
+  });
 });
 
 describe('twitchRevocationSchema', () => {
@@ -173,9 +220,37 @@ describe('twitchRevocationSchema', () => {
     expect(twitchRevocationSchema.parse(body)).toEqual(body);
   });
 
-  it('rejects a revocation without a subscription id', () => {
+  it.each([
+    'id',
+    'type',
+    'version',
+    'status',
+    'condition',
+    'transport',
+    'created_at'
+  ])('rejects a revocation subscription without %s', (field) => {
     const result = twitchRevocationSchema.safeParse({
-      subscription: subscriptionPayload({ id: undefined })
+      subscription: subscriptionPayload({ [field]: undefined })
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a revocation condition with non string values', () => {
+    const result = twitchRevocationSchema.safeParse({
+      subscription: subscriptionPayload({
+        condition: { broadcaster_user_id: 1 }
+      })
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a revocation transport without a method', () => {
+    const result = twitchRevocationSchema.safeParse({
+      subscription: subscriptionPayload({
+        transport: { callback: 'https://giveaway.test/api/twitch/webhooks' }
+      })
     });
 
     expect(result.success).toBe(false);
@@ -236,6 +311,26 @@ describe('parseGiveawayCommand', () => {
 
     it('does not treat a dot in the trigger as a wildcard', () => {
       expect(parseGiveawayCommand('!aXb', '!a.b')).toBe(false);
+    });
+
+    it('matches a trigger containing parentheses literally', () => {
+      expect(parseGiveawayCommand('!(win) now', '!(win)')).toBe(true);
+    });
+
+    it.each([
+      ['a question mark', '!win?', '!wi'],
+      ['a star', '!win*', '!wi'],
+      ['a caret', '!^win', '!win'],
+      ['a dollar sign', '!win$', '!win'],
+      ['braces', '!w{2}', '!ww'],
+      ['a pipe', '!a|b', '!b'],
+      ['brackets', '!w[i]n', '!win'],
+      ['a backslash', '!w\\d', '!w1']
+    ])('escapes %s in the trigger', (_label, trigger, lookalike) => {
+      expect([
+        parseGiveawayCommand(trigger, trigger),
+        parseGiveawayCommand(lookalike, trigger)
+      ]).toEqual([true, false]);
     });
   });
 });

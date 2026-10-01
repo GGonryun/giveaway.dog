@@ -150,6 +150,17 @@ describe('processChatMessage', () => {
     });
   });
 
+  describe('when the event is valid', () => {
+    it('logs the parsed event without unknown keys', async () => {
+      await processChatMessage(event('hello there', { extra: 'dropped' }));
+
+      expect(console.info).toHaveBeenCalledWith(
+        'Processing Twitch chat message event:',
+        chatMessageEvent({ message: { text: 'hello there', fragments: [] } })
+      );
+    });
+  });
+
   describe('when the message comes from the bot', () => {
     it('ignores the message', async () => {
       await processChatMessage(event('!enter', { chatter_user_id: 'bot-1' }));
@@ -304,6 +315,16 @@ describe('processChatMessage', () => {
       expect(prismaMock.user.findFirst).not.toHaveBeenCalled();
     });
 
+    it('does not report a missing trigger when the team has no active tasks', async () => {
+      prismaMock.task.findMany.mockResolvedValue([]);
+
+      await processChatMessage(event());
+
+      expect(console.info).not.toHaveBeenCalledWith(
+        '[Twitch] No valid task found for trigger: !enter'
+      );
+    });
+
     it('caches the matching task', async () => {
       const task = taskRecord();
       prismaMock.task.findMany.mockResolvedValue([task]);
@@ -328,6 +349,17 @@ describe('processChatMessage', () => {
           })
         })
       );
+    });
+
+    it('skips tasks that are not twitch chat tasks without a parse warning', async () => {
+      prismaMock.task.findMany.mockResolvedValue([
+        taskRecord({ id: 'bonus-task', config: bonusTaskConfig }),
+        taskRecord({ id: 'chat-task' })
+      ]);
+
+      await processChatMessage(event());
+
+      expect(console.warn).not.toHaveBeenCalled();
     });
 
     it('skips tasks with a different trigger and caches a miss', async () => {
@@ -364,6 +396,26 @@ describe('processChatMessage', () => {
       expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
       expect(console.info).toHaveBeenCalledWith(
         '[Twitch] Task task-1 has expired (end date: 2026-10-01T11:59:59.999Z)'
+      );
+    });
+
+    it('uses a later matching task when an earlier one has ended', async () => {
+      prismaMock.task.findMany.mockResolvedValue([
+        taskRecord({
+          id: 'ended-task',
+          timing: { endDate: '2026-09-30T00:00:00.000Z' }
+        }),
+        taskRecord({ id: 'open-task' })
+      ]);
+
+      await processChatMessage(event());
+
+      expect(prismaMock.taskCompletion.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            task: { connect: { id: 'open-task' } }
+          })
+        })
       );
     });
 
