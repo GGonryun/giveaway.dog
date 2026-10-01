@@ -313,8 +313,7 @@ const BUCKET_SCORES: Record<QualityType, number> = {
 function classifySignals(signals: Record<string, number>): QualityType {
   const botLikely = signals.turnstileTrust < -5;
   const sharedInfra =
-    signals.overlappingIpAddresses < 0 ||
-    signals.overlappingFingerprints < 0;
+    signals.overlappingIpAddresses < 0 || signals.overlappingFingerprints < 0;
 
   if (botLikely) return 'banned';
   if (sharedInfra) return 'suspicious';

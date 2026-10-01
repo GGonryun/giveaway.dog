@@ -63,7 +63,11 @@ import { DisqualificationDialog } from './disqualification-dialog';
 import { TASK_LABEL } from '@/lib/task/schemas';
 import { USER_SOURCE_LABEL } from '@/lib/user-source/data';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import { toQualityType, QUALITY_LABELS, QUALITY_BADGE_VARIANT } from '@/schemas/quality';
+import {
+  toQualityType,
+  QUALITY_LABELS,
+  QUALITY_BADGE_VARIANT
+} from '@/schemas/quality';
 import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
 import { rollPrize } from '@/lib/winners/procedures/roll-prize';
 import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';
@@ -150,7 +154,9 @@ const PrizeDrawRow = ({
       </TableCell>
       <TableCell>
         <Badge
-          variant={QUALITY_BADGE_VARIANT[toQualityType(draw.participant.qualityScore)]}
+          variant={
+            QUALITY_BADGE_VARIANT[toQualityType(draw.participant.qualityScore)]
+          }
         >
           {QUALITY_LABELS[toQualityType(draw.participant.qualityScore)]}
         </Badge>

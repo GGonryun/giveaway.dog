@@ -32,7 +32,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
       title: 'Schedule Your Picker',
       description:
         'Create an account and upgrade to PRO to unlock the ability to schedule your picker for later. Set a specific date and time for your drawing to run automatically.'
-    },
+    }
   };
 
   return (

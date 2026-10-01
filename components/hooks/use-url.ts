@@ -19,7 +19,7 @@ export const computeUrl = ({
   const origin = window.location.origin;
   const path = pathname ?? window.location.pathname;
 
-  let url = new URL(path, origin);
+  const url = new URL(path, origin);
 
   if (searchParams) {
     Object.entries(searchParams).forEach(([key, value]) => {

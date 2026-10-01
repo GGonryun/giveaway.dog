@@ -11,9 +11,7 @@ export const PickersV2Tabs: React.PC<{
   filters: ListPickersV2FilterSchema;
 }> = ({ filters, children }) => {
   const page = useSweepstakesPage();
-  const [tab, setTab] = useState<PickerFilterStatus>(
-    filters.status ?? 'ALL'
-  );
+  const [tab, setTab] = useState<PickerFilterStatus>(filters.status ?? 'ALL');
 
   return (
     <Tabs

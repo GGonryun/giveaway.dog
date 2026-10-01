@@ -78,7 +78,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Charge credits upfront for this endpoint call
-    await checkAndConsumeCredits(request.headers, CREDIT_COSTS.LOAD_TWEET_ENDPOINT);
+    await checkAndConsumeCredits(
+      request.headers,
+      CREDIT_COSTS.LOAD_TWEET_ENDPOINT
+    );
 
     const tweet = await getTweetCached({ tweetId });
     const user = await getUserCached({ username: tweet.username });
@@ -121,28 +124,30 @@ export async function POST(request: NextRequest) {
       estimatedDurationMs
     };
 
-    prisma.$transaction([
-      prisma.siteMetric.upsert({
-        where: { key: X_PICKER_LIKES_KEY },
-        create: { key: X_PICKER_LIKES_KEY, value: likeCount },
-        update: { value: { increment: likeCount } }
-      }),
-      prisma.siteMetric.upsert({
-        where: { key: X_PICKER_RETWEETS_KEY },
-        create: { key: X_PICKER_RETWEETS_KEY, value: retweetCount },
-        update: { value: { increment: retweetCount } }
-      }),
-      prisma.siteMetric.upsert({
-        where: { key: X_PICKER_REPLIES_KEY },
-        create: { key: X_PICKER_REPLIES_KEY, value: replyCount },
-        update: { value: { increment: replyCount } }
-      }),
-      prisma.siteMetric.upsert({
-        where: { key: X_PICKER_QUOTES_KEY },
-        create: { key: X_PICKER_QUOTES_KEY, value: quoteCount },
-        update: { value: { increment: quoteCount } }
-      })
-    ]).catch(() => {});
+    prisma
+      .$transaction([
+        prisma.siteMetric.upsert({
+          where: { key: X_PICKER_LIKES_KEY },
+          create: { key: X_PICKER_LIKES_KEY, value: likeCount },
+          update: { value: { increment: likeCount } }
+        }),
+        prisma.siteMetric.upsert({
+          where: { key: X_PICKER_RETWEETS_KEY },
+          create: { key: X_PICKER_RETWEETS_KEY, value: retweetCount },
+          update: { value: { increment: retweetCount } }
+        }),
+        prisma.siteMetric.upsert({
+          where: { key: X_PICKER_REPLIES_KEY },
+          create: { key: X_PICKER_REPLIES_KEY, value: replyCount },
+          update: { value: { increment: replyCount } }
+        }),
+        prisma.siteMetric.upsert({
+          where: { key: X_PICKER_QUOTES_KEY },
+          create: { key: X_PICKER_QUOTES_KEY, value: quoteCount },
+          update: { value: { increment: quoteCount } }
+        })
+      ])
+      .catch(() => {});
 
     return NextResponse.json({
       success: true,

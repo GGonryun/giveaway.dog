@@ -48,7 +48,11 @@ import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toEngagementTheme } from '@/lib/participant/util';
-import { toQualityType, QUALITY_LABELS, QUALITY_BADGE_VARIANT } from '@/schemas/quality';
+import {
+  toQualityType,
+  QUALITY_LABELS,
+  QUALITY_BADGE_VARIANT
+} from '@/schemas/quality';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { disqualifyParticipant } from '@/procedures/sweepstakes/disqualify-participant';
 
@@ -285,7 +289,9 @@ const SweepstakeParticipant: React.FC<{
 
       <TableCell className="hidden lg:table-cell text-right">
         <Badge
-          variant={QUALITY_BADGE_VARIANT[toQualityType(participant.user.qualityScore)]}
+          variant={
+            QUALITY_BADGE_VARIANT[toQualityType(participant.user.qualityScore)]
+          }
         >
           {QUALITY_LABELS[toQualityType(participant.user.qualityScore)]}
         </Badge>
