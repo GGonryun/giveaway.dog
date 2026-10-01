@@ -79,6 +79,12 @@ describe('POST /api/workflows/cancel', () => {
       expect(res.status).toBe(400);
       expect(m.cancel).not.toHaveBeenCalled();
     });
+
+    it('rejects with a TypeError instead of returning 400 when the body is JSON null', async () => {
+      await expect(POST(buildRequest({ body: 'null' }))).rejects.toThrow(
+        TypeError
+      );
+    });
   });
 
   describe('when the body is not valid JSON', () => {
@@ -104,6 +110,23 @@ describe('POST /api/workflows/cancel', () => {
 
       expect(res.status).toBe(200);
       expect(await res.json()).toEqual({ status: 'cancelled' });
+    });
+
+    it('returns the status reported by the workflow world when the run did not end as cancelled', async () => {
+      m.cancel.mockResolvedValue({ status: 'completed' });
+
+      const res = await POST(
+        buildRequest({ body: JSON.stringify({ runId: 'run-1' }) })
+      );
+
+      expect(res.status).toBe(200);
+      expect(await res.json()).toEqual({ status: 'completed' });
+    });
+
+    it('passes a non-string runId through to the workflow world unchanged', async () => {
+      await POST(buildRequest({ body: JSON.stringify({ runId: 42 }) }));
+
+      expect(m.cancel).toHaveBeenCalledWith(42);
     });
 
     it('returns 500 when cancelling the run fails', async () => {

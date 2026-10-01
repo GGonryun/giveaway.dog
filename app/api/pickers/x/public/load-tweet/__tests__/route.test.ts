@@ -363,6 +363,26 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       expect(res.status).toBe(200);
       expect((await res.json()).success).toBe(true);
     });
+
+    it('attaches a handler that swallows a failed metrics write', async () => {
+      const metricsWrite = { catch: vi.fn() };
+      prismaMock.$transaction.mockReturnValue(metricsWrite);
+
+      await POST(buildRequest());
+
+      expect(metricsWrite.catch).toHaveBeenCalledTimes(1);
+      const [swallow] = metricsWrite.catch.mock.calls[0];
+      expect(swallow(new Error('metrics down'))).toBeUndefined();
+    });
+
+    it('responds without waiting for the metrics write to settle', async () => {
+      prismaMock.$transaction.mockReturnValue(new Promise(() => {}));
+
+      const res = await POST(buildRequest());
+
+      expect(res.status).toBe(200);
+      expect((await res.json()).data.id).toBe('123');
+    });
   });
 
   describe('when the tweet has sparse data', () => {

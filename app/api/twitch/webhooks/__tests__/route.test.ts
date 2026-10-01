@@ -143,6 +143,7 @@ describe('POST /api/twitch/webhooks', () => {
       );
 
       expect(res.status).toBe(401);
+      expect(await res.json()).toEqual({ error: 'Unauthorized' });
     });
 
     it('returns 401 when the message is more than ten minutes old', async () => {
@@ -155,6 +156,7 @@ describe('POST /api/twitch/webhooks', () => {
       );
 
       expect(res.status).toBe(401);
+      expect(await res.json()).toEqual({ error: 'Unauthorized' });
     });
 
     it('returns 401 when the message is more than ten minutes in the future', async () => {
@@ -220,6 +222,7 @@ describe('POST /api/twitch/webhooks', () => {
       );
 
       expect(res.status).toBe(500);
+      expect(await res.json()).toEqual({ error: 'Internal server error' });
     });
   });
 
@@ -314,18 +317,24 @@ describe('POST /api/twitch/webhooks', () => {
       });
     });
 
-    it('keeps the integration status when other subscriptions remain', async () => {
-      prismaMock.eventSubSubscription.findUnique.mockResolvedValue({
-        id: 'local-sub-1',
-        integrationId: 'integration-1'
-      });
-      prismaMock.eventSubSubscription.count.mockResolvedValue(2);
+    it.each([1, 2])(
+      'keeps the integration status when %i other subscriptions remain',
+      async (remaining) => {
+        prismaMock.eventSubSubscription.findUnique.mockResolvedValue({
+          id: 'local-sub-1',
+          integrationId: 'integration-1'
+        });
+        prismaMock.eventSubSubscription.count.mockResolvedValue(remaining);
 
-      await POST(revocationRequest());
+        const res = await POST(revocationRequest());
 
-      expect(prismaMock.eventSubSubscription.delete).toHaveBeenCalled();
-      expect(prismaMock.integration.update).not.toHaveBeenCalled();
-    });
+        expect(res.status).toBe(200);
+        expect(prismaMock.eventSubSubscription.delete).toHaveBeenCalledWith({
+          where: { id: 'local-sub-1' }
+        });
+        expect(prismaMock.integration.update).not.toHaveBeenCalled();
+      }
+    );
 
     it('rejects instead of returning 500 when the database fails', async () => {
       prismaMock.eventSubSubscription.findUnique.mockRejectedValue(

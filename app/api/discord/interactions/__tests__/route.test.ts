@@ -124,6 +124,7 @@ describe('POST /api/discord/interactions', () => {
       );
 
       expect(res.status).toBe(401);
+      expect(await res.json()).toEqual({ error: 'Unauthorized' });
     });
 
     it('returns 401 when the timestamp header is missing', async () => {
@@ -132,6 +133,7 @@ describe('POST /api/discord/interactions', () => {
       );
 
       expect(res.status).toBe(401);
+      expect(await res.json()).toEqual({ error: 'Unauthorized' });
     });
 
     it('returns 401 when the signature does not match the body', async () => {
@@ -153,6 +155,7 @@ describe('POST /api/discord/interactions', () => {
       );
 
       expect(res.status).toBe(401);
+      expect(await res.json()).toEqual({ error: 'Unauthorized' });
     });
   });
 

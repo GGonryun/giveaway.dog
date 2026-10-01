@@ -90,6 +90,13 @@ const fakeHandleUpload = async ({
   return { type: body.type, response: 'ok' };
 };
 
+const GENERIC_ERROR = {
+  error: {
+    code: 'INTERNAL_SERVER_ERROR',
+    message: 'An unexpected error occurred'
+  }
+};
+
 const safeSearch = (annotation: Record<string, string> | null) => {
   m.safeSearchDetection.mockResolvedValue([
     { safeSearchAnnotation: annotation }
@@ -381,6 +388,7 @@ describe('POST /api/upload', () => {
       const res = await POST(buildRequest(body()));
 
       expect(res.status).toBe(500);
+      expect(await res.json()).toEqual(GENERIC_ERROR);
       expect(m.del).not.toHaveBeenCalled();
     });
   });
@@ -412,6 +420,7 @@ describe('POST /api/upload', () => {
       const res = await POST(buildRequest(completedBody(null)));
 
       expect(res.status).toBe(500);
+      expect(await res.json()).toEqual(GENERIC_ERROR);
     });
   });
 
@@ -422,6 +431,7 @@ describe('POST /api/upload', () => {
       );
 
       expect(res.status).toBe(500);
+      expect(await res.json()).toEqual(GENERIC_ERROR);
       expect(m.del).not.toHaveBeenCalled();
       expect(prismaMock.imageMetadata.create).not.toHaveBeenCalled();
     });
@@ -430,6 +440,7 @@ describe('POST /api/upload', () => {
       const res = await POST(buildRequest(completedBody('not-json')));
 
       expect(res.status).toBe(500);
+      expect(await res.json()).toEqual(GENERIC_ERROR);
       expect(m.del).not.toHaveBeenCalled();
     });
   });

@@ -273,6 +273,19 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
       expect(m.getById).toHaveBeenCalledWith('AbC123');
     });
 
+    it.each([
+      ['https://notx.com/someone/status/555', '555'],
+      ['https://ghost.co/xyz', 'xyz']
+    ])(
+      'accepts %s without checking the domain and charges a credit',
+      async (postUrl, tweetId) => {
+        await POST(buildRequest(buildBody({ postUrl })));
+
+        expect(m.creditsLimit).toHaveBeenCalledTimes(1);
+        expect(m.getById).toHaveBeenCalledWith(tweetId);
+      }
+    );
+
     it('returns a generic 500 when the post has no retweeters', async () => {
       m.getRetweeters.mockResolvedValue({ data: [], hasMore: false });
 
@@ -438,6 +451,43 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
 
       expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
       expect(prismaMock.$transaction.mock.calls[0][0]).toHaveLength(4);
+    });
+
+    it('passes the picker, post, retweeter and draw writes to the transaction in that order', async () => {
+      prismaMock.twitterPicker.create.mockReturnValue('picker-write');
+      prismaMock.twitterPost.create.mockReturnValue('post-write');
+      prismaMock.twitterPickerUser.createMany.mockReturnValue('users-write');
+      prismaMock.twitterPickerDraw.createMany.mockReturnValue('draws-write');
+
+      await POST(buildRequest());
+
+      expect(prismaMock.$transaction).toHaveBeenCalledWith([
+        'picker-write',
+        'post-write',
+        'users-write',
+        'draws-write'
+      ]);
+    });
+
+    it('issues each write exactly once', async () => {
+      await POST(buildRequest());
+
+      expect(prismaMock.twitterPicker.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.twitterPost.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.twitterPickerUser.createMany).toHaveBeenCalledTimes(1);
+      expect(prismaMock.twitterPickerDraw.createMany).toHaveBeenCalledTimes(1);
+    });
+
+    it('reports the id parsed from the url as the post id even when the fetched tweet id differs', async () => {
+      const res = await POST(
+        buildRequest(buildBody({ postUrl: 'https://t.co/AbC123' }))
+      );
+
+      const { data } = await res.json();
+      expect(data.postId).toBe('AbC123');
+      expect(prismaMock.twitterPost.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ tweetId: '123' })
+      });
     });
 
     it('picks winners using the shuffled order', async () => {

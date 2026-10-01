@@ -40,12 +40,14 @@ describe('GET /api/jobs/process', () => {
       const res = await GET(buildRequest({ authorization: 'Bearer nope' }));
 
       expect(res.status).toBe(401);
+      expect(await res.json()).toEqual({ error: 'Unauthorized' });
     });
 
     it('returns 401 when the secret is sent without the Bearer prefix', async () => {
       const res = await GET(buildRequest({ authorization: CRON_SECRET }));
 
       expect(res.status).toBe(401);
+      expect(await res.json()).toEqual({ error: 'Unauthorized' });
     });
 
     it('does not run any job processor', async () => {

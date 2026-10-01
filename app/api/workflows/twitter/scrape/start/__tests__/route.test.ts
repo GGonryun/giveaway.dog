@@ -337,6 +337,38 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
       });
     });
 
+    it('passes the user, draw and post deletions to the transaction in that order', async () => {
+      prismaMock.twitterPickerUser.deleteMany.mockReturnValue('users-delete');
+      prismaMock.twitterPickerDraw.deleteMany.mockReturnValue('draws-delete');
+      prismaMock.twitterPost.deleteMany.mockReturnValue('posts-delete');
+
+      await POST(buildRequest());
+
+      expect(prismaMock.$transaction).toHaveBeenCalledWith([
+        'users-delete',
+        'draws-delete',
+        'posts-delete'
+      ]);
+    });
+
+    it('issues each cleanup deletion exactly once', async () => {
+      await POST(buildRequest());
+
+      expect(prismaMock.twitterPickerUser.deleteMany).toHaveBeenCalledTimes(1);
+      expect(prismaMock.twitterPickerDraw.deleteMany).toHaveBeenCalledTimes(1);
+      expect(prismaMock.twitterPost.deleteMany).toHaveBeenCalledTimes(1);
+    });
+
+    it('stores the new run id instead of the previous one', async () => {
+      await POST(buildRequest());
+
+      expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ runId: 'run-new' })
+        })
+      );
+    });
+
     it('cancels and cleans up before starting the new run', async () => {
       await POST(buildRequest());
 
