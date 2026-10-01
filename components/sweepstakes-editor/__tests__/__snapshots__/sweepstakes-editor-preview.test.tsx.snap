@@ -1,0 +1,58 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SweepstakesSharedFormPreview > when the form only has a name > fills every other setting with preview defaults 1`] = `
+{
+  "audience": {
+    "allowedIdentities": [
+      "TWITTER",
+      "GOOGLE",
+      "DISCORD",
+      "EMAIL",
+      "TWITCH",
+      "KICK",
+      "TIKTOK",
+      "STEAM",
+    ],
+    "formFields": [],
+    "regionalRestriction": undefined,
+    "requirePreEntryLogin": false,
+  },
+  "criteria": {
+    "allowMultipleWins": false,
+    "allowUserSelection": false,
+    "minQualityScore": 50,
+    "minTasksCompleted": 1,
+  },
+  "design": {
+    "aspectRatio": "VIDEO",
+    "background": {
+      "color": "#edf0f4",
+      "type": "color",
+    },
+    "displayDescription": true,
+    "displayName": true,
+  },
+  "id": "preview-sweepstakes-id",
+  "prizes": [],
+  "setup": {
+    "banner": "",
+    "description": "",
+    "name": "Summer Giveaway",
+  },
+  "status": "RUNNING",
+  "tasks": [],
+  "terms": {
+    "text": "",
+    "type": "CUSTOM",
+  },
+  "timing": {
+    "endDate": 2026-06-22T12:00:00.000Z,
+    "startDate": 2026-06-15T12:00:00.000Z,
+    "timeZone": "UTC",
+  },
+  "visibility": {
+    "slug": "",
+    "visibility": "PRIVATE",
+  },
+}
+`;

@@ -1,0 +1,299 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TermsAndConditions > with custom terms > matches the snapshot 1`] = `
+<div>
+  <div
+    class="space-y-1"
+  >
+    <label
+      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+      for=":id1:-form-item"
+    >
+      Terms & Conditions
+    </label>
+    <div
+      aria-describedby=":id1:-form-item-description"
+      aria-invalid="false"
+      class="space-y-2"
+      id=":id1:-form-item"
+    >
+      <div
+        class="flex gap-2"
+      >
+        <button
+          class="cursor-pointer gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-9 px-4 py-2 has-[>svg]:px-3 flex flex-col justify-start items-start text-left grow"
+          data-slot="button"
+          type="button"
+        >
+          <div
+            class="flex justify-between items-center w-full"
+          >
+            <p
+              class="text-sm font-semibold"
+              weight="semibold"
+            >
+              Default
+            </p>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-square"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="18"
+                rx="2"
+                width="18"
+                x="3"
+                y="3"
+              />
+            </svg>
+          </div>
+        </button>
+        <button
+          class="cursor-pointer gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 flex flex-col justify-start items-start text-left grow"
+          data-slot="button"
+          type="button"
+        >
+          <div
+            class="flex justify-between items-center w-full"
+          >
+            <p
+              class="text-sm font-semibold"
+              weight="semibold"
+            >
+              Custom
+            </p>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-square-check-big"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344"
+              />
+              <path
+                d="m9 11 3 3L22 4"
+              />
+            </svg>
+          </div>
+        </button>
+      </div>
+      <textarea
+        aria-label="Enter a description"
+      >
+        &lt;p&gt;Our own rules&lt;/p&gt;
+      </textarea>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TermsAndConditions > with template terms > matches the snapshot 1`] = `
+<div>
+  <div
+    class="space-y-1"
+  >
+    <label
+      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+      for=":id1:-form-item"
+    >
+      Terms & Conditions
+    </label>
+    <div
+      aria-describedby=":id1:-form-item-description"
+      aria-invalid="false"
+      class="space-y-2"
+      id=":id1:-form-item"
+    >
+      <div
+        class="flex gap-2"
+      >
+        <button
+          class="cursor-pointer gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 flex flex-col justify-start items-start text-left grow"
+          data-slot="button"
+          type="button"
+        >
+          <div
+            class="flex justify-between items-center w-full"
+          >
+            <p
+              class="text-sm font-semibold"
+              weight="semibold"
+            >
+              Default
+            </p>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-square-check-big"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344"
+              />
+              <path
+                d="m9 11 3 3L22 4"
+              />
+            </svg>
+          </div>
+        </button>
+        <button
+          class="cursor-pointer gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-9 px-4 py-2 has-[>svg]:px-3 flex flex-col justify-start items-start text-left grow"
+          data-slot="button"
+          type="button"
+        >
+          <div
+            class="flex justify-between items-center w-full"
+          >
+            <p
+              class="text-sm font-semibold"
+              weight="semibold"
+            >
+              Custom
+            </p>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-square"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="18"
+                rx="2"
+                width="18"
+                x="3"
+                y="3"
+              />
+            </svg>
+          </div>
+        </button>
+      </div>
+      <div
+        class="relative w-full"
+      >
+        <textarea
+          class="flex min-h-[80px] w-full rounded-md border border-input bg-white dark:bg-input/30 px-3 py-2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-sm shadow-xs"
+          rows="12"
+        >
+          NO PURCHASE IS NECESSARY TO ENTER OR WIN. A PURCHASE DOES NOT INCREASE YOUR CHANCES OF WINNING.
+
+The Sweepstakes (“Promotion”) is sponsored by Acme Inc (“Sponsor”). For inquiries or winner requests, contact the Sponsor.
+
+The Promotion is open Global to all individuals, unless restricted by local law. 
+Employees, contractors, and affiliates of the Sponsor, as well as household or immediate family members, are not eligible to participate.
+Entrants under the legal age of majority must have permission from a parent or legal guardian.
+
+By entering, you accept these Official Rules and agree to be bound by them, including all eligibility requirements and Sponsor decisions, which are final.
+
+The Promotion begins on July 1, 2026 and ends on July 15, 2026. Entries received outside this period will not be accepted.
+
+Enter via https://giveaway.dog/browse/sweepstakes-1. Automated, fraudulent, or multiple entries through bots, scripts, or fake accounts are prohibited and may result in disqualification.
+
+Prizes:
+	- 1 winner will receive 'Gift Card'
+
+Prizes are non-transferable and non-redeemable for cash unless permitted by the Sponsor. All taxes and expenses related to the prize are the responsibility of the Winner.
+
+The odds of winning depend on the number of eligible entries received.
+
+Winner(s) will be selected by Random Drawing. Winners will be notified within 7 days using the contact information provided. Winners must claim their prize within 7 days or an alternate winner may be chosen.
+
+By entering, participants grant the Sponsor rights to use their name, likeness, and submitted content for promotional purposes in any medium, without further compensation, unless prohibited by law.
+Participants affirm that their entry is their own original work and does not infringe on the rights of others.
+
+Sponsor reserves the right to cancel, modify, or suspend the Promotion in the event of fraud, technical failure, or any other factor beyond its reasonable control. Sponsor may disqualify any participant found violating these terms.
+
+Sponsor is not responsible for:
+- Technical malfunctions, network failures, or lost entries
+- Unauthorized human or automated intervention
+- Errors in administration or prize delivery
+- Circumstances beyond Sponsor's control
+
+By entering, participants release and hold harmless the Sponsor and its affiliates from liability arising from participation or prize use.
+
+This Promotion is governed by the laws of USA. All disputes shall be resolved individually (not as part of a class action) and exclusively in the courts located in USA.
+
+To obtain a list of winners, contact the Sponsor within four (4) weeks of the sweepstakes' end date.
+
+This Promotion is not sponsored, endorsed, or administered by any social media platform, including but not limited to Facebook, Instagram, Twitter (X), YouTube, or Reddit. You are providing your information to the Sponsor.
+
+Your information is governed by our privacy policy (https://giveaway.dog/privacy). 
+
+
+        </textarea>
+        <div
+          class="absolute border inset-0 bg-white/70 dark:bg-input/30 backdrop-blur-[1px] opacity-100 lg:opacity-0 hover:opacity-100 transition-opacity rounded-md flex items-center justify-center cursor-pointer"
+        >
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3"
+            data-slot="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-settings2 lucide-settings-2"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14 17H5"
+              />
+              <path
+                d="M19 7h-9"
+              />
+              <circle
+                cx="17"
+                cy="17"
+                r="3"
+              />
+              <circle
+                cx="7"
+                cy="7"
+                r="3"
+              />
+            </svg>
+            Modify
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

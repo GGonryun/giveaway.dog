@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`stringifyTerms > matches the snapshot of the default terms 1`] = `
+"NO PURCHASE IS NECESSARY TO ENTER OR WIN. A PURCHASE DOES NOT INCREASE YOUR CHANCES OF WINNING.
+
+The Sweepstakes (“Promotion”) is sponsored by <Sponsor Name>, located at <Sponsor Address> (“Sponsor”). For inquiries or winner requests, contact the Sponsor.
+
+The Promotion is open <Eligibility Regions> to all individuals, unless restricted by local law. 
+Employees, contractors, and affiliates of the Sponsor, as well as household or immediate family members, are not eligible to participate.
+Entrants under the legal age of majority must have permission from a parent or legal guardian.
+
+By entering, you accept these Official Rules and agree to be bound by them, including all eligibility requirements and Sponsor decisions, which are final.
+
+The Promotion begins on <Tuesday> and ends on <Thursday>. Entries received outside this period will not be accepted.
+
+Enter via https://giveaway.dog/browse/abc123. Automated, fraudulent, or multiple entries through bots, scripts, or fake accounts are prohibited and may result in disqualification.
+
+Prizes:
+
+
+Prizes are non-transferable and non-redeemable for cash unless permitted by the Sponsor. All taxes and expenses related to the prize are the responsibility of the Winner.
+
+The odds of winning depend on the number of eligible entries received.
+
+Winner(s) will be selected by Randomly Draw. Winners will be notified within 7 days using the contact information provided. Winners must claim their prize within 7 days or an alternate winner may be chosen.
+
+By entering, participants grant the Sponsor rights to use their name, likeness, and submitted content for promotional purposes in any medium, without further compensation, unless prohibited by law.
+Participants affirm that their entry is their own original work and does not infringe on the rights of others.
+
+Sponsor reserves the right to cancel, modify, or suspend the Promotion in the event of fraud, technical failure, or any other factor beyond its reasonable control. Sponsor may disqualify any participant found violating these terms.
+
+Sponsor is not responsible for:
+- Technical malfunctions, network failures, or lost entries
+- Unauthorized human or automated intervention
+- Errors in administration or prize delivery
+- Circumstances beyond Sponsor's control
+
+By entering, participants release and hold harmless the Sponsor and its affiliates from liability arising from participation or prize use.
+
+This Promotion is governed by the laws of USA. All disputes shall be resolved individually (not as part of a class action) and exclusively in the courts located in USA.
+
+To obtain a list of winners, contact the Sponsor within four (4) weeks of the sweepstakes' end date.
+
+This Promotion is not sponsored, endorsed, or administered by any social media platform, including but not limited to Facebook, Instagram, Twitter (X), YouTube, or Reddit. You are providing your information to the Sponsor.
+
+Your information is governed by our privacy policy (https://giveaway.dog/privacy). 
+
+"
+`;

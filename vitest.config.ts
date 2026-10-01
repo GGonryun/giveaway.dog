@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitest/config';
 import path from 'path';
 
+process.env.TZ = 'UTC';
+
 const alias = {
   '@': path.resolve(__dirname, './')
 };

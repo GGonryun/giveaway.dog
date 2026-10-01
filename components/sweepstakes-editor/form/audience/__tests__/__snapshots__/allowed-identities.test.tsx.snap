@@ -1,0 +1,181 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AllowedIdentities > matches the snapshot 1`] = `
+<div>
+  <div
+    class="space-y-1 flex flex-col gap-1"
+  >
+    <div
+      class="space-y-0.5 m-0"
+    >
+      <div
+        class="flex gap-1 items-center"
+      >
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          for=":id1:-form-item"
+        >
+          Allowed Identities
+        </label>
+        <svg
+          aria-controls="radix-:id2:"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full cursor-help"
+          data-slot="dialog-trigger"
+          data-state="closed"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          type="button"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+          />
+          <path
+            d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+          />
+          <path
+            d="M12 17h.01"
+          />
+        </svg>
+      </div>
+    </div>
+    <button
+      aria-controls="radix-:id3:"
+      aria-describedby=":id1:-form-item-description"
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      aria-invalid="false"
+      class="cursor-pointer gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-primary-foreground shadow-xs has-[>svg]:px-3 flex w-full p-1 rounded-md border min-h-9 h-auto items-center justify-between hover:bg-foreground/5 [&_svg]:pointer-events-auto bg-background"
+      data-slot="popover-trigger"
+      data-state="closed"
+      id=":id1:-form-item"
+      type="button"
+      value="TWITTER,GOOGLE"
+    >
+      <div
+        class="flex justify-between items-center w-full "
+      >
+        <div
+          class="flex flex-wrap items-center"
+        >
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive overflow-hidden [a&]:hover:bg-primary/90 m-0.5 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 border-foreground/10 text-foreground bg-card hover:bg-card/80 [&>svg]:pointer-events-auto"
+            data-slot="badge"
+            style="animation-duration: 0s;"
+          >
+            X (Twitter)
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-x ml-2 h-4 w-4 cursor-pointer pointer-events-auto"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="m15 9-6 6"
+              />
+              <path
+                d="m9 9 6 6"
+              />
+            </svg>
+          </span>
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive overflow-hidden [a&]:hover:bg-primary/90 m-0.5 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 border-foreground/10 text-foreground bg-card hover:bg-card/80 [&>svg]:pointer-events-auto"
+            data-slot="badge"
+            style="animation-duration: 0s;"
+          >
+            Google
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-x ml-2 h-4 w-4 cursor-pointer pointer-events-auto"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="m15 9-6 6"
+              />
+              <path
+                d="m9 9 6 6"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="flex items-center justify-between"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x h-4 mx-2 cursor-pointer text-muted-foreground"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-chevron-down h-4 mx-2 cursor-pointer text-muted-foreground"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+            />
+          </svg>
+        </div>
+      </div>
+    </button>
+  </div>
+</div>
+`;

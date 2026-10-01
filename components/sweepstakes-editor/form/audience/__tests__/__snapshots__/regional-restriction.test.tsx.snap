@@ -1,0 +1,357 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RegionalRestriction > when there is a restriction > matches the snapshot 1`] = `
+<div>
+  <div
+    class="rounded-lg border p-3 shadow-xs"
+  >
+    <div
+      class="space-y-1 flex flex-row items-start justify-between"
+    >
+      <div
+        class="space-y-0.5 m-0"
+      >
+        <div
+          class="flex gap-1 items-center"
+        >
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for=":id1:-form-item"
+          >
+            Regional Restrictions
+          </label>
+          <svg
+            aria-controls="radix-:id2:"
+            aria-expanded="false"
+            aria-haspopup="dialog"
+            class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full cursor-help"
+            data-slot="dialog-trigger"
+            data-state="closed"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            type="button"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <path
+              d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+            />
+            <path
+              d="M12 17h.01"
+            />
+          </svg>
+        </div>
+        <p
+          class="text-sm text-muted-foreground"
+          id=":id1:-form-item-description"
+        >
+          Restrict access to users from certain regions or countries.
+        </p>
+      </div>
+      <button
+        aria-checked="true"
+        aria-describedby=":id1:-form-item-description"
+        aria-invalid="false"
+        class="peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.3rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+        data-slot="switch"
+        data-state="checked"
+        id=":id1:-form-item"
+        role="switch"
+        type="button"
+        value="on"
+      >
+        <span
+          class="bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+          data-slot="switch-thumb"
+          data-state="checked"
+        />
+      </button>
+    </div>
+    <div
+      data-state="open"
+    >
+      <div
+        class="flex flex-col gap-2"
+        data-state="open"
+        id="radix-:id3:"
+        style="transition-duration: 0s; animation-name: none;"
+      >
+        <div
+          class="grid grid-cols-1 sm:grid-cols-[128px_1fr] gap-2 items-start mt-2"
+        >
+          <div
+            class="space-y-1 flex flex-row items-center justify-between"
+          >
+            <button
+              aria-autocomplete="none"
+              aria-controls="radix-:id4:"
+              aria-expanded="false"
+              class="flex h-9 shadow-xs w-full items-center justify-between rounded-md border border-input bg-white dark:bg-input/30 px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+              data-state="closed"
+              dir="ltr"
+              role="combobox"
+              type="button"
+            >
+              <span
+                style="pointer-events: none;"
+              >
+                Exclude
+              </span>
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m6 9 6 6 6-6"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            class="space-y-1 flex flex-row items-center justify-between"
+          >
+            <button
+              aria-controls="radix-:id6:"
+              aria-describedby=":id5:-form-item-description"
+              aria-expanded="false"
+              aria-haspopup="dialog"
+              aria-invalid="false"
+              class="cursor-pointer gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-primary-foreground shadow-xs has-[>svg]:px-3 flex w-full p-1 rounded-md border min-h-9 h-auto items-center justify-between hover:bg-foreground/5 [&_svg]:pointer-events-auto bg-background"
+              data-slot="popover-trigger"
+              data-state="closed"
+              id=":id5:-form-item"
+              type="button"
+              value="country:CA,continent:EU"
+            >
+              <div
+                class="flex justify-between items-center w-full "
+              >
+                <div
+                  class="flex flex-wrap items-center"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive overflow-hidden [a&]:hover:bg-primary/90 m-0.5 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 border-foreground/10 text-foreground bg-card hover:bg-card/80 [&>svg]:pointer-events-auto"
+                    data-slot="badge"
+                    style="animation-duration: 0s;"
+                  >
+                    Canada
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-circle-x ml-2 h-4 w-4 cursor-pointer pointer-events-auto"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                      <path
+                        d="m15 9-6 6"
+                      />
+                      <path
+                        d="m9 9 6 6"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive overflow-hidden [a&]:hover:bg-primary/90 m-0.5 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 border-foreground/10 text-foreground bg-card hover:bg-card/80 [&>svg]:pointer-events-auto"
+                    data-slot="badge"
+                    style="animation-duration: 0s;"
+                  >
+                    Europe
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-circle-x ml-2 h-4 w-4 cursor-pointer pointer-events-auto"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                      <path
+                        d="m15 9-6 6"
+                      />
+                      <path
+                        d="m9 9 6 6"
+                      />
+                    </svg>
+                  </span>
+                </div>
+                <div
+                  class="flex items-center justify-between"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-x h-4 mx-2 cursor-pointer text-muted-foreground"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 6 6 18"
+                    />
+                    <path
+                      d="m6 6 12 12"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-chevron-down h-4 mx-2 cursor-pointer text-muted-foreground"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m6 9 6 6 6-6"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RegionalRestriction > when there is no restriction > matches the snapshot 1`] = `
+<div>
+  <div
+    class="rounded-lg border p-3 shadow-xs"
+  >
+    <div
+      class="space-y-1 flex flex-row items-start justify-between"
+    >
+      <div
+        class="space-y-0.5 m-0"
+      >
+        <div
+          class="flex gap-1 items-center"
+        >
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for=":id1:-form-item"
+          >
+            Regional Restrictions
+          </label>
+          <svg
+            aria-controls="radix-:id2:"
+            aria-expanded="false"
+            aria-haspopup="dialog"
+            class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full cursor-help"
+            data-slot="dialog-trigger"
+            data-state="closed"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            type="button"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <path
+              d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+            />
+            <path
+              d="M12 17h.01"
+            />
+          </svg>
+        </div>
+        <p
+          class="text-sm text-muted-foreground"
+          id=":id1:-form-item-description"
+        >
+          Restrict access to users from certain regions or countries.
+        </p>
+      </div>
+      <button
+        aria-checked="false"
+        aria-describedby=":id1:-form-item-description"
+        aria-invalid="false"
+        class="peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.3rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+        data-slot="switch"
+        data-state="unchecked"
+        id=":id1:-form-item"
+        role="switch"
+        type="button"
+        value="on"
+      >
+        <span
+          class="bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+          data-slot="switch-thumb"
+          data-state="unchecked"
+        />
+      </button>
+    </div>
+    <div
+      data-state="closed"
+    >
+      <div
+        class="flex flex-col gap-2"
+        data-state="closed"
+        hidden=""
+        id="radix-:id3:"
+        style=""
+      />
+    </div>
+  </div>
+</div>
+`;

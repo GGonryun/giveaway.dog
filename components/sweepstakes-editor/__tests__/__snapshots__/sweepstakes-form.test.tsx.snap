@@ -1,0 +1,405 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SweepstakesForm > layout > matches the snapshot of the header when create 1`] = `
+<header
+  class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b sticky top-0 z-50 bg-background"
+>
+  <div
+    class="flex w-full items-center gap-1 px-4"
+  >
+    <div
+      class="grid grid-cols-3 w-full items-center gap-4"
+    >
+      <h1
+        class="text-lg sm:text-xl font-medium text-ellipsis whitespace-nowrap overflow-hidden"
+      >
+        Summer Giveaway
+      </h1>
+      <div
+        class="flex-1 flex justify-center"
+      >
+        <div
+          class="flex flex-col gap-4"
+          data-orientation="horizontal"
+          data-slot="tabs"
+          dir="ltr"
+        >
+          <div
+            class="overflow-x-auto"
+          >
+            <div
+              aria-orientation="horizontal"
+              class="bg-muted text-muted-foreground inline-flex h-10 w-fit items-center justify-center rounded-lg p-[3px]"
+              data-orientation="horizontal"
+              data-slot="tabs-list"
+              role="tablist"
+              style="outline: none;"
+              tabindex="0"
+            >
+              <a
+                aria-controls="radix-:id1:-content-setup"
+                aria-selected="true"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="active"
+                href="?step=setup"
+                id="radix-:id1:-trigger-setup"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Setup
+              </a>
+              <a
+                aria-controls="radix-:id1:-content-audience"
+                aria-selected="false"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="inactive"
+                href="?step=audience"
+                id="radix-:id1:-trigger-audience"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Audience
+              </a>
+              <a
+                aria-controls="radix-:id1:-content-tasks"
+                aria-selected="false"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="inactive"
+                href="?step=tasks"
+                id="radix-:id1:-trigger-tasks"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Tasks
+              </a>
+              <a
+                aria-controls="radix-:id1:-content-selection"
+                aria-selected="false"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="inactive"
+                href="?step=selection"
+                id="radix-:id1:-trigger-selection"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Selection
+              </a>
+              <a
+                aria-controls="radix-:id1:-content-prizes"
+                aria-selected="false"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="inactive"
+                href="?step=prizes"
+                id="radix-:id1:-trigger-prizes"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Prizes
+              </a>
+              <a
+                aria-controls="radix-:id1:-content-design"
+                aria-selected="false"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="inactive"
+                href="?step=design"
+                id="radix-:id1:-trigger-design"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Design
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex-1 flex justify-end gap-2"
+      >
+        <button
+          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-9 px-4 py-2 has-[>svg]:px-3"
+          data-slot="button"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+          Cancel
+        </button>
+        <button
+          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3"
+          data-slot="button"
+          type="submit"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-save"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"
+            />
+            <path
+              d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"
+            />
+            <path
+              d="M7 3v4a1 1 0 0 0 1 1h7"
+            />
+          </svg>
+          Publish
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+`;
+
+exports[`SweepstakesForm > layout > matches the snapshot of the header when edit 1`] = `
+<header
+  class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b sticky top-0 z-50 bg-background"
+>
+  <div
+    class="flex w-full items-center gap-1 px-4"
+  >
+    <div
+      class="grid grid-cols-3 w-full items-center gap-4"
+    >
+      <h1
+        class="text-lg sm:text-xl font-medium text-ellipsis whitespace-nowrap overflow-hidden"
+      >
+        Summer Giveaway
+      </h1>
+      <div
+        class="flex-1 flex justify-center"
+      >
+        <div
+          class="flex flex-col gap-4"
+          data-orientation="horizontal"
+          data-slot="tabs"
+          dir="ltr"
+        >
+          <div
+            class="overflow-x-auto"
+          >
+            <div
+              aria-orientation="horizontal"
+              class="bg-muted text-muted-foreground inline-flex h-10 w-fit items-center justify-center rounded-lg p-[3px]"
+              data-orientation="horizontal"
+              data-slot="tabs-list"
+              role="tablist"
+              style="outline: none;"
+              tabindex="0"
+            >
+              <a
+                aria-controls="radix-:id1:-content-setup"
+                aria-selected="true"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="active"
+                href="?step=setup"
+                id="radix-:id1:-trigger-setup"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Setup
+              </a>
+              <a
+                aria-controls="radix-:id1:-content-audience"
+                aria-selected="false"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="inactive"
+                href="?step=audience"
+                id="radix-:id1:-trigger-audience"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Audience
+              </a>
+              <a
+                aria-controls="radix-:id1:-content-tasks"
+                aria-selected="false"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="inactive"
+                href="?step=tasks"
+                id="radix-:id1:-trigger-tasks"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Tasks
+              </a>
+              <a
+                aria-controls="radix-:id1:-content-selection"
+                aria-selected="false"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="inactive"
+                href="?step=selection"
+                id="radix-:id1:-trigger-selection"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Selection
+              </a>
+              <a
+                aria-controls="radix-:id1:-content-prizes"
+                aria-selected="false"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="inactive"
+                href="?step=prizes"
+                id="radix-:id1:-trigger-prizes"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Prizes
+              </a>
+              <a
+                aria-controls="radix-:id1:-content-design"
+                aria-selected="false"
+                class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex gap-1"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-slot="tabs-trigger"
+                data-state="inactive"
+                href="?step=design"
+                id="radix-:id1:-trigger-design"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                Design
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex-1 flex justify-end gap-2"
+      >
+        <button
+          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-9 px-4 py-2 has-[>svg]:px-3"
+          data-slot="button"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+          Cancel
+        </button>
+        <button
+          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3"
+          data-slot="button"
+          type="submit"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-save"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"
+            />
+            <path
+              d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"
+            />
+            <path
+              d="M7 3v4a1 1 0 0 0 1 1h7"
+            />
+          </svg>
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+`;
