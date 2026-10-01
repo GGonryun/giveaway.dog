@@ -3,6 +3,7 @@ import getUserDeviceActivity from '../get-user-device-activity';
 import { prismaMock, knownRequestError } from '@/test/prisma';
 import { signIn } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
+import { PRISMA_NOT_FOUND_MESSAGE } from './fixtures-procedures-user';
 
 type DeviceActivityInput = Parameters<typeof getUserDeviceActivity>[0];
 
@@ -178,7 +179,9 @@ describe('getUserDeviceActivity', () => {
 
       const result = await getUserDeviceActivity({ userId: 'user-2' });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

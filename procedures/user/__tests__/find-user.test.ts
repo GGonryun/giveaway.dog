@@ -95,7 +95,9 @@ describe('findUser', () => {
         self: false
       } as unknown as FindUserInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
     });
 

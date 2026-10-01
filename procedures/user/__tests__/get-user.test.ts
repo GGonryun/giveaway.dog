@@ -35,7 +35,9 @@ describe('getUser', () => {
 
       const result = await getUser({ self: true });
 
-      expectFailure(result, 'UNAUTHORIZED');
+      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
+        'Invalid session'
+      );
     });
   });
 
@@ -56,13 +58,17 @@ describe('getUser', () => {
     it('rejects self set to false', async () => {
       const result = await getUser({ self: false } as unknown as GetUserInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
 
     it('rejects a non-string user id', async () => {
       const result = await getUser({ userId: 42 } as unknown as GetUserInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
   });
 

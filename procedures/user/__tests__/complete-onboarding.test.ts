@@ -4,7 +4,7 @@ import completeOnboarding from '../complete-onboarding';
 import { prismaMock, knownRequestError } from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
-import { dbUser } from './fixtures-procedures-user';
+import { dbUser, PRISMA_NOT_FOUND_MESSAGE } from './fixtures-procedures-user';
 
 type OnboardingInput = Parameters<typeof completeOnboarding>[0];
 
@@ -101,7 +101,9 @@ describe('completeOnboarding', () => {
         })
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
 
     it('rejects an image that is not a url', async () => {
@@ -109,7 +111,9 @@ describe('completeOnboarding', () => {
         validInput({ image: 'not-a-url' })
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(prismaMock.user.update).not.toHaveBeenCalled();
     });
   });
@@ -164,6 +168,14 @@ describe('completeOnboarding', () => {
       });
     });
 
+    it('leaves the image out of the update when none is provided', async () => {
+      await completeOnboarding(validInput());
+
+      expect(prismaMock.user.update.mock.calls[0][0].data).not.toHaveProperty(
+        'image'
+      );
+    });
+
     it('writes the image when one is provided', async () => {
       await completeOnboarding(
         validInput({ image: 'https://example.com/me.png' })
@@ -193,6 +205,24 @@ describe('completeOnboarding', () => {
         id: 'user-1',
         username: 'jane_doe',
         accountType: UserAccountType.HOST
+      });
+    });
+
+    it('returns the values stored on the updated row rather than the input', async () => {
+      prismaMock.user.update.mockResolvedValue(
+        dbUser({
+          id: 'stored-id',
+          username: 'stored_name',
+          accountType: UserAccountType.PARTICIPANT
+        })
+      );
+
+      const result = await completeOnboarding(validInput());
+
+      expect(expectOk(result)).toEqual({
+        id: 'stored-id',
+        username: 'stored_name',
+        accountType: UserAccountType.PARTICIPANT
       });
     });
   });
@@ -248,7 +278,9 @@ describe('completeOnboarding', () => {
 
       const result = await completeOnboarding(validInput());
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
       expect(prismaMock.user.update).not.toHaveBeenCalled();
     });
   });

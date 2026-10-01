@@ -71,6 +71,22 @@ describe('updateAccountType', () => {
     });
   });
 
+  it('returns the values stored on the updated row rather than the input', async () => {
+    signIn();
+    prismaMock.user.update.mockResolvedValue(
+      dbUser({ id: 'stored-id', accountType: UserAccountType.PARTICIPANT })
+    );
+
+    const result = await updateAccountType({
+      accountType: UserAccountType.HOST
+    });
+
+    expect(expectOk(result)).toEqual({
+      id: 'stored-id',
+      accountType: UserAccountType.PARTICIPANT
+    });
+  });
+
   it('returns INTERNAL_SERVER_ERROR when the update fails', async () => {
     signIn();
     prismaMock.user.update.mockRejectedValue(knownRequestError('P2025'));

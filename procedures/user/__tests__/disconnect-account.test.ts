@@ -4,7 +4,7 @@ import disconnectAccount, { updateEmail } from '../disconnect-account';
 import { prismaMock, knownRequestError } from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
-import { dbUser } from './fixtures-procedures-user';
+import { dbUser, PRISMA_NOT_FOUND_MESSAGE } from './fixtures-procedures-user';
 
 type DisconnectInput = Parameters<typeof disconnectAccount>[0];
 
@@ -82,7 +82,9 @@ describe('disconnectAccount', () => {
         type: 'discord'
       } as unknown as DisconnectInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
   });
 
@@ -253,7 +255,9 @@ describe('disconnectAccount', () => {
         type: IdentityProvider.DISCORD
       });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

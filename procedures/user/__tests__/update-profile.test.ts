@@ -49,7 +49,9 @@ describe('updateProfile', () => {
     it('rejects an empty name', async () => {
       const result = await updateProfile({ name: '' });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
 
     it('rejects a name with disallowed characters', async () => {
@@ -63,7 +65,9 @@ describe('updateProfile', () => {
     it('rejects an image that is not a url', async () => {
       const result = await updateProfile({ image: 'avatar.png' });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
 
     it('rejects an unknown preferred contact method', async () => {
@@ -71,7 +75,9 @@ describe('updateProfile', () => {
         preferredContactMethod: 'PIGEON'
       } as unknown as UpdateProfileInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
   });
 
@@ -84,7 +90,7 @@ describe('updateProfile', () => {
     it('updates only the name when only a name is given', async () => {
       await updateProfile({ name: 'Jane_Doe-2 x' });
 
-      expect(prismaMock.user.update).toHaveBeenCalledWith({
+      expect(prismaMock.user.update.mock.calls[0][0]).toStrictEqual({
         where: { id: TEST_USER.id },
         data: { name: 'Jane_Doe-2 x' }
       });
@@ -110,7 +116,7 @@ describe('updateProfile', () => {
     it('clears the image and contact method when they are null', async () => {
       await updateProfile({ image: null, preferredContactMethod: null });
 
-      expect(prismaMock.user.update).toHaveBeenCalledWith({
+      expect(prismaMock.user.update.mock.calls[0][0]).toStrictEqual({
         where: { id: TEST_USER.id },
         data: { image: null, preferredContactMethod: null }
       });
@@ -119,7 +125,7 @@ describe('updateProfile', () => {
     it('still issues an update with empty data when nothing is provided', async () => {
       await updateProfile({});
 
-      expect(prismaMock.user.update).toHaveBeenCalledWith({
+      expect(prismaMock.user.update.mock.calls[0][0]).toStrictEqual({
         where: { id: TEST_USER.id },
         data: {}
       });
@@ -153,7 +159,9 @@ describe('updateProfile', () => {
 
       const result = await updateProfile({ name: 'Jane Doe' });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Output validation failed: /
+      );
     });
   });
 });

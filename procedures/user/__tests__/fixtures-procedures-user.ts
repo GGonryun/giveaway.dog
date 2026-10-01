@@ -12,6 +12,9 @@ export type UserRow = Prisma.UserGetPayload<{
   select: typeof USER_SCHEMA_SELECT_QUERY;
 }>;
 
+export const PRISMA_NOT_FOUND_MESSAGE =
+  'Unable to process your request. The item may no longer exist. Give us a minute before you try again.';
+
 const CREATED_AT = new Date('2026-01-15T00:00:00.000Z');
 const UPDATED_AT = new Date('2026-02-01T00:00:00.000Z');
 

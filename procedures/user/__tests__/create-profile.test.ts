@@ -36,7 +36,9 @@ describe('createProfile', () => {
 
       const result = await createProfile({} as unknown as CreateProfileInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
       expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
     });
 
@@ -47,7 +49,9 @@ describe('createProfile', () => {
         name: 7
       } as unknown as CreateProfileInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
   });
 
@@ -139,7 +143,9 @@ describe('createProfile', () => {
 
       const result = await createProfile({ name: 'Jane' });
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Output validation failed: /
+      );
     });
   });
 

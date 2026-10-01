@@ -52,7 +52,9 @@ describe('verifyEmail', () => {
         email: EMAIL
       } as unknown as VerifyEmailInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
   });
 

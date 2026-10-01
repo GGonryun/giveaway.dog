@@ -4,6 +4,7 @@ import withdrawParticipation from '../withdraw-participation';
 import { prismaMock, knownRequestError } from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
+import { PRISMA_NOT_FOUND_MESSAGE } from './fixtures-procedures-user';
 
 type WithdrawInput = Parameters<typeof withdrawParticipation>[0];
 
@@ -197,7 +198,9 @@ describe('withdrawParticipation', () => {
 
       const result = await withdrawParticipation({ sweepstakesId: 'sweep-1' });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

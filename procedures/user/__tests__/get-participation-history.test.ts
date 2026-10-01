@@ -1,15 +1,20 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { SweepstakesStatus } from '@prisma/client';
+import { CompletionStatus, SweepstakesStatus } from '@prisma/client';
 import getParticipationHistory from '../get-participation-history';
 import { prismaMock, knownRequestError } from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
+import { PRISMA_NOT_FOUND_MESSAGE } from './fixtures-procedures-user';
 
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 const START = new Date('2026-09-01T00:00:00.000Z');
 const END = new Date('2026-12-01T00:00:00.000Z');
 
-type Completion = { completedAt: Date; won?: boolean };
+type Completion = {
+  completedAt: Date;
+  won?: boolean;
+  status?: CompletionStatus;
+};
 
 const task = (id: string, completions: Completion[] = []) => ({
   id,
@@ -23,7 +28,7 @@ const task = (id: string, completions: Completion[] = []) => ({
     completedAt: completion.completedAt,
     proof: null,
     reason: null,
-    status: 'COMPLETED',
+    status: completion.status ?? CompletionStatus.COMPLETED,
     draws: completion.won
       ? [{ id: `${id}-draw-${index}`, result: 'WINNER' }]
       : []
@@ -275,6 +280,30 @@ describe('getParticipationHistory', () => {
       });
     });
 
+    it.each([CompletionStatus.PENDING, CompletionStatus.REJECTED])(
+      'counts a %s completion as a completed task',
+      async (status) => {
+        prismaMock.sweepstakes.findMany.mockResolvedValue([
+          sweepstakes({
+            tasks: [
+              task('task-1', [
+                { completedAt: at('2026-09-10T10:00:00.000Z'), status }
+              ]),
+              task('task-2')
+            ]
+          })
+        ]);
+
+        const result = await getParticipationHistory();
+
+        expect(expectOk(result)[0]).toMatchObject({
+          completedTasks: 1,
+          engagement: 50,
+          lastParticipatedAt: '2026-09-10T10:00:00.000Z'
+        });
+      }
+    );
+
     it('reports the latest completion across all tasks as the last participation', async () => {
       prismaMock.sweepstakes.findMany.mockResolvedValue([
         sweepstakes({
@@ -400,7 +429,9 @@ describe('getParticipationHistory', () => {
 
       const result = await getParticipationHistory();
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

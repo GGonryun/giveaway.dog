@@ -5,6 +5,7 @@ import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { prismaMock, knownRequestError } from '@/test/prisma';
 import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
+import { PRISMA_NOT_FOUND_MESSAGE } from './fixtures-procedures-user';
 
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 const START = new Date('2026-09-01T00:00:00.000Z');
@@ -185,7 +186,9 @@ describe('getSweepstakeParticipation', () => {
 
       const result = await getSweepstakeParticipation();
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        PRISMA_NOT_FOUND_MESSAGE
+      );
     });
   });
 });

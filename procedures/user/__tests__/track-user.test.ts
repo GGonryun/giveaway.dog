@@ -144,6 +144,21 @@ describe('trackUser', () => {
       });
     });
 
+    it('records the requested event type', async () => {
+      await trackUser({ type: UserEventType.TRACKING });
+
+      expect(createdEvent().type).toBe(UserEventType.TRACKING);
+    });
+
+    it('returns the ip reported by the geolocation rather than the forwarded header', async () => {
+      useRequest({ 'x-forwarded-for': '198.51.100.7' });
+
+      const result = await trackUser({ type: UserEventType.LOGIN });
+
+      expect(geolocation).toHaveBeenCalledWith('198.51.100.7');
+      expect(expectOk(result).ip).toBe('203.0.113.5');
+    });
+
     it('logs the tracked event', async () => {
       useRequest({ 'user-agent': 'Mozilla/5.0' });
 

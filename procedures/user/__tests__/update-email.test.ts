@@ -51,7 +51,9 @@ describe('updateEmail', () => {
 
       const result = await updateEmail({} as unknown as UpdateEmailInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
   });
 

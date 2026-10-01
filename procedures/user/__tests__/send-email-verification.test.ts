@@ -101,7 +101,9 @@ describe('sendEmailVerification', () => {
         redirectTo: 5
       } as unknown as SendInput);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
     });
   });
 
