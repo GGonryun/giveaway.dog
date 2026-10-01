@@ -186,7 +186,9 @@ describe('deleteTaskCompletion', () => {
 
       const result = await deleteTaskCompletion(input);
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
       expect(nextCacheMock.revalidateTag).not.toHaveBeenCalled();
     });
   });

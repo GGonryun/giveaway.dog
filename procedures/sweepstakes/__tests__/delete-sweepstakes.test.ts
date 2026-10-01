@@ -198,7 +198,9 @@ describe('deleteSweepstakes', () => {
 
       const result = await deleteSweepstakes({ id: SWEEPSTAKES_ID });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
     });
 
     it('maps an unexpected error to INTERNAL_SERVER_ERROR', async () => {

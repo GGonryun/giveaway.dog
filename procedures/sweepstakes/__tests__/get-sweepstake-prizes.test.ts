@@ -126,7 +126,9 @@ describe('getSweepstakesPrizes', () => {
 
       const result = await getSweepstakesPrizes(input);
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        `Sweepstakes with ID ${SWEEPSTAKES_ID} not found`
+      );
       expect(prismaMock.prize.findMany).not.toHaveBeenCalled();
     });
   });
@@ -138,6 +140,20 @@ describe('getSweepstakesPrizes', () => {
     });
 
     it('loads the prizes of the requested sweepstakes id with their draws', async () => {
+      prismaMock.prize.findMany.mockResolvedValue([]);
+
+      await getSweepstakesPrizes(input);
+
+      expect(prismaMock.prize.findMany).toHaveBeenCalledWith({
+        where: { sweepstakesId: SWEEPSTAKES_ID },
+        include: PRIZE_WINNERS_INCLUDE_QUERY
+      });
+    });
+
+    it('loads prizes by the requested id rather than the id of the loaded record', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        sweepstakes({ id: 'loaded-id' })
+      );
       prismaMock.prize.findMany.mockResolvedValue([]);
 
       await getSweepstakesPrizes(input);

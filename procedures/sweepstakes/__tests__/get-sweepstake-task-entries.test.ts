@@ -82,7 +82,9 @@ describe('getSweepstakeTaskEntries', () => {
 
       const result = await getSweepstakeTaskEntries(input);
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        `Sweepstakes with ID ${SWEEPSTAKES_ID} not found`
+      );
       expect(prismaMock.taskCompletion.findMany).not.toHaveBeenCalled();
     });
   });

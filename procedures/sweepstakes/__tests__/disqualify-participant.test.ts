@@ -268,7 +268,9 @@ describe('disqualifyParticipant', () => {
 
       const result = await disqualifyParticipant(input);
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: .{6}$/
+      );
       expect(prismaMock.prizeDraw.updateMany).not.toHaveBeenCalled();
     });
 

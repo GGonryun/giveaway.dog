@@ -424,10 +424,20 @@ describe('copySweepstakes', () => {
       });
     });
 
+    it('uses the JSON null sentinel rather than the database null for a missing task config', async () => {
+      await copySweepstakes({ id: SWEEPSTAKES_ID });
+
+      const tasks = copiedData().tasks as {
+        createMany: { data: { config: unknown }[] };
+      };
+      expect(tasks.createMany.data[1].config).toBe(Prisma.JsonNull);
+      expect(tasks.createMany.data[1].config).not.toBe(Prisma.DbNull);
+    });
+
     it('copies the design data', async () => {
       await copySweepstakes({ id: SWEEPSTAKES_ID });
 
-      expect(copiedData().design).toEqual({
+      expect(copiedData().design).toStrictEqual({
         create: { data: { aspectRatio: 'VIDEO' } }
       });
     });
@@ -551,9 +561,9 @@ describe('copySweepstakes', () => {
 
       await copySweepstakes({ id: SWEEPSTAKES_ID });
 
-      expect(copiedData().design).toEqual({
-        create: { data: Prisma.JsonNull }
-      });
+      const design = copiedData().design as { create: { data: unknown } };
+      expect(design.create.data).toBe(Prisma.JsonNull);
+      expect(design.create.data).not.toBe(Prisma.DbNull);
     });
   });
 

@@ -442,6 +442,37 @@ describe('createSweepstakes', () => {
       });
     });
 
+    it('returns VALIDATION_ERROR when the stored template has no string id', async () => {
+      prismaMock.template.findFirst.mockResolvedValue({
+        ...dbTemplate({}),
+        id: 42
+      });
+
+      const result = await createSweepstakes({ ...input, templateId: 'tpl-1' });
+
+      expect(expectFailure(result, 'VALIDATION_ERROR').message).toBe(
+        'Template validation failed'
+      );
+      expect(prismaMock.sweepstakes.create).not.toHaveBeenCalled();
+    });
+
+    it('replaces the default details and timing with empty sections', async () => {
+      prismaMock.template.findFirst.mockResolvedValue(dbTemplate({}));
+
+      await createSweepstakes({ ...input, templateId: 'tpl-1' });
+
+      expect(createdData().details).toStrictEqual({
+        create: { name: undefined, description: undefined, banner: undefined }
+      });
+      expect(createdData().timing).toStrictEqual({
+        create: {
+          startDate: undefined,
+          endDate: undefined,
+          timeZone: undefined
+        }
+      });
+    });
+
     it('keeps the default audience when the template has none', async () => {
       prismaMock.template.findFirst.mockResolvedValue(dbTemplate({}));
 

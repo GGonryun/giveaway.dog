@@ -111,7 +111,10 @@ describe('getPublishedSweepstakes', () => {
 
       const result = await getPublishedSweepstakes({ slug: TEAM_SLUG });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
+      expect(prismaMock.sweepstakes.count).not.toHaveBeenCalled();
     });
   });
 });
