@@ -200,6 +200,20 @@ describe('getSweepstakesPrivacy', () => {
         'Sweepstakes visibility is missing'
       );
     });
+
+    it('returns INTERNAL_SERVER_ERROR when the visibility row has no visibility value', async () => {
+      prismaMock.sweepstakes.findFirst.mockResolvedValue({
+        teamId: 'team-1',
+        visibility: { visibility: null }
+      });
+
+      const result = await getSweepstakesPrivacy({ sweepstakesId: 'sw-1' });
+
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
+        'Sweepstakes visibility is missing'
+      );
+      expect(prismaMock.membership.findUnique).not.toHaveBeenCalled();
+    });
   });
 
   describe('input validation', () => {
@@ -221,7 +235,9 @@ describe('getSweepstakesPrivacy', () => {
 
       const result = await getSweepstakesPrivacy({ sweepstakesId: 'sw-1' });
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
     });
   });
 });

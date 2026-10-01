@@ -170,7 +170,9 @@ describe('getSweepstakesTasks', () => {
 
       const result = await getSweepstakesTasks({ sweepstakesId: 'sw-1' });
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
+        'Failed to parse task config'
+      );
     });
 
     it('does not cache the call', async () => {

@@ -331,17 +331,20 @@ describe('getHistoricalSweepstakesList', () => {
 
   describe('input validation', () => {
     it.each([
-      ['page of zero', { page: 0 }],
-      ['fractional page', { page: 2.5 }],
-      ['string page', { page: '2' }],
-      ['negative minEntrants', { minEntrants: -1 }],
-      ['unknown sortBy', { sortBy: 'oldest' }]
-    ])('rejects a %s', async (_label, input) => {
+      ['page of zero', 'page', { page: 0 }],
+      ['fractional page', 'page', { page: 2.5 }],
+      ['string page', 'page', { page: '2' }],
+      ['negative minEntrants', 'minEntrants', { minEntrants: -1 }],
+      ['negative maxEntrants', 'maxEntrants', { maxEntrants: -1 }],
+      ['unknown sortBy', 'sortBy', { sortBy: 'oldest' }]
+    ])('rejects a %s', async (_label, field, input) => {
       const result = await getHistoricalSweepstakesList(
         input as unknown as Input
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      const failure = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(failure.message).toMatch(/^Input validation failed: /);
+      expect(failure.message).toContain(`"${field}"`);
       expect(prismaMock.sweepstakes.findMany).not.toHaveBeenCalled();
     });
 

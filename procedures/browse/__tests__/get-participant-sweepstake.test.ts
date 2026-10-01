@@ -454,6 +454,21 @@ describe('getParticipantSweepstake', () => {
       });
     });
 
+    it('counts unique users by the participant user id rather than the participant id', async () => {
+      const sameUserOtherParticipant = {
+        ...completionRow('c-2', 'user-a', task1),
+        participantId: 'participant-other'
+      };
+      givenSweepstakes(sweepstakesRow({ tasks: [task1] }), [
+        completionRow('c-1', 'user-a', task1),
+        sameUserOtherParticipant
+      ]);
+
+      const result = await getParticipantSweepstake({ sweepstakesId: 'sw-1' });
+
+      expect(expectOk(result).participation.totalUsers).toBe(1);
+    });
+
     it('counts pending and rejected completions in every statistic', async () => {
       givenSweepstakes(sweepstakesRow({ tasks: [task1] }), [
         completionRow('c-1', 'user-a', task1, 'PENDING'),

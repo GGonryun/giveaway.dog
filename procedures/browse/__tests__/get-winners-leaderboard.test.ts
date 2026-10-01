@@ -77,6 +77,26 @@ const rawCall = () => {
   return { sql: strings.join('?'), values };
 };
 
+const normalizedSql = () => rawCall().sql.replace(/\s+/g, ' ').trim();
+
+const SELECT_AND_JOINS = [
+  'SELECT u.id as "userId", u.name as "userName", u.email as "userEmail", u.image as "userImage", COUNT(DISTINCT d.id) as "winCount"',
+  'FROM "User" u',
+  'INNER JOIN "Participant" p ON p."userId" = u.id',
+  'INNER JOIN "TaskCompletion" tc ON tc."participantId" = p.id',
+  'INNER JOIN "PrizeDraw" d ON d."taskCompletionId" = tc.id',
+  'INNER JOIN "Prize" pr ON pr.id = d."prizeId"',
+  'INNER JOIN "Sweepstakes" s ON s.id = pr."sweepstakesId"',
+  'INNER JOIN "SweepstakesVisibility" sv ON sv."sweepstakesId" = s.id',
+  "WHERE d.result = 'WINNER' AND sv.visibility = 'PUBLIC'"
+].join(' ');
+
+const GROUP_ORDER_PAGE = [
+  'GROUP BY u.id, u.name, u.email, u.image',
+  'ORDER BY "winCount" DESC, u.id ASC',
+  'LIMIT ? OFFSET ?'
+].join(' ');
+
 describe('getWinnersLeaderboard', () => {
   describe('aggregate query', () => {
     it('uses page 1 and a limit of 25 when no input is given', async () => {
@@ -116,6 +136,14 @@ describe('getWinnersLeaderboard', () => {
       expect(sql).not.toContain('LIKE');
     });
 
+    it('runs the exact unfiltered aggregate SQL when there is no search', async () => {
+      prismaMock.$queryRaw.mockResolvedValue([]);
+
+      await getWinnersLeaderboard(undefined);
+
+      expect(normalizedSql()).toBe(`${SELECT_AND_JOINS} ${GROUP_ORDER_PAGE}`);
+    });
+
     it('filters by a case-insensitive name match when a search is given', async () => {
       prismaMock.$queryRaw.mockResolvedValue([]);
 
@@ -124,6 +152,24 @@ describe('getWinnersLeaderboard', () => {
       const { sql, values } = rawCall();
       expect(sql).toContain('AND LOWER(u.name) LIKE LOWER(?)');
       expect(values).toEqual(['%Bob%', 25, 0]);
+    });
+
+    it('runs the exact search aggregate SQL with the name filter after the public winner conditions', async () => {
+      prismaMock.$queryRaw.mockResolvedValue([]);
+
+      await callWithPartialInput({ search: 'Bob' });
+
+      expect(normalizedSql()).toBe(
+        `${SELECT_AND_JOINS} AND LOWER(u.name) LIKE LOWER(?) ${GROUP_ORDER_PAGE}`
+      );
+    });
+
+    it('applies the page and limit to the search query as well', async () => {
+      prismaMock.$queryRaw.mockResolvedValue([]);
+
+      await getWinnersLeaderboard({ page: 4, limit: 5, search: 'al' });
+
+      expect(rawCall().values).toEqual(['%al%', 5, 15]);
     });
 
     it('trims the search term before matching', async () => {
@@ -417,15 +463,18 @@ describe('getWinnersLeaderboard', () => {
 
   describe('input validation', () => {
     it.each([
-      ['page of zero', { page: 0 }],
-      ['fractional page', { page: 1.5 }],
-      ['limit of zero', { limit: 0 }],
-      ['limit above 100', { limit: 101 }],
-      ['non-string search', { search: 5 }]
-    ])('rejects a %s', async (_label, input) => {
+      ['page of zero', 'page', { page: 0 }],
+      ['fractional page', 'page', { page: 1.5 }],
+      ['limit of zero', 'limit', { limit: 0 }],
+      ['fractional limit', 'limit', { limit: 2.5 }],
+      ['limit above 100', 'limit', { limit: 101 }],
+      ['non-string search', 'search', { search: 5 }]
+    ])('rejects a %s', async (_label, field, input) => {
       const result = await getWinnersLeaderboard(input as unknown as Input);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      const failure = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(failure.message).toMatch(/^Input validation failed: /);
+      expect(failure.message).toContain(`"${field}"`);
       expect(prismaMock.$queryRaw).not.toHaveBeenCalled();
     });
 

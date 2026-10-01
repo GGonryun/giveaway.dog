@@ -485,17 +485,22 @@ describe('getPublicSweepstakesList', () => {
 
   describe('input validation', () => {
     it.each([
-      ['page of zero', { page: 0 }],
-      ['fractional page', { page: 1.5 }],
-      ['negative minEntrants', { minEntrants: -1 }],
-      ['negative maxEntrants', { maxEntrants: -1 }],
-      ['unknown sortBy', { sortBy: 'popular' }],
-      ['unknown status', { showStatuses: ['DRAFT'] }],
-      ['non-string host', { hosts: [1] }]
-    ])('rejects a %s', async (_label, input) => {
+      ['page of zero', 'page', { page: 0 }],
+      ['fractional page', 'page', { page: 1.5 }],
+      ['negative minEntrants', 'minEntrants', { minEntrants: -1 }],
+      ['fractional minEntrants', 'minEntrants', { minEntrants: 1.5 }],
+      ['negative maxEntrants', 'maxEntrants', { maxEntrants: -1 }],
+      ['unknown sortBy', 'sortBy', { sortBy: 'popular' }],
+      ['unknown status', 'showStatuses', { showStatuses: ['DRAFT'] }],
+      ['non-boolean hideEntered', 'hideEntered', { hideEntered: 'yes' }],
+      ['non-string search', 'search', { search: 3 }],
+      ['non-string host', 'hosts', { hosts: [1] }]
+    ])('rejects a %s', async (_label, field, input) => {
       const result = await getPublicSweepstakesList(input as unknown as Input);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      const failure = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(failure.message).toMatch(/^Input validation failed: /);
+      expect(failure.message).toContain(`"${field}"`);
       expect(prismaMock.sweepstakes.findMany).not.toHaveBeenCalled();
     });
 

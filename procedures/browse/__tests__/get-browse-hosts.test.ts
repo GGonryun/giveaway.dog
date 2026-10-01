@@ -212,7 +212,9 @@ describe('getBrowseHosts', () => {
 
       const result = await getBrowseHosts();
 
-      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
+        /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: .{6}$/
+      );
     });
 
     it('returns INTERNAL_SERVER_ERROR with the message of a generic error', async () => {
