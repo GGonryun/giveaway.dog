@@ -71,7 +71,12 @@ describe('handleButtonInteraction', () => {
   });
 
   describe('when the button is not a task action', () => {
-    it.each(['legacy:enter:task-1', 'TASK:enter:task-1', ''])(
+    it.each([
+      'legacy:enter:task-1',
+      'TASK:enter:task-1',
+      'tasks:enter:task-1',
+      ''
+    ])(
       'responds that the button %j is no longer functional',
       async (customId) => {
         const response = await handleButtonInteraction({

@@ -32,6 +32,12 @@ describe('toEphemeralChannelMessage', () => {
   it('keeps empty content as is', () => {
     expect(toEphemeralChannelMessage('').data.content).toBe('');
   });
+
+  it('passes the content through without trimming or escaping', () => {
+    expect(toEphemeralChannelMessage('  **Done** <@1>\n').data.content).toBe(
+      '  **Done** <@1>\n'
+    );
+  });
 });
 
 describe('toDeferredEphemeralChannelMessage', () => {
@@ -40,5 +46,11 @@ describe('toDeferredEphemeralChannelMessage', () => {
       type: 5,
       data: { flags: 64, content: 'Working on it' }
     });
+  });
+
+  it('passes the content through without trimming or escaping', () => {
+    expect(
+      toDeferredEphemeralChannelMessage('  **Wait** <@1>\n').data.content
+    ).toBe('  **Wait** <@1>\n');
   });
 });

@@ -116,7 +116,7 @@ describe('getDiscordGuildRoles', () => {
   });
 
   describe('when discord responds with an error status', () => {
-    it.each([401, 403, 404, 500])(
+    it.each([400, 401, 403, 404, 429, 500])(
       'throws INTERNAL_SERVER_ERROR for status %i',
       async (status) => {
         fetchMock.mockResolvedValue(jsonResponse({}, { status }));

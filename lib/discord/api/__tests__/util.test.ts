@@ -1,9 +1,13 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   toActiveSweepstakeComponents,
   toExpiredSweepstakeComponents
 } from '../util';
 import { discordPostSweepstakes } from '../../__tests__/fixtures-discord-core';
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 describe('toActiveSweepstakeComponents', () => {
   describe('when a task id is provided', () => {
@@ -76,6 +80,25 @@ describe('toActiveSweepstakeComponents', () => {
       'https://giveaway.dog/browse/sweep-77'
     );
   });
+
+  it('always links to the production site instead of the configured app url', () => {
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'http://localhost:3000');
+
+    const [withTask] = toActiveSweepstakeComponents({
+      taskId: 'task-9',
+      sweepstakes: discordPostSweepstakes()
+    });
+    const [withoutTask] = toActiveSweepstakeComponents({
+      sweepstakes: discordPostSweepstakes()
+    });
+
+    expect(withTask.components[1].url).toBe(
+      'https://giveaway.dog/browse/dog-treats'
+    );
+    expect(withoutTask.components[0].url).toBe(
+      'https://giveaway.dog/browse/dog-treats'
+    );
+  });
 });
 
 describe('toExpiredSweepstakeComponents', () => {
@@ -125,5 +148,18 @@ describe('toExpiredSweepstakeComponents', () => {
     expect(result[0].components[0].url).toBe(
       'https://giveaway.dog/browse/sweep-5'
     );
+  });
+
+  it('always links to the production site instead of the configured app url', () => {
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'http://localhost:3000');
+
+    const [row] = toExpiredSweepstakeComponents({
+      sweepstakes: discordPostSweepstakes()
+    });
+
+    expect(row.components.map((component) => component.url)).toEqual([
+      'https://giveaway.dog/browse/dog-treats',
+      'https://giveaway.dog/browse'
+    ]);
   });
 });

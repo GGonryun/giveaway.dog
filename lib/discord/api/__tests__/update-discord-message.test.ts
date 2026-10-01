@@ -68,6 +68,19 @@ describe('updateDiscordMessage', () => {
       });
       expect(fetchMock).not.toHaveBeenCalled();
     });
+
+    it('treats an empty token as missing', async () => {
+      vi.stubEnv('DISCORD_BOT_TOKEN', '');
+
+      const error = await captureError(updateDiscordMessage(options()));
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Discord bot token is not configured'
+      });
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
   });
 
   describe('when discord accepts the edit', () => {
@@ -185,6 +198,20 @@ describe('updateDiscordMessage', () => {
       expect(error).toMatchObject({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Failed to update Discord message: 503 Service Unavailable'
+      });
+    });
+
+    it('treats a rate limit response as an internal server error', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({}, { status: 429, statusText: 'Too Many Requests' })
+      );
+
+      const error = await captureError(updateDiscordMessage(options()));
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to update Discord message: 429 Too Many Requests'
       });
     });
   });

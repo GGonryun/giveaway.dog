@@ -92,6 +92,12 @@ describe('discordUserSchema', () => {
     ).toBe(false);
   });
 
+  it('rejects a null system flag because it is only optional', () => {
+    expect(
+      discordUserSchema.safeParse({ ...discordUser(), system: null }).success
+    ).toBe(false);
+  });
+
   it('strips unknown keys', () => {
     expect(
       discordUserSchema.parse({ ...discordUser(), locale: 'en-US' })
@@ -154,9 +160,9 @@ describe('discordGuildSchema', () => {
     ).toBe(false);
   });
 
-  it('requires a locale', () => {
+  it.each(['features', 'id', 'locale'])('requires %s', (key) => {
     expect(
-      discordGuildSchema.safeParse(without(discordGuild(), 'locale')).success
+      discordGuildSchema.safeParse(without(discordGuild(), key)).success
     ).toBe(false);
   });
 });
@@ -197,14 +203,20 @@ describe('discordMemberSchema', () => {
     ).toBe(false);
   });
 
-  it.each(['deaf', 'flags', 'joined_at', 'mute', 'pending', 'permissions'])(
-    'requires %s',
-    (key) => {
-      expect(
-        discordMemberSchema.safeParse(without(discordMember(), key)).success
-      ).toBe(false);
-    }
-  );
+  it.each([
+    'deaf',
+    'flags',
+    'joined_at',
+    'mute',
+    'pending',
+    'permissions',
+    'roles',
+    'user'
+  ])('requires %s', (key) => {
+    expect(
+      discordMemberSchema.safeParse(without(discordMember(), key)).success
+    ).toBe(false);
+  });
 });
 
 describe('discordCommandOptionSchema', () => {
@@ -217,6 +229,14 @@ describe('discordCommandOptionSchema', () => {
   it('rejects a numeric option value', () => {
     expect(
       discordCommandOptionSchema.safeParse({ name: 'count', value: 3 }).success
+    ).toBe(false);
+  });
+
+  it.each(['name', 'value'])('requires %s', (key) => {
+    expect(
+      discordCommandOptionSchema.safeParse(
+        without({ name: 'code', value: 'abc' }, key)
+      ).success
     ).toBe(false);
   });
 });
@@ -248,6 +268,14 @@ describe('discordInteractionDataSchema', () => {
         type: 1,
         options: [{ name: 'code' }]
       }).success
+    ).toBe(false);
+  });
+
+  it.each(['id', 'name', 'type'])('requires %s', (key) => {
+    expect(
+      discordInteractionDataSchema.safeParse(
+        without({ id: 'cmd-1', name: 'connect', type: 1 }, key)
+      ).success
     ).toBe(false);
   });
 });
@@ -340,6 +368,15 @@ describe('discordApplicationCommandInteractionSchema', () => {
       ).success
     ).toBe(false);
   });
+
+  it('rejects any other type', () => {
+    expect(
+      discordApplicationCommandInteractionSchema.safeParse({
+        ...applicationCommandInteraction(),
+        type: 3
+      }).success
+    ).toBe(false);
+  });
 });
 
 describe('discordButtonInteractionSchema', () => {
@@ -347,6 +384,15 @@ describe('discordButtonInteractionSchema', () => {
     expect(discordButtonInteractionSchema.parse(buttonInteraction())).toEqual(
       buttonInteraction()
     );
+  });
+
+  it('accepts a button pressed outside a guild without channel or member', () => {
+    const input = {
+      ...without(buttonInteraction(), 'channel', 'member', 'guild_id'),
+      user: discordUser()
+    };
+
+    expect(discordButtonInteractionSchema.parse(input)).toEqual(input);
   });
 
   it('requires the source message', () => {
@@ -357,11 +403,38 @@ describe('discordButtonInteractionSchema', () => {
     ).toBe(false);
   });
 
-  it('requires a custom id and component type', () => {
+  it.each(['id', 'channel_id'])('requires the source message %s', (key) => {
+    expect(
+      discordButtonInteractionSchema.safeParse({
+        ...buttonInteraction(),
+        message: without({ id: 'message-1', channel_id: 'channel-1' }, key)
+      }).success
+    ).toBe(false);
+  });
+
+  it('requires a component type', () => {
     expect(
       discordButtonInteractionSchema.safeParse({
         ...buttonInteraction(),
         data: { custom_id: 'task:enter:1' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('requires a custom id', () => {
+    expect(
+      discordButtonInteractionSchema.safeParse({
+        ...buttonInteraction(),
+        data: { component_type: 2 }
+      }).success
+    ).toBe(false);
+  });
+
+  it('rejects any other type', () => {
+    expect(
+      discordButtonInteractionSchema.safeParse({
+        ...buttonInteraction(),
+        type: 2
       }).success
     ).toBe(false);
   });

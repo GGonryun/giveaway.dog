@@ -101,6 +101,22 @@ describe('discordRoleSchema', () => {
       false
     );
   });
+
+  it.each([
+    'id',
+    'name',
+    'color',
+    'hoist',
+    'position',
+    'permissions',
+    'managed',
+    'mentionable'
+  ])('requires %s', (key) => {
+    const input: Record<string, unknown> = { ...role };
+    delete input[key];
+
+    expect(discordRoleSchema.safeParse(input).success).toBe(false);
+  });
 });
 
 describe('discordGuildRolesSchema', () => {
@@ -137,6 +153,19 @@ describe('discordChannelSchema', () => {
     expect(
       discordChannelSchema.safeParse({ ...channel, type: '0' }).success
     ).toBe(false);
+  });
+
+  it.each(['id', 'name', 'type', 'position'])('requires %s', (key) => {
+    const input: Record<string, unknown> = { ...channel };
+    delete input[key];
+
+    expect(discordChannelSchema.safeParse(input).success).toBe(false);
+  });
+
+  it('strips unknown keys', () => {
+    expect(
+      discordChannelSchema.parse({ ...channel, topic: 'Chat', nsfw: false })
+    ).toEqual(channel);
   });
 });
 
@@ -179,6 +208,12 @@ describe('discordMessageResponseSchema', () => {
     expect(discordMessageResponseSchema.safeParse({ id: 'm-1' }).success).toBe(
       false
     );
+  });
+
+  it('rejects a response without a message id', () => {
+    expect(
+      discordMessageResponseSchema.safeParse({ channel_id: 'c-1' }).success
+    ).toBe(false);
   });
 });
 

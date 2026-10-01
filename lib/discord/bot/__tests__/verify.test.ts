@@ -134,6 +134,26 @@ describe('verifyDiscordRequest', () => {
       });
     });
 
+    it('treats an empty timestamp header as missing even when the signature matches', async () => {
+      const body = JSON.stringify(pingInteraction());
+
+      const error = await captureError(
+        verifyDiscordRequest(
+          discordRequest({
+            body,
+            timestamp: '',
+            signature: signDiscordBody(body, '')
+          })
+        )
+      );
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'UNAUTHORIZED',
+        message: 'Discord request is missing timestamp in header'
+      });
+    });
+
     it('checks the signature header before the timestamp header', async () => {
       const body = JSON.stringify(pingInteraction());
 

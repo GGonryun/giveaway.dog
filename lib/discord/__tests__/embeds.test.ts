@@ -127,6 +127,7 @@ describe('toSweepstakesEmbed', () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   describe('for a running sweepstakes', () => {
@@ -264,6 +265,16 @@ describe('toSweepstakesEmbed', () => {
 
       expect(lineFor(lines, 'Name')).toBe(
         '**Name:** [Dog Treats](https://giveaway.dog/browse/sweep-7)'
+      );
+    });
+
+    it('links to the production site instead of the configured app url', async () => {
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'http://localhost:3000');
+
+      const lines = await descriptionLines();
+
+      expect(lineFor(lines, 'Name')).toBe(
+        '**Name:** [Dog Treats](https://giveaway.dog/browse/dog-treats)'
       );
     });
   });
