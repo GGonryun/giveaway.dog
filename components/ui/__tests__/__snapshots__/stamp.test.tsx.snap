@@ -1,0 +1,83 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Stamp > matches the snapshot for the check variant 1`] = `
+<svg
+  aria-hidden="true"
+  class="lucide lucide-check flex items-center justify-center p-1 rounded-full text-white h-6 w-6 min-h-6 min-w-6 bg-success"
+  fill="none"
+  height="24"
+  stroke="currentColor"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  stroke-width="2"
+  viewBox="0 0 24 24"
+  width="24"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M20 6 9 17l-5-5"
+  />
+</svg>
+`;
+
+exports[`Stamp > matches the snapshot for the error variant 1`] = `
+<svg
+  aria-hidden="true"
+  class="lucide lucide-circle-x flex items-center justify-center p-1 rounded-full text-white h-6 w-6 min-h-6 min-w-6 bg-error"
+  fill="none"
+  height="24"
+  stroke="currentColor"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  stroke-width="2"
+  viewBox="0 0 24 24"
+  width="24"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <circle
+    cx="12"
+    cy="12"
+    r="10"
+  />
+  <path
+    d="m15 9-6 6"
+  />
+  <path
+    d="m9 9 6 6"
+  />
+</svg>
+`;
+
+exports[`Stamp > matches the snapshot for the info variant 1`] = `
+<svg
+  aria-hidden="true"
+  class="lucide lucide-circle-alert flex items-center justify-center p-1 rounded-full text-white h-6 w-6 min-h-6 min-w-6 bg-info/80"
+  fill="none"
+  height="24"
+  stroke="currentColor"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  stroke-width="2"
+  viewBox="0 0 24 24"
+  width="24"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <circle
+    cx="12"
+    cy="12"
+    r="10"
+  />
+  <line
+    x1="12"
+    x2="12"
+    y1="8"
+    y2="12"
+  />
+  <line
+    x1="12"
+    x2="12.01"
+    y1="16"
+    y2="16"
+  />
+</svg>
+`;

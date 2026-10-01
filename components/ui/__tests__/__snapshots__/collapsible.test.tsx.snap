@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Collapsible > matches the snapshot when open 1`] = `
+<div
+  data-state="open"
+>
+  <button
+    aria-controls="radix-:id0:"
+    aria-expanded="true"
+    data-state="open"
+    type="button"
+  >
+    Show rules
+  </button>
+  <div
+    data-state="open"
+    id="radix-:id0:"
+    style="transition-duration: 0s; animation-name: none;"
+  >
+    One entry per person.
+  </div>
+</div>
+`;

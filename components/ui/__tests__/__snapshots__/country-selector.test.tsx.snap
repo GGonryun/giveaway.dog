@@ -1,0 +1,76 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CountrySelector > matches the snapshot when closed 1`] = `
+<div
+  class="space-y-2 w-80"
+>
+  <label
+    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+  >
+    Country
+  </label>
+  <button
+    aria-controls="radix-:id0:"
+    aria-expanded="false"
+    aria-haspopup="dialog"
+    class="cursor-pointer inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent has-[>svg]:px-3 justify-between w-full h-auto px-3 py-2"
+    data-slot="popover-trigger"
+    data-state="closed"
+    role="combobox"
+    type="button"
+  >
+    <div
+      class="flex items-center gap-2 min-w-0 flex-1 overflow-hidden"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-map-pin h-4 w-4 text-muted-foreground shrink-0"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+        />
+        <circle
+          cx="12"
+          cy="10"
+          r="3"
+        />
+      </svg>
+      <span
+        class="text-left truncate"
+        style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+      >
+        Search for your country...
+      </span>
+    </div>
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-chevrons-up-down ml-2 h-4 w-4 shrink-0 opacity-50"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="m7 15 5 5 5-5"
+      />
+      <path
+        d="m7 9 5-5 5 5"
+      />
+    </svg>
+  </button>
+</div>
+`;

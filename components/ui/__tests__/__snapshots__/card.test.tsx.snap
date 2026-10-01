@@ -1,0 +1,44 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Card > matches the snapshot for a complete card 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4"
+    data-slot="card-header"
+  >
+    <div
+      class="leading-none font-semibold"
+      data-slot="card-title"
+    >
+      Summer giveaway
+    </div>
+    <div
+      class="text-muted-foreground text-sm"
+      data-slot="card-description"
+    >
+      Ends in 3 days
+    </div>
+    <div
+      class="col-start-2 row-span-2 row-start-1 self-start justify-self-end"
+      data-slot="card-action"
+    >
+      Edit
+    </div>
+  </div>
+  <div
+    class="px-4"
+    data-slot="card-content"
+  >
+    120 entries
+  </div>
+  <div
+    class="flex items-center px-4 [.border-t]:pt-4"
+    data-slot="card-footer"
+  >
+    Hosted by Giveaway.dog
+  </div>
+</div>
+`;

@@ -1,0 +1,185 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Command > matches the snapshot 1`] = `
+<div
+  class="bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md"
+  cmdk-root=""
+  data-slot="command"
+  tabindex="-1"
+>
+  <label
+    cmdk-label=""
+    for="radix-:id0:"
+    id="radix-:id1:"
+    style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
+  />
+  <div
+    class="flex h-9 items-center gap-2 border-b px-3"
+    data-slot="command-input-wrapper"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-search size-4 shrink-0 opacity-50"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="m21 21-4.34-4.34"
+      />
+      <circle
+        cx="11"
+        cy="11"
+        r="8"
+      />
+    </svg>
+    <input
+      aria-autocomplete="list"
+      aria-controls="radix-:id2:"
+      aria-expanded="true"
+      aria-labelledby="radix-:id1:"
+      autocomplete="off"
+      autocorrect="off"
+      class="placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
+      cmdk-input=""
+      data-slot="command-input"
+      id="radix-:id0:"
+      placeholder="Search giveaways..."
+      role="combobox"
+      spellcheck="false"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    aria-label="Suggestions"
+    class="max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto"
+    cmdk-list=""
+    data-slot="command-list"
+    id="radix-:id2:"
+    role="listbox"
+    tabindex="-1"
+  >
+    <div
+      cmdk-list-sizer=""
+    >
+      <div
+        class="text-foreground [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium"
+        cmdk-group=""
+        data-slot="command-group"
+        data-value="Giveaways"
+        role="presentation"
+      >
+        <div
+          aria-hidden="true"
+          cmdk-group-heading=""
+          id="radix-:id3:"
+        >
+          Giveaways
+        </div>
+        <div
+          aria-labelledby="radix-:id3:"
+          cmdk-group-items=""
+          role="group"
+        >
+          <div
+            aria-disabled="false"
+            aria-selected="true"
+            class="data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            cmdk-item=""
+            data-disabled="false"
+            data-selected="true"
+            data-slot="command-item"
+            data-value="Summer bike"
+            id="radix-:id4:"
+            role="option"
+          >
+            Summer bike
+          </div>
+          <div
+            aria-disabled="false"
+            aria-selected="false"
+            class="data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            cmdk-item=""
+            data-disabled="false"
+            data-selected="false"
+            data-slot="command-item"
+            data-value="Winter jacket⌘J"
+            id="radix-:id5:"
+            role="option"
+          >
+            Winter jacket
+            <span
+              class="text-muted-foreground ml-auto text-xs tracking-widest"
+              data-slot="command-shortcut"
+            >
+              ⌘J
+            </span>
+          </div>
+          <div
+            aria-disabled="true"
+            aria-selected="false"
+            class="data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            cmdk-item=""
+            data-disabled="true"
+            data-selected="false"
+            data-slot="command-item"
+            data-value="Archived prize"
+            id="radix-:id6:"
+            role="option"
+          >
+            Archived prize
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-border -mx-1 h-px"
+        cmdk-separator=""
+        data-slot="command-separator"
+        role="separator"
+      />
+      <div
+        class="text-foreground [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium"
+        cmdk-group=""
+        data-slot="command-group"
+        data-value="Settings"
+        role="presentation"
+      >
+        <div
+          aria-hidden="true"
+          cmdk-group-heading=""
+          id="radix-:id7:"
+        >
+          Settings
+        </div>
+        <div
+          aria-labelledby="radix-:id7:"
+          cmdk-group-items=""
+          role="group"
+        >
+          <div
+            aria-disabled="false"
+            aria-selected="false"
+            class="data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            cmdk-item=""
+            data-disabled="false"
+            data-selected="false"
+            data-slot="command-item"
+            data-value="Billing"
+            id="radix-:id8:"
+            role="option"
+          >
+            Billing
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

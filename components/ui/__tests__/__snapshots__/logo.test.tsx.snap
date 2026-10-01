@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Logo > matches the snapshot with an image and text 1`] = `
+<a
+  class="flex max-h-8 items-center gap-2"
+  href="https://example.com"
+>
+  <img
+    alt="Giveaway.dog"
+    class="block h-8"
+    src="https://example.com/logo.svg"
+  />
+  <span
+    class="text-lg font-semibold tracking-tighter"
+  >
+    Giveaway.dog
+  </span>
+</a>
+`;

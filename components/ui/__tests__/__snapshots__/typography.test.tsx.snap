@@ -1,0 +1,41 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Typography > matches the snapshot with the default variants 1`] = `
+<div
+  class="text-sm font-normal"
+>
+  Body text
+</div>
+`;
+
+exports[`Typography.Caption > matches the snapshot 1`] = `
+<span
+  class="text-muted-foreground text-xs font-normal"
+>
+  Caption
+</span>
+`;
+
+exports[`Typography.Code > matches the snapshot 1`] = `
+<code
+  class="bg-gray-100 border rounded-sm px-1 py-0.5 text-sm font-normal"
+>
+  pnpm install
+</code>
+`;
+
+exports[`Typography.Header > matches the snapshot for a level 2 heading 1`] = `
+<h2
+  class="text-2xl font-semibold"
+>
+  Section
+</h2>
+`;
+
+exports[`Typography.Paragraph > matches the snapshot 1`] = `
+<p
+  class="text-sm font-normal"
+>
+  Paragraph
+</p>
+`;

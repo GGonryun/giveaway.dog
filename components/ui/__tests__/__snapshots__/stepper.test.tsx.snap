@@ -1,0 +1,57 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Stepper > matches the snapshot for the second of three steps 1`] = `
+<div
+  class="flex items-center justify-center"
+>
+  <div
+    class="flex items-center"
+  >
+    <div
+      class="flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors bg-primary border-primary text-primary-foreground"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-check h-4 w-4"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 6 9 17l-5-5"
+        />
+      </svg>
+    </div>
+    <div
+      class="mx-4 h-0.5 w-12 transition-colors bg-primary"
+    />
+  </div>
+  <div
+    class="flex items-center"
+  >
+    <div
+      class="flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors border-primary text-primary bg-background"
+    >
+      2
+    </div>
+    <div
+      class="mx-4 h-0.5 w-12 transition-colors bg-muted-foreground/30"
+    />
+  </div>
+  <div
+    class="flex items-center"
+  >
+    <div
+      class="flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors border-muted-foreground text-muted-foreground"
+    >
+      3
+    </div>
+  </div>
+</div>
+`;

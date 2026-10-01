@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Avatar > matches the snapshot while the image is loading 1`] = `
+<span
+  class="relative flex shrink-0 overflow-hidden rounded-full size-12"
+>
+  <span
+    class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+  >
+    AL
+  </span>
+</span>
+`;

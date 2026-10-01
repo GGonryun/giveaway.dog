@@ -1,0 +1,39 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Select > matches the snapshot of the closed trigger 1`] = `
+<button
+  aria-autocomplete="none"
+  aria-controls="radix-:id0:"
+  aria-expanded="false"
+  aria-label="Prize"
+  class="flex h-9 shadow-xs w-full items-center justify-between rounded-md border border-input bg-white dark:bg-input/30 px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+  data-placeholder=""
+  data-state="closed"
+  dir="ltr"
+  role="combobox"
+  type="button"
+>
+  <span
+    style="pointer-events: none;"
+  >
+    Choose a prize
+  </span>
+  <svg
+    aria-hidden="true"
+    class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+    fill="none"
+    height="24"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="m6 9 6 6 6-6"
+    />
+  </svg>
+</button>
+`;
