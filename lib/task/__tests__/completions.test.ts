@@ -234,6 +234,20 @@ describe('toMostRecentCompletion', () => {
     expect(toMostRecentCompletion([undated, dated])).toBe(dated.completedAt);
   });
 
+  it('does not filter out undefined completion dates and fails to compare them', () => {
+    const undated = {
+      ...completionAt('2026-02-01T00:00:00.000Z'),
+      completedAt: undefined
+    } as unknown as TaskCompletionSchema;
+
+    expect(() =>
+      toMostRecentCompletion([
+        undated,
+        completionAt('2026-01-01T00:00:00.000Z')
+      ])
+    ).toThrow(TypeError);
+  });
+
   it('returns null when every completion has a null completion date', () => {
     const undated = {
       ...completionAt('2026-02-01T00:00:00.000Z'),

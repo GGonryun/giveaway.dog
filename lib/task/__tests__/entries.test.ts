@@ -51,6 +51,19 @@ describe('toCompletionValue', () => {
 
       expect(toCompletionValue({ task, proof: twitterProof(true) })).toBe(7);
     });
+
+    it.each(FLAT_VALUE_TYPES)(
+      'ignores a verified bonus on %s even with a verified twitter proof',
+      (type) => {
+        const task = {
+          ...VALID_TASKS[type],
+          value: 7,
+          verifiedBonus: 3
+        } as unknown as TaskSchema;
+
+        expect(toCompletionValue({ task, proof: twitterProof(true) })).toBe(7);
+      }
+    );
   });
 
   describe.each(

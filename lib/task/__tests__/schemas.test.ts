@@ -372,7 +372,8 @@ const instagramPostCase = (
   valid: [
     INSTAGRAM_POST_URL,
     'https://instagram.com/dog.lover/p/ABC-_1',
-    'https://www.instagram.com/p/ABC?igsh=xyz'
+    'https://www.instagram.com/p/ABC?igsh=xyz',
+    'http://instagram.com/p/ABC'
   ],
   invalid: [
     'https://www.instagram.com/reel/ABC/',
@@ -488,7 +489,8 @@ const URL_FIELD_CASES: UrlFieldCase[] = [
       'Unexpected URL, should be like https://discord.com/channels/guildId/channelId or https://discordapp.com/channels/guildId/channelId',
     valid: [
       'https://discord.com/channels/111/222',
-      'https://www.discordapp.com/channels/1/2'
+      'https://www.discordapp.com/channels/1/2',
+      'http://discord.com/channels/111/222'
     ],
     invalid: [
       'https://discord.com/channels/111/222/333',
@@ -542,9 +544,15 @@ const URL_FIELD_CASES: UrlFieldCase[] = [
     requiredMessage: 'Kick Channel URL is required',
     formatMessage:
       'Unexpected URL, should be like https://www.kick.com/username',
-    valid: ['https://kick.com/giveawaydog', 'https://www.kick.com/abcd'],
+    valid: [
+      'https://kick.com/giveawaydog',
+      'https://www.kick.com/abcd',
+      'http://kick.com/giveawaydog',
+      `https://kick.com/${'a'.repeat(25)}`
+    ],
     invalid: [
       'https://kick.com/abc',
+      `https://kick.com/${'a'.repeat(26)}`,
       'https://kick.com/giveawaydog/',
       'https://kick.tv/giveawaydog'
     ]
@@ -583,6 +591,7 @@ const URL_FIELD_CASES: UrlFieldCase[] = [
     valid: [
       'https://www.instagram.com/giveawaydog/',
       'https://www.instagram.com/giveawaydog',
+      'https://instagram.com/a',
       `http://instagram.com/${'a'.repeat(30)}`,
       'https://instagram.com/dog.lover_1'
     ],
@@ -617,7 +626,8 @@ const URL_FIELD_CASES: UrlFieldCase[] = [
       'https://www.facebook.com/people/Dog-Lover/123',
       'https://www.facebook.com/share/AbC123',
       'https://www.facebook.com/123456/',
-      'https://www.facebook.com/giveawaydog?ref=bookmarks'
+      'https://www.facebook.com/giveawaydog?ref=bookmarks',
+      'http://facebook.com/giveawaydog'
     ],
     invalid: [
       'https://m.facebook.com/giveawaydog',
@@ -640,7 +650,11 @@ const URL_FIELD_CASES: UrlFieldCase[] = [
       'https://www.facebook.com/page.name/posts/123abc',
       'https://www.facebook.com/page-name/posts/123abc/',
       'https://www.facebook.com/photo.php?fbid=123&id=456',
-      'https://www.facebook.com/photo.php?fbid=123&id=456&set=a.1'
+      'https://www.facebook.com/photo.php?fbid=123&id=456&set=a.1',
+      'https://www.facebook.com/photo.php?fbid=123&amp;id=456',
+      'http://facebook.com/permalink.php?story_fbid=abc&id=1',
+      'http://facebook.com/page/posts/123',
+      'http://facebook.com/photo.php?fbid=1&id=2'
     ],
     invalid: [
       'https://www.facebook.com/page/posts/123?ref=share',
@@ -659,7 +673,9 @@ const URL_FIELD_CASES: UrlFieldCase[] = [
       'Unexpected URL, should be like https://www.tiktok.com/@username/',
     valid: [
       'https://www.tiktok.com/@giveawaydog',
-      'https://tiktok.com/@dog.lover_1/'
+      'https://tiktok.com/@dog.lover_1/',
+      'http://tiktok.com/@giveawaydog',
+      `https://www.tiktok.com/@${'a'.repeat(30)}`
     ],
     invalid: [
       'https://www.tiktok.com/giveawaydog',
@@ -679,10 +695,13 @@ const URL_FIELD_CASES: UrlFieldCase[] = [
     valid: [
       'https://www.tiktok.com/@giveawaydog/video/1234567890',
       'https://tiktok.com/@dog.lover/photo/1/',
-      'https://www.tiktok.com/@giveawaydog/video/1234567890?is_from_webapp=1'
+      'https://www.tiktok.com/@giveawaydog/video/1234567890?is_from_webapp=1',
+      'http://tiktok.com/@dog/video/1',
+      `https://www.tiktok.com/@${'a'.repeat(30)}/video/1`
     ],
     invalid: [
       'https://www.tiktok.com/@giveawaydog/live',
+      `https://www.tiktok.com/@${'a'.repeat(31)}/video/1`,
       'https://www.tiktok.com/@giveawaydog/video/abc',
       'https://www.tiktok.com/giveawaydog/video/123'
     ]
@@ -708,7 +727,8 @@ const URL_FIELD_CASES: UrlFieldCase[] = [
     formatMessage: 'Unexpected URL, should be like https://velora.tv/username',
     valid: [
       'https://velora.tv/giveawaydog',
-      'https://www.velora.tv/dog.lover-1/'
+      'https://www.velora.tv/dog.lover-1/',
+      'http://velora.tv/giveawaydog'
     ],
     invalid: [
       'https://velora.com/giveawaydog',
@@ -749,6 +769,15 @@ describe.each(URL_FIELD_CASES)(
       ]);
     });
 
+    it('rejects a URL on another host that ends with a valid URL', () => {
+      expect(
+        messagesFor(
+          schema,
+          withField(type, field, `https://evil.example/${valid[0]}`)
+        )
+      ).toEqual([formatMessage]);
+    });
+
     it('reports both the required and format messages for a non-URL string', () => {
       expect(messagesFor(schema, withField(type, field, 'not a url'))).toEqual([
         requiredMessage,
@@ -760,6 +789,320 @@ describe.each(URL_FIELD_CASES)(
       expect(messagesFor(schema, withoutField(type, field))).toEqual([
         'Required'
       ]);
+    });
+  }
+);
+
+type MinimumCase = [
+  string,
+  z.ZodTypeAny,
+  Record<string, unknown>,
+  string,
+  number,
+  string
+];
+
+const NUMBER_MINIMUM_CASES: MinimumCase[] = [
+  [
+    'task value',
+    bonusTaskSchema,
+    VALID_TASKS.BONUS_TASK,
+    'value',
+    1,
+    'Minimum value is 1'
+  ],
+  [
+    'limited bonus entrants',
+    bonusLimitedTaskSchema,
+    VALID_TASKS.BONUS_LIMITED,
+    'maxEntrants',
+    1,
+    'Limit must be at least 1'
+  ],
+  [
+    'loyalty requirement',
+    bonusLoyaltyTaskSchema,
+    VALID_TASKS.BONUS_LOYALTY,
+    'loyaltyRequired',
+    1,
+    'Must be at least 1'
+  ],
+  [
+    'minimum selections',
+    multipleChoiceTaskSchema,
+    VALID_TASKS.MULTIPLE_CHOICE,
+    'minSelections',
+    1,
+    'Minimum selections must be at least 1'
+  ],
+  [
+    'maximum selections',
+    multipleChoiceTaskSchema,
+    VALID_TASKS.MULTIPLE_CHOICE,
+    'maxSelections',
+    1,
+    'Maximum selections must be at least 1'
+  ],
+  [
+    'retweet import verified bonus',
+    twitterRetweetImportTaskSchema,
+    VALID_TASKS.TWITTER_RETWEET_IMPORT,
+    'verifiedBonus',
+    1,
+    'Verified bonus must be at least 1'
+  ],
+  [
+    'like import verified bonus',
+    twitterLikeImportTaskSchema,
+    VALID_TASKS.TWITTER_LIKE_IMPORT,
+    'verifiedBonus',
+    1,
+    'Verified bonus must be at least 1'
+  ],
+  [
+    'referral maximum',
+    referralLinkTaskSchema,
+    VALID_TASKS.REFERRAL_LINK,
+    'maximum',
+    1,
+    'Maximum referrals must be at least 1'
+  ],
+  [
+    'after visit delay',
+    afterVisitSchema,
+    { type: 'DELAY', seconds: 10 },
+    'seconds',
+    1,
+    'Seconds must be at least 1'
+  ]
+];
+
+describe.each(NUMBER_MINIMUM_CASES)(
+  '%s minimum',
+  (_name, schema, base, field, minimum, message) => {
+    it('accepts the minimum value', () => {
+      expect(messagesFor(schema, { ...base, [field]: minimum })).toEqual([]);
+    });
+
+    it('rejects a value just below the minimum with its message', () => {
+      expect(messagesFor(schema, { ...base, [field]: minimum - 1 })).toEqual([
+        message
+      ]);
+    });
+  }
+);
+
+const STRING_MINIMUM_CASES: MinimumCase[] = [
+  [
+    'task title',
+    bonusTaskSchema,
+    VALID_TASKS.BONUS_TASK,
+    'title',
+    1,
+    'Title is required'
+  ],
+  [
+    'visit url label',
+    visitUrlTaskSchema,
+    VALID_TASKS.VISIT_URL,
+    'label',
+    3,
+    'Label is required'
+  ],
+  [
+    'ask question question',
+    askQuestionTaskSchema,
+    VALID_TASKS.ASK_QUESTION,
+    'question',
+    1,
+    'Question is required'
+  ],
+  [
+    'single choice question',
+    singleChoiceTaskSchema,
+    VALID_TASKS.SINGLE_CHOICE,
+    'question',
+    1,
+    'Question is required'
+  ],
+  [
+    'multiple choice question',
+    multipleChoiceTaskSchema,
+    VALID_TASKS.MULTIPLE_CHOICE,
+    'question',
+    1,
+    'Question is required'
+  ],
+  [
+    'after visit question',
+    afterVisitSchema,
+    { type: 'QUESTION', question: 'Why?', input: 'TEXT' },
+    'question',
+    1,
+    'Question is required'
+  ],
+  [
+    'retweet import importing account',
+    twitterRetweetImportTaskSchema,
+    VALID_TASKS.TWITTER_RETWEET_IMPORT,
+    'importingAccount',
+    1,
+    'Importing account is required'
+  ],
+  [
+    'like import importing account',
+    twitterLikeImportTaskSchema,
+    VALID_TASKS.TWITTER_LIKE_IMPORT,
+    'importingAccount',
+    1,
+    'Importing account is required'
+  ],
+  [
+    'twitch chat importing account',
+    twitchChatImportTaskSchema,
+    VALID_TASKS.TWITCH_CHAT_IMPORT,
+    'importingAccount',
+    1,
+    'Importing account is required'
+  ],
+  [
+    'bluesky like import importing account',
+    blueskyLikeImportTaskSchema,
+    VALID_TASKS.BLUESKY_LIKE_IMPORT,
+    'importingAccount',
+    1,
+    'Importing account is required'
+  ],
+  [
+    'bluesky repost import importing account',
+    blueskyRepostImportTaskSchema,
+    VALID_TASKS.BLUESKY_REPOST_IMPORT,
+    'importingAccount',
+    1,
+    'Importing account is required'
+  ],
+  [
+    'secret code',
+    secretCodeTaskSchema,
+    VALID_TASKS.SECRET_CODE,
+    'code',
+    1,
+    'Secret code is required'
+  ],
+  [
+    'secret code input',
+    TASK_INPUT_SCHEMA.SECRET_CODE,
+    {},
+    'code',
+    1,
+    'Secret code is required'
+  ],
+  [
+    'secret code v2 input',
+    TASK_INPUT_SCHEMA.SECRET_CODE_V2,
+    {},
+    'code',
+    1,
+    'Secret code is required'
+  ],
+  [
+    'ask question answer input',
+    TASK_INPUT_SCHEMA.ASK_QUESTION,
+    {},
+    'answer',
+    1,
+    'Answer is required'
+  ],
+  [
+    'single choice input',
+    TASK_INPUT_SCHEMA.SINGLE_CHOICE,
+    {},
+    'choice',
+    1,
+    'Please select an option'
+  ]
+];
+
+describe.each(STRING_MINIMUM_CASES)(
+  '%s length',
+  (_name, schema, base, field, minimum, message) => {
+    it('accepts a value of exactly the minimum length', () => {
+      expect(
+        messagesFor(schema, { ...base, [field]: 'x'.repeat(minimum) })
+      ).toEqual([]);
+    });
+
+    it('rejects a value one character too short with its message', () => {
+      expect(
+        messagesFor(schema, { ...base, [field]: 'x'.repeat(minimum - 1) })
+      ).toEqual([message]);
+    });
+  }
+);
+
+const ARRAY_MINIMUM_CASES: [
+  string,
+  z.ZodTypeAny,
+  Record<string, unknown>,
+  string,
+  unknown[],
+  string
+][] = [
+  [
+    'single choice options',
+    singleChoiceTaskSchema,
+    VALID_TASKS.SINGLE_CHOICE,
+    'options',
+    ['A', 'B'],
+    'At least two options are required'
+  ],
+  [
+    'multiple choice options',
+    multipleChoiceTaskSchema,
+    VALID_TASKS.MULTIPLE_CHOICE,
+    'options',
+    ['A', 'B'],
+    'At least two options are required'
+  ],
+  [
+    'secret codes',
+    secretCodeV2TaskSchema,
+    VALID_TASKS.SECRET_CODE_V2,
+    'codes',
+    ['W'],
+    'At least one secret code is required'
+  ],
+  [
+    'accepted media types',
+    submitMediaTaskSchema,
+    VALID_TASKS.SUBMIT_MEDIA,
+    'acceptedTypes',
+    ['IMAGE'],
+    'At least one media type is required'
+  ],
+  [
+    'multiple choice input',
+    TASK_INPUT_SCHEMA.MULTIPLE_CHOICE,
+    {},
+    'choices',
+    ['R'],
+    'Please select at least one option'
+  ]
+];
+
+describe.each(ARRAY_MINIMUM_CASES)(
+  '%s count',
+  (_name, schema, base, field, minimal, message) => {
+    it('accepts the smallest allowed list', () => {
+      expect(schema.parse({ ...base, [field]: minimal })[field]).toEqual(
+        minimal
+      );
+    });
+
+    it('rejects a list one item short with its message', () => {
+      expect(
+        messagesFor(schema, { ...base, [field]: minimal.slice(1) })
+      ).toEqual([message]);
     });
   }
 );
@@ -791,6 +1134,27 @@ describe('bonus task schemas', () => {
       ).toEqual([]);
     }
   );
+
+  it.each([null, undefined, 'not a date'])(
+    'accepts a timed bonus with a %s end date',
+    (endDate) => {
+      expect(
+        messagesFor(
+          bonusTimedTaskSchema,
+          withField('BONUS_TIMED', 'endDate', endDate)
+        )
+      ).toEqual([]);
+    }
+  );
+
+  it('rejects a timed bonus with a numeric start date', () => {
+    expect(
+      messagesFor(
+        bonusTimedTaskSchema,
+        withField('BONUS_TIMED', 'startDate', 1767225600000)
+      )
+    ).toEqual(['Expected string, received number']);
+  });
 
   it('accepts a timed bonus that ends before it starts', () => {
     expect(
@@ -865,6 +1229,15 @@ describe('visitUrlTaskSchema', () => {
       messagesFor(
         visitUrlTaskSchema,
         withField('VISIT_URL', 'href', 'mailto:dog@example.com')
+      )
+    ).toEqual([]);
+  });
+
+  it('accepts a javascript scheme href', () => {
+    expect(
+      messagesFor(
+        visitUrlTaskSchema,
+        withField('VISIT_URL', 'href', 'javascript:alert(1)')
       )
     ).toEqual([]);
   });
@@ -1197,6 +1570,25 @@ describe('twitchChatImportTaskSchema', () => {
     }
   );
 
+  it('accepts zero and negative rate limit numbers', () => {
+    const rateLimit = { max: 0, window: { value: -1, unit: 's' } };
+
+    expect(
+      twitchChatImportTaskSchema.parse(
+        withField('TWITCH_CHAT_IMPORT', 'rateLimit', rateLimit)
+      ).rateLimit
+    ).toEqual(rateLimit);
+  });
+
+  it('rejects a rate limit without a window', () => {
+    expect(
+      messagesFor(
+        twitchChatImportTaskSchema,
+        withField('TWITCH_CHAT_IMPORT', 'rateLimit', { max: 1 })
+      )
+    ).toEqual(['Required']);
+  });
+
   it('rejects a rate limit window in weeks', () => {
     expect(
       twitchChatImportTaskSchema.safeParse(
@@ -1305,6 +1697,7 @@ describe('blueskyFollowTaskSchema', () => {
   });
 
   it.each([
+    'a',
     'giveawaydog',
     '@giveawaydog.bsky.social',
     'https://bsky.app/profile/giveawaydog'
@@ -1394,17 +1787,54 @@ describe('TASK_LABEL', () => {
     });
   });
 
-  it.each([
-    ['REFERRAL_LINK', 'Refer a Friend'],
-    ['BONUS_TASK', 'Bonus'],
-    ['TWITTER_CONNECT', 'Connect X'],
-    ['TWITTER_LIKE_IMPORT', 'Like a post on X (Legacy)'],
-    ['DISCORD_INTERACTION_IMPORT', 'Interact on Discord'],
-    ['TWITCH_CHAT_IMPORT', 'Chat on Twitch'],
-    ['FACEBOOK_VIEW_POST', 'View Facebook Post'],
-    ['LINKEDIN_FOLLOW', 'Follow on LinkedIn']
-  ] as const)('labels %s as %s', (type, label) => {
-    expect(TASK_LABEL[type]).toBe(label);
+  it('labels every task type with its display name', () => {
+    expect(TASK_LABEL).toEqual({
+      REFERRAL_LINK: 'Refer a Friend',
+      BONUS_TASK: 'Bonus',
+      BONUS_TIMED: 'Timed Bonus',
+      BONUS_LIMITED: 'Limited Bonus',
+      BONUS_LOYALTY: 'Loyalty Bonus',
+      BONUS_COMPLETE_PROFILE: 'Complete Your Profile',
+      VISIT_URL: 'Visit URL',
+      ASK_QUESTION: 'Ask a Question',
+      SINGLE_CHOICE: 'Single Choice',
+      MULTIPLE_CHOICE: 'Multiple Choice',
+      SUBMIT_MEDIA: 'Submit Media',
+      SECRET_CODE: 'Enter Secret Code',
+      SECRET_CODE_V2: 'Enter Secret Code',
+      TWITTER_CONNECT: 'Connect X',
+      TWITTER_FOLLOW: 'Follow on X',
+      TWITTER_RETWEET: 'Repost on X',
+      TWITTER_RETWEET_IMPORT: 'Repost on X (Legacy)',
+      TWITTER_RETWEET_IMPORT_V2: 'Repost on X',
+      TWITTER_LIKE: 'Like a post on X',
+      TWITTER_LIKE_IMPORT: 'Like a post on X (Legacy)',
+      STEAM_WISHLIST: 'Steam Wishlist',
+      STEAM_FOLLOW: 'Follow on Steam',
+      DISCORD_JOIN: 'Join Discord Server',
+      DISCORD_INTERACTION_IMPORT: 'Interact on Discord',
+      TWITCH_FOLLOW: 'Follow on Twitch',
+      TWITCH_CHAT_IMPORT: 'Chat on Twitch',
+      YOUTUBE_VISIT: 'Visit YouTube Channel',
+      KICK_FOLLOW: 'Follow on Kick',
+      INSTAGRAM_VISIT: 'Visit Instagram Profile',
+      INSTAGRAM_LIKE: 'Like Instagram Post',
+      INSTAGRAM_COMMENT: 'Comment on Instagram Post',
+      FACEBOOK_VISIT_PAGE: 'Visit Facebook Page',
+      FACEBOOK_VIEW_POST: 'View Facebook Post',
+      TIKTOK_FOLLOW: 'Follow on TikTok',
+      TIKTOK_LIKE: 'Like TikTok Post',
+      BLUESKY_CONNECT: 'Connect Bluesky',
+      BLUESKY_FOLLOW: 'Follow on Bluesky',
+      BLUESKY_LIKE: 'Like a post on Bluesky',
+      BLUESKY_REPOST: 'Repost on Bluesky',
+      BLUESKY_LIKE_IMPORT: 'Like a post on Bluesky',
+      BLUESKY_REPOST_IMPORT: 'Repost on Bluesky',
+      VELORA_CONNECT: 'Connect Velora',
+      VELORA_FOLLOW: 'Follow on Velora',
+      LINKEDIN_CONNECT: 'Connect LinkedIn',
+      LINKEDIN_FOLLOW: 'Follow on LinkedIn'
+    });
   });
 });
 
@@ -1463,6 +1893,9 @@ describe('TASK_INPUT_SCHEMA', () => {
     ['ASK_QUESTION', { answer: '' }, 'Answer is required'],
     ['SINGLE_CHOICE', { choice: '' }, 'Please select an option'],
     ['MULTIPLE_CHOICE', { choices: [] }, 'Please select at least one option'],
+    ['MULTIPLE_CHOICE', { choices: [1] }, 'Expected string, received number'],
+    ['ASK_QUESTION', {}, 'Required'],
+    ['SINGLE_CHOICE', {}, 'Required'],
     ['SUBMIT_MEDIA', { mediaUrl: 'nope' }, 'Media URL is required'],
     ['SUBMIT_MEDIA', {}, 'Required']
   ] as const)('rejects %s input %j with %s', (type, input, message) => {
@@ -1506,35 +1939,47 @@ describe('TASK_JOB_DATA_SCHEMA', () => {
     );
   });
 
-  it('accepts the initial job data with zero runs', () => {
-    expect(TASK_JOB_DATA_SCHEMA.TWITTER_LIKE_IMPORT.parse({ runs: 0 })).toEqual(
-      { runs: 0 }
-    );
-  });
+  describe.each([
+    ['TWITTER_RETWEET_IMPORT', { runs: 3, lastProcessedId: '10' }],
+    [
+      'TWITTER_RETWEET_IMPORT_V2',
+      {
+        runs: 3,
+        nextCursor: 'cursor-1',
+        lastProcessedId: '10',
+        firstSeenId: '20'
+      }
+    ],
+    ['TWITTER_LIKE_IMPORT', { runs: 3, lastProcessedId: '10' }],
+    ['BLUESKY_LIKE_IMPORT', { runs: 3, lastProcessedDid: 'did:plc:abc' }],
+    ['BLUESKY_REPOST_IMPORT', { runs: 3, lastProcessedDid: 'did:plc:abc' }]
+  ] as const)('%s job data', (type, data) => {
+    const schema: z.ZodTypeAny = TASK_JOB_DATA_SCHEMA[type];
+    const cursorKeys = Object.keys(data).filter((key) => key !== 'runs');
 
-  it('keeps v2 cursor fields', () => {
-    const data = {
-      runs: 3,
-      nextCursor: 'cursor-1',
-      lastProcessedId: '10',
-      firstSeenId: '20'
-    };
+    it('keeps every progress field', () => {
+      expect(schema.parse(data)).toEqual(data);
+    });
 
-    expect(TASK_JOB_DATA_SCHEMA.TWITTER_RETWEET_IMPORT_V2.parse(data)).toEqual(
-      data
-    );
-  });
+    it('accepts the initial job data with zero runs', () => {
+      expect(schema.parse({ runs: 0 })).toEqual({ runs: 0 });
+    });
 
-  it('rejects a negative run count', () => {
-    expect(
-      messagesFor(TASK_JOB_DATA_SCHEMA.BLUESKY_LIKE_IMPORT, { runs: -1 })
-    ).toEqual(['Number must be greater than or equal to 0']);
-  });
+    it('rejects a negative run count', () => {
+      expect(messagesFor(schema, { ...data, runs: -1 })).toEqual([
+        'Number must be greater than or equal to 0'
+      ]);
+    });
 
-  it('requires a run count', () => {
-    expect(messagesFor(TASK_JOB_DATA_SCHEMA.BLUESKY_REPOST_IMPORT, {})).toEqual(
-      ['Required']
-    );
+    it('requires a run count', () => {
+      expect(messagesFor(schema, {})).toEqual(['Required']);
+    });
+
+    it.each(cursorKeys)('rejects a numeric %s', (key) => {
+      expect(messagesFor(schema, { ...data, [key]: 1 })).toEqual([
+        'Expected string, received number'
+      ]);
+    });
   });
 });
 
