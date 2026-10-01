@@ -31,16 +31,16 @@ export const VeloraCreatorSchema = z.object({
 export const VeloraProfileSchema = z.object({
   id: z.string(),
   username: z.string(),
-  email: z.string(),
-  displayName: z.string(),
-  bio: z.string().nullable(),
-  role: z.string(),
-  status: z.string(),
-  streamingEnabled: z.boolean(),
-  followerCount: z.number(),
+  email: z.string().nullish(),
+  displayName: z.string().nullish(),
+  bio: z.string().nullish(),
+  role: z.string().optional(),
+  status: z.string().optional(),
+  streamingEnabled: z.boolean().optional(),
+  followerCount: z.number().optional(),
   followingCount: z.number().optional(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
   creator: VeloraCreatorSchema.nullable().optional(),
   accentColor: z.string().nullable().optional(),
   profileCustomization: z
@@ -117,7 +117,7 @@ export function VeloraProvider(
       return {
         id: parsed.id,
         name: parsed.displayName || parsed.username,
-        email: parsed.email,
+        email: parsed.email ?? null,
         image: null
       };
     },
