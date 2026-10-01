@@ -1,0 +1,432 @@
+{
+  "app/(auth)/login/page.tsx": {
+    "@next/next/no-html-link-for-pages": {
+      "count": 1
+    }
+  },
+  "app/app/[slug]/(app)/users/[userId]/components/entries/user-entries.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "app/app/[slug]/(app)/users/components/users-table.tsx": {
+    "react-hooks/static-components": {
+      "count": 2
+    }
+  },
+  "components/auth/email-verification.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "components/patterns/emoji-picker.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "components/patterns/form-layout/use-form-issues.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "components/patterns/pricing-section.tsx": {
+    "react/jsx-key": {
+      "count": 2
+    }
+  },
+  "components/sweepstakes-details/sweepstakes-analytics-skeleton.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "components/sweepstakes-details/verification-instructions-dialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "components/sweepstakes-editor/form/audience/regional-restriction.tsx": {
+    "react-hooks/rules-of-hooks": {
+      "count": 1
+    }
+  },
+  "components/sweepstakes-editor/form/audience/sweepstakes-visibility.tsx": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "components/sweepstakes-editor/form/design/design.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "components/sweepstakes-editor/form/setup/setup.tsx": {
+    "react/display-name": {
+      "count": 1
+    }
+  },
+  "components/sweepstakes-editor/publish-confirmation-modal.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "components/sweepstakes-editor/sweepstakes-editor-preview.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "components/sweepstakes-editor/sweepstakes-form.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "components/sweepstakes/giveaway-participation-context.tsx": {
+    "@typescript-eslint/no-empty-object-type": {
+      "count": 1
+    }
+  },
+  "components/sweepstakes/states/user-details-form.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "components/ui/box.tsx": {
+    "@typescript-eslint/no-empty-object-type": {
+      "count": 1
+    }
+  },
+  "components/ui/country-selector.tsx": {
+    "react-hooks/immutability": {
+      "count": 2
+    },
+    "react-hooks/use-memo": {
+      "count": 1
+    }
+  },
+  "components/ui/date-time-picker.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "components/ui/flex.tsx": {
+    "react/display-name": {
+      "count": 1
+    }
+  },
+  "components/ui/sidebar.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "components/ui/stamp.tsx": {
+    "react-hooks/static-components": {
+      "count": 1
+    }
+  },
+  "components/ui/typography.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    },
+    "react/display-name": {
+      "count": 2
+    }
+  },
+  "lib/auth/config-middleware.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "lib/auth/config.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/auth/get-account-data.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    }
+  },
+  "lib/auth/providers/steam.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "lib/bluesky/bluesky-client.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/bluesky/is-user-liking-post.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/bluesky/is-user-reposting-post.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/bluesky/team-bluesky-client.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/custom-fields/components/custom-form-fields.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 5
+    }
+  },
+  "lib/custom-fields/components/form-field.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/discord/procedures/get-discord-channels.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "lib/discord/procedures/get-discord-roles.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "lib/discord/procedures/save-discord-settings.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/home/supported-integrations.tsx": {
+    "@next/next/no-html-link-for-pages": {
+      "count": 1
+    }
+  },
+  "lib/integrations/notifications/discord-notifier.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "lib/integrations/procedures/connect-twitter.tsx": {
+    "@typescript-eslint/no-require-imports": {
+      "count": 1
+    }
+  },
+  "lib/integrations/procedures/create-skeet.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/json.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "lib/marketing/bot-protection-animation.tsx": {
+    "react-hooks/refs": {
+      "count": 2
+    }
+  },
+  "lib/marketing/orbiting-platforms.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "lib/mrpc/errors.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "lib/mrpc/hook.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 5
+    }
+  },
+  "lib/mrpc/procedures.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 16
+    }
+  },
+  "lib/object.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "lib/participant/db.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/pickers/x/components/sections/setup-section.tsx": {
+    "react/display-name": {
+      "count": 1
+    }
+  },
+  "lib/pickers/x/components/twitter-v2-picker-preview.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "lib/referrals/procedures/get-user-referral.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/task/components/entry-methods/entry-methods.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "lib/task/components/public-sweepstakes/task-actions/building-blocks.tsx": {
+    "react-hooks/static-components": {
+      "count": 1
+    }
+  },
+  "lib/task/components/public-sweepstakes/task-actions/lib/bluesky/shared.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "lib/task/components/public-sweepstakes/task-actions/lib/referral/referral-link.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/task/components/public-sweepstakes/task-actions/lib/twitter/shared.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "lib/task/components/public-sweepstakes/task-actions/lib/twitter/verified-bonus-badge.tsx": {
+    "react-hooks/static-components": {
+      "count": 2
+    }
+  },
+  "lib/task/components/sweepstakes-editor-form/additional-settings/lib/end-date.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "react/display-name": {
+      "count": 1
+    }
+  },
+  "lib/task/components/sweepstakes-editor-form/additional-settings/lib/multiple-choice.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/task/components/sweepstakes-editor-form/additional-settings/lib/secret-codes.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 7
+    }
+  },
+  "lib/task/components/sweepstakes-editor-form/additional-settings/lib/single-choice.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/task/components/sweepstakes-editor-form/additional-settings/lib/start-date.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "react/display-name": {
+      "count": 1
+    }
+  },
+  "lib/task/hooks/use-twitch-trigger-validation.ts": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "lib/task/hooks/use-youtube-channel-validation.ts": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "lib/task/validation/steam.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/templates/components/template-preview.tsx": {
+    "react-hooks/purity": {
+      "count": 2
+    }
+  },
+  "lib/templates/components/use-template-modal.tsx": {
+    "react-hooks/purity": {
+      "count": 2
+    }
+  },
+  "lib/templates/schemas/template.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "lib/twitch/bot/webhooks/chat-message.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "lib/twitch/components/twitch-card.tsx": {
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
+    }
+  },
+  "lib/types.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "lib/utils.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "procedures/browse/get-historical-sweepstakes-list.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "procedures/browse/get-public-sweepstakes-list.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "procedures/browse/get-sweepstakes-privacy.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "procedures/browse/get-user-host-relationship.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "procedures/sweepstakes/reverify-task-completion.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "procedures/sweepstakes/update-task-completion-status.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "procedures/teams/shared.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "schemas/giveaway/db.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "schemas/giveaway/input.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  }
+}

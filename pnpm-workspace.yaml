@@ -12,6 +12,7 @@ allowBuilds:
   prisma: true
   protobufjs: true
   sharp: false
+  unrs-resolver: false
 
 onlyBuiltDependencies:
   - '@prisma/client'
@@ -25,3 +26,4 @@ onlyBuiltDependencies:
 
 ignoredBuiltDependencies:
   - sharp
+  - unrs-resolver

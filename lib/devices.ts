@@ -79,7 +79,7 @@ export namespace devices {
     const geo = ip.parseGeo(args.geo);
     const parsedUserAgent = userAgent.parse(args.userAgent);
 
-    let components = [
+    const components = [
       parsedUserAgent.device,
       parsedUserAgent.os,
       parsedUserAgent.browser,

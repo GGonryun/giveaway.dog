@@ -8,7 +8,7 @@ export async function getServerTheme(): Promise<ResolvedTheme> {
   const cookieStore = await cookies();
   const themeCookie = cookieStore.get(THEME_STORAGE_KEY);
 
-  let theme = themeCookie?.value as Theme | undefined;
+  const theme = themeCookie?.value as Theme | undefined;
 
   if (!theme || theme === 'system') {
     return 'dark';
