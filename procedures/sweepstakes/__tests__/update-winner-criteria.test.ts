@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Prisma, TeamRole, UserSource } from '@prisma/client';
 import updateWinnerCriteria from '../update-winner-criteria';
+import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { knownRequestError, prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
+import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
 import { nextCacheMock } from '@/test/next-cache';
 import {
@@ -65,6 +66,20 @@ describe('updateWinnerCriteria', () => {
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
     });
 
+    it('loads the sweepstakes from the input sweepstakes id scoped to the caller', async () => {
+      signIn();
+
+      await updateWinnerCriteria(input());
+
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
+        where: {
+          id: SWEEPSTAKES_ID,
+          team: { members: { some: { userId: TEST_USER.id } } }
+        },
+        include: TEAM_SWEEPSTAKES_PAYLOAD
+      });
+    });
+
     it('returns NOT_FOUND when the sweepstakes is not accessible', async () => {
       signIn();
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
@@ -104,14 +119,42 @@ describe('updateWinnerCriteria', () => {
     });
 
     it.each([
-      ['minTasksCompleted below one', { minTasksCompleted: 0 }],
-      ['fractional minTasksCompleted', { minTasksCompleted: 1.5 }],
-      ['negative minQualityScore', { minQualityScore: -1 }],
-      ['minQualityScore above 100', { minQualityScore: 101 }],
-      ['fractional minQualityScore', { minQualityScore: 50.5 }],
-      ['non boolean allowMultipleWins', { allowMultipleWins: 'yes' }],
-      ['non boolean allowUserSelection', { allowUserSelection: 1 }],
-      ['an empty external platform list', { externalPlatforms: [] }],
+      [
+        'minTasksCompleted below one',
+        { minTasksCompleted: 0 },
+        'minTasksCompleted'
+      ],
+      [
+        'fractional minTasksCompleted',
+        { minTasksCompleted: 1.5 },
+        'minTasksCompleted'
+      ],
+      ['negative minQualityScore', { minQualityScore: -1 }, 'minQualityScore'],
+      [
+        'minQualityScore above 100',
+        { minQualityScore: 101 },
+        'minQualityScore'
+      ],
+      [
+        'fractional minQualityScore',
+        { minQualityScore: 50.5 },
+        'minQualityScore'
+      ],
+      [
+        'non boolean allowMultipleWins',
+        { allowMultipleWins: 'yes' },
+        'allowMultipleWins'
+      ],
+      [
+        'non boolean allowUserSelection',
+        { allowUserSelection: 1 },
+        'allowUserSelection'
+      ],
+      [
+        'an empty external platform list',
+        { externalPlatforms: [] },
+        'externalPlatforms'
+      ],
       [
         'more than five external platforms',
         {
@@ -123,16 +166,28 @@ describe('updateWinnerCriteria', () => {
             UserSource.MANUAL_IMPORT,
             UserSource.DISCORD_IMPORT
           ]
-        }
+        },
+        'externalPlatforms'
       ],
-      ['an unknown external platform', { externalPlatforms: ['MYSPACE'] }],
-      ['a missing slug', { slug: undefined }]
-    ])('rejects %s', async (_label, overrides) => {
+      [
+        'an unknown external platform',
+        { externalPlatforms: ['MYSPACE'] },
+        'externalPlatforms'
+      ],
+      ['a missing slug', { slug: undefined }, 'slug'],
+      [
+        'a missing sweepstakes id',
+        { sweepstakesId: undefined },
+        'sweepstakesId'
+      ]
+    ])('rejects %s', async (_label, overrides, field) => {
       const result = await updateWinnerCriteria(
         input(overrides as unknown as Partial<Input>)
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      const failure = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(failure.message).toMatch(/^Input validation failed: /);
+      expect(failure.message).toContain(`"${field}"`);
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
     });
 

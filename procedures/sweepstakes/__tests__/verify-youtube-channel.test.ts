@@ -68,7 +68,9 @@ describe('verifyYouTubeChannel', () => {
 
       const result = await verify('');
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"channelUrl"/
+      );
     });
 
     it('rejects a missing channel url', async () => {
@@ -76,7 +78,9 @@ describe('verifyYouTubeChannel', () => {
 
       const result = await verifyYouTubeChannel({} as unknown as Input);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"channelUrl"/
+      );
     });
   });
 

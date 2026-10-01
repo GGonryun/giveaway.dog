@@ -76,29 +76,20 @@ describe('getSweepstakesList', () => {
       signIn();
     });
 
-    it('rejects a missing team slug', async () => {
-      const result = await getSweepstakesList({} as unknown as Input);
+    it.each([
+      ['a missing team slug', { slug: undefined }, 'slug'],
+      ['an unknown status filter', { status: 'ACTIVE' }, 'status'],
+      ['an unknown sort field', { sortField: 'status' }, 'sortField'],
+      ['an unknown sort direction', { sortDirection: 'up' }, 'sortDirection'],
+      ['a non numeric page', { page: '2' }, 'page'],
+      ['a non string search', { search: 7 }, 'search']
+    ])('rejects %s', async (_label, overrides, field) => {
+      const result = await list(overrides as unknown as Partial<Input>);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      const failure = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(failure.message).toMatch(/^Input validation failed: /);
+      expect(failure.message).toContain(`"${field}"`);
       expect(prismaMock.sweepstakes.findMany).not.toHaveBeenCalled();
-    });
-
-    it('rejects an unknown status filter', async () => {
-      const result = await list({ status: 'ACTIVE' } as unknown as Input);
-
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
-    });
-
-    it('rejects an unknown sort field', async () => {
-      const result = await list({ sortField: 'status' } as unknown as Input);
-
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
-    });
-
-    it('rejects a non numeric page', async () => {
-      const result = await list({ page: '2' } as unknown as Input);
-
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
     });
   });
 
@@ -222,6 +213,16 @@ describe('getSweepstakesList', () => {
       expect(findManyArgs().where).toMatchObject({
         status: 'COMPLETED',
         timing: undefined
+      });
+    });
+
+    it('ignores the date range filter', async () => {
+      await list({ dateRange: 'last-7-days' });
+
+      expect(findManyArgs().where).toEqual({
+        status: undefined,
+        timing: undefined,
+        team: teamWhere
       });
     });
 
@@ -403,6 +404,25 @@ describe('getSweepstakesList', () => {
         status: 'ERROR',
         timeLeft: 'Not started',
         endsAt: undefined
+      });
+    });
+
+    it('reports RUNNING with a not started description when an active sweepstakes has only an end date', async () => {
+      prismaMock.sweepstakes.findMany.mockResolvedValue([
+        row({
+          timing: {
+            startDate: null,
+            endDate: new Date('2025-06-20T12:00:00.000Z')
+          }
+        })
+      ]);
+
+      const [item] = expectOk(await list()).sweepstakes;
+
+      expect(item).toMatchObject({
+        status: 'RUNNING',
+        timeLeft: 'Not started',
+        endsAt: '2025-06-20T12:00:00.000Z'
       });
     });
 

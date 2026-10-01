@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { CompletionStatus, TeamRole } from '@prisma/client';
 import { updateTaskCompletionStatus } from '../update-task-completion-status';
+import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
+import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
 import {
   SWEEPSTAKES_ID,
@@ -64,7 +65,10 @@ describe('updateTaskCompletionStatus', () => {
         input({ status: 'APPROVED' } as unknown as Partial<Input>)
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"status"/
+      );
+      expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
     });
 
     it('rejects a non string reason', async () => {
@@ -74,7 +78,35 @@ describe('updateTaskCompletionStatus', () => {
         input({ reason: 42 } as unknown as Partial<Input>)
       );
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"reason"/
+      );
+    });
+
+    it('rejects input without a task completion id', async () => {
+      signIn();
+
+      const result = await updateTaskCompletionStatus(
+        input({ taskCompletionId: undefined })
+      );
+
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"taskCompletionId"/
+      );
+    });
+
+    it('loads the sweepstakes from the input sweepstakes id scoped to the caller', async () => {
+      signIn();
+
+      await updateTaskCompletionStatus(input());
+
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
+        where: {
+          id: SWEEPSTAKES_ID,
+          team: { members: { some: { userId: TEST_USER.id } } }
+        },
+        include: TEAM_SWEEPSTAKES_PAYLOAD
+      });
     });
 
     it('returns NOT_FOUND when the sweepstakes is not accessible', async () => {

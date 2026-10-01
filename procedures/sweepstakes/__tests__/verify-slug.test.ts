@@ -25,7 +25,9 @@ describe('verifySlug', () => {
 
     const result = await verifySlug({ slug: '' });
 
-    expectFailure(result, 'UNPROCESSABLE_CONTENT');
+    expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+      /^Input validation failed: [\s\S]*"slug"/
+    );
     expect(prismaMock.sweepstakesVisibility.findFirst).not.toHaveBeenCalled();
   });
 
@@ -37,7 +39,9 @@ describe('verifySlug', () => {
       currentSweepstakesId: 5
     } as unknown as Input);
 
-    expectFailure(result, 'UNPROCESSABLE_CONTENT');
+    expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+      /^Input validation failed: [\s\S]*"currentSweepstakesId"/
+    );
   });
 
   it('looks up the slug selecting only the owning sweepstakes id', async () => {

@@ -51,14 +51,18 @@ describe('updateSweepstakes', () => {
         setup: { name: 'x' }
       } as unknown as Input);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"Invalid input"/
+      );
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
     });
 
     it('rejects a non object payload', async () => {
       const result = await updateSweepstakes('sweep-1' as unknown as Input);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"Invalid input"/
+      );
     });
   });
 

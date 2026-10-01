@@ -2,8 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { CompletionStatus, TeamRole } from '@prisma/client';
 import { reverifyTaskCompletion } from '../reverify-task-completion';
 import { ApplicationError } from '@/lib/errors';
+import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { asPrismaClient, prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
+import { signIn, TEST_USER } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
 import { nextCacheMock } from '@/test/next-cache';
 import {
@@ -103,7 +104,37 @@ describe('reverifyTaskCompletion', () => {
         sweepstakesId: SWEEPSTAKES_ID
       } as unknown as Input);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"taskCompletionId"/
+      );
+      expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('rejects input without a sweepstakes id', async () => {
+      signIn();
+
+      const result = await reverifyTaskCompletion({
+        taskCompletionId: 'completion-1'
+      } as unknown as Input);
+
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"sweepstakesId"/
+      );
+      expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('loads the sweepstakes from the input sweepstakes id scoped to the caller', async () => {
+      signIn();
+
+      await reverifyTaskCompletion(INPUT);
+
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
+        where: {
+          id: SWEEPSTAKES_ID,
+          team: { members: { some: { userId: TEST_USER.id } } }
+        },
+        include: TEAM_SWEEPSTAKES_PAYLOAD
+      });
     });
 
     it('returns NOT_FOUND when the sweepstakes is not visible to the caller', async () => {

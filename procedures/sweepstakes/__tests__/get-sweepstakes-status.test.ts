@@ -39,7 +39,9 @@ describe('getSweepstakesStatus', () => {
       {} as unknown as Parameters<typeof getSweepstakesStatus>[0]
     );
 
-    expectFailure(result, 'UNPROCESSABLE_CONTENT');
+    expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+      /^Input validation failed: [\s\S]*"id"/
+    );
   });
 
   it('queries the sweepstakes scoped to the caller with its timing', async () => {

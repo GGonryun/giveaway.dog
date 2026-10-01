@@ -83,7 +83,9 @@ describe('verifyTwitchTrigger', () => {
         trigger: '!enter'
       } as unknown as Input);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"teamId"/
+      );
     });
 
     it('verifies the caller belongs to the team by id', async () => {

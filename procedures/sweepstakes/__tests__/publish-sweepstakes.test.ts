@@ -53,20 +53,26 @@ describe('publishSweepstakes', () => {
     it('rejects input without an id', async () => {
       const result = await publishSweepstakes({} as unknown as Input);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"Invalid input"/
+      );
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
     });
 
     it('rejects a non string id', async () => {
       const result = await publishSweepstakes({ id: 7 } as unknown as Input);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"Invalid input"/
+      );
     });
 
     it('rejects a null payload', async () => {
       const result = await publishSweepstakes(null as unknown as Input);
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: [\s\S]*"Invalid input"/
+      );
     });
   });
 

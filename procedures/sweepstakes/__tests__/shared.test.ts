@@ -362,6 +362,18 @@ describe('applySweepstakesChanges', () => {
   });
 
   describe('authorization and guards', () => {
+    it('looks up the input sweepstakes scoped to the caller', async () => {
+      await apply({ id: 'sweep-42' });
+
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
+        where: {
+          id: 'sweep-42',
+          team: { members: { some: { userId: TEST_USER.id } } }
+        },
+        include: TEAM_SWEEPSTAKES_PAYLOAD
+      });
+    });
+
     it('requires the update permission on the sweepstakes team', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         buildTeamSweepstakes({
@@ -579,6 +591,54 @@ describe('applySweepstakesChanges', () => {
       );
     });
 
+    it('deletes the stored sweepstakes id even if the input id differs', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        buildTeamSweepstakes({ id: 'stored-id' })
+      );
+
+      await apply({ id: 'input-id' });
+
+      expect(prismaMock.sweepstakes.delete).toHaveBeenCalledWith({
+        where: { id: 'stored-id' }
+      });
+    });
+
+    it('reads dependent records by the stored sweepstakes id even if the input id differs', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        buildTeamSweepstakes({ id: 'stored-id' })
+      );
+
+      await apply({ id: 'input-id' });
+
+      expect(prismaMock.sweepstakesParticipant.findMany).toHaveBeenCalledWith({
+        where: { sweepstakesId: 'stored-id' }
+      });
+    });
+
+    it('schedules jobs for the stored sweepstakes id even if the input id differs', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        buildTeamSweepstakes({ id: 'stored-id' })
+      );
+
+      await apply({
+        id: 'input-id',
+        status: SweepstakesStatus.ACTIVE,
+        timing: { endDate: END }
+      });
+
+      expect(prismaMock.sweepstakesJob.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            sweepstakesId_type: {
+              sweepstakesId: 'stored-id',
+              type: SweepstakesJobType.PROCESS_EXPIRATION
+            }
+          },
+          create: expect.objectContaining({ sweepstakesId: 'stored-id' })
+        })
+      );
+    });
+
     it('propagates errors raised inside the transaction', async () => {
       prismaMock.sweepstakes.create.mockRejectedValue(new Error('boom'));
 
@@ -746,7 +806,8 @@ describe('applySweepstakesChanges', () => {
       expect(prismaMock.automatedPostJob.createMany).not.toHaveBeenCalled();
     });
 
-    it('restores referrals when there are some', async () => {
+    it('restores referrals even when their task no longer exists', async () => {
+      stubSweepstakesRewrite(prismaMock, { tasks: [{ id: 'task-keep' }] });
       prismaMock.referral.findMany.mockResolvedValue([
         { id: 'r-1', code: 'ABC', taskId: 'task-gone' }
       ]);
