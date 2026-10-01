@@ -303,7 +303,9 @@ describe('processTaskJobs', () => {
 
       const result = await processTaskJobs();
 
-      expectFailure(result, 'NOT_FOUND');
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
+      );
       expect(updateCalls()).toEqual([
         { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
         { where: { id: 'job-1' }, data: { status: 'COMPLETED' } },

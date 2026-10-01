@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import type { MockInstance } from 'vitest';
 import { Prisma } from '@prisma/client';
 import type { Sweepstakes, SweepstakesTiming } from '@prisma/client';
 import updateTask from '../update-task';
@@ -211,6 +212,51 @@ describe('updateTask', () => {
         'You have not completed this task yet.'
       );
       expect(prismaMock.taskCompletion.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('error logging', () => {
+    let consoleError: MockInstance<typeof console.error>;
+
+    beforeEach(() => {
+      consoleError = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+    });
+
+    afterEach(() => {
+      consoleError.mockRestore();
+    });
+
+    it('does not log the conflict when the participant has no completions', async () => {
+      givenCompletions();
+
+      await updateTask(input());
+
+      expect(consoleError).not.toHaveBeenCalled();
+    });
+
+    it('does not log the conflict when the only completion belongs to another task', async () => {
+      givenCompletions(completion('task-2'));
+
+      await updateTask(input({ data: { answer: 'Yes' } }));
+
+      expect(consoleError).not.toHaveBeenCalled();
+    });
+
+    it('logs the multiple completions error', async () => {
+      givenCompletions(completion('task-1'), completion('task-2'));
+
+      await updateTask(input({ data: { answer: 'Yes' } }));
+
+      expect(consoleError).toHaveBeenCalledWith(
+        'Application error:',
+        expect.objectContaining({
+          code: 'INTERNAL_SERVER_ERROR',
+          message:
+            'Multiple completions found for this task. Please contact support.'
+        })
+      );
     });
   });
 

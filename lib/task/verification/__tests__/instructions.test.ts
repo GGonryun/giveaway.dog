@@ -234,6 +234,54 @@ const EXPECTED: [TaskType, string, string][] = [
   ]
 ];
 
+const STEPS_WITH_NOTES: Record<TaskType, number[]> = {
+  INSTAGRAM_VISIT: [1, 2],
+  INSTAGRAM_LIKE: [2],
+  INSTAGRAM_COMMENT: [2],
+  FACEBOOK_VISIT_PAGE: [1, 2],
+  FACEBOOK_VIEW_POST: [2],
+  TIKTOK_FOLLOW: [2],
+  TIKTOK_LIKE: [2],
+  TWITTER_FOLLOW: [2],
+  TWITTER_RETWEET: [2],
+  TWITTER_LIKE: [2],
+  YOUTUBE_VISIT: [1, 2],
+  VISIT_URL: [1],
+  ASK_QUESTION: [],
+  SINGLE_CHOICE: [],
+  MULTIPLE_CHOICE: [],
+  SUBMIT_MEDIA: [2],
+  REFERRAL_LINK: [2],
+  BONUS_TASK: [],
+  BONUS_TIMED: [],
+  BONUS_LIMITED: [],
+  BONUS_LOYALTY: [],
+  BONUS_COMPLETE_PROFILE: [],
+  STEAM_FOLLOW: [],
+  TWITTER_CONNECT: [2],
+  KICK_FOLLOW: [2],
+  TWITTER_RETWEET_IMPORT: [1],
+  TWITTER_RETWEET_IMPORT_V2: [1],
+  TWITTER_LIKE_IMPORT: [1],
+  BLUESKY_LIKE_IMPORT: [1],
+  BLUESKY_REPOST_IMPORT: [1],
+  STEAM_WISHLIST: [1, 2],
+  DISCORD_JOIN: [1, 2],
+  DISCORD_INTERACTION_IMPORT: [1, 2],
+  TWITCH_FOLLOW: [1, 2],
+  SECRET_CODE: [1],
+  SECRET_CODE_V2: [1],
+  BLUESKY_CONNECT: [1],
+  BLUESKY_FOLLOW: [1],
+  BLUESKY_LIKE: [1],
+  BLUESKY_REPOST: [1],
+  TWITCH_CHAT_IMPORT: [1],
+  VELORA_CONNECT: [1],
+  VELORA_FOLLOW: [1],
+  LINKEDIN_CONNECT: [1],
+  LINKEDIN_FOLLOW: []
+};
+
 const BONUS_TYPES: TaskType[] = [
   'BONUS_TASK',
   'BONUS_TIMED',
@@ -275,6 +323,17 @@ describe('getVerificationInstructions', () => {
         for (const step of steps) {
           expect(step.instruction.length).toBeGreaterThan(0);
         }
+      }
+    );
+
+    it.each(Object.entries(STEPS_WITH_NOTES) as [TaskType, number[]][])(
+      'attaches notes to the expected steps of %s when no provider is connected',
+      (type, expectedSteps) => {
+        const { steps } = instructionsFor(type);
+
+        expect(
+          steps.filter((step) => step.note !== undefined).map((s) => s.step)
+        ).toEqual(expectedSteps);
       }
     );
 
@@ -502,6 +561,16 @@ describe('getVerificationInstructions', () => {
       });
     });
 
+    it('asks for the facebook profile url when the connected profile has no link', () => {
+      expect(
+        stepOf('FACEBOOK_VISIT_PAGE', 1, [provider('FACEBOOK', { link: null })])
+      ).toEqual({
+        step: 1,
+        instruction: 'Ask the user for their Facebook profile URL',
+        note: 'User has not connected their Facebook profile'
+      });
+    });
+
     it('shows the connected twitter username in the connection note', () => {
       expect(stepOf('TWITTER_CONNECT', 2, [provider('TWITTER')]).note).toBe(
         "User's Twitter/X username: @alex_handle"
@@ -512,6 +581,12 @@ describe('getVerificationInstructions', () => {
       expect(stepOf('TWITTER_CONNECT', 2).note).toBe(
         'User has not connected Twitter/X'
       );
+    });
+
+    it('notes that twitter is not connected when the twitter provider has no label', () => {
+      expect(
+        stepOf('TWITTER_CONNECT', 2, [provider('TWITTER', { label: '' })]).note
+      ).toBe('User has not connected Twitter/X');
     });
   });
 

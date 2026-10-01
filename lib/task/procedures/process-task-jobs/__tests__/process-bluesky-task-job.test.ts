@@ -350,6 +350,29 @@ describe('processBlueskyTaskJob', () => {
       }
     );
 
+    it('checkpoints the newest user even when it was already processed', async () => {
+      await processBlueskyTaskJob(
+        db,
+        likeTask,
+        jobWith({ runs: 1, lastProcessedDid: 'did:plc:a' }),
+        actionReturning([blueskyUser('did:plc:a'), blueskyUser('did:plc:z')])
+      );
+
+      expect(m.importBlueskyUsers).toHaveBeenCalledWith(db, {
+        sweepstakesId: 'sweep-1',
+        taskId: 'task-1',
+        blueskyUsers: []
+      });
+      expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
+        data: {
+          taskId: 'task-1',
+          status: 'PENDING',
+          runAt: new Date(NOW.getTime() + 20 * MINUTE),
+          data: { runs: 2, lastProcessedDid: 'did:plc:a' }
+        }
+      });
+    });
+
     it('clears the checkpoint when the response has no data', async () => {
       await processBlueskyTaskJob(
         db,

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import type { MockInstance } from 'vitest';
 import { Prisma } from '@prisma/client';
 import type { Sweepstakes, SweepstakesTiming } from '@prisma/client';
 import submitTask from '../submit-tasks';
@@ -242,6 +243,44 @@ describe('submitTask', () => {
     });
   });
 
+  describe('error logging', () => {
+    let consoleError: MockInstance<typeof console.error>;
+
+    beforeEach(() => {
+      consoleError = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+    });
+
+    afterEach(() => {
+      consoleError.mockRestore();
+    });
+
+    it('does not log the already completed error', async () => {
+      givenCompletions(completion('task-1'));
+
+      await submitTask(input());
+
+      expect(consoleError).not.toHaveBeenCalled();
+    });
+
+    it('logs the missing team error', async () => {
+      givenTasks(
+        storedTask('task-1', taskConfig('BONUS_TASK'), { teamId: null })
+      );
+
+      await submitTask(input());
+
+      expect(consoleError).toHaveBeenCalledWith(
+        'Application error:',
+        expect.objectContaining({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Giveaway team data is missing. Please contact support.'
+        })
+      );
+    });
+  });
+
   describe('prerequisite tasks', () => {
     it('requires the mandatory tasks to be completed first', async () => {
       givenTasks(
@@ -328,6 +367,45 @@ describe('submitTask', () => {
         })
       );
       expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
+    });
+
+    it('validates a bluesky connection against the accounts of the signed in user', async () => {
+      givenTasks(storedTask('task-1', taskConfig('BLUESKY_CONNECT')));
+      prismaMock.user.findUnique.mockResolvedValue({
+        id: TEST_USER.id,
+        accounts: [{ provider: 'twitter' }]
+      });
+
+      const result = await submitTask(input());
+
+      expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+        'User does not have a Bluesky account connected'
+      );
+      expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+        where: { id: TEST_USER.id },
+        include: { accounts: true }
+      });
+      expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
+    });
+
+    it('records a completed bluesky connection when the user has a bluesky account', async () => {
+      givenTasks(storedTask('task-1', taskConfig('BLUESKY_CONNECT')));
+      prismaMock.user.findUnique.mockResolvedValue({
+        id: TEST_USER.id,
+        accounts: [{ provider: 'bluesky' }]
+      });
+
+      const result = await submitTask(input());
+
+      expect(expectOk(result)).toBe(true);
+      expect(prismaMock.taskCompletion.create).toHaveBeenCalledWith({
+        data: {
+          participantId: 'participant-1',
+          taskId: 'task-1',
+          status: 'COMPLETED',
+          proof: Prisma.JsonNull
+        }
+      });
     });
 
     it('records a completion with the submitted code as proof', async () => {
