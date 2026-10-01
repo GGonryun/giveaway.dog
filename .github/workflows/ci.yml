@@ -54,6 +54,22 @@ jobs:
           echo "lines=$lines" >> "$GITHUB_OUTPUT"
           echo "Line coverage: ${lines}%" >> "$GITHUB_STEP_SUMMARY"
 
+  snapshot:
+    name: Snapshot tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Vitest snapshots
+        run: pnpm run test:snapshot
+
   badge:
     name: Coverage badge
     if: github.event_name == 'push'
