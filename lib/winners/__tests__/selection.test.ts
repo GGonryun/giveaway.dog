@@ -807,6 +807,44 @@ describe('prize draw characterization', () => {
       expect(result[0].taskCompletionId).toBe('c-heavy');
     });
 
+    it('skips a slot without allocated participants and still fills later slots', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+
+      const result = toUniquePrizeDraw({
+        slots: [{ prizeId: 'p-1' }, { prizeId: 'p-2' }],
+        draws: [],
+        criteria: criteria({ allowUserSelection: true }),
+        completions: [alice, bob],
+        allocations: [buildAllocation('participant-bob', 'p-2')]
+      });
+
+      expect(result).toEqual([
+        {
+          id: expect.any(String),
+          prizeId: 'p-2',
+          result: 'WINNER',
+          taskCompletionId: 'c-bob'
+        }
+      ]);
+    });
+
+    it('generates a distinct nanoid for each draw', () => {
+      const result = toUniquePrizeDraw({
+        slots: [{ prizeId: 'p-1' }, { prizeId: 'p-2' }],
+        draws: [],
+        criteria: criteria(),
+        completions: [alice, bob],
+        allocations: []
+      });
+
+      const ids = result.map((d) => d.id);
+      expect(ids).toHaveLength(2);
+      expect(new Set(ids).size).toBe(2);
+      for (const id of ids) {
+        expect(id).toMatch(/^[A-Za-z0-9_-]{21}$/);
+      }
+    });
+
     it('ignores allocations when user selection is disabled', () => {
       vi.spyOn(Math, 'random').mockReturnValue(0);
 
@@ -898,6 +936,43 @@ describe('prize draw characterization', () => {
           taskCompletionId: 'c-alice'
         }
       ]);
+    });
+
+    it('generates a distinct nanoid for each draw', () => {
+      const result = toDuplicatePrizeDraw({
+        slots: [{ prizeId: 'p-1' }, { prizeId: 'p-1' }],
+        draws: [],
+        criteria: criteria({ allowMultipleWins: true }),
+        completions: [alice],
+        allocations: []
+      });
+
+      const ids = result.map((d) => d.id);
+      expect(ids).toHaveLength(2);
+      expect(new Set(ids).size).toBe(2);
+      for (const id of ids) {
+        expect(id).toMatch(/^[A-Za-z0-9_-]{21}$/);
+      }
+    });
+
+    it('weights the pick by completion value', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5);
+      const light = buildExpandedCompletion({ id: 'c-light', userId: 'u1' });
+      const heavy = buildExpandedCompletion({
+        id: 'c-heavy',
+        userId: 'u2',
+        value: 4
+      });
+
+      const result = toDuplicatePrizeDraw({
+        slots: [{ prizeId: 'p-1' }],
+        draws: [],
+        criteria: criteria({ allowMultipleWins: true }),
+        completions: [light, heavy],
+        allocations: []
+      });
+
+      expect(result[0].taskCompletionId).toBe('c-heavy');
     });
 
     it('does not exclude users that were previously drawn', () => {

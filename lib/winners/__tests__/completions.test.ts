@@ -151,6 +151,22 @@ describe('isEligibleTaskCompletion', () => {
       ).toBe(true);
     });
 
+    it('accepts an imported user whose import source is listed', () => {
+      expect(
+        eligibility({ externalPlatforms: ['TWITTER_IMPORT'] })(
+          buildCompletion({ source: 'TWITTER_IMPORT' })
+        )
+      ).toBe(true);
+    });
+
+    it('rejects an imported user from a platform that is not listed', () => {
+      expect(
+        eligibility({ externalPlatforms: ['TWITTER_IMPORT'] })(
+          buildCompletion({ source: 'BLUESKY_IMPORT' })
+        )
+      ).toBe(false);
+    });
+
     it('rejects a user whose source is not listed', () => {
       expect(
         eligibility({ externalPlatforms: ['TWITTER_IMPORT'] })(

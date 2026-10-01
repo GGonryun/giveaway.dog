@@ -179,3 +179,16 @@ export const givenSweepstakesLookups = (
     }
   );
 };
+
+export const omitField = <T extends object>(value: T, field: string): T => {
+  const copy = { ...value } as Record<string, unknown>;
+  delete copy[field];
+  return copy as unknown as T;
+};
+
+export const inputIssuePaths = (message: string) =>
+  (
+    JSON.parse(message.replace(/^Input validation failed: /, '')) as {
+      path: (string | number)[];
+    }[]
+  ).map((issue) => issue.path.join('.'));

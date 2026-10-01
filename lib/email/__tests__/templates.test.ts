@@ -21,6 +21,12 @@ const URL = 'https://giveaway.dog/verify?token=abc';
 const countOccurrences = (haystack: string, needle: string) =>
   haystack.split(needle).length - 1;
 
+const visibleText = (html: string) =>
+  html
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
 const pickerOptions = (
   overrides: Partial<PickerProcessedEmailOptions> = {}
 ): PickerProcessedEmailOptions => ({
@@ -85,6 +91,14 @@ describe('verification email', () => {
       );
     });
 
+    it('renders exactly the expected visible text', () => {
+      expect(
+        visibleText(getVerificationEmailHTML({ url: URL, name: 'Ada' }))
+      ).toBe(
+        `🐶 Hello Ada, from Giveaway.Dog ! Please verify your email address by clicking the button below. Verify Email Or copy and paste this link into your browser: ${URL} If you didn't request this, you can safely ignore this email.`
+      );
+    });
+
     it('interpolates the name without html escaping', () => {
       const html = getVerificationEmailHTML({
         url: URL,
@@ -134,6 +148,14 @@ describe('magic link email', () => {
       const html = getMagicLinkEmailHTML({ url: URL });
 
       expect(html).toContain('🐶 Hey there,</h1>');
+    });
+
+    it('renders exactly the expected visible text', () => {
+      expect(
+        visibleText(getMagicLinkEmailHTML({ url: URL, name: 'Ada' }))
+      ).toBe(
+        `🐶 Hey Ada, Use the button below to sign in to your Giveaway.Dog account. Sign In to Giveaway.Dog Or copy and paste this link into your browser: ${URL} This link will expire soon and can only be used once for security reasons.`
+      );
     });
 
     it('embeds the url three times and the sign in call to action', () => {
@@ -209,6 +231,14 @@ describe('picker processed email', () => {
 
       expect(countOccurrences(html, options.verificationUrl)).toBe(3);
       expect(html).toContain('Select Winners');
+    });
+
+    it('renders exactly the expected visible text', () => {
+      expect(
+        visibleText(getPickerProcessedEmailHTML(pickerOptions({ name: 'Ada' })))
+      ).toBe(
+        `🎉 Hey Ada, Your picker is ready! "Spring Raffle" 📊 Total Participants: 100 ✅ Eligible Participants: 42 All participants have been processed and verified! You're now ready to select and notify the winners. Select Winners Or copy and paste this link into your browser: https://giveaway.dog/app/pickers/p-1 Next Steps: Click the button above to go to your giveaway Review the eligible participants Select the number of winners to draw Share the results with participants Powered by Giveaway.Dog 🐶`
+      );
     });
 
     it('lists four next steps', () => {
@@ -304,6 +334,16 @@ describe('team invite email', () => {
       const html = getTeamInviteEmailHTML(inviteOptions({ inviterName: '' }));
 
       expect(html).toContain("You've been invited to join");
+    });
+
+    it('renders exactly the expected visible text', () => {
+      expect(
+        visibleText(
+          getTeamInviteEmailHTML(inviteOptions({ inviterName: 'Grace' }))
+        )
+      ).toBe(
+        `Team Invitation Grace has invited you to join Acme Your Role: ADMIN Click the button below to accept the invitation and join the team. Accept Invitation Or copy and paste this link into your browser: https://giveaway.dog/invite/xyz If you don't want to join this team, you can safely ignore this email. Powered by Giveaway.Dog 🐶`
+      );
     });
 
     it('renders the team logo with an alt text based on the team name', () => {

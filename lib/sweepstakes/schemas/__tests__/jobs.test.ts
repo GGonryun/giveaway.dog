@@ -61,6 +61,29 @@ describe('sweepstakesJobDataSchema', () => {
         sweepstakesJobDataSchema.parse({ ...base, extra: true })
       ).not.toHaveProperty('extra');
     });
+
+    it('strips unknown keys inside the result', () => {
+      expect(
+        sweepstakesJobDataSchema.parse({
+          ...base,
+          result: { ...result, skipped: 3 }
+        }).result
+      ).toEqual(result);
+    });
+
+    it('accepts negative and fractional counts', () => {
+      const counts = {
+        totalImported: -1,
+        newUsers: 0.5,
+        existingUsers: -0.25,
+        completionsValidated: 1e9,
+        completionsCreated: -100
+      };
+
+      expect(
+        sweepstakesJobDataSchema.parse({ ...base, result: counts }).result
+      ).toEqual(counts);
+    });
   });
 
   describe('invalid input', () => {
@@ -94,6 +117,10 @@ describe('sweepstakesJobDataSchema', () => {
 
     it('rejects a null result', () => {
       expect(issuePaths({ ...base, result: null })).toEqual(['result']);
+    });
+
+    it('rejects a null error', () => {
+      expect(issuePaths({ ...base, error: null })).toEqual(['error']);
     });
 
     it('rejects a non string error', () => {

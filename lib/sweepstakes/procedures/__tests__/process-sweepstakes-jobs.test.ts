@@ -946,6 +946,39 @@ describe('processSweepstakesJobs', () => {
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
+    it('ignores completed posts to other platforms', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        discordSweepstakes({
+          status: 'COMPLETED',
+          posts: [discordPost({ type: 'POST_TO_BLUESKY' })]
+        })
+      );
+
+      await processSweepstakesJobs();
+
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
+    });
+
+    it('updates the discord post even when it is not the first post', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        discordSweepstakes({
+          status: 'COMPLETED',
+          posts: [
+            discordPost({ id: 'post-0', type: 'POST_TO_BLUESKY' }),
+            discordPost()
+          ]
+        })
+      );
+
+      await processSweepstakesJobs();
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://discord.com/api/v10/channels/chan-1/messages/msg-1',
+        expect.objectContaining({ method: 'PATCH' })
+      );
+    });
+
     it('skips discord when the discord post is not completed', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         discordSweepstakes({

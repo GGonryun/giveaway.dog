@@ -6,7 +6,9 @@ import { expectFailure, expectOk } from '@/test/result';
 import { nextCacheMock } from '@/test/next-cache';
 import {
   buildCriteriaRow,
-  givenSweepstakesLookups
+  givenSweepstakesLookups,
+  inputIssuePaths,
+  omitField
 } from '../../__tests__/fixtures-sweepstakes-winners-email';
 
 type Input = Parameters<typeof disqualifyDraw>[0];
@@ -47,20 +49,19 @@ describe('disqualifyDraw', () => {
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
     });
 
-    it('rejects input without a disqualification reason', async () => {
-      signIn();
+    it.each(['sweepstakesId', 'slug', 'drawId', 'disqualificationReason'])(
+      'rejects input without %s',
+      async (field) => {
+        signIn();
 
-      const result = await disqualifyDraw({
-        sweepstakesId: 'sw-1',
-        slug: 'acme',
-        drawId: 'draw-1'
-      } as unknown as Input);
+        const result = await disqualifyDraw(omitField(input(), field));
 
-      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
-        /^Input validation failed: /
-      );
-      expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
-    });
+        const { message } = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+        expect(message).toMatch(/^Input validation failed: /);
+        expect(inputIssuePaths(message)).toEqual([field]);
+        expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
+      }
+    );
 
     it('does not check team membership for the sweepstakes', async () => {
       signIn();

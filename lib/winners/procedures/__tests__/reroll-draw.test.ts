@@ -8,7 +8,9 @@ import {
   buildCompletion,
   buildCriteriaRow,
   buildTeamSweepstakes,
-  givenSweepstakesLookups
+  givenSweepstakesLookups,
+  inputIssuePaths,
+  omitField
 } from '../../__tests__/fixtures-sweepstakes-winners-email';
 
 const ids = vi.hoisted(() => ({ next: 0 }));
@@ -77,6 +79,19 @@ describe('rerollDraw', () => {
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
     });
 
+    it.each(['sweepstakesId', 'slug', 'drawId', 'disqualificationReason'])(
+      'rejects input without %s',
+      async (field) => {
+        signIn();
+
+        const result = await rerollDraw(omitField(input(), field));
+
+        const { message } = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+        expect(inputIssuePaths(message)).toEqual([field]);
+        expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
+      }
+    );
+
     it('rejects input with a non string draw id', async () => {
       signIn();
 
@@ -112,6 +127,24 @@ describe('rerollDraw', () => {
 
       expectFailure(result, 'FORBIDDEN');
       expect(prismaMock.$transaction).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when the caller is a view only guest', () => {
+    it('still disqualifies and replaces the draw because only view permission is checked', async () => {
+      signIn();
+      givenHappyPath();
+      givenSweepstakesLookups({
+        team: buildTeamSweepstakes({ role: 'GUEST' })
+      });
+
+      expectOk(await rerollDraw(input()));
+
+      expect(prismaMock.prizeDraw.update).toHaveBeenCalledWith({
+        where: { id: 'draw-1' },
+        data: { result: 'DISQUALIFIED', disqualificationReason: 'Fake account' }
+      });
+      expect(createdDraws().data).toHaveLength(1);
     });
   });
 

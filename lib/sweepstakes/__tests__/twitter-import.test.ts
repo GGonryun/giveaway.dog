@@ -273,6 +273,23 @@ describe('importTwitterUsers', () => {
       expect(prismaMock.userScoringRequest.create).not.toHaveBeenCalled();
     });
 
+    it('excludes a new user whose scoring request creation failed', async () => {
+      prismaMock.account.findUnique.mockResolvedValue(null);
+      const failure = new Error('unique constraint');
+      prismaMock.userScoringRequest.create.mockRejectedValue(failure);
+      const user = twitterUser();
+
+      const result = await run([user]);
+
+      expect(prismaMock.user.create).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({ imported: [], existing: [] });
+      expect(console.error).toHaveBeenCalledWith(
+        'Error importing Twitter user',
+        user,
+        failure
+      );
+    });
+
     it('keeps an existing user in the result even when the upsert fails', async () => {
       prismaMock.account.findUnique.mockResolvedValue({
         userId: 'existing-user'

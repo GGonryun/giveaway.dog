@@ -9,7 +9,9 @@ import {
   buildCompletion,
   buildCriteriaRow,
   buildTeamSweepstakes,
-  givenSweepstakesLookups
+  givenSweepstakesLookups,
+  inputIssuePaths,
+  omitField
 } from '../../__tests__/fixtures-sweepstakes-winners-email';
 
 const ids = vi.hoisted(() => ({ next: 0 }));
@@ -69,16 +71,18 @@ describe('rollPrize', () => {
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
     });
 
-    it('rejects input without a prize id', async () => {
-      signIn();
+    it.each(['sweepstakesId', 'slug', 'prizeId'])(
+      'rejects input without %s',
+      async (field) => {
+        signIn();
 
-      const result = await rollPrize({
-        sweepstakesId: 'sw-1',
-        slug: 'acme'
-      } as unknown as Input);
+        const result = await rollPrize(omitField(input(), field));
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
-    });
+        const { message } = expectFailure(result, 'UNPROCESSABLE_CONTENT');
+        expect(inputIssuePaths(message)).toEqual([field]);
+        expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
+      }
+    );
 
     it('returns FORBIDDEN when the caller is not a member of the team', async () => {
       signIn();
@@ -93,6 +97,20 @@ describe('rollPrize', () => {
         'You are not a member of this team'
       );
       expect(prismaMock.prizeDraw.createMany).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when the caller is a view only guest', () => {
+    it('still draws winners because only view permission is checked', async () => {
+      signIn();
+      givenHappyPath();
+      givenSweepstakesLookups({
+        team: buildTeamSweepstakes({ role: 'GUEST' })
+      });
+
+      expectOk(await rollPrize(input()));
+
+      expect(createdTaskCompletionIds()).toEqual(['c-alice', 'c-bob']);
     });
   });
 

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   buildWeightedIndex,
   pickWeightedIndex,
@@ -7,6 +7,29 @@ import {
   pickUniqueWeighted,
   type WeightedItem
 } from '../weighted-rolls';
+
+const seededRandom = (seed: number) => {
+  let state = seed;
+  return () => {
+    state = (state + 0x6d2b79f5) | 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const sequence = (...values: number[]) => {
+  let i = 0;
+  return () => values[i++];
+};
+
+beforeEach(() => {
+  vi.spyOn(Math, 'random').mockImplementation(seededRandom(20240101));
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 const calculateStats = (counts: number[]) => {
   const mean = counts.reduce((sum, count) => sum + count, 0) / counts.length;
@@ -549,11 +572,41 @@ describe('Edge Cases and Error Handling', () => {
   });
 });
 
-describe('zero weight index alignment', () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
+describe('custom rng', () => {
+  const items: WeightedItem<string>[] = [
+    { item: 'a', weight: 1 },
+    { item: 'b', weight: 1 },
+    { item: 'c', weight: 1 }
+  ];
+
+  it('passes the rng to every pick of pickManyWeighted', () => {
+    expect(pickManyWeighted(items, 3, sequence(0.99, 0, 0.5))).toEqual([
+      'c',
+      'a',
+      'b'
+    ]);
+    expect(Math.random).not.toHaveBeenCalled();
   });
 
+  it('passes the rng to every pick of pickUniqueWeighted', () => {
+    expect(pickUniqueWeighted(items, 3, () => 0.99)).toEqual(['c', 'b', 'a']);
+    expect(Math.random).not.toHaveBeenCalled();
+  });
+
+  it('rebuilds the index from the remaining pool after each unique pick', () => {
+    const weighted: WeightedItem<string>[] = [
+      { item: 'a', weight: 1 },
+      { item: 'b', weight: 3 }
+    ];
+
+    expect(pickUniqueWeighted(weighted, 2, sequence(0.5, 0.5))).toEqual([
+      'b',
+      'a'
+    ]);
+  });
+});
+
+describe('zero weight index alignment', () => {
   it('returns a zero weight item that precedes positive items', () => {
     const items: WeightedItem<string>[] = [
       { item: 'zero', weight: 0 },
@@ -590,7 +643,7 @@ describe('zero weight index alignment', () => {
   });
 
   it('uses Math.random when no rng is provided', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.9);
+    vi.mocked(Math.random).mockReturnValue(0.9);
 
     expect(pickWeightedIndex({ prefix: [1, 2], total: 2 })).toBe(1);
     expect(Math.random).toHaveBeenCalledTimes(1);
