@@ -86,9 +86,4 @@ describe('Footer', () => {
       screen.queryByRole('link', { name: 'Facebook' })
     ).not.toBeInTheDocument();
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<Footer />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

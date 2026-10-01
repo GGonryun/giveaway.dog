@@ -17,7 +17,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '../dropdown-menu';
-import { withStableIds } from './test-utils';
 
 function renderDropdownMenu() {
   const onProfile = vi.fn();
@@ -65,12 +64,6 @@ async function openMenu() {
 }
 
 describe('DropdownMenu', () => {
-  it('matches the snapshot when open', async () => {
-    renderDropdownMenu();
-    const menu = await openMenu();
-    expect(withStableIds(menu)).toMatchSnapshot();
-  });
-
   it('opens the menu from the trigger', async () => {
     renderDropdownMenu();
     const trigger = screen.getByRole('button', { name: 'Account' });

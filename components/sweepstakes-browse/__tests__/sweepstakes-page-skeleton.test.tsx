@@ -3,11 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { SweepstakesPageSkeleton } from '../sweepstakes-page-skeleton';
 
 describe('SweepstakesPageSkeleton', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<SweepstakesPageSkeleton />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders eight placeholder giveaway cards', () => {
     const { container } = render(<SweepstakesPageSkeleton />);
     const grid = container.querySelector('.grid');

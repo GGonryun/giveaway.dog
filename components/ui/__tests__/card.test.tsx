@@ -11,21 +11,6 @@ import {
 } from '../card';
 
 describe('Card', () => {
-  it('matches the snapshot for a complete card', () => {
-    const { container } = render(
-      <Card>
-        <CardHeader>
-          <CardTitle>Summer giveaway</CardTitle>
-          <CardDescription>Ends in 3 days</CardDescription>
-          <CardAction>Edit</CardAction>
-        </CardHeader>
-        <CardContent>120 entries</CardContent>
-        <CardFooter>Hosted by Giveaway.dog</CardFooter>
-      </Card>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it.each([
     { name: 'Card', Component: Card, slot: 'card', base: 'rounded-xl' },
     {

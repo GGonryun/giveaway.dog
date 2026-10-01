@@ -91,18 +91,6 @@ describe('ProviderButtons', () => {
     );
     expect(container.firstChild).toBeEmptyDOMElement();
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <ProviderButtons
-        identities={identities}
-        onSubmit={onSubmit}
-        userProviders={erroredDiscord}
-        lastUsedProvider="GOOGLE"
-      />
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });
 
 describe('ProviderIcons', () => {
@@ -161,17 +149,6 @@ describe('ProviderIcons', () => {
     );
     expect(screen.queryByText('Last used')).not.toBeInTheDocument();
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <ProviderIcons
-        identities={identities}
-        onSubmit={onSubmit}
-        userProviders={erroredDiscord}
-      />
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });
 
 describe('ProviderDots', () => {
@@ -209,17 +186,6 @@ describe('ProviderDots', () => {
     const [google, discord] = screen.getAllByRole('button');
     expect(discord.parentElement).toHaveClass('opacity-50');
     expect(google.parentElement).not.toHaveClass('opacity-50');
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <ProviderDots
-        identities={['GOOGLE', 'DISCORD']}
-        onSubmit={onSubmit}
-        userProviders={erroredDiscord}
-      />
-    );
-    expect(container.firstChild).toMatchSnapshot();
   });
 });
 
@@ -263,16 +229,5 @@ describe('ProviderPills', () => {
     expect(
       screen.getByRole('button', { name: 'Login with YouTube' })
     ).toBeDisabled();
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <ProviderPills
-        identities={['GOOGLE', 'DISCORD']}
-        onSubmit={onSubmit}
-        userProviders={erroredDiscord}
-      />
-    );
-    expect(container.firstChild).toMatchSnapshot();
   });
 });

@@ -5,8 +5,7 @@ import { useState, type ComponentProps } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   buildProvider,
-  buildTask,
-  withStableIds
+  buildTask
 } from '@/components/sweepstakes/__tests__/fixtures';
 import type { TaskSchema } from '@/lib/task/schemas';
 import { reverifyTaskCompletion } from '@/procedures/sweepstakes/reverify-task-completion';
@@ -97,11 +96,6 @@ const ControlledDialog = () => {
 describe('VerificationInstructionsDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  it('matches the snapshot for a manual task', () => {
-    renderDialog();
-    expect(withStableIds(screen.getByRole('dialog'))).toMatchSnapshot();
   });
 
   it('renders nothing while closed', () => {

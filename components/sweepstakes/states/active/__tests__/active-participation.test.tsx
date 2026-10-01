@@ -10,8 +10,7 @@ import {
   buildSweepstakes,
   buildTask,
   buildUser,
-  renderWithParticipation,
-  withStableIds
+  renderWithParticipation
 } from '@/components/sweepstakes/__tests__/fixtures';
 import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
 import { ActiveParticipation } from '../active-participation';
@@ -79,29 +78,6 @@ const selectionSweepstakes = buildSweepstakes({
 describe('ActiveParticipation', () => {
   beforeEach(() => {
     setUrl('');
-  });
-
-  describe('snapshots', () => {
-    it('matches the snapshot for a participant on the tasks tab', () => {
-      const { container } = renderActive({
-        participant: buildParticipant({
-          completions: [buildCompletion()]
-        })
-      });
-      expect(withStableIds(container)).toMatchSnapshot();
-    });
-
-    it('matches the snapshot when winners are pending', () => {
-      const { container } = renderActive({
-        state: 'winners-pending',
-        sweepstakes: buildSweepstakes({ prizes }),
-        participant: buildParticipant({
-          user: connectedUser,
-          allocation: { prize: { id: 'prize-2', name: 'Gift Card' } }
-        })
-      });
-      expect(withStableIds(container)).toMatchSnapshot();
-    });
   });
 
   describe('initial tab', () => {

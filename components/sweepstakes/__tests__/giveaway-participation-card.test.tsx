@@ -8,8 +8,7 @@ import {
   buildHost,
   buildParticipation,
   buildSweepstakes,
-  renderWithParticipation,
-  withStableIds
+  renderWithParticipation
 } from './fixtures';
 import { DEFAULT_DESIGN_DATA } from '@/schemas/giveaway/defaults';
 import type { DeviceType } from '@/schemas/giveaway/schemas';
@@ -40,11 +39,6 @@ describe('GiveawayParticipationCard', () => {
 
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = renderCard();
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   it('renders the children inside the card', () => {

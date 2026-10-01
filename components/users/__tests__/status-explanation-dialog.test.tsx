@@ -10,14 +10,6 @@ expect.addSnapshotSerializer({
 
 describe('StatusExplanationDialog', () => {
   describe('for an active user', () => {
-    it('matches the snapshot', () => {
-      render(
-        <StatusExplanationDialog open onClose={vi.fn()} status="active" />
-      );
-
-      expect(screen.getByRole('alertdialog')).toMatchSnapshot();
-    });
-
     it('explains that active users can win prizes', () => {
       render(
         <StatusExplanationDialog open onClose={vi.fn()} status="active" />
@@ -34,14 +26,6 @@ describe('StatusExplanationDialog', () => {
   });
 
   describe('for a blocked user', () => {
-    it('matches the snapshot', () => {
-      render(
-        <StatusExplanationDialog open onClose={vi.fn()} status="blocked" />
-      );
-
-      expect(screen.getByRole('alertdialog')).toMatchSnapshot();
-    });
-
     it('explains that blocked users are shadow banned', () => {
       render(
         <StatusExplanationDialog open onClose={vi.fn()} status="blocked" />

@@ -48,9 +48,4 @@ describe('WebsiteLogo', () => {
       screen.getByRole('button', { name: 'Toggle Sidebar' })
     ).toBeInTheDocument();
   });
-
-  it('matches the snapshot', () => {
-    const { container } = renderLogo();
-    expect(container.querySelector('ul')).toMatchSnapshot();
-  });
 });

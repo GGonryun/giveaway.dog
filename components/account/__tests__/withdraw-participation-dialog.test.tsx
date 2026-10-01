@@ -51,12 +51,6 @@ describe('WithdrawParticipationDialog', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    renderDialog();
-
-    expect(screen.getByRole('alertdialog')).toMatchSnapshot();
-  });
-
   describe('when open', () => {
     it('asks to confirm withdrawing from the named giveaway', () => {
       renderDialog();

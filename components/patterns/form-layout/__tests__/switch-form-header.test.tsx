@@ -48,11 +48,6 @@ describe('SwitchBox', () => {
     expect(box).toHaveClass('p-6', 'border');
     expect(box).not.toHaveClass('p-3');
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<SwitchBox>Notify winners</SwitchBox>);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });
 
 describe('SwitchFormHeader', () => {

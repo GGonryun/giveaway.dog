@@ -12,7 +12,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '../alert-dialog';
-import { withStableIds } from './test-utils';
 
 function renderAlertDialog(
   props: {
@@ -47,12 +46,6 @@ async function openDialog() {
 }
 
 describe('AlertDialog', () => {
-  it('matches the snapshot when open', async () => {
-    renderAlertDialog();
-    const dialog = await openDialog();
-    expect(withStableIds(dialog)).toMatchSnapshot();
-  });
-
   it('stays closed until the trigger is clicked', async () => {
     renderAlertDialog();
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();

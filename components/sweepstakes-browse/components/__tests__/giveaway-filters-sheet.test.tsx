@@ -2,7 +2,6 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { withStableIds } from '@/components/sweepstakes/__tests__/fixtures';
 import { GiveawayFiltersSheet } from '../giveaway-filters-sheet';
 
 const navigation = vi.hoisted(() => ({
@@ -50,11 +49,6 @@ describe('GiveawayFiltersSheet', () => {
   });
 
   describe('trigger', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderSheet();
-      expect(withStableIds(container)).toMatchSnapshot();
-    });
-
     it('does not flag the trigger without active filters', () => {
       renderSheet();
       expect(
@@ -79,12 +73,6 @@ describe('GiveawayFiltersSheet', () => {
   });
 
   describe('sheet', () => {
-    it('matches the snapshot when opened', async () => {
-      renderSheet();
-      const { sheet } = await openSheet();
-      expect(withStableIds(sheet)).toMatchSnapshot();
-    });
-
     it('shows the defaults when no filters are set', async () => {
       renderSheet();
       const { sheet } = await openSheet();

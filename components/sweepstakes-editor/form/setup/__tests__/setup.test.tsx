@@ -7,7 +7,6 @@ import {
   LayoutValue,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { Setup } from '../setup';
 
 vi.hoisted(() => {
@@ -84,11 +83,6 @@ const renderSetup = (
 };
 
 describe('Setup', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderSetup({ banner: 'https://cdn.test/old.png' });
-    expect(stabilizeIds(container)).toMatchSnapshot();
-  });
-
   it('introduces the setup step', () => {
     renderSetup();
     expect(

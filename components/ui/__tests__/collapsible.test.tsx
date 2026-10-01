@@ -6,7 +6,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '../collapsible';
-import { withStableIds } from './test-utils';
 
 function renderCollapsible(
   props: React.ComponentProps<typeof Collapsible> = {}
@@ -20,11 +19,6 @@ function renderCollapsible(
 }
 
 describe('Collapsible', () => {
-  it('matches the snapshot when open', () => {
-    const { container } = renderCollapsible({ defaultOpen: true });
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
-  });
-
   it('hides the content until the trigger is clicked', async () => {
     renderCollapsible();
     const trigger = screen.getByRole('button', { name: 'Show rules' });

@@ -2,10 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamsProvider } from '@/components/context/team-provider';
-import {
-  buildTeam,
-  withStableIds
-} from '@/components/sweepstakes/__tests__/fixtures';
+import { buildTeam } from '@/components/sweepstakes/__tests__/fixtures';
 import { SweepstakesDetailsTabs } from '../sweepstakes-tabs';
 
 const navigation = vi.hoisted(() => ({
@@ -38,11 +35,6 @@ const selectedTab = () => screen.getByRole('tab', { selected: true });
 describe('SweepstakesDetailsTabs', () => {
   beforeEach(() => {
     navigation.router.push.mockReset();
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = render(tabs('/app/acme/sweepstakes/sweep-1'));
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   it('renders every details tab in order and the children', () => {

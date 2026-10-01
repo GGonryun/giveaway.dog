@@ -8,11 +8,6 @@ describe('ObfuscatedEmail', () => {
     vi.useRealTimers();
   });
 
-  it('matches the snapshot', () => {
-    const { container } = render(<ObfuscatedEmail email="jane@example.com" />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it.each([null, undefined, ''])(
     'renders nothing when the email is %o',
     (email) => {

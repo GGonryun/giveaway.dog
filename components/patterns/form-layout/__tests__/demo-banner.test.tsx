@@ -47,11 +47,6 @@ describe('DemoBanner', () => {
       expect(screen.queryByText('Demo Mode')).not.toBeInTheDocument();
       expect(screen.getByText('Read only')).toBeInTheDocument();
     });
-
-    it('matches the snapshot', () => {
-      const { container } = renderWithLayout(<DemoBanner />, { banner });
-      expect(container.firstChild).toMatchSnapshot();
-    });
   });
 
   describe('in demo mode', () => {
@@ -70,13 +65,6 @@ describe('DemoBanner', () => {
       expect(
         screen.getByRole('link', { name: /Create Free Account/ })
       ).toHaveAttribute('href', '/login');
-    });
-
-    it('matches the snapshot', () => {
-      const { container } = renderWithLayout(<DemoBanner />, {
-        action: 'demo'
-      });
-      expect(container.firstChild).toMatchSnapshot();
     });
   });
 

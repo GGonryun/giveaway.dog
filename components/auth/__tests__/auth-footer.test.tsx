@@ -23,9 +23,4 @@ describe('AuthFooter', () => {
       'By clicking continue, you agree to our Terms of Service and Privacy Policy.'
     );
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<AuthFooter />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

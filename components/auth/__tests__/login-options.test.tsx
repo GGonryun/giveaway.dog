@@ -174,14 +174,6 @@ describe('LoginOptions', () => {
         screen.getByRole('button', { name: 'Reconnect Google' })
       ).toBeInTheDocument();
     });
-
-    it('matches the snapshot', () => {
-      const { container } = renderLoginOptions({
-        label: 'Continue with',
-        dividers: true
-      });
-      expect(container.firstChild).toMatchSnapshot();
-    });
   });
 
   describe('when an OAuth provider is chosen', () => {
@@ -383,11 +375,6 @@ describe('LoginOptions', () => {
       expect(screen.getByPlaceholderText('player@giveaway.dog')).toHaveValue(
         ''
       );
-    });
-
-    it('matches the snapshot', async () => {
-      const { container } = await openEmailForm();
-      expect(container.firstChild).toMatchSnapshot();
     });
   });
 

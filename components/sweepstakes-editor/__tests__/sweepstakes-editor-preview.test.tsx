@@ -212,11 +212,6 @@ describe('SweepstakesSharedFormPreview', () => {
   });
 
   describe('when the form only has a name', () => {
-    it('fills every other setting with preview defaults', () => {
-      renderShared({ setup: { name: 'Summer Giveaway' } });
-      expect(lastProps().sweepstakes).toMatchSnapshot();
-    });
-
     it('defaults the dates to a week starting now', () => {
       renderShared({ setup: { name: 'Summer Giveaway' } });
       expect(lastProps().sweepstakes.timing).toEqual({

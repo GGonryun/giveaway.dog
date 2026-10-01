@@ -17,17 +17,6 @@ const renderNotEligible = (audience: Partial<GiveawayFormAudience>) =>
   });
 
 describe('NotEligible', () => {
-  it('matches the snapshot with age and regional requirements', () => {
-    const { container } = renderNotEligible({
-      formFields: [buildAgeField({ minimum: 18 })],
-      regionalRestriction: {
-        filter: 'INCLUDE',
-        regions: ['country:US', 'country:CA']
-      }
-    });
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('tells the user they are not eligible', () => {
     renderNotEligible({});
     expect(

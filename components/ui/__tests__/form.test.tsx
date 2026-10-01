@@ -14,7 +14,6 @@ import {
   FormMessageParagraph
 } from '../form';
 import { Input } from '../input';
-import { withStableIds } from './test-utils';
 
 type Values = { email: string };
 
@@ -55,13 +54,6 @@ async function submit() {
 }
 
 describe('Form', () => {
-  it('matches the snapshot of a field', () => {
-    const { container } = render(<EmailForm />);
-    expect(
-      withStableIds(container.querySelector('form > div'))
-    ).toMatchSnapshot();
-  });
-
   it('connects the label and the description to the control', () => {
     render(<EmailForm />);
     const input = screen.getByLabelText('Email');

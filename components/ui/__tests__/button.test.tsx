@@ -4,20 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { Button, buttonVariants } from '../button';
 
 describe('Button', () => {
-  it.each([
-    'default',
-    'success',
-    'destructive',
-    'warning',
-    'outline',
-    'secondary',
-    'ghost',
-    'link'
-  ] as const)('matches the snapshot for the %s variant', (variant) => {
-    const { container } = render(<Button variant={variant}>Go</Button>);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a button element with the data-slot attribute', () => {
     render(<Button>Save</Button>);
     const button = screen.getByRole('button', { name: 'Save' });

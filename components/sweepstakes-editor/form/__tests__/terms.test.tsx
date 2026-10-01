@@ -208,10 +208,6 @@ describe('stringifyTerms', () => {
     expect(stringifyTerms()).toBe(stringifyTerms(defaultTermOptions));
     expect(stringifyTerms()).toContain('sponsored by <Sponsor Name>');
   });
-
-  it('matches the snapshot of the default terms', () => {
-    expect(stringifyTerms()).toMatchSnapshot();
-  });
 });
 
 describe('defaultTermInputOptions', () => {

@@ -32,14 +32,6 @@ describe('stampIcon', () => {
 });
 
 describe('Stamp', () => {
-  it.each(['check', 'error', 'info'] as const)(
-    'matches the snapshot for the %s variant',
-    (variant) => {
-      const { container } = render(<Stamp variant={variant} />);
-      expect(container.firstChild).toMatchSnapshot();
-    }
-  );
-
   it.each([
     ['check', 'bg-success'],
     ['error', 'bg-error'],

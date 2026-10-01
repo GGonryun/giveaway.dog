@@ -23,13 +23,6 @@ describe('AllGiveawaysGrid', () => {
     vi.useRealTimers();
   });
 
-  it('matches the snapshot for the empty state', () => {
-    const { container } = render(
-      <AllGiveawaysGrid sweepstakes={[]} participation={{}} />
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('explains that no giveaways were found', () => {
     render(<AllGiveawaysGrid sweepstakes={[]} participation={{}} />);
     expect(

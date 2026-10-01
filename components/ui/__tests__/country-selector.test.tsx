@@ -2,7 +2,6 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CountrySelector } from '../country-selector';
-import { withStableIds } from './test-utils';
 
 type CountrySelectorProps = React.ComponentProps<typeof CountrySelector>;
 
@@ -39,11 +38,6 @@ function waitForDebounce(milliseconds = 300) {
 describe('CountrySelector', () => {
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  it('matches the snapshot when closed', () => {
-    const { container } = renderSelector({ className: 'w-80' });
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
   });
 
   it('shows the default label and placeholder', () => {

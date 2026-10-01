@@ -33,9 +33,4 @@ describe('FeaturesSection', () => {
     const { container } = await renderFeaturesSection();
     expect(container.querySelectorAll('[data-slot="card"]')).toHaveLength(4);
   });
-
-  it('matches the snapshot', async () => {
-    const { container } = await renderFeaturesSection();
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

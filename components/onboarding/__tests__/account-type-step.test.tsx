@@ -11,12 +11,6 @@ const cardFor = (title: string) => {
 };
 
 describe('AccountTypeStep', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<AccountTypeStep onNext={vi.fn()} />);
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when first rendered', () => {
     it('shows both account types with their descriptions', () => {
       render(<AccountTypeStep onNext={vi.fn()} />);

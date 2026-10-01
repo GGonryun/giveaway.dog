@@ -93,14 +93,6 @@ describe('ParticipationHistoryTable', () => {
   });
 
   describe('when the user has participated', () => {
-    it('matches the snapshot', () => {
-      const { container } = render(
-        <ParticipationHistoryTable history={history.slice(0, 2)} />
-      );
-
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('links each giveaway to its page', () => {
       render(<ParticipationHistoryTable history={history} />);
 

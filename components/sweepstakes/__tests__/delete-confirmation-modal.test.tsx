@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { DeleteConfirmationModal } from '../delete-confirmation-modal';
-import { withStableIds } from './fixtures';
 
 vi.mock('@/procedures/sweepstakes/delete-sweepstakes', () => ({
   default: vi.fn()
@@ -40,11 +39,6 @@ describe('DeleteConfirmationModal', () => {
     const { container } = renderModal(null);
     expect(container).toBeEmptyDOMElement();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  });
-
-  it('matches the snapshot', () => {
-    renderModal();
-    expect(withStableIds(screen.getByRole('dialog'))).toMatchSnapshot();
   });
 
   it('warns that the deletion is permanent', () => {

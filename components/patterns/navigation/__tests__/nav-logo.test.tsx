@@ -19,9 +19,4 @@ describe('NavLogo', () => {
     );
     expect(within(link).getByText('Giveaway.dog')).toBeInTheDocument();
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<NavLogo />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

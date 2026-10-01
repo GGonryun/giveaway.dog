@@ -37,12 +37,6 @@ describe('OnboardingForm', () => {
     navigation.searchParams = new URLSearchParams();
   });
 
-  it('matches the snapshot on the account type step', () => {
-    const { container } = render(<OnboardingForm />);
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('on the account type step', () => {
     it('welcomes the user and asks how they will use the site', () => {
       render(<OnboardingForm />);

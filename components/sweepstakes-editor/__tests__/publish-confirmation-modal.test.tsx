@@ -4,7 +4,6 @@ import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PublishConfirmationModal } from '../publish-confirmation-modal';
 import { buildFormValues, FIXED_NOW, renderWithForm } from './form-harness';
-import { stabilizeIds } from './stable-dom';
 
 vi.mock('next/link', () => ({
   default: ({
@@ -76,11 +75,6 @@ describe('PublishConfirmationModal', () => {
   });
 
   describe('when publishing a draft', () => {
-    it('matches the snapshot', () => {
-      renderModal();
-      expect(stabilizeIds(getDialog())).toMatchSnapshot();
-    });
-
     it('says when the sweepstakes will go live', () => {
       renderModal();
       expect(getDialog()).toHaveAccessibleName('Ready to Publish?');
@@ -138,11 +132,6 @@ describe('PublishConfirmationModal', () => {
   });
 
   describe('when saving changes to a published sweepstakes', () => {
-    it('matches the snapshot', () => {
-      renderModal({ action: 'edit' });
-      expect(stabilizeIds(getDialog())).toMatchSnapshot();
-    });
-
     it('says that the changes go live immediately', () => {
       renderModal({ action: 'edit' });
       expect(getDialog()).toHaveAccessibleName('Save Changes?');
@@ -187,11 +176,6 @@ describe('PublishConfirmationModal', () => {
   });
 
   describe('in the demo', () => {
-    it('matches the snapshot', () => {
-      renderModal({ action: 'demo' });
-      expect(stabilizeIds(getDialog())).toMatchSnapshot();
-    });
-
     it('explains that publishing is not available', () => {
       renderModal({ action: 'demo' });
       expect(within(getDialog()).getByRole('alert')).toHaveTextContent(

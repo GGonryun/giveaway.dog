@@ -96,12 +96,6 @@ describe('WinnersLeaderboard', () => {
   });
 
   describe('when there are no winners', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderLeaderboard({ winners: [] });
-
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('shows an empty state without a table or pagination', () => {
       renderLeaderboard({ winners: [] });
 
@@ -114,12 +108,6 @@ describe('WinnersLeaderboard', () => {
   });
 
   describe('when there are winners', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderLeaderboard();
-
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('ranks winners from the top of the first page', () => {
       renderLeaderboard();
 

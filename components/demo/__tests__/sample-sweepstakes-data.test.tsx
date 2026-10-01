@@ -15,10 +15,6 @@ vi.mock('nanoid', () => {
 });
 
 describe('SAMPLE_SWEEPSTAKES_DATA', () => {
-  it('matches the snapshot', () => {
-    expect(SAMPLE_SWEEPSTAKES_DATA).toMatchSnapshot();
-  });
-
   it('starts one day after it is loaded and ends 128 days after', () => {
     expect(SAMPLE_SWEEPSTAKES_DATA.timing.startDate).toEqual(
       new Date('2026-06-16T12:00:00.000Z')

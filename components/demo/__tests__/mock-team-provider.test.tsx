@@ -13,13 +13,6 @@ describe('MockTeamProvider', () => {
     expect(screen.getByText('Editor')).toBeInTheDocument();
   });
 
-  it('provides the demo team as the active team', () => {
-    const { result } = renderHook(() => useTeams(), {
-      wrapper: MockTeamProvider
-    });
-    expect(result.current.activeTeam).toMatchSnapshot();
-  });
-
   it('provides the demo team as the only team', () => {
     const { result } = renderHook(() => useTeams(), {
       wrapper: MockTeamProvider

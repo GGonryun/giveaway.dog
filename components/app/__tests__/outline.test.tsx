@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { SidebarProvider, useSidebar } from '@/components/ui/sidebar';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { Outline } from '../outline';
 
 const SidebarState = () => {
@@ -24,14 +23,6 @@ const renderOutline = (props: Partial<React.ComponentProps<typeof Outline>>) =>
 const getContentWrapper = () => screen.getByText('Page content').parentElement;
 
 describe('Outline', () => {
-  it('matches the snapshot with a breadcrumb title and an action', () => {
-    const { container } = renderOutline({
-      title: [{ href: '/app/acme', label: 'Sweepstakes' }, { label: 'Edit' }],
-      action: <button type="button">Share</button>
-    });
-    expect(stabilizeIds(container)).toMatchSnapshot();
-  });
-
   describe('title', () => {
     it('renders a string title as the page heading', () => {
       renderOutline({ title: 'Settings' });

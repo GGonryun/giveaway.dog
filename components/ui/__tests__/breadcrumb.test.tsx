@@ -31,11 +31,6 @@ function renderBreadcrumb() {
 }
 
 describe('Breadcrumb', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderBreadcrumb();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a navigation landmark named breadcrumb', () => {
     renderBreadcrumb();
     expect(

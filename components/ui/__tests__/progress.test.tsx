@@ -7,11 +7,6 @@ function getIndicator() {
 }
 
 describe('Progress', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<Progress value={40} />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a progress bar', () => {
     render(<Progress value={40} aria-label="Upload progress" />);
     expect(

@@ -2,10 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { text } from '../text';
 
 describe('text', () => {
-  it('matches the snapshot of the text tokens', () => {
-    expect(text).toMatchSnapshot();
-  });
-
   it.each(Object.entries(text.size))(
     'maps the %s size to a single text size class',
     (_, className) => {

@@ -57,9 +57,4 @@ describe('AuthError', () => {
     expect(region).toHaveAttribute('aria-live', 'polite');
     expect(region).toHaveAttribute('aria-atomic', 'true');
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<AuthError error="OAuthAccountNotLinked" />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

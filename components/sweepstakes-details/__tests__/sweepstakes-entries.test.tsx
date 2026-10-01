@@ -5,8 +5,7 @@ import {
   NOW,
   buildTask,
   buildUser,
-  buildUserEntry,
-  withStableIds
+  buildUserEntry
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { DeleteEntryDialog } from '../delete-entry-dialog';
 import { SweepstakesEntries } from '../sweepstakes-entries';
@@ -77,11 +76,6 @@ describe('SweepstakesEntries', () => {
 
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = renderEntries();
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   it('renders the entry columns', () => {

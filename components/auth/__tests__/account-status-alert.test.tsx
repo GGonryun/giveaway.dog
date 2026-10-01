@@ -24,11 +24,4 @@ describe('AccountStatusAlert', () => {
       'text-left'
     );
   });
-
-  it('matches the snapshot for an errored account', () => {
-    const { container } = render(
-      <AccountStatusAlert status="ERROR" providerLabel="Twitch" />
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

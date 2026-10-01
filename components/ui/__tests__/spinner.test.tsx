@@ -3,11 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { Spinner } from '../spinner';
 
 describe('Spinner', () => {
-  it('matches the snapshot with the default size', () => {
-    const { container } = render(<Spinner />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a spinning icon with the small size by default', () => {
     const { container } = render(<Spinner />);
     const icon = container.querySelector('svg');

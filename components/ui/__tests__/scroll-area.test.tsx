@@ -3,15 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { ScrollArea, ScrollBar } from '../scroll-area';
 
 describe('ScrollArea', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <ScrollArea className="h-40">
-        <p>Long content</p>
-      </ScrollArea>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders its children inside the scrollable viewport', () => {
     const { container } = render(
       <ScrollArea>

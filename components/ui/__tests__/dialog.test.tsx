@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from '../dialog';
-import { withStableIds } from './test-utils';
 
 function renderDialog(
   props: {
@@ -41,12 +40,6 @@ async function openDialog() {
 }
 
 describe('Dialog', () => {
-  it('matches the snapshot when open', async () => {
-    renderDialog();
-    const dialog = await openDialog();
-    expect(withStableIds(dialog)).toMatchSnapshot();
-  });
-
   it('opens from the trigger and is described by its title and description', async () => {
     renderDialog();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();

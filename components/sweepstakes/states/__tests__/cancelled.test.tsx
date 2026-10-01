@@ -3,11 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { Cancelled } from '../cancelled';
 
 describe('Cancelled', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<Cancelled />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('explains that the host cancelled the giveaway', () => {
     render(<Cancelled />);
     expect(

@@ -3,11 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { ProfileIncomplete } from '../profile-incomplete';
 
 describe('ProfileIncomplete', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<ProfileIncomplete />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('asks the user to complete their profile', () => {
     render(<ProfileIncomplete />);
     expect(

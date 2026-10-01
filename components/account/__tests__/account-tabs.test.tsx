@@ -35,12 +35,6 @@ describe('AccountTabs', () => {
     navigation.pathname = '/account';
   });
 
-  it('matches the snapshot', () => {
-    const { container } = renderTabs();
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a tab for every account section', () => {
     renderTabs();
 

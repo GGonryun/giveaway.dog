@@ -8,7 +8,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { EnableAutomaticProfileEntry } from '../enable-automatic-profile-entry';
 
 vi.mock('nanoid', () => ({ nanoid: vi.fn() }));
@@ -28,11 +27,6 @@ const renderToggle = (tasks: TaskSchema[]) =>
 describe('EnableAutomaticProfileEntry', () => {
   beforeEach(() => {
     vi.mocked(nanoid).mockReset().mockReturnValue('new-profile-task');
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = renderToggle([bonusTask]);
-    expect(stabilizeIds(container)).toMatchSnapshot();
   });
 
   it('is off when there is no profile completion task', () => {

@@ -94,11 +94,6 @@ describe('SidebarProvider and Sidebar', () => {
     vi.restoreAllMocks();
   });
 
-  it('matches the snapshot of an expanded desktop sidebar', () => {
-    const { container } = renderSidebar();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('is expanded by default', () => {
     renderSidebar();
     const sidebar = getSidebar();

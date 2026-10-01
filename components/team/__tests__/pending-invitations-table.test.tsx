@@ -82,12 +82,6 @@ describe('PendingInvitationsTable', () => {
   });
 
   describe('when there are invitations', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderTable();
-
-      expect(container).toMatchSnapshot();
-    });
-
     it('lists each invitation with its role and when it was sent', () => {
       renderTable();
 

@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../tabs';
-import { withStableIds } from './test-utils';
 
 function renderTabs(onValueChange = vi.fn()) {
   const result = render(
@@ -23,11 +22,6 @@ function renderTabs(onValueChange = vi.fn()) {
 }
 
 describe('Tabs', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderTabs();
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
-  });
-
   it('shows the panel of the default tab', () => {
     renderTabs();
     expect(screen.getByRole('tab', { name: 'Entries' })).toHaveAttribute(

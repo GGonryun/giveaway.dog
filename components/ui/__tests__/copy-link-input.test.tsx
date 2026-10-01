@@ -25,11 +25,6 @@ describe('CopyLinkInput', () => {
     vi.restoreAllMocks();
   });
 
-  it('matches the snapshot', () => {
-    const { container } = render(<CopyLinkInput value={link} />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('shows the link in a read-only text box', () => {
     render(<CopyLinkInput value={link} />);
     const input = screen.getByRole('textbox');

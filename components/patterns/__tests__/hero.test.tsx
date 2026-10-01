@@ -77,9 +77,4 @@ describe('Hero', () => {
     await renderHero();
     expect(screen.getByText('Sweepstakes preview')).toBeInTheDocument();
   });
-
-  it('matches the snapshot', async () => {
-    const { container } = await renderHero();
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

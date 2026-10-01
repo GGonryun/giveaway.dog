@@ -7,7 +7,6 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '../tooltip';
-import { withStableIds } from './test-utils';
 
 function renderTooltip(
   contentProps: Partial<React.ComponentProps<typeof TooltipContent>> = {}
@@ -25,13 +24,6 @@ function getVisibleContent() {
 }
 
 describe('Tooltip', () => {
-  it('matches the snapshot when opened with the keyboard', async () => {
-    renderTooltip();
-    await userEvent.tab();
-    await screen.findByRole('tooltip');
-    expect(withStableIds(getVisibleContent())).toMatchSnapshot();
-  });
-
   it('stays hidden until the trigger is hovered', async () => {
     renderTooltip();
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();

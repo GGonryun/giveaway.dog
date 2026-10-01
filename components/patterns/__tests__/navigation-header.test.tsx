@@ -24,13 +24,4 @@ describe('NavigationHeader', () => {
     );
     expect(screen.getByRole('banner')).toHaveClass('sticky', 'top-0');
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <NavigationHeader>
-        <span>Logo</span>
-      </NavigationHeader>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

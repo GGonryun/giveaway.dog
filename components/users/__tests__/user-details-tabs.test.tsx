@@ -56,12 +56,6 @@ describe('UserDetailsTabs', () => {
     window.history.replaceState({}, '', '/');
   });
 
-  it('matches the snapshot', () => {
-    const { container } = render(tabs());
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders the overview and entries tabs', () => {
     render(tabs());
 

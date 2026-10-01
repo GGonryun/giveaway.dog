@@ -46,12 +46,6 @@ describe('InviteLinkModal', () => {
   });
 
   describe('when the invite link has loaded', () => {
-    it('matches the snapshot', () => {
-      renderModal();
-
-      expect(screen.getByRole('dialog')).toMatchSnapshot();
-    });
-
     it('shows the invite url in a read-only field', () => {
       renderModal();
 

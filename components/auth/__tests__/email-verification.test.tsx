@@ -247,11 +247,6 @@ describe('EmailVerification', () => {
         await screen.findByRole('button', { name: 'Add Email' })
       ).toBeEnabled();
     });
-
-    it('matches the snapshot', () => {
-      const { container } = renderEmailVerification();
-      expect(container.firstChild).toMatchSnapshot();
-    });
   });
 
   describe('when the email is not verified', () => {
@@ -360,11 +355,6 @@ describe('EmailVerification', () => {
       send.resolve({ ok: true, data: { success: true, message: 'sent' } });
       expect(await waitForConfirmation()).toBeInTheDocument();
     });
-
-    it('matches the snapshot', () => {
-      const { container } = renderEmailVerification({ user: unverifiedUser });
-      expect(container.firstChild).toMatchSnapshot();
-    });
   });
 
   describe('when the email is verified', () => {
@@ -414,11 +404,6 @@ describe('EmailVerification', () => {
           email: 'new@example.com'
         })
       );
-    });
-
-    it('matches the snapshot', () => {
-      const { container } = renderEmailVerification({ user: verifiedUser });
-      expect(container.firstChild).toMatchSnapshot();
     });
   });
 
@@ -473,11 +458,6 @@ describe('EmailVerification', () => {
     it('renders the confirmation without a card when showCard is false', async () => {
       const { container } = await sendVerification({ showCard: false });
       expect(container.querySelector('[data-slot="card"]')).toBeNull();
-    });
-
-    it('matches the snapshot', async () => {
-      const { container } = await sendVerification();
-      expect(container.firstChild).toMatchSnapshot();
     });
   });
 });

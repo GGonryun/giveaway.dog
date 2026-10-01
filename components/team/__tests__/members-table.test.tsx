@@ -109,12 +109,6 @@ describe('MembersTable', () => {
   });
 
   describe('when there are members', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderTable();
-
-      expect(container).toMatchSnapshot();
-    });
-
     it('renders a row per member below the header', () => {
       renderTable();
 

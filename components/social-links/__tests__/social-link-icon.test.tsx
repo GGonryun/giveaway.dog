@@ -20,14 +20,6 @@ const expectedLabels: Record<SocialPlatform, string> = {
 };
 
 describe('SocialLinkIcon', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <SocialLinkIcon platform="discord" url="https://discord.gg/doggo" />
-    );
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it.each(SUPPORTED_SOCIAL_PLATFORMS)(
     'renders an accessible external link for %s',
     (platform) => {

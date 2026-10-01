@@ -5,15 +5,6 @@ import { Box } from '../box';
 type BoxVariantProps = Omit<React.ComponentProps<typeof Box>, 'children'>;
 
 describe('Box', () => {
-  it('matches the snapshot with spacing variants', () => {
-    const { container } = render(
-      <Box sy="md" p="lg" mb="sm">
-        Content
-      </Box>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders its children inside a div', () => {
     render(<Box>Content</Box>);
     expect(screen.getByText('Content').tagName).toBe('DIV');

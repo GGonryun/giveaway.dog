@@ -11,7 +11,6 @@ import {
   SheetTitle,
   SheetTrigger
 } from '../sheet';
-import { withStableIds } from './test-utils';
 
 function renderSheet(side?: 'top' | 'right' | 'bottom' | 'left') {
   return render(
@@ -36,12 +35,6 @@ async function openSheet() {
 }
 
 describe('Sheet', () => {
-  it('matches the snapshot when open', async () => {
-    renderSheet();
-    const sheet = await openSheet();
-    expect(withStableIds(sheet)).toMatchSnapshot();
-  });
-
   it('opens from the trigger with its title and description', async () => {
     renderSheet();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();

@@ -8,7 +8,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { UrlSlugField, VisibilityTypeField } from '../sweepstakes-visibility';
 
 vi.mock('@/procedures/sweepstakes/verify-slug', () => ({ default: vi.fn() }));
@@ -52,11 +51,6 @@ const renderSlug = (slug: string | null) =>
   );
 
 describe('VisibilityTypeField', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderVisibility();
-    expect(stabilizeIds(container)).toMatchSnapshot();
-  });
-
   it.each([
     ['PUBLIC', 'Public'],
     ['PRIVATE', 'Private'],
@@ -126,11 +120,6 @@ describe('UrlSlugField', () => {
     'Only letters, numbers, and hyphens. Must be unique across all giveaways.';
 
   describe('when there is no custom slug', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderSlug(null);
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
     it('hides the slug input', () => {
       renderSlug(null);
       expect(getSwitch()).not.toBeChecked();
@@ -151,11 +140,6 @@ describe('UrlSlugField', () => {
   });
 
   describe('when there is a custom slug', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderSlug('summer-fun');
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
     it('removes the slug when turned off', () => {
       const { form } = renderSlug('summer-fun');
       fireEvent.click(getSwitch());

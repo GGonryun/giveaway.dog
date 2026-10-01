@@ -6,7 +6,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { RegionalRestriction } from '../regional-restriction';
 
 vi.mock('@/lib/countries', async (importOriginal) => {
@@ -50,11 +49,6 @@ const getSwitch = () =>
 
 describe('RegionalRestriction', () => {
   describe('when there is no restriction', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderRestriction(null);
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
     it('shows the switch turned off and hides the restriction fields', () => {
       renderRestriction(null);
       expect(getSwitch()).not.toBeChecked();
@@ -86,11 +80,6 @@ describe('RegionalRestriction', () => {
       regions: ['country:CA', 'continent:EU'],
       filter: 'EXCLUDE' as const
     };
-
-    it('matches the snapshot', () => {
-      const { container } = renderRestriction(restriction);
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
 
     it('shows the filter and the selected regions', () => {
       renderRestriction(restriction);

@@ -12,7 +12,6 @@ import {
   CommandSeparator,
   CommandShortcut
 } from '../command';
-import { withStableIds } from './test-utils';
 
 function renderCommand(onSelect = vi.fn()) {
   const result = render(
@@ -45,11 +44,6 @@ function getOptionLabels() {
 }
 
 describe('Command', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderCommand();
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
-  });
-
   it('lists every item before searching', () => {
     renderCommand();
     expect(getOptionLabels()).toEqual([

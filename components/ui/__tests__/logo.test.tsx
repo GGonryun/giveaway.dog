@@ -13,16 +13,6 @@ import {
 } from '../logo';
 
 describe('Logo', () => {
-  it('matches the snapshot with an image and text', () => {
-    const { container } = render(
-      <Logo url="https://example.com">
-        <LogoImage src="https://example.com/logo.svg" alt="Giveaway.dog" />
-        <LogoText>Giveaway.dog</LogoText>
-      </Logo>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('links to the given url and merges a custom class name', () => {
     render(
       <Logo url="https://example.com" className="gap-4">

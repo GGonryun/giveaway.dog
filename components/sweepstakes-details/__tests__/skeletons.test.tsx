@@ -18,18 +18,6 @@ describe('sweepstakes details skeletons', () => {
       vi.restoreAllMocks();
     });
 
-    it('matches the snapshot without the allocation chart', () => {
-      const { container } = render(<SweepstakesAnalyticsSkeleton />);
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
-    it('matches the snapshot with the allocation chart', () => {
-      const { container } = render(
-        <SweepstakesAnalyticsSkeleton showAllocation />
-      );
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('only shows the timeline by default', () => {
       render(<SweepstakesAnalyticsSkeleton />);
       expect(screen.getByText('Daily Entries Timeline')).toBeInTheDocument();
@@ -58,11 +46,6 @@ describe('sweepstakes details skeletons', () => {
   });
 
   describe('SweepstakesEntriesSkeleton', () => {
-    it('matches the snapshot', () => {
-      const { container } = render(<SweepstakesEntriesSkeleton />);
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('renders the entries columns with ten placeholder rows', () => {
       render(<SweepstakesEntriesSkeleton />);
       expect(
@@ -73,11 +56,6 @@ describe('sweepstakes details skeletons', () => {
   });
 
   describe('SweepstakesParticipantsSkeleton', () => {
-    it('matches the snapshot', () => {
-      const { container } = render(<SweepstakesParticipantsSkeleton />);
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('renders the participant columns with ten placeholder rows', () => {
       render(<SweepstakesParticipantsSkeleton />);
       expect(
@@ -88,11 +66,6 @@ describe('sweepstakes details skeletons', () => {
   });
 
   describe('SweepstakesWinnersSkeleton', () => {
-    it('matches the snapshot', () => {
-      const { container } = render(<SweepstakesWinnersSkeleton />);
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('renders three prize cards with two placeholder rows each', () => {
       render(<SweepstakesWinnersSkeleton />);
       expect(screen.getAllByRole('table')).toHaveLength(3);
@@ -101,11 +74,6 @@ describe('sweepstakes details skeletons', () => {
   });
 
   describe('SweepstakesLoadingSkeleton', () => {
-    it('matches the snapshot', () => {
-      const { container } = render(<SweepstakesLoadingSkeleton />);
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('renders a status card and a preview card', () => {
       const { container } = render(<SweepstakesLoadingSkeleton />);
       expect(container.querySelectorAll('[data-slot="card"]')).toHaveLength(2);

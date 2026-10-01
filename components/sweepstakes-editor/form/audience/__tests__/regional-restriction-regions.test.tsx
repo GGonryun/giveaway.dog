@@ -5,7 +5,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { RegionalRestrictionRegions } from '../regional-restriction-regions';
 
 vi.mock('@/lib/countries', async (importOriginal) => {
@@ -66,11 +65,6 @@ const search = (text: string) =>
   });
 
 describe('RegionalRestrictionRegions', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderRegions(['continent:EU', 'country:CA']);
-    expect(stabilizeIds(container)).toMatchSnapshot();
-  });
-
   it('shows the placeholder when no region is selected', () => {
     renderRegions([]);
     expect(

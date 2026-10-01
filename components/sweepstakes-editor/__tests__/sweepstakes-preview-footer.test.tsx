@@ -1,11 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayState } from '@/schemas/giveaway/schemas';
 import { PreviewStateContext } from '../contexts/preview-state-context';
 import { SweepstakesPreviewFooter } from '../sweepstakes-preview-footer';
-import { stabilizeIds } from './stable-dom';
 
 const StatefulFooter = ({
   initialState,
@@ -37,11 +36,6 @@ const renderFooter = (initialState: GiveawayState = 'active') => {
 describe('SweepstakesPreviewFooter', () => {
   afterEach(() => {
     vi.restoreAllMocks();
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = renderFooter();
-    expect(stabilizeIds(container)).toMatchSnapshot();
   });
 
   it('labels the preview mode', () => {

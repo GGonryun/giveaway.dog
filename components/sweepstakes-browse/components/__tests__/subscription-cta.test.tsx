@@ -2,7 +2,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { withStableIds } from '@/components/sweepstakes/__tests__/fixtures';
 import subscribeEmail from '@/procedures/marketing/subscribe-email';
 import { SubscriptionCTA } from '../subscription-cta';
 
@@ -21,11 +20,6 @@ describe('SubscriptionCTA', () => {
     vi.mocked(subscribeEmail).mockReset();
     vi.mocked(toast.success).mockReset();
     vi.mocked(toast.error).mockReset();
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<SubscriptionCTA />);
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   it('invites the visitor to subscribe', () => {

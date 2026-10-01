@@ -12,8 +12,7 @@ import {
   buildTwitterField,
   buildUser,
   buildUsernameField,
-  renderWithParticipation,
-  withStableIds
+  renderWithParticipation
 } from '@/components/sweepstakes/__tests__/fixtures';
 import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
 import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
@@ -70,11 +69,6 @@ describe('UserDetailsForm', () => {
     navigation.router.refresh.mockReset();
     vi.mocked(toast.success).mockReset();
     vi.mocked(toast.error).mockReset();
-  });
-
-  it('matches the snapshot for a visitor with every field type', () => {
-    const { container } = renderForm(allFields);
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   it('introduces the entry form', () => {

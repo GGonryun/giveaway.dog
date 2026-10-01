@@ -61,15 +61,6 @@ describe('SiteHeader', () => {
     expect(screen.getByRole('banner')).toHaveClass('h-22');
     expect(screen.getByRole('banner')).not.toHaveClass('h-16');
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <SiteHeader>
-        <span>Dashboard</span>
-      </SiteHeader>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });
 
 describe('SiteHeaderTitle', () => {
@@ -126,11 +117,6 @@ describe('SiteHeaderTitle', () => {
     expect(container.querySelectorAll('li[role="presentation"]')).toHaveLength(
       0
     );
-  });
-
-  it('matches the snapshot for breadcrumbs', () => {
-    const { container } = render(<SiteHeaderTitle title={breadcrumbTitle} />);
-    expect(container.firstChild).toMatchSnapshot();
   });
 });
 

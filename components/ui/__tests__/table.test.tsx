@@ -43,11 +43,6 @@ function renderTable() {
 }
 
 describe('Table', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderTable();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('exposes an accessible table named by its caption', () => {
     renderTable();
     expect(

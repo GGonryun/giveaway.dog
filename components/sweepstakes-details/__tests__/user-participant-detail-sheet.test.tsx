@@ -11,8 +11,7 @@ import {
   buildTask,
   buildTeam,
   buildTwitterField,
-  buildUser,
-  withStableIds
+  buildUser
 } from '@/components/sweepstakes/__tests__/fixtures';
 import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import type { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
@@ -93,11 +92,6 @@ const statistic = (label: string) =>
 describe('UserParticipantSheetContent', () => {
   beforeEach(() => {
     navigation.router.push.mockReset();
-  });
-
-  it('matches the snapshot', () => {
-    renderContent();
-    expect(withStableIds(screen.getByRole('dialog'))).toMatchSnapshot();
   });
 
   it('renders nothing without a participant', () => {

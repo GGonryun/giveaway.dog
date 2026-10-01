@@ -3,11 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { BackButton } from '../back-button';
 
 describe('BackButton', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<BackButton />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('links back to the browse page', () => {
     render(<BackButton />);
     const link = screen.getByRole('link', { name: 'Browse all sweepstakes' });

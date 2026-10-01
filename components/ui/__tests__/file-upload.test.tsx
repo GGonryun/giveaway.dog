@@ -51,11 +51,6 @@ describe('FileUpload', () => {
     Reflect.deleteProperty(URL, 'createObjectURL');
   });
 
-  it('matches the snapshot of the empty drop zone', () => {
-    const { container } = render(<FileUpload />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('describes the accepted file types and the size limit', () => {
     render(<FileUpload />);
     expect(

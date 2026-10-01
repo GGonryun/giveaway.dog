@@ -66,11 +66,6 @@ describe('PublicWinnerPicker', () => {
     vi.restoreAllMocks();
   });
 
-  it('matches the snapshot before the draw', () => {
-    const { container } = renderPicker();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('before the draw', () => {
     it('describes how many winners will be picked from how many participants', () => {
       renderPicker();

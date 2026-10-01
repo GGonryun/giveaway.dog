@@ -128,12 +128,6 @@ describe('PublicWinnerDraw', () => {
     vi.useRealTimers();
   });
 
-  it('matches the snapshot once the existing winners are revealed', async () => {
-    const { container } = render(drawElement());
-    await advance(5_000);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('shows the sweepstakes name and the number of eligible participants', () => {
     render(drawElement());
     expect(

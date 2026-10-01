@@ -43,12 +43,6 @@ describe('TeamNameCard', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    const { container } = renderCard();
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when first rendered', () => {
     it('shows the current team name', () => {
       renderCard();

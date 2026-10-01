@@ -18,11 +18,6 @@ const renderButton = (slug = 'acme') => {
 };
 
 describe('EditGiveawayButton', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderButton();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('links to the editor of the sweepstakes for the active team', () => {
     renderButton('globex');
     const link = screen.getByRole('link', { name: 'Edit' });

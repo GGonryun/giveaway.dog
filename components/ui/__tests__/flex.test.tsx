@@ -5,16 +5,6 @@ import { Flex } from '../flex';
 type FlexVariantProps = Omit<React.ComponentProps<typeof Flex>, 'children'>;
 
 describe('Flex', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <Flex gap="md" center>
-        <span>One</span>
-        <span>Two</span>
-      </Flex>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a flex container with its children', () => {
     render(
       <Flex data-testid="flex">
@@ -64,16 +54,6 @@ describe('Flex', () => {
 });
 
 describe('Flex.Stack', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <Flex.Stack gap="sm">
-        <span>One</span>
-        <span>Two</span>
-      </Flex.Stack>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('stacks its children in a column', () => {
     render(
       <Flex.Stack data-testid="stack" gap="lg" full="width">

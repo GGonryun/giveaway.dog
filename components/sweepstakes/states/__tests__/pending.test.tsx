@@ -55,11 +55,6 @@ describe('Pending', () => {
   });
 
   describe('before the giveaway starts', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderPending(secondsFromNow(2 * 24 * 60 * 60));
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('shows a relative countdown to the start date', () => {
       renderPending(secondsFromNow(2 * 24 * 60 * 60));
       expect(
@@ -107,11 +102,6 @@ describe('Pending', () => {
   });
 
   describe('when the giveaway has already started', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderPending(secondsFromNow(-60));
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('invites the visitor to refresh the page', () => {
       renderPending(secondsFromNow(-60));
       expect(

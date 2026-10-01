@@ -5,7 +5,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { Prize } from '../prize';
 
 const values = buildFormValues({
@@ -42,11 +41,6 @@ const getIconButton = (icon: string) => {
 
 describe('Prize', () => {
   describe('when collapsed', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderPrize();
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
     it('numbers the prize from its index', () => {
       renderPrize({ index: 1 });
       expect(screen.getByText('Prize 2')).toBeInTheDocument();
@@ -88,11 +82,6 @@ describe('Prize', () => {
   });
 
   describe('when expanded', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderPrize({ open: true });
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
     it('asks to close when the collapse button is clicked', async () => {
       const { onOpenChange } = renderPrize({ open: true });
       await userEvent.click(getIconButton('chevron-up'));

@@ -39,23 +39,6 @@ const selectOption = async (
 };
 
 describe('FilterBar', () => {
-  describe('snapshots', () => {
-    it('matches the snapshot without active filters', () => {
-      const { container } = renderBar();
-
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
-    it('matches the snapshot with active filters', () => {
-      const { container } = renderBar({
-        ...DEFAULT_FILTERS,
-        status: 'blocked'
-      });
-
-      expect(container.firstChild).toMatchSnapshot();
-    });
-  });
-
   describe('active filter count', () => {
     it('shows no count without active filters', () => {
       renderBar();

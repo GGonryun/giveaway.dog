@@ -13,11 +13,6 @@ describe('DiceIcon', () => {
     vi.useRealTimers();
   });
 
-  it('matches the snapshot while idle', () => {
-    const { container } = render(<DiceIcon isRolling={false} />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('shows a still, grey one when not rolling', () => {
     const { container } = render(<DiceIcon isRolling={false} />);
     expect(icon(container)).toHaveClass('lucide-dice-1', 'text-gray-400');

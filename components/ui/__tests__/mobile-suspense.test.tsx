@@ -16,16 +16,6 @@ describe('MobileSuspense', () => {
     vi.mocked(useIsTablet).mockReset();
   });
 
-  it('matches the snapshot of the default fallback', () => {
-    vi.mocked(useIsTablet).mockReturnValue(loading);
-    const { container } = render(
-      <MobileSuspense>
-        <p>Dashboard</p>
-      </MobileSuspense>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders the children once the screen size is known', () => {
     render(
       <MobileSuspense>

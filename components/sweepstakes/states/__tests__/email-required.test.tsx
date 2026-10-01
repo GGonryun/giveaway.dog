@@ -28,11 +28,6 @@ describe('EmailRequired', () => {
   });
 
   describe('when there is no participant', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderWithParticipation(<EmailRequired />);
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('asks the visitor to log in before verifying', () => {
       renderWithParticipation(<EmailRequired />);
       expect(

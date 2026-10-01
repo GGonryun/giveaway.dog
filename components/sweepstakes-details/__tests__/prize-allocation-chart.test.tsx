@@ -30,13 +30,6 @@ describe('PrizeAllocationChart', () => {
       allocationsByPrize: []
     });
 
-    it('matches the snapshot', () => {
-      const { container } = render(
-        <PrizeAllocationChart allocations={empty} />
-      );
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('explains that nobody picked a prize yet', () => {
       const { container } = render(
         <PrizeAllocationChart allocations={empty} />

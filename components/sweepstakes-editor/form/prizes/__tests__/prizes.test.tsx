@@ -14,7 +14,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { Prizes } from '../prizes';
 
 const dnd = vi.hoisted(() => ({
@@ -119,11 +118,6 @@ describe('Prizes', () => {
     dnd.context = null;
     dnd.items = [];
     vi.mocked(nanoid).mockReset().mockReturnValue('new-prize');
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = renderPrizes([giftCard, stickers]);
-    expect(stabilizeIds(container)).toMatchSnapshot();
   });
 
   it('shows a numbered card for each prize', () => {

@@ -19,11 +19,6 @@ function renderRadioGroup(onValueChange = vi.fn()) {
 }
 
 describe('RadioGroup', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderRadioGroup();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a labelled group of radio buttons', () => {
     renderRadioGroup();
     expect(

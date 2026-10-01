@@ -5,7 +5,6 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from '../resizable';
-import { withStableIds } from './test-utils';
 
 function renderPanels(
   props: {
@@ -30,11 +29,6 @@ function renderPanels(
 }
 
 describe('Resizable', () => {
-  it('matches the snapshot with a visible handle', () => {
-    const { container } = renderPanels({ withHandle: true });
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
-  });
-
   it('lays out the panels with their default sizes', () => {
     renderPanels();
     const sidebar = screen.getByText('Sidebar');

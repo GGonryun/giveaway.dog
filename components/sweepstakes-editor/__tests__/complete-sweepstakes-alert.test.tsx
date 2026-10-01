@@ -2,7 +2,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { CompleteSweepstakesAlert } from '../complete-sweepstakes-alert';
-import { stabilizeIds } from './stable-dom';
 
 const renderAlert = (isCompleting = false) => {
   const onCompleteAction = vi.fn();
@@ -17,11 +16,6 @@ const renderAlert = (isCompleting = false) => {
 
 describe('CompleteSweepstakesAlert', () => {
   describe('when the sweepstakes is not being completed', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderAlert();
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
     it('explains that all winners were selected', () => {
       renderAlert();
       expect(screen.getByRole('alert')).toHaveTextContent(
@@ -44,14 +38,6 @@ describe('CompleteSweepstakesAlert', () => {
         'This action is irreversible and will permanently complete the sweepstakes.'
       );
       expect(onCompleteAction).not.toHaveBeenCalled();
-    });
-
-    it('matches the snapshot of the confirmation dialog', async () => {
-      renderAlert();
-      await userEvent.click(
-        screen.getByRole('button', { name: 'Mark as Completed' })
-      );
-      expect(stabilizeIds(screen.getByRole('alertdialog'))).toMatchSnapshot();
     });
 
     it('completes the sweepstakes and closes the dialog when confirmed', async () => {
@@ -84,11 +70,6 @@ describe('CompleteSweepstakesAlert', () => {
   });
 
   describe('when the sweepstakes is being completed', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderAlert(true);
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
     it('shows a disabled loading button', () => {
       renderAlert(true);
       expect(

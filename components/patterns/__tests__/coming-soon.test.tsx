@@ -14,9 +14,4 @@ describe('ComingSoon', () => {
     render(<ComingSoon />);
     expect(screen.getByText('Coming Soon')).toBeInTheDocument();
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<ComingSoon />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

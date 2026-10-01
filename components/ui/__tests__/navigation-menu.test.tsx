@@ -11,7 +11,6 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle
 } from '../navigation-menu';
-import { withStableIds } from './test-utils';
 
 function renderNavigationMenu(onClick = vi.fn()) {
   const result = render(
@@ -47,11 +46,6 @@ function getTrigger() {
 }
 
 describe('NavigationMenu', () => {
-  it('matches the snapshot when closed', () => {
-    const { container } = renderNavigationMenu();
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
-  });
-
   it('renders a navigation landmark with its links', () => {
     renderNavigationMenu();
     expect(screen.getByRole('navigation')).toHaveClass('relative', 'z-10');

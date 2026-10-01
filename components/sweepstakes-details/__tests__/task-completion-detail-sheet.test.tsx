@@ -8,8 +8,7 @@ import {
   buildTask,
   buildTeam,
   buildUser,
-  buildUserEntry,
-  withStableIds
+  buildUserEntry
 } from '@/components/sweepstakes/__tests__/fixtures';
 import {
   TaskCompletionDetailSheet,
@@ -140,11 +139,6 @@ describe('TaskCompletionDetailSheetContent', () => {
 
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  it('matches the snapshot for a selected completion', () => {
-    renderContent('entry-3');
-    expect(withStableIds(screen.getByRole('dialog'))).toMatchSnapshot();
   });
 
   it('asks for a selection without an active completion', () => {

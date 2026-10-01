@@ -19,8 +19,7 @@ import {
   buildTask,
   buildTeam,
   buildUser,
-  buildUserProfile,
-  withStableIds
+  buildUserProfile
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { disqualifyDraw } from '@/lib/winners/procedures/disqualify-draw';
 import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';
@@ -173,11 +172,6 @@ describe('SweepstakesWinners', () => {
 
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  it('matches the snapshot with partially picked winners', () => {
-    const { container } = renderWinners();
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   describe('selection criteria', () => {

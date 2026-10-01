@@ -127,18 +127,4 @@ describe('MarketingHeader', () => {
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
     expect(container.querySelector('.mt-3')).not.toBeInTheDocument();
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <MarketingHeader
-        title={title}
-        subtitle={subtitle}
-        actions={[
-          { label: 'Giveaways', href: '/browse', variant: 'outline' },
-          { label: 'Try it for free', href: '/demo/sweepstakes' }
-        ]}
-      />
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

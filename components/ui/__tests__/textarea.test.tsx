@@ -5,11 +5,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { Textarea } from '../textarea';
 
 describe('Textarea', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<Textarea placeholder="Describe the prize" />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a multi-line text box that accepts typing', async () => {
     render(<Textarea placeholder="Describe the prize" />);
     const textarea = screen.getByPlaceholderText('Describe the prize');

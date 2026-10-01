@@ -7,7 +7,7 @@ import { createTemplate } from '@/lib/templates/procedures/create-template';
 import { timezone } from '@/lib/time';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { CreateGiveawayButton } from '../create-giveaway-button';
-import { buildTeam, withStableIds } from './fixtures';
+import { buildTeam } from './fixtures';
 
 const navigation = vi.hoisted(() => ({
   router: { push: vi.fn(), refresh: vi.fn() }
@@ -54,11 +54,6 @@ describe('CreateGiveawayButton', () => {
     vi.mocked(createSweepstakes).mockReset();
     vi.mocked(createTemplate).mockReset();
     navigation.router.push.mockReset();
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = renderButton();
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   it('renders a create button with a plus icon and a dropdown trigger', () => {

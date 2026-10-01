@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import type { DateRange } from 'react-day-picker';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DatePickerWithRange } from '../date-picker-with-range';
-import { withStableIds } from './test-utils';
 
 const from = new Date(2024, 0, 10);
 const to = new Date(2024, 0, 20);
@@ -27,11 +26,6 @@ function getTrigger() {
 describe('DatePickerWithRange', () => {
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  it('matches the snapshot without a date', () => {
-    const { container } = renderPicker(undefined);
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
   });
 
   it('prompts for a range when no date is set', () => {

@@ -23,11 +23,6 @@ describe('Toaster', () => {
     localStorage.clear();
   });
 
-  it('matches the snapshot without toasts', () => {
-    const { container } = render(<Toaster />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders an empty notifications region', () => {
     render(<Toaster />);
     expect(

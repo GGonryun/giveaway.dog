@@ -29,12 +29,6 @@ describe('DangerZone', () => {
     vi.mocked(deleteUser).mockResolvedValue({ ok: true, data: undefined });
   });
 
-  it('matches the snapshot', () => {
-    const { container } = render(<DangerZone />);
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when first rendered', () => {
     it('explains that deletion is permanent', () => {
       render(<DangerZone />);

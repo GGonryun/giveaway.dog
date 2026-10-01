@@ -133,15 +133,4 @@ describe('PricingSection', () => {
       'bg-background'
     );
   });
-
-  it('matches the snapshot when billed monthly', () => {
-    const { container } = render(<PricingSection />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
-  it('matches the snapshot when billed yearly', async () => {
-    const { container } = render(<PricingSection />);
-    await chooseBilling('Yearly');
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

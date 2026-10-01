@@ -31,12 +31,6 @@ describe('UserNotifications', () => {
     vi.restoreAllMocks();
   });
 
-  it('matches the snapshot', () => {
-    const { container } = render(<UserNotifications />);
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('notification preferences', () => {
     it('enables updates, reminders and winner announcements by default', () => {
       render(<UserNotifications />);

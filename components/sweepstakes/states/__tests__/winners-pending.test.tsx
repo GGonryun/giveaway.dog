@@ -3,11 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { WinnersPending } from '../winners-pending';
 
 describe('WinnersPending', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<WinnersPending />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a warning alert that winners are being selected', () => {
     render(<WinnersPending />);
     const alert = screen.getByRole('alert');

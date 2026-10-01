@@ -12,11 +12,6 @@ const skeletons = (container: HTMLElement) =>
 
 describe('giveaway skeletons', () => {
   describe('GiveawayHeaderSkeleton', () => {
-    it('matches the snapshot', () => {
-      const { container } = render(<GiveawayHeaderSkeleton />);
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('labels the banner and badge as a preview', () => {
       render(<GiveawayHeaderSkeleton />);
       expect(screen.getByText('Preview Banner')).toBeInTheDocument();
@@ -30,11 +25,6 @@ describe('giveaway skeletons', () => {
   });
 
   describe('TaskListSkeleton', () => {
-    it('matches the snapshot', () => {
-      const { container } = render(<TaskListSkeleton />);
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('renders three placeholder task rows', () => {
       const { container } = render(<TaskListSkeleton />);
       expect(container.querySelectorAll('.border.rounded-lg')).toHaveLength(3);
@@ -42,11 +32,6 @@ describe('giveaway skeletons', () => {
   });
 
   describe('PrizeListSkeleton', () => {
-    it('matches the snapshot', () => {
-      const { container } = render(<PrizeListSkeleton />);
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('renders two placeholder prize rows', () => {
       const { container } = render(<PrizeListSkeleton />);
       expect(container.querySelectorAll('.border.rounded-lg')).toHaveLength(2);

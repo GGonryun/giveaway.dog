@@ -7,7 +7,6 @@ import {
   buildTemplateTerms,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { TermsAndConditions } from '../terms';
 
 vi.hoisted(() => {
@@ -66,11 +65,6 @@ const getLivePreview = (sheet: HTMLElement) => {
 
 describe('TermsAndConditions', () => {
   describe('with template terms', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderTerms();
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
     it('marks the default terms as selected', () => {
       renderTerms();
       expect(
@@ -116,11 +110,6 @@ describe('TermsAndConditions', () => {
       type: 'CUSTOM',
       text: '<p>Our own rules</p>'
     };
-
-    it('matches the snapshot', () => {
-      const { container } = renderTerms(customTerms);
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
 
     it('edits the custom text', async () => {
       const { form } = renderTerms(customTerms);

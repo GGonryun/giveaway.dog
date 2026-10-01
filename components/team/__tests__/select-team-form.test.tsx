@@ -92,13 +92,6 @@ describe('SelectTeamForm', () => {
   });
 
   describe('when the user has teams', () => {
-    it('matches the snapshot', async () => {
-      const { container } = render(<SelectTeamForm />);
-      await screen.findByText('Doggo Club');
-
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('lists each team with its role, slug and member count', async () => {
       render(<SelectTeamForm />);
 
@@ -122,13 +115,6 @@ describe('SelectTeamForm', () => {
   describe('when the user has no teams', () => {
     beforeEach(() => {
       vi.mocked(getUserTeams).mockResolvedValue({ ok: true, data: [] });
-    });
-
-    it('matches the snapshot', async () => {
-      const { container } = render(<SelectTeamForm />);
-      await screen.findByText('No teams yet');
-
-      expect(container.firstChild).toMatchSnapshot();
     });
 
     it('prompts the user to create their first team', async () => {

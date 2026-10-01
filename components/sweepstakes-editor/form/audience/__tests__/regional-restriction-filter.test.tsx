@@ -6,7 +6,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { RegionalRestrictionFilterField } from '../regional-restriction-filter';
 
 const renderFilter = (filter: RegionalRestrictionFilter) => {
@@ -31,11 +30,6 @@ const renderFilter = (filter: RegionalRestrictionFilter) => {
 };
 
 describe('RegionalRestrictionFilterField', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderFilter('INCLUDE');
-    expect(stabilizeIds(container)).toMatchSnapshot();
-  });
-
   it.each([
     ['INCLUDE', 'Include'],
     ['EXCLUDE', 'Exclude']

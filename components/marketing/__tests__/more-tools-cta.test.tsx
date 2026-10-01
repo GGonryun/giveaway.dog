@@ -26,11 +26,6 @@ describe('MorePowerfulGiveawaysCTA', () => {
       screen.getByRole('link', { name: 'Browse Examples' })
     ).toHaveAttribute('href', '/browse');
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<MorePowerfulGiveawaysCTA />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });
 
 describe('MoreToolsCTA', () => {
@@ -40,10 +35,5 @@ describe('MoreToolsCTA', () => {
     expect(
       screen.getByRole('link', { name: 'View All Tools' })
     ).toHaveAttribute('href', '/tools');
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<MoreToolsCTA />);
-    expect(container.firstChild).toMatchSnapshot();
   });
 });

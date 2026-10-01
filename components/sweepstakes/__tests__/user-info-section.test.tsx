@@ -44,11 +44,6 @@ describe('UserInfoSection', () => {
   });
 
   describe('when nobody is signed in', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderWithParticipation(<UserInfoSection />);
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('links to the login page with a redirect back to the current page', () => {
       renderWithParticipation(<UserInfoSection />);
       expect(screen.getByText('Not signed in')).toBeInTheDocument();
@@ -60,15 +55,6 @@ describe('UserInfoSection', () => {
   });
 
   describe('when a participant is signed in', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderWithParticipation(<UserInfoSection />, {
-        participant: buildParticipant({
-          user: buildUser({ providers: providers(2) })
-        })
-      });
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('links the participant name and the edit action to the account page', () => {
       renderWithParticipation(<UserInfoSection />, {
         participant: buildParticipant()

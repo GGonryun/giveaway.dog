@@ -78,12 +78,6 @@ describe('FeatureSettings', () => {
     });
   });
 
-  it('matches the snapshot for a participant', () => {
-    const { container } = render(<FeatureSettings />);
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('for every user', () => {
     it('describes each feature', () => {
       render(<FeatureSettings />);

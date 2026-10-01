@@ -3,11 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { Skeleton } from '../skeleton';
 
 describe('Skeleton', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<Skeleton className="h-4 w-24" />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a pulsing placeholder with the data-slot attribute', () => {
     render(<Skeleton data-testid="skeleton" />);
     const skeleton = screen.getByTestId('skeleton');

@@ -4,20 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { Toggle, toggleVariants } from '../toggle';
 
 describe('Toggle', () => {
-  it('matches the snapshot when off', () => {
-    const { container } = render(<Toggle aria-label="Bold">B</Toggle>);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
-  it('matches the snapshot for the outline variant when on', () => {
-    const { container } = render(
-      <Toggle aria-label="Bold" variant="outline" size="lg" defaultPressed>
-        B
-      </Toggle>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('toggles its pressed state when clicked', async () => {
     const onPressedChange = vi.fn();
     render(

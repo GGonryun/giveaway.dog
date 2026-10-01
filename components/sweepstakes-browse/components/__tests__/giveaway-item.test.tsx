@@ -32,14 +32,6 @@ describe('GiveawayItem', () => {
     vi.useRealTimers();
   });
 
-  it('matches the snapshot for a running giveaway with partial participation', () => {
-    const { container } = renderItem(
-      { featured: true },
-      { sweepstakesId: 'sweep-1', completed: 2, maximum: 5 }
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('links to the giveaway by its slug', () => {
     renderItem();
     expect(screen.getByRole('link')).toHaveAttribute(

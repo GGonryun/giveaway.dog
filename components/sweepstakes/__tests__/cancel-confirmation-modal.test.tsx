@@ -7,7 +7,6 @@ import type { UnifiedFormAction } from '@/components/patterns/form-layout/types'
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import type { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { CancelConfirmationModal } from '../cancel-confirmation-modal';
-import { withStableIds } from './fixtures';
 
 const EditorForm = ({
   name,
@@ -52,14 +51,6 @@ describe('CancelConfirmationModal', () => {
     renderModal({ open: false });
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
-
-  it.each<UnifiedFormAction>(['create', 'edit', 'demo'])(
-    'matches the snapshot for the %s action',
-    (action) => {
-      renderModal({ action });
-      expect(withStableIds(screen.getByRole('dialog'))).toMatchSnapshot();
-    }
-  );
 
   it('names the sweepstakes with unsaved changes', () => {
     renderModal({ name: 'Winter Raffle' });

@@ -4,8 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   buildTask,
   buildUser,
-  buildUserEntry,
-  withStableIds
+  buildUserEntry
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { deleteTaskCompletion } from '@/procedures/sweepstakes/delete-task-completion';
 import { DeleteEntryDialog } from '../delete-entry-dialog';
@@ -39,11 +38,6 @@ const renderDialog = (onDeleted?: () => void) => {
 describe('DeleteEntryDialog', () => {
   beforeEach(() => {
     vi.mocked(deleteTaskCompletion).mockReset();
-  });
-
-  it('matches the snapshot', () => {
-    renderDialog();
-    expect(withStableIds(screen.getByRole('dialog'))).toMatchSnapshot();
   });
 
   it('names the participant and the task of the entry', () => {

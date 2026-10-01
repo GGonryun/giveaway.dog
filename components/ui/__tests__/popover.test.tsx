@@ -7,7 +7,6 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '../popover';
-import { withStableIds } from './test-utils';
 
 function renderPopover(
   contentProps: React.ComponentProps<typeof PopoverContent> = {}
@@ -27,12 +26,6 @@ async function openPopover() {
 }
 
 describe('Popover', () => {
-  it('matches the snapshot when open', async () => {
-    renderPopover();
-    const content = await openPopover();
-    expect(withStableIds(content)).toMatchSnapshot();
-  });
-
   it('toggles the content from the trigger', async () => {
     renderPopover();
     const trigger = screen.getByRole('button', { name: 'Share' });

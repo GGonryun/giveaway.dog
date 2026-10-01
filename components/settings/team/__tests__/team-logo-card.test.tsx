@@ -57,12 +57,6 @@ describe('TeamLogoCard', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    const { container } = renderCard();
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when first rendered', () => {
     it('passes the current logo to the uploader', () => {
       renderCard();

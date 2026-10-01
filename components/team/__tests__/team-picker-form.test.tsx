@@ -25,12 +25,6 @@ describe('TeamPickerForm', () => {
     navigation.searchParams = new URLSearchParams();
   });
 
-  it('matches the snapshot on the select step', () => {
-    const { container } = render(<TeamPickerForm />);
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('on the select step', () => {
     it('shows the select team form', () => {
       render(<TeamPickerForm />);

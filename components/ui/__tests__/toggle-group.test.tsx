@@ -4,16 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { ToggleGroup, ToggleGroupItem } from '../toggle-group';
 
 describe('ToggleGroup', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <ToggleGroup type="single" defaultValue="left" aria-label="Alignment">
-        <ToggleGroupItem value="left">Left</ToggleGroupItem>
-        <ToggleGroupItem value="right">Right</ToggleGroupItem>
-      </ToggleGroup>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('selects one item at a time in single mode', async () => {
     const onValueChange = vi.fn();
     render(

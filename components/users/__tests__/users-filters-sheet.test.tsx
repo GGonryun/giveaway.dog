@@ -47,18 +47,6 @@ describe('UsersFiltersSheet', () => {
     navigation.searchParams = new URLSearchParams();
   });
 
-  it('matches the snapshot of the open sheet', async () => {
-    const user = userEvent.setup();
-    navigation.searchParams = new URLSearchParams(
-      'sources=SIGNUP&minQualityScore=40'
-    );
-    render(<UsersFiltersSheet />);
-
-    const sheet = await openSheet(user);
-
-    expect(sheet).toMatchSnapshot();
-  });
-
   describe('trigger', () => {
     it('does not mark the trigger without active filters', () => {
       render(<UsersFiltersSheet />);

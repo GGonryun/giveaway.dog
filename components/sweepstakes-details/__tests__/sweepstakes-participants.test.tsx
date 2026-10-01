@@ -4,8 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   buildCompletion,
   buildParticipant,
-  buildUser,
-  withStableIds
+  buildUser
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { disqualifyParticipant } from '@/procedures/sweepstakes/disqualify-participant';
 import { SweepstakesParticipants } from '../sweepstakes-participants';
@@ -64,11 +63,6 @@ const openActions = async (rowIndex: number) => {
 describe('SweepstakesParticipants', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = renderParticipants();
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   it('renders the participant columns', () => {

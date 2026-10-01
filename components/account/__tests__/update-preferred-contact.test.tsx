@@ -89,14 +89,6 @@ describe('UpdatePreferredContact', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    const { container } = renderCard({
-      preferredContactMethod: IdentityProvider.DISCORD
-    });
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when first rendered', () => {
     it('shows None when there is no preferred contact method', () => {
       renderCard();

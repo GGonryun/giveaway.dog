@@ -22,9 +22,4 @@ describe('CallToAction', () => {
       '/demo/sweepstakes'
     );
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<CallToAction />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

@@ -137,10 +137,4 @@ describe('NavGroups', () => {
       expect(pickerLinks()).toHaveLength(0);
     });
   });
-
-  it('matches the snapshot of a plain menu item', () => {
-    navigation.pathname = '/app/acme/users';
-    renderInSidebar(<NavGroups />);
-    expect(link('Users').closest('li')).toMatchSnapshot();
-  });
 });

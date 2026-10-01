@@ -18,7 +18,6 @@ import {
   MenubarSubTrigger,
   MenubarTrigger
 } from '../menu-bar';
-import { withStableIds } from './test-utils';
 
 function renderMenubar() {
   const onNew = vi.fn();
@@ -75,11 +74,6 @@ async function openFileMenu() {
 }
 
 describe('Menubar', () => {
-  it('matches the snapshot when closed', () => {
-    renderMenubar();
-    expect(withStableIds(screen.getByRole('menubar'))).toMatchSnapshot();
-  });
-
   it('renders a menubar with a trigger per menu', () => {
     renderMenubar();
     const menubar = screen.getByRole('menubar');

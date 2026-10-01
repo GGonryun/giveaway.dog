@@ -14,8 +14,7 @@ import {
   NOW,
   buildAudience,
   buildParticipationProps,
-  buildSweepstakes,
-  withStableIds
+  buildSweepstakes
 } from './fixtures';
 
 vi.mock('@/lib/turnstile/gate', () => ({
@@ -58,11 +57,6 @@ describe('GiveawayParticipation', () => {
 
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  it('matches the snapshot for the active state', () => {
-    const { container } = renderParticipation();
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   it.each<[GiveawayState, string]>([

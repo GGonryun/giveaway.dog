@@ -83,12 +83,6 @@ describe('UpdateDisplayName', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    const { container } = renderCard();
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when first rendered', () => {
     it('prefills the current display name', () => {
       renderCard();

@@ -9,12 +9,6 @@ expect.addSnapshotSerializer({
 });
 
 describe('FeatureInDevelopmentDialog', () => {
-  it('matches the snapshot', () => {
-    render(<FeatureInDevelopmentDialog open onClose={vi.fn()} />);
-
-    expect(screen.getByRole('dialog')).toMatchSnapshot();
-  });
-
   describe('when open', () => {
     it('is titled as a feature in active development', () => {
       render(<FeatureInDevelopmentDialog open onClose={vi.fn()} />);

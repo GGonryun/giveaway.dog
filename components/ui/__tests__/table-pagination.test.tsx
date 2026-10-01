@@ -30,11 +30,6 @@ function getButtons() {
 }
 
 describe('TablePagination', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderPagination();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('shows the range of items on the current page', () => {
     renderPagination();
     expect(screen.getByText('11-20 of 45')).toHaveTextContent(

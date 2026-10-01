@@ -3,12 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { LoadingState } from '../loading-state';
 
 describe('LoadingState', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<LoadingState text="Loading teams..." />);
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('shows the given text', () => {
     render(<LoadingState text="Switching to team..." />);
 

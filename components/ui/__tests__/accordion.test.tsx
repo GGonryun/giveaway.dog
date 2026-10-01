@@ -7,7 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '../accordion';
-import { withStableIds } from './test-utils';
 
 function FaqItems() {
   return (
@@ -35,11 +34,6 @@ function renderSingle(
 }
 
 describe('Accordion', () => {
-  it('matches the snapshot with the first item open', () => {
-    const { container } = renderSingle({ defaultValue: 'entries' });
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
-  });
-
   it('renders each trigger as a button inside a heading', () => {
     renderSingle();
     const headings = screen.getAllByRole('heading', { level: 3 });

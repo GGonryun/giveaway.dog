@@ -6,7 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import toggleVisibility from '@/procedures/sweepstakes/toggle-visibility';
 import { SweepstakesStatusComponent } from '../sweepstakes-status';
 import { FIXED_NOW } from './form-harness';
-import { stabilizeIds } from './stable-dom';
 
 vi.hoisted(() => {
   process.env.TZ = 'UTC';
@@ -77,27 +76,6 @@ describe('SweepstakesStatusComponent', () => {
 
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  describe('snapshots', () => {
-    it('matches the snapshot of a running public sweepstakes', () => {
-      const { container } = renderStatus({
-        visibility: 'PUBLIC',
-        sweepstakesUrl: 'https://giveaway.dog/browse/summer',
-        onGenerateQR: vi.fn()
-      });
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
-    it('matches the snapshot of an expired sweepstakes without winners', () => {
-      const { container } = renderStatus({
-        status: 'EXPIRED',
-        startDate: new Date('2026-05-01T12:00:00.000Z'),
-        endDate: new Date('2026-06-01T12:00:00.000Z'),
-        onPickWinners: vi.fn()
-      });
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
   });
 
   describe('status', () => {

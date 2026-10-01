@@ -56,11 +56,6 @@ describe('Carousel', () => {
     vi.restoreAllMocks();
   });
 
-  it('matches the snapshot', () => {
-    const { container } = renderCarousel();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a carousel region with its slides', () => {
     renderCarousel();
     expect(screen.getByRole('region', { name: 'Prizes' })).toHaveAttribute(

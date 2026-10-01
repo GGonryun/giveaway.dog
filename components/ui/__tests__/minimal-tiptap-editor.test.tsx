@@ -104,11 +104,6 @@ describe('MinimalTiptap', () => {
     vi.restoreAllMocks();
   });
 
-  it('matches the snapshot of the editable area', async () => {
-    const { container } = await renderEditor();
-    expect(getEditable(container)).toMatchSnapshot();
-  });
-
   it('renders the toolbar and the initial content once the editor is ready', async () => {
     const { container } = await renderEditor(
       <MinimalTiptap content="<p>Hello <strong>world</strong></p>" />

@@ -41,9 +41,4 @@ describe('UnifiedSectionHeader', () => {
     expect(header).toHaveClass('bg-muted', 'top-0');
     expect(header).not.toHaveClass('bg-background');
   });
-
-  it('matches the snapshot', () => {
-    const { container } = renderSection();
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

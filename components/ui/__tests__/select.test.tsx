@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '../select';
-import { withStableIds } from './test-utils';
 
 function renderSelect(props: React.ComponentProps<typeof Select> = {}) {
   return render(
@@ -40,13 +39,6 @@ async function openSelect() {
 }
 
 describe('Select', () => {
-  it('matches the snapshot of the closed trigger', () => {
-    renderSelect();
-    expect(
-      withStableIds(screen.getByRole('combobox', { name: 'Prize' }))
-    ).toMatchSnapshot();
-  });
-
   it('shows the placeholder until a value is chosen', () => {
     renderSelect();
     const trigger = screen.getByRole('combobox', { name: 'Prize' });

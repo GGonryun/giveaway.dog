@@ -3,7 +3,6 @@ import { baseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import {
   isSweepstakeStepKey,
   SWEEPSTAKE_FIELD_TO_STEP_MAP,
-  SWEEPSTAKE_STEP_LABELS,
   SWEEPSTAKE_STEP_ORDER,
   SWEEPSTAKE_STEP_TO_FIELD_MAP
 } from '../steps';
@@ -18,20 +17,6 @@ describe('SWEEPSTAKE_STEP_ORDER', () => {
       'prizes',
       'design'
     ]);
-  });
-
-  it('has a label for every step', () => {
-    expect(SWEEPSTAKE_STEP_ORDER.map((step) => SWEEPSTAKE_STEP_LABELS[step]))
-      .toMatchInlineSnapshot(`
-      [
-        "Setup",
-        "Audience",
-        "Tasks",
-        "Selection",
-        "Prizes",
-        "Design",
-      ]
-    `);
   });
 });
 

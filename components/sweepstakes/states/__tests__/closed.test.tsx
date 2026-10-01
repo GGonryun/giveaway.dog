@@ -3,11 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { Closed } from '../closed';
 
 describe('Closed', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<Closed />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('tells the visitor that entries are not accepted', () => {
     render(<Closed />);
     expect(

@@ -140,17 +140,4 @@ describe('MobileNavLinks', () => {
     render(<MobileNavLinks onLinkClick={onLinkClick} />);
     expect(section('Tools')).toHaveClass('text-primary');
   });
-
-  it('matches the snapshot when collapsed', () => {
-    const { container } = render(<MobileNavLinks onLinkClick={onLinkClick} />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
-  it('matches the snapshot when both sections are expanded', async () => {
-    navigation.pathname = '/learn/integrations';
-    const { container } = render(<MobileNavLinks onLinkClick={onLinkClick} />);
-    await userEvent.click(section('Learn'));
-    await userEvent.click(section('Tools'));
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

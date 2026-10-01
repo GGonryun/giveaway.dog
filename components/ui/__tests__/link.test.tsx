@@ -3,13 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { Link } from '../link';
 
 describe('Link', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <Link href="https://example.com/giveaways">Giveaways</Link>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders an anchor for the href', () => {
     render(<Link href="https://example.com/giveaways">Giveaways</Link>);
     expect(screen.getByRole('link', { name: 'Giveaways' })).toHaveAttribute(

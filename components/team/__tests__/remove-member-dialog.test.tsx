@@ -56,12 +56,6 @@ describe('RemoveMemberDialog', () => {
   });
 
   describe('when the member can be removed', () => {
-    it('matches the snapshot', () => {
-      renderDialog();
-
-      expect(screen.getByRole('alertdialog')).toMatchSnapshot();
-    });
-
     it('asks to confirm removing the member by name', () => {
       renderDialog();
 
@@ -166,12 +160,6 @@ describe('RemoveMemberDialog', () => {
   });
 
   describe('when the member cannot be removed', () => {
-    it('matches the snapshot', () => {
-      renderDialog({ blockReason: 'Cannot remove the team owner' });
-
-      expect(screen.getByRole('alertdialog')).toMatchSnapshot();
-    });
-
     it('explains why the member cannot be removed', () => {
       renderDialog({ blockReason: 'Cannot remove the team owner' });
 

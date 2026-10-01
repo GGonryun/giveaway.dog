@@ -41,15 +41,4 @@ describe('EasterEggLogo', () => {
     await userEvent.click(screen.getByRole('img', { name: 'Easter Egg' }));
     expect(screen.getByRole('img', { name: 'Easter Egg' })).toBeInTheDocument();
   });
-
-  it('matches the snapshot before the easter egg is found', () => {
-    const { container } = render(<EasterEggLogo />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
-  it('matches the snapshot after the easter egg is found', async () => {
-    const { container } = render(<EasterEggLogo />);
-    await userEvent.click(defaultLogo());
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

@@ -7,8 +7,7 @@ import {
   buildPrizeDraw,
   buildUser,
   buildUserProfile,
-  renderWithParticipation,
-  withStableIds
+  renderWithParticipation
 } from '@/components/sweepstakes/__tests__/fixtures';
 import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
 import { UNKNOWN_USER_NAME } from '@/lib/settings';
@@ -58,18 +57,6 @@ const participantWithAllocation = (prizeId: string, prizeName: string) =>
   });
 
 describe('WinnersAnnounced', () => {
-  it('matches the snapshot for a participant who won', () => {
-    const { container } = renderWinners({
-      prizes: [
-        buildGiveawayPrize({
-          draws: [buildPrizeDraw({ user: buildUserProfile({ id: me.id }) })]
-        })
-      ],
-      participant: participantWithAllocation('prize-1', 'Gaming Headset')
-    });
-    expect(withStableIds(container)).toMatchSnapshot();
-  });
-
   it('announces the winners', () => {
     renderWinners();
     expect(

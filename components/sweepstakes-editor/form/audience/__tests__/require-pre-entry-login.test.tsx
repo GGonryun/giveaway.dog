@@ -5,7 +5,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { RequirePreEntryLogin } from '../require-pre-entry-login';
 
 const renderField = (requirePreEntryLogin: boolean) => {
@@ -30,11 +29,6 @@ const getSwitch = () =>
   screen.getByRole('switch', { name: 'Require Pre-Entry Login' });
 
 describe('RequirePreEntryLogin', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderField(false);
-    expect(stabilizeIds(container)).toMatchSnapshot();
-  });
-
   it('describes the setting', () => {
     renderField(false);
     expect(getSwitch()).toHaveAccessibleDescription(

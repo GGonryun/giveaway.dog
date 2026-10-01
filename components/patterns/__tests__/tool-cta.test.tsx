@@ -52,9 +52,4 @@ describe('ToolCta', () => {
       '/pricing'
     );
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<ToolCta />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

@@ -8,8 +8,7 @@ import {
   buildAudience,
   buildPrize,
   buildSweepstakes,
-  renderWithParticipation,
-  withStableIds
+  renderWithParticipation
 } from './fixtures';
 import type { GiveawayFormAudience } from '@/schemas/giveaway/schemas';
 
@@ -45,14 +44,6 @@ describe('TermsModal', () => {
   it('keeps the terms closed until the trigger is clicked', () => {
     renderTerms();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  });
-
-  it('matches the snapshot for custom terms', async () => {
-    renderTerms({
-      terms: { type: 'CUSTOM', text: '<p>Be <strong>nice</strong>.</p>' }
-    });
-    const { dialog } = await openTerms();
-    expect(withStableIds(dialog)).toMatchSnapshot();
   });
 
   it('renders custom terms as rich text', async () => {

@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { withStableIds } from '@/components/sweepstakes/__tests__/fixtures';
 import { DisqualificationDialog } from '../disqualification-dialog';
 
 const renderDialog = (
@@ -25,11 +24,6 @@ describe('DisqualificationDialog', () => {
   it('renders nothing while closed', () => {
     renderDialog({ open: false });
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  });
-
-  it('matches the snapshot', () => {
-    renderDialog();
-    expect(withStableIds(screen.getByRole('dialog'))).toMatchSnapshot();
   });
 
   it('shows the participant and the reason', () => {

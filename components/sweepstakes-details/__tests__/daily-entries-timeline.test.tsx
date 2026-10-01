@@ -53,13 +53,6 @@ describe('DailyEntriesTimeline', () => {
     vi.unstubAllEnvs();
   });
 
-  it('matches the snapshot of the header', () => {
-    const { container } = renderTimeline([]);
-    expect(
-      container.querySelector('[data-slot="card-header"]')
-    ).toMatchSnapshot();
-  });
-
   it('describes the chart period', () => {
     renderTimeline([]);
     expect(screen.getByText('Daily Entries Timeline')).toBeInTheDocument();

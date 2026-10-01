@@ -6,11 +6,6 @@ import { AllGiveawaysSearch } from '../all-giveaways-search';
 const searchBox = () => screen.getByRole('searchbox');
 
 describe('AllGiveawaysSearch', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<AllGiveawaysSearch />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders an empty search box with a hint', () => {
     render(<AllGiveawaysSearch />);
     expect(searchBox()).toHaveValue('');

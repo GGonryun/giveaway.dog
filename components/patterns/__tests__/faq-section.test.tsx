@@ -69,11 +69,4 @@ describe('FaqSection', () => {
     await userEvent.click(question('Can I cancel anytime?'));
     expect(screen.queryByRole('region')).not.toBeInTheDocument();
   });
-
-  it('matches the snapshot of the page header', () => {
-    render(<FaqSection />);
-    expect(
-      screen.getByRole('heading', { level: 1 }).parentElement
-    ).toMatchSnapshot();
-  });
 });

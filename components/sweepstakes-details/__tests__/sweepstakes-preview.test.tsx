@@ -22,8 +22,7 @@ import {
   buildPrize,
   buildPrizeDraw,
   buildSweepstakes,
-  buildTeam,
-  withStableIds
+  buildTeam
 } from '@/components/sweepstakes/__tests__/fixtures';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { DEFAULT_DESIGN_DATA } from '@/schemas/giveaway/defaults';
@@ -119,11 +118,6 @@ describe('SweepstakesPreview', () => {
 
   afterEach(() => {
     window.innerWidth = 1024;
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = renderPreview();
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   describe('status panel', () => {

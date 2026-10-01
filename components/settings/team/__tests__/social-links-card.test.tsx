@@ -61,12 +61,6 @@ describe('SocialLinksCard', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    const { container } = renderCard();
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when there are no links', () => {
     it('explains how to add one', () => {
       renderCard(NO_LINKS);

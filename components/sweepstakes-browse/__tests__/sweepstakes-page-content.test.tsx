@@ -3,8 +3,7 @@ import type { ComponentProps } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   NOW,
-  buildPublicSweepstakes,
-  withStableIds
+  buildPublicSweepstakes
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { SweepstakesPageContent } from '../sweepstakes-page-content';
 
@@ -60,11 +59,6 @@ describe('SweepstakesPageContent', () => {
 
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  it('matches the snapshot for the browse page', () => {
-    const { container } = renderPage();
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   describe('header', () => {

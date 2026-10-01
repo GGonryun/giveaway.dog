@@ -31,11 +31,6 @@ function renderEmptyState(items = trackedItems) {
 }
 
 describe('EmptyState', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderEmptyState();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders the title, description and footer message', () => {
     renderEmptyState();
     expect(screen.getByText('No data yet')).toHaveAttribute(

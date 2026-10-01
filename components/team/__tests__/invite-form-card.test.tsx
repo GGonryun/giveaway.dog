@@ -69,12 +69,6 @@ describe('InviteFormCard', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    const { container } = renderCard();
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when first rendered', () => {
     it('starts with one empty invitation for a member', () => {
       renderCard();

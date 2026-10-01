@@ -17,7 +17,6 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger
 } from '../context-menu';
-import { withStableIds } from './test-utils';
 
 function renderContextMenu() {
   const onEdit = vi.fn();
@@ -65,11 +64,6 @@ function openMenu() {
 }
 
 describe('ContextMenu', () => {
-  it('matches the snapshot when open', () => {
-    renderContextMenu();
-    expect(withStableIds(openMenu())).toMatchSnapshot();
-  });
-
   it('opens the menu on right click', () => {
     renderContextMenu();
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();

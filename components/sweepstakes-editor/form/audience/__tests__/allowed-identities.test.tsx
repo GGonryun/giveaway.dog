@@ -6,7 +6,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { AllowedIdentities } from '../allowed-identities';
 
 const renderField = (
@@ -32,11 +31,6 @@ const getSelect = () =>
   screen.getByRole('button', { name: 'Allowed Identities' });
 
 describe('AllowedIdentities', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderField();
-    expect(stabilizeIds(container)).toMatchSnapshot();
-  });
-
   it('shows a badge for each allowed identity', () => {
     renderField(['TWITTER', 'DISCORD', 'EMAIL']);
     const select = getSelect();

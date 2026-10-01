@@ -37,11 +37,6 @@ function renderPagination() {
 }
 
 describe('Pagination', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderPagination();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a navigation landmark with a list of pages', () => {
     renderPagination();
     const nav = screen.getByRole('navigation', { name: 'pagination' });

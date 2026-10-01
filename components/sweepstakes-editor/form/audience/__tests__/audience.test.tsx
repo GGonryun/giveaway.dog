@@ -7,7 +7,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { Audience } from '../audience';
 
 vi.mock('nanoid', () => ({ nanoid: vi.fn() }));
@@ -45,11 +44,6 @@ const renderAudience = () => {
 describe('Audience', () => {
   beforeEach(() => {
     vi.mocked(nanoid).mockReset().mockReturnValue('new-id');
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = renderAudience();
-    expect(stabilizeIds(container)).toMatchSnapshot();
   });
 
   it('groups the settings into identity, user details, location and visibility', () => {

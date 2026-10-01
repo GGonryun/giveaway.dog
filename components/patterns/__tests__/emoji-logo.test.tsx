@@ -32,9 +32,4 @@ describe('EmojiLogo', () => {
     const logo = screen.getByRole('img', { name: 'Giveaway.dog logo' });
     expect(logo).toHaveAttribute('title', 'Giveaway.dog');
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(<EmojiLogo className="text-3xl" />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

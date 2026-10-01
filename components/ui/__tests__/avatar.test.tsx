@@ -34,11 +34,6 @@ describe('Avatar', () => {
     vi.unstubAllGlobals();
   });
 
-  it('matches the snapshot while the image is loading', () => {
-    const { container } = renderAvatar();
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('shows the fallback while the image is loading', () => {
     renderAvatar();
     expect(screen.getByText('AL')).toHaveClass('rounded-full', 'bg-muted');

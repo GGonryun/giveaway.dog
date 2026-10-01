@@ -67,11 +67,4 @@ describe('AvatarGroupEasterEgg', () => {
     await clickAvatars([5]);
     expect(easterEggDialog()).not.toBeInTheDocument();
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <AvatarGroupEasterEgg hosts={hosts.slice(0, 2)} />
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

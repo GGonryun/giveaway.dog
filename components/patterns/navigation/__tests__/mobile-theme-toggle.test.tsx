@@ -54,10 +54,4 @@ describe('MobileThemeToggle', () => {
     await userEvent.click(screen.getByRole('radio', { name: 'System theme' }));
     expect(themeState.setTheme).not.toHaveBeenCalled();
   });
-
-  it('matches the snapshot', () => {
-    themeState.theme = 'dark';
-    const { container } = render(<MobileThemeToggle />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

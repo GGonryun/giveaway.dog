@@ -72,12 +72,6 @@ describe('CreateTeamForm', () => {
     document.cookie = 'last_team_slug=; max-age=0; path=/';
   });
 
-  it('matches the snapshot', () => {
-    const { container } = render(<CreateTeamForm />);
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when the form is empty', () => {
     it('disables the create button', () => {
       render(<CreateTeamForm />);

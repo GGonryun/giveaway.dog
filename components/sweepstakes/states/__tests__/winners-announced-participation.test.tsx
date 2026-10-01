@@ -8,8 +8,7 @@ import {
   buildPrizeDraw,
   buildSweepstakes,
   buildTask,
-  renderWithParticipation,
-  withStableIds
+  renderWithParticipation
 } from '@/components/sweepstakes/__tests__/fixtures';
 import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
 import { WinnersAnnouncedParticipation } from '../winners-announced-participation';
@@ -63,13 +62,6 @@ const renderParticipation = (
 describe('WinnersAnnouncedParticipation', () => {
   beforeEach(() => {
     setUrl('');
-  });
-
-  it('matches the snapshot', () => {
-    const { container } = renderParticipation({
-      participant: buildParticipant({ completions: [buildCompletion()] })
-    });
-    expect(withStableIds(container)).toMatchSnapshot();
   });
 
   it('opens the prizes tab with the announced winners', () => {

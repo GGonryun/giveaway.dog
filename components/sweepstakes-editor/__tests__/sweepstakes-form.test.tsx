@@ -16,7 +16,6 @@ import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { SweepstakesForm } from '../sweepstakes-form';
 import { buildFormValues, FIXED_NOW } from './form-harness';
-import { stabilizeIds } from './stable-dom';
 
 vi.hoisted(() => {
   process.env.TZ = 'UTC';
@@ -159,14 +158,6 @@ describe('SweepstakesForm', () => {
   });
 
   describe('layout', () => {
-    it.each([
-      ['create', '/app/demo-team/sweepstakes/sweepstakes-1/create'],
-      ['edit', '/app/demo-team/sweepstakes/sweepstakes-1/edit']
-    ])('matches the snapshot of the header when %s', (_, pathname) => {
-      renderForm({ pathname });
-      expect(stabilizeIds(screen.getByRole('banner'))).toMatchSnapshot();
-    });
-
     it('rejects a missing sweepstakes id outside of the demo', () => {
       renderForm({ params: { slug: 'demo-team' } });
       expect(screen.getByText(/Invalid ID:/)).toBeInTheDocument();

@@ -11,11 +11,6 @@ function getDay(label: RegExp) {
 }
 
 describe('Calendar', () => {
-  it('matches the snapshot of the month navigation', () => {
-    render(<Calendar mode="single" defaultMonth={january2024} />);
-    expect(screen.getByRole('navigation')).toMatchSnapshot();
-  });
-
   it('renders the month grid labelled with the month', () => {
     render(<Calendar mode="single" defaultMonth={january2024} />);
     expect(

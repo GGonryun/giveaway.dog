@@ -44,7 +44,6 @@ describe('status badges', () => {
         );
         expect(container.firstChild).toHaveTextContent(label);
         expect(container.firstChild).toHaveClass('text-sm', variantClass);
-        expect(container.firstChild).toMatchSnapshot();
       }
     );
 

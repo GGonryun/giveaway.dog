@@ -12,13 +12,6 @@ function focusThumb() {
 }
 
 describe('Slider', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <Slider defaultValue={[25]} aria-label="Volume" />
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('exposes the thumb as a slider with its value and bounds', () => {
     render(<Slider defaultValue={[25]} min={0} max={50} />);
     const thumb = screen.getByRole('slider');

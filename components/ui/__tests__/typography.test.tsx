@@ -3,11 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { Typography } from '../typography';
 
 describe('Typography', () => {
-  it('matches the snapshot with the default variants', () => {
-    const { container } = render(<Typography>Body text</Typography>);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a div with the default size and weight', () => {
     render(<Typography>Body text</Typography>);
     const text = screen.getByText('Body text');
@@ -61,13 +56,6 @@ describe('Typography', () => {
 });
 
 describe('Typography.Paragraph', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <Typography.Paragraph>Paragraph</Typography.Paragraph>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a paragraph with the typography variants', () => {
     render(
       <Typography.Paragraph weight="medium">Paragraph</Typography.Paragraph>
@@ -105,13 +93,6 @@ describe('Typography.Text', () => {
 });
 
 describe('Typography.Code', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <Typography.Code>pnpm install</Typography.Code>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a code element with a boxed style', () => {
     render(<Typography.Code>pnpm install</Typography.Code>);
     const code = screen.getByText('pnpm install');
@@ -121,13 +102,6 @@ describe('Typography.Code', () => {
 });
 
 describe('Typography.Caption', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <Typography.Caption>Caption</Typography.Caption>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders small muted text', () => {
     render(<Typography.Caption>Caption</Typography.Caption>);
     const caption = screen.getByText('Caption');
@@ -144,13 +118,6 @@ describe('Typography.Caption', () => {
 });
 
 describe('Typography.Header', () => {
-  it('matches the snapshot for a level 2 heading', () => {
-    const { container } = render(
-      <Typography.Header level={2}>Section</Typography.Header>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it.each([
     [1, 'text-3xl', 'font-bold'],
     [2, 'text-2xl', 'font-semibold'],

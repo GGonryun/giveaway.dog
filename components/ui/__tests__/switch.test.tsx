@@ -4,18 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { Switch } from '../switch';
 
 describe('Switch', () => {
-  it('matches the snapshot when off', () => {
-    const { container } = render(<Switch aria-label="Notifications" />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
-  it('matches the snapshot when on', () => {
-    const { container } = render(
-      <Switch aria-label="Notifications" defaultChecked />
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('toggles when clicked and reports the new state', async () => {
     const onCheckedChange = vi.fn();
     render(

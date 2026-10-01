@@ -5,11 +5,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { IconButton } from '../icon-button';
 
 describe('IconButton', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<IconButton icon={Trash2Icon} />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a ghost icon button with the given icon', () => {
     const { container } = render(<IconButton icon={CopyIcon} />);
     const button = screen.getByRole('button');

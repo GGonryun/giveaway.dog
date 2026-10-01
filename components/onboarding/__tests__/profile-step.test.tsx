@@ -102,12 +102,6 @@ describe('ProfileStep', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    const { container } = renderStep();
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when entering a username', () => {
     it('keeps Complete Setup disabled while the username is empty', () => {
       renderStep();

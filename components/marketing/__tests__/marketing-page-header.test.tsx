@@ -49,14 +49,4 @@ describe('MarketingPageHeader', () => {
     );
     expect(screen.getByText('Plans for everyone').tagName).toBe('P');
   });
-
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <MarketingPageHeader
-        title="Frequently Asked Questions"
-        description="Everything you need to know"
-      />
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

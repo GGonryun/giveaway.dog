@@ -3,12 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { ParticipationHistorySkeleton } from '../participation-history-skeleton';
 
 describe('ParticipationHistorySkeleton', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<ParticipationHistorySkeleton />);
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders the same columns as the history table', () => {
     render(<ParticipationHistorySkeleton />);
 

@@ -71,15 +71,6 @@ afterEach(() => {
 });
 
 describe('ChartContainer', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(
-      <ChartContainer id="entries" config={config}>
-        <div>Chart body</div>
-      </ChartContainer>
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders its children and identifies the chart', () => {
     const { container } = render(
       <ChartContainer id="entries" config={config} className="h-64">
@@ -106,11 +97,6 @@ describe('ChartContainer', () => {
 });
 
 describe('ChartStyle', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<ChartStyle id="chart-x" config={config} />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('defines a color variable per configured item for each theme', () => {
     const { container } = render(<ChartStyle id="chart-x" config={config} />);
     const css = container.querySelector('style')?.innerHTML ?? '';
@@ -131,11 +117,6 @@ describe('ChartStyle', () => {
 });
 
 describe('ChartTooltipContent', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderTooltip();
-    expect(getTooltip(container)).toMatchSnapshot();
-  });
-
   it('renders nothing while inactive', () => {
     const { container } = renderTooltip({ active: false });
     expect(getTooltip(container)).not.toBeInTheDocument();

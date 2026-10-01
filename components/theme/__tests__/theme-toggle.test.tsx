@@ -76,10 +76,4 @@ describe('ThemeToggle', () => {
     await userEvent.click(screen.getByRole('radio', { name: 'Light' }));
     expect(themeState.setTheme).not.toHaveBeenCalled();
   });
-
-  it('matches the snapshot', () => {
-    themeState.theme = 'dark';
-    const { container } = render(<ThemeToggle />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });

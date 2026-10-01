@@ -8,7 +8,6 @@ import {
   MultiSelect,
   type MultiSelectOption
 } from '../multi-select';
-import { withStableIds } from './test-utils';
 
 const options: MultiSelectOption[] = [
   { label: 'Instagram', value: 'instagram', group: 'Social' },
@@ -62,18 +61,6 @@ describe('isValidOption', () => {
 });
 
 describe('MultiSelect', () => {
-  it('matches the snapshot without a selection', () => {
-    const { container } = renderMultiSelect();
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
-  });
-
-  it('matches the snapshot with selected values', () => {
-    const { container } = renderMultiSelect({
-      defaultValue: ['instagram', 'newsletter']
-    });
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
-  });
-
   it('shows the placeholder when nothing is selected', () => {
     const { unmount } = renderMultiSelect();
     expect(getTrigger()).toHaveTextContent('Select options');

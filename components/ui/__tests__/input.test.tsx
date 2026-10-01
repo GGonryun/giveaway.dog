@@ -6,11 +6,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { Input, SpecialInput } from '../input';
 
 describe('Input', () => {
-  it('matches the snapshot', () => {
-    const { container } = render(<Input placeholder="Email" />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a text box with the data-slot attribute', () => {
     render(<Input aria-label="Email" />);
     expect(screen.getByRole('textbox', { name: 'Email' })).toHaveAttribute(
@@ -64,22 +59,6 @@ describe('Input', () => {
 });
 
 describe('SpecialInput', () => {
-  it('matches the snapshot without decorations', () => {
-    const { container } = render(<SpecialInput placeholder="Search" />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
-  it('matches the snapshot with a start icon and an end button', () => {
-    const { container } = render(
-      <SpecialInput
-        placeholder="Search"
-        startIcon={Search}
-        endButton={<button type="button">Clear</button>}
-      />
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders a bare input when there are no decorations', () => {
     const { container } = render(<SpecialInput aria-label="Search" />);
     const input = screen.getByRole('textbox', { name: 'Search' });

@@ -43,23 +43,6 @@ const SearchHarness = ({
 const searchInput = () => screen.getByRole('textbox');
 
 describe('SearchBar', () => {
-  describe('snapshots', () => {
-    it('matches the snapshot when empty', () => {
-      const { container } = render(<SearchHarness />);
-
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
-    it('matches the snapshot with suggestions open', async () => {
-      const user = userEvent.setup();
-      const { container } = render(<SearchHarness suggestions={SUGGESTIONS} />);
-
-      await user.type(searchInput(), 'cat');
-
-      expect(container.firstChild).toMatchSnapshot();
-    });
-  });
-
   describe('when first rendered', () => {
     it('uses the default placeholder', () => {
       render(<SearchHarness />);

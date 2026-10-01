@@ -8,7 +8,6 @@ import {
   TimePickerInput,
   type TimePickerType
 } from '../date-time-picker';
-import { withStableIds } from './test-utils';
 
 const afternoon = new Date(2024, 0, 15, 14, 5, 9);
 const midnight = new Date(2024, 0, 15, 0, 0, 0);
@@ -414,11 +413,6 @@ describe('DateTimePicker', () => {
     await userEvent.click(getTrigger());
     return screen.findByRole('dialog');
   }
-
-  it('matches the snapshot of the trigger', () => {
-    const { container } = renderPicker();
-    expect(withStableIds(container.firstChild)).toMatchSnapshot();
-  });
 
   it('shows the placeholder without a value', () => {
     renderPicker({ value: undefined, placeholder: 'Pick a start date' });

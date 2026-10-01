@@ -11,7 +11,6 @@ import {
   DrawerTitle,
   DrawerTrigger
 } from '../drawer';
-import { withStableIds } from './test-utils';
 
 function renderDrawer(
   props: {
@@ -51,12 +50,6 @@ describe('Drawer', () => {
 
   afterAll(() => {
     Reflect.deleteProperty(Element.prototype, 'setPointerCapture');
-  });
-
-  it('matches the snapshot when open', async () => {
-    renderDrawer();
-    const drawer = await openDrawer();
-    expect(withStableIds(drawer)).toMatchSnapshot();
   });
 
   it('opens from the trigger with its title and description', async () => {

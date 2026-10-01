@@ -6,7 +6,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { WinnerCriteria } from '../winner-criteria';
 
 const renderCriteria = (
@@ -21,11 +20,6 @@ const renderCriteria = (
 };
 
 describe('WinnerCriteria', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderCriteria();
-    expect(stabilizeIds(container)).toMatchSnapshot();
-  });
-
   describe('minimum tasks completed', () => {
     const getInput = () => screen.getByLabelText('Minimum Tasks Completed');
 

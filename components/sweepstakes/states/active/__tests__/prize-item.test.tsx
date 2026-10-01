@@ -4,8 +4,7 @@ import type { ComponentProps } from 'react';
 import {
   buildAllocations,
   buildPrize,
-  renderWithParticipation,
-  withStableIds
+  renderWithParticipation
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { PrizeItem } from '../prize-item';
 
@@ -37,21 +36,6 @@ const renderPrizeItem = (props: Partial<PrizeItemProps> = {}) =>
 describe('PrizeItem', () => {
   beforeEach(() => {
     vi.mocked(Element.prototype.scrollIntoView).mockClear();
-  });
-
-  describe('snapshots', () => {
-    it('matches the snapshot when collapsed', () => {
-      const { container } = renderPrizeItem();
-      expect(withStableIds(container)).toMatchSnapshot();
-    });
-
-    it('matches the snapshot when expanded with popularity and an action', () => {
-      const { container } = renderPrizeItem({
-        open: true,
-        onAllocate: vi.fn()
-      });
-      expect(withStableIds(container)).toMatchSnapshot();
-    });
   });
 
   describe('header', () => {

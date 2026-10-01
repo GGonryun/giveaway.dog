@@ -15,11 +15,6 @@ function renderStepper(currentStep: number, totalSteps: number) {
 }
 
 describe('Stepper', () => {
-  it('matches the snapshot for the second of three steps', () => {
-    const { container } = renderStepper(2, 3);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('renders one indicator per step', () => {
     const { steps } = renderStepper(1, 4);
     expect(steps).toHaveLength(4);

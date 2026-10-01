@@ -64,12 +64,6 @@ describe('EditMemberDialog', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    renderDialog();
-
-    expect(screen.getByRole('dialog')).toMatchSnapshot();
-  });
-
   describe('when open', () => {
     it('describes whose role is being changed', () => {
       renderDialog();

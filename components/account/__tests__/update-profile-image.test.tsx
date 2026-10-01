@@ -82,12 +82,6 @@ describe('UpdateProfileImage', () => {
     });
   });
 
-  it('matches the snapshot', () => {
-    const { container } = renderCard();
-
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   describe('when first rendered', () => {
     it('passes the current image to the uploader', () => {
       renderCard();

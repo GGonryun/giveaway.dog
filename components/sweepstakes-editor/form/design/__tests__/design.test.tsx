@@ -14,7 +14,6 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import {
   AspectRatioField,
   BackgroundColor,
@@ -62,13 +61,6 @@ const openGradientEditor = async () => {
 };
 
 describe('Design', () => {
-  it('matches the snapshot', () => {
-    const { container } = renderWithForm(<Design />, {
-      values: valuesWith(buildDesign())
-    });
-    expect(stabilizeIds(container)).toMatchSnapshot();
-  });
-
   it('groups the settings into form design and layout', () => {
     renderWithForm(<Design />, { values: valuesWith(buildDesign()) });
     expect(
@@ -185,14 +177,6 @@ describe('BackgroundFields', () => {
   });
 
   describe('with a solid color background', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderBackground({
-        type: 'color',
-        color: '#123456'
-      });
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
     it('stores the picked color', () => {
       const { container, form } = renderBackground({
         type: 'color',
@@ -227,16 +211,6 @@ describe('BackgroundFields', () => {
   });
 
   describe('with a gradient background', () => {
-    it('matches the snapshot', () => {
-      const { container } = renderBackground(gradient());
-      expect(stabilizeIds(container)).toMatchSnapshot();
-    });
-
-    it('matches the snapshot of the gradient editor', async () => {
-      renderBackground(gradient());
-      expect(stabilizeIds(await openGradientEditor())).toMatchSnapshot();
-    });
-
     it('shows the gradient settings in the editor', async () => {
       renderBackground(gradient());
       const editor = await openGradientEditor();

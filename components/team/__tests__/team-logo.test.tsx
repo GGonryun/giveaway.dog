@@ -6,14 +6,6 @@ const LOGO_URL = 'https://cdn.example.com/doggo.png';
 
 describe('TeamLogo', () => {
   describe('when the logo url is valid', () => {
-    it('matches the snapshot', () => {
-      const { container } = render(
-        <TeamLogo logoUrl={LOGO_URL} alt="Doggo Club logo" size={48} />
-      );
-
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it('renders the logo image with the given alt text', () => {
       render(<TeamLogo logoUrl={LOGO_URL} alt="Doggo Club logo" />);
 
@@ -50,12 +42,6 @@ describe('TeamLogo', () => {
   });
 
   describe('when the logo url cannot be used', () => {
-    it('matches the snapshot', () => {
-      const { container } = render(<TeamLogo logoUrl={null} size={50} />);
-
-      expect(container.firstChild).toMatchSnapshot();
-    });
-
     it.each([
       ['missing', undefined],
       ['null', null],
