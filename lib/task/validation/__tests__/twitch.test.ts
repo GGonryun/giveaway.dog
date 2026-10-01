@@ -113,6 +113,26 @@ describe('checkTwitchFollow', () => {
         AUTH_HEADERS
       );
     });
+
+    it('accepts a four-character username', async () => {
+      await followTwitch('https://twitch.tv/abcd');
+
+      expect(fetchMock).toHaveBeenNthCalledWith(
+        1,
+        'https://api.twitch.tv/helix/users?login=abcd',
+        AUTH_HEADERS
+      );
+    });
+
+    it('uses only the first 25 characters of a longer username', async () => {
+      await followTwitch(`https://twitch.tv/${'a'.repeat(25)}bbbbb`);
+
+      expect(fetchMock).toHaveBeenNthCalledWith(
+        1,
+        `https://api.twitch.tv/helix/users?login=${'a'.repeat(25)}`,
+        AUTH_HEADERS
+      );
+    });
   });
 
   it('propagates token refresh failures without calling Twitch', async () => {

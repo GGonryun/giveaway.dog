@@ -269,7 +269,7 @@ describe('checkSecretCodeV2', () => {
     });
 
     it('rejects with FORBIDDEN once the attempt count reaches 25', async () => {
-      prismaMock.taskProgress.upsert.mockResolvedValue(progress(30));
+      prismaMock.taskProgress.upsert.mockResolvedValue(progress(25));
 
       const error = await applicationError(
         checkSecretCodeV2(db, input(buildTaskV2(), { code: 'Alpha' }))
@@ -279,6 +279,17 @@ describe('checkSecretCodeV2', () => {
         code: 'FORBIDDEN',
         message: 'Maximum number of attempts reached for this task'
       });
+      expect(prismaMock.taskCompletion.findFirst).not.toHaveBeenCalled();
+    });
+
+    it('keeps rejecting with FORBIDDEN above 25 attempts', async () => {
+      prismaMock.taskProgress.upsert.mockResolvedValue(progress(30));
+
+      const error = await applicationError(
+        checkSecretCodeV2(db, input(buildTaskV2(), { code: 'Alpha' }))
+      );
+
+      expect(error.code).toBe('FORBIDDEN');
     });
 
     it('still accepts the 24th attempt', async () => {
@@ -287,6 +298,12 @@ describe('checkSecretCodeV2', () => {
       await expect(
         checkSecretCodeV2(db, input(buildTaskV2(), { code: 'Alpha' }))
       ).resolves.toBeUndefined();
+    });
+
+    it('counts the attempt even when the input data is invalid', async () => {
+      await applicationError(checkSecretCodeV2(db, input(buildTaskV2(), {})));
+
+      expect(prismaMock.taskProgress.upsert).toHaveBeenCalledTimes(1);
     });
   });
 

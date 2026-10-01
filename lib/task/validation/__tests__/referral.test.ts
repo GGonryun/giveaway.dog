@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Prisma } from '@prisma/client';
 import { validateReferral } from '../referral';
 import { prismaMock } from '@/test/prisma';
@@ -95,6 +95,11 @@ describe('validateReferral', () => {
     runtime.cookies.mockResolvedValue(cookieStore('REF123'));
     prismaMock.referral.findUnique.mockResolvedValue(buildReferral());
     prismaMock.referredUser.findUnique.mockResolvedValue(null);
+    vi.spyOn(console, 'info').mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   describe('when there is no referral code cookie', () => {
@@ -282,5 +287,181 @@ describe('validateReferral', () => {
 
     await expect(validate()).rejects.toThrow('db down');
     expect(runtime.deleteCookie).not.toHaveBeenCalled();
+  });
+
+  describe('logging', () => {
+    it('logs the submitted task when there is no referral code', async () => {
+      runtime.cookies.mockResolvedValue(cookieStore(undefined));
+
+      await validate();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] No referral code found in cookies',
+        {
+          userId: IDS.userId,
+          sweepstakesId: IDS.sweepstakesId,
+          taskId: 'task-submitted'
+        }
+      );
+    });
+
+    it('logs the completion count when the user already completed a task', async () => {
+      await validate([taskCompletion('task-a'), taskCompletion('task-b')]);
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] User already has completions, skipping referral',
+        {
+          userId: IDS.userId,
+          sweepstakesId: IDS.sweepstakesId,
+          referralCode: 'REF123',
+          completionsCount: 2
+        }
+      );
+    });
+
+    it('logs an unknown referral code', async () => {
+      prismaMock.referral.findUnique.mockResolvedValue(null);
+
+      await validate();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] Referral code not found in database',
+        {
+          userId: IDS.userId,
+          sweepstakesId: IDS.sweepstakesId,
+          referralCode: 'REF123'
+        }
+      );
+    });
+
+    it('logs both giveaways when the referral belongs to another giveaway', async () => {
+      prismaMock.referral.findUnique.mockResolvedValue(
+        buildReferral({ sweepstakesId: 'sweep-other' })
+      );
+
+      await validate();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] Referral code is for a different sweepstakes',
+        {
+          userId: IDS.userId,
+          participantSweepstakesId: IDS.sweepstakesId,
+          referralSweepstakesId: 'sweep-other',
+          referralCode: 'REF123'
+        }
+      );
+    });
+
+    it('logs a self-referral attempt', async () => {
+      prismaMock.referral.findUnique.mockResolvedValue(
+        buildReferral({ referrerUserId: IDS.userId })
+      );
+
+      await validate();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] User attempted to use their own referral code',
+        {
+          userId: IDS.userId,
+          sweepstakesId: IDS.sweepstakesId,
+          referralCode: 'REF123'
+        }
+      );
+    });
+
+    it('logs a repeated referral with the referral id', async () => {
+      prismaMock.referredUser.findUnique.mockResolvedValue({
+        id: 'referred-0',
+        referralId: 'referral-1',
+        userId: IDS.userId,
+        createdAt: FIXED_DATE
+      });
+
+      await validate();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] User already referred by this code',
+        {
+          userId: IDS.userId,
+          sweepstakesId: IDS.sweepstakesId,
+          referralCode: 'REF123',
+          referralId: 'referral-1'
+        }
+      );
+    });
+
+    it('logs the referral being processed with the current count and maximum', async () => {
+      prismaMock.referral.findUnique.mockResolvedValue(
+        buildReferral({ referredUsers: 1 })
+      );
+
+      await validate();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] Processing referral',
+        {
+          userId: IDS.userId,
+          sweepstakesId: IDS.sweepstakesId,
+          referralCode: 'REF123',
+          referralId: 'referral-1',
+          referrerUserId: 'user-referrer',
+          currentReferrals: 1,
+          maximum: 2
+        }
+      );
+    });
+
+    it('logs the new referral count after crediting the referrer', async () => {
+      prismaMock.referral.findUnique.mockResolvedValue(
+        buildReferral({ referredUsers: 1 })
+      );
+
+      await validate();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] Referral completed successfully',
+        {
+          userId: IDS.userId,
+          referrerUserId: 'user-referrer',
+          sweepstakesId: IDS.sweepstakesId,
+          referralCode: 'REF123',
+          newReferralCount: 2,
+          maximum: 2
+        }
+      );
+    });
+
+    it('logs that no completion was created at the maximum', async () => {
+      prismaMock.referral.findUnique.mockResolvedValue(
+        buildReferral({ referredUsers: 2 })
+      );
+
+      await validate();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] Maximum referrals reached, user added but no completion created',
+        {
+          userId: IDS.userId,
+          referrerUserId: 'user-referrer',
+          sweepstakesId: IDS.sweepstakesId,
+          referralCode: 'REF123',
+          currentReferrals: 2,
+          maximum: 2
+        }
+      );
+    });
+
+    it('logs an unlimited maximum as Infinity', async () => {
+      prismaMock.referral.findUnique.mockResolvedValue(
+        buildReferral({ config: referralConfig() })
+      );
+
+      await validate();
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] Processing referral',
+        expect.objectContaining({ currentReferrals: 0, maximum: Infinity })
+      );
+    });
   });
 });

@@ -186,6 +186,18 @@ describe('refineSweepstakeTasks', () => {
       ).toEqual([]);
     });
 
+    it('accepts an end date equal to the giveaway start', async () => {
+      expect(
+        await refine([timed(undefined, FORM_START.toISOString())])
+      ).toEqual([]);
+    });
+
+    it('accepts a start date equal to the giveaway end', async () => {
+      expect(await refine([timed(FORM_END.toISOString(), undefined)])).toEqual(
+        []
+      );
+    });
+
     it('reports an end date before the giveaway start', async () => {
       expect(
         await refine([timed(undefined, '2024-04-30T00:00:00.000Z')])

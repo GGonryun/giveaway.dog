@@ -112,6 +112,40 @@ describe('checkBonusTimed', () => {
       checkBonusTimed(timedTask({ endDate: END }))
     ).resolves.toBeUndefined();
   });
+
+  it('only enforces the start date when no end date is set', async () => {
+    vi.setSystemTime(new Date('2030-01-01T00:00:00.000Z'));
+
+    await expect(
+      checkBonusTimed(timedTask({ startDate: START }))
+    ).resolves.toBeUndefined();
+  });
+
+  it('rejects before the start date when only a start date is set', async () => {
+    vi.setSystemTime(new Date('2024-02-29T23:59:59.999Z'));
+
+    const error = await applicationError(
+      checkBonusTimed(timedTask({ startDate: START }))
+    );
+
+    expect(error).toMatchObject({
+      code: 'BAD_REQUEST',
+      message: 'This bonus timed task is not active yet.'
+    });
+  });
+
+  it('rejects after the end date when only an end date is set', async () => {
+    vi.setSystemTime(new Date('2024-03-31T00:00:00.001Z'));
+
+    const error = await applicationError(
+      checkBonusTimed(timedTask({ endDate: END }))
+    );
+
+    expect(error).toMatchObject({
+      code: 'BAD_REQUEST',
+      message: 'This bonus timed task has expired.'
+    });
+  });
 });
 
 describe('checkBonusLimited', () => {
