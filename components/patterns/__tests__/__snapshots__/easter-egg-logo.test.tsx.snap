@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EasterEggLogo > matches the snapshot after the easter egg is found 1`] = `
+<div>
+  <img
+    alt="Easter Egg"
+    class="mx-auto"
+    data-nimg="1"
+    decoding="async"
+    height="200"
+    loading="lazy"
+    src="/_next/image?url=%2Ftaki.png&w=640&q=75"
+    srcset="/_next/image?url=%2Ftaki.png&w=256&q=75 1x, /_next/image?url=%2Ftaki.png&w=640&q=75 2x"
+    style="color: transparent;"
+    width="200"
+  />
+</div>
+`;
+
+exports[`EasterEggLogo > matches the snapshot before the easter egg is found 1`] = `
+<div>
+  <img
+    alt="Default Team Logo"
+    class="mx-auto cursor-help rounded-md"
+    data-nimg="1"
+    decoding="async"
+    height="150"
+    loading="lazy"
+    src="/_next/image?url=https%3A%2F%2Fa8mwfsrzadqc10xo.public.blob.vercel-storage.com%2Ftaki.png&w=384&q=75"
+    srcset="/_next/image?url=https%3A%2F%2Fa8mwfsrzadqc10xo.public.blob.vercel-storage.com%2Ftaki.png&w=256&q=75 1x, /_next/image?url=https%3A%2F%2Fa8mwfsrzadqc10xo.public.blob.vercel-storage.com%2Ftaki.png&w=384&q=75 2x"
+    style="color: transparent;"
+    width="150"
+  />
+</div>
+`;

@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SwitchBox > matches the snapshot 1`] = `
+<div
+  class="rounded-lg border p-3 shadow-xs"
+>
+  Notify winners
+</div>
+`;

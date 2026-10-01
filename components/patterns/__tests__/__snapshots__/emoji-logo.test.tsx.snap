@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EmojiLogo > matches the snapshot 1`] = `
+<span
+  aria-label="dog face"
+  class="text-3xl"
+  role="img"
+>
+  🐶
+</span>
+`;

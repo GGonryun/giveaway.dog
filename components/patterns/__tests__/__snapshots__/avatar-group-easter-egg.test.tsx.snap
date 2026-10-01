@@ -1,0 +1,60 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AvatarGroupEasterEgg > matches the snapshot 1`] = `
+<div
+  class="flex flex-row -space-x-2"
+>
+  <button
+    class="cursor-pointer hover:z-10 transition-all"
+    type="button"
+  >
+    <span
+      class="relative flex shrink-0 overflow-hidden rounded-full border-4 border-background w-12 h-12"
+    >
+      <img
+        alt="EB"
+        class="aspect-square w-full h-full"
+        data-nimg="1"
+        decoding="async"
+        height="48"
+        loading="lazy"
+        src="/_next/image?url=%2Fhosts%2Febidi.jpg&w=96&q=75"
+        srcset="/_next/image?url=%2Fhosts%2Febidi.jpg&w=48&q=75 1x, /_next/image?url=%2Fhosts%2Febidi.jpg&w=96&q=75 2x"
+        style="color: transparent;"
+        width="48"
+      />
+      <span
+        class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+      >
+        EB
+      </span>
+    </span>
+  </button>
+  <button
+    class="cursor-pointer hover:z-10 transition-all"
+    type="button"
+  >
+    <span
+      class="relative flex shrink-0 overflow-hidden rounded-full border-4 border-background w-12 h-12"
+    >
+      <img
+        alt="KU"
+        class="aspect-square w-full h-full"
+        data-nimg="1"
+        decoding="async"
+        height="48"
+        loading="lazy"
+        src="/_next/image?url=%2Fhosts%2Fkurozzz.jpg&w=96&q=75"
+        srcset="/_next/image?url=%2Fhosts%2Fkurozzz.jpg&w=48&q=75 1x, /_next/image?url=%2Fhosts%2Fkurozzz.jpg&w=96&q=75 2x"
+        style="color: transparent;"
+        width="48"
+      />
+      <span
+        class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+      >
+        KU
+      </span>
+    </span>
+  </button>
+</div>
+`;

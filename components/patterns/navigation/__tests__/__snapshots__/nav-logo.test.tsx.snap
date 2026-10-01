@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`NavLogo > matches the snapshot 1`] = `
+<a
+  class="flex items-center gap-2"
+  href="/home"
+>
+  <span
+    aria-label="dog face"
+    class="text-3xl mb-1"
+    role="img"
+  >
+    🐶
+  </span>
+  <span
+    class="text-lg font-semibold"
+  >
+    Giveaway.dog
+  </span>
+</a>
+`;

@@ -1,0 +1,46 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MarketingHeader > matches the snapshot 1`] = `
+<div
+  class="flex flex-col items-center text-center gap-2"
+>
+  <h1
+    class="max-w-2xl font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter text-foreground text-balance"
+  >
+    Pick winners 
+    <span
+      class="text-primary"
+    >
+      fairly
+    </span>
+  </h1>
+  <div />
+  <p
+    class="text-muted-foreground text-base sm:text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto text-pretty"
+  >
+    Random, verified and transparent.
+  </p>
+  <div
+    class="mt-3 sm:mt-4 md:mt-5 lg:mt-6 mb-0 sm:mb-1 md:mb-2"
+  >
+    <div
+      class="flex w-full flex-col justify-center gap-2 sm:flex-row"
+    >
+      <a
+        class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-14 rounded-full text-lg px-12 has-[>svg]:px-8 w-full sm:w-auto"
+        data-slot="button"
+        href="/browse"
+      >
+        Giveaways
+      </a>
+      <a
+        class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-14 rounded-full text-lg px-12 has-[>svg]:px-8 w-full sm:w-auto"
+        data-slot="button"
+        href="/demo/sweepstakes"
+      >
+        Try it for free
+      </a>
+    </div>
+  </div>
+</div>
+`;

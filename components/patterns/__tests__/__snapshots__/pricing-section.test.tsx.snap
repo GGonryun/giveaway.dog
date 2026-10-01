@@ -1,0 +1,1464 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PricingSection > matches the snapshot when billed monthly 1`] = `
+<section
+  class="bg-linear-to-b from-primary/12 to-background w-full flex items-center justify-center"
+  id="pricing"
+>
+  <div
+    class="container mx-auto px-4 py-16 md:py-24"
+  >
+    <div
+      class="text-center mb-12 relative"
+    >
+      <div
+        class="flex flex-col items-center text-center gap-2"
+      >
+        <h1
+          class="max-w-2xl font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter text-foreground text-balance"
+        >
+          Get more views 
+          <span
+            class="text-primary"
+          >
+            with less effort
+          </span>
+        </h1>
+        <div />
+        <p
+          class="text-muted-foreground text-base sm:text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto text-pretty"
+        >
+          Flexible pricing options for creators of all sizes.
+        </p>
+      </div>
+    </div>
+    <div
+      class="flex justify-center mb-8"
+    >
+      <div
+        class="relative"
+      >
+        <div
+          class="inline-flex items-center rounded-lg border bg-muted p-1"
+        >
+          <button
+            class="px-8 py-2 rounded-md text-sm font-medium transition-colors bg-background shadow-sm"
+          >
+            Monthly
+          </button>
+          <div
+            class="relative"
+          >
+            <span
+              class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90 absolute -top-3 left-16 text-xs"
+              data-slot="badge"
+            >
+              Save 
+              25
+              %
+            </span>
+            <button
+              class="px-8 py-2 rounded-md text-sm font-medium transition-colors text-muted-foreground hover:text-foreground"
+            >
+              Yearly
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8"
+    >
+      <div
+        class="bg-card text-card-foreground gap-2 rounded-xl border p-4 flex flex-col relative shadow-xl"
+        data-slot="card"
+      >
+        <div
+          class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 pb-2 pt-6 lg:pt-8"
+          data-slot="card-header"
+        >
+          <div
+            class="flex items-center gap-2 mb-2"
+          >
+            <h3
+              class="text-xl lg:text-2xl font-bold"
+            >
+              Creator
+            </h3>
+            <span
+              class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90 text-xs"
+              data-slot="badge"
+            >
+              Beta
+            </span>
+          </div>
+          <p
+            class="font-normal text-sm text-muted-foreground"
+          >
+            Best for small creators
+          </p>
+          <div
+            class="mt-4 min-h-18.75"
+          >
+            <div
+              class="text-4xl lg:text-5xl font-bold"
+            >
+              Free
+            </div>
+            <p
+              class="font-normal text-sm text-muted-foreground mt-1"
+            >
+              No credit card required
+            </p>
+          </div>
+        </div>
+        <div
+          class="px-4 mt-0 pt-0 flex-1 flex flex-col"
+          data-slot="card-content"
+        >
+          <div
+            class="space-y-2.5 lg:space-y-3 flex-1"
+          >
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                1 team
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                3 seats
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Up to 3 concurrent giveaways
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                10 giveaways a month
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                All entry methods enabled
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Up to 10 entry methods per giveaway
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Unlisted giveaways only
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Up to 10 integrations
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Unlimited participants
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Human support
+              </div>
+            </div>
+          </div>
+          <a
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-10 rounded-md px-6 has-[>svg]:px-4 w-full mt-4 lg:mt-6"
+            data-slot="button"
+            href="/login"
+          >
+            Get Started for Free
+             
+          </a>
+          <p
+            class="text-xs text-muted-foreground text-center mt-2"
+          >
+            Try it now!
+          </p>
+        </div>
+      </div>
+      <div
+        class="bg-card text-card-foreground gap-2 rounded-xl p-4 flex flex-col relative shadow-xl border-2 border-primary"
+        data-slot="card"
+      >
+        <div
+          class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 pb-2 pt-6 lg:pt-8"
+          data-slot="card-header"
+        >
+          <div
+            class="flex items-center gap-2 mb-2"
+          >
+            <h3
+              class="text-xl lg:text-2xl font-bold"
+            >
+              Pro
+            </h3>
+            <span
+              class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90 text-xs"
+              data-slot="badge"
+            >
+              Best deal
+            </span>
+          </div>
+          <p
+            class="font-normal text-sm text-muted-foreground"
+          >
+            Best for bigger brands
+          </p>
+          <div
+            class="mt-4 min-h-18.75"
+          >
+            <div>
+              <div
+                class="flex items-baseline gap-2 flex-wrap"
+              >
+                <span
+                  class="text-4xl lg:text-5xl font-bold"
+                >
+                  $
+                  20
+                </span>
+                <span
+                  class="text-lg text-muted-foreground"
+                >
+                  /month
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="px-4 mt-0 pt-0 flex-1 flex flex-col"
+          data-slot="card-content"
+        >
+          <div
+            class="space-y-2.5 lg:space-y-3 flex-1"
+          >
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                <span
+                  class="bg-linear-to-r from-primary via-black dark:via-white to-primary bg-clip-text text-transparent font-bold animate-gradient"
+                >
+                  Unlimited giveaways
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                <span
+                  class="bg-linear-to-r from-primary via-black dark:via-white to-primary bg-clip-text text-transparent font-bold animate-gradient"
+                >
+                  Unlimited entry methods
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                1 team
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Unlimited seats
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                All entry methods
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Public giveaways
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Verified badge
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                More design customization
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Unlimited integrations
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Human support
+              </div>
+            </div>
+          </div>
+          <a
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-10 rounded-md px-6 has-[>svg]:px-4 w-full mt-4 lg:mt-6"
+            data-slot="button"
+            href="/login"
+          >
+            Contact Us
+             
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-arrow-right"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5 12h14"
+              />
+              <path
+                d="m12 5 7 7-7 7"
+              />
+            </svg>
+          </a>
+          <p
+            class="text-xs text-muted-foreground text-center mt-2"
+          >
+            Billed monthly or yearly
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+`;
+
+exports[`PricingSection > matches the snapshot when billed yearly 1`] = `
+<section
+  class="bg-linear-to-b from-primary/12 to-background w-full flex items-center justify-center"
+  id="pricing"
+>
+  <div
+    class="container mx-auto px-4 py-16 md:py-24"
+  >
+    <div
+      class="text-center mb-12 relative"
+    >
+      <div
+        class="flex flex-col items-center text-center gap-2"
+      >
+        <h1
+          class="max-w-2xl font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter text-foreground text-balance"
+        >
+          Get more views 
+          <span
+            class="text-primary"
+          >
+            with less effort
+          </span>
+        </h1>
+        <div />
+        <p
+          class="text-muted-foreground text-base sm:text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto text-pretty"
+        >
+          Flexible pricing options for creators of all sizes.
+        </p>
+      </div>
+    </div>
+    <div
+      class="flex justify-center mb-8"
+    >
+      <div
+        class="relative"
+      >
+        <div
+          class="inline-flex items-center rounded-lg border bg-muted p-1"
+        >
+          <button
+            class="px-8 py-2 rounded-md text-sm font-medium transition-colors text-muted-foreground hover:text-foreground"
+          >
+            Monthly
+          </button>
+          <div
+            class="relative"
+          >
+            <span
+              class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90 absolute -top-3 left-16 text-xs"
+              data-slot="badge"
+            >
+              Save 
+              25
+              %
+            </span>
+            <button
+              class="px-8 py-2 rounded-md text-sm font-medium transition-colors bg-background shadow-sm"
+            >
+              Yearly
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8"
+    >
+      <div
+        class="bg-card text-card-foreground gap-2 rounded-xl border p-4 flex flex-col relative shadow-xl"
+        data-slot="card"
+      >
+        <div
+          class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 pb-2 pt-6 lg:pt-8"
+          data-slot="card-header"
+        >
+          <div
+            class="flex items-center gap-2 mb-2"
+          >
+            <h3
+              class="text-xl lg:text-2xl font-bold"
+            >
+              Creator
+            </h3>
+            <span
+              class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90 text-xs"
+              data-slot="badge"
+            >
+              Beta
+            </span>
+          </div>
+          <p
+            class="font-normal text-sm text-muted-foreground"
+          >
+            Best for small creators
+          </p>
+          <div
+            class="mt-4 min-h-22.5"
+          >
+            <div
+              class="text-4xl lg:text-5xl font-bold"
+            >
+              Free
+            </div>
+            <p
+              class="font-normal text-sm text-muted-foreground mt-1"
+            >
+              No credit card required
+            </p>
+          </div>
+        </div>
+        <div
+          class="px-4 mt-0 pt-0 flex-1 flex flex-col"
+          data-slot="card-content"
+        >
+          <div
+            class="space-y-2.5 lg:space-y-3 flex-1"
+          >
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                1 team
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                3 seats
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Up to 3 concurrent giveaways
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                10 giveaways a month
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                All entry methods enabled
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Up to 10 entry methods per giveaway
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Unlisted giveaways only
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Up to 10 integrations
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Unlimited participants
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Human support
+              </div>
+            </div>
+          </div>
+          <a
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-10 rounded-md px-6 has-[>svg]:px-4 w-full mt-4 lg:mt-6"
+            data-slot="button"
+            href="/login"
+          >
+            Get Started for Free
+             
+          </a>
+          <p
+            class="text-xs text-muted-foreground text-center mt-2"
+          >
+            Try it now!
+          </p>
+        </div>
+      </div>
+      <div
+        class="bg-card text-card-foreground gap-2 rounded-xl p-4 flex flex-col relative shadow-xl border-2 border-primary"
+        data-slot="card"
+      >
+        <span
+          class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90 absolute top-4 right-4 text-xs z-10"
+          data-slot="badge"
+        >
+          25
+          % OFF
+        </span>
+        <div
+          class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 pb-2 pt-6 lg:pt-8"
+          data-slot="card-header"
+        >
+          <div
+            class="flex items-center gap-2 mb-2"
+          >
+            <h3
+              class="text-xl lg:text-2xl font-bold"
+            >
+              Pro
+            </h3>
+            <span
+              class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90 text-xs"
+              data-slot="badge"
+            >
+              Best deal
+            </span>
+          </div>
+          <p
+            class="font-normal text-sm text-muted-foreground"
+          >
+            Best for bigger brands
+          </p>
+          <div
+            class="mt-4 min-h-22.5"
+          >
+            <div>
+              <div
+                class="flex items-baseline gap-2 flex-wrap"
+              >
+                <span
+                  class="text-4xl lg:text-5xl font-bold"
+                >
+                  $
+                  15
+                </span>
+                <span
+                  class="text-lg text-muted-foreground"
+                >
+                  /month
+                </span>
+              </div>
+            </div>
+            <p
+              class="font-normal text-sm text-muted-foreground mt-1"
+            >
+              Billed as $180.00/year
+            </p>
+            <p
+              class="text-primary text-sm font-medium mt-0.5"
+            >
+              Save $
+              60.00
+              /year (
+              25
+              % off)
+            </p>
+          </div>
+        </div>
+        <div
+          class="px-4 mt-0 pt-0 flex-1 flex flex-col"
+          data-slot="card-content"
+        >
+          <div
+            class="space-y-2.5 lg:space-y-3 flex-1"
+          >
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                <span
+                  class="bg-linear-to-r from-primary via-black dark:via-white to-primary bg-clip-text text-transparent font-bold animate-gradient"
+                >
+                  Unlimited giveaways
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                <span
+                  class="bg-linear-to-r from-primary via-black dark:via-white to-primary bg-clip-text text-transparent font-bold animate-gradient"
+                >
+                  Unlimited entry methods
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                1 team
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Unlimited seats
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                All entry methods
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Public giveaways
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Verified badge
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                More design customization
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Unlimited integrations
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-3"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-check w-5 h-5 text-primary shrink-0 mt-0.5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 6 9 17l-5-5"
+                />
+              </svg>
+              <div>
+                Human support
+              </div>
+            </div>
+          </div>
+          <a
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-10 rounded-md px-6 has-[>svg]:px-4 w-full mt-4 lg:mt-6"
+            data-slot="button"
+            href="/login"
+          >
+            Contact Us
+             
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-arrow-right"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5 12h14"
+              />
+              <path
+                d="m12 5 7 7-7 7"
+              />
+            </svg>
+          </a>
+          <p
+            class="text-xs text-muted-foreground text-center mt-2"
+          >
+            Billed monthly or yearly
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+`;

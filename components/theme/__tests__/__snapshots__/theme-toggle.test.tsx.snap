@@ -1,0 +1,130 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ThemeToggle > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header auto-rows-min grid-rows-[auto_auto] px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 flex justify-between items-center"
+    data-slot="card-header"
+  >
+    <div>
+      <div
+        class="leading-none font-semibold"
+        data-slot="card-title"
+      >
+        Appearance
+      </div>
+      <div
+        class="text-muted-foreground text-sm mt-1"
+        data-slot="card-description"
+      >
+        Choose how the app looks on this device
+      </div>
+    </div>
+  </div>
+  <div
+    class="px-4 pt-2"
+    data-slot="card-content"
+  >
+    <div
+      aria-required="false"
+      class="grid gap-2 max-w-2xl"
+      dir="ltr"
+      role="radiogroup"
+      style="outline: none;"
+      tabindex="0"
+    >
+      <div
+        class="flex items-center space-x-2"
+      >
+        <button
+          aria-checked="false"
+          class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          data-radix-collection-item=""
+          data-state="unchecked"
+          id="light"
+          role="radio"
+          tabindex="-1"
+          type="button"
+          value="light"
+        />
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          for="light"
+        >
+          Light
+        </label>
+      </div>
+      <div
+        class="flex items-center space-x-2"
+      >
+        <button
+          aria-checked="true"
+          class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          data-radix-collection-item=""
+          data-state="checked"
+          id="dark"
+          role="radio"
+          tabindex="-1"
+          type="button"
+          value="dark"
+        >
+          <span
+            class="flex items-center justify-center"
+            data-state="checked"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle h-2.5 w-2.5 fill-current text-current"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+            </svg>
+          </span>
+        </button>
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          for="dark"
+        >
+          Dark
+        </label>
+      </div>
+      <div
+        class="flex items-center space-x-2"
+      >
+        <button
+          aria-checked="false"
+          class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          data-radix-collection-item=""
+          data-state="unchecked"
+          id="system"
+          role="radio"
+          tabindex="-1"
+          type="button"
+          value="system"
+        />
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          for="system"
+        >
+          System
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,551 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EmailVerification > after the verification email is sent > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="px-4"
+    data-slot="card-content"
+  >
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="text-center"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-mail-check h-12 w-12 min-w-12 mx-auto mb-4 text-green-500"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8"
+          />
+          <path
+            d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"
+          />
+          <path
+            d="m16 19 2 2 4-4"
+          />
+        </svg>
+        <h3
+          class="text-lg font-semibold mb-2"
+        >
+          Check Your Email
+        </h3>
+        <p
+          class="text-muted-foreground mb-4"
+        >
+          We've sent a verification email to:
+        </p>
+        <p
+          class="font-medium text-foreground mb-4"
+        >
+          ada@example.com
+        </p>
+        <p
+          class="text-sm text-muted-foreground mb-6"
+        >
+          Click the verification link in the email to complete your email verification. The link will expire in 15 minutes.
+        </p>
+        <div
+          class="flex flex-col gap-2"
+        >
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-9 px-4 py-2 has-[>svg]:px-3 w-full"
+            data-slot="button"
+          >
+            Resend Email
+          </button>
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 h-9 px-4 py-2 has-[>svg]:px-3 w-full text-sm"
+            data-slot="button"
+          >
+            Use a different email
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`EmailVerification > when the email is not verified > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header auto-rows-min grid-rows-[auto_auto] px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 flex justify-between items-center"
+    data-slot="card-header"
+  >
+    <div>
+      <div
+        class="leading-none font-semibold"
+        data-slot="card-title"
+      >
+        Email Verification
+      </div>
+      <div
+        class="text-muted-foreground text-sm mt-1"
+        data-slot="card-description"
+      >
+        Manage your email address and verification status
+      </div>
+    </div>
+  </div>
+  <div
+    class="px-4 pt-2"
+    data-slot="card-content"
+  >
+    <div
+      class="space-y-2"
+    >
+      <div
+        class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 text-destructive [&>svg]:text-current bg-destructive/10 border-destructive/50"
+        data-slot="alert"
+        role="alert"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-shield-alert h-4 w-4"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+          />
+          <path
+            d="M12 8v4"
+          />
+          <path
+            d="M12 16h.01"
+          />
+        </svg>
+        <div
+          class="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight"
+          data-slot="alert-title"
+        >
+          Email Verification Required
+        </div>
+        <div
+          class="col-start-2 justify-items-start gap-1 text-sm [&_p]:leading-relaxed flex items-center justify-between"
+          data-slot="alert-description"
+        >
+          <span>
+            Please verify your email address to access all features.
+          </span>
+          <button
+            class="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
+            data-slot="button"
+          >
+            Send Verification
+          </button>
+        </div>
+      </div>
+      <div
+        class="space-y-2"
+      >
+        <div
+          class="relative"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-mail absolute left-3 top-3 h-4 w-4 text-muted-foreground"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"
+            />
+            <rect
+              height="16"
+              rx="2"
+              width="20"
+              x="2"
+              y="4"
+            />
+          </svg>
+          <input
+            class="file:text-foreground placeholder:text-muted-foreground bg-white selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-white file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive pl-10 pr-10 truncate"
+            data-slot="input"
+            id="email"
+            name="email"
+            placeholder="Enter your email address"
+            type="email"
+            value="ada@example.com"
+          />
+        </div>
+      </div>
+      <div
+        class="space-y-2"
+      >
+        <div
+          class="flex flex-col sm:flex-row gap-2"
+        >
+          <button
+            class="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 w-full sm:w-fit"
+            data-slot="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-save"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"
+              />
+              <path
+                d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"
+              />
+              <path
+                d="M7 3v4a1 1 0 0 0 1 1h7"
+              />
+            </svg>
+            Update Email
+          </button>
+        </div>
+        <p
+          class="text-xs text-muted-foreground"
+        >
+          A verification email will be sent to your new email address.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`EmailVerification > when the email is verified > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header auto-rows-min grid-rows-[auto_auto] px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 flex justify-between items-center"
+    data-slot="card-header"
+  >
+    <div>
+      <div
+        class="leading-none font-semibold"
+        data-slot="card-title"
+      >
+        Email Verification
+      </div>
+      <div
+        class="text-muted-foreground text-sm mt-1"
+        data-slot="card-description"
+      >
+        Manage your email address and verification status
+      </div>
+    </div>
+  </div>
+  <div
+    class="px-4 pt-2"
+    data-slot="card-content"
+  >
+    <div
+      class="space-y-2"
+    >
+      <div
+        class="w-full flex flex-col sm:flex-row gap-4 sm:gap-2 items-center justify-between p-2 border rounded-lg"
+      >
+        <div
+          class="flex items-center gap-3 min-w-0 w-full sm:flex-1"
+        >
+          <div
+            class="w-12 h-12 flex-shrink-0 bg-background flex items-center justify-center"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-mail w-8 h-8 text-foreground"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"
+              />
+              <rect
+                height="16"
+                rx="2"
+                width="20"
+                x="2"
+                y="4"
+              />
+            </svg>
+          </div>
+          <div
+            class="flex flex-col min-w-0 flex-1"
+          >
+            <div
+              class="font-medium truncate"
+            >
+              Email
+            </div>
+            <div
+              class="text-sm text-muted-foreground truncate w-full overflow-hidden whitespace-nowrap"
+            >
+              <span
+                class="hidden sm:inline"
+              >
+                Connected • 
+              </span>
+              <span>
+                ada@example.com
+              </span>
+            </div>
+          </div>
+        </div>
+        <button
+          class="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 w-full sm:w-[125px] flex-shrink-0"
+          data-slot="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-unlink"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m18.84 12.25 1.72-1.71h-.02a5.004 5.004 0 0 0-.12-7.07 5.006 5.006 0 0 0-6.95 0l-1.72 1.71"
+            />
+            <path
+              d="m5.17 11.75-1.71 1.71a5.004 5.004 0 0 0 .12 7.07 5.006 5.006 0 0 0 6.95 0l1.71-1.71"
+            />
+            <line
+              x1="8"
+              x2="8"
+              y1="2"
+              y2="5"
+            />
+            <line
+              x1="2"
+              x2="5"
+              y1="8"
+              y2="8"
+            />
+            <line
+              x1="16"
+              x2="16"
+              y1="19"
+              y2="22"
+            />
+            <line
+              x1="19"
+              x2="22"
+              y1="16"
+              y2="16"
+            />
+          </svg>
+          Change
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`EmailVerification > when the user has no email > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header auto-rows-min grid-rows-[auto_auto] px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 flex justify-between items-center"
+    data-slot="card-header"
+  >
+    <div>
+      <div
+        class="leading-none font-semibold"
+        data-slot="card-title"
+      >
+        Email Verification
+      </div>
+      <div
+        class="text-muted-foreground text-sm mt-1"
+        data-slot="card-description"
+      >
+        Manage your email address and verification status
+      </div>
+    </div>
+  </div>
+  <div
+    class="px-4 pt-2"
+    data-slot="card-content"
+  >
+    <div
+      class="space-y-2"
+    >
+      <div
+        class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 text-destructive [&>svg]:text-current bg-destructive/10 border-destructive/50"
+        data-slot="alert"
+        role="alert"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-triangle-alert h-4 w-4"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+          />
+          <path
+            d="M12 9v4"
+          />
+          <path
+            d="M12 17h.01"
+          />
+        </svg>
+        <div
+          class="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight"
+          data-slot="alert-title"
+        >
+          Email Required
+        </div>
+        <div
+          class="col-start-2 grid justify-items-start gap-1 text-sm [&_p]:leading-relaxed"
+          data-slot="alert-description"
+        >
+          Please add and verify an email address to participate in this giveaway.
+        </div>
+      </div>
+      <div
+        class="space-y-2"
+      >
+        <div
+          class="relative"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-mail absolute left-3 top-3 h-4 w-4 text-muted-foreground"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"
+            />
+            <rect
+              height="16"
+              rx="2"
+              width="20"
+              x="2"
+              y="4"
+            />
+          </svg>
+          <input
+            class="file:text-foreground placeholder:text-muted-foreground bg-white selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-white file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive pl-10 pr-10 truncate"
+            data-slot="input"
+            id="email"
+            name="email"
+            placeholder="Enter your email address"
+            type="email"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="space-y-2"
+      >
+        <div
+          class="flex flex-col sm:flex-row gap-2"
+        >
+          <button
+            class="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 w-full sm:w-fit"
+            data-slot="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-plus"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5 12h14"
+              />
+              <path
+                d="M12 5v14"
+              />
+            </svg>
+            Add Email
+          </button>
+        </div>
+        <p
+          class="text-xs text-muted-foreground"
+        >
+          A verification email will be sent to your new email address.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;

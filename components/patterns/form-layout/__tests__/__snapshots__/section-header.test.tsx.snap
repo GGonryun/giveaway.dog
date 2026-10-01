@@ -1,0 +1,42 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`UnifiedSectionHeader > matches the snapshot 1`] = `
+<div>
+  <div
+    class="sticky top-0 z-10 bg-background flex items-center justify-between p-2 sm:p-4 border-b"
+  >
+    <div
+      class="flex flex-col gap-2 w-full"
+    >
+      <div
+        class="flex justify-between items-center grow"
+      >
+        <div
+          class="flex flex-col"
+        >
+          <h2
+            class="text-lg sm:text-xl font-semibold"
+          >
+            Prizes
+          </h2>
+          <p
+            class="text-sm sm:text-base text-muted-foreground"
+          >
+            What winners receive
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex flex-col gap-2 p-2 sm:p-4"
+  >
+    <p>
+      First prize
+    </p>
+    <p>
+      Second prize
+    </p>
+  </div>
+</div>
+`;
