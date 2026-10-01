@@ -1,9 +1,13 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { toUniquePrizeDraw, toDuplicatePrizeDraw } from '../selection';
 import type { ExpandedEligibleTaskCompletion } from '../completions';
 import type { PrizeSlot, DrawInfo } from '../slots';
 import type { EligibleTaskCompletion } from '@/lib/task/queries';
 import type { Prisma } from '@prisma/client';
+import {
+  buildAllocation,
+  buildExpandedCompletion
+} from './fixtures-sweepstakes-winners-email';
 
 const createMockCompletion = (
   userId: number,
@@ -693,6 +697,256 @@ describe('toDuplicatePrizeDraw', () => {
       for (const participantId of prize2Winners) {
         expect(['participant-2', 'participant-3']).toContain(participantId);
       }
+    });
+  });
+});
+
+describe('prize draw characterization', () => {
+  const criteria = (
+    overrides: Partial<Parameters<typeof toUniquePrizeDraw>[0]['criteria']> = {}
+  ) => ({
+    minQualityScore: 0,
+    minTasksCompleted: 0,
+    allowMultipleWins: false,
+    allowUserSelection: false,
+    externalPlatforms: null,
+    ...overrides
+  });
+
+  const alice = buildExpandedCompletion({ id: 'c-alice', userId: 'alice' });
+  const alice2 = buildExpandedCompletion({ id: 'c-alice-2', userId: 'alice' });
+  const bob = buildExpandedCompletion({ id: 'c-bob', userId: 'bob' });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  describe('toUniquePrizeDraw', () => {
+    it('returns no draws when there are no slots', () => {
+      expect(
+        toUniquePrizeDraw({
+          slots: [],
+          draws: [],
+          criteria: criteria(),
+          completions: [alice],
+          allocations: []
+        })
+      ).toEqual([]);
+    });
+
+    it('builds a winner create input with a generated id for each slot', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+
+      const result = toUniquePrizeDraw({
+        slots: [{ prizeId: 'p-1' }],
+        draws: [],
+        criteria: criteria(),
+        completions: [alice, bob],
+        allocations: []
+      });
+
+      expect(result).toEqual([
+        {
+          id: expect.any(String),
+          prizeId: 'p-1',
+          result: 'WINNER',
+          taskCompletionId: 'c-alice'
+        }
+      ]);
+    });
+
+    it('excludes every completion of a user that already won in the same call', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+
+      const result = toUniquePrizeDraw({
+        slots: [{ prizeId: 'p-1' }, { prizeId: 'p-2' }],
+        draws: [],
+        criteria: criteria(),
+        completions: [alice, alice2, bob],
+        allocations: []
+      });
+
+      expect(result.map((d) => d.taskCompletionId)).toEqual([
+        'c-alice',
+        'c-bob'
+      ]);
+    });
+
+    it('returns no draws when every user was already drawn before', () => {
+      expect(
+        toUniquePrizeDraw({
+          slots: [{ prizeId: 'p-1' }],
+          draws: [
+            { drawId: 'd-1', userId: 'alice' },
+            { drawId: 'd-2', userId: 'bob' }
+          ],
+          criteria: criteria(),
+          completions: [alice, bob],
+          allocations: []
+        })
+      ).toEqual([]);
+    });
+
+    it('weights the pick by completion value', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5);
+      const light = buildExpandedCompletion({ id: 'c-light', userId: 'u1' });
+      const heavy = buildExpandedCompletion({
+        id: 'c-heavy',
+        userId: 'u2',
+        value: 4
+      });
+
+      const result = toUniquePrizeDraw({
+        slots: [{ prizeId: 'p-1' }],
+        draws: [],
+        criteria: criteria(),
+        completions: [light, heavy],
+        allocations: []
+      });
+
+      expect(result[0].taskCompletionId).toBe('c-heavy');
+    });
+
+    it('ignores allocations when user selection is disabled', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+
+      const result = toUniquePrizeDraw({
+        slots: [{ prizeId: 'p-1' }],
+        draws: [],
+        criteria: criteria({ allowUserSelection: false }),
+        completions: [alice],
+        allocations: [buildAllocation('participant-alice', 'p-other')]
+      });
+
+      expect(result).toHaveLength(1);
+    });
+
+    it('throws when every remaining completion has zero value', () => {
+      expect(() =>
+        toUniquePrizeDraw({
+          slots: [{ prizeId: 'p-1' }],
+          draws: [],
+          criteria: criteria(),
+          completions: [
+            buildExpandedCompletion({ id: 'c-zero', userId: 'u', value: 0 })
+          ],
+          allocations: []
+        })
+      ).toThrow('Total weight must be greater than 0');
+    });
+
+    it('can pick a zero value completion that precedes a positive one', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+      const zero = buildExpandedCompletion({
+        id: 'c-zero',
+        userId: 'u-zero',
+        value: 0
+      });
+      const positive = buildExpandedCompletion({
+        id: 'c-positive',
+        userId: 'u-positive',
+        value: 1
+      });
+
+      const result = toUniquePrizeDraw({
+        slots: [{ prizeId: 'p-1' }],
+        draws: [],
+        criteria: criteria(),
+        completions: [zero, positive],
+        allocations: []
+      });
+
+      expect(result[0].taskCompletionId).toBe('c-zero');
+    });
+  });
+
+  describe('toDuplicatePrizeDraw', () => {
+    it('returns no draws when there are no slots', () => {
+      expect(
+        toDuplicatePrizeDraw({
+          slots: [],
+          draws: [],
+          criteria: criteria({ allowMultipleWins: true }),
+          completions: [alice],
+          allocations: []
+        })
+      ).toEqual([]);
+    });
+
+    it('lets the same completion win every slot', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+
+      const result = toDuplicatePrizeDraw({
+        slots: [{ prizeId: 'p-1' }, { prizeId: 'p-2' }],
+        draws: [],
+        criteria: criteria({ allowMultipleWins: true }),
+        completions: [alice, bob],
+        allocations: []
+      });
+
+      expect(result).toEqual([
+        {
+          id: expect.any(String),
+          prizeId: 'p-1',
+          result: 'WINNER',
+          taskCompletionId: 'c-alice'
+        },
+        {
+          id: expect.any(String),
+          prizeId: 'p-2',
+          result: 'WINNER',
+          taskCompletionId: 'c-alice'
+        }
+      ]);
+    });
+
+    it('does not exclude users that were previously drawn', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+
+      const result = toDuplicatePrizeDraw({
+        slots: [{ prizeId: 'p-1' }],
+        draws: [{ drawId: 'd-1', userId: 'alice' }],
+        criteria: criteria({ allowMultipleWins: true }),
+        completions: [alice],
+        allocations: []
+      });
+
+      expect(result[0].taskCompletionId).toBe('c-alice');
+    });
+
+    it('only considers allocated participants for each slot when user selection is enabled', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+
+      const result = toDuplicatePrizeDraw({
+        slots: [{ prizeId: 'p-1' }, { prizeId: 'p-2' }],
+        draws: [],
+        criteria: criteria({ allowUserSelection: true }),
+        completions: [alice, bob],
+        allocations: [buildAllocation('participant-bob', 'p-2')]
+      });
+
+      expect(result).toEqual([
+        {
+          id: expect.any(String),
+          prizeId: 'p-2',
+          result: 'WINNER',
+          taskCompletionId: 'c-bob'
+        }
+      ]);
+    });
+
+    it('throws when every eligible completion has zero value', () => {
+      expect(() =>
+        toDuplicatePrizeDraw({
+          slots: [{ prizeId: 'p-1' }],
+          draws: [],
+          criteria: criteria({ allowMultipleWins: true }),
+          completions: [
+            buildExpandedCompletion({ id: 'c-zero', userId: 'u', value: 0 })
+          ],
+          allocations: []
+        })
+      ).toThrow('Total weight must be greater than 0');
     });
   });
 });

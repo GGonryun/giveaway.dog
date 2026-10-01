@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   buildWeightedIndex,
   pickWeightedIndex,
@@ -546,5 +546,53 @@ describe('Edge Cases and Error Handling', () => {
 
     const results = pickUniqueWeighted(items, -1);
     expect(results).toEqual([]);
+  });
+});
+
+describe('zero weight index alignment', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('returns a zero weight item that precedes positive items', () => {
+    const items: WeightedItem<string>[] = [
+      { item: 'zero', weight: 0 },
+      { item: 'one', weight: 1 }
+    ];
+
+    expect(pickWeightedValue(items, buildWeightedIndex(items), () => 0)).toBe(
+      'zero'
+    );
+  });
+
+  it('never returns an item positioned after the number of positive weights', () => {
+    const items: WeightedItem<string>[] = [
+      { item: 'zero', weight: 0 },
+      { item: 'one', weight: 1 }
+    ];
+
+    expect(pickManyWeighted(items, 3, () => 0.99)).toEqual([
+      'zero',
+      'zero',
+      'zero'
+    ]);
+  });
+
+  it('throws from pickUniqueWeighted once only zero weight items remain', () => {
+    const items: WeightedItem<string>[] = [
+      { item: 'a', weight: 1 },
+      { item: 'b', weight: 0 }
+    ];
+
+    expect(() => pickUniqueWeighted(items, 2, () => 0)).toThrow(
+      'Total weight must be greater than 0'
+    );
+  });
+
+  it('uses Math.random when no rng is provided', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.9);
+
+    expect(pickWeightedIndex({ prefix: [1, 2], total: 2 })).toBe(1);
+    expect(Math.random).toHaveBeenCalledTimes(1);
   });
 });
