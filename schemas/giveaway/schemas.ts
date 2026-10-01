@@ -409,8 +409,6 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
       return 'Winners Announced';
     case 'winners-pending':
       return 'Winners Pending';
-    case 'profile-incomplete':
-      return 'Profile Incomplete';
     case 'no-prize-allocation':
       return 'No Prize Selected';
     case 'closed':

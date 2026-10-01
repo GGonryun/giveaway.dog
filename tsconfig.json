@@ -22,7 +22,8 @@
       "@/schemas/*": ["schemas/*"],
       "@/app/*": ["app/*"],
       "@/procedures/*": ["procedures/*"],
-      "@/types/*": ["types/*"]
+      "@/types/*": ["types/*"],
+      "@/test/*": ["test/*"]
     },
     "plugins": [
       {
