@@ -1,0 +1,361 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PrizeItem > snapshots > matches the snapshot when collapsed 1`] = `
+<div>
+  <div
+    class="rounded-sm border transition-colors bg-sidebar overflow-hidden relative shadow-sm"
+    data-state="closed"
+  >
+    <div
+      aria-controls="generated-id"
+      aria-expanded="false"
+      class="group flex items-stretch w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+      data-state="closed"
+      type="button"
+    >
+      <div
+        class="flex items-center gap-3"
+      >
+        <div
+          class="flex items-center justify-center min-w-8 w-11 h-full bg-amber-100 text-amber-600"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-trophy h-6 w-6"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"
+            />
+            <path
+              d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"
+            />
+            <path
+              d="M18 9h1.5a1 1 0 0 0 0-5H18"
+            />
+            <path
+              d="M4 22h16"
+            />
+            <path
+              d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"
+            />
+            <path
+              d="M6 9H4.5a1 1 0 0 1 0-5H6"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="px-2 py-2 gap-2 flex items-center justify-between w-full flex-wrap"
+      >
+        <div
+          class="text-left flex items-center gap-2"
+        >
+          <h4
+            class="font-medium text-sm sm:text-base"
+          >
+            Gaming Headset
+          </h4>
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-trending-up h-4 w-4 text-green-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M16 7h6v6"
+            />
+            <path
+              d="m22 7-8.5 8.5-5-5L2 17"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex items-center gap-2"
+        >
+          <span
+            class="inline-flex items-center justify-center rounded-md px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/90 text-xs border font-bold"
+            data-slot="badge"
+          >
+            1 winner
+          </span>
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-chevron-down"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-t bg-muted/50"
+      data-state="closed"
+      hidden=""
+      id="generated-id"
+      style=""
+    />
+  </div>
+</div>
+`;
+
+exports[`PrizeItem > snapshots > matches the snapshot when expanded with popularity and an action 1`] = `
+<div>
+  <div
+    class="rounded-sm border transition-colors bg-sidebar overflow-hidden relative z-50 shadow-xl"
+    data-state="open"
+  >
+    <div
+      aria-controls="generated-id"
+      aria-expanded="true"
+      class="group flex items-stretch w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+      data-state="open"
+      type="button"
+    >
+      <div
+        class="flex items-center gap-3"
+      >
+        <div
+          class="flex items-center justify-center min-w-8 w-11 h-full bg-amber-100 text-amber-600"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-trophy h-6 w-6"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"
+            />
+            <path
+              d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"
+            />
+            <path
+              d="M18 9h1.5a1 1 0 0 0 0-5H18"
+            />
+            <path
+              d="M4 22h16"
+            />
+            <path
+              d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"
+            />
+            <path
+              d="M6 9H4.5a1 1 0 0 1 0-5H6"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="px-2 py-2 gap-2 flex items-center justify-between w-full flex-wrap"
+      >
+        <div
+          class="text-left flex items-center gap-2"
+        >
+          <h4
+            class="font-medium text-sm sm:text-base"
+          >
+            Gaming Headset
+          </h4>
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-trending-up h-4 w-4 text-green-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M16 7h6v6"
+            />
+            <path
+              d="m22 7-8.5 8.5-5-5L2 17"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex items-center gap-2"
+        >
+          <span
+            class="inline-flex items-center justify-center rounded-md px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/90 text-xs border font-bold"
+            data-slot="badge"
+          >
+            1 winner
+          </span>
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-chevron-up"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m18 15-6-6-6 6"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-t bg-muted/50"
+      data-state="open"
+      id="generated-id"
+      style="transition-duration: 0s; animation-name: none;"
+    >
+      <div
+        class="p-4 space-y-3"
+      >
+        <div>
+          <h5
+            class="font-semibold text-sm mb-1"
+          >
+            Prize Details
+          </h5>
+          <p
+            class="text-sm text-muted-foreground"
+          >
+            1 winner
+             will receive this prize
+          </p>
+        </div>
+        <div
+          class="space-y-2"
+        >
+          <div
+            class="flex items-center gap-2"
+          >
+            <span
+              class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90 text-xs"
+              data-slot="badge"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-trending-up h-3 w-3 mr-1"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M16 7h6v6"
+                />
+                <path
+                  d="m22 7-8.5 8.5-5-5L2 17"
+                />
+              </svg>
+              Most Popular
+            </span>
+          </div>
+          <div
+            class="flex items-center justify-between text-xs"
+          >
+            <span
+              class="text-muted-foreground"
+            >
+              Popularity
+            </span>
+            <span
+              class="text-muted-foreground"
+            >
+              (
+              3
+              /
+              4
+              )
+               
+              75
+              %
+            </span>
+          </div>
+          <div
+            aria-valuemax="100"
+            aria-valuemin="0"
+            class="relative w-full overflow-hidden rounded-full bg-secondary h-2"
+            data-max="100"
+            data-state="indeterminate"
+            role="progressbar"
+          >
+            <div
+              class="h-full w-full flex-1 bg-primary transition-all"
+              data-max="100"
+              data-state="indeterminate"
+              style="transform: translateX(-25%);"
+            />
+          </div>
+        </div>
+        <button
+          class="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-warning text-white shadow-xs hover:bg-warning/90 focus-visible:ring-warning/20 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 w-full"
+          data-slot="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-star"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+            />
+          </svg>
+          Select This Prize
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

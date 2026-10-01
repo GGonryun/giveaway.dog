@@ -1,0 +1,97 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TermsModal > matches the snapshot for custom terms 1`] = `
+<div
+  aria-describedby="generated-id"
+  aria-labelledby="generated-id"
+  class="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg max-w-2xl max-h-[80vh] overflow-y-auto"
+  data-slot="dialog-content"
+  data-state="open"
+  id="generated-id"
+  role="dialog"
+  style="pointer-events: auto;"
+  tabindex="-1"
+>
+  <div
+    class="flex flex-col gap-2 text-center sm:text-left"
+    data-slot="dialog-header"
+  >
+    <h2
+      class="text-lg leading-none font-semibold"
+      data-slot="dialog-title"
+      id="generated-id"
+    >
+      Terms & Conditions
+    </h2>
+    <p
+      class="text-muted-foreground text-sm"
+      data-slot="dialog-description"
+      id="generated-id"
+    >
+      Please read the following terms and conditions for this sweepstakes.
+    </p>
+  </div>
+  <div
+    class="space-y-4"
+  >
+    <div>
+      <div
+        class="whitespace-pre-wrap text-sm leading-relaxed font-mono"
+      >
+        <div
+          class="prose prose-sm max-w-none [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h1]:mt-6 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mb-3 [&_h2]:mt-5 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mb-2 [&_h3]:mt-4 [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:my-3 [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:my-3 [&_li]:my-1 [&_p]:min-h-[1.5em] [&_p]:leading-relaxed [&_strong]:font-bold [&_em]:italic [&_s]:line-through [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_hr]:my-6 [&_hr]:border-t [&_br]:block [&_a]:text-primary [&_a]:underline [&_a]:hover:text-primary/80 text-sm sm:text-base [&_a]:break-all"
+        >
+          <p>
+            Be 
+            <strong>
+              nice
+            </strong>
+            .
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex justify-end pt-4 border-t"
+    >
+      <button
+        class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-9 px-4 py-2 has-[>svg]:px-3"
+        data-slot="button"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+  <button
+    class="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+    data-slot="dialog-close"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-x"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M18 6 6 18"
+      />
+      <path
+        d="m6 6 12 12"
+      />
+    </svg>
+    <span
+      class="sr-only"
+    >
+      Close
+    </span>
+  </button>
+</div>
+`;

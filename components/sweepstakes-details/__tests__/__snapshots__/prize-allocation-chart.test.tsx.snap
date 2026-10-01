@@ -1,0 +1,62 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PrizeAllocationChart > without allocations > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4"
+    data-slot="card-header"
+  >
+    <div
+      class="leading-none font-semibold"
+      data-slot="card-title"
+    >
+      Prize Allocation Distribution
+    </div>
+    <div
+      class="text-muted-foreground text-sm"
+      data-slot="card-description"
+    >
+      Breakdown of user prize selections across all available prizes
+    </div>
+    <div
+      class="flex items-center space-x-6 pt-2"
+    >
+      <div
+        class="text-sm text-muted-foreground"
+      >
+        Total Selections:
+         
+        <span
+          class="font-medium"
+        >
+          0
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="px-4 pt-2"
+    data-slot="card-content"
+  >
+    <div
+      class="flex items-center justify-center h-[350px] text-center text-muted-foreground"
+    >
+      <div>
+        <p
+          class="text-lg font-medium"
+        >
+          No Allocations Yet
+        </p>
+        <p
+          class="text-sm"
+        >
+          Users haven't selected their prize preferences yet
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;

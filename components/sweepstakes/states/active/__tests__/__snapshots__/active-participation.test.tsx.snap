@@ -1,0 +1,607 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ActiveParticipation > snapshots > matches the snapshot for a participant on the tasks tab 1`] = `
+<div>
+  <div
+    class="space-y-2 relative"
+  >
+    <div>
+      <div
+        class="text-xs text-muted-foreground"
+      >
+        <div
+          class="flex justify-between"
+        >
+          <div
+            class="flex items-center gap-1 flex-wrap"
+          >
+            <span
+              class="hidden sm:inline"
+            >
+              Signed in as
+            </span>
+            <a
+              class="font-semibold"
+              href="/account"
+            >
+              Jane Doe
+            </a>
+            <div
+              class="flex items-center gap-1 "
+            />
+          </div>
+          <div
+            class="gap-1.5 flex"
+          >
+            <a
+              class="hover:underline"
+              href="/account"
+            >
+              Edit
+            </a>
+            <span
+              class="cursor-pointer hover:underline"
+            >
+              Logout
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="space-y-1"
+      >
+        <div
+          class="flex items-end justify-between"
+        >
+          <div
+            class="font-normal text-xs text-muted-foreground"
+          >
+            Your entries: 
+            1
+          </div>
+          <div
+            class="font-normal text-xs text-muted-foreground"
+          >
+            1
+            /
+            1
+             completed
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-col gap-4 w-full"
+      data-orientation="horizontal"
+      data-slot="tabs"
+      dir="ltr"
+    >
+      <div
+        class="overflow-x-auto"
+      >
+        <div
+          aria-orientation="horizontal"
+          class="bg-muted text-muted-foreground h-10 items-center justify-center rounded-lg p-[3px] grid w-full grid-cols-2"
+          data-orientation="horizontal"
+          data-slot="tabs-list"
+          role="tablist"
+          style="outline: none;"
+          tabindex="0"
+        >
+          <button
+            aria-controls="generated-id-content-prizes"
+            aria-selected="false"
+            class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            data-orientation="horizontal"
+            data-radix-collection-item=""
+            data-slot="tabs-trigger"
+            data-state="inactive"
+            id="generated-id-trigger-prizes"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            Prizes
+          </button>
+          <button
+            aria-controls="generated-id-content-tasks"
+            aria-selected="true"
+            class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            data-orientation="horizontal"
+            data-radix-collection-item=""
+            data-slot="tabs-trigger"
+            data-state="active"
+            id="generated-id-trigger-tasks"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            Tasks
+          </button>
+        </div>
+      </div>
+      <div
+        aria-labelledby="generated-id-trigger-tasks"
+        class="flex-1 outline-none"
+        data-orientation="horizontal"
+        data-slot="tabs-content"
+        data-state="active"
+        id="generated-id-content-tasks"
+        role="tabpanel"
+        style="animation-duration: 0s;"
+        tabindex="0"
+      >
+        <div
+          data-testid="task-list"
+        >
+          <span>
+            open task: 
+            none
+          </span>
+          <button>
+            open first task
+          </button>
+          <button>
+            show prizes
+          </button>
+        </div>
+      </div>
+      <div
+        aria-labelledby="generated-id-trigger-prizes"
+        class="flex-1 outline-none"
+        data-orientation="horizontal"
+        data-slot="tabs-content"
+        data-state="inactive"
+        hidden=""
+        id="generated-id-content-prizes"
+        role="tabpanel"
+        tabindex="0"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ActiveParticipation > snapshots > matches the snapshot when winners are pending 1`] = `
+<div>
+  <div
+    class="space-y-2 relative"
+  >
+    <div>
+      <div
+        class="text-xs text-muted-foreground"
+      >
+        <div
+          class="flex justify-between"
+        >
+          <div
+            class="flex items-center gap-1 flex-wrap"
+          >
+            <span
+              class="hidden sm:inline"
+            >
+              Signed in as
+            </span>
+            <a
+              class="font-semibold"
+              href="/account"
+            >
+              Jane Doe
+            </a>
+            <div
+              class="flex items-center gap-1 "
+            >
+              <div
+                class="w-4 h-4 rounded bg-background border border-border flex items-center justify-center"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-social-x lucide-SocialX w-2.5 h-2.5 text-foreground"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+                    fill="currentColor"
+                    stroke="none"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="gap-1.5 flex"
+          >
+            <a
+              class="hover:underline"
+              href="/account"
+            >
+              Edit
+            </a>
+            <span
+              class="cursor-pointer hover:underline"
+            >
+              Logout
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="space-y-1"
+      >
+        <div
+          class="flex items-end justify-between"
+        >
+          <div
+            class="font-normal text-xs text-muted-foreground"
+          >
+            Your entries: 
+            0
+          </div>
+          <div
+            class="font-normal text-xs text-muted-foreground"
+          >
+            0
+            /
+            1
+             completed
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-2"
+    >
+      <div
+        class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 text-warning [&>svg]:text-current bg-warning/10 border-warning/50"
+        data-slot="alert"
+        role="alert"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-hourglass h-4 w-4"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M5 22h14"
+          />
+          <path
+            d="M5 2h14"
+          />
+          <path
+            d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"
+          />
+          <path
+            d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"
+          />
+        </svg>
+        <div
+          class="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight"
+          data-slot="alert-title"
+        >
+          Winners Being Selected
+        </div>
+        <div
+          class="col-start-2 grid justify-items-start gap-1 text-sm [&_p]:leading-relaxed"
+          data-slot="alert-description"
+        >
+          This giveaway has ended and winners are being selected. Check back soon to see the results!
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-col gap-4 w-full"
+      data-orientation="horizontal"
+      data-slot="tabs"
+      dir="ltr"
+    >
+      <div
+        class="overflow-x-auto"
+      >
+        <div
+          aria-orientation="horizontal"
+          class="bg-muted text-muted-foreground h-10 items-center justify-center rounded-lg p-[3px] grid w-full grid-cols-2"
+          data-orientation="horizontal"
+          data-slot="tabs-list"
+          role="tablist"
+          style="outline: none;"
+          tabindex="0"
+        >
+          <button
+            aria-controls="generated-id-content-prizes"
+            aria-selected="true"
+            class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            data-orientation="horizontal"
+            data-radix-collection-item=""
+            data-slot="tabs-trigger"
+            data-state="active"
+            id="generated-id-trigger-prizes"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            Prizes
+          </button>
+          <button
+            aria-controls="generated-id-content-tasks"
+            aria-selected="false"
+            class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            data-orientation="horizontal"
+            data-radix-collection-item=""
+            data-slot="tabs-trigger"
+            data-state="inactive"
+            id="generated-id-trigger-tasks"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            Tasks
+          </button>
+        </div>
+      </div>
+      <div
+        aria-labelledby="generated-id-trigger-tasks"
+        class="flex-1 outline-none"
+        data-orientation="horizontal"
+        data-slot="tabs-content"
+        data-state="inactive"
+        hidden=""
+        id="generated-id-content-tasks"
+        role="tabpanel"
+        tabindex="0"
+      />
+      <div
+        aria-labelledby="generated-id-trigger-prizes"
+        class="flex-1 outline-none"
+        data-orientation="horizontal"
+        data-slot="tabs-content"
+        data-state="active"
+        id="generated-id-content-prizes"
+        role="tabpanel"
+        style="animation-duration: 0s;"
+        tabindex="0"
+      >
+        <div
+          class="space-y-2"
+        >
+          <div
+            class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 text-success [&>svg]:text-current bg-success/10 border-success/50"
+            data-slot="alert"
+            role="alert"
+          >
+            <div
+              class="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight"
+              data-slot="alert-title"
+            >
+              You 
+              competed
+               for
+               
+              <span
+                class="font-semibold"
+              >
+                Gift Card
+              </span>
+            </div>
+          </div>
+          <div
+            class="rounded-sm border transition-colors bg-sidebar overflow-hidden relative shadow-sm opacity-70"
+            data-state="closed"
+          >
+            <div
+              aria-controls="generated-id"
+              aria-expanded="false"
+              class="group flex items-stretch w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+              data-state="closed"
+              type="button"
+            >
+              <div
+                class="flex items-center gap-3"
+              >
+                <div
+                  class="flex items-center justify-center min-w-8 w-11 h-full bg-amber-100 text-amber-600"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-trophy h-6 w-6"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"
+                    />
+                    <path
+                      d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"
+                    />
+                    <path
+                      d="M18 9h1.5a1 1 0 0 0 0-5H18"
+                    />
+                    <path
+                      d="M4 22h16"
+                    />
+                    <path
+                      d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"
+                    />
+                    <path
+                      d="M6 9H4.5a1 1 0 0 1 0-5H6"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="px-2 py-2 gap-2 flex items-center justify-between w-full flex-wrap"
+              >
+                <div
+                  class="text-left flex items-center gap-2"
+                >
+                  <h4
+                    class="font-medium text-sm sm:text-base"
+                  >
+                    Gaming Headset
+                  </h4>
+                </div>
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/90 text-xs border font-bold"
+                    data-slot="badge"
+                  >
+                    1 winner
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-chevron-down"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m6 9 6 6 6-6"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div
+              class="border-t bg-muted/50"
+              data-state="closed"
+              hidden=""
+              id="generated-id"
+              style=""
+            />
+          </div>
+          <div
+            class="rounded-sm border transition-colors bg-sidebar overflow-hidden relative shadow-sm border-amber-500 hover:border-amber-600"
+            data-state="closed"
+          >
+            <div
+              aria-controls="generated-id"
+              aria-expanded="false"
+              class="group flex items-stretch w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+              data-state="closed"
+              type="button"
+            >
+              <div
+                class="flex items-center gap-3"
+              >
+                <div
+                  class="flex items-center justify-center min-w-8 w-11 h-full bg-amber-100 text-amber-600"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-trophy h-6 w-6"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"
+                    />
+                    <path
+                      d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"
+                    />
+                    <path
+                      d="M18 9h1.5a1 1 0 0 0 0-5H18"
+                    />
+                    <path
+                      d="M4 22h16"
+                    />
+                    <path
+                      d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"
+                    />
+                    <path
+                      d="M6 9H4.5a1 1 0 0 1 0-5H6"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="px-2 py-2 gap-2 flex items-center justify-between w-full flex-wrap"
+              >
+                <div
+                  class="text-left flex items-center gap-2"
+                >
+                  <h4
+                    class="font-medium text-sm sm:text-base"
+                  >
+                    Gift Card
+                  </h4>
+                </div>
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/90 text-xs border font-bold"
+                    data-slot="badge"
+                  >
+                    2 winners
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-chevron-down"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m6 9 6 6 6-6"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div
+              class="border-t bg-muted/50"
+              data-state="closed"
+              hidden=""
+              id="generated-id"
+              style=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

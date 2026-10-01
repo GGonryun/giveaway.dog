@@ -1,0 +1,190 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`UserDetailsForm > matches the snapshot for a visitor with every field type 1`] = `
+<div>
+  <div
+    class="space-y-2"
+  >
+    <div
+      class="space-y-1"
+    >
+      <h3
+        class="text-xl font-semibold"
+      >
+        Ready to win?
+      </h3>
+      <p
+        class="text-sm font-normal text-muted-foreground"
+      >
+        To participate in this sweepstakes, please complete the following entry form.
+      </p>
+    </div>
+    <div
+      class="space-y-2"
+    >
+      <div
+        class="space-y-1"
+      >
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          for="generated-id-form-item"
+        >
+          Username
+          <span
+            class="text-destructive"
+          >
+             *
+          </span>
+        </label>
+        <input
+          aria-describedby="generated-id-form-item-description"
+          aria-invalid="false"
+          class="file:text-foreground placeholder:text-muted-foreground bg-white selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-white file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+          data-slot="input"
+          id="generated-id-form-item"
+          name="field-username"
+          placeholder="Pick a username"
+          value=""
+        />
+      </div>
+      <div
+        class="space-y-1"
+      >
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          for="generated-id-form-item"
+        >
+          Email
+          <span
+            class="text-destructive"
+          >
+             *
+          </span>
+        </label>
+        <input
+          aria-describedby="generated-id-form-item-description"
+          aria-invalid="false"
+          class="file:text-foreground placeholder:text-muted-foreground bg-white selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-white file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+          data-slot="input"
+          id="generated-id-form-item"
+          name="field-email"
+          placeholder="Email"
+          type="email"
+          value=""
+        />
+      </div>
+      <div
+        class="flex flex-row items-start space-x-3 space-y-0 py-2"
+      >
+        <button
+          aria-checked=""
+          aria-describedby="generated-id-form-item-description"
+          aria-invalid="false"
+          class="peer dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-2xs transition-shadow outline-hidden focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 bg-background"
+          data-slot="checkbox"
+          data-state="unchecked"
+          id="generated-id-form-item"
+          role="checkbox"
+          type="button"
+          value="on"
+        />
+        <div
+          class="space-y-1 leading-none"
+        >
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for="generated-id-form-item"
+          >
+            I am at least 18 years of age (required)
+          </label>
+        </div>
+      </div>
+      <div
+        class="space-y-1"
+      >
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
+          for="generated-id-form-item"
+        >
+          <span>
+            X profile
+            <span
+              class="text-destructive"
+            >
+               *
+            </span>
+          </span>
+          <svg
+            aria-controls="generated-id"
+            aria-expanded="false"
+            aria-haspopup="dialog"
+            class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full cursor-help"
+            data-slot="dialog-trigger"
+            data-state="closed"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            type="button"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <path
+              d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+            />
+            <path
+              d="M12 17h.01"
+            />
+          </svg>
+        </label>
+        <input
+          aria-describedby="generated-id-form-item-description"
+          aria-invalid="false"
+          class="file:text-foreground placeholder:text-muted-foreground bg-white selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-white file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+          data-slot="input"
+          id="generated-id-form-item"
+          name="field-twitter"
+          placeholder="https://twitter.com/username"
+          value=""
+        />
+      </div>
+      <button
+        class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 w-full mt-2"
+        data-slot="button"
+        type="button"
+      >
+        Continue to Sweepstakes
+         
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-arrow-right"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M5 12h14"
+          />
+          <path
+            d="m12 5 7 7-7 7"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,261 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`giveaway skeletons > GiveawayHeaderSkeleton > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="relative"
+  >
+    <div
+      class="h-48 sm:h-64 bg-gray-200 rounded-t-lg flex items-center justify-center"
+    >
+      <div
+        class="text-gray-400 text-sm"
+      >
+        Preview Banner
+      </div>
+    </div>
+    <div
+      class="absolute top-4 right-4"
+    >
+      <span
+        class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90 text-xs"
+        data-slot="badge"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-clock h-3 w-3 mr-1"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 6v6l4 2"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+          />
+        </svg>
+        Preview Mode
+      </span>
+    </div>
+  </div>
+  <div
+    class="p-6"
+    data-slot="card-content"
+  >
+    <div
+      class="bg-accent animate-pulse rounded-md h-8 w-3/4 mb-2"
+      data-slot="skeleton"
+    />
+    <div
+      class="flex items-center gap-2 mb-4"
+    >
+      <div
+        class="bg-accent animate-pulse w-6 h-6 rounded-full"
+        data-slot="skeleton"
+      />
+      <div
+        class="bg-accent animate-pulse rounded-md h-4 w-32"
+        data-slot="skeleton"
+      />
+    </div>
+    <div
+      class="flex flex-wrap gap-4 mb-4"
+    >
+      <div
+        class="bg-accent animate-pulse rounded-md h-4 w-24"
+        data-slot="skeleton"
+      />
+      <div
+        class="bg-accent animate-pulse rounded-md h-4 w-32"
+        data-slot="skeleton"
+      />
+      <div
+        class="bg-accent animate-pulse rounded-md h-4 w-28"
+        data-slot="skeleton"
+      />
+    </div>
+    <div
+      class="border-t pt-4"
+    >
+      <div
+        class="bg-accent animate-pulse rounded-md h-4 w-full mb-2"
+        data-slot="skeleton"
+      />
+      <div
+        class="bg-accent animate-pulse rounded-md h-4 w-2/3"
+        data-slot="skeleton"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`giveaway skeletons > PrizeListSkeleton > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4"
+    data-slot="card-header"
+  >
+    <div
+      class="bg-accent animate-pulse rounded-md h-6 w-24"
+      data-slot="skeleton"
+    />
+  </div>
+  <div
+    class="px-4 space-y-3"
+    data-slot="card-content"
+  >
+    <div
+      class="flex items-center justify-between p-3 border rounded-lg"
+    >
+      <div
+        class="bg-accent animate-pulse rounded-md h-4 w-40"
+        data-slot="skeleton"
+      />
+      <div
+        class="bg-accent animate-pulse rounded-md h-5 w-16"
+        data-slot="skeleton"
+      />
+    </div>
+    <div
+      class="flex items-center justify-between p-3 border rounded-lg"
+    >
+      <div
+        class="bg-accent animate-pulse rounded-md h-4 w-40"
+        data-slot="skeleton"
+      />
+      <div
+        class="bg-accent animate-pulse rounded-md h-5 w-16"
+        data-slot="skeleton"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`giveaway skeletons > TaskListSkeleton > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4"
+    data-slot="card-header"
+  >
+    <div
+      class="flex items-center justify-between"
+    >
+      <div
+        class="bg-accent animate-pulse rounded-md h-6 w-32"
+        data-slot="skeleton"
+      />
+      <div
+        class="bg-accent animate-pulse rounded-md h-5 w-20"
+        data-slot="skeleton"
+      />
+    </div>
+    <div
+      class="bg-accent animate-pulse rounded-md h-2 w-full"
+      data-slot="skeleton"
+    />
+  </div>
+  <div
+    class="px-4 space-y-3"
+    data-slot="card-content"
+  >
+    <div
+      class="flex items-center justify-between p-3 border rounded-lg"
+    >
+      <div
+        class="flex items-center gap-3"
+      >
+        <div
+          class="bg-accent animate-pulse w-8 h-8 rounded-full"
+          data-slot="skeleton"
+        />
+        <div>
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-32 mb-1"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-3 w-20"
+            data-slot="skeleton"
+          />
+        </div>
+      </div>
+      <div
+        class="bg-accent animate-pulse rounded-md h-8 w-20"
+        data-slot="skeleton"
+      />
+    </div>
+    <div
+      class="flex items-center justify-between p-3 border rounded-lg"
+    >
+      <div
+        class="flex items-center gap-3"
+      >
+        <div
+          class="bg-accent animate-pulse w-8 h-8 rounded-full"
+          data-slot="skeleton"
+        />
+        <div>
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-32 mb-1"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-3 w-20"
+            data-slot="skeleton"
+          />
+        </div>
+      </div>
+      <div
+        class="bg-accent animate-pulse rounded-md h-8 w-20"
+        data-slot="skeleton"
+      />
+    </div>
+    <div
+      class="flex items-center justify-between p-3 border rounded-lg"
+    >
+      <div
+        class="flex items-center gap-3"
+      >
+        <div
+          class="bg-accent animate-pulse w-8 h-8 rounded-full"
+          data-slot="skeleton"
+        />
+        <div>
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-32 mb-1"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-3 w-20"
+            data-slot="skeleton"
+          />
+        </div>
+      </div>
+      <div
+        class="bg-accent animate-pulse rounded-md h-8 w-20"
+        data-slot="skeleton"
+      />
+    </div>
+  </div>
+</div>
+`;

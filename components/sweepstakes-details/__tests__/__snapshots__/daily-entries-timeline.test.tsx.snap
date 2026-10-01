@@ -1,0 +1,50 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DailyEntriesTimeline > matches the snapshot of the header 1`] = `
+<div
+  class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4"
+  data-slot="card-header"
+>
+  <div
+    class="leading-none font-semibold"
+    data-slot="card-title"
+  >
+    Daily Entries Timeline
+  </div>
+  <div
+    class="text-muted-foreground text-sm"
+    data-slot="card-description"
+  >
+    Total entry volume over the last 
+    7
+     days
+  </div>
+  <div
+    class="flex items-center space-x-6 pt-2"
+  >
+    <div
+      class="text-sm text-muted-foreground"
+    >
+      Total Entries:
+       
+      <span
+        class="font-medium"
+      >
+        42
+      </span>
+    </div>
+    <div
+      class="text-sm text-muted-foreground"
+    >
+      <span>
+        Unique Users: 
+      </span>
+      <span
+        class="font-medium"
+      >
+        12
+      </span>
+    </div>
+  </div>
+</div>
+`;
