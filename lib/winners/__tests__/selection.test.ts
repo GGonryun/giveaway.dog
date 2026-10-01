@@ -201,7 +201,7 @@ describe('toUniquePrizeDraw', () => {
       expect(['participant-4', 'participant-5']).toContain(prize3Winners[0]);
     });
 
-    it('should throw error when not enough participants with allocations exist', () => {
+    it('should leave slots empty when not enough participants with allocations exist', () => {
       const completions: ExpandedEligibleTaskCompletion[] = [];
       for (let userId = 0; userId < 5; userId++) {
         completions.push(createMockCompletion(userId, 0));
@@ -220,21 +220,30 @@ describe('toUniquePrizeDraw', () => {
 
       const draws: DrawInfo[] = [];
 
-      expect(() =>
-        toUniquePrizeDraw({
-          slots,
-          draws,
-          completions,
-          criteria: {
-            minQualityScore: 0,
-            minTasksCompleted: 0,
-            allowMultipleWins: false,
-            allowUserSelection: true,
-            externalPlatforms: null
-          },
-          allocations
-        })
-      ).toThrow('Not enough eligible participants');
+      const result = toUniquePrizeDraw({
+        slots,
+        draws,
+        completions,
+        criteria: {
+          minQualityScore: 0,
+          minTasksCompleted: 0,
+          allowMultipleWins: false,
+          allowUserSelection: true,
+          externalPlatforms: null
+        },
+        allocations
+      });
+
+      expect(result).toHaveLength(2);
+
+      const winnerParticipantIds = result.map((r) => {
+        const comp = completions.find((c) => c.id === r.taskCompletionId);
+        return comp?.participant.id;
+      });
+
+      expect(new Set(winnerParticipantIds)).toEqual(
+        new Set(['participant-0', 'participant-1'])
+      );
     });
 
     it('should respect both allocations and previously drawn users', () => {
@@ -534,7 +543,7 @@ describe('toDuplicatePrizeDraw', () => {
       ).toBe(3);
     });
 
-    it('should throw error when a slot has no eligible participants with allocations', () => {
+    it('should leave a slot empty when it has no eligible participants with allocations', () => {
       const completions: ExpandedEligibleTaskCompletion[] = [];
       for (let userId = 0; userId < 5; userId++) {
         completions.push(createMockCompletion(userId, 0));
@@ -551,23 +560,28 @@ describe('toDuplicatePrizeDraw', () => {
 
       const draws: DrawInfo[] = [];
 
-      expect(() =>
-        toDuplicatePrizeDraw({
-          slots,
-          draws,
-          completions,
-          criteria: {
-            minQualityScore: 0,
-            minTasksCompleted: 0,
-            allowMultipleWins: true,
-            allowUserSelection: true,
-            externalPlatforms: null
-          },
-          allocations
-        })
-      ).toThrow(
-        'Not enough eligible participants to fill prize slot for prize prize-2'
+      const result = toDuplicatePrizeDraw({
+        slots,
+        draws,
+        completions,
+        criteria: {
+          minQualityScore: 0,
+          minTasksCompleted: 0,
+          allowMultipleWins: true,
+          allowUserSelection: true,
+          externalPlatforms: null
+        },
+        allocations
+      });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].prizeId).toBe('prize-1');
+
+      const winner = completions.find(
+        (c) => c.id === result[0].taskCompletionId
       );
+
+      expect(winner?.participant.id).toBe('participant-0');
     });
 
     it('should handle multiple slots for same prize with allocations', () => {
