@@ -1,0 +1,301 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GiveawayParticipationCard > matches the snapshot 1`] = `
+<div>
+  <div
+    class="bg-card text-card-foreground flex flex-col rounded-xl border py-4 shadow-md relative gap-0 overflow-hidden w-full space-y-2 sm:space-y-4 px-0 pb-2 pt-4"
+    data-slot="card"
+  >
+    <div
+      class="px-4"
+      data-slot="card-content"
+    >
+      <div
+        class="flex flex-row gap-x-4 gap-y-2"
+      >
+        <div
+          class="hidden sm:flex items-center gap-1"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-calendar h-4 w-4 text-muted-foreground"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M8 2v4"
+            />
+            <path
+              d="M16 2v4"
+            />
+            <rect
+              height="18"
+              rx="2"
+              width="18"
+              x="3"
+              y="4"
+            />
+            <path
+              d="M3 10h18"
+            />
+          </svg>
+          <div
+            class="text-xs text-muted-foreground font-semibold"
+          >
+            Sep 24, 2026
+             - 
+            Oct 8, 2026
+          </div>
+        </div>
+        <div
+          class="shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:h-4 bg-muted-foreground hidden sm:block"
+          data-orientation="vertical"
+          data-slot="separator"
+          role="none"
+        />
+        <div
+          class="flex gap-1"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-clock h-4 w-4 text-muted-foreground"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 6v6l4 2"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+          </svg>
+          <div
+            class="text-xs text-muted-foreground font-semibold"
+          >
+            Ends in 7 days
+          </div>
+        </div>
+        <div
+          class="shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:h-4 bg-muted-foreground"
+          data-orientation="vertical"
+          data-slot="separator"
+          role="none"
+        />
+        <div
+          class="flex gap-1"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-file-check h-4 w-4 text-muted-foreground"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+            />
+            <path
+              d="M14 2v5a1 1 0 0 0 1 1h5"
+            />
+            <path
+              d="m9 15 2 2 4-4"
+            />
+          </svg>
+          <span
+            class="text-xs text-muted-foreground font-semibold"
+          >
+            42
+             total entries
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="px-4 relative"
+      data-slot="card-content"
+    >
+      <div
+        class="relative"
+      >
+        <div
+          class="overflow-hidden rounded-lg flex w-full aspect-video"
+        >
+          <img
+            alt="Summer Giveaway"
+            class="w-full h-full object-cover"
+            src="https://cdn.example.com/banner.png"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="px-4 space-y-0.5"
+      data-slot="card-content"
+    >
+      <h1
+        class="text-2xl sm:text-3xl md:text-4xl font-bold"
+      >
+        Summer Giveaway
+      </h1>
+      <p
+        class="text-sm sm:text-base text-muted-foreground flex items-center gap-1 flex-wrap"
+      >
+        <span>
+          by
+           
+          <a
+            class="font-semibold underline hover:text-primary hover:underline transition-colors"
+            href="/browse?hosts=acme"
+          >
+            Acme Games
+          </a>
+        </span>
+        <span
+          class="flex items-center gap-1"
+        >
+          <a
+            aria-label="X (Twitter)"
+            class="w-4 h-4 rounded bg-white dark:bg-input/30 border border-border flex items-center justify-center hover:bg-accent transition-colors"
+            href="https://x.com/acme"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-social-x lucide-SocialX w-2.5 h-2.5 text-foreground"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+                fill="currentColor"
+                stroke="none"
+              />
+            </svg>
+          </a>
+          <a
+            aria-label="Discord"
+            class="w-4 h-4 rounded bg-white dark:bg-input/30 border border-border flex items-center justify-center hover:bg-accent transition-colors"
+            href="https://discord.gg/acme"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-social-discord lucide-SocialDiscord w-2.5 h-2.5 text-foreground"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"
+                fill="currentColor"
+                stroke="none"
+              />
+            </svg>
+          </a>
+        </span>
+      </p>
+    </div>
+    <div
+      class="px-4"
+      data-slot="card-content"
+    >
+      <div
+        class="prose prose-sm max-w-none [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h1]:mt-6 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mb-3 [&_h2]:mt-5 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mb-2 [&_h3]:mt-4 [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:my-3 [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:my-3 [&_li]:my-1 [&_p]:min-h-[1.5em] [&_p]:leading-relaxed [&_strong]:font-bold [&_em]:italic [&_s]:line-through [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_hr]:my-6 [&_hr]:border-t [&_br]:block [&_a]:text-primary [&_a]:underline [&_a]:hover:text-primary/80 text-sm sm:text-base [&_a]:break-all"
+      >
+        <p>
+          Win a brand new headset!
+        </p>
+      </div>
+    </div>
+    <div
+      class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mb-0"
+      data-orientation="horizontal"
+      data-slot="separator"
+      role="none"
+    />
+    <div
+      class="p-3 m-0"
+      data-slot="card-content"
+    >
+      <p>
+        state content
+      </p>
+    </div>
+    <div
+      class="space-y-2"
+    >
+      <div
+        class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px"
+        data-orientation="horizontal"
+        data-slot="separator"
+        role="none"
+      />
+      <div
+        class="px-4 flex flex-row items-center justify-center gap-x-4 gap-y-2"
+        data-slot="card-content"
+      >
+        <button
+          aria-controls="generated-id"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          class="text-xs cursor-pointer underline hover:text-primary transition-colors"
+          data-slot="dialog-trigger"
+          data-state="closed"
+          type="button"
+        >
+          Terms & Conditions
+        </button>
+        <div
+          class="shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:h-4 bg-muted-foreground"
+          data-orientation="vertical"
+          data-slot="separator"
+          role="none"
+        />
+        <div
+          class="text-xs"
+        >
+          © 
+          Acme Games
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

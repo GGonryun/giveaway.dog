@@ -32,7 +32,7 @@ jobs:
   test:
     name: Unit tests
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     outputs:
       coverage: ${{ steps.coverage.outputs.lines }}
     steps:
@@ -53,6 +53,22 @@ jobs:
           lines=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
           echo "lines=$lines" >> "$GITHUB_OUTPUT"
           echo "Line coverage: ${lines}%" >> "$GITHUB_STEP_SUMMARY"
+
+  snapshot:
+    name: Snapshot tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Vitest snapshots
+        run: pnpm run test:snapshot
 
   badge:
     name: Coverage badge

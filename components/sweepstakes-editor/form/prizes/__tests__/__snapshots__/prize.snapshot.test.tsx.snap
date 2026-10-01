@@ -1,0 +1,483 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Prize > when collapsed > matches the snapshot 1`] = `
+<div>
+  <div
+    class="bg-background relative border shadow-xs rounded-lg w-full group opacity-100"
+  >
+    <div
+      aria-describedby=""
+      aria-disabled="false"
+      aria-roledescription="sortable"
+      class="absolute -left-8 text-muted-foreground w-8 h-10 flex items-center justify-end opacity-0 transition-opacity group-hover:opacity-100"
+      role="button"
+      tabindex="0"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-grip-vertical size-5"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="9"
+          cy="12"
+          r="1"
+        />
+        <circle
+          cx="9"
+          cy="5"
+          r="1"
+        />
+        <circle
+          cx="9"
+          cy="19"
+          r="1"
+        />
+        <circle
+          cx="15"
+          cy="12"
+          r="1"
+        />
+        <circle
+          cx="15"
+          cy="5"
+          r="1"
+        />
+        <circle
+          cx="15"
+          cy="19"
+          r="1"
+        />
+      </svg>
+    </div>
+    <div
+      class="grow"
+      data-state="closed"
+    >
+      <div
+        aria-controls="radix-:id1:"
+        aria-expanded="false"
+        class="relative flex grow py-1 pl-2 pr-1 w-full justify-between items-center cursor-pointer rounded-lg"
+        data-state="closed"
+        type="button"
+      >
+        <div
+          class="flex gap-2 items-center"
+        >
+          <div
+            class="flex items-center justify-center w-6 h-6 p-0.5 rounded-md border bg-green-100 text-green-700"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-gift"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="4"
+                rx="1"
+                width="18"
+                x="3"
+                y="8"
+              />
+              <path
+                d="M12 8v13"
+              />
+              <path
+                d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"
+              />
+              <path
+                d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"
+              />
+            </svg>
+          </div>
+          <p
+            class="text-sm font-medium"
+            weight="medium"
+          >
+            Prize 
+            2
+          </p>
+        </div>
+        <div
+          class="flex items-center gap-1"
+        >
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+            data-slot="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-trash2 lucide-trash-2"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 11v6"
+              />
+              <path
+                d="M14 11v6"
+              />
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+              />
+              <path
+                d="M3 6h18"
+              />
+              <path
+                d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+              />
+            </svg>
+          </button>
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+            data-slot="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-copy"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="14"
+                rx="2"
+                ry="2"
+                width="14"
+                x="8"
+                y="8"
+              />
+              <path
+                d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+              />
+            </svg>
+          </button>
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+            data-slot="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-chevron-down"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m6 9 6 6 6-6"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div
+        class="p-3 pt-1.5 border-t space-y-2"
+        data-state="closed"
+        hidden=""
+        id="radix-:id1:"
+        style=""
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Prize > when expanded > matches the snapshot 1`] = `
+<div>
+  <div
+    class="bg-background relative border shadow-xs rounded-lg w-full group opacity-100"
+  >
+    <div
+      aria-describedby=""
+      aria-disabled="false"
+      aria-roledescription="sortable"
+      class="absolute -left-8 text-muted-foreground w-8 h-10 flex items-center justify-end opacity-0 transition-opacity group-hover:opacity-100"
+      role="button"
+      tabindex="0"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-grip-vertical size-5"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="9"
+          cy="12"
+          r="1"
+        />
+        <circle
+          cx="9"
+          cy="5"
+          r="1"
+        />
+        <circle
+          cx="9"
+          cy="19"
+          r="1"
+        />
+        <circle
+          cx="15"
+          cy="12"
+          r="1"
+        />
+        <circle
+          cx="15"
+          cy="5"
+          r="1"
+        />
+        <circle
+          cx="15"
+          cy="19"
+          r="1"
+        />
+      </svg>
+    </div>
+    <div
+      class="grow"
+      data-state="open"
+    >
+      <div
+        aria-controls="radix-:id1:"
+        aria-expanded="true"
+        class="relative flex grow py-1 pl-2 pr-1 w-full justify-between items-center cursor-pointer rounded-lg rounded-b-none"
+        data-state="open"
+        type="button"
+      >
+        <div
+          class="flex gap-2 items-center"
+        >
+          <div
+            class="flex items-center justify-center w-6 h-6 p-0.5 rounded-md border bg-green-100 text-green-700"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-gift"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="4"
+                rx="1"
+                width="18"
+                x="3"
+                y="8"
+              />
+              <path
+                d="M12 8v13"
+              />
+              <path
+                d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"
+              />
+              <path
+                d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"
+              />
+            </svg>
+          </div>
+          <p
+            class="text-sm font-medium"
+            weight="medium"
+          >
+            Prize 
+            2
+          </p>
+        </div>
+        <div
+          class="flex items-center gap-1"
+        >
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+            data-slot="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-trash2 lucide-trash-2"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 11v6"
+              />
+              <path
+                d="M14 11v6"
+              />
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+              />
+              <path
+                d="M3 6h18"
+              />
+              <path
+                d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+              />
+            </svg>
+          </button>
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+            data-slot="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-copy"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="14"
+                rx="2"
+                ry="2"
+                width="14"
+                x="8"
+                y="8"
+              />
+              <path
+                d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+              />
+            </svg>
+          </button>
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+            data-slot="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-chevron-up"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m18 15-6-6-6 6"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div
+        class="p-3 pt-1.5 border-t space-y-2"
+        data-state="open"
+        id="radix-:id1:"
+        style="transition-duration: 0s; animation-name: none;"
+      >
+        <div
+          class="grid grid-cols-[1fr_96px] gap-2"
+        >
+          <div
+            class="space-y-1"
+          >
+            <label
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              for=":id2:-form-item"
+            >
+              Prize name
+            </label>
+            <input
+              aria-describedby=":id2:-form-item-description"
+              aria-invalid="false"
+              class="file:text-foreground placeholder:text-muted-foreground bg-white selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-white file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+              data-slot="input"
+              id=":id2:-form-item"
+              name="prizes.1.name"
+              value="Sticker Pack"
+            />
+          </div>
+          <div
+            class="space-y-1"
+          >
+            <label
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              for=":id3:-form-item"
+            >
+              Winners
+            </label>
+            <input
+              aria-describedby=":id3:-form-item-description"
+              aria-invalid="false"
+              class="file:text-foreground placeholder:text-muted-foreground bg-white selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-white file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+              data-slot="input"
+              id=":id3:-form-item"
+              type="number"
+              value="3"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

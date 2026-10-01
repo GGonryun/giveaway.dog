@@ -1,0 +1,86 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Table > matches the snapshot 1`] = `
+<div
+  class="relative w-full overflow-auto"
+>
+  <table
+    class="w-full caption-bottom text-sm"
+  >
+    <caption
+      class="mt-4 text-sm text-muted-foreground"
+    >
+      Recent entries
+    </caption>
+    <thead
+      class="[&_tr]:border-b bg-muted/50"
+    >
+      <tr
+        class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+      >
+        <th
+          class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+        >
+          Name
+        </th>
+        <th
+          class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+        >
+          Entries
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="[&_tr:last-child]:border-0"
+    >
+      <tr
+        class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        data-state="selected"
+      >
+        <td
+          class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+        >
+          Ada
+        </td>
+        <td
+          class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+        >
+          3
+        </td>
+      </tr>
+      <tr
+        class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+      >
+        <td
+          class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+        >
+          Grace
+        </td>
+        <td
+          class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+        >
+          5
+        </td>
+      </tr>
+    </tbody>
+    <tfoot
+      class="border-t bg-muted/50 font-medium last:[&>tr]:border-b-0"
+    >
+      <tr
+        class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+      >
+        <td
+          class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+        >
+          Total
+        </td>
+        <td
+          class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+        >
+          8
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+`;

@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DangerZone > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl py-4 shadow-md border border-destructive"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header auto-rows-min grid-rows-[auto_auto] px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 flex justify-between items-center"
+    data-slot="card-header"
+  >
+    <div>
+      <div
+        class="leading-none font-semibold"
+        data-slot="card-title"
+      >
+        Account Actions
+      </div>
+      <div
+        class="text-muted-foreground text-sm mt-1"
+        data-slot="card-description"
+      >
+        Manage your account settings and deletion
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-0"
+    data-slot="card-content"
+  />
+  <div
+    class="px-4 [.border-t]:pt-4 flex flex-col items-start gap-3 border-t sm:flex-row sm:items-center sm:justify-between py-0 my-0 text-sm sm:leading-8 text-muted-foreground border-destructive dark:text-destructive"
+    data-slot="card-footer"
+  >
+     Account deletion is permanent and cannot be reversed.
+    <button
+      aria-controls="radix-_r_id_"
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 h-9 px-4 py-2 has-[>svg]:px-3 w-full sm:w-auto"
+      data-slot="alert-dialog-trigger"
+      data-state="closed"
+      type="button"
+    >
+      Delete Account
+    </button>
+  </div>
+</div>
+`;

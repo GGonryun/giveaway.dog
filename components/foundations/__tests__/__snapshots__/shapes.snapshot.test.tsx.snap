@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`shapes > matches the snapshot of the size scale 1`] = `
+{
+  "2xl": "h-16 w-16 min-h-16 min-w-16",
+  "2xs": "h-3 w-3 min-h-3 min-w-3",
+  "3xl": "h-24 w-24 min-h-24 min-w-24",
+  "3xs": "h-2 w-2 min-h-2 min-w-2",
+  "lg": "h-10 w-10 min-h-10 min-w-10",
+  "md": "h-8 w-8 min-h-8 min-w-8",
+  "sm": "h-6 w-6 min-h-6 min-w-6",
+  "xl": "h-12 w-12 min-h-12 min-w-12",
+  "xs": "h-4 w-4 min-h-4 min-w-4",
+}
+`;

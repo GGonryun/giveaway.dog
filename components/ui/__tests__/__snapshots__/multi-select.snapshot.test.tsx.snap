@@ -1,0 +1,192 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MultiSelect > matches the snapshot with selected values 1`] = `
+<button
+  aria-controls="radix-:id0:"
+  aria-expanded="false"
+  aria-haspopup="dialog"
+  aria-label="Channels"
+  class="cursor-pointer gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-primary-foreground shadow-xs has-[>svg]:px-3 flex w-full p-1 rounded-md border min-h-9 h-auto items-center justify-between hover:bg-foreground/5 [&_svg]:pointer-events-auto bg-background"
+  data-slot="popover-trigger"
+  data-state="closed"
+  type="button"
+>
+  <div
+    class="flex justify-between items-center w-full "
+  >
+    <div
+      class="flex flex-wrap items-center"
+    >
+      <span
+        class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive overflow-hidden [a&]:hover:bg-primary/90 m-0.5 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 border-foreground/10 text-foreground bg-card hover:bg-card/80 [&>svg]:pointer-events-auto"
+        data-slot="badge"
+        style="animation-duration: 0s;"
+      >
+        Instagram
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-circle-x ml-2 h-4 w-4 cursor-pointer pointer-events-auto"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+          />
+          <path
+            d="m15 9-6 6"
+          />
+          <path
+            d="m9 9 6 6"
+          />
+        </svg>
+      </span>
+      <span
+        class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive overflow-hidden [a&]:hover:bg-primary/90 m-0.5 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 border-foreground/10 text-foreground bg-card hover:bg-card/80 [&>svg]:pointer-events-auto"
+        data-slot="badge"
+        style="animation-duration: 0s;"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-mail h-4 w-4 mr-2"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"
+          />
+          <rect
+            height="16"
+            rx="2"
+            width="20"
+            x="2"
+            y="4"
+          />
+        </svg>
+        Newsletter
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-circle-x ml-2 h-4 w-4 cursor-pointer pointer-events-auto"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+          />
+          <path
+            d="m15 9-6 6"
+          />
+          <path
+            d="m9 9 6 6"
+          />
+        </svg>
+      </span>
+    </div>
+    <div
+      class="flex items-center justify-between"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-x h-4 mx-2 cursor-pointer text-muted-foreground"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M18 6 6 18"
+        />
+        <path
+          d="m6 6 12 12"
+        />
+      </svg>
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-chevron-down h-4 mx-2 cursor-pointer text-muted-foreground"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="m6 9 6 6 6-6"
+        />
+      </svg>
+    </div>
+  </div>
+</button>
+`;
+
+exports[`MultiSelect > matches the snapshot without a selection 1`] = `
+<button
+  aria-controls="radix-:id0:"
+  aria-expanded="false"
+  aria-haspopup="dialog"
+  aria-label="Channels"
+  class="cursor-pointer gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-primary-foreground shadow-xs has-[>svg]:px-3 flex w-full p-1 rounded-md border min-h-9 h-auto items-center justify-between hover:bg-foreground/5 [&_svg]:pointer-events-auto bg-background"
+  data-slot="popover-trigger"
+  data-state="closed"
+  type="button"
+>
+  <div
+    class="flex items-center justify-between w-full mx-auto"
+  >
+    <span
+      class="text-sm text-muted-foreground mx-3"
+    >
+      Select options
+    </span>
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-chevron-down h-4 cursor-pointer text-muted-foreground mx-2"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="m6 9 6 6 6-6"
+      />
+    </svg>
+  </div>
+</button>
+`;

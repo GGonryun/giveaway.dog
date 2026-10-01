@@ -1,0 +1,600 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`UserNotifications > matches the snapshot 1`] = `
+<div
+  class="space-y-6"
+>
+  <div
+    class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+    data-slot="card"
+  >
+    <div
+      class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4"
+      data-slot="card-header"
+    >
+      <div
+        class="leading-none font-semibold"
+        data-slot="card-title"
+      >
+        Notification Preferences
+      </div>
+      <div
+        class="text-muted-foreground text-sm"
+        data-slot="card-description"
+      >
+        Choose how you want to be notified about giveaways and updates
+      </div>
+    </div>
+    <div
+      class="px-4 space-y-6"
+      data-slot="card-content"
+    >
+      <div
+        class="space-y-4"
+      >
+        <div
+          class="flex items-center justify-between space-x-2"
+        >
+          <div
+            class="flex items-center space-x-2"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-mail h-4 w-4 text-muted-foreground"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"
+              />
+              <rect
+                height="16"
+                rx="2"
+                width="20"
+                x="2"
+                y="4"
+              />
+            </svg>
+            <label
+              class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-medium"
+              for="email-updates"
+            >
+              Email Notifications
+            </label>
+          </div>
+        </div>
+        <div
+          class="ml-6 space-y-3"
+        >
+          <div
+            class="flex items-center justify-between"
+          >
+            <label
+              class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm"
+              for="email-giveaway-updates"
+            >
+              Giveaway updates and reminders
+            </label>
+            <button
+              aria-checked="true"
+              class="peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.3rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+              data-slot="switch"
+              data-state="checked"
+              id="email-giveaway-updates"
+              role="switch"
+              type="button"
+              value="on"
+            >
+              <span
+                class="bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+                data-slot="switch-thumb"
+                data-state="checked"
+              />
+            </button>
+          </div>
+          <div
+            class="flex items-center justify-between"
+          >
+            <label
+              class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm"
+              for="email-winner-announcements"
+            >
+              Winner announcements
+            </label>
+            <button
+              aria-checked="true"
+              class="peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.3rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+              data-slot="switch"
+              data-state="checked"
+              id="email-winner-announcements"
+              role="switch"
+              type="button"
+              value="on"
+            >
+              <span
+                class="bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+                data-slot="switch-thumb"
+                data-state="checked"
+              />
+            </button>
+          </div>
+          <div
+            class="flex items-center justify-between"
+          >
+            <label
+              class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm"
+              for="email-new-giveaways"
+            >
+              New giveaway alerts
+            </label>
+            <button
+              aria-checked="false"
+              class="peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.3rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+              data-slot="switch"
+              data-state="unchecked"
+              id="email-new-giveaways"
+              role="switch"
+              type="button"
+              value="on"
+            >
+              <span
+                class="bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+                data-slot="switch-thumb"
+                data-state="unchecked"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="space-y-4"
+      >
+        <div
+          class="flex items-center justify-between space-x-2"
+        >
+          <div
+            class="flex items-center space-x-2"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-smartphone h-4 w-4 text-muted-foreground"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="20"
+                rx="2"
+                ry="2"
+                width="14"
+                x="5"
+                y="2"
+              />
+              <path
+                d="M12 18h.01"
+              />
+            </svg>
+            <label
+              class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-medium"
+              for="push-notifications"
+            >
+              Push Notifications
+            </label>
+          </div>
+        </div>
+        <div
+          class="ml-6 space-y-3"
+        >
+          <div
+            class="flex items-center justify-between"
+          >
+            <label
+              class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm"
+              for="push-giveaway-reminders"
+            >
+              Giveaway reminders
+            </label>
+            <button
+              aria-checked="true"
+              class="peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.3rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+              data-slot="switch"
+              data-state="checked"
+              id="push-giveaway-reminders"
+              role="switch"
+              type="button"
+              value="on"
+            >
+              <span
+                class="bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+                data-slot="switch-thumb"
+                data-state="checked"
+              />
+            </button>
+          </div>
+          <div
+            class="flex items-center justify-between"
+          >
+            <label
+              class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm"
+              for="push-winner-announcements"
+            >
+              Winner announcements
+            </label>
+            <button
+              aria-checked="true"
+              class="peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.3rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+              data-slot="switch"
+              data-state="checked"
+              id="push-winner-announcements"
+              role="switch"
+              type="button"
+              value="on"
+            >
+              <span
+                class="bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+                data-slot="switch-thumb"
+                data-state="checked"
+              />
+            </button>
+          </div>
+          <div
+            class="flex items-center justify-between"
+          >
+            <label
+              class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm"
+              for="push-new-giveaways"
+            >
+              New giveaway alerts
+            </label>
+            <button
+              aria-checked="false"
+              class="peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.3rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+              data-slot="switch"
+              data-state="unchecked"
+              id="push-new-giveaways"
+              role="switch"
+              type="button"
+              value="on"
+            >
+              <span
+                class="bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+                data-slot="switch-thumb"
+                data-state="unchecked"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <button
+        class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 w-full sm:w-auto"
+        data-slot="button"
+      >
+        Save Preferences
+      </button>
+    </div>
+  </div>
+  <div
+    class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+    data-slot="card"
+  >
+    <div
+      class="@container/card-header auto-rows-min grid-rows-[auto_auto] px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 flex flex-row items-center justify-between"
+      data-slot="card-header"
+    >
+      <div>
+        <div
+          class="leading-none font-semibold"
+          data-slot="card-title"
+        >
+          Recent Notifications
+        </div>
+        <div
+          class="text-muted-foreground text-sm"
+          data-slot="card-description"
+        >
+          Your latest notifications and updates
+        </div>
+      </div>
+      <button
+        class="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
+        data-slot="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 mr-2"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M10 11v6"
+          />
+          <path
+            d="M14 11v6"
+          />
+          <path
+            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+          />
+          <path
+            d="M3 6h18"
+          />
+          <path
+            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+          />
+        </svg>
+        Clear All
+      </button>
+    </div>
+    <div
+      class="px-4"
+      data-slot="card-content"
+    >
+      <div
+        class="space-y-3"
+      >
+        <div
+          class="flex items-start space-x-3 p-3 rounded-lg border bg-muted/50"
+        >
+          <div
+            class="flex-shrink-0 mt-0.5"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-trophy h-4 w-4 text-yellow-500"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"
+              />
+              <path
+                d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"
+              />
+              <path
+                d="M18 9h1.5a1 1 0 0 0 0-5H18"
+              />
+              <path
+                d="M4 22h16"
+              />
+              <path
+                d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"
+              />
+              <path
+                d="M6 9H4.5a1 1 0 0 1 0-5H6"
+              />
+            </svg>
+          </div>
+          <div
+            class="flex-1 min-w-0"
+          >
+            <div
+              class="flex items-center gap-2"
+            >
+              <h4
+                class="text-sm font-medium"
+              >
+                Congratulations! You won!
+              </h4>
+              <span
+                class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90 h-5 text-xs"
+                data-slot="badge"
+              >
+                New
+              </span>
+            </div>
+            <p
+              class="text-sm text-muted-foreground"
+            >
+              You won the Travel Voucher Sweepstakes by WanderLust Travel
+            </p>
+            <p
+              class="text-xs text-muted-foreground mt-1"
+            >
+              1h ago
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-start space-x-3 p-3 rounded-lg border "
+        >
+          <div
+            class="flex-shrink-0 mt-0.5"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-calendar h-4 w-4 text-blue-500"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 2v4"
+              />
+              <path
+                d="M16 2v4"
+              />
+              <rect
+                height="18"
+                rx="2"
+                width="18"
+                x="3"
+                y="4"
+              />
+              <path
+                d="M3 10h18"
+              />
+            </svg>
+          </div>
+          <div
+            class="flex-1 min-w-0"
+          >
+            <div
+              class="flex items-center gap-2"
+            >
+              <h4
+                class="text-sm font-medium"
+              >
+                Giveaway ended
+              </h4>
+            </div>
+            <p
+              class="text-sm text-muted-foreground"
+            >
+              The iPhone 15 Pro Giveaway has ended. Winners will be announced soon.
+            </p>
+            <p
+              class="text-xs text-muted-foreground mt-1"
+            >
+              19h ago
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-start space-x-3 p-3 rounded-lg border "
+        >
+          <div
+            class="flex-shrink-0 mt-0.5"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-bell h-4 w-4 text-orange-500"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.268 21a2 2 0 0 0 3.464 0"
+              />
+              <path
+                d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"
+              />
+            </svg>
+          </div>
+          <div
+            class="flex-1 min-w-0"
+          >
+            <div
+              class="flex items-center gap-2"
+            >
+              <h4
+                class="text-sm font-medium"
+              >
+                Giveaway ending soon
+              </h4>
+            </div>
+            <p
+              class="text-sm text-muted-foreground"
+            >
+              The Gaming Setup Contest ends in 24 hours. Don't miss out!
+            </p>
+            <p
+              class="text-xs text-muted-foreground mt-1"
+            >
+              1/18/2024
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-start space-x-3 p-3 rounded-lg border "
+        >
+          <div
+            class="flex-shrink-0 mt-0.5"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-gift h-4 w-4 text-green-500"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="4"
+                rx="1"
+                width="18"
+                x="3"
+                y="8"
+              />
+              <path
+                d="M12 8v13"
+              />
+              <path
+                d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"
+              />
+              <path
+                d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"
+              />
+            </svg>
+          </div>
+          <div
+            class="flex-1 min-w-0"
+          >
+            <div
+              class="flex items-center gap-2"
+            >
+              <h4
+                class="text-sm font-medium"
+              >
+                New giveaway available
+              </h4>
+            </div>
+            <p
+              class="text-sm text-muted-foreground"
+            >
+              TechReviews Co. just launched a new MacBook Pro giveaway
+            </p>
+            <p
+              class="text-xs text-muted-foreground mt-1"
+            >
+              1/17/2024
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

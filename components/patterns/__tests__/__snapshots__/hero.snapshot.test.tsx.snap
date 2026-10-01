@@ -1,0 +1,300 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Hero > matches the snapshot 1`] = `
+<section
+  class="w-full flex flex-col items-center justify-center bg-linear-to-t from-primary/15 to-background"
+>
+  <div
+    class="w-full pb-0 sm:pb-1 md:pb-1.5 lg:pb-2 pt-6 sm:pt-10 md:pt-14 lg:pt-18"
+  >
+    <div>
+      Platforms carousel (
+      dark
+      )
+    </div>
+  </div>
+  <div
+    class="container flex items-center justify-center"
+  >
+    <div
+      class="grid items-center gap-8 pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-12"
+    >
+      <div
+        class="flex flex-col items-center text-center gap-2"
+      >
+        <h1
+          class="max-w-2xl font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter text-foreground text-balance"
+        >
+          How creators build 
+          <span
+            class="text-primary"
+          >
+            bigger communities
+          </span>
+        </h1>
+        <div />
+        <p
+          class="text-muted-foreground text-base sm:text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto text-pretty"
+        >
+          Host verified giveaways in under 60 seconds that grow your community without bots or spam.
+        </p>
+        <div
+          class="mt-3 sm:mt-4 md:mt-5 lg:mt-6 mb-0 sm:mb-1 md:mb-2"
+        >
+          <div
+            class="flex w-full flex-col justify-center gap-2 sm:flex-row"
+          >
+            <a
+              class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-14 rounded-full text-lg px-12 has-[>svg]:px-8 w-full sm:w-auto"
+              data-slot="button"
+              href="/browse"
+            >
+              Giveaways
+            </a>
+            <a
+              class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-14 rounded-full text-lg px-12 has-[>svg]:px-8 w-full sm:w-auto"
+              data-slot="button"
+              href="/demo/sweepstakes"
+            >
+              Try it for free 
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-arrow-right"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5 12h14"
+                />
+                <path
+                  d="m12 5 7 7-7 7"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex flex-col w-full items-center gap-0"
+      >
+        <div
+          class="flex flex-col md:flex-row items-center gap-2 md:gap-3"
+        >
+          <div
+            class="flex flex-row -space-x-2"
+          >
+            <button
+              class="cursor-pointer hover:z-10 transition-all"
+              type="button"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full border-4 border-background w-12 h-12"
+              >
+                <img
+                  alt="AD"
+                  class="aspect-square w-full h-full"
+                  data-nimg="1"
+                  decoding="async"
+                  height="48"
+                  loading="lazy"
+                  src="/_next/image?url=%2Fhosts%2Febidi.jpg&w=96&q=75"
+                  srcset="/_next/image?url=%2Fhosts%2Febidi.jpg&w=48&q=75 1x, /_next/image?url=%2Fhosts%2Febidi.jpg&w=96&q=75 2x"
+                  style="color: transparent;"
+                  width="48"
+                />
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  AD
+                </span>
+              </span>
+            </button>
+            <button
+              class="cursor-pointer hover:z-10 transition-all"
+              type="button"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full border-4 border-background w-12 h-12"
+              >
+                <img
+                  alt="KZ"
+                  class="aspect-square w-full h-full"
+                  data-nimg="1"
+                  decoding="async"
+                  height="48"
+                  loading="lazy"
+                  src="/_next/image?url=%2Fhosts%2Fkurozzz.jpg&w=96&q=75"
+                  srcset="/_next/image?url=%2Fhosts%2Fkurozzz.jpg&w=48&q=75 1x, /_next/image?url=%2Fhosts%2Fkurozzz.jpg&w=96&q=75 2x"
+                  style="color: transparent;"
+                  width="48"
+                />
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  KZ
+                </span>
+              </span>
+            </button>
+            <button
+              class="cursor-pointer hover:z-10 transition-all"
+              type="button"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full border-4 border-background w-12 h-12"
+              >
+                <img
+                  alt="H7"
+                  class="aspect-square w-full h-full"
+                  data-nimg="1"
+                  decoding="async"
+                  height="48"
+                  loading="lazy"
+                  src="/_next/image?url=%2Fhosts%2Fh7.jpg&w=96&q=75"
+                  srcset="/_next/image?url=%2Fhosts%2Fh7.jpg&w=48&q=75 1x, /_next/image?url=%2Fhosts%2Fh7.jpg&w=96&q=75 2x"
+                  style="color: transparent;"
+                  width="48"
+                />
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  H7
+                </span>
+              </span>
+            </button>
+            <button
+              class="cursor-pointer hover:z-10 transition-all"
+              type="button"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full border-4 border-background w-12 h-12"
+              >
+                <img
+                  alt="TJ"
+                  class="aspect-square w-full h-full"
+                  data-nimg="1"
+                  decoding="async"
+                  height="48"
+                  loading="lazy"
+                  src="/_next/image?url=%2Fhosts%2Ftheejankanator.jpg&w=96&q=75"
+                  srcset="/_next/image?url=%2Fhosts%2Ftheejankanator.jpg&w=48&q=75 1x, /_next/image?url=%2Fhosts%2Ftheejankanator.jpg&w=96&q=75 2x"
+                  style="color: transparent;"
+                  width="48"
+                />
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  TJ
+                </span>
+              </span>
+            </button>
+            <button
+              class="cursor-pointer hover:z-10 transition-all"
+              type="button"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full border-4 border-background w-12 h-12"
+              >
+                <img
+                  alt="LV"
+                  class="aspect-square w-full h-full"
+                  data-nimg="1"
+                  decoding="async"
+                  height="48"
+                  loading="lazy"
+                  src="/_next/image?url=%2Fhosts%2Fl1ghtervibes.jpg&w=96&q=75"
+                  srcset="/_next/image?url=%2Fhosts%2Fl1ghtervibes.jpg&w=48&q=75 1x, /_next/image?url=%2Fhosts%2Fl1ghtervibes.jpg&w=96&q=75 2x"
+                  style="color: transparent;"
+                  width="48"
+                />
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  LV
+                </span>
+              </span>
+            </button>
+            <button
+              class="cursor-pointer hover:z-10 transition-all"
+              type="button"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full border-4 border-background w-12 h-12"
+              >
+                <img
+                  alt="TO"
+                  class="aspect-square w-full h-full"
+                  data-nimg="1"
+                  decoding="async"
+                  height="48"
+                  loading="lazy"
+                  src="/_next/image?url=%2Fhosts%2Ftoniii.jpg&w=96&q=75"
+                  srcset="/_next/image?url=%2Fhosts%2Ftoniii.jpg&w=48&q=75 1x, /_next/image?url=%2Fhosts%2Ftoniii.jpg&w=96&q=75 2x"
+                  style="color: transparent;"
+                  width="48"
+                />
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  TO
+                </span>
+              </span>
+            </button>
+            <button
+              class="cursor-pointer hover:z-10 transition-all"
+              type="button"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full border-4 border-background w-12 h-12"
+              >
+                <img
+                  alt="SZ"
+                  class="aspect-square w-full h-full"
+                  data-nimg="1"
+                  decoding="async"
+                  height="48"
+                  loading="lazy"
+                  src="/_next/image?url=%2Fhosts%2Fszamer.jpg&w=96&q=75"
+                  srcset="/_next/image?url=%2Fhosts%2Fszamer.jpg&w=48&q=75 1x, /_next/image?url=%2Fhosts%2Fszamer.jpg&w=96&q=75 2x"
+                  style="color: transparent;"
+                  width="48"
+                />
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  SZ
+                </span>
+              </span>
+            </button>
+          </div>
+          <div
+            class="text-lg text-muted-foreground/80"
+          >
+            Chosen by
+             
+            <span
+              class="font-semibold text-foreground"
+            >
+              over 30
+            </span>
+             
+            giveaway hosts
+          </div>
+        </div>
+        <div
+          class="my-2 sm:my-1.5 md:my-0.5 lg:my-0"
+        />
+        <div>
+          Sweepstakes preview
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+`;

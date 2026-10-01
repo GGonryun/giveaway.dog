@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Link > matches the snapshot 1`] = `
+<a
+  href="https://example.com/giveaways"
+>
+  Giveaways
+</a>
+`;

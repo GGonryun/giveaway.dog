@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ComingSoon > matches the snapshot 1`] = `
+<div
+  class="flex flex-col gap-4 justify-center items-center h-full w-full"
+>
+  <img
+    alt="The Giveaway Dog"
+    data-nimg="1"
+    decoding="async"
+    height="198"
+    loading="lazy"
+    src="/_next/image?url=%2Fdog.png&w=640&q=75"
+    srcset="/_next/image?url=%2Fdog.png&w=256&q=75 1x, /_next/image?url=%2Fdog.png&w=640&q=75 2x"
+    style="color: transparent;"
+    width="222"
+  />
+  <div
+    class="text-sm font-normal"
+  >
+    Coming Soon
+  </div>
+</div>
+`;

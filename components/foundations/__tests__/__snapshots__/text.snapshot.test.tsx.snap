@@ -1,0 +1,44 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`text > matches the snapshot of the text tokens 1`] = `
+{
+  "color": {
+    "destructive": "text-destructive",
+    "muted": "text-muted-foreground",
+    "primary": "text-primary",
+    "white": "text-white",
+  },
+  "leading": {
+    "lg": "leading-4",
+    "md": "leading-3",
+    "none": "leading-none",
+    "normal": "leading-normal",
+    "relaxed": "leading-relaxed",
+    "sm": "leading-2",
+    "xl": "leading-5",
+    "xs": "leading-1",
+  },
+  "size": {
+    "2xl": "text-2xl",
+    "3xl": "text-3xl",
+    "base": "text-base",
+    "lg": "text-lg",
+    "md": "text-base",
+    "sm": "text-sm",
+    "xl": "text-xl",
+    "xs": "text-xs",
+  },
+  "weight": {
+    "bold": "font-bold",
+    "extralight": "font-extralight",
+    "light": "font-light",
+    "medium": "font-medium",
+    "normal": "font-normal",
+    "semibold": "font-semibold",
+    "thin": "font-thin",
+  },
+  "words": {
+    "break": "break-words overflow-x-auto",
+  },
+}
+`;

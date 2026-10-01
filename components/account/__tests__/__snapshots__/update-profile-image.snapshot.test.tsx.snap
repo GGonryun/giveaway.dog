@@ -1,0 +1,65 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`UpdateProfileImage > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header auto-rows-min grid-rows-[auto_auto] px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 flex justify-between items-center"
+    data-slot="card-header"
+  >
+    <div>
+      <div
+        class="leading-none font-semibold"
+        data-slot="card-title"
+      >
+        Profile Image
+      </div>
+      <div
+        class="text-muted-foreground text-sm mt-1"
+        data-slot="card-description"
+      >
+        Upload a profile image that will be shown on your public profile.
+      </div>
+    </div>
+  </div>
+  <div
+    class="px-4 py-2"
+    data-slot="card-content"
+  >
+    <div
+      class="space-y-1"
+    >
+      <div
+        data-initial-url="https://cdn.example.com/ada.png"
+        data-testid="file-upload"
+      >
+        <button
+          type="button"
+        >
+          Upload file
+        </button>
+        <button
+          type="button"
+        >
+          Remove file
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="px-4 [.border-t]:pt-4 flex flex-col items-start gap-3 border-t sm:flex-row sm:items-center sm:justify-between py-0 my-0 text-sm sm:leading-8 text-muted-foreground"
+    data-slot="card-footer"
+  >
+    Accepted formats: JPEG, PNG, GIF. Max size: 3MB.
+    <button
+      class="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 w-full sm:w-auto"
+      data-slot="button"
+      disabled=""
+    >
+      Save
+    </button>
+  </div>
+</div>
+`;

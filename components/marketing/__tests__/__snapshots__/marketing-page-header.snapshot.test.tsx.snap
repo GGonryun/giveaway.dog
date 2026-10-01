@@ -1,0 +1,18 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MarketingPageHeader > matches the snapshot 1`] = `
+<div
+  class="text-center space-y-1"
+>
+  <h1
+    class="text-4xl font-semibold font-outfit tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4"
+  >
+    Frequently Asked Questions
+  </h1>
+  <p
+    class="font-normal text-lg text-muted-foreground max-w-2xl mx-auto"
+  >
+    Everything you need to know
+  </p>
+</div>
+`;

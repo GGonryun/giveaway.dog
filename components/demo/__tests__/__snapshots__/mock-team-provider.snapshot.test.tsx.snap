@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MockTeamProvider > provides the demo team as the active team 1`] = `
+{
+  "id": "demo-team-id",
+  "logo": "🎮",
+  "memberCount": 1,
+  "name": "Demo Team",
+  "role": "OWNER",
+  "slug": "demo-team",
+  "tier": "ALPHA",
+}
+`;

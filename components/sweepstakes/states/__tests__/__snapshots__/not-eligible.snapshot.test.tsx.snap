@@ -1,0 +1,76 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`NotEligible > matches the snapshot with age and regional requirements 1`] = `
+<div
+  class="text-center my-4"
+>
+  <svg
+    aria-hidden="true"
+    class="lucide lucide-circle-alert h-12 w-12 mx-auto mb-4 text-destructive"
+    fill="none"
+    height="24"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="12"
+      cy="12"
+      r="10"
+    />
+    <line
+      x1="12"
+      x2="12"
+      y1="8"
+      y2="12"
+    />
+    <line
+      x1="12"
+      x2="12.01"
+      y1="16"
+      y2="16"
+    />
+  </svg>
+  <p
+    class="text-muted-foreground mb-4"
+  >
+    You are not eligible to participate in this giveaway.
+  </p>
+  <div
+    class="mb-4"
+  >
+    <p
+      class="text-sm font-medium mb-2"
+    >
+      Eligibility requirements:
+    </p>
+    <ul
+      class="text-sm text-muted-foreground space-y-1"
+    >
+      <li>
+        Must be at least 18 years old
+      </li>
+      <li>
+        Only available in: United States of America, Canada
+      </li>
+    </ul>
+  </div>
+  <p
+    class="text-sm text-muted-foreground"
+  >
+    If you believe this is an error, please contact
+     
+    <a
+      class="underline"
+      href="/contact"
+    >
+      support
+    </a>
+    .
+  </p>
+</div>
+`;

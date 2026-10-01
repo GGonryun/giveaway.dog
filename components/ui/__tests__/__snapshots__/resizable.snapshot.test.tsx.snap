@@ -1,0 +1,99 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Resizable > matches the snapshot with a visible handle 1`] = `
+<div
+  class="flex h-full w-full data-[panel-group-direction=vertical]:flex-col min-h-40"
+  data-panel-group=""
+  data-panel-group-direction="horizontal"
+  data-panel-group-id=":id0:"
+  data-slot="resizable-panel-group"
+  style="display: flex; flex-direction: row; height: 100%; overflow: hidden; width: 100%;"
+>
+  <div
+    class=""
+    data-panel=""
+    data-panel-group-id=":id0:"
+    data-panel-id=":id1:"
+    data-panel-size="30.0"
+    data-slot="resizable-panel"
+    id=":id1:"
+    style="flex: 30 1 0px; overflow: hidden;"
+  >
+    Sidebar
+  </div>
+  <div
+    class="bg-border focus-visible:ring-ring relative flex w-px items-center justify-center after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:outline-hidden data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:translate-x-0 data-[panel-group-direction=vertical]:after:-translate-y-1/2 [&[data-panel-group-direction=vertical]>div]:rotate-90"
+    data-panel-group-direction="horizontal"
+    data-panel-group-id=":id0:"
+    data-panel-resize-handle-enabled="true"
+    data-panel-resize-handle-id=":id2:"
+    data-resize-handle=""
+    data-resize-handle-state="inactive"
+    data-slot="resizable-handle"
+    role="separator"
+    style="touch-action: none; user-select: none;"
+    tabindex="0"
+  >
+    <div
+      class="bg-border z-10 flex h-4 w-3 items-center justify-center rounded-xs border text-background"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-grip-vertical size-8"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="3"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="9"
+          cy="12"
+          r="1"
+        />
+        <circle
+          cx="9"
+          cy="5"
+          r="1"
+        />
+        <circle
+          cx="9"
+          cy="19"
+          r="1"
+        />
+        <circle
+          cx="15"
+          cy="12"
+          r="1"
+        />
+        <circle
+          cx="15"
+          cy="5"
+          r="1"
+        />
+        <circle
+          cx="15"
+          cy="19"
+          r="1"
+        />
+      </svg>
+    </div>
+  </div>
+  <div
+    class=""
+    data-panel=""
+    data-panel-group-id=":id0:"
+    data-panel-id=":id3:"
+    data-panel-size="70.0"
+    data-slot="resizable-panel"
+    id=":id3:"
+    style="flex: 70 1 0px; overflow: hidden;"
+  >
+    Content
+  </div>
+</div>
+`;

@@ -1,0 +1,253 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PublicWinnerDraw > matches the snapshot once the existing winners are revealed 1`] = `
+<div
+  class="min-h-screen bg-muted flex flex-col"
+>
+  <header
+    class="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50"
+  >
+    <div
+      class="container mx-auto px-4 sm:px-6 lg:px-8"
+    >
+      <nav
+        class="relative flex items-center justify-between h-16"
+      >
+        <a
+          class="flex items-center gap-2"
+          href="/app/acme/sweepstakes/sweep-1/winners"
+        >
+          <span
+            class="text-lg font-semibold"
+          >
+            Random Name Picker
+          </span>
+        </a>
+        <button
+          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0"
+          data-slot="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x h-5 w-5"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div
+    class="flex-1 overflow-y-auto p-2 sm:p-4 lg:p-8 pb-[6rem] sm:pb-[8rem]"
+  >
+    <div
+      class="max-w-6xl mx-auto space-y-4"
+    >
+      <div
+        class="text-center space-y-2"
+      >
+        <h1
+          class="text-2xl sm:text-3xl lg:text-4xl font-bold"
+        >
+          Summer Giveaway
+        </h1>
+        <p
+          class="text-sm sm:text-base text-muted-foreground"
+        >
+          2
+           eligible
+           
+          participants
+        </p>
+      </div>
+      <div
+        class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
+      >
+        <div>
+          <div
+            class="flex flex-col gap-2 rounded-xl py-4 h-full transition-all duration-300 border-2 bg-warning text-warning-foreground border-warning shadow-xl"
+            data-slot="card"
+          >
+            <div
+              class="p-3 sm:p-4 lg:p-6 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] space-y-2 sm:space-y-3 relative"
+              data-slot="card-content"
+            >
+              <div>
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-trophy h-12 w-12 sm:h-16 sm:w-16 drop-shadow-lg"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"
+                  />
+                  <path
+                    d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"
+                  />
+                  <path
+                    d="M18 9h1.5a1 1 0 0 0 0-5H18"
+                  />
+                  <path
+                    d="M4 22h16"
+                  />
+                  <path
+                    d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"
+                  />
+                  <path
+                    d="M6 9H4.5a1 1 0 0 1 0-5H6"
+                  />
+                </svg>
+              </div>
+              <div
+                class="text-center space-y-0.5 sm:space-y-1"
+              >
+                <h3
+                  class="text-lg sm:text-xl lg:text-2xl font-bold line-clamp-1"
+                >
+                  Wendy Winner
+                </h3>
+                <p
+                  class="text-xs sm:text-sm opacity-90 font-medium"
+                >
+                  wins
+                </p>
+                <p
+                  class="text-sm sm:text-base lg:text-lg font-semibold line-clamp-2"
+                >
+                  Gaming Headset
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            class="flex flex-col gap-2 rounded-xl py-4 shadow-md h-full transition-all duration-300 border-2 bg-info text-info-foreground border-info cursor-pointer"
+            data-slot="card"
+          >
+            <div
+              class="p-3 sm:p-4 lg:p-6 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] space-y-2 sm:space-y-3 relative"
+              data-slot="card-content"
+            >
+              <div
+                class="text-4xl sm:text-5xl lg:text-6xl font-bold opacity-50"
+              >
+                ?
+              </div>
+              <p
+                class="text-sm sm:text-base lg:text-lg font-medium opacity-80 text-center line-clamp-2"
+              >
+                Gaming Headset
+              </p>
+              <p
+                class="text-xs sm:text-sm opacity-60"
+              >
+                Winner #
+                2
+              </p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            class="flex flex-col gap-2 rounded-xl py-4 shadow-md h-full transition-all duration-300 border-2 bg-info text-info-foreground border-info cursor-pointer"
+            data-slot="card"
+          >
+            <div
+              class="p-3 sm:p-4 lg:p-6 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] space-y-2 sm:space-y-3 relative"
+              data-slot="card-content"
+            >
+              <div
+                class="text-4xl sm:text-5xl lg:text-6xl font-bold opacity-50"
+              >
+                ?
+              </div>
+              <p
+                class="text-sm sm:text-base lg:text-lg font-medium opacity-80 text-center line-clamp-2"
+              >
+                Gift Card
+              </p>
+              <p
+                class="text-xs sm:text-sm opacity-60"
+              >
+                Winner #
+                1
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="fixed bottom-0 left-0 right-0 border-t border-border bg-background/95 backdrop-blur-sm p-3 sm:p-4"
+  >
+    <div
+      class="max-w-6xl mx-auto"
+    >
+      <div>
+        <button
+          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs h-10 rounded-md px-6 has-[>svg]:px-4 w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 sm:py-6 text-base sm:text-lg font-semibold"
+          data-slot="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-trophy h-5 w-5 sm:h-6 sm:w-6 mr-2"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"
+            />
+            <path
+              d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"
+            />
+            <path
+              d="M18 9h1.5a1 1 0 0 0 0-5H18"
+            />
+            <path
+              d="M4 22h16"
+            />
+            <path
+              d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"
+            />
+            <path
+              d="M6 9H4.5a1 1 0 0 1 0-5H6"
+            />
+          </svg>
+          Draw All Winners
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

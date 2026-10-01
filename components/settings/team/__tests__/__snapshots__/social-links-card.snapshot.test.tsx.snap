@@ -1,0 +1,219 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SocialLinksCard > matches the snapshot 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header auto-rows-min grid-rows-[auto_auto] px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 flex justify-between items-center"
+    data-slot="card-header"
+  >
+    <div>
+      <div
+        class="leading-none font-semibold"
+        data-slot="card-title"
+      >
+        Social Media Links
+      </div>
+      <div
+        class="text-muted-foreground text-sm mt-1"
+        data-slot="card-description"
+      >
+        Add links to your social media profiles and website.
+      </div>
+    </div>
+  </div>
+  <div
+    class="px-4 py-2"
+    data-slot="card-content"
+  >
+    <form
+      class="space-y-3"
+    >
+      <div
+        class="flex gap-2 items-start"
+      >
+        <div
+          class="space-y-1 w-[180px]"
+        >
+          <button
+            aria-autocomplete="none"
+            aria-controls="radix-_r_id_"
+            aria-describedby="_r_id_-form-item-description"
+            aria-expanded="false"
+            aria-invalid="false"
+            class="flex h-9 shadow-xs w-full items-center justify-between rounded-md border border-input bg-white dark:bg-input/30 px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+            data-state="closed"
+            dir="ltr"
+            id="_r_id_-form-item"
+            role="combobox"
+            type="button"
+          >
+            <span
+              style="pointer-events: none;"
+            >
+              X (Twitter)
+            </span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m6 9 6 6 6-6"
+              />
+            </svg>
+          </button>
+          <select
+            aria-hidden="true"
+            style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; word-wrap: normal;"
+            tabindex="-1"
+          >
+            <option
+              selected=""
+              value="x"
+            >
+              X (Twitter)
+            </option>
+            <option
+              value="facebook"
+            >
+              Facebook
+            </option>
+            <option
+              value="instagram"
+            >
+              Instagram
+            </option>
+            <option
+              value="discord"
+            >
+              Discord
+            </option>
+            <option
+              value="reddit"
+            >
+              Reddit
+            </option>
+            <option
+              value="youtube"
+            >
+              YouTube
+            </option>
+            <option
+              value="twitch"
+            >
+              Twitch
+            </option>
+            <option
+              value="tiktok"
+            >
+              TikTok
+            </option>
+            <option
+              value="linkedin"
+            >
+              LinkedIn
+            </option>
+            <option
+              value="website"
+            >
+              Website
+            </option>
+          </select>
+        </div>
+        <div
+          class="space-y-1 flex-1"
+        >
+          <input
+            aria-describedby="_r_id_-form-item-description"
+            aria-invalid="false"
+            class="file:text-foreground placeholder:text-muted-foreground bg-white selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-white file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+            data-slot="input"
+            id="_r_id_-form-item"
+            name="links.0.url"
+            placeholder="https://x.com/username"
+            type="url"
+            value="https://x.com/doggo"
+          />
+        </div>
+        <button
+          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent size-9 p-0 [&_svg]:mr-0 mt-0"
+          data-slot="button"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x h-4 w-4"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <button
+        class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-9 px-4 py-2 has-[>svg]:px-3 w-full"
+        data-slot="button"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-plus h-4 w-4 mr-2"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M5 12h14"
+          />
+          <path
+            d="M12 5v14"
+          />
+        </svg>
+        Add Social Link
+      </button>
+    </form>
+  </div>
+  <div
+    class="px-4 [.border-t]:pt-4 flex flex-col items-start gap-3 border-t sm:flex-row sm:items-center sm:justify-between py-0 my-0 text-sm sm:leading-8 text-muted-foreground"
+    data-slot="card-footer"
+  >
+    Links will be displayed on your sweepstakes pages.
+    <button
+      class="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 w-full sm:w-auto"
+      data-slot="button"
+      disabled=""
+    >
+      Save
+    </button>
+  </div>
+</div>
+`;

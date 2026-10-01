@@ -105,18 +105,31 @@ lib/
 
 - Use `pnpm run lint` for code linting (ESLint)
 - Use `pnpm run type-check` for TypeScript verification
-- Use `pnpm run test:run` to run the unit tests one time (Vitest)
-- Use `pnpm run test:coverage` to run the unit tests and measure the code coverage
+- Use `pnpm run test:run` to run all the tests one time (Vitest): server tests, component tests and snapshot tests
+- Use `pnpm run test:unit` to run only the server and component tests, and `pnpm run test:snapshot` to run only the snapshot tests
+- Use `pnpm run test:coverage` to run the server and component tests and measure the code coverage
+- Use `pnpm vitest run --project <name>` to run one project: `server`, `frontend` or `snapshot`
+- Use `pnpm vitest run -u <path>` to update snapshots after an intended UI change. Review the snapshot diff before you commit it
 - Use `pnpm run format` to automatically format all files
 - Use `pnpm run format:check` to check if files need formatting
-- Use `pnpm run verify` to run lint, format check, type check, and unit tests in sequence
+- Use `pnpm run verify` to run lint, format check, type check, and all the tests in sequence
 - Never use `pnpm run build` for testing changes
 - Check IDE diagnostics for immediate feedback
+
+### Frontend Tests
+
+- **Location**: Put component and hook tests in a `__tests__/` folder next to the code, named `<name>.test.tsx`. Put snapshot tests in a separate file in the same folder, named `<name>.snapshot.test.tsx`
+- **Projects**: Files that end in `.snapshot.test.tsx` run in jsdom (the `snapshot` project). Other files that end in `.test.tsx` run in jsdom (the `frontend` project). Files that end in `.test.ts` run in Node (the `server` project)
+- **Setup**: `test/setup-dom.ts` loads the jest-dom matchers, cleans up after each test and stubs `matchMedia`, `ResizeObserver`, `IntersectionObserver` and `scrollIntoView`
+- **Libraries**: Use `@testing-library/react` with role queries (`screen.getByRole`) and `@testing-library/user-event` for interactions. Use `renderHook` for hooks
+- **Snapshots**: Use `toMatchSnapshot()` for representative states, only in `.snapshot.test.tsx` files. ESLint rejects snapshot assertions in other test files. Keep snapshots deterministic: freeze time with `vi.setSystemTime`, mock `Math.random` and id generators, and do not snapshot Radix-generated ids
+- **Mocks**: Mock `next/navigation`, `next/link`, `next/image`, `next-auth/react` and server actions with `vi.mock` in the test file
+- **Pattern**: See `components/ui/__tests__/button.test.tsx` and `components/ui/__tests__/button.snapshot.test.tsx`
 
 ### Continuous Integration
 
 - **Workflow**: `.github/workflows/ci.yml` runs on each pull request and on each push to `main`
-- **Checks**: `Lint` (ESLint) and `Unit tests` (Vitest). Merge a pull request only when the two checks pass
+- **Checks**: `Lint` (ESLint), `Unit tests` (Vitest server and component tests, with coverage) and `Snapshot tests` (Vitest snapshot tests). Merge a pull request only when the three checks pass
 - **Coverage badge**: After each push to `main`, the `Coverage badge` job puts the line coverage in `coverage.svg` on the `badges` branch. The README shows this image. Do not edit the `badges` branch by hand
 - **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`
 - **ESLint baseline**: `eslint-suppressions.json` records the errors that existed when ESLint was added. New errors fail the check. Do not add entries to this file to hide new errors

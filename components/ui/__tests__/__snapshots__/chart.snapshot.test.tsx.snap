@@ -1,0 +1,112 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ChartContainer > matches the snapshot 1`] = `
+<div
+  class="[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border flex aspect-video justify-center text-xs [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden"
+  data-chart="chart-entries"
+  data-slot="chart"
+>
+  <style>
+    
+             [data-chart=chart-entries] {
+              --color-entries: #2563eb;
+  --color-winners: #16a34a;
+            }
+            
+
+            .dark [data-chart=chart-entries] {
+              --color-entries: #2563eb;
+  --color-winners: #4ade80;
+            }
+            
+  </style>
+  <div>
+    Chart body
+  </div>
+</div>
+`;
+
+exports[`ChartStyle > matches the snapshot 1`] = `
+<style>
+  
+             [data-chart=chart-x] {
+              --color-entries: #2563eb;
+  --color-winners: #16a34a;
+            }
+            
+
+            .dark [data-chart=chart-x] {
+              --color-entries: #2563eb;
+  --color-winners: #4ade80;
+            }
+            
+</style>
+`;
+
+exports[`ChartTooltipContent > matches the snapshot 1`] = `
+<div
+  class="border-border/50 bg-background grid min-w-[8rem] items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-sm"
+>
+  <div
+    class="font-medium"
+  >
+    Mon
+  </div>
+  <div
+    class="grid gap-1.5"
+  >
+    <div
+      class="[&>svg]:text-muted-foreground flex w-full flex-wrap gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 items-center"
+    >
+      <div
+        class="shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg) h-2.5 w-2.5"
+        style="--color-bg: #2563eb; --color-border: #2563eb;"
+      />
+      <div
+        class="flex flex-1 justify-between leading-none items-center"
+      >
+        <div
+          class="grid gap-1.5"
+        >
+          <span
+            class="text-muted-foreground"
+          >
+            Entries
+          </span>
+        </div>
+        <span
+          class="text-foreground font-mono font-medium tabular-nums"
+        >
+          1,200
+        </span>
+      </div>
+    </div>
+    <div
+      class="[&>svg]:text-muted-foreground flex w-full flex-wrap gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 items-center"
+    >
+      <div
+        class="shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg) h-2.5 w-2.5"
+        style="--color-bg: #16a34a; --color-border: #16a34a;"
+      />
+      <div
+        class="flex flex-1 justify-between leading-none items-center"
+      >
+        <div
+          class="grid gap-1.5"
+        >
+          <span
+            class="text-muted-foreground"
+          >
+            Winners
+          </span>
+        </div>
+        <span
+          class="text-foreground font-mono font-medium tabular-nums"
+        >
+          3
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;

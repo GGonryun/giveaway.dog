@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GiveawayItem > matches the snapshot for a running giveaway with partial participation 1`] = `
+<a
+  href="/browse/summer-giveaway"
+>
+  <div
+    class="bg-card text-card-foreground gap-2 rounded-xl border py-4 shadow-md group overflow-hidden pt-0 flex flex-col h-full hover:scale-[1.03] transition-transform duration-200"
+    data-slot="card"
+  >
+    <div
+      class="relative overflow-hidden rounded-t-lg"
+    >
+      <img
+        alt="Summer Giveaway"
+        class="w-full aspect-video object-cover transition-transform duration-300"
+        src="https://cdn.example.com/banner.png"
+      />
+      <div
+        class="absolute top-3 left-3"
+      />
+      <div
+        class="absolute top-3 right-3 flex flex-col gap-2 items-end"
+      >
+        <span
+          class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent text-primary-foreground [a&]:hover:bg-primary/90 bg-primary"
+          data-slot="badge"
+        >
+          Featured
+        </span>
+        <span
+          class="justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent [a&]:hover:bg-primary/90 bg-green-600 hover:bg-green-700 text-white flex items-center gap-1"
+          data-slot="badge"
+        >
+          2
+          /
+          5
+        </span>
+      </div>
+    </div>
+    <div
+      class="px-4 flex-1"
+      data-slot="card-content"
+    >
+      <h3
+        class="font-semibold text-lg line-clamp-1 group-hover:underline group-hover:text-success"
+      >
+        Summer Giveaway
+      </h3>
+      <div
+        class="font-normal text-sm text-muted-foreground"
+      >
+        7 days left
+         
+        • by 
+        Acme Games
+      </div>
+    </div>
+  </div>
+</a>
+`;

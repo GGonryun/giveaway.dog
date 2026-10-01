@@ -1,0 +1,8 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Textarea > matches the snapshot 1`] = `
+<textarea
+  class="flex min-h-[80px] w-full rounded-md border border-input bg-white dark:bg-input/30 px-3 py-2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-sm shadow-xs"
+  placeholder="Describe the prize"
+/>
+`;

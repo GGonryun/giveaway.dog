@@ -1,0 +1,74 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RadioGroup > matches the snapshot 1`] = `
+<div
+  aria-label="Account type"
+  aria-required="false"
+  class="grid gap-2"
+  dir="ltr"
+  role="radiogroup"
+  style="outline: none;"
+  tabindex="0"
+>
+  <button
+    aria-checked="true"
+    aria-label="Host"
+    class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    data-radix-collection-item=""
+    data-state="checked"
+    role="radio"
+    tabindex="-1"
+    type="button"
+    value="host"
+  >
+    <span
+      class="flex items-center justify-center"
+      data-state="checked"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-circle h-2.5 w-2.5 fill-current text-current"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+        />
+      </svg>
+    </span>
+  </button>
+  <button
+    aria-checked="false"
+    aria-label="Participate"
+    class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    data-radix-collection-item=""
+    data-state="unchecked"
+    role="radio"
+    tabindex="-1"
+    type="button"
+    value="participate"
+  />
+  <button
+    aria-checked="false"
+    aria-label="Both"
+    class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    data-disabled=""
+    data-radix-collection-item=""
+    data-state="unchecked"
+    disabled=""
+    role="radio"
+    tabindex="-1"
+    type="button"
+    value="both"
+  />
+</div>
+`;

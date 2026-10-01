@@ -1,0 +1,82 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Alert > matches the snapshot for the default variant 1`] = `
+<div
+  class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current bg-card text-muted-foreground"
+  data-slot="alert"
+  role="alert"
+>
+  Saved
+</div>
+`;
+
+exports[`Alert > matches the snapshot for the destructive variant 1`] = `
+<div
+  class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 text-destructive [&>svg]:text-current bg-destructive/10 border-destructive/50"
+  data-slot="alert"
+  role="alert"
+>
+  Saved
+</div>
+`;
+
+exports[`Alert > matches the snapshot for the info variant 1`] = `
+<div
+  class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 text-info [&>svg]:text-current bg-info/10 border-info/50"
+  data-slot="alert"
+  role="alert"
+>
+  Saved
+</div>
+`;
+
+exports[`Alert > matches the snapshot for the primary variant 1`] = `
+<div
+  class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 text-primary [&>svg]:text-current bg-primary/10 border-primary/50"
+  data-slot="alert"
+  role="alert"
+>
+  Saved
+</div>
+`;
+
+exports[`Alert > matches the snapshot for the success variant 1`] = `
+<div
+  class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 text-success [&>svg]:text-current bg-success/10 border-success/50"
+  data-slot="alert"
+  role="alert"
+>
+  Saved
+</div>
+`;
+
+exports[`Alert > matches the snapshot for the warning variant 1`] = `
+<div
+  class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 text-warning [&>svg]:text-current bg-warning/10 border-warning/50"
+  data-slot="alert"
+  role="alert"
+>
+  Saved
+</div>
+`;
+
+exports[`Alert > matches the snapshot with a title and a description 1`] = `
+<div
+  class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current bg-card text-muted-foreground"
+  data-slot="alert"
+  role="alert"
+>
+  <div
+    class="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight"
+    data-slot="alert-title"
+  >
+    Heads up
+  </div>
+  <div
+    class="col-start-2 grid justify-items-start gap-1 text-sm [&_p]:leading-relaxed"
+    data-slot="alert-description"
+  >
+    Your giveaway ends soon.
+  </div>
+</div>
+`;

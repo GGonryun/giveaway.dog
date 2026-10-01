@@ -16,6 +16,20 @@ export default defineConfig([
       'react-hooks/set-state-in-effect': 'warn'
     }
   },
+  {
+    files: ['**/*.test.ts', '**/*.test.tsx'],
+    ignores: ['**/*.snapshot.test.tsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'CallExpression[callee.property.name=/Snapshot$/]',
+          message:
+            'Put snapshot assertions in a .snapshot.test.tsx file. Those files run in the Snapshot tests job.'
+        }
+      ]
+    }
+  },
   globalIgnores([
     '.next/**',
     'out/**',

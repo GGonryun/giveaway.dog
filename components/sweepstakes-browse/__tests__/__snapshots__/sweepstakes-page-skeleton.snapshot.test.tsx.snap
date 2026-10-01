@@ -1,0 +1,300 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SweepstakesPageSkeleton > matches the snapshot 1`] = `
+<div
+  class="space-y-6"
+>
+  <div
+    class="flex flex-col sm:flex-row gap-3 items-start sm:items-center"
+  >
+    <div
+      class="flex-1 w-full"
+    >
+      <div
+        class="bg-accent animate-pulse rounded-md h-10 w-full"
+        data-slot="skeleton"
+      />
+    </div>
+    <div
+      class="flex gap-2 w-full sm:w-auto"
+    >
+      <div
+        class="bg-accent animate-pulse rounded-md h-10 w-32"
+        data-slot="skeleton"
+      />
+      <div
+        class="bg-accent animate-pulse rounded-md h-10 w-32"
+        data-slot="skeleton"
+      />
+    </div>
+  </div>
+  <div
+    class="flex flex-col lg:flex-row lg:items-start gap-6"
+  >
+    <div
+      class="flex-1 min-w-0"
+    >
+      <div
+        class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      >
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="bg-accent animate-pulse rounded-md h-48 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-6 w-3/4"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-5/6"
+            data-slot="skeleton"
+          />
+          <div
+            class="flex gap-2"
+          >
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+          </div>
+        </div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="bg-accent animate-pulse rounded-md h-48 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-6 w-3/4"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-5/6"
+            data-slot="skeleton"
+          />
+          <div
+            class="flex gap-2"
+          >
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+          </div>
+        </div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="bg-accent animate-pulse rounded-md h-48 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-6 w-3/4"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-5/6"
+            data-slot="skeleton"
+          />
+          <div
+            class="flex gap-2"
+          >
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+          </div>
+        </div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="bg-accent animate-pulse rounded-md h-48 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-6 w-3/4"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-5/6"
+            data-slot="skeleton"
+          />
+          <div
+            class="flex gap-2"
+          >
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+          </div>
+        </div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="bg-accent animate-pulse rounded-md h-48 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-6 w-3/4"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-5/6"
+            data-slot="skeleton"
+          />
+          <div
+            class="flex gap-2"
+          >
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+          </div>
+        </div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="bg-accent animate-pulse rounded-md h-48 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-6 w-3/4"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-5/6"
+            data-slot="skeleton"
+          />
+          <div
+            class="flex gap-2"
+          >
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+          </div>
+        </div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="bg-accent animate-pulse rounded-md h-48 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-6 w-3/4"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-5/6"
+            data-slot="skeleton"
+          />
+          <div
+            class="flex gap-2"
+          >
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+          </div>
+        </div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="bg-accent animate-pulse rounded-md h-48 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-6 w-3/4"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-4 w-5/6"
+            data-slot="skeleton"
+          />
+          <div
+            class="flex gap-2"
+          >
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+            <div
+              class="bg-accent animate-pulse rounded-md h-9 flex-1"
+              data-slot="skeleton"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

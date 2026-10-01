@@ -1,0 +1,255 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PublicWinnerPicker > matches the snapshot before the draw 1`] = `
+<div
+  class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+>
+  <div
+    class="relative w-full max-w-6xl"
+  >
+    <button
+      class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 absolute -top-12 right-0 text-white hover:bg-white/20"
+      data-slot="button"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-x h-6 w-6"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M18 6 6 18"
+        />
+        <path
+          d="m6 6 12 12"
+        />
+      </svg>
+    </button>
+    <div
+      class="bg-background rounded-lg p-8 space-y-6"
+    >
+      <div
+        class="text-center space-y-2"
+      >
+        <h2
+          class="text-3xl font-bold"
+        >
+          Winner Selection
+        </h2>
+        <p
+          class="text-muted-foreground"
+        >
+          Ready to pick 2 winners from 10 participants
+        </p>
+      </div>
+      <div
+        class="min-h-[400px] flex items-center justify-center"
+      >
+        <div
+          class="relative w-full max-w-4xl"
+        >
+          <div
+            class="grid grid-cols-8 gap-2 perspective-1000"
+          >
+            <div
+              class="relative aspect-[2/3]"
+            >
+              <div
+                class="bg-card text-card-foreground flex-col gap-2 rounded-xl py-4 shadow-md w-full h-full flex items-center justify-center transition-all duration-300 border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400"
+                data-slot="card"
+              >
+                <div
+                  class="text-2xl font-bold text-white opacity-50"
+                >
+                  ?
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative aspect-[2/3]"
+            >
+              <div
+                class="bg-card text-card-foreground flex-col gap-2 rounded-xl py-4 shadow-md w-full h-full flex items-center justify-center transition-all duration-300 border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400"
+                data-slot="card"
+              >
+                <div
+                  class="text-2xl font-bold text-white opacity-50"
+                >
+                  ?
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative aspect-[2/3]"
+            >
+              <div
+                class="bg-card text-card-foreground flex-col gap-2 rounded-xl py-4 shadow-md w-full h-full flex items-center justify-center transition-all duration-300 border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400"
+                data-slot="card"
+              >
+                <div
+                  class="text-2xl font-bold text-white opacity-50"
+                >
+                  ?
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative aspect-[2/3]"
+            >
+              <div
+                class="bg-card text-card-foreground flex-col gap-2 rounded-xl py-4 shadow-md w-full h-full flex items-center justify-center transition-all duration-300 border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400"
+                data-slot="card"
+              >
+                <div
+                  class="text-2xl font-bold text-white opacity-50"
+                >
+                  ?
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative aspect-[2/3]"
+            >
+              <div
+                class="bg-card text-card-foreground flex-col gap-2 rounded-xl py-4 shadow-md w-full h-full flex items-center justify-center transition-all duration-300 border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400"
+                data-slot="card"
+              >
+                <div
+                  class="text-2xl font-bold text-white opacity-50"
+                >
+                  ?
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative aspect-[2/3]"
+            >
+              <div
+                class="bg-card text-card-foreground flex-col gap-2 rounded-xl py-4 shadow-md w-full h-full flex items-center justify-center transition-all duration-300 border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400"
+                data-slot="card"
+              >
+                <div
+                  class="text-2xl font-bold text-white opacity-50"
+                >
+                  ?
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative aspect-[2/3]"
+            >
+              <div
+                class="bg-card text-card-foreground flex-col gap-2 rounded-xl py-4 shadow-md w-full h-full flex items-center justify-center transition-all duration-300 border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400"
+                data-slot="card"
+              >
+                <div
+                  class="text-2xl font-bold text-white opacity-50"
+                >
+                  ?
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative aspect-[2/3]"
+            >
+              <div
+                class="bg-card text-card-foreground flex-col gap-2 rounded-xl py-4 shadow-md w-full h-full flex items-center justify-center transition-all duration-300 border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400"
+                data-slot="card"
+              >
+                <div
+                  class="text-2xl font-bold text-white opacity-50"
+                >
+                  ?
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative aspect-[2/3]"
+            >
+              <div
+                class="bg-card text-card-foreground flex-col gap-2 rounded-xl py-4 shadow-md w-full h-full flex items-center justify-center transition-all duration-300 border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400"
+                data-slot="card"
+              >
+                <div
+                  class="text-2xl font-bold text-white opacity-50"
+                >
+                  ?
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative aspect-[2/3]"
+            >
+              <div
+                class="bg-card text-card-foreground flex-col gap-2 rounded-xl py-4 shadow-md w-full h-full flex items-center justify-center transition-all duration-300 border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400"
+                data-slot="card"
+              >
+                <div
+                  class="text-2xl font-bold text-white opacity-50"
+                >
+                  ?
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex justify-center gap-4"
+      >
+        <button
+          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-9 px-4 py-2 has-[>svg]:px-3"
+          data-slot="button"
+        >
+          Cancel
+        </button>
+        <button
+          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-10 rounded-md px-6 has-[>svg]:px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+          data-slot="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-trophy h-5 w-5 mr-2"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"
+            />
+            <path
+              d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"
+            />
+            <path
+              d="M18 9h1.5a1 1 0 0 0 0-5H18"
+            />
+            <path
+              d="M4 22h16"
+            />
+            <path
+              d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"
+            />
+            <path
+              d="M6 9H4.5a1 1 0 0 1 0-5H6"
+            />
+          </svg>
+          Start Draw
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

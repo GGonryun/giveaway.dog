@@ -1,0 +1,1040 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TaskCompletionDetailSheetContent > matches the snapshot for a selected completion 1`] = `
+<div
+  aria-describedby="generated-id"
+  aria-labelledby="generated-id"
+  class="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full border-r w-full sm:max-w-lg flex flex-col px-4 sm:px-6 pb-4"
+  data-slot="sheet-content"
+  data-state="open"
+  id="generated-id"
+  role="dialog"
+  style="pointer-events: auto;"
+  tabindex="-1"
+>
+  <div
+    class="flex flex-col p-4 px-0"
+    data-slot="sheet-header"
+  >
+    <div
+      class="flex items-center space-x-3"
+    >
+      <div
+        class="flex-1"
+      >
+        <h2
+          class="text-foreground font-semibold text-lg"
+          data-slot="sheet-title"
+          id="generated-id"
+        >
+          Say hello
+        </h2>
+        <p
+          class="text-muted-foreground text-sm flex items-center space-x-1"
+          data-slot="sheet-description"
+          id="generated-id"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-star h-4 w-4 text-gray-500"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+            />
+          </svg>
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-accent [a&]:hover:text-accent-foreground text-xs bg-green-100 text-green-800"
+            data-slot="badge"
+          >
+            Engagement
+          </span>
+          <span
+            class="text-xs text-muted-foreground"
+          >
+            BONUS_TASK
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex-1 overflow-y-auto space-y-6 pr-1"
+  >
+    <div
+      class="space-y-4"
+    >
+      <h4
+        class="text-base font-medium border-b pb-2"
+      >
+        Task Statistics
+      </h4>
+      <div
+        class="grid grid-cols-3 gap-3"
+      >
+        <div
+          class="text-center p-3 bg-muted/50 rounded-lg"
+        >
+          <div
+            class="text-xl font-bold text-blue-600"
+          >
+            3
+          </div>
+          <div
+            class="text-xs text-muted-foreground"
+          >
+            Total Completions
+          </div>
+        </div>
+        <div
+          class="text-center p-3 bg-muted/50 rounded-lg"
+        >
+          <div
+            class="text-xl font-bold text-green-600"
+          >
+            75
+            %
+          </div>
+          <div
+            class="text-xs text-muted-foreground"
+          >
+            Completion Rate
+          </div>
+        </div>
+        <div
+          class="text-center p-3 bg-muted/50 rounded-lg"
+        >
+          <div
+            class="text-xl font-bold text-purple-600"
+          >
+            1
+          </div>
+          <div
+            class="text-xs text-muted-foreground"
+          >
+            Verified
+          </div>
+        </div>
+      </div>
+      <div
+        class="space-y-2"
+      >
+        <div
+          class="flex items-center justify-between text-sm"
+        >
+          <div
+            class="flex items-center space-x-2"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-check-big h-4 w-4 text-green-500"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M21.801 10A10 10 0 1 1 17 3.335"
+              />
+              <path
+                d="m9 11 3 3L22 4"
+              />
+            </svg>
+            <span>
+              Completed
+            </span>
+          </div>
+          <span
+            class="font-medium"
+          >
+            1
+          </span>
+        </div>
+        <div
+          class="flex items-center justify-between text-sm"
+        >
+          <div
+            class="flex items-center space-x-2"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-clock h-4 w-4 text-yellow-500"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 6v6l4 2"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+            </svg>
+            <span>
+              Pending Review
+            </span>
+          </div>
+          <span
+            class="font-medium"
+          >
+            0
+          </span>
+        </div>
+        <div
+          class="flex items-center justify-between text-sm"
+        >
+          <div
+            class="flex items-center space-x-2"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-x h-4 w-4 text-red-500"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="m15 9-6 6"
+              />
+              <path
+                d="m9 9 6 6"
+              />
+            </svg>
+            <span>
+              Rejected
+            </span>
+          </div>
+          <span
+            class="font-medium"
+          >
+            1
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <h4
+        class="text-base font-medium border-b pb-2"
+      >
+        This Completion
+      </h4>
+      <div
+        class="p-4 border bg-muted rounded-lg space-y-3"
+      >
+        <div
+          class="flex items-center justify-between"
+        >
+          <div
+            class="flex items-center space-x-2"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-x h-4 w-4 text-red-500"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="m15 9-6 6"
+              />
+              <path
+                d="m9 9 6 6"
+              />
+            </svg>
+            <span
+              class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 text-xs"
+              data-slot="badge"
+            >
+              Rejected
+            </span>
+          </div>
+          <span
+            class="text-xs text-muted-foreground"
+          >
+            3 hours ago
+          </span>
+        </div>
+        <div
+          class="space-y-2"
+        >
+          <div
+            class="space-y-1"
+          >
+            <div
+              class="flex items-center space-x-2"
+            >
+              <div>
+                <div
+                  class="font-medium text-sm"
+                >
+                  Alex Kim
+                </div>
+                <div
+                  class="text-xs text-muted-foreground"
+                >
+                  <div
+                    class="flex items-center gap-2"
+                  >
+                    <span
+                      class="text-sm"
+                    >
+                      a***x@example.com
+                    </span>
+                    <button
+                      aria-label="Reveal email"
+                      class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 size-8 [&_svg]:mr-0 h-auto w-auto p-0 hover:bg-transparent"
+                      data-slot="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="lucide lucide-eye h-4 w-4 text-muted-foreground"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                        />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="3"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex items-center space-x-1 text-xs text-muted-foreground"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-globe h-3 w-3"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
+                <path
+                  d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"
+                />
+                <path
+                  d="M2 12h20"
+                />
+              </svg>
+              <span>
+                US
+              </span>
+              <span
+                class="mx-2"
+              >
+                •
+              </span>
+              <span>
+                Quality Score: 
+                80
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 text-destructive [&>svg]:text-current bg-destructive/10 border-destructive/50"
+        data-slot="alert"
+        role="alert"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-circle-x h-4 w-4"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+          />
+          <path
+            d="m15 9-6 6"
+          />
+          <path
+            d="m9 9 6 6"
+          />
+        </svg>
+        <div
+          class="col-start-2 grid justify-items-start gap-1 text-sm [&_p]:leading-relaxed"
+          data-slot="alert-description"
+        >
+          <div
+            class="space-y-1"
+          >
+            <div
+              class="font-semibold text-sm"
+            >
+              Rejection Reason:
+            </div>
+            <div
+              class="text-sm"
+            >
+              Fake account
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="flex items-center justify-between border-b pb-2"
+      >
+        <h4
+          class="text-base font-medium"
+        >
+          Recent Completions
+        </h4>
+        <div
+          class="flex items-center space-x-1 text-xs text-muted-foreground"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-file-check h-3 w-3"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+            />
+            <path
+              d="M14 2v5a1 1 0 0 0 1 1h5"
+            />
+            <path
+              d="m9 15 2 2 4-4"
+            />
+          </svg>
+          <span>
+            3
+             shown
+          </span>
+        </div>
+      </div>
+      <div
+        class="space-y-2 max-h-64 overflow-y-auto"
+      >
+        <div
+          class="p-3 bg-muted rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
+        >
+          <a
+            href="/app/acme/users/user-2"
+          >
+            <div
+              class="flex items-center justify-between"
+            >
+              <div
+                class="space-y-1"
+              >
+                <div
+                  class="flex items-center space-x-2"
+                >
+                  <div>
+                    <div
+                      class="font-medium text-sm"
+                    >
+                      Sam Smith
+                    </div>
+                    <div
+                      class="text-xs text-muted-foreground"
+                    >
+                      <div
+                        class="flex items-center gap-2"
+                      >
+                        <span
+                          class="text-sm"
+                        >
+                          s***m@example.com
+                        </span>
+                        <button
+                          aria-label="Reveal email"
+                          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 size-8 [&_svg]:mr-0 h-auto w-auto p-0 hover:bg-transparent"
+                          data-slot="button"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="lucide lucide-eye h-4 w-4 text-muted-foreground"
+                            fill="none"
+                            height="24"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                            />
+                            <circle
+                              cx="12"
+                              cy="12"
+                              r="3"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center space-x-1 text-xs text-muted-foreground"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-globe h-3 w-3"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                    />
+                    <path
+                      d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"
+                    />
+                    <path
+                      d="M2 12h20"
+                    />
+                  </svg>
+                  <span>
+                    CA
+                  </span>
+                  <span
+                    class="mx-2"
+                  >
+                    •
+                  </span>
+                  <span>
+                    Quality Score: 
+                    55
+                  </span>
+                </div>
+              </div>
+              <div
+                class="flex items-center space-x-2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-clock h-4 w-4 text-yellow-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 6v6l4 2"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                  />
+                </svg>
+                <span
+                  class="text-xs text-muted-foreground"
+                >
+                  1 hour ago
+                </span>
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-chevron-right h-3 w-3 text-muted-foreground"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m9 18 6-6-6-6"
+                  />
+                </svg>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div
+          class="p-3 bg-muted rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
+        >
+          <a
+            href="/app/acme/users/user-3"
+          >
+            <div
+              class="flex items-center justify-between"
+            >
+              <div
+                class="space-y-1"
+              >
+                <div
+                  class="flex items-center space-x-2"
+                >
+                  <div>
+                    <div
+                      class="font-medium text-sm"
+                    >
+                      Alex Kim
+                    </div>
+                    <div
+                      class="text-xs text-muted-foreground"
+                    >
+                      <div
+                        class="flex items-center gap-2"
+                      >
+                        <span
+                          class="text-sm"
+                        >
+                          a***x@example.com
+                        </span>
+                        <button
+                          aria-label="Reveal email"
+                          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 size-8 [&_svg]:mr-0 h-auto w-auto p-0 hover:bg-transparent"
+                          data-slot="button"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="lucide lucide-eye h-4 w-4 text-muted-foreground"
+                            fill="none"
+                            height="24"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                            />
+                            <circle
+                              cx="12"
+                              cy="12"
+                              r="3"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center space-x-1 text-xs text-muted-foreground"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-globe h-3 w-3"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                    />
+                    <path
+                      d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"
+                    />
+                    <path
+                      d="M2 12h20"
+                    />
+                  </svg>
+                  <span>
+                    US
+                  </span>
+                  <span
+                    class="mx-2"
+                  >
+                    •
+                  </span>
+                  <span>
+                    Quality Score: 
+                    80
+                  </span>
+                </div>
+              </div>
+              <div
+                class="flex items-center space-x-2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-circle-x h-4 w-4 text-red-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                  />
+                  <path
+                    d="m15 9-6 6"
+                  />
+                  <path
+                    d="m9 9 6 6"
+                  />
+                </svg>
+                <span
+                  class="text-xs text-muted-foreground"
+                >
+                  3 hours ago
+                </span>
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-chevron-right h-3 w-3 text-muted-foreground"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m9 18 6-6-6-6"
+                  />
+                </svg>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div
+          class="p-3 bg-muted rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
+        >
+          <a
+            href="/app/acme/users/user-1"
+          >
+            <div
+              class="flex items-center justify-between"
+            >
+              <div
+                class="space-y-1"
+              >
+                <div
+                  class="flex items-center space-x-2"
+                >
+                  <div>
+                    <div
+                      class="font-medium text-sm"
+                    >
+                      Jane Doe
+                    </div>
+                    <div
+                      class="text-xs text-muted-foreground"
+                    >
+                      <div
+                        class="flex items-center gap-2"
+                      >
+                        <span
+                          class="text-sm"
+                        >
+                          j***e@example.com
+                        </span>
+                        <button
+                          aria-label="Reveal email"
+                          class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 size-8 [&_svg]:mr-0 h-auto w-auto p-0 hover:bg-transparent"
+                          data-slot="button"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="lucide lucide-eye h-4 w-4 text-muted-foreground"
+                            fill="none"
+                            height="24"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                            />
+                            <circle
+                              cx="12"
+                              cy="12"
+                              r="3"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center space-x-1 text-xs text-muted-foreground"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-globe h-3 w-3"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                    />
+                    <path
+                      d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"
+                    />
+                    <path
+                      d="M2 12h20"
+                    />
+                  </svg>
+                  <span>
+                    US
+                  </span>
+                  <span
+                    class="mx-2"
+                  >
+                    •
+                  </span>
+                  <span>
+                    Quality Score: 
+                    80
+                  </span>
+                </div>
+              </div>
+              <div
+                class="flex items-center space-x-2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-circle-check-big h-4 w-4 text-green-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M21.801 10A10 10 0 1 1 17 3.335"
+                  />
+                  <path
+                    d="m9 11 3 3L22 4"
+                  />
+                </svg>
+                <span
+                  class="text-xs text-muted-foreground"
+                >
+                  5 hours ago
+                </span>
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-chevron-right h-3 w-3 text-muted-foreground"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m9 18 6-6-6-6"
+                  />
+                </svg>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="border-t pt-4 mt-4 shrink-0 space-y-2"
+  >
+    <button
+      class="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 w-full"
+      data-slot="button"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-shield h-4 w-4 mr-2"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+        />
+      </svg>
+      Verify Entry
+    </button>
+    <button
+      class="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 w-full"
+      data-slot="button"
+    >
+      Close Details
+    </button>
+  </div>
+  <button
+    class="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-full transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none border p-1 hover:bg-secondary/80"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-x size-5"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M18 6 6 18"
+      />
+      <path
+        d="m6 6 12 12"
+      />
+    </svg>
+    <span
+      class="sr-only"
+    >
+      Close
+    </span>
+  </button>
+</div>
+`;
