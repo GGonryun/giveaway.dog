@@ -1,0 +1,174 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FeatureInDevelopmentDialog > matches the snapshot 1`] = `
+<div
+  aria-describedby="radix-_r_id_"
+  aria-labelledby="radix-_r_id_"
+  class="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-md"
+  data-slot="dialog-content"
+  data-state="open"
+  id="radix-_r_id_"
+  role="dialog"
+  style="pointer-events: auto;"
+  tabindex="-1"
+>
+  <div
+    class="flex flex-col gap-2 text-center sm:text-left"
+    data-slot="dialog-header"
+  >
+    <div
+      class="flex items-center gap-2"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-rocket h-5 w-5 text-primary"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"
+        />
+        <path
+          d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"
+        />
+        <path
+          d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"
+        />
+        <path
+          d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"
+        />
+      </svg>
+      <h2
+        class="text-lg leading-none font-semibold"
+        data-slot="dialog-title"
+        id="radix-_r_id_"
+      >
+        Feature In Active Development
+      </h2>
+    </div>
+    <p
+      class="text-muted-foreground text-sm pt-4 space-y-4"
+      data-slot="dialog-description"
+      id="radix-_r_id_"
+    >
+      <p>
+        This feature
+         is currently being actively developed and will be available soon.
+      </p>
+      <div
+        class="space-y-3 pt-2"
+      >
+        <div
+          class="flex items-start gap-3 text-sm"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-settings h-4 w-4 mt-0.5 text-muted-foreground shrink-0"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="3"
+            />
+          </svg>
+          <p>
+            You can request early access from your
+             
+            <span
+              class="font-medium"
+            >
+              Account &gt; Feature Flags
+            </span>
+             
+            section
+          </p>
+        </div>
+        <div
+          class="flex items-start gap-3 text-sm"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-message-circle h-4 w-4 mt-0.5 text-muted-foreground shrink-0"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"
+            />
+          </svg>
+          <p>
+            Or contact our support team to learn more about this feature
+          </p>
+        </div>
+      </div>
+    </p>
+  </div>
+  <div
+    class="flex justify-end gap-2 pt-4"
+  >
+    <button
+      class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3"
+      data-slot="button"
+    >
+      Got it
+    </button>
+  </div>
+  <button
+    class="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+    data-slot="dialog-close"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-x"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M18 6 6 18"
+      />
+      <path
+        d="m6 6 12 12"
+      />
+    </svg>
+    <span
+      class="sr-only"
+    >
+      Close
+    </span>
+  </button>
+</div>
+`;

@@ -1,0 +1,567 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ParticipationHistoryTable > when the user has participated > matches the snapshot 1`] = `
+<div
+  class="space-y-4"
+>
+  <div
+    class="flex items-center justify-between"
+  >
+    <div
+      class="flex items-center space-x-2"
+    >
+      <button
+        aria-checked="false"
+        class="peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.3rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+        data-slot="switch"
+        data-state="unchecked"
+        id="wins-only"
+        role="switch"
+        type="button"
+        value="on"
+      >
+        <span
+          class="bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+          data-slot="switch-thumb"
+          data-state="unchecked"
+        />
+      </button>
+      <label
+        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+        for="wins-only"
+      >
+        Show wins only
+        <span
+          class="ml-1.5 text-xs text-muted-foreground"
+        >
+          (
+          1
+          )
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border shadow-md p-0 overflow-hidden"
+    data-slot="card"
+  >
+    <div
+      class="p-0"
+      data-slot="card-content"
+    >
+      <div
+        class="overflow-x-auto"
+      >
+        <div
+          class="relative w-full overflow-auto"
+        >
+          <table
+            class="w-full caption-bottom text-sm"
+          >
+            <thead
+              class="[&_tr]:border-b bg-muted/50"
+            >
+              <tr
+                class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              >
+                <th
+                  class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                >
+                  Giveaway
+                </th>
+                <th
+                  class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                >
+                  Progress
+                </th>
+                <th
+                  class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                >
+                  Status
+                </th>
+                <th
+                  class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                >
+                  Last Activity
+                </th>
+                <th
+                  class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 w-[50px]"
+                />
+              </tr>
+            </thead>
+            <tbody
+              class="[&_tr:last-child]:border-0"
+            >
+              <tr
+                class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              >
+                <td
+                  class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+                >
+                  <a
+                    class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+                    href="/browse/sweepstakes-1"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="lucide lucide-trophy h-4 w-4 text-yellow-500 flex-shrink-0"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"
+                        />
+                        <path
+                          d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"
+                        />
+                        <path
+                          d="M18 9h1.5a1 1 0 0 0 0-5H18"
+                        />
+                        <path
+                          d="M4 22h16"
+                        />
+                        <path
+                          d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"
+                        />
+                        <path
+                          d="M6 9H4.5a1 1 0 0 1 0-5H6"
+                        />
+                      </svg>
+                      <div
+                        class="font-medium text-sm hover:underline"
+                      >
+                        Summer Gear Giveaway
+                      </div>
+                    </div>
+                  </a>
+                </td>
+                <td
+                  class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+                >
+                  <div
+                    class="flex items-center space-x-2"
+                  >
+                    <div
+                      class="w-16 bg-muted rounded-full h-1.5"
+                    >
+                      <div
+                        class="h-1.5 rounded-full transition-all bg-green-500"
+                        style="width: 85%;"
+                      />
+                    </div>
+                    <span
+                      class="text-xs font-medium min-w-[2.5rem]"
+                    >
+                      85
+                      %
+                    </span>
+                  </div>
+                </td>
+                <td
+                  class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90 text-sm"
+                    data-slot="badge"
+                  >
+                    Active
+                  </span>
+                </td>
+                <td
+                  class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+                >
+                  <div
+                    class="flex items-center space-x-1 text-sm"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-clock h-3 w-3 text-muted-foreground"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 6v6l4 2"
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                    </svg>
+                    <span>
+                      Feb 14, 2026, 03:30 PM
+                    </span>
+                  </div>
+                </td>
+                <td
+                  class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+                >
+                  <button
+                    aria-expanded="false"
+                    aria-haspopup="menu"
+                    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+                    data-slot="button"
+                    data-state="closed"
+                    id="radix-_r_id_"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-ellipsis h-4 w-4"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="19"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="5"
+                        cy="12"
+                        r="1"
+                      />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              >
+                <td
+                  class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+                >
+                  <a
+                    class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+                    href="/browse/sweepstakes-2"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <div
+                        class="font-medium text-sm hover:underline"
+                      >
+                        Winter Coffee Raffle
+                      </div>
+                    </div>
+                  </a>
+                </td>
+                <td
+                  class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+                >
+                  <div
+                    class="flex items-center space-x-2"
+                  >
+                    <div
+                      class="w-16 bg-muted rounded-full h-1.5"
+                    >
+                      <div
+                        class="h-1.5 rounded-full transition-all bg-red-500"
+                        style="width: 30%;"
+                      />
+                    </div>
+                    <span
+                      class="text-xs font-medium min-w-[2.5rem]"
+                    >
+                      30
+                      %
+                    </span>
+                  </div>
+                </td>
+                <td
+                  class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-success text-success-foreground [a&]:hover:bg-success/90 text-sm"
+                    data-slot="badge"
+                  >
+                    Completed
+                  </span>
+                </td>
+                <td
+                  class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+                >
+                  <div
+                    class="flex items-center space-x-1 text-sm"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-clock h-3 w-3 text-muted-foreground"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 6v6l4 2"
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                    </svg>
+                    <span>
+                      Feb 14, 2026, 03:30 PM
+                    </span>
+                  </div>
+                </td>
+                <td
+                  class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+                >
+                  <button
+                    aria-expanded="false"
+                    aria-haspopup="menu"
+                    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+                    data-slot="button"
+                    data-state="closed"
+                    id="radix-_r_id_"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-ellipsis h-4 w-4"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="19"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="5"
+                        cy="12"
+                        r="1"
+                      />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-3 sm:px-6 py-2 border-t"
+      >
+        <div
+          class="flex items-center justify-center sm:justify-start text-xs sm:text-sm text-muted-foreground"
+        >
+          <span>
+            <span
+              class="hidden sm:inline"
+            >
+              Showing 
+            </span>
+            1
+            -
+            2
+             of 
+            2
+            <span
+              class="hidden sm:inline"
+            >
+               
+              giveaways
+            </span>
+          </span>
+        </div>
+        <div
+          class="flex items-center justify-center gap-1 sm:gap-2"
+        >
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent p-0 [&_svg]:mr-0 size-8"
+            data-slot="button"
+            disabled=""
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-chevrons-left"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m11 17-5-5 5-5"
+              />
+              <path
+                d="m18 17-5-5 5-5"
+              />
+            </svg>
+            <span
+              class="sr-only"
+            >
+              First page
+            </span>
+          </button>
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent p-0 [&_svg]:mr-0 size-8"
+            data-slot="button"
+            disabled=""
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-chevron-left"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m15 18-6-6 6-6"
+              />
+            </svg>
+            <span
+              class="sr-only"
+            >
+              Previous page
+            </span>
+          </button>
+          <div
+            class="flex items-center gap-1 px-2 sm:px-3"
+          >
+            <span
+              class="text-xs sm:text-sm font-medium"
+            >
+              Page
+            </span>
+            <span
+              class="inline-flex items-center justify-center rounded-md border font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground text-xs sm:text-sm px-2 py-1"
+              data-slot="badge"
+            >
+              1
+            </span>
+            <span
+              class="text-xs sm:text-sm"
+            >
+              of
+            </span>
+            <span
+              class="text-xs sm:text-sm font-medium"
+            >
+              1
+            </span>
+          </div>
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent p-0 [&_svg]:mr-0 size-8"
+            data-slot="button"
+            disabled=""
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-chevron-right"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m9 18 6-6-6-6"
+              />
+            </svg>
+            <span
+              class="sr-only"
+            >
+              Next page
+            </span>
+          </button>
+          <button
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-white shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent p-0 [&_svg]:mr-0 size-8"
+            data-slot="button"
+            disabled=""
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-chevrons-right"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m6 17 5-5-5-5"
+              />
+              <path
+                d="m13 17 5-5-5-5"
+              />
+            </svg>
+            <span
+              class="sr-only"
+            >
+              Last page
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

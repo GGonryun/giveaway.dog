@@ -1,0 +1,521 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MembersTable > when there are members > matches the snapshot 1`] = `
+<div>
+  <div
+    class="rounded-md border"
+  >
+    <div
+      class="relative w-full overflow-auto"
+    >
+      <table
+        class="w-full caption-bottom text-sm"
+      >
+        <thead
+          class="[&_tr]:border-b bg-muted/50"
+        >
+          <tr
+            class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+          >
+            <th
+              class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 w-[50px]"
+            />
+            <th
+              class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+            >
+              Member
+            </th>
+            <th
+              class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden sm:table-cell"
+            >
+              Role
+            </th>
+            <th
+              class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden lg:table-cell"
+            >
+              Joined
+            </th>
+            <th
+              class="h-10 px-4 pt-1 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 w-[50px]"
+            />
+          </tr>
+        </thead>
+        <tbody
+          class="[&_tr:last-child]:border-0"
+        >
+          <tr
+            class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+          >
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8"
+              >
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  A
+                </span>
+              </span>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 font-medium"
+            >
+              <div>
+                <div
+                  class="font-medium"
+                >
+                  Ada Lovelace
+                </div>
+                <div
+                  class="text-xs text-muted-foreground/70"
+                >
+                  <div
+                    class="flex items-center gap-2"
+                  >
+                    <span
+                      class="text-sm"
+                    >
+                      a***a@example.com
+                    </span>
+                    <button
+                      aria-label="Reveal email"
+                      class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 size-8 [&_svg]:mr-0 h-auto w-auto p-0 hover:bg-transparent"
+                      data-slot="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="lucide lucide-eye h-4 w-4 text-muted-foreground"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                        />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="3"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 hidden sm:table-cell"
+            >
+              <span
+                class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90"
+                data-slot="badge"
+              >
+                OWNER
+              </span>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 hidden text-muted-foreground lg:table-cell"
+            >
+              about 2 months ago
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+                data-slot="button"
+                data-state="closed"
+                id="radix-_r_id_"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-ellipsis h-4 w-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="1"
+                  />
+                  <circle
+                    cx="19"
+                    cy="12"
+                    r="1"
+                  />
+                  <circle
+                    cx="5"
+                    cy="12"
+                    r="1"
+                  />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          <tr
+            class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+          >
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8"
+              >
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  🐶
+                </span>
+              </span>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 font-medium"
+            >
+              <div>
+                <div
+                  class="font-medium"
+                >
+                  Unnamed User
+                </div>
+                <div
+                  class="text-xs text-muted-foreground/70"
+                >
+                  <div
+                    class="flex items-center gap-2"
+                  >
+                    <span
+                      class="text-sm"
+                    >
+                      g***e@example.com
+                    </span>
+                    <button
+                      aria-label="Reveal email"
+                      class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 size-8 [&_svg]:mr-0 h-auto w-auto p-0 hover:bg-transparent"
+                      data-slot="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="lucide lucide-eye h-4 w-4 text-muted-foreground"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                        />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="3"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 hidden sm:table-cell"
+            >
+              <span
+                class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90"
+                data-slot="badge"
+              >
+                ADMIN
+              </span>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 hidden text-muted-foreground lg:table-cell"
+            >
+              3 days ago
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+                data-slot="button"
+                data-state="closed"
+                id="radix-_r_id_"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-ellipsis h-4 w-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="1"
+                  />
+                  <circle
+                    cx="19"
+                    cy="12"
+                    r="1"
+                  />
+                  <circle
+                    cx="5"
+                    cy="12"
+                    r="1"
+                  />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          <tr
+            class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+          >
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8"
+              >
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  L
+                </span>
+              </span>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 font-medium"
+            >
+              <div>
+                <div
+                  class="font-medium"
+                >
+                  Unnamed User
+                </div>
+                <div
+                  class="text-xs text-muted-foreground/70"
+                >
+                  <div
+                    class="flex items-center gap-2"
+                  >
+                    <span
+                      class="text-sm"
+                    >
+                      l***s@example.com
+                    </span>
+                    <button
+                      aria-label="Reveal email"
+                      class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 size-8 [&_svg]:mr-0 h-auto w-auto p-0 hover:bg-transparent"
+                      data-slot="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="lucide lucide-eye h-4 w-4 text-muted-foreground"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                        />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="3"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 hidden sm:table-cell"
+            >
+              <span
+                class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground"
+                data-slot="badge"
+              >
+                GUEST
+              </span>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 hidden text-muted-foreground lg:table-cell"
+            >
+              about 3 hours ago
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+                data-slot="button"
+                data-state="closed"
+                id="radix-_r_id_"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-ellipsis h-4 w-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="1"
+                  />
+                  <circle
+                    cx="19"
+                    cy="12"
+                    r="1"
+                  />
+                  <circle
+                    cx="5"
+                    cy="12"
+                    r="1"
+                  />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          <tr
+            class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+          >
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+            >
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8"
+              >
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
+                  ?
+                </span>
+              </span>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 font-medium"
+            >
+              <div>
+                <div
+                  class="font-medium"
+                >
+                  Unnamed User
+                </div>
+                <div
+                  class="text-xs text-muted-foreground/70"
+                />
+              </div>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 hidden sm:table-cell"
+            >
+              <span
+                class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground"
+                data-slot="badge"
+              >
+                MEMBER
+              </span>
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0 hidden text-muted-foreground lg:table-cell"
+            >
+              14 days ago
+            </td>
+            <td
+              class="px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 p-0 [&_svg]:mr-0 h-8 w-8"
+                data-slot="button"
+                data-state="closed"
+                id="radix-_r_id_"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-ellipsis h-4 w-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="1"
+                  />
+                  <circle
+                    cx="19"
+                    cy="12"
+                    r="1"
+                  />
+                  <circle
+                    cx="5"
+                    cy="12"
+                    r="1"
+                  />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+`;

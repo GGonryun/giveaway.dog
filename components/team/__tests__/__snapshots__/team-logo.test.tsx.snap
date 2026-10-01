@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TeamLogo > when the logo url cannot be used > matches the snapshot 1`] = `
+<div
+  class="flex items-center justify-center bg-muted rounded-md "
+  style="width: 50px; height: 50px;"
+>
+  <svg
+    aria-hidden="true"
+    class="lucide lucide-users text-muted-foreground"
+    fill="none"
+    height="30"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    width="30"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+    />
+    <path
+      d="M16 3.128a4 4 0 0 1 0 7.744"
+    />
+    <path
+      d="M22 21v-2a4 4 0 0 0-3-3.87"
+    />
+    <circle
+      cx="9"
+      cy="7"
+      r="4"
+    />
+  </svg>
+</div>
+`;
+
+exports[`TeamLogo > when the logo url is valid > matches the snapshot 1`] = `
+<img
+  alt="Doggo Club logo"
+  class="object-cover rounded-md "
+  data-nimg="1"
+  decoding="async"
+  height="48"
+  loading="lazy"
+  src="http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fdoggo.png&w=96&q=75"
+  srcset="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fdoggo.png&w=48&q=75 1x, /_next/image?url=https%3A%2F%2Fcdn.example.com%2Fdoggo.png&w=96&q=75 2x"
+  style="color: transparent;"
+  width="48"
+/>
+`;
