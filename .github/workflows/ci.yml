@@ -33,6 +33,8 @@ jobs:
     name: Unit tests
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      coverage: ${{ steps.coverage.outputs.lines }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -42,5 +44,42 @@ jobs:
       - name: Set up the project
         uses: ./.github/actions/setup
 
-      - name: Vitest
-        run: pnpm run test:run
+      - name: Vitest with coverage
+        run: pnpm run test:coverage
+
+      - name: Report the line coverage
+        id: coverage
+        run: |
+          lines=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
+          echo "lines=$lines" >> "$GITHUB_OUTPUT"
+          echo "Line coverage: ${lines}%" >> "$GITHUB_STEP_SUMMARY"
+
+  badge:
+    name: Coverage badge
+    if: github.event_name == 'push'
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Publish the badge to the badges branch
+        env:
+          COVERAGE: ${{ needs.test.outputs.coverage }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          color=red
+          if awk "BEGIN { exit !($COVERAGE >= 50) }"; then color=yellow; fi
+          if awk "BEGIN { exit !($COVERAGE >= 80) }"; then color=brightgreen; fi
+          mkdir badges
+          cd badges
+          curl --fail --silent --show-error --location --retry 3 \
+            --output coverage.svg \
+            "https://img.shields.io/badge/coverage-${COVERAGE}%25-${color}"
+          echo '{ "git": { "deploymentEnabled": false } }' > vercel.json
+          git init --quiet --initial-branch badges
+          git add coverage.svg vercel.json
+          git -c user.name='github-actions[bot]' \
+            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit --quiet --message 'update coverage badge'
+          git push --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" badges

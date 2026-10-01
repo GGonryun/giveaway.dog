@@ -106,6 +106,7 @@ lib/
 - Use `pnpm run lint` for code linting (ESLint)
 - Use `pnpm run type-check` for TypeScript verification
 - Use `pnpm run test:run` to run the unit tests one time (Vitest)
+- Use `pnpm run test:coverage` to run the unit tests and measure the code coverage
 - Use `pnpm run format` to automatically format all files
 - Use `pnpm run format:check` to check if files need formatting
 - Use `pnpm run verify` to run lint, format check, type check, and unit tests in sequence
@@ -116,6 +117,7 @@ lib/
 
 - **Workflow**: `.github/workflows/ci.yml` runs on each pull request and on each push to `main`
 - **Checks**: `Lint` (ESLint) and `Unit tests` (Vitest). Merge a pull request only when the two checks pass
+- **Coverage badge**: After each push to `main`, the `Coverage badge` job puts the line coverage in `coverage.svg` on the `badges` branch. The README shows this image. Do not edit the `badges` branch by hand
 - **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`
 - **ESLint baseline**: `eslint-suppressions.json` records the errors that existed when ESLint was added. New errors fail the check. Do not add entries to this file to hide new errors
 - **After you fix a recorded error**: Run `pnpm run lint:prune` and commit `eslint-suppressions.json`. If you do not, ESLint stops with exit code 2
