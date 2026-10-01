@@ -392,6 +392,15 @@ describe('processAutomatedPostJobs', () => {
       });
     });
 
+    it('loads the sweepstakes of the bluesky job', async () => {
+      await processAutomatedPostJobs();
+
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
+        where: { id: 'sweep-1' },
+        select: { id: true, tasks: true, teamId: true }
+      });
+    });
+
     it('requires an active bluesky integration and selects its account id', async () => {
       await processAutomatedPostJobs();
 
@@ -413,6 +422,29 @@ describe('processAutomatedPostJobs', () => {
         teamId: 'team-1',
         text: 'Skeet text',
         imageUrl: undefined
+      });
+    });
+
+    it('passes the job image url to the skeet', async () => {
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([
+        jobRow({
+          id: 'job-2',
+          type: 'POST_TO_BLUESKY',
+          request: {
+            integrationId: 'bsky-int',
+            text: 'Skeet text',
+            imageUrl: 'https://cdn.example.com/skeet.png',
+            tasks: []
+          }
+        })
+      ]);
+
+      await processAutomatedPostJobs();
+
+      expect(mocks.createSkeet).toHaveBeenCalledWith(prismaMock, {
+        teamId: 'team-1',
+        text: 'Skeet text',
+        imageUrl: 'https://cdn.example.com/skeet.png'
       });
     });
 
@@ -487,6 +519,23 @@ describe('processAutomatedPostJobs', () => {
         expect.objectContaining({
           index: 2,
           config: expect.objectContaining({ type: 'BLUESKY_LIKE_IMPORT' })
+        })
+      ]);
+    });
+
+    it('adds only a repost import task when only REPOST is requested', async () => {
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([
+        blueskyJob(['REPOST'])
+      ]);
+
+      await processAutomatedPostJobs();
+
+      const call = prismaMock.sweepstakes.update.mock.calls[0][0];
+      expect(call.data.tasks.create).toEqual([
+        expect.objectContaining({
+          id: 'nano-1',
+          index: 2,
+          config: expect.objectContaining({ type: 'BLUESKY_REPOST_IMPORT' })
         })
       ]);
     });

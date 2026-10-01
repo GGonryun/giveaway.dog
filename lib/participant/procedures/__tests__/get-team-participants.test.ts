@@ -62,7 +62,8 @@ describe('getTeamParticipants', () => {
         ['a maximum quality score above 100', { maxQualityScore: 101 }],
         ['an unknown source', { sources: ['WEBSITE'] }],
         ['an unknown sort field', { sortBy: 'email' }],
-        ['an unknown sort direction', { sortDirection: 'up' }]
+        ['an unknown sort direction', { sortDirection: 'up' }],
+        ['a missing slug', { slug: undefined }]
       ])('rejects %s', async (_label, overrides) => {
         const result = await getTeamParticipants({
           slug: 'acme',
@@ -244,6 +245,24 @@ describe('getTeamParticipants', () => {
         page: 1,
         pageSize: 50,
         totalPages: 2
+      });
+    });
+
+    it('echoes the requested page and page size in the result', async () => {
+      prismaMock.user.count.mockResolvedValue(25);
+
+      const result = await getTeamParticipants({
+        slug: 'acme',
+        page: 3,
+        pageSize: 10
+      } as Input);
+
+      expect(expectOk(result)).toEqual({
+        participants: [],
+        total: 25,
+        page: 3,
+        pageSize: 10,
+        totalPages: 3
       });
     });
 

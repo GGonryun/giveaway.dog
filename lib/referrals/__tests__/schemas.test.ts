@@ -55,14 +55,38 @@ describe('userReferralSchema', () => {
     expect(userReferralSchema.parse(value)).toEqual(value);
   });
 
-  it('rejects a referral without a link', () => {
+  it.each(['id', 'code', 'link', 'referrals'])(
+    'rejects a referral without %s',
+    (key) => {
+      const value: Record<string, unknown> = {
+        id: 'abc123',
+        code: 'abc123',
+        link: 'https://giveaway.dog/browse/sweep-1?ref=abc123',
+        referrals: []
+      };
+      delete value[key];
+
+      const result = userReferralSchema.safeParse(value);
+
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0].path).toEqual([key]);
+    }
+  );
+
+  it('rejects a referral whose referred user is invalid', () => {
     const result = userReferralSchema.safeParse({
       id: 'abc123',
       code: 'abc123',
-      referrals: []
+      link: 'https://giveaway.dog/browse/sweep-1?ref=abc123',
+      referrals: [{ user: { name: 'Jane' }, createdAt: CREATED_AT }]
     });
 
-    expect(result.error?.issues[0].path).toEqual(['link']);
+    expect(result.error?.issues[0].path).toEqual([
+      'referrals',
+      0,
+      'user',
+      'id'
+    ]);
   });
 });
 

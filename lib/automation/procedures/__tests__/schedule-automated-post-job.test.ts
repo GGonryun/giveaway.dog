@@ -175,6 +175,7 @@ describe('scheduleAutomatedPostJob', () => {
       expect(expectFailure(result, 'NOT_FOUND').message).toBe(
         'Sweepstakes not found'
       );
+      expect(prismaMock.automatedPostJob.create).not.toHaveBeenCalled();
     });
 
     it('returns FORBIDDEN when the caller is not a team member', async () => {

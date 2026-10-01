@@ -98,6 +98,30 @@ describe('generateReferral', () => {
     expect(prismaMock.referral.findUnique).toHaveBeenCalledTimes(3);
   });
 
+  it('generates every retry code with a length of six', async () => {
+    prismaMock.referral.findUnique
+      .mockResolvedValueOnce({ id: 'existing' })
+      .mockResolvedValueOnce({ id: 'existing' })
+      .mockResolvedValueOnce(null);
+
+    await generateReferral(asPrismaClient());
+
+    expect(mocks.nanoid.mock.calls).toEqual([[6], [6], [6]]);
+  });
+
+  it('checks each newly generated code for uniqueness', async () => {
+    prismaMock.referral.findUnique
+      .mockResolvedValueOnce({ id: 'existing' })
+      .mockResolvedValueOnce(null);
+
+    await generateReferral(asPrismaClient());
+
+    expect(prismaMock.referral.findUnique.mock.calls).toEqual([
+      [{ where: { code: 'code-1' } }],
+      [{ where: { code: 'code-2' } }]
+    ]);
+  });
+
   it('accepts a unique code found on the tenth check', async () => {
     for (let i = 0; i < 9; i++) {
       prismaMock.referral.findUnique.mockResolvedValueOnce({ id: 'taken' });

@@ -37,13 +37,24 @@ describe('getSweepstakesParticipants', () => {
       signIn();
     });
 
-    it('rejects input without a sweepstakes id', async () => {
-      const result = await getSweepstakesParticipants({
-        slug: 'acme'
-      } as unknown as Parameters<typeof getSweepstakesParticipants>[0]);
+    it.each(['slug', 'sweepstakesId'])(
+      'rejects input without %s',
+      async (key) => {
+        const partial: Record<string, string> = { ...input };
+        delete partial[key];
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
-    });
+        const result = await getSweepstakesParticipants(
+          partial as unknown as Parameters<typeof getSweepstakesParticipants>[0]
+        );
+
+        expect(
+          expectFailure(result, 'UNPROCESSABLE_CONTENT').message
+        ).toContain(key);
+        expect(
+          prismaMock.sweepstakesParticipant.findMany
+        ).not.toHaveBeenCalled();
+      }
+    );
 
     it('lists participants of the sweepstakes without filtering by team', async () => {
       prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([]);

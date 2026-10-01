@@ -71,13 +71,17 @@ describe('sweepstakesParticipantSchema', () => {
     ]);
   });
 
-  it('rejects a participant without an id', () => {
-    const result = sweepstakesParticipantSchema.safeParse(
-      withoutKey(buildParticipant(), 'id')
-    );
+  it.each(['id', 'user', 'completions', 'formValues'])(
+    'rejects a participant without %s',
+    (key) => {
+      const result = sweepstakesParticipantSchema.safeParse(
+        withoutKey(buildParticipant(), key)
+      );
 
-    expect(result.error?.issues[0].path).toEqual(['id']);
-  });
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0].path).toEqual([key]);
+    }
+  );
 });
 
 describe('resolvedFormFieldSchema', () => {
@@ -86,6 +90,21 @@ describe('resolvedFormFieldSchema', () => {
 
     expect(resolvedFormFieldSchema.parse(field)).toEqual(field);
   });
+
+  it.each(['fieldId', 'label', 'value', 'type'])(
+    'rejects a resolved field without %s',
+    (key) => {
+      const result = resolvedFormFieldSchema.safeParse(
+        withoutKey(
+          { fieldId: 'f-1', label: 'Age', value: '25', type: 'AGE' },
+          key
+        )
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0].path).toEqual([key]);
+    }
+  );
 
   it('rejects an unknown field type', () => {
     const result = resolvedFormFieldSchema.safeParse({
@@ -111,6 +130,21 @@ describe('publicSweepstakesParticipationSchema', () => {
   it('accepts an empty record', () => {
     expect(publicSweepstakesParticipationSchema.parse({})).toEqual({});
   });
+
+  it.each(['sweepstakesId', 'completed', 'maximum'])(
+    'rejects a summary without %s',
+    (key) => {
+      const result = publicSweepstakesParticipationSchema.safeParse({
+        'sweep-1': withoutKey(
+          { sweepstakesId: 'sweep-1', completed: 2, maximum: 5 },
+          key
+        )
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0].path).toEqual(['sweep-1', key]);
+    }
+  );
 
   it('rejects a summary with a non numeric count', () => {
     const result = publicSweepstakesParticipationSchema.safeParse({

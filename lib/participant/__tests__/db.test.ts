@@ -505,6 +505,22 @@ describe('findOrCreateSweepstakesParticipant', () => {
       });
     });
 
+    it('stores the auto-completed task proof as a JSON null', async () => {
+      givenSweepstakesFormFields([]);
+      prismaMock.task.findMany.mockResolvedValue([
+        buildTaskRow({
+          id: 'profile',
+          config: bonusConfig({ type: 'BONUS_COMPLETE_PROFILE' })
+        })
+      ]);
+      prismaMock.taskCompletion.findFirst.mockResolvedValue(null);
+
+      await findOrCreateSweepstakesParticipant(options());
+
+      const [args] = prismaMock.taskCompletion.create.mock.calls[0];
+      expect(args.data.proof).toBe(Prisma.JsonNull);
+    });
+
     it('does not complete the profile task twice', async () => {
       givenSweepstakesFormFields([]);
       prismaMock.task.findMany.mockResolvedValue([
@@ -792,6 +808,27 @@ describe('toTeamParticipant', () => {
     });
   });
 
+  it('keeps every completion of a participation in query order', () => {
+    const participant = toTeamParticipant({
+      ...buildUserRow(),
+      participation: [
+        {
+          taskCompletions: [
+            buildCompletionRow({ id: 'a', completedAt: daysAfterBase(1) }),
+            buildCompletionRow({ id: 'b', completedAt: daysAfterBase(5) })
+          ]
+        },
+        {
+          taskCompletions: [
+            buildCompletionRow({ id: 'c', completedAt: daysAfterBase(3) })
+          ]
+        }
+      ]
+    });
+
+    expect(participant.completions.map((c) => c.id)).toEqual(['a', 'b', 'c']);
+  });
+
   it('returns no completions for a user without participation', () => {
     const participant = toTeamParticipant({
       ...buildUserRow(),
@@ -833,6 +870,19 @@ describe('toParticipantProfile', () => {
         'f-email': undefined
       })
     ).toEqual([]);
+  });
+
+  it('keeps values verbatim without trimming', () => {
+    expect(
+      toParticipantProfile([emailField], { 'f-email': '  jane@example.com ' })
+    ).toEqual([
+      {
+        fieldId: 'f-email',
+        label: 'Email',
+        type: 'EMAIL',
+        value: '  jane@example.com '
+      }
+    ]);
   });
 
   it('keeps empty string values', () => {

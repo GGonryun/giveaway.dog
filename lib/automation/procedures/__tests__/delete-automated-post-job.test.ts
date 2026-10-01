@@ -90,7 +90,9 @@ describe('deleteAutomatedPostJob', () => {
       const result = await deleteAutomatedPostJob({ jobId: 'job-1' });
 
       expect(expectOk(result)).toEqual({ success: true });
-      expect(prismaMock.automatedPostJob.delete).toHaveBeenCalledTimes(1);
+      expect(prismaMock.automatedPostJob.delete).toHaveBeenCalledWith({
+        where: { id: 'job-1' }
+      });
     });
 
     it('returns NOT_FOUND when the job does not exist', async () => {

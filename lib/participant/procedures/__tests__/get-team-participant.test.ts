@@ -30,12 +30,18 @@ describe('getTeamParticipant', () => {
       signIn();
     });
 
-    it('rejects input without a slug', async () => {
-      const result = await getTeamParticipant({
-        userId: 'user-2'
-      } as unknown as Parameters<typeof getTeamParticipant>[0]);
+    it.each(['slug', 'userId'])('rejects input without %s', async (key) => {
+      const partial: Record<string, string> = { ...input };
+      delete partial[key];
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      const result = await getTeamParticipant(
+        partial as unknown as Parameters<typeof getTeamParticipant>[0]
+      );
+
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
+        key
+      );
+      expect(prismaMock.user.findFirst).not.toHaveBeenCalled();
     });
 
     it('loads the user with completions scoped to the team slug', async () => {

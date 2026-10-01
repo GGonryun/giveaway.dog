@@ -344,6 +344,77 @@ describe('automatedPostJobSchema', () => {
     ]);
   });
 
+  it('rejects an empty twitter integration id with an account selection message', () => {
+    const result = automatedPostJobSchema.safeParse(
+      jobRow({
+        type: 'POST_TO_TWITTER',
+        request: { integrationId: '', text: 'Tweet' }
+      })
+    );
+
+    expect(issuesOf(result)).toEqual([
+      { path: 'request.integrationId', message: 'Please select an account' }
+    ]);
+  });
+
+  it('keeps a twitter image url without validating it as a url', () => {
+    const parsed = automatedPostJobSchema.parse(
+      jobRow({
+        type: 'POST_TO_TWITTER',
+        request: {
+          integrationId: 'int-1',
+          text: 'Tweet',
+          imageUrl: 'banner.png',
+          tasks: ['REPOST', 'LIKE']
+        }
+      })
+    );
+
+    expect(parsed.request).toEqual({
+      integrationId: 'int-1',
+      text: 'Tweet',
+      imageUrl: 'banner.png',
+      tasks: ['REPOST', 'LIKE']
+    });
+  });
+
+  it('rejects twitter task names other than REPOST and LIKE', () => {
+    const result = automatedPostJobSchema.safeParse(
+      jobRow({
+        type: 'POST_TO_TWITTER',
+        request: { integrationId: 'int-1', text: 'Tweet', tasks: ['FOLLOW'] }
+      })
+    );
+
+    expect(result.success).toBe(false);
+    expect(issuesOf(result)[0].path).toBe('request.tasks.0');
+  });
+
+  it('accepts a null twitter response', () => {
+    const parsed = automatedPostJobSchema.parse(
+      jobRow({
+        type: 'POST_TO_TWITTER',
+        request: { integrationId: 'int-1', text: 'Tweet' },
+        response: null
+      })
+    );
+
+    expect(parsed.response).toBeNull();
+  });
+
+  it.each(['id', 'sweepstakesId', 'runAt', 'status', 'createdAt', 'updatedAt'])(
+    'rejects a job row without %s',
+    (key) => {
+      const row: Record<string, unknown> = { ...jobRow() };
+      delete row[key];
+
+      const result = automatedPostJobSchema.safeParse(row);
+
+      expect(result.success).toBe(false);
+      expect(issuesOf(result)[0].path).toBe(key);
+    }
+  );
+
   it('rejects a twitter response whose tweet url is not a url', () => {
     const result = automatedPostJobSchema.safeParse(
       jobRow({

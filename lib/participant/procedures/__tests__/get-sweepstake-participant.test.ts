@@ -32,14 +32,24 @@ describe('getSweepstakesParticipant', () => {
       signIn();
     });
 
-    it('rejects input without a user id', async () => {
-      const result = await getSweepstakesParticipant({
-        slug: 'acme',
-        sweepstakesId: 'sweep-1'
-      } as unknown as Parameters<typeof getSweepstakesParticipant>[0]);
+    it.each(['slug', 'sweepstakesId', 'userId'])(
+      'rejects input without %s',
+      async (key) => {
+        const partial: Record<string, string> = { ...input };
+        delete partial[key];
 
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
-    });
+        const result = await getSweepstakesParticipant(
+          partial as unknown as Parameters<typeof getSweepstakesParticipant>[0]
+        );
+
+        expect(
+          expectFailure(result, 'UNPROCESSABLE_CONTENT').message
+        ).toContain(key);
+        expect(
+          prismaMock.sweepstakesParticipant.findUnique
+        ).not.toHaveBeenCalled();
+      }
+    );
 
     it('looks up the requested user in the requested sweepstakes', async () => {
       prismaMock.sweepstakesParticipant.findUnique.mockResolvedValue(
