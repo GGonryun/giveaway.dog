@@ -2,6 +2,12 @@
 
 This plan moves giveaway.dog to the package graph in [package-graph.md](./package-graph.md). It is built so that `main` stays deployable after every pull request and feature work never has to stop.
 
+The work is tracked in [GGonryun/giveaway.dog#137](https://github.com/GGonryun/giveaway.dog/issues/137). Its sub-issues set the order, which differs from the phases below in three ways:
+
+- **Nx first.** Introducing Nx, with no code moves, is the first issue.
+- **Packages move a few at a time.** The pilot moves 3 packages, then 23 batches of up to 10 packages each.
+- **CI switches earlier.** The switch to `nx affected` comes right after the move codemod.
+
 ## Goals
 
 - CI runs lint, type check and tests only for the packages a change affects (`nx affected`), and reuses cached results for everything else.
