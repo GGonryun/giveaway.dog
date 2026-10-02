@@ -28,6 +28,43 @@ Paths in `package-map.json` and in this plan are relative to the app root: the r
 - **Bottom-up order.** A package moves only after every package it depends on has moved. The `layer` field in `package-map.json` gives this order, so a moved package never imports code that is still in the root app.
 - **The checker is the progress bar.** `node docs/monorepo/check-package-map.mjs` reports unmapped files, cycles, boundary violations, client code that reaches a `runtime:server` package and the refactors still to do.
 
+## Pilot results
+
+[GGonryun/giveaway.dog#146](https://github.com/GGonryun/giveaway.dog/issues/146) moved three packages by hand, to test the toolchain before the codemod:
+
+| Package                  | Moved from (under `apps/web/`)                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `@giveaway/util-errors`  | `lib/errors/`                                                                                          |
+| `@giveaway/util-types`   | `lib/types.ts`, `lib/widetype.ts` and `types/index.ts` (renamed to `recursive-required.ts`, see below) |
+| `@giveaway/util-strings` | `lib/strings.ts` and `lib/email-validation.ts`                                                         |
+
+The move rewrote 339 imports in 315 files.
+
+### Answers
+
+- **Do `next dev` and `next build` compile TypeScript-source packages from `transpilePackages`?** `next dev` (Turbopack) does. Route handlers that import the packages compiled, and the `/login` client bundle has `packages/shared/util-errors` in it. `next build` (Turbopack) on the Vercel preview printed "Compiled successfully" with the packages in `transpilePackages`.
+- **Do Tailwind classes used only in a package appear in the production CSS?** No. Tailwind scans only the app folder. A class written only in a package file was missing from the compiled `globals.css`. With `@source '../../../packages';` in `apps/web/app/globals.css` it is there, so that line is added. Today it adds one rule, `.font-sans` from `@giveaway/testing-visual`. That rule gives the visual test wrapper the font it already inherits.
+- **Is `tsc --noEmit` per package fast enough, or should packages use project references?** Keep `tsc --noEmit`. Each new package checks in about 1 second, and Nx caches the result. The app check took 45 seconds before the move and 45 seconds after, because the app's `tsc` still reads the package sources through its imports. Project references (`tsc --build`) would let the app read declaration files instead, but every package would then need `composite` and declaration output. That is a build step, which the package shape avoids. Measure again after wave 2. Only then is enough code in packages to make a difference.
+- **Do per-package ESLint suppressions files work with `pnpm run lint` and `lint:prune`?** Not as they were. `eslint .` reads only the root `eslint-suppressions.json`, so the moved errors failed it. Now:
+  - A package's `lint` target passes `--suppressions-location <package>/eslint-suppressions.json`. The paths in that file are relative to the root, like those in the root file, because the target runs from the root. ESLint fails when the file does not exist, so only a package with recorded errors passes the option. The others use the root file.
+  - `pnpm run lint` runs every `lint` target through Nx, so it is cached, then `pnpm run lint:root` for the files outside the projects.
+  - `pnpm run lint:prune` runs every `lint` target with `--prune-suppressions`, one at a time, because several projects write the root file. A test with one stale entry in the root file and one in the package file pruned both, and changed nothing else.
+- **Does the Vercel preview build, with source files outside the Root Directory?** The preview build installs the whole workspace with `--frozen-lockfile` and builds with `npx nx build web` from the root, so it reads `packages/` outside the Root Directory. Its compile step passed. The full result of the preview and its E2E run is recorded in [GGonryun/giveaway.dog#146](https://github.com/GGonryun/giveaway.dog/issues/146).
+- **Does `nx affected` skip `web`'s tests for a change to one of these packages' tests?** No. `nx affected` decides from the project graph, not from the target inputs, so `web` and `web-e2e` are affected by any file in a package they depend on. The cache does the skipping instead. `web`'s targets hash `^production`, which leaves out test files. After a change to `util-errors/src/__tests__/index.test.ts`, `web:type-check` came from the cache. After a change to `util-errors/src/index.ts`, it ran again. In CI, the cache that a job reads from `main` gives the same result.
+
+### Changes the pilot needed
+
+The codemod ([GGonryun/giveaway.dog#147](https://github.com/GGonryun/giveaway.dog/issues/147)) has to make these changes, or they are now in place:
+
+- **Relative imports.** 35 of the 339 imports were relative (`../errors`, `./types`), not `@/` aliases. The rewrite must resolve each specifier to a file, then map the file. Matching strings is not enough: `lib/mrpc/` has its own `errors.ts` and `types.ts`. The rewrite also covers `await import()` in tests. The pilot found no `vi.mock` of these modules.
+- **Module names.** A file keeps its base name (`lib/widetype.ts` becomes `./widetype`). The `index.ts` of a folder source becomes the package root (`lib/errors/index.ts` becomes `@giveaway/util-errors`). Two sources can collide: `lib/types.ts` and `types/index.ts` both want `./types`. The codemod must stop on a collision and take a rename map. The pilot renamed `types/index.ts` to `recursive-required.ts`.
+- **Tests and helpers inside a package import each other with relative paths.** The moved tests already did, so their imports did not change.
+- **Package files.** `package.json` (tags, `exports`, scripts, dependencies), `tsconfig.json` and `vitest.config.ts`, as in `packages/shared/util-errors/`. An npm package that the source imports goes in `dependencies`, or in `peerDependencies` when the app provides it (`next` for `util-errors`), or `@nx/dependency-checks` fails. Each package also has a `test` script (`vitest run`), so `pnpm nx run <package>:test` works. Nx accepts the name without the `@giveaway/` scope.
+- **App files.** Add the package to `transpilePackages` in `apps/web/next.config.ts` and to the app's `dependencies` (`workspace:*`). Then run `pnpm install` and commit `pnpm-lock.yaml`.
+- **Package map.** Set the moved package's `sources` to `[]`. Its path now owns its files, and a new file left at the old place is then reported as unmapped. The checker now counts a package's `vitest.config.ts` and `eslint.config.mjs` as dev files, like tests, so their import of `@giveaway/vitest-config` is not a boundary violation.
+- **Nx lint rules.** `@nx/enforce-module-boundaries` crashed on the app's first import of a workspace package, because the workspace had no root `tsconfig.base.json` for it to resolve imports with. A minimal one that extends the base preset is added. The rule then warned on every static import of `@giveaway/util-errors`, because two tests import it with `await import()` (after `vi.resetModules()`). That check is for lazy-loaded Angular routes, so `@giveaway/**` is exempt from it. Tests and package config files may now import `type:config` packages.
+- **Prettier.** A rewritten import can be longer than the line width. Run Prettier on every changed file.
+
 ## Phase 0: Preparation
 
 No files move in this phase.
