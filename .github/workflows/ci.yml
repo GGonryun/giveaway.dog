@@ -29,10 +29,59 @@ jobs:
       - name: ESLint
         run: pnpm run lint --quiet
 
-  test:
-    name: Unit tests
+  server:
+    name: Server tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Vitest server tests with coverage
+        run: pnpm run test:server --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
+
+      - name: Upload the test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-report-server
+          path: .vitest-reports/
+          include-hidden-files: true
+          retention-days: 1
+
+  frontend:
+    name: Frontend tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Vitest frontend tests with coverage
+        run: pnpm run test:frontend --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
+
+      - name: Upload the test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-report-frontend
+          path: .vitest-reports/
+          include-hidden-files: true
+          retention-days: 1
+
+  coverage:
+    name: Coverage
+    needs: [server, frontend]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       coverage: ${{ steps.coverage.outputs.lines }}
     steps:
@@ -44,8 +93,15 @@ jobs:
       - name: Set up the project
         uses: ./.github/actions/setup
 
-      - name: Vitest with coverage
-        run: pnpm run test:coverage
+      - name: Download the test reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vitest-report-*
+          path: .vitest-reports
+          merge-multiple: true
+
+      - name: Merge the coverage
+        run: pnpm vitest run --merge-reports=.vitest-reports --coverage
 
       - name: Report the line coverage
         id: coverage
@@ -73,7 +129,7 @@ jobs:
   badge:
     name: Coverage badge
     if: github.event_name == 'push'
-    needs: test
+    needs: coverage
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -81,7 +137,7 @@ jobs:
     steps:
       - name: Publish the badge to the badges branch
         env:
-          COVERAGE: ${{ needs.test.outputs.coverage }}
+          COVERAGE: ${{ needs.coverage.outputs.coverage }}
           GH_TOKEN: ${{ github.token }}
         run: |
           color=red

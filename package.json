@@ -16,6 +16,8 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:unit": "vitest run --project server --project frontend",
+    "test:server": "vitest run --project server",
+    "test:frontend": "vitest run --project frontend",
     "test:snapshot": "vitest run --project snapshot",
     "test:coverage": "vitest run --coverage --project server --project frontend",
     "test:e2e": "playwright test",
