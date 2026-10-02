@@ -15,6 +15,14 @@ runs:
         node-version-file: .nvmrc
         cache: pnpm
 
+    - name: Restore node_modules
+      id: node-modules
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('.nvmrc') }}-modules-${{ hashFiles('pnpm-lock.yaml', 'pnpm-workspace.yaml', 'prisma/schema.prisma') }}
+
     - name: Install dependencies
+      if: steps.node-modules.outputs.cache-hit != 'true'
       shell: bash
       run: pnpm install --frozen-lockfile
