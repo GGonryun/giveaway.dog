@@ -13,38 +13,6 @@
   },
   "refactors": [
     {
-      "id": "R1",
-      "reason": "cycle",
-      "required": true,
-      "from": "^lib\\/(__tests__\\/)?settings(\\.test)?\\.ts$",
-      "to": "^schemas\\/(account|sweepstakes|user)\\.ts$",
-      "change": "Move DEFAULT_ACCOUNT_TAB, DEFAULT_SWEEPSTAKES_DETAILS_TAB and DEFAULT_USER_DETAILS_TAB out of lib/settings.ts, next to the tab schemas they use in schemas/account.ts, schemas/sweepstakes.ts and schemas/user.ts. lib/settings.ts then has no local imports."
-    },
-    {
-      "id": "R2",
-      "reason": "cycle",
-      "required": true,
-      "from": "^lib\\/task\\/(__tests__\\/)?completions(\\.test)?\\.ts$",
-      "to": "^schemas\\/giveaway\\/defaults\\.ts$",
-      "change": "Move DEFAULT_SWEEPSTAKES_NAME from schemas/giveaway/defaults.ts to lib/settings.ts (@giveaway/app-config). lib/task/completions.ts then stops importing the sweepstakes schemas."
-    },
-    {
-      "id": "R3",
-      "reason": "cycle",
-      "required": true,
-      "from": "^lib\\/task\\/validation\\/(?!integrations\\.ts).+\\.ts$",
-      "to": "^lib\\/task\\/validation\\/integrations\\.ts$",
-      "change": "Move the ValidateTaskInput type from lib/task/validation/integrations.ts (the validator registry) to a new lib/task/validation/types.ts. Each validator imports the type from there, and only the registry imports the validators."
-    },
-    {
-      "id": "R4",
-      "reason": "cycle",
-      "required": true,
-      "from": "^lib\\/(__tests__\\/)?ratelimit(\\.test)?\\.ts$",
-      "to": "^lib\\/scrapebadger\\/settings\\.ts$",
-      "change": "Move the scrapeBadgerCredits limiter from lib/ratelimit.ts to lib/scrapebadger/ (@giveaway/x-scraper). lib/ratelimit.ts keeps the generic limiters."
-    },
-    {
       "id": "R5",
       "reason": "boundary",
       "required": true,
@@ -67,14 +35,6 @@
       "from": "^lib\\/mrpc\\/hook\\.ts$",
       "to": "^lib\\/mrpc\\/errors\\.ts$",
       "change": "Move isNextRedirect from lib/mrpc/errors.ts to lib/mrpc/types.ts (@giveaway/rpc-model). The client hook lib/mrpc/hook.ts then stops importing the server error boundary, which imports the Prisma runtime."
-    },
-    {
-      "id": "R8",
-      "reason": "cycle",
-      "required": true,
-      "from": "^lib\\/auth\\/config-runtime\\.ts$",
-      "to": "^lib\\/auth\\/config\\.ts$",
-      "change": "Make lib/auth/config-runtime.ts a factory that takes a getSession function instead of importing auth from lib/auth/config.ts. config.ts passes () => auth() and config-no-providers.ts passes () => null. The RPC layer then depends on @giveaway/auth-core only, not on every login provider."
     }
   ],
   "testFixtures": {
