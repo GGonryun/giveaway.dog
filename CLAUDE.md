@@ -106,7 +106,7 @@ lib/
 - Use `pnpm run lint` for code linting (ESLint)
 - Use `pnpm run type-check` for TypeScript verification
 - Use `pnpm run test:run` to run all the tests one time (Vitest): server tests, component tests and snapshot tests
-- Use `pnpm run test:unit` to run only the server and component tests, and `pnpm run test:snapshot` to run only the snapshot tests
+- Use `pnpm run test:unit` to run only the server and component tests, `pnpm run test:server` to run only the server tests, `pnpm run test:frontend` to run only the component tests, and `pnpm run test:snapshot` to run only the snapshot tests
 - Use `pnpm run test:coverage` to run the server and component tests and measure the code coverage
 - Use `pnpm run test:e2e` to run the Playwright end-to-end tests against a running app (see E2E Tests)
 - Use `pnpm vitest run --project <name>` to run one project: `server`, `frontend` or `snapshot`
@@ -130,8 +130,8 @@ lib/
 ### Continuous Integration
 
 - **Workflow**: `.github/workflows/ci.yml` runs on each pull request and on each push to `main`
-- **Checks**: `Lint` (ESLint), `Unit tests` (Vitest server and component tests, with coverage) and `Snapshot tests` (Vitest snapshot tests). Merge a pull request only when the three checks pass
-- **Coverage badge**: After each push to `main`, the `Coverage badge` job puts the line coverage in `coverage.svg` on the `badges` branch. The README shows this image. Do not edit the `badges` branch by hand
+- **Checks**: `Lint` (ESLint), `Server tests` (Vitest server tests, with coverage), `Frontend tests` (Vitest component tests, with coverage), `Snapshot tests` (Vitest snapshot tests) and `Coverage` (merges the server and frontend coverage). Merge a pull request only when all the checks pass
+- **Coverage badge**: After each push to `main`, the `Coverage badge` job puts the merged line coverage in `coverage.svg` on the `badges` branch. The README shows this image. Do not edit the `badges` branch by hand
 - **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`
 - **ESLint baseline**: `eslint-suppressions.json` records the errors that existed when ESLint was added. New errors fail the check. Do not add entries to this file to hide new errors
 - **After you fix a recorded error**: Run `pnpm run lint:prune` and commit `eslint-suppressions.json`. If you do not, ESLint stops with exit code 2
