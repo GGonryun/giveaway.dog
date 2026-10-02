@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { IntegrationProvider } from '@prisma/client';
 import { twitterOAuthCallback } from '../twitter-oauth-callback';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 vi.hoisted(() => {
   vi.stubEnv('TWITTER_TEAM_APP_CLIENT_ID', 'client-id');

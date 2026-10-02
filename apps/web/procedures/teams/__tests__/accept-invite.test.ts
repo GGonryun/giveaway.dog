@@ -6,9 +6,9 @@ import {
   knownRequestError,
   createPrismaMock,
   type PrismaMock
-} from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+} from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   inputIssues,
   PRISMA_INTERNAL_ERROR_MESSAGE,

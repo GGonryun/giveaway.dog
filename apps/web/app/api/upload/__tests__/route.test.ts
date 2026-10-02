@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { HandleUploadOptions } from '@vercel/blob/client';
 import { POST } from '../route';
-import { prismaMock } from '@/test/prisma';
-import { createSession } from '@/test/session';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { createSession } from '@giveaway/testing-server/session';
 import { isImageSafe } from '@/lib/content-moderation';
 
 type Limiter = {

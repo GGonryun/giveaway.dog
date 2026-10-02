@@ -1,7 +1,7 @@
 import { IdentityProvider } from '@prisma/client';
 import { describe, expect, test, vi } from 'vitest';
 import { ProviderSchema } from '@/lib/integrations/schemas/providers';
-import { renderVisual, THEMES } from '@/test/visual/render';
+import { renderVisual, THEMES } from '@giveaway/testing-visual/render';
 import {
   ProviderButtons,
   ProviderDots,

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import getBlueskyOEmbed from '../get-bluesky-oembed';
 import { ApplicationError } from '@/lib/errors';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const POST_URL = 'https://bsky.app/profile/acme.bsky.social/post/3kabc123';
 

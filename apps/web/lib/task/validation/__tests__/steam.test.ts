@@ -5,7 +5,7 @@ import {
   PRIVATE_STEAM_WISHLIST_ERROR
 } from '../steam-errors';
 import { SteamWishlistTaskSchema } from '../../schemas';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BASE_TASK,
   IDS,

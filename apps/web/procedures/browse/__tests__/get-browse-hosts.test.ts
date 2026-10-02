@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import getBrowseHosts from '../get-browse-hosts';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { nextCacheMock } from '@/test/next-cache';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   FIXED_NOW,
   daysFromFixedNow

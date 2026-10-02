@@ -3,7 +3,7 @@ import { uploadImage } from '../upload-image';
 import { twitterApiRequest } from '@/lib/integrations/utils/twitter-api-request';
 import { uploadMediaResponseSchema } from '@/lib/integrations/schemas/api';
 import { ApplicationError } from '@/lib/errors';
-import { asPrismaClient } from '@/test/prisma';
+import { asPrismaClient } from '@giveaway/testing-server/prisma';
 
 vi.mock('@/lib/integrations/utils/twitter-api-request', () => ({
   twitterApiRequest: vi.fn()

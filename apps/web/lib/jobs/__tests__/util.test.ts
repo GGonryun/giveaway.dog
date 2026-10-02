@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { isValidCronSecret, scheduleRandomlyAssignPrizesJob } from '../util';
-import { prismaMock, asPrismaClient } from '@/test/prisma';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 
 const request = (headers: Record<string, string> = {}) =>
   new NextRequest('http://localhost:3000/api/cron/jobs', { headers });

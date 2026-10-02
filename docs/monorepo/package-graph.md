@@ -12,7 +12,7 @@ The graph comes from the code, not from a whiteboard. A script read every import
 
 ## Summary
 
-- **237 packages** in 20 groups, plus `apps/web`, `apps/web-e2e` and `tools/db-seed`.
+- **238 packages** in 20 groups, plus `apps/web`, `apps/web-e2e` and `tools/db-seed`.
 - **No dependency cycles and no boundary violations**, after 8 small refactors ([R1 to R8](#refactors-that-make-the-graph-valid)). Mapped onto these packages as it is today, the code has 4 dependency cycles and 4 imports that break the type rules.
 - **Small packages.** The median package has 3 source files, 4 internal dependencies and 2 npm dependencies. Today every CI job installs all 143 npm packages that the root `package.json` lists.
 - **Small blast radius.** A change to one package affects a median of 8 packages and a mean of 25, out of 240. Today every change affects the whole app.
@@ -29,7 +29,7 @@ apps/
   web/                    Next.js routes only: page, layout, route and loading files
   web-e2e/                Playwright tests
 packages/
-  tooling/                tsconfig, eslint-config, vitest-config, testing-server, testing-dom
+  tooling/                tsconfig, eslint-config, vitest-config, testing-server, testing-dom, testing-visual
   shared/                 util-*: helpers with no React and no server dependencies
   infra/                  db-*, cache, ratelimit, rpc-*, email, jobs, request-context-*, turnstile-*
   ui/                     ui-*: the design system, theme-*
@@ -58,7 +58,7 @@ Each package has three tags. Nx's `@nx/enforce-module-boundaries` ESLint rule en
 | `server`  | Server actions, queries, API clients, jobs, webhooks         | `server`, `model`, `util` |    69 |
 | `ui`      | Presentational components and hooks that call no server code | `ui`, `model`, `util`     |    35 |
 | `feature` | Pages and components that call server actions                | everything above          |    80 |
-| `config`  | tsconfig, ESLint and Vitest presets, test setup              | `config`, `model`, `util` |     5 |
+| `config`  | tsconfig, ESLint and Vitest presets, test setup              | `config`, `model`, `util` |     6 |
 | `app`     | `apps/web` and `apps/web-e2e`                                | everything                |     2 |
 | `tool`    | `tools/db-seed`                                              | `server`, `model`, `util` |     1 |
 
@@ -375,13 +375,14 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 
 ### Tooling
 
-5 packages, 9 source files, 0 test files.
+6 packages, 9 source files, 0 test files.
 
 | Package                    | Type   | Files | Moves from                                                                                      |
 | -------------------------- | ------ | ----- | ----------------------------------------------------------------------------------------------- |
 | `@giveaway/eslint-config`  | config | 0 / 0 | Flat ESLint presets, the snapshot-assertion rule and the module boundary rules.                 |
-| `@giveaway/testing-dom`    | config | 4 / 0 | `test/setup-dom.ts`<br>`test/visual/`                                                           |
+| `@giveaway/testing-dom`    | config | 1 / 0 | `test/setup-dom.ts`                                                                             |
 | `@giveaway/testing-server` | config | 5 / 0 | `test/next-cache.ts`<br>`test/prisma.ts`<br>`test/result.ts`<br>`test/session.ts`<br>and 1 more |
+| `@giveaway/testing-visual` | config | 3 / 0 | `test/visual/`                                                                                  |
 | `@giveaway/tsconfig`       | config | 0 / 0 | Shared tsconfig presets (base, library, react-library, nextjs).                                 |
 | `@giveaway/vitest-config`  | config | 0 / 0 | Helpers that define the server, frontend and snapshot projects for each package.                |
 

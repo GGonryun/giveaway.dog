@@ -1,0 +1,46 @@
+{
+  "name": "@giveaway/testing-visual",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:config",
+      "runtime:isomorphic",
+      "scope:tooling"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tooling/testing-visual",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "bin": {
+    "visual-docker": "./docker.sh"
+  },
+  "exports": {
+    "./render": "./src/render.tsx",
+    "./setup": "./src/setup.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/figtree": "catalog:",
+    "@testing-library/react": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:",
+    "vitest": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
+  }
+}

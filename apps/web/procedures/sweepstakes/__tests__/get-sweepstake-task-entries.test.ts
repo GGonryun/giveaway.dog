@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import getSweepstakeTaskEntries from '../get-sweepstake-task-entries';
-import { prismaMock } from '@/test/prisma';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
 import {

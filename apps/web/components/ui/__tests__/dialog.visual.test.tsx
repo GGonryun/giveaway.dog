@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { page } from 'vitest/browser';
-import { renderVisual, THEMES } from '@/test/visual/render';
+import { renderVisual, THEMES } from '@giveaway/testing-visual/render';
 import { Button } from '../button';
 import {
   Dialog,

@@ -1,0 +1,45 @@
+{
+  "name": "@giveaway/testing-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:config",
+      "runtime:isomorphic",
+      "scope:tooling"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tooling/testing-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./next-cache": "./src/next-cache.ts",
+    "./prisma": "./src/prisma.ts",
+    "./result": "./src/result.ts",
+    "./session": "./src/session.ts",
+    "./setup": "./src/setup.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@prisma/client": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "vitest": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "prisma": "catalog:",
+    "typescript": "catalog:"
+  }
+}

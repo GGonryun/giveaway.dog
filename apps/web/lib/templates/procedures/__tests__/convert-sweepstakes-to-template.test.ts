@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { convertSweepstakesToTemplate } from '../convert-sweepstakes-to-template';
 import { DEFAULT_TEMPLATE_IMAGE, DEFAULT_TEMPLATE_NAME } from '../../defaults';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
-import { knownRequestError, prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
-import { nextCacheMock } from '@/test/next-cache';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 
 const team = {
   id: 'team-1',

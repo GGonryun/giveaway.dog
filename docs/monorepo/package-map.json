@@ -254,6 +254,8 @@
         "@giveaway/templates-gallery",
         "@giveaway/templates-model",
         "@giveaway/templates-server",
+        "@giveaway/testing-server",
+        "@giveaway/testing-visual",
         "@giveaway/theme-model",
         "@giveaway/theme-server",
         "@giveaway/turnstile-ui",
@@ -268,6 +270,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-time",
         "@giveaway/util-types",
+        "@giveaway/vitest-config",
         "@giveaway/x-connect",
         "@giveaway/x-model",
         "@giveaway/x-picker-dashboard",
@@ -5326,37 +5329,43 @@
       "type": "config",
       "tags": ["type:config", "runtime:isomorphic", "scope:tooling"],
       "layer": 0,
-      "sourceFiles": 4,
+      "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["test/setup-dom.ts", "test/visual/"],
+      "sources": [],
       "dependsOn": [],
-      "npm": [
-        "@fontsource-variable/figtree",
-        "@testing-library/jest-dom",
-        "@testing-library/react",
-        "vitest"
-      ],
-      "note": "jsdom setup for component and snapshot tests, and the browser setup and render helper for visual tests."
+      "npm": ["@testing-library/jest-dom", "@testing-library/react", "vitest"],
+      "note": "jsdom setup for component and snapshot tests."
     },
     {
       "name": "@giveaway/testing-server",
       "path": "packages/tooling/testing-server",
       "type": "config",
       "tags": ["type:config", "runtime:isomorphic", "scope:tooling"],
-      "layer": 2,
+      "layer": 0,
       "sourceFiles": 6,
       "testFiles": 0,
-      "sources": [
-        "test/next-cache.ts",
-        "test/prisma.ts",
-        "test/result.ts",
-        "test/server-only.ts",
-        "test/session.ts",
-        "test/setup.ts"
+      "sources": [],
+      "dependsOn": [],
+      "npm": ["@prisma/client", "next", "vitest"],
+      "note": "Vitest setup for every package: the Prisma, session and next/cache mocks."
+    },
+    {
+      "name": "@giveaway/testing-visual",
+      "path": "packages/tooling/testing-visual",
+      "type": "config",
+      "tags": ["type:config", "runtime:isomorphic", "scope:tooling"],
+      "layer": 0,
+      "sourceFiles": 3,
+      "testFiles": 0,
+      "sources": [],
+      "dependsOn": [],
+      "npm": [
+        "@fontsource-variable/figtree",
+        "@testing-library/react",
+        "react",
+        "vitest"
       ],
-      "dependsOn": ["@giveaway/rpc-model", "@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model", "vitest"],
-      "note": "Vitest setup for every package: the Prisma, session and next/cache mocks, and the empty server-only module."
+      "note": "Browser setup and render helpers for visual tests, and the script that runs them in the Playwright Docker image."
     },
     {
       "name": "@giveaway/tsconfig",

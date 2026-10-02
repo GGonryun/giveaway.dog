@@ -3,8 +3,8 @@ import { createAuthConfig, type GetSession } from '../config-runtime';
 import { authConfigMiddleware } from '../config-middleware';
 import { ApplicationError } from '@/lib/errors';
 import { DOG_BREEDS } from '@/lib/dogs';
-import { prismaMock } from '@/test/prisma';
-import { createSession } from '@/test/session';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { createSession } from '@giveaway/testing-server/session';
 
 const getSession = vi.fn<GetSession>();
 

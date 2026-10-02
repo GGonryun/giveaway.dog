@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { PickerStatus } from '@prisma/client';
 import { getTwitterV2PublicPicker } from '../get-twitter-v2-public-picker';
-import { knownRequestError, prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   DISQUALIFICATION_CASES,
   NOW,

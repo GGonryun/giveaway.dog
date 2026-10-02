@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { deleteTwitterV2Picker } from '../delete-twitter-v2-picker';
-import { knownRequestError, prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { buildPicker } from './fixtures-pickers';
 
 const mocks = vi.hoisted(() => ({

@@ -3,7 +3,7 @@ import { ZodError } from 'zod';
 import { processChatMessage } from '../chat-message';
 import { sendChatMessage } from '@/lib/twitch/api/send-chat-message';
 import { ApplicationError } from '@/lib/errors';
-import { prismaMock, knownRequestError } from '@/test/prisma';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { chatMessageEvent } from '@/lib/twitch/__tests__/fixtures-twitch';
 
 vi.hoisted(() => {

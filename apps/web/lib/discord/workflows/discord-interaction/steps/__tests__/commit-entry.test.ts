@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { commitEntry } from '../commit-entry';
-import { prismaMock, knownRequestError } from '@/test/prisma';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import {
   buttonInteraction,
   discordMember,

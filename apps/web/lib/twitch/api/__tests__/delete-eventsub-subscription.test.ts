@@ -4,7 +4,7 @@ import {
   deleteEventSubSubscription
 } from '../delete-eventsub-subscription';
 import { ApplicationError } from '@/lib/errors';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   EVENTSUB_URL,
   TOKEN_URL,

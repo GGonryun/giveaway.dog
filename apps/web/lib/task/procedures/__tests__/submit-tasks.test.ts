@@ -3,9 +3,9 @@ import type { MockInstance } from 'vitest';
 import { Prisma } from '@prisma/client';
 import type { Sweepstakes, SweepstakesTiming } from '@prisma/client';
 import submitTask from '../submit-tasks';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { signIn, signOut, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { signIn, signOut, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   buildSweepstakes,
   buildTiming,

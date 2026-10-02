@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { IdentityProvider } from '@prisma/client';
 import login from '../login';
-import { signIn as signInSession } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { signIn as signInSession } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 type LoginInput = Parameters<typeof login>[0];
 

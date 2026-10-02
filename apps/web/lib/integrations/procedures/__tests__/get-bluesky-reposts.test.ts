@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Agent } from '@atproto/api';
 import { getBlueskyReposts } from '../get-bluesky-reposts';
 import { ApplicationError } from '@/lib/errors';
-import { asPrismaClient } from '@/test/prisma';
+import { asPrismaClient } from '@giveaway/testing-server/prisma';
 
 const POST_URL = 'https://bsky.app/profile/acme.bsky.social/post/3kpost';
 

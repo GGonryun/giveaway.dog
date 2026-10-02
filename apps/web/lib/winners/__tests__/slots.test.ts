@@ -5,7 +5,7 @@ import {
   getEmptyPrizeSlots,
   getPrizeAllocations
 } from '../slots';
-import { asPrismaClient, prismaMock } from '@/test/prisma';
+import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { buildAllocation } from './fixtures-winners-model';
 
 const db = asPrismaClient();

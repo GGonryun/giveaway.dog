@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { getLoyalty } from '../db';
-import { prismaMock, asPrismaClient } from '@/test/prisma';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 
 describe('getLoyalty', () => {
   it('returns the number of participations counted by the database', async () => {

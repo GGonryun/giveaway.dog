@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { getUserHostRelationship } from '../get-user-host-relationship';
-import { prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { nextCacheMock } from '@/test/next-cache';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 type Input = Parameters<typeof getUserHostRelationship>[0];
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { scheduleRewards } from '../schedule-rewards';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 
 const NOW = new Date('2026-06-01T12:00:00.000Z');
 

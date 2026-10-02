@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { getOrCreateSweepstakesParticipant } from '../get-sweepstake-participant';
 import { SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY } from '@/lib/participant/db';
-import { prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { nextCacheMock } from '@/test/next-cache';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { buildSelectedUser } from './fixtures-procedures-browse-marketing-pickers';
 
 type Input = Parameters<typeof getOrCreateSweepstakesParticipant>[0];

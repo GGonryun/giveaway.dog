@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { processConnect } from '../process-connect';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import type { DiscordApplicationCommandInteractionSchema } from '@/lib/discord/bot/schema';
 import {
   commandInteraction,

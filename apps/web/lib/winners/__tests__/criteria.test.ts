@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { ZodError } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 import { getSweepstakesCriteria, sweepstakesCriteriaSchema } from '../criteria';
-import { asPrismaClient, prismaMock } from '@/test/prisma';
+import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { buildCriteriaRow } from './fixtures-winners-model';
 
 const validCriteria = {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { computeSignupUserScore } from '../signup';
-import { prismaMock, asPrismaClient } from '@/test/prisma';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 
 const NOW = new Date('2026-06-15T12:00:00.000Z');
 const DAY_MS = 24 * 60 * 60 * 1000;

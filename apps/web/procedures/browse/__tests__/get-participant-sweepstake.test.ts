@@ -3,10 +3,10 @@ import getParticipantSweepstake from '../get-participant-sweepstake';
 import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY } from '@/lib/task/queries';
 import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
-import { prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { nextCacheMock } from '@/test/next-cache';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   FIXED_NOW,
   buildSelectedUser,

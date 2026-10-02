@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import { scrapeTwitterWorkflow } from '@/lib/pickers/x/workflows/scrape-twitter/workflow';
 
 const m = vi.hoisted(() => ({

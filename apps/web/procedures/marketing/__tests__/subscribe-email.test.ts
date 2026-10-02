@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import subscribeEmail from '../subscribe-email';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { nextCacheMock } from '@/test/next-cache';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 type Input = Parameters<typeof subscribeEmail>[0];
 

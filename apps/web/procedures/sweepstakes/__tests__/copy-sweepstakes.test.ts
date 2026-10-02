@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Prisma, TeamRole } from '@prisma/client';
 import copySweepstakes from '../copy-sweepstakes';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import {
   buildMember,

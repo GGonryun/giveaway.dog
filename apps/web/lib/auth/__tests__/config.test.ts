@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { auth, handlers, signIn, signOut } from '../config';
 import { createAuthConfig, type GetSession } from '../config-runtime';
 import { createHash } from 'crypto';
-import { knownRequestError, prismaMock } from '@/test/prisma';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 
 type ProviderOptions = Record<string, unknown> & {
   id?: string;

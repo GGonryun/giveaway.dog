@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
 import { updateTwitterV2Picker } from '../update-twitter-v2-picker';
-import { knownRequestError, prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { buildFormInput, buildPicker, buildTeam } from './fixtures-pickers';
 
 type UpdateInput = Parameters<typeof updateTwitterV2Picker>[0];

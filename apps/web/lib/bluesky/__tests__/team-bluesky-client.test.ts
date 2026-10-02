@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import { getTeamBlueskyClient as getCachedTeamBlueskyClient } from '../team-bluesky-client';
 
 const m = vi.hoisted(() => ({

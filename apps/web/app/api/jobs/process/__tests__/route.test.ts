@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { TaskJobStatus } from '@prisma/client';
 import { GET } from '../route';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 
 const CRON_SECRET = 'cron-secret';
 const NOW = new Date('2026-03-01T12:00:00.000Z');

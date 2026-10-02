@@ -1,7 +1,7 @@
 import { expect } from 'vitest';
 import { TeamRole } from '@prisma/client';
-import { TEST_USER } from '@/test/session';
-import { expectFailure } from '@/test/result';
+import { TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure } from '@giveaway/testing-server/result';
 import type { Result } from '@/lib/mrpc/types';
 
 export const SLUG = 'acme';

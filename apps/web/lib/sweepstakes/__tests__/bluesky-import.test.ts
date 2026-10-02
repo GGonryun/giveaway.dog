@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { UserSource } from '@prisma/client';
 import { importBlueskyUsers } from '../bluesky-import';
-import { asPrismaClient, prismaMock } from '@/test/prisma';
+import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import type { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-likes';
 
 const nanoidMock = vi.hoisted(() => vi.fn());

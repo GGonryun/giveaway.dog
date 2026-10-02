@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createHash } from 'crypto';
 import verifyEmailDefault, { verifyEmail } from '../verify-email';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { dbUser } from './fixtures-procedures-user';
 
 type VerifyEmailInput = Parameters<typeof verifyEmail>[0];

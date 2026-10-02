@@ -2,7 +2,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { UserEventType, type UserEvent } from '@prisma/client';
 import { GET } from '../route';
-import { createPrismaMock, prismaMock, type PrismaMock } from '@/test/prisma';
+import {
+  createPrismaMock,
+  prismaMock,
+  type PrismaMock
+} from '@giveaway/testing-server/prisma';
 import { MAX_TRACKING_REQUESTS_PER_RUN } from '@/schemas/user-scoring';
 
 const CRON_SECRET = 'cron-secret';

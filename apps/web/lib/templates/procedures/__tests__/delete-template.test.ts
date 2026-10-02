@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { deleteTemplate } from '../delete-template';
-import { knownRequestError, prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
-import { nextCacheMock } from '@/test/next-cache';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 
 const input = { templateId: 'tpl-1', slug: 'acme' };
 

@@ -6,10 +6,10 @@ import {
   X_PICKER_REPLIES_KEY,
   X_PICKER_RETWEETS_KEY
 } from '@/lib/pickers/x/constants';
-import { prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { nextCacheMock } from '@/test/next-cache';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const metric = (key: string, value: bigint) => ({
   key,

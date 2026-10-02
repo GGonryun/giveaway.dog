@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
 import { findUserTeam, findUserTeamQuery } from '../find-user-team';
 import { TeamPermission } from '@/lib/permissions';
-import { asPrismaClient, prismaMock } from '@/test/prisma';
-import { TEST_USER } from '@/test/session';
+import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
+import { TEST_USER } from '@giveaway/testing-server/session';
 import {
   NOT_A_MEMBER_MESSAGE,
   SLUG,

@@ -28,6 +28,7 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 
 - **App location**: The Next.js app is in `apps/web`. Paths in this file are relative to `apps/web` unless they start with `apps/`, `.github/` or name a root file
 - **Environment files**: Put `.env.local` and `.env.prod` in `apps/web`. Next.js, Prisma and the `prisma:*` scripts read them from there
+- **Workspace packages**: Shared code goes in pnpm workspace packages under `packages/` (see Workspace Packages). Today only the tooling packages exist, in `packages/tooling/`
 - **Auth pages**: Located in `app/(auth)/` directory
 - **Shared components**: Place reusable components in `components/` directory
 - **UI components**: Use existing shadcn/ui components in `components/ui/`
@@ -92,7 +93,6 @@ apps/
 │   │   └── patterns/ (reusable patterns)
 │   ├── lib/
 │   ├── prisma/
-│   ├── test/
 │   ├── package.json (app dependencies and scripts)
 │   ├── tsconfig.json
 │   ├── vercel.json
@@ -100,11 +100,20 @@ apps/
 └── web-e2e/ (Playwright tests)
     ├── src/
     └── playwright.config.ts
+packages/
+└── tooling/
+    ├── tsconfig/ (@giveaway/tsconfig: tsconfig presets)
+    ├── eslint-config/ (@giveaway/eslint-config: ESLint presets)
+    ├── vitest-config/ (@giveaway/vitest-config: Vitest projects)
+    ├── testing-server/ (@giveaway/testing-server: Vitest setup and mocks)
+    ├── testing-dom/ (@giveaway/testing-dom: jsdom setup)
+    └── testing-visual/ (@giveaway/testing-visual: visual test setup and helpers)
 package.json (workspace tooling: Nx, ESLint, Prettier, Vitest)
 eslint.config.mjs
 eslint-suppressions.json
 nx.json
-pnpm-workspace.yaml
+pnpm-workspace.yaml (workspace packages and the pnpm catalog)
+vitest.config.ts (lists the Vitest projects of every package)
 ```
 
 ### Common Patterns to Follow
@@ -121,12 +130,12 @@ pnpm-workspace.yaml
 - Run these commands from the repository root. The root scripts call the scripts in `apps/web/package.json` and `apps/web-e2e/package.json`
 - Use `pnpm run lint` for code linting (ESLint)
 - Use `pnpm run type-check` for TypeScript verification
-- Use `pnpm run test:run` to run all the tests one time (Vitest): server tests, component tests and snapshot tests
+- Use `pnpm run test:run` to run all the tests one time (Vitest): server tests, component tests and snapshot tests of every package. The root `vitest.config.ts` lists them (see Workspace Packages)
 - Use `pnpm run test:unit` to run only the server and component tests, `pnpm run test:server` to run only the server tests, `pnpm run test:frontend` to run only the component tests, and `pnpm run test:snapshot` to run only the snapshot tests
 - Use `pnpm run test:coverage` to run the server and component tests and measure the code coverage
 - Use `pnpm run test:visual:docker` to run the visual tests in the Playwright Docker image that CI uses, and `pnpm run test:visual:docker:update` to update their reference screenshots (see Visual Tests)
 - Use `pnpm run test:e2e` to run the Playwright end-to-end tests against a running app (see E2E Tests)
-- Use `pnpm --filter web exec vitest run --project <name>` to run one project: `server`, `frontend` or `snapshot`
+- Use `pnpm --filter web exec vitest run --project <name>` to run one project of the app: `server`, `frontend` or `snapshot`. From the root, the project names start with the package name, for example `pnpm exec vitest run --project 'web:server'`
 - Use `pnpm --filter web exec vitest run -u <path>` to update snapshots (the path is relative to `apps/web`) after an intended UI change. Review the snapshot diff before you commit it
 - Use `pnpm run format` to automatically format all files
 - Use `pnpm run format:check` to check if files need formatting
@@ -136,20 +145,33 @@ pnpm-workspace.yaml
 
 ### Nx
 
-- **Projects**: pnpm workspace packages under `apps/`. `web` is the app in `apps/web`, and `web-e2e` is the Playwright tests in `apps/web-e2e`. Their targets are the scripts in their `package.json`. `nx.json` sets the cache and the inputs
-- **Cached targets**: `lint`, `type-check`, `test:unit`, `test:server`, `test:frontend` and `test:snapshot`, for example `pnpm nx run web:lint`. A second run with no changed inputs reads the result from the cache. `lint` is defined in `apps/web/package.json` and `apps/web-e2e/package.json` under `nx.targets` and runs ESLint from the root, so it uses the root `eslint-suppressions.json`
-- **Inputs**: Each cached target hashes the files of its project, the versions of all the npm packages in `pnpm-lock.yaml`, and the `sharedGlobals` files in `nx.json` (`.nvmrc`, the root `package.json`, the ESLint config and the CI files). A change to a `sharedGlobals` file affects every project
+- **Projects**: pnpm workspace packages under `apps/` and `packages/`. `web` is the app in `apps/web`, `web-e2e` is the Playwright tests in `apps/web-e2e`, and the `@giveaway/*` packages are in `packages/`. Their targets are the scripts in their `package.json`. `nx.json` sets the cache and the inputs
+- **Cached targets**: `lint`, `type-check`, `test:unit`, `test:server`, `test:frontend` and `test:snapshot`, for example `pnpm nx run web:lint`. A second run with no changed inputs reads the result from the cache. `lint` is defined in each `package.json` under `nx.targets` and runs ESLint from the root, so it uses the root `eslint-suppressions.json`
+- **Inputs**: Each cached target hashes the files of its project, the non-test files of the workspace packages it depends on (`^production`), the versions of all the npm packages in `pnpm-lock.yaml`, and the `sharedGlobals` files in `nx.json` (`.nvmrc`, the root `package.json`, the root ESLint config and the CI files). A change to a `sharedGlobals` file affects every project. `lint` also hashes `docs/monorepo/package-map.json`, because the boundary rules come from it
 - **Affected projects**: `pnpm nx affected -t <target>` runs a target only for the projects that changed since `main`, and the projects that depend on them. `web-e2e` depends on `web`. A change to `pnpm-lock.yaml` affects only the projects that use the changed packages (`projectsAffectedByDependencyUpdates` is `auto`). A package that only the root tooling uses, such as ESLint or Prettier, is in no project, so a lockfile-only update of it affects no project. The full run on `main` still runs it
-- **Dependencies**: Add an app dependency with `pnpm --filter web add <name>`. Add workspace tooling (Nx, ESLint, Prettier, Vitest and its plugins) to the root `package.json` with `pnpm add -D -w <name>`. Vitest runs from the root, so its peer dependencies (`@types/node`, `jsdom`, `playwright`) stay in the root `package.json` with the same versions the app uses. Otherwise pnpm installs a second copy of Vitest, and the visual tests stop with no output
+- **Dependencies**: Each npm version is written once, in the `catalog` of `pnpm-workspace.yaml`. A `package.json` writes `"<name>": "catalog:"`. Add an app dependency with `pnpm --filter web add --save-catalog <name>`. Add workspace tooling (Nx, ESLint, Prettier, Vitest and its plugins) to the root `package.json` with `pnpm add -D -w --save-catalog <name>`. A workspace package depends on another one with `"workspace:*"`. Vitest runs from the root, so its peer dependencies (`@types/node`, `jsdom`, `playwright`) stay in the root `package.json` with the same versions the app uses. Otherwise pnpm installs a second copy of Vitest, and the visual tests stop with no output
 - **Other commands**: `pnpm nx show projects` lists the projects, `pnpm nx show project web` shows the targets and `pnpm nx reset` clears the cache
 - **Build**: `nx.json` defines a `build` target default that is never cached, so a build always uses the current environment variables. Vercel finds this target and builds the app with `cd ../.. && npx nx build web`
 - **CI**: CI runs the targets through Nx. See Continuous Integration
+
+### Workspace Packages
+
+- **Location and names**: A package is in `packages/<group>/<name>` and is named `@giveaway/<name>`. `pnpm-workspace.yaml` lists `apps/*`, `packages/**` and `tools/*`
+- **Shape**: A package ships TypeScript source, with no build step. `exports` in its `package.json` lists each module, for example `"./button": "./src/button.tsx"`. Do not add barrel `index.ts` files. Its tags go in `"nx": { "tags": [...] }`, with the tags from `docs/monorepo/package-map.json`
+- **Tooling packages**: `packages/tooling/` has the packages that configure the others:
+  - `@giveaway/tsconfig`: the `base`, `library`, `react-library` and `nextjs` presets. A `tsconfig.json` extends one of them, for example `"extends": "@giveaway/tsconfig/library.json"`
+  - `@giveaway/eslint-config`: `base` has the rules and the snapshot-assertion rule. `boundaries` has `@nx/enforce-module-boundaries` (a warning for now), with the `depConstraints` that `dependencyRules` in `docs/monorepo/package-map.json` defines, and `@nx/dependency-checks` for each `package.json` under `packages/`. The root `eslint.config.mjs` uses both. The rules need the Nx project graph, so `pnpm run lint` runs `nx show projects` first
+  - `@giveaway/vitest-config`: `projects` defines the `server`, `frontend` and `snapshot` projects of a package (`packageTestConfig`). It also sets `TZ=UTC` and replaces `server-only` with an empty module. `workspace` finds the `vitest.config.ts` of each package for the root config
+  - `@giveaway/testing-server`: the setup file of every project (the Prisma, session and `next/cache` mocks) and the helpers that tests import: `@giveaway/testing-server/prisma`, `/session`, `/result` and `/next-cache`
+  - `@giveaway/testing-dom`: the jsdom setup of the `frontend` and `snapshot` projects
+  - `@giveaway/testing-visual`: the browser setup (`/setup`) and the `renderVisual` helpers (`/render`) of the visual tests, and `visual-docker`, which runs the visual tests of the package it is called from in the Playwright Docker image
+- **Vitest config of a package**: `vitest.config.ts` exports `defineConfig(packageTestConfig())`. The root `vitest.config.ts` adds the three projects of each package that has one, named `<package>:server`, `<package>:frontend` and `<package>:snapshot`. A package with tests has `test:*` scripts for the projects it uses, so Nx and CI run them
 
 ### Frontend Tests
 
 - **Location**: Put component and hook tests in a `__tests__/` folder next to the code, named `<name>.test.tsx`. Put snapshot tests in a separate file in the same folder, named `<name>.snapshot.test.tsx`
 - **Projects**: Files that end in `.snapshot.test.tsx` run in jsdom (the `snapshot` project). Other files that end in `.test.tsx` run in jsdom (the `frontend` project). Files that end in `.test.ts` run in Node (the `server` project)
-- **Setup**: `test/setup-dom.ts` loads the jest-dom matchers, cleans up after each test and stubs `matchMedia`, `ResizeObserver`, `IntersectionObserver` and `scrollIntoView`
+- **Setup**: `@giveaway/testing-dom/setup` (`packages/tooling/testing-dom/src/setup.ts`) loads the jest-dom matchers, cleans up after each test and stubs `matchMedia`, `ResizeObserver`, `IntersectionObserver` and `scrollIntoView`. `@giveaway/testing-server/setup` mocks Prisma, the session and `next/cache` in every project
 - **Libraries**: Use `@testing-library/react` with role queries (`screen.getByRole`) and `@testing-library/user-event` for interactions. Use `renderHook` for hooks
 - **Snapshots**: Use `toMatchSnapshot()` for representative states, only in `.snapshot.test.tsx` files. ESLint rejects snapshot assertions in other test files. Keep snapshots deterministic: freeze time with `vi.setSystemTime`, mock `Math.random` and id generators, and do not snapshot Radix-generated ids
 - **Mocks**: Mock `next/navigation`, `next/link`, `next/image`, `next-auth/react` and server actions with `vi.mock` in the test file
@@ -161,7 +183,7 @@ pnpm-workspace.yaml
 - **Checks**: `Lint` (ESLint and the package map checker), `Type check` (TypeScript), `Server tests` (Vitest server tests, with coverage), `Frontend tests` (Vitest component tests, with coverage), `Snapshot tests` (Vitest snapshot tests), `Visual tests` (screenshots in Chromium) and `Coverage` (merges the server and frontend coverage). Merge a pull request only when all the checks pass
 - **Nx in CI**: On a pull request, each job runs `pnpm nx affected -t <target>`, so a pull request that changes no project (for example, only Markdown files at the root) runs no tests. `nrwl/nx-set-shas` sets the base commit. On a push to `main` and on a manual run, each job runs `pnpm nx run-many -t <target>` for all the projects, so the `Coverage badge` job always has the full coverage
 - **Nx cache in CI**: `.github/actions/nx-cache` starts a small server (`server.mjs`) that gives the cache to Nx through the Nx remote cache API (`NX_SELF_HOSTED_REMOTE_CACHE_SERVER`). `actions/cache` keeps the files of the server in `.nx/ci-cache`, for each job and branch, with a fallback to `main`. The server deletes the entries that no run used for 7 days. Nx cannot use a copy of its own local cache folder, because its cache database is tied to the machine. A re-run on the same commit reads `lint`, `type-check` and the tests from the cache
-- **Paths in CI**: The Vitest reports, the coverage summary and the visual test attachments are in `apps/web` (`apps/web/.vitest-reports`, `apps/web/coverage`, `apps/web/.vitest-attachments`). The Playwright report is in `apps/web-e2e/playwright-report`
+- **Paths in CI**: Each project writes its Vitest reports to `.vitest-reports` in its folder. `.github/scripts/collect-vitest-reports.mjs` copies them to `.vitest-reports` at the root, and the `Coverage` job merges them with the root `vitest.config.ts` into `coverage/coverage-summary.json` at the root. The visual test attachments are in `apps/web/.vitest-attachments`. The Playwright report is in `apps/web-e2e/playwright-report`
 - **Coverage badge**: After each push to `main`, the `Coverage badge` job puts the merged line coverage in `coverage.svg` on the `badges` branch. The README shows this image. Do not edit the `badges` branch by hand
 - **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`
 - **ESLint baseline**: `eslint-suppressions.json` (at the root, with paths relative to the root) records the errors that existed when ESLint was added. New errors fail the check. Do not add entries to this file to hide new errors
@@ -172,8 +194,8 @@ pnpm-workspace.yaml
 
 - **What they do**: Each visual test renders a component in a real Chromium browser (Vitest browser mode with Playwright), takes a screenshot and compares it with a reference PNG pixel by pixel. A change to a component, a Tailwind class or a theme token that changes how it looks fails the `Visual tests` check
 - **Location**: Put visual tests in a `__tests__/` folder next to the code, named `<name>.visual.test.tsx`. The references go in `__tests__/__screenshots__/<name>.visual.test.tsx/`. The config is `vitest.visual.config.ts`. `pnpm run test:run` does not run visual tests
-- **Writing a test**: Use `renderVisual` and `THEMES` from `test/visual/render.tsx`. Render each test in the light and the dark theme. Then call `await expect.element(root).toMatchScreenshot()`. For a component in a portal (a dialog, a popover), take the screenshot of the portal element, for example `page.getByRole('dialog')`. See `components/ui/__tests__/button.visual.test.tsx`
-- **Keep them deterministic**: Use fixed data. Do not use the current date, random values or images from the network. `test/visual/setup.ts` loads the Figtree font and turns off animations and transitions
+- **Writing a test**: Use `renderVisual` and `THEMES` from `@giveaway/testing-visual/render`. Render each test in the light and the dark theme. Then call `await expect.element(root).toMatchScreenshot()`. For a component in a portal (a dialog, a popover), take the screenshot of the portal element, for example `page.getByRole('dialog')`. See `components/ui/__tests__/button.visual.test.tsx`
+- **Keep them deterministic**: Use fixed data. Do not use the current date, random values or images from the network. `@giveaway/testing-visual/setup` loads the Figtree font and turns off animations and transitions. The visual config also loads `app/globals.css` as a setup file, for the theme
 - **The references come from the Playwright Docker image**: The pixels depend on the browser version and the fonts of the operating system, so a screenshot from your own browser does not match. The `Visual tests` job runs in `mcr.microsoft.com/playwright` for the Playwright version in `pnpm-lock.yaml`. Only commit references that were made in that image, in one of these ways:
   - `pnpm run test:visual:docker:update` runs the tests in the same image on your machine and writes the new references. Use `pnpm run test:visual:docker` to only compare. These scripts need Docker on Linux, because they use your `node_modules`. In a Claude Code cloud session, start Docker first with `dockerd > /tmp/dockerd.log 2>&1 &`
   - The **Update visual references** workflow (Actions tab, or `workflow_dispatch` through the GitHub API, on your branch, not on `main`) takes new references in the same image, commits them to the branch and starts CI again on that commit

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validateEntry } from '../validate-entry';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   buttonInteraction,
   discordMember,

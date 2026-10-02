@@ -3,8 +3,8 @@ import { createHash } from 'crypto';
 import { NextRequest } from 'next/server';
 import { UserSource } from '@prisma/client';
 import { GET } from '../route';
-import { prismaMock } from '@/test/prisma';
-import { createSession, TEST_USER } from '@/test/session';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { createSession, TEST_USER } from '@giveaway/testing-server/session';
 
 const m = vi.hoisted(() => {
   const getProfile = vi.fn();

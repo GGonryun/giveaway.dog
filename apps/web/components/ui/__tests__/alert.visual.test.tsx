@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { CircleAlert } from 'lucide-react';
-import { renderVisual, THEMES } from '@/test/visual/render';
+import { renderVisual, THEMES } from '@giveaway/testing-visual/render';
 import { Alert, AlertDescription, AlertTitle } from '../alert';
 
 const VARIANTS = [

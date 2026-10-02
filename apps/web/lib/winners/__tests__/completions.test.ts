@@ -9,8 +9,8 @@ import {
   toUserCompletionCounts
 } from '../completions';
 import type { SweepstakesCriteriaSchema } from '../criteria';
-import { asPrismaClient, prismaMock } from '@/test/prisma';
-import { TEST_USER } from '@/test/session';
+import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
+import { TEST_USER } from '@giveaway/testing-server/session';
 import {
   bonusTaskConfig,
   buildCompletion,

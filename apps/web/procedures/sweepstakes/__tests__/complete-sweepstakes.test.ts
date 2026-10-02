@@ -5,10 +5,10 @@ import {
   SweepstakesJobType
 } from '@prisma/client';
 import completeSweepstakes from '../complete-sweepstakes';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
-import { nextCacheMock } from '@/test/next-cache';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { SWEEPSTAKES_ID, TEAM_SLUG } from './fixtures-procedures-sweepstakes-a';
 
 const NOW = new Date('2026-10-01T12:00:00.000Z');

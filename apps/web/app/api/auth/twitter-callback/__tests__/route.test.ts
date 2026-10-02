@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import { ZodError } from 'zod';
-import { prismaMock, knownRequestError } from '@/test/prisma';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { ApplicationError } from '@/lib/errors';
 
 const m = vi.hoisted(() => ({

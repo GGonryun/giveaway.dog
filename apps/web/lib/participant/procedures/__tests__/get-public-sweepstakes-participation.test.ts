@@ -1,8 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { getPublicSweepstakesParticipation } from '../get-public-sweepstakes-participation';
-import { prismaMock } from '@/test/prisma';
-import { createSession, signIn, TEST_USER, authMock } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import {
+  createSession,
+  signIn,
+  TEST_USER,
+  authMock
+} from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const NOW = new Date('2026-06-01T12:00:00.000Z');
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createEventSubSubscriptionsForFeatures } from '../create-eventsub-subscription';
 import { ApplicationError } from '@/lib/errors';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   EVENTSUB_URL,
   TOKEN_URL,

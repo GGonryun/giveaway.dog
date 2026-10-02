@@ -3,8 +3,8 @@ import { ZodError } from 'zod';
 import verifyYouTubeChannelDefault, {
   verifyYouTubeChannel
 } from '../verify-youtube-channel';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 type Input = Parameters<typeof verifyYouTubeChannel>[0];
 

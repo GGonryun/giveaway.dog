@@ -1,4 +1,3 @@
-import '@/app/globals.css';
 import figtree from '@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2?url';
 import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll } from 'vitest';

@@ -1,9 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
 import getUserTeams from '../get-user-teams';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { authMock, createSession, signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import {
+  authMock,
+  createSession,
+  signIn,
+  TEST_USER
+} from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   expectOutputFailure,
   PRISMA_INTERNAL_ERROR_MESSAGE

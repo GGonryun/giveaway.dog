@@ -4,7 +4,7 @@ import { ApplicationError } from '@/lib/errors';
 import { USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
 import { TASK_COMPLETIONS_SELECT_QUERY } from '@/lib/task/completions';
 import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
-import { asPrismaClient, prismaMock } from '@/test/prisma';
+import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import {
   findOrCreateSweepstakesParticipant,
   findSweepstakesParticipant,

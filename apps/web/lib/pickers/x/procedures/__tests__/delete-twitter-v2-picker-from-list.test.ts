@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { deleteTwitterV2PickerFromList } from '../delete-twitter-v2-picker-from-list';
-import { knownRequestError, prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 describe('deleteTwitterV2PickerFromList', () => {
   describe('when the caller is not signed in', () => {

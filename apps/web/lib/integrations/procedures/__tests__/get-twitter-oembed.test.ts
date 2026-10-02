@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import getTwitterOEmbed from '../get-twitter-oembed';
 import { ApplicationError } from '@/lib/errors';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const POST_URL = 'https://x.com/acme_dog/status/1234567890';
 const ENCODED_POST_URL = 'https%3A%2F%2Fx.com%2Facme_dog%2Fstatus%2F1234567890';
