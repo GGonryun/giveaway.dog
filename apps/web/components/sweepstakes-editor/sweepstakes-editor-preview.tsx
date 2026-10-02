@@ -21,10 +21,7 @@ import {
   SweepstakesTermsType
 } from '@prisma/client';
 import { defaultTermInputOptions } from './form/terms';
-import {
-  DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND,
-  DEFAULT_SWEEPSTAKES_NAME
-} from '@/schemas/giveaway/defaults';
+import { DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND } from '@/schemas/giveaway/defaults';
 import {
   mockParticipation,
   mockUserHostRelationship,
@@ -45,6 +42,7 @@ import { toSweepstakesHost } from '@/schemas/giveaway/participant';
 import { assertNever } from '@/lib/errors';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
+  DEFAULT_SWEEPSTAKES_NAME,
   TWITTER_PROFILE_URL
 } from '@/lib/settings';
 import { DeepNil, DeepPartial } from '@/lib/types';

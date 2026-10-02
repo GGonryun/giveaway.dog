@@ -12,7 +12,7 @@ import { useMemo, useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
 import { useDeleteSweepstakes } from './use-delete-sweepstakes';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 
 interface DeleteConfirmationModalProps {
   onClose: () => void;

@@ -17,7 +17,7 @@ const m = vi.hoisted(() => ({
   getByUsername: vi.fn()
 }));
 
-vi.mock('@/lib/ratelimit', () => ({
+vi.mock('@/lib/scrapebadger/ratelimit', () => ({
   scrapeBadgerCredits: { limit: m.creditsLimit }
 }));
 

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { AskQuestionTaskSchema, TASK_INPUT_SCHEMA } from '../schemas';
 import { ApplicationError } from '@/lib/errors';
-import { ValidateTaskInput } from './integrations';
+import { ValidateTaskInput } from './types';
 
 export const checkAskQuestion = async (
   db: PrismaClient,

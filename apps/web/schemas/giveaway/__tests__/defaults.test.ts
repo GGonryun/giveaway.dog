@@ -16,7 +16,6 @@ import {
   DEFAULT_SWEEPSTAKES_DESCRIPTION,
   DEFAULT_SWEEPSTAKES_DESIGN,
   DEFAULT_SWEEPSTAKES_DETAILS,
-  DEFAULT_SWEEPSTAKES_NAME,
   DEFAULT_SWEEPSTAKES_PRIZE_NAME,
   DEFAULT_SWEEPSTAKES_PRIZE_QUOTA,
   DEFAULT_SWEEPSTAKES_PRIZES,
@@ -41,13 +40,11 @@ import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
 describe('scalar defaults', () => {
   it('exposes the default sweepstakes copy', () => {
     expect({
-      name: DEFAULT_SWEEPSTAKES_NAME,
       description: DEFAULT_SWEEPSTAKES_DESCRIPTION,
       prizeName: DEFAULT_SWEEPSTAKES_PRIZE_NAME,
       sponsorName: DEFAULT_SPONSOR_NAME,
       winnerSelectionMethod: DEFAULT_WINNER_SELECTION_METHOD
     }).toEqual({
-      name: 'Untitled Sweepstakes',
       description: 'Enter to win a prize!',
       prizeName: 'My Custom Prize',
       sponsorName: 'Giveaway Sponsor',

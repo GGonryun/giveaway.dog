@@ -6,12 +6,12 @@ import { widetype } from '@/lib/widetype';
 import {
   isAccountTab,
   ACCOUNT_TAB_OPTIONS,
-  AccountTabSchema
+  AccountTabSchema,
+  DEFAULT_ACCOUNT_TAB
 } from '@/schemas/account';
 import { useAccountPage } from './use-account-page';
 import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
-import { DEFAULT_ACCOUNT_TAB } from '@/lib/settings';
 
 const tabRegex = new RegExp('^/account(?:/([^/]+))?');
 const matchAccountTab = (path: string): AccountTabSchema | null => {

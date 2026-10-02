@@ -7,12 +7,12 @@ import { widetype } from '@/lib/widetype';
 import {
   isSweepstakesTab,
   SWEEPSTAKES_TAB_OPTIONS,
-  SweepstakesTabSchema
+  SweepstakesTabSchema,
+  DEFAULT_SWEEPSTAKES_DETAILS_TAB
 } from '@/schemas/sweepstakes';
 import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepstakes-details-page';
 import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
-import { DEFAULT_SWEEPSTAKES_DETAILS_TAB } from '@/lib/settings';
 
 const tabRegex = new RegExp('^/app/[^/]+/sweepstakes/[^/]+(?:/([^/]+))?');
 const matchSweepstakesTab = (path: string): SweepstakesTabSchema | null => {

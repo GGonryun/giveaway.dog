@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '../automation/db';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { toSweepstakesUrl } from '../sweepstakes/util';
 import {
   DiscordActionRow,
@@ -12,7 +11,7 @@ import {
   SWEEPSTAKES_STATUS_LABEL,
   toDerivedSweepstakeStatus
 } from '@/schemas/sweepstakes';
-import { UNKNOWN_USER_NAME } from '../settings';
+import { DEFAULT_SWEEPSTAKES_NAME, UNKNOWN_USER_NAME } from '../settings';
 import {
   DiscordMessageComponentFactory,
   toActiveSweepstakeComponents,

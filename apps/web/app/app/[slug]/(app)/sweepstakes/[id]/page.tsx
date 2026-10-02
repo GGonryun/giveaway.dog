@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { DEFAULT_SWEEPSTAKES_DETAILS_TAB } from '@/lib/settings';
+import { DEFAULT_SWEEPSTAKES_DETAILS_TAB } from '@/schemas/sweepstakes';
 import type { Metadata } from 'next';
 import { SweepstakesPageProps } from '@/schemas/pages';
 

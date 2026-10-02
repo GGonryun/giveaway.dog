@@ -16,6 +16,7 @@ import {
   listSweepstakesFiltersSchema,
   toSweepstakesFilter,
   sweepstakesTabSchema,
+  DEFAULT_SWEEPSTAKES_DETAILS_TAB,
   SWEEPSTAKES_TAB_OPTIONS,
   isSweepstakesTab,
   SWEEPSTAKES_STATUS_LABEL
@@ -422,6 +423,13 @@ describe('isSweepstakesTab', () => {
 
   it('returns false for an unknown tab', () => {
     expect(isSweepstakesTab('Winners')).toBe(false);
+  });
+});
+
+describe('DEFAULT_SWEEPSTAKES_DETAILS_TAB', () => {
+  it('defaults sweepstakes details to the preview tab', () => {
+    expect(DEFAULT_SWEEPSTAKES_DETAILS_TAB).toBe('preview');
+    expect(isSweepstakesTab(DEFAULT_SWEEPSTAKES_DETAILS_TAB)).toBe(true);
   });
 });
 

@@ -11,6 +11,8 @@ export const accountTabSchema = z.union([
 
 export type AccountTabSchema = z.infer<typeof accountTabSchema>;
 
+export const DEFAULT_ACCOUNT_TAB: AccountTabSchema = 'profile';
+
 export const ACCOUNT_TAB_OPTIONS: Record<AccountTabSchema, string> = {
   profile: 'Profile',
   history: 'History',

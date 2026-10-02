@@ -11,6 +11,7 @@ import {
   USER_SCHEMA_SELECT_QUERY,
   toUserSchema,
   userDetailsTabSchema,
+  DEFAULT_USER_DETAILS_TAB,
   USER_DETAILS_TAB_OPTIONS,
   isUserDetailsTab,
   isAnonymousUser,
@@ -803,6 +804,13 @@ describe('isUserDetailsTab', () => {
 
   it('returns false for an unknown tab', () => {
     expect(isUserDetailsTab('Entries')).toBe(false);
+  });
+});
+
+describe('DEFAULT_USER_DETAILS_TAB', () => {
+  it('defaults user details to the overview tab', () => {
+    expect(DEFAULT_USER_DETAILS_TAB).toBe('overview');
+    expect(isUserDetailsTab(DEFAULT_USER_DETAILS_TAB)).toBe(true);
   });
 });
 

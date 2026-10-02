@@ -47,9 +47,8 @@ import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-b
 import { DeleteConfirmationModal } from '@/components/sweepstakes/delete-confirmation-modal';
 import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
 import { useEditSweepstakesPage } from '@/components/sweepstakes/use-edit-sweepstakes-page';
-import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
+import { DEFAULT_PAGE_SIZE, DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepstakes-details-page';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { Badge } from '@/components/ui/badge';
 import { DerivedStatusIcon } from '@/lib/sweepstake-status';
 import { useCreateSweepstakesPage } from '@/components/sweepstakes/use-create-sweepstakes-page';
