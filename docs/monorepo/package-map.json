@@ -175,84 +175,7 @@
       "split": false
     }
   },
-  "deadFiles": [
-    "components/account/user-notifications.tsx",
-    "components/hooks/use-media-query.tsx",
-    "components/marketing/feature-card.tsx",
-    "components/marketing/how-it-works-section.tsx",
-    "components/marketing/more-tools-cta.tsx",
-    "components/patterns/app-sidebar/website-logo.tsx",
-    "components/patterns/emoji-picker.tsx",
-    "components/patterns/features-section.tsx",
-    "components/patterns/tool-cta.tsx",
-    "components/sweepstakes-browse/back-button.tsx",
-    "components/sweepstakes-browse/participation-page-ctas.tsx",
-    "components/sweepstakes-browse/sweepstakes-page-content.tsx",
-    "components/sweepstakes-browse/util.ts",
-    "components/sweepstakes-details/public-winner-picker.tsx",
-    "components/sweepstakes-editor/form-issues-dialog.tsx",
-    "components/sweepstakes/states/email-required.tsx",
-    "components/sweepstakes/states/profile-incomplete.tsx",
-    "components/sweepstakes/use-update-sweepstakes.ts",
-    "components/ui/box.tsx",
-    "components/ui/calendar.tsx",
-    "components/ui/context-menu.tsx",
-    "components/ui/country-selector.tsx",
-    "components/ui/date-picker-with-range.tsx",
-    "components/ui/drawer.tsx",
-    "components/ui/link.tsx",
-    "components/ui/logo.tsx",
-    "components/ui/menu-bar.tsx",
-    "components/ui/slider.tsx",
-    "components/ui/stamp.tsx",
-    "components/ui/stepper.tsx",
-    "components/users/filter-bar.tsx",
-    "components/users/search-bar.tsx",
-    "lib/announcements.ts",
-    "lib/discord/api/get-discord-channels.ts",
-    "lib/discord/api/get-discord-guild-roles.ts",
-    "lib/discord/procedures/regenerate-discord-key.ts",
-    "lib/discord/procedures/save-discord-settings.ts",
-    "lib/feature-flags.ts",
-    "lib/integrations/components/twitter-connect-dialog.tsx",
-    "lib/integrations/components/twitter-disconnect-dialog.tsx",
-    "lib/integrations/components/twitter-scope-checkbox.tsx",
-    "lib/integrations/components/twitter-scope-dialog.tsx",
-    "lib/integrations/notifications/discord-notifier.ts",
-    "lib/integrations/procedures/connect-twitter.tsx",
-    "lib/integrations/procedures/disconnect-twitter.tsx",
-    "lib/integrations/procedures/get-bluesky-profile.ts",
-    "lib/integrations/procedures/get-liking-users.tsx",
-    "lib/integrations/procedures/get-quote-tweets.tsx",
-    "lib/integrations/procedures/get-replies.tsx",
-    "lib/integrations/procedures/get-retweets.tsx",
-    "lib/integrations/schemas/bluesky.ts",
-    "lib/integrations/schemas/discord.ts",
-    "lib/integrations/utils/refresh-kick-token.ts",
-    "lib/marketing/bot-protection-animation.tsx",
-    "lib/pickers/x/components/searching-winners-modal.tsx",
-    "lib/scoring/schemas/index.ts",
-    "lib/scrapebadger/schemas/api.ts",
-    "lib/settings/components/account-type-card.tsx",
-    "lib/settings/components/billing.tsx",
-    "lib/settings/components/crm-connectors.tsx",
-    "lib/settings/components/legal.tsx",
-    "lib/sweepstakes/schemas/jobs.ts",
-    "lib/task/components/public-sweepstakes/task-actions/lib/facebook/shared-container.tsx",
-    "lib/task/components/public-sweepstakes/task-actions/lib/tiktok/shared-container.tsx",
-    "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-integration-check.tsx",
-    "lib/task/procedures/process-task-jobs/process-like-task-job.ts",
-    "lib/task/procedures/process-task-jobs/process-retweet-task-job.ts",
-    "lib/task/procedures/process-task-jobs/process-twitter-task-job.ts",
-    "lib/turnstile/index.ts",
-    "lib/utils/wait-at-least.ts",
-    "procedures/browse/get-user-sweepstakes-participation.ts",
-    "procedures/marketing/get-featured-giveaways.ts",
-    "procedures/teams/shared.ts",
-    "procedures/user/get-sweepstake-participation.ts",
-    "procedures/user/get-user-device-activity.ts",
-    "schemas/platform-scoring.ts"
-  ],
+  "deadFiles": [],
   "packages": [
     {
       "name": "apps/web",
@@ -583,15 +506,13 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:account"],
       "layer": 5,
-      "sourceFiles": 6,
-      "testFiles": 9,
+      "sourceFiles": 4,
+      "testFiles": 7,
       "sources": [
         "components/account/account-tabs.tsx",
         "components/account/danger-zone.tsx",
         "components/account/feature-settings.tsx",
-        "components/account/use-account-page.ts",
-        "components/account/user-notifications.tsx",
-        "lib/settings/components/account-type-card.tsx"
+        "components/account/use-account-page.ts"
       ],
       "dependsOn": [
         "@giveaway/account-server",
@@ -670,11 +591,10 @@
       "type": "server",
       "tags": ["type:server", "runtime:server", "scope:audience"],
       "layer": 5,
-      "sourceFiles": 4,
-      "testFiles": 4,
+      "sourceFiles": 3,
+      "testFiles": 3,
       "sources": [
         "procedures/user/find-user.ts",
-        "procedures/user/get-user-device-activity.ts",
         "procedures/user/get-user-signals.ts",
         "procedures/user/track-user.ts"
       ],
@@ -697,13 +617,11 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:audience"],
       "layer": 12,
-      "sourceFiles": 8,
-      "testFiles": 7,
+      "sourceFiles": 6,
+      "testFiles": 3,
       "sources": [
         "app/app/[slug]/(app)/users/components/",
         "app/app/[slug]/(app)/users/lib/",
-        "components/users/filter-bar.tsx",
-        "components/users/search-bar.tsx",
         "components/users/users-filters-sheet.tsx"
       ],
       "dependsOn": [
@@ -1005,12 +923,10 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:browse"],
       "layer": 15,
-      "sourceFiles": 6,
-      "testFiles": 7,
+      "sourceFiles": 4,
+      "testFiles": 3,
       "sources": [
         "components/sweepstakes-browse/authenticated-sweepstakes-content.tsx",
-        "components/sweepstakes-browse/back-button.tsx",
-        "components/sweepstakes-browse/participation-page-ctas.tsx",
         "components/sweepstakes-browse/public-sweepstakes-content.tsx",
         "components/sweepstakes-browse/referral-code-handler.tsx",
         "components/sweepstakes-browse/sweepstakes-participation-page-content.tsx"
@@ -1039,14 +955,12 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:browse"],
       "layer": 7,
-      "sourceFiles": 10,
-      "testFiles": 16,
+      "sourceFiles": 8,
+      "testFiles": 14,
       "sources": [
         "app/(marketing)/browse/(list)/filters.tsx",
         "components/sweepstakes-browse/components/",
-        "components/sweepstakes-browse/sweepstakes-page-content.tsx",
-        "components/sweepstakes-browse/sweepstakes-page-skeleton.tsx",
-        "components/sweepstakes-browse/util.ts"
+        "components/sweepstakes-browse/sweepstakes-page-skeleton.tsx"
       ],
       "dependsOn": [
         "@giveaway/marketing-server",
@@ -1185,9 +1099,9 @@
       "type": "model",
       "tags": ["type:model", "runtime:isomorphic", "scope:infra"],
       "layer": 1,
-      "sourceFiles": 2,
-      "testFiles": 2,
-      "sources": ["lib/feature-flags.ts", "schemas/feature-flags.ts"],
+      "sourceFiles": 1,
+      "testFiles": 1,
+      "sources": ["schemas/feature-flags.ts"],
       "dependsOn": ["@giveaway/util-types"],
       "npm": ["@giveaway/db-model"]
     },
@@ -1333,12 +1247,11 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:infra"],
       "layer": 11,
-      "sourceFiles": 6,
-      "testFiles": 1,
+      "sourceFiles": 5,
+      "testFiles": 0,
       "sources": [
         "lib/turnstile/context.tsx",
         "lib/turnstile/gate.tsx",
-        "lib/turnstile/index.ts",
         "lib/turnstile/provider.tsx",
         "lib/turnstile/use-turnstile.tsx",
         "lib/turnstile/widget.tsx"
@@ -1362,14 +1275,13 @@
         "platform:bluesky"
       ],
       "layer": 4,
-      "sourceFiles": 13,
-      "testFiles": 13,
+      "sourceFiles": 12,
+      "testFiles": 12,
       "sources": [
         "lib/bluesky/",
         "lib/integrations/procedures/create-skeet.ts",
         "lib/integrations/procedures/get-bluesky-likes.ts",
         "lib/integrations/procedures/get-bluesky-oembed.ts",
-        "lib/integrations/procedures/get-bluesky-profile.ts",
         "lib/integrations/procedures/get-bluesky-reposts.ts"
       ],
       "dependsOn": [
@@ -1474,12 +1386,11 @@
         "platform:bluesky"
       ],
       "layer": 3,
-      "sourceFiles": 3,
-      "testFiles": 3,
+      "sourceFiles": 2,
+      "testFiles": 2,
       "sources": [
         "lib/auth/schemas/bluesky.ts",
-        "lib/integrations/schemas/bluesky-helpers.ts",
-        "lib/integrations/schemas/bluesky.ts"
+        "lib/integrations/schemas/bluesky-helpers.ts"
       ],
       "dependsOn": ["@giveaway/user-model", "@giveaway/util-errors"],
       "npm": ["zod"]
@@ -1692,12 +1603,10 @@
         "platform:discord"
       ],
       "layer": 7,
-      "sourceFiles": 10,
-      "testFiles": 10,
+      "sourceFiles": 7,
+      "testFiles": 7,
       "sources": [
-        "lib/discord/api/get-discord-channels.ts",
         "lib/discord/api/get-discord-guild-name.ts",
-        "lib/discord/api/get-discord-guild-roles.ts",
         "lib/discord/api/post-discord-message.ts",
         "lib/discord/api/update-discord-message.ts",
         "lib/discord/api/util.ts",
@@ -1760,8 +1669,8 @@
         "platform:discord"
       ],
       "layer": 8,
-      "sourceFiles": 8,
-      "testFiles": 8,
+      "sourceFiles": 6,
+      "testFiles": 6,
       "sources": ["lib/discord/procedures/"],
       "dependsOn": [
         "@giveaway/automation-model",
@@ -1812,13 +1721,9 @@
         "platform:discord"
       ],
       "layer": 1,
-      "sourceFiles": 3,
-      "testFiles": 5,
-      "sources": [
-        "lib/discord/api/schemas.ts",
-        "lib/discord/bot/schema.ts",
-        "lib/integrations/schemas/discord.ts"
-      ],
+      "sourceFiles": 2,
+      "testFiles": 4,
+      "sources": ["lib/discord/api/schemas.ts", "lib/discord/bot/schema.ts"],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": ["zod"]
     },
@@ -2085,7 +1990,7 @@
         "platform:meta"
       ],
       "layer": 11,
-      "sourceFiles": 9,
+      "sourceFiles": 8,
       "testFiles": 0,
       "sources": [
         "lib/task/components/public-sweepstakes/task-actions/lib/facebook/",
@@ -2221,7 +2126,7 @@
         "platform:tiktok"
       ],
       "layer": 11,
-      "sourceFiles": 3,
+      "sourceFiles": 2,
       "testFiles": 0,
       "sources": [
         "lib/task/components/public-sweepstakes/task-actions/lib/tiktok/"
@@ -2383,14 +2288,13 @@
         "platform:twitch"
       ],
       "layer": 9,
-      "sourceFiles": 8,
+      "sourceFiles": 7,
       "testFiles": 1,
       "sources": [
         "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-channel-url-display.tsx",
         "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-chat-command.tsx",
         "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-follow.tsx",
         "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-importing-account.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-integration-check.tsx",
         "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-rate-limit.tsx",
         "lib/task/hooks/use-twitch-trigger-validation.ts",
         "procedures/sweepstakes/verify-twitch-trigger.ts"
@@ -2579,14 +2483,10 @@
         "platform:x"
       ],
       "layer": 4,
-      "sourceFiles": 9,
-      "testFiles": 9,
+      "sourceFiles": 5,
+      "testFiles": 5,
       "sources": [
         "lib/integrations/procedures/create-tweet.ts",
-        "lib/integrations/procedures/get-liking-users.tsx",
-        "lib/integrations/procedures/get-quote-tweets.tsx",
-        "lib/integrations/procedures/get-replies.tsx",
-        "lib/integrations/procedures/get-retweets.tsx",
         "lib/integrations/procedures/get-twitter-oembed.ts",
         "lib/integrations/procedures/upload-image.ts",
         "lib/integrations/utils/get-latest-twitter-access-token.ts",
@@ -2612,13 +2512,9 @@
         "platform:x"
       ],
       "layer": 7,
-      "sourceFiles": 3,
-      "testFiles": 3,
-      "sources": [
-        "lib/integrations/procedures/connect-twitter.tsx",
-        "lib/integrations/procedures/disconnect-twitter.tsx",
-        "lib/integrations/procedures/twitter-oauth-callback.tsx"
-      ],
+      "sourceFiles": 1,
+      "testFiles": 1,
+      "sources": ["lib/integrations/procedures/twitter-oauth-callback.tsx"],
       "dependsOn": [
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
@@ -2674,8 +2570,8 @@
         "platform:x"
       ],
       "layer": 2,
-      "sourceFiles": 12,
-      "testFiles": 11,
+      "sourceFiles": 11,
+      "testFiles": 10,
       "sources": ["lib/scrapebadger/", "types/scrapebadger.d.ts"],
       "dependsOn": [
         "@giveaway/cache",
@@ -2756,13 +2652,10 @@
         "platform:x"
       ],
       "layer": 5,
-      "sourceFiles": 4,
-      "testFiles": 4,
+      "sourceFiles": 1,
+      "testFiles": 1,
       "sources": [
-        "lib/task/procedures/process-task-jobs/process-like-task-job.ts",
-        "lib/task/procedures/process-task-jobs/process-retweet-task-job.ts",
-        "lib/task/procedures/process-task-jobs/process-retweet-v2-task-job.ts",
-        "lib/task/procedures/process-task-jobs/process-twitter-task-job.ts"
+        "lib/task/procedures/process-task-jobs/process-retweet-v2-task-job.ts"
       ],
       "dependsOn": [
         "@giveaway/db-client",
@@ -2859,7 +2752,7 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:marketing"],
       "layer": 3,
-      "sourceFiles": 6,
+      "sourceFiles": 5,
       "testFiles": 0,
       "sources": ["lib/marketing/"],
       "dependsOn": [
@@ -2928,8 +2821,8 @@
       "type": "server",
       "tags": ["type:server", "runtime:server", "scope:marketing"],
       "layer": 4,
-      "sourceFiles": 3,
-      "testFiles": 3,
+      "sourceFiles": 2,
+      "testFiles": 2,
       "sources": ["procedures/marketing/", "schemas/email-subscription.ts"],
       "dependsOn": [
         "@giveaway/rpc-server",
@@ -2945,18 +2838,16 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:marketing"],
       "layer": 3,
-      "sourceFiles": 12,
-      "testFiles": 23,
+      "sourceFiles": 7,
+      "testFiles": 13,
       "sources": [
         "components/marketing/",
         "components/patterns/coming-soon.tsx",
         "components/patterns/faq-section.tsx",
-        "components/patterns/features-section.tsx",
         "components/patterns/pricing-cta.tsx",
         "components/patterns/pricing-section.tsx",
         "components/patterns/shared.tsx",
-        "components/patterns/social-platforms-carousel.tsx",
-        "components/patterns/tool-cta.tsx"
+        "components/patterns/social-platforms-carousel.tsx"
       ],
       "dependsOn": [
         "@giveaway/platform-catalog",
@@ -3140,11 +3031,10 @@
       "type": "server",
       "tags": ["type:server", "runtime:server", "scope:participants"],
       "layer": 7,
-      "sourceFiles": 3,
-      "testFiles": 3,
+      "sourceFiles": 2,
+      "testFiles": 2,
       "sources": [
         "procedures/user/get-participation-history.ts",
-        "procedures/user/get-sweepstake-participation.ts",
         "procedures/user/withdraw-participation.ts"
       ],
       "dependsOn": [
@@ -3161,8 +3051,8 @@
       "type": "server",
       "tags": ["type:server", "runtime:server", "scope:participants"],
       "layer": 7,
-      "sourceFiles": 8,
-      "testFiles": 8,
+      "sourceFiles": 7,
+      "testFiles": 7,
       "sources": [
         "procedures/browse/get-participant-sweepstake.ts",
         "procedures/browse/get-sweepstake-form-field.ts",
@@ -3170,7 +3060,6 @@
         "procedures/browse/get-sweepstake-tasks.ts",
         "procedures/browse/get-sweepstakes-privacy.ts",
         "procedures/browse/get-user-host-relationship.ts",
-        "procedures/browse/get-user-sweepstakes-participation.ts",
         "procedures/browse/refresh-sweepstakes.ts"
       ],
       "dependsOn": [
@@ -3220,13 +3109,9 @@
       "type": "model",
       "tags": ["type:model", "runtime:isomorphic", "scope:participants"],
       "layer": 1,
-      "sourceFiles": 5,
-      "testFiles": 5,
-      "sources": [
-        "lib/scoring/schemas/",
-        "schemas/platform-scoring.ts",
-        "schemas/user-scoring.ts"
-      ],
+      "sourceFiles": 3,
+      "testFiles": 3,
+      "sources": ["lib/scoring/schemas/", "schemas/user-scoring.ts"],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": ["@giveaway/db-model", "lodash", "lucide-react", "zod"]
     },
@@ -3465,7 +3350,7 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:pickers"],
       "layer": 11,
-      "sourceFiles": 15,
+      "sourceFiles": 14,
       "testFiles": 0,
       "sources": [
         "lib/pickers/x/components/load-tweet-modal.tsx",
@@ -3477,7 +3362,6 @@
         "lib/pickers/x/components/progress-modal.tsx",
         "lib/pickers/x/components/public-x-picker-form.tsx",
         "lib/pickers/x/components/rate-limit-modal.tsx",
-        "lib/pickers/x/components/searching-winners-modal.tsx",
         "lib/pickers/x/components/tweet-preview-card.tsx",
         "lib/pickers/x/components/twitter-v2-public-view.tsx",
         "lib/pickers/x/components/upgrade-modal.tsx",
@@ -3767,15 +3651,14 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:shell"],
       "layer": 11,
-      "sourceFiles": 6,
-      "testFiles": 10,
+      "sourceFiles": 5,
+      "testFiles": 8,
       "sources": [
         "components/app/",
         "components/patterns/app-sidebar/index.tsx",
         "components/patterns/app-sidebar/nav-projects.tsx",
         "components/patterns/app-sidebar/nav-user.tsx",
-        "components/patterns/app-sidebar/team-switcher.tsx",
-        "components/patterns/app-sidebar/website-logo.tsx"
+        "components/patterns/app-sidebar/team-switcher.tsx"
       ],
       "dependsOn": [
         "@giveaway/account-context",
@@ -3815,7 +3698,7 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:sweepstakes"],
       "layer": 8,
-      "sourceFiles": 8,
+      "sourceFiles": 7,
       "testFiles": 9,
       "sources": [
         "components/sweepstakes/create-giveaway-button.tsx",
@@ -3824,7 +3707,6 @@
         "components/sweepstakes/use-convert-to-template.ts",
         "components/sweepstakes/use-copy-sweepstakes.ts",
         "components/sweepstakes/use-delete-sweepstakes.ts",
-        "components/sweepstakes/use-update-sweepstakes.ts",
         "components/templates/"
       ],
       "dependsOn": [
@@ -4047,12 +3929,11 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:sweepstakes"],
       "layer": 11,
-      "sourceFiles": 5,
-      "testFiles": 8,
+      "sourceFiles": 4,
+      "testFiles": 6,
       "sources": [
         "components/sweepstakes-details/dice-icon.tsx",
         "components/sweepstakes-details/public-winner-draw.tsx",
-        "components/sweepstakes-details/public-winner-picker.tsx",
         "components/sweepstakes-details/sweepstakes-winners-skeleton.tsx",
         "components/sweepstakes-details/sweepstakes-winners.tsx"
       ],
@@ -4163,13 +4044,12 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:sweepstakes"],
       "layer": 8,
-      "sourceFiles": 7,
+      "sourceFiles": 6,
       "testFiles": 11,
       "sources": [
         "components/sweepstakes-editor/complete-sweepstakes-alert.tsx",
         "components/sweepstakes-editor/contexts/",
         "components/sweepstakes-editor/data/steps.ts",
-        "components/sweepstakes-editor/form-issues-dialog.tsx",
         "components/sweepstakes-editor/form/icon-button.tsx",
         "components/sweepstakes-editor/publish-confirmation-modal.tsx",
         "components/sweepstakes-editor/sweepstakes-status.tsx"
@@ -4390,8 +4270,8 @@
       "type": "model",
       "tags": ["type:model", "runtime:isomorphic", "scope:sweepstakes"],
       "layer": 5,
-      "sourceFiles": 19,
-      "testFiles": 19,
+      "sourceFiles": 18,
+      "testFiles": 18,
       "sources": [
         "components/sweepstakes-editor/form/terms.ts",
         "components/sweepstakes/util.ts",
@@ -4523,8 +4403,8 @@
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:sweepstakes"],
       "layer": 13,
-      "sourceFiles": 13,
-      "testFiles": 26,
+      "sourceFiles": 11,
+      "testFiles": 22,
       "sources": ["components/sweepstakes/states/"],
       "dependsOn": [
         "@giveaway/account-email",
@@ -5224,14 +5104,13 @@
       "type": "server",
       "tags": ["type:server", "runtime:server", "scope:team"],
       "layer": 4,
-      "sourceFiles": 8,
-      "testFiles": 8,
+      "sourceFiles": 7,
+      "testFiles": 7,
       "sources": [
         "procedures/teams/create-team.ts",
         "procedures/teams/get-user-team.ts",
         "procedures/teams/get-user-teams.ts",
         "procedures/teams/select-team.ts",
-        "procedures/teams/shared.ts",
         "procedures/teams/update-team-links.ts",
         "procedures/teams/update-team-logo.ts",
         "procedures/teams/update-team-name.ts"
@@ -5295,12 +5174,9 @@
       "type": "ui",
       "tags": ["type:ui", "runtime:react", "scope:team"],
       "layer": 2,
-      "sourceFiles": 5,
+      "sourceFiles": 2,
       "testFiles": 1,
       "sources": [
-        "lib/settings/components/billing.tsx",
-        "lib/settings/components/crm-connectors.tsx",
-        "lib/settings/components/legal.tsx",
         "lib/settings/components/settings-tabs.tsx",
         "lib/settings/schemas/"
       ],
@@ -5622,11 +5498,10 @@
       "type": "ui",
       "tags": ["type:ui", "runtime:react", "scope:ui"],
       "layer": 2,
-      "sourceFiles": 3,
-      "testFiles": 6,
+      "sourceFiles": 2,
+      "testFiles": 4,
       "sources": [
         "components/ui/command.tsx",
-        "components/ui/country-selector.tsx",
         "components/ui/multi-select.tsx"
       ],
       "dependsOn": [
@@ -5643,13 +5518,9 @@
       "type": "ui",
       "tags": ["type:ui", "runtime:react", "scope:ui"],
       "layer": 2,
-      "sourceFiles": 3,
-      "testFiles": 6,
-      "sources": [
-        "components/ui/calendar.tsx",
-        "components/ui/date-picker-with-range.tsx",
-        "components/ui/date-time-picker.tsx"
-      ],
+      "sourceFiles": 1,
+      "testFiles": 2,
+      "sources": ["components/ui/date-time-picker.tsx"],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/ui-utils"],
       "npm": ["date-fns", "lucide-react", "react", "react-day-picker"]
     },
@@ -5676,13 +5547,12 @@
       "type": "ui",
       "tags": ["type:ui", "runtime:react", "scope:ui"],
       "layer": 0,
-      "sourceFiles": 8,
-      "testFiles": 8,
+      "sourceFiles": 7,
+      "testFiles": 7,
       "sources": [
         "components/hooks/use-array-context.tsx",
         "components/hooks/use-file-provider.ts",
         "components/hooks/use-interval.tsx",
-        "components/hooks/use-media-query.tsx",
         "components/hooks/use-mobile.tsx",
         "components/hooks/use-tablet.tsx",
         "components/hooks/use-update-params.tsx",
@@ -5729,21 +5599,19 @@
       "type": "ui",
       "tags": ["type:ui", "runtime:react", "scope:ui"],
       "layer": 1,
-      "sourceFiles": 51,
-      "testFiles": 102,
+      "sourceFiles": 43,
+      "testFiles": 86,
       "sources": [
         "components/ui/accordion.tsx",
         "components/ui/alert-dialog.tsx",
         "components/ui/alert.tsx",
         "components/ui/avatar.tsx",
         "components/ui/badge.tsx",
-        "components/ui/box.tsx",
         "components/ui/breadcrumb.tsx",
         "components/ui/button.tsx",
         "components/ui/card.tsx",
         "components/ui/checkbox.tsx",
         "components/ui/collapsible.tsx",
-        "components/ui/context-menu.tsx",
         "components/ui/copy-link-input.tsx",
         "components/ui/dialog.tsx",
         "components/ui/dropdown-menu.tsx",
@@ -5752,9 +5620,6 @@
         "components/ui/form.tsx",
         "components/ui/input.tsx",
         "components/ui/label.tsx",
-        "components/ui/link.tsx",
-        "components/ui/logo.tsx",
-        "components/ui/menu-bar.tsx",
         "components/ui/mobile-suspense.tsx",
         "components/ui/navigation-menu.tsx",
         "components/ui/obfuscated-email.tsx",
@@ -5769,10 +5634,7 @@
         "components/ui/sheet.tsx",
         "components/ui/sidebar.tsx",
         "components/ui/skeleton.tsx",
-        "components/ui/slider.tsx",
         "components/ui/spinner.tsx",
-        "components/ui/stamp.tsx",
-        "components/ui/stepper.tsx",
         "components/ui/switch.tsx",
         "components/ui/table-pagination.tsx",
         "components/ui/table.tsx",
@@ -5796,11 +5658,9 @@
         "@radix-ui/react-avatar",
         "@radix-ui/react-checkbox",
         "@radix-ui/react-collapsible",
-        "@radix-ui/react-context-menu",
         "@radix-ui/react-dialog",
         "@radix-ui/react-dropdown-menu",
         "@radix-ui/react-label",
-        "@radix-ui/react-menubar",
         "@radix-ui/react-navigation-menu",
         "@radix-ui/react-popover",
         "@radix-ui/react-progress",
@@ -5808,7 +5668,6 @@
         "@radix-ui/react-scroll-area",
         "@radix-ui/react-select",
         "@radix-ui/react-separator",
-        "@radix-ui/react-slider",
         "@radix-ui/react-slot",
         "@radix-ui/react-switch",
         "@radix-ui/react-tabs",
@@ -5878,8 +5737,8 @@
       "type": "util",
       "tags": ["type:util", "runtime:isomorphic", "scope:ui"],
       "layer": 0,
-      "sourceFiles": 4,
-      "testFiles": 6,
+      "sourceFiles": 3,
+      "testFiles": 5,
       "sources": ["components/foundations/", "lib/utils.ts", "lib/utils/"],
       "dependsOn": [],
       "npm": ["clsx", "tailwind-merge"]

@@ -1,9 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`Box > matches the snapshot with spacing variants 1`] = `
-<div
-  class="space-y-3 mb-2 p-4"
->
-  Content
-</div>
-`;

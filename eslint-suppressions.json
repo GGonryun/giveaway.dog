@@ -19,11 +19,6 @@
       "count": 2
     }
   },
-  "apps/web/components/patterns/emoji-picker.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "apps/web/components/patterns/form-layout/use-form-issues.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
@@ -89,19 +84,6 @@
       "count": 2
     }
   },
-  "apps/web/components/ui/box.tsx": {
-    "@typescript-eslint/no-empty-object-type": {
-      "count": 1
-    }
-  },
-  "apps/web/components/ui/country-selector.tsx": {
-    "react-hooks/immutability": {
-      "count": 2
-    },
-    "react-hooks/use-memo": {
-      "count": 1
-    }
-  },
   "apps/web/components/ui/date-time-picker.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -114,11 +96,6 @@
   },
   "apps/web/components/ui/sidebar.tsx": {
     "react-hooks/purity": {
-      "count": 1
-    }
-  },
-  "apps/web/components/ui/stamp.tsx": {
-    "react-hooks/static-components": {
       "count": 1
     }
   },
@@ -190,23 +167,8 @@
       "count": 4
     }
   },
-  "apps/web/lib/discord/procedures/save-discord-settings.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "apps/web/lib/home/supported-integrations.tsx": {
     "@next/next/no-html-link-for-pages": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/integrations/notifications/discord-notifier.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "apps/web/lib/integrations/procedures/connect-twitter.tsx": {
-    "@typescript-eslint/no-require-imports": {
       "count": 1
     }
   },
@@ -217,11 +179,6 @@
   },
   "apps/web/lib/json.ts": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "apps/web/lib/marketing/bot-protection-animation.tsx": {
-    "react-hooks/refs": {
       "count": 2
     }
   },
@@ -410,11 +367,6 @@
     }
   },
   "apps/web/procedures/sweepstakes/update-task-completion-status.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "apps/web/procedures/teams/shared.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

@@ -4,7 +4,6 @@ import { Checkbox } from '../checkbox';
 import { Input } from '../input';
 import { Label } from '../label';
 import { RadioGroup, RadioGroupItem } from '../radio-group';
-import { Slider } from '../slider';
 import { Switch } from '../switch';
 import { Textarea } from '../textarea';
 
@@ -62,7 +61,6 @@ describe.each(THEMES)('Form controls (%s)', (theme) => {
             <Label htmlFor="participate">Participate</Label>
           </div>
         </RadioGroup>
-        <Slider defaultValue={[40]} max={100} aria-label="Volume" />
       </div>,
       { theme }
     );
