@@ -118,6 +118,13 @@ lib/
 - Never use `pnpm run build` for testing changes
 - Check IDE diagnostics for immediate feedback
 
+### Nx
+
+- **Project**: The app is the Nx root project `web`. Its targets are the `package.json` scripts. `nx.json` sets the cache and the inputs
+- **Cached targets**: `pnpm nx run web:lint`, `pnpm nx run web:type-check`, `pnpm nx run web:test:unit` and `pnpm nx run web:test:snapshot`. A second run with no changed inputs reads the result from the cache in `.nx/`
+- **Other commands**: `pnpm nx show projects` lists the projects, `pnpm nx show project web` shows the targets and `pnpm nx reset` clears the cache
+- **CI and Vercel**: They still run the `pnpm run` scripts, not Nx
+
 ### Frontend Tests
 
 - **Location**: Put component and hook tests in a `__tests__/` folder next to the code, named `<name>.test.tsx`. Put snapshot tests in a separate file in the same folder, named `<name>.snapshot.test.tsx`

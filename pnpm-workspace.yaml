@@ -9,6 +9,7 @@ allowBuilds:
   '@tailwindcss/oxide': true
   core-js: true
   esbuild: true
+  nx: false
   prisma: true
   protobufjs: true
   sharp: false
@@ -25,5 +26,6 @@ onlyBuiltDependencies:
   - protobufjs
 
 ignoredBuiltDependencies:
+  - nx
   - sharp
   - unrs-resolver

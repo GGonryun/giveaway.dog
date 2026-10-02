@@ -1,5 +1,8 @@
 {
   "private": true,
+  "nx": {
+    "name": "web"
+  },
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "next dev --turbopack",
@@ -198,6 +201,7 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "16.1.6",
     "jsdom": "^30.1.1",
+    "nx": "23.2.1",
     "patch-package": "^8.0.1",
     "prisma": "^6.19.0",
     "tsx": "^4.20.6",
