@@ -22,14 +22,7 @@ import {
   checkBlueskyRepost
 } from './bluesky';
 import { checkVeloraConnect, checkVeloraFollow } from './velora';
-
-export type ValidateTaskInput<T extends TaskSchema> = {
-  task: T;
-  userId: string;
-  participantId: string;
-  teamId: string;
-  data?: unknown;
-};
+import { ValidateTaskInput } from './types';
 
 export const validateTask = async <T extends TaskSchema>(
   db: PrismaClient,

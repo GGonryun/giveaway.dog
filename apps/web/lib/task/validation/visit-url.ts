@@ -1,6 +1,6 @@
 import { ApplicationError } from '@/lib/errors';
 import { VisitUrlTaskSchema, TASK_INPUT_SCHEMA } from '../schemas';
-import { ValidateTaskInput } from './integrations';
+import { ValidateTaskInput } from './types';
 
 export const checkVisitUrl = async (
   input: ValidateTaskInput<VisitUrlTaskSchema>

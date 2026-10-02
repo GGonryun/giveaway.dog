@@ -2,7 +2,7 @@
 
 import { IdentityProvider, PrismaClient } from '@prisma/client';
 import { VeloraConnectTaskSchema, VeloraFollowTaskSchema } from '../schemas';
-import { ValidateTaskInput } from './integrations';
+import { ValidateTaskInput } from './types';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@/lib/integrations/schemas/providers';
 import { ApplicationError } from '@/lib/errors';
 import { refreshVeloraToken } from '@/lib/integrations/utils/refresh-velora-token';

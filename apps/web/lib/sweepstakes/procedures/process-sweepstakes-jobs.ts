@@ -3,7 +3,7 @@
 import { ApplicationError, assertNever } from '@/lib/errors';
 import { html } from '@/lib/html';
 import { DEFAULT_TEAM_NAME } from '@/lib/team/data';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 import {
   Prisma,
   PrismaClient,

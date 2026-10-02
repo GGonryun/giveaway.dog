@@ -218,6 +218,8 @@ export const userDetailsTabSchema = z.union([
 
 export type UserDetailsTabSchema = z.infer<typeof userDetailsTabSchema>;
 
+export const DEFAULT_USER_DETAILS_TAB: UserDetailsTabSchema = 'overview';
+
 export const USER_DETAILS_TAB_OPTIONS: Record<UserDetailsTabSchema, string> = {
   overview: 'Overview',
   entries: 'Entries'

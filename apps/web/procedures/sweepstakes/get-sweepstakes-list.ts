@@ -8,8 +8,7 @@ import {
   listSweepstakesFiltersSchema,
   toDerivedSweepstakeStatus
 } from '@/schemas/sweepstakes';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
-import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
+import { DEFAULT_PAGE_SIZE, DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 import { getSweepstakesTimingDescription } from '@/components/sweepstakes/status-badge';
 import { Prisma } from '@prisma/client';
 

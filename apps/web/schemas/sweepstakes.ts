@@ -166,6 +166,8 @@ export const sweepstakesTabSchema = z.union([
 
 export type SweepstakesTabSchema = z.infer<typeof sweepstakesTabSchema>;
 
+export const DEFAULT_SWEEPSTAKES_DETAILS_TAB: SweepstakesTabSchema = 'preview';
+
 export const SWEEPSTAKES_TAB_OPTIONS: Record<SweepstakesTabSchema, string> = {
   preview: 'Preview',
   analytics: 'Analytics',

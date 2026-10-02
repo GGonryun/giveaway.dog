@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   accountTabSchema,
+  DEFAULT_ACCOUNT_TAB,
   ACCOUNT_TAB_OPTIONS,
   isAccountTab
 } from '../account';
@@ -52,5 +53,12 @@ describe('isAccountTab', () => {
 
   it('returns false for an unknown tab', () => {
     expect(isAccountTab('billing')).toBe(false);
+  });
+});
+
+describe('DEFAULT_ACCOUNT_TAB', () => {
+  it('defaults the account page to the profile tab', () => {
+    expect(DEFAULT_ACCOUNT_TAB).toBe('profile');
+    expect(isAccountTab(DEFAULT_ACCOUNT_TAB)).toBe(true);
   });
 });

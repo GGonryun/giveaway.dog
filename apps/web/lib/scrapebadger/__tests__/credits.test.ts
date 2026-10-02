@@ -6,7 +6,7 @@ const m = vi.hoisted(() => ({
   limit: vi.fn()
 }));
 
-vi.mock('@/lib/ratelimit', () => ({
+vi.mock('../ratelimit', () => ({
   scrapeBadgerCredits: { limit: m.limit }
 }));
 
