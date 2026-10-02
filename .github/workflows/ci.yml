@@ -40,7 +40,7 @@ jobs:
         uses: ./.github/actions/nx-cache
 
       - name: ESLint
-        run: pnpm nx $NX_RUN -t lint --quiet
+        run: pnpm nx $NX_RUN -t lint --output-style=static --quiet
 
   type-check:
     name: Type check
@@ -64,7 +64,7 @@ jobs:
         uses: ./.github/actions/nx-cache
 
       - name: TypeScript
-        run: pnpm nx $NX_RUN -t type-check
+        run: pnpm nx $NX_RUN -t type-check --output-style=static
 
   server:
     name: Server tests
@@ -88,7 +88,7 @@ jobs:
         uses: ./.github/actions/nx-cache
 
       - name: Vitest server tests with coverage
-        run: pnpm nx $NX_RUN -t test:server -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
+        run: pnpm nx $NX_RUN -t test:server --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
 
       - name: Upload the test report
         uses: actions/upload-artifact@v4
@@ -120,7 +120,7 @@ jobs:
         uses: ./.github/actions/nx-cache
 
       - name: Vitest frontend tests with coverage
-        run: pnpm nx $NX_RUN -t test:frontend -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
+        run: pnpm nx $NX_RUN -t test:frontend --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
 
       - name: Upload the test report
         uses: actions/upload-artifact@v4
@@ -196,7 +196,7 @@ jobs:
         uses: ./.github/actions/nx-cache
 
       - name: Vitest snapshots
-        run: pnpm nx $NX_RUN -t test:snapshot
+        run: pnpm nx $NX_RUN -t test:snapshot --output-style=static
 
   playwright:
     name: Playwright version
@@ -244,7 +244,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Vitest visual tests
-        run: pnpm nx $NX_RUN -t test:visual
+        run: pnpm nx $NX_RUN -t test:visual --output-style=static
 
       - name: Upload the screenshots that changed
         if: failure()
