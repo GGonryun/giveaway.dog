@@ -108,6 +108,7 @@ lib/
 - Use `pnpm run test:run` to run all the tests one time (Vitest): server tests, component tests and snapshot tests
 - Use `pnpm run test:unit` to run only the server and component tests, `pnpm run test:server` to run only the server tests, `pnpm run test:frontend` to run only the component tests, and `pnpm run test:snapshot` to run only the snapshot tests
 - Use `pnpm run test:coverage` to run the server and component tests and measure the code coverage
+- Use `pnpm run test:visual:docker` to run the visual tests in the Playwright Docker image that CI uses, and `pnpm run test:visual:docker:update` to update their reference screenshots (see Visual Tests)
 - Use `pnpm run test:e2e` to run the Playwright end-to-end tests against a running app (see E2E Tests)
 - Use `pnpm vitest run --project <name>` to run one project: `server`, `frontend` or `snapshot`
 - Use `pnpm vitest run -u <path>` to update snapshots after an intended UI change. Review the snapshot diff before you commit it
@@ -130,11 +131,25 @@ lib/
 ### Continuous Integration
 
 - **Workflow**: `.github/workflows/ci.yml` runs on each pull request and on each push to `main`
-- **Checks**: `Lint` (ESLint), `Server tests` (Vitest server tests, with coverage), `Frontend tests` (Vitest component tests, with coverage), `Snapshot tests` (Vitest snapshot tests) and `Coverage` (merges the server and frontend coverage). Merge a pull request only when all the checks pass
+- **Checks**: `Lint` (ESLint), `Server tests` (Vitest server tests, with coverage), `Frontend tests` (Vitest component tests, with coverage), `Snapshot tests` (Vitest snapshot tests), `Visual tests` (screenshots in Chromium) and `Coverage` (merges the server and frontend coverage). Merge a pull request only when all the checks pass
 - **Coverage badge**: After each push to `main`, the `Coverage badge` job puts the merged line coverage in `coverage.svg` on the `badges` branch. The README shows this image. Do not edit the `badges` branch by hand
 - **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`
 - **ESLint baseline**: `eslint-suppressions.json` records the errors that existed when ESLint was added. New errors fail the check. Do not add entries to this file to hide new errors
 - **After you fix a recorded error**: Run `pnpm run lint:prune` and commit `eslint-suppressions.json`. If you do not, ESLint stops with exit code 2
+
+### Visual Tests
+
+- **What they do**: Each visual test renders a component in a real Chromium browser (Vitest browser mode with Playwright), takes a screenshot and compares it with a reference PNG pixel by pixel. A change to a component, a Tailwind class or a theme token that changes how it looks fails the `Visual tests` check
+- **Location**: Put visual tests in a `__tests__/` folder next to the code, named `<name>.visual.test.tsx`. The references go in `__tests__/__screenshots__/<name>.visual.test.tsx/`. The config is `vitest.visual.config.ts`. `pnpm run test:run` does not run visual tests
+- **Writing a test**: Use `renderVisual` and `THEMES` from `test/visual/render.tsx`. Render each test in the light and the dark theme. Then call `await expect.element(root).toMatchScreenshot()`. For a component in a portal (a dialog, a popover), take the screenshot of the portal element, for example `page.getByRole('dialog')`. See `components/ui/__tests__/button.visual.test.tsx`
+- **Keep them deterministic**: Use fixed data. Do not use the current date, random values or images from the network. `test/visual/setup.ts` loads the Figtree font and turns off animations and transitions
+- **The references come from the Playwright Docker image**: The pixels depend on the browser version and the fonts of the operating system, so a screenshot from your own browser does not match. The `Visual tests` job runs in `mcr.microsoft.com/playwright` for the Playwright version in `pnpm-lock.yaml`. Only commit references that were made in that image, in one of these ways:
+  - `pnpm run test:visual:docker:update` runs the tests in the same image on your machine and writes the new references. Use `pnpm run test:visual:docker` to only compare. These scripts need Docker on Linux, because they use your `node_modules`. In a Claude Code cloud session, start Docker first with `dockerd > /tmp/dockerd.log 2>&1 &`
+  - The **Update visual references** workflow (Actions tab, or `workflow_dispatch` through the GitHub API, on your branch, not on `main`) takes new references in the same image, commits them to the branch and starts CI again on that commit
+- **When `Visual tests` fails**: The job log and the job summary list each screenshot that changed, with the number of pixels that differ. The `visual-changes` artifact has the actual screenshot and a diff image (changed pixels in red) for each one. To see them in a session, run `pnpm run test:visual:docker` and open the files in `.vitest-attachments/`. Then decide if each change is intended:
+  - Intended (you changed how the component looks on purpose, or you added a visual test): update the references (see above). Open the new PNG files and the old ones (`git show HEAD:<path>`) and confirm that they show only what you meant to change
+  - Not intended (for example, a change to a shared component or a theme token changed a component you did not mean to change): fix the code. Do not update the references to make the check pass
+- **Run without Docker**: `pnpm run test:visual` uses the Chromium of your Playwright install. It is useful while you write a test, but expect small text differences against the committed references. When Chromium is not where Playwright expects it, set `VISUAL_CHROMIUM_PATH` to the Chromium binary (in Claude Code cloud sessions: `VISUAL_CHROMIUM_PATH=/opt/pw-browsers/chromium`)
 
 ### E2E Tests
 

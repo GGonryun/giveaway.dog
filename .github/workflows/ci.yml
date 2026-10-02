@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -125,6 +126,71 @@ jobs:
 
       - name: Vitest snapshots
         run: pnpm run test:snapshot
+
+  playwright:
+    name: Playwright version
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Check out the lockfile
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: pnpm-lock.yaml
+          sparse-checkout-cone-mode: false
+
+      - name: Read the Playwright version from the lockfile
+        id: version
+        run: |
+          version=$(grep -m1 -oP "^  playwright@\K[0-9.]+(?=:)" pnpm-lock.yaml)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  visual:
+    name: Visual tests
+    needs: playwright
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.playwright.outputs.version }}-noble
+      options: --ipc=host
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Vitest visual tests
+        run: pnpm run test:visual
+
+      - name: Upload the screenshots that changed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-changes
+          path: .vitest-attachments/
+          include-hidden-files: true
+          retention-days: 14
+
+      - name: Explain how to review the changes
+        if: failure()
+        run: |
+          {
+            echo "## Visual changes"
+            echo
+            echo "These screenshots do not match their references:"
+            echo
+            find .vitest-attachments -name '*-actual-*.png' | sort | sed -e 's|^\.vitest-attachments/|- |' -e 's|-actual-|-|'
+            echo
+            echo "The \`visual-changes\` artifact of this run has the actual screenshot and a diff image for each one. The diff image shows the changed pixels in red."
+            echo
+            echo "- If the change is intended, update the references: run the **Update visual references** workflow on this branch, or run \`pnpm run test:visual:docker:update\` and commit the result. Then review the new images in the pull request."
+            echo "- If the change is not intended, fix the code."
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
   badge:
     name: Coverage badge

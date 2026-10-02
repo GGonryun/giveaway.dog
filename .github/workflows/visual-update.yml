@@ -1,0 +1,115 @@
+name: Update visual references
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  playwright:
+    name: Playwright version
+    if: github.ref_type == 'branch' && github.ref_name != github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Check out the lockfile
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: pnpm-lock.yaml
+          sparse-checkout-cone-mode: false
+
+      - name: Read the Playwright version from the lockfile
+        id: version
+        run: |
+          version=$(grep -m1 -oP "^  playwright@\K[0-9.]+(?=:)" pnpm-lock.yaml)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  screenshots:
+    name: Take the screenshots
+    needs: playwright
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.playwright.outputs.version }}-noble
+      options: --ipc=host
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Remove the old references
+        run: find . -path ./node_modules -prune -o -type d -name __screenshots__ -prune -exec rm -rf {} +
+
+      - name: Take new references
+        run: pnpm run test:visual:update
+
+      - name: Pack the references
+        run: find . -path ./node_modules -prune -o -type d -name __screenshots__ -print | tar -czf visual-references.tgz -T -
+
+      - name: Upload the references
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-references
+          path: visual-references.tgz
+          retention-days: 1
+
+  commit:
+    name: Commit the references
+    needs: screenshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Check out the branch
+        uses: actions/checkout@v7
+
+      - name: Download the references
+        uses: actions/download-artifact@v4
+        with:
+          name: visual-references
+          path: ${{ runner.temp }}
+
+      - name: Replace the references
+        run: |
+          find . -path ./.git -prune -o -path ./node_modules -prune -o -type d -name __screenshots__ -prune -exec rm -rf {} +
+          tar -xzf "$RUNNER_TEMP/visual-references.tgz"
+
+      - name: Commit and push the changes
+        id: commit
+        run: |
+          git add --all -- ':(glob)**/__screenshots__/**'
+          if git diff --cached --quiet; then
+            echo "The references did not change." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          {
+            echo "## Changed references"
+            echo
+            git diff --cached --name-status | sed 's/^/- /'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+          git -c user.name='github-actions[bot]' \
+            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit --quiet --message 'Update visual references'
+          git push origin "HEAD:$GITHUB_REF_NAME"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Run CI on the new commit
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"

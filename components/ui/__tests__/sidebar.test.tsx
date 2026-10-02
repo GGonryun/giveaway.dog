@@ -162,10 +162,9 @@ describe('SidebarProvider and Sidebar', () => {
     const wrapper = container.firstChild;
     expect(wrapper).toHaveAttribute('data-slot', 'sidebar-wrapper');
     expect(wrapper).toHaveClass('bg-muted', 'min-h-svh');
-    expect(wrapper).toHaveStyle({
-      '--sidebar-width': '16rem',
-      '--sidebar-width-icon': '3rem'
-    });
+    expect(wrapper).toHaveStyle(
+      '--sidebar-width: 16rem; --sidebar-width-icon: 3rem'
+    );
   });
 
   it('renders on the requested side with the requested variant', () => {
@@ -366,7 +365,7 @@ describe('sidebar building blocks', () => {
     ).toBeInTheDocument();
     expect(
       container.querySelector('[data-sidebar="menu-skeleton-text"]')
-    ).toHaveStyle({ '--skeleton-width': '70%' });
+    ).toHaveStyle('--skeleton-width: 70%');
     vi.restoreAllMocks();
   });
 });
