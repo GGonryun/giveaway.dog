@@ -158,7 +158,7 @@ pnpm-workspace.yaml
 ### Continuous Integration
 
 - **Workflow**: `.github/workflows/ci.yml` runs on each pull request and on each push to `main`
-- **Checks**: `Lint` (ESLint), `Type check` (TypeScript), `Server tests` (Vitest server tests, with coverage), `Frontend tests` (Vitest component tests, with coverage), `Snapshot tests` (Vitest snapshot tests), `Visual tests` (screenshots in Chromium) and `Coverage` (merges the server and frontend coverage). Merge a pull request only when all the checks pass
+- **Checks**: `Lint` (ESLint and the package map checker), `Type check` (TypeScript), `Server tests` (Vitest server tests, with coverage), `Frontend tests` (Vitest component tests, with coverage), `Snapshot tests` (Vitest snapshot tests), `Visual tests` (screenshots in Chromium) and `Coverage` (merges the server and frontend coverage). Merge a pull request only when all the checks pass
 - **Nx in CI**: On a pull request, each job runs `pnpm nx affected -t <target>`, so a pull request that changes no project (for example, only Markdown files at the root) runs no tests. `nrwl/nx-set-shas` sets the base commit. On a push to `main` and on a manual run, each job runs `pnpm nx run-many -t <target>` for all the projects, so the `Coverage badge` job always has the full coverage
 - **Nx cache in CI**: `.github/actions/nx-cache` starts a small server (`server.mjs`) that gives the cache to Nx through the Nx remote cache API (`NX_SELF_HOSTED_REMOTE_CACHE_SERVER`). `actions/cache` keeps the files of the server in `.nx/ci-cache`, for each job and branch, with a fallback to `main`. The server deletes the entries that no run used for 7 days. Nx cannot use a copy of its own local cache folder, because its cache database is tied to the machine. A re-run on the same commit reads `lint`, `type-check` and the tests from the cache
 - **Paths in CI**: The Vitest reports, the coverage summary and the visual test attachments are in `apps/web` (`apps/web/.vitest-reports`, `apps/web/coverage`, `apps/web/.vitest-attachments`). The Playwright report is in `apps/web-e2e/playwright-report`
@@ -166,6 +166,7 @@ pnpm-workspace.yaml
 - **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`
 - **ESLint baseline**: `eslint-suppressions.json` (at the root, with paths relative to the root) records the errors that existed when ESLint was added. New errors fail the check. Do not add entries to this file to hide new errors
 - **After you fix a recorded error**: Run `pnpm run lint:prune` from the root and commit `eslint-suppressions.json`. If you do not, ESLint stops with exit code 2
+- **Package map**: `docs/monorepo/package-map.json` assigns each source file to a package of the planned Nx package graph (see `docs/monorepo/package-graph.md`). The `Lint` job runs `node docs/monorepo/check-package-map.mjs` from the root. It fails on a file that no package owns, a dependency cycle between packages or an import that breaks a package boundary. It also reports the open refactors and the dead files, but they do not fail it. When you add a file to a folder that two packages share, add the file to the `sources` of its package in `package-map.json`. Add `--verbose` to see every item of each report
 
 ### Visual Tests
 
