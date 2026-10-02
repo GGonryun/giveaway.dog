@@ -52,10 +52,22 @@ SOURCE_ROOTS.filter((dir) => fs.existsSync(path.join(root, dir))).forEach(walk);
 ROOT_FILES.filter((file) => fs.existsSync(path.join(root, file))).forEach(
   (file) => files.push(file)
 );
+
+const appRoot = fs.existsSync(path.join(root, 'apps/web/app'))
+  ? 'apps/web/'
+  : '';
+const realPath = new Map();
+for (let index = 0; index < files.length; index++) {
+  const real = files[index];
+  const logical =
+    appRoot && real.startsWith(appRoot) ? real.slice(appRoot.length) : real;
+  realPath.set(logical, real);
+  files[index] = logical;
+}
 const fileSet = new Set(files);
 
 const tsconfig = JSON.parse(
-  fs.readFileSync(path.join(root, 'tsconfig.json'), 'utf8')
+  fs.readFileSync(path.join(root, appRoot, 'tsconfig.json'), 'utf8')
 );
 const aliases = Object.entries(tsconfig.compilerOptions?.paths ?? {}).map(
   ([key, [target]]) => [key.replace(/\*$/, ''), target.replace(/\*$/, '')]
@@ -167,7 +179,7 @@ for (const file of files) {
     if (!dead.has(file)) unmapped.push(file);
     continue;
   }
-  const text = fs.readFileSync(path.join(root, file), 'utf8');
+  const text = fs.readFileSync(path.join(root, realPath.get(file)), 'utf8');
   for (const pattern of IMPORT_PATTERNS) {
     for (const match of text.matchAll(pattern)) {
       const target = resolve(file, match[1]);

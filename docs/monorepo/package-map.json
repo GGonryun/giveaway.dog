@@ -309,6 +309,7 @@
         "app/not-found.tsx",
         "middleware.ts",
         "next.config.ts",
+        "postcss.config.js",
         "types/next-auth.d.ts",
         "types/react.d.ts",
         "vitest.config.ts"

@@ -2,11 +2,16 @@
 
 This plan moves giveaway.dog to the package graph in [package-graph.md](./package-graph.md). It is built so that `main` stays deployable after every pull request and feature work never has to stop.
 
-The work is tracked in [GGonryun/giveaway.dog#137](https://github.com/GGonryun/giveaway.dog/issues/137). Its sub-issues set the order, which differs from the phases below in three ways:
+The work is tracked in [GGonryun/giveaway.dog#137](https://github.com/GGonryun/giveaway.dog/issues/137). Its sub-issues set the order, which differs from the phases below:
 
-- **Nx first.** Introducing Nx, with no code moves, is the first issue.
-- **Packages move a few at a time.** The pilot moves 3 packages, then 23 batches of up to 10 packages each.
-- **CI switches earlier.** The switch to `nx affected` comes right after the move codemod.
+1. **Introduce Nx**, with no code moves.
+2. **Move the whole app to `apps/web`** and point Vercel at it. This is Phase 5 below, done first, so the layout and the Vercel settings are final from the start.
+3. **Run CI through Nx** (Phase 4 below), with a CI cache. Every package extracted later then speeds up CI with no further CI changes.
+4. **Prepare, untangle and set up the tooling** (Phases 0 to 2), including a 3-package pilot and the move codemod.
+5. **Move the packages a few at a time** (Phase 3): 23 batches of up to 10 packages each.
+6. **Lock in the boundaries** (Phase 6).
+
+Paths in `package-map.json` and in this plan are relative to the app root: the repository root before the app moves, and `apps/web/` after. The checker handles both layouts.
 
 ## Goals
 
@@ -144,6 +149,8 @@ Within a wave, pull requests for different scopes can run in parallel, because p
 **Exit criterion:** CI time and affected share measured on 20 pull requests and compared with the numbers in [package-graph.md](./package-graph.md#summary).
 
 ## Phase 5: Move the app shell
+
+This phase now runs second, right after Nx is introduced. See [GGonryun/giveaway.dog#172](https://github.com/GGonryun/giveaway.dog/issues/172). When it runs early, move the whole app: `app/`, `components/`, `lib/`, `procedures/`, `schemas/`, `types/`, `test/`, `prisma/` and the app's dependencies, not only the route files.
 
 1. Move the remaining root app files to `apps/web` with `git mv`: `app/`, `public/`, `next.config.ts`, `middleware.ts`, `postcss.config.js`, `vercel.json` and `components.json`. Move `e2e/` and `playwright.config.ts` to `apps/web-e2e`, and `prisma/seed.ts` to `tools/db-seed`.
 2. In `apps/web/app/globals.css`, add `@source "../../../packages";`, so Tailwind still scans the packages for class names.
