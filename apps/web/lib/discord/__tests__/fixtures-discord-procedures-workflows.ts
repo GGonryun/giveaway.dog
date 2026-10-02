@@ -7,7 +7,7 @@ import type {
   DiscordMemberSchema,
   DiscordUserSchema
 } from '../bot/schema';
-import { TEST_USER } from '@/test/session';
+import { TEST_USER } from '@giveaway/testing-server/session';
 
 export const TEAM_ID = 'team-1';
 export const TEAM_SLUG = 'acme';

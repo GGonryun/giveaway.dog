@@ -22,6 +22,8 @@ runs:
         path: |
           node_modules
           apps/*/node_modules
+          packages/*/*/node_modules
+          tools/*/node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('.nvmrc') }}-modules-${{ hashFiles('pnpm-lock.yaml', 'pnpm-workspace.yaml', 'apps/web/prisma/schema.prisma') }}
 
     - name: Install dependencies

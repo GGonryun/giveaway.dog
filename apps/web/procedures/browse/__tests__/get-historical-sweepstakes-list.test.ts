@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import getHistoricalSweepstakesList from '../get-historical-sweepstakes-list';
 import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
-import { prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { nextCacheMock } from '@/test/next-cache';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   FIXED_NOW,
   buildPublicSweepstakes,

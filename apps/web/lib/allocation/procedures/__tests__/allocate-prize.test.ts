@@ -1,9 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { allocatePrize } from '../allocate-prize';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { authMock, createSession, signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
-import { nextCacheMock } from '@/test/next-cache';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import {
+  authMock,
+  createSession,
+  signIn,
+  TEST_USER
+} from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 
 const validInput = { participantId: 'participant-1', prizeId: 'prize-1' };
 

@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import refreshSweepstakes from '../refresh-sweepstakes';
-import { signIn } from '@/test/session';
-import { nextCacheMock } from '@/test/next-cache';
-import { expectFailure, expectOk } from '@/test/result';
+import { signIn } from '@giveaway/testing-server/session';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 describe('refreshSweepstakes', () => {
   describe('when the input is valid', () => {

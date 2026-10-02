@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { createSession, TEST_USER } from '@/test/session';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { createSession, TEST_USER } from '@giveaway/testing-server/session';
 
 const m = vi.hoisted(() => ({
   auth: vi.fn()

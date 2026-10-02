@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getTeamParticipants } from '../get-team-participants';
 import { TEAM_PARTICIPANT_USER_SELECT_QUERY } from '../../db';
-import { prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   buildCompletion,
   buildCompletionRow,

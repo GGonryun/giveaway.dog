@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { getTemplates } from '../get-templates';
 import { STATIC_TEMPLATES } from '../../data/static-templates';
-import { knownRequestError, prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const teamDetails = {
   name: 'Acme',

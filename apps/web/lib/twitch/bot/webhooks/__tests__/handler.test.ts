@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { ZodError } from 'zod';
 import { POST } from '../handler';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   chatMessageEvent,
   eventSubRecord,

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { asPrismaClient, prismaMock } from '@/test/prisma';
+import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { ApplicationError } from '@/lib/errors';
 import { isUserRepostingPost } from '../is-user-reposting-post';
 

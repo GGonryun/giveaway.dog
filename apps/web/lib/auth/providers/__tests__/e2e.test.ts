@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { E2E_USER_EMAIL, newE2eProviders } from '../e2e';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 
 vi.mock('next-auth/providers/credentials', () => ({
   default: <T>(config: T) => config

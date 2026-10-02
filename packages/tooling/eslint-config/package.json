@@ -1,0 +1,33 @@
+{
+  "name": "@giveaway/eslint-config",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:config",
+      "runtime:isomorphic",
+      "scope:tooling"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tooling/eslint-config",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./base": "./src/base.mjs",
+    "./boundaries": "./src/boundaries.mjs"
+  },
+  "dependencies": {
+    "@nx/eslint-plugin": "catalog:",
+    "eslint-config-next": "catalog:",
+    "jsonc-eslint-parser": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": "catalog:"
+  }
+}

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { disqualifyDraw } from '../disqualify-draw';
-import { knownRequestError, prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
-import { nextCacheMock } from '@/test/next-cache';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { buildCriteriaRow } from '../../__tests__/fixtures-winners-model';
 import {
   givenSweepstakesLookups,

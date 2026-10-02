@@ -7,7 +7,7 @@ import {
   type TwitterPickerUser,
   type TwitterPost
 } from '@prisma/client';
-import { TEST_USER } from '@/test/session';
+import { TEST_USER } from '@giveaway/testing-server/session';
 
 export const NOW = new Date('2025-06-15T12:00:00.000Z');
 

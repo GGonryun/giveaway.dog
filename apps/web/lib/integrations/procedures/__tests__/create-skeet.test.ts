@@ -3,7 +3,7 @@ import type { Agent } from '@atproto/api';
 import { createSkeet } from '../create-skeet';
 import { getLatestTeamBlueskyCredentials } from '@/lib/bluesky/get-latest-team-bluesky-agent';
 import { ApplicationError } from '@/lib/errors';
-import { asPrismaClient } from '@/test/prisma';
+import { asPrismaClient } from '@giveaway/testing-server/prisma';
 
 vi.mock('@/lib/bluesky/get-latest-team-bluesky-agent', () => ({
   getLatestTeamBlueskyCredentials: vi.fn()

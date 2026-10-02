@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { fetchTask } from '../fetch-task';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   bonusTaskConfig,
   discordInteractionTaskConfig

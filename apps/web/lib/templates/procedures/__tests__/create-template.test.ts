@@ -8,10 +8,10 @@ import {
   DEFAULT_TEMPLATE_NAME
 } from '../../defaults';
 import { toStorableTemplateSchema } from '../../schemas/template';
-import { knownRequestError, prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
-import { nextCacheMock } from '@/test/next-cache';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 
 const NANOID_6 = /^[A-Za-z0-9_-]{6}$/;
 const NANOID_21 = /^[A-Za-z0-9_-]{21}$/;

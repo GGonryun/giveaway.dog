@@ -4,7 +4,7 @@ import { processBlueskyTaskJob } from '../process-bluesky-task-job';
 import { ApplicationError } from '@/lib/errors';
 import type { Prisma } from '@prisma/client';
 import type { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-likes';
-import { prismaMock, asPrismaClient } from '@/test/prisma';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   buildTaskJob,
   taskOf

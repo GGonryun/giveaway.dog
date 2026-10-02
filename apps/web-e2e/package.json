@@ -2,6 +2,11 @@
   "name": "web-e2e",
   "private": true,
   "nx": {
+    "tags": [
+      "type:app",
+      "runtime:app",
+      "scope:apps"
+    ],
     "implicitDependencies": [
       "web"
     ],
@@ -21,9 +26,11 @@
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
-    "@types/node": "20.17.6",
-    "dotenv-cli": "^10.0.0",
-    "typescript": "5.7.2"
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@playwright/test": "catalog:",
+    "@types/node": "catalog:",
+    "dotenv-cli": "catalog:",
+    "typescript": "catalog:"
   }
 }

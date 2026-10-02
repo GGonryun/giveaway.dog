@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Tweet, User } from 'scrapebadger';
 import { scrapeTwitterWorkflow } from '../workflow';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 
 const mocks = vi.hoisted(() => {
   class FatalError extends Error {

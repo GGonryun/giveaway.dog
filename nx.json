@@ -29,32 +29,36 @@
     },
     "lint": {
       "cache": true,
-      "inputs": ["default"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/docs/monorepo/package-map.json"
+      ],
       "outputs": []
     },
     "type-check": {
       "cache": true,
-      "inputs": ["default"],
+      "inputs": ["default", "^production"],
       "outputs": []
     },
     "test:unit": {
       "cache": true,
-      "inputs": ["default"],
+      "inputs": ["default", "^production"],
       "outputs": []
     },
     "test:server": {
       "cache": true,
-      "inputs": ["default"],
+      "inputs": ["default", "^production"],
       "outputs": ["{projectRoot}/.vitest-reports/server.json"]
     },
     "test:frontend": {
       "cache": true,
-      "inputs": ["default"],
+      "inputs": ["default", "^production"],
       "outputs": ["{projectRoot}/.vitest-reports/frontend.json"]
     },
     "test:snapshot": {
       "cache": true,
-      "inputs": ["default"],
+      "inputs": ["default", "^production"],
       "outputs": []
     }
   }

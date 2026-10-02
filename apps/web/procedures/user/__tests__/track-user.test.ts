@@ -4,9 +4,9 @@ import trackUser from '../track-user';
 import { ip } from '@/lib/ip';
 import { ApplicationError } from '@/lib/errors';
 import { DEVELOPMENT_GEO } from '@/schemas/fingerprint';
-import { prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const nextHeaders = vi.hoisted(() => ({
   headers: vi.fn(),

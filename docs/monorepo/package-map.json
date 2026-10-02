@@ -253,6 +253,7 @@
         "@giveaway/templates-gallery",
         "@giveaway/templates-model",
         "@giveaway/templates-server",
+        "@giveaway/testing-server",
         "@giveaway/theme-model",
         "@giveaway/theme-server",
         "@giveaway/turnstile-ui",
@@ -267,6 +268,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-time",
         "@giveaway/util-types",
+        "@giveaway/vitest-config",
         "@giveaway/x-connect",
         "@giveaway/x-model",
         "@giveaway/x-picker-dashboard",
@@ -5318,7 +5320,7 @@
       "layer": 0,
       "sourceFiles": 4,
       "testFiles": 0,
-      "sources": ["test/setup-dom.ts", "test/visual/"],
+      "sources": ["test/visual/"],
       "dependsOn": [],
       "npm": [
         "@fontsource-variable/figtree",
@@ -5333,20 +5335,13 @@
       "path": "packages/tooling/testing-server",
       "type": "config",
       "tags": ["type:config", "runtime:isomorphic", "scope:tooling"],
-      "layer": 2,
+      "layer": 0,
       "sourceFiles": 6,
       "testFiles": 0,
-      "sources": [
-        "test/next-cache.ts",
-        "test/prisma.ts",
-        "test/result.ts",
-        "test/server-only.ts",
-        "test/session.ts",
-        "test/setup.ts"
-      ],
-      "dependsOn": ["@giveaway/rpc-model", "@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model", "vitest"],
-      "note": "Vitest setup for every package: the Prisma, session and next/cache mocks, and the empty server-only module."
+      "sources": [],
+      "dependsOn": [],
+      "npm": ["@prisma/client", "next", "vitest"],
+      "note": "Vitest setup for every package: the Prisma, session and next/cache mocks."
     },
     {
       "name": "@giveaway/tsconfig",

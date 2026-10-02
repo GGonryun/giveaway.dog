@@ -2,9 +2,9 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { AutomatedPostJob } from '@prisma/client';
 import { ApplicationError } from '@/lib/errors';
 import { processAutomatedPostJobs } from '../process-automated-post-jobs';
-import { prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const mocks = vi.hoisted(() => ({
   createTweet: vi.fn(),

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import logout from '../logout';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const mocks = vi.hoisted(() => ({ signOut: vi.fn() }));
 

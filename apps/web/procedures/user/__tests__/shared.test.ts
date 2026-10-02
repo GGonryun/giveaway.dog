@@ -6,7 +6,7 @@ import {
   createPrismaMock,
   knownRequestError,
   prismaMock
-} from '@/test/prisma';
+} from '@giveaway/testing-server/prisma';
 import {
   mappedUser,
   userRow,

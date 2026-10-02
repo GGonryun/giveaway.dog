@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { refreshVeloraToken } from '../refresh-velora-token';
 import { ApplicationError } from '@/lib/errors';
-import { prismaMock, asPrismaClient } from '@/test/prisma';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   NOW,
   NOW_SECONDS,

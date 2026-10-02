@@ -1,9 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { getSweepstakesPrivacy } from '../get-sweepstakes-privacy';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { authMock, createSession, signIn, TEST_USER } from '@/test/session';
-import { nextCacheMock } from '@/test/next-cache';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import {
+  authMock,
+  createSession,
+  signIn,
+  TEST_USER
+} from '@giveaway/testing-server/session';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 type Input = Parameters<typeof getSweepstakesPrivacy>[0];
 

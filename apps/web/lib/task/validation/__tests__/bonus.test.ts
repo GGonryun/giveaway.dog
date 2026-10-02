@@ -13,7 +13,7 @@ import {
   BonusTimedTaskSchema
 } from '../../schemas';
 import { USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BASE_TASK,
   FIXED_DATE,

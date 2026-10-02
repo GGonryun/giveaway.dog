@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getTaskCompletions } from '../get-task-completions';
 import { TASK_COMPLETIONS_SELECT_QUERY } from '@/lib/task/completions';
-import { prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   buildCompletion,
   buildCompletionRow,

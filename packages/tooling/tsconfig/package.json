@@ -1,0 +1,30 @@
+{
+  "name": "@giveaway/tsconfig",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:config",
+      "runtime:isomorphic",
+      "scope:tooling"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tooling/tsconfig",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./base.json": "./base.json",
+    "./library.json": "./library.json",
+    "./react-library.json": "./react-library.json",
+    "./nextjs.json": "./nextjs.json"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*"
+  }
+}

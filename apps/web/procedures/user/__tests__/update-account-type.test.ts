@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { UserAccountType } from '@prisma/client';
 import updateAccountType from '../update-account-type';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { dbUser } from './fixtures-procedures-user';
 
 type UpdateAccountTypeInput = Parameters<typeof updateAccountType>[0];

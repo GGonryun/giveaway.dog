@@ -1,7 +1,7 @@
 import type { Prisma, TeamRole, TeamTier, UserSource } from '@prisma/client';
 import type { EligibleTaskCompletion } from '@/lib/task/queries';
 import type { ExpandedEligibleTaskCompletion } from '../completions';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import { BASE_DATE, buildCriteriaRow } from './fixtures-winners-model';
 
 export const bonusTaskConfig = (value = 1) => ({

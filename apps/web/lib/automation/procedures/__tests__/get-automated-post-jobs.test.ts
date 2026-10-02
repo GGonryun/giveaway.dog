@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import type { AutomatedPostJob } from '@prisma/client';
 import { getAutomatedPostJobs } from '../get-automated-post-jobs';
-import { prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const RUN_AT = new Date('2026-05-01T10:00:00.000Z');
 const CREATED_AT = new Date('2026-04-01T10:00:00.000Z');

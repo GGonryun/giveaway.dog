@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import updateEmailDefault, { updateEmail } from '../update-email';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
-import { nextCacheMock } from '@/test/next-cache';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { dbUser } from './fixtures-procedures-user';
 
 type UpdateEmailInput = Parameters<typeof updateEmail>[0];

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SweepstakesStatus } from '@prisma/client';
 import getSweepstakesList from '../get-sweepstakes-list';
-import { prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const NOW = new Date('2025-06-15T12:00:00.000Z');
 const CREATED_AT = new Date('2025-06-01T08:00:00.000Z');

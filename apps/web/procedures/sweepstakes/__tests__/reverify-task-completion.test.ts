@@ -3,10 +3,10 @@ import { CompletionStatus, TeamRole } from '@prisma/client';
 import { reverifyTaskCompletion } from '../reverify-task-completion';
 import { ApplicationError } from '@/lib/errors';
 import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
-import { asPrismaClient, prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
-import { nextCacheMock } from '@/test/next-cache';
+import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import {
   SWEEPSTAKES_ID,
   TEAM_ID,

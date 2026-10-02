@@ -7,7 +7,7 @@ import {
   checkSteamWishlist
 } from '../steam';
 import { SteamWishlistTaskSchema } from '../../schemas';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BASE_TASK,
   IDS,

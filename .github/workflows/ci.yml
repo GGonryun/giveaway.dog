@@ -93,11 +93,14 @@ jobs:
       - name: Vitest server tests with coverage
         run: pnpm nx $NX_RUN -t test:server --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
 
-      - name: Upload the test report
+      - name: Collect the test reports
+        run: node .github/scripts/collect-vitest-reports.mjs server
+
+      - name: Upload the test reports
         uses: actions/upload-artifact@v4
         with:
           name: vitest-report-server
-          path: apps/web/.vitest-reports/
+          path: .vitest-reports/
           include-hidden-files: true
           retention-days: 1
 
@@ -125,11 +128,14 @@ jobs:
       - name: Vitest frontend tests with coverage
         run: pnpm nx $NX_RUN -t test:frontend --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
 
-      - name: Upload the test report
+      - name: Collect the test reports
+        run: node .github/scripts/collect-vitest-reports.mjs frontend
+
+      - name: Upload the test reports
         uses: actions/upload-artifact@v4
         with:
           name: vitest-report-frontend
-          path: apps/web/.vitest-reports/
+          path: .vitest-reports/
           include-hidden-files: true
           retention-days: 1
 
@@ -153,13 +159,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: vitest-report-*
-          path: apps/web/.vitest-reports
+          path: .vitest-reports
           merge-multiple: true
 
       - name: Check for test reports
         id: reports
         run: |
-          if [ -n "$(ls -A apps/web/.vitest-reports 2>/dev/null)" ]; then
+          if [ -n "$(ls -A .vitest-reports 2>/dev/null)" ]; then
             echo "found=true" >> "$GITHUB_OUTPUT"
           else
             echo "No project with tests is affected, so there is no coverage to merge." | tee -a "$GITHUB_STEP_SUMMARY"
@@ -167,13 +173,13 @@ jobs:
 
       - name: Merge the coverage
         if: steps.reports.outputs.found == 'true'
-        run: pnpm --filter web exec vitest run --merge-reports=.vitest-reports --coverage
+        run: pnpm exec vitest run --merge-reports=.vitest-reports --coverage
 
       - name: Report the line coverage
         if: steps.reports.outputs.found == 'true'
         id: coverage
         run: |
-          lines=$(node -p "require('./apps/web/coverage/coverage-summary.json').total.lines.pct")
+          lines=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
           echo "lines=$lines" >> "$GITHUB_OUTPUT"
           echo "Line coverage: ${lines}%" >> "$GITHUB_STEP_SUMMARY"
 

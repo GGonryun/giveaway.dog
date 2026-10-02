@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { UserSource } from '@prisma/client';
 import { computeUserQualityScore } from '../index';
-import { prismaMock, asPrismaClient } from '@/test/prisma';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 
 const NOW = new Date('2026-06-15T12:00:00.000Z');
 const USER_ID = 'user-1';

@@ -2,7 +2,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { UserSource } from '@prisma/client';
 import { GET } from '../route';
-import { createPrismaMock, prismaMock, type PrismaMock } from '@/test/prisma';
+import {
+  createPrismaMock,
+  prismaMock,
+  type PrismaMock
+} from '@giveaway/testing-server/prisma';
 import { MAX_SCORING_REQUESTS_PER_RUN } from '@/schemas/user-scoring';
 import { IMPORTED_BASE_SCORE } from '@/lib/scoring/schemas/imported';
 

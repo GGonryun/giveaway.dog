@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { CompletionStatus, TeamRole } from '@prisma/client';
 import { updateTaskCompletionStatus } from '../update-task-completion-status';
 import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
-import { prismaMock } from '@/test/prisma';
-import { signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   SWEEPSTAKES_ID,
   buildMembership,

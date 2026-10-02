@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { PickerStatus } from '@prisma/client';
 import { updatePickerStatus } from '../update-picker-status';
-import { knownRequestError, prismaMock } from '@/test/prisma';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 
 describe('updatePickerStatus', () => {
   it.each(Object.values(PickerStatus))(

@@ -1,6 +1,6 @@
 import { SweepstakesStatus, TeamRole, TeamTier } from '@prisma/client';
-import type { PrismaMock } from '@/test/prisma';
-import { TEST_USER } from '@/test/session';
+import type { PrismaMock } from '@giveaway/testing-server/prisma';
+import { TEST_USER } from '@giveaway/testing-server/session';
 
 export const SWEEPSTAKES_ID = 'sweep-1';
 export const TEAM_ID = 'team-1';

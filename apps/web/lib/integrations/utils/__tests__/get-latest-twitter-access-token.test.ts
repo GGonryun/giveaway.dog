@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { getLatestTwitterAccessToken } from '../get-latest-twitter-access-token';
 import { ApplicationError } from '@/lib/errors';
-import { prismaMock, asPrismaClient } from '@/test/prisma';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   NOW,
   NOW_SECONDS,

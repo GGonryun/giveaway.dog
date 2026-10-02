@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
 import { disconnectDiscord } from '../disconnect-discord';
-import { prismaMock, knownRequestError } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
-import { nextCacheMock } from '@/test/next-cache';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import {
   expectedTeamLookup,
   teamWithRole

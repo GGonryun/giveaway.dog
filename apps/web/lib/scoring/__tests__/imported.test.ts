@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { computeImportedUserScore } from '../imported';
-import { prismaMock, asPrismaClient, createPrismaMock } from '@/test/prisma';
+import {
+  prismaMock,
+  asPrismaClient,
+  createPrismaMock
+} from '@giveaway/testing-server/prisma';
 
 describe('computeImportedUserScore', () => {
   it('creates a quality entry with the imported base score of 50', async () => {

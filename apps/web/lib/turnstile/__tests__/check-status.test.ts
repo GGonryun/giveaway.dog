@@ -1,7 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { prismaMock } from '@/test/prisma';
-import { authMock, createSession, signIn, TEST_USER } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import {
+  authMock,
+  createSession,
+  signIn,
+  TEST_USER
+} from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { getLastTurnstileCheck } from '../check-status';
 
 const m = vi.hoisted(() => {

@@ -14,8 +14,8 @@ import {
 } from '../shared';
 import { TeamPermission } from '@/lib/permissions';
 import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
-import { asPrismaClient, prismaMock } from '@/test/prisma';
-import { TEST_USER } from '@/test/session';
+import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
+import { TEST_USER } from '@giveaway/testing-server/session';
 import {
   SWEEPSTAKES_ID,
   TEAM_ID,

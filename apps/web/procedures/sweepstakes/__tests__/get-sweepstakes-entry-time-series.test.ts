@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import getSweepstakesEntryTimeSeries from '../get-sweepstakes-entry-time-series';
-import { prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
-import { nextCacheMock } from '@/test/next-cache';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { SWEEPSTAKES_ID } from './fixtures-procedures-sweepstakes-a';
 
 const NOW = new Date(2026, 9, 1, 12, 0, 0);

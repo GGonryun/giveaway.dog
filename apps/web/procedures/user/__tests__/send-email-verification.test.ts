@@ -5,9 +5,9 @@ import sendEmailVerificationDefault, {
 } from '../send-email-verification';
 import { NO_REPLY_EMAIL } from '@/lib/email/client';
 import { getVerificationEmailContent } from '@/lib/email/templates';
-import { prismaMock } from '@/test/prisma';
-import { signIn } from '@/test/session';
-import { expectFailure, expectOk } from '@/test/result';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const inbound = vi.hoisted(() => ({
   construct: vi.fn(),

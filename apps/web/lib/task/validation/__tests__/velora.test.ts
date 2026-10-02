@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { checkVeloraConnect, checkVeloraFollow } from '../velora';
 import { VeloraConnectTaskSchema, VeloraFollowTaskSchema } from '../../schemas';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BASE_TASK,
   IDS,

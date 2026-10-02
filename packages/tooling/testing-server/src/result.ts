@@ -1,7 +1,12 @@
-import type { ApplicationErrorCode } from '@/lib/errors';
-import type { FailureData, Result } from '@/lib/mrpc/types';
+type ResultLike =
+  | { ok: true; data: unknown }
+  | { ok: false; data: { code: string; message: string } };
 
-export const expectOk = <T>(result: Result<T>): T => {
+type OkData<R extends ResultLike> = Extract<R, { ok: true }>['data'];
+
+type FailureData<R extends ResultLike> = Extract<R, { ok: false }>['data'];
+
+export const expectOk = <R extends ResultLike>(result: R): OkData<R> => {
   if (!result.ok) {
     throw new Error(
       `Expected an ok result, got ${result.data.code}: ${result.data.message}`
@@ -10,10 +15,10 @@ export const expectOk = <T>(result: Result<T>): T => {
   return result.data;
 };
 
-export const expectFailure = <T>(
-  result: Result<T>,
-  code?: ApplicationErrorCode
-): FailureData => {
+export const expectFailure = <R extends ResultLike>(
+  result: R,
+  code?: FailureData<R>['code']
+): FailureData<R> => {
   if (result.ok) {
     throw new Error(
       `Expected a failure result, got ok: ${JSON.stringify(result.data)}`

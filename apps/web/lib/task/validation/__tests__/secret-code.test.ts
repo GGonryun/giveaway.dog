@@ -5,7 +5,7 @@ import {
   SecretCodeV2TaskSchema,
   TASK_INPUT_SCHEMA
 } from '../../schemas';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BASE_TASK,
   IDS,

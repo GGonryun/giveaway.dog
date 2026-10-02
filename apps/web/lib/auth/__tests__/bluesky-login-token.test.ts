@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createHash } from 'crypto';
 import type { VerificationToken } from '@prisma/client';
-import { knownRequestError, prismaMock } from '@/test/prisma';
+import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BLUESKY_LOGIN_TOKEN_PREFIX,
   createBlueskyLoginToken,

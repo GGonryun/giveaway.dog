@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import type { Session } from 'next-auth';
 import { authConfigMiddleware } from '../config-middleware';
-import { prismaMock } from '@/test/prisma';
-import { createSession } from '@/test/session';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { createSession } from '@giveaway/testing-server/session';
 
 const { logger, adapter, callbacks } = authConfigMiddleware;
 

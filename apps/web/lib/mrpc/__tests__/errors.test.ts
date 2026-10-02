@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Prisma } from '@prisma/client';
 import { isPrismaError, prismaErrorBoundary } from '../errors';
-import { knownRequestError } from '@/test/prisma';
+import { knownRequestError } from '@giveaway/testing-server/prisma';
 
 const nanoidMock = vi.hoisted(() => vi.fn());
 

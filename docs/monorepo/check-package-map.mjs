@@ -48,14 +48,16 @@ const walk = (dir) => {
     }
   }
 };
-SOURCE_ROOTS.filter((dir) => fs.existsSync(path.join(root, dir))).forEach(walk);
-ROOT_FILES.filter((file) => fs.existsSync(path.join(root, file))).forEach(
-  (file) => files.push(file)
-);
-
 const appRoot = fs.existsSync(path.join(root, 'apps/web/app'))
   ? 'apps/web/'
   : '';
+
+SOURCE_ROOTS.filter((dir) => fs.existsSync(path.join(root, dir))).forEach(walk);
+if (!appRoot) {
+  ROOT_FILES.filter((file) => fs.existsSync(path.join(root, file))).forEach(
+    (file) => files.push(file)
+  );
+}
 const realPath = new Map();
 for (let index = 0; index < files.length; index++) {
   const real = files[index];

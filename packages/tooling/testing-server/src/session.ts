@@ -1,5 +1,21 @@
 import { vi } from 'vitest';
-import type { Session } from 'next-auth';
+import type { UserAccountType } from '@prisma/client';
+
+export type TestSessionUser = {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  provider?: string;
+  onboarded?: boolean;
+  accountType?: UserAccountType;
+  username?: string | null;
+};
+
+export type TestSession = {
+  user: TestSessionUser;
+  expires: string;
+};
 
 export const TEST_USER = {
   id: 'user-1',
@@ -9,19 +25,19 @@ export const TEST_USER = {
   username: 'testuser',
   onboarded: true,
   accountType: 'HOST'
-} satisfies Session['user'];
+} satisfies TestSessionUser;
 
-export const authMock = vi.fn<() => Promise<Session | null>>();
+export const authMock = vi.fn<() => Promise<TestSession | null>>();
 
 export const createSession = (
-  user: Partial<Session['user']> = {},
+  user: Partial<TestSessionUser> = {},
   expires = '2999-01-01T00:00:00.000Z'
-): Session => ({
+): TestSession => ({
   user: { ...TEST_USER, ...user },
   expires
 });
 
-export const signIn = (user: Partial<Session['user']> = {}) => {
+export const signIn = (user: Partial<TestSessionUser> = {}) => {
   const session = createSession(user);
   authMock.mockResolvedValue(session);
   return session;

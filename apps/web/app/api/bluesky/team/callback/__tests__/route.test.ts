@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import { GET } from '../route';
-import { prismaMock } from '@/test/prisma';
-import { createSession, TEST_USER } from '@/test/session';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { createSession, TEST_USER } from '@giveaway/testing-server/session';
 import { ApplicationError } from '@/lib/errors';
 
 const m = vi.hoisted(() => {

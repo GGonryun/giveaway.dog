@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { AccountStatus, type Account } from '@prisma/client';
 import { getUserSignals, type UserSignals } from '../get-user-signals';
-import { prismaMock } from '@/test/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import { dbUser } from './fixtures-procedures-user';
 
 const USER_ID = 'user-7';
