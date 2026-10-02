@@ -130,6 +130,7 @@ lib/
 
 - **Workflow**: `.github/workflows/ci.yml` runs on each pull request and on each push to `main`
 - **Checks**: `Lint` (ESLint), `Unit tests` (Vitest server and component tests, with coverage) and `Snapshot tests` (Vitest snapshot tests). Merge a pull request only when the three checks pass
+- **Production deploys**: Vercel does not deploy `main` by itself (`git.deploymentEnabled.main` is `false` in `vercel.json`). After a push to `main`, the `Deploy to production` job runs `vercel deploy --prod` only when `Lint`, `Unit tests` and `Snapshot tests` pass. The job needs the `VERCEL_TOKEN` repository secret. Pull requests still get Vercel preview deployments
 - **Coverage badge**: After each push to `main`, the `Coverage badge` job puts the line coverage in `coverage.svg` on the `badges` branch. The README shows this image. Do not edit the `badges` branch by hand
 - **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`
 - **ESLint baseline**: `eslint-suppressions.json` records the errors that existed when ESLint was added. New errors fail the check. Do not add entries to this file to hide new errors

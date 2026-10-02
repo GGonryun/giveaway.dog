@@ -99,3 +99,44 @@ jobs:
             -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
             commit --quiet --message 'update coverage badge'
           git push --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" badges
+
+  deploy:
+    name: Deploy to production
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [lint, test, snapshot]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    concurrency:
+      group: vercel-production
+      cancel-in-progress: false
+    env:
+      VERCEL_ORG_ID: team_asHRya24u30lgmkzXsKG5yjM
+      VERCEL_PROJECT_ID: prj_VOa01RYBNPYCob5bOQHXYiI1bxRA
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install the Vercel CLI
+        run: npm install --global vercel@62.1.0
+
+      - name: Deploy to Vercel production
+        id: deploy
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::error::The VERCEL_TOKEN secret is not set, so production was not deployed."
+            exit 1
+          fi
+          url=$(vercel deploy --prod --yes --token "$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed to production: $url" >> "$GITHUB_STEP_SUMMARY"
