@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { auth, handlers, signIn, signOut } from '../config';
 import { authConfig } from '../config-runtime';
-import { prismaMock } from '@/test/prisma';
+import { createHash } from 'crypto';
+import { knownRequestError, prismaMock } from '@/test/prisma';
 
 type ProviderOptions = Record<string, unknown> & {
   id?: string;
@@ -362,45 +363,74 @@ describe('auth config', () => {
   });
 
   describe('bluesky direct credentials provider', () => {
-    it('accepts a user id credential', () => {
+    const authorize = (credentials: unknown) =>
+      optionsOf('bluesky-direct').authorize?.(credentials);
+
+    const storedToken = (token: string, expires: Date) => ({
+      identifier: 'bluesky-direct:u-1',
+      token: createHash('sha256').update(token).digest('hex'),
+      expires
+    });
+
+    const FUTURE = new Date(Date.now() + 60_000);
+
+    it('accepts only a login token credential', () => {
       expect(optionsOf('bluesky-direct')).toMatchObject({
         id: 'bluesky-direct',
         name: 'Bluesky Direct',
-        credentials: { userId: { label: 'User ID', type: 'text' } }
+        credentials: { token: { label: 'Login Token', type: 'text' } }
       });
+      expect(optionsOf('bluesky-direct').credentials).not.toHaveProperty(
+        'userId'
+      );
     });
 
-    it('returns null when no user id is provided', async () => {
-      expect(await optionsOf('bluesky-direct').authorize?.({})).toBeNull();
+    it('returns null for a bare user id without a valid token', async () => {
+      prismaMock.user.findUnique.mockResolvedValue({ id: 'u-1' });
+
+      expect(await authorize({ userId: 'u-1' })).toBeNull();
+      expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('returns null for a user id sent as the token', async () => {
+      prismaMock.verificationToken.findFirst.mockResolvedValue(null);
+      prismaMock.user.findUnique.mockResolvedValue({ id: 'u-1' });
+
+      expect(await authorize({ token: 'u-1' })).toBeNull();
       expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
     });
 
     it('returns null when no credentials are provided', async () => {
-      expect(
-        await optionsOf('bluesky-direct').authorize?.(undefined)
-      ).toBeNull();
+      expect(await authorize(undefined)).toBeNull();
+      expect(await authorize({})).toBeNull();
+      expect(prismaMock.verificationToken.findFirst).not.toHaveBeenCalled();
     });
 
-    it('returns the user with the given id', async () => {
+    it('accepts a token one time and rejects it the second time', async () => {
       const found = { id: 'u-1', name: 'Blue' };
+      const row = storedToken('login-token', FUTURE);
+      prismaMock.verificationToken.findFirst.mockResolvedValue(row);
+      prismaMock.verificationToken.delete
+        .mockResolvedValueOnce(row)
+        .mockRejectedValueOnce(knownRequestError('P2025'));
       prismaMock.user.findUnique.mockResolvedValue(found);
 
-      const user = await optionsOf('bluesky-direct').authorize?.({
-        userId: 'u-1'
-      });
-
-      expect(user).toBe(found);
+      expect(await authorize({ token: 'login-token' })).toBe(found);
+      expect(await authorize({ token: 'login-token' })).toBeNull();
+      expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
         where: { id: 'u-1' }
       });
     });
 
-    it('returns null when the user does not exist', async () => {
-      prismaMock.user.findUnique.mockResolvedValue(null);
+    it('rejects an expired token', async () => {
+      const row = storedToken('login-token', new Date(Date.now() - 1));
+      prismaMock.verificationToken.findFirst.mockResolvedValue(row);
+      prismaMock.verificationToken.delete.mockResolvedValue(row);
+      prismaMock.user.findUnique.mockResolvedValue({ id: 'u-1' });
 
-      expect(
-        await optionsOf('bluesky-direct').authorize?.({ userId: 'missing' })
-      ).toBeNull();
+      expect(await authorize({ token: 'login-token' })).toBeNull();
+      expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
     });
   });
 
