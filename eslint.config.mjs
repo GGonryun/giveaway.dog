@@ -36,6 +36,7 @@ export default defineConfig([
     'build/**',
     'coverage/**',
     'app/.well-known/**',
+    '.nx/**',
     'next-env.d.ts'
   ])
 ]);

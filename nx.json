@@ -1,0 +1,39 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": [
+      "default",
+      "!{projectRoot}/**/__tests__/**",
+      "!{projectRoot}/**/*.test.*",
+      "!{projectRoot}/**/__snapshots__/**"
+    ],
+    "sharedGlobals": [
+      "{workspaceRoot}/tsconfig.json",
+      "{workspaceRoot}/vitest.config.ts",
+      "{workspaceRoot}/eslint.config.mjs"
+    ]
+  },
+  "targetDefaults": {
+    "lint": {
+      "cache": true,
+      "inputs": ["default"],
+      "outputs": []
+    },
+    "type-check": {
+      "cache": true,
+      "inputs": ["default"],
+      "outputs": []
+    },
+    "test:unit": {
+      "cache": true,
+      "inputs": ["default"],
+      "outputs": []
+    },
+    "test:snapshot": {
+      "cache": true,
+      "inputs": ["default"],
+      "outputs": []
+    }
+  }
+}
