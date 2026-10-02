@@ -170,6 +170,22 @@ describe('GiveawayParticipationCard', () => {
       expect(screen.getByText('Win a brand new headset!').tagName).toBe('P');
     });
 
+    it('removes unsafe markup from the description', () => {
+      const base = buildSweepstakes();
+      const { container } = renderCard({
+        sweepstakes: {
+          ...base,
+          setup: {
+            ...base.setup,
+            description:
+              '<p onclick="alert(1)">Win a prize</p><img src="x" onerror="alert(document.domain)"><script>alert(1)</script>'
+          }
+        }
+      });
+      expect(screen.getByText('Win a prize')).not.toHaveAttribute('onclick');
+      expect(container.querySelector('[onerror], script')).toBeNull();
+    });
+
     it('hides the description when it is not displayed', () => {
       renderCard({
         sweepstakes: buildSweepstakes({

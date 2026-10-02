@@ -3,6 +3,7 @@ import {
   SweepstakesJobStatus,
   SweepstakesJobType,
   SweepstakesStatus,
+  SweepstakesTermsType,
   TeamRole,
   TeamTier,
   VisibilityType
@@ -10,7 +11,8 @@ import {
 import {
   applySweepstakesChanges,
   findUserSweepstakes,
-  findUserSweepstakesQuery
+  findUserSweepstakesQuery,
+  sanitizeSweepstakesInput
 } from '../shared';
 import { TeamPermission } from '@/lib/permissions';
 import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
@@ -193,6 +195,78 @@ describe('findUserSweepstakes', () => {
     const result = await find(TeamPermission.UPDATE_SWEEPSTAKES, TeamTier.PRO);
 
     expect(result.team.tier).toBe(TeamTier.ELITE);
+  });
+});
+
+describe('sanitizeSweepstakesInput', () => {
+  const UNSAFE =
+    '<p onclick="alert(1)">Prize</p><img src="x" onerror="alert(document.domain)"><script>alert(1)</script>';
+
+  it('sanitises the description and keeps the other setup fields', () => {
+    expect(
+      sanitizeSweepstakesInput({
+        id: SWEEPSTAKES_ID,
+        setup: { name: 'Bike', description: UNSAFE, banner: 'b.png' }
+      })
+    ).toEqual({
+      id: SWEEPSTAKES_ID,
+      setup: { name: 'Bike', description: '<p>Prize</p>', banner: 'b.png' }
+    });
+  });
+
+  it('sanitises the text of custom terms', () => {
+    expect(
+      sanitizeSweepstakesInput({
+        id: SWEEPSTAKES_ID,
+        terms: { type: SweepstakesTermsType.CUSTOM, text: UNSAFE }
+      }).terms
+    ).toEqual({ type: SweepstakesTermsType.CUSTOM, text: '<p>Prize</p>' });
+  });
+
+  it('leaves template terms unchanged', () => {
+    const terms = {
+      type: SweepstakesTermsType.TEMPLATE,
+      sponsorName: 'Acme',
+      additionalTerms: 'Be <nice>'
+    };
+
+    expect(sanitizeSweepstakesInput({ id: SWEEPSTAKES_ID, terms }).terms).toBe(
+      terms
+    );
+  });
+
+  it('keeps the markup the rich text editor produces', () => {
+    const description =
+      '<h2 style="text-align: center;">Win</h2><ul><li><p><a target="_blank" rel="noopener noreferrer nofollow" href="https://giveaway.dog">Rules</a></p></li></ul>';
+
+    expect(
+      sanitizeSweepstakesInput({ id: SWEEPSTAKES_ID, setup: { description } })
+        .setup?.description
+    ).toBe(description);
+  });
+
+  it('leaves missing and non string fields for the database to reject', () => {
+    const input = {
+      id: SWEEPSTAKES_ID,
+      setup: { name: 'Bike', description: 42 },
+      terms: { type: SweepstakesTermsType.CUSTOM }
+    } as unknown as Parameters<typeof sanitizeSweepstakesInput>[0];
+
+    expect(sanitizeSweepstakesInput(input)).toEqual(input);
+  });
+
+  it('keeps the input without setup or terms as it is', () => {
+    expect(
+      sanitizeSweepstakesInput({
+        id: SWEEPSTAKES_ID,
+        status: SweepstakesStatus.ACTIVE
+      })
+    ).toEqual({
+      id: SWEEPSTAKES_ID,
+      status: SweepstakesStatus.ACTIVE,
+      setup: undefined,
+      terms: undefined
+    });
   });
 });
 
@@ -779,6 +853,57 @@ describe('applySweepstakesChanges', () => {
       expect(
         prismaMock.sweepstakesAllocation.createMany
       ).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('sanitising rich text', () => {
+    it('stores the description without unsafe markup', async () => {
+      await apply({
+        id: SWEEPSTAKES_ID,
+        setup: {
+          name: 'Bike',
+          description:
+            '<p>Win</p><img src="x" onerror="alert(document.domain)">',
+          banner: 'b.png'
+        }
+      });
+
+      expect(prismaMock.sweepstakes.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            details: {
+              create: {
+                name: 'Bike',
+                description: '<p>Win</p>',
+                banner: 'b.png'
+              }
+            }
+          })
+        })
+      );
+    });
+
+    it('stores custom terms without unsafe markup', async () => {
+      await apply({
+        id: SWEEPSTAKES_ID,
+        terms: {
+          type: SweepstakesTermsType.CUSTOM,
+          text: '<p>Rules</p><a href="javascript:alert(1)">Click</a><iframe src="https://evil.example"></iframe>'
+        }
+      });
+
+      expect(prismaMock.sweepstakes.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            terms: {
+              create: {
+                type: SweepstakesTermsType.CUSTOM,
+                text: '<p>Rules</p><a>Click</a>'
+              }
+            }
+          })
+        })
+      );
     });
   });
 

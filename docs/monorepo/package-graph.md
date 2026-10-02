@@ -388,7 +388,7 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 
 ### Shared utilities
 
-10 packages, 19 source files, 16 test files.
+10 packages, 20 source files, 17 test files.
 
 | Package                      | Type | Files | Moves from                                                                 |
 | ---------------------------- | ---- | ----- | -------------------------------------------------------------------------- |
@@ -396,7 +396,7 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 | `@giveaway/util-collections` | util | 4 / 4 | `lib/arrays.ts`<br>`lib/json.ts`<br>`lib/object.ts`<br>`lib/pagination.ts` |
 | `@giveaway/util-errors`      | util | 1 / 1 | `lib/errors/`                                                              |
 | `@giveaway/util-geo`         | util | 1 / 1 | `lib/continents.json`<br>`lib/countries.json`<br>`lib/countries.ts`        |
-| `@giveaway/util-html`        | util | 1 / 1 | `lib/html.ts`                                                              |
+| `@giveaway/util-html`        | util | 2 / 2 | `lib/html.ts`<br>`lib/sanitize-html.ts`                                    |
 | `@giveaway/util-media`       | util | 2 / 2 | `lib/aspect-ratio/`<br>`lib/files.ts`                                      |
 | `@giveaway/util-random`      | util | 2 / 2 | `lib/rng.ts`<br>`lib/simulate.ts`                                          |
 | `@giveaway/util-strings`     | util | 2 / 2 | `lib/email-validation.ts`<br>`lib/strings.ts`                              |
@@ -430,7 +430,7 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 
 ### Design system
 
-15 packages, 88 source files, 150 test files.
+15 packages, 88 source files, 151 test files.
 
 | Package                    | Type   | Files   | Moves from                                                                                                                                                                        |
 | -------------------------- | ------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -446,7 +446,7 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 | `@giveaway/ui-layouts`     | ui     | 16 / 22 | `components/patterns/app-sidebar/site-header.tsx`<br>`components/patterns/form-layout/`<br>`components/patterns/help-dialog.tsx`<br>`components/patterns/links.tsx`<br>and 1 more |
 | `@giveaway/ui-primitives`  | ui     | 43 / 86 | `components/ui/accordion.tsx`<br>`components/ui/alert-dialog.tsx`<br>`components/ui/alert.tsx`<br>`components/ui/avatar.tsx`<br>and 39 more                                       |
 | `@giveaway/ui-qr`          | ui     | 2 / 1   | `components/patterns/qr-code-modal.tsx`<br>`lib/qr.ts`                                                                                                                            |
-| `@giveaway/ui-rich-text`   | ui     | 3 / 5   | `components/ui/minimal-tiptap-editor.tsx`<br>`components/ui/minimal-tiptap-preview.tsx`<br>`lib/rich-text-styles.ts`                                                              |
+| `@giveaway/ui-rich-text`   | ui     | 3 / 6   | `components/ui/minimal-tiptap-editor.tsx`<br>`components/ui/minimal-tiptap-preview.tsx`<br>`lib/rich-text-styles.ts`                                                              |
 | `@giveaway/ui-theme`       | ui     | 3 / 4   | `components/theme/`                                                                                                                                                               |
 | `@giveaway/ui-utils`       | util   | 3 / 5   | `components/foundations/`<br>`lib/utils.ts`<br>`lib/utils/`                                                                                                                       |
 

@@ -3477,11 +3477,11 @@
       "type": "util",
       "tags": ["type:util", "runtime:isomorphic", "scope:shared"],
       "layer": 0,
-      "sourceFiles": 1,
-      "testFiles": 1,
-      "sources": ["lib/html.ts"],
+      "sourceFiles": 2,
+      "testFiles": 2,
+      "sources": ["lib/html.ts", "lib/sanitize-html.ts"],
       "dependsOn": [],
-      "npm": ["turndown"]
+      "npm": ["isomorphic-dompurify", "turndown"]
     },
     {
       "name": "@giveaway/util-media",
@@ -3646,6 +3646,7 @@
         "@giveaway/team-model",
         "@giveaway/team-permissions",
         "@giveaway/util-errors",
+        "@giveaway/util-html",
         "@giveaway/util-types"
       ],
       "npm": ["@giveaway/db-model", "next-auth"]
@@ -5672,13 +5673,17 @@
       "tags": ["type:ui", "runtime:react", "scope:ui"],
       "layer": 2,
       "sourceFiles": 3,
-      "testFiles": 5,
+      "testFiles": 6,
       "sources": [
         "components/ui/minimal-tiptap-editor.tsx",
         "components/ui/minimal-tiptap-preview.tsx",
         "lib/rich-text-styles.ts"
       ],
-      "dependsOn": ["@giveaway/ui-primitives", "@giveaway/ui-utils"],
+      "dependsOn": [
+        "@giveaway/ui-primitives",
+        "@giveaway/ui-utils",
+        "@giveaway/util-html"
+      ],
       "npm": [
         "@tiptap/extension-link",
         "@tiptap/extension-text-align",

@@ -55,6 +55,19 @@ describe('TermsModal', () => {
     expect(screen.getByText('nice').tagName).toBe('STRONG');
   });
 
+  it('removes unsafe markup from custom terms', async () => {
+    renderTerms({
+      terms: {
+        type: 'CUSTOM',
+        text: '<p>Be nice.</p><img src="x" onerror="alert(document.domain)"><a href="javascript:alert(1)">Rules</a><iframe src="https://evil.example"></iframe>'
+      }
+    });
+    const { dialog } = await openTerms();
+    expect(screen.getByText('Be nice.')).toBeInTheDocument();
+    expect(screen.getByText('Rules')).not.toHaveAttribute('href');
+    expect(dialog.querySelector('[onerror], iframe')).toBeNull();
+  });
+
   describe('template terms', () => {
     it('fills in the sponsor, dates and prizes of the giveaway', async () => {
       renderTerms();

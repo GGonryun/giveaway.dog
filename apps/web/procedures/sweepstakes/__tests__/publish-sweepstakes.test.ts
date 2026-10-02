@@ -130,6 +130,36 @@ describe('publishSweepstakes', () => {
       ]);
     });
 
+    it('stores the description and custom terms without unsafe markup', async () => {
+      await publishSweepstakes({
+        id: SWEEPSTAKES_ID,
+        setup: {
+          name: 'Bike',
+          description:
+            '<p>Win</p><img src="x" onerror="alert(document.domain)">'
+        },
+        terms: {
+          type: 'CUSTOM',
+          text: '<p>Rules</p><script>alert(1)</script>'
+        }
+      });
+
+      expect(prismaMock.sweepstakes.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            details: {
+              create: {
+                name: 'Bike',
+                description: '<p>Win</p>',
+                banner: undefined
+              }
+            },
+            terms: { create: { type: 'CUSTOM', text: '<p>Rules</p>' } }
+          })
+        })
+      );
+    });
+
     it('invalidates the sweepstakes cache tag', async () => {
       await publishSweepstakes({ id: SWEEPSTAKES_ID });
 

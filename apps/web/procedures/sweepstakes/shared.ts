@@ -10,6 +10,7 @@ import {
   SweepstakesJobStatus,
   SweepstakesJobType,
   SweepstakesStatus,
+  SweepstakesTermsType,
   TeamTier,
   VisibilityType
 } from '@prisma/client';
@@ -17,6 +18,7 @@ import { User } from 'next-auth';
 import { RecursiveRequired } from '@/types/index';
 import { assertMembershipPermission, TeamPermission } from '@/lib/permissions';
 import { assertMinimumTeamTier } from '@/lib/team/util';
+import { sanitizeRichText } from '@/lib/sanitize-html';
 
 export const findUserSweepstakesQuery = ({
   userId,
@@ -75,6 +77,27 @@ export const findUserSweepstakes = async ({
   return { sweepstakes, team, membership };
 };
 
+type SweepstakesChangesInput = SweepstakesInputSchema & {
+  status?: SweepstakesStatus;
+};
+
+const sanitizeOptionalRichText = <T>(value: T): T | string =>
+  typeof value === 'string' ? sanitizeRichText(value) : value;
+
+export const sanitizeSweepstakesInput = (
+  input: SweepstakesChangesInput
+): SweepstakesChangesInput => ({
+  ...input,
+  setup: input.setup && {
+    ...input.setup,
+    description: sanitizeOptionalRichText(input.setup.description)
+  },
+  terms:
+    input.terms?.type === SweepstakesTermsType.CUSTOM
+      ? { ...input.terms, text: sanitizeOptionalRichText(input.terms.text) }
+      : input.terms
+});
+
 export const applySweepstakesChanges = async ({
   db,
   user,
@@ -82,7 +105,7 @@ export const applySweepstakesChanges = async ({
 }: {
   db: PrismaClient;
   user: RecursiveRequired<User>;
-  input: SweepstakesInputSchema & { status?: SweepstakesStatus };
+  input: SweepstakesChangesInput;
 }) => {
   const { sweepstakes, team } = await findUserSweepstakes({
     db,
@@ -186,7 +209,10 @@ export const applySweepstakesChanges = async ({
       });
 
       const created = await tx.sweepstakes.create({
-        data: toStorableSweepstakes(sweepstakes, input),
+        data: toStorableSweepstakes(
+          sweepstakes,
+          sanitizeSweepstakesInput(input)
+        ),
         include: {
           tasks: true,
           criteria: true,
