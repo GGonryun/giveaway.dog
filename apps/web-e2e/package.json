@@ -4,7 +4,16 @@
   "nx": {
     "implicitDependencies": [
       "web"
-    ]
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint apps/web-e2e",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
   },
   "scripts": {
     "test:e2e": "playwright test",

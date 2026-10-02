@@ -13,6 +13,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+env:
+  NX_NO_CLOUD: true
+  NX_RUN: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
+
 jobs:
   lint:
     name: Lint
@@ -23,12 +27,44 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set the base and head commits for nx affected
+        if: github.event_name == 'pull_request'
+        uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
         uses: ./.github/actions/setup
 
+      - name: Set up the Nx cache
+        uses: ./.github/actions/nx-cache
+
       - name: ESLint
-        run: pnpm run lint --quiet
+        run: pnpm nx $NX_RUN -t lint --output-style=static --quiet
+
+  type-check:
+    name: Type check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set the base and head commits for nx affected
+        if: github.event_name == 'pull_request'
+        uses: nrwl/nx-set-shas@v5
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Set up the Nx cache
+        uses: ./.github/actions/nx-cache
+
+      - name: TypeScript
+        run: pnpm nx $NX_RUN -t type-check --output-style=static
 
   server:
     name: Server tests
@@ -39,12 +75,20 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set the base and head commits for nx affected
+        if: github.event_name == 'pull_request'
+        uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
         uses: ./.github/actions/setup
 
+      - name: Set up the Nx cache
+        uses: ./.github/actions/nx-cache
+
       - name: Vitest server tests with coverage
-        run: pnpm run test:server --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
+        run: pnpm nx $NX_RUN -t test:server --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
 
       - name: Upload the test report
         uses: actions/upload-artifact@v4
@@ -63,12 +107,20 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set the base and head commits for nx affected
+        if: github.event_name == 'pull_request'
+        uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
         uses: ./.github/actions/setup
 
+      - name: Set up the Nx cache
+        uses: ./.github/actions/nx-cache
+
       - name: Vitest frontend tests with coverage
-        run: pnpm run test:frontend --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
+        run: pnpm nx $NX_RUN -t test:frontend --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
 
       - name: Upload the test report
         uses: actions/upload-artifact@v4
@@ -101,10 +153,21 @@ jobs:
           path: apps/web/.vitest-reports
           merge-multiple: true
 
+      - name: Check for test reports
+        id: reports
+        run: |
+          if [ -n "$(ls -A apps/web/.vitest-reports 2>/dev/null)" ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No project with tests is affected, so there is no coverage to merge." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Merge the coverage
+        if: steps.reports.outputs.found == 'true'
         run: pnpm --filter web exec vitest run --merge-reports=.vitest-reports --coverage
 
       - name: Report the line coverage
+        if: steps.reports.outputs.found == 'true'
         id: coverage
         run: |
           lines=$(node -p "require('./apps/web/coverage/coverage-summary.json').total.lines.pct")
@@ -120,12 +183,20 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set the base and head commits for nx affected
+        if: github.event_name == 'pull_request'
+        uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
         uses: ./.github/actions/setup
 
+      - name: Set up the Nx cache
+        uses: ./.github/actions/nx-cache
+
       - name: Vitest snapshots
-        run: pnpm run test:snapshot
+        run: pnpm nx $NX_RUN -t test:snapshot --output-style=static
 
   playwright:
     name: Playwright version
@@ -160,12 +231,20 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
+
+      - name: Trust the checkout in the container
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Set the base and head commits for nx affected
+        if: github.event_name == 'pull_request'
+        uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
         uses: ./.github/actions/setup
 
       - name: Vitest visual tests
-        run: pnpm run test:visual
+        run: pnpm nx $NX_RUN -t test:visual --output-style=static
 
       - name: Upload the screenshots that changed
         if: failure()

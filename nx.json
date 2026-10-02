@@ -9,10 +9,18 @@
       "!{projectRoot}/**/__snapshots__/**"
     ],
     "sharedGlobals": [
+      "{workspaceRoot}/.nvmrc",
+      "{workspaceRoot}/package.json",
       "{workspaceRoot}/eslint.config.mjs",
       "{workspaceRoot}/eslint-suppressions.json",
-      "{workspaceRoot}/pnpm-lock.yaml"
+      "{workspaceRoot}/.github/workflows/ci.yml",
+      "{workspaceRoot}/.github/actions/**/*"
     ]
+  },
+  "pluginsConfig": {
+    "@nx/js": {
+      "projectsAffectedByDependencyUpdates": "auto"
+    }
   },
   "targetDefaults": {
     "build": {
@@ -33,6 +41,16 @@
       "cache": true,
       "inputs": ["default"],
       "outputs": []
+    },
+    "test:server": {
+      "cache": true,
+      "inputs": ["default"],
+      "outputs": ["{projectRoot}/.vitest-reports/server.json"]
+    },
+    "test:frontend": {
+      "cache": true,
+      "inputs": ["default"],
+      "outputs": ["{projectRoot}/.vitest-reports/frontend.json"]
     },
     "test:snapshot": {
       "cache": true,
