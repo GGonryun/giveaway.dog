@@ -18,7 +18,8 @@ import {
   sweepstakesTabSchema,
   SWEEPSTAKES_TAB_OPTIONS,
   isSweepstakesTab,
-  SWEEPSTAKES_STATUS_LABEL
+  SWEEPSTAKES_STATUS_LABEL,
+  getSweepstakesTimingDescription
 } from '../sweepstakes';
 
 const NOW = new Date('2026-06-15T12:00:00.000Z');
@@ -435,5 +436,69 @@ describe('SWEEPSTAKES_STATUS_LABEL', () => {
       EXPIRED: 'Expired',
       ERROR: 'Error'
     });
+  });
+});
+
+describe('getSweepstakesTimingDescription', () => {
+  const HOUR = 60 * 60 * 1000;
+  const DAY = 24 * HOUR;
+  const fromNow = (ms: number) => new Date(NOW.getTime() + ms);
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it.each([
+    [{ status: null, startDate: NOW, endDate: NOW }],
+    [{ status: 'DRAFT' as const, startDate: NOW, endDate: NOW }],
+    [{ status: 'RUNNING' as const, startDate: null, endDate: NOW }],
+    [{ status: 'RUNNING' as const, startDate: NOW, endDate: undefined }]
+  ])('returns Not started for %o', (args) => {
+    expect(getSweepstakesTimingDescription(args)).toBe('Not started');
+  });
+
+  it('describes how long ago a giveaway finished', () => {
+    expect(
+      getSweepstakesTimingDescription({
+        status: 'EXPIRED',
+        startDate: fromNow(-10 * DAY),
+        endDate: fromNow(-2 * DAY)
+      })
+    ).toBe('Finished 2 days ago');
+  });
+
+  it('describes when a scheduled giveaway starts', () => {
+    expect(
+      getSweepstakesTimingDescription({
+        status: 'SCHEDULED',
+        startDate: fromNow(3 * DAY),
+        endDate: fromNow(10 * DAY)
+      })
+    ).toBe('Starts in 3 days');
+  });
+
+  it('describes when a running giveaway ends', () => {
+    expect(
+      getSweepstakesTimingDescription({
+        status: 'RUNNING',
+        startDate: fromNow(-DAY),
+        endDate: fromNow(7 * DAY)
+      })
+    ).toBe('Ends in 7 days');
+  });
+
+  it('uses an approximate distance for the end of a running giveaway', () => {
+    expect(
+      getSweepstakesTimingDescription({
+        status: 'RUNNING',
+        startDate: fromNow(-DAY),
+        endDate: fromNow(90 * 60 * 1000)
+      })
+    ).toBe('Ends in about 2 hours');
   });
 });

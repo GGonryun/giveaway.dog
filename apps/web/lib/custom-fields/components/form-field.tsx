@@ -33,7 +33,8 @@ import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { assertNever } from '@/lib/errors';
 import { strings } from '@/lib/strings';
-import { FIELD_TYPE_ICON, FIELD_TYPE_LABELS } from '../schemas';
+import { FIELD_TYPE_LABELS } from '../schemas';
+import { FIELD_TYPE_ICON } from './field-icons';
 
 export const FormFieldComponent = <
   TFieldValues extends FieldValues,

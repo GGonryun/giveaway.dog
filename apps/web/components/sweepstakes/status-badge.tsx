@@ -1,17 +1,10 @@
 import { Badge } from '../ui/badge';
-import {
-  differenceInDays,
-  formatDistance,
-  formatDistanceToNowStrict,
-  isAfter,
-  isBefore
-} from 'date-fns';
+import { differenceInDays, isAfter, isBefore } from 'date-fns';
 import {
   ENDING_SOON_SWEEPSTAKE_THRESHOLD,
   NEW_SWEEPSTAKE_THRESHOLD,
   STARTING_SOON_SWEEPSTAKE_THRESHOLD
 } from '@/lib/settings';
-import { Nullable } from '@/lib/types';
 import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 import { assertNever } from '@/lib/errors';
 
@@ -118,20 +111,4 @@ export const SweepstakesStatusDescription: React.FC<
 > = (props) => {
   const { description } = getStatusConfig(props);
   return <span>{description}</span>;
-};
-
-export const getSweepstakesTimingDescription = ({
-  status,
-  endDate,
-  startDate
-}: Nullable<Partial<SweepstakeStatusBadgeProps>>): string => {
-  const now = new Date();
-  if (!status || status === 'DRAFT') return 'Not started';
-  if (!startDate || !endDate) return 'Not started';
-
-  if (isAfter(now, endDate))
-    return `Finished ${formatDistanceToNowStrict(endDate)} ago`;
-  if (isAfter(startDate, now))
-    return `Starts in ${formatDistanceToNowStrict(startDate)}`;
-  return `Ends in ${formatDistance(endDate, now)}`;
 };

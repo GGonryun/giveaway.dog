@@ -1,4 +1,3 @@
-import { StarIcon, LucideIcon } from 'lucide-react';
 import z from 'zod';
 
 export const IMPORTED_BASE_SCORE = 50;
@@ -16,10 +15,6 @@ export const IMPORTED_METRIC_MAX: Record<ImportedMetricKey, number> = {
 
 export const IMPORTED_METRIC_LABELS: Record<ImportedMetricKey, string> = {
   baseScore: 'Base Score'
-};
-
-export const IMPORTED_METRIC_ICONS: Record<ImportedMetricKey, LucideIcon> = {
-  baseScore: StarIcon
 };
 
 export const IMPORTED_METRIC_DESCRIPTION: Record<ImportedMetricKey, string> = {

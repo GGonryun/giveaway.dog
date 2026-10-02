@@ -1,10 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { Eye, Monitor, Smartphone, Tablet } from 'lucide-react';
 import {
   deviceTypeSchema,
   userAgentSchema,
   USER_AGENT_DEVICE_LABEL,
-  USER_AGENT_DEVICE_ICON,
   userDeviceActivitySchema,
   INCLUDE_USER_DEVICE_AGENT_QUERY,
   toUserDeviceActivity
@@ -109,15 +107,6 @@ describe('device display records', () => {
       tablet: 'Tablet',
       desktop: 'Desktop',
       unknown: 'Unknown'
-    });
-  });
-
-  it('maps every device type to an icon', () => {
-    expect(USER_AGENT_DEVICE_ICON).toEqual({
-      mobile: Smartphone,
-      tablet: Tablet,
-      desktop: Monitor,
-      unknown: Eye
     });
   });
 });

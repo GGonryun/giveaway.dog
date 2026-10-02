@@ -1,11 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { StarIcon } from 'lucide-react';
 import {
   IMPORTED_BASE_SCORE,
   importedScoreMetricsSchema,
   IMPORTED_METRIC_MAX,
   IMPORTED_METRIC_LABELS,
-  IMPORTED_METRIC_ICONS,
   IMPORTED_METRIC_DESCRIPTION,
   IMPORTED_METRIC_TYPE
 } from '../imported';
@@ -47,10 +45,6 @@ describe('imported metric records', () => {
 
   it('labels the base score', () => {
     expect(IMPORTED_METRIC_LABELS).toEqual({ baseScore: 'Base Score' });
-  });
-
-  it('uses the star icon for the base score', () => {
-    expect(IMPORTED_METRIC_ICONS).toEqual({ baseScore: StarIcon });
   });
 
   it('describes the base score with the interpolated points', () => {

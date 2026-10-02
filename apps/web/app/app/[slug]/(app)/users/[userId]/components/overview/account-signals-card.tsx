@@ -13,7 +13,8 @@ import {
   SIGNAL_MAX,
   SIGNAL_QUALITY_KEYS
 } from '@/lib/scoring/signal-display';
-import { toQualityType, QUALITY_BADGE_VARIANT } from '@/schemas/quality';
+import { toQualityType } from '@/schemas/quality';
+import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
 import { cn } from '@/lib/utils';
 
 const OVERVIEW_SIGNALS = SIGNAL_QUALITY_KEYS.filter((k) =>

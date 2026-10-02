@@ -28,7 +28,6 @@ import { VisibilityType } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { datetime } from '@/lib/date';
 import {
-  getSweepstakesTimingDescription,
   SweepstakesStatusBadge,
   SweepstakesStatusDescription
 } from '../sweepstakes/status-badge';
@@ -39,7 +38,8 @@ import { useRouter } from 'next/navigation';
 import { CompleteSweepstakesAlert } from './complete-sweepstakes-alert';
 import {
   DerivedSweepstakeStatus,
-  EDITABLE_DERIVED_STATUS
+  EDITABLE_DERIVED_STATUS,
+  getSweepstakesTimingDescription
 } from '@/schemas/sweepstakes';
 
 interface SweepstakesStatusProps {

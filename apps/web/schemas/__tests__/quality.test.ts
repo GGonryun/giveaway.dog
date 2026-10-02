@@ -1,25 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import {
-  CircleAlert,
-  OctagonXIcon,
-  Shield,
-  ShieldCheck,
-  TriangleAlert
-} from 'lucide-react';
-import {
   qualityTypeSchema,
   QUALITY_THRESHOLDS,
   toQualityType,
   toQualityProgressColor,
   toQualityTextColor,
-  QUALITY_BADGE_VARIANT,
-  QUALITY_ALERT_VARIANT,
   QUALITY_THEME,
   QUALITY_BADGE_TEXT,
   QUALITY_BADGE_RISK,
   QUALITY_LABELS,
-  QUALITY_DESCRIPTION,
-  QUALITY_ICON
+  QUALITY_DESCRIPTION
 } from '../quality';
 
 const QUALITY_TYPES = ['trusted', 'good', 'neutral', 'suspicious', 'banned'];
@@ -98,27 +88,13 @@ describe('toQualityTextColor', () => {
 
 describe('quality display records', () => {
   it.each([
-    ['QUALITY_BADGE_VARIANT', QUALITY_BADGE_VARIANT],
-    ['QUALITY_ALERT_VARIANT', QUALITY_ALERT_VARIANT],
     ['QUALITY_THEME', QUALITY_THEME],
     ['QUALITY_BADGE_TEXT', QUALITY_BADGE_TEXT],
     ['QUALITY_BADGE_RISK', QUALITY_BADGE_RISK],
     ['QUALITY_LABELS', QUALITY_LABELS],
-    ['QUALITY_DESCRIPTION', QUALITY_DESCRIPTION],
-    ['QUALITY_ICON', QUALITY_ICON]
+    ['QUALITY_DESCRIPTION', QUALITY_DESCRIPTION]
   ])('%s covers every quality type', (_name, record) => {
     expect(Object.keys(record).sort()).toEqual([...QUALITY_TYPES].sort());
-  });
-
-  it('uses the same variants for badges and alerts', () => {
-    expect(QUALITY_BADGE_VARIANT).toEqual({
-      trusted: 'success',
-      good: 'info',
-      neutral: 'warning',
-      suspicious: 'warning',
-      banned: 'destructive'
-    });
-    expect(QUALITY_ALERT_VARIANT).toEqual(QUALITY_BADGE_VARIANT);
   });
 
   it('defines a full theme for each quality', () => {
@@ -187,16 +163,6 @@ describe('quality display records', () => {
       good: 'This user has low risk factors. They are generally trustworthy.',
       trusted:
         'This user has excellent quality indicators. They are highly trustworthy.'
-    });
-  });
-
-  it('maps each quality to its icon', () => {
-    expect(QUALITY_ICON).toEqual({
-      trusted: ShieldCheck,
-      good: Shield,
-      neutral: CircleAlert,
-      suspicious: TriangleAlert,
-      banned: OctagonXIcon
     });
   });
 });

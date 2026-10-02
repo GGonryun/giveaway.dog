@@ -1,27 +1,21 @@
-import { AlertVariant } from '@/components/ui/alert';
-
 export const ENFORCEMENT_LEVELS = {
   0: {
     label: 'None',
-    variant: 'destructive' as AlertVariant,
     message:
       'This might allow bots, cheaters, and spammers to participate in your giveaway.'
   },
   25: {
     label: 'Minimum',
-    variant: 'warning' as AlertVariant,
     message:
       'This might allow some suspicious users but offers some protection against the worst offenders.'
   },
   50: {
     label: 'Moderate',
-    variant: 'success' as AlertVariant,
     message:
       'Most bad actors will be filtered out. This provides a decent middle ground between protection and engagement.'
   },
   75: {
     label: 'Maximum',
-    variant: 'success' as AlertVariant,
     message:
       'This offers maximum protection and might reduce engagement, but will guarantee that bots, cheaters, and spammers are not allowed to participate.'
   }

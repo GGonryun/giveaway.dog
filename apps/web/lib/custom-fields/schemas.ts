@@ -1,7 +1,5 @@
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { Expand, FlatUnion } from '@/lib/types';
 import { SweepstakesFormFieldType } from '@prisma/client';
-import { LucideIcon, UserIcon, BalloonIcon, MailIcon } from 'lucide-react';
 import z from 'zod';
 
 export const baseSweepstakesFormFieldSchema = z.object({
@@ -46,13 +44,6 @@ export type SweepstakesFormFieldSchema = z.infer<
 export type FlatSweepstakesFormField = FlatUnion<
   Expand<SweepstakesFormFieldSchema>
 >;
-
-export const FIELD_TYPE_ICON: Record<SweepstakesFormFieldType, LucideIcon> = {
-  [SweepstakesFormFieldType.USERNAME]: UserIcon,
-  [SweepstakesFormFieldType.AGE]: BalloonIcon,
-  [SweepstakesFormFieldType.EMAIL]: MailIcon,
-  [SweepstakesFormFieldType.TWITTER]: SocialXIcon
-};
 
 export const FIELD_TYPE_LABELS: Record<SweepstakesFormFieldType, string> = {
   [SweepstakesFormFieldType.USERNAME]: 'Username',

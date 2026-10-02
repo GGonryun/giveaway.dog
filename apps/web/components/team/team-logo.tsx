@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FALLBACK_TEAM_ICON } from '@/lib/team/data';
+import { Users } from 'lucide-react';
 import Image from 'next/image';
 
 interface TeamLogoProps {
@@ -29,15 +29,13 @@ export const TeamLogo = ({
     }
   };
 
-  const FallbackIcon = FALLBACK_TEAM_ICON;
-
   if (!isValidImageUrl(logoUrl) || imageError) {
     return (
       <div
         className={`flex items-center justify-center bg-muted rounded-md ${className}`}
         style={{ width: size, height: size }}
       >
-        <FallbackIcon className="text-muted-foreground" size={size * 0.6} />
+        <Users className="text-muted-foreground" size={size * 0.6} />
       </div>
     );
   }

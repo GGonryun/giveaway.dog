@@ -4,13 +4,13 @@ import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import {
   DERIVED_TO_ACTUAL_STATUS_MAP,
+  getSweepstakesTimingDescription,
   listSweepstakesDataSchema,
   listSweepstakesFiltersSchema,
   toDerivedSweepstakeStatus
 } from '@/schemas/sweepstakes';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
 import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
-import { getSweepstakesTimingDescription } from '@/components/sweepstakes/status-badge';
 import { Prisma } from '@prisma/client';
 
 const getSweepstakesList = procedure()
