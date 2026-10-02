@@ -162,6 +162,17 @@ const knownRefactor = (from, to) =>
       new RegExp(refactor.from).test(from) && new RegExp(refactor.to).test(to)
   );
 
+const texts = new Map();
+const readSource = (file) => {
+  if (!texts.has(file)) {
+    texts.set(
+      file,
+      fs.readFileSync(path.join(root, realPath.get(file)), 'utf8')
+    );
+  }
+  return texts.get(file);
+};
+
 const sourceEdges = new Map();
 const testEdges = new Map();
 const knownEdges = new Map();
@@ -179,7 +190,7 @@ for (const file of files) {
     if (!dead.has(file)) unmapped.push(file);
     continue;
   }
-  const text = fs.readFileSync(path.join(root, realPath.get(file)), 'utf8');
+  const text = readSource(file);
   for (const pattern of IMPORT_PATTERNS) {
     for (const match of text.matchAll(pattern)) {
       const target = resolve(file, match[1]);
@@ -266,6 +277,75 @@ const testCycles = findCycles([sourceEdges, testEdges]).filter(
       cycle.every((member) => sourceCycle.includes(member))
     )
 );
+const DIRECTIVE_PREFIX = String.raw`^(?:\s+|\/\/[^\n]*|\/\*[\s\S]*?\*\/)*`;
+const hasDirective = (text, directive) =>
+  new RegExp(`${DIRECTIVE_PREFIX}['"]${directive}['"]`).test(text);
+const VALUE_IMPORT_PATTERNS = [
+  /(?:^|[\n;])\s*(import|export)\s+(type\s+)?([^'";]*?)\s*from\s*['"]([^'"]+)['"]/g,
+  /(?:^|[\n;])\s*import\s*()()()['"]([^'"]+)['"]/g,
+  /import\(\s*()()()['"]([^'"]+)['"]\s*\)/g,
+  /require\(\s*()()()['"]([^'"]+)['"]\s*\)/g
+];
+const isTypeOnly = (typeKeyword, clause) => {
+  if (typeKeyword) return true;
+  const named = clause.trim().match(/^\{([\s\S]*)\}$/);
+  if (!named) return false;
+  const specifiers = named[1]
+    .split(',')
+    .map((specifier) => specifier.trim())
+    .filter(Boolean);
+  return (
+    specifiers.length > 0 &&
+    specifiers.every((specifier) => /^type\s/.test(specifier))
+  );
+};
+const runtimeOf = (name) =>
+  byName
+    .get(name)
+    ?.tags.find((tag) => tag.startsWith('runtime:'))
+    ?.slice('runtime:'.length);
+
+const clientRoots = files.filter(
+  (file) =>
+    !isTest(file) &&
+    ownerOf(file) &&
+    ownerOf(file) !== DEAD &&
+    hasDirective(readSource(file), 'use client')
+);
+const reachedFrom = new Map(clientRoots.map((file) => [file, null]));
+const serverReached = clientRoots.filter(
+  (file) => runtimeOf(ownerOf(file)) === 'server'
+);
+const queue = [...clientRoots];
+while (queue.length) {
+  const file = queue.shift();
+  const text = readSource(file);
+  for (const pattern of VALUE_IMPORT_PATTERNS) {
+    for (const [, , typeKeyword, clause, specifier] of text.matchAll(pattern)) {
+      if (isTypeOnly(typeKeyword, clause)) continue;
+      const target = resolve(file, specifier);
+      const next = target?.file ?? target?.pkg;
+      if (!next || reachedFrom.has(next)) continue;
+      const owner = target.pkg ?? ownerOf(target.file);
+      if (!owner || owner === DEAD || isTest(next)) continue;
+      reachedFrom.set(next, file);
+      if (target.file && hasDirective(readSource(next), 'use server')) continue;
+      if (runtimeOf(owner) === 'server') {
+        serverReached.push(next);
+      } else if (target.file) {
+        queue.push(next);
+      }
+    }
+  }
+}
+const chainTo = (module) => {
+  const chain = [];
+  for (let step = module; step; step = reachedFrom.get(step)) {
+    chain.unshift(step);
+  }
+  return chain;
+};
+
 const deadPresent = [...dead].filter((file) => fileSet.has(file));
 
 const show = (label, items, format = (item) => item) => {
@@ -289,9 +369,19 @@ show(
   ([id, evidence]) =>
     `${id.replace(' -> ', '')}: ${evidence.length} import(s), e.g. ${evidence[0]}`
 );
+show(
+  'Server modules that client code imports',
+  serverReached.sort(),
+  (module) => `${module}  (${chainTo(module).join(' -> ')})`
+);
 show('Dependencies missing from package-map.json', undeclared);
 show('Cycles that only tests create', testCycles, (cycle) => cycle.join(', '));
 show('Dead files still present', deadPresent);
 
 process.exitCode =
-  unmapped.length || sourceCycles.length || violations.length ? 1 : 0;
+  unmapped.length ||
+  sourceCycles.length ||
+  violations.length ||
+  serverReached.length
+    ? 1
+    : 0;

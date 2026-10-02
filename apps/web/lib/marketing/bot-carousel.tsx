@@ -2,7 +2,7 @@
 
 import { motion, useAnimationFrame } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { ResolvedTheme } from '../theme/get-server-theme';
+import type { ResolvedTheme } from '../theme/get-server-theme';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';

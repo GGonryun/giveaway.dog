@@ -1,11 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { checkSteamWishlist } from '../steam';
 import {
   GAME_NOT_IN_WISHLIST_ERROR,
-  GAME_NOT_OWNED_ERROR,
-  PRIVATE_STEAM_LIBRARY_ERROR,
-  PRIVATE_STEAM_WISHLIST_ERROR,
-  checkSteamWishlist
-} from '../steam';
+  PRIVATE_STEAM_WISHLIST_ERROR
+} from '../steam-errors';
 import { SteamWishlistTaskSchema } from '../../schemas';
 import { prismaMock } from '@/test/prisma';
 import {
@@ -49,22 +47,6 @@ const steamAccount = {
 };
 
 const notOwned = () => jsonResponse({ response: { game_count: 0 } });
-
-describe('steam error constants', () => {
-  it('exposes stable error identifiers', () => {
-    expect({
-      PRIVATE_STEAM_WISHLIST_ERROR,
-      GAME_NOT_IN_WISHLIST_ERROR,
-      PRIVATE_STEAM_LIBRARY_ERROR,
-      GAME_NOT_OWNED_ERROR
-    }).toEqual({
-      PRIVATE_STEAM_WISHLIST_ERROR: 'PRIVATE_STEAM_WISHLIST',
-      GAME_NOT_IN_WISHLIST_ERROR: 'GAME_NOT_IN_WISHLIST',
-      PRIVATE_STEAM_LIBRARY_ERROR: 'PRIVATE_STEAM_LIBRARY',
-      GAME_NOT_OWNED_ERROR: 'GAME_NOT_OWNED'
-    });
-  });
-});
 
 describe('checkSteamWishlist', () => {
   beforeEach(() => {
