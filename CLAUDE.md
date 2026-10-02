@@ -140,7 +140,8 @@ pnpm-workspace.yaml
 - **Cached targets**: `pnpm nx run web:lint`, `pnpm nx run web:type-check`, `pnpm nx run web:test:unit` and `pnpm nx run web:test:snapshot`. A second run with no changed inputs reads the result from the cache in `.nx/`. `web:lint` is defined in `apps/web/package.json` under `nx.targets` and runs ESLint from the root, so it uses the root `eslint-suppressions.json`
 - **Dependencies**: Add an app dependency with `pnpm --filter web add <name>`. Add workspace tooling (Nx, ESLint, Prettier, Vitest and its plugins) to the root `package.json` with `pnpm add -D -w <name>`. Vitest runs from the root, so its peer dependencies (`@types/node`, `jsdom`, `playwright`) stay in the root `package.json` with the same versions the app uses. Otherwise pnpm installs a second copy of Vitest, and the visual tests stop with no output
 - **Other commands**: `pnpm nx show projects` lists the projects, `pnpm nx show project web` shows the targets and `pnpm nx reset` clears the cache
-- **CI and Vercel**: They still run the `pnpm run` scripts, not Nx
+- **Build**: `nx.json` defines a `build` target default that is never cached, so a build always uses the current environment variables. Vercel finds this target and builds the app with `cd ../.. && npx nx build web`
+- **CI**: CI still runs the `pnpm run` scripts, not Nx
 
 ### Frontend Tests
 
