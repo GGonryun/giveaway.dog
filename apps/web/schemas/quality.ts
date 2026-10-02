@@ -1,14 +1,4 @@
-import { AlertVariant } from '@/components/ui/alert';
-import { BadgeVariants } from '@/components/ui/badge';
 import { widetype } from '@/lib/widetype';
-import {
-  LucideIcon,
-  Shield,
-  CircleAlert,
-  TriangleAlert,
-  OctagonXIcon,
-  ShieldCheck
-} from 'lucide-react';
 import z from 'zod';
 
 export const qualityTypeSchema = z.enum([
@@ -55,22 +45,6 @@ export type QualityColor = {
   border: string;
   text: string;
   base: string;
-};
-
-export const QUALITY_BADGE_VARIANT: Record<QualityType, BadgeVariants> = {
-  trusted: 'success',
-  good: 'info',
-  neutral: 'warning',
-  suspicious: 'warning',
-  banned: 'destructive'
-};
-
-export const QUALITY_ALERT_VARIANT: Record<QualityType, AlertVariant> = {
-  trusted: 'success',
-  good: 'info',
-  neutral: 'warning',
-  suspicious: 'warning',
-  banned: 'destructive'
 };
 
 export const QUALITY_THEME: Record<QualityType, QualityColor> = {
@@ -139,12 +113,4 @@ export const QUALITY_DESCRIPTION: Record<QualityType, string> = {
   good: 'This user has low risk factors. They are generally trustworthy.',
   trusted:
     'This user has excellent quality indicators. They are highly trustworthy.'
-};
-
-export const QUALITY_ICON: Record<QualityType, LucideIcon> = {
-  trusted: ShieldCheck,
-  good: Shield,
-  neutral: CircleAlert,
-  suspicious: TriangleAlert,
-  banned: OctagonXIcon
 };

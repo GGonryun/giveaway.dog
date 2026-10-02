@@ -10,7 +10,7 @@ import { TermsModal } from './terms-modal';
 import { DeviceType, GiveawayState } from '@/schemas/giveaway/schemas';
 import { cn } from '@/lib/utils';
 import { date } from '@/lib/date';
-import { getSweepstakesTimingDescription } from './status-badge';
+import { getSweepstakesTimingDescription } from '@/schemas/sweepstakes';
 import { MinimalTipTapPreview } from '@/components/ui/minimal-tiptap-preview';
 import { PLATFORM_ICONS } from '@/components/social-links/social-link-icon';
 import { parseSocialLinks, type SocialLink } from '@/schemas/social-links';

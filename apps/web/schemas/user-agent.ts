@@ -1,6 +1,5 @@
 import { UNKNOWN_BROWSER, UNKNOWN_OS } from '@/lib/settings';
 import { Prisma } from '@prisma/client';
-import { Eye, LucideIcon, Monitor, Smartphone, Tablet } from 'lucide-react';
 import { z } from 'zod';
 
 export const deviceTypeSchema = z.enum([
@@ -26,13 +25,6 @@ export const USER_AGENT_DEVICE_LABEL: Record<DeviceTypeSchema, string> = {
   tablet: 'Tablet',
   desktop: 'Desktop',
   unknown: 'Unknown'
-};
-
-export const USER_AGENT_DEVICE_ICON: Record<DeviceTypeSchema, LucideIcon> = {
-  mobile: Smartphone,
-  tablet: Tablet,
-  desktop: Monitor,
-  unknown: Eye
 };
 
 export const userDeviceActivitySchema = userAgentSchema.extend({

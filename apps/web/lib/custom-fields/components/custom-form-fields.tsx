@@ -35,11 +35,8 @@ import {
 
 import { widetype } from '@/lib/widetype';
 import { TWITTER_PROFILE_URL } from '@/lib/settings';
-import {
-  FIELD_TYPE_ICON,
-  FIELD_TYPE_LABELS,
-  SweepstakesFormFieldSchema
-} from '../schemas';
+import { FIELD_TYPE_LABELS, SweepstakesFormFieldSchema } from '../schemas';
+import { FIELD_TYPE_ICON } from './field-icons';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '../defaults';
 import { FormFieldComponent } from './form-field';
 import {

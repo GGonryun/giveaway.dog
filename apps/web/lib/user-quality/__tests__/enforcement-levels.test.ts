@@ -14,18 +14,17 @@ describe('enforcement levels', () => {
       ]);
     });
 
-    it('labels and colors each level', () => {
+    it('labels each level', () => {
       expect(
         VALID_ENFORCEMENT_VALUES.map((value) => ({
           value,
-          label: ENFORCEMENT_LEVELS[value].label,
-          variant: ENFORCEMENT_LEVELS[value].variant
+          label: ENFORCEMENT_LEVELS[value].label
         }))
       ).toEqual([
-        { value: 0, label: 'None', variant: 'destructive' },
-        { value: 25, label: 'Minimum', variant: 'warning' },
-        { value: 50, label: 'Moderate', variant: 'success' },
-        { value: 75, label: 'Maximum', variant: 'success' }
+        { value: 0, label: 'None' },
+        { value: 25, label: 'Minimum' },
+        { value: 50, label: 'Moderate' },
+        { value: 75, label: 'Maximum' }
       ]);
     });
 

@@ -10,10 +10,12 @@ import {
   toQualityType,
   QUALITY_DESCRIPTION,
   QUALITY_BADGE_RISK,
-  QUALITY_BADGE_TEXT,
+  QUALITY_BADGE_TEXT
+} from '@/schemas/quality';
+import {
   QUALITY_BADGE_VARIANT,
   QUALITY_ICON
-} from '@/schemas/quality';
+} from '@/lib/user-quality/display';
 
 interface BotUser {
   avatar: string;

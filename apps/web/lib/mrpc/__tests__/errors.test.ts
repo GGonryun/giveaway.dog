@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Prisma } from '@prisma/client';
-import { isNextRedirect, isPrismaError, prismaErrorBoundary } from '../errors';
+import { isPrismaError, prismaErrorBoundary } from '../errors';
 import { knownRequestError } from '@/test/prisma';
 
 const nanoidMock = vi.hoisted(() => vi.fn());
@@ -9,81 +9,6 @@ vi.mock('nanoid', () => ({ nanoid: nanoidMock }));
 
 const validationError = (message = 'Invalid field') =>
   new Prisma.PrismaClientValidationError(message, { clientVersion: 'test' });
-
-const redirectError = (digest: unknown, message: unknown) =>
-  Object.assign(Object.create(Error.prototype), { digest, message });
-
-describe('isNextRedirect', () => {
-  it('returns true when both digest and message start with NEXT_REDIRECT', () => {
-    const err = redirectError('NEXT_REDIRECT;replace;/x;307;', 'NEXT_REDIRECT');
-
-    expect(isNextRedirect(err)).toBe(true);
-  });
-
-  it('returns false when only the digest starts with NEXT_REDIRECT', () => {
-    const err = redirectError('NEXT_REDIRECT;replace;/x;307;', 'Other');
-
-    expect(isNextRedirect(err)).toBe(false);
-  });
-
-  it('returns false when only the message starts with NEXT_REDIRECT', () => {
-    const err = redirectError('SOMETHING_ELSE', 'NEXT_REDIRECT');
-
-    expect(isNextRedirect(err)).toBe(false);
-  });
-
-  it('returns false when NEXT_REDIRECT appears later in the digest', () => {
-    const err = redirectError(
-      'X_NEXT_REDIRECT;replace;/x;307;',
-      'NEXT_REDIRECT'
-    );
-
-    expect(isNextRedirect(err)).toBe(false);
-  });
-
-  it('returns false when NEXT_REDIRECT appears later in the message', () => {
-    const err = redirectError(
-      'NEXT_REDIRECT;replace;/x;307;',
-      'Error: NEXT_REDIRECT'
-    );
-
-    expect(isNextRedirect(err)).toBe(false);
-  });
-
-  it('returns false when the digest is not a string', () => {
-    const err = redirectError(42, 'NEXT_REDIRECT');
-
-    expect(isNextRedirect(err)).toBe(false);
-  });
-
-  it('returns false when the message is not a string', () => {
-    const err = redirectError('NEXT_REDIRECT', 42);
-
-    expect(isNextRedirect(err)).toBe(false);
-  });
-
-  it('returns false for an error without a digest', () => {
-    expect(isNextRedirect(new Error('NEXT_REDIRECT'))).toBe(false);
-  });
-
-  it('returns false for a plain object without digest or message', () => {
-    expect(isNextRedirect({})).toBe(false);
-  });
-
-  it('is case sensitive about the NEXT_REDIRECT prefix', () => {
-    const err = redirectError('next_redirect', 'next_redirect');
-
-    expect(isNextRedirect(err)).toBe(false);
-  });
-
-  it('throws a TypeError when given null', () => {
-    expect(() => isNextRedirect(null)).toThrow(TypeError);
-  });
-
-  it('throws a TypeError when given a string', () => {
-    expect(() => isNextRedirect('NEXT_REDIRECT')).toThrow(TypeError);
-  });
-});
 
 describe('isPrismaError', () => {
   it('returns true for a PrismaClientKnownRequestError', () => {

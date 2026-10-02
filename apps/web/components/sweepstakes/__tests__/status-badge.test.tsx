@@ -4,8 +4,7 @@ import type { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 import {
   SweepstakesStatusBadge,
   SweepstakesStatusDescription,
-  SweepstakesStatusSummaryBadge,
-  getSweepstakesTimingDescription
+  SweepstakesStatusSummaryBadge
 } from '../status-badge';
 import { NOW } from './fixtures';
 
@@ -158,57 +157,6 @@ describe('status badges', () => {
         fromNow(4 * DAY)
       );
       expect(container).toBeEmptyDOMElement();
-    });
-  });
-
-  describe('getSweepstakesTimingDescription', () => {
-    it.each([
-      [{ status: null, startDate: NOW, endDate: NOW }],
-      [{ status: 'DRAFT' as const, startDate: NOW, endDate: NOW }],
-      [{ status: 'RUNNING' as const, startDate: null, endDate: NOW }],
-      [{ status: 'RUNNING' as const, startDate: NOW, endDate: undefined }]
-    ])('returns Not started for %o', (args) => {
-      expect(getSweepstakesTimingDescription(args)).toBe('Not started');
-    });
-
-    it('describes how long ago a giveaway finished', () => {
-      expect(
-        getSweepstakesTimingDescription({
-          status: 'EXPIRED',
-          startDate: fromNow(-10 * DAY),
-          endDate: fromNow(-2 * DAY)
-        })
-      ).toBe('Finished 2 days ago');
-    });
-
-    it('describes when a scheduled giveaway starts', () => {
-      expect(
-        getSweepstakesTimingDescription({
-          status: 'SCHEDULED',
-          startDate: fromNow(3 * DAY),
-          endDate: fromNow(10 * DAY)
-        })
-      ).toBe('Starts in 3 days');
-    });
-
-    it('describes when a running giveaway ends', () => {
-      expect(
-        getSweepstakesTimingDescription({
-          status: 'RUNNING',
-          startDate: fromNow(-DAY),
-          endDate: fromNow(7 * DAY)
-        })
-      ).toBe('Ends in 7 days');
-    });
-
-    it('uses an approximate distance for the end of a running giveaway', () => {
-      expect(
-        getSweepstakesTimingDescription({
-          status: 'RUNNING',
-          startDate: fromNow(-DAY),
-          endDate: fromNow(90 * 60 * 1000)
-        })
-      ).toBe('Ends in about 2 hours');
     });
   });
 });

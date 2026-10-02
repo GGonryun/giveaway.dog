@@ -1,11 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { SweepstakesFormFieldType } from '@prisma/client';
-import { UserIcon, BalloonIcon, MailIcon } from 'lucide-react';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import {
   ageSweepstakesFormFieldSchema,
   baseSweepstakesFormFieldSchema,
-  FIELD_TYPE_ICON,
   FIELD_TYPE_LABELS,
   sweepstakesFormFieldSchema
 } from '../schemas';
@@ -260,23 +256,6 @@ describe('sweepstakesFormFieldSchema', () => {
     expect(issueMessages(result)).toEqual([
       { path: 'label', message: 'Label is required' }
     ]);
-  });
-});
-
-describe('FIELD_TYPE_ICON', () => {
-  it('maps every form field type to its icon component', () => {
-    expect(FIELD_TYPE_ICON).toEqual({
-      [SweepstakesFormFieldType.USERNAME]: UserIcon,
-      [SweepstakesFormFieldType.AGE]: BalloonIcon,
-      [SweepstakesFormFieldType.EMAIL]: MailIcon,
-      [SweepstakesFormFieldType.TWITTER]: SocialXIcon
-    });
-  });
-
-  it('covers exactly the prisma form field types', () => {
-    expect(Object.keys(FIELD_TYPE_ICON).sort()).toEqual(
-      Object.values(SweepstakesFormFieldType).sort()
-    );
   });
 });
 

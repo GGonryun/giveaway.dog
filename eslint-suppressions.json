@@ -189,7 +189,7 @@
   },
   "apps/web/lib/mrpc/errors.ts": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 4
+      "count": 3
     }
   },
   "apps/web/lib/mrpc/hook.ts": {

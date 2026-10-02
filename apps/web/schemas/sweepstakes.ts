@@ -1,5 +1,7 @@
 import { date } from '@/lib/date';
+import { Nullable } from '@/lib/types';
 import { Prisma, SweepstakesStatus } from '@prisma/client';
+import { formatDistance, formatDistanceToNowStrict, isAfter } from 'date-fns';
 import z from 'zod';
 
 export const expectedSweepstakesStatusSchema = z.union([
@@ -54,6 +56,28 @@ export const toDerivedSweepstakeStatus = ({
 export type DerivedSweepstakeStatus = z.infer<
   typeof derivedSweepstakesStatusSchema
 >;
+
+export const getSweepstakesTimingDescription = ({
+  status,
+  endDate,
+  startDate
+}: Nullable<
+  Partial<{
+    status: DerivedSweepstakeStatus;
+    startDate: Date;
+    endDate: Date;
+  }>
+>): string => {
+  const now = new Date();
+  if (!status || status === 'DRAFT') return 'Not started';
+  if (!startDate || !endDate) return 'Not started';
+
+  if (isAfter(now, endDate))
+    return `Finished ${formatDistanceToNowStrict(endDate)} ago`;
+  if (isAfter(startDate, now))
+    return `Starts in ${formatDistanceToNowStrict(startDate)}`;
+  return `Ends in ${formatDistance(endDate, now)}`;
+};
 
 export const DERIVED_TO_ACTUAL_STATUS_MAP: Record<
   DerivedSweepstakeStatus,

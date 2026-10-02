@@ -1,7 +1,6 @@
-import { Failure, Result } from '@/lib/mrpc/types';
+import { Failure, Result, isNextRedirect } from '@/lib/mrpc/types';
 import { useCallback, useState, useTransition } from 'react';
 import { toast } from 'sonner';
-import { isNextRedirect } from './errors';
 
 const guard = (error: unknown) => {
   toast.error(parseError(error));

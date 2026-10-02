@@ -9,6 +9,7 @@ import {
   clampToNearestEnforcementLevel,
   getEnforcementLevel
 } from './enforcement-levels';
+import { ENFORCEMENT_LEVEL_ALERT_VARIANT } from './display';
 
 interface BotEnforcementFieldProps {
   value: number;
@@ -55,7 +56,7 @@ export const BotEnforcementField: React.FC<BotEnforcementFieldProps> = ({
         ))}
       </ToggleGroup>
       {showAlert && (
-        <Alert variant={enforcementLevel.variant}>
+        <Alert variant={ENFORCEMENT_LEVEL_ALERT_VARIANT[normalizedValue]}>
           <AlertDescription>{enforcementLevel.message}</AlertDescription>
         </Alert>
       )}
