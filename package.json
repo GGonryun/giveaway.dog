@@ -18,6 +18,8 @@
     "test:unit": "vitest run --project server --project frontend",
     "test:snapshot": "vitest run --project snapshot",
     "test:coverage": "vitest run --coverage --project server --project frontend",
+    "test:e2e": "playwright test",
+    "test:e2e:local": "dotenv -e .env.local -- playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "verify": "pnpm run lint && pnpm run format:check && pnpm run type-check && pnpm run test:run",
@@ -172,6 +174,7 @@
     "trailingComma": "none"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",

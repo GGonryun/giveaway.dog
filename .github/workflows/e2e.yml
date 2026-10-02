@@ -1,0 +1,109 @@
+name: E2E
+
+on:
+  repository_dispatch:
+    types: [vercel.deployment.success]
+  workflow_dispatch:
+    inputs:
+      url:
+        description: URL of the preview deployment to test
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  statuses: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.client_payload.git.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: E2E tests
+    if: github.event_name == 'workflow_dispatch' || github.event.client_payload.environment != 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SHA: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.client_payload.git.sha }}
+      DEPLOYMENT_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.url || github.event.client_payload.url }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Check the deployment and the secrets
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+          E2E_LOGIN_SECRET: ${{ secrets.E2E_LOGIN_SECRET }}
+        run: |
+          failed=0
+          if [ -z "$SHA" ] || [ -z "$DEPLOYMENT_URL" ]; then
+            echo "::error::The event has no commit SHA or no deployment URL."
+            failed=1
+          fi
+          for name in VERCEL_AUTOMATION_BYPASS_SECRET E2E_LOGIN_SECRET; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Add the $name secret in Settings > Secrets and variables > Actions."
+              failed=1
+            fi
+          done
+          exit $failed
+
+      - name: Report a pending status on the commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state=pending \
+            -f context='E2E tests' \
+            -f description='Testing the preview deployment' \
+            -f target_url="$RUN_URL"
+
+      - name: Check out the deployed commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.SHA }}
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Playwright
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+          E2E_LOGIN_SECRET: ${{ secrets.E2E_LOGIN_SECRET }}
+        run: |
+          case "$DEPLOYMENT_URL" in
+            http://* | https://*) E2E_BASE_URL="$DEPLOYMENT_URL" ;;
+            *) E2E_BASE_URL="https://$DEPLOYMENT_URL" ;;
+          esac
+          echo "Testing $E2E_BASE_URL at $SHA" >> "$GITHUB_STEP_SUMMARY"
+          E2E_BASE_URL="$E2E_BASE_URL" pnpm run test:e2e
+
+      - name: Upload the Playwright report
+        if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Report the result on the commit
+        if: ${{ (success() || failure()) && env.SHA != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          if [ "$JOB_STATUS" = success ]; then
+            state=success
+            description='The preview deployment passed'
+          else
+            state=failure
+            description='The preview deployment failed'
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state="$state" \
+            -f context='E2E tests' \
+            -f description="$description" \
+            -f target_url="$RUN_URL"

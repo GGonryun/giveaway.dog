@@ -16,6 +16,7 @@ import { SteamProvider } from './providers/steam';
 import { InboundEmailProvider } from './providers/inbound';
 import { KickProvider } from './providers/kick';
 import { VeloraProvider } from './providers/velora';
+import { newE2eProviders } from './providers/e2e';
 
 import {
   REQUIRED_DISCORD_SCOPES,
@@ -198,6 +199,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
           linkedInProfileUrl
         };
       }
-    })
+    }),
+    ...newE2eProviders()
   ]
 }));
