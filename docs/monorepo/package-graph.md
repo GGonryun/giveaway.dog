@@ -76,7 +76,7 @@ An arrow means "may import". A package may also import packages of its own type,
 
 The other two tags:
 
-- `runtime:server`, `runtime:react` or `runtime:isomorphic`. In a `server` package, every module that is not a server action imports `server-only`. Today no file does. A `model` or `util` package must not depend on React. That keeps icon libraries out of the server bundle and keeps the Prisma runtime out of the client bundle.
+- `runtime:server`, `runtime:react` or `runtime:isomorphic`. In a `server` package, every module that is not a server action imports `server-only`. Today only `lib/prisma.ts`, `lib/auth/config.ts` and `lib/auth/config-no-providers.ts` do. A `model` or `util` package must not depend on React. That keeps icon libraries out of the server bundle and keeps the Prisma runtime out of the client bundle.
 - `scope:<group>`, plus `platform:<name>` for platform plugins. Use them for ownership (`CODEOWNERS`) and to run one area with `nx run-many --projects=tag:platform:x`.
 
 ## Platform plugins
@@ -301,7 +301,7 @@ D1 is optional. Together with the moves above, it shrinks what a sweepstakes cha
 
 Two small fixes are also worth making while you are there:
 
-- `lib/auth/config-no-providers.ts` starts with the string `'server only';`, which does nothing. Replace it with `import 'server-only'`.
+- `lib/prisma.ts`, `lib/auth/config.ts` and `lib/auth/config-no-providers.ts` started with the string `'server only';`, which does nothing. They now use `import 'server-only'`, so a client module that imports them fails the build.
 - `procedures/teams/shared.ts` duplicated `findUserTeamQuery` and was only used by tests. It is deleted. `findUserTeam` and `findUserTeamQuery` moved from `procedures/sweepstakes/shared.ts` to `procedures/teams/find-user-team.ts` (`team-server`), so team lookups live with teams. The platform `connect` packages and the X picker server then depend on `team-server` instead of `sweepstakes-access`.
 
 ## Fan-out hotspots
