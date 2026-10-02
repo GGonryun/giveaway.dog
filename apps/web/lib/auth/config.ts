@@ -1,6 +1,6 @@
 'server only';
 
-import { authConfig } from './config-runtime';
+import { createAuthConfig } from './config-runtime';
 import { createId } from '@paralleldrive/cuid2';
 
 import NextAuth from 'next-auth';
@@ -28,6 +28,8 @@ import {
 import { UserSource } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { redeemBlueskyLoginToken } from './bluesky-login-token';
+
+const authConfig = createAuthConfig(() => auth());
 
 export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
   ...authConfig,

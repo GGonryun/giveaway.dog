@@ -2,11 +2,11 @@ import { nanoid } from 'nanoid';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '../custom-fields/defaults';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
-  DEFAULT_REQUIRED_PRE_ENTRY_LOGIN
+  DEFAULT_REQUIRED_PRE_ENTRY_LOGIN,
+  DEFAULT_SWEEPSTAKES_NAME
 } from '../settings';
 import { TemplateFormSchema } from './schemas/template';
 import {
-  DEFAULT_SWEEPSTAKES_NAME,
   DEFAULT_SWEEPSTAKES_DESCRIPTION,
   DEFAULT_MIN_QUALITY_SCORE,
   DEFAULT_MIN_TASK_COMPLETED,

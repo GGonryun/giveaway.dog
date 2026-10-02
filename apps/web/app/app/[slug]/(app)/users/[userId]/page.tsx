@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { DEFAULT_USER_DETAILS_TAB } from '@/lib/settings';
+import { DEFAULT_USER_DETAILS_TAB } from '@/schemas/user';
 import { UserParams } from './params';
 
 interface UserDetailPageProps {

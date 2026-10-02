@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { SingleChoiceTaskSchema, TASK_INPUT_SCHEMA } from '../schemas';
 import { ApplicationError } from '@/lib/errors';
-import { ValidateTaskInput } from './integrations';
+import { ValidateTaskInput } from './types';
 
 export const checkSingleChoice = async (
   db: PrismaClient,

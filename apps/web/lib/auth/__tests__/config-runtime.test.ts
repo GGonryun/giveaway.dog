@@ -1,17 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { Session } from 'next-auth';
-import { authConfig } from '../config-runtime';
+import { createAuthConfig, type GetSession } from '../config-runtime';
 import { authConfigMiddleware } from '../config-middleware';
 import { ApplicationError } from '@/lib/errors';
 import { DOG_BREEDS } from '@/lib/dogs';
 import { prismaMock } from '@/test/prisma';
 import { createSession } from '@/test/session';
 
-const config = vi.hoisted(() => ({
-  auth: vi.fn<() => Promise<Session | null>>()
-}));
+const getSession = vi.fn<GetSession>();
 
-vi.mock('../config', () => ({ auth: config.auth }));
+const authConfig = createAuthConfig(getSession);
 
 type LinkAccountArgs = Parameters<typeof authConfig.events.linkAccount>[0];
 type SignInArgs = Parameters<typeof authConfig.callbacks.signIn>[0];
@@ -48,8 +45,8 @@ const oauthAccount = (overrides: Record<string, unknown> = {}) => ({
 });
 
 beforeEach(() => {
-  config.auth.mockReset();
-  config.auth.mockResolvedValue(null);
+  getSession.mockReset();
+  getSession.mockResolvedValue(null);
   vi.spyOn(console, 'info').mockImplementation(() => {});
 });
 
@@ -80,6 +77,14 @@ describe('authConfig', () => {
     it('adds a signIn callback that the middleware does not have', () => {
       expect('signIn' in authConfigMiddleware.callbacks).toBe(false);
       expect(authConfig.callbacks.signIn).toEqual(expect.any(Function));
+    });
+
+    it('does not load the session while it builds the config', () => {
+      const getOtherSession = vi.fn<GetSession>();
+
+      createAuthConfig(getOtherSession);
+
+      expect(getOtherSession).not.toHaveBeenCalled();
     });
   });
 
@@ -278,7 +283,7 @@ describe('authConfig', () => {
       it('allows sign in without a profile', async () => {
         expect(await signIn({ account: oauthAccount() })).toBe(true);
         expect(prismaMock.account.findUnique).not.toHaveBeenCalled();
-        expect(config.auth).not.toHaveBeenCalled();
+        expect(getSession).not.toHaveBeenCalled();
       });
 
       it('allows sign in without an account', async () => {
@@ -329,7 +334,7 @@ describe('authConfig', () => {
 
       it('allows a reconnect by the owner', async () => {
         prismaMock.account.findUnique.mockResolvedValue(existing('SIGNUP'));
-        config.auth.mockResolvedValue(createSession({ id: 'owner' }));
+        getSession.mockResolvedValue(createSession({ id: 'owner' }));
 
         expect(
           await signIn({ account: oauthAccount(), profile: { id: 'p' } })
@@ -338,11 +343,34 @@ describe('authConfig', () => {
 
       it('refuses when the account belongs to another signed-in user', async () => {
         prismaMock.account.findUnique.mockResolvedValue(existing('SIGNUP'));
-        config.auth.mockResolvedValue(createSession({ id: 'someone-else' }));
+        getSession.mockResolvedValue(createSession({ id: 'someone-else' }));
 
         expect(
           await signIn({ account: oauthAccount(), profile: { id: 'p' } })
         ).toBe(false);
+      });
+
+      it('links the account to the user of the session from getSession', async () => {
+        prismaMock.account.findUnique.mockResolvedValue(
+          existing('DISCORD_IMPORT', 'imported')
+        );
+        prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([]);
+        getSession.mockResolvedValue(createSession({ id: 'current' }));
+
+        await signIn({ account: oauthAccount(), profile: { id: 'p' } });
+
+        expect(getSession).toHaveBeenCalledTimes(1);
+        expect(prismaMock.account.update).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: expect.objectContaining({ userId: 'current' })
+          })
+        );
+        expect(
+          prismaMock.sweepstakesParticipant.updateMany
+        ).toHaveBeenCalledWith({
+          where: { userId: 'imported' },
+          data: { userId: 'current' }
+        });
       });
 
       it('returns the merge redirect when linking an imported account', async () => {
@@ -350,7 +378,7 @@ describe('authConfig', () => {
           existing('DISCORD_IMPORT', 'imported')
         );
         prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([]);
-        config.auth.mockResolvedValue(createSession({ id: 'current' }));
+        getSession.mockResolvedValue(createSession({ id: 'current' }));
 
         expect(
           await signIn({
@@ -383,7 +411,7 @@ describe('authConfig', () => {
       it('loads the current session', async () => {
         await signIn({ account: oauthAccount(), profile: { id: 'p' } });
 
-        expect(config.auth).toHaveBeenCalledTimes(1);
+        expect(getSession).toHaveBeenCalledTimes(1);
       });
 
       it('refreshes the tokens and resets the status to active', async () => {

@@ -1,7 +1,7 @@
 import { ApplicationError } from '@/lib/errors';
 import { PrismaClient } from '@prisma/client';
 import { SteamWishlistTaskSchema } from '../schemas';
-import { ValidateTaskInput } from './integrations';
+import { ValidateTaskInput } from './types';
 
 export const PRIVATE_STEAM_WISHLIST_ERROR = 'PRIVATE_STEAM_WISHLIST';
 export const GAME_NOT_IN_WISHLIST_ERROR = 'GAME_NOT_IN_WISHLIST';

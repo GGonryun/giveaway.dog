@@ -5,7 +5,7 @@ import {
   TASK_INPUT_SCHEMA
 } from '../schemas';
 import { ApplicationError } from '@/lib/errors';
-import { ValidateTaskInput } from './integrations';
+import { ValidateTaskInput } from './types';
 
 const MAX_ATTEMPTS = 25;
 

@@ -6,7 +6,7 @@ import {
   BonusTimedTaskSchema
 } from '../schemas';
 import { PrismaClient } from '@prisma/client';
-import { ValidateTaskInput } from './integrations';
+import { ValidateTaskInput } from './types';
 import { getLoyalty } from '@/lib/loyalty/db';
 import { isLoyal } from '@/lib/loyalty/validation';
 import {

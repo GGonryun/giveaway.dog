@@ -32,13 +32,8 @@ vi.mock('@upstash/ratelimit', () => ({
   }
 }));
 
-import {
-  fileUpload,
-  newVersionedRateLimiter,
-  scrapeBadgerCredits
-} from '../ratelimit';
+import { fileUpload, newVersionedRateLimiter } from '../ratelimit';
 import { redis } from '../redis';
-import { SCRAPEBADGER_CREDIT_LIMIT } from '../scrapebadger/settings';
 
 const configOf = (limiter: unknown) =>
   (limiter as { config: Record<string, unknown> }).config;
@@ -112,27 +107,6 @@ describe('ratelimit', () => {
         limiter: { algorithm: 'slidingWindow', tokens: 20, window: '1 d' },
         analytics: true,
         prefix: 'file-upload:user'
-      });
-    });
-  });
-
-  describe('scrapeBadgerCredits', () => {
-    it('limits credits to the daily ScrapeBadger allowance on a fixed window', () => {
-      expect(configOf(scrapeBadgerCredits)).toEqual({
-        redis,
-        limiter: {
-          algorithm: 'fixedWindow',
-          tokens: SCRAPEBADGER_CREDIT_LIMIT,
-          window: '1 d'
-        },
-        analytics: true,
-        prefix: 'scrapebadger:credits'
-      });
-    });
-
-    it('allows 20 credits per day', () => {
-      expect(configOf(scrapeBadgerCredits).limiter).toMatchObject({
-        tokens: 20
       });
     });
   });

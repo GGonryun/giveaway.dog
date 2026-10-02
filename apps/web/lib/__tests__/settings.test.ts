@@ -1,9 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { IdentityProvider } from '@prisma/client';
 import * as settings from '../settings';
-import { isAccountTab } from '@/schemas/account';
-import { isSweepstakesTab } from '@/schemas/sweepstakes';
-import { isUserDetailsTab } from '@/schemas/user';
 
 describe('settings', () => {
   describe('limits and thresholds', () => {
@@ -62,22 +59,9 @@ describe('settings', () => {
     });
   });
 
-  describe('default tabs', () => {
-    it('defaults sweepstakes details to the preview tab', () => {
-      expect(settings.DEFAULT_SWEEPSTAKES_DETAILS_TAB).toBe('preview');
-      expect(isSweepstakesTab(settings.DEFAULT_SWEEPSTAKES_DETAILS_TAB)).toBe(
-        true
-      );
-    });
-
-    it('defaults user details to the overview tab', () => {
-      expect(settings.DEFAULT_USER_DETAILS_TAB).toBe('overview');
-      expect(isUserDetailsTab(settings.DEFAULT_USER_DETAILS_TAB)).toBe(true);
-    });
-
-    it('defaults the account page to the profile tab', () => {
-      expect(settings.DEFAULT_ACCOUNT_TAB).toBe('profile');
-      expect(isAccountTab(settings.DEFAULT_ACCOUNT_TAB)).toBe(true);
+  describe('sweepstakes defaults', () => {
+    it('names new sweepstakes Untitled Sweepstakes', () => {
+      expect(settings.DEFAULT_SWEEPSTAKES_NAME).toBe('Untitled Sweepstakes');
     });
   });
 

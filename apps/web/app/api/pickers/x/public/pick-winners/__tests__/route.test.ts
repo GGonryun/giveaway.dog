@@ -12,7 +12,7 @@ const m = vi.hoisted(() => ({
   createId: vi.fn()
 }));
 
-vi.mock('@/lib/ratelimit', () => ({
+vi.mock('@/lib/scrapebadger/ratelimit', () => ({
   scrapeBadgerCredits: { limit: m.creditsLimit }
 }));
 

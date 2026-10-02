@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { describe, expect, it, vi } from 'vitest';
 import type { UnifiedFormAction } from '@/components/patterns/form-layout/types';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/schemas/giveaway/defaults';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
 import type { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { CancelConfirmationModal } from '../cancel-confirmation-modal';
 

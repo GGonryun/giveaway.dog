@@ -516,7 +516,6 @@
       ],
       "dependsOn": [
         "@giveaway/account-server",
-        "@giveaway/app-config",
         "@giveaway/feature-flags",
         "@giveaway/rpc-client",
         "@giveaway/ui-layouts",
@@ -716,7 +715,12 @@
         "@giveaway/integration-model",
         "@giveaway/util-collections"
       ],
-      "npm": ["@auth/prisma-adapter", "@giveaway/db-model", "next-auth"]
+      "npm": [
+        "@auth/prisma-adapter",
+        "@giveaway/db-model",
+        "next-auth",
+        "server-only"
+      ]
     },
     {
       "name": "@giveaway/auth-login-ui",
@@ -2566,16 +2570,21 @@
         "platform:x"
       ],
       "layer": 2,
-      "sourceFiles": 11,
-      "testFiles": 10,
+      "sourceFiles": 12,
+      "testFiles": 11,
       "sources": ["lib/scrapebadger/", "types/scrapebadger.d.ts"],
       "dependsOn": [
         "@giveaway/cache",
         "@giveaway/integration-model",
-        "@giveaway/ratelimit",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "lodash", "scrapebadger", "zod"]
+      "npm": [
+        "@giveaway/db-model",
+        "@upstash/ratelimit",
+        "lodash",
+        "scrapebadger",
+        "zod"
+      ]
     },
     {
       "name": "@giveaway/x-task-editor",
@@ -3036,6 +3045,7 @@
         "procedures/user/withdraw-participation.ts"
       ],
       "dependsOn": [
+        "@giveaway/app-config",
         "@giveaway/participation-history-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
@@ -3711,9 +3721,9 @@
         "components/templates/"
       ],
       "dependsOn": [
+        "@giveaway/app-config",
         "@giveaway/rpc-client",
         "@giveaway/sweepstakes-editor-server",
-        "@giveaway/sweepstakes-model",
         "@giveaway/sweepstakes-routes",
         "@giveaway/team-context",
         "@giveaway/templates-server",
@@ -3896,6 +3906,7 @@
       "testFiles": 0,
       "sources": ["lib/sweepstakes-promotion/"],
       "dependsOn": [
+        "@giveaway/app-config",
         "@giveaway/integration-icons",
         "@giveaway/sweepstakes-model",
         "@giveaway/sweepstakes-routes",
@@ -3917,7 +3928,6 @@
         "components/sweepstakes-details/sweepstakes-tabs.tsx"
       ],
       "dependsOn": [
-        "@giveaway/app-config",
         "@giveaway/sweepstakes-model",
         "@giveaway/sweepstakes-routes",
         "@giveaway/ui-primitives",
@@ -4256,6 +4266,7 @@
       "testFiles": 1,
       "sources": ["lib/sweepstakes/procedures/"],
       "dependsOn": [
+        "@giveaway/app-config",
         "@giveaway/automation-model",
         "@giveaway/db-client",
         "@giveaway/discord-api",
@@ -4804,7 +4815,7 @@
       "type": "model",
       "tags": ["type:model", "runtime:isomorphic", "scope:tasks"],
       "layer": 4,
-      "sourceFiles": 7,
+      "sourceFiles": 8,
       "testFiles": 9,
       "sources": [
         "lib/task/completions.ts",
@@ -4812,9 +4823,11 @@
         "lib/task/entries.ts",
         "lib/task/queries.ts",
         "lib/task/schemas.ts",
+        "lib/task/validation/types.ts",
         "lib/task/verification/"
       ],
       "dependsOn": [
+        "@giveaway/app-config",
         "@giveaway/bluesky-model",
         "@giveaway/integration-model",
         "@giveaway/user-model",
@@ -5381,18 +5394,19 @@
       "type": "config",
       "tags": ["type:config", "runtime:isomorphic", "scope:tooling"],
       "layer": 2,
-      "sourceFiles": 5,
+      "sourceFiles": 6,
       "testFiles": 0,
       "sources": [
         "test/next-cache.ts",
         "test/prisma.ts",
         "test/result.ts",
+        "test/server-only.ts",
         "test/session.ts",
         "test/setup.ts"
       ],
       "dependsOn": ["@giveaway/rpc-model", "@giveaway/util-errors"],
       "npm": ["@giveaway/db-model", "vitest"],
-      "note": "Vitest setup for every package: the Prisma, session and next/cache mocks."
+      "note": "Vitest setup for every package: the Prisma, session and next/cache mocks, and the empty server-only module."
     },
     {
       "name": "@giveaway/tsconfig",

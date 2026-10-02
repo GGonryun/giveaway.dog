@@ -6,12 +6,12 @@ import { widetype } from '@/lib/widetype';
 import {
   isUserDetailsTab,
   USER_DETAILS_TAB_OPTIONS,
-  UserDetailsTabSchema
+  UserDetailsTabSchema,
+  DEFAULT_USER_DETAILS_TAB
 } from '@/schemas/user';
 import { useUserDetailsPage } from '@/components/users/use-user-details-page';
 import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
-import { DEFAULT_USER_DETAILS_TAB } from '@/lib/settings';
 
 const tabRegex = new RegExp('^/app/[^/]+/users/[^/]+(?:/([^/]+))?');
 const matchUserDetailsTab = (path: string): UserDetailsTabSchema | null => {
