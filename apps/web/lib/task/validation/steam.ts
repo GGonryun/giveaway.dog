@@ -1,12 +1,11 @@
 import { ApplicationError } from '@/lib/errors';
 import { PrismaClient } from '@prisma/client';
 import { SteamWishlistTaskSchema } from '../schemas';
+import {
+  GAME_NOT_IN_WISHLIST_ERROR,
+  PRIVATE_STEAM_WISHLIST_ERROR
+} from './steam-errors';
 import { ValidateTaskInput } from './types';
-
-export const PRIVATE_STEAM_WISHLIST_ERROR = 'PRIVATE_STEAM_WISHLIST';
-export const GAME_NOT_IN_WISHLIST_ERROR = 'GAME_NOT_IN_WISHLIST';
-export const PRIVATE_STEAM_LIBRARY_ERROR = 'PRIVATE_STEAM_LIBRARY';
-export const GAME_NOT_OWNED_ERROR = 'GAME_NOT_OWNED';
 
 const checkSteamGameOwnership = async (
   steamId: string,

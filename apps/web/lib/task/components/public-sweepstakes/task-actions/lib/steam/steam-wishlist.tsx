@@ -17,7 +17,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { ErrorDisplay } from '../error-display';
-import { PRIVATE_STEAM_WISHLIST_ERROR } from '@/lib/task/validation/steam';
+import { PRIVATE_STEAM_WISHLIST_ERROR } from '@/lib/task/validation/steam-errors';
 import { SteamWishlistTaskSchema } from '@/lib/task/schemas';
 
 export const SteamWishlistTaskActionForm: React.FC<

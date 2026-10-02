@@ -26,7 +26,7 @@ Paths in `package-map.json` and in this plan are relative to the app root: the r
 - **Untangle before moving.** All the refactors land while the code is still one package (Phase 1). File moves (Phase 3) then change no logic.
 - **Codemods, not hand edits.** A script moves files with `git mv` and rewrites the imports. To resolve a conflict with feature work, re-run the codemod on the new `main` instead of merging by hand.
 - **Bottom-up order.** A package moves only after every package it depends on has moved. The `layer` field in `package-map.json` gives this order, so a moved package never imports code that is still in the root app.
-- **The checker is the progress bar.** `node docs/monorepo/check-package-map.mjs` reports unmapped files, cycles, boundary violations and the refactors still to do.
+- **The checker is the progress bar.** `node docs/monorepo/check-package-map.mjs` reports unmapped files, cycles, boundary violations, client code that reaches a `runtime:server` package and the refactors still to do.
 
 ## Phase 0: Preparation
 
@@ -162,7 +162,7 @@ This phase now runs second, right after Nx is introduced. See [GGonryun/giveaway
 
 ## Phase 6: Lock it in
 
-- **Make boundary violations errors** in `@nx/enforce-module-boundaries`. Retire the checker: Nx's project graph and the lint rule do its job now.
+- **Make boundary violations errors** in `@nx/enforce-module-boundaries`. Retire the checker: Nx's project graph and the lint rule do its job now. Keep its report of client code that reaches a `runtime:server` package (or an ESLint rule that does the same walk), because Nx constraints work on package tags and cannot express a rule on files ([GGonryun/giveaway.dog#192](https://github.com/GGonryun/giveaway.dog/issues/192)).
 - **Add generators** for the common package kinds: `model`, `server`, `ui`, `feature` and a platform plugin slot. A new package then starts with the right tags, configs and test projects.
 - **Update `CLAUDE.md`:**
   - the directory structure
