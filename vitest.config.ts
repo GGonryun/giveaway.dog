@@ -29,7 +29,12 @@ export default defineConfig({
           name: 'frontend',
           environment: 'jsdom',
           include: ['**/*.test.tsx'],
-          exclude: ['**/node_modules/**', '.next/**', '**/*.snapshot.test.tsx'],
+          exclude: [
+            '**/node_modules/**',
+            '.next/**',
+            '**/*.snapshot.test.tsx',
+            '**/*.visual.test.tsx'
+          ],
           setupFiles: ['./test/setup.ts', './test/setup-dom.ts']
         }
       },

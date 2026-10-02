@@ -35,11 +35,9 @@ describe('Toaster', () => {
     await showToast('Giveaway saved');
     const toaster = getToaster();
     expect(toaster).toHaveClass('toaster', 'group');
-    expect(toaster).toHaveStyle({
-      '--normal-bg': 'var(--popover)',
-      '--normal-text': 'var(--popover-foreground)',
-      '--normal-border': 'var(--border)'
-    });
+    expect(toaster).toHaveStyle(
+      '--normal-bg: var(--popover); --normal-text: var(--popover-foreground); --normal-border: var(--border)'
+    );
   });
 
   it('falls back to the system theme without a theme provider', async () => {

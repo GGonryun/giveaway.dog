@@ -177,7 +177,7 @@ describe('ChartTooltipContent', () => {
   it('colors each indicator from the item', () => {
     const { container } = renderTooltip({ payload: [entriesItem] });
     const indicator = container.querySelector('.h-2\\.5.w-2\\.5');
-    expect(indicator).toHaveStyle({ '--color-bg': '#2563eb' });
+    expect(indicator).toHaveStyle('--color-bg: #2563eb');
   });
 
   it('prefers the payload fill and then a color override for the indicator', () => {
@@ -186,15 +186,15 @@ describe('ChartTooltipContent', () => {
       payload: { ...entriesItem.payload, fill: '#f97316' }
     };
     const { container, unmount } = renderTooltip({ payload: [filled] });
-    expect(container.querySelector('.h-2\\.5.w-2\\.5')).toHaveStyle({
-      '--color-bg': '#f97316'
-    });
+    expect(container.querySelector('.h-2\\.5.w-2\\.5')).toHaveStyle(
+      '--color-bg: #f97316'
+    );
     unmount();
 
     const overridden = renderTooltip({ payload: [filled], color: '#000000' });
-    expect(overridden.container.querySelector('.h-2\\.5.w-2\\.5')).toHaveStyle({
-      '--color-bg': '#000000'
-    });
+    expect(overridden.container.querySelector('.h-2\\.5.w-2\\.5')).toHaveStyle(
+      '--color-bg: #000000'
+    );
   });
 
   it('hides the indicators when asked to', () => {
