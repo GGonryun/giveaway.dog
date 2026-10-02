@@ -1,4 +1,4 @@
-'server only';
+import 'server-only';
 
 import { createAuthConfig } from './config-runtime';
 import { createId } from '@paralleldrive/cuid2';
