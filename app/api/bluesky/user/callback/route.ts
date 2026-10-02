@@ -6,6 +6,7 @@ import { Agent } from '@atproto/api';
 import { REQUIRED_BLUESKY_SCOPES } from '@/lib/integrations/scopes';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import { auth, signIn } from '@/lib/auth/config';
+import { createBlueskyLoginToken } from '@/lib/auth/bluesky-login-token';
 import { redirect } from 'next/navigation';
 import { UserSource } from '@prisma/client';
 
@@ -193,10 +194,12 @@ export async function GET(req: NextRequest) {
       redirectTo: finalRedirect
     });
 
+    const token = await createBlueskyLoginToken(userId);
+
     // Note: signIn throws a NEXT_REDIRECT, so the cookie cleanup won't execute
     // The cookie will expire naturally after 10 minutes
     await signIn('bluesky-direct', {
-      userId,
+      token,
       redirectTo: finalRedirect
     });
   } else {

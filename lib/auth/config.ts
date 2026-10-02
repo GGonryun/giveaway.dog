@@ -26,6 +26,7 @@ import {
 } from '../integrations/scopes';
 import { UserSource } from '@prisma/client';
 import prisma from '@/lib/prisma';
+import { redeemBlueskyLoginToken } from './bluesky-login-token';
 
 export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
   ...authConfig,
@@ -67,22 +68,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       id: 'bluesky-direct',
       name: 'Bluesky Direct',
       credentials: {
-        userId: { label: 'User ID', type: 'text' }
+        token: { label: 'Login Token', type: 'text' }
       },
-      authorize: async (credentials) => {
-        if (!credentials?.userId) {
-          return null;
-        }
-
-        const userId = credentials.userId as string;
-
-        // Find the user
-        const user = await prisma.user.findUnique({
-          where: { id: userId }
-        });
-
-        return user;
-      }
+      authorize: async (credentials) =>
+        redeemBlueskyLoginToken(credentials?.token)
     }),
     SteamProvider({
       request,

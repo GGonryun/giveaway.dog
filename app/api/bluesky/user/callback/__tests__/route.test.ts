@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { createHash } from 'crypto';
 import { NextRequest } from 'next/server';
 import { UserSource } from '@prisma/client';
 import { GET } from '../route';
@@ -52,6 +53,11 @@ const request = (redirectCookie?: string) =>
     }
   );
 
+const LOGIN_TOKEN = expect.stringMatching(/^[0-9a-f]{64}$/);
+
+const signedInToken = () =>
+  (m.signIn.mock.calls[0][1] as { token: string }).token;
+
 const redirectDigest = (url: string) => `NEXT_REDIRECT;replace;${url};307;`;
 
 const linkedAccount = (userId: string | null) => ({
@@ -93,6 +99,7 @@ describe('bluesky user callback GET', () => {
     prismaMock.account.update.mockResolvedValue({ id: 'account-1' });
     prismaMock.user.update.mockResolvedValue({ id: 'user-9' });
     prismaMock.user.create.mockResolvedValue({ id: 'new-user' });
+    prismaMock.verificationToken.create.mockResolvedValue({});
   });
 
   afterEach(() => {
@@ -258,7 +265,7 @@ describe('bluesky user callback GET', () => {
       await GET(request());
 
       expect(m.signIn).toHaveBeenCalledWith('bluesky-direct', {
-        userId: 'user-9',
+        token: LOGIN_TOKEN,
         redirectTo: '/browse'
       });
     });
@@ -267,9 +274,45 @@ describe('bluesky user callback GET', () => {
       await GET(request('/browse/giveaway-1'));
 
       expect(m.signIn).toHaveBeenCalledWith('bluesky-direct', {
-        userId: 'user-9',
+        token: LOGIN_TOKEN,
         redirectTo: '/browse/giveaway-1'
       });
+    });
+
+    it('stores a one minute login token for the linked user', async () => {
+      await GET(request());
+
+      expect(prismaMock.verificationToken.create).toHaveBeenCalledWith({
+        data: {
+          identifier: 'bluesky-direct:user-9',
+          token: createHash('sha256').update(signedInToken()).digest('hex'),
+          expires: new Date('2026-01-15T12:01:00.000Z')
+        }
+      });
+    });
+
+    it('passes the login token and not the user id to sign in', async () => {
+      await GET(request());
+
+      const options = m.signIn.mock.calls[0][1];
+      expect(options).not.toHaveProperty('userId');
+      expect(JSON.stringify(options)).not.toContain('user-9');
+    });
+
+    it('stores the login token before signing in', async () => {
+      await GET(request());
+
+      expect(
+        prismaMock.verificationToken.create.mock.invocationCallOrder[0]
+      ).toBeLessThan(m.signIn.mock.invocationCallOrder[0]);
+    });
+
+    it('does not sign in when the login token cannot be stored', async () => {
+      const failure = new Error('db down');
+      prismaMock.verificationToken.create.mockRejectedValue(failure);
+
+      await expect(GET(request())).rejects.toBe(failure);
+      expect(m.signIn).not.toHaveBeenCalled();
     });
 
     it('does not create a new user', async () => {
@@ -318,7 +361,7 @@ describe('bluesky user callback GET', () => {
         })
       );
       expect(m.signIn).toHaveBeenCalledWith('bluesky-direct', {
-        userId: TEST_USER.id,
+        token: LOGIN_TOKEN,
         redirectTo: '/browse'
       });
     });
@@ -392,6 +435,12 @@ describe('bluesky user callback GET', () => {
       expect(m.signIn).not.toHaveBeenCalled();
     });
 
+    it('does not create a login token', async () => {
+      await GET(request()).catch(() => undefined);
+
+      expect(prismaMock.verificationToken.create).not.toHaveBeenCalled();
+    });
+
     it('propagates a failure to update the account', async () => {
       const failure = new Error('Record to update not found');
       prismaMock.account.update.mockRejectedValue(failure);
@@ -445,8 +494,19 @@ describe('bluesky user callback GET', () => {
       await GET(request('/browse/giveaway-1'));
 
       expect(m.signIn).toHaveBeenCalledWith('bluesky-direct', {
-        userId: 'new-user',
+        token: LOGIN_TOKEN,
         redirectTo: '/browse/giveaway-1'
+      });
+    });
+
+    it('stores the login token for the new user', async () => {
+      await GET(request());
+
+      expect(prismaMock.verificationToken.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          identifier: 'bluesky-direct:new-user',
+          token: createHash('sha256').update(signedInToken()).digest('hex')
+        })
       });
     });
 
