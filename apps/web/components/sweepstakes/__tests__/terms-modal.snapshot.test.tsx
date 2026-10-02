@@ -7,9 +7,9 @@ import {
   buildAudience,
   buildPrize,
   buildSweepstakes,
-  renderWithParticipation,
   withStableIds
 } from './fixtures';
+import { renderWithParticipation } from './participation-fixtures';
 import type { GiveawayFormAudience } from '@/schemas/giveaway/schemas';
 
 const renderTerms = ({

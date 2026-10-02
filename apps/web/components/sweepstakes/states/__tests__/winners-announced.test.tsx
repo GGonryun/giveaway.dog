@@ -6,9 +6,9 @@ import {
   buildParticipant,
   buildPrizeDraw,
   buildUser,
-  buildUserProfile,
-  renderWithParticipation
+  buildUserProfile
 } from '@/components/sweepstakes/__tests__/fixtures';
+import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
 import { UNKNOWN_USER_NAME } from '@/lib/settings';
 import { WinnersAnnounced } from '../winners-announced';

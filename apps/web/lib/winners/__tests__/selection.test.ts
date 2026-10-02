@@ -4,10 +4,8 @@ import type { ExpandedEligibleTaskCompletion } from '../completions';
 import type { PrizeSlot, DrawInfo } from '../slots';
 import type { EligibleTaskCompletion } from '@/lib/task/queries';
 import type { Prisma } from '@prisma/client';
-import {
-  buildAllocation,
-  buildExpandedCompletion
-} from './fixtures-sweepstakes-winners-email';
+import { buildAllocation } from './fixtures-winners-model';
+import { buildExpandedCompletion } from './fixtures-sweepstakes-winners-email';
 
 const createMockCompletion = (
   userId: number,

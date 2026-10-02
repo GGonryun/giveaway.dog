@@ -1,10 +1,3 @@
-import { render } from '@testing-library/react';
-import type { ReactElement } from 'react';
-import { vi } from 'vitest';
-import {
-  GiveawayParticipationProvider,
-  type GiveawayParticipationProps
-} from '@/components/sweepstakes/giveaway-participation-context';
 import type { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
 import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
@@ -360,39 +353,6 @@ export const buildAllocations = (
   ],
   ...overrides
 });
-
-export const buildParticipationProps = (
-  overrides: Partial<GiveawayParticipationProps> = {}
-): GiveawayParticipationProps => ({
-  sweepstakes: buildSweepstakes(),
-  host: buildHost(),
-  participation: buildParticipation(),
-  prizes: [],
-  state: 'active',
-  verifyEmail: false,
-  isPreview: false,
-  onCreateReferral: vi.fn(),
-  onAllocate: vi.fn(),
-  onTaskComplete: vi.fn(),
-  onTaskUpdate: vi.fn(),
-  onLogin: vi.fn(),
-  onCompleteProfile: vi.fn(),
-  onFormSubmit: vi.fn(),
-  ...overrides
-});
-
-export const renderWithParticipation = (
-  ui: ReactElement,
-  overrides: Partial<GiveawayParticipationProps> = {}
-) => {
-  const props = buildParticipationProps(overrides);
-  const result = render(
-    <GiveawayParticipationProvider {...props}>
-      {ui}
-    </GiveawayParticipationProvider>
-  );
-  return { ...result, props };
-};
 
 const GENERATED_ID = /(radix-)?_r_[0-9a-z]+_/g;
 

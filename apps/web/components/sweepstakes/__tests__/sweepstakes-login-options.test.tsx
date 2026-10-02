@@ -2,11 +2,8 @@ import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LoginOptions } from '@/components/auth/login-options';
 import { SweepstakesLoginOptions } from '../sweepstakes-login-options';
-import {
-  buildAudience,
-  buildSweepstakes,
-  renderWithParticipation
-} from './fixtures';
+import { buildAudience, buildSweepstakes } from './fixtures';
+import { renderWithParticipation } from './participation-fixtures';
 
 const navigation = vi.hoisted(() => ({
   pathname: '/browse/summer-giveaway',

@@ -4,12 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import logout from '@/lib/auth/procedures/logout';
 import { UNKNOWN_USER_NAME } from '@/lib/settings';
 import { UserInfoSection } from '../user-info-section';
-import {
-  buildParticipant,
-  buildProvider,
-  buildUser,
-  renderWithParticipation
-} from './fixtures';
+import { buildParticipant, buildProvider, buildUser } from './fixtures';
+import { renderWithParticipation } from './participation-fixtures';
 import type { ProviderSchema } from '@/lib/integrations/schemas/providers';
 
 const navigation = vi.hoisted(() => ({ pathname: '/browse/summer-giveaway' }));

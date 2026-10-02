@@ -302,7 +302,7 @@ D1 is optional. Together with the moves above, it shrinks what a sweepstakes cha
 Two small fixes are also worth making while you are there:
 
 - `lib/auth/config-no-providers.ts` starts with the string `'server only';`, which does nothing. Replace it with `import 'server-only'`.
-- `procedures/teams/shared.ts` duplicates `findUserTeamQuery` and is only used by tests. The platform `connect` packages import `findUserTeam` from `procedures/sweepstakes/shared.ts`. Move it to `team-server` so team lookups live with teams.
+- `procedures/teams/shared.ts` duplicated `findUserTeamQuery` and was only used by tests. It is deleted. `findUserTeam` and `findUserTeamQuery` moved from `procedures/sweepstakes/shared.ts` to `procedures/teams/find-user-team.ts` (`team-server`), so team lookups live with teams. The platform `connect` packages and the X picker server then depend on `team-server` instead of `sweepstakes-access`.
 
 ## Fan-out hotspots
 
@@ -351,12 +351,12 @@ These stay together:
 
 ## Test fixtures
 
-22 fixture files in `__tests__` folders are shared by tests in more than one package:
+24 fixture files in `__tests__` folders are shared by tests in more than one package. Each one lives in one package: a package that shares fixtures exports them from a `testing` entry point, for example `@giveaway/task-model/testing`. `package-map.json` lists where each fixture goes.
 
-- **20 can live in one package.** A package that shares fixtures exports them from a `testing` entry point, for example `@giveaway/task-model/testing`. `package-map.json` lists where each fixture goes.
-- **2 must be split.** The checker reports these as "cycles that only tests create".
-  - `components/sweepstakes/__tests__/fixtures.tsx` serves 14 packages, including one that it imports. Its participation-context part moves to `sweepstakes-participation-core`, and the rest becomes `@giveaway/sweepstakes-ui-testing`.
-  - `lib/winners/__tests__/fixtures-sweepstakes-winners-email.ts` mixes fixtures for `winners-model` with fixtures that import `winners-server`. Each part moves to its own package.
+Two fixture files created cycles in tests, so they were split:
+
+- `components/sweepstakes/__tests__/fixtures.tsx` served 14 packages, including one that it imported. Its participation-context part is now `components/sweepstakes/__tests__/participation-fixtures.tsx` (`sweepstakes-participation-core`). The rest becomes `@giveaway/sweepstakes-ui-testing`.
+- `lib/winners/__tests__/fixtures-sweepstakes-winners-email.ts` mixed fixtures for `winners-model` with fixtures that import `winners-server`. The `winners-model` part is now `lib/winners/__tests__/fixtures-winners-model.ts`. The rest stays in the original file, which only `winners-server` tests use, so it goes to `winners-server`.
 
 ## Dead code
 
@@ -478,7 +478,7 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 
 ### Team
 
-13 packages, 54 source files, 63 test files.
+13 packages, 55 source files, 64 test files.
 
 | Package                                | Type    | Files  | Moves from                                                                                                                                                                                                               |
 | -------------------------------------- | ------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -490,7 +490,7 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 | `@giveaway/team-model`                 | model   | 5 / 5  | `lib/team/`<br>`schemas/social-links.ts`<br>`schemas/teams.ts`                                                                                                                                                           |
 | `@giveaway/team-permissions`           | model   | 1 / 1  | `lib/permissions/`                                                                                                                                                                                                       |
 | `@giveaway/team-picker`                | feature | 5 / 10 | `components/team/create-team-form.tsx`<br>`components/team/loading-state.tsx`<br>`components/team/select-team-form.tsx`<br>`components/team/team-logo.tsx`<br>and 1 more                                                 |
-| `@giveaway/team-server`                | server  | 7 / 7  | `procedures/teams/create-team.ts`<br>`procedures/teams/get-user-team.ts`<br>`procedures/teams/get-user-teams.ts`<br>`procedures/teams/select-team.ts`<br>and 3 more                                                      |
+| `@giveaway/team-server`                | server  | 8 / 8  | `procedures/teams/create-team.ts`<br>`procedures/teams/find-user-team.ts`<br>`procedures/teams/get-user-team.ts`<br>`procedures/teams/get-user-teams.ts`<br>and 4 more                                                   |
 | `@giveaway/team-settings-integrations` | feature | 1 / 0  | `lib/settings/components/integrations.tsx`                                                                                                                                                                               |
 | `@giveaway/team-settings-profile`      | feature | 5 / 6  | `components/settings/team/team-logo-card.tsx`<br>`components/settings/team/team-name-card.tsx`<br>`components/settings/team/team-slug-card.tsx`<br>`lib/settings/components/basic-information-section.tsx`<br>and 1 more |
 | `@giveaway/team-settings-shell`        | ui      | 2 / 1  | `lib/settings/components/settings-tabs.tsx`<br>`lib/settings/schemas/`                                                                                                                                                   |
@@ -535,7 +535,7 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 
 ### Tasks (entry methods)
 
-14 packages, 86 source files, 26 test files.
+14 packages, 87 source files, 26 test files.
 
 | Package                          | Type    | Files   | Moves from                                                                                                                                                                                                                                                                                                                                                               |
 | -------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -543,7 +543,7 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 | `@giveaway/task-editor`          | feature | 8 / 0   | `lib/task/components/entry-methods/`<br>`lib/task/components/select-dialog/`<br>`lib/task/components/sweepstakes-editor-form/additional-settings/additional-settings.tsx`<br>`lib/task/components/sweepstakes-editor-form/advanced-settings.tsx`<br>and 1 more                                                                                                           |
 | `@giveaway/task-editor-fields`   | ui      | 17 / 0  | `lib/task/components/sweepstakes-editor-form/additional-settings/lib/ask-question.tsx`<br>`lib/task/components/sweepstakes-editor-form/additional-settings/lib/bonus-loyalty.tsx`<br>`lib/task/components/sweepstakes-editor-form/additional-settings/lib/end-date.tsx`<br>`lib/task/components/sweepstakes-editor-form/additional-settings/lib/href.tsx`<br>and 13 more |
 | `@giveaway/task-entry`           | feature | 9 / 0   | `lib/task/components/public-sweepstakes/task-action.tsx`<br>`lib/task/components/public-sweepstakes/task-actions/form.tsx`<br>`lib/task/components/public-sweepstakes/task-badge.tsx`<br>`lib/task/components/public-sweepstakes/task-button.tsx`<br>and 5 more                                                                                                          |
-| `@giveaway/task-entry-core`      | feature | 4 / 0   | `lib/task/components/public-sweepstakes/task-actions/building-blocks.tsx`<br>`lib/task/components/public-sweepstakes/task-actions/lib/error-display.tsx`<br>`lib/task/components/public-sweepstakes/task-actions/lib/provider-connection.tsx`<br>`lib/task/components/public-sweepstakes/task-actions/lib/use-after-visit-behavior.tsx`                                  |
+| `@giveaway/task-entry-core`      | feature | 5 / 0   | `lib/task/components/public-sweepstakes/task-actions/building-blocks.tsx`<br>`lib/task/components/public-sweepstakes/task-actions/lib/error-display.tsx`<br>`lib/task/components/public-sweepstakes/task-actions/lib/provider-connection.tsx`<br>`lib/task/components/public-sweepstakes/task-actions/lib/task-entry-context.tsx`<br>and 1 more                          |
 | `@giveaway/task-entry-form`      | feature | 5 / 0   | `lib/task/components/public-sweepstakes/task-actions/lib/form/`                                                                                                                                                                                                                                                                                                          |
 | `@giveaway/task-entry-referral`  | feature | 1 / 0   | `lib/task/components/public-sweepstakes/task-actions/lib/referral/`                                                                                                                                                                                                                                                                                                      |
 | `@giveaway/task-entry-website`   | feature | 5 / 0   | `lib/task/components/public-sweepstakes/task-actions/lib/website/`                                                                                                                                                                                                                                                                                                       |

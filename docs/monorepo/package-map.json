@@ -75,14 +75,6 @@
       "from": "^lib\\/auth\\/config-runtime\\.ts$",
       "to": "^lib\\/auth\\/config\\.ts$",
       "change": "Make lib/auth/config-runtime.ts a factory that takes a getSession function instead of importing auth from lib/auth/config.ts. config.ts passes () => auth() and config-no-providers.ts passes () => null. The RPC layer then depends on @giveaway/auth-core only, not on every login provider."
-    },
-    {
-      "id": "D1",
-      "reason": "fan-out",
-      "required": false,
-      "from": "^lib\\/task\\/components\\/public-sweepstakes\\/task-actions\\/lib\\/provider-connection\\.tsx$",
-      "to": "^components\\/sweepstakes\\/giveaway-participation-context\\.tsx$",
-      "change": "Stop importing the giveaway participation context in provider-connection.tsx. @giveaway/task-entry-core defines the small context it needs, and @giveaway/sweepstakes-participation-core provides it."
     }
   ],
   "testFixtures": {
@@ -94,16 +86,20 @@
       "package": "@giveaway/ui-layouts",
       "split": false
     },
-    "components/sweepstakes/__tests__/fixtures.tsx": {
-      "package": "@giveaway/sweepstakes-ui-testing",
-      "split": true
-    },
     "components/sweepstakes-editor/__tests__/form-harness.tsx": {
       "package": "@giveaway/ui-layouts",
       "split": false
     },
     "components/sweepstakes-editor/__tests__/stable-dom.ts": {
       "package": "@giveaway/testing-dom",
+      "split": false
+    },
+    "components/sweepstakes/__tests__/fixtures.tsx": {
+      "package": "@giveaway/sweepstakes-ui-testing",
+      "split": false
+    },
+    "components/sweepstakes/__tests__/participation-fixtures.tsx": {
+      "package": "@giveaway/sweepstakes-participation-core",
       "split": false
     },
     "components/ui/__tests__/test-utils.ts": {
@@ -147,8 +143,12 @@
       "split": false
     },
     "lib/winners/__tests__/fixtures-sweepstakes-winners-email.ts": {
-      "package": "@giveaway/winners-testing",
-      "split": true
+      "package": "@giveaway/winners-server",
+      "split": false
+    },
+    "lib/winners/__tests__/fixtures-winners-model.ts": {
+      "package": "@giveaway/winners-model",
+      "split": false
     },
     "procedures/browse/__tests__/fixtures-procedures-browse-marketing-pickers.ts": {
       "package": "@giveaway/testing-server",
@@ -182,7 +182,7 @@
       "path": "apps/web",
       "type": "app",
       "tags": ["type:app", "runtime:app", "scope:apps"],
-      "layer": 17,
+      "layer": 16,
       "sourceFiles": 132,
       "testFiles": 24,
       "sources": [
@@ -434,7 +434,7 @@
       "path": "packages/account/account-profile",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:account"],
-      "layer": 10,
+      "layer": 8,
       "sourceFiles": 5,
       "testFiles": 7,
       "sources": [
@@ -538,7 +538,7 @@
       "path": "packages/account/onboarding",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:account"],
-      "layer": 10,
+      "layer": 8,
       "sourceFiles": 5,
       "testFiles": 9,
       "sources": ["components/onboarding/"],
@@ -721,7 +721,7 @@
       "path": "packages/auth/auth-login-ui",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:auth"],
-      "layer": 9,
+      "layer": 7,
       "sourceFiles": 8,
       "testFiles": 10,
       "sources": [
@@ -922,7 +922,7 @@
       "path": "packages/browse/browse-item",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:browse"],
-      "layer": 15,
+      "layer": 14,
       "sourceFiles": 4,
       "testFiles": 3,
       "sources": [
@@ -1246,7 +1246,7 @@
       "path": "packages/infra/turnstile-ui",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:infra"],
-      "layer": 11,
+      "layer": 10,
       "sourceFiles": 5,
       "testFiles": 0,
       "sources": [
@@ -1308,14 +1308,14 @@
         "scope:integrations",
         "platform:bluesky"
       ],
-      "layer": 7,
+      "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
       "sources": ["lib/integrations/procedures/disconnect-bluesky.ts"],
       "dependsOn": [
         "@giveaway/rpc-server",
-        "@giveaway/sweepstakes-access",
-        "@giveaway/team-permissions"
+        "@giveaway/team-permissions",
+        "@giveaway/team-server"
       ],
       "npm": ["@giveaway/db-model", "zod"]
     },
@@ -1329,7 +1329,7 @@
         "scope:integrations",
         "platform:bluesky"
       ],
-      "layer": 8,
+      "layer": 6,
       "sourceFiles": 4,
       "testFiles": 0,
       "sources": [
@@ -1435,7 +1435,7 @@
         "scope:integrations",
         "platform:bluesky"
       ],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 5,
       "testFiles": 0,
       "sources": [
@@ -1676,10 +1676,10 @@
         "@giveaway/automation-model",
         "@giveaway/discord-api",
         "@giveaway/rpc-server",
-        "@giveaway/sweepstakes-access",
         "@giveaway/sweepstakes-model",
         "@giveaway/task-model",
         "@giveaway/team-permissions",
+        "@giveaway/team-server",
         "@giveaway/util-errors"
       ],
       "npm": ["@giveaway/db-model", "nanoid", "zod"]
@@ -1763,7 +1763,7 @@
         "scope:integrations",
         "platform:discord"
       ],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
       "sources": [
@@ -1848,7 +1848,7 @@
         "scope:integrations",
         "platform:kick"
       ],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 1,
       "testFiles": 0,
       "sources": [
@@ -1895,7 +1895,7 @@
         "scope:integrations",
         "platform:linkedin"
       ],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
       "sources": [
@@ -1989,7 +1989,7 @@
         "scope:integrations",
         "platform:meta"
       ],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 8,
       "testFiles": 0,
       "sources": [
@@ -2057,7 +2057,7 @@
         "scope:integrations",
         "platform:steam"
       ],
-      "layer": 11,
+      "layer": 10,
       "sourceFiles": 2,
       "testFiles": 0,
       "sources": [
@@ -2125,7 +2125,7 @@
         "scope:integrations",
         "platform:tiktok"
       ],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
       "sources": [
@@ -2217,14 +2217,14 @@
         "scope:integrations",
         "platform:twitch"
       ],
-      "layer": 7,
+      "layer": 5,
       "sourceFiles": 3,
       "testFiles": 3,
       "sources": ["lib/twitch/procedures/"],
       "dependsOn": [
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
-        "@giveaway/sweepstakes-access",
+        "@giveaway/team-server",
         "@giveaway/twitch-api",
         "@giveaway/util-errors",
         "@giveaway/util-time"
@@ -2241,7 +2241,7 @@
         "scope:integrations",
         "platform:twitch"
       ],
-      "layer": 8,
+      "layer": 6,
       "sourceFiles": 3,
       "testFiles": 0,
       "sources": ["lib/twitch/components/"],
@@ -2303,12 +2303,12 @@
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
-        "@giveaway/sweepstakes-access",
         "@giveaway/sweepstakes-editor-core",
         "@giveaway/sweepstakes-model",
         "@giveaway/task-model",
         "@giveaway/team-context",
         "@giveaway/team-permissions",
+        "@giveaway/team-server",
         "@giveaway/ui-hooks",
         "@giveaway/ui-layouts",
         "@giveaway/ui-primitives",
@@ -2333,7 +2333,7 @@
         "scope:integrations",
         "platform:twitch"
       ],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
       "sources": [
@@ -2436,7 +2436,7 @@
         "scope:integrations",
         "platform:velora"
       ],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
       "sources": [
@@ -2622,7 +2622,7 @@
         "scope:integrations",
         "platform:x"
       ],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 6,
       "testFiles": 0,
       "sources": [
@@ -2730,7 +2730,7 @@
         "scope:integrations",
         "platform:youtube"
       ],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 1,
       "testFiles": 0,
       "sources": [
@@ -2770,7 +2770,7 @@
       "path": "packages/marketing/marketing-home",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:marketing"],
-      "layer": 15,
+      "layer": 14,
       "sourceFiles": 7,
       "testFiles": 3,
       "sources": [
@@ -2796,7 +2796,7 @@
       "path": "packages/marketing/marketing-learn",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:marketing"],
-      "layer": 16,
+      "layer": 15,
       "sourceFiles": 4,
       "testFiles": 0,
       "sources": [
@@ -3245,7 +3245,7 @@
       "path": "packages/pickers/x-picker-dashboard",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:pickers"],
-      "layer": 8,
+      "layer": 7,
       "sourceFiles": 6,
       "testFiles": 0,
       "sources": [
@@ -3275,7 +3275,7 @@
       "path": "packages/pickers/x-picker-editor",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:pickers"],
-      "layer": 9,
+      "layer": 8,
       "sourceFiles": 11,
       "testFiles": 1,
       "sources": [
@@ -3349,7 +3349,7 @@
       "path": "packages/pickers/x-picker-public",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:pickers"],
-      "layer": 11,
+      "layer": 10,
       "sourceFiles": 14,
       "testFiles": 0,
       "sources": [
@@ -3396,7 +3396,7 @@
       "path": "packages/pickers/x-picker-results",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:pickers"],
-      "layer": 10,
+      "layer": 9,
       "sourceFiles": 8,
       "testFiles": 0,
       "sources": [
@@ -3426,7 +3426,7 @@
       "path": "packages/pickers/x-picker-server",
       "type": "server",
       "tags": ["type:server", "runtime:server", "scope:pickers"],
-      "layer": 7,
+      "layer": 5,
       "sourceFiles": 13,
       "testFiles": 14,
       "sources": [
@@ -3436,8 +3436,8 @@
       ],
       "dependsOn": [
         "@giveaway/rpc-server",
-        "@giveaway/sweepstakes-access",
         "@giveaway/team-permissions",
+        "@giveaway/team-server",
         "@giveaway/util-errors",
         "@giveaway/x-picker-model",
         "@giveaway/x-scraper"
@@ -3650,7 +3650,7 @@
       "path": "packages/shell/shell-sidebar",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:shell"],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 5,
       "testFiles": 8,
       "sources": [
@@ -3863,7 +3863,7 @@
       "path": "packages/sweepstakes/sweepstakes-details-preview",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:sweepstakes"],
-      "layer": 16,
+      "layer": 15,
       "sourceFiles": 1,
       "testFiles": 2,
       "sources": ["components/sweepstakes-details/sweepstakes-preview.tsx"],
@@ -3972,7 +3972,7 @@
       "path": "packages/sweepstakes/sweepstakes-editor",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:sweepstakes"],
-      "layer": 16,
+      "layer": 15,
       "sourceFiles": 3,
       "testFiles": 4,
       "sources": [
@@ -4096,7 +4096,7 @@
       "path": "packages/sweepstakes/sweepstakes-editor-preview",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:sweepstakes"],
-      "layer": 15,
+      "layer": 14,
       "sourceFiles": 2,
       "testFiles": 4,
       "sources": [
@@ -4190,6 +4190,7 @@
         "@giveaway/sweepstakes-access",
         "@giveaway/sweepstakes-model",
         "@giveaway/team-permissions",
+        "@giveaway/team-server",
         "@giveaway/templates-model",
         "@giveaway/util-collections",
         "@giveaway/util-errors"
@@ -4341,7 +4342,7 @@
       "path": "packages/sweepstakes/sweepstakes-participation",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:sweepstakes"],
-      "layer": 14,
+      "layer": 13,
       "sourceFiles": 2,
       "testFiles": 4,
       "sources": [
@@ -4369,7 +4370,7 @@
       "path": "packages/sweepstakes/sweepstakes-participation-core",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:sweepstakes"],
-      "layer": 10,
+      "layer": 9,
       "sourceFiles": 4,
       "testFiles": 6,
       "sources": [
@@ -4389,6 +4390,7 @@
         "@giveaway/participant-model",
         "@giveaway/referrals-model",
         "@giveaway/sweepstakes-model",
+        "@giveaway/task-entry-core",
         "@giveaway/turnstile-model",
         "@giveaway/ui-primitives",
         "@giveaway/ui-rich-text",
@@ -4402,7 +4404,7 @@
       "path": "packages/sweepstakes/sweepstakes-participation-states",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:sweepstakes"],
-      "layer": 13,
+      "layer": 12,
       "sourceFiles": 11,
       "testFiles": 22,
       "sources": ["components/sweepstakes/states/"],
@@ -4611,7 +4613,7 @@
       "path": "packages/tasks/task-entry",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:tasks"],
-      "layer": 12,
+      "layer": 11,
       "sourceFiles": 9,
       "testFiles": 0,
       "sources": [
@@ -4674,13 +4676,14 @@
       "path": "packages/tasks/task-entry-core",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:tasks"],
-      "layer": 10,
-      "sourceFiles": 4,
+      "layer": 8,
+      "sourceFiles": 5,
       "testFiles": 0,
       "sources": [
         "lib/task/components/public-sweepstakes/task-actions/building-blocks.tsx",
         "lib/task/components/public-sweepstakes/task-actions/lib/error-display.tsx",
         "lib/task/components/public-sweepstakes/task-actions/lib/provider-connection.tsx",
+        "lib/task/components/public-sweepstakes/task-actions/lib/task-entry-context.tsx",
         "lib/task/components/public-sweepstakes/task-actions/lib/use-after-visit-behavior.tsx"
       ],
       "dependsOn": [
@@ -4701,7 +4704,7 @@
       "path": "packages/tasks/task-entry-form",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:tasks"],
-      "layer": 11,
+      "layer": 10,
       "sourceFiles": 5,
       "testFiles": 0,
       "sources": [
@@ -4723,7 +4726,7 @@
       "path": "packages/tasks/task-entry-referral",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:tasks"],
-      "layer": 11,
+      "layer": 10,
       "sourceFiles": 1,
       "testFiles": 0,
       "sources": [
@@ -4745,7 +4748,7 @@
       "path": "packages/tasks/task-entry-website",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:tasks"],
-      "layer": 11,
+      "layer": 9,
       "sourceFiles": 5,
       "testFiles": 0,
       "sources": [
@@ -5066,7 +5069,7 @@
       "path": "packages/team/team-picker",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:team"],
-      "layer": 10,
+      "layer": 8,
       "sourceFiles": 5,
       "testFiles": 10,
       "sources": [
@@ -5104,10 +5107,11 @@
       "type": "server",
       "tags": ["type:server", "runtime:server", "scope:team"],
       "layer": 4,
-      "sourceFiles": 7,
-      "testFiles": 7,
+      "sourceFiles": 8,
+      "testFiles": 8,
       "sources": [
         "procedures/teams/create-team.ts",
+        "procedures/teams/find-user-team.ts",
         "procedures/teams/get-user-team.ts",
         "procedures/teams/get-user-teams.ts",
         "procedures/teams/select-team.ts",
@@ -5120,7 +5124,8 @@
         "@giveaway/rpc-server",
         "@giveaway/team-model",
         "@giveaway/team-permissions",
-        "@giveaway/util-errors"
+        "@giveaway/util-errors",
+        "@giveaway/util-types"
       ],
       "npm": ["@giveaway/db-model", "next", "zod"]
     },
@@ -5221,7 +5226,7 @@
       "path": "packages/templates/templates-editor",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:templates"],
-      "layer": 16,
+      "layer": 15,
       "sourceFiles": 14,
       "testFiles": 0,
       "sources": [
@@ -5274,7 +5279,7 @@
       "path": "packages/templates/templates-gallery",
       "type": "feature",
       "tags": ["type:feature", "runtime:react", "scope:templates"],
-      "layer": 15,
+      "layer": 14,
       "sourceFiles": 9,
       "testFiles": 0,
       "sources": [

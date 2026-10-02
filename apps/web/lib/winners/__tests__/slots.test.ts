@@ -6,7 +6,7 @@ import {
   getPrizeAllocations
 } from '../slots';
 import { asPrismaClient, prismaMock } from '@/test/prisma';
-import { buildAllocation } from './fixtures-sweepstakes-winners-email';
+import { buildAllocation } from './fixtures-winners-model';
 
 const db = asPrismaClient();
 

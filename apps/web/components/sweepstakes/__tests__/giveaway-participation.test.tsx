@@ -10,12 +10,8 @@ import GiveawayParticipationDefault, {
   GiveawayParticipation
 } from '../giveaway-participation';
 import type { GiveawayParticipationProps } from '../giveaway-participation-context';
-import {
-  NOW,
-  buildAudience,
-  buildParticipationProps,
-  buildSweepstakes
-} from './fixtures';
+import { NOW, buildAudience, buildSweepstakes } from './fixtures';
+import { buildParticipationProps } from './participation-fixtures';
 
 vi.mock('@/lib/turnstile/gate', () => ({
   TurnstileGate: ({ children }: { children: ReactNode }) => (

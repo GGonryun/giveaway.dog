@@ -10,9 +10,7 @@ import {
 import {
   applySweepstakesChanges,
   findUserSweepstakes,
-  findUserSweepstakesQuery,
-  findUserTeam,
-  findUserTeamQuery
+  findUserSweepstakesQuery
 } from '../shared';
 import { TeamPermission } from '@/lib/permissions';
 import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
@@ -21,7 +19,6 @@ import { TEST_USER } from '@/test/session';
 import {
   SWEEPSTAKES_ID,
   TEAM_ID,
-  TEAM_SLUG,
   buildMembership,
   buildTeam,
   buildTeamSweepstakes,
@@ -41,22 +38,6 @@ describe('findUserSweepstakesQuery', () => {
     ).toEqual({
       id: 'sweep-9',
       team: { members: { some: { userId: 'user-9' } } }
-    });
-  });
-});
-
-describe('findUserTeamQuery', () => {
-  it('builds a slug based query when a slug is provided', () => {
-    expect(findUserTeamQuery({ slug: 'acme', userId: 'user-9' })).toEqual({
-      slug: 'acme',
-      members: { some: { userId: 'user-9' } }
-    });
-  });
-
-  it('builds an id based query when an id is provided', () => {
-    expect(findUserTeamQuery({ id: 'team-9', userId: 'user-9' })).toEqual({
-      id: 'team-9',
-      members: { some: { userId: 'user-9' } }
     });
   });
 });
@@ -212,133 +193,6 @@ describe('findUserSweepstakes', () => {
     const result = await find(TeamPermission.UPDATE_SWEEPSTAKES, TeamTier.PRO);
 
     expect(result.team.tier).toBe(TeamTier.ELITE);
-  });
-});
-
-describe('findUserTeam', () => {
-  it('looks a team up by slug with its members', async () => {
-    prismaMock.team.findUnique.mockResolvedValue(buildTeam());
-
-    await findUserTeam({
-      db,
-      user: TEST_USER,
-      slug: TEAM_SLUG,
-      permission: TeamPermission.VIEW_SWEEPSTAKES,
-      tier: TeamTier.FREE
-    });
-
-    expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
-      where: {
-        slug: TEAM_SLUG,
-        members: { some: { userId: TEST_USER.id } }
-      },
-      include: { members: true }
-    });
-  });
-
-  it('looks a team up by id with its members', async () => {
-    prismaMock.team.findUnique.mockResolvedValue(buildTeam());
-
-    await findUserTeam({
-      db,
-      user: TEST_USER,
-      id: TEAM_ID,
-      permission: TeamPermission.VIEW_SWEEPSTAKES,
-      tier: TeamTier.FREE
-    });
-
-    expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
-      where: {
-        id: TEAM_ID,
-        members: { some: { userId: TEST_USER.id } }
-      },
-      include: { members: true }
-    });
-  });
-
-  it('returns the team and the caller membership', async () => {
-    const team = buildTeam();
-    prismaMock.team.findUnique.mockResolvedValue(team);
-
-    const result = await findUserTeam({
-      db,
-      user: TEST_USER,
-      id: TEAM_ID,
-      permission: TeamPermission.VIEW_SWEEPSTAKES,
-      tier: TeamTier.FREE
-    });
-
-    expect(result).toEqual({ team, membership: buildMembership() });
-  });
-
-  it('throws NOT_FOUND when the team does not exist', async () => {
-    prismaMock.team.findUnique.mockResolvedValue(null);
-
-    await expect(
-      findUserTeam({
-        db,
-        user: TEST_USER,
-        id: TEAM_ID,
-        permission: TeamPermission.VIEW_SWEEPSTAKES,
-        tier: TeamTier.FREE
-      })
-    ).rejects.toMatchObject({ code: 'NOT_FOUND', message: 'Team not found' });
-  });
-
-  it('throws FORBIDDEN when the caller is not a member', async () => {
-    prismaMock.team.findUnique.mockResolvedValue(
-      buildTeam({ members: [buildMembership({ userId: 'user-2' })] })
-    );
-
-    await expect(
-      findUserTeam({
-        db,
-        user: TEST_USER,
-        id: TEAM_ID,
-        permission: TeamPermission.VIEW_SWEEPSTAKES,
-        tier: TeamTier.FREE
-      })
-    ).rejects.toMatchObject({
-      code: 'FORBIDDEN',
-      message: 'You are not a member of this team'
-    });
-  });
-
-  it('throws FORBIDDEN when a blocked member requests view access', async () => {
-    prismaMock.team.findUnique.mockResolvedValue(
-      buildTeam({ members: [buildMembership({ role: TeamRole.BLOCKED })] })
-    );
-
-    await expect(
-      findUserTeam({
-        db,
-        user: TEST_USER,
-        id: TEAM_ID,
-        permission: TeamPermission.VIEW_SWEEPSTAKES,
-        tier: TeamTier.FREE
-      })
-    ).rejects.toMatchObject({
-      code: 'FORBIDDEN',
-      message:
-        'You do not have permission to perform this action. Required permission: VIEW_SWEEPSTAKES'
-    });
-  });
-
-  it('throws FORBIDDEN when the team tier is too low', async () => {
-    prismaMock.team.findUnique.mockResolvedValue(buildTeam());
-
-    await expect(
-      findUserTeam({
-        db,
-        user: TEST_USER,
-        id: TEAM_ID,
-        permission: TeamPermission.VIEW_SWEEPSTAKES,
-        tier: TeamTier.ALPHA
-      })
-    ).rejects.toMatchObject({
-      code: 'FORBIDDEN',
-      message: 'This feature requires a team with at least the ALPHA tier.'
-    });
   });
 });
 

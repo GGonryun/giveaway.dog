@@ -2,7 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import { findUserTeam } from '@/procedures/sweepstakes/shared';
+import { findUserTeam } from '@/procedures/teams/find-user-team';
 import { nanoid } from 'nanoid';
 import { TeamPermission } from '@/lib/permissions';
 import { LastPostedType, PickerStatus, TeamTier } from '@prisma/client';

@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@/lib/errors';
 import z from 'zod';
-import { findUserTeamQuery } from '@/procedures/sweepstakes/shared';
+import { findUserTeamQuery } from '@/procedures/teams/find-user-team';
 import { IntegrationProvider } from '@prisma/client';
 import { deleteAllEventSubSubscriptions } from '../api/delete-eventsub-subscription';
 

@@ -2,9 +2,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import refreshSweepstakes from '@/procedures/browse/refresh-sweepstakes';
 import {
   NOW,
-  buildSweepstakes,
-  renderWithParticipation
+  buildSweepstakes
 } from '@/components/sweepstakes/__tests__/fixtures';
+import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import { Pending } from '../pending';
 
 const navigation = vi.hoisted(() => ({
