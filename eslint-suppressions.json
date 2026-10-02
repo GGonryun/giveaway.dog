@@ -205,11 +205,6 @@
       "count": 2
     }
   },
-  "apps/web/lib/marketing/bot-protection-animation.tsx": {
-    "react-hooks/refs": {
-      "count": 2
-    }
-  },
   "apps/web/lib/marketing/orbiting-platforms.tsx": {
     "react-hooks/purity": {
       "count": 1
@@ -395,11 +390,6 @@
     }
   },
   "apps/web/procedures/sweepstakes/update-task-completion-status.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "apps/web/procedures/teams/shared.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
