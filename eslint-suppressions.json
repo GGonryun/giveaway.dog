@@ -190,23 +190,8 @@
       "count": 4
     }
   },
-  "apps/web/lib/discord/procedures/save-discord-settings.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "apps/web/lib/home/supported-integrations.tsx": {
     "@next/next/no-html-link-for-pages": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/integrations/notifications/discord-notifier.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "apps/web/lib/integrations/procedures/connect-twitter.tsx": {
-    "@typescript-eslint/no-require-imports": {
       "count": 1
     }
   },
