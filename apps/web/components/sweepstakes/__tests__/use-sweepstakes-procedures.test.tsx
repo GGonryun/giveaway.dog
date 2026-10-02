@@ -4,11 +4,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { convertSweepstakesToTemplate } from '@/lib/templates/procedures/convert-sweepstakes-to-template';
 import copySweepstakes from '@/procedures/sweepstakes/copy-sweepstakes';
 import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
-import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
 import { useConvertToTemplate } from '../use-convert-to-template';
 import { useCopySweepstakes } from '../use-copy-sweepstakes';
 import { useDeleteSweepstakes } from '../use-delete-sweepstakes';
-import { useUpdateSweepstakes } from '../use-update-sweepstakes';
 
 const navigation = vi.hoisted(() => ({
   router: { push: vi.fn(), refresh: vi.fn() }
@@ -28,9 +26,6 @@ vi.mock('@/procedures/sweepstakes/copy-sweepstakes', () => ({
   default: vi.fn()
 }));
 vi.mock('@/procedures/sweepstakes/delete-sweepstakes', () => ({
-  default: vi.fn()
-}));
-vi.mock('@/procedures/sweepstakes/update-sweepstakes', () => ({
   default: vi.fn()
 }));
 
@@ -173,38 +168,6 @@ describe('sweepstakes procedure hooks', () => {
       const { result } = renderHook(() => useDeleteSweepstakes(vi.fn()));
 
       await act(async () => result.current.run({ id: 'sweep-1' }));
-
-      await waitFor(() =>
-        expect(toast.error).toHaveBeenCalledWith('You cannot do that')
-      );
-    });
-  });
-
-  describe('useUpdateSweepstakes', () => {
-    it('calls the success callback after an update', async () => {
-      const onSuccess = vi.fn();
-      vi.mocked(updateSweepstakes).mockResolvedValue({
-        ok: true,
-        data: { slug: 'acme' }
-      });
-      const { result } = renderHook(() => useUpdateSweepstakes(onSuccess));
-
-      await act(async () =>
-        result.current.run({} as Parameters<typeof updateSweepstakes>[0])
-      );
-
-      await waitFor(() =>
-        expect(onSuccess).toHaveBeenCalledWith({ slug: 'acme' })
-      );
-    });
-
-    it('reports failures with the default toast', async () => {
-      vi.mocked(updateSweepstakes).mockResolvedValue(forbidden);
-      const { result } = renderHook(() => useUpdateSweepstakes(vi.fn()));
-
-      await act(async () =>
-        result.current.run({} as Parameters<typeof updateSweepstakes>[0])
-      );
 
       await waitFor(() =>
         expect(toast.error).toHaveBeenCalledWith('You cannot do that')

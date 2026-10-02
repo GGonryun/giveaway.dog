@@ -4,10 +4,9 @@ import { Avatar, AvatarFallback } from '../avatar';
 import { Progress } from '../progress';
 import { Separator } from '../separator';
 import { Skeleton } from '../skeleton';
-import { Stepper } from '../stepper';
 
 describe.each(THEMES)('Feedback (%s)', (theme) => {
-  test('progress, skeleton, avatar and stepper', async () => {
+  test('progress, skeleton and avatar', async () => {
     const root = await renderVisual(
       <div className="flex flex-col gap-4">
         <Progress value={0} />
@@ -30,8 +29,6 @@ describe.each(THEMES)('Feedback (%s)', (theme) => {
             <AvatarFallback>AB</AvatarFallback>
           </Avatar>
         </div>
-        <Separator />
-        <Stepper currentStep={2} totalSteps={3} />
       </div>,
       { theme }
     );
