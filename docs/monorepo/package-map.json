@@ -3451,7 +3451,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/errors/"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["next"]
     },
@@ -3515,7 +3515,7 @@
       "layer": 0,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/email-validation.ts", "lib/strings.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": []
     },
@@ -3539,7 +3539,7 @@
       "layer": 0,
       "sourceFiles": 3,
       "testFiles": 1,
-      "sources": ["lib/types.ts", "lib/widetype.ts", "types/index.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": []
     },

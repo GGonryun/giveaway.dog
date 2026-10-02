@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { toSweepstakesState } from '../sweepstakes';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 type Args = Parameters<typeof toSweepstakesState>[0];
 type Participant = NonNullable<Args['participant']>;

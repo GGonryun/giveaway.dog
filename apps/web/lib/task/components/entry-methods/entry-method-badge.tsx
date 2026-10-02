@@ -1,4 +1,4 @@
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { ImportBadge } from '../badges/import-badge';
 import { InstantBadge } from '../badges/instant-badge';
 import { VerificationBadge } from '../badges/verification-badge';

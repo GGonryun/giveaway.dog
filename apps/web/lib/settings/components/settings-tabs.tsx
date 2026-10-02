@@ -11,7 +11,7 @@ import {
   SettingsTabSchema
 } from '../schemas/tabs';
 import { toast } from 'sonner';
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 
 interface SettingsTabsProps {
   slug: string;

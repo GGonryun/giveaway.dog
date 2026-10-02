@@ -3,7 +3,7 @@ import {
   xStatusRefineUrl
 } from '@/lib/integrations/schemas/twitter';
 import { MAX_PICKER_SCHEDULE_DAYS } from '@/lib/settings';
-import { DeepPartial } from '@/lib/types';
+import { DeepPartial } from '@giveaway/util-types/types';
 import { z } from 'zod';
 
 const twitterUserFiltersSchema = z.object({

@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import { ZodError } from 'zod';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const m = vi.hoisted(() => ({
   twitchOAuthCallback: vi.fn()

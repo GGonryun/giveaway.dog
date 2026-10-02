@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { Failure } from './types';
-import { assertNever } from '../errors';
+import { assertNever } from '@giveaway/util-errors';
 
 export const isPrismaError = (
   err: any

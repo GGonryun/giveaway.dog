@@ -6,7 +6,7 @@ import {
   templateInputSchema,
   toTemplateInputSchema
 } from '../schemas/template';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { STATIC_TEMPLATES } from '../data/static-templates';
 
 export const getTemplateForm = procedure()

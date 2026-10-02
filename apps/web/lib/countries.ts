@@ -1,6 +1,6 @@
 import countriesData from './countries.json';
 import continentsData from './continents.json';
-import { ApplicationError } from './errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export type Country = `country:${string}` & { __brand?: 'country' };
 export type Continent = `continent:${string}` & { __brand?: 'continent' };

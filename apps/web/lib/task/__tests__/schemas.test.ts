@@ -76,7 +76,7 @@ import {
   youtubeVisitTaskSchema,
   type TaskType
 } from '../schemas';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import {
   IDENTITY_PROVIDER_LABEL,
   PROVIDER_REQUIRED_SCOPES

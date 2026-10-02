@@ -1,5 +1,5 @@
 import { scrapeBadgerCredits } from './ratelimit';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export async function checkAndConsumeCredits(
   headers: Headers,

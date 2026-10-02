@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { VisitUrlTaskSchema, TASK_INPUT_SCHEMA } from '../schemas';
 import { ValidateTaskInput } from './types';
 

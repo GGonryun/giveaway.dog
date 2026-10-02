@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import {
   TWITCH_CLIENT_ID,
   TWITCH_BOT_USER_ID,

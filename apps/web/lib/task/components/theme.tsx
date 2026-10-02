@@ -10,7 +10,7 @@ import {
   UserCheck,
   UploadCloud
 } from 'lucide-react';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 
 import React from 'react';
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';

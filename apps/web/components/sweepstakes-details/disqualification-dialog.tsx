@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { strings } from '@/lib/strings';
+import { strings } from '@giveaway/util-strings/strings';
 import { UNKNOWN_EMAIL } from '@/lib/settings';
 
 interface DisqualificationDialogProps {

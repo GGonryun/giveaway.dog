@@ -9,7 +9,7 @@ import {
 } from '../schemas';
 import { ValidateTaskInput } from './types';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@/lib/integrations/schemas/providers';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { isUserFollowingTarget } from '@/lib/bluesky/is-user-following-target';
 import { isUserLikingPost } from '@/lib/bluesky/is-user-liking-post';
 import { isUserRepostingPost } from '@/lib/bluesky/is-user-reposting-post';

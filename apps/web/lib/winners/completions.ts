@@ -3,10 +3,10 @@ import {
   ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY,
   EligibleTaskCompletion
 } from '../task/queries';
-import { RecursiveRequired } from '@/types/index';
+import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
 import { User } from 'next-auth';
 import { findUserSweepstakes } from '@/procedures/sweepstakes/shared';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 import { SweepstakesCriteriaSchema } from './criteria';
 import { toCompletionValue } from '../task/entries';

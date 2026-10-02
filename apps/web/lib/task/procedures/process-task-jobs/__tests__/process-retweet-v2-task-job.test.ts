@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
 import type { User } from 'scrapebadger';
 import { processRetweetV2TaskJob } from '../process-retweet-v2-task-job';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import type { Prisma } from '@prisma/client';
 import type { TwitterRetweetV2TaskSchema } from '@/lib/task/schemas';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';

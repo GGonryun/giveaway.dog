@@ -11,6 +11,7 @@
     "sharedGlobals": [
       "{workspaceRoot}/.nvmrc",
       "{workspaceRoot}/package.json",
+      "{workspaceRoot}/tsconfig.base.json",
       "{workspaceRoot}/eslint.config.mjs",
       "{workspaceRoot}/eslint-suppressions.json",
       "{workspaceRoot}/.github/workflows/ci.yml",

@@ -1,5 +1,5 @@
 import { PrismaClient, PrizeDrawResult } from '@prisma/client';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export type PrizeSlot = {
   prizeId: string;

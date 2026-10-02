@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createAuthConfig, type GetSession } from '../config-runtime';
 import { authConfigMiddleware } from '../config-middleware';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { DOG_BREEDS } from '@/lib/dogs';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { createSession } from '@giveaway/testing-server/session';

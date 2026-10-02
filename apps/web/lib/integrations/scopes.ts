@@ -1,6 +1,6 @@
 import z from 'zod';
 import { AuthProvider } from './schemas/providers';
-import { widetype } from '../widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 
 export const REQUIRED_DISCORD_SCOPES = [
   'identify',

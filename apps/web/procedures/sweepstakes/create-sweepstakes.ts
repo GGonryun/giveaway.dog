@@ -3,7 +3,7 @@
 import { nanoid } from 'nanoid';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 import {
   DEFAULT_SWEEPSTAKES_AUDIENCE,

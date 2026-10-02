@@ -1,4 +1,4 @@
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { CompletionStatus } from '@prisma/client';
 import { TaskSchema } from '../schemas';
 

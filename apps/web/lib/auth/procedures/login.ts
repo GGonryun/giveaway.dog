@@ -1,6 +1,6 @@
 'use server';
 
-import { ApplicationError, assertNever } from '@/lib/errors';
+import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { parseProvider, blueskyHandleSchema } from '@/schemas/user';
 import { AuthError } from 'next-auth';

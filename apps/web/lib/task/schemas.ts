@@ -8,7 +8,7 @@ import {
   xStatusRefineUrl
 } from '@/lib/integrations/schemas/twitter';
 import { userSchema } from '@/schemas/user';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { toJsonObject } from '../json';
 import {
   identityProviderSchema,

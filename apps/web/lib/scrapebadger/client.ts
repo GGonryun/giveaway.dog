@@ -1,5 +1,5 @@
 import { ScrapeBadger } from 'scrapebadger';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export const getScrapeBadgerClient = () => {
   const apiKey = process.env.SCRAPEBADGER_API_KEY;

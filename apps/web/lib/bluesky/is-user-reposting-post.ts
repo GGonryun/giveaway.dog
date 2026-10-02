@@ -1,6 +1,6 @@
 'use server';
 
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { PrismaClient } from '@prisma/client';
 import { getLatestBlueskyCredentials } from './get-latest-bluesky-agent';
 

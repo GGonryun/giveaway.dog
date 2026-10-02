@@ -10,14 +10,14 @@ import {
   toTaskCompletion
 } from '../task/completions';
 import z from 'zod';
-import { widetype } from '../widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 import { SweepstakesFormFieldSchema } from '../custom-fields/schemas';
 import {
   isProfileComplete,
   toParticipantForm,
   toParticipantFormFields
 } from '@/schemas/giveaway/participant';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { toTaskSchema } from '../task/schemas';
 import { SweepstakesAllocationSchema } from '@/schemas/giveaway/schemas';
 

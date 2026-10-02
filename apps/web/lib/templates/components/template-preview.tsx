@@ -17,7 +17,7 @@ import {
 import { VisibilityType } from '@prisma/client';
 import * as dates from 'date-fns';
 import { timezone } from '@/lib/time';
-import { DeepPartial } from '@/lib/types';
+import { DeepPartial } from '@giveaway/util-types/types';
 
 export const TemplatePreview: React.FC = () => {
   const form = useFormContext<TemplateFormSchema>();

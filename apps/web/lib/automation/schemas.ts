@@ -4,7 +4,7 @@ import {
   Prisma
 } from '@prisma/client';
 import z from 'zod';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const postToTwitterRequestSchema = z.object({
   integrationId: z.string().min(1, 'Please select an account'),

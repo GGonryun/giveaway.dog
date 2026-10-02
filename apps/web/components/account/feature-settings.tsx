@@ -22,7 +22,7 @@ import {
   HOST_DASHBOARD_FEATURE_FLAG_KEY,
   BASIC_DASHBOARD_FEATURE_FLAG_KEY
 } from '@/schemas/feature-flags';
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 import { useSession } from 'next-auth/react';
 import { UserAccountType } from '@prisma/client';
 import { useProcedure } from '@/lib/mrpc/hook';

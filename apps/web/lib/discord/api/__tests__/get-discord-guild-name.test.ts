@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { getDiscordGuildInfo } from '../get-discord-guild-name';
 
 const fetchMock = vi.fn<typeof fetch>();

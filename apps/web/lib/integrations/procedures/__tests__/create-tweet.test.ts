@@ -5,7 +5,7 @@ import {
   createTweetResponseSchema,
   uploadMediaResponseSchema
 } from '@/lib/integrations/schemas/api';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
 
 vi.mock('@/lib/integrations/utils/twitter-api-request', () => ({

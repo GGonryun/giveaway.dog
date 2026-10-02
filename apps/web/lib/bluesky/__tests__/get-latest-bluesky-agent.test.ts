@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { getLatestBlueskyCredentials } from '../get-latest-bluesky-agent';
 
 const m = vi.hoisted(() => ({

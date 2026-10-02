@@ -1,4 +1,4 @@
-import { ApplicationErrorCode } from '../errors';
+import { ApplicationErrorCode } from '@giveaway/util-errors';
 
 export type Success<T> = { ok: true; data: T };
 

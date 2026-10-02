@@ -1,7 +1,7 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { IntegrationSchema } from '../schemas';
 import { AlertCircleIcon } from 'lucide-react';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 
 export const IntegrationStatusAlert: React.FC<{
   status: IntegrationSchema['status'];

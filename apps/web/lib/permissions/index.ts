@@ -1,5 +1,5 @@
 import { TeamRole } from '@prisma/client';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export enum TeamPermission {
   INVITE_MEMBERS = 'INVITE_MEMBERS',

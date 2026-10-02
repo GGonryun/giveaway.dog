@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { PrismaClient } from '@prisma/client';
 
 const EXPIRY_BUFFER_SECONDS = 300;

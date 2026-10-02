@@ -1,5 +1,5 @@
 import { date } from '@/lib/date';
-import { Nullable } from '@/lib/types';
+import { Nullable } from '@giveaway/util-types/types';
 import { Prisma, SweepstakesStatus } from '@prisma/client';
 import { formatDistance, formatDistanceToNowStrict, isAfter } from 'date-fns';
 import z from 'zod';

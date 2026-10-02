@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ApplicationError, type ApplicationErrorCode } from '@/lib/errors';
+import {
+  ApplicationError,
+  type ApplicationErrorCode
+} from '@giveaway/util-errors';
 import { POST } from '../handler';
 import * as verifyModule from '../../verify';
 import { discordConnectWorkflow } from '../../../workflows/discord-connect/workflow';

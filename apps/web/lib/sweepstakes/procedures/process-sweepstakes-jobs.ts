@@ -1,6 +1,6 @@
 'use server';
 
-import { ApplicationError, assertNever } from '@/lib/errors';
+import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { html } from '@/lib/html';
 import { DEFAULT_TEAM_NAME } from '@/lib/team/data';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';

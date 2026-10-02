@@ -5,7 +5,7 @@ import { POST } from '../route';
 import { POST as handlerPOST } from '@/lib/discord/bot/commands/handler';
 import { discordConnectWorkflow } from '@/lib/discord/workflows/discord-connect/workflow';
 import { discordInteractionWorkflow } from '@/lib/discord/workflows/discord-interaction/workflow';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const m = vi.hoisted(() => ({ start: vi.fn() }));
 

@@ -1,8 +1,8 @@
-import { ApplicationError } from './errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
 import { DEVELOPMENT_GEO } from '@/schemas/fingerprint';
 import { Prisma } from '@prisma/client';
-import { Nil } from './types';
+import { Nil } from '@giveaway/util-types/types';
 import https from 'https';
 
 const httpsGet = (url: string): Promise<unknown> =>

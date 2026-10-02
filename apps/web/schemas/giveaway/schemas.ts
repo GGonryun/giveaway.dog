@@ -4,7 +4,7 @@ import {
   RegionalRestrictionFilter,
   VisibilityType
 } from '@prisma/client';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import z from 'zod';
 import { userProfileSchema, userSchema } from '../user';
 import { derivedSweepstakesStatusSchema } from '../sweepstakes';

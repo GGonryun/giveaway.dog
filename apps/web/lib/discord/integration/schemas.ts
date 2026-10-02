@@ -3,7 +3,7 @@ import {
   discordApplicationCommandInteractionSchema,
   DiscordApplicationCommandInteractionSchema
 } from '../bot/schema';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export const discordIntegrationSettings =
   discordApplicationCommandInteractionSchema.pick({

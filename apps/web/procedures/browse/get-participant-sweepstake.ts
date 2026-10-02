@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { z } from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { toSweepstakesInput } from '@/schemas/giveaway/input';
 import {
   ParticipantSweepstakeSchema,
@@ -13,7 +13,7 @@ import {
   toSweepstakesHost,
   toSweepstakesPrizes
 } from '@/schemas/giveaway/participant';
-import { DeepNullable, DeepPartial } from '@/lib/types';
+import { DeepNullable, DeepPartial } from '@giveaway/util-types/types';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 import { Prisma } from '@prisma/client';
 import { toCompletionValue } from '@/lib/task/entries';

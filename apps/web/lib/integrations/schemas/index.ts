@@ -8,7 +8,7 @@ import {
   type BlueskyFeatureSchema,
   type TwitchFeatureSchema
 } from '../scopes';
-import { Nil } from '@/lib/types';
+import { Nil } from '@giveaway/util-types/types';
 
 export const DEFAULT_INTEGRATION_LABEL = 'MISSING_NO';
 export const TWITTER_TEAM_APP_CLIENT_ID =

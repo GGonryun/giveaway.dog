@@ -1,4 +1,4 @@
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { Prisma } from '@prisma/client';
 import { clamp } from 'lodash';
 import z from 'zod';

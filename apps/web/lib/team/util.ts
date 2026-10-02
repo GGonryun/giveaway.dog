@@ -1,5 +1,5 @@
 import { Prisma, TeamTier } from '@prisma/client';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const TIER_ORDER: TeamTier[] = [
   TeamTier.FREE,

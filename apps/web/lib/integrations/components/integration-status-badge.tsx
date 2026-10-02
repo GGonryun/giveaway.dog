@@ -1,4 +1,4 @@
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { IntegrationSchema } from '../schemas';
 import { CheckCircle, AlertCircle, LoaderCircle } from 'lucide-react';
 

@@ -1,11 +1,11 @@
-import { DeepNullable } from '@/lib/types';
+import { DeepNullable } from '@giveaway/util-types/types';
 import { ParticipantSweepstakesGetPayload } from './db';
 import { GiveawayPrizeSchema } from './schemas';
 import z from 'zod';
 import { toUserSchema, UserSchema } from '../user';
 import { toTaskInput } from './input';
 import { Prisma } from '@prisma/client';
-import { ApplicationError, assertNever } from '@/lib/errors';
+import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { taskSchema } from '@/lib/task/schemas';
 import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 import { parseSocialLinks } from '../social-links';

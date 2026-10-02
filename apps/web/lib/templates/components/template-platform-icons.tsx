@@ -1,5 +1,5 @@
 import { TaskPlatformSchema } from '@/lib/task/schemas';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
 import { SocialGoogleIcon } from '@/lib/integrations/components/icons/google-icon';
 import { SocialSteamIcon } from '@/lib/integrations/components/icons/steam-icon';

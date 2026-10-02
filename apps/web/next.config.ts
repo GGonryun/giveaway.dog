@@ -3,6 +3,11 @@ import { withWorkflow } from 'workflow/next';
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ['*.ngrok-free.app'],
+  transpilePackages: [
+    '@giveaway/util-errors',
+    '@giveaway/util-strings',
+    '@giveaway/util-types'
+  ],
   experimental: {
     useCache: true
   },

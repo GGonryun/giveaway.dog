@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 
 import { SweepstakesPrizeSchema } from './giveaway/schemas';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 import {
   TASK_COMPLETIONS_SELECT_QUERY,

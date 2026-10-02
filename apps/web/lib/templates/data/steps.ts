@@ -1,4 +1,4 @@
-import { Nil } from '@/lib/types';
+import { Nil } from '@giveaway/util-types/types';
 
 export type TemplateStep =
   | 'template'

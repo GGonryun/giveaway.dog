@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { Tx } from '@/lib/prisma';
 import { twitterApiRequest } from '../utils/twitter-api-request';
 import { uploadMediaResponseSchema } from '../schemas/api';

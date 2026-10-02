@@ -1,6 +1,6 @@
 import { UserSource, Prisma } from '@prisma/client';
 import z from 'zod';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export const userSourceSchema = z.array(z.nativeEnum(UserSource));
 

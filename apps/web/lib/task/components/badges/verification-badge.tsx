@@ -1,7 +1,7 @@
 import { ShieldCheck } from 'lucide-react';
 import { TASK_VERIFICATION_REQUIREMENT, TaskType } from '../../schemas';
 import { SelectTaskBadge } from './select-task-badge';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 
 export const VerificationBadge: React.FC<{ type: TaskType }> = ({ type }) => {
   const verification = TASK_VERIFICATION_REQUIREMENT[type];

@@ -1,6 +1,6 @@
 import { expect } from 'vitest';
 import type { Prisma, Task, TaskCompletion } from '@prisma/client';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
 
 export const db = asPrismaClient();

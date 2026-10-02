@@ -1,5 +1,5 @@
 import { ObfuscatedEmail } from '@/components/ui/obfuscated-email';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { UserSchema } from '@/schemas/user';
 
 export const UserSourceCaption: React.FC<{

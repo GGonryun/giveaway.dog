@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import {
   getDrawsInfo,
   getEmptyPrizeSlots,

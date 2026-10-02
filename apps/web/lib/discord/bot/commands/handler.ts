@@ -1,4 +1,4 @@
-import { ApplicationError, assertNever } from '@/lib/errors';
+import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyDiscordRequest } from '../verify';
 import { toEphemeralChannelMessage } from '../messages';

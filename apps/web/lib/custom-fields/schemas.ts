@@ -1,4 +1,4 @@
-import { Expand, FlatUnion } from '@/lib/types';
+import { Expand, FlatUnion } from '@giveaway/util-types/types';
 import { SweepstakesFormFieldType } from '@prisma/client';
 import z from 'zod';
 

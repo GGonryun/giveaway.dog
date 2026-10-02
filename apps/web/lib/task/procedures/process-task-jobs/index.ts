@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { processTaskJob } from './process-task-job';
 import { taskJobInclude } from './types';
 import { TaskJobStatus } from '@prisma/client';
-import { isRetryableApplicationError } from '@/lib/errors';
+import { isRetryableApplicationError } from '@giveaway/util-errors';
 
 const MAX_JOBS_PER_RUN = 5;
 

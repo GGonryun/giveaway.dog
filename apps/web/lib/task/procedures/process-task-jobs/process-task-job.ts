@@ -1,4 +1,4 @@
-import { ApplicationError, assertNever } from '@/lib/errors';
+import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { toTaskSchema } from '@/lib/task/schemas';
 import { PrismaClient, TaskJobStatus } from '@prisma/client';
 import { TaskJobWithRelations } from './types';

@@ -1,0 +1,7 @@
+{
+  "packages/shared/util-types/src/types.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  }
+}

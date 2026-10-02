@@ -4,7 +4,7 @@ import { toDesignInput, toSweepstakesInput, toTaskInput } from '../input';
 import type { FormSweepstakesGetPayload } from '../db';
 import { DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND } from '../defaults';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 type Payload = FormSweepstakesGetPayload;
 type Task = Payload['tasks'][number];

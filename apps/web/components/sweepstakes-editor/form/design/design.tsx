@@ -31,7 +31,7 @@ import {
   DEFAULT_GRADIENT_DESIGN_BACKGROUND
 } from '@/schemas/giveaway/defaults';
 import { Input } from '@/components/ui/input';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2, Settings2 } from 'lucide-react';
 import {

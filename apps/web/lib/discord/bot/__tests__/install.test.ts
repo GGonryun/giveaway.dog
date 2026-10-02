@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { DISCORD_BOT_SCOPES, getDiscordInstallUrl } from '../install';
 
 describe('DISCORD_BOT_SCOPES', () => {

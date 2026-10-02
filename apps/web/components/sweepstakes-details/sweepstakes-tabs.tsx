@@ -3,7 +3,7 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import React, { useEffect, useState } from 'react';
 
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 import {
   isSweepstakesTab,
   SWEEPSTAKES_TAB_OPTIONS,

@@ -15,7 +15,7 @@ import { Closed } from './states/closed';
 import { Error } from './states/error';
 import { Pending } from './states/pending';
 import { useGiveawayParticipation } from './giveaway-participation-context';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { toBackgroundStyle } from '@/schemas/color';
 import { cn } from '@/lib/utils';
 import { SweepstakesLoginOptions } from './sweepstakes-login-options';

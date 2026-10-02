@@ -1,4 +1,4 @@
-import { assertNever } from '../errors';
+import { assertNever } from '@giveaway/util-errors';
 import { TaskCompletionSchema } from './completions';
 import { parseTwitterProofSchema, TaskSchema } from './schemas';
 

@@ -1,5 +1,5 @@
 import { toBrowsePageUrl } from '@/components/sweepstakes/util';
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 import { TermsTemplateSchema } from '@/schemas/giveaway/schemas';
 import pluralize from 'pluralize';
 

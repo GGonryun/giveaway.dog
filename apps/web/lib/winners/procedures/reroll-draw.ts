@@ -8,7 +8,7 @@ import { getEligibleCompletions } from '../completions';
 import { getDrawsInfo, getPrizeAllocations } from '../slots';
 import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
 import { PrizeDrawResult } from '@prisma/client';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export const rerollDraw = procedure()
   .authorization({

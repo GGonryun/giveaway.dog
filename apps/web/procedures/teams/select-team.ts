@@ -3,7 +3,7 @@
 import getUserTeams from './get-user-teams';
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const selectTeam = procedure()
   .authorization({ required: true })

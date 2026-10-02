@@ -1,7 +1,7 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { TeamPermission, requireMembershipPermission } from '@/lib/permissions';
 import { environment } from '@/lib/environment';
 import z from 'zod';

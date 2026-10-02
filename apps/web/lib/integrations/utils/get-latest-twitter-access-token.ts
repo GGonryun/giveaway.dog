@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import {
   TWITTER_TEAM_APP_CLIENT_ID,

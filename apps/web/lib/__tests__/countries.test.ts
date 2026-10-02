@@ -13,7 +13,7 @@ import {
   type Continent
 } from '../countries';
 import countriesData from '../countries.json';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const catchError = (fn: () => unknown): unknown => {
   try {

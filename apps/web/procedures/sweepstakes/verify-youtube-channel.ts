@@ -1,6 +1,6 @@
 'use server';
 
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { listChannelSnippetSchema } from '@/lib/integrations/schemas/youtube';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';

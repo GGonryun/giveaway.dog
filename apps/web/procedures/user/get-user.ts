@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { userSchema } from '@/schemas/user';
 import { getUserQuery } from './shared';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
 
 const getUser = procedure()

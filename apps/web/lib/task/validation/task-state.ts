@@ -1,5 +1,5 @@
-import { ApplicationError } from '@/lib/errors';
-import { Nil } from '@/lib/types';
+import { ApplicationError } from '@giveaway/util-errors';
+import { Nil } from '@giveaway/util-types/types';
 import { Prisma } from '@prisma/client';
 
 export function validateSweepstakesState(

@@ -14,7 +14,7 @@ import { Settings2, Square, SquareCheckBig } from 'lucide-react';
 import { useMemo, useState, useCallback, useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Typography } from '@/components/ui/typography';
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 
 import { stringifyTerms } from '../terms';
 import {

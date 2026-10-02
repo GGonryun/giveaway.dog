@@ -6,7 +6,7 @@ import {
   STARTING_SOON_SWEEPSTAKE_THRESHOLD
 } from '@/lib/settings';
 import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 
 const getStatusConfig = ({ status }: SweepstakeStatusBadgeProps) => {
   switch (status) {

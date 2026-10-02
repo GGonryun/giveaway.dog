@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { baseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { Prisma } from '@prisma/client';
-import { ApplicationError } from '@/lib/errors';
-import { DeepPartial, Nil } from '@/lib/types';
+import { ApplicationError } from '@giveaway/util-errors';
+import { DeepPartial, Nil } from '@giveaway/util-types/types';
 
 export const baseContentSchema = baseGiveawayFormSchema({
   validate: false

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
 import { processChatMessage } from '../chat-message';
 import { sendChatMessage } from '@/lib/twitch/api/send-chat-message';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { chatMessageEvent } from '@/lib/twitch/__tests__/fixtures-twitch';
 

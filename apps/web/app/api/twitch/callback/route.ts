@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 import z from 'zod';
 
 import { twitchOAuthCallback } from '@/lib/twitch/procedures/twitch-oauth-callback';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { twitchStateSchema } from '@/lib/twitch/schemas';
 
 const twitchCallbackResultSchema = z.object({

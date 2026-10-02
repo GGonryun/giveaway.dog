@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
 import { processBlueskyTaskJob } from '../process-bluesky-task-job';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import type { Prisma } from '@prisma/client';
 import type { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-likes';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';

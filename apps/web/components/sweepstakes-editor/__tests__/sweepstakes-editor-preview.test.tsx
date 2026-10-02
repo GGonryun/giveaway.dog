@@ -5,7 +5,7 @@ import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-partici
 import { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
 import { MockTeamProvider } from '@/components/demo/mock-team-provider';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
-import { DeepPartial } from '@/lib/types';
+import { DeepPartial } from '@giveaway/util-types/types';
 import {
   GiveawayFormSchema,
   GiveawaySchema,

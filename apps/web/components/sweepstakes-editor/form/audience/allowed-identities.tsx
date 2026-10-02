@@ -10,7 +10,7 @@ import {
   ENABLED_IDENTITY_PROVIDERS,
   IDENTITY_PROVIDER_LABEL
 } from '@/lib/integrations/schemas/providers';
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 
 export const AllowedIdentities = <

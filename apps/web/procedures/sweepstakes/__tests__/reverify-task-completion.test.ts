@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { CompletionStatus, TeamRole } from '@prisma/client';
 import { reverifyTaskCompletion } from '../reverify-task-completion';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';

@@ -5,7 +5,7 @@ import {
   assertMinimumTeamTier,
   hasMinimumTeamTier
 } from '../util';
-import { ApplicationError } from '../../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const ORDER = [TeamTier.FREE, TeamTier.PRO, TeamTier.ELITE, TeamTier.ALPHA];
 

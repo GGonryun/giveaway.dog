@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { computeUrl } from '../hooks/use-url';
-import { Nil } from '@/lib/types';
+import { Nil } from '@giveaway/util-types/types';
 
 type BrowsePageArgs = { sweepstakesId: string; slug: Nil<string> };
 export const useBrowseSweepstakesPage = () => {

@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import React from 'react';
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 import { PlusIcon, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 

@@ -7,7 +7,7 @@ import {
   TaskSchema,
   TASK_IS_DEPRECATED
 } from '../schemas';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import {
   BaseGiveawayFormSchema,
   GiveawayFormSchemaOptions

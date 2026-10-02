@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTeamBlueskyClient } from '@/lib/bluesky/team-bluesky-client';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);

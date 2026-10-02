@@ -16,8 +16,8 @@ import {
   IdentityProviderSchema,
   identityProviderSchema
 } from '@/lib/integrations/schemas/providers';
-import { ApplicationError } from '@/lib/errors';
-import { Nil } from '@/lib/types';
+import { ApplicationError } from '@giveaway/util-errors';
+import { Nil } from '@giveaway/util-types/types';
 
 export const userProfileSchema = z.object({
   id: z.string(),

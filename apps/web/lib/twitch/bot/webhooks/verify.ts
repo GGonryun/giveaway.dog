@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { NextRequest } from 'next/server';
 
 const TWITCH_MESSAGE_ID = 'twitch-eventsub-message-id';

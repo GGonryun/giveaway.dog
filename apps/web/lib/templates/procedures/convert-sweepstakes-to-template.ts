@@ -2,7 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { findUserSweepstakesQuery } from '@/procedures/sweepstakes/shared';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { toSweepstakesInput } from '@/schemas/giveaway/input';

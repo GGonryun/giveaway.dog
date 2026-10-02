@@ -7,7 +7,7 @@ import {
   estimateDuration
 } from '@/lib/pickers/x/utils/calculate-api-calls';
 import type { Tweet } from 'scrapebadger';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { checkAndConsumeCredits } from '@/lib/scrapebadger/credits';
 import { CREDIT_COSTS } from '@/lib/scrapebadger/settings';
 import prisma from '@/lib/prisma';

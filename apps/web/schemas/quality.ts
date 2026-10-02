@@ -1,4 +1,4 @@
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 import z from 'zod';
 
 export const qualityTypeSchema = z.enum([

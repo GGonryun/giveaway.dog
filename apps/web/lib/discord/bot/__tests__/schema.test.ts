@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { ZodError } from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import {
   discordApplicationCommandInteractionSchema,
   discordButtonInteractionSchema,
