@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { auth, handlers, signIn, signOut } from '../config';
-import { authConfig } from '../config-runtime';
+import { createAuthConfig, type GetSession } from '../config-runtime';
 import { createHash } from 'crypto';
 import { knownRequestError, prismaMock } from '@/test/prisma';
 
@@ -20,7 +20,9 @@ type RawProvider = Record<string, unknown> & {
   token?: { conform: () => Promise<Response> };
 };
 
-type BuiltConfig = Omit<typeof authConfig, 'providers'> & {
+type AuthConfig = ReturnType<typeof createAuthConfig>;
+
+type BuiltConfig = Omit<AuthConfig, 'providers'> & {
   providers: RawProvider[];
 };
 
@@ -46,6 +48,11 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock('next-auth', () => ({ default: mocks.NextAuth }));
+
+vi.mock('../config-runtime', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../config-runtime')>();
+  return { ...actual, createAuthConfig: vi.fn(actual.createAuthConfig) };
+});
 
 vi.mock('@paralleldrive/cuid2', () => ({ createId: mocks.createId }));
 
@@ -74,6 +81,13 @@ const ENV = {
 };
 
 const factory = () => mocks.NextAuth.mock.calls[0][0] as ConfigFactory;
+
+const createAuthConfigMock = vi.mocked(createAuthConfig);
+
+const authConfig = () =>
+  createAuthConfigMock.mock.results[0].value as AuthConfig;
+
+const getSession = () => createAuthConfigMock.mock.calls[0][0] as GetSession;
 
 const buildConfig = (request?: Request) => factory()(request);
 
@@ -131,11 +145,26 @@ describe('auth config', () => {
     it('spreads the runtime config', () => {
       const config = buildConfig();
 
-      expect(config.callbacks).toBe(authConfig.callbacks);
-      expect(config.events).toBe(authConfig.events);
-      expect(config.adapter).toBe(authConfig.adapter);
-      expect(config.pages).toBe(authConfig.pages);
-      expect(config.session).toBe(authConfig.session);
+      expect(config.callbacks).toBe(authConfig().callbacks);
+      expect(config.events).toBe(authConfig().events);
+      expect(config.adapter).toBe(authConfig().adapter);
+      expect(config.pages).toBe(authConfig().pages);
+      expect(config.session).toBe(authConfig().session);
+    });
+
+    it('builds the runtime config once', () => {
+      buildConfig();
+      buildConfig();
+
+      expect(createAuthConfigMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('gives the runtime config a session getter that reads the current session', async () => {
+      const session = { user: { id: 'u-1' }, expires: '2026-12-31' };
+      mocks.instance.auth.mockResolvedValue(session);
+
+      await expect(getSession()()).resolves.toBe(session);
+      expect(mocks.instance.auth).toHaveBeenCalledWith();
     });
 
     it('registers the providers in order', () => {

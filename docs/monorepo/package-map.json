@@ -713,7 +713,12 @@
         "@giveaway/integration-model",
         "@giveaway/util-collections"
       ],
-      "npm": ["@auth/prisma-adapter", "@giveaway/db-model", "next-auth"]
+      "npm": [
+        "@auth/prisma-adapter",
+        "@giveaway/db-model",
+        "next-auth",
+        "server-only"
+      ]
     },
     {
       "name": "@giveaway/auth-login-ui",
@@ -5393,18 +5398,19 @@
       "type": "config",
       "tags": ["type:config", "runtime:isomorphic", "scope:tooling"],
       "layer": 2,
-      "sourceFiles": 5,
+      "sourceFiles": 6,
       "testFiles": 0,
       "sources": [
         "test/next-cache.ts",
         "test/prisma.ts",
         "test/result.ts",
+        "test/server-only.ts",
         "test/session.ts",
         "test/setup.ts"
       ],
       "dependsOn": ["@giveaway/rpc-model", "@giveaway/util-errors"],
       "npm": ["@giveaway/db-model", "vitest"],
-      "note": "Vitest setup for every package: the Prisma, session and next/cache mocks."
+      "note": "Vitest setup for every package: the Prisma, session and next/cache mocks, and the empty server-only module."
     },
     {
       "name": "@giveaway/tsconfig",
