@@ -108,6 +108,7 @@ lib/
 - Use `pnpm run test:run` to run all the tests one time (Vitest): server tests, component tests and snapshot tests
 - Use `pnpm run test:unit` to run only the server and component tests, and `pnpm run test:snapshot` to run only the snapshot tests
 - Use `pnpm run test:coverage` to run the server and component tests and measure the code coverage
+- Use `pnpm run test:e2e` to run the Playwright end-to-end tests against a running app (see E2E Tests)
 - Use `pnpm vitest run --project <name>` to run one project: `server`, `frontend` or `snapshot`
 - Use `pnpm vitest run -u <path>` to update snapshots after an intended UI change. Review the snapshot diff before you commit it
 - Use `pnpm run format` to automatically format all files
@@ -134,6 +135,15 @@ lib/
 - **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`
 - **ESLint baseline**: `eslint-suppressions.json` records the errors that existed when ESLint was added. New errors fail the check. Do not add entries to this file to hide new errors
 - **After you fix a recorded error**: Run `pnpm run lint:prune` and commit `eslint-suppressions.json`. If you do not, ESLint stops with exit code 2
+
+### E2E Tests
+
+- **Location**: Put Playwright tests in `e2e/`, named `<name>.spec.ts`. They run in Chromium. Vitest does not run them
+- **Run locally**: Start the app with `pnpm dev`, then run `pnpm run test:e2e:local`. Run `pnpm exec playwright install chromium` one time first. The tests use `http://localhost:3000`. Set `E2E_BASE_URL` to test another deployment
+- **Login**: The login test signs in through the `e2e` credentials provider in `lib/auth/providers/e2e.ts`. The app adds this provider only when `E2E_LOGIN_SECRET` has at least 32 characters, and only on Vercel preview deployments (`VERCEL_ENV=preview`) and the local development server (`next dev`). The provider signs in one host user, `e2e-host@example.com`. Without `E2E_LOGIN_SECRET`, the login test is skipped
+- **Protected deployments**: `e2e/vercel.setup.ts` sends `VERCEL_AUTOMATION_BYPASS_SECRET` one time to get the Vercel bypass cookie. The other tests use that cookie, so the secret goes only to the deployment
+- **CI**: `.github/workflows/e2e.yml` runs after each successful Vercel preview deployment (the `vercel.deployment.success` repository dispatch event). It tests the commit of the deployment against the preview URL and sets the `E2E tests` status on that commit. To test a deployment by hand, run the workflow from the Actions tab with the deployment URL
+- **Secrets**: The workflow needs the `VERCEL_AUTOMATION_BYPASS_SECRET` and `E2E_LOGIN_SECRET` GitHub Actions secrets. Set the same `E2E_LOGIN_SECRET` in Vercel for the Preview environment only. Never set it for Production
 
 ### Authentication Flow
 

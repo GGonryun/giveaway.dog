@@ -155,6 +155,13 @@ describe('auth config', () => {
       ]);
     });
 
+    it('registers the e2e provider last when an e2e login secret is set', () => {
+      vi.stubEnv('E2E_LOGIN_SECRET', 'e2e-secret-with-at-least-32-chars');
+      vi.stubEnv('VERCEL_ENV', 'preview');
+
+      expect(buildConfig().providers.map(providerId).at(-1)).toBe('e2e');
+    });
+
     it('throws when the steam secret is missing', () => {
       vi.stubEnv('STEAM_SECRET', '');
 
