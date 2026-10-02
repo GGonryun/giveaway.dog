@@ -11,32 +11,7 @@
     "tool": ["server", "model", "util"],
     "config": ["config", "model", "util"]
   },
-  "refactors": [
-    {
-      "id": "R5",
-      "reason": "boundary",
-      "required": true,
-      "from": "^(lib\\/custom-fields\\/schemas|schemas\\/quality|lib\\/user-quality\\/enforcement-levels|lib\\/team\\/data|lib\\/scoring\\/schemas\\/imported|schemas\\/user-agent)\\.ts$",
-      "to": "^(lib\\/integrations\\/components\\/icons\\/.*|components\\/ui\\/(alert|badge)\\.tsx)$",
-      "change": "Move icon and variant maps out of model files into the UI package that renders them: lib/custom-fields/schemas.ts (field icons), schemas/quality.ts (badge and alert variants, icons), lib/user-quality/enforcement-levels.ts (alert variants), lib/team/data.ts (FALLBACK_TEAM_ICON), lib/scoring/schemas/imported.ts (icons) and schemas/user-agent.ts (device icons). Model packages then have no React dependency."
-    },
-    {
-      "id": "R6",
-      "reason": "boundary",
-      "required": true,
-      "from": "^procedures\\/sweepstakes\\/get-sweepstakes-list\\.ts$",
-      "to": "^components\\/sweepstakes\\/status-badge\\.tsx$",
-      "change": "Move getSweepstakesTimingDescription from components/sweepstakes/status-badge.tsx to the sweepstakes model. procedures/sweepstakes/get-sweepstakes-list.ts then stops importing a UI file."
-    },
-    {
-      "id": "R7",
-      "reason": "boundary",
-      "required": true,
-      "from": "^lib\\/mrpc\\/hook\\.ts$",
-      "to": "^lib\\/mrpc\\/errors\\.ts$",
-      "change": "Move isNextRedirect from lib/mrpc/errors.ts to lib/mrpc/types.ts (@giveaway/rpc-model). The client hook lib/mrpc/hook.ts then stops importing the server error boundary, which imports the Prisma runtime."
-    }
-  ],
+  "refactors": [],
   "testFixtures": {
     "components/patterns/app-sidebar/__tests__/fixtures.tsx": {
       "package": "@giveaway/shell-sidebar",
