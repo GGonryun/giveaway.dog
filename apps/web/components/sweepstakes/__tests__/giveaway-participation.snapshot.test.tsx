@@ -3,7 +3,8 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayParticipation } from '../giveaway-participation';
 import type { GiveawayParticipationProps } from '../giveaway-participation-context';
-import { NOW, buildParticipationProps, withStableIds } from './fixtures';
+import { NOW, withStableIds } from './fixtures';
+import { buildParticipationProps } from './participation-fixtures';
 
 vi.mock('@/lib/turnstile/gate', () => ({
   TurnstileGate: ({ children }: { children: ReactNode }) => (

@@ -5,7 +5,7 @@ import {
   GiveawayParticipationProvider,
   useGiveawayParticipation
 } from '../giveaway-participation-context';
-import { buildParticipationProps } from './fixtures';
+import { buildParticipationProps } from './participation-fixtures';
 import type { GiveawayParticipationProps } from '../giveaway-participation-context';
 
 const wrapperFor = (props: GiveawayParticipationProps) => {

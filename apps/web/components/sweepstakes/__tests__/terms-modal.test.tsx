@@ -7,9 +7,9 @@ import {
   buildAgeField,
   buildAudience,
   buildPrize,
-  buildSweepstakes,
-  renderWithParticipation
+  buildSweepstakes
 } from './fixtures';
+import { renderWithParticipation } from './participation-fixtures';
 import type { GiveawayFormAudience } from '@/schemas/giveaway/schemas';
 
 const renderTerms = ({

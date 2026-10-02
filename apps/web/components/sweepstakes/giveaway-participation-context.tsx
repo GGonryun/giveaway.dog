@@ -18,6 +18,7 @@ import {
 } from '@/lib/referrals/schemas';
 import { TurnstileStatus } from '@/lib/turnstile/schemas';
 import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
+import { TaskEntryProvider } from '@/lib/task/components/public-sweepstakes/task-actions/lib/task-entry-context';
 
 export interface GiveawayParticipationProps {
   device?: DeviceType;
@@ -103,7 +104,9 @@ export const GiveawayParticipationProvider: React.FC<
 
   return (
     <GiveawayParticipationContext.Provider value={value}>
-      {children}
+      <TaskEntryProvider providers={participant?.user.providers}>
+        {children}
+      </TaskEntryProvider>
     </GiveawayParticipationContext.Provider>
   );
 };

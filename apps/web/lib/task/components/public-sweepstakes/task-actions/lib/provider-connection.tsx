@@ -6,7 +6,7 @@ import {
 } from '../building-blocks';
 import { useMemo } from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
+import { useTaskEntry } from './task-entry-context';
 import { usePathname } from 'next/navigation';
 
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -25,15 +25,15 @@ import { LoginOptions } from '@/components/auth/login-options';
 import { AccountStatusAlert } from '@/components/auth/account-status-alert';
 
 const useProviderConnection = ({ task }: { task: TaskSchema }) => {
-  const { participant } = useGiveawayParticipation();
+  const { providers } = useTaskEntry();
   const pathname = usePathname();
 
   const providerId = TASK_IDENTITY_PROVIDER[task.type];
   const providerLabel = IDENTITY_PROVIDER_LABEL[providerId];
 
   const provider = useMemo(() => {
-    return participant?.user.providers.find((p) => p.type === providerId);
-  }, [participant?.user.providers, providerId]);
+    return providers?.find((p) => p.type === providerId);
+  }, [providers, providerId]);
 
   const redirectTo = useMemo(() => {
     const params = new URLSearchParams();
@@ -104,7 +104,7 @@ export const WithProviderConnection: React.FC<
     task
   });
 
-  const { participant } = useGiveawayParticipation();
+  const { providers } = useTaskEntry();
 
   return (
     <>
@@ -120,7 +120,7 @@ export const WithProviderConnection: React.FC<
               returnTo={redirectTo}
               allowedIdentities={[providerId]}
               type="pill"
-              userProviders={participant?.user.providers}
+              userProviders={providers}
             />
             {Boolean(provider && isIncomplete) && (
               <IsMissingPermissions providerLabel={providerLabel} />

@@ -3,7 +3,7 @@ import { ZodError } from 'zod';
 import { ApplicationError } from '@/lib/errors';
 import { getSweepstakesCriteria, sweepstakesCriteriaSchema } from '../criteria';
 import { asPrismaClient, prismaMock } from '@/test/prisma';
-import { buildCriteriaRow } from './fixtures-sweepstakes-winners-email';
+import { buildCriteriaRow } from './fixtures-winners-model';
 
 const validCriteria = {
   minQualityScore: 50,

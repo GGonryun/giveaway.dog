@@ -4,8 +4,8 @@ import { knownRequestError, prismaMock } from '@/test/prisma';
 import { signIn } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
 import { nextCacheMock } from '@/test/next-cache';
+import { buildCriteriaRow } from '../../__tests__/fixtures-winners-model';
 import {
-  buildCriteriaRow,
   givenSweepstakesLookups,
   inputIssuePaths,
   omitField

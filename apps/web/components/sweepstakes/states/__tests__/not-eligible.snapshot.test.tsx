@@ -3,9 +3,9 @@ import { NotEligible } from '../not-eligible';
 import {
   buildAgeField,
   buildAudience,
-  buildSweepstakes,
-  renderWithParticipation
+  buildSweepstakes
 } from '@/components/sweepstakes/__tests__/fixtures';
+import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import type { GiveawayFormAudience } from '@/schemas/giveaway/schemas';
 
 const renderNotEligible = (audience: Partial<GiveawayFormAudience>) =>

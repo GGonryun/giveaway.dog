@@ -7,9 +7,9 @@ import {
   buildParticipant,
   buildPrizeDraw,
   buildSweepstakes,
-  buildTask,
-  renderWithParticipation
+  buildTask
 } from '@/components/sweepstakes/__tests__/fixtures';
+import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
 import { WinnersAnnouncedParticipation } from '../winners-announced-participation';
 

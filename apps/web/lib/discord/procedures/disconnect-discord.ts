@@ -2,7 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { TeamPermission } from '@/lib/permissions';
-import { findUserTeam } from '@/procedures/sweepstakes/shared';
+import { findUserTeam } from '@/procedures/teams/find-user-team';
 import { IntegrationProvider, TeamTier } from '@prisma/client';
 import z from 'zod';
 

@@ -2,8 +2,7 @@ import type { Prisma, TeamRole, TeamTier, UserSource } from '@prisma/client';
 import type { EligibleTaskCompletion } from '@/lib/task/queries';
 import type { ExpandedEligibleTaskCompletion } from '../completions';
 import { prismaMock } from '@/test/prisma';
-
-export const BASE_DATE = new Date('2024-01-01T00:00:00.000Z');
+import { BASE_DATE, buildCriteriaRow } from './fixtures-winners-model';
 
 export const bonusTaskConfig = (value = 1) => ({
   type: 'BONUS_TASK',
@@ -114,17 +113,6 @@ export const buildExpandedCompletion = (
   value: options.value ?? 1
 });
 
-export const buildCriteriaRow = (overrides: Record<string, unknown> = {}) => ({
-  id: 'criteria-1',
-  sweepstakesId: 'sw-1',
-  minTasksCompleted: 0,
-  minQualityScore: 0,
-  allowMultipleWins: false,
-  allowUserSelection: false,
-  externalPlatforms: null,
-  ...overrides
-});
-
 export const buildTeamSweepstakes = (
   options: { userId?: string; role?: TeamRole; tier?: TeamTier } = {}
 ) => ({
@@ -140,17 +128,6 @@ export const buildTeamSweepstakes = (
       }
     ]
   }
-});
-
-export const buildAllocation = (
-  participantId: string,
-  prizeId: string
-): Prisma.SweepstakesAllocationGetPayload<{}> => ({
-  id: `allocation-${participantId}-${prizeId}`,
-  participantId,
-  prizeId,
-  createdAt: BASE_DATE,
-  updatedAt: BASE_DATE
 });
 
 type SweepstakesLookupArgs = {

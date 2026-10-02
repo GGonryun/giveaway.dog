@@ -59,7 +59,7 @@ Make the changes from [Refactors that make the graph valid](./package-graph.md#r
 | 6            | R8: make the auth runtime config a factory, and replace `'server only'` with `import 'server-only'` |
 | 7            | D1: invert the task-entry dependency on the participation context                                   |
 | 8            | Split the two shared fixture files that create cycles in tests                                      |
-| 9            | Move `findUserTeam` to the team procedures and delete the unused `procedures/teams/shared.ts`       |
+| 9            | Move `findUserTeam` to the team procedures (`procedures/teams/shared.ts` is already deleted)        |
 
 **Exit criterion:** the checker reports no imports under "Imports that a listed refactor removes" and no "Cycles that only tests create". Then remove the `refactors` entries from `package-map.json`.
 
@@ -112,11 +112,11 @@ Run the codemod one wave at a time. Within a wave, group packages by scope into 
 
 | Wave | Layers   | Packages | Source files | Test files | Mostly                                                                       |
 | ---- | -------- | -------: | -----------: | ---------: | ---------------------------------------------------------------------------- |
-| 1    | 0 to 1   |       57 |          155 |        205 | Tooling, shared utilities, server infrastructure, base models, ui-primitives |
-| 2    | 2 to 4   |       47 |          220 |        214 | Remaining models, auth, rpc, platform APIs, design system                    |
-| 3    | 5 to 7   |       67 |          304 |        272 | Server procedures, platform plugins, first feature packages                  |
-| 4    | 8 to 11  |       54 |          262 |        164 | Task registries, sweepstakes details and editor sections, team UI            |
-| 5    | 12 to 17 |       12 |           78 |         57 | Participation, editor shell, templates, marketing home, browse item          |
+| 1    | 0 to 1   |       58 |          145 |        187 | Tooling, shared utilities, server infrastructure, base models, ui-primitives |
+| 2    | 2 to 4   |       48 |          201 |        190 | Remaining models, auth, rpc, platform APIs, design system                    |
+| 3    | 5 to 7   |       71 |          309 |        266 | Server procedures, platform plugins, first feature packages                  |
+| 4    | 8 to 11  |       51 |          240 |        147 | Task registries, sweepstakes details and editor sections, team UI            |
+| 5    | 12 to 15 |       11 |           63 |         45 | Participation, editor shell, templates, marketing home, browse item          |
 
 Every wave pull request must meet these checks:
 

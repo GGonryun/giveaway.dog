@@ -5,8 +5,10 @@ import { signIn } from '@/test/session';
 import { expectFailure, expectOk } from '@/test/result';
 import {
   buildAllocation,
+  buildCriteriaRow
+} from '../../__tests__/fixtures-winners-model';
+import {
   buildCompletion,
-  buildCriteriaRow,
   buildTeamSweepstakes,
   givenSweepstakesLookups,
   inputIssuePaths,

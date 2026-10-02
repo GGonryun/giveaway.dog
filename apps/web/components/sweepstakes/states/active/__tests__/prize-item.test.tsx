@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ComponentProps } from 'react';
 import {
   buildAllocations,
-  buildPrize,
-  renderWithParticipation
+  buildPrize
 } from '@/components/sweepstakes/__tests__/fixtures';
+import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import { PrizeItem } from '../prize-item';
 
 vi.mock('next/navigation', () => ({

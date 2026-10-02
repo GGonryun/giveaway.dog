@@ -3,7 +3,8 @@
 import { ApplicationError } from '@/lib/errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import { findUserSweepstakes, findUserTeam } from './shared';
+import { findUserSweepstakes } from './shared';
+import { findUserTeam } from '@/procedures/teams/find-user-team';
 import { TeamPermission } from '@/lib/permissions';
 import { TeamTier } from '@prisma/client';
 

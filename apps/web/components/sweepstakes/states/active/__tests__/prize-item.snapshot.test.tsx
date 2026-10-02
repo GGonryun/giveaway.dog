@@ -3,9 +3,9 @@ import type { ComponentProps } from 'react';
 import {
   buildAllocations,
   buildPrize,
-  renderWithParticipation,
   withStableIds
 } from '@/components/sweepstakes/__tests__/fixtures';
+import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import { PrizeItem } from '../prize-item';
 
 vi.mock('next/navigation', () => ({
