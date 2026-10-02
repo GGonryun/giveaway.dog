@@ -113,9 +113,9 @@ Run the codemod one wave at a time. Within a wave, group packages by scope into 
 | Wave | Layers   | Packages | Source files | Test files | Mostly                                                                       |
 | ---- | -------- | -------: | -----------: | ---------: | ---------------------------------------------------------------------------- |
 | 1    | 0 to 1   |       58 |          145 |        187 | Tooling, shared utilities, server infrastructure, base models, ui-primitives |
-| 2    | 2 to 4   |       48 |          204 |        191 | Remaining models, auth, rpc, platform APIs, design system                    |
+| 2    | 2 to 4   |       48 |          205 |        192 | Remaining models, auth, rpc, platform APIs, design system                    |
 | 3    | 5 to 7   |       71 |          309 |        266 | Server procedures, platform plugins, first feature packages                  |
-| 4    | 8 to 11  |       51 |          240 |        147 | Task registries, sweepstakes details and editor sections, team UI            |
+| 4    | 8 to 11  |       51 |          241 |        148 | Task registries, sweepstakes details and editor sections, team UI            |
 | 5    | 12 to 15 |       11 |           63 |         45 | Participation, editor shell, templates, marketing home, browse item          |
 
 Every wave pull request must meet these checks:
