@@ -137,11 +137,13 @@ pnpm-workspace.yaml
 ### Nx
 
 - **Projects**: pnpm workspace packages under `apps/`. `web` is the app in `apps/web`, and `web-e2e` is the Playwright tests in `apps/web-e2e`. Their targets are the scripts in their `package.json`. `nx.json` sets the cache and the inputs
-- **Cached targets**: `pnpm nx run web:lint`, `pnpm nx run web:type-check`, `pnpm nx run web:test:unit` and `pnpm nx run web:test:snapshot`. A second run with no changed inputs reads the result from the cache in `.nx/`. `web:lint` is defined in `apps/web/package.json` under `nx.targets` and runs ESLint from the root, so it uses the root `eslint-suppressions.json`
+- **Cached targets**: `lint`, `type-check`, `test:unit`, `test:server`, `test:frontend` and `test:snapshot`, for example `pnpm nx run web:lint`. A second run with no changed inputs reads the result from the cache. `lint` is defined in `apps/web/package.json` and `apps/web-e2e/package.json` under `nx.targets` and runs ESLint from the root, so it uses the root `eslint-suppressions.json`
+- **Inputs**: Each cached target hashes the files of its project, the versions of all the npm packages in `pnpm-lock.yaml`, and the `sharedGlobals` files in `nx.json` (`.nvmrc`, the root `package.json`, the ESLint config and the CI files). A change to a `sharedGlobals` file affects every project
+- **Affected projects**: `pnpm nx affected -t <target>` runs a target only for the projects that changed since `main`, and the projects that depend on them. `web-e2e` depends on `web`. A change to `pnpm-lock.yaml` affects only the projects that use the changed packages (`projectsAffectedByDependencyUpdates` is `auto`). A package that only the root tooling uses, such as ESLint or Prettier, is in no project, so a lockfile-only update of it affects no project. The full run on `main` still runs it
 - **Dependencies**: Add an app dependency with `pnpm --filter web add <name>`. Add workspace tooling (Nx, ESLint, Prettier, Vitest and its plugins) to the root `package.json` with `pnpm add -D -w <name>`. Vitest runs from the root, so its peer dependencies (`@types/node`, `jsdom`, `playwright`) stay in the root `package.json` with the same versions the app uses. Otherwise pnpm installs a second copy of Vitest, and the visual tests stop with no output
 - **Other commands**: `pnpm nx show projects` lists the projects, `pnpm nx show project web` shows the targets and `pnpm nx reset` clears the cache
 - **Build**: `nx.json` defines a `build` target default that is never cached, so a build always uses the current environment variables. Vercel finds this target and builds the app with `cd ../.. && npx nx build web`
-- **CI**: CI still runs the `pnpm run` scripts, not Nx
+- **CI**: CI runs the targets through Nx. See Continuous Integration
 
 ### Frontend Tests
 
@@ -156,7 +158,9 @@ pnpm-workspace.yaml
 ### Continuous Integration
 
 - **Workflow**: `.github/workflows/ci.yml` runs on each pull request and on each push to `main`
-- **Checks**: `Lint` (ESLint), `Server tests` (Vitest server tests, with coverage), `Frontend tests` (Vitest component tests, with coverage), `Snapshot tests` (Vitest snapshot tests), `Visual tests` (screenshots in Chromium) and `Coverage` (merges the server and frontend coverage). Merge a pull request only when all the checks pass
+- **Checks**: `Lint` (ESLint), `Type check` (TypeScript), `Server tests` (Vitest server tests, with coverage), `Frontend tests` (Vitest component tests, with coverage), `Snapshot tests` (Vitest snapshot tests), `Visual tests` (screenshots in Chromium) and `Coverage` (merges the server and frontend coverage). Merge a pull request only when all the checks pass
+- **Nx in CI**: On a pull request, each job runs `pnpm nx affected -t <target>`, so a pull request that changes no project (for example, only Markdown files at the root) runs no tests. `nrwl/nx-set-shas` sets the base commit. On a push to `main` and on a manual run, each job runs `pnpm nx run-many -t <target>` for all the projects, so the `Coverage badge` job always has the full coverage
+- **Nx cache in CI**: `.github/actions/nx-cache` starts a small server (`server.mjs`) that gives the cache to Nx through the Nx remote cache API (`NX_SELF_HOSTED_REMOTE_CACHE_SERVER`). `actions/cache` keeps the files of the server in `.nx/ci-cache`, for each job and branch, with a fallback to `main`. The server deletes the entries that no run used for 7 days. Nx cannot use a copy of its own local cache folder, because its cache database is tied to the machine. A re-run on the same commit reads `lint`, `type-check` and the tests from the cache
 - **Paths in CI**: The Vitest reports, the coverage summary and the visual test attachments are in `apps/web` (`apps/web/.vitest-reports`, `apps/web/coverage`, `apps/web/.vitest-attachments`). The Playwright report is in `apps/web-e2e/playwright-report`
 - **Coverage badge**: After each push to `main`, the `Coverage badge` job puts the merged line coverage in `coverage.svg` on the `badges` branch. The README shows this image. Do not edit the `badges` branch by hand
 - **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`

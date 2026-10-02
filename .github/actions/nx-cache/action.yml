@@ -1,0 +1,27 @@
+name: Nx cache
+description: Keep the Nx cache between CI runs. A local server gives the cache to Nx through the Nx remote cache API, and actions/cache keeps the files of the server
+
+runs:
+  using: composite
+  steps:
+    - name: Restore the Nx cache
+      uses: actions/cache@v4
+      with:
+        path: .nx/ci-cache
+        key: nx-${{ runner.os }}-${{ github.job }}-${{ github.head_ref || github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          nx-${{ runner.os }}-${{ github.job }}-${{ github.head_ref || github.ref_name }}-
+          nx-${{ runner.os }}-${{ github.job }}-main-
+
+    - name: Start the Nx cache server
+      shell: bash
+      run: |
+        log="$RUNNER_TEMP/nx-cache-server.log"
+        nohup node "$GITHUB_ACTION_PATH/server.mjs" .nx/ci-cache 7373 > "$log" 2>&1 &
+        for _ in $(seq 50); do
+          grep -q 'Listening' "$log" && break
+          sleep 0.1
+        done
+        cat "$log"
+        grep -q 'Listening' "$log"
+        echo "NX_SELF_HOSTED_REMOTE_CACHE_SERVER=http://127.0.0.1:7373" >> "$GITHUB_ENV"
