@@ -9,9 +9,9 @@
       "!{projectRoot}/**/__snapshots__/**"
     ],
     "sharedGlobals": [
-      "{workspaceRoot}/tsconfig.json",
-      "{workspaceRoot}/vitest.config.ts",
-      "{workspaceRoot}/eslint.config.mjs"
+      "{workspaceRoot}/eslint.config.mjs",
+      "{workspaceRoot}/eslint-suppressions.json",
+      "{workspaceRoot}/pnpm-lock.yaml"
     ]
   },
   "targetDefaults": {

@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
-import { BASE_URL, BYPASS_STATE } from './e2e/env';
+import { BASE_URL, BYPASS_STATE } from './src/env';
 
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './src',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,

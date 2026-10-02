@@ -19,8 +19,10 @@ runs:
       id: node-modules
       uses: actions/cache@v4
       with:
-        path: node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('.nvmrc') }}-modules-${{ hashFiles('pnpm-lock.yaml', 'pnpm-workspace.yaml', 'prisma/schema.prisma') }}
+        path: |
+          node_modules
+          apps/*/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('.nvmrc') }}-modules-${{ hashFiles('pnpm-lock.yaml', 'pnpm-workspace.yaml', 'apps/web/prisma/schema.prisma') }}
 
     - name: Install dependencies
       if: steps.node-modules.outputs.cache-hit != 'true'

@@ -67,7 +67,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm --filter web-e2e exec playwright install --with-deps chromium
 
       - name: Playwright
         env:
@@ -82,11 +82,11 @@ jobs:
           E2E_BASE_URL="$E2E_BASE_URL" pnpm run test:e2e
 
       - name: Upload the Playwright report
-        if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
+        if: ${{ !cancelled() && hashFiles('apps/web-e2e/playwright-report/**') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright-report/
+          path: apps/web-e2e/playwright-report/
           retention-days: 14
 
       - name: Report the result on the commit
