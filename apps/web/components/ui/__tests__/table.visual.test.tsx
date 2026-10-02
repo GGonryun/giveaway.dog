@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { renderVisual, THEMES } from '@/test/visual/render';
+import { renderVisual, THEMES } from '@giveaway/testing-visual/render';
 import { Badge } from '../badge';
 import {
   Table,

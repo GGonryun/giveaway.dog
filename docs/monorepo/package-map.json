@@ -254,6 +254,7 @@
         "@giveaway/templates-model",
         "@giveaway/templates-server",
         "@giveaway/testing-server",
+        "@giveaway/testing-visual",
         "@giveaway/theme-model",
         "@giveaway/theme-server",
         "@giveaway/turnstile-ui",
@@ -5318,17 +5319,12 @@
       "type": "config",
       "tags": ["type:config", "runtime:isomorphic", "scope:tooling"],
       "layer": 0,
-      "sourceFiles": 4,
+      "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["test/visual/"],
+      "sources": [],
       "dependsOn": [],
-      "npm": [
-        "@fontsource-variable/figtree",
-        "@testing-library/jest-dom",
-        "@testing-library/react",
-        "vitest"
-      ],
-      "note": "jsdom setup for component and snapshot tests, and the browser setup and render helper for visual tests."
+      "npm": ["@testing-library/jest-dom", "@testing-library/react", "vitest"],
+      "note": "jsdom setup for component and snapshot tests."
     },
     {
       "name": "@giveaway/testing-server",
@@ -5342,6 +5338,24 @@
       "dependsOn": [],
       "npm": ["@prisma/client", "next", "vitest"],
       "note": "Vitest setup for every package: the Prisma, session and next/cache mocks."
+    },
+    {
+      "name": "@giveaway/testing-visual",
+      "path": "packages/tooling/testing-visual",
+      "type": "config",
+      "tags": ["type:config", "runtime:isomorphic", "scope:tooling"],
+      "layer": 0,
+      "sourceFiles": 3,
+      "testFiles": 0,
+      "sources": [],
+      "dependsOn": [],
+      "npm": [
+        "@fontsource-variable/figtree",
+        "@testing-library/react",
+        "react",
+        "vitest"
+      ],
+      "note": "Browser setup and render helpers for visual tests, and the script that runs them in the Playwright Docker image."
     },
     {
       "name": "@giveaway/tsconfig",

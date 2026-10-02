@@ -8,8 +8,7 @@
       "@/schemas/*": ["schemas/*"],
       "@/app/*": ["app/*"],
       "@/procedures/*": ["procedures/*"],
-      "@/types/*": ["types/*"],
-      "@/test/*": ["test/*"]
+      "@/types/*": ["types/*"]
     }
   },
   "include": [

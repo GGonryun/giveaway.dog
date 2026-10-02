@@ -9,7 +9,7 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    entries: ['**/*.visual.test.tsx', 'test/visual/**/*.{ts,tsx}'],
+    entries: ['**/*.visual.test.tsx'],
     include: [
       'react',
       'react-dom',
@@ -27,7 +27,7 @@ export default defineConfig({
     name: 'visual',
     include: ['**/*.visual.test.tsx'],
     exclude: ['**/node_modules/**', '.next/**'],
-    setupFiles: ['./test/visual/setup.ts'],
+    setupFiles: ['./app/globals.css', '@giveaway/testing-visual/setup'],
     attachmentsDir: '.vitest-attachments',
     browser: {
       enabled: true,

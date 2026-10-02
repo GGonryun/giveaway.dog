@@ -1,6 +1,10 @@
 import { describe, expect, test } from 'vitest';
 import { Mail } from 'lucide-react';
-import { renderVisual, THEMES, VisualGrid } from '@/test/visual/render';
+import {
+  renderVisual,
+  THEMES,
+  VisualGrid
+} from '@giveaway/testing-visual/render';
 import { Button } from '../button';
 
 const VARIANTS = [
