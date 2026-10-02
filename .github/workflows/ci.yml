@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vitest-report-server
-          path: .vitest-reports/
+          path: apps/web/.vitest-reports/
           include-hidden-files: true
           retention-days: 1
 
@@ -74,7 +74,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vitest-report-frontend
-          path: .vitest-reports/
+          path: apps/web/.vitest-reports/
           include-hidden-files: true
           retention-days: 1
 
@@ -98,16 +98,16 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: vitest-report-*
-          path: .vitest-reports
+          path: apps/web/.vitest-reports
           merge-multiple: true
 
       - name: Merge the coverage
-        run: pnpm vitest run --merge-reports=.vitest-reports --coverage
+        run: pnpm --filter web exec vitest run --merge-reports=.vitest-reports --coverage
 
       - name: Report the line coverage
         id: coverage
         run: |
-          lines=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
+          lines=$(node -p "require('./apps/web/coverage/coverage-summary.json').total.lines.pct")
           echo "lines=$lines" >> "$GITHUB_OUTPUT"
           echo "Line coverage: ${lines}%" >> "$GITHUB_STEP_SUMMARY"
 
@@ -172,7 +172,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: visual-changes
-          path: .vitest-attachments/
+          path: apps/web/.vitest-attachments/
           include-hidden-files: true
           retention-days: 14
 
@@ -184,7 +184,7 @@ jobs:
             echo
             echo "These screenshots do not match their references:"
             echo
-            find .vitest-attachments -name '*-actual-*.png' | sort | sed -e 's|^\.vitest-attachments/|- |' -e 's|-actual-|-|'
+            find apps/web/.vitest-attachments -name '*-actual-*.png' | sort | sed -e 's|^apps/web/\.vitest-attachments/|- |' -e 's|-actual-|-|'
             echo
             echo "The \`visual-changes\` artifact of this run has the actual screenshot and a diff image for each one. The diff image shows the changed pixels in red."
             echo

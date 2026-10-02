@@ -6,6 +6,9 @@ export default defineConfig([
   ...nextVitals,
   ...nextTs,
   {
+    settings: {
+      next: { rootDir: 'apps/web/' }
+    },
     rules: {
       '@typescript-eslint/no-namespace': 'off',
       '@typescript-eslint/no-empty-object-type': [
@@ -31,12 +34,12 @@ export default defineConfig([
     }
   },
   globalIgnores([
-    '.next/**',
-    'out/**',
-    'build/**',
-    'coverage/**',
-    'app/.well-known/**',
+    '**/.next/**',
+    '**/out/**',
+    '**/build/**',
+    '**/coverage/**',
+    'apps/web/app/.well-known/**',
     '.nx/**',
-    'next-env.d.ts'
+    '**/next-env.d.ts'
   ])
 ]);

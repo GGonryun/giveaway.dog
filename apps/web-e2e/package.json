@@ -1,0 +1,20 @@
+{
+  "name": "web-e2e",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "web"
+    ]
+  },
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:local": "dotenv -e ../web/.env.local -- playwright test",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "20.17.6",
+    "dotenv-cli": "^10.0.0",
+    "typescript": "5.7.2"
+  }
+}
