@@ -112,6 +112,8 @@ packages/
     ├── testing-server/ (@giveaway/testing-server: Vitest setup and mocks)
     ├── testing-dom/ (@giveaway/testing-dom: jsdom setup)
     └── testing-visual/ (@giveaway/testing-visual: visual test setup and helpers)
+tools/
+└── codemods/ (@giveaway/codemods: the move codemod)
 package.json (workspace tooling: Nx, ESLint, Prettier, Vitest)
 eslint.config.mjs
 eslint-suppressions.json
@@ -142,6 +144,7 @@ vitest.config.ts (lists the Vitest projects of every package)
 - Use `pnpm run test:e2e` to run the Playwright end-to-end tests against a running app (see E2E Tests)
 - Use `pnpm --filter web exec vitest run --project <name>` to run one project of the app: `server`, `frontend` or `snapshot`. From the root, the project names start with the package name, for example `pnpm exec vitest run --project 'web:server'`
 - Use `pnpm --filter web exec vitest run -u <path>` to update snapshots (the path is relative to `apps/web`) after an intended UI change. Review the snapshot diff before you commit it
+- Use `pnpm run move-packages <package>...` to move packages out of `apps/web` (see Workspace Packages)
 - Use `pnpm run format` to automatically format all files
 - Use `pnpm run format:check` to check if files need formatting
 - Use `pnpm run verify` to run lint, format check, type check, and all the tests in sequence
@@ -171,6 +174,7 @@ vitest.config.ts (lists the Vitest projects of every package)
   - `@giveaway/testing-dom`: the jsdom setup of the `frontend` and `snapshot` projects
   - `@giveaway/testing-visual`: the browser setup (`/setup`) and the `renderVisual` helpers (`/render`) of the visual tests, and `visual-docker`, which runs the visual tests of the package it is called from in the Playwright Docker image
 - **Shared packages**: `packages/shared/` has the `util` packages that moved out of the app. Import them by package name, for example `@giveaway/util-errors` or `@giveaway/util-types/widetype`, never with a path into `packages/`. Each one is in `transpilePackages` in `apps/web/next.config.ts` and is a `workspace:*` dependency in `apps/web/package.json`. `apps/web/app/globals.css` has `@source '../../../packages'`, so Tailwind finds the classes that packages use. The migration plan in `docs/monorepo/migration-plan.md` lists what a move changes
+- **Moving a package**: Run `pnpm run move-packages <package>...` from the root, with the package names from `docs/monorepo/package-map.json`. The codemod in `tools/codemods` moves the package's `sources` with `git mv` into `packages/<path>/src/` and writes the package files. It rewrites every import of a moved file, puts the package in `transpilePackages` and the app's dependencies, moves its ESLint suppressions, empties its `sources` in the map and runs Prettier and `pnpm install`. It changes nothing when it finds a problem, for example two sources with the same module name (pass `--rename <source>=<name>`) or an import of a file that stays in the app. Run it with `--dry-run` first. To fix a conflict with `main`, run it again on the new `main` instead of merging by hand. See "The move codemod" in `docs/monorepo/migration-plan.md`
 - **Vitest config of a package**: `vitest.config.ts` exports `defineConfig(packageTestConfig())`. The root `vitest.config.ts` adds the three projects of each package that has one, named `<package>:server`, `<package>:frontend` and `<package>:snapshot`. A package with tests has `test:*` scripts for the projects it uses, so Nx and CI run them
 
 ### Frontend Tests

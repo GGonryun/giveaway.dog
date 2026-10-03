@@ -1,0 +1,44 @@
+{
+  "name": "@giveaway/codemods",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:tool",
+      "runtime:isomorphic",
+      "scope:tools"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint tools/codemods",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "bin": {
+    "move-packages": "./src/move-packages/cli.ts"
+  },
+  "scripts": {
+    "move-packages": "node src/move-packages/cli.ts",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "prettier": "catalog:",
+    "ts-morph": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

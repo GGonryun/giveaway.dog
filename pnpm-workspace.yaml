@@ -139,6 +139,7 @@ catalog:
   tailwind-merge: ^2.6.0
   tailwindcss: ^4.1.11
   tailwindcss-animate: ^1.0.7
+  ts-morph: ^28.0.0
   tsx: ^4.20.6
   turndown: ^7.2.2
   tweetnacl: ^1.0.3

@@ -5798,6 +5798,19 @@
       "npm": ["@giveaway/db-model", "nanoid", "next-auth", "zod"]
     },
     {
+      "name": "@giveaway/codemods",
+      "path": "tools/codemods",
+      "type": "tool",
+      "tags": ["type:tool", "runtime:isomorphic", "scope:tools"],
+      "layer": 0,
+      "sourceFiles": 7,
+      "testFiles": 4,
+      "sources": [],
+      "dependsOn": [],
+      "npm": ["prettier", "ts-morph"],
+      "note": "The move codemod: moves packages out of apps/web and rewrites their imports."
+    },
+    {
       "name": "tools/db-seed",
       "path": "tools/db-seed",
       "type": "tool",
