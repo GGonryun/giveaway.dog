@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { refreshDiscordToken } from '../refresh-discord-token';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   NOW,

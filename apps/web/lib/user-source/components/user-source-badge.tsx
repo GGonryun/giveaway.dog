@@ -1,5 +1,5 @@
 import { Badge, BadgeVariants } from '@/components/ui/badge';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 
 import { UserSource } from '@prisma/client';
 import { USER_SOURCE_ICON } from './user-source-icon';

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { verifyDiscordRequest } from '../verify';
 import {
   DISCORD_TEST_PUBLIC_KEY,

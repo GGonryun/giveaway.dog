@@ -1,8 +1,8 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { ApplicationError } from '@/lib/errors';
-import { isValidEmail } from '@/lib/email-validation';
+import { ApplicationError } from '@giveaway/util-errors';
+import { isValidEmail } from '@giveaway/util-strings/email-validation';
 import { emailSubscriptionSchema } from '@/schemas/email-subscription';
 import z from 'zod';
 

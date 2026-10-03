@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import type { ScheduleAutomatedPostRequest } from '../schemas';
 import { validateAutomatedPostRequest } from '../validation';

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { processTaskJobs } from '../index';
 import { taskJobInclude } from '../types';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';

@@ -27,7 +27,7 @@ import { Alert, AlertDescription } from '../ui/alert';
 import { toAuthErrorDescription } from '@/lib/auth/util';
 import { useSearchParams } from 'next/navigation';
 import { IdentityProvider } from '@prisma/client';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { Separator } from '../ui/separator';
 import { BlueskyConnectForm } from '@/lib/auth/components/bluesky-connect-form';
 import { InstagramConnectForm } from '@/lib/auth/components/instagram-connect-form';

@@ -1,7 +1,7 @@
 import { SweepstakesInputTaskSchema } from '@/schemas/giveaway/db';
 import { Prisma, SweepstakesStatus } from '@prisma/client';
-import { assertNever } from '../errors';
-import { RequiredFields } from '../types';
+import { assertNever } from '@giveaway/util-errors';
+import { RequiredFields } from '@giveaway/util-types/types';
 
 export const createJobsForTask = (
   task: RequiredFields<SweepstakesInputTaskSchema, 'id'>,

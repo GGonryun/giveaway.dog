@@ -331,11 +331,6 @@
       "count": 1
     }
   },
-  "apps/web/lib/types.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "apps/web/lib/utils.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 4

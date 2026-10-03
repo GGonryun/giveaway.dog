@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { Prisma } from '@prisma/client';
 import { toTaskSchema } from '../schemas';
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { updateDiscordMessage } from '../update-discord-message';
 import type { UpdateDiscordMessageOptions } from '../schemas';
 

@@ -1,7 +1,7 @@
 'use server';
 
 import { getBlueskyClient } from '@/lib/bluesky/bluesky-client';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { Agent } from '@atproto/api';
 import { PrismaClient } from '@prisma/client';
 

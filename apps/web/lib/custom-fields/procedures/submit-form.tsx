@@ -1,7 +1,7 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { ApplicationError, assertNever } from '@/lib/errors';
+import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import {
   Account,
   PrismaClient,
@@ -11,9 +11,9 @@ import {
 import { extractUsernameFromProfileUrl } from '@/lib/integrations/schemas/twitter';
 import z from 'zod';
 import { toTaskSchema } from '@/lib/task/schemas';
-import { RecursiveRequired } from '@/types/index';
+import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
 import { User } from 'next-auth';
-import { Nil } from '@/lib/types';
+import { Nil } from '@giveaway/util-types/types';
 
 type ValidationContext = {
   db: PrismaClient;

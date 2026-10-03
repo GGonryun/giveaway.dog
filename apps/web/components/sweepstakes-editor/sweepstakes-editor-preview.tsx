@@ -39,14 +39,14 @@ import {
 import { TaskSchema } from '@/lib/task/schemas';
 import { useTeams } from '../context/team-provider';
 import { toSweepstakesHost } from '@/schemas/giveaway/participant';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
   DEFAULT_SWEEPSTAKES_NAME,
   TWITTER_PROFILE_URL
 } from '@/lib/settings';
-import { DeepNil, DeepPartial } from '@/lib/types';
-import { isDefined } from '@/lib/widetype';
+import { DeepNil, DeepPartial } from '@giveaway/util-types/types';
+import { isDefined } from '@giveaway/util-types/widetype';
 import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';

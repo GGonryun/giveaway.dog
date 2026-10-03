@@ -3,7 +3,7 @@ import type { Prisma } from '@prisma/client';
 import { PRIZE_WINNERS_INCLUDE_QUERY, toSweepstakesPrizes } from '../prizes';
 import { USER_SCHEMA_SELECT_QUERY, toUserSchema } from '../user';
 import { TASK_COMPLETIONS_SELECT_QUERY } from '@/lib/task/completions';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import {
   buildUserPayload,
   FIXED_CREATED_AT

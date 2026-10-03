@@ -4,7 +4,7 @@ import z from 'zod';
 
 import { twitterOAuthCallback } from '@/lib/integrations/procedures/twitter-oauth-callback';
 import { twitterStateSchema } from '@/lib/integrations/schemas';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const twitterCallbackResultSchema = z.object({
   success: z.literal(true),

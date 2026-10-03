@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { verifyTwitchRequest } from '../verify';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const SECRET = 'eventsub-secret';
 const NOW = new Date('2026-10-01T12:00:00.000Z');

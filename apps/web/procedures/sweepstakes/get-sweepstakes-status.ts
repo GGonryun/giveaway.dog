@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { findUserSweepstakesQuery } from './shared';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 import {
   derivedSweepstakesStatusSchema,

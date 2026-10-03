@@ -1,6 +1,6 @@
 import nacl from 'tweetnacl';
 
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 import { NextRequest } from 'next/server';
 import { DiscordInteractionSchema, toDiscordInteraction } from './schema';

@@ -2,8 +2,8 @@ import {
   GiveawayState,
   ParticipantSweepstakeSchema
 } from '@/schemas/giveaway/schemas';
-import { assertNever } from './errors';
-import { RequiredFields } from './types';
+import { assertNever } from '@giveaway/util-errors';
+import { RequiredFields } from '@giveaway/util-types/types';
 import { expandCountries, includesCountryCode } from './countries';
 import { isFormFilled } from '@/schemas/giveaway/participant';
 import { SweepstakesParticipantSchema } from './participant/schemas';

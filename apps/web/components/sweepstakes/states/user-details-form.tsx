@@ -22,7 +22,7 @@ import {
   xProfileRefineUrl
 } from '@/lib/integrations/schemas/twitter';
 import { HelpDialog } from '@/components/patterns/help-dialog';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { ArrowRight } from 'lucide-react';
 import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { UserInfoSection } from '../user-info-section';

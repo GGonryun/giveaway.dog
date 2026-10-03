@@ -1,7 +1,7 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
 import { findUserTeamQuery } from '@/procedures/teams/find-user-team';
 import { IntegrationProvider } from '@prisma/client';

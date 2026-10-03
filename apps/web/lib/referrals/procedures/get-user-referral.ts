@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { createReferralSchema, userReferralSchema } from '../schemas';
 import { REFERRAL_USER_INCLUDE, toUserReferral } from './shared';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const getCacheConfig = ({ user, input }: any) => {
   if (!user?.id) return undefined; // Don't cache if no user

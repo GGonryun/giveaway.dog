@@ -2,7 +2,7 @@
 
 import { newEmailClient, NO_REPLY_EMAIL } from '@/lib/email/client';
 import { getVerificationEmailContent } from '@/lib/email/templates';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { createHash, randomBytes } from 'crypto';
 import { addMinutes } from 'date-fns';

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getTeamBlueskyClient } from '@/lib/bluesky/team-bluesky-client';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import { Agent } from '@atproto/api';
 import { auth } from '@/lib/auth/config';

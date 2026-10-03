@@ -9,7 +9,7 @@ import {
 import { PrismaClient } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 import { datetime } from '@/lib/date';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
 
 const SCRAPEBADGER_RUN_OFFSET = 5;

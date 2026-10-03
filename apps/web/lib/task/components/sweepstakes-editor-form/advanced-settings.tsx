@@ -9,7 +9,7 @@ import {
   FormLabel
 } from '@/components/ui/form';
 import { Typography } from '@/components/ui/typography';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';

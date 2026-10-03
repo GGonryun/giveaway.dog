@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { ProviderSchema } from '../schemas/providers';
 import { PROVIDER_ICON } from './icons/provider-icon';
-import { strings } from '@/lib/strings';
+import { strings } from '@giveaway/util-strings/strings';
 
 export const UserProviders: React.FC<{
   providers: ProviderSchema[];

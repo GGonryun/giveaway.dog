@@ -1,4 +1,4 @@
-import { RequiredFields } from '@/lib/types';
+import { RequiredFields } from '@giveaway/util-types/types';
 import { SweepstakesInputPrizeSchema, SweepstakesInputTaskSchema } from './db';
 
 export const isStorablePrize = (

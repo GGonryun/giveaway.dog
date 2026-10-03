@@ -13,7 +13,7 @@ import { TaskSchema } from '../../../schemas';
 import { useTaskTheme } from '../../theme';
 import { Separator } from '@/components/ui/separator';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
-import { OptionalFields } from '@/lib/types';
+import { OptionalFields } from '@giveaway/util-types/types';
 
 export type TaskActionHandlers = {
   onSubmit: (data?: unknown) => void;

@@ -6,7 +6,7 @@ import {
   templateInputSchema
 } from '../schemas/template';
 import z from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export const updateTemplate = procedure()
   .authorization({ required: true })

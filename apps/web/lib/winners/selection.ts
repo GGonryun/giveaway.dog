@@ -6,7 +6,7 @@ import {
   pickUniqueWeighted,
   WeightedItem
 } from './weighted-rolls';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { nanoid } from 'nanoid';
 import { SweepstakesCriteriaSchema } from './criteria';
 

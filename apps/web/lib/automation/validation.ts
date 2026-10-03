@@ -4,7 +4,7 @@ import {
   PrismaClient
 } from '@prisma/client';
 import { ScheduleAutomatedPostRequest } from './schemas';
-import { ApplicationError, assertNever } from '../errors';
+import { ApplicationError, assertNever } from '@giveaway/util-errors';
 
 export const validateAutomatedPostRequest = async (args: {
   db: PrismaClient;

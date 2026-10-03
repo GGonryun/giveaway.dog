@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { AutomatedPostJob } from '@prisma/client';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { processAutomatedPostJobs } from '../process-automated-post-jobs';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';

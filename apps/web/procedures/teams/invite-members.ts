@@ -1,7 +1,7 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { TeamPermission, requireMembershipPermission } from '@/lib/permissions';
 import { TeamRole } from '@prisma/client';
 import { newEmailClient, NO_REPLY_EMAIL } from '@/lib/email/client';

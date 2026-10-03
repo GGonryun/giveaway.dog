@@ -7,7 +7,7 @@ import {
   requireMembershipPermission,
   requirePermission
 } from '../index';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const catchError = (fn: () => unknown): unknown => {
   try {

@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { isImageSafe } from '@/lib/content-moderation';
 import z from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { fileUpload } from '@/lib/ratelimit';
 
 const tokenPayloadSchema = z.object({

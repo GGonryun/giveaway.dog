@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { ReferredUserSchema, UserReferralSchema } from '../schemas';

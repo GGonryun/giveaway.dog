@@ -2,7 +2,7 @@
 
 import z from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { findUserSweepstakes } from './shared';
 import { TeamPermission } from '@/lib/permissions';
 import { TeamTier } from '@prisma/client';

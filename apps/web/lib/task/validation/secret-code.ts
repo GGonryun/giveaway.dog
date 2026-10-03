@@ -4,7 +4,7 @@ import {
   SecretCodeV2TaskSchema,
   TASK_INPUT_SCHEMA
 } from '../schemas';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { ValidateTaskInput } from './types';
 
 const MAX_ATTEMPTS = 25;

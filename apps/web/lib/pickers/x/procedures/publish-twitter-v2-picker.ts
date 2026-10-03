@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { twitterV2PickerFormSchema } from '../schemas/form';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { findUserTeam } from '@/procedures/teams/find-user-team';
 import { TeamPermission } from '@/lib/permissions';
 import { TeamTier } from '@prisma/client';

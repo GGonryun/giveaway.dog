@@ -1,4 +1,4 @@
-import { DeepPartial } from '@/lib/types';
+import { DeepPartial } from '@giveaway/util-types/types';
 import { GiveawayFormSchema as SweepstakesFormSchema } from './schemas';
 import z from 'zod';
 import { Prisma } from '@prisma/client';

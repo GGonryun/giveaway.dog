@@ -3,7 +3,7 @@ import {
   deleteAllEventSubSubscriptions,
   deleteEventSubSubscription
 } from '../delete-eventsub-subscription';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   EVENTSUB_URL,
@@ -159,7 +159,7 @@ describe('delete-eventsub-subscription', () => {
         vi.resetModules();
         vi.stubEnv('TWITCH_CLIENT_ID', '');
         const isolated = await import('../delete-eventsub-subscription');
-        const errors = await import('@/lib/errors');
+        const errors = await import('@giveaway/util-errors');
 
         const error = await isolated
           .deleteEventSubSubscription(args)

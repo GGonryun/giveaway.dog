@@ -7,7 +7,7 @@ import {
   CreateTweetResponse,
   createTweetResponseSchema
 } from '../schemas/api';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { uploadImage } from './upload-image';
 
 interface CreateTweetInput extends CreateTweetRequest {

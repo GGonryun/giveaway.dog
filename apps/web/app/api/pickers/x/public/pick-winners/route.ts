@@ -11,7 +11,7 @@ import {
 } from '@/lib/pickers/x/utils/picker-utils';
 import { createId } from '@paralleldrive/cuid2';
 import { fetchRetweetersWithCoverage } from '@/lib/pickers/x/utils/fetch-retweeters-with-coverage';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { checkAndConsumeCredits } from '@/lib/scrapebadger/credits';
 import { CREDIT_COSTS } from '@/lib/scrapebadger/settings';
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { z, ZodError } from 'zod';
 import { twitterApiRequest } from '../twitter-api-request';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   NOW,

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { isUserLikingPost } from '../is-user-liking-post';
 
 const m = vi.hoisted(() => ({

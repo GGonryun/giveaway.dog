@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { assertNever } from '../../errors';
+import { assertNever } from '@giveaway/util-errors';
 import { checkSteamWishlist } from './steam';
 import { checkDiscordJoin } from './discord';
 import { TaskSchema } from '../schemas';

@@ -18,7 +18,7 @@ import {
   type UserAccounts,
   type UserSchema
 } from '../user';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import {
   buildUserPayload,
   FIXED_CREATED_AT

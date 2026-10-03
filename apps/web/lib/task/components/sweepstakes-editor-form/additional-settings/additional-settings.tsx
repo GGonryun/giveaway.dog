@@ -1,4 +1,4 @@
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { useCallback } from 'react';
 import { StartDateField } from './lib/start-date';
 import { EndDateField } from './lib/end-date';

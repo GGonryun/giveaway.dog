@@ -2,7 +2,7 @@
 
 import { createTeamInputSchema } from '@/schemas/teams';
 import { procedure } from '@/lib/mrpc/procedures';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
 
 import { MAX_USER_TEAMS } from '@/lib/settings';

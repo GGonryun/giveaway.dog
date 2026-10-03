@@ -20,7 +20,7 @@ import {
   type StoredTemplateSchema,
   type TemplateInputSchema
 } from '../template';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const settings = {
   name: 'Launch Party',

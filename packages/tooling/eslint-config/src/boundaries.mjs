@@ -16,19 +16,42 @@ export const depConstraints = Object.entries(packageMap.dependencyRules).map(
   })
 );
 
+const devDepConstraints = depConstraints.map((constraint) => ({
+  ...constraint,
+  onlyDependOnLibsWithTags: [
+    ...new Set([...constraint.onlyDependOnLibsWithTags, 'type:config'])
+  ]
+}));
+
+const DEV_FILES = [
+  '**/__tests__/**',
+  '**/*.test.{ts,tsx}',
+  '**/{vitest,vitest.visual}.config.ts',
+  '**/eslint.config.mjs'
+];
+
+const moduleBoundaries = (constraints) => [
+  'warn',
+  {
+    enforceBuildableLibDependency: false,
+    allow: [],
+    checkDynamicDependenciesExceptions: ['@giveaway/**'],
+    depConstraints: constraints
+  }
+];
+
 const boundaries = [
   ...nx.configs['flat/base'],
   {
     files: ['**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}'],
     rules: {
-      '@nx/enforce-module-boundaries': [
-        'warn',
-        {
-          enforceBuildableLibDependency: false,
-          allow: [],
-          depConstraints
-        }
-      ]
+      '@nx/enforce-module-boundaries': moduleBoundaries(depConstraints)
+    }
+  },
+  {
+    files: DEV_FILES,
+    rules: {
+      '@nx/enforce-module-boundaries': moduleBoundaries(devDepConstraints)
     }
   },
   {

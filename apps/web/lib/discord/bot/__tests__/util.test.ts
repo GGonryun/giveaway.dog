@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { INTEGRATIONS_SETUP_URL, toSplitActionId } from '../util';
 import { buttonInteraction } from '../../__tests__/fixtures-discord-core';
 

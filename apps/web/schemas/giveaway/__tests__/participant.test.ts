@@ -15,7 +15,7 @@ import {
 import type { ParticipantSweepstakesGetPayload } from '../db';
 import type { UserSchema } from '../../user';
 import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
 
 type Prize = ParticipantSweepstakesGetPayload['prizes'][number];

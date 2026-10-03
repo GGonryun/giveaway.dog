@@ -9,7 +9,7 @@ import {
 } from '../../submission';
 import { TaskSchema } from '../../schemas';
 import pluralize from 'pluralize';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 
 export const TaskTooltipContent: React.FC<{
   status: CompletionStatus | undefined;

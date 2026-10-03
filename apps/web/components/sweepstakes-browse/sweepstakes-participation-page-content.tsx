@@ -19,9 +19,9 @@ import {
 } from '@/lib/referrals/schemas';
 import updateTask from '@/lib/task/procedures/update-task';
 import { allocatePrize } from '@/lib/allocation/procedures/allocate-prize';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { useMemo, useState } from 'react';
-import { Nil } from '@/lib/types';
+import { Nil } from '@giveaway/util-types/types';
 import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
 
 export type SweepstakesParticipationPageContentProps =

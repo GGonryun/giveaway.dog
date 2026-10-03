@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export const DISCORD_BOT_SCOPES = ['bot', 'applications.commands'];
 const DISCORD_BOT_PERMISSIONS = '18432';

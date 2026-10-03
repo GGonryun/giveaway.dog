@@ -1,6 +1,6 @@
 'use server';
 
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { getLatestTwitterAccessToken } from './get-latest-twitter-access-token';
 import { Tx } from '@/lib/prisma';
 import { z } from 'zod';

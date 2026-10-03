@@ -4,7 +4,7 @@ import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import { GET } from '../route';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { createSession, TEST_USER } from '@giveaway/testing-server/session';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const m = vi.hoisted(() => {
   const getProfile = vi.fn();

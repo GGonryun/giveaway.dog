@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isValidEmail } from '@/lib/email-validation';
+import { isValidEmail } from '@giveaway/util-strings/email-validation';
 
 export const emailSubscriptionSchema = z.object({
   email: z

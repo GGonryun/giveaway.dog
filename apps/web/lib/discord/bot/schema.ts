@@ -1,5 +1,5 @@
 import z from 'zod';
-import { ApplicationError } from '../../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export const discordUserSchema = z.object({
   avatar: z.string().nullish(),

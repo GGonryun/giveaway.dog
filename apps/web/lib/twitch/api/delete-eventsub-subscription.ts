@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { TWITCH_CLIENT_ID } from '../bot/scopes';
 import { getAppAccessToken } from './get-app-access-token';
 import prisma from '@/lib/prisma';

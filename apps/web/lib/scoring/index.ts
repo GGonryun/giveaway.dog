@@ -2,7 +2,7 @@ import { UserSource } from '@prisma/client';
 import { Tx } from '../prisma';
 import { computeSignupUserScore } from './signup';
 import { computeImportedUserScore } from './imported';
-import { assertNever } from '../errors';
+import { assertNever } from '@giveaway/util-errors';
 
 export const computeUserQualityScore = async (tx: Tx, userId: string) => {
   const user = await tx.user.findUnique({

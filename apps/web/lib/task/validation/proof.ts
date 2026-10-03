@@ -1,4 +1,4 @@
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { TASK_INPUT_SCHEMA, TaskSchema } from '../schemas';
 import { Prisma } from '@prisma/client';
 

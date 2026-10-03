@@ -19,7 +19,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useTaskTheme } from '../theme';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { SocialXBlueCheckmarkIcon } from '@/lib/integrations/components/icons/x-icon';
 import pluralize from 'pluralize';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';

@@ -3,7 +3,7 @@ import { devices, userAgent } from '@/lib/devices';
 import { NextRequest, NextResponse } from 'next/server';
 import { ip } from '@/lib/ip';
 import { UserAgentSchema } from '@/schemas/user-agent';
-import { Nil } from '@/lib/types';
+import { Nil } from '@giveaway/util-types/types';
 import { MAX_TRACKING_REQUESTS_PER_RUN } from '@/schemas/user-scoring';
 import { isValidCronSecret } from '@/lib/jobs/util';
 

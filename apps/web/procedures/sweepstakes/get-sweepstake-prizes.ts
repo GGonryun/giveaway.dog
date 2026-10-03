@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { z } from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { sweepstakesPrizeSchema } from '@/schemas/giveaway/schemas';
 import {
   PRIZE_WINNERS_INCLUDE_QUERY,

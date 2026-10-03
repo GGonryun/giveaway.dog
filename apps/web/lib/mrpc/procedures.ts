@@ -1,5 +1,5 @@
 import z from 'zod';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { noProviderAuth } from '../auth/config-no-providers';
 import { Session, User } from 'next-auth';
 import { Result, Success, isNextRedirect } from './types';
@@ -9,7 +9,7 @@ import { isPrismaError, prismaErrorBoundary } from './errors';
 import { environment } from '../environment';
 import { simulateNetworkDelay } from '../simulate';
 import { unstable_cache, revalidateTag } from 'next/cache';
-import { RecursiveRequired } from '@/types/index';
+import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
 
 interface AuthConfig {
   required: boolean;

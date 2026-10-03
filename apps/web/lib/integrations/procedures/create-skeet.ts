@@ -1,7 +1,7 @@
 'use server';
 
 import { Tx } from '@/lib/prisma';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { getLatestTeamBlueskyCredentials } from '@/lib/bluesky/get-latest-team-bluesky-agent';
 import { RichText } from '@atproto/api';
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { EventEmitter } from 'events';
 import { ip } from '../ip';
-import { ApplicationError } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { DEVELOPMENT_GEO } from '@/schemas/fingerprint';
 
 const m = vi.hoisted(() => ({ get: vi.fn() }));

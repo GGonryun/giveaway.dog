@@ -1,4 +1,4 @@
-import { Nil } from '@/lib/types';
+import { Nil } from '@giveaway/util-types/types';
 import z from 'zod';
 import {
   REQUIRED_DISCORD_SCOPES,
@@ -12,9 +12,9 @@ import {
   REQUIRED_VELORA_SCOPES,
   REQUIRED_LINKEDIN_SCOPES
 } from '../scopes';
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 import { IdentityProvider } from '@prisma/client';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export const identityProviderSchema = z.nativeEnum(IdentityProvider);
 

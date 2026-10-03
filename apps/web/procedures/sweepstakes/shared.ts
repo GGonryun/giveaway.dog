@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import {
   SweepstakesInputSchema,
   TEAM_SWEEPSTAKES_PAYLOAD
@@ -14,7 +14,7 @@ import {
   VisibilityType
 } from '@prisma/client';
 import { User } from 'next-auth';
-import { RecursiveRequired } from '@/types/index';
+import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
 import { assertMembershipPermission, TeamPermission } from '@/lib/permissions';
 import { assertMinimumTeamTier } from '@/lib/team/util';
 

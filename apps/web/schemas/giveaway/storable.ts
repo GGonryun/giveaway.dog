@@ -9,7 +9,7 @@ import {
   TeamSweepstakesGetPayload
 } from './db';
 import { compact } from 'lodash';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { isStorablePrize, isStorableTask } from './is';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,

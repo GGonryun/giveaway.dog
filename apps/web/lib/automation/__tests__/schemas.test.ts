@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { AutomatedPostJob } from '@prisma/client';
 import { ZodError } from 'zod';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import {
   asPostToDiscordResponseSchema,
   automatedPostJobSchema,

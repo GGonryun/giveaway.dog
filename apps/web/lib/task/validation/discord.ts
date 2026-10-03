@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { PrismaClient } from '@prisma/client';
 import { refreshDiscordToken } from '@/lib/integrations/utils/refresh-discord-token';
 import { DiscordJoinTaskSchema } from '../schemas';

@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyTwitchRequest } from './verify';
 

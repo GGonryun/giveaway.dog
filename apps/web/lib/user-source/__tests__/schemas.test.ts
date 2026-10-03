@@ -6,7 +6,7 @@ import {
   parseUserSourceSchema,
   userSourceSchema
 } from '../schemas';
-import { ApplicationError } from '../../errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const catchError = (fn: () => unknown): unknown => {
   try {

@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 import { RegionalRestrictionFilter } from '@prisma/client';
 
 const OPTIONS: Record<RegionalRestrictionFilter, string> = {

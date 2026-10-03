@@ -1,7 +1,7 @@
 'use server';
 
 import { Tx } from '@/lib/prisma';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { Agent } from '@atproto/api';
 
 export interface BlueskyUserSchema {

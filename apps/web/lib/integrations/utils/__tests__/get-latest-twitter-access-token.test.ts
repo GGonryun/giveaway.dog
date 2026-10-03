@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { getLatestTwitterAccessToken } from '../get-latest-twitter-access-token';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   NOW,
@@ -56,7 +56,7 @@ describe('getLatestTwitterAccessToken', () => {
       vi.stubEnv('TWITTER_TEAM_APP_CLIENT_ID', env.clientId);
       vi.stubEnv('TWITTER_TEAM_APP_CLIENT_SECRET', env.clientSecret);
       vi.resetModules();
-      const errors = await import('@/lib/errors');
+      const errors = await import('@giveaway/util-errors');
       const mod = await import('../get-latest-twitter-access-token');
       return { ApplicationErrorClass: errors.ApplicationError, mod };
     };

@@ -32,7 +32,7 @@ import {
   REQUIRED_VELORA_SCOPES,
   REQUIRED_LINKEDIN_SCOPES
 } from '../../scopes';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 const ALL_IDENTITY_PROVIDERS = Object.values(IdentityProvider);
 

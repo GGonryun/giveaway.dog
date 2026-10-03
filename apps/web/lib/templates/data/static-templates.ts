@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { TemplateDetailsSchema } from '../schemas/template';
 import { toDefaultValues } from '@/lib/task/defaults';
-import { Nil } from '@/lib/types';
+import { Nil } from '@giveaway/util-types/types';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
   TWITTER_POST_URL,

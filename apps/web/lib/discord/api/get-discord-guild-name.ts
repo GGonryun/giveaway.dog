@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { discordGuildInfoSchema, type DiscordGuildInfoSchema } from './schemas';
 
 export async function getDiscordGuildInfo(

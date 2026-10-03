@@ -1,5 +1,5 @@
 import { isBefore, format as fnsFormat } from 'date-fns';
-import { assertNever } from './errors';
+import { assertNever } from '@giveaway/util-errors';
 
 export namespace date {
   export const now = () => new Date();

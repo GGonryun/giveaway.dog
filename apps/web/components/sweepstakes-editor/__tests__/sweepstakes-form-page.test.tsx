@@ -7,7 +7,7 @@ import getSweepstakesForm from '@/procedures/sweepstakes/get-sweepstakes-form';
 import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
 import { SweepstakesForm } from '@/components/sweepstakes-editor/sweepstakes-form';
 import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
-import { ApplicationErrorCode } from '@/lib/errors';
+import { ApplicationErrorCode } from '@giveaway/util-errors';
 import { SweepstakeFormPage } from '../sweepstakes-form-page';
 import { buildFormValues } from './form-harness';
 

@@ -1,4 +1,4 @@
-import { widetype } from './widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 
 export type PlatformId =
   | 'x'

@@ -1,6 +1,6 @@
 'use server';
 
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { TeamPermission } from '@/lib/permissions';
 import { findUserTeam } from '@/procedures/teams/find-user-team';

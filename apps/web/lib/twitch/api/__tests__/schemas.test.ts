@@ -9,7 +9,7 @@ import {
   toEventSubSubscriptionSchema,
   toEventSubSubscriptionSchemasListSchema
 } from '../schemas';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import {
   subscriptionList,
   twitchSubscription

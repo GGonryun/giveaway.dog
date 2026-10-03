@@ -31,8 +31,8 @@ import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 import { SweepstakesFormFieldType } from '@prisma/client';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
-import { assertNever } from '@/lib/errors';
-import { strings } from '@/lib/strings';
+import { assertNever } from '@giveaway/util-errors';
+import { strings } from '@giveaway/util-strings/strings';
 import { FIELD_TYPE_LABELS } from '../schemas';
 import { FIELD_TYPE_ICON } from './field-icons';
 

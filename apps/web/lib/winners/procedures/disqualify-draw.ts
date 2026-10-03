@@ -5,7 +5,7 @@ import z from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
 import { getSweepstakesCriteria } from '../criteria';
 import { PrizeDrawResult } from '@prisma/client';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 
 export const disqualifyDraw = procedure()
   .authorization({

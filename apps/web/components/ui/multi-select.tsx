@@ -29,7 +29,7 @@ import {
   CommandSeparator
 } from '@/components/ui/command';
 import { useMemo } from 'react';
-import { widetype } from '@/lib/widetype';
+import { widetype } from '@giveaway/util-types/widetype';
 
 /**
  * Variants for the multi-select component to handle different styles.

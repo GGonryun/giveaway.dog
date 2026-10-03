@@ -9,7 +9,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { TaskType } from '../../schemas';
 
 export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {

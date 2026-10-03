@@ -1,6 +1,6 @@
 'use server';
 
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import {
   IDENTITY_PROVIDER_TO_AUTH_PROVIDER,
   identityProviderSchema

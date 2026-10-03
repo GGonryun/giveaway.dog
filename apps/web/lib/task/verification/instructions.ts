@@ -1,6 +1,6 @@
 import { UserSchema } from '@/schemas/user';
 import { TaskSchema, TaskType } from '../schemas';
-import { assertNever } from '@/lib/errors';
+import { assertNever } from '@giveaway/util-errors';
 import { getProviderByTask, getProviderLabel, getProviderLink } from './utils';
 
 export interface VerificationStep {

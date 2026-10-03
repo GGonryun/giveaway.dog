@@ -7,7 +7,7 @@ import {
 import { PrismaClient, TaskJobStatus } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 import { datetime } from '@/lib/date';
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { takeUntil } from '@/lib/arrays';
 import { Tx } from '@/lib/prisma';
 import { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-likes';

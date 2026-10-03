@@ -1,4 +1,4 @@
-import { ApplicationError } from '@/lib/errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from '../bot/scopes';
 
 export const getAppAccessToken = async () => {

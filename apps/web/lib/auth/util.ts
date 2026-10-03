@@ -1,4 +1,4 @@
-import { Nil } from '../types';
+import { Nil } from '@giveaway/util-types/types';
 
 export const toAuthErrorDescription = (error: Nil<string>) => {
   switch (error) {
