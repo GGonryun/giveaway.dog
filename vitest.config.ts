@@ -4,7 +4,7 @@ import { workspaceProjects } from '@giveaway/vitest-config/workspace';
 export default defineConfig({
   test: {
     silent: 'passed-only',
-    projects: workspaceProjects(__dirname, ['apps/web', 'packages']),
+    projects: workspaceProjects(__dirname, ['apps/web', 'packages', 'tools']),
     coverage: {
       provider: 'v8',
       reporter: ['text-summary', 'json-summary'],
@@ -14,7 +14,8 @@ export default defineConfig({
         'apps/web/lib/**/*.{ts,tsx}',
         'apps/web/procedures/**/*.{ts,tsx}',
         'apps/web/schemas/**/*.{ts,tsx}',
-        'packages/**/src/**/*.{ts,tsx}'
+        'packages/**/src/**/*.{ts,tsx}',
+        'tools/**/src/**/*.{ts,tsx}'
       ],
       exclude: [
         '**/__tests__/**',
