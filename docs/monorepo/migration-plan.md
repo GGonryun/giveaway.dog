@@ -65,6 +65,42 @@ The codemod ([GGonryun/giveaway.dog#147](https://github.com/GGonryun/giveaway.do
 - **Nx lint rules.** `@nx/enforce-module-boundaries` crashed on the app's first import of a workspace package, because the workspace had no root `tsconfig.base.json` for it to resolve imports with. A minimal one that extends the base preset is added. The rule then warned on every static import of `@giveaway/util-errors`, because two tests import it with `await import()` (after `vi.resetModules()`). That check is for lazy-loaded Angular routes, so `@giveaway/**` is exempt from it. Tests and package config files may now import `type:config` packages.
 - **Prettier.** A rewritten import can be longer than the line width. Run Prettier on every changed file.
 
+## The move codemod
+
+[GGonryun/giveaway.dog#147](https://github.com/GGonryun/giveaway.dog/issues/147) built the codemod in `tools/codemods` (`@giveaway/codemods`). Run it from the root with the package names from `package-map.json`:
+
+```sh
+pnpm run move-packages --dry-run @giveaway/cache @giveaway/email
+pnpm run move-packages @giveaway/cache @giveaway/email
+```
+
+`--dry-run` prints the files that would move and changes nothing. `--rename <source>=<name>` gives a source another name in `src/`, `--skip-install` skips `pnpm install` and `--root <dir>` sets the repository root.
+
+### What it does
+
+- **Moves the files with `git mv`.** It finds a package's files the way the checker does: its `sources`, the tests that the checker gives to the package, the `__snapshots__` and `__screenshots__` of those tests, and the fixtures in `testFixtures` that name the package. It removes the folders that the move leaves empty.
+- **Names the modules.** A file source keeps its base name (`lib/redis.ts` becomes `src/redis.ts`). A file source named `index` takes the name of its folder (`types/owl/index.ts` becomes `src/owl.ts`). When a folder is the package's only source, its contents go straight into `src/`, so its `index.ts` is the package root. With several sources, a folder keeps its name (`lib/scoring/schemas/` becomes `src/schemas/`). A test goes to the `__tests__` folder next to its module, and its snapshots and screenshots go with it. A fixture goes to `src/testing/<name>`, which is exported as `@giveaway/<package>/testing/<name>`.
+- **Rewrites the imports in the whole repository**: `import`, `export ... from`, `import()`, `typeof import()`, `require`, `vi.mock`, `vi.doMock`, `vi.unmock`, `vi.doUnmock`, `vi.importActual` and `vi.importMock`. It resolves each `@/` alias and relative path to a file first, then maps the file. An import between two files of the same package becomes a relative path. Any other import of a moved file becomes `@giveaway/<package>/<module>`. In a moved package other than `@giveaway/db-client`, `'@prisma/client'` becomes `'@giveaway/db-model'`.
+- **Adds `import 'server-only'`** at the top of each module of a `server` package, after its directives. It skips `'use server'` modules, tests and modules that already import it.
+- **Writes the package files.** `package.json` has the tags, the `lint` target, an `exports` entry for each module, JSON file and fixture, and the scripts: `type-check`, `test`, and `test:unit`, `test:server`, `test:frontend` and `test:snapshot` for the test projects that the package uses. A package with no tests gets `vitest run --passWithNoTests`. A workspace package is a `workspace:*` dependency and an npm package is a `catalog:` dependency. `next`, `next-auth`, `react`, `react-dom` and `vitest` are `peerDependencies`, because the app provides them. Imports that only tests or `vi.mock` calls make go to `devDependencies`, with the tooling packages, `@types/node`, `typescript` and `vitest`, and the `@types` package of each dependency that the catalog has. `tsconfig.json` extends `react-library.json` when the package has a `.tsx` file, else `library.json`. `vitest.config.ts` is the one from the pilot.
+- **Moves the ESLint suppressions** of the moved files from the root `eslint-suppressions.json` to `<package>/eslint-suppressions.json`, with the new paths and in the format ESLint writes. Only then does the `lint` command get `--suppressions-location`.
+- **Updates the other files**: it adds the packages to `transpilePackages` and to the app's `dependencies`, and adds a `workspace:*` dependency to any other workspace package whose files now import a moved package (a `devDependency` for tests and `vi.mock` calls). In `package-map.json` it empties the packages' `sources`, moves the workspace packages they import from `npm` to `dependsOn`, and removes the fixtures that moved from `testFixtures`.
+- **Formats** every file it wrote with Prettier, then runs `pnpm install`.
+
+It sorts everything it writes, so running it on a newer `main` gives the same result. Before it changes any file, it checks the whole move and stops, with a list of the problems, on: a package that is not in the map or has already moved, two files with the same target or module name, a moved file that imports a file that stays in the app, an `@/` import that does not resolve, an import of another package's test file, a visual test, an npm package that is not in the catalog, and a `--rename` that matches nothing. A source with no files is only a warning.
+
+It does not write an `eslint.config.mjs`. Each `lint` target runs ESLint from the root, so ESLint reads only the root config, and the pilot packages have none.
+
+### Dry run of move 2
+
+On a branch, the codemod moved the 10 packages of [GGonryun/giveaway.dog#149](https://github.com/GGonryun/giveaway.dog/issues/149): 309 files, with 184 edits in 165 files. Three hand edits for Prisma completed the move: `@giveaway/db-model` got `src/index.ts` (`export * from '@prisma/client'`), `@giveaway/db-schema` got `@prisma/client` and `prisma` as `devDependencies`, and `apps/web/package.json` got `"prisma": { "schema": "../../packages/infra/db-schema/src/schema.prisma" }`. The codemod moved the global Prisma mock in `@giveaway/testing-server` to `vi.mock('@giveaway/db-client/prisma')`. Then the checker and `pnpm run verify` passed. After a hand edit to a new package, run `pnpm nx reset` if `@nx/dependency-checks` reports a dependency that the package does use: the project graph in the Nx cache can be older than the edit.
+
+A `--dry-run` of all 229 packages that have not moved found what later moves must decide by hand:
+
+- **Module name collisions**: `@giveaway/twitch-model` has two `schemas.ts` (`lib/twitch/api/` and `lib/twitch/integration/`), and `@giveaway/sweepstakes-model` has two `util.ts` (`components/sweepstakes/` and `lib/sweepstakes/`). Pass `--rename` for one of each pair.
+- **Visual tests**: `@giveaway/ui-primitives` and `@giveaway/auth-login-ui` have visual tests. They need a `vitest.visual.config.ts` in the package, and the theme from `apps/web/app/globals.css`. Move them by hand or teach the codemod when those packages move.
+- **Sources with no files**: `lib/integrations/notifications/` (`@giveaway/discord-api`), `lib/sweepstakes/schemas/` (`@giveaway/sweepstakes-model`) and `lib/utils/` (`@giveaway/ui-utils`) no longer exist. Remove them from the map.
+
 ## Phase 0: Preparation
 
 No files move in this phase.
@@ -128,7 +164,7 @@ The Next.js app stays at the repository root in this phase. Nx treats it as the 
    - `package.json` lists each module under `exports`, for example `"./button": "./src/button.tsx"`. The codemod generates this list.
    - There are no barrel `index.ts` files. Imports map 1:1 (`@/components/ui/button` becomes `@giveaway/ui-primitives/button`), so the codemod stays mechanical and the client bundles avoid barrel imports.
    - Each package has `"nx": { "tags": [...] }` with the tags from `package-map.json`, a `tsconfig.json` that extends the preset, a `vitest.config.ts` and an `eslint.config.mjs`.
-5. **The move codemod** (`tools/codemods`, built with ts-morph). For one package, or a list of packages, it does the following:
+5. **The move codemod** (`tools/codemods`, built with ts-morph, done: see [The move codemod](#the-move-codemod)). For one package, or a list of packages, it does the following:
    - Moves the package's sources with `git mv` into `packages/<path>/src/`, including data files such as `lib/countries.json`. The `__tests__` and `__snapshots__` folders move with them.
    - Writes `package.json`, `tsconfig.json`, `vitest.config.ts` and `eslint.config.mjs`. The internal dependencies use `workspace:*` and the npm dependencies use `catalog:`.
    - Rewrites, across the repository, every import that points at a moved file. This covers `import`, `export ... from`, `import()`, `vi.mock`, `vi.doMock` and `vi.importActual`, for `@/` aliases and relative paths alike.

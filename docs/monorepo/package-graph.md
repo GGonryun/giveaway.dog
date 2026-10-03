@@ -12,7 +12,7 @@ The graph comes from the code, not from a whiteboard. A script read every import
 
 ## Summary
 
-- **238 packages** in 20 groups, plus `apps/web`, `apps/web-e2e` and `tools/db-seed`.
+- **238 packages** in 20 groups, plus `apps/web`, `apps/web-e2e`, `tools/db-seed` and `tools/codemods`.
 - **No dependency cycles and no boundary violations**, after 8 small refactors ([R1 to R8](#refactors-that-make-the-graph-valid)). Mapped onto these packages as it is today, the code has 4 dependency cycles and 4 imports that break the type rules.
 - **Small packages.** The median package has 3 source files, 4 internal dependencies and 2 npm dependencies. Today every CI job installs all 143 npm packages that the root `package.json` lists.
 - **Small blast radius.** A change to one package affects a median of 8 packages and a mean of 25, out of 240. Today every change affects the whole app.
@@ -40,6 +40,7 @@ packages/
     core/                 integration-model, integration-icons, integration-ui, integration-server, platform-catalog
     x/  bluesky/  discord/  twitch/  youtube/  steam/  meta/  tiktok/  linkedin/  kick/  velora/
 tools/
+  codemods/
   db-seed/
 ```
 
@@ -60,7 +61,7 @@ Each package has three tags. Nx's `@nx/enforce-module-boundaries` ESLint rule en
 | `feature` | Pages and components that call server actions                | everything above          |    80 |
 | `config`  | tsconfig, ESLint and Vitest presets, test setup              | `config`, `model`, `util` |     6 |
 | `app`     | `apps/web` and `apps/web-e2e`                                | everything                |     2 |
-| `tool`    | `tools/db-seed`                                              | `server`, `model`, `util` |     1 |
+| `tool`    | `tools/db-seed` and `tools/codemods`                         | `server`, `model`, `util` |     2 |
 
 ```mermaid
 flowchart TB
@@ -753,10 +754,11 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 
 ### Apps and tools
 
-3 packages, 134 source files, 28 test files.
+4 packages, 141 source files, 32 test files.
 
-| Package         | Type | Files    | Moves from                                                                                                                               |
-| --------------- | ---- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `apps/web`      | app  | 132 / 24 | `__tests__/middleware.test.ts`<br>`app/(auth)/login/page.tsx`<br>`app/(auth)/logout/page.tsx`<br>`app/(auth)/onboarding/`<br>and 46 more |
-| `apps/web-e2e`  | app  | 1 / 4    | `e2e/`<br>`playwright.config.ts`                                                                                                         |
-| `tools/db-seed` | tool | 1 / 0    | `prisma/seed.ts`                                                                                                                         |
+| Package          | Type | Files    | Moves from                                                                                                                               |
+| ---------------- | ---- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/web`       | app  | 132 / 24 | `__tests__/middleware.test.ts`<br>`app/(auth)/login/page.tsx`<br>`app/(auth)/logout/page.tsx`<br>`app/(auth)/onboarding/`<br>and 46 more |
+| `apps/web-e2e`   | app  | 1 / 4    | `e2e/`<br>`playwright.config.ts`                                                                                                         |
+| `tools/db-seed`  | tool | 1 / 0    | `prisma/seed.ts`                                                                                                                         |
+| `tools/codemods` | tool | 7 / 4    | New package: the move codemod                                                                                                            |
