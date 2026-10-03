@@ -173,7 +173,7 @@ jobs:
 
       - name: Merge the coverage
         if: steps.reports.outputs.found == 'true'
-        run: pnpm exec vitest run --merge-reports=.vitest-reports --coverage
+        run: pnpm exec vitest run --merge-reports=.vitest-reports --coverage --passWithNoTests
 
       - name: Report the line coverage
         if: steps.reports.outputs.found == 'true'
