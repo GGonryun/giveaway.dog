@@ -60,6 +60,12 @@ const openLinksSafely = (node: Element) => {
 };
 
 export function sanitizeRichText(html: string): string {
+  if (!DOMPurify.isSupported) {
+    throw new Error(
+      'DOMPurify cannot sanitize HTML in this environment, so the rich text was not rendered'
+    );
+  }
+
   DOMPurify.addHook('uponSanitizeAttribute', keepOnlyTextAlign);
   DOMPurify.addHook('afterSanitizeAttributes', openLinksSafely);
   try {

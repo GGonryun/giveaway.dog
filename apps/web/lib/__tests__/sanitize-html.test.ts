@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { sanitizeRichText } from '../sanitize-html';
 
 describe('sanitizeRichText', () => {
@@ -174,6 +174,33 @@ describe('sanitizeRichText', () => {
           '<a href="https://giveaway.dog" style="color: red">Site</a>'
         )
       ).toBe('<a href="https://giveaway.dog" style="color: red">Site</a>');
+    });
+  });
+
+  describe('when DOMPurify cannot run', () => {
+    afterEach(() => {
+      vi.doUnmock('isomorphic-dompurify');
+      vi.resetModules();
+    });
+
+    it('throws instead of returning the HTML unsanitised', async () => {
+      const sanitize = vi.fn((html: string) => html);
+      vi.resetModules();
+      vi.doMock('isomorphic-dompurify', () => ({
+        default: {
+          isSupported: false,
+          sanitize,
+          addHook: vi.fn(),
+          removeHook: vi.fn()
+        }
+      }));
+      const { sanitizeRichText: sanitizeWithoutDom } =
+        await import('../sanitize-html');
+
+      expect(() =>
+        sanitizeWithoutDom('<img src="x" onerror="alert(1)">')
+      ).toThrow('DOMPurify cannot sanitize HTML in this environment');
+      expect(sanitize).not.toHaveBeenCalled();
     });
   });
 });

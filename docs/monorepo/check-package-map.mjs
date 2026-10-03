@@ -105,7 +105,7 @@ const ownerOf = (file) => {
   if (direct || !isTest(file)) return direct;
   const base = file
     .replace('/__tests__/', '/')
-    .replace(/\.(snapshot\.)?(test|spec)\.tsx?$/, '');
+    .replace(/\.(snapshot\.|visual\.)?(test|spec)\.tsx?$/, '');
   for (const ext of ['.ts', '.tsx', '/index.ts', '/index.tsx']) {
     if (dead.has(base + ext)) return DEAD;
     if (fileSet.has(base + ext)) return ownerOfSource(base + ext);
