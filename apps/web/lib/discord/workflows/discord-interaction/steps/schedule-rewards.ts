@@ -1,5 +1,5 @@
-import db from '@/lib/prisma';
-import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
+import db from '@giveaway/db-client/prisma';
+import { scheduleRandomlyAssignPrizesJob } from '@giveaway/jobs/util';
 export async function scheduleRewards({
   sweepstakesId,
   userId

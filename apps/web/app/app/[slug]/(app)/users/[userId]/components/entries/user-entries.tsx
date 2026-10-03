@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/table';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { formatDistanceToNowStrict } from 'date-fns';
-import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
+import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
 
 import { Button } from '@/components/ui/button';
 

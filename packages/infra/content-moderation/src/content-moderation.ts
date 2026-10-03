@@ -1,3 +1,5 @@
+import 'server-only';
+
 import vision from '@google-cloud/vision';
 import type { google } from '@google-cloud/vision/build/protos/protos';
 

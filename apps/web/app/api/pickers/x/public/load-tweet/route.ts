@@ -10,7 +10,7 @@ import type { Tweet } from 'scrapebadger';
 import { ApplicationError } from '@giveaway/util-errors';
 import { checkAndConsumeCredits } from '@/lib/scrapebadger/credits';
 import { CREDIT_COSTS } from '@/lib/scrapebadger/settings';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import {
   X_PICKER_LIKES_KEY,
   X_PICKER_RETWEETS_KEY,

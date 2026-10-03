@@ -7,7 +7,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { BLUESKY_PROFILE_URL } from '@/lib/settings';
+import { BLUESKY_PROFILE_URL } from '@giveaway/app-config/settings';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useArrayContext } from '@/components/hooks/use-array-context';
 

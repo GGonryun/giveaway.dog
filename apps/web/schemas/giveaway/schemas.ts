@@ -8,7 +8,7 @@ import { assertNever } from '@giveaway/util-errors';
 import z from 'zod';
 import { userProfileSchema, userSchema } from '../user';
 import { derivedSweepstakesStatusSchema } from '../sweepstakes';
-import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@/lib/settings';
+import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@giveaway/app-config/settings';
 import { timingSchema } from '../timing';
 import { taskSchema, baseTaskSchema } from '@/lib/task/schemas';
 import { allowedUserSourcesSchema } from '@/lib/user-source/schemas';

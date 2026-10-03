@@ -1,7 +1,7 @@
 'use server';
 
-import { newEmailClient, NO_REPLY_EMAIL } from '@/lib/email/client';
-import { getVerificationEmailContent } from '@/lib/email/templates';
+import { newEmailClient, NO_REPLY_EMAIL } from '@giveaway/email/client';
+import { getVerificationEmailContent } from '@giveaway/email/templates';
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@/lib/mrpc/procedures';
 import { createHash, randomBytes } from 'crypto';

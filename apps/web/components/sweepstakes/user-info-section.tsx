@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
 import { useLogout } from '@/lib/auth/hooks/use-logout';
 import { cn } from '@/lib/utils';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 
 export const UserInfoSection: React.FC<{ className?: string }> = ({
   className

@@ -39,7 +39,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog';
 
-import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
+import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
 import { datetime } from '@/lib/date';
 
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';

@@ -16,7 +16,7 @@ const redisMock = vi.hoisted(() => ({
   del: vi.fn()
 }));
 
-vi.mock('@/lib/redis', () => ({ redis: redisMock }));
+vi.mock('@giveaway/cache/redis', () => ({ redis: redisMock }));
 
 const SECRET = 'eventsub-secret';
 const NOW = new Date('2026-10-01T12:00:00.000Z');

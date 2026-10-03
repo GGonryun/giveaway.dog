@@ -1,4 +1,4 @@
-import { isValidCronSecret } from '@/lib/jobs/util';
+import { isValidCronSecret } from '@giveaway/jobs/util';
 import { NextRequest, NextResponse } from 'next/server';
 import { getWorld } from 'workflow/runtime';
 

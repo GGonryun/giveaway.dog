@@ -28,7 +28,7 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 
 - **App location**: The Next.js app is in `apps/web`. Paths in this file are relative to `apps/web` unless they start with `apps/`, `.github/` or name a root file
 - **Environment files**: Put `.env.local` and `.env.prod` in `apps/web`. Next.js, Prisma and the `prisma:*` scripts read them from there
-- **Workspace packages**: Shared code goes in pnpm workspace packages under `packages/` (see Workspace Packages). Today the tooling packages are in `packages/tooling/`, and the first shared utilities are in `packages/shared/`
+- **Workspace packages**: Shared code goes in pnpm workspace packages under `packages/` (see Workspace Packages). Today the tooling packages are in `packages/tooling/`, and the packages that moved out of the app are in `packages/shared/`, `packages/infra/` and `packages/integrations/`
 - **Auth pages**: Located in `app/(auth)/` directory
 - **Shared components**: Place reusable components in `components/` directory
 - **UI components**: Use existing shadcn/ui components in `components/ui/`
@@ -92,7 +92,7 @@ apps/
 │   │   ├── ui/ (shadcn/ui components)
 │   │   └── patterns/ (reusable patterns)
 │   ├── lib/
-│   ├── prisma/
+│   ├── prisma/ (seed.ts)
 │   ├── package.json (app dependencies and scripts)
 │   ├── tsconfig.json
 │   ├── vercel.json
@@ -101,6 +101,18 @@ apps/
     ├── src/
     └── playwright.config.ts
 packages/
+├── infra/
+│   ├── app-config/ (@giveaway/app-config: environment and settings)
+│   ├── cache/ (@giveaway/cache: the Redis client)
+│   ├── content-moderation/ (@giveaway/content-moderation: image moderation)
+│   ├── db-client/ (@giveaway/db-client: the Prisma client)
+│   ├── db-model/ (@giveaway/db-model: the Prisma enums and types)
+│   ├── db-schema/ (@giveaway/db-schema: schema.prisma, the migrations and prisma generate)
+│   ├── email/ (@giveaway/email: the email client and templates)
+│   ├── jobs/ (@giveaway/jobs: cron secret check and job scheduling)
+│   └── turnstile-model/ (@giveaway/turnstile-model: Turnstile constants and schemas)
+├── integrations/
+│   └── kick/kick-auth/ (@giveaway/kick-auth: the Kick login provider)
 ├── shared/
 │   ├── util-errors/ (@giveaway/util-errors: ApplicationError and assertNever)
 │   ├── util-strings/ (@giveaway/util-strings: string and email helpers)
@@ -173,7 +185,8 @@ vitest.config.ts (lists the Vitest projects of every package)
   - `@giveaway/testing-server`: the setup file of every project (the Prisma, session and `next/cache` mocks) and the helpers that tests import: `@giveaway/testing-server/prisma`, `/session`, `/result` and `/next-cache`
   - `@giveaway/testing-dom`: the jsdom setup of the `frontend` and `snapshot` projects
   - `@giveaway/testing-visual`: the browser setup (`/setup`) and the `renderVisual` helpers (`/render`) of the visual tests, and `visual-docker`, which runs the visual tests of the package it is called from in the Playwright Docker image
-- **Shared packages**: `packages/shared/` has the `util` packages that moved out of the app. Import them by package name, for example `@giveaway/util-errors` or `@giveaway/util-types/widetype`, never with a path into `packages/`. Each one is in `transpilePackages` in `apps/web/next.config.ts` and is a `workspace:*` dependency in `apps/web/package.json`. `apps/web/app/globals.css` has `@source '../../../packages'`, so Tailwind finds the classes that packages use. The migration plan in `docs/monorepo/migration-plan.md` lists what a move changes
+- **Moved packages**: `packages/shared/`, `packages/infra/` and `packages/integrations/` have the packages that moved out of the app. Import them by package name, for example `@giveaway/util-errors` or `@giveaway/db-client/prisma`, never with a path into `packages/`. Each one is in `transpilePackages` in `apps/web/next.config.ts` and is a `workspace:*` dependency in `apps/web/package.json`. `apps/web/app/globals.css` has `@source '../../../packages'`, so Tailwind finds the classes that packages use. The migration plan in `docs/monorepo/migration-plan.md` lists what a move changes
+- **Prisma**: `@giveaway/db-schema` has `schema.prisma` and the migrations in `packages/infra/db-schema/src/`. Its `postinstall` runs `prisma generate`, and `pnpm --filter @giveaway/db-schema run generate` runs it again. The `prisma:*` scripts in `apps/web/package.json` find the schema through `prisma.schema` in that file, and read the env files in `apps/web`. Import the Prisma client from `@giveaway/db-client/prisma`. In a package, import the Prisma enums and types from `@giveaway/db-model`, not from `@prisma/client` (the move codemod rewrites these imports; the app still imports `@prisma/client`). `@giveaway/db-client` and `@giveaway/db-model` have an implicit Nx dependency on `@giveaway/db-schema`, so a schema change affects every project that uses the generated client
 - **Moving a package**: Run `pnpm run move-packages <package>...` from the root, with the package names from `docs/monorepo/package-map.json`. The codemod in `tools/codemods` moves the package's `sources` with `git mv` into `packages/<path>/src/` and writes the package files. It rewrites every import of a moved file, puts the package in `transpilePackages` and the app's dependencies, moves its ESLint suppressions, empties its `sources` in the map and runs Prettier and `pnpm install`. It changes nothing when it finds a problem, for example two sources with the same module name (pass `--rename <source>=<name>`) or an import of a file that stays in the app. Run it with `--dry-run` first. To fix a conflict with `main`, run it again on the new `main` instead of merging by hand. See "The move codemod" in `docs/monorepo/migration-plan.md`
 - **Vitest config of a package**: `vitest.config.ts` exports `defineConfig(packageTestConfig())`. The root `vitest.config.ts` adds the three projects of each package that has one, named `<package>:server`, `<package>:frontend` and `<package>:snapshot`. A package with tests has `test:*` scripts for the projects it uses, so Nx and CI run them
 

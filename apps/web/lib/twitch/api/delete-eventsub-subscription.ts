@@ -1,7 +1,7 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import { TWITCH_CLIENT_ID } from '../bot/scopes';
 import { getAppAccessToken } from './get-app-access-token';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import { EventSubSubscription } from '@prisma/client';
 
 export const deleteEventSubSubscription = async ({

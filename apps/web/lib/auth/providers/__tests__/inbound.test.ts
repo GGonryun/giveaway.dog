@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { InboundEmailProvider } from '../inbound';
-import { getMagicLinkEmailContent } from '@/lib/email/templates';
+import { getMagicLinkEmailContent } from '@giveaway/email/templates';
 
 const inbound = vi.hoisted(() => {
   const send = vi.fn();

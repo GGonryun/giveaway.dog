@@ -19,7 +19,7 @@ import { EasterEggLogo } from '@/components/patterns/easter-egg-logo';
 import { toast } from 'sonner';
 import { CheckCircle } from 'lucide-react';
 import { TeamRole } from '@prisma/client';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import Image from 'next/image';
 
 interface InviteDetails {

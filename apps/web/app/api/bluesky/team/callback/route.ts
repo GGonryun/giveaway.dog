@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import { getTeamBlueskyClient } from '@/lib/bluesky/team-bluesky-client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { IntegrationProvider, IntegrationStatus } from '@prisma/client';

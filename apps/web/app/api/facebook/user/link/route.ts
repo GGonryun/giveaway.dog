@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import { auth } from '@/lib/auth/config';
 import { redirect } from 'next/navigation';
 

@@ -3,7 +3,7 @@ import { prismaMock, resetPrismaMock } from './prisma';
 import { resetAuthMock } from './session';
 import { resetNextCacheMock } from './next-cache';
 
-vi.mock('@/lib/prisma', async () => {
+vi.mock('@giveaway/db-client/prisma', async () => {
   const { prismaMock } = await import('./prisma');
   return { default: prismaMock };
 });

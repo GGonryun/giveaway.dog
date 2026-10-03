@@ -10,7 +10,7 @@ import {
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { WinnersAnnounced } from '../winners-announced';
 
 const me = buildUser({ id: 'user-me', name: 'Me Myself' });

@@ -3,7 +3,7 @@ import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
 import type { ProviderSchema } from '@/lib/integrations/schemas/providers';
 import type { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import type { TaskCompletionSchema } from '@/lib/task/completions';
 import type {
   BonusTaskSchema,

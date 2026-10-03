@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { Redis } from '@upstash/redis';
 
 const redisUrl = process.env.REDIS_URL!;

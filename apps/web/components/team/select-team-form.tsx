@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 import { PlusIcon } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { LoadingState } from './loading-state';
-import { MAX_USER_TEAMS } from '@/lib/settings';
+import { MAX_USER_TEAMS } from '@giveaway/app-config/settings';
 import { TeamLogo } from '@/components/team/team-logo';
 
 import { useUserTeams } from '../hooks/use-user-teams';

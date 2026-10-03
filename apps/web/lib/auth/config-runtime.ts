@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import { NextAuthConfig, Session } from 'next-auth';
 import { tryAutoMerge } from './auto-merge';
 import { authConfigMiddleware } from './config-middleware';

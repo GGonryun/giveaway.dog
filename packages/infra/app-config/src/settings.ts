@@ -1,4 +1,4 @@
-import { IdentityProvider } from '@prisma/client';
+import { IdentityProvider } from '@giveaway/db-model';
 export const MAX_USER_TEAMS = 5;
 export const NEW_SWEEPSTAKE_THRESHOLD = 3;
 export const ENDING_SOON_SWEEPSTAKE_THRESHOLD = 3;

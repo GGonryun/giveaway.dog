@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import {
   getRetweeters,
   getRetweetersUntil

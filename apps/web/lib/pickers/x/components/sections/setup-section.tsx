@@ -2,7 +2,7 @@
 
 import { useFormContext, useFieldArray } from 'react-hook-form';
 import { TwitterV2PickerFormSchema } from '../../schemas/form';
-import { MAX_TWITTER_V2_PICKER_POSTS } from '@/lib/settings';
+import { MAX_TWITTER_V2_PICKER_POSTS } from '@giveaway/app-config/settings';
 import {
   FormControl,
   FormField,

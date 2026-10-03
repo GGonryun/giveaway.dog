@@ -2,7 +2,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { ReferredUserSchema, UserReferralSchema } from '../schemas';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 
 export const REFERRED_USER_INCLUDE = {
   user: true

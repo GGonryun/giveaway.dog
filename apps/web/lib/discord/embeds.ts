@@ -11,7 +11,10 @@ import {
   SWEEPSTAKES_STATUS_LABEL,
   toDerivedSweepstakeStatus
 } from '@/schemas/sweepstakes';
-import { DEFAULT_SWEEPSTAKES_NAME, UNKNOWN_USER_NAME } from '../settings';
+import {
+  DEFAULT_SWEEPSTAKES_NAME,
+  UNKNOWN_USER_NAME
+} from '@giveaway/app-config/settings';
 import {
   DiscordMessageComponentFactory,
   toActiveSweepstakeComponents,

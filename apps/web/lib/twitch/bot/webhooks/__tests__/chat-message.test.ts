@@ -28,7 +28,7 @@ const ratelimitMock = vi.hoisted(() => ({
   limit: vi.fn()
 }));
 
-vi.mock('@/lib/redis', () => ({ redis: redisMock }));
+vi.mock('@giveaway/cache/redis', () => ({ redis: redisMock }));
 
 vi.mock('@upstash/ratelimit', () => {
   class Ratelimit {

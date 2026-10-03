@@ -1,5 +1,5 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import { NextAuthConfig } from 'next-auth';
 
 export const authConfigMiddleware = {

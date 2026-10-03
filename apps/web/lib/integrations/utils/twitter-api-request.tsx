@@ -2,7 +2,7 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { getLatestTwitterAccessToken } from './get-latest-twitter-access-token';
-import { Tx } from '@/lib/prisma';
+import { Tx } from '@giveaway/db-client/prisma';
 import { z } from 'zod';
 
 interface TwitterApiRequestOptions<T> {

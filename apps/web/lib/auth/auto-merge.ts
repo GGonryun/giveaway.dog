@@ -1,5 +1,5 @@
 import { Account, Profile, Session } from 'next-auth';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import { getAccountLabel, getAccountLink } from './get-account-data';
 import { Prisma, UserSource } from '@prisma/client';
 

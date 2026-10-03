@@ -1,4 +1,4 @@
-import { redis } from '@/lib/redis';
+import { redis } from '@giveaway/cache/redis';
 import { getUser } from './get-user';
 import type { User } from 'scrapebadger';
 

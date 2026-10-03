@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { IdentityProvider } from '@prisma/client';
+import { IdentityProvider } from '@giveaway/db-model';
 import * as settings from '../settings';
 
 describe('settings', () => {

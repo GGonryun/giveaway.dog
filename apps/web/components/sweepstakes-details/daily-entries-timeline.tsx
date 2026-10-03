@@ -12,7 +12,7 @@ import {
   ParticipantSweepstakeSchema,
   TimeSeriesDataSchema
 } from '@/schemas/giveaway/schemas';
-import { DEFAULT_TIME_SERIES_DURATION } from '@/lib/settings';
+import { DEFAULT_TIME_SERIES_DURATION } from '@giveaway/app-config/settings';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 

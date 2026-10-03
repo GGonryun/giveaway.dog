@@ -1,5 +1,5 @@
-import { newEmailClient, NO_REPLY_EMAIL } from '@/lib/email/client';
-import { getMagicLinkEmailContent } from '@/lib/email/templates';
+import { newEmailClient, NO_REPLY_EMAIL } from '@giveaway/email/client';
+import { getMagicLinkEmailContent } from '@giveaway/email/templates';
 
 export const InboundEmailProvider = ({ secret }: { secret?: string }) => {
   const sendVerificationRequest = async ({

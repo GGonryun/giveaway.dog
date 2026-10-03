@@ -34,7 +34,7 @@ import {
   termsTemplateSchema
 } from '../schemas';
 import { allowedUserSourcesSchema } from '@/lib/user-source/schemas';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
 
 describe('scalar defaults', () => {

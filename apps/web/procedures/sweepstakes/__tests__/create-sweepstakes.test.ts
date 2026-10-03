@@ -13,7 +13,7 @@ import {
   DEFAULT_SWEEPSTAKES_VISIBILITY,
   DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
 } from '@/schemas/giveaway/defaults';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { getTemplateById } from '@/lib/templates/data/static-templates';
 import {
   bonusTaskConfig,

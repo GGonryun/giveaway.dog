@@ -10,7 +10,7 @@ import { PrismaClient } from '@prisma/client';
 import { TaskJobWithRelations } from './types';
 import { datetime } from '@/lib/date';
 import { ApplicationError } from '@giveaway/util-errors';
-import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
+import { scheduleRandomlyAssignPrizesJob } from '@giveaway/jobs/util';
 
 const SCRAPEBADGER_RUN_OFFSET = 5;
 const MAX_RUN_OFFSET = 360;

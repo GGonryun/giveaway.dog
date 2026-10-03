@@ -1,7 +1,7 @@
 import { createHash, timingSafeEqual } from 'crypto';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { UserAccountType } from '@prisma/client';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 
 export const E2E_USER_EMAIL = 'e2e-host@example.com';
 

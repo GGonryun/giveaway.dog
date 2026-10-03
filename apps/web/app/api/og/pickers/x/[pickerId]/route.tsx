@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 
 export async function GET(
   _request: NextRequest,

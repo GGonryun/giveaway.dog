@@ -1,7 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { TURNSTILE_COOKIE_NAME } from './consts';
+import { TURNSTILE_COOKIE_NAME } from '@giveaway/turnstile-model/consts';
 
 export interface TurnstileVerificationResponse {
   success: boolean;

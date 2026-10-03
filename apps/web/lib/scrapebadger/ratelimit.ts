@@ -1,5 +1,5 @@
 import { Ratelimit } from '@upstash/ratelimit';
-import { redis } from '@/lib/redis';
+import { redis } from '@giveaway/cache/redis';
 import { SCRAPEBADGER_CREDIT_LIMIT } from './settings';
 
 // Single rate limiter for ScrapeBadger credits

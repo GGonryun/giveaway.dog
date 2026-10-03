@@ -1,7 +1,10 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { TURNSTILE_COOKIE_DAYS, TURNSTILE_COOKIE_NAME } from './consts';
+import {
+  TURNSTILE_COOKIE_DAYS,
+  TURNSTILE_COOKIE_NAME
+} from '@giveaway/turnstile-model/consts';
 
 export async function setTurnstileToken(token: string) {
   const isProduction = process.env.NODE_ENV === 'production';

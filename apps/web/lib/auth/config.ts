@@ -14,7 +14,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { SteamProvider } from './providers/steam';
 import { InboundEmailProvider } from './providers/inbound';
-import { KickProvider } from './providers/kick';
+import { KickProvider } from '@giveaway/kick-auth/kick';
 import { VeloraProvider } from './providers/velora';
 import { newE2eProviders } from './providers/e2e';
 
@@ -26,7 +26,7 @@ import {
   REQUIRED_LINKEDIN_SCOPES
 } from '../integrations/scopes';
 import { UserSource } from '@prisma/client';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import { redeemBlueskyLoginToken } from './bluesky-login-token';
 
 const authConfig = createAuthConfig(() => auth());

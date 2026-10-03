@@ -23,8 +23,9 @@ runs:
           node_modules
           apps/*/node_modules
           packages/*/*/node_modules
+          packages/*/*/*/node_modules
           tools/*/node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('.nvmrc') }}-modules-${{ hashFiles('pnpm-lock.yaml', 'pnpm-workspace.yaml', 'apps/web/prisma/schema.prisma') }}
+        key: ${{ runner.os }}-node-${{ hashFiles('.nvmrc') }}-modules-${{ hashFiles('pnpm-lock.yaml', 'pnpm-workspace.yaml', 'packages/infra/db-schema/src/schema.prisma') }}
 
     - name: Install dependencies
       if: steps.node-modules.outputs.cache-hit != 'true'

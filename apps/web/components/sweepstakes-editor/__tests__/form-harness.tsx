@@ -25,7 +25,7 @@ import {
 import {
   DEFAULT_ALLOWED_IDENTITIES,
   DEFAULT_REQUIRED_PRE_ENTRY_LOGIN
-} from '@/lib/settings';
+} from '@giveaway/app-config/settings';
 import { toDefaultValues } from '@/lib/task/defaults';
 
 export const FIXED_NOW = new Date('2026-06-15T12:00:00.000Z');

@@ -1,5 +1,5 @@
 import { IntegrationStatus } from '@prisma/client';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import type { DiscordApplicationCommandInteractionSchema } from '../../../bot/schema';
 import { toDiscordIntegrationSettings } from '@/lib/discord/integration/schemas';
 import { INTEGRATIONS_SETUP_URL } from '../../../bot/util';

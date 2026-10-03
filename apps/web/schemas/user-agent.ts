@@ -1,4 +1,4 @@
-import { UNKNOWN_BROWSER, UNKNOWN_OS } from '@/lib/settings';
+import { UNKNOWN_BROWSER, UNKNOWN_OS } from '@giveaway/app-config/settings';
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 

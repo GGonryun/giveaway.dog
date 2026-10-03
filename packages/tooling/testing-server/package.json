@@ -36,6 +36,7 @@
     "vitest": "catalog:"
   },
   "devDependencies": {
+    "@giveaway/db-client": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@types/node": "catalog:",

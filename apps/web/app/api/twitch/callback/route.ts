@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import z from 'zod';
 
 import { twitchOAuthCallback } from '@/lib/twitch/procedures/twitch-oauth-callback';

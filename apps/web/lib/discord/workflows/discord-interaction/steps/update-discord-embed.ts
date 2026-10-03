@@ -1,4 +1,4 @@
-import db from '@/lib/prisma';
+import db from '@giveaway/db-client/prisma';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
 import { updateDiscordMessage } from '../../../api/update-discord-message';
 import { toSweepstakesEmbed } from '../../../embeds';

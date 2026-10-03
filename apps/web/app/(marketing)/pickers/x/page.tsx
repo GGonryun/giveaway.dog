@@ -5,7 +5,7 @@ import { PickerBenefitsSection } from '@/lib/pickers/x/components/picker-benefit
 import { PickerFaqSection } from '@/lib/pickers/x/components/picker-faq-section';
 import { HostCTA } from '@/components/sweepstakes-browse/components/host-cta';
 import { PickerLiveEngagementSection } from '@/lib/pickers/x/components/picker-live-engagement-section';
-import { environment } from '@/lib/environment';
+import { environment } from '@giveaway/app-config/environment';
 import type { Metadata } from 'next';
 
 const appUrl = environment.appUrl();

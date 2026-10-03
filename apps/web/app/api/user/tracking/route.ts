@@ -1,11 +1,11 @@
-import prisma, { Tx } from '@/lib/prisma';
+import prisma, { Tx } from '@giveaway/db-client/prisma';
 import { devices, userAgent } from '@/lib/devices';
 import { NextRequest, NextResponse } from 'next/server';
 import { ip } from '@/lib/ip';
 import { UserAgentSchema } from '@/schemas/user-agent';
 import { Nil } from '@giveaway/util-types/types';
 import { MAX_TRACKING_REQUESTS_PER_RUN } from '@/schemas/user-scoring';
-import { isValidCronSecret } from '@/lib/jobs/util';
+import { isValidCronSecret } from '@giveaway/jobs/util';
 
 export async function GET(request: NextRequest) {
   if (!isValidCronSecret(request)) {

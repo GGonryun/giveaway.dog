@@ -4,7 +4,7 @@ import {
   DEFAULT_ALLOWED_IDENTITIES,
   DEFAULT_REQUIRED_PRE_ENTRY_LOGIN,
   DEFAULT_SWEEPSTAKES_NAME
-} from '../settings';
+} from '@giveaway/app-config/settings';
 import { TemplateFormSchema } from './schemas/template';
 import {
   DEFAULT_SWEEPSTAKES_DESCRIPTION,

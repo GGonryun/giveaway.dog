@@ -18,7 +18,7 @@ const redisMock = vi.hoisted(() => ({
   del: vi.fn()
 }));
 
-vi.mock('@/lib/redis', () => ({ redis: redisMock }));
+vi.mock('@giveaway/cache/redis', () => ({ redis: redisMock }));
 
 const CACHE_KEY = 'twitch:bot:access_token';
 

@@ -2,7 +2,7 @@
 
 import { date } from '@/lib/date';
 import { procedure } from '@/lib/mrpc/procedures';
-import { DEFAULT_TIME_SERIES_DURATION } from '@/lib/settings';
+import { DEFAULT_TIME_SERIES_DURATION } from '@giveaway/app-config/settings';
 import { timeSeriesDataSchema } from '@/schemas/giveaway/schemas';
 import { subDays } from 'date-fns';
 import { groupBy, map } from 'lodash';

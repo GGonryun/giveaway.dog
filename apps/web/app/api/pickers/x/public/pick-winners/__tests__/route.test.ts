@@ -16,7 +16,7 @@ vi.mock('@/lib/scrapebadger/ratelimit', () => ({
   scrapeBadgerCredits: { limit: m.creditsLimit }
 }));
 
-vi.mock('@/lib/redis', () => ({
+vi.mock('@giveaway/cache/redis', () => ({
   redis: { get: m.redisGet, set: m.redisSet }
 }));
 

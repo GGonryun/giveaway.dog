@@ -1,4 +1,4 @@
-import db from '@/lib/prisma';
+import db from '@giveaway/db-client/prisma';
 import { toTaskSchema } from '@/lib/task/schemas';
 
 export type FetchTaskResult =

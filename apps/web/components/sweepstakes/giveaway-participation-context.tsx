@@ -16,7 +16,7 @@ import {
   CreateReferralSchema,
   UserReferralSchema
 } from '@/lib/referrals/schemas';
-import { TurnstileStatus } from '@/lib/turnstile/schemas';
+import { TurnstileStatus } from '@giveaway/turnstile-model/schemas';
 import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
 import { TaskEntryProvider } from '@/lib/task/components/public-sweepstakes/task-actions/lib/task-entry-context';
 

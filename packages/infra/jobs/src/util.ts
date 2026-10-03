@@ -1,8 +1,10 @@
+import 'server-only';
+
 import {
   PrismaClient,
   SweepstakesJobStatus,
   SweepstakesJobType
-} from '@prisma/client';
+} from '@giveaway/db-model';
 import { NextRequest } from 'next/server';
 
 export const isValidCronSecret = (request: NextRequest) => {

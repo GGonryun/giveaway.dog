@@ -8,7 +8,7 @@ import {
   UNKNOWN_SCREEN,
   UNKNOWN_TIMEZONE,
   UNKNOWN_USER_AGENT
-} from './settings';
+} from '@giveaway/app-config/settings';
 import { ip } from './ip';
 
 export namespace userAgent {

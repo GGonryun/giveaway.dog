@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { OAuthUserConfig, OAuthConfig } from 'next-auth/providers';
 
 export interface KickProfile {

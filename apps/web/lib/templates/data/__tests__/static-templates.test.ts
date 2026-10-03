@@ -10,7 +10,7 @@ import {
   DEFAULT_ALLOWED_IDENTITIES,
   TWITTER_POST_URL,
   TWITTER_PROFILE_URL
-} from '@/lib/settings';
+} from '@giveaway/app-config/settings';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
   DEFAULT_ALLOW_USER_SELECTION,
