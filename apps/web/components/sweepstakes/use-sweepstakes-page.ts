@@ -1,7 +1,7 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTeams } from '../context/team-provider';
 import { useMemo } from 'react';
-import { useUpdateParams } from '../hooks/use-update-params';
+import { useUpdateParams } from '@giveaway/ui-hooks/use-update-params';
 
 export const useSweepstakesPage = () => {
   const pathname = usePathname();

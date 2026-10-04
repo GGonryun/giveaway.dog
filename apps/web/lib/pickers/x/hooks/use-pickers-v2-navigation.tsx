@@ -1,5 +1,5 @@
 import { useTeams } from '@/components/context/team-provider';
-import { useUpdateParams } from '@/components/hooks/use-update-params';
+import { useUpdateParams } from '@giveaway/ui-hooks/use-update-params';
 import { useRouter } from 'next/navigation';
 
 export const usePickersV2Navigation = () => {

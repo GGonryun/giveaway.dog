@@ -25,7 +25,7 @@ import Link from 'next/link';
 import { StatusExplanationDialog } from '../users/status-explanation-dialog';
 import { Separator } from '../ui/separator';
 import { datetime } from '@/lib/date';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { toQualityType, QUALITY_LABELS } from '@/schemas/quality';
 import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
 import { UserProviders } from '@/lib/integrations/components/user-providers';

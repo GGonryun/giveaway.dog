@@ -3,11 +3,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { UploadCloud, Trash2, ZoomIn, X } from 'lucide-react';
-import { useFileProvider } from '@/components/hooks/use-file-provider';
+import { useFileProvider } from '@giveaway/ui-hooks/use-file-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Typography } from '@/components/ui/typography';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { AcceptedFileTypes, FileSize } from '@giveaway/util-media/files';
 
 export interface FileUploadProps {

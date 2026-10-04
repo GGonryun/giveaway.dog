@@ -2,7 +2,7 @@ import { TaskActionProps } from '../../building-blocks';
 import { useState } from 'react';
 import { InstagramCommentTaskSchema } from '@/lib/task/schemas';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';

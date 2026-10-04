@@ -8,7 +8,7 @@ import {
   SweepstakesFormFieldType,
   Prisma
 } from '@prisma/client';
-import { extractUsernameFromProfileUrl } from '@/lib/integrations/schemas/twitter';
+import { extractUsernameFromProfileUrl } from '@giveaway/x-model/twitter';
 import z from 'zod';
 import { toTaskSchema } from '@/lib/task/schemas';
 import { RecursiveRequired } from '@giveaway/util-types/recursive-required';

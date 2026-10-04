@@ -11,7 +11,7 @@ import {
 import type { Props as LegendProps } from 'recharts/types/component/Legend';
 import { TooltipContentProps } from 'recharts/types/component/Tooltip';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const;

@@ -17,7 +17,7 @@ import { Pending } from './states/pending';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { assertNever } from '@giveaway/util-errors';
 import { toBackgroundStyle } from '@/schemas/color';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { SweepstakesLoginOptions } from './sweepstakes-login-options';
 import { UserDetailsForm } from './states/user-details-form';
 import { TurnstileGate } from '@/lib/turnstile/gate';

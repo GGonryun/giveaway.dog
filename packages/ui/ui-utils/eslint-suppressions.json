@@ -1,0 +1,7 @@
+{
+  "packages/ui/ui-utils/src/utils.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  }
+}

@@ -25,7 +25,7 @@ import {
   FormControl,
   FormMessage
 } from '@/components/ui/form';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useState } from 'react';
 import { BlueskyPostPermissionBanner } from '../bluesky-post-permission-banner';
 import { FileSize } from '@giveaway/util-media/files';

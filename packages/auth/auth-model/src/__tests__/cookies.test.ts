@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { IdentityProvider } from '@prisma/client';
+import { IdentityProvider } from '@giveaway/db-model';
 import {
   LAST_LOGIN_PROVIDER_COOKIE,
   getLastLoginProviderCookie,

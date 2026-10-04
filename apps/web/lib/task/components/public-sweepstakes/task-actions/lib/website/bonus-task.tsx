@@ -4,7 +4,7 @@ import {
   BonusTaskSchema,
   BonusCompleteProfileTaskSchema
 } from '@/lib/task/schemas';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
 import React from 'react';
 

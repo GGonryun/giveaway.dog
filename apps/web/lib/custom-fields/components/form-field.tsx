@@ -9,10 +9,10 @@ import React from 'react';
 import {
   ArrayContext,
   useArrayContext
-} from '@/components/hooks/use-array-context';
+} from '@giveaway/ui-hooks/use-array-context';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { IconButton } from '../../../components/sweepstakes-editor/form/icon-button';
 import {
   Collapsible,

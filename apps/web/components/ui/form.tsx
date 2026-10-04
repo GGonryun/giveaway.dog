@@ -13,7 +13,7 @@ import {
   type FieldValues
 } from 'react-hook-form';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from './alert';
 import { AlertCircleIcon } from 'lucide-react';

@@ -1,4 +1,4 @@
-import { useArrayContext } from '@/components/hooks/use-array-context';
+import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { datetime } from '@/lib/date';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';

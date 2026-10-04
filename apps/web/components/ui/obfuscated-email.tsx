@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { strings } from '@giveaway/util-strings/strings';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 interface ObfuscatedEmailProps {
   email: string | null | undefined;

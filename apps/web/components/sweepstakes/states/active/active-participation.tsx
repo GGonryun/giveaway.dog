@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { Plus } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useGiveawayParticipation } from '../../giveaway-participation-context';
 import { UserInfoSection } from '../../user-info-section';
 import { Typography } from '@/components/ui/typography';

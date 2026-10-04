@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 interface SettingsCardProps {
   title: string;

@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,9 +22,9 @@ import login from '@/lib/auth/procedures/login';
 import {
   getLastLoginProviderCookie,
   setLastLoginProviderCookie
-} from '@/lib/auth/cookies';
+} from '@giveaway/auth-model/cookies';
 import { Alert, AlertDescription } from '../ui/alert';
-import { toAuthErrorDescription } from '@/lib/auth/util';
+import { toAuthErrorDescription } from '@giveaway/auth-model/util';
 import { useSearchParams } from 'next/navigation';
 import { IdentityProvider } from '@prisma/client';
 import { assertNever } from '@giveaway/util-errors';

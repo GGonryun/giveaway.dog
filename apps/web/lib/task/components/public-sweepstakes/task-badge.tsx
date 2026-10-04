@@ -17,7 +17,7 @@ import {
 import { formatDistanceToNowStrict } from 'date-fns';
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../theme';
 import { assertNever } from '@giveaway/util-errors';
 import { SocialXBlueCheckmarkIcon } from '@/lib/integrations/components/icons/x-icon';

@@ -1,7 +1,7 @@
 import {
   xStatusRefineError,
   xStatusRefineUrl
-} from '@/lib/integrations/schemas/twitter';
+} from '@giveaway/x-model/twitter';
 import { MAX_PICKER_SCHEDULE_DAYS } from '@giveaway/app-config/settings';
 import { DeepPartial } from '@giveaway/util-types/types';
 import { z } from 'zod';

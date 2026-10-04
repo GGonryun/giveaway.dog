@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserPlus, ExternalLink, ImageIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 import { SteamFollowTaskSchema, TaskInput } from '@/lib/task/schemas';
 import { FileUpload } from '@/components/ui/file-upload';

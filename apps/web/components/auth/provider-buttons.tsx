@@ -10,7 +10,7 @@ import {
   ENABLED_IDENTITY_PROVIDERS,
   ProviderSchema
 } from '@/lib/integrations/schemas/providers';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { IdentityProvider } from '@prisma/client';
 import React from 'react';
 

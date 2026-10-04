@@ -1,5 +1,5 @@
 import { richTextPreviewStyles } from '@/lib/rich-text-styles';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 interface RichTextPreviewProps {
   content?: string | null;

@@ -6,7 +6,7 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { Failure } from '@/lib/mrpc/types';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { CheckIcon, LucideIcon, SaveIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { TaskSchema } from '../../../schemas';

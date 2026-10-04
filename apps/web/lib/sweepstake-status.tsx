@@ -9,7 +9,7 @@ import {
   LucideIcon
 } from 'lucide-react';
 import React from 'react';
-import { cn } from './utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 export const DERIVED_STATUS_ICON: Record<DerivedSweepstakeStatus, LucideIcon> =
   {

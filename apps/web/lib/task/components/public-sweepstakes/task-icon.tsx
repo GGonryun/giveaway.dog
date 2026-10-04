@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTaskTheme } from '../theme';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { CompletionStatus } from '@prisma/client';
 import { SUBMISSION_COLOR_MAP, SUBMISSION_ICON_MAP } from '../../submission';
 

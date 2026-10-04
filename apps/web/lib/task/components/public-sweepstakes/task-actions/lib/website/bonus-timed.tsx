@@ -1,11 +1,11 @@
 import { TaskActionProps, TaskContent } from '../../building-blocks';
 import { Button } from '@/components/ui/button';
 import { BonusTimedTaskSchema } from '@/lib/task/schemas';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
 import { datetime } from '@/lib/date';
 import React, { useState } from 'react';
-import { useInterval } from '@/components/hooks/use-interval';
+import { useInterval } from '@giveaway/ui-hooks/use-interval';
 import { formatDistanceToNow } from 'date-fns';
 import {
   Tooltip,

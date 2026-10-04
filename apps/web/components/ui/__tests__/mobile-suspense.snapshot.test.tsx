@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { useIsTablet } from '@/components/hooks/use-tablet';
+import { useIsTablet } from '@giveaway/ui-hooks/use-tablet';
 import { MobileSuspense } from '../mobile-suspense';
 
-vi.mock('@/components/hooks/use-tablet', async (importOriginal) => {
+vi.mock('@giveaway/ui-hooks/use-tablet', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@/components/hooks/use-tablet')>();
+    await importOriginal<typeof import('@giveaway/ui-hooks/use-tablet')>();
   return { useIsTablet: vi.fn(actual.useIsTablet) };
 });
 

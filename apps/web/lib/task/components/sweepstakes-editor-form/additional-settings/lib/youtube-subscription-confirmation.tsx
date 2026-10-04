@@ -1,6 +1,6 @@
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useMemo } from 'react';
-import { useArrayContext } from '@/components/hooks/use-array-context';
+import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import { useFormContext, useWatch } from 'react-hook-form';
 import {
   FormField,

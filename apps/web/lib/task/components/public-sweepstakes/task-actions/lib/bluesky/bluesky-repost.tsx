@@ -12,7 +12,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { BlueskyEmbed } from './shared';
 import { blueskyPostRefineUrl } from '@/lib/integrations/schemas/bluesky-helpers';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 export const BlueskyRepostTaskActionForm: React.FC<
   TaskActionProps<BlueskyRepostTaskSchema | BlueskyRepostImportTaskSchema>

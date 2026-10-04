@@ -8,7 +8,7 @@ import { ClockIcon, CalendarIcon, FileCheck } from 'lucide-react';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { TermsModal } from './terms-modal';
 import { DeviceType, GiveawayState } from '@/schemas/giveaway/schemas';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { date } from '@/lib/date';
 import { getSweepstakesTimingDescription } from '@/schemas/sweepstakes';
 import { MinimalTipTapPreview } from '@/components/ui/minimal-tiptap-preview';

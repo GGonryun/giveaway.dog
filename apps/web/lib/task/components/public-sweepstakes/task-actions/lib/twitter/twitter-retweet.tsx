@@ -4,10 +4,7 @@ import { TaskActionProps } from '../../building-blocks';
 import { useState } from 'react';
 import { AlertCircle, Repeat2Icon } from 'lucide-react';
 import { WithProviderConnection } from '../provider-connection';
-import {
-  xStatusRefineUrl,
-  extractTweetId
-} from '@/lib/integrations/schemas/twitter';
+import { xStatusRefineUrl, extractTweetId } from '@giveaway/x-model/twitter';
 import {
   TwitterRetweetImportTaskSchema,
   TwitterRetweetTaskSchema,
@@ -17,7 +14,7 @@ import { useTheme } from 'next-themes';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { TwitterEmbed } from './shared';
 import { VerifiedBonusBadge } from './verified-bonus-badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 export const TwitterRetweetTaskActionForm: React.FC<
   TaskActionProps<

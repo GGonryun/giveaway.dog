@@ -9,7 +9,7 @@ const { upload, useFileProvider } = vi.hoisted(() => {
   return { upload, useFileProvider: vi.fn(() => ({ upload })) };
 });
 
-vi.mock('@/components/hooks/use-file-provider', () => ({ useFileProvider }));
+vi.mock('@giveaway/ui-hooks/use-file-provider', () => ({ useFileProvider }));
 
 const createdImages: HTMLImageElement[] = [];
 const NativeImage = window.Image;

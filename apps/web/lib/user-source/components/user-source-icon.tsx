@@ -1,7 +1,7 @@
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { UserSource } from '@prisma/client';
 import {
   EditIcon,

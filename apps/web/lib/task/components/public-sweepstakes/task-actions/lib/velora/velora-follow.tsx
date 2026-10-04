@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 import { ErrorDisplay } from '../error-display';
 import { VeloraFollowTaskSchema } from '@/lib/task/schemas';

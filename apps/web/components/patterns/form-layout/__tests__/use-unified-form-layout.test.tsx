@@ -25,7 +25,7 @@ const mocks = vi.hoisted(() => ({
   setShowIssues: vi.fn()
 }));
 
-vi.mock('@/components/hooks/use-tablet', () => ({
+vi.mock('@giveaway/ui-hooks/use-tablet', () => ({
   useIsTablet: () => mocks.viewport
 }));
 

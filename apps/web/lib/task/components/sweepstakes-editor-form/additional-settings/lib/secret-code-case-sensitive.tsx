@@ -1,4 +1,4 @@
-import { useArrayContext } from '@/components/hooks/use-array-context';
+import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import {
   SwitchBox,
   SwitchFormHeader

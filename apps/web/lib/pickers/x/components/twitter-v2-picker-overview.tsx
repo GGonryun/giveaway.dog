@@ -42,7 +42,7 @@ import {
 import { TwitterV2PickerSchema } from '../schemas/details';
 import { TwitterScrapeProgressMonitor } from './twitter-scrape-progress-monitor';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import {
   STATUS_COLORS,
   STATUS_ICONS

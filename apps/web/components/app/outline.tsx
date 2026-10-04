@@ -2,7 +2,7 @@ import {
   SiteHeaderWithTrigger,
   SiteHeaderProps
 } from '@/components/patterns/app-sidebar/site-header';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 export const Outline: React.PC<
   SiteHeaderProps & { container?: boolean; className?: string }

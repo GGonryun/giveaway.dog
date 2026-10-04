@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { WinnerLeaderboardSchema } from '@/schemas/giveaway/winners';
+import type { WinnerLeaderboardSchema } from '@giveaway/leaderboard-model/winners';
 import { WinnersLeaderboard } from '../winners-leaderboard';
 
 const navigation = vi.hoisted(() => ({

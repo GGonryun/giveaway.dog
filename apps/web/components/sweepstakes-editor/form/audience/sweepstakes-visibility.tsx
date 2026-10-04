@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/select';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import Link from 'next/link';
-import { debounce } from '@/lib/utils';
+import { debounce } from '@giveaway/ui-utils/utils';
 import verifySlug from '@/procedures/sweepstakes/verify-slug';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';

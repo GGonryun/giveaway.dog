@@ -1,4 +1,4 @@
-import { useArrayContext } from '@/components/hooks/use-array-context';
+import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import { SwitchFormHeader } from '@/components/patterns/form-layout/switch-form-header';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 import { SweepstakeStep } from '@/components/sweepstakes-editor/data/steps';
@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/select';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { hasFeature, type IntegrationSchema } from '@/lib/integrations/schemas';
-import { extractUsernameFromTweetUrl } from '@/lib/integrations/schemas/twitter';
+import { extractUsernameFromTweetUrl } from '@giveaway/x-model/twitter';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { AlertCircle, RefreshCw, Info } from 'lucide-react';
 import Link from 'next/link';

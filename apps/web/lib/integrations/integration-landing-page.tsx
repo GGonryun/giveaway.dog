@@ -11,7 +11,7 @@ import {
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
-import { cn } from '../utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 interface IntegrationLandingPageProps {
   platform: PlatformId;

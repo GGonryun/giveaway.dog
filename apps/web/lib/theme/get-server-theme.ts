@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { THEME_STORAGE_KEY } from './constants';
+import { THEME_STORAGE_KEY } from '@giveaway/theme-model/constants';
 
 type Theme = 'light' | 'dark' | 'system';
 export type ResolvedTheme = 'light' | 'dark';

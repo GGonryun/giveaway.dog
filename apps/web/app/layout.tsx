@@ -11,7 +11,10 @@ import { UserMetricsCollector } from '@/components/user-metrics-collector';
 import { environment } from '@giveaway/app-config/environment';
 import { BLUESKY_EMBED_SCRIPT_URL } from '@/lib/bluesky/embed';
 import { TurnstileProvider } from '@/lib/turnstile/provider';
-import { THEME_STORAGE_KEY, DEFAULT_THEME } from '@/lib/theme/constants';
+import {
+  THEME_STORAGE_KEY,
+  DEFAULT_THEME
+} from '@giveaway/theme-model/constants';
 
 const figtree = Figtree({
   subsets: ['latin'],

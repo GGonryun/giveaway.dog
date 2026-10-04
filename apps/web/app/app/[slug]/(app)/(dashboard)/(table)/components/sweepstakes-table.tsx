@@ -55,7 +55,7 @@ import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepsta
 import { Badge } from '@/components/ui/badge';
 import { DerivedStatusIcon } from '@/lib/sweepstake-status';
 import { useCreateSweepstakesPage } from '@/components/sweepstakes/use-create-sweepstakes-page';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useCopySweepstakes } from '@/components/sweepstakes/use-copy-sweepstakes';
 import { useConvertToTemplate } from '@/components/sweepstakes/use-convert-to-template';
 import { useRouter } from 'next/navigation';

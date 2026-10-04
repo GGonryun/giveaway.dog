@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
 import { useLogout } from '@/lib/auth/hooks/use-logout';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 
 export const UserInfoSection: React.FC<{ className?: string }> = ({

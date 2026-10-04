@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 import { TwitterFollowTaskSchema } from '@/lib/task/schemas';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';

@@ -6,7 +6,7 @@ import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
 import React from 'react';
 import Link from 'next/link';
 import { date } from '@/lib/date';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { SweepstakesStatusSummaryBadge } from '@/components/sweepstakes/status-badge';
 import { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas';
 import { Check } from 'lucide-react';

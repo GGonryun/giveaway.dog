@@ -1,6 +1,6 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { text } from '../foundations/text';
+import { text } from '@giveaway/ui-utils/foundations/text';
 import { JSX } from 'react';
 
 const typographyVariants = cva('', {

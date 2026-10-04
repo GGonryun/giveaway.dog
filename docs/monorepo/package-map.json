@@ -713,9 +713,9 @@
       "layer": 1,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/auth/cookies.ts", "lib/auth/util.ts"],
-      "dependsOn": ["@giveaway/util-types"],
-      "npm": ["@giveaway/db-model", "cookies-next"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-types"],
+      "npm": ["cookies-next"]
     },
     {
       "name": "@giveaway/auth-provider-e2e",
@@ -725,9 +725,9 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/auth/providers/e2e.ts"],
-      "dependsOn": ["@giveaway/db-client"],
-      "npm": ["@giveaway/db-model", "next-auth"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-client", "@giveaway/db-model"],
+      "npm": ["next-auth"]
     },
     {
       "name": "@giveaway/auth-provider-inbound",
@@ -737,7 +737,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/auth/providers/inbound.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/email"],
       "npm": []
     },
@@ -2342,7 +2342,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/auth/providers/velora.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["next-auth", "zod"]
     },
@@ -2498,7 +2498,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/schemas/twitter.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": []
     },
@@ -2633,7 +2633,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/schemas/youtube.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },
@@ -5393,7 +5393,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/theme/constants.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": []
     },
@@ -5510,15 +5510,7 @@
       "layer": 0,
       "sourceFiles": 7,
       "testFiles": 7,
-      "sources": [
-        "components/hooks/use-array-context.tsx",
-        "components/hooks/use-file-provider.ts",
-        "components/hooks/use-interval.tsx",
-        "components/hooks/use-mobile.tsx",
-        "components/hooks/use-tablet.tsx",
-        "components/hooks/use-update-params.tsx",
-        "components/hooks/use-url.ts"
-      ],
+      "sources": [],
       "dependsOn": [],
       "npm": ["@vercel/blob", "next", "react"]
     },
@@ -5700,7 +5692,7 @@
       "layer": 0,
       "sourceFiles": 3,
       "testFiles": 5,
-      "sources": ["components/foundations/", "lib/utils.ts", "lib/utils/"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["clsx", "tailwind-merge"]
     },
@@ -5712,7 +5704,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["schemas/giveaway/winners.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },

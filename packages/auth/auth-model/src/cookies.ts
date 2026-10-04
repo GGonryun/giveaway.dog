@@ -1,5 +1,5 @@
 import { getCookie, setCookie } from 'cookies-next';
-import { IdentityProvider } from '@prisma/client';
+import { IdentityProvider } from '@giveaway/db-model';
 
 export const LAST_LOGIN_PROVIDER_COOKIE = 'last_login_provider';
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 365;

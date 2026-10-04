@@ -6,7 +6,7 @@ import {
 import { useState, useEffect } from 'react';
 import { InstagramVisitTaskSchema } from '@/lib/task/schemas';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '@/lib/task/components/theme';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';

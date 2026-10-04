@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 

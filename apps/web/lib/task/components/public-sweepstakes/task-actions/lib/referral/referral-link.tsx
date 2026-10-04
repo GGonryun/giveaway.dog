@@ -3,7 +3,7 @@
 import { TaskActionProps, TaskContent } from '../../building-blocks';
 import { Button } from '@/components/ui/button';
 import { ReferralLinkTaskSchema } from '@/lib/task/schemas';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
 import React, { useEffect, useState } from 'react';
 import { Copy, Share2, Check, ChevronDown, ChevronUp } from 'lucide-react';

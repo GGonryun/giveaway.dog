@@ -8,7 +8,7 @@ import {
   SaveIcon
 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 import { useMemo } from 'react';
 import pluralize from 'pluralize';

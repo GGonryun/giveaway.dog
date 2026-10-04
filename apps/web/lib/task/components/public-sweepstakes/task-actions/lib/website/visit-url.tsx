@@ -8,7 +8,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ExternalLinkIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
 import { VisitUrlTaskSchema } from '@/lib/task/schemas';
 import { useAfterVisitBehavior } from '../use-after-visit-behavior';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { HatGlassesIcon, MailIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { SocialXIcon } from './x-icon';
 import { SocialGoogleIcon } from './google-icon';
 import { SocialDiscordIcon } from './discord-icon';

@@ -1,6 +1,6 @@
 import { HelpDialog, HelpDialogProps } from '@/components/patterns/help-dialog';
 import { FormDescription, FormLabel } from '@/components/ui/form';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 export const SwitchBox: React.PC<{ className?: string }> = ({
   children,

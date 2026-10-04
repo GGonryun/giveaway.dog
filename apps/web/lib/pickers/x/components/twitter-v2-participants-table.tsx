@@ -12,7 +12,7 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { ExternalLink, XCircle, CheckCircle2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import {
   Tooltip,
   TooltipContent,

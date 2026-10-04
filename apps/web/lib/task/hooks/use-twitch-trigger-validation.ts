@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { debounce } from '@/lib/utils';
+import { debounce } from '@giveaway/ui-utils/utils';
 import verifyTwitchTrigger from '@/procedures/sweepstakes/verify-twitch-trigger';
 
 type ValidationStatus = 'idle' | 'checking' | 'available' | 'conflict' | null;

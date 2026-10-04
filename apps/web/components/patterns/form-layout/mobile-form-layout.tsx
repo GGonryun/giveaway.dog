@@ -11,7 +11,7 @@ import { UnifiedFormFooter } from './unified-form-footer';
 import { useUnifiedFormLayout } from './use-unified-form-layout';
 import { DemoBanner } from './demo-banner';
 import { NonNavigationalLink } from '../links';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 const MobileTabTrigger: React.FC<{
   step: string;

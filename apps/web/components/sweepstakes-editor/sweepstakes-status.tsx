@@ -25,7 +25,7 @@ import {
   CircleCheck
 } from 'lucide-react';
 import { VisibilityType } from '@prisma/client';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { datetime } from '@/lib/date';
 import {
   SweepstakesStatusBadge,

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Home, Plus } from 'lucide-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useIsMobile } from '@/components/hooks/use-mobile';
+import { useIsMobile } from '@giveaway/ui-hooks/use-mobile';
 import {
   Sidebar,
   SidebarContent,
@@ -30,7 +30,7 @@ import {
   useSidebar
 } from '../sidebar';
 
-vi.mock('@/components/hooks/use-mobile', () => ({
+vi.mock('@giveaway/ui-hooks/use-mobile', () => ({
   useIsMobile: vi.fn(() => ({ isMobile: false, isLoading: false }))
 }));
 

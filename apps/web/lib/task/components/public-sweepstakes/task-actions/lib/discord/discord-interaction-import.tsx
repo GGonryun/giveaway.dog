@@ -2,7 +2,7 @@ import { TaskActionProps } from '../../building-blocks';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { MessageCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 import { ErrorDisplay } from '../error-display';
 import { DiscordInteractionImportTaskSchema } from '@/lib/task/schemas';

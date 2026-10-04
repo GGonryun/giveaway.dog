@@ -6,7 +6,7 @@ import confetti from 'canvas-confetti';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Trophy, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useRouter } from 'next/navigation';
 import { useProcedure } from '@/lib/mrpc/hook';
 import {

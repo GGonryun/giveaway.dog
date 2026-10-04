@@ -23,7 +23,7 @@ import {
   AlignCenter,
   AlignRight
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { richTextEditorStyles } from '@/lib/rich-text-styles';
 
 interface MinimalTiptapProps {

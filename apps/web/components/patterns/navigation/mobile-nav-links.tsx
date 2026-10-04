@@ -3,7 +3,7 @@
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useState } from 'react';
 
 export interface MobileNavLinks {

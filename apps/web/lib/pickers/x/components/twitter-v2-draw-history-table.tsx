@@ -13,7 +13,7 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { Trophy, Ban, ExternalLink } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import {
   TwitterV2PickerDrawSchema,
   TwitterV2PickerUserSchema

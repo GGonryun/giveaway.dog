@@ -31,7 +31,7 @@ import {
   PaginationPrevious
 } from '@/components/ui/pagination';
 import { WINNERS_PAGE_SIZE } from '@giveaway/util-collections/pagination';
-import { WinnerLeaderboardSchema } from '@/schemas/giveaway/winners';
+import { WinnerLeaderboardSchema } from '@giveaway/leaderboard-model/winners';
 import { AllGiveawaysSearch } from '@/components/sweepstakes-browse/components/all-giveaways-search';
 
 export function WinnersLeaderboard({

@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import {
   ParticipantSweepstakeSchema,
   DeviceType,
@@ -9,7 +9,7 @@ import {
 } from '@/schemas/giveaway/schemas';
 import { Eye, Smartphone, Monitor } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
-import { useIsMobile } from '../hooks/use-mobile';
+import { useIsMobile } from '@giveaway/ui-hooks/use-mobile';
 import { QRCodeModal } from '../patterns/qr-code-modal';
 import {
   mockParticipation,

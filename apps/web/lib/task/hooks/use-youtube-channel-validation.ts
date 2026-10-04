@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { debounce } from '@/lib/utils';
+import { debounce } from '@giveaway/ui-utils/utils';
 import verifyYouTubeChannel from '@/procedures/sweepstakes/verify-youtube-channel';
-import { ListChannelSnippetSchema } from '@/lib/integrations/schemas/youtube';
+import { ListChannelSnippetSchema } from '@giveaway/youtube-model/youtube';
 
 type ValidationStatus = 'idle' | 'checking' | 'success' | 'error' | null;
 

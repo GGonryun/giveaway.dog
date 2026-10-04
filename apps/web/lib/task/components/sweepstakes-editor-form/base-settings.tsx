@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
-import { useArrayContext } from '@/components/hooks/use-array-context';
+import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import {
   FormControl,
   FormField,

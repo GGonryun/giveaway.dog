@@ -3,7 +3,7 @@ import { TaskSchema } from '../../schemas';
 import { useTaskTheme } from '../theme';
 import { Spinner } from '@/components/ui/spinner';
 import { ChevronDownIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { TooltipTrigger } from '@/components/ui/tooltip';
 import { TaskLock } from './task-lock';
 import {

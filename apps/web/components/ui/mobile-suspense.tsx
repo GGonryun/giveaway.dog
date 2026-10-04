@@ -1,6 +1,6 @@
 import React from 'react';
 import { Loader2Icon } from 'lucide-react';
-import { useIsTablet } from '../hooks/use-tablet';
+import { useIsTablet } from '@giveaway/ui-hooks/use-tablet';
 
 interface MobileSuspenseProps {
   children: React.ReactNode;

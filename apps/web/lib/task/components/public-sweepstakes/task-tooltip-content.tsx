@@ -1,6 +1,6 @@
 import { TooltipContent } from '@/components/ui/tooltip';
 import { useTaskTheme } from '../theme';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { TaskLock } from './task-lock';
 import { CompletionStatus } from '@prisma/client';
 import {

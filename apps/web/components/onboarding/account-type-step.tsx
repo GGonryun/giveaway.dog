@@ -6,7 +6,7 @@ import { UserAccountType } from '@prisma/client';
 import { ACCOUNT_TYPE_OPTIONS } from '@/schemas/onboarding';
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 interface AccountTypeStepProps {
   onNext: (accountType: UserAccountType) => void;

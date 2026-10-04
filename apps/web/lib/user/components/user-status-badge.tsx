@@ -1,6 +1,6 @@
 import { Badge, BadgeVariants } from '@/components/ui/badge';
 import { StatusExplanationDialog } from '@/components/users/status-explanation-dialog';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { UserStatusSchema } from '@/schemas/giveaway/participant';
 import { useState } from 'react';
 

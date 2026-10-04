@@ -4,10 +4,7 @@ import { TaskActionProps } from '../../building-blocks';
 import { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { WithProviderConnection } from '../provider-connection';
-import {
-  xStatusRefineUrl,
-  extractTweetId
-} from '@/lib/integrations/schemas/twitter';
+import { xStatusRefineUrl, extractTweetId } from '@giveaway/x-model/twitter';
 import {
   TwitterLikeImportTaskSchema,
   TwitterLikeTaskSchema
@@ -17,7 +14,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { TwitterEmbed } from './shared';
 import { VerifiedBonusBadge } from './verified-bonus-badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 export const TwitterLikeTaskActionForm: React.FC<
   TaskActionProps<TwitterLikeTaskSchema | TwitterLikeImportTaskSchema>

@@ -6,7 +6,7 @@ import {
   twitterV2PickerFormSchema,
   twitterV2PickerUnvalidatedFormSchema
 } from '../form';
-import { xStatusRefineError } from '@/lib/integrations/schemas/twitter';
+import { xStatusRefineError } from '@giveaway/x-model/twitter';
 import { MAX_PICKER_SCHEDULE_DAYS } from '@giveaway/app-config/settings';
 
 const NOW = new Date('2025-06-15T12:00:00.000Z');

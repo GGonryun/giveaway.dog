@@ -10,7 +10,7 @@ import {
   TrendingUp,
   TrendingDown
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import pluralize from 'pluralize';
 import { Prize } from '@/schemas/giveaway/schemas';
 import { Button } from '@/components/ui/button';

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRightIcon, Check } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { MarketingHeader, MarketingTitle } from './shared';
 
 type PricingTier = {

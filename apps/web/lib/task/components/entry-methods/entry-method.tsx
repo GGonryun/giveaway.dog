@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import {
   Trash2Icon,
   CopyIcon,
@@ -17,7 +17,7 @@ import {
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ArrayContext } from '@/components/hooks/use-array-context';
+import { ArrayContext } from '@giveaway/ui-hooks/use-array-context';
 
 import { FieldError, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';

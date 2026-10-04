@@ -16,7 +16,7 @@ import { MobileSheetHeader } from './navigation/mobile-sheet-header';
 import { NavLogo } from './navigation/nav-logo';
 import { UserDropdownMenu } from './navigation/user-dropdown-menu';
 import { useLogout } from '@/lib/auth/hooks/use-logout';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 const UserAvatar: React.FC<{ user: UserSchema; className?: string }> = ({
   user,

@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { Gift, Users } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';

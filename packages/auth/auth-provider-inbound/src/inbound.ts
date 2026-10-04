@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { newEmailClient, NO_REPLY_EMAIL } from '@giveaway/email/client';
 import { getMagicLinkEmailContent } from '@giveaway/email/templates';
 

@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { YoutubeVisitTaskSchema } from '@/lib/task/schemas';
 import { useTaskTheme } from '@/lib/task/components/theme';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
 
 export const YouTubeVisitTaskActionForm: React.FC<

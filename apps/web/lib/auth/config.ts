@@ -13,10 +13,10 @@ import TikTokProvider from 'next-auth/providers/tiktok';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { SteamProvider } from '@giveaway/steam-auth/steam';
-import { InboundEmailProvider } from './providers/inbound';
+import { InboundEmailProvider } from '@giveaway/auth-provider-inbound/inbound';
 import { KickProvider } from '@giveaway/kick-auth/kick';
-import { VeloraProvider } from './providers/velora';
-import { newE2eProviders } from './providers/e2e';
+import { VeloraProvider } from '@giveaway/velora-auth/velora';
+import { newE2eProviders } from '@giveaway/auth-provider-e2e/e2e';
 
 import {
   REQUIRED_DISCORD_SCOPES,

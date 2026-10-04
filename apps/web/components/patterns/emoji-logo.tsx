@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 
 export const EmojiLogo: React.FC<React.ComponentProps<'span'>> = ({
   className,

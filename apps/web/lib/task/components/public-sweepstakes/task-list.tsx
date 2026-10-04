@@ -1,6 +1,6 @@
 import { partition, uniqBy } from 'lodash';
 import { Lock } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { toDefaultValues } from '@/lib/task/defaults';
 import { nanoid } from 'nanoid';
 import React, { useEffect } from 'react';

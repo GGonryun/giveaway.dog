@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { Button } from '@/components/ui/button';
 import {
   getPlatformIcon,

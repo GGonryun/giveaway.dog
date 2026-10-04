@@ -2,7 +2,7 @@ import { TaskActionProps } from '../../building-blocks';
 import { BlueskyFollowTaskSchema } from '@/lib/task/schemas';
 import { WithProviderConnection } from '../provider-connection';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { useState } from 'react';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import Link from 'next/link';

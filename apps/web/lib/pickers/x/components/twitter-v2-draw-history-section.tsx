@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/collapsible';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { ChevronDown, Trophy } from 'lucide-react';
 import pluralize from 'pluralize';
 import { useState } from 'react';

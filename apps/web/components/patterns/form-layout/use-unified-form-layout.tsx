@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { useIsTablet } from '@/components/hooks/use-tablet';
+import { useIsTablet } from '@giveaway/ui-hooks/use-tablet';
 import { UnifiedFormLayout } from './unified-form-layout';
 import {
   FieldKey,

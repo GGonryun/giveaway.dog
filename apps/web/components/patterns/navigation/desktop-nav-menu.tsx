@@ -10,7 +10,7 @@ import {
   NavigationMenuContent,
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import Link from 'next/link';
 
 export const DesktopNavMenu: React.FC = () => {

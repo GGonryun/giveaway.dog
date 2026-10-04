@@ -1,7 +1,7 @@
 import { Globe, type LucideIcon } from 'lucide-react';
 import { type SocialPlatform } from '@/schemas/social-links';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@giveaway/ui-utils/utils';
 import { SocialXIcon } from '../../lib/integrations/components/icons/x-icon';
 import { SocialDiscordIcon } from '../../lib/integrations/components/icons/discord-icon';
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
