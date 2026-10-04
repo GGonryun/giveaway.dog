@@ -3,7 +3,7 @@
 import { IdentityProvider, PrismaClient } from '@prisma/client';
 import { VeloraConnectTaskSchema, VeloraFollowTaskSchema } from '../schemas';
 import { ValidateTaskInput } from './types';
-import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@/lib/integrations/schemas/providers';
+import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@giveaway/integration-model/providers';
 import { ApplicationError } from '@giveaway/util-errors';
 import { refreshVeloraToken } from '@/lib/integrations/utils/refresh-velora-token';
 

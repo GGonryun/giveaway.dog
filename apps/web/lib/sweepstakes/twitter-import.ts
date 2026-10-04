@@ -1,6 +1,6 @@
 import { PrismaClient, UserSource } from '@prisma/client';
 import { nanoid } from 'nanoid';
-import { TwitterUserSchema } from '../integrations/schemas/api';
+import { TwitterUserSchema } from '@giveaway/integration-model/api';
 
 export interface ImportTwitterParticipantsInput {
   sweepstakesId: string;

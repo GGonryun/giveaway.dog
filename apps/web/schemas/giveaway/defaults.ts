@@ -6,13 +6,13 @@ import {
   GradientBackgroundSchema,
   SolidColorBackgroundSchema
 } from './schemas';
-import { AllowedUserSourcesSchema } from '@/lib/user-source/schemas';
+import { AllowedUserSourcesSchema } from '@giveaway/user-source-model/schemas';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
   DEFAULT_REQUIRED_PRE_ENTRY_LOGIN,
   DEFAULT_SWEEPSTAKES_NAME
 } from '@giveaway/app-config/settings';
-import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
+import { DEFAULT_MINIMUM_AGE_FIELD } from '@giveaway/custom-fields-model/defaults';
 
 export const DEFAULT_SWEEPSTAKES_PRIZE_NAME = 'My Custom Prize';
 export const DEFAULT_SWEEPSTAKES_PRIZE_QUOTA = 1;

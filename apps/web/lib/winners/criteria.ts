@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
-import { userSourceSchema } from '../user-source/schemas';
+import { userSourceSchema } from '@giveaway/user-source-model/schemas';
 
 export const sweepstakesCriteriaSchema = z.object({
   minQualityScore: z.number().min(0),

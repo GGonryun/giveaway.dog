@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
-import { IDENTITY_PROVIDER_LABEL } from '../../integrations/schemas/providers';
+import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';
 
 interface DiscordDisconnectDialogProps {
   open: boolean;

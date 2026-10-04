@@ -5,7 +5,7 @@ import { UserAccountType } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import completeOnboarding from '@/procedures/user/complete-onboarding';
-import type { Result } from '@/lib/mrpc/types';
+import type { Result } from '@giveaway/rpc-model/types';
 import { ProfileStep } from '../profile-step';
 
 const navigation = vi.hoisted(() => ({

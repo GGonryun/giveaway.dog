@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { processConnect } from '../process-connect';
 import { prismaMock } from '@giveaway/testing-server/prisma';
-import type { DiscordApplicationCommandInteractionSchema } from '@/lib/discord/bot/schema';
+import type { DiscordApplicationCommandInteractionSchema } from '@giveaway/discord-model/schema';
 import {
   commandInteraction,
   discordChannel,
   discordGuild,
   discordMember,
   jsonResponse
-} from '@/lib/discord/__tests__/fixtures-discord-procedures-workflows';
+} from '@giveaway/discord-model/testing/fixtures-discord-procedures-workflows';
 
 const APP_URL = 'https://app.giveaway.test';
 

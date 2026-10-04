@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { IntegrationLandingPage } from '@/lib/integrations/integration-landing-page';
-import { PlatformId } from '@/lib/platform-icons';
+import { PlatformId } from '@giveaway/platform-catalog/platform-icons';
 
 interface IntegrationPageProps {
   params: Promise<{

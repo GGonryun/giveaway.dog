@@ -15,7 +15,7 @@ import {
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
-import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import type { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { UserDetailsForm } from '../user-details-form';
 
 const navigation = vi.hoisted(() => ({

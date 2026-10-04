@@ -3,7 +3,10 @@ import nacl from 'tweetnacl';
 import { ApplicationError } from '@giveaway/util-errors';
 
 import { NextRequest } from 'next/server';
-import { DiscordInteractionSchema, toDiscordInteraction } from './schema';
+import {
+  DiscordInteractionSchema,
+  toDiscordInteraction
+} from '@giveaway/discord-model/schema';
 
 export const verifyDiscordRequest = async (
   request: NextRequest

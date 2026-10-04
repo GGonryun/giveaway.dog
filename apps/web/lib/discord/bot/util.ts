@@ -1,5 +1,5 @@
 import { ApplicationError } from '@giveaway/util-errors';
-import { DiscordButtonInteractionSchema } from './schema';
+import { DiscordButtonInteractionSchema } from '@giveaway/discord-model/schema';
 
 // TODO: when we add support for redirecting back to th recent team use this short-cut to send user's to the accounts page of that team
 export const INTEGRATIONS_SETUP_URL = ({

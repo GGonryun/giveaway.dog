@@ -34,7 +34,10 @@ import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
 import { toEngagementTheme } from '@/lib/participant/util';
-import { toQualityType, QUALITY_LABELS } from '@/schemas/quality';
+import {
+  toQualityType,
+  QUALITY_LABELS
+} from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
 import { UsersFiltersSheet } from '@/components/users/users-filters-sheet';
 

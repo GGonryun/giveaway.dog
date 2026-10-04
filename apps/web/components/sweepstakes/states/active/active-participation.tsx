@@ -13,7 +13,7 @@ import { PrizeItem } from './prize-item';
 import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';
 import { toParticipantEntries } from '@/lib/task/entries';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { doesUserHaveAllowedIdentity } from '@/lib/integrations/schemas/providers';
+import { doesUserHaveAllowedIdentity } from '@giveaway/integration-model/providers';
 import { WinnersPending } from '../winners-pending';
 
 export const ActiveParticipation: React.FC = () => {

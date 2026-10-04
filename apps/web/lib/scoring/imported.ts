@@ -1,4 +1,4 @@
-import { IMPORTED_BASE_SCORE } from './schemas/imported';
+import { IMPORTED_BASE_SCORE } from '@giveaway/scoring-model/schemas/imported';
 import { Tx } from '@giveaway/db-client/prisma';
 
 export const computeImportedUserScore = async (tx: Tx, userId: string) => {

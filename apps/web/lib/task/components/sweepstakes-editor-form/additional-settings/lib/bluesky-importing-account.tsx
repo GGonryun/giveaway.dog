@@ -13,7 +13,10 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
-import { hasFeature, type IntegrationSchema } from '@/lib/integrations/schemas';
+import {
+  hasFeature,
+  type IntegrationSchema
+} from '@giveaway/integration-model/schemas';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';

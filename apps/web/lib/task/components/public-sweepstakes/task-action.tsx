@@ -4,10 +4,10 @@ import { TaskContent } from './task-actions/building-blocks';
 import { Button } from '@/components/ui/button';
 import { TaskSchema } from '../../schemas';
 import { TaskActionForm } from './task-actions/form';
-import { FailureData } from '@/lib/mrpc/types';
+import { FailureData } from '@giveaway/rpc-model/types';
 import { TaskLock } from './task-lock';
 
-import { doesUserHaveAllowedIdentity } from '@/lib/integrations/schemas/providers';
+import { doesUserHaveAllowedIdentity } from '@giveaway/integration-model/providers';
 import { SweepstakesLoginOptions } from '@/components/sweepstakes/sweepstakes-login-options';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 

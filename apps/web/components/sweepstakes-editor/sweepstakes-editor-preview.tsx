@@ -47,8 +47,8 @@ import {
 } from '@giveaway/app-config/settings';
 import { DeepNil, DeepPartial } from '@giveaway/util-types/types';
 import { isDefined } from '@giveaway/util-types/widetype';
-import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
-import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
+import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
+import { DEFAULT_MINIMUM_AGE } from '@giveaway/custom-fields-model/defaults';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 
 export const SweepstakesFormPreview: React.FC = () => {

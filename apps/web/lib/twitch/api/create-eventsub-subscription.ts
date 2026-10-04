@@ -9,7 +9,7 @@ import { toEventSubSubscriptionSchemasListSchema } from './schemas';
 import {
   TwitchFeatureSchema,
   getEventSubTypesForTwitchFeatures
-} from '@/lib/integrations/scopes';
+} from '@giveaway/integration-model/scopes';
 import prisma from '@giveaway/db-client/prisma';
 import { EventSubSubscription } from '@prisma/client';
 

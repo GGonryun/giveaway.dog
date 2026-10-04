@@ -5,7 +5,7 @@ import {
   DiscordActionRow,
   DiscordMessageComponent,
   DiscordMessageEmbed
-} from './api/schemas';
+} from '@giveaway/discord-model/schemas';
 import {
   DerivedSweepstakeStatus,
   SWEEPSTAKES_STATUS_LABEL,

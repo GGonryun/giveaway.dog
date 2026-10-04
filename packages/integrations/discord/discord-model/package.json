@@ -1,0 +1,49 @@
+{
+  "name": "@giveaway/discord-model",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:model",
+      "runtime:isomorphic",
+      "scope:integrations",
+      "platform:discord"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/discord/discord-model",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./install": "./src/install.ts",
+    "./schema": "./src/schema.ts",
+    "./schemas": "./src/schemas.ts",
+    "./testing/fixtures-discord-model": "./src/testing/fixtures-discord-model.ts",
+    "./testing/fixtures-discord-procedures-workflows": "./src/testing/fixtures-discord-procedures-workflows.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/util-errors": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

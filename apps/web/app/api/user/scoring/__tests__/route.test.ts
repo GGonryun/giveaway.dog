@@ -7,8 +7,8 @@ import {
   prismaMock,
   type PrismaMock
 } from '@giveaway/testing-server/prisma';
-import { MAX_SCORING_REQUESTS_PER_RUN } from '@/schemas/user-scoring';
-import { IMPORTED_BASE_SCORE } from '@/lib/scoring/schemas/imported';
+import { MAX_SCORING_REQUESTS_PER_RUN } from '@giveaway/scoring-model/user-scoring';
+import { IMPORTED_BASE_SCORE } from '@giveaway/scoring-model/schemas/imported';
 
 const CRON_SECRET = 'cron-secret';
 

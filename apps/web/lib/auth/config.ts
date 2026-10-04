@@ -24,7 +24,7 @@ import {
   REQUIRED_KICK_SCOPES,
   REQUIRED_VELORA_SCOPES,
   REQUIRED_LINKEDIN_SCOPES
-} from '../integrations/scopes';
+} from '@giveaway/integration-model/scopes';
 import { UserSource } from '@prisma/client';
 import prisma from '@giveaway/db-client/prisma';
 import { redeemBlueskyLoginToken } from './bluesky-login-token';

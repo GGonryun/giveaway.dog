@@ -1,7 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { CAROUSEL_PLATFORMS, getPlatformLabel } from '@/lib/platform-icons';
+import {
+  CAROUSEL_PLATFORMS,
+  getPlatformLabel
+} from '@giveaway/platform-catalog/platform-icons';
 import { SocialPlatformsCarousel } from '../social-platforms-carousel';
 
 const themeState = vi.hoisted(() => ({

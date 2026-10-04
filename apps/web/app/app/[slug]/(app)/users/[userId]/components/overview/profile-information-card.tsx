@@ -16,7 +16,10 @@ import {
 import { datetime } from '@/lib/date';
 import { UserSchema } from '@/schemas/user';
 import { ObfuscatedEmail } from '@/components/ui/obfuscated-email';
-import { toQualityType, QUALITY_LABELS } from '@/schemas/quality';
+import {
+  toQualityType,
+  QUALITY_LABELS
+} from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
 
 export const ProfileInformationCard: React.FC<{

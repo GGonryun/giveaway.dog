@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { ProviderSchema } from '@/lib/integrations/schemas/providers';
+import { ProviderSchema } from '@giveaway/integration-model/providers';
 
 export interface TaskEntryContextValue {
   providers?: ProviderSchema[];

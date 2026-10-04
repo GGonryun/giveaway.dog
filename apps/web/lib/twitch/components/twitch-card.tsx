@@ -7,15 +7,15 @@ import { Badge } from '@/components/ui/badge';
 import { ExternalLink } from 'lucide-react';
 import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
-import { IntegrationSchema } from '@/lib/integrations/schemas';
+import { IntegrationSchema } from '@giveaway/integration-model/schemas';
 import { IntegrationStatusAlert } from '@/lib/integrations/components/integration-status-alert';
-import { IDENTITY_PROVIDER_LABEL } from '@/lib/integrations/schemas/providers';
+import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';
 import { IntegrationCardHeader } from '@/lib/integrations/components/integration-card-header';
 import { TwitchIntegrationSettings } from '../integration/schemas';
 import {
   TWITCH_FEATURE_LABEL,
   TwitchFeatureSchema
-} from '@/lib/integrations/scopes';
+} from '@giveaway/integration-model/scopes';
 import { EventSubSubscription } from '@prisma/client';
 import { TwitchRegistrationDialog } from './twitch-registration-dialog';
 import { TwitchDisconnectDialog } from './twitch-disconnect-dialog';

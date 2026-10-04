@@ -6,7 +6,7 @@ import {
   CreateTweetRequest,
   CreateTweetResponse,
   createTweetResponseSchema
-} from '../schemas/api';
+} from '@giveaway/integration-model/api';
 import { ApplicationError } from '@giveaway/util-errors';
 import { uploadImage } from './upload-image';
 

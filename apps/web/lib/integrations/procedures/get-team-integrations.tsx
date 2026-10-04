@@ -6,8 +6,8 @@ import { ApplicationError } from '@giveaway/util-errors';
 import {
   DEFAULT_INTEGRATION_LABEL,
   integrationsSchema
-} from '@/lib/integrations/schemas';
-import { toProviderUrl } from '../utils/to-provider-url';
+} from '@giveaway/integration-model/schemas';
+import { toProviderUrl } from '@giveaway/integration-model/to-provider-url';
 
 export const getTeamIntegrations = procedure()
   .authorization({

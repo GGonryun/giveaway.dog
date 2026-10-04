@@ -5,7 +5,7 @@ import {
   buttonInteraction,
   discordMember,
   discordUser
-} from '@/lib/discord/__tests__/fixtures-discord-procedures-workflows';
+} from '@giveaway/discord-model/testing/fixtures-discord-procedures-workflows';
 
 type ValidateArgs = Parameters<typeof validateEntry>[0];
 

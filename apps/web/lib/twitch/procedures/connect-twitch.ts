@@ -10,7 +10,7 @@ import {
   TWITCH_INTEGRATION_SCOPES,
   TWITCH_REDIRECT_URI
 } from '../bot/scopes';
-import { twitchFeatureSchema } from '@/lib/integrations/scopes';
+import { twitchFeatureSchema } from '@giveaway/integration-model/scopes';
 
 export const connectTwitch = procedure()
   .authorization({

@@ -1,5 +1,8 @@
 import { ApplicationError } from '@giveaway/util-errors';
-import { discordGuildInfoSchema, type DiscordGuildInfoSchema } from './schemas';
+import {
+  discordGuildInfoSchema,
+  type DiscordGuildInfoSchema
+} from '@giveaway/discord-model/schemas';
 
 export async function getDiscordGuildInfo(
   guildId: string

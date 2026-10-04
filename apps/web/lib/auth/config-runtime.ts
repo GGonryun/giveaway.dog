@@ -5,8 +5,8 @@ import { authConfigMiddleware } from './config-middleware';
 import { getAccountLabel, getAccountLink } from './get-account-data';
 import { pickRandom } from '@giveaway/util-collections/arrays';
 import { DOG_BREEDS } from '../dogs';
-import { VERIFIED_EMAIL_PROVIDERS } from '../integrations/scopes';
-import { parseAuthProvider } from '../integrations/schemas/providers';
+import { VERIFIED_EMAIL_PROVIDERS } from '@giveaway/integration-model/scopes';
+import { parseAuthProvider } from '@giveaway/integration-model/providers';
 
 export type GetSession = () => Promise<Session | null>;
 

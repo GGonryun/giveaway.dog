@@ -1,7 +1,7 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { IdentityProviderSchema } from '@/lib/integrations/schemas/providers';
+import { IdentityProviderSchema } from '@giveaway/integration-model/providers';
 import {
   buildFormValues,
   renderWithForm

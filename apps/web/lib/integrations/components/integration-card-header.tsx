@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { IntegrationStatusBadge } from './integration-status-badge';
-import { IntegrationSchema } from '../schemas';
+import { IntegrationSchema } from '@giveaway/integration-model/schemas';
 
 interface IntegrationCardHeaderProps {
   icon: ReactNode;

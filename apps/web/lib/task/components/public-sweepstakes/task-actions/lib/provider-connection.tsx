@@ -14,7 +14,7 @@ import {
   IDENTITY_PROVIDER_LABEL,
   ProviderSchema,
   isMissingScopes
-} from '@/lib/integrations/schemas/providers';
+} from '@giveaway/integration-model/providers';
 import { TaskTheme, useTaskTheme } from '@/lib/task/components/theme';
 import {
   TaskSchema,

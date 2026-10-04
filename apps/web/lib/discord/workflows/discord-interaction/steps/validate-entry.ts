@@ -2,7 +2,7 @@ import db from '@giveaway/db-client/prisma';
 import type {
   DiscordButtonInteractionSchema,
   DiscordMemberSchema
-} from '../../../bot/schema';
+} from '@giveaway/discord-model/schema';
 
 type ValidateEntryResult =
   | { valid: false; content: string; flags?: number }

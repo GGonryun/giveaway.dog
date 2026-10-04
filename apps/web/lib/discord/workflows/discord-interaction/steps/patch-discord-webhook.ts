@@ -1,4 +1,4 @@
-import type { DiscordFollowupMessage } from '@/lib/discord/bot/schema';
+import type { DiscordFollowupMessage } from '@giveaway/discord-model/schema';
 
 export type { DiscordFollowupMessage };
 

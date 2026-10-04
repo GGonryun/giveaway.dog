@@ -11,7 +11,7 @@ import {
   QUALITY_DESCRIPTION,
   QUALITY_BADGE_RISK,
   QUALITY_BADGE_TEXT
-} from '@/schemas/quality';
+} from '@giveaway/user-quality-model/quality';
 import {
   QUALITY_BADGE_VARIANT,
   QUALITY_ICON

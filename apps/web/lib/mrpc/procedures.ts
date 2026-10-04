@@ -2,7 +2,7 @@ import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { noProviderAuth } from '../auth/config-no-providers';
 import { Session, User } from 'next-auth';
-import { Result, Success, isNextRedirect } from './types';
+import { Result, Success, isNextRedirect } from '@giveaway/rpc-model/types';
 import prisma from '@giveaway/db-client/prisma';
 import { PrismaClient } from '@prisma/client';
 import { isPrismaError, prismaErrorBoundary } from './errors';

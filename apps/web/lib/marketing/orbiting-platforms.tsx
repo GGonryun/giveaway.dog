@@ -7,7 +7,7 @@ import {
   getPlatformIcon,
   getPlatformLabel,
   type PlatformId
-} from '@/lib/platform-icons';
+} from '@giveaway/platform-catalog/platform-icons';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import type { ResolvedTheme } from '@/lib/theme/get-server-theme';

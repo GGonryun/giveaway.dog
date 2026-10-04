@@ -26,7 +26,7 @@ vi.mock('@vercel/blob/client', () => ({ handleUpload: m.handleUpload }));
 
 vi.mock('@vercel/blob', () => ({ del: m.del }));
 
-vi.mock('@/lib/ratelimit', () => ({ fileUpload: m.fileUpload }));
+vi.mock('@giveaway/ratelimit/ratelimit', () => ({ fileUpload: m.fileUpload }));
 
 vi.mock('@google-cloud/vision', () => ({
   default: {

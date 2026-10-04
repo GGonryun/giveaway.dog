@@ -2,7 +2,7 @@ import z from 'zod';
 import {
   discordApplicationCommandInteractionSchema,
   DiscordApplicationCommandInteractionSchema
-} from '../bot/schema';
+} from '@giveaway/discord-model/schema';
 import { ApplicationError } from '@giveaway/util-errors';
 
 export const discordIntegrationSettings =

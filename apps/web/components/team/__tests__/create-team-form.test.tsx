@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { toast } from 'sonner';
 import createTeam from '@/procedures/teams/create-team';
-import type { Result } from '@/lib/mrpc/types';
+import type { Result } from '@giveaway/rpc-model/types';
 import { CreateTeamForm } from '../create-team-form';
 
 const navigation = vi.hoisted(() => ({

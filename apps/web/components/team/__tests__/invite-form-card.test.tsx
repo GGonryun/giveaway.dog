@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole } from '@prisma/client';
 import { toast } from 'sonner';
 import inviteMembers from '@/procedures/teams/invite-members';
-import type { Result } from '@/lib/mrpc/types';
+import type { Result } from '@giveaway/rpc-model/types';
 import { TeamInviteLinkProvider } from '@/lib/invites/context/team-invite-link-context';
 import { InviteFormCard } from '../invite-form-card';
 

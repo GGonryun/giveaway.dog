@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { handleButtonInteraction } from '../button';
 import { discordInteractionWorkflow } from '../../../workflows/discord-interaction/workflow';
-import { buttonInteraction } from '../../../__tests__/fixtures-discord-model';
+import { buttonInteraction } from '@giveaway/discord-model/testing/fixtures-discord-model';
 
 const workflowApi = vi.hoisted(() => ({ start: vi.fn() }));
 

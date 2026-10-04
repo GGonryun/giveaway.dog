@@ -20,8 +20,8 @@ import {
   PER_DEVICE_STABILITY_BONUS,
   PER_PROVIDER_BONUS,
   PER_TASK_BONUS
-} from '@/schemas/user-scoring';
-import { QualityType } from '@/schemas/quality';
+} from '@giveaway/scoring-model/user-scoring';
+import { QualityType } from '@giveaway/user-quality-model/quality';
 import { Prisma } from '@prisma/client';
 import { datetime } from '../date';
 import { Tx } from '@giveaway/db-client/prisma';

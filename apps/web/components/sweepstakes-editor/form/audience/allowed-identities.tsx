@@ -9,7 +9,7 @@ import { MultiSelect, MultiSelectOption } from '@/components/ui/multi-select';
 import {
   ENABLED_IDENTITY_PROVIDERS,
   IDENTITY_PROVIDER_LABEL
-} from '@/lib/integrations/schemas/providers';
+} from '@giveaway/integration-model/providers';
 import { widetype } from '@giveaway/util-types/widetype';
 import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 

@@ -35,9 +35,12 @@ import {
 
 import { widetype } from '@giveaway/util-types/widetype';
 import { TWITTER_PROFILE_URL } from '@giveaway/app-config/settings';
-import { FIELD_TYPE_LABELS, SweepstakesFormFieldSchema } from '../schemas';
+import {
+  FIELD_TYPE_LABELS,
+  SweepstakesFormFieldSchema
+} from '@giveaway/custom-fields-model/schemas';
 import { FIELD_TYPE_ICON } from './field-icons';
-import { DEFAULT_MINIMUM_AGE_FIELD } from '../defaults';
+import { DEFAULT_MINIMUM_AGE_FIELD } from '@giveaway/custom-fields-model/defaults';
 import { FormFieldComponent } from './form-field';
 import {
   FieldPath,

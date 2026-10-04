@@ -1,4 +1,4 @@
-import { Failure, Result, isNextRedirect } from '@/lib/mrpc/types';
+import { Failure, Result, isNextRedirect } from '@giveaway/rpc-model/types';
 import { useCallback, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 

@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useProcedureAsync } from '@/lib/mrpc/hook';
 import getTwitterOEmbed from '@/lib/integrations/procedures/get-twitter-oembed';
 import { xStatusRefineUrl } from '@giveaway/x-model/twitter';
-import { FailureData } from '@/lib/mrpc/types';
+import { FailureData } from '@giveaway/rpc-model/types';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTheme } from 'next-themes';

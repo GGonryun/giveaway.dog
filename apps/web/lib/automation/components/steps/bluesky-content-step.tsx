@@ -15,7 +15,7 @@ import {
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
-import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { useFormContext } from 'react-hook-form';
 import { PostToBlueskyRequestSchema } from '../../schemas';
 import {

@@ -61,9 +61,12 @@ import {
 import { PrizeDrawResult, UserSource } from '@prisma/client';
 import { DisqualificationDialog } from './disqualification-dialog';
 import { TASK_LABEL } from '@/lib/task/schemas';
-import { USER_SOURCE_LABEL } from '@/lib/user-source/data';
+import { USER_SOURCE_LABEL } from '@giveaway/user-source-model/data';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import { toQualityType, QUALITY_LABELS } from '@/schemas/quality';
+import {
+  toQualityType,
+  QUALITY_LABELS
+} from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
 import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
 import { rollPrize } from '@/lib/winners/procedures/roll-prize';

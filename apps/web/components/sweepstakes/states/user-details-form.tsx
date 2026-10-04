@@ -24,13 +24,13 @@ import {
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import { assertNever } from '@giveaway/util-errors';
 import { ArrowRight } from 'lucide-react';
-import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { UserInfoSection } from '../user-info-section';
 import { toParticipantForm } from '@/schemas/giveaway/participant';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { isFailureData } from '@/lib/mrpc/types';
+import { isFailureData } from '@giveaway/rpc-model/types';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/ui/spinner';
 

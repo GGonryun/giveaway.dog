@@ -25,7 +25,7 @@ import publishSweepstakes from '@/procedures/sweepstakes/publish-sweepstakes';
 import { PreviewStateContext } from './contexts/preview-state-context';
 
 import { UnifiedFormLayoutContextProvider } from '../patterns/form-layout/use-unified-form-layout';
-import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import {
   SWEEPSTAKE_FIELD_TO_STEP_MAP,
   isSweepstakeStepKey,

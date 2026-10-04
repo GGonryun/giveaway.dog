@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { toast } from 'sonner';
 import removeMember from '@/procedures/teams/remove-member';
-import type { Result } from '@/lib/mrpc/types';
+import type { Result } from '@giveaway/rpc-model/types';
 import { RemoveMemberDialog } from '../remove-member-dialog';
 
 vi.mock('@/procedures/teams/remove-member', () => ({ default: vi.fn() }));

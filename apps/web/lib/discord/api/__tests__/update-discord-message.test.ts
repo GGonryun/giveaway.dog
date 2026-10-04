@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { updateDiscordMessage } from '../update-discord-message';
-import type { UpdateDiscordMessageOptions } from '../schemas';
+import type { UpdateDiscordMessageOptions } from '@giveaway/discord-model/schemas';
 
 const fetchMock = vi.fn<typeof fetch>();
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { IdentityProviderSchema } from '@/lib/integrations/schemas/providers';
+import { IdentityProviderSchema } from '@giveaway/integration-model/providers';
 import {
   buildFormValues,
   renderWithForm

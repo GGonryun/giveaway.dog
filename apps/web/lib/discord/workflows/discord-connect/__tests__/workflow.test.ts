@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { discordConnectWorkflow } from '../workflow';
-import { commandInteraction } from '@/lib/discord/__tests__/fixtures-discord-procedures-workflows';
+import { commandInteraction } from '@giveaway/discord-model/testing/fixtures-discord-procedures-workflows';
 
 const m = vi.hoisted(() => ({
   processConnect: vi.fn(),

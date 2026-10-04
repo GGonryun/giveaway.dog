@@ -7,7 +7,7 @@ import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   expectedTeamLookup,
   teamWithRole
-} from '@/lib/discord/__tests__/fixtures-discord-procedures-workflows';
+} from '@giveaway/discord-model/testing/fixtures-discord-procedures-workflows';
 
 describe('startDiscordInstall', () => {
   describe('when the caller is not signed in', () => {

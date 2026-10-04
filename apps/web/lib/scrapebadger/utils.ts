@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { Tweet, User } from 'scrapebadger';
-import { TwitterUserSchema } from '../integrations/schemas/api';
+import { TwitterUserSchema } from '@giveaway/integration-model/api';
 
 export const toTwitterUserSchema = (user: User): TwitterUserSchema => ({
   id: user.id,

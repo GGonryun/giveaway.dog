@@ -13,7 +13,7 @@ import { DetailedUserTeam } from '../teams';
 import {
   sweepstakesFormFieldSchema,
   SweepstakesFormFieldSchema
-} from '@/lib/custom-fields/schemas';
+} from '@giveaway/custom-fields-model/schemas';
 import { size } from 'lodash';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { datetime } from '@/lib/date';

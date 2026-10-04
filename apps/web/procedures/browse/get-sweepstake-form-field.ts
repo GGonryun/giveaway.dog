@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
-import { sweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import { sweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 
 export const getSweepstakesFormFields = procedure()
   .authorization({

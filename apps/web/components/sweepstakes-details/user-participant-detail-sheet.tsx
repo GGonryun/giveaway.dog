@@ -26,7 +26,10 @@ import { StatusExplanationDialog } from '../users/status-explanation-dialog';
 import { Separator } from '../ui/separator';
 import { datetime } from '@/lib/date';
 import { cn } from '@giveaway/ui-utils/utils';
-import { toQualityType, QUALITY_LABELS } from '@/schemas/quality';
+import {
+  toQualityType,
+  QUALITY_LABELS
+} from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
 import { UserProviders } from '@/lib/integrations/components/user-providers';
 import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
@@ -34,7 +37,7 @@ import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toSweepstakesEngagement, toTwitterLink } from '@/lib/participant/db';
-import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { ObfuscatedEmail } from '../ui/obfuscated-email';
 

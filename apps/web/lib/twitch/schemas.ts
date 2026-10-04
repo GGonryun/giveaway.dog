@@ -1,5 +1,5 @@
 import z from 'zod';
-import { twitchFeatureSchema } from '@/lib/integrations/scopes';
+import { twitchFeatureSchema } from '@giveaway/integration-model/scopes';
 
 export const twitchStateSchema = z.object({
   teamId: z.string(),

@@ -4,7 +4,7 @@ import { twitterApiRequest } from '@/lib/integrations/utils/twitter-api-request'
 import {
   createTweetResponseSchema,
   uploadMediaResponseSchema
-} from '@/lib/integrations/schemas/api';
+} from '@giveaway/integration-model/api';
 import { ApplicationError } from '@giveaway/util-errors';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
 

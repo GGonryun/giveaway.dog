@@ -16,7 +16,7 @@ import {
   DEFAULT_MIN_TASK_COMPLETED,
   DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND
 } from './defaults';
-import { parseUserSourceSchema } from '@/lib/user-source/schemas';
+import { parseUserSourceSchema } from '@giveaway/user-source-model/schemas';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { parseAspectRatio } from '@giveaway/util-media/aspect-ratio/data';
 import { Prisma } from '@prisma/client';

@@ -11,7 +11,7 @@ import {
 } from '../task/completions';
 import z from 'zod';
 import { widetype } from '@giveaway/util-types/widetype';
-import { SweepstakesFormFieldSchema } from '../custom-fields/schemas';
+import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import {
   isProfileComplete,
   toParticipantForm,

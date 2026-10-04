@@ -13,7 +13,7 @@ import {
   buildTwitterField,
   buildUser
 } from '@/components/sweepstakes/__tests__/fixtures';
-import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import type { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import type { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import {

@@ -5,7 +5,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Terminal, Copy, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
-import { IntegrationSchema } from '../../integrations/schemas';
+import { IntegrationSchema } from '@giveaway/integration-model/schemas';
 
 interface DiscordConnectInstructionsProps {
   integration: IntegrationSchema;

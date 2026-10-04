@@ -3,7 +3,7 @@ import {
   discordMessageResponseSchema,
   PostDiscordMessageOptions,
   type DiscordMessageResponseSchema
-} from './schemas';
+} from '@giveaway/discord-model/schemas';
 
 export async function postDiscordMessage(
   options: PostDiscordMessageOptions

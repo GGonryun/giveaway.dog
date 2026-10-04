@@ -8,7 +8,7 @@ import {
 
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { FailureData, isFailureData } from '@/lib/mrpc/types';
+import { FailureData, isFailureData } from '@giveaway/rpc-model/types';
 import { TaskThemeProvider } from '@/lib/task/components/theme';
 import { TaskSchema } from '@/lib/task/schemas';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';

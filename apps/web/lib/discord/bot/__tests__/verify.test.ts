@@ -10,7 +10,7 @@ import {
 import {
   buttonInteraction,
   pingInteraction
-} from '../../__tests__/fixtures-discord-model';
+} from '@giveaway/discord-model/testing/fixtures-discord-model';
 
 const captureError = (promise: Promise<unknown>) =>
   promise.then(

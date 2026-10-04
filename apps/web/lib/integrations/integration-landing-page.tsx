@@ -7,7 +7,7 @@ import {
   PlatformId,
   PLATFORM_ICONS,
   PLATFORM_TOOLTIP_THEMES
-} from '@/lib/platform-icons';
+} from '@giveaway/platform-catalog/platform-icons';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';

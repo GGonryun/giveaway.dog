@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
 import { INTEGRATIONS_SETUP_URL, toSplitActionId } from '../util';
-import { buttonInteraction } from '../../__tests__/fixtures-discord-model';
+import { buttonInteraction } from '@giveaway/discord-model/testing/fixtures-discord-model';
 
 describe('INTEGRATIONS_SETUP_URL', () => {
   afterEach(() => {

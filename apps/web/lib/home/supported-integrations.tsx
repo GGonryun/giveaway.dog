@@ -7,7 +7,7 @@ import {
   getPlatformIcon,
   getPlatformLabel,
   type PlatformId
-} from '@/lib/platform-icons';
+} from '@giveaway/platform-catalog/platform-icons';
 import type { ResolvedTheme } from '@/lib/theme/get-server-theme';
 
 const PLATFORM_BADGES: Partial<

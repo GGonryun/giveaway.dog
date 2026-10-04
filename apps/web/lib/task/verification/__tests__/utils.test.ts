@@ -8,7 +8,7 @@ import {
   supportsAutomatedReverification
 } from '../utils';
 import type { TaskType } from '@/lib/task/schemas';
-import type { ProviderSchema } from '@/lib/integrations/schemas/providers';
+import type { ProviderSchema } from '@giveaway/integration-model/providers';
 import { ALL_TASK_TYPES } from '@/lib/task/procedures/__tests__/fixtures-task-procedures-verification';
 
 const provider = (overrides: Partial<ProviderSchema> = {}): ProviderSchema => ({

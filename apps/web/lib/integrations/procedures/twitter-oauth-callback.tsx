@@ -9,7 +9,7 @@ import {
   TWITTER_TEAM_APP_CLIENT_SECRET,
   TWITTER_REDIRECT_URI,
   twitterStateSchema
-} from '../schemas';
+} from '@giveaway/integration-model/schemas';
 
 export const twitterOAuthCallback = procedure()
   .authorization({

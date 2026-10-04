@@ -8,7 +8,7 @@ import {
   discordPostSweepstakes,
   jsonResponse,
   storedTask
-} from '@/lib/discord/__tests__/fixtures-discord-procedures-workflows';
+} from '@giveaway/discord-model/testing/fixtures-discord-procedures-workflows';
 
 const m = vi.hoisted(() => ({ nanoid: vi.fn() }));
 

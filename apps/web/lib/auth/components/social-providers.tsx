@@ -15,7 +15,7 @@ import {
   PROVIDER_REQUIRED_SCOPES,
   IDENTITY_PROVIDER_LABEL,
   SOCIAL_PROVIDERS
-} from '@/lib/integrations/schemas/providers';
+} from '@giveaway/integration-model/providers';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Spinner } from '@/components/ui/spinner';
 import login from '../procedures/login';

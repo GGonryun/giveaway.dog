@@ -1,6 +1,6 @@
 import { IntegrationStatus } from '@prisma/client';
 import prisma from '@giveaway/db-client/prisma';
-import type { DiscordApplicationCommandInteractionSchema } from '../../../bot/schema';
+import type { DiscordApplicationCommandInteractionSchema } from '@giveaway/discord-model/schema';
 import { toDiscordIntegrationSettings } from '@/lib/discord/integration/schemas';
 import { INTEGRATIONS_SETUP_URL } from '../../../bot/util';
 import { getDiscordGuildInfo } from '../../../api/get-discord-guild-name';

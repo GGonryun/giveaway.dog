@@ -6,7 +6,7 @@ import {
   ShieldCheck,
   TriangleAlert
 } from 'lucide-react';
-import { VALID_ENFORCEMENT_VALUES } from '../enforcement-levels';
+import { VALID_ENFORCEMENT_VALUES } from '@giveaway/user-quality-model/enforcement-levels';
 import {
   ENFORCEMENT_LEVEL_ALERT_VARIANT,
   QUALITY_ALERT_VARIANT,

@@ -3,7 +3,7 @@ import { Prisma, type SweepstakesFormField } from '@prisma/client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
 import { TASK_COMPLETIONS_SELECT_QUERY } from '@/lib/task/completions';
-import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import type { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import {
   findOrCreateSweepstakesParticipant,

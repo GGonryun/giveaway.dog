@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { toDeferredEphemeralChannelMessage } from '../messages';
-import type { DiscordButtonInteractionSchema } from '../schema';
+import type { DiscordButtonInteractionSchema } from '@giveaway/discord-model/schema';
 import { toSplitActionId } from '../util';
 import { start } from 'workflow/api';
 import { discordInteractionWorkflow } from '../../workflows/discord-interaction/workflow';

@@ -20,7 +20,7 @@ import {
   IDENTITY_PROVIDER_LABEL,
   IdentityProviderSchema,
   isProviderType
-} from '@/lib/integrations/schemas/providers';
+} from '@giveaway/integration-model/providers';
 
 export const UpdatePreferredContact = () => {
   const user = useUser();

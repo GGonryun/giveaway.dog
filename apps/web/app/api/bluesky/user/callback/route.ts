@@ -3,7 +3,7 @@ import { getBlueskyClient } from '@/lib/bluesky/bluesky-client';
 import prisma from '@giveaway/db-client/prisma';
 import { createId } from '@paralleldrive/cuid2';
 import { Agent } from '@atproto/api';
-import { REQUIRED_BLUESKY_SCOPES } from '@/lib/integrations/scopes';
+import { REQUIRED_BLUESKY_SCOPES } from '@giveaway/integration-model/scopes';
 import { getUserAuthRedirect } from '@/lib/redirect';
 import { auth, signIn } from '@/lib/auth/config';
 import { createBlueskyLoginToken } from '@/lib/auth/bluesky-login-token';

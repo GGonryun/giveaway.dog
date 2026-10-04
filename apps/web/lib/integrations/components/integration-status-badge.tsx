@@ -1,5 +1,5 @@
 import { assertNever } from '@giveaway/util-errors';
-import { IntegrationSchema } from '../schemas';
+import { IntegrationSchema } from '@giveaway/integration-model/schemas';
 import { CheckCircle, AlertCircle, LoaderCircle } from 'lucide-react';
 
 export const IntegrationStatusBadge: React.FC<{

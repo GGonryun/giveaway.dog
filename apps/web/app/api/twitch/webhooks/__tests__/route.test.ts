@@ -16,7 +16,7 @@ vi.mock('@giveaway/cache/redis', () => ({
   redis: { get: m.redisGet, set: m.redisSet }
 }));
 
-vi.mock('@/lib/ratelimit', () => ({
+vi.mock('@giveaway/ratelimit/ratelimit', () => ({
   newVersionedRateLimiter: m.newVersionedRateLimiter
 }));
 

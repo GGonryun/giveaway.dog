@@ -1,7 +1,7 @@
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
-import { PROVIDER_REQUIRED_SCOPES } from '@/lib/integrations/schemas/providers';
+import { PROVIDER_REQUIRED_SCOPES } from '@giveaway/integration-model/providers';
 import {
   mockAllocation,
   mockParticipant,

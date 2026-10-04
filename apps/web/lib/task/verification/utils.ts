@@ -3,7 +3,7 @@ import {
   TASK_VERIFICATION_REQUIREMENT,
   TASK_IDENTITY_PROVIDER
 } from '../schemas';
-import { ProviderSchema } from '@/lib/integrations/schemas/providers';
+import { ProviderSchema } from '@giveaway/integration-model/providers';
 
 export function isTaskVerifiable(taskType: TaskType): boolean {
   const requirement = TASK_VERIFICATION_REQUIREMENT[taskType];

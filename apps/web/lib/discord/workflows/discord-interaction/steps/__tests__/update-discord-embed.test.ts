@@ -7,7 +7,7 @@ import {
   discordPostSweepstakes,
   jsonResponse,
   storedTask
-} from '@/lib/discord/__tests__/fixtures-discord-procedures-workflows';
+} from '@giveaway/discord-model/testing/fixtures-discord-procedures-workflows';
 
 const NOW = new Date('2026-06-01T00:00:00.000Z');
 

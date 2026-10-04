@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole } from '@prisma/client';
 import { toast } from 'sonner';
 import updateMemberRole from '@/procedures/teams/update-member-role';
-import type { Result } from '@/lib/mrpc/types';
+import type { Result } from '@giveaway/rpc-model/types';
 import { EditMemberDialog } from '../edit-member-dialog';
 
 vi.mock('@/procedures/teams/update-member-role', () => ({ default: vi.fn() }));

@@ -1,7 +1,7 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import { Tx } from '@giveaway/db-client/prisma';
 import { twitterApiRequest } from '../utils/twitter-api-request';
-import { uploadMediaResponseSchema } from '../schemas/api';
+import { uploadMediaResponseSchema } from '@giveaway/integration-model/api';
 
 export async function uploadImage(
   tx: Tx,

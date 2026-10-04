@@ -3,7 +3,7 @@ import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import {
   TWITTER_TEAM_APP_CLIENT_ID,
   TWITTER_TEAM_APP_CLIENT_SECRET
-} from '../schemas';
+} from '@giveaway/integration-model/schemas';
 import { Tx } from '@giveaway/db-client/prisma';
 
 const EXPIRY_BUFFER_SECONDS = 300;

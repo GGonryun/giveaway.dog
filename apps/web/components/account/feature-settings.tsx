@@ -21,7 +21,7 @@ import {
   USER_FEATURE_FLAG_LABELS,
   HOST_DASHBOARD_FEATURE_FLAG_KEY,
   BASIC_DASHBOARD_FEATURE_FLAG_KEY
-} from '@/schemas/feature-flags';
+} from '@giveaway/feature-flags/feature-flags';
 import { widetype } from '@giveaway/util-types/widetype';
 import { useSession } from 'next-auth/react';
 import { UserAccountType } from '@prisma/client';

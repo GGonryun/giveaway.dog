@@ -24,7 +24,7 @@ import {
   MAX_FINGERPRINT_CONSISTENCY_PUNISHMENT,
   MAX_TURNSTILE_TRUST_BONUS,
   MIN_TURNSTILE_TRUST_PENALTY
-} from '@/schemas/user-scoring';
+} from '@giveaway/scoring-model/user-scoring';
 import { clamp } from 'lodash';
 
 export type UserSignals = {

@@ -11,16 +11,19 @@ import { useRouter } from 'next/navigation';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
-import { IntegrationSchema, hasFeature } from '../schemas';
+import {
+  IntegrationSchema,
+  hasFeature
+} from '@giveaway/integration-model/schemas';
 import { IntegrationStatusAlert } from './integration-status-alert';
 import { BlueskyDisconnectDialog } from './bluesky-disconnect-dialog';
 import { BlueskyConnectDialog } from './bluesky-connect-dialog';
-import { IDENTITY_PROVIDER_LABEL } from '../schemas/providers';
+import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';
 import {
   blueskyFeatures,
   toBlueskyScope,
   type BlueskyFeatureSchema
-} from '../scopes';
+} from '@giveaway/integration-model/scopes';
 import { IntegrationCardHeader } from './integration-card-header';
 
 interface BlueskyCardProps {

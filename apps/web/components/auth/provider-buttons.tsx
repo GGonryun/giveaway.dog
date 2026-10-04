@@ -9,7 +9,7 @@ import {
   IDENTITY_PROVIDER_LABEL,
   ENABLED_IDENTITY_PROVIDERS,
   ProviderSchema
-} from '@/lib/integrations/schemas/providers';
+} from '@giveaway/integration-model/providers';
 import { cn } from '@giveaway/ui-utils/utils';
 import { IdentityProvider } from '@prisma/client';
 import React from 'react';

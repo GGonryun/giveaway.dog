@@ -15,7 +15,7 @@ import {
   applicationCommandInteraction,
   buttonInteraction,
   pingInteraction
-} from '../../../__tests__/fixtures-discord-model';
+} from '@giveaway/discord-model/testing/fixtures-discord-model';
 
 const workflowApi = vi.hoisted(() => ({ start: vi.fn() }));
 

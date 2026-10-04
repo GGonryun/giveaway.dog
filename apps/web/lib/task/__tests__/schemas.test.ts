@@ -80,7 +80,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import {
   IDENTITY_PROVIDER_LABEL,
   PROVIDER_REQUIRED_SCOPES
-} from '@/lib/integrations/schemas/providers';
+} from '@giveaway/integration-model/providers';
 import {
   BLUESKY_POST_URL,
   INSTAGRAM_POST_URL,

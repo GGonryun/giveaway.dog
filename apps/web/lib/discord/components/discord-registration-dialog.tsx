@@ -17,8 +17,8 @@ import {
   Trash2Icon
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { IntegrationSchema } from '../../integrations/schemas';
-import { getDiscordInstallUrl } from '@/lib/discord/bot/install';
+import { IntegrationSchema } from '@giveaway/integration-model/schemas';
+import { getDiscordInstallUrl } from '@giveaway/discord-model/install';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { disconnectDiscord } from '../procedures/disconnect-discord';
 import { useRouter } from 'next/navigation';

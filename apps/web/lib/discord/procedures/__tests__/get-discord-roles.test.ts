@@ -8,7 +8,7 @@ import {
   expectedTeamLookup,
   jsonResponse,
   teamWithRole
-} from '@/lib/discord/__tests__/fixtures-discord-procedures-workflows';
+} from '@giveaway/discord-model/testing/fixtures-discord-procedures-workflows';
 
 const input = { slug: 'acme', integrationId: 'integration-1' };
 

@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IdentityProvider } from '@prisma/client';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ProviderSchema } from '@/lib/integrations/schemas/providers';
+import { ProviderSchema } from '@giveaway/integration-model/providers';
 import {
   ProviderButtons,
   ProviderDots,

@@ -1,5 +1,5 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { IntegrationSchema } from '../schemas';
+import { IntegrationSchema } from '@giveaway/integration-model/schemas';
 import { AlertCircleIcon } from 'lucide-react';
 import { assertNever } from '@giveaway/util-errors';
 

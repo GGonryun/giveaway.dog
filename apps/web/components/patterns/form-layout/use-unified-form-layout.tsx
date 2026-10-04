@@ -14,7 +14,7 @@ import { useFormErrors } from './use-form-issues';
 import { browser } from '@giveaway/util-browser/browser';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'sonner';
-import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 
 export type UnifiedFormLayoutState<TSteps extends string> = {
   id: string;

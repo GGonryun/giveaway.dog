@@ -12,7 +12,7 @@ import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
-import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { PostBuilderSheet } from './post-builder-sheet';
 import { AutomatedPostDetails } from './automated-post-details';
 import { AutomatedPostJobSchema } from '../schemas';

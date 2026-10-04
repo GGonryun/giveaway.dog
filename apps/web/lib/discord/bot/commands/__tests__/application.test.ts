@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { handleApplicationCommandRequest } from '../application';
 import { discordConnectWorkflow } from '../../../workflows/discord-connect/workflow';
-import { applicationCommandInteraction } from '../../../__tests__/fixtures-discord-model';
+import { applicationCommandInteraction } from '@giveaway/discord-model/testing/fixtures-discord-model';
 
 const workflowApi = vi.hoisted(() => ({ start: vi.fn() }));
 

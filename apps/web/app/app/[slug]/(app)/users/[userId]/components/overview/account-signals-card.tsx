@@ -13,7 +13,7 @@ import {
   SIGNAL_MAX,
   SIGNAL_QUALITY_KEYS
 } from '@/lib/scoring/signal-display';
-import { toQualityType } from '@/schemas/quality';
+import { toQualityType } from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
 import { cn } from '@giveaway/ui-utils/utils';
 

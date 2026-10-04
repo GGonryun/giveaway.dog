@@ -6,7 +6,7 @@ import prisma from '@giveaway/db-client/prisma';
 import { isImageSafe } from '@giveaway/content-moderation/content-moderation';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
-import { fileUpload } from '@/lib/ratelimit';
+import { fileUpload } from '@giveaway/ratelimit/ratelimit';
 
 const tokenPayloadSchema = z.object({
   userId: z.string().nullish()

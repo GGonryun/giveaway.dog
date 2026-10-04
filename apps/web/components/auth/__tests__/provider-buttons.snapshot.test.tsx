@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { IdentityProvider } from '@prisma/client';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ProviderSchema } from '@/lib/integrations/schemas/providers';
+import { ProviderSchema } from '@giveaway/integration-model/providers';
 import {
   ProviderButtons,
   ProviderDots,

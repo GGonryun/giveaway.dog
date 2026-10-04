@@ -13,7 +13,10 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
-import { hasFeature, type IntegrationSchema } from '@/lib/integrations/schemas';
+import {
+  hasFeature,
+  type IntegrationSchema
+} from '@giveaway/integration-model/schemas';
 import { extractUsernameFromTweetUrl } from '@giveaway/x-model/twitter';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { AlertCircle, RefreshCw, Info } from 'lucide-react';

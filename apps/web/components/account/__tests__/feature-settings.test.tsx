@@ -6,7 +6,7 @@ import type { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import updateAccountType from '@/procedures/user/update-account-type';
-import type { Result } from '@/lib/mrpc/types';
+import type { Result } from '@giveaway/rpc-model/types';
 import { FeatureSettings } from '../feature-settings';
 
 const navigation = vi.hoisted(() => ({

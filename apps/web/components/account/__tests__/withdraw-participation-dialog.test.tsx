@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { toast } from 'sonner';
 import withdrawParticipation from '@/procedures/user/withdraw-participation';
-import type { Result } from '@/lib/mrpc/types';
+import type { Result } from '@giveaway/rpc-model/types';
 import { WithdrawParticipationDialog } from '../withdraw-participation-dialog';
 
 vi.mock('@/procedures/user/withdraw-participation', () => ({

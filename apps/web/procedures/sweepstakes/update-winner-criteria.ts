@@ -6,7 +6,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import {
   allowedUserSourcesSchema,
   parseUserSourceSchema
-} from '@/lib/user-source/schemas';
+} from '@giveaway/user-source-model/schemas';
 import { Prisma, TeamTier } from '@prisma/client';
 import { sweepstakesWinnerCriteriaSchema } from '@/schemas/giveaway/schemas';
 import {

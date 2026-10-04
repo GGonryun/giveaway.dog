@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { LOGIN_PROVIDERS } from '@/lib/integrations/schemas/providers';
+import { LOGIN_PROVIDERS } from '@giveaway/integration-model/providers';
 
 export function LoginForm({
   className,

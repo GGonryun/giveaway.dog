@@ -33,9 +33,9 @@ import {
   sweepstakesWinnerCriteriaSchema,
   termsTemplateSchema
 } from '../schemas';
-import { allowedUserSourcesSchema } from '@/lib/user-source/schemas';
+import { allowedUserSourcesSchema } from '@giveaway/user-source-model/schemas';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
-import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
+import { DEFAULT_MINIMUM_AGE_FIELD } from '@giveaway/custom-fields-model/defaults';
 
 describe('scalar defaults', () => {
   it('exposes the default sweepstakes copy', () => {

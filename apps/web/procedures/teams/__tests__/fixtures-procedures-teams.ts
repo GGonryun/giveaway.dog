@@ -2,7 +2,7 @@ import { expect } from 'vitest';
 import { TeamRole } from '@prisma/client';
 import { TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure } from '@giveaway/testing-server/result';
-import type { Result } from '@/lib/mrpc/types';
+import type { Result } from '@giveaway/rpc-model/types';
 
 export const SLUG = 'acme';
 export const TEAM_ID = 'team-1';

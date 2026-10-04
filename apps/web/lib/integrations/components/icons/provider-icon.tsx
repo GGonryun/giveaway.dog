@@ -9,7 +9,7 @@ import { SocialTwitchIcon } from './twitch-icon';
 import {
   IDENTITY_PROVIDER_LABEL,
   IdentityProviderSchema
-} from '../../schemas/providers';
+} from '@giveaway/integration-model/providers';
 import { SocialKickIcon } from './kick-icon';
 import { SocialYouTubeIcon } from './youtube';
 import { SocialInstagramIcon } from './instagram';

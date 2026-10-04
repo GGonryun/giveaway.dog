@@ -14,7 +14,7 @@ import {
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
-import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { PostToDiscordRequestSchema } from '../../schemas';
 import {

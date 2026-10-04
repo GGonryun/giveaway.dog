@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { uploadImage } from '../upload-image';
 import { twitterApiRequest } from '@/lib/integrations/utils/twitter-api-request';
-import { uploadMediaResponseSchema } from '@/lib/integrations/schemas/api';
+import { uploadMediaResponseSchema } from '@giveaway/integration-model/api';
 import { ApplicationError } from '@giveaway/util-errors';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
 

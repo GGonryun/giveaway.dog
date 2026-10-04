@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { nanoid } from 'nanoid';
-import { Failure } from './types';
+import { Failure } from '@giveaway/rpc-model/types';
 import { assertNever } from '@giveaway/util-errors';
 
 export const isPrismaError = (

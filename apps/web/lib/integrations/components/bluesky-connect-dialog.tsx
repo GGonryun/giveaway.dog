@@ -14,8 +14,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Shield, Check, Loader2, Plug } from 'lucide-react';
-import { IDENTITY_PROVIDER_LABEL } from '../schemas/providers';
-import { IntegrationFeatureConfig } from '../scopes';
+import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';
+import { IntegrationFeatureConfig } from '@giveaway/integration-model/scopes';
 import { useForm } from 'react-hook-form';
 import {
   blueskyProfileRefineUrl,

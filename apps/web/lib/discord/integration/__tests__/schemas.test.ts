@@ -10,8 +10,8 @@ import {
   discordChannel,
   discordGuild,
   discordMember
-} from '../../__tests__/fixtures-discord-model';
-import type { DiscordApplicationCommandInteractionSchema } from '../../bot/schema';
+} from '@giveaway/discord-model/testing/fixtures-discord-model';
+import type { DiscordApplicationCommandInteractionSchema } from '@giveaway/discord-model/schema';
 
 const captureError = (fn: () => unknown) => {
   try {

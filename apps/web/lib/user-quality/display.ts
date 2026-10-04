@@ -1,6 +1,6 @@
 import { AlertVariant } from '@/components/ui/alert';
 import { BadgeVariants } from '@/components/ui/badge';
-import { QualityType } from '@/schemas/quality';
+import { QualityType } from '@giveaway/user-quality-model/quality';
 import {
   LucideIcon,
   Shield,
@@ -9,7 +9,7 @@ import {
   OctagonXIcon,
   ShieldCheck
 } from 'lucide-react';
-import { EnforcementLevel } from './enforcement-levels';
+import { EnforcementLevel } from '@giveaway/user-quality-model/enforcement-levels';
 
 export const QUALITY_BADGE_VARIANT: Record<QualityType, BadgeVariants> = {
   trusted: 'success',

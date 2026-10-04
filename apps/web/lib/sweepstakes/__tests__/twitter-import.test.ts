@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { UserSource } from '@prisma/client';
 import { importTwitterUsers } from '../twitter-import';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
-import type { TwitterUserSchema } from '@/lib/integrations/schemas/api';
+import type { TwitterUserSchema } from '@giveaway/integration-model/api';
 
 const nanoidMock = vi.hoisted(() => vi.fn());
 

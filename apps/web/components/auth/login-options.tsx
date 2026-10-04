@@ -32,7 +32,7 @@ import { Separator } from '../ui/separator';
 import { BlueskyConnectForm } from '@/lib/auth/components/bluesky-connect-form';
 import { InstagramConnectForm } from '@/lib/auth/components/instagram-connect-form';
 import { FacebookConnectForm } from '@/lib/auth/components/facebook-connect-form';
-import { ProviderSchema } from '@/lib/integrations/schemas/providers';
+import { ProviderSchema } from '@giveaway/integration-model/providers';
 
 type LoginButtonType = 'pill' | 'buttons' | 'icons' | 'dots';
 interface LoginOptionsProps {

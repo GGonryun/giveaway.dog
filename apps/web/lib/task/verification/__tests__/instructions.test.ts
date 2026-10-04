@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { getVerificationInstructions } from '../instructions';
 import type { TaskSchema, TaskType } from '@/lib/task/schemas';
-import type { ProviderSchema } from '@/lib/integrations/schemas/providers';
+import type { ProviderSchema } from '@giveaway/integration-model/providers';
 import {
   ALL_TASK_TYPES,
   taskOf

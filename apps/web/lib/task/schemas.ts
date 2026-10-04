@@ -13,7 +13,7 @@ import { toJsonObject } from '@giveaway/util-collections/json';
 import {
   identityProviderSchema,
   PROVIDER_REQUIRED_SCOPES
-} from '../integrations/schemas/providers';
+} from '@giveaway/integration-model/providers';
 import {
   blueskyPostRefineError,
   blueskyPostRefineUrl,

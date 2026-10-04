@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { Failure } from '@/lib/mrpc/types';
+import { Failure } from '@giveaway/rpc-model/types';
 import { cn } from '@giveaway/ui-utils/utils';
 import { CheckIcon, LucideIcon, SaveIcon } from 'lucide-react';
 import { useMemo } from 'react';

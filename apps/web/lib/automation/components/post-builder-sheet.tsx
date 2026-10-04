@@ -11,7 +11,10 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { GiveawaySchema } from '@/schemas/giveaway/schemas';
-import { IntegrationsSchema, hasFeature } from '@/lib/integrations/schemas';
+import {
+  IntegrationsSchema,
+  hasFeature
+} from '@giveaway/integration-model/schemas';
 import { AlertCircleIcon, SendIcon } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { AutomatedPostIntegrationStep } from './steps/integration-step';

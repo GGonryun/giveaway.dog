@@ -37,7 +37,7 @@ import { TemplatePreview } from './template-preview';
 import { TemplatePreviewFooter } from './template-preview-footer';
 import { PreviewStateContext } from '@/components/sweepstakes-editor/contexts/preview-state-context';
 import { GiveawayState } from '@/schemas/giveaway/schemas';
-import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { TemplatePublishConfirmationModal } from './template-publish-confirmation-modal';
 import { TemplateCancelConfirmationModal } from './template-cancel-confirmation-modal';
 import { deleteTemplate } from '../procedures/delete-template';

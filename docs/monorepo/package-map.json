@@ -45,14 +45,6 @@
       "package": "@giveaway/discord-api",
       "split": false
     },
-    "lib/discord/__tests__/fixtures-discord-model.ts": {
-      "package": "@giveaway/discord-model",
-      "split": false
-    },
-    "lib/discord/__tests__/fixtures-discord-procedures-workflows.ts": {
-      "package": "@giveaway/discord-model",
-      "split": false
-    },
     "lib/participant/__tests__/fixtures-participant-referrals-automation.ts": {
       "package": "@giveaway/participant-model",
       "split": false
@@ -1045,7 +1037,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["schemas/feature-flags.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/util-types"],
       "npm": ["@giveaway/db-model"]
     },
@@ -1069,7 +1061,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/ratelimit.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/cache"],
       "npm": ["@upstash/ratelimit"]
     },
@@ -1126,7 +1118,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/mrpc/types.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": []
     },
@@ -1469,15 +1461,13 @@
       "layer": 1,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": [
-        "lib/integrations/schemas/api.ts",
-        "lib/integrations/schemas/index.ts",
-        "lib/integrations/schemas/providers.ts",
-        "lib/integrations/scopes.ts",
-        "lib/integrations/utils/to-provider-url.tsx"
+      "sources": [],
+      "dependsOn": [
+        "@giveaway/db-model",
+        "@giveaway/util-errors",
+        "@giveaway/util-types"
       ],
-      "dependsOn": ["@giveaway/util-errors", "@giveaway/util-types"],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/integration-server",
@@ -1527,7 +1517,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/platform-icons.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/util-types"],
       "npm": []
     },
@@ -1661,11 +1651,7 @@
       "layer": 1,
       "sourceFiles": 3,
       "testFiles": 5,
-      "sources": [
-        "lib/discord/api/schemas.ts",
-        "lib/discord/bot/install.ts",
-        "lib/discord/bot/schema.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": ["zod"]
     },
@@ -2846,12 +2832,9 @@
       "layer": 1,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": [
-        "lib/custom-fields/defaults.ts",
-        "lib/custom-fields/schemas.ts"
-      ],
-      "dependsOn": ["@giveaway/util-types"],
-      "npm": ["@giveaway/db-model", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-types"],
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/custom-fields-server",
@@ -3059,9 +3042,9 @@
       "layer": 1,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": ["lib/scoring/schemas/", "schemas/user-scoring.ts"],
-      "dependsOn": ["@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model", "lodash", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-errors"],
+      "npm": ["lodash", "zod"]
     },
     {
       "name": "@giveaway/scoring-server",
@@ -3105,10 +3088,7 @@
       "layer": 1,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": [
-        "lib/user-quality/enforcement-levels.ts",
-        "schemas/quality.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/util-types"],
       "npm": ["zod"]
     },
@@ -3135,9 +3115,9 @@
       "layer": 1,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/user-source/data.ts", "lib/user-source/schemas.ts"],
-      "dependsOn": ["@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-errors"],
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/user-source-ui",

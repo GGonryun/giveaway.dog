@@ -7,7 +7,7 @@ import { AuthError } from 'next-auth';
 import z from 'zod';
 import { signIn } from '../config';
 import { IdentityProvider } from '@prisma/client';
-import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@/lib/integrations/schemas/providers';
+import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@giveaway/integration-model/providers';
 import { redirect } from 'next/navigation';
 import {
   instagramProfileUrlSchema,

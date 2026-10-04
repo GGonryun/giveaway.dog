@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { DEFAULT_MINIMUM_AGE_FIELD } from '../custom-fields/defaults';
+import { DEFAULT_MINIMUM_AGE_FIELD } from '@giveaway/custom-fields-model/defaults';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
   DEFAULT_REQUIRED_PRE_ENTRY_LOGIN,

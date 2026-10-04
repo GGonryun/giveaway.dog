@@ -1,4 +1,4 @@
-import type { DiscordApplicationCommandInteractionSchema } from '../../bot/schema';
+import type { DiscordApplicationCommandInteractionSchema } from '@giveaway/discord-model/schema';
 import { processConnect } from './steps/process-connect';
 import { patchDiscordWebhook } from '../discord-interaction/steps/patch-discord-webhook';
 

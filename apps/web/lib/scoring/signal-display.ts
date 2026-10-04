@@ -36,7 +36,7 @@ import {
   MAX_PROVIDERS_CONNECTED_BONUS as PROVIDERS_MAX,
   PER_TASK_BONUS,
   COMPLETION_THRESHOLD_DAYS
-} from '@/schemas/user-scoring';
+} from '@giveaway/scoring-model/user-scoring';
 import type { UserSignalKey } from '@/procedures/user/get-user-signals';
 
 export const SIGNAL_LABEL: Record<UserSignalKey, string> = {

@@ -9,8 +9,8 @@ import {
   templateFormSchema,
   templateSettingsSchema
 } from '../schemas/template';
-import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
-import { sweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import { DEFAULT_MINIMUM_AGE_FIELD } from '@giveaway/custom-fields-model/defaults';
+import { sweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { DEFAULT_DESIGN_DATA } from '@/schemas/giveaway/defaults';
 

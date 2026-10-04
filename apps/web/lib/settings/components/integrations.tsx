@@ -8,7 +8,7 @@ import { BlueskyCard } from '@/lib/integrations/components/bluesky-card';
 import { DiscordCard } from '@/lib/discord/components/discord-card';
 import { TwitchCard } from '@/lib/twitch/components/twitch-card';
 import { PlaceholderCard } from '@/lib/integrations/components/placeholder-card';
-import { IntegrationsSchema } from '@/lib/integrations/schemas';
+import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { IntegrationProvider } from '@prisma/client';
 
 export const TeamIntegrationSettings: React.FC<{

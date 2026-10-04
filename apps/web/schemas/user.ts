@@ -18,7 +18,7 @@ import {
   ProviderSchema,
   IdentityProviderSchema,
   identityProviderSchema
-} from '@/lib/integrations/schemas/providers';
+} from '@giveaway/integration-model/providers';
 import { ApplicationError } from '@giveaway/util-errors';
 import { Nil } from '@giveaway/util-types/types';
 

@@ -3,7 +3,10 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { cn } from '@giveaway/ui-utils/utils';
-import { getPlatformIcon, type PlatformId } from '@/lib/platform-icons';
+import {
+  getPlatformIcon,
+  type PlatformId
+} from '@giveaway/platform-catalog/platform-icons';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import type { ResolvedTheme } from '@/lib/theme/get-server-theme';

@@ -1,5 +1,5 @@
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
-import { PROVIDER_REQUIRED_SCOPES } from '@/lib/integrations/schemas/providers';
+import { PROVIDER_REQUIRED_SCOPES } from '@giveaway/integration-model/providers';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { TWITTER_PROFILE_URL } from '@giveaway/app-config/settings';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { twitterUserSchema } from '@/lib/integrations/schemas/api';
+import { twitterUserSchema } from '@giveaway/integration-model/api';
 import {
   extractTweetId,
   toTwitterPickerUsers,

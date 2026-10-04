@@ -1,7 +1,7 @@
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
 import { Prisma } from '@prisma/client';
 import { toSweepstakesUrl } from '@/lib/sweepstakes/util';
-import { DiscordActionRow } from './schemas';
+import { DiscordActionRow } from '@giveaway/discord-model/schemas';
 
 export type DiscordMessageComponentFactory = (args: {
   taskId?: string;

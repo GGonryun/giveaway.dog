@@ -1,4 +1,4 @@
-import type { DiscordButtonInteractionSchema } from '../../bot/schema';
+import type { DiscordButtonInteractionSchema } from '@giveaway/discord-model/schema';
 import { DISCORD_RESPONSE_FLAG } from '../../bot/messages';
 import { fetchTask } from './steps/fetch-task';
 import { validateEntry } from './steps/validate-entry';

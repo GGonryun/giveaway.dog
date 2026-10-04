@@ -16,7 +16,7 @@ import {
 } from '@/components/sweepstakes-editor/form/terms';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { date } from '@/lib/date';
-import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
+import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { MinimalTipTapPreview } from '../ui/minimal-tiptap-preview';
 
 interface TermsModalProps {

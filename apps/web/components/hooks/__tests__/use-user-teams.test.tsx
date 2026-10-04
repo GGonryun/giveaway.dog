@@ -4,7 +4,7 @@ import { TeamRole, TeamTier } from '@prisma/client';
 import { toast } from 'sonner';
 import getUserTeams from '@/procedures/teams/get-user-teams';
 import type { DetailedUserTeam } from '@/schemas/teams';
-import type { Result } from '@/lib/mrpc/types';
+import type { Result } from '@giveaway/rpc-model/types';
 import { useUserTeams } from '../use-user-teams';
 
 vi.mock('@/procedures/teams/get-user-teams', () => ({ default: vi.fn() }));

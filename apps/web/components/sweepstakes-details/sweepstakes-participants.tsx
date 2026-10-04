@@ -48,7 +48,10 @@ import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toEngagementTheme } from '@/lib/participant/util';
-import { toQualityType, QUALITY_LABELS } from '@/schemas/quality';
+import {
+  toQualityType,
+  QUALITY_LABELS
+} from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { disqualifyParticipant } from '@/procedures/sweepstakes/disqualify-participant';

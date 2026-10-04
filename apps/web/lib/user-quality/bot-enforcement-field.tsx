@@ -8,7 +8,7 @@ import {
   VALID_ENFORCEMENT_VALUES,
   clampToNearestEnforcementLevel,
   getEnforcementLevel
-} from './enforcement-levels';
+} from '@giveaway/user-quality-model/enforcement-levels';
 import { ENFORCEMENT_LEVEL_ALERT_VARIANT } from './display';
 
 interface BotEnforcementFieldProps {

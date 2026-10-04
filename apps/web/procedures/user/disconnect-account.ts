@@ -4,7 +4,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import {
   IDENTITY_PROVIDER_TO_AUTH_PROVIDER,
   identityProviderSchema
-} from '@/lib/integrations/schemas/providers';
+} from '@giveaway/integration-model/providers';
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 

@@ -6,7 +6,7 @@ import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { UserInfoSection } from '../user-info-section';
 import { buildParticipant, buildProvider, buildUser } from './fixtures';
 import { renderWithParticipation } from './participation-fixtures';
-import type { ProviderSchema } from '@/lib/integrations/schemas/providers';
+import type { ProviderSchema } from '@giveaway/integration-model/providers';
 
 const navigation = vi.hoisted(() => ({ pathname: '/browse/summer-giveaway' }));
 
