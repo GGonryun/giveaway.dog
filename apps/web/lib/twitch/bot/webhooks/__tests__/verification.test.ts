@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
 import { handleSubscriptionVerification } from '../verification';
-import { subscriptionPayload } from '@/lib/twitch/__tests__/fixtures-twitch';
+import { subscriptionPayload } from '@giveaway/testing-server/fixtures-twitch';
 
 describe('handleSubscriptionVerification', () => {
   beforeEach(() => {

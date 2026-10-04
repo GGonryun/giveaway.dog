@@ -5,7 +5,7 @@ import { processChatMessage } from '../chat-message';
 import {
   chatMessageEvent,
   subscriptionPayload
-} from '@/lib/twitch/__tests__/fixtures-twitch';
+} from '@giveaway/testing-server/fixtures-twitch';
 
 vi.mock('../chat-message', () => ({ processChatMessage: vi.fn() }));
 

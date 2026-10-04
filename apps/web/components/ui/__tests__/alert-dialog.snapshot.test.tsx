@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '../alert-dialog';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 function renderAlertDialog(
   props: {

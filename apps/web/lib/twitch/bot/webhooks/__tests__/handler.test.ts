@@ -8,7 +8,7 @@ import {
   chatMessageEvent,
   eventSubRecord,
   subscriptionPayload
-} from '@/lib/twitch/__tests__/fixtures-twitch';
+} from '@giveaway/testing-server/fixtures-twitch';
 
 const redisMock = vi.hoisted(() => ({
   get: vi.fn(),

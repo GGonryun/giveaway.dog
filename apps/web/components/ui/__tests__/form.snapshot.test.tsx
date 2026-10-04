@@ -11,7 +11,7 @@ import {
   FormMessage
 } from '../form';
 import { Input } from '../input';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 type Values = { email: string };
 

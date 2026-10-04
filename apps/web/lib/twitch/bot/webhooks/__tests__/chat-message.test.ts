@@ -4,7 +4,7 @@ import { processChatMessage } from '../chat-message';
 import { sendChatMessage } from '@/lib/twitch/api/send-chat-message';
 import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
-import { chatMessageEvent } from '@/lib/twitch/__tests__/fixtures-twitch';
+import { chatMessageEvent } from '@giveaway/testing-server/fixtures-twitch';
 
 vi.hoisted(() => {
   vi.stubEnv('TWITCH_BOT_USER_ID', 'bot-1');

@@ -10,7 +10,7 @@ import {
   CommandSeparator,
   CommandShortcut
 } from '../command';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 function renderCommand(onSelect = vi.fn()) {
   const result = render(

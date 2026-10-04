@@ -17,7 +17,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '../dropdown-menu';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 function renderDropdownMenu() {
   const onProfile = vi.fn();

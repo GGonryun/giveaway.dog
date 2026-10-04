@@ -10,7 +10,7 @@ import {
   formBody,
   jsonResponse,
   textResponse
-} from '@/lib/twitch/__tests__/fixtures-twitch';
+} from '@giveaway/testing-server/fixtures-twitch';
 
 vi.hoisted(() => {
   vi.stubEnv('TWITCH_CLIENT_ID', 'client-id');

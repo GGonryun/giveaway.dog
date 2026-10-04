@@ -4,11 +4,13 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { verifyDiscordRequest } from '../verify';
 import {
   DISCORD_TEST_PUBLIC_KEY,
-  buttonInteraction,
   discordRequest,
-  pingInteraction,
   signDiscordBody
-} from '../../__tests__/fixtures-discord-core';
+} from '../../__tests__/fixtures-discord-bot';
+import {
+  buttonInteraction,
+  pingInteraction
+} from '../../__tests__/fixtures-discord-model';
 
 const captureError = (promise: Promise<unknown>) =>
   promise.then(

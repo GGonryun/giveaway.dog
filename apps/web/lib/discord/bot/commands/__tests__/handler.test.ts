@@ -9,11 +9,13 @@ import { discordConnectWorkflow } from '../../../workflows/discord-connect/workf
 import { discordInteractionWorkflow } from '../../../workflows/discord-interaction/workflow';
 import {
   DISCORD_TEST_PUBLIC_KEY,
+  discordRequest
+} from '../../../__tests__/fixtures-discord-bot';
+import {
   applicationCommandInteraction,
   buttonInteraction,
-  discordRequest,
   pingInteraction
-} from '../../../__tests__/fixtures-discord-core';
+} from '../../../__tests__/fixtures-discord-model';
 
 const workflowApi = vi.hoisted(() => ({ start: vi.fn() }));
 

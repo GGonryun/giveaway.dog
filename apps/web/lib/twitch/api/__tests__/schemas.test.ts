@@ -13,7 +13,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import {
   subscriptionList,
   twitchSubscription
-} from '@/lib/twitch/__tests__/fixtures-twitch';
+} from '@giveaway/testing-server/fixtures-twitch';
 
 const textFragment = {
   type: 'text',

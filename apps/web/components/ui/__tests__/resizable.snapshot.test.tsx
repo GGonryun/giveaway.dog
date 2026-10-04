@@ -5,7 +5,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from '../resizable';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 function renderPanels(
   props: {

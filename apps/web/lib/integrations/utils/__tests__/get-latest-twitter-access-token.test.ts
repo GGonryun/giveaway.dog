@@ -12,7 +12,7 @@ import {
   captureError,
   fetchCall,
   formBody
-} from './fixtures-integrations-utils';
+} from '@giveaway/testing-server/fixtures-integrations-utils';
 
 vi.hoisted(() => {
   vi.stubEnv('TWITTER_TEAM_APP_CLIENT_ID', 'twitter-client-id');

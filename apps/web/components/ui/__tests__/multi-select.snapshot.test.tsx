@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { Mail } from 'lucide-react';
 import { describe, expect, it, vi } from 'vitest';
 import { MultiSelect, type MultiSelectOption } from '../multi-select';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 const options: MultiSelectOption[] = [
   { label: 'Instagram', value: 'instagram', group: 'Social' },

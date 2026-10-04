@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from '../sheet';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 function renderSheet(side?: 'top' | 'right' | 'bottom' | 'left') {
   return render(

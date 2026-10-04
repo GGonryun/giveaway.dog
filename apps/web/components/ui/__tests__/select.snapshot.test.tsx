@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '../select';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 function renderSelect(props: React.ComponentProps<typeof Select> = {}) {
   return render(

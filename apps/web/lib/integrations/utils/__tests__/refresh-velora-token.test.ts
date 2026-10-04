@@ -11,7 +11,7 @@ import {
   textResponse,
   captureError,
   fetchCall
-} from './fixtures-integrations-utils';
+} from '@giveaway/testing-server/fixtures-integrations-utils';
 
 const fetchMock = vi.fn<typeof fetch>();
 

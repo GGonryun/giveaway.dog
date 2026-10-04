@@ -5,7 +5,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '../collapsible';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 function renderCollapsible(
   props: React.ComponentProps<typeof Collapsible> = {}

@@ -25,7 +25,7 @@ import {
   discordMember,
   discordUser,
   pingInteraction
-} from '../../__tests__/fixtures-discord-core';
+} from '../../__tests__/fixtures-discord-model';
 
 const without = (value: object, ...keys: string[]) => {
   const copy: Record<string, unknown> = { ...value };

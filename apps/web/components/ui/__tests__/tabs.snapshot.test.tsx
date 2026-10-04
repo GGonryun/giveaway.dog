@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../tabs';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 function renderTabs(onValueChange = vi.fn()) {
   const result = render(

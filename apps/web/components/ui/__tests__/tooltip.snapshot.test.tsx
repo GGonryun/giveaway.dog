@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 function renderTooltip(
   contentProps: Partial<React.ComponentProps<typeof TooltipContent>> = {}

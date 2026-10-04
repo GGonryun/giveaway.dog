@@ -5,7 +5,7 @@ import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   eventSubRecord,
   subscriptionPayload
-} from '@/lib/twitch/__tests__/fixtures-twitch';
+} from '@giveaway/testing-server/fixtures-twitch';
 
 const revocationBody = {
   subscription: subscriptionPayload({ status: 'authorization_revoked' })

@@ -9,7 +9,7 @@ import {
 import {
   chatMessageEvent,
   subscriptionPayload
-} from '@/lib/twitch/__tests__/fixtures-twitch';
+} from '@giveaway/testing-server/fixtures-twitch';
 
 describe('twitchChatMessageEventSchema', () => {
   it('accepts an event with only the required fields', () => {

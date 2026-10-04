@@ -22,7 +22,7 @@
       "split": false
     },
     "components/sweepstakes-editor/__tests__/form-harness.tsx": {
-      "package": "@giveaway/ui-layouts",
+      "package": "@giveaway/sweepstakes-editor-setup",
       "split": false
     },
     "components/sweepstakes-editor/__tests__/stable-dom.ts": {
@@ -37,20 +37,20 @@
       "package": "@giveaway/sweepstakes-participation-core",
       "split": false
     },
-    "components/ui/__tests__/test-utils.ts": {
-      "package": "@giveaway/testing-server",
+    "lib/discord/__tests__/fixtures-discord-bot.ts": {
+      "package": "@giveaway/discord-bot",
       "split": false
     },
     "lib/discord/__tests__/fixtures-discord-core.ts": {
+      "package": "@giveaway/discord-api",
+      "split": false
+    },
+    "lib/discord/__tests__/fixtures-discord-model.ts": {
       "package": "@giveaway/discord-model",
       "split": false
     },
     "lib/discord/__tests__/fixtures-discord-procedures-workflows.ts": {
       "package": "@giveaway/discord-model",
-      "split": false
-    },
-    "lib/integrations/utils/__tests__/fixtures-integrations-utils.ts": {
-      "package": "@giveaway/testing-server",
       "split": false
     },
     "lib/participant/__tests__/fixtures-participant-referrals-automation.ts": {
@@ -70,10 +70,6 @@
       "split": false
     },
     "lib/task/validation/__tests__/fixtures-task-validation.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
-    "lib/twitch/__tests__/fixtures-twitch.ts": {
       "package": "@giveaway/testing-server",
       "split": false
     },

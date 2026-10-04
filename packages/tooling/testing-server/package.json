@@ -19,6 +19,8 @@
     }
   },
   "exports": {
+    "./fixtures-integrations-utils": "./src/fixtures-integrations-utils.ts",
+    "./fixtures-twitch": "./src/fixtures-twitch.ts",
     "./next-cache": "./src/next-cache.ts",
     "./prisma": "./src/prisma.ts",
     "./result": "./src/result.ts",

@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '../popover';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 function renderPopover(
   contentProps: React.ComponentProps<typeof PopoverContent> = {}

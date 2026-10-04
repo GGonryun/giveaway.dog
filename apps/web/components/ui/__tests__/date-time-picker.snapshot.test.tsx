@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DateTimePicker } from '../date-time-picker';
-import { withStableIds } from './test-utils';
+import { withStableIds } from '@giveaway/testing-dom/test-utils';
 
 describe('DateTimePicker', () => {
   const value = new Date(2024, 0, 15, 14, 30, 45);
