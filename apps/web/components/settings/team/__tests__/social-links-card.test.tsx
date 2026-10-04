@@ -2,14 +2,16 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { toast } from 'sonner';
-import updateTeamLinks from '@/procedures/teams/update-team-links';
+import updateTeamLinks from '@giveaway/team-server/update-team-links';
 import {
   SUPPORTED_SOCIAL_PLATFORMS,
   type SocialLink
 } from '@giveaway/team-model/social-links';
 import { SocialLinksCard } from '../social-links-card';
 
-vi.mock('@/procedures/teams/update-team-links', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-server/update-team-links', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

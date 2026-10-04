@@ -1,6 +1,9 @@
 import { ApplicationError } from '@giveaway/util-errors';
-import { VisitUrlTaskSchema, TASK_INPUT_SCHEMA } from '../schemas';
-import { ValidateTaskInput } from './types';
+import {
+  VisitUrlTaskSchema,
+  TASK_INPUT_SCHEMA
+} from '@giveaway/task-model/schemas';
+import { ValidateTaskInput } from '@giveaway/task-model/types';
 
 export const checkVisitUrl = async (
   input: ValidateTaskInput<VisitUrlTaskSchema>

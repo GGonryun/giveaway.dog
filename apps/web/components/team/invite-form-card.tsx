@@ -21,7 +21,7 @@ import {
 import { Input } from '@giveaway/ui-primitives/input';
 import { Button } from '@giveaway/ui-primitives/button';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import inviteMembers from '@/procedures/teams/invite-members';
+import inviteMembers from '@giveaway/team-invites-server/invite-members';
 import { toast } from 'sonner';
 import { Plus, Trash2, Link2 } from 'lucide-react';
 import { InviteLinkModal } from './invite-link-modal';

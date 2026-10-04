@@ -5,7 +5,7 @@ import {
   SwitchBox,
   SwitchFormHeader
 } from '@giveaway/ui-layouts/form-layout/switch-form-header';
-import { toDefaultValues } from '@/lib/task/defaults';
+import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { nanoid } from 'nanoid';
 
 export const EnableAutomaticProfileEntry = () => {

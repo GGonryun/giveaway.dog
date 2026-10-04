@@ -33,7 +33,7 @@ import {
   ToggleGroup,
   ToggleGroupItem
 } from '@giveaway/ui-primitives/toggle-group';
-import { useLogout } from '@/lib/auth/hooks/use-logout';
+import { useLogout } from '@giveaway/auth-session-ui/hooks/use-logout';
 import { useTheme } from 'next-themes';
 
 export const UserDropdownMenu: React.FC<{ user: UserSchema }> = ({ user }) => {

@@ -1,0 +1,7 @@
+{
+  "packages/account/account-email/src/email-verification.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  }
+}

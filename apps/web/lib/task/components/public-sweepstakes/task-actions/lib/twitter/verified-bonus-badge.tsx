@@ -7,7 +7,7 @@ import {
   TwitterRetweetTaskSchema,
   TwitterLikeTaskSchema,
   parseTwitterProofSchema
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 import pluralize from 'pluralize';
 import React from 'react';

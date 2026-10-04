@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { assertNever } from '@giveaway/util-errors';
 import { checkSteamWishlist } from './steam';
 import { checkDiscordJoin } from './discord';
-import { TaskSchema } from '../schemas';
+import { TaskSchema } from '@giveaway/task-model/schemas';
 import { checkTwitchFollow } from './twitch';
 import { checkSecretCode, checkSecretCodeV2 } from './secret-code';
 import {
@@ -22,7 +22,7 @@ import {
   checkBlueskyRepost
 } from './bluesky';
 import { checkVeloraConnect, checkVeloraFollow } from './velora';
-import { ValidateTaskInput } from './types';
+import { ValidateTaskInput } from '@giveaway/task-model/types';
 
 export const validateTask = async <T extends TaskSchema>(
   db: PrismaClient,

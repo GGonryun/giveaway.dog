@@ -1,7 +1,7 @@
 import { TaskActionProps } from '../../building-blocks';
 import { useState, useEffect, useRef } from 'react';
 import { WithProviderConnection } from '../provider-connection';
-import { TiktokFollowTaskSchema } from '@/lib/task/schemas';
+import { TiktokFollowTaskSchema } from '@giveaway/task-model/schemas';
 import { AlertCircle, UserPlus, ExternalLink } from 'lucide-react';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import Link from 'next/link';

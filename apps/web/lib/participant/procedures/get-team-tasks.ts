@@ -2,7 +2,7 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
-import { taskSchema, toTaskSchemaSafe } from '@/lib/task/schemas';
+import { taskSchema, toTaskSchemaSafe } from '@giveaway/task-model/schemas';
 
 export const getTeamTasks = procedure()
   .authorization({

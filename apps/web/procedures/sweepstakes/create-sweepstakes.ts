@@ -16,7 +16,7 @@ import {
   DEFAULT_SWEEPSTAKES_VISIBILITY,
   DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
 } from '@/schemas/giveaway/defaults';
-import { findUserTeam } from '@/procedures/teams/find-user-team';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { getTemplateById } from '@/lib/templates/data/static-templates';
 import {
   Prisma,

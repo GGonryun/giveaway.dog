@@ -2,7 +2,7 @@ import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-part
 
 import { TaskContent } from './task-actions/building-blocks';
 import { Button } from '@giveaway/ui-primitives/button';
-import { TaskSchema } from '../../schemas';
+import { TaskSchema } from '@giveaway/task-model/schemas';
 import { TaskActionForm } from './task-actions/form';
 import { FailureData } from '@giveaway/rpc-model/types';
 import { TaskLock } from './task-lock';

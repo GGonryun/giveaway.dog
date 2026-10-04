@@ -1,7 +1,7 @@
 import { TaskActionProps } from '../../building-blocks';
 import Link from 'next/link';
 import { WithProviderConnection } from '../provider-connection';
-import { TwitterConnectTaskSchema } from '@/lib/task/schemas';
+import { TwitterConnectTaskSchema } from '@giveaway/task-model/schemas';
 
 export const TwitterConnectTaskActionForm: React.FC<
   TaskActionProps<TwitterConnectTaskSchema>

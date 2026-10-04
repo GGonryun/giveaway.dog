@@ -2,12 +2,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
 import { toast } from 'sonner';
-import getUserTeams from '@/procedures/teams/get-user-teams';
+import getUserTeams from '@giveaway/team-server/get-user-teams';
 import type { DetailedUserTeam } from '@giveaway/team-model/teams';
 import type { Result } from '@giveaway/rpc-model/types';
 import { useUserTeams } from '../use-user-teams';
 
-vi.mock('@/procedures/teams/get-user-teams', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-server/get-user-teams', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

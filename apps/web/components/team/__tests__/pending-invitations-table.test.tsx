@@ -3,10 +3,12 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole } from '@prisma/client';
 import { toast } from 'sonner';
-import revokeInvitation from '@/procedures/teams/revoke-invitation';
+import revokeInvitation from '@giveaway/team-invites-server/revoke-invitation';
 import { PendingInvitationsTable } from '../pending-invitations-table';
 
-vi.mock('@/procedures/teams/revoke-invitation', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-invites-server/revoke-invitation', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

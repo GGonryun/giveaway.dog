@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { getTemplatePlatforms } from '../get-template-platforms';
 import { getTemplateById } from '../../data/static-templates';
 import type { TemplateDetailsSchema } from '../../schemas/template';
-import { TASK_PLATFORM } from '@/lib/task/schemas';
+import { TASK_PLATFORM } from '@giveaway/task-model/schemas';
 
 const withTasks = (...types: string[]) =>
   ({

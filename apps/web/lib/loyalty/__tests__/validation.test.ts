@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { isLoyal } from '../validation';
-import type { BonusLoyaltyTaskSchema } from '../../task/schemas';
+import type { BonusLoyaltyTaskSchema } from '@giveaway/task-model/schemas';
 
 const loyaltyTask = (loyaltyRequired: number): BonusLoyaltyTaskSchema => ({
   id: 'task-1',

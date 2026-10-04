@@ -1,5 +1,5 @@
 import db from '@giveaway/db-client/prisma';
-import { toTaskSchema } from '@/lib/task/schemas';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
 
 export type FetchTaskResult =
   | { status: 'error'; content: string }

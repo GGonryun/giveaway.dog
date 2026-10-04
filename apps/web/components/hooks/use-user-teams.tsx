@@ -1,6 +1,6 @@
 'use client';
 
-import getUserTeams from '@/procedures/teams/get-user-teams';
+import getUserTeams from '@giveaway/team-server/get-user-teams';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { useEffect, useState } from 'react';

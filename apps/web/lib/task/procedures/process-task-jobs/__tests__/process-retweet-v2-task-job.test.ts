@@ -4,13 +4,13 @@ import type { User } from 'scrapebadger';
 import { processRetweetV2TaskJob } from '../process-retweet-v2-task-job';
 import { ApplicationError } from '@giveaway/util-errors';
 import type { Prisma } from '@prisma/client';
-import type { TwitterRetweetV2TaskSchema } from '@/lib/task/schemas';
+import type { TwitterRetweetV2TaskSchema } from '@giveaway/task-model/schemas';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   buildTaskJob,
   buildTiming,
   taskOf
-} from '@/lib/task/procedures/__tests__/fixtures-task-procedures-verification';
+} from '@giveaway/task-model/testing/fixtures-task-procedures-verification';
 
 const m = vi.hoisted(() => ({
   getRetweetersUntilUser: vi.fn(),

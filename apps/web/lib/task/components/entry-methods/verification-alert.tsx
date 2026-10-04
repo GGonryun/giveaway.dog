@@ -4,7 +4,7 @@ import {
   AlertTitle
 } from '@giveaway/ui-primitives/alert';
 import { ShieldOffIcon } from 'lucide-react';
-import { TaskType } from '../../schemas';
+import { TaskType } from '@giveaway/task-model/schemas';
 
 const VERIFICATION_WARNINGS: Record<
   TaskType,

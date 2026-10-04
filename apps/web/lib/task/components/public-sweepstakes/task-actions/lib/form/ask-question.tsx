@@ -5,7 +5,7 @@ import {
   TaskControls
 } from '../../building-blocks';
 import { useState } from 'react';
-import { AskQuestionTaskSchema, TaskInput } from '@/lib/task/schemas';
+import { AskQuestionTaskSchema, TaskInput } from '@giveaway/task-model/schemas';
 import { Textarea } from '@giveaway/ui-primitives/textarea';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import {

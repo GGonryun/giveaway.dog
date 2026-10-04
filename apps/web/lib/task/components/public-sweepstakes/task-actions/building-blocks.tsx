@@ -9,7 +9,7 @@ import { Failure } from '@giveaway/rpc-model/types';
 import { cn } from '@giveaway/ui-utils/utils';
 import { CheckIcon, LucideIcon, SaveIcon } from 'lucide-react';
 import { useMemo } from 'react';
-import { TaskSchema } from '../../../schemas';
+import { TaskSchema } from '@giveaway/task-model/schemas';
 import { useTaskTheme } from '../../theme';
 import { Separator } from '@giveaway/ui-primitives/separator';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';

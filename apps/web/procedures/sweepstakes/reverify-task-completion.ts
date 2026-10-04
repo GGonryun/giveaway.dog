@@ -6,8 +6,8 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { CompletionStatus, TeamTier } from '@prisma/client';
 import { findUserSweepstakes, findUserSweepstakesQuery } from './shared';
 import { validateTask } from '@/lib/task/validation/integrations';
-import { supportsAutomatedReverification } from '@/lib/task/verification/utils';
-import { toTaskSchema } from '@/lib/task/schemas';
+import { supportsAutomatedReverification } from '@giveaway/task-model/verification/utils';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
 import { TeamPermission } from '@giveaway/team-permissions';
 
 export const reverifyTaskCompletion = procedure()

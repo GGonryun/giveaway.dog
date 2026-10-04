@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
-import getUserTeams from '@/procedures/teams/get-user-teams';
-import selectTeam from '@/procedures/teams/select-team';
+import getUserTeams from '@giveaway/team-server/get-user-teams';
+import selectTeam from '@giveaway/team-server/select-team';
 import type { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { SelectTeamForm } from '../select-team-form';
 
@@ -16,8 +16,8 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => navigation.searchParams
 }));
 
-vi.mock('@/procedures/teams/get-user-teams', () => ({ default: vi.fn() }));
-vi.mock('@/procedures/teams/select-team', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-server/get-user-teams', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-server/select-team', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

@@ -6,7 +6,7 @@ import {
   SecretCodeV2TaskSchema,
   TaskSchema,
   TASK_IS_DEPRECATED
-} from '../schemas';
+} from '@giveaway/task-model/schemas';
 import { assertNever } from '@giveaway/util-errors';
 import {
   BaseGiveawayFormSchema,

@@ -27,7 +27,7 @@ import {
   TASK_DUPLICATE_RESTRICTION,
   TaskType,
   TASK_IS_DEPRECATED
-} from '../../schemas';
+} from '@giveaway/task-model/schemas';
 import { toTaskTheme } from '../theme';
 import { EntryMethodBadge } from '../entry-methods/entry-method-badge';
 

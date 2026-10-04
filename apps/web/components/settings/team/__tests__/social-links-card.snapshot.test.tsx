@@ -1,10 +1,12 @@
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import updateTeamLinks from '@/procedures/teams/update-team-links';
+import updateTeamLinks from '@giveaway/team-server/update-team-links';
 import { type SocialLink } from '@giveaway/team-model/social-links';
 import { SocialLinksCard } from '../social-links-card';
 
-vi.mock('@/procedures/teams/update-team-links', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-server/update-team-links', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

@@ -1,5 +1,5 @@
 import { assertNever } from '@giveaway/util-errors';
-import { TASK_INPUT_SCHEMA, TaskSchema } from '../schemas';
+import { TASK_INPUT_SCHEMA, TaskSchema } from '@giveaway/task-model/schemas';
 import { Prisma } from '@prisma/client';
 
 export const saveTaskProof = (task: TaskSchema, data: unknown) => {

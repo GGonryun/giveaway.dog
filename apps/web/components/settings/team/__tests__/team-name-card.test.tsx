@@ -2,11 +2,11 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { toast } from 'sonner';
-import updateTeamName from '@/procedures/teams/update-team-name';
+import updateTeamName from '@giveaway/team-server/update-team-name';
 import type { Result } from '@giveaway/rpc-model/types';
 import { TeamNameCard } from '../team-name-card';
 
-vi.mock('@/procedures/teams/update-team-name', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-server/update-team-name', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

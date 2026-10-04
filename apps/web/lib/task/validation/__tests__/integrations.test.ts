@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { validateTask } from '../integrations';
-import { TaskSchema, TaskType } from '../../schemas';
+import { TaskSchema, TaskType } from '@giveaway/task-model/schemas';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BASE_TASK,

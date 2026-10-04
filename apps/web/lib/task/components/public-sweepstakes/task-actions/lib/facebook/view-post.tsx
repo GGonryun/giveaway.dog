@@ -3,7 +3,7 @@ import {
   TaskContent,
   TaskControls
 } from '../../building-blocks';
-import { FacebookViewPostTaskSchema } from '@/lib/task/schemas';
+import { FacebookViewPostTaskSchema } from '@giveaway/task-model/schemas';
 import { SocialFacebookIcon } from '@giveaway/integration-icons/facebook-icon';
 import { FacebookDisclaimer } from './disclaimer';
 import { Separator } from '@giveaway/ui-primitives/separator';

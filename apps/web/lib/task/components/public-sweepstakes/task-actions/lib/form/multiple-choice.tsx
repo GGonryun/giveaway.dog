@@ -5,7 +5,10 @@ import {
   TaskControls
 } from '../../building-blocks';
 import { useState } from 'react';
-import { MultipleChoiceTaskSchema, TaskInput } from '@/lib/task/schemas';
+import {
+  MultipleChoiceTaskSchema,
+  TaskInput
+} from '@giveaway/task-model/schemas';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import {
   Alert,

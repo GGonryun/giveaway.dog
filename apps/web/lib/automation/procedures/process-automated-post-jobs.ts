@@ -14,9 +14,9 @@ import {
   PostToBlueskyJobSchema,
   toAutomatedPostJobSchema
 } from '../schemas';
-import { createTweet } from '@/lib/integrations/procedures/create-tweet';
+import { createTweet } from '@giveaway/x-api/create-tweet';
 import { createSkeet } from '@giveaway/bluesky-api/create-skeet';
-import { toDefaultValues } from '@/lib/task/defaults';
+import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { nanoid } from 'nanoid';
 import {
   StorableTaskSchema,

@@ -10,7 +10,7 @@ import {
 } from '@giveaway/ui-primitives/form';
 import { Input } from '@giveaway/ui-primitives/input';
 import { assertNever } from '@giveaway/util-errors';
-import { TaskType } from '../../schemas';
+import { TaskType } from '@giveaway/task-model/schemas';
 
 export const BaseSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   switch (type) {

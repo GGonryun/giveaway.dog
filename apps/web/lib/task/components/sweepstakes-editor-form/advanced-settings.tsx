@@ -27,7 +27,7 @@ import { Label } from '@giveaway/ui-primitives/label';
 import { SecretCodeCaseSensitiveFormField } from './additional-settings/lib/secret-code-case-sensitive';
 import { TwitterVerifiedBonusField } from './additional-settings/lib/twitter-verified-bonus';
 import { RequireProofField } from './additional-settings/lib/require-proof';
-import { TaskType } from '../../schemas';
+import { TaskType } from '@giveaway/task-model/schemas';
 
 export const AdvancedSettings: React.FC<{ type: TaskType }> = ({ type }) => {
   const content = useCallback(() => {

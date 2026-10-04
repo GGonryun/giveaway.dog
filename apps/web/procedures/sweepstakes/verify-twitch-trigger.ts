@@ -2,8 +2,8 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
-import { toTaskSchema } from '@/lib/task/schemas';
-import { findUserTeam } from '@/procedures/teams/find-user-team';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@prisma/client';
 

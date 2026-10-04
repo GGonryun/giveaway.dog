@@ -1,11 +1,11 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import { PrismaClient } from '@prisma/client';
-import { SteamWishlistTaskSchema } from '../schemas';
+import { SteamWishlistTaskSchema } from '@giveaway/task-model/schemas';
 import {
   GAME_NOT_IN_WISHLIST_ERROR,
   PRIVATE_STEAM_WISHLIST_ERROR
-} from './steam-errors';
-import { ValidateTaskInput } from './types';
+} from '@giveaway/task-model/steam-errors';
+import { ValidateTaskInput } from '@giveaway/task-model/types';
 
 const checkSteamGameOwnership = async (
   steamId: string,

@@ -4,9 +4,9 @@ import {
   BonusLimitedTaskSchema,
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema
-} from '../schemas';
+} from '@giveaway/task-model/schemas';
 import { PrismaClient } from '@prisma/client';
-import { ValidateTaskInput } from './types';
+import { ValidateTaskInput } from '@giveaway/task-model/types';
 import { getLoyalty } from '@/lib/loyalty/db';
 import { isLoyal } from '@/lib/loyalty/validation';
 import {

@@ -1,0 +1,60 @@
+{
+  "name": "@giveaway/audience-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:audience"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/audience/audience-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./find-user": "./src/find-user.ts",
+    "./get-user-signals": "./src/get-user-signals.ts",
+    "./track-user": "./src/track-user.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/account-server": "workspace:*",
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/request-context-model": "workspace:*",
+    "@giveaway/request-context-server": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/scoring-model": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "lodash": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

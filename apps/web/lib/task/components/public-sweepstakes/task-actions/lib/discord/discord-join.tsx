@@ -7,7 +7,7 @@ import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 
 import { ErrorDisplay } from '../error-display';
-import { DiscordJoinTaskSchema } from '@/lib/task/schemas';
+import { DiscordJoinTaskSchema } from '@giveaway/task-model/schemas';
 
 export const DiscordJoinTaskActionForm: React.FC<
   TaskActionProps<DiscordJoinTaskSchema>

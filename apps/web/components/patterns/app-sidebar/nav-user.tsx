@@ -37,8 +37,8 @@ import {
 } from '@giveaway/ui-primitives/sidebar';
 import { useUser } from '@giveaway/account-context/user-provider';
 import Link from 'next/link';
-import { useAccountPage } from '@/components/account/use-account-page';
-import { useLogout } from '@/lib/auth/hooks/use-logout';
+import { useAccountPage } from '@giveaway/account-settings/use-account-page';
+import { useLogout } from '@giveaway/auth-session-ui/hooks/use-logout';
 import { useTheme } from 'next-themes';
 
 export const NavUser = () => {

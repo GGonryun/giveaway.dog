@@ -11,7 +11,7 @@ import {
   BonusLimitedTaskSchema,
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema
-} from '../../schemas';
+} from '@giveaway/task-model/schemas';
 import { USER_SCHEMA_SELECT_QUERY } from '@giveaway/user-model/user';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import {

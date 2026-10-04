@@ -3,7 +3,7 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
-import { toTaskSchema } from '../schemas';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
 import { saveTaskProof } from '../validation/proof';
 import { validateSweepstakesState } from '../validation/task-state';
 

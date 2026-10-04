@@ -1,4 +1,4 @@
-import { BlueskyRepostImportTaskSchema } from '@/lib/task/schemas';
+import { BlueskyRepostImportTaskSchema } from '@giveaway/task-model/schemas';
 import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
 import { getBlueskyReposts } from '@giveaway/bluesky-api/get-bluesky-reposts';
 import { processBlueskyTaskJob } from './process-bluesky-task-job';

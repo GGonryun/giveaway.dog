@@ -1,5 +1,5 @@
 import type { Prisma, TeamRole, TeamTier, UserSource } from '@prisma/client';
-import type { EligibleTaskCompletion } from '@/lib/task/queries';
+import type { EligibleTaskCompletion } from '@giveaway/task-model/queries';
 import type { ExpandedEligibleTaskCompletion } from '../completions';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import {

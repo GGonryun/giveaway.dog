@@ -4,12 +4,12 @@ import { DEFAULT_MINIMUM_AGE_FIELD } from '@giveaway/custom-fields-model/default
 import type { ProviderSchema } from '@giveaway/integration-model/providers';
 import type { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
-import type { TaskCompletionSchema } from '@/lib/task/completions';
+import type { TaskCompletionSchema } from '@giveaway/task-model/completions';
 import type {
   BonusTaskSchema,
   TaskSchema,
   UserEntriesSchema
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import {
   DEFAULT_CLAIM_DEADLINE_DAYS,
   DEFAULT_DESIGN_DATA,

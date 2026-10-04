@@ -1,7 +1,7 @@
 import { TaskActionProps } from '../../building-blocks';
 import Link from 'next/link';
 import { WithProviderConnection } from '../provider-connection';
-import { LinkedInConnectTaskSchema } from '@/lib/task/schemas';
+import { LinkedInConnectTaskSchema } from '@giveaway/task-model/schemas';
 
 export const LinkedInConnectTaskActionForm: React.FC<
   TaskActionProps<LinkedInConnectTaskSchema>

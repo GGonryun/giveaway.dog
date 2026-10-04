@@ -46,7 +46,7 @@ import { UserSourceBadge } from '@giveaway/user-source-ui/user-source-badge';
 import { UserSourceCaption } from '@giveaway/user-source-ui/user-source-caption';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
-import { toMostRecentCompletion } from '@/lib/task/completions';
+import { toMostRecentCompletion } from '@giveaway/task-model/completions';
 import { toEngagementTheme } from '@/lib/participant/util';
 import {
   toQualityType,

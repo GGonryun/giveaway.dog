@@ -1,5 +1,5 @@
 import { Button } from '@giveaway/ui-primitives/button';
-import { TaskSchema } from '../../schemas';
+import { TaskSchema } from '@giveaway/task-model/schemas';
 import { useTaskTheme } from '../theme';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { ChevronDownIcon } from 'lucide-react';

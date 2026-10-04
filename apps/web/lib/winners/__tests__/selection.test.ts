@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { toUniquePrizeDraw, toDuplicatePrizeDraw } from '../selection';
 import type { ExpandedEligibleTaskCompletion } from '../completions';
 import type { PrizeSlot, DrawInfo } from '@giveaway/winners-model/slots';
-import type { EligibleTaskCompletion } from '@/lib/task/queries';
+import type { EligibleTaskCompletion } from '@giveaway/task-model/queries';
 import type { Prisma } from '@prisma/client';
 import { buildAllocation } from '@giveaway/winners-model/testing/fixtures-winners-model';
 import { buildExpandedCompletion } from './fixtures-sweepstakes-winners-email';

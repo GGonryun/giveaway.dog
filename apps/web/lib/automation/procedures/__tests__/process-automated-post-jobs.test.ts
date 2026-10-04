@@ -13,7 +13,7 @@ const mocks = vi.hoisted(() => ({
   nanoid: vi.fn()
 }));
 
-vi.mock('@/lib/integrations/procedures/create-tweet', () => ({
+vi.mock('@giveaway/x-api/create-tweet', () => ({
   createTweet: mocks.createTweet
 }));
 

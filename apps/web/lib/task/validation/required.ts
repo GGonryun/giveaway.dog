@@ -1,6 +1,6 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import { Prisma } from '@prisma/client';
-import { toTaskSchema } from '../schemas';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
 
 export const validateRequiredTasks = async ({
   taskId,

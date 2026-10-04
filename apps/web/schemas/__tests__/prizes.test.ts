@@ -5,7 +5,7 @@ import {
   USER_SCHEMA_SELECT_QUERY,
   toUserSchema
 } from '@giveaway/user-model/user';
-import { TASK_COMPLETIONS_SELECT_QUERY } from '@/lib/task/completions';
+import { TASK_COMPLETIONS_SELECT_QUERY } from '@giveaway/task-model/completions';
 import { ApplicationError } from '@giveaway/util-errors';
 import {
   buildUserPayload,

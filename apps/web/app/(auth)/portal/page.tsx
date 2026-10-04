@@ -1,7 +1,7 @@
 import { AuthPortal, PortalLayout } from './auth-portal';
 import { redirect } from 'next/navigation';
 import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
-import trackUser from '@/procedures/user/track-user';
+import trackUser from '@giveaway/audience-server/track-user';
 import { Metadata } from 'next';
 import { UserEventType } from '@prisma/client';
 import { auth } from '@giveaway/auth-server/config';

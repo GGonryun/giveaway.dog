@@ -2,15 +2,15 @@ import { PrismaClient, TeamTier } from '@prisma/client';
 import {
   ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY,
   EligibleTaskCompletion
-} from '../task/queries';
+} from '@giveaway/task-model/queries';
 import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
 import { User } from 'next-auth';
 import { findUserSweepstakes } from '@/procedures/sweepstakes/shared';
 import { ApplicationError } from '@giveaway/util-errors';
 
 import { SweepstakesCriteriaSchema } from '@giveaway/winners-model/criteria';
-import { toCompletionValue } from '../task/entries';
-import { toTaskSchema } from '../task/schemas';
+import { toCompletionValue } from '@giveaway/task-model/entries';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
 import { TeamPermission } from '@giveaway/team-permissions';
 
 export type ExpandedEligibleTaskCompletion = EligibleTaskCompletion & {

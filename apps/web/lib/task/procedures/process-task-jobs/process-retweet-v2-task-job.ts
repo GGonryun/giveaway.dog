@@ -5,7 +5,7 @@ import {
   TASK_JOB_DATA_SCHEMA,
   toTwitterProofSchema,
   TwitterRetweetV2TaskSchema
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import { PrismaClient } from '@prisma/client';
 import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
 import { datetime } from '@giveaway/util-time/date';

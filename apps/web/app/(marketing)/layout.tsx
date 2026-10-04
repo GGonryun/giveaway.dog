@@ -1,4 +1,4 @@
-import findUser from '@/procedures/user/find-user';
+import findUser from '@giveaway/audience-server/find-user';
 import { Footer } from '@giveaway/shell-footer/footer';
 import { NavigationBar } from '@/components/patterns/navigation-bar';
 

@@ -19,7 +19,7 @@ import { MembersTable } from '@/components/team/members-table';
 import { PendingInvitationsTable } from '@/components/team/pending-invitations-table';
 import { TeamInviteLinkProvider } from '@/lib/invites/context/team-invite-link-context';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import regenerateInviteLink from '@/procedures/teams/regenerate-invite-link';
+import regenerateInviteLink from '@giveaway/team-invites-server/regenerate-invite-link';
 import { toast } from 'sonner';
 import { TeamRole } from '@prisma/client';
 import { SettingsCard } from '@giveaway/ui-layouts/settings-card';

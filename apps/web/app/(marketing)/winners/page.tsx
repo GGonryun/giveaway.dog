@@ -1,4 +1,4 @@
-import getWinnersLeaderboard from '@/procedures/browse/get-winners-leaderboard';
+import getWinnersLeaderboard from '@giveaway/leaderboard-server/get-winners-leaderboard';
 import { WINNERS_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { Metadata } from 'next';
 import { Suspense } from 'react';

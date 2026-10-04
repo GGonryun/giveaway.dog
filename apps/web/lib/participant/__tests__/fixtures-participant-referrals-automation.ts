@@ -11,7 +11,7 @@ import type {
 import type {
   TASK_COMPLETIONS_SELECT_QUERY,
   TaskCompletionSchema
-} from '@/lib/task/completions';
+} from '@giveaway/task-model/completions';
 import type { SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY } from '../db';
 import type { SweepstakesParticipantSchema } from '../schemas';
 

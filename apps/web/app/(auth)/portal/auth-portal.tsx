@@ -15,7 +15,7 @@ import createProfile from '@giveaway/account-server/create-profile';
 import verifyEmail from '@giveaway/account-server/verify-email';
 import { toast } from 'sonner';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import { useAccountPage } from '@/components/account/use-account-page';
+import { useAccountPage } from '@giveaway/account-settings/use-account-page';
 import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
 import { CheckCircle } from 'lucide-react';
 import { UserAccountType } from '@prisma/client';

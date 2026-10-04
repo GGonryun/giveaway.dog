@@ -3,7 +3,7 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { TeamPermission } from '@giveaway/team-permissions';
-import { findUserTeam } from '@/procedures/teams/find-user-team';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import {
   IntegrationProvider,
   IntegrationStatus,

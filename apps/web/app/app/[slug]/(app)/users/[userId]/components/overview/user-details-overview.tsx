@@ -1,11 +1,11 @@
 'use client';
 
-import { toMostRecentCompletion } from '@/lib/task/completions';
+import { toMostRecentCompletion } from '@giveaway/task-model/completions';
 import { ProfileInformationCard } from './profile-information-card';
 import { UserProviders } from '@giveaway/integration-ui/user-providers';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
-import type { UserSignals } from '@/procedures/user/get-user-signals';
+import type { UserSignals } from '@giveaway/audience-server/get-user-signals';
 import { AccountSignalsCard } from './account-signals-card';
 
 export const UserDetailsOverview: React.FC<{

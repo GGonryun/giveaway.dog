@@ -1,8 +1,11 @@
 'use server';
 
 import { IdentityProvider, PrismaClient } from '@prisma/client';
-import { VeloraConnectTaskSchema, VeloraFollowTaskSchema } from '../schemas';
-import { ValidateTaskInput } from './types';
+import {
+  VeloraConnectTaskSchema,
+  VeloraFollowTaskSchema
+} from '@giveaway/task-model/schemas';
+import { ValidateTaskInput } from '@giveaway/task-model/types';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@giveaway/integration-model/providers';
 import { ApplicationError } from '@giveaway/util-errors';
 import { refreshVeloraToken } from '@giveaway/velora-api/refresh-velora-token';

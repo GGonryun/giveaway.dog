@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useUser } from '@giveaway/account-context/user-provider';
-import { EmailVerification } from '../auth/email-verification';
+import { EmailVerification } from '@giveaway/account-email/email-verification';
 import { SocialProviders } from '@/lib/auth/components/social-providers';
 import { UpdateProfileImage } from './update-profile-image';
 import { UpdateDisplayName } from './update-display-name';

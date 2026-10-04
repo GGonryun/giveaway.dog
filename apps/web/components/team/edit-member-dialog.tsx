@@ -18,7 +18,7 @@ import {
 import { Button } from '@giveaway/ui-primitives/button';
 import { Label } from '@giveaway/ui-primitives/label';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import updateMemberRole from '@/procedures/teams/update-member-role';
+import updateMemberRole from '@giveaway/team-members-server/update-member-role';
 import { toast } from 'sonner';
 import { TeamRole } from '@prisma/client';
 import { useState } from 'react';

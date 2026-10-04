@@ -8,7 +8,7 @@ import {
   SecretCodeTaskSchema,
   SecretCodeV2TaskSchema,
   TaskInput
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import { Input } from '@giveaway/ui-primitives/input';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import {

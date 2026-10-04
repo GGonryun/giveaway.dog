@@ -45,20 +45,8 @@
       "package": "@giveaway/x-picker-server",
       "split": false
     },
-    "lib/task/__tests__/fixtures-task-schemas.ts": {
-      "package": "@giveaway/task-model",
-      "split": false
-    },
-    "lib/task/procedures/__tests__/fixtures-task-procedures-verification.ts": {
-      "package": "@giveaway/task-model",
-      "split": false
-    },
     "lib/winners/__tests__/fixtures-sweepstakes-winners-email.ts": {
       "package": "@giveaway/winners-server",
-      "split": false
-    },
-    "procedures/teams/__tests__/fixtures-procedures-teams.ts": {
-      "package": "@giveaway/team-testing",
       "split": false
     }
   },
@@ -281,7 +269,7 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/auth/email-verification.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-server",
         "@giveaway/rpc-client",
@@ -386,14 +374,10 @@
       "layer": 5,
       "sourceFiles": 4,
       "testFiles": 7,
-      "sources": [
-        "components/account/account-tabs.tsx",
-        "components/account/danger-zone.tsx",
-        "components/account/feature-settings.tsx",
-        "components/account/use-account-page.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-server",
+        "@giveaway/db-model",
         "@giveaway/feature-flags",
         "@giveaway/rpc-client",
         "@giveaway/ui-layouts",
@@ -401,14 +385,7 @@
         "@giveaway/user-model",
         "@giveaway/util-types"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "next",
-        "next-auth",
-        "react",
-        "sonner"
-      ]
+      "npm": ["lucide-react", "next", "next-auth", "react", "sonner"]
     },
     {
       "name": "@giveaway/onboarding",
@@ -467,15 +444,12 @@
       "layer": 5,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "procedures/user/find-user.ts",
-        "procedures/user/get-user-signals.ts",
-        "procedures/user/track-user.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-server",
         "@giveaway/app-config",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/request-context-model",
         "@giveaway/request-context-server",
         "@giveaway/rpc-server",
@@ -483,7 +457,7 @@
         "@giveaway/user-model",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "lodash", "next", "zod"]
+      "npm": ["lodash", "next", "zod"]
     },
     {
       "name": "@giveaway/audience-table",
@@ -695,11 +669,7 @@
       "layer": 5,
       "sourceFiles": 3,
       "testFiles": 1,
-      "sources": [
-        "components/context/auth-session-provider.tsx",
-        "lib/auth/components/logout-button.tsx",
-        "lib/auth/hooks/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-actions",
         "@giveaway/rpc-client",
@@ -2309,21 +2279,16 @@
       "layer": 4,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": [
-        "lib/integrations/procedures/create-tweet.ts",
-        "lib/integrations/procedures/get-twitter-oembed.ts",
-        "lib/integrations/procedures/upload-image.ts",
-        "lib/integrations/utils/get-latest-twitter-access-token.ts",
-        "lib/integrations/utils/twitter-api-request.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
         "@giveaway/util-errors",
         "@giveaway/x-model"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/x-connect",
@@ -4623,27 +4588,18 @@
       "layer": 4,
       "sourceFiles": 10,
       "testFiles": 11,
-      "sources": [
-        "lib/task/completions.ts",
-        "lib/task/defaults.ts",
-        "lib/task/entries.ts",
-        "lib/task/queries.ts",
-        "lib/task/schemas.ts",
-        "lib/task/validation/status.ts",
-        "lib/task/validation/steam-errors.ts",
-        "lib/task/validation/types.ts",
-        "lib/task/verification/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/bluesky-model",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/user-model",
         "@giveaway/util-collections",
         "@giveaway/util-errors",
         "@giveaway/x-model"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/task-ui",
@@ -4778,23 +4734,16 @@
       "layer": 4,
       "sourceFiles": 7,
       "testFiles": 7,
-      "sources": [
-        "procedures/teams/accept-invite.ts",
-        "procedures/teams/get-invite-details.ts",
-        "procedures/teams/get-invite-link.ts",
-        "procedures/teams/get-team-invitations.ts",
-        "procedures/teams/invite-members.ts",
-        "procedures/teams/regenerate-invite-link.ts",
-        "procedures/teams/revoke-invitation.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/email",
         "@giveaway/rpc-server",
         "@giveaway/team-permissions",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/team-members-server",
@@ -4804,17 +4753,14 @@
       "layer": 4,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "procedures/teams/get-team-members.ts",
-        "procedures/teams/remove-member.ts",
-        "procedures/teams/update-member-role.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/team-permissions",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/team-members-ui",
@@ -4922,25 +4868,17 @@
       "layer": 4,
       "sourceFiles": 8,
       "testFiles": 8,
-      "sources": [
-        "procedures/teams/create-team.ts",
-        "procedures/teams/find-user-team.ts",
-        "procedures/teams/get-user-team.ts",
-        "procedures/teams/get-user-teams.ts",
-        "procedures/teams/select-team.ts",
-        "procedures/teams/update-team-links.ts",
-        "procedures/teams/update-team-logo.ts",
-        "procedures/teams/update-team-name.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/team-model",
         "@giveaway/team-permissions",
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "next", "zod"]
+      "npm": ["next", "zod"]
     },
     {
       "name": "@giveaway/team-settings-integrations",
@@ -5529,7 +5467,7 @@
       "layer": 4,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["procedures/browse/get-winners-leaderboard.ts"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/leaderboard-model",
         "@giveaway/rpc-server",

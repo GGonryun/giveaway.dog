@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { TemplateDetailsSchema } from '../schemas/template';
-import { toDefaultValues } from '@/lib/task/defaults';
+import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { Nil } from '@giveaway/util-types/types';
 import {
   DEFAULT_ALLOWED_IDENTITIES,

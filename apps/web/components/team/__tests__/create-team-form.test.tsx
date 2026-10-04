@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { toast } from 'sonner';
-import createTeam from '@/procedures/teams/create-team';
+import createTeam from '@giveaway/team-server/create-team';
 import type { Result } from '@giveaway/rpc-model/types';
 import { CreateTeamForm } from '../create-team-form';
 
@@ -16,7 +16,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => navigation.searchParams
 }));
 
-vi.mock('@/procedures/teams/create-team', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-server/create-team', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

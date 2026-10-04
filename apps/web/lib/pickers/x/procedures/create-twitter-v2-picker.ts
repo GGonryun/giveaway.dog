@@ -2,7 +2,7 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
-import { findUserTeam } from '@/procedures/teams/find-user-team';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { nanoid } from 'nanoid';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { LastPostedType, PickerStatus, TeamTier } from '@prisma/client';

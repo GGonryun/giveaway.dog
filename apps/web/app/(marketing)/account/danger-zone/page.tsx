@@ -1,4 +1,4 @@
-import { DangerZone } from '@/components/account/danger-zone';
+import { DangerZone } from '@giveaway/account-settings/danger-zone';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';

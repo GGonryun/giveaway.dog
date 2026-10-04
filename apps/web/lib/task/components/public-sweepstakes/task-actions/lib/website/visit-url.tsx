@@ -10,7 +10,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { ExternalLinkIcon } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
-import { VisitUrlTaskSchema } from '@/lib/task/schemas';
+import { VisitUrlTaskSchema } from '@giveaway/task-model/schemas';
 import { useAfterVisitBehavior } from '../use-after-visit-behavior';
 
 export const VisitUrlTaskActionForm: React.FC<

@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import createTeam from '@/procedures/teams/create-team';
+import createTeam from '@giveaway/team-server/create-team';
 import { CreateTeamForm } from '../create-team-form';
 
 const navigation = vi.hoisted(() => ({
@@ -13,7 +13,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => navigation.searchParams
 }));
 
-vi.mock('@/procedures/teams/create-team', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-server/create-team', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

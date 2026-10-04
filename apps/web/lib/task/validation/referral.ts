@@ -6,7 +6,7 @@ import {
 } from '@giveaway/referrals-model/cookies';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { cookies } from 'next/headers';
-import { toTaskSchema } from '../schemas';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
 
 export type ValidateReferralArgs = {
   participant: Prisma.SweepstakesParticipantGetPayload<{}>;

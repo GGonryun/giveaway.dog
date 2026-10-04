@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createJobsForTask } from '../jobs';
-import type { TaskType } from '../schemas';
-import { TASK_TYPES, VALID_TASKS } from './fixtures-task-schemas';
+import type { TaskType } from '@giveaway/task-model/schemas';
+import {
+  TASK_TYPES,
+  VALID_TASKS
+} from '@giveaway/task-model/testing/fixtures-task-schemas';
 
 type JobTask = Parameters<typeof createJobsForTask>[0];
 

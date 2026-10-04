@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import z from 'zod';
 import { refineSweepstakeTasks } from '../form';
-import { TaskSchema, TaskType } from '../../schemas';
+import { TaskSchema, TaskType } from '@giveaway/task-model/schemas';
 import type { BaseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { BASE_TASK } from '@giveaway/testing-server/fixtures-task-validation';
 

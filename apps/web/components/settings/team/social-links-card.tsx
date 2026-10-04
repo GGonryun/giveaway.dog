@@ -30,7 +30,7 @@ import {
   socialLinksSchema
 } from '@giveaway/team-model/social-links';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import updateTeamLinks from '@/procedures/teams/update-team-links';
+import updateTeamLinks from '@giveaway/team-server/update-team-links';
 import { toast } from 'sonner';
 
 const formSchema = z.object({

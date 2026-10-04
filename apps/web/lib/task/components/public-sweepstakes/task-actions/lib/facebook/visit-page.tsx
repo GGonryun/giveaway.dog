@@ -4,7 +4,7 @@ import {
   TaskControls
 } from '../../building-blocks';
 import { useState } from 'react';
-import { FacebookVisitPageTaskSchema } from '@/lib/task/schemas';
+import { FacebookVisitPageTaskSchema } from '@giveaway/task-model/schemas';
 
 import { SocialFacebookIcon } from '@giveaway/integration-icons/facebook-icon';
 import { cn } from '@giveaway/ui-utils/utils';

@@ -3,7 +3,7 @@ import {
   TASK_JOB_DATA_SCHEMA,
   BlueskyLikeImportTaskSchema,
   BlueskyRepostImportTaskSchema
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import { PrismaClient, TaskJobStatus } from '@prisma/client';
 import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
 import { datetime } from '@giveaway/util-time/date';

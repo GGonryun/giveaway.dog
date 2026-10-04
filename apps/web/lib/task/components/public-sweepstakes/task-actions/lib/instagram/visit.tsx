@@ -4,7 +4,7 @@ import {
   TaskControls
 } from '../../building-blocks';
 import { useState, useEffect } from 'react';
-import { InstagramVisitTaskSchema } from '@/lib/task/schemas';
+import { InstagramVisitTaskSchema } from '@giveaway/task-model/schemas';
 import { SocialInstagramIcon } from '@giveaway/integration-icons/instagram';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '@/lib/task/components/theme';

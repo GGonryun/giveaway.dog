@@ -1,8 +1,8 @@
 import { UserProvider } from '@giveaway/account-context/user-provider';
 import { redirect } from 'next/navigation';
 import getUser from '@giveaway/account-server/get-user';
-import { AccountTabs } from '@/components/account/account-tabs';
-import { LogoutButton } from '@/lib/auth/components/logout-button';
+import { AccountTabs } from '@giveaway/account-settings/account-tabs';
+import { LogoutButton } from '@giveaway/auth-session-ui/logout-button';
 
 export default async function Layout({
   children

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { checkVisitUrl } from '../visit-url';
-import { VisitUrlTaskSchema } from '../../schemas';
+import { VisitUrlTaskSchema } from '@giveaway/task-model/schemas';
 import {
   BASE_TASK,
   IDS,

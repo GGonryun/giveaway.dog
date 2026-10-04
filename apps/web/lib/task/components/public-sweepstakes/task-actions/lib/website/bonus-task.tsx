@@ -3,7 +3,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import {
   BonusTaskSchema,
   BonusCompleteProfileTaskSchema
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
 import React from 'react';

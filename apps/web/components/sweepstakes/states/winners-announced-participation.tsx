@@ -15,7 +15,7 @@ import {
   TabsTrigger
 } from '@giveaway/ui-primitives/tabs';
 import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';
-import { toParticipantEntries } from '@/lib/task/entries';
+import { toParticipantEntries } from '@giveaway/task-model/entries';
 import {
   Alert,
   AlertDescription,

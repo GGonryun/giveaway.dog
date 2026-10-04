@@ -6,7 +6,7 @@ import { toUserSchema, UserSchema } from '@giveaway/user-model/user';
 import { toTaskInput } from './input';
 import { Prisma } from '@prisma/client';
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
-import { taskSchema } from '@/lib/task/schemas';
+import { taskSchema } from '@giveaway/task-model/schemas';
 import { DEFAULT_TEAM_LOGO } from '@giveaway/team-model/team/data';
 import { parseSocialLinks } from '@giveaway/team-model/social-links';
 import { DetailedUserTeam } from '@giveaway/team-model/teams';

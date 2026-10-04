@@ -24,7 +24,7 @@ import {
   TaskSchema,
   TASK_REQUIRED_SCOPES,
   TASK_IDENTITY_PROVIDER
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import { LoginOptions } from '@/components/auth/login-options';
 import { AccountStatusAlert } from '@/components/auth/account-status-alert';
 

@@ -14,7 +14,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import acceptInvite from '@/procedures/teams/accept-invite';
+import acceptInvite from '@giveaway/team-invites-server/accept-invite';
 import { EasterEggLogo } from '@giveaway/ui-brand/easter-egg-logo';
 import { toast } from 'sonner';
 import { CheckCircle } from 'lucide-react';

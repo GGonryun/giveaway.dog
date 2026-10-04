@@ -1,5 +1,8 @@
 import { ShieldCheck } from 'lucide-react';
-import { TASK_VERIFICATION_REQUIREMENT, TaskType } from '../../schemas';
+import {
+  TASK_VERIFICATION_REQUIREMENT,
+  TaskType
+} from '@giveaway/task-model/schemas';
 import { SelectTaskBadge } from './select-task-badge';
 import { assertNever } from '@giveaway/util-errors';
 

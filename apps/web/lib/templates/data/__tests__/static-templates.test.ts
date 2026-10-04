@@ -5,7 +5,7 @@ import {
   templateDetailsSchema,
   templateSettingsSchema
 } from '../../schemas/template';
-import { taskSchema } from '@/lib/task/schemas';
+import { taskSchema } from '@giveaway/task-model/schemas';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
   TWITTER_POST_URL,

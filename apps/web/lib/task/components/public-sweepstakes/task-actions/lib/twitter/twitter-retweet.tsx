@@ -9,7 +9,7 @@ import {
   TwitterRetweetImportTaskSchema,
   TwitterRetweetTaskSchema,
   TwitterRetweetV2TaskSchema
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import { useTheme } from 'next-themes';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { TwitterEmbed } from './shared';

@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import getUserTeams from '@/procedures/teams/get-user-teams';
+import getUserTeams from '@giveaway/team-server/get-user-teams';
 import { getLastTeamSlugFromServerCookies } from '@giveaway/team-model/team/cookies';
 
 export const metadata: Metadata = {

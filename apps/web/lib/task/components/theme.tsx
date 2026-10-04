@@ -25,7 +25,7 @@ import { SocialTikTokIcon } from '@giveaway/integration-icons/tiktok-icon';
 import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 import { SocialVeloraIcon } from '@giveaway/integration-icons/velora-icon';
 import { SocialLinkedInIcon } from '@giveaway/integration-icons/linked-in-icon';
-import { TaskType } from '../schemas';
+import { TaskType } from '@giveaway/task-model/schemas';
 
 export type TaskTheme = {
   action: string;

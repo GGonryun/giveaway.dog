@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { FailureData, isFailureData } from '@giveaway/rpc-model/types';
 import { TaskThemeProvider } from '@/lib/task/components/theme';
-import { TaskSchema } from '@/lib/task/schemas';
+import { TaskSchema } from '@giveaway/task-model/schemas';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
 import { getTaskLock } from './task-lock';
 import { TaskBadge } from './task-badge';
@@ -21,7 +21,7 @@ import { TaskIcon } from './task-icon';
 import { Tooltip } from '@giveaway/ui-primitives/tooltip';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 import { toTaskStatus } from '../../submission';
-import { toCompletionValue } from '../../entries';
+import { toCompletionValue } from '@giveaway/task-model/entries';
 
 type TaskItemProps = {
   task: TaskSchema;

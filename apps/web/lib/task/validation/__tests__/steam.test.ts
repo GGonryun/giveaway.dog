@@ -3,8 +3,8 @@ import { checkSteamWishlist } from '../steam';
 import {
   GAME_NOT_IN_WISHLIST_ERROR,
   PRIVATE_STEAM_WISHLIST_ERROR
-} from '../steam-errors';
-import { SteamWishlistTaskSchema } from '../../schemas';
+} from '@giveaway/task-model/steam-errors';
+import { SteamWishlistTaskSchema } from '@giveaway/task-model/schemas';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BASE_TASK,

@@ -2,7 +2,7 @@ import './globals.css';
 import { Toaster } from '@giveaway/ui-primitives/toaster';
 
 import { Analytics } from '@vercel/analytics/react';
-import { SessionProvider } from '@/components/context/auth-session-provider';
+import { SessionProvider } from '@giveaway/auth-session-ui/auth-session-provider';
 import { Metadata } from 'next';
 import { ThemeProvider } from '@giveaway/ui-theme/theme-provider';
 

@@ -11,7 +11,7 @@ import {
   TASK_COMPLETIONS_SELECT_QUERY,
   TaskCompletionSchema,
   toTaskCompletion
-} from '../task/completions';
+} from '@giveaway/task-model/completions';
 import z from 'zod';
 import { widetype } from '@giveaway/util-types/widetype';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
@@ -21,7 +21,7 @@ import {
   toParticipantFormFields
 } from '@/schemas/giveaway/participant';
 import { ApplicationError } from '@giveaway/util-errors';
-import { toTaskSchema } from '../task/schemas';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
 import { SweepstakesAllocationSchema } from '@/schemas/giveaway/schemas';
 
 const PRIZE_ALLOCATION_SELECT_QUERY = {

@@ -17,10 +17,10 @@ import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
 
 import { Button } from '@giveaway/ui-primitives/button';
 
-import { TASK_LABEL } from '@/lib/task/schemas';
+import { TASK_LABEL } from '@giveaway/task-model/schemas';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
-import { TaskCompletionSchema } from '@/lib/task/completions';
+import { TaskCompletionSchema } from '@giveaway/task-model/completions';
 
 interface UserEntriesProps {
   slug: string;

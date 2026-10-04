@@ -2,8 +2,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { nanoid } from 'nanoid';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { toDefaultValues } from '@/lib/task/defaults';
-import { TaskSchema } from '@/lib/task/schemas';
+import { toDefaultValues } from '@giveaway/task-model/defaults';
+import { TaskSchema } from '@giveaway/task-model/schemas';
 import {
   buildFormValues,
   renderWithForm

@@ -4,7 +4,7 @@ import {
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema,
   TaskSchema
-} from '../../schemas';
+} from '@giveaway/task-model/schemas';
 import pluralize from 'pluralize';
 import { formatDistance } from 'date-fns';
 import { BanIcon, ClockIcon, LockIcon, LucideIcon } from 'lucide-react';

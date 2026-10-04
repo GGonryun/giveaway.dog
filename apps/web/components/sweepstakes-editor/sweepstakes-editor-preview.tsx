@@ -36,7 +36,7 @@ import {
   onFakeAllocate,
   mockAllocation
 } from './data/mocks';
-import { TaskSchema } from '@/lib/task/schemas';
+import { TaskSchema } from '@giveaway/task-model/schemas';
 import { useTeams } from '../context/team-provider';
 import { toSweepstakesHost } from '@/schemas/giveaway/participant';
 import { assertNever } from '@giveaway/util-errors';

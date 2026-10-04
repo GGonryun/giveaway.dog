@@ -1,6 +1,6 @@
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { Label } from 'recharts';
-import selectTeam from '@/procedures/teams/select-team';
+import selectTeam from '@giveaway/team-server/select-team';
 import { Button } from '@giveaway/ui-primitives/button';
 import { PlusIcon } from 'lucide-react';
 import { Badge } from '@giveaway/ui-primitives/badge';

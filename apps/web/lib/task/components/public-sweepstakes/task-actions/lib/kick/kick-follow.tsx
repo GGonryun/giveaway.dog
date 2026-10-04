@@ -5,7 +5,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
-import { KickFollowTaskSchema } from '@/lib/task/schemas';
+import { KickFollowTaskSchema } from '@giveaway/task-model/schemas';
 
 export const KickFollowTaskActionForm: React.FC<
   TaskActionProps<KickFollowTaskSchema>

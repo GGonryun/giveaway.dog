@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Input } from '@giveaway/ui-primitives/input';
 import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import updateTeamName from '@/procedures/teams/update-team-name';
+import updateTeamName from '@giveaway/team-server/update-team-name';
 import { toast } from 'sonner';
 
 interface TeamNameCardProps {

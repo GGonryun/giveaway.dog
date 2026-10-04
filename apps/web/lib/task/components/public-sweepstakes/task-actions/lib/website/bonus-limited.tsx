@@ -1,6 +1,6 @@
 import { TaskActionProps, TaskContent } from '../../building-blocks';
 import { Button } from '@giveaway/ui-primitives/button';
-import { BonusLimitedTaskSchema } from '@/lib/task/schemas';
+import { BonusLimitedTaskSchema } from '@giveaway/task-model/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
 import React, { useState } from 'react';

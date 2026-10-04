@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { checkMultipleChoice } from '../multiple-choice';
-import { MultipleChoiceTaskSchema, TASK_INPUT_SCHEMA } from '../../schemas';
+import {
+  MultipleChoiceTaskSchema,
+  TASK_INPUT_SCHEMA
+} from '@giveaway/task-model/schemas';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BASE_TASK,

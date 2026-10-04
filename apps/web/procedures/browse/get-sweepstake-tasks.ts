@@ -3,7 +3,7 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
-import { taskSchema, toTaskSchema } from '@/lib/task/schemas';
+import { taskSchema, toTaskSchema } from '@giveaway/task-model/schemas';
 
 export const getSweepstakesTasks = procedure()
   .authorization({

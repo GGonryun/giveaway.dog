@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { checkTwitchFollow } from '../twitch';
-import { TwitchFollowTaskSchema } from '../../schemas';
+import { TwitchFollowTaskSchema } from '@giveaway/task-model/schemas';
 import {
   BASE_TASK,
   IDS,

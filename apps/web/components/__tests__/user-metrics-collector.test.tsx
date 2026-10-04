@@ -9,7 +9,7 @@ import {
   setUserMetricsCookie,
   type UserMetrics
 } from '@giveaway/request-context-model/user-metrics';
-import trackUser from '@/procedures/user/track-user';
+import trackUser from '@giveaway/audience-server/track-user';
 import { UserMetricsCollector } from '../user-metrics-collector';
 
 vi.mock('next-auth/react', () => ({ useSession: vi.fn() }));
@@ -20,7 +20,7 @@ vi.mock('@giveaway/request-context-model/user-metrics', () => ({
   setUserMetricsCookie: vi.fn()
 }));
 
-vi.mock('@/procedures/user/track-user', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/audience-server/track-user', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 

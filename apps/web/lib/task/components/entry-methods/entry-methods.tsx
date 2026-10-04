@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from 'react';
 import { EntryMethod } from './entry-method';
 import { SelectTaskDialog } from '../select-dialog/select-task-dialog';
-import { toDefaultValues } from '@/lib/task/defaults';
+import { toDefaultValues } from '@giveaway/task-model/defaults';
 import {
   DndContext,
   closestCenter,
@@ -33,7 +33,7 @@ import {
 import { nanoid } from 'nanoid';
 import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 import { uniq } from 'lodash';
-import { TaskSchema, TaskType } from '@/lib/task/schemas';
+import { TaskSchema, TaskType } from '@giveaway/task-model/schemas';
 import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };

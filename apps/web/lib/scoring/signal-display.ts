@@ -37,7 +37,7 @@ import {
   PER_TASK_BONUS,
   COMPLETION_THRESHOLD_DAYS
 } from '@giveaway/scoring-model/user-scoring';
-import type { UserSignalKey } from '@/procedures/user/get-user-signals';
+import type { UserSignalKey } from '@giveaway/audience-server/get-user-signals';
 
 export const SIGNAL_LABEL: Record<UserSignalKey, string> = {
   deviceStability: 'Device Stability',

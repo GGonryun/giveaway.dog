@@ -3,7 +3,7 @@ import {
   TASK_COMPLETIONS_SELECT_QUERY,
   taskCompletionSchema,
   toTaskCompletion
-} from '@/lib/task/completions';
+} from '@giveaway/task-model/completions';
 
 import z from 'zod';
 

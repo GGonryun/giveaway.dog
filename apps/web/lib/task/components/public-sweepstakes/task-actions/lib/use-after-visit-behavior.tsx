@@ -3,7 +3,7 @@ import { Progress } from '@giveaway/ui-primitives/progress';
 import { Input } from '@giveaway/ui-primitives/input';
 import { Label } from '@giveaway/ui-primitives/label';
 import pluralize from 'pluralize';
-import type { AfterVisitSchema } from '@/lib/task/schemas';
+import type { AfterVisitSchema } from '@giveaway/task-model/schemas';
 
 type UseAfterVisitBehaviorProps = {
   afterVisit?: AfterVisitSchema;

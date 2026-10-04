@@ -1,6 +1,6 @@
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { nanoid } from 'nanoid';
-import { toDefaultValues } from '@/lib/task/defaults';
+import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { datetime } from '@giveaway/util-time/date';
 import {
   BLUESKY_PROFILE_URL,

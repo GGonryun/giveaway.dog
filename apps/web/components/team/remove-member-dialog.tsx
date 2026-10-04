@@ -11,7 +11,7 @@ import {
   AlertDialogTitle
 } from '@giveaway/ui-primitives/alert-dialog';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import removeMember from '@/procedures/teams/remove-member';
+import removeMember from '@giveaway/team-members-server/remove-member';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { TriangleAlertIcon } from 'lucide-react';

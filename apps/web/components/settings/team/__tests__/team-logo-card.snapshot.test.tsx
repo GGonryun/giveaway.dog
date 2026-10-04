@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import updateTeamLogo from '@/procedures/teams/update-team-logo';
+import updateTeamLogo from '@giveaway/team-server/update-team-logo';
 import { TeamLogoCard } from '../team-logo-card';
 
-vi.mock('@/procedures/teams/update-team-logo', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-server/update-team-logo', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

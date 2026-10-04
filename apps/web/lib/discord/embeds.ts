@@ -20,7 +20,7 @@ import {
   toActiveSweepstakeComponents,
   toExpiredSweepstakeComponents
 } from './api/util';
-import { toTaskSchema } from '../task/schemas';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
 import { PostToDiscordJobSchema } from '../automation/schemas';
 
 export const getSweepstakesActivity = async ({

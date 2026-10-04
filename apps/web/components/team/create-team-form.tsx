@@ -24,7 +24,7 @@ import {
   FormLabel,
   FormMessage
 } from '@giveaway/ui-primitives/form';
-import createTeam from '@/procedures/teams/create-team';
+import createTeam from '@giveaway/team-server/create-team';
 import {
   createTeamInputSchema,
   type CreateTeamInput

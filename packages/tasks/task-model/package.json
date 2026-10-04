@@ -1,0 +1,62 @@
+{
+  "name": "@giveaway/task-model",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:model",
+      "runtime:isomorphic",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-model",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./completions": "./src/completions.ts",
+    "./defaults": "./src/defaults.ts",
+    "./entries": "./src/entries.ts",
+    "./queries": "./src/queries.ts",
+    "./schemas": "./src/schemas.ts",
+    "./status": "./src/status.ts",
+    "./steam-errors": "./src/steam-errors.ts",
+    "./testing/fixtures-task-procedures-verification": "./src/testing/fixtures-task-procedures-verification.ts",
+    "./testing/fixtures-task-schemas": "./src/testing/fixtures-task-schemas.ts",
+    "./types": "./src/types.ts",
+    "./verification/instructions": "./src/verification/instructions.ts",
+    "./verification/utils": "./src/verification/utils.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/bluesky-model": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/util-collections": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/x-model": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/task-jobs-core": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

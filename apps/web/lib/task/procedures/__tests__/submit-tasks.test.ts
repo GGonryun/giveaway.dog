@@ -11,7 +11,7 @@ import {
   buildTiming,
   taskConfig,
   toJsonConfig
-} from './fixtures-task-procedures-verification';
+} from '@giveaway/task-model/testing/fixtures-task-procedures-verification';
 
 const m = vi.hoisted(() => ({
   referralCode: null as string | null,

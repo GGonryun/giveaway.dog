@@ -11,7 +11,7 @@ import {
 import { Button } from '@giveaway/ui-primitives/button';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { deleteTaskCompletion } from '@/procedures/sweepstakes/delete-task-completion';
-import { UserEntriesSchema } from '@/lib/task/schemas';
+import { UserEntriesSchema } from '@giveaway/task-model/schemas';
 
 interface DeleteEntryDialogProps {
   open: boolean;

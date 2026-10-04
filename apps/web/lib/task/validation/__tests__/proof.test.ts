@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Prisma } from '@prisma/client';
 import { ZodError } from 'zod';
 import { saveTaskProof } from '../proof';
-import { TaskSchema, TaskType } from '../../schemas';
+import { TaskSchema, TaskType } from '@giveaway/task-model/schemas';
 import { BASE_TASK } from '@giveaway/testing-server/fixtures-task-validation';
 
 const taskOf = (task: Record<string, unknown> & { type: string }) =>

@@ -6,7 +6,7 @@ import { UserPlus } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 import { ErrorDisplay } from '../error-display';
-import { VeloraFollowTaskSchema } from '@/lib/task/schemas';
+import { VeloraFollowTaskSchema } from '@giveaway/task-model/schemas';
 
 export const VeloraFollowTaskActionForm: React.FC<
   TaskActionProps<VeloraFollowTaskSchema>

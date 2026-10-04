@@ -13,7 +13,7 @@ import {
   TaskSchema,
   TwitterLikeImportTaskSchema,
   TwitterRetweetImportTaskSchema
-} from '../../schemas';
+} from '@giveaway/task-model/schemas';
 import { formatDistanceToNowStrict } from 'date-fns';
 import React from 'react';
 import { Badge } from '@giveaway/ui-primitives/badge';

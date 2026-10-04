@@ -1,7 +1,7 @@
 import { TaskActionProps } from '../../building-blocks';
 import Link from 'next/link';
 import { WithProviderConnection } from '../provider-connection';
-import { VeloraConnectTaskSchema } from '@/lib/task/schemas';
+import { VeloraConnectTaskSchema } from '@giveaway/task-model/schemas';
 
 export const VeloraConnectTaskActionForm: React.FC<
   TaskActionProps<VeloraConnectTaskSchema>

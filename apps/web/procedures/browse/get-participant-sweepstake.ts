@@ -16,9 +16,9 @@ import {
 import { DeepNullable, DeepPartial } from '@giveaway/util-types/types';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 import { Prisma } from '@prisma/client';
-import { toCompletionValue } from '@/lib/task/entries';
-import { ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY } from '@/lib/task/queries';
-import { toTaskSchema } from '@/lib/task/schemas';
+import { toCompletionValue } from '@giveaway/task-model/entries';
+import { ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY } from '@giveaway/task-model/queries';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
 
 const getParticipantSweepstake = procedure()
   .authorization({

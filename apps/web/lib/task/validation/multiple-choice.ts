@@ -1,7 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { MultipleChoiceTaskSchema, TASK_INPUT_SCHEMA } from '../schemas';
+import {
+  MultipleChoiceTaskSchema,
+  TASK_INPUT_SCHEMA
+} from '@giveaway/task-model/schemas';
 import { ApplicationError } from '@giveaway/util-errors';
-import { ValidateTaskInput } from './types';
+import { ValidateTaskInput } from '@giveaway/task-model/types';
 
 export const checkMultipleChoice = async (
   db: PrismaClient,

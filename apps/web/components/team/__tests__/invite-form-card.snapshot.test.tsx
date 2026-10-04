@@ -1,10 +1,12 @@
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import inviteMembers from '@/procedures/teams/invite-members';
+import inviteMembers from '@giveaway/team-invites-server/invite-members';
 import { TeamInviteLinkProvider } from '@/lib/invites/context/team-invite-link-context';
 import { InviteFormCard } from '../invite-form-card';
 
-vi.mock('@/procedures/teams/invite-members', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-invites-server/invite-members', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn(), warning: vi.fn() }

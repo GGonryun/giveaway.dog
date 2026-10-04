@@ -1,14 +1,14 @@
 import { partition, uniqBy } from 'lodash';
 import { Lock } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
-import { toDefaultValues } from '@/lib/task/defaults';
+import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { nanoid } from 'nanoid';
 import React, { useEffect } from 'react';
-import { TaskSchema } from '@/lib/task/schemas';
+import { TaskSchema } from '@giveaway/task-model/schemas';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
 import { TaskItem } from './task-item';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
-import { computeTaskStatus } from '../../validation/status';
+import { computeTaskStatus } from '@giveaway/task-model/status';
 import { Button } from '@giveaway/ui-primitives/button';
 import pluralize from 'pluralize';
 

@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { assertNever } from '@giveaway/util-errors';
 import { UserReferralSchema } from '@giveaway/referrals-model/schemas';
-import { TaskSchema } from './schemas';
+import { TaskSchema } from '@giveaway/task-model/schemas';
 import pluralize from 'pluralize';
 
 export const SUBMISSION_COLOR_MAP: Record<CompletionStatus, string> = {

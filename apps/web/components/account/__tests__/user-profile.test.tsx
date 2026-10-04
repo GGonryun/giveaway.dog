@@ -21,7 +21,7 @@ vi.mock('../update-preferred-contact', () => ({
   UpdatePreferredContact: () => <section>Preferred contact settings</section>
 }));
 
-vi.mock('@/components/auth/email-verification', () => ({
+vi.mock('@giveaway/account-email/email-verification', () => ({
   EmailVerification: (props: Record<string, unknown>) => {
     children.emailVerificationProps.push(props);
     return <section>Email verification settings</section>;

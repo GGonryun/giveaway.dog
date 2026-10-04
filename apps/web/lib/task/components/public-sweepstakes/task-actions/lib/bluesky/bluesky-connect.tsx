@@ -1,7 +1,7 @@
 import { TaskActionProps } from '../../building-blocks';
 import Link from 'next/link';
 import { WithProviderConnection } from '../provider-connection';
-import { BlueskyConnectTaskSchema } from '@/lib/task/schemas';
+import { BlueskyConnectTaskSchema } from '@giveaway/task-model/schemas';
 
 export const BlueskyConnectTaskActionForm: React.FC<
   TaskActionProps<BlueskyConnectTaskSchema>

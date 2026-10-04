@@ -20,7 +20,7 @@ import {
   SwitchFormHeader
 } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { Switch } from '@giveaway/ui-primitives/switch';
-import { TwitchChatImportTaskSchema } from '@/lib/task/schemas';
+import { TwitchChatImportTaskSchema } from '@giveaway/task-model/schemas';
 
 type RateLimit = NonNullable<TwitchChatImportTaskSchema['rateLimit']>;
 

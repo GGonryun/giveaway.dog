@@ -1,12 +1,16 @@
 import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole } from '@prisma/client';
-import removeMember from '@/procedures/teams/remove-member';
-import updateMemberRole from '@/procedures/teams/update-member-role';
+import removeMember from '@giveaway/team-members-server/remove-member';
+import updateMemberRole from '@giveaway/team-members-server/update-member-role';
 import { MembersTable } from '../members-table';
 
-vi.mock('@/procedures/teams/remove-member', () => ({ default: vi.fn() }));
-vi.mock('@/procedures/teams/update-member-role', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-members-server/remove-member', () => ({
+  default: vi.fn()
+}));
+vi.mock('@giveaway/team-members-server/update-member-role', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() }

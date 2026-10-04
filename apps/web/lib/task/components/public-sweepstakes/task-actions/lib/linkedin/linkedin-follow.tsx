@@ -6,7 +6,7 @@ import { UserPlus } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 import { ErrorDisplay } from '../error-display';
-import { LinkedInFollowTaskSchema } from '@/lib/task/schemas';
+import { LinkedInFollowTaskSchema } from '@giveaway/task-model/schemas';
 
 export const LinkedInFollowTaskActionForm: React.FC<
   TaskActionProps<LinkedInFollowTaskSchema>

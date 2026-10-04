@@ -2,7 +2,7 @@
 
 import { TaskActionProps, TaskContent } from '../../building-blocks';
 import { Button } from '@giveaway/ui-primitives/button';
-import { ReferralLinkTaskSchema } from '@/lib/task/schemas';
+import { ReferralLinkTaskSchema } from '@giveaway/task-model/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
 import React, { useEffect, useState } from 'react';

@@ -5,7 +5,7 @@ import {
   TaskControls
 } from '../../building-blocks';
 import { useState } from 'react';
-import { YoutubeVisitTaskSchema } from '@/lib/task/schemas';
+import { YoutubeVisitTaskSchema } from '@giveaway/task-model/schemas';
 import { useTaskTheme } from '@/lib/task/components/theme';
 import { Button } from '@giveaway/ui-primitives/button';
 import { cn } from '@giveaway/ui-utils/utils';

@@ -1,6 +1,6 @@
 import getUser from '@giveaway/account-server/get-user';
-import getUserTeam from '@/procedures/teams/get-user-team';
-import getUserTeams from '@/procedures/teams/get-user-teams';
+import getUserTeam from '@giveaway/team-server/get-user-team';
+import getUserTeams from '@giveaway/team-server/get-user-teams';
 import { TeamsProvider } from '@/components/context/team-provider';
 import { UserProvider } from '@giveaway/account-context/user-provider';
 import { redirect } from 'next/navigation';

@@ -7,7 +7,7 @@ import {
   TaskControls
 } from '../../building-blocks';
 import { useState } from 'react';
-import { SubmitMediaTaskSchema, TaskInput } from '@/lib/task/schemas';
+import { SubmitMediaTaskSchema, TaskInput } from '@giveaway/task-model/schemas';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import {
   Alert,

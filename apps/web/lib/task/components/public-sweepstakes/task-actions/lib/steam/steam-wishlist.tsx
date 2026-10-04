@@ -21,8 +21,8 @@ import {
   DialogTitle
 } from '@giveaway/ui-primitives/dialog';
 import { ErrorDisplay } from '../error-display';
-import { PRIVATE_STEAM_WISHLIST_ERROR } from '@/lib/task/validation/steam-errors';
-import { SteamWishlistTaskSchema } from '@/lib/task/schemas';
+import { PRIVATE_STEAM_WISHLIST_ERROR } from '@giveaway/task-model/steam-errors';
+import { SteamWishlistTaskSchema } from '@giveaway/task-model/schemas';
 
 export const SteamWishlistTaskActionForm: React.FC<
   TaskActionProps<SteamWishlistTaskSchema>

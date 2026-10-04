@@ -14,15 +14,18 @@ import { Textarea } from '@giveaway/ui-primitives/textarea';
 import { Label } from '@giveaway/ui-primitives/label';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { ExternalLink, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
-import { TASK_VERIFICATION_REQUIREMENT, TaskSchema } from '@/lib/task/schemas';
+import {
+  TASK_VERIFICATION_REQUIREMENT,
+  TaskSchema
+} from '@giveaway/task-model/schemas';
 import {
   getVerificationInstructions,
   VerificationInstruction
-} from '@/lib/task/verification/instructions';
+} from '@giveaway/task-model/verification/instructions';
 import {
   getProviderLink,
   getProviderLabel
-} from '@/lib/task/verification/utils';
+} from '@giveaway/task-model/verification/utils';
 import { CompletionStatus } from '@prisma/client';
 import { UserSchema } from '@giveaway/user-model/user';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';

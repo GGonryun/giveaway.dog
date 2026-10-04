@@ -7,8 +7,8 @@ import { UserParams } from '../params';
 import getUser from '@giveaway/account-server/get-user';
 import { getTeamParticipant } from '@/lib/participant/procedures/get-team-participant';
 import { getTeamTasks } from '@/lib/participant/procedures/get-team-tasks';
-import { getUserSignals } from '@/procedures/user/get-user-signals';
-import type { UserSignals } from '@/procedures/user/get-user-signals';
+import { getUserSignals } from '@giveaway/audience-server/get-user-signals';
+import type { UserSignals } from '@giveaway/audience-server/get-user-signals';
 
 const IMPORTED_SOURCES = [
   'TWITTER_IMPORT',

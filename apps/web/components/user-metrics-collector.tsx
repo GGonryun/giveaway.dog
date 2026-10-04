@@ -8,7 +8,7 @@ import {
   getUserMetricsCookie
 } from '@giveaway/request-context-model/user-metrics';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import trackUser from '@/procedures/user/track-user';
+import trackUser from '@giveaway/audience-server/track-user';
 import { UserEventType } from '@prisma/client';
 
 export function UserMetricsCollector() {

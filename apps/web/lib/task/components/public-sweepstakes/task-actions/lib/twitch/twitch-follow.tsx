@@ -7,7 +7,7 @@ import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 
 import { ErrorDisplay } from '../error-display';
-import { TwitchFollowTaskSchema } from '@/lib/task/schemas';
+import { TwitchFollowTaskSchema } from '@giveaway/task-model/schemas';
 
 export const TwitchFollowTaskActionForm: React.FC<
   TaskActionProps<TwitchFollowTaskSchema>

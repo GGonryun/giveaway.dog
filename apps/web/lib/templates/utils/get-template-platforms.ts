@@ -2,7 +2,7 @@ import {
   TASK_PLATFORM,
   TaskPlatformSchema,
   TaskType
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import { TemplateDetailsSchema } from '../schemas/template';
 
 export function getTemplatePlatforms(

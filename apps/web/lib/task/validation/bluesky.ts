@@ -6,8 +6,8 @@ import {
   BlueskyFollowTaskSchema,
   BlueskyLikeTaskSchema,
   BlueskyRepostTaskSchema
-} from '../schemas';
-import { ValidateTaskInput } from './types';
+} from '@giveaway/task-model/schemas';
+import { ValidateTaskInput } from '@giveaway/task-model/types';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@giveaway/integration-model/providers';
 import { ApplicationError } from '@giveaway/util-errors';
 import { isUserFollowingTarget } from '@giveaway/bluesky-api/bluesky/is-user-following-target';

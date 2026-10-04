@@ -6,7 +6,7 @@ import {
   StarIcon
 } from 'lucide-react';
 
-import { TASK_PLATFORM, TaskType } from '@/lib/task/schemas';
+import { TASK_PLATFORM, TaskType } from '@giveaway/task-model/schemas';
 import { assertNever } from '@giveaway/util-errors';
 import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
 import { SocialGoogleIcon } from '@giveaway/integration-icons/google-icon';

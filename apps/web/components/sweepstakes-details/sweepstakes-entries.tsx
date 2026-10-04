@@ -17,7 +17,7 @@ import { formatDistanceToNowStrict } from 'date-fns';
 import { UserSchema } from '@giveaway/user-model/user';
 import { Button } from '@giveaway/ui-primitives/button';
 
-import { TASK_LABEL, UserEntriesSchema } from '@/lib/task/schemas';
+import { TASK_LABEL, UserEntriesSchema } from '@giveaway/task-model/schemas';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { UserSourceBadge } from '@giveaway/user-source-ui/user-source-badge';
 import { UserSourceCaption } from '@giveaway/user-source-ui/user-source-caption';

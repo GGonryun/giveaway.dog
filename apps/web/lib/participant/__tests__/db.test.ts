@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Prisma, type SweepstakesFormField } from '@prisma/client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { USER_SCHEMA_SELECT_QUERY } from '@giveaway/user-model/user';
-import { TASK_COMPLETIONS_SELECT_QUERY } from '@/lib/task/completions';
+import { TASK_COMPLETIONS_SELECT_QUERY } from '@giveaway/task-model/completions';
 import type { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import {

@@ -46,7 +46,7 @@ import {
   AlertTitle
 } from '@giveaway/ui-primitives/alert';
 import Link from 'next/link';
-import { TaskType } from '@/lib/task/schemas';
+import { TaskType } from '@giveaway/task-model/schemas';
 import { TwitchImportingAccountField } from './lib/twitch-importing-account';
 import { TwitchRateLimitField } from './lib/twitch-rate-limit';
 

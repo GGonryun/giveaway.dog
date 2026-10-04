@@ -27,7 +27,7 @@ import { BaseSettings } from '../sweepstakes-editor-form/base-settings';
 import { AdditionalSettings } from '../sweepstakes-editor-form/additional-settings/additional-settings';
 import { AdvancedSettings } from '../sweepstakes-editor-form/advanced-settings';
 import { toTaskTheme } from '../theme';
-import { TASK_LABEL, TaskType } from '../../schemas';
+import { TASK_LABEL, TaskType } from '@giveaway/task-model/schemas';
 import { VerificationAlert } from './verification-alert';
 
 export const EntryMethod: React.FC<{

@@ -3,7 +3,7 @@ import {
   TaskCategorySchema,
   TASK_CATEGORY_LABEL,
   TaskType
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import { Badge } from '@giveaway/ui-primitives/badge';
 
 export const TaskCategoryBadge: React.FC<{ type: TaskType }> = ({ type }) => {

@@ -3,7 +3,7 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
-import { findUserTeamQuery } from '@/procedures/teams/find-user-team';
+import { findUserTeamQuery } from '@giveaway/team-server/find-user-team';
 import { IntegrationProvider } from '@prisma/client';
 import { deleteAllEventSubSubscriptions } from '@giveaway/twitch-api/delete-eventsub-subscription';
 

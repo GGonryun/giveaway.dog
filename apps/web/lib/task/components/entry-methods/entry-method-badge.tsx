@@ -4,7 +4,7 @@ import { InstantBadge } from '../badges/instant-badge';
 import { VerificationBadge } from '../badges/verification-badge';
 import { ErrorCountBadge } from '../badges/error-count-badge';
 import { MaxOfOneBadge } from '../badges/max-of-one-badge';
-import { TaskType } from '../../schemas';
+import { TaskType } from '@giveaway/task-model/schemas';
 
 export const EntryMethodBadge: React.FC<{
   type: TaskType;

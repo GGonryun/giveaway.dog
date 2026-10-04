@@ -14,11 +14,6 @@
       "count": 2
     }
   },
-  "apps/web/components/auth/email-verification.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "apps/web/components/sweepstakes-details/sweepstakes-analytics-skeleton.tsx": {
     "react-hooks/purity": {
       "count": 1

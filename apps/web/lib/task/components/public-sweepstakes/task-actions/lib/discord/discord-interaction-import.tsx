@@ -5,7 +5,7 @@ import { MessageCircle } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 import { ErrorDisplay } from '../error-display';
-import { DiscordInteractionImportTaskSchema } from '@/lib/task/schemas';
+import { DiscordInteractionImportTaskSchema } from '@giveaway/task-model/schemas';
 
 export const DiscordInteractionImportTaskActionForm: React.FC<
   TaskActionProps<DiscordInteractionImportTaskSchema>

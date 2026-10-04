@@ -1,7 +1,7 @@
 import { userSchema } from '@giveaway/user-model/user';
 import z from 'zod';
 
-import { taskCompletionSchema } from '../task/completions';
+import { taskCompletionSchema } from '@giveaway/task-model/completions';
 import { SweepstakesFormFieldType } from '@prisma/client';
 import { sweepstakesAllocationSchema } from '@/schemas/giveaway/schemas';
 

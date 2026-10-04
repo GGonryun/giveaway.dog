@@ -7,7 +7,7 @@ import { WithProviderConnection } from '../provider-connection';
 import {
   BlueskyLikeTaskSchema,
   BlueskyLikeImportTaskSchema
-} from '@/lib/task/schemas';
+} from '@giveaway/task-model/schemas';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 import { BlueskyEmbed } from './shared';

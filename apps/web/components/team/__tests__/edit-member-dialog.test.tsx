@@ -3,11 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole } from '@prisma/client';
 import { toast } from 'sonner';
-import updateMemberRole from '@/procedures/teams/update-member-role';
+import updateMemberRole from '@giveaway/team-members-server/update-member-role';
 import type { Result } from '@giveaway/rpc-model/types';
 import { EditMemberDialog } from '../edit-member-dialog';
 
-vi.mock('@/procedures/teams/update-member-role', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/team-members-server/update-member-role', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() }

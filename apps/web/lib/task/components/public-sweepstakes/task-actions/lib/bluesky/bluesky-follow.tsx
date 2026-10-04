@@ -1,5 +1,5 @@
 import { TaskActionProps } from '../../building-blocks';
-import { BlueskyFollowTaskSchema } from '@/lib/task/schemas';
+import { BlueskyFollowTaskSchema } from '@giveaway/task-model/schemas';
 import { WithProviderConnection } from '../provider-connection';
 import { Button } from '@giveaway/ui-primitives/button';
 import { cn } from '@giveaway/ui-utils/utils';

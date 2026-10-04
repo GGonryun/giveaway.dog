@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { processTaskJob } from '../process-task-job';
 import { ApplicationError } from '@giveaway/util-errors';
-import type { TaskType } from '@/lib/task/schemas';
+import type { TaskType } from '@giveaway/task-model/schemas';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   ALL_TASK_TYPES,
   BLUESKY_POST_URL,
   buildTaskJob,
   buildTiming
-} from '@/lib/task/procedures/__tests__/fixtures-task-procedures-verification';
+} from '@giveaway/task-model/testing/fixtures-task-procedures-verification';
 
 const m = vi.hoisted(() => ({
   getRetweetersUntilUser: vi.fn(),

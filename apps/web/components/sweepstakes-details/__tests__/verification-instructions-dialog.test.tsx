@@ -7,7 +7,7 @@ import {
   buildProvider,
   buildTask
 } from '@/components/sweepstakes/__tests__/fixtures';
-import type { TaskSchema } from '@/lib/task/schemas';
+import type { TaskSchema } from '@giveaway/task-model/schemas';
 import { reverifyTaskCompletion } from '@/procedures/sweepstakes/reverify-task-completion';
 import { updateTaskCompletionStatus } from '@/procedures/sweepstakes/update-task-completion-status';
 import { VerificationInstructionsDialog } from '../verification-instructions-dialog';

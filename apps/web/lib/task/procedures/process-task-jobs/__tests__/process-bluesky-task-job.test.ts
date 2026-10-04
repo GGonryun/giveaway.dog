@@ -8,7 +8,7 @@ import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   buildTaskJob,
   taskOf
-} from '@/lib/task/procedures/__tests__/fixtures-task-procedures-verification';
+} from '@giveaway/task-model/testing/fixtures-task-procedures-verification';
 
 const m = vi.hoisted(() => ({
   getLatestTeamBlueskyCredentials: vi.fn(),

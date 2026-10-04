@@ -5,7 +5,7 @@ import {
   buildProvider,
   withStableIds
 } from '@/components/sweepstakes/__tests__/fixtures';
-import type { TaskSchema } from '@/lib/task/schemas';
+import type { TaskSchema } from '@giveaway/task-model/schemas';
 import { VerificationInstructionsDialog } from '../verification-instructions-dialog';
 
 const navigation = vi.hoisted(() => ({

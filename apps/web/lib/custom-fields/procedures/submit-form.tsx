@@ -10,7 +10,7 @@ import {
 } from '@prisma/client';
 import { extractUsernameFromProfileUrl } from '@giveaway/x-model/twitter';
 import z from 'zod';
-import { toTaskSchema } from '@/lib/task/schemas';
+import { toTaskSchema } from '@giveaway/task-model/schemas';
 import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
 import { User } from 'next-auth';
 import { Nil } from '@giveaway/util-types/types';

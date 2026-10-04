@@ -6,7 +6,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import {
   TASK_COMPLETIONS_SELECT_QUERY,
   toTaskCompletion
-} from '@/lib/task/completions';
+} from '@giveaway/task-model/completions';
 import {
   toUserSchema,
   USER_SCHEMA_SELECT_QUERY

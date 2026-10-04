@@ -11,7 +11,7 @@ import {
   buildTiming,
   taskConfig,
   toJsonConfig
-} from './fixtures-task-procedures-verification';
+} from '@giveaway/task-model/testing/fixtures-task-procedures-verification';
 
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 
