@@ -1,9 +1,9 @@
 'use client';
 
-import { TaskActionProps } from '../../building-blocks';
+import { TaskActionProps } from '@giveaway/task-entry-core/building-blocks';
 import { useState } from 'react';
 import { AlertCircle, Repeat2Icon } from 'lucide-react';
-import { WithProviderConnection } from '../provider-connection';
+import { WithProviderConnection } from '@giveaway/task-entry-core/provider-connection';
 import { xStatusRefineUrl, extractTweetId } from '@giveaway/x-model/twitter';
 import {
   TwitterRetweetImportTaskSchema,

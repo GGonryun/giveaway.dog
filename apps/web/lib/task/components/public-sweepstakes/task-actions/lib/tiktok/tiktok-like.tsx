@@ -1,6 +1,6 @@
-import { TaskActionProps } from '../../building-blocks';
+import { TaskActionProps } from '@giveaway/task-entry-core/building-blocks';
 import { useState, useEffect, useRef } from 'react';
-import { WithProviderConnection } from '../provider-connection';
+import { WithProviderConnection } from '@giveaway/task-entry-core/provider-connection';
 import { TiktokLikeTaskSchema } from '@giveaway/task-model/schemas';
 import { AlertCircle, Heart, ExternalLink } from 'lucide-react';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';

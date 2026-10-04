@@ -6,7 +6,7 @@ import {
   buildParticipant,
   buildUser
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
-import { disqualifyParticipant } from '@/procedures/sweepstakes/disqualify-participant';
+import { disqualifyParticipant } from '@giveaway/sweepstakes-moderation-server/disqualify-participant';
 import { SweepstakesParticipants } from '../sweepstakes-participants';
 
 const navigation = vi.hoisted(() => ({
@@ -15,9 +15,12 @@ const navigation = vi.hoisted(() => ({
 
 vi.mock('next/navigation', () => ({ useRouter: () => navigation.router }));
 
-vi.mock('@/procedures/sweepstakes/disqualify-participant', () => ({
-  disqualifyParticipant: vi.fn()
-}));
+vi.mock(
+  '@giveaway/sweepstakes-moderation-server/disqualify-participant',
+  () => ({
+    disqualifyParticipant: vi.fn()
+  })
+);
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 

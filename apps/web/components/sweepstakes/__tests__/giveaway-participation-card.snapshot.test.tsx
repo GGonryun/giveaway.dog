@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { GiveawayParticipationProps } from '../giveaway-participation-context';
+import type { GiveawayParticipationProps } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { GiveawayParticipationCard } from '../giveaway-participation-card';
 import {
   NOW,
   buildHost,
   withStableIds
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
-import { renderWithParticipation } from './participation-fixtures';
+import { renderWithParticipation } from '@giveaway/sweepstakes-participation-core/testing/participation-fixtures';
 import type { DeviceType } from '@giveaway/sweepstakes-model/schemas';
 
 const socialHost = buildHost({

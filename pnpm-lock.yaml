@@ -594,6 +594,9 @@ importers:
       '@giveaway/bluesky-task-editor':
         specifier: workspace:*
         version: link:../../packages/integrations/bluesky/bluesky-task-editor
+      '@giveaway/bluesky-task-entry':
+        specifier: workspace:*
+        version: link:../../packages/integrations/bluesky/bluesky-task-entry
       '@giveaway/bluesky-task-jobs':
         specifier: workspace:*
         version: link:../../packages/integrations/bluesky/bluesky-task-jobs
@@ -648,6 +651,9 @@ importers:
       '@giveaway/discord-task-editor':
         specifier: workspace:*
         version: link:../../packages/integrations/discord/discord-task-editor
+      '@giveaway/discord-task-entry':
+        specifier: workspace:*
+        version: link:../../packages/integrations/discord/discord-task-entry
       '@giveaway/discord-task-validation':
         specifier: workspace:*
         version: link:../../packages/integrations/discord/discord-task-validation
@@ -840,6 +846,12 @@ importers:
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../../packages/sweepstakes/sweepstakes-model
+      '@giveaway/sweepstakes-moderation-server':
+        specifier: workspace:*
+        version: link:../../packages/sweepstakes/sweepstakes-moderation-server
+      '@giveaway/sweepstakes-participation-core':
+        specifier: workspace:*
+        version: link:../../packages/sweepstakes/sweepstakes-participation-core
       '@giveaway/sweepstakes-routes':
         specifier: workspace:*
         version: link:../../packages/sweepstakes/sweepstakes-routes
@@ -849,9 +861,18 @@ importers:
       '@giveaway/sweepstakes-ui-testing':
         specifier: workspace:*
         version: link:../../packages/sweepstakes/sweepstakes-ui-testing
+      '@giveaway/task-actions':
+        specifier: workspace:*
+        version: link:../../packages/tasks/task-actions
+      '@giveaway/task-editor':
+        specifier: workspace:*
+        version: link:../../packages/tasks/task-editor
       '@giveaway/task-editor-fields':
         specifier: workspace:*
         version: link:../../packages/tasks/task-editor-fields
+      '@giveaway/task-entry-core':
+        specifier: workspace:*
+        version: link:../../packages/tasks/task-entry-core
       '@giveaway/task-jobs':
         specifier: workspace:*
         version: link:../../packages/tasks/task-jobs
@@ -891,9 +912,15 @@ importers:
       '@giveaway/team-permissions':
         specifier: workspace:*
         version: link:../../packages/team/team-permissions
+      '@giveaway/team-picker':
+        specifier: workspace:*
+        version: link:../../packages/team/team-picker
       '@giveaway/team-server':
         specifier: workspace:*
         version: link:../../packages/team/team-server
+      '@giveaway/team-settings-integrations':
+        specifier: workspace:*
+        version: link:../../packages/team/team-settings-integrations
       '@giveaway/team-settings-profile':
         specifier: workspace:*
         version: link:../../packages/team/team-settings-profile
@@ -927,6 +954,9 @@ importers:
       '@giveaway/turnstile-server':
         specifier: workspace:*
         version: link:../../packages/infra/turnstile-server
+      '@giveaway/turnstile-ui':
+        specifier: workspace:*
+        version: link:../../packages/infra/turnstile-ui
       '@giveaway/twitch-api':
         specifier: workspace:*
         version: link:../../packages/integrations/twitch/twitch-api
@@ -3592,6 +3622,58 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
 
+  packages/infra/turnstile-ui:
+    dependencies:
+      '@giveaway/rpc-client':
+        specifier: workspace:*
+        version: link:../rpc-client
+      '@giveaway/sweepstakes-participation-core':
+        specifier: workspace:*
+        version: link:../../sweepstakes/sweepstakes-participation-core
+      '@giveaway/turnstile-model':
+        specifier: workspace:*
+        version: link:../turnstile-model
+      '@giveaway/turnstile-server':
+        specifier: workspace:*
+        version: link:../turnstile-server
+      '@marsidev/react-turnstile':
+        specifier: 'catalog:'
+        version: 1.4.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      cookies-next:
+        specifier: 'catalog:'
+        version: 6.1.1(next@16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      sonner:
+        specifier: 'catalog:'
+        version: 2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
   packages/integrations/bluesky/bluesky-api:
     dependencies:
       '@atproto/api':
@@ -3885,6 +3967,67 @@ importers:
       react:
         specifier: 'catalog:'
         version: 19.2.4
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/integrations/bluesky/bluesky-task-entry:
+    dependencies:
+      '@giveaway/bluesky-api':
+        specifier: workspace:*
+        version: link:../bluesky-api
+      '@giveaway/bluesky-model':
+        specifier: workspace:*
+        version: link:../bluesky-model
+      '@giveaway/integration-icons':
+        specifier: workspace:*
+        version: link:../../core/integration-icons
+      '@giveaway/rpc-client':
+        specifier: workspace:*
+        version: link:../../../infra/rpc-client
+      '@giveaway/task-entry-core':
+        specifier: workspace:*
+        version: link:../../../tasks/task-entry-core
+      '@giveaway/task-model':
+        specifier: workspace:*
+        version: link:../../../tasks/task-model
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../../ui/ui-primitives
+      '@giveaway/ui-utils':
+        specifier: workspace:*
+        version: link:../../../ui/ui-utils
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
       typescript:
         specifier: 'catalog:'
         version: 5.7.2
@@ -4525,6 +4668,55 @@ importers:
       react:
         specifier: 'catalog:'
         version: 19.2.4
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/integrations/discord/discord-task-entry:
+    dependencies:
+      '@giveaway/task-entry-core':
+        specifier: workspace:*
+        version: link:../../../tasks/task-entry-core
+      '@giveaway/task-model':
+        specifier: workspace:*
+        version: link:../../../tasks/task-model
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../../ui/ui-primitives
+      '@giveaway/ui-utils':
+        specifier: workspace:*
+        version: link:../../../ui/ui-utils
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
       typescript:
         specifier: 'catalog:'
         version: 5.7.2
@@ -9111,6 +9303,164 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
 
+  packages/sweepstakes/sweepstakes-moderation-server:
+    dependencies:
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../../infra/db-model
+      '@giveaway/rpc-server':
+        specifier: workspace:*
+        version: link:../../infra/rpc-server
+      '@giveaway/sweepstakes-access':
+        specifier: workspace:*
+        version: link:../sweepstakes-access
+      '@giveaway/sweepstakes-model':
+        specifier: workspace:*
+        version: link:../sweepstakes-model
+      '@giveaway/task-model':
+        specifier: workspace:*
+        version: link:../../tasks/task-model
+      '@giveaway/task-validation':
+        specifier: workspace:*
+        version: link:../../tasks/task-validation
+      '@giveaway/team-permissions':
+        specifier: workspace:*
+        version: link:../../team/team-permissions
+      '@giveaway/user-source-model':
+        specifier: workspace:*
+        version: link:../../participants/user-source-model
+      '@giveaway/util-errors':
+        specifier: workspace:*
+        version: link:../../shared/util-errors
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/sweepstakes/sweepstakes-participation-core:
+    dependencies:
+      '@giveaway/allocation-model':
+        specifier: workspace:*
+        version: link:../../participants/allocation-model
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
+      '@giveaway/auth-login-ui':
+        specifier: workspace:*
+        version: link:../../auth/auth-login-ui
+      '@giveaway/auth-session-ui':
+        specifier: workspace:*
+        version: link:../../auth/auth-session-ui
+      '@giveaway/custom-fields-model':
+        specifier: workspace:*
+        version: link:../../participants/custom-fields-model
+      '@giveaway/integration-icons':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-icons
+      '@giveaway/loyalty-model':
+        specifier: workspace:*
+        version: link:../../participants/loyalty-model
+      '@giveaway/participant-model':
+        specifier: workspace:*
+        version: link:../../participants/participant-model
+      '@giveaway/referrals-model':
+        specifier: workspace:*
+        version: link:../../participants/referrals-model
+      '@giveaway/sweepstakes-model':
+        specifier: workspace:*
+        version: link:../sweepstakes-model
+      '@giveaway/task-entry-core':
+        specifier: workspace:*
+        version: link:../../tasks/task-entry-core
+      '@giveaway/turnstile-model':
+        specifier: workspace:*
+        version: link:../../infra/turnstile-model
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/ui-primitives
+      '@giveaway/ui-rich-text':
+        specifier: workspace:*
+        version: link:../../ui/ui-rich-text
+      '@giveaway/ui-utils':
+        specifier: workspace:*
+        version: link:../../ui/ui-utils
+      '@giveaway/util-time':
+        specifier: workspace:*
+        version: link:../../shared/util-time
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+    devDependencies:
+      '@giveaway/auth-actions':
+        specifier: workspace:*
+        version: link:../../auth/auth-actions
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/integration-model':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-model
+      '@giveaway/sweepstakes-ui-testing':
+        specifier: workspace:*
+        version: link:../sweepstakes-ui-testing
+      '@giveaway/testing-dom':
+        specifier: workspace:*
+        version: link:../../tooling/testing-dom
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@testing-library/user-event':
+        specifier: 'catalog:'
+        version: 14.6.7(@testing-library/dom@10.4.2)
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
+      sonner:
+        specifier: 'catalog:'
+        version: 2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
   packages/sweepstakes/sweepstakes-routes:
     dependencies:
       '@giveaway/sweepstakes-model':
@@ -9305,6 +9655,206 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
 
+  packages/tasks/task-actions:
+    dependencies:
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../../infra/db-model
+      '@giveaway/referrals-model':
+        specifier: workspace:*
+        version: link:../../participants/referrals-model
+      '@giveaway/rpc-server':
+        specifier: workspace:*
+        version: link:../../infra/rpc-server
+      '@giveaway/sweepstakes-model':
+        specifier: workspace:*
+        version: link:../../sweepstakes/sweepstakes-model
+      '@giveaway/task-model':
+        specifier: workspace:*
+        version: link:../task-model
+      '@giveaway/task-validation':
+        specifier: workspace:*
+        version: link:../task-validation
+      '@giveaway/task-validation-core':
+        specifier: workspace:*
+        version: link:../task-validation-core
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/ui-primitives
+      '@giveaway/util-errors':
+        specifier: workspace:*
+        version: link:../../shared/util-errors
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+      pluralize:
+        specifier: 'catalog:'
+        version: 8.0.0
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/pluralize':
+        specifier: 'catalog:'
+        version: 0.0.33
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
+      cookies-next:
+        specifier: 'catalog:'
+        version: 6.1.1(next@16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/tasks/task-editor:
+    dependencies:
+      '@dnd-kit/core':
+        specifier: 'catalog:'
+        version: 6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@dnd-kit/sortable':
+        specifier: 'catalog:'
+        version: 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+      '@dnd-kit/utilities':
+        specifier: 'catalog:'
+        version: 3.2.2(react@19.2.4)
+      '@giveaway/bluesky-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/bluesky/bluesky-task-editor
+      '@giveaway/discord-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/discord/discord-task-editor
+      '@giveaway/kick-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/kick/kick-task-editor
+      '@giveaway/linkedin-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/linkedin/linkedin-task-editor
+      '@giveaway/meta-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/meta/meta-task-editor
+      '@giveaway/steam-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/steam/steam-task-editor
+      '@giveaway/sweepstakes-editor-core':
+        specifier: workspace:*
+        version: link:../../sweepstakes/sweepstakes-editor-core
+      '@giveaway/sweepstakes-model':
+        specifier: workspace:*
+        version: link:../../sweepstakes/sweepstakes-model
+      '@giveaway/task-editor-fields':
+        specifier: workspace:*
+        version: link:../task-editor-fields
+      '@giveaway/task-model':
+        specifier: workspace:*
+        version: link:../task-model
+      '@giveaway/task-ui':
+        specifier: workspace:*
+        version: link:../task-ui
+      '@giveaway/tiktok-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/tiktok/tiktok-task-editor
+      '@giveaway/twitch-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/twitch/twitch-task-editor
+      '@giveaway/ui-hooks':
+        specifier: workspace:*
+        version: link:../../ui/ui-hooks
+      '@giveaway/ui-layouts':
+        specifier: workspace:*
+        version: link:../../ui/ui-layouts
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/ui-primitives
+      '@giveaway/ui-utils':
+        specifier: workspace:*
+        version: link:../../ui/ui-utils
+      '@giveaway/util-errors':
+        specifier: workspace:*
+        version: link:../../shared/util-errors
+      '@giveaway/util-types':
+        specifier: workspace:*
+        version: link:../../shared/util-types
+      '@giveaway/velora-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/velora/velora-task-editor
+      '@giveaway/x-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/x/x-task-editor
+      '@giveaway/youtube-task-editor':
+        specifier: workspace:*
+        version: link:../../integrations/youtube/youtube-task-editor
+      lodash:
+        specifier: 'catalog:'
+        version: 4.17.23
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+      nanoid:
+        specifier: 'catalog:'
+        version: 5.1.6
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      react-hook-form:
+        specifier: 'catalog:'
+        version: 7.71.1(react@19.2.4)
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/lodash':
+        specifier: 'catalog:'
+        version: 4.17.23
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
   packages/tasks/task-editor-fields:
     dependencies:
       '@giveaway/sweepstakes-model':
@@ -9353,6 +9903,76 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/tasks/task-entry-core:
+    dependencies:
+      '@giveaway/auth-login-ui':
+        specifier: workspace:*
+        version: link:../../auth/auth-login-ui
+      '@giveaway/integration-model':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-model
+      '@giveaway/rpc-model':
+        specifier: workspace:*
+        version: link:../../infra/rpc-model
+      '@giveaway/sweepstakes-model':
+        specifier: workspace:*
+        version: link:../../sweepstakes/sweepstakes-model
+      '@giveaway/task-model':
+        specifier: workspace:*
+        version: link:../task-model
+      '@giveaway/task-ui':
+        specifier: workspace:*
+        version: link:../task-ui
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/ui-primitives
+      '@giveaway/ui-utils':
+        specifier: workspace:*
+        version: link:../../ui/ui-utils
+      '@giveaway/util-types':
+        specifier: workspace:*
+        version: link:../../shared/util-types
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      pluralize:
+        specifier: 'catalog:'
+        version: 8.0.0
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/pluralize':
+        specifier: 'catalog:'
+        version: 0.0.33
       '@types/react':
         specifier: 19.2.10
         version: 19.2.10
@@ -10063,6 +10683,100 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
 
+  packages/team/team-picker:
+    dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
+      '@giveaway/auth-login-ui':
+        specifier: workspace:*
+        version: link:../../auth/auth-login-ui
+      '@giveaway/rpc-client':
+        specifier: workspace:*
+        version: link:../../infra/rpc-client
+      '@giveaway/team-context':
+        specifier: workspace:*
+        version: link:../team-context
+      '@giveaway/team-model':
+        specifier: workspace:*
+        version: link:../team-model
+      '@giveaway/team-server':
+        specifier: workspace:*
+        version: link:../team-server
+      '@giveaway/ui-file-upload':
+        specifier: workspace:*
+        version: link:../../ui/ui-file-upload
+      '@giveaway/ui-layouts':
+        specifier: workspace:*
+        version: link:../../ui/ui-layouts
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/ui-primitives
+      '@giveaway/ui-utils':
+        specifier: workspace:*
+        version: link:../../ui/ui-utils
+      '@hookform/resolvers':
+        specifier: 'catalog:'
+        version: 4.1.3(react-hook-form@7.71.1(react@19.2.4))
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      react-hook-form:
+        specifier: 'catalog:'
+        version: 7.71.1(react@19.2.4)
+      recharts:
+        specifier: 'catalog:'
+        version: 3.7.0(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@17.0.2)(react@19.2.4)(redux@5.0.1)
+      sonner:
+        specifier: 'catalog:'
+        version: 2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+    devDependencies:
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../../infra/db-model
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/rpc-model':
+        specifier: workspace:*
+        version: link:../../infra/rpc-model
+      '@giveaway/testing-dom':
+        specifier: workspace:*
+        version: link:../../tooling/testing-dom
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@testing-library/user-event':
+        specifier: 'catalog:'
+        version: 14.6.7(@testing-library/dom@10.4.2)
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
   packages/team/team-server:
     dependencies:
       '@giveaway/app-config':
@@ -10117,6 +10831,64 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/team/team-settings-integrations:
+    dependencies:
+      '@giveaway/bluesky-connect-ui':
+        specifier: workspace:*
+        version: link:../../integrations/bluesky/bluesky-connect-ui
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../../infra/db-model
+      '@giveaway/discord-connect-ui':
+        specifier: workspace:*
+        version: link:../../integrations/discord/discord-connect-ui
+      '@giveaway/integration-model':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-model
+      '@giveaway/integration-ui':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-ui
+      '@giveaway/twitch-connect-ui':
+        specifier: workspace:*
+        version: link:../../integrations/twitch/twitch-connect-ui
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/ui-primitives
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
       typescript:
         specifier: 'catalog:'
         version: 5.7.2

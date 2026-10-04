@@ -1,0 +1,58 @@
+{
+  "name": "@giveaway/bluesky-task-entry",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:integrations",
+      "platform:bluesky"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/bluesky/bluesky-task-entry --suppressions-location packages/integrations/bluesky/bluesky-task-entry/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./bluesky-connect": "./src/bluesky-connect.tsx",
+    "./bluesky-follow": "./src/bluesky-follow.tsx",
+    "./bluesky-like": "./src/bluesky-like.tsx",
+    "./bluesky-repost": "./src/bluesky-repost.tsx",
+    "./shared": "./src/shared.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/bluesky-api": "workspace:*",
+    "@giveaway/bluesky-model": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/task-entry-core": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "lucide-react": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

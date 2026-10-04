@@ -5,7 +5,7 @@ import {
   TaskActionProps,
   TaskContent,
   TaskControls
-} from '../../building-blocks';
+} from '@giveaway/task-entry-core/building-blocks';
 import { useState } from 'react';
 import { SubmitMediaTaskSchema, TaskInput } from '@giveaway/task-model/schemas';
 import { Typography } from '@giveaway/ui-primitives/typography';
@@ -17,7 +17,7 @@ import {
 import { AlertCircleIcon, ImageIcon } from 'lucide-react';
 import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 import { AcceptedFileTypes, FileSize } from '@giveaway/util-media/files';
-import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
+import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { MinimalTipTapPreview } from '@giveaway/ui-rich-text/minimal-tiptap-preview';
 
 export const SubmitMediaTaskActionForm: React.FC<

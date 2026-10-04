@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import {
   GiveawayParticipationProvider,
   GiveawayParticipationProps
-} from './giveaway-participation-context';
+} from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { GiveawayParticipationCard } from './giveaway-participation-card';
 
 import { NotEligible } from './states/not-eligible';
@@ -14,13 +14,13 @@ import { Cancelled } from './states/cancelled';
 import { Closed } from './states/closed';
 import { Error } from './states/error';
 import { Pending } from './states/pending';
-import { useGiveawayParticipation } from './giveaway-participation-context';
+import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { assertNever } from '@giveaway/util-errors';
 import { toBackgroundStyle } from '@giveaway/sweepstakes-model/color';
 import { cn } from '@giveaway/ui-utils/utils';
-import { SweepstakesLoginOptions } from './sweepstakes-login-options';
+import { SweepstakesLoginOptions } from '@giveaway/sweepstakes-participation-core/sweepstakes-login-options';
 import { UserDetailsForm } from './states/user-details-form';
-import { TurnstileGate } from '@/lib/turnstile/gate';
+import { TurnstileGate } from '@giveaway/turnstile-ui/gate';
 
 const GiveawayParticipationContent = () => {
   const { state, sweepstakes } = useGiveawayParticipation();

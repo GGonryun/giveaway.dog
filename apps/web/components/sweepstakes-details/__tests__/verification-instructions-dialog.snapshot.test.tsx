@@ -16,13 +16,19 @@ vi.mock('next/navigation', () => ({ useRouter: () => navigation.router }));
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
-vi.mock('@/procedures/sweepstakes/update-task-completion-status', () => ({
-  updateTaskCompletionStatus: vi.fn()
-}));
+vi.mock(
+  '@giveaway/sweepstakes-moderation-server/update-task-completion-status',
+  () => ({
+    updateTaskCompletionStatus: vi.fn()
+  })
+);
 
-vi.mock('@/procedures/sweepstakes/reverify-task-completion', () => ({
-  reverifyTaskCompletion: vi.fn()
-}));
+vi.mock(
+  '@giveaway/sweepstakes-moderation-server/reverify-task-completion',
+  () => ({
+    reverifyTaskCompletion: vi.fn()
+  })
+);
 
 const followTask: TaskSchema = {
   id: 'task-follow',

@@ -54,7 +54,7 @@ import {
 } from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import { disqualifyParticipant } from '@/procedures/sweepstakes/disqualify-participant';
+import { disqualifyParticipant } from '@giveaway/sweepstakes-moderation-server/disqualify-participant';
 
 const useDisqualifyParticipant = () => {
   const router = useRouter();

@@ -3,7 +3,7 @@
 import React from 'react';
 import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
-import { useGiveawayParticipation } from '../giveaway-participation-context';
+import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { toRegionalRestrictionDescription } from '@giveaway/sweepstakes-model/schemas';
 
 export const NotEligible: React.FC = () => {

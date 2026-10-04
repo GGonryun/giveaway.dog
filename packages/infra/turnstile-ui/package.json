@@ -1,0 +1,54 @@
+{
+  "name": "@giveaway/turnstile-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:infra"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/infra/turnstile-ui",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./context": "./src/context.tsx",
+    "./gate": "./src/gate.tsx",
+    "./provider": "./src/provider.tsx",
+    "./use-turnstile": "./src/use-turnstile.tsx",
+    "./widget": "./src/widget.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/sweepstakes-participation-core": "workspace:*",
+    "@giveaway/turnstile-model": "workspace:*",
+    "@giveaway/turnstile-server": "workspace:*",
+    "@marsidev/react-turnstile": "catalog:",
+    "cookies-next": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

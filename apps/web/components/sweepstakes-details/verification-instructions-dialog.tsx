@@ -31,9 +31,9 @@ import { UserSchema } from '@giveaway/user-model/user';
 import { TaskStatusBadge } from '@giveaway/task-ui/task-status-badge';
 import { useRouter } from 'next/navigation';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import { updateTaskCompletionStatus } from '@/procedures/sweepstakes/update-task-completion-status';
+import { updateTaskCompletionStatus } from '@giveaway/sweepstakes-moderation-server/update-task-completion-status';
 import { toast } from 'sonner';
-import { reverifyTaskCompletion } from '@/procedures/sweepstakes/reverify-task-completion';
+import { reverifyTaskCompletion } from '@giveaway/sweepstakes-moderation-server/reverify-task-completion';
 
 const useUpdateTaskCompletionStatus = ({
   sweepstakesId

@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
+import type { GiveawayParticipationProps } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import {
   mockHost,
   mockParticipant,

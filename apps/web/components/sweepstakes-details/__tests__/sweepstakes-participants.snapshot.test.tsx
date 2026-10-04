@@ -14,9 +14,12 @@ const navigation = vi.hoisted(() => ({
 
 vi.mock('next/navigation', () => ({ useRouter: () => navigation.router }));
 
-vi.mock('@/procedures/sweepstakes/disqualify-participant', () => ({
-  disqualifyParticipant: vi.fn()
-}));
+vi.mock(
+  '@giveaway/sweepstakes-moderation-server/disqualify-participant',
+  () => ({
+    disqualifyParticipant: vi.fn()
+  })
+);
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 

@@ -8,8 +8,8 @@ import {
   buildUser,
   buildUserProfile
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
-import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
-import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
+import { renderWithParticipation } from '@giveaway/sweepstakes-participation-core/testing/participation-fixtures';
+import type { GiveawayParticipationProps } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { WinnersAnnounced } from '../winners-announced';
 

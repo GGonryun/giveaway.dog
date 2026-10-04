@@ -5,7 +5,7 @@ import type { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { SweepstakeFormContent } from '../sweepstake-form-content';
 import { renderWithForm } from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 
-vi.mock('@/lib/task/components/entry-methods/entry-methods', () => ({
+vi.mock('@giveaway/task-editor/entry-methods/entry-methods', () => ({
   EntryMethods: ({
     fieldPath,
     action

@@ -10,7 +10,7 @@ import {
 } from '@giveaway/ui-primitives/dialog';
 import { Button } from '@giveaway/ui-primitives/button';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import { deleteTaskCompletion } from '@/procedures/sweepstakes/delete-task-completion';
+import { deleteTaskCompletion } from '@giveaway/sweepstakes-moderation-server/delete-task-completion';
 import { UserEntriesSchema } from '@giveaway/task-model/schemas';
 
 interface DeleteEntryDialogProps {

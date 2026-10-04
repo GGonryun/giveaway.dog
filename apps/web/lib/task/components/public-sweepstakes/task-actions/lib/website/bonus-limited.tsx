@@ -1,4 +1,7 @@
-import { TaskActionProps, TaskContent } from '../../building-blocks';
+import {
+  TaskActionProps,
+  TaskContent
+} from '@giveaway/task-entry-core/building-blocks';
 import { Button } from '@giveaway/ui-primitives/button';
 import { BonusLimitedTaskSchema } from '@giveaway/task-model/schemas';
 import { cn } from '@giveaway/ui-utils/utils';

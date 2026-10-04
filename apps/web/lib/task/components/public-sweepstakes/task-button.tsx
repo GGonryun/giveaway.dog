@@ -9,7 +9,7 @@ import { TaskLock } from './task-lock';
 import {
   SUBMISSION_BUTTON_ICON_MAP,
   SUBMISSION_BUTTON_VARIANT_MAP
-} from '../../submission';
+} from '@giveaway/task-actions/submission';
 import { CompletionStatus } from '@prisma/client';
 
 export const TaskButton: React.FC<{

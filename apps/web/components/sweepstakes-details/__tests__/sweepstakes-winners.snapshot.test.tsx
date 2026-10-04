@@ -40,9 +40,12 @@ vi.mock('@giveaway/winners-server/procedures/disqualify-draw', () => ({
 vi.mock('@giveaway/sweepstakes-editor-server/complete-sweepstakes', () => ({
   default: vi.fn()
 }));
-vi.mock('@/procedures/sweepstakes/update-winner-criteria', () => ({
-  default: vi.fn()
-}));
+vi.mock(
+  '@giveaway/sweepstakes-moderation-server/update-winner-criteria',
+  () => ({
+    default: vi.fn()
+  })
+);
 
 const DAY = 24 * 60 * 60 * 1000;
 const ENDED = new Date(NOW.getTime() - DAY);

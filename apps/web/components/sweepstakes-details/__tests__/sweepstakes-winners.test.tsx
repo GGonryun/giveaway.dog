@@ -26,7 +26,7 @@ import { rerollDraw } from '@giveaway/winners-server/procedures/reroll-draw';
 import { rollPrize } from '@giveaway/winners-server/procedures/roll-prize';
 import { rollPrizes } from '@giveaway/winners-server/procedures/roll-prizes';
 import completeSweepstakes from '@giveaway/sweepstakes-editor-server/complete-sweepstakes';
-import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteria';
+import updateWinnerCriteria from '@giveaway/sweepstakes-moderation-server/update-winner-criteria';
 import { SweepstakesWinners } from '../sweepstakes-winners';
 
 const navigation = vi.hoisted(() => ({
@@ -52,9 +52,12 @@ vi.mock('@giveaway/winners-server/procedures/disqualify-draw', () => ({
 vi.mock('@giveaway/sweepstakes-editor-server/complete-sweepstakes', () => ({
   default: vi.fn()
 }));
-vi.mock('@/procedures/sweepstakes/update-winner-criteria', () => ({
-  default: vi.fn()
-}));
+vi.mock(
+  '@giveaway/sweepstakes-moderation-server/update-winner-criteria',
+  () => ({
+    default: vi.fn()
+  })
+);
 
 const DAY = 24 * 60 * 60 * 1000;
 const ENDED = new Date(NOW.getTime() - DAY);

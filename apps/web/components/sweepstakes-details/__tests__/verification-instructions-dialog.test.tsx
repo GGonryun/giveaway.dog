@@ -8,8 +8,8 @@ import {
   buildTask
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import type { TaskSchema } from '@giveaway/task-model/schemas';
-import { reverifyTaskCompletion } from '@/procedures/sweepstakes/reverify-task-completion';
-import { updateTaskCompletionStatus } from '@/procedures/sweepstakes/update-task-completion-status';
+import { reverifyTaskCompletion } from '@giveaway/sweepstakes-moderation-server/reverify-task-completion';
+import { updateTaskCompletionStatus } from '@giveaway/sweepstakes-moderation-server/update-task-completion-status';
 import { VerificationInstructionsDialog } from '../verification-instructions-dialog';
 
 const navigation = vi.hoisted(() => ({
@@ -20,13 +20,19 @@ vi.mock('next/navigation', () => ({ useRouter: () => navigation.router }));
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
-vi.mock('@/procedures/sweepstakes/update-task-completion-status', () => ({
-  updateTaskCompletionStatus: vi.fn()
-}));
+vi.mock(
+  '@giveaway/sweepstakes-moderation-server/update-task-completion-status',
+  () => ({
+    updateTaskCompletionStatus: vi.fn()
+  })
+);
 
-vi.mock('@/procedures/sweepstakes/reverify-task-completion', () => ({
-  reverifyTaskCompletion: vi.fn()
-}));
+vi.mock(
+  '@giveaway/sweepstakes-moderation-server/reverify-task-completion',
+  () => ({
+    reverifyTaskCompletion: vi.fn()
+  })
+);
 
 const followTask: TaskSchema = {
   id: 'task-follow',

@@ -23,7 +23,7 @@ import { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { useTeamsPage } from '@giveaway/team-context/use-teams-page';
 import { useTeamPage } from '@giveaway/team-context/use-team-page';
 import { useTeams } from '@giveaway/team-context/team-provider';
-import { TeamLogo } from '@/components/team/team-logo';
+import { TeamLogo } from '@giveaway/team-picker/team-logo';
 
 export function TeamSwitcher() {
   const { activeTeam, teams } = useTeams();

@@ -16,10 +16,6 @@
     "components/patterns/app-sidebar/__tests__/fixtures.tsx": {
       "package": "@giveaway/shell-sidebar",
       "split": false
-    },
-    "components/sweepstakes/__tests__/participation-fixtures.tsx": {
-      "package": "@giveaway/sweepstakes-participation-core",
-      "split": false
     }
   },
   "deadFiles": [],
@@ -1005,13 +1001,7 @@
       "layer": 10,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/turnstile/context.tsx",
-        "lib/turnstile/gate.tsx",
-        "lib/turnstile/provider.tsx",
-        "lib/turnstile/use-turnstile.tsx",
-        "lib/turnstile/widget.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/rpc-client",
         "@giveaway/sweepstakes-participation-core",
@@ -1177,9 +1167,7 @@
       "layer": 9,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/bluesky/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-api",
         "@giveaway/bluesky-model",
@@ -1479,9 +1467,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/discord/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/task-entry-core",
         "@giveaway/task-model",
@@ -3830,14 +3816,9 @@
       "layer": 10,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": [
-        "procedures/sweepstakes/delete-task-completion.ts",
-        "procedures/sweepstakes/disqualify-participant.ts",
-        "procedures/sweepstakes/reverify-task-completion.ts",
-        "procedures/sweepstakes/update-task-completion-status.ts",
-        "procedures/sweepstakes/update-winner-criteria.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-access",
         "@giveaway/sweepstakes-model",
@@ -3847,7 +3828,7 @@
         "@giveaway/user-source-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/sweepstakes-participation",
@@ -3885,12 +3866,7 @@
       "layer": 9,
       "sourceFiles": 4,
       "testFiles": 6,
-      "sources": [
-        "components/sweepstakes/giveaway-participation-context.tsx",
-        "components/sweepstakes/sweepstakes-login-options.tsx",
-        "components/sweepstakes/terms-modal.tsx",
-        "components/sweepstakes/user-info-section.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/allocation-model",
         "@giveaway/app-config",
@@ -4014,12 +3990,9 @@
       "layer": 10,
       "sourceFiles": 3,
       "testFiles": 2,
-      "sources": [
-        "lib/task/procedures/submit-tasks.ts",
-        "lib/task/procedures/update-task.ts",
-        "lib/task/submission.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/referrals-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
@@ -4029,7 +4002,7 @@
         "@giveaway/ui-primitives",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "pluralize", "zod"]
+      "npm": ["lucide-react", "pluralize", "zod"]
     },
     {
       "name": "@giveaway/task-editor",
@@ -4039,13 +4012,7 @@
       "layer": 10,
       "sourceFiles": 8,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/entry-methods/",
-        "lib/task/components/select-dialog/",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/additional-settings.tsx",
-        "lib/task/components/sweepstakes-editor-form/advanced-settings.tsx",
-        "lib/task/components/sweepstakes-editor-form/base-settings.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-task-editor",
         "@giveaway/discord-task-editor",
@@ -4173,13 +4140,7 @@
       "layer": 8,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/building-blocks.tsx",
-        "lib/task/components/public-sweepstakes/task-actions/lib/error-display.tsx",
-        "lib/task/components/public-sweepstakes/task-actions/lib/provider-connection.tsx",
-        "lib/task/components/public-sweepstakes/task-actions/lib/task-entry-context.tsx",
-        "lib/task/components/public-sweepstakes/task-actions/lib/use-after-visit-behavior.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-login-ui",
         "@giveaway/integration-model",
@@ -4505,13 +4466,7 @@
       "layer": 8,
       "sourceFiles": 5,
       "testFiles": 10,
-      "sources": [
-        "components/team/create-team-form.tsx",
-        "components/team/loading-state.tsx",
-        "components/team/select-team-form.tsx",
-        "components/team/team-logo.tsx",
-        "components/team/team-picker-form.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/auth-login-ui",
@@ -4562,16 +4517,17 @@
       "layer": 10,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["lib/settings/components/integrations.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-connect-ui",
+        "@giveaway/db-model",
         "@giveaway/discord-connect-ui",
         "@giveaway/integration-model",
         "@giveaway/integration-ui",
         "@giveaway/twitch-connect-ui",
         "@giveaway/ui-primitives"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "next", "react"]
+      "npm": ["lucide-react", "next", "react"]
     },
     {
       "name": "@giveaway/team-settings-profile",

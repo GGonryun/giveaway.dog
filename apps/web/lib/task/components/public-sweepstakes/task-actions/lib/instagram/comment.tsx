@@ -1,4 +1,4 @@
-import { TaskActionProps } from '../../building-blocks';
+import { TaskActionProps } from '@giveaway/task-entry-core/building-blocks';
 import { useState } from 'react';
 import { InstagramCommentTaskSchema } from '@giveaway/task-model/schemas';
 import { SocialInstagramIcon } from '@giveaway/integration-icons/instagram';
@@ -7,7 +7,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
 import { Separator } from '@giveaway/ui-primitives/separator';
 import { InstagramDisclaimer } from './disclaimer';
-import { WithProviderConnection } from '../provider-connection';
+import { WithProviderConnection } from '@giveaway/task-entry-core/provider-connection';
 
 export const InstagramCommentTaskActionForm: React.FC<
   TaskActionProps<InstagramCommentTaskSchema>

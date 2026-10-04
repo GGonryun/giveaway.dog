@@ -1,6 +1,6 @@
 'use client';
 
-import { useGiveawayParticipation } from '../giveaway-participation-context';
+import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { useForm, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -25,7 +25,7 @@ import { HelpDialog } from '@giveaway/ui-layouts/help-dialog';
 import { assertNever } from '@giveaway/util-errors';
 import { ArrowRight } from 'lucide-react';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
-import { UserInfoSection } from '../user-info-section';
+import { UserInfoSection } from '@giveaway/sweepstakes-participation-core/user-info-section';
 import { toParticipantForm } from '@giveaway/participant-model/participant';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useState } from 'react';

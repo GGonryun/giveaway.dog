@@ -2,7 +2,7 @@ import {
   TaskActionProps,
   TaskContent,
   TaskControls
-} from '../../building-blocks';
+} from '@giveaway/task-entry-core/building-blocks';
 import { FacebookViewPostTaskSchema } from '@giveaway/task-model/schemas';
 import { SocialFacebookIcon } from '@giveaway/integration-icons/facebook-icon';
 import { FacebookDisclaimer } from './disclaimer';

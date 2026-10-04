@@ -1,7 +1,7 @@
 import { act, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
-import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
+import type { GiveawayParticipationProps } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import {
   NOW,
   buildGiveawayPrize,
@@ -13,8 +13,8 @@ import {
 import { allocatePrize } from '@giveaway/allocation-server/allocate-prize';
 import { submitParticipantForm } from '@giveaway/custom-fields-server/submit-form';
 import createReferralCode from '@giveaway/referrals-server/create-referral-code';
-import submitTask from '@/lib/task/procedures/submit-tasks';
-import updateTask from '@/lib/task/procedures/update-task';
+import submitTask from '@giveaway/task-actions/submit-tasks';
+import updateTask from '@giveaway/task-actions/update-task';
 import {
   SweepstakesParticipationPage,
   type SweepstakesParticipationPageContentProps
@@ -34,8 +34,8 @@ vi.mock('@/components/sweepstakes/giveaway-participation', () => ({
   GiveawayParticipation: vi.fn(() => null)
 }));
 
-vi.mock('@/lib/task/procedures/submit-tasks', () => ({ default: vi.fn() }));
-vi.mock('@/lib/task/procedures/update-task', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/task-actions/submit-tasks', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/task-actions/update-task', () => ({ default: vi.fn() }));
 vi.mock('@giveaway/custom-fields-server/submit-form', () => ({
   submitParticipantForm: vi.fn()
 }));

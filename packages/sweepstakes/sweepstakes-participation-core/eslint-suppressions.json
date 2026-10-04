@@ -1,0 +1,7 @@
+{
+  "packages/sweepstakes/sweepstakes-participation-core/src/giveaway-participation-context.tsx": {
+    "@typescript-eslint/no-empty-object-type": {
+      "count": 1
+    }
+  }
+}

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Clock, RefreshCw } from 'lucide-react';
-import { useGiveawayParticipation } from '../giveaway-participation-context';
+import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@giveaway/ui-primitives/button';
 import { useProcedureAsync } from '@giveaway/rpc-client/hook';

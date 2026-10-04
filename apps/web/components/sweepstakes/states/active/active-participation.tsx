@@ -3,8 +3,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
-import { useGiveawayParticipation } from '../../giveaway-participation-context';
-import { UserInfoSection } from '../../user-info-section';
+import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
+import { UserInfoSection } from '@giveaway/sweepstakes-participation-core/user-info-section';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { useSearchParams } from 'next/navigation';
 import { browser } from '@giveaway/util-browser/browser';

@@ -1,6 +1,9 @@
 'use client';
 
-import { TaskActionProps, TaskContent } from '../../building-blocks';
+import {
+  TaskActionProps,
+  TaskContent
+} from '@giveaway/task-entry-core/building-blocks';
 import { Button } from '@giveaway/ui-primitives/button';
 import { ReferralLinkTaskSchema } from '@giveaway/task-model/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
@@ -11,7 +14,7 @@ import { toast } from 'sonner';
 import { Input } from '@giveaway/ui-primitives/input';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import pluralize from 'pluralize';
-import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
+import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import {
   DEFAULT_USER_REFERRAL,
   UserReferralSchema

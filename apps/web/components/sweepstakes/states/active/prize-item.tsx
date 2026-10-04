@@ -15,7 +15,7 @@ import pluralize from 'pluralize';
 import { Prize } from '@giveaway/sweepstakes-model/schemas';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
-import { SweepstakesLoginOptions } from '../../sweepstakes-login-options';
+import { SweepstakesLoginOptions } from '@giveaway/sweepstakes-participation-core/sweepstakes-login-options';
 import {
   Collapsible,
   CollapsibleContent,

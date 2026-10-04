@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
-import { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
+import { GiveawayParticipationProps } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { MockTeamProvider } from '@giveaway/team-context/mock-team-provider';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { DeepPartial } from '@giveaway/util-types/types';

@@ -2,7 +2,10 @@ import React from 'react';
 import { useTaskTheme } from '@giveaway/task-ui/theme';
 import { cn } from '@giveaway/ui-utils/utils';
 import { CompletionStatus } from '@prisma/client';
-import { SUBMISSION_COLOR_MAP, SUBMISSION_ICON_MAP } from '../../submission';
+import {
+  SUBMISSION_COLOR_MAP,
+  SUBMISSION_ICON_MAP
+} from '@giveaway/task-actions/submission';
 
 export const TaskIcon: React.FC<{
   status: CompletionStatus | undefined;

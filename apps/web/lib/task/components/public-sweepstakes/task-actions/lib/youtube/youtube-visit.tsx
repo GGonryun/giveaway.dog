@@ -3,7 +3,7 @@ import {
   TaskActionProps,
   TaskContent,
   TaskControls
-} from '../../building-blocks';
+} from '@giveaway/task-entry-core/building-blocks';
 import { useState } from 'react';
 import { YoutubeVisitTaskSchema } from '@giveaway/task-model/schemas';
 import { useTaskTheme } from '@giveaway/task-ui/theme';

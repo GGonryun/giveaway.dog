@@ -1,0 +1,7 @@
+{
+  "packages/tasks/task-entry-core/src/building-blocks.tsx": {
+    "react-hooks/static-components": {
+      "count": 1
+    }
+  }
+}

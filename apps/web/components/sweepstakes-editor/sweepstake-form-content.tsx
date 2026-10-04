@@ -4,7 +4,7 @@ import { Design } from '@giveaway/sweepstakes-editor-design/design';
 import { Prizes } from '@giveaway/sweepstakes-editor-prizes/prizes';
 import { Setup } from '@giveaway/sweepstakes-editor-setup/setup';
 import { Selection } from '@giveaway/sweepstakes-editor-selection/selection';
-import { EntryMethods } from '@/lib/task/components/entry-methods/entry-methods';
+import { EntryMethods } from '@giveaway/task-editor/entry-methods/entry-methods';
 import { useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 

@@ -1,10 +1,10 @@
-import { TaskActionProps } from '../../building-blocks';
+import { TaskActionProps } from '@giveaway/task-entry-core/building-blocks';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button } from '@giveaway/ui-primitives/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
-import { WithProviderConnection } from '../provider-connection';
+import { WithProviderConnection } from '@giveaway/task-entry-core/provider-connection';
 
 import {
   Alert,
@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@giveaway/ui-primitives/dialog';
-import { ErrorDisplay } from '../error-display';
+import { ErrorDisplay } from '@giveaway/task-entry-core/error-display';
 import { PRIVATE_STEAM_WISHLIST_ERROR } from '@giveaway/task-model/steam-errors';
 import { SteamWishlistTaskSchema } from '@giveaway/task-model/schemas';
 

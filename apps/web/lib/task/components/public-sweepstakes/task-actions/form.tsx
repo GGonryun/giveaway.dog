@@ -1,6 +1,6 @@
 import { assertNever } from '@giveaway/util-errors';
 
-import { TaskActionProps } from './building-blocks';
+import { TaskActionProps } from '@giveaway/task-entry-core/building-blocks';
 
 import { VisitUrlTaskActionForm } from './lib/website/visit-url';
 import { BonusTaskActionForm } from './lib/website/bonus-task';
@@ -9,8 +9,8 @@ import { TwitterFollowTaskActionForm } from './lib/twitter/twitter-follow';
 import { TwitterRetweetTaskActionForm } from './lib/twitter/twitter-retweet';
 import { SteamWishlistTaskActionForm } from './lib/steam/steam-wishlist';
 import { SteamFollowTaskActionForm } from './lib/steam/steam-follow';
-import { DiscordJoinTaskActionForm } from './lib/discord/discord-join';
-import { DiscordInteractionImportTaskActionForm } from './lib/discord/discord-interaction-import';
+import { DiscordJoinTaskActionForm } from '@giveaway/discord-task-entry/discord-join';
+import { DiscordInteractionImportTaskActionForm } from '@giveaway/discord-task-entry/discord-interaction-import';
 import { TwitchFollowTaskActionForm } from './lib/twitch/twitch-follow';
 import { KickFollowTaskActionForm } from './lib/kick/kick-follow';
 import { SecretCodeTaskActionForm } from './lib/form/secret-code';
@@ -20,10 +20,10 @@ import { BonusTimedActionForm } from './lib/website/bonus-timed';
 import { BonusLimitedActionForm } from './lib/website/bonus-limited';
 import { BonusLoyaltyActionForm } from './lib/website/bonus-loyalty';
 import { InstagramVisitTaskActionForm } from './lib/instagram/visit';
-import { BlueskyConnectTaskActionForm } from './lib/bluesky/bluesky-connect';
-import { BlueskyFollowTaskActionForm } from './lib/bluesky/bluesky-follow';
-import { BlueskyLikeTaskActionForm } from './lib/bluesky/bluesky-like';
-import { BlueskyRepostTaskActionForm } from './lib/bluesky/bluesky-repost';
+import { BlueskyConnectTaskActionForm } from '@giveaway/bluesky-task-entry/bluesky-connect';
+import { BlueskyFollowTaskActionForm } from '@giveaway/bluesky-task-entry/bluesky-follow';
+import { BlueskyLikeTaskActionForm } from '@giveaway/bluesky-task-entry/bluesky-like';
+import { BlueskyRepostTaskActionForm } from '@giveaway/bluesky-task-entry/bluesky-repost';
 import { VeloraConnectTaskActionForm } from './lib/velora/velora-connect';
 import { VeloraFollowTaskActionForm } from './lib/velora/velora-follow';
 import { LinkedInConnectTaskActionForm } from './lib/linkedin/linkedin-connect';

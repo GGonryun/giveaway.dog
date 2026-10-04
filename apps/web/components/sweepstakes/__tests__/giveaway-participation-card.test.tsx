@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { GiveawayParticipationProps } from '../giveaway-participation-context';
+import type { GiveawayParticipationProps } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { GiveawayParticipationCard } from '../giveaway-participation-card';
 import {
   NOW,
@@ -9,7 +9,7 @@ import {
   buildParticipation,
   buildSweepstakes
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
-import { renderWithParticipation } from './participation-fixtures';
+import { renderWithParticipation } from '@giveaway/sweepstakes-participation-core/testing/participation-fixtures';
 import { DEFAULT_DESIGN_DATA } from '@giveaway/sweepstakes-model/defaults';
 import type { DeviceType } from '@giveaway/sweepstakes-model/schemas';
 

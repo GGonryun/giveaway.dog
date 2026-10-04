@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Crown, ChevronDown, ChevronRight } from 'lucide-react';
-import { useGiveawayParticipation } from '../giveaway-participation-context';
+import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import {
   Table,
   TableBody,

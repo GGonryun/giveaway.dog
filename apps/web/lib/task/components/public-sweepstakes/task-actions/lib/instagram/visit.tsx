@@ -2,7 +2,7 @@ import {
   TaskActionProps,
   TaskContent,
   TaskControls
-} from '../../building-blocks';
+} from '@giveaway/task-entry-core/building-blocks';
 import { useState, useEffect } from 'react';
 import { InstagramVisitTaskSchema } from '@giveaway/task-model/schemas';
 import { SocialInstagramIcon } from '@giveaway/integration-icons/instagram';

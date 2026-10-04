@@ -1,10 +1,10 @@
-import { TaskActionProps } from '../../building-blocks';
+import { TaskActionProps } from '@giveaway/task-entry-core/building-blocks';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@giveaway/ui-primitives/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
-import { WithProviderConnection } from '../provider-connection';
+import { WithProviderConnection } from '@giveaway/task-entry-core/provider-connection';
 import { KickFollowTaskSchema } from '@giveaway/task-model/schemas';
 
 export const KickFollowTaskActionForm: React.FC<

@@ -24,11 +24,6 @@
       "count": 1
     }
   },
-  "apps/web/components/sweepstakes/giveaway-participation-context.tsx": {
-    "@typescript-eslint/no-empty-object-type": {
-      "count": 1
-    }
-  },
   "apps/web/components/sweepstakes/states/user-details-form.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -37,24 +32,6 @@
   "apps/web/lib/home/supported-integrations.tsx": {
     "@next/next/no-html-link-for-pages": {
       "count": 1
-    }
-  },
-  "apps/web/lib/task/components/entry-methods/entry-methods.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    },
-    "react-hooks/immutability": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/task/components/public-sweepstakes/task-actions/building-blocks.tsx": {
-    "react-hooks/static-components": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/task/components/public-sweepstakes/task-actions/lib/bluesky/shared.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
     }
   },
   "apps/web/lib/task/components/public-sweepstakes/task-actions/lib/referral/referral-link.tsx": {
@@ -80,16 +57,6 @@
   "apps/web/lib/templates/components/use-template-modal.tsx": {
     "react-hooks/purity": {
       "count": 2
-    }
-  },
-  "apps/web/procedures/sweepstakes/reverify-task-completion.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "apps/web/procedures/sweepstakes/update-task-completion-status.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
     }
   }
 }

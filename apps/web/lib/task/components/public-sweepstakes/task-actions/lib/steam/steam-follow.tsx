@@ -1,16 +1,16 @@
 'use client';
 
-import { TaskActionProps } from '../../building-blocks';
+import { TaskActionProps } from '@giveaway/task-entry-core/building-blocks';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Button } from '@giveaway/ui-primitives/button';
 import { UserPlus, ExternalLink, ImageIcon } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
-import { WithProviderConnection } from '../provider-connection';
+import { WithProviderConnection } from '@giveaway/task-entry-core/provider-connection';
 import { SteamFollowTaskSchema, TaskInput } from '@giveaway/task-model/schemas';
 import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 import { AcceptedFileTypes, FileSize } from '@giveaway/util-media/files';
-import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
+import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 
 export const SteamFollowTaskActionForm: React.FC<
   TaskActionProps<SteamFollowTaskSchema>

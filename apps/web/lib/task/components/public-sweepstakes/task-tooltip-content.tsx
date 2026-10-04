@@ -6,7 +6,7 @@ import { CompletionStatus } from '@prisma/client';
 import {
   SUBMISSION_TOOLTIP_COLOR_MAP,
   SUBMISSION_TOOLTIP_CONTENT
-} from '../../submission';
+} from '@giveaway/task-actions/submission';
 import { TaskSchema } from '@giveaway/task-model/schemas';
 import pluralize from 'pluralize';
 import { assertNever } from '@giveaway/util-errors';

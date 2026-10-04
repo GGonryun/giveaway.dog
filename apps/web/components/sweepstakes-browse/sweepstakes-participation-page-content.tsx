@@ -7,7 +7,7 @@ import {
 } from '@giveaway/sweepstakes-model/schemas';
 import { usePathname, useRouter } from 'next/navigation';
 import { useProcedureAsync } from '@giveaway/rpc-client/hook';
-import submitTask from '@/lib/task/procedures/submit-tasks';
+import submitTask from '@giveaway/task-actions/submit-tasks';
 import { toSweepstakesState } from '@giveaway/participant-model/sweepstakes';
 import { submitParticipantForm } from '@giveaway/custom-fields-server/submit-form';
 import { UserHostRelationshipSchema } from '@giveaway/loyalty-model/schemas';
@@ -17,7 +17,7 @@ import {
   CreateReferralSchema,
   UserReferralSchema
 } from '@giveaway/referrals-model/schemas';
-import updateTask from '@/lib/task/procedures/update-task';
+import updateTask from '@giveaway/task-actions/update-task';
 import { allocatePrize } from '@giveaway/allocation-server/allocate-prize';
 import { ApplicationError } from '@giveaway/util-errors';
 import { useMemo, useState } from 'react';

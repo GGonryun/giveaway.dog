@@ -2,14 +2,14 @@ import { render } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayParticipation } from '../giveaway-participation';
-import type { GiveawayParticipationProps } from '../giveaway-participation-context';
+import type { GiveawayParticipationProps } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import {
   NOW,
   withStableIds
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
-import { buildParticipationProps } from './participation-fixtures';
+import { buildParticipationProps } from '@giveaway/sweepstakes-participation-core/testing/participation-fixtures';
 
-vi.mock('@/lib/turnstile/gate', () => ({
+vi.mock('@giveaway/turnstile-ui/gate', () => ({
   TurnstileGate: ({ children }: { children: ReactNode }) => (
     <div data-testid="turnstile-gate">{children}</div>
   )
@@ -33,9 +33,12 @@ vi.mock('../states/cancelled', () => ({
 }));
 vi.mock('../states/closed', () => ({ Closed: () => <div>closed</div> }));
 vi.mock('../states/error', () => ({ Error: () => <div>error</div> }));
-vi.mock('../sweepstakes-login-options', () => ({
-  SweepstakesLoginOptions: () => <div>login options</div>
-}));
+vi.mock(
+  '@giveaway/sweepstakes-participation-core/sweepstakes-login-options',
+  () => ({
+    SweepstakesLoginOptions: () => <div>login options</div>
+  })
+);
 
 const renderParticipation = (
   overrides: Partial<GiveawayParticipationProps> = {}

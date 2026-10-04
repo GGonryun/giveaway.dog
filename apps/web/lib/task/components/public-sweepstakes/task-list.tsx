@@ -5,7 +5,7 @@ import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { nanoid } from 'nanoid';
 import React, { useEffect } from 'react';
 import { TaskSchema } from '@giveaway/task-model/schemas';
-import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
+import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { TaskItem } from './task-item';
 import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';
 import { computeTaskStatus } from '@giveaway/task-model/status';

@@ -24,7 +24,7 @@ import { SocialXBlueCheckmarkIcon } from '@giveaway/integration-icons/x-icon';
 import pluralize from 'pluralize';
 import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';
 import { UserReferralSchema } from '@giveaway/referrals-model/schemas';
-import { toTaskStatus } from '../../submission';
+import { toTaskStatus } from '@giveaway/task-actions/submission';
 import { CompletionStatus } from '@prisma/client';
 
 const Container: React.PC<{
