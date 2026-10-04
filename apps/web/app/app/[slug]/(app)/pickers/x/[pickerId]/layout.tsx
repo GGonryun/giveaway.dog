@@ -1,7 +1,7 @@
 'use server';
 
 import React from 'react';
-import { Outline } from '@/components/app/outline';
+import { Outline } from '@giveaway/shell-sidebar/app/outline';
 
 interface PickerDetailLayoutProps {
   params: Promise<{ slug: string; pickerId: string }>;

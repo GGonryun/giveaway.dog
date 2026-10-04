@@ -1,4 +1,4 @@
-import { Outline } from '@/components/app/outline';
+import { Outline } from '@giveaway/shell-sidebar/app/outline';
 import { SelectPickerList } from '@giveaway/picker-ui/components/select-picker-list';
 
 interface PickersPageProps {

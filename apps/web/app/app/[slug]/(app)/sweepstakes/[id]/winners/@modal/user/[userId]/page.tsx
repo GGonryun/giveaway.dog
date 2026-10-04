@@ -3,7 +3,7 @@
 import {
   ParticipatingUserSheet,
   UserParticipantSheetContent
-} from '@/components/sweepstakes-details/user-participant-detail-sheet';
+} from '@giveaway/sweepstakes-details-participants/user-participant-detail-sheet';
 import { getSweepstakesParticipant } from '@giveaway/participant-server/get-sweepstake-participant';
 import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import { getSweepstakesFormFields } from '@giveaway/participation-server/get-sweepstake-form-field';

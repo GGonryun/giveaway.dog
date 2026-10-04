@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { AppSidebar } from '../index';
-import { renderInSidebar } from './fixtures';
+import { AppSidebar } from '../app-sidebar';
+import { renderInSidebar } from '../testing/fixtures';
 
 vi.mock('@giveaway/auth-actions/logout', () => ({ default: vi.fn() }));
 

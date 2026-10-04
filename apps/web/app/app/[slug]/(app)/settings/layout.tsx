@@ -1,7 +1,7 @@
 'use server';
 
 import React from 'react';
-import { Outline } from '@/components/app/outline';
+import { Outline } from '@giveaway/shell-sidebar/app/outline';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import { SettingsTabs } from '@giveaway/team-settings-shell/settings-tabs';
 

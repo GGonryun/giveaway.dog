@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NavGroups } from '../nav-projects';
-import { renderInSidebar } from './fixtures';
+import { renderInSidebar } from '../testing/fixtures';
 
 const navigation = vi.hoisted(() => ({
   pathname: '/app/acme',

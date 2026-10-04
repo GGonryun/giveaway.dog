@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Outline } from '@/components/app/outline';
+import { Outline } from '@giveaway/shell-sidebar/app/outline';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import {
   ListPickersV2FilterSchema,
@@ -9,7 +9,7 @@ import { CreatePickerV2Button } from '@giveaway/x-picker-dashboard/create-picker
 import { PickersV2Table } from '@giveaway/x-picker-dashboard/pickers-v2-table';
 import { PickersV2Tabs } from '@giveaway/x-picker-dashboard/pickers-v2-tabs';
 import { getPickersV2List } from '@giveaway/x-picker-server/procedures/get-pickers-v2-list';
-import { XPickersUpgradeCTA } from '@/lib/pickers/x/components/x-pickers-upgrade-cta';
+import { XPickersUpgradeCTA } from '@giveaway/x-picker-public/x-pickers-upgrade-cta';
 import { hasMinimumTeamTier } from '@giveaway/team-model/team/util';
 import { TeamTier } from '@prisma/client';
 import db from '@giveaway/db-client/prisma';

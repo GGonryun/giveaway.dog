@@ -14,7 +14,7 @@ import {
   SweepstakesWinnerCriteriaSchema
 } from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
-import { PrizeDrawResult } from '@prisma/client';
+import { PrizeDrawResult } from '@giveaway/db-model';
 import { NavigationHeader } from '@giveaway/shell-navigation/navigation-header';
 import Link from 'next/link';
 import { rollPrizes } from '@giveaway/winners-server/procedures/roll-prizes';

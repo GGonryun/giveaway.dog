@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamSwitcher } from '../team-switcher';
-import { globexTeam, renderInSidebar } from './fixtures';
+import { globexTeam, renderInSidebar } from '../testing/fixtures';
 
 const mocks = vi.hoisted(() => ({
   push: vi.fn(),

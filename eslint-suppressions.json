@@ -9,11 +9,6 @@
       "count": 2
     }
   },
-  "apps/web/components/sweepstakes-details/verification-instructions-dialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "apps/web/components/sweepstakes-editor/sweepstakes-editor-preview.tsx": {
     "react-hooks/purity": {
       "count": 1

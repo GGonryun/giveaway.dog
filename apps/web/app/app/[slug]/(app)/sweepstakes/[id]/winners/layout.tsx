@@ -1,5 +1,5 @@
-import { SweepstakesWinners } from '@/components/sweepstakes-details/sweepstakes-winners';
-import { SweepstakesWinnersSkeleton } from '@/components/sweepstakes-details/sweepstakes-winners-skeleton';
+import { SweepstakesWinners } from '@giveaway/sweepstakes-details-winners/sweepstakes-winners';
+import { SweepstakesWinnersSkeleton } from '@giveaway/sweepstakes-details-winners/sweepstakes-winners-skeleton';
 import { getSweepstakesParticipants } from '@giveaway/participant-server/get-sweepstakes-participants';
 import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import getSweepstakePrizes from '@giveaway/sweepstakes-insights-server/get-sweepstake-prizes';

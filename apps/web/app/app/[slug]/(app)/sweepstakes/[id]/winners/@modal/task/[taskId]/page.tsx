@@ -3,7 +3,7 @@
 import {
   TaskCompletionDetailSheet,
   TaskCompletionDetailSheetContent
-} from '@/components/sweepstakes-details/task-completion-detail-sheet';
+} from '@giveaway/sweepstakes-details-entries/task-completion-detail-sheet';
 import getSweepstakeEntry from '@giveaway/sweepstakes-insights-server/get-sweepstake-task-entries';
 import { Suspense } from 'react';
 

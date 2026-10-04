@@ -1,4 +1,4 @@
-import { AppSidebar } from '@/components/patterns/app-sidebar';
+import { AppSidebar } from '@giveaway/shell-sidebar/app-sidebar';
 
 import { SidebarInset, SidebarProvider } from '@giveaway/ui-primitives/sidebar';
 

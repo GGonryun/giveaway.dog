@@ -26,7 +26,7 @@ import {
   getProviderLink,
   getProviderLabel
 } from '@giveaway/task-model/verification/utils';
-import { CompletionStatus } from '@prisma/client';
+import { CompletionStatus } from '@giveaway/db-model';
 import { UserSchema } from '@giveaway/user-model/user';
 import { TaskStatusBadge } from '@giveaway/task-ui/task-status-badge';
 import { useRouter } from 'next/navigation';

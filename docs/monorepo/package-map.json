@@ -12,12 +12,7 @@
     "config": ["config", "model", "util"]
   },
   "refactors": [],
-  "testFixtures": {
-    "components/patterns/app-sidebar/__tests__/fixtures.tsx": {
-      "package": "@giveaway/shell-sidebar",
-      "split": false
-    }
-  },
+  "testFixtures": {},
   "deadFiles": [],
   "packages": [
     {
@@ -1549,9 +1544,7 @@
       "layer": 9,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/kick/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/task-entry-core",
         "@giveaway/task-model",
@@ -1594,9 +1587,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/linkedin/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/task-entry-core",
         "@giveaway/task-model",
@@ -1679,10 +1670,7 @@
       "layer": 9,
       "sourceFiles": 8,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/facebook/",
-        "lib/task/components/public-sweepstakes/task-actions/lib/instagram/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/task-entry-core",
@@ -1744,9 +1732,7 @@
       "layer": 10,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/steam/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-participation-core",
         "@giveaway/task-entry-core",
@@ -2944,22 +2930,7 @@
       "layer": 10,
       "sourceFiles": 14,
       "testFiles": 0,
-      "sources": [
-        "lib/pickers/x/components/load-tweet-modal.tsx",
-        "lib/pickers/x/components/pick-winners-error-modal.tsx",
-        "lib/pickers/x/components/picker-benefits-section.tsx",
-        "lib/pickers/x/components/picker-faq-section.tsx",
-        "lib/pickers/x/components/picker-how-it-works-section.tsx",
-        "lib/pickers/x/components/picker-live-engagement-section.tsx",
-        "lib/pickers/x/components/progress-modal.tsx",
-        "lib/pickers/x/components/public-x-picker-form.tsx",
-        "lib/pickers/x/components/rate-limit-modal.tsx",
-        "lib/pickers/x/components/tweet-preview-card.tsx",
-        "lib/pickers/x/components/twitter-v2-public-view.tsx",
-        "lib/pickers/x/components/upgrade-modal.tsx",
-        "lib/pickers/x/components/winners-result-modal.tsx",
-        "lib/pickers/x/components/x-pickers-upgrade-cta.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/browse-list",
         "@giveaway/integration-icons",
@@ -3218,13 +3189,7 @@
       "layer": 9,
       "sourceFiles": 5,
       "testFiles": 8,
-      "sources": [
-        "components/app/",
-        "components/patterns/app-sidebar/index.tsx",
-        "components/patterns/app-sidebar/nav-projects.tsx",
-        "components/patterns/app-sidebar/nav-user.tsx",
-        "components/patterns/app-sidebar/team-switcher.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-context",
         "@giveaway/account-settings",
@@ -3349,15 +3314,10 @@
       "layer": 11,
       "sourceFiles": 5,
       "testFiles": 10,
-      "sources": [
-        "components/sweepstakes-details/delete-entry-dialog.tsx",
-        "components/sweepstakes-details/sweepstakes-entries-skeleton.tsx",
-        "components/sweepstakes-details/sweepstakes-entries.tsx",
-        "components/sweepstakes-details/task-completion-detail-sheet.tsx",
-        "components/sweepstakes-details/verification-instructions-dialog.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/sweepstakes-moderation-server",
         "@giveaway/task-model",
@@ -3367,15 +3327,7 @@
         "@giveaway/user-model",
         "@giveaway/user-source-ui"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "date-fns",
-        "lodash",
-        "lucide-react",
-        "next",
-        "react",
-        "sonner"
-      ]
+      "npm": ["date-fns", "lodash", "lucide-react", "next", "react", "sonner"]
     },
     {
       "name": "@giveaway/sweepstakes-details-participants",
@@ -3385,11 +3337,7 @@
       "layer": 11,
       "sourceFiles": 3,
       "testFiles": 4,
-      "sources": [
-        "components/sweepstakes-details/sweepstakes-participants-skeleton.tsx",
-        "components/sweepstakes-details/sweepstakes-participants.tsx",
-        "components/sweepstakes-details/user-participant-detail-sheet.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/audience-user-details",
@@ -3480,14 +3428,10 @@
       "layer": 11,
       "sourceFiles": 4,
       "testFiles": 6,
-      "sources": [
-        "components/sweepstakes-details/dice-icon.tsx",
-        "components/sweepstakes-details/public-winner-draw.tsx",
-        "components/sweepstakes-details/sweepstakes-winners-skeleton.tsx",
-        "components/sweepstakes-details/sweepstakes-winners.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/participant-model",
         "@giveaway/rpc-client",
         "@giveaway/shell-navigation",
@@ -3507,7 +3451,6 @@
         "@giveaway/winners-server"
       ],
       "npm": [
-        "@giveaway/db-model",
         "canvas-confetti",
         "framer-motion",
         "lucide-react",
@@ -4162,9 +4105,7 @@
       "layer": 10,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/form/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-participation-core",
         "@giveaway/task-entry-core",

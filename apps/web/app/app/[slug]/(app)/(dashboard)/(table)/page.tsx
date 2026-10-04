@@ -19,7 +19,7 @@ import {
 } from '@giveaway/sweepstakes-model/sweepstakes';
 import { SweepstakesFilterBar } from '@giveaway/sweepstakes-dashboard/sweepstakes-filter-bar';
 import { SweepstakesTabs } from '@giveaway/sweepstakes-dashboard/sweepstakes-tabs';
-import { Outline } from '@/components/app/outline';
+import { Outline } from '@giveaway/shell-sidebar/app/outline';
 import { CreateGiveawayButton } from '@giveaway/sweepstakes-actions-ui/create-giveaway-button';
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
