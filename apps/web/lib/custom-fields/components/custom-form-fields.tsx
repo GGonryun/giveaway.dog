@@ -2,7 +2,7 @@
 
 import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { ArrayPath, useFieldArray } from 'react-hook-form';
 import {
   closestCenter,
@@ -23,7 +23,7 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { nanoid } from 'nanoid';
 import { SweepstakesFormFieldType } from '@prisma/client';
 import {
@@ -31,7 +31,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 
 import { widetype } from '@giveaway/util-types/widetype';
 import { TWITTER_PROFILE_URL } from '@giveaway/app-config/settings';

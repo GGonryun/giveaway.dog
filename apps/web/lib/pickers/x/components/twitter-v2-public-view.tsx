@@ -2,8 +2,13 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@giveaway/ui-primitives/card';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import {
   Users,
   CheckCircle2,
@@ -13,7 +18,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { formatDistance } from 'date-fns';
-import { TwitterV2PickerSchema } from '../schemas/details';
+import { TwitterV2PickerSchema } from '@giveaway/x-picker-model/schemas/details';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 import { TwitterV2ParticipantsSection } from './twitter-v2-participants-section';
@@ -28,7 +33,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/ui/dialog';
+} from '@giveaway/ui-primitives/dialog';
 
 interface TwitterV2PublicViewProps {
   picker: TwitterV2PickerSchema;

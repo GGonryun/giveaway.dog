@@ -7,7 +7,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader
-} from '@/components/ui/card';
+} from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -15,21 +15,21 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+} from '@giveaway/ui-primitives/table';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import { MoreVertical, Eye, UserX, Users, Ban } from 'lucide-react';
-import { TablePagination } from '@/components/ui/table-pagination';
+import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
 import { StatusExplanationDialog } from '../users/status-explanation-dialog';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
+import { Label } from '@giveaway/ui-primitives/label';
 import {
   Dialog,
   DialogContent,
@@ -37,10 +37,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter
-} from '@/components/ui/dialog';
+} from '@giveaway/ui-primitives/dialog';
 
 import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
 import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';

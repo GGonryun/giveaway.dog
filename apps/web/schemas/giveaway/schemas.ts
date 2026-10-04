@@ -18,8 +18,8 @@ import { aspectRatioSchema } from '@giveaway/util-media/aspect-ratio/data';
 import { sweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { DEFAULT_MINIMUM_AGE } from '@giveaway/custom-fields-model/defaults';
 import { taskCompletionSchema } from '@/lib/task/completions';
-import countriesData from '@/lib/countries.json';
-import continentsData from '@/lib/continents.json';
+import countriesData from '@giveaway/util-geo/countries.json';
+import continentsData from '@giveaway/util-geo/continents.json';
 export type DeviceType = 'mobile' | 'desktop';
 
 export const prizeSchema = z.object({

@@ -1,7 +1,7 @@
 import db from '@giveaway/db-client/prisma';
 import { redis } from '@giveaway/cache/redis';
 import { newVersionedRateLimiter } from '@giveaway/ratelimit/ratelimit';
-import { twitchChatMessageEventSchema } from './schema';
+import { twitchChatMessageEventSchema } from '@giveaway/twitch-model/schema';
 import { toTaskSchema } from '@/lib/task/schemas';
 import { sendChatMessage } from '@/lib/twitch/api/send-chat-message';
 import { TWITCH_BOT_USER_ID } from '@/lib/twitch/bot/scopes';

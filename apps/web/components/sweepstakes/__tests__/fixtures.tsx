@@ -31,7 +31,7 @@ import type {
   SweepstakesPrizeSchema,
   SweepstakesWinnerCriteriaSchema
 } from '@/schemas/giveaway/schemas';
-import type { DetailedUserTeam } from '@/schemas/teams';
+import type { DetailedUserTeam } from '@giveaway/team-model/teams';
 import type { UserProfileSchema, UserSchema } from '@/schemas/user';
 
 export const NOW = new Date(2026, 9, 1, 12, 0, 0);

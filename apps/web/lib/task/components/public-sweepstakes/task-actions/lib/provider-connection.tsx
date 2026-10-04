@@ -9,7 +9,11 @@ import { AlertTriangle } from 'lucide-react';
 import { useTaskEntry } from './task-entry-context';
 import { usePathname } from 'next/navigation';
 
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertTitle,
+  AlertDescription
+} from '@giveaway/ui-primitives/alert';
 import {
   IDENTITY_PROVIDER_LABEL,
   ProviderSchema,

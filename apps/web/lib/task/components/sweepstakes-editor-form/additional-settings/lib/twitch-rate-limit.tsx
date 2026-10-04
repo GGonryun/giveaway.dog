@@ -7,19 +7,19 @@ import {
   FormControl,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import { TwitchChatImportTaskSchema } from '@/lib/task/schemas';
 
 type RateLimit = NonNullable<TwitchChatImportTaskSchema['rateLimit']>;

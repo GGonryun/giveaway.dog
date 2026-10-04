@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { SlidersHorizontal, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   Sheet,
   SheetContent,
@@ -11,24 +11,24 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger
-} from '@/components/ui/sheet';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/sheet';
+import { Label } from '@giveaway/ui-primitives/label';
+import { Input } from '@giveaway/ui-primitives/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import {
   ALL_BROWSE_STATUSES,
   BrowseStatus,
   BROWSE_STATUS_LABELS,
   GiveawayFilters
 } from '@/lib/filters/giveaway-filters';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@giveaway/ui-primitives/checkbox';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import { MultiSelect, MultiSelectOption } from '@/components/ui/multi-select';
 import { useMemo } from 'react';
 

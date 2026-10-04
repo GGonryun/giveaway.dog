@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
 import { toast } from 'sonner';
 import getUserTeams from '@/procedures/teams/get-user-teams';
-import type { DetailedUserTeam } from '@/schemas/teams';
+import type { DetailedUserTeam } from '@giveaway/team-model/teams';
 import type { Result } from '@giveaway/rpc-model/types';
 import { useUserTeams } from '../use-user-teams';
 

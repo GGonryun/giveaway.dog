@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 
-import { Input } from '@/components/ui/input';
+import { Input } from '@giveaway/ui-primitives/input';
 import { Search } from 'lucide-react';
 import { TemplateListItemSchema } from '../schemas/template';
 import { TemplateCard } from './template-card';
@@ -12,7 +12,7 @@ import { DeleteTemplateModal } from './delete-template-modal';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { useRouter } from 'next/navigation';
-import { timezone } from '@/lib/time';
+import { timezone } from '@giveaway/util-time/time';
 import { useCreateTemplate } from '@/components/templates/use-create-template';
 
 export const TemplatesPage: React.FC<{

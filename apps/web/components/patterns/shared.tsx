@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '../ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 
 export const MarketingHeader: React.FC<{
   title: MarketingTitleProps;

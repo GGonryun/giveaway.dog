@@ -7,16 +7,16 @@ import { toTaskInput } from './input';
 import { Prisma } from '@prisma/client';
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { taskSchema } from '@/lib/task/schemas';
-import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
-import { parseSocialLinks } from '../social-links';
-import { DetailedUserTeam } from '../teams';
+import { DEFAULT_TEAM_LOGO } from '@giveaway/team-model/team/data';
+import { parseSocialLinks } from '@giveaway/team-model/social-links';
+import { DetailedUserTeam } from '@giveaway/team-model/teams';
 import {
   sweepstakesFormFieldSchema,
   SweepstakesFormFieldSchema
 } from '@giveaway/custom-fields-model/schemas';
 import { size } from 'lodash';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 
 export const winnerSchema = z.object({
   prizeId: z.string(),

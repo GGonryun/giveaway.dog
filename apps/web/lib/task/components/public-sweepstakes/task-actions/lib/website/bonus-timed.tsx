@@ -1,9 +1,9 @@
 import { TaskActionProps, TaskContent } from '../../building-blocks';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { BonusTimedTaskSchema } from '@/lib/task/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import React, { useState } from 'react';
 import { useInterval } from '@giveaway/ui-hooks/use-interval';
 import { formatDistanceToNow } from 'date-fns';
@@ -11,7 +11,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
-} from '@/components/ui/tooltip';
+} from '@giveaway/ui-primitives/tooltip';
 
 export const BonusTimedActionForm: React.FC<
   TaskActionProps<BonusTimedTaskSchema>

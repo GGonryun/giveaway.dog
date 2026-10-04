@@ -2,9 +2,9 @@
 
 import { motion, useAnimationFrame } from 'framer-motion';
 import { useRef, useState } from 'react';
-import type { ResolvedTheme } from '../theme/get-server-theme';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import type { ResolvedTheme } from '@giveaway/theme-server/get-server-theme';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import Image from 'next/image';
 import {
   toQualityType,

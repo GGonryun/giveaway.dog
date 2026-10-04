@@ -11,15 +11,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar
-} from '@/components/ui/sidebar';
+} from '@giveaway/ui-primitives/sidebar';
 import { toast } from 'sonner';
-import { DetailedUserTeam } from '@/schemas/teams';
+import { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { useTeamsPage } from '@/components/team/use-teams-page';
 import { useTeamPage } from '@/components/team/use-team-page';
 import { useTeams } from '@/components/context/team-provider';

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import {
   ArrowLeftIcon,
   ChevronDown,
@@ -13,16 +13,16 @@ import {
 import { cn } from '@giveaway/ui-utils/utils';
 import pluralize from 'pluralize';
 import { Prize } from '@/schemas/giveaway/schemas';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { SweepstakesLoginOptions } from '../../sweepstakes-login-options';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@/components/ui/collapsible';
+} from '@giveaway/ui-primitives/collapsible';
 import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '@giveaway/ui-primitives/progress';
 
 export const PrizeItem: React.FC<{
   prize: Prize;

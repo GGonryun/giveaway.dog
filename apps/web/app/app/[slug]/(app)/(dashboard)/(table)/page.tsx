@@ -2,8 +2,8 @@
 
 import { SweepstakesTable } from './components/sweepstakes-table';
 import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card } from '@/components/ui/card';
+import { Skeleton } from '@giveaway/ui-primitives/skeleton';
+import { Card } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import getSweepstakesList from '@/procedures/sweepstakes/get-sweepstakes-list';
 import {
   ListSweepstakesFilters,

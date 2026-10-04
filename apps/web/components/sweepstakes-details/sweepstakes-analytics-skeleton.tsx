@@ -4,8 +4,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+} from '@giveaway/ui-primitives/card';
+import { Skeleton } from '@giveaway/ui-primitives/skeleton';
 import { DEFAULT_TIME_SERIES_DURATION } from '@giveaway/app-config/settings';
 
 const TimelineChartSkeleton = () => (

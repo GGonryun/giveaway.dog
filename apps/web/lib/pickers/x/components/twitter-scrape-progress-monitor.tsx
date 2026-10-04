@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@giveaway/ui-primitives/card';
 import { Loader2, CheckCircle2, AlertCircle, AlarmClock } from 'lucide-react';
 import { PickerStatus } from '@prisma/client';
 import { shouldShowProgress } from '@giveaway/picker-model/utils/status';

@@ -4,7 +4,7 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { MultiSelect, MultiSelectOption } from '@/components/ui/multi-select';
 import {
   ENABLED_IDENTITY_PROVIDERS,

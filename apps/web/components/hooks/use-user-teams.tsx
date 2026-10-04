@@ -2,7 +2,7 @@
 
 import getUserTeams from '@/procedures/teams/get-user-teams';
 import { useProcedure } from '@/lib/mrpc/hook';
-import { DetailedUserTeam } from '@/schemas/teams';
+import { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { useEffect, useState } from 'react';
 
 export const useUserTeams = () => {

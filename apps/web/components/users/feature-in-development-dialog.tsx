@@ -6,8 +6,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { Rocket, Settings, MessageCircle } from 'lucide-react';
 
 interface FeatureInDevelopmentDialogProps {

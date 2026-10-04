@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { FeatureInDevelopmentDialog } from '@/components/users/feature-in-development-dialog';
 import { UserCheck, UserX, Tag, Download, ExternalLink } from 'lucide-react';
 import { useState } from 'react';

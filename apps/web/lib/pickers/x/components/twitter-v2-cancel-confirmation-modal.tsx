@@ -7,13 +7,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { InfoIcon, SaveIcon, TrashIcon } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import Link from 'next/link';
 import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
-import { DEFAULT_TWITTER_V2_PICKER_NAME } from '../data/defaults';
+import { DEFAULT_TWITTER_V2_PICKER_NAME } from '@giveaway/x-picker-model/defaults';
 
 interface TwitterV2CancelConfirmationModalProps {
   onClose: () => void;

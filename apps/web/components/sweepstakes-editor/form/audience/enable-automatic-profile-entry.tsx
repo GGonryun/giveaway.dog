@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
   SwitchFormHeader

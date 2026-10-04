@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -6,8 +6,8 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
+} from '@giveaway/ui-primitives/table';
+import { Skeleton } from '@giveaway/ui-primitives/skeleton';
 
 export function ParticipationHistorySkeleton() {
   return (

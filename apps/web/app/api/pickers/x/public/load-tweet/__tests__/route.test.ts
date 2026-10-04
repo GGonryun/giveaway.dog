@@ -7,7 +7,7 @@ import {
   X_PICKER_QUOTES_KEY,
   X_PICKER_REPLIES_KEY,
   X_PICKER_RETWEETS_KEY
-} from '@/lib/pickers/x/constants';
+} from '@giveaway/x-picker-model/constants';
 
 const m = vi.hoisted(() => ({
   creditsLimit: vi.fn(),

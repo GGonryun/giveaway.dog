@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Button } from '@giveaway/ui-primitives/button';
 import { Search, X } from 'lucide-react';
 
 interface AllGiveawaysSearchProps {

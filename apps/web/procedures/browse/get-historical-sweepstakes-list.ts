@@ -7,7 +7,7 @@ import {
 } from '@/schemas/giveaway/public';
 import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { compact } from 'lodash';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import { giveawayFiltersSchema } from '@/lib/filters/giveaway-filters';
 import { HISTORY_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { z } from 'zod';

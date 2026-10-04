@@ -1,9 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Avatar, AvatarFallback } from '@giveaway/ui-primitives/avatar';
 import Image from 'next/image';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@giveaway/ui-primitives/dialog';
 
 interface Host {
   label: string;

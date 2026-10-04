@@ -9,7 +9,7 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
   navigationMenuTriggerStyle
-} from '@/components/ui/navigation-menu';
+} from '@giveaway/ui-primitives/navigation-menu';
 import { cn } from '@giveaway/ui-utils/utils';
 import Link from 'next/link';
 

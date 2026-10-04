@@ -5,7 +5,7 @@ import {
   X_PICKER_QUOTES_KEY,
   X_PICKER_REPLIES_KEY,
   X_PICKER_RETWEETS_KEY
-} from '@/lib/pickers/x/constants';
+} from '@giveaway/x-picker-model/constants';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';

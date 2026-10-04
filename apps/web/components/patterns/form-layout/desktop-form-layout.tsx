@@ -1,12 +1,12 @@
 import { SiteHeader } from '@/components/patterns/app-sidebar/site-header';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle
-} from '@/components/ui/resizable';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@giveaway/ui-primitives/resizable';
+import { Tabs, TabsList, TabsTrigger } from '@giveaway/ui-primitives/tabs';
 import { XIcon, SaveIcon, AlertCircleIcon } from 'lucide-react';
 import React, { useRef, useEffect } from 'react';
 import { FormLayoutProps } from './types';

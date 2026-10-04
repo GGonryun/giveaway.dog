@@ -53,8 +53,9 @@ vi.mock('next/link', () => ({
   }
 }));
 
-vi.mock('@/lib/time', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/lib/time')>();
+vi.mock('@giveaway/util-time/time', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@giveaway/util-time/time')>();
   const zones = ['Pacific/Honolulu', 'Atlantic/Reykjavik', 'Asia/Tokyo'];
   return {
     ...actual,

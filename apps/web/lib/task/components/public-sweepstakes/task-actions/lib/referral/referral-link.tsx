@@ -1,15 +1,15 @@
 'use client';
 
 import { TaskActionProps, TaskContent } from '../../building-blocks';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { ReferralLinkTaskSchema } from '@/lib/task/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
 import React, { useEffect, useState } from 'react';
 import { Copy, Share2, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import pluralize from 'pluralize';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
 import {
@@ -20,7 +20,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@/components/ui/collapsible';
+} from '@giveaway/ui-primitives/collapsible';
 
 export const ReferralLinkTaskActionForm: React.FC<
   TaskActionProps<ReferralLinkTaskSchema>

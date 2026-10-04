@@ -1,9 +1,9 @@
 import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
-import { FormControl, FormField, FormItem } from '@/components/ui/form';
+import { FormControl, FormField, FormItem } from '@giveaway/ui-primitives/form';
 
 import { isValidOption, MultiSelect } from '@/components/ui/multi-select';
 import { useMemo } from 'react';
-import { countryOptions, continentOptions } from '@/lib/countries';
+import { countryOptions, continentOptions } from '@giveaway/util-geo/countries';
 
 export const RegionalRestrictionRegions = <
   TFieldValues extends FieldValues,

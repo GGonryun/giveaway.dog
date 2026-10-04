@@ -1,8 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from '@giveaway/ui-primitives/avatar';
 import {
   Table,
   TableBody,
@@ -10,7 +14,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import { ExternalLink, XCircle, CheckCircle2 } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import {
@@ -18,8 +22,8 @@ import {
   TooltipContent,
   TooltipTrigger,
   TooltipProvider
-} from '@/components/ui/tooltip';
-import { TwitterV2PickerUserSchema } from '../schemas/details';
+} from '@giveaway/ui-primitives/tooltip';
+import { TwitterV2PickerUserSchema } from '@giveaway/x-picker-model/schemas/details';
 
 interface TwitterV2ParticipantsTableProps {
   participants: TwitterV2PickerUserSchema[];

@@ -1,4 +1,4 @@
-import { Spinner } from '@/components/ui/spinner';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 
 interface LoadingStateProps {
   text?: string;

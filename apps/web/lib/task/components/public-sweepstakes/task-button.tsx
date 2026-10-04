@@ -1,10 +1,10 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { TaskSchema } from '../../schemas';
 import { useTaskTheme } from '../theme';
-import { Spinner } from '@/components/ui/spinner';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { ChevronDownIcon } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
-import { TooltipTrigger } from '@/components/ui/tooltip';
+import { TooltipTrigger } from '@giveaway/ui-primitives/tooltip';
 import { TaskLock } from './task-lock';
 import {
   SUBMISSION_BUTTON_ICON_MAP,

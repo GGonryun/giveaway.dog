@@ -11,9 +11,13 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback
+} from '@giveaway/ui-primitives/avatar';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -21,7 +25,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import {
   Pagination,
   PaginationContent,
@@ -29,7 +33,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious
-} from '@/components/ui/pagination';
+} from '@giveaway/ui-primitives/pagination';
 import { WINNERS_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { WinnerLeaderboardSchema } from '@giveaway/leaderboard-model/winners';
 import { AllGiveawaysSearch } from '@/components/sweepstakes-browse/components/all-giveaways-search';

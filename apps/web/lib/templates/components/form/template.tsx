@@ -7,13 +7,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
 import { TemplateFormSchema } from '../../schemas/template';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { FileUpload } from '@/components/ui/file-upload';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
 
 export const TemplateDetails = () => {
   const form = useFormContext<TemplateFormSchema>();

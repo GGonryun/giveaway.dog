@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { CompletionStatus } from '@prisma/client';
 
 export const TaskStatusBadge: React.FC<{ status: CompletionStatus }> = ({

@@ -1,5 +1,5 @@
 import { rng } from './rng';
-import { time } from './time';
+import { time } from '@giveaway/util-time/time';
 
 export const simulateNetworkDelay = async (n?: number): Promise<unknown> => {
   if (n) return await time.wait(n);

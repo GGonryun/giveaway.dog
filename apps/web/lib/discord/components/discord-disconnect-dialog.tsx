@@ -9,7 +9,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog';
+} from '@giveaway/ui-primitives/alert-dialog';
 import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';
 
 interface DiscordDisconnectDialogProps {

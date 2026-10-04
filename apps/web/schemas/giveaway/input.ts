@@ -1,4 +1,4 @@
-import { timezone } from '@/lib/time';
+import { timezone } from '@giveaway/util-time/time';
 import * as dates from 'date-fns';
 import {
   FormSweepstakesGetPayload,

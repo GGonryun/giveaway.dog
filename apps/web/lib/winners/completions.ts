@@ -11,7 +11,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { SweepstakesCriteriaSchema } from './criteria';
 import { toCompletionValue } from '../task/entries';
 import { toTaskSchema } from '../task/schemas';
-import { TeamPermission } from '../permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 
 export type ExpandedEligibleTaskCompletion = EligibleTaskCompletion & {
   value: number;

@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   PROVIDER_THEME,
   ProviderIcon,

@@ -12,19 +12,19 @@ import {
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTeams } from '../context/team-provider';
-import { Badge } from '../ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle
-} from '../ui/sheet';
-import { Button } from '../ui/button';
+} from '@giveaway/ui-primitives/sheet';
+import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
 import { StatusExplanationDialog } from '../users/status-explanation-dialog';
-import { Separator } from '../ui/separator';
-import { datetime } from '@/lib/date';
+import { Separator } from '@giveaway/ui-primitives/separator';
+import { datetime } from '@giveaway/util-time/date';
 import { cn } from '@giveaway/ui-utils/utils';
 import {
   toQualityType,
@@ -39,7 +39,7 @@ import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toSweepstakesEngagement, toTwitterLink } from '@/lib/participant/db';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
-import { ObfuscatedEmail } from '../ui/obfuscated-email';
+import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 
 export const UserParticipantSheetContent: React.FC<{
   participant: SweepstakesParticipantSchema | null;

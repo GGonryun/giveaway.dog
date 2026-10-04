@@ -8,13 +8,13 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,9 +24,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+} from '@giveaway/ui-primitives/alert-dialog';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { MoreHorizontal, Trash2 } from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import revokeInvitation from '@/procedures/teams/revoke-invitation';

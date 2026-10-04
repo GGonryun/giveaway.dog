@@ -16,7 +16,7 @@ import {
 } from '../../schemas';
 import { formatDistanceToNowStrict } from 'date-fns';
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../theme';
 import { assertNever } from '@giveaway/util-errors';

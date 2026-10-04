@@ -7,8 +7,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@giveaway/ui-primitives/card';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@giveaway/ui-primitives/tabs';
 import { InviteFormCard } from '@/components/team/invite-form-card';
 import { MembersTable } from '@/components/team/members-table';
 import { PendingInvitationsTable } from '@/components/team/pending-invitations-table';

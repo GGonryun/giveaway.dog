@@ -11,13 +11,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 
 import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   Select,
   SelectContent,
@@ -25,20 +25,20 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import {
   DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND,
   DEFAULT_GRADIENT_DESIGN_BACKGROUND
 } from '@/schemas/giveaway/defaults';
-import { Input } from '@/components/ui/input';
+import { Input } from '@giveaway/ui-primitives/input';
 import { assertNever } from '@giveaway/util-errors';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { Plus, Trash2, Settings2 } from 'lucide-react';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
-} from '@/components/ui/popover';
+} from '@giveaway/ui-primitives/popover';
 import { toGradient } from '@/schemas/color';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import {

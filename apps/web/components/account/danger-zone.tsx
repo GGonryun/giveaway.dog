@@ -11,13 +11,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger
-} from '../ui/alert-dialog';
-import { Button } from '../ui/button';
+} from '@giveaway/ui-primitives/alert-dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { SettingsCard } from '../settings/settings-card';
-import { Alert, AlertDescription } from '../ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { AlertTriangleIcon } from 'lucide-react';
 
 export const DangerZone = () => {

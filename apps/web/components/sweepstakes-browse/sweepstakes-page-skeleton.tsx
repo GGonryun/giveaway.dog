@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@giveaway/ui-primitives/skeleton';
 
 export const SweepstakesPageSkeleton: React.FC = () => {
   return (

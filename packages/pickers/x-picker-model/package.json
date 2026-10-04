@@ -1,0 +1,55 @@
+{
+  "name": "@giveaway/x-picker-model",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:model",
+      "runtime:isomorphic",
+      "scope:pickers"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/pickers/x-picker-model",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./calculate-api-calls": "./src/calculate-api-calls.ts",
+    "./constants": "./src/constants.ts",
+    "./defaults": "./src/defaults.ts",
+    "./extract-tweet-id": "./src/extract-tweet-id.ts",
+    "./picker-utils": "./src/picker-utils.ts",
+    "./schemas/details": "./src/schemas/details.ts",
+    "./schemas/form": "./src/schemas/form.ts",
+    "./schemas/list": "./src/schemas/list.ts",
+    "./schemas/workflow": "./src/schemas/workflow.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/picker-model": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "@giveaway/x-model": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

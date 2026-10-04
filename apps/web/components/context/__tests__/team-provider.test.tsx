@@ -1,7 +1,7 @@
 import { render, renderHook, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
-import type { DetailedUserTeam } from '@/schemas/teams';
+import type { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { TeamsProvider, useTeams } from '../team-provider';
 
 const activeTeam: DetailedUserTeam = {

@@ -1,4 +1,4 @@
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import {
   TaskActionProps,
   TaskContent,
@@ -6,9 +6,13 @@ import {
 } from '../../building-blocks';
 import { useState } from 'react';
 import { AskQuestionTaskSchema, TaskInput } from '@/lib/task/schemas';
-import { Textarea } from '@/components/ui/textarea';
-import { Typography } from '@/components/ui/typography';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
+import { Typography } from '@giveaway/ui-primitives/typography';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import { AlertCircleIcon } from 'lucide-react';
 
 export const AskQuestionTaskActionForm: React.FC<

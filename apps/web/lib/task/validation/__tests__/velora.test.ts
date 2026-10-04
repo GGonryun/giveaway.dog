@@ -13,7 +13,7 @@ import {
 
 const tokens = vi.hoisted(() => ({ refreshVeloraToken: vi.fn() }));
 
-vi.mock('@/lib/integrations/utils/refresh-velora-token', () => ({
+vi.mock('@giveaway/velora-api/refresh-velora-token', () => ({
   refreshVeloraToken: tokens.refreshVeloraToken
 }));
 

@@ -1,8 +1,13 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@giveaway/ui-primitives/card';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
 import {
   MapPin,
@@ -13,9 +18,9 @@ import {
   CircleCheckIcon,
   SquareArrowOutUpRight
 } from 'lucide-react';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import { UserSchema } from '@/schemas/user';
-import { ObfuscatedEmail } from '@/components/ui/obfuscated-email';
+import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 import {
   toQualityType,
   QUALITY_LABELS

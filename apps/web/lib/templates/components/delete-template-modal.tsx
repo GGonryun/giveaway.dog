@@ -7,11 +7,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { AlertTriangleIcon, Trash2Icon } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { deleteTemplate } from '../procedures/delete-template';

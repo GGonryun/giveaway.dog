@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
 import { TeamsProvider } from '@/components/context/team-provider';
-import type { DetailedUserTeam } from '@/schemas/teams';
+import type { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { useActiveTeam } from '../use-active-team-page';
 
 const navigation = vi.hoisted(() => ({

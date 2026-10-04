@@ -5,22 +5,22 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { SettingsCard } from '@/components/settings/settings-card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { X, Plus } from 'lucide-react';
 import {
   SUPPORTED_SOCIAL_PLATFORMS,
@@ -28,7 +28,7 @@ import {
   PLATFORM_PLACEHOLDERS,
   type SocialLink,
   socialLinksSchema
-} from '@/schemas/social-links';
+} from '@giveaway/team-model/social-links';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateTeamLinks from '@/procedures/teams/update-team-links';
 import { toast } from 'sonner';

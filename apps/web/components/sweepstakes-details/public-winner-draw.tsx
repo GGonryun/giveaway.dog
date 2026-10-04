@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Trophy, X } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useRouter } from 'next/navigation';

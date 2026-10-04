@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { XPickerUpgradeContent } from '@/lib/pickers/shared/components/x-picker-upgrade-content';
 
 interface XPickersUpgradeCTAProps {

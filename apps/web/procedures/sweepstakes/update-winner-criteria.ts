@@ -14,7 +14,7 @@ import {
   DEFAULT_ALLOW_USER_SELECTION
 } from '@/schemas/giveaway/defaults';
 import { findUserSweepstakes } from './shared';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 
 const updateWinnerCriteriaInput = z.object({
   sweepstakesId: z.string(),

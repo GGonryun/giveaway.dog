@@ -8,7 +8,7 @@ import {
   BlueskyLikeTaskSchema,
   BlueskyLikeImportTaskSchema
 } from '@/lib/task/schemas';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { BlueskyEmbed } from './shared';
 import { blueskyPostRefineUrl } from '@/lib/integrations/schemas/bluesky-helpers';

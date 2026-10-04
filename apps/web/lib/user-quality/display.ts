@@ -1,5 +1,5 @@
-import { AlertVariant } from '@/components/ui/alert';
-import { BadgeVariants } from '@/components/ui/badge';
+import { AlertVariant } from '@giveaway/ui-primitives/alert';
+import { BadgeVariants } from '@giveaway/ui-primitives/badge';
 import { QualityType } from '@giveaway/user-quality-model/quality';
 import {
   LucideIcon,

@@ -5,11 +5,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { AlertTriangleIcon, Trash2Icon } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { toast } from 'sonner';
 import { useDeleteSweepstakes } from './use-delete-sweepstakes';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';

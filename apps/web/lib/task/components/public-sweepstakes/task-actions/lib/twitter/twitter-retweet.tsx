@@ -11,7 +11,7 @@ import {
   TwitterRetweetV2TaskSchema
 } from '@/lib/task/schemas';
 import { useTheme } from 'next-themes';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { TwitterEmbed } from './shared';
 import { VerifiedBonusBadge } from './verified-bonus-badge';
 import { cn } from '@giveaway/ui-utils/utils';

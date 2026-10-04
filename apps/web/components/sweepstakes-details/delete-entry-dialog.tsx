@@ -7,8 +7,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { deleteTaskCompletion } from '@/procedures/sweepstakes/delete-task-completion';
 import { UserEntriesSchema } from '@/lib/task/schemas';

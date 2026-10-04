@@ -8,7 +8,7 @@ import { findUserSweepstakes, findUserSweepstakesQuery } from './shared';
 import { validateTask } from '@/lib/task/validation/integrations';
 import { supportsAutomatedReverification } from '@/lib/task/verification/utils';
 import { toTaskSchema } from '@/lib/task/schemas';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 
 export const reverifyTaskCompletion = procedure()
   .authorization({ required: true })

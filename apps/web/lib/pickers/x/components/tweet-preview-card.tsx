@@ -9,9 +9,13 @@ import {
   ExternalLink,
   ImageIcon
 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from '@giveaway/ui-primitives/avatar';
+import { Button } from '@giveaway/ui-primitives/button';
 
 interface TweetPreviewCardProps {
   tweetData: {

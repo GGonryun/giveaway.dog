@@ -11,14 +11,14 @@ import {
 } from 'lucide-react';
 
 import { cn } from '@giveaway/ui-utils/utils';
-import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Separator } from '@giveaway/ui-primitives/separator';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
-} from '@/components/ui/popover';
+} from '@giveaway/ui-primitives/popover';
 import {
   Command,
   CommandEmpty,

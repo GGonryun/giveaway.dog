@@ -2,8 +2,12 @@
 
 import { useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-import { Button } from '../ui/button';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +17,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '../ui/alert-dialog';
+} from '@giveaway/ui-primitives/alert-dialog';
 
 export const CompleteSweepstakesAlert: React.FC<{
   onCompleteAction: () => void;

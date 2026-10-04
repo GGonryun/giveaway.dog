@@ -16,16 +16,23 @@ import Link from 'next/link';
 import { UserSchema } from '@/schemas/user';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { UserAccountType } from '@prisma/client';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback
+} from '@giveaway/ui-primitives/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+} from '@giveaway/ui-primitives/dropdown-menu';
+import { Button } from '@giveaway/ui-primitives/button';
+import {
+  ToggleGroup,
+  ToggleGroupItem
+} from '@giveaway/ui-primitives/toggle-group';
 import { useLogout } from '@/lib/auth/hooks/use-logout';
 import { useTheme } from 'next-themes';
 

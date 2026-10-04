@@ -1,6 +1,6 @@
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
 

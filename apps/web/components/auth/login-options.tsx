@@ -1,11 +1,11 @@
 'use client';
 
 import { cn } from '@giveaway/ui-utils/utils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Label } from '@giveaway/ui-primitives/label';
 import { useEffect, useMemo, useState } from 'react';
-import { Spinner } from '@/components/ui/spinner';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import {
   ProviderDots,
   ProviderButtons,
@@ -16,19 +16,19 @@ import { AuthError } from '@/components/auth/auth-error';
 import { AlertCircle, ArrowDown, ArrowLeftIcon } from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
-import { Typography } from '../ui/typography';
-import { Flex } from '../ui/flex';
+import { Typography } from '@giveaway/ui-primitives/typography';
+import { Flex } from '@giveaway/ui-primitives/flex';
 import login from '@/lib/auth/procedures/login';
 import {
   getLastLoginProviderCookie,
   setLastLoginProviderCookie
 } from '@giveaway/auth-model/cookies';
-import { Alert, AlertDescription } from '../ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { toAuthErrorDescription } from '@giveaway/auth-model/util';
 import { useSearchParams } from 'next/navigation';
 import { IdentityProvider } from '@prisma/client';
 import { assertNever } from '@giveaway/util-errors';
-import { Separator } from '../ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import { BlueskyConnectForm } from '@/lib/auth/components/bluesky-connect-form';
 import { InstagramConnectForm } from '@/lib/auth/components/instagram-connect-form';
 import { FacebookConnectForm } from '@/lib/auth/components/facebook-connect-form';

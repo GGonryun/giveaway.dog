@@ -4,7 +4,7 @@ import z from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import { findUserSweepstakes } from './shared';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@prisma/client';
 
 export const disqualifyParticipant = procedure()

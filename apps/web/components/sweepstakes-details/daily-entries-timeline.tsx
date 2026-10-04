@@ -7,13 +7,17 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '../ui/card';
+} from '@giveaway/ui-primitives/card';
 import {
   ParticipantSweepstakeSchema,
   TimeSeriesDataSchema
 } from '@/schemas/giveaway/schemas';
 import { DEFAULT_TIME_SERIES_DURATION } from '@giveaway/app-config/settings';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent
+} from '@giveaway/ui-charts/chart';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 const chartConfig = {

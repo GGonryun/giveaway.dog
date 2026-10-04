@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
+} from '@giveaway/ui-primitives/card';
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';

@@ -12,11 +12,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
-import { Checkbox } from '@/components/ui/checkbox';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Typography } from '@giveaway/ui-primitives/typography';
+import { Checkbox } from '@giveaway/ui-primitives/checkbox';
 import {
   xProfileRefineError,
   xProfileRefineUrl
@@ -32,7 +32,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { isFailureData } from '@giveaway/rpc-model/types';
 import { useRouter } from 'next/navigation';
-import { Spinner } from '@/components/ui/spinner';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 
 const createFormSchema = (formFields: SweepstakesFormFieldSchema[]) => {
   const schemaFields: Record<string, z.ZodTypeAny> = {};

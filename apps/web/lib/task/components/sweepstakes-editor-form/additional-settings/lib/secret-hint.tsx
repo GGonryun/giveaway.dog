@@ -7,8 +7,8 @@ import {
   FormLabel,
   FormControl,
   FormMessage
-} from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
+} from '@giveaway/ui-primitives/form';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
 
 export const SecretHintFormField: React.FC = () => {
   const index = useArrayContext();

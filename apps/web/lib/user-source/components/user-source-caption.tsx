@@ -1,4 +1,4 @@
-import { ObfuscatedEmail } from '@/components/ui/obfuscated-email';
+import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 import { assertNever } from '@giveaway/util-errors';
 import { UserSchema } from '@/schemas/user';
 

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -6,9 +6,9 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
+} from '@giveaway/ui-primitives/table';
+import { Skeleton } from '@giveaway/ui-primitives/skeleton';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { Users } from 'lucide-react';
 
 export const UsersTableSkeleton = () => {

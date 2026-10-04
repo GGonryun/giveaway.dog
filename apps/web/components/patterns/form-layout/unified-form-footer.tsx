@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   AlertCircleIcon,
   ChevronLeftIcon,
@@ -15,7 +15,7 @@ import pluralize from 'pluralize';
 import { FormIssuesDialog } from './form-issues-dialog';
 import { useUnifiedFormLayout } from './use-unified-form-layout';
 import { useFormFooterNavigation } from './use-form-footer-navigation';
-import { DialogFooter } from '@/components/ui/dialog';
+import { DialogFooter } from '@giveaway/ui-primitives/dialog';
 
 export const UnifiedFormFooter: React.FC = () => {
   const {

@@ -2,7 +2,10 @@
 
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import {
+  ToggleGroup,
+  ToggleGroupItem
+} from '@giveaway/ui-primitives/toggle-group';
 import { cn } from '@giveaway/ui-utils/utils';
 
 export const MobileThemeToggle: React.FC<{ textClassName?: string }> = ({

@@ -2,7 +2,10 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
-import { TeamPermission, requireMembershipPermission } from '@/lib/permissions';
+import {
+  TeamPermission,
+  requireMembershipPermission
+} from '@giveaway/team-permissions';
 import { TeamRole } from '@prisma/client';
 import z from 'zod';
 

@@ -1,7 +1,7 @@
 import { MarketingHeader } from '@/components/patterns/shared';
 import { CallToAction } from '@/components/patterns/pricing-cta';
 import { IntegrationsShowcase } from '@/lib/learn/integrations-showcase';
-import { getServerTheme } from '@/lib/theme/get-server-theme';
+import { getServerTheme } from '@giveaway/theme-server/get-server-theme';
 
 export default async function IntegrationsPage() {
   const theme = await getServerTheme();

@@ -5,9 +5,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Label } from '@giveaway/ui-primitives/label';
 import { strings } from '@giveaway/util-strings/strings';
 import { UNKNOWN_EMAIL } from '@giveaway/app-config/settings';
 

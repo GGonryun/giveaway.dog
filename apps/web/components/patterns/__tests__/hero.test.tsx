@@ -6,7 +6,7 @@ const mocks = vi.hoisted(() => ({
   getServerTheme: vi.fn()
 }));
 
-vi.mock('@/lib/theme/get-server-theme', () => ({
+vi.mock('@giveaway/theme-server/get-server-theme', () => ({
   getServerTheme: mocks.getServerTheme
 }));
 

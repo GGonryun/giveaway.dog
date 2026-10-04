@@ -7,11 +7,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { InfoIcon, SaveIcon, RocketIcon } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Spinner } from '@/components/ui/spinner';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import Link from 'next/link';
 import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 

@@ -2,9 +2,14 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@giveaway/ui-primitives/card';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   Calendar,
   Clock,
@@ -33,15 +38,15 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import { formatDistance, format, isFuture } from 'date-fns';
 import {
   PICKER_STATUS_LABELS,
   PICKER_STATUS_DESCRIPTIONS
 } from '@giveaway/picker-model/schemas/status';
-import { TwitterV2PickerSchema } from '../schemas/details';
+import { TwitterV2PickerSchema } from '@giveaway/x-picker-model/schemas/details';
 import { TwitterScrapeProgressMonitor } from './twitter-scrape-progress-monitor';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import { cn } from '@giveaway/ui-utils/utils';
 import {
   STATUS_COLORS,
@@ -49,8 +54,12 @@ import {
 } from '@/lib/pickers/shared/themes/status';
 import { shouldShowProgress } from '@giveaway/picker-model/utils/status';
 import Link from 'next/link';
-import { extractTweetId } from '../utils/extract-tweet-id';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { extractTweetId } from '@giveaway/x-picker-model/extract-tweet-id';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from '@giveaway/ui-primitives/avatar';
 import { TwitterV2DeleteConfirmationModal } from './twitter-v2-delete-confirmation-modal';
 import { DrawExtraWinnerModal } from './twitter-v2-draw-extra-winner-modal';
 import { DisqualifyWinnerModal } from './twitter-v2-disqualify-winner-modal';

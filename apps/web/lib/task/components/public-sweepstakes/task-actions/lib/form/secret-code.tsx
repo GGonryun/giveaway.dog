@@ -9,9 +9,13 @@ import {
   SecretCodeV2TaskSchema,
   TaskInput
 } from '@/lib/task/schemas';
-import { Input } from '@/components/ui/input';
-import { Typography } from '@/components/ui/typography';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Typography } from '@giveaway/ui-primitives/typography';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import { AlertCircleIcon } from 'lucide-react';
 
 export const SecretCodeTaskActionForm: React.FC<

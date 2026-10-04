@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { ProviderSchema } from '@giveaway/integration-model/providers';
 import { PROVIDER_ICON } from './icons/provider-icon';
 import { strings } from '@giveaway/util-strings/strings';

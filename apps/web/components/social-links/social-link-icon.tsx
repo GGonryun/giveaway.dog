@@ -1,6 +1,6 @@
 import { Globe, type LucideIcon } from 'lucide-react';
-import { type SocialPlatform } from '@/schemas/social-links';
-import { Button } from '@/components/ui/button';
+import { type SocialPlatform } from '@giveaway/team-model/social-links';
+import { Button } from '@giveaway/ui-primitives/button';
 import { cn } from '@giveaway/ui-utils/utils';
 import { SocialXIcon } from '../../lib/integrations/components/icons/x-icon';
 import { SocialDiscordIcon } from '../../lib/integrations/components/icons/discord-icon';

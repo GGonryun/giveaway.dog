@@ -1,8 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
+import { Button } from '@giveaway/ui-primitives/button';
 import { Terminal, Copy, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { IntegrationSchema } from '@giveaway/integration-model/schemas';

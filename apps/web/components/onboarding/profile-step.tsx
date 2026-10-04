@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { ArrowLeft, User, AlertTriangle } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 import { useForm } from 'react-hook-form';
@@ -15,7 +15,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { LoadingState } from './loading-state';

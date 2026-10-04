@@ -6,15 +6,15 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/card';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import { ArrowRight, MoreVertical, Edit, Trash2 } from 'lucide-react';
 import { TemplateListItemSchema } from '../schemas/template';
 import { useRouter } from 'next/navigation';

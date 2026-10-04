@@ -1,11 +1,11 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { ArrowRight } from 'lucide-react';
 import { UserAccountType } from '@prisma/client';
 import { ACCOUNT_TYPE_OPTIONS } from '@/schemas/onboarding';
 import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { cn } from '@giveaway/ui-utils/utils';
 
 interface AccountTypeStepProps {

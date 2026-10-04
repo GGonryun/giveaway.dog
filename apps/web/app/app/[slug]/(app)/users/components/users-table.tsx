@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -10,25 +10,25 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+} from '@giveaway/ui-primitives/table';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import { MoreVertical, Eye, UserX, Users, ArrowUpDown } from 'lucide-react';
-import { TablePagination } from '@/components/ui/table-pagination';
-import { Input } from '@/components/ui/input';
+import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
+import { Input } from '@giveaway/ui-primitives/input';
 import { Search } from 'lucide-react';
 
 import { useTeams } from '@/components/context/team-provider';
 import { UserDetailSheet } from '@/components/sweepstakes-details/user-participant-detail-sheet';
 import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toMostRecentCompletion } from '@/lib/task/completions';

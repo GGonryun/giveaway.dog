@@ -1,9 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import { Button } from '@giveaway/ui-primitives/button';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from '@giveaway/ui-primitives/avatar';
 import {
   Table,
   TableBody,
@@ -11,13 +15,13 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import { Trophy, Ban, ExternalLink } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import {
   TwitterV2PickerDrawSchema,
   TwitterV2PickerUserSchema
-} from '../schemas/details';
+} from '@giveaway/x-picker-model/schemas/details';
 
 interface DrawHistoryEntry {
   draw: TwitterV2PickerDrawSchema;

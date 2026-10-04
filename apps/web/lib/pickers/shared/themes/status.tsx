@@ -1,4 +1,4 @@
-import { BadgeVariants } from '@/components/ui/badge';
+import { BadgeVariants } from '@giveaway/ui-primitives/badge';
 import { PickerStatus } from '@prisma/client';
 import {
   LucideIcon,

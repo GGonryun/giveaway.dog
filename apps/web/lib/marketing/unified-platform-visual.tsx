@@ -3,7 +3,7 @@
 import { cn } from '@giveaway/ui-utils/utils';
 import { Gift, Users } from 'lucide-react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 
 const platforms = [
   {

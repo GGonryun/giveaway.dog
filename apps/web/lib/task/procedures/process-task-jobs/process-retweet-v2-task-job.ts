@@ -8,7 +8,7 @@ import {
 } from '@/lib/task/schemas';
 import { PrismaClient } from '@prisma/client';
 import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import { ApplicationError } from '@giveaway/util-errors';
 import { scheduleRandomlyAssignPrizesJob } from '@giveaway/jobs/util';
 

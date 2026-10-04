@@ -9,9 +9,9 @@ import {
   FormLabel,
   FormControl,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
   SwitchFormHeader

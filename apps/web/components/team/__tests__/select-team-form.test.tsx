@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import getUserTeams from '@/procedures/teams/get-user-teams';
 import selectTeam from '@/procedures/teams/select-team';
 import type { Result } from '@giveaway/rpc-model/types';
-import type { DetailedUserTeam } from '@/schemas/teams';
+import type { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { SelectTeamForm } from '../select-team-form';
 
 const navigation = vi.hoisted(() => ({

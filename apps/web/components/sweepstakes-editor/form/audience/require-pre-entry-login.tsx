@@ -1,6 +1,6 @@
 import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
-import { FormControl, FormField, FormItem } from '@/components/ui/form';
-import { Switch } from '@/components/ui/switch';
+import { FormControl, FormField, FormItem } from '@giveaway/ui-primitives/form';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
   SwitchFormHeader

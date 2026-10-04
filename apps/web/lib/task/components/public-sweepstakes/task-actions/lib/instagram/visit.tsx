@@ -8,12 +8,12 @@ import { InstagramVisitTaskSchema } from '@/lib/task/schemas';
 import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '@/lib/task/components/theme';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import { InstagramDisclaimer } from './disclaimer';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Label } from '@giveaway/ui-primitives/label';
 import {
   INSTAGRAM_USERNAME_QUESTION,
   INSTAGRAM_USERNAME_STORAGE_KEY

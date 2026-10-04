@@ -6,8 +6,9 @@ import {
 import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { RegionalRestrictionRegions } from '../regional-restriction-regions';
 
-vi.mock('@/lib/countries', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/lib/countries')>();
+vi.mock('@giveaway/util-geo/countries', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@giveaway/util-geo/countries')>();
   const regions = [
     'continent:AS',
     'continent:EU',

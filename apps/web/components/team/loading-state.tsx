@@ -1,4 +1,4 @@
-import { Spinner } from '../ui/spinner';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 
 export const LoadingState: React.FC<{ text: string }> = ({ text }) => {
   return (

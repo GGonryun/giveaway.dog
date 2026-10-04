@@ -10,19 +10,27 @@ import {
   FormLabel,
   FormMessage,
   FormDescription
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Button } from '@giveaway/ui-primitives/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@giveaway/ui-primitives/card';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+} from '@giveaway/ui-primitives/select';
+import {
+  Collapsible,
+  CollapsibleContent
+} from '@giveaway/ui-primitives/collapsible';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { UpgradeModal } from './upgrade-modal';

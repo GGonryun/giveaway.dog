@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { cn } from '@giveaway/ui-utils/utils';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   getPlatformIcon,
   getPlatformLabel,
@@ -10,7 +10,7 @@ import {
 } from '@giveaway/platform-catalog/platform-icons';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import type { ResolvedTheme } from '@/lib/theme/get-server-theme';
+import type { ResolvedTheme } from '@giveaway/theme-server/get-server-theme';
 import Link from 'next/link';
 
 const SIZE_PRESETS = {

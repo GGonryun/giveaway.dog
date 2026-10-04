@@ -1,7 +1,7 @@
 'use client';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
+import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
 import { useUnifiedFormLayout } from './use-unified-form-layout';
 

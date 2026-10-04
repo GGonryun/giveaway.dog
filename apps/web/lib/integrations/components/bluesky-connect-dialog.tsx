@@ -8,11 +8,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Label } from '@giveaway/ui-primitives/label';
+import { Checkbox } from '@giveaway/ui-primitives/checkbox';
 import { Shield, Check, Loader2, Plug } from 'lucide-react';
 import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';
 import { IntegrationFeatureConfig } from '@giveaway/integration-model/scopes';

@@ -1,4 +1,8 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import { ShieldOffIcon } from 'lucide-react';
 import { TaskType } from '../../schemas';
 

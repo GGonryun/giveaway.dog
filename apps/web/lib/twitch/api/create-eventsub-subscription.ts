@@ -5,7 +5,7 @@ import {
   TWITCH_EVENTSUB_SECRET
 } from '../bot/scopes';
 import { getAppAccessToken } from './get-app-access-token';
-import { toEventSubSubscriptionSchemasListSchema } from './schemas';
+import { toEventSubSubscriptionSchemasListSchema } from '@giveaway/twitch-model/schemas';
 import {
   TwitchFeatureSchema,
   getEventSubTypesForTwitchFeatures

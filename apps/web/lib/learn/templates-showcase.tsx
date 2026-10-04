@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
+} from '@giveaway/ui-primitives/card';
 import { ArrowRight } from 'lucide-react';
 import { STATIC_TEMPLATES } from '@/lib/templates/data/static-templates';
 import { getTemplatePlatforms } from '@/lib/templates/utils/get-template-platforms';

@@ -2,7 +2,7 @@
 
 import { LoaderCircleIcon, LogOutIcon } from 'lucide-react';
 import { useLogout } from '../hooks/use-logout';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 
 export const LogoutButton = () => {
   const logout = useLogout();

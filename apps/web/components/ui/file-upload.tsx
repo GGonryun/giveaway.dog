@@ -4,9 +4,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { UploadCloud, Trash2, ZoomIn, X } from 'lucide-react';
 import { useFileProvider } from '@giveaway/ui-hooks/use-file-provider';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Typography } from '@/components/ui/typography';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import { cn } from '@giveaway/ui-utils/utils';
 import { AcceptedFileTypes, FileSize } from '@giveaway/util-media/files';
 

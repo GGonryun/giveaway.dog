@@ -2,7 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 
 const hostSchema = z.object({
   id: z.string(),

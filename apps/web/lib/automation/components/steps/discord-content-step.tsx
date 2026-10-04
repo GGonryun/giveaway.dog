@@ -6,9 +6,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Checkbox } from '@/components/ui/checkbox';
+} from '@giveaway/ui-primitives/select';
+import { Switch } from '@giveaway/ui-primitives/switch';
+import { Checkbox } from '@giveaway/ui-primitives/checkbox';
 import {
   SwitchBox,
   SwitchFormHeader
@@ -24,7 +24,7 @@ import {
   FormControl,
   FormMessage,
   FormDescription
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { DiscordPostPermissionBanner } from '../discord-post-permission-banner';
 import { useState, useEffect } from 'react';
 import { getDiscordRoles } from '@/lib/discord/procedures/get-discord-roles';

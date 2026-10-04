@@ -7,8 +7,8 @@ import {
   FormControl,
   FormMessage,
   FormLabel
-} from '@/components/ui/form';
-import { Typography } from '@/components/ui/typography';
+} from '@giveaway/ui-primitives/form';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import { assertNever } from '@giveaway/util-errors';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useCallback } from 'react';
@@ -17,10 +17,13 @@ import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
-import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { Switch } from '@giveaway/ui-primitives/switch';
+import { Input } from '@giveaway/ui-primitives/input';
+import {
+  RadioGroup,
+  RadioGroupItem
+} from '@giveaway/ui-primitives/radio-group';
+import { Label } from '@giveaway/ui-primitives/label';
 import { SecretCodeCaseSensitiveFormField } from './additional-settings/lib/secret-code-case-sensitive';
 import { TwitterVerifiedBonusField } from './additional-settings/lib/twitter-verified-bonus';
 import { RequireProofField } from './additional-settings/lib/require-proof';

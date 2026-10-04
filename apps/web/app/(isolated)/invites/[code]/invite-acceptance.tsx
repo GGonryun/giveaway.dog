@@ -9,10 +9,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
-import { Badge } from '@/components/ui/badge';
+} from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { useProcedure } from '@/lib/mrpc/hook';
 import acceptInvite from '@/procedures/teams/accept-invite';
 import { EasterEggLogo } from '@/components/patterns/easter-egg-logo';

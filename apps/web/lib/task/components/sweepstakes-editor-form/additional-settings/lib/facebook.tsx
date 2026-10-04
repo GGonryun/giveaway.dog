@@ -7,8 +7,8 @@ import {
   FormLabel,
   FormControl,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import Image from 'next/image';
 

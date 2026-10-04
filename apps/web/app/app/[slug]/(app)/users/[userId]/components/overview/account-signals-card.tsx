@@ -4,8 +4,8 @@ import {
   CardHeader,
   CardTitle,
   CardDescription
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from '@giveaway/ui-primitives/card';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import type { UserSignals } from '@/procedures/user/get-user-signals';
 import {
   SIGNAL_LABEL,

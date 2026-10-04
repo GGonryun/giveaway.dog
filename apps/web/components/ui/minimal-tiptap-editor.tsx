@@ -5,9 +5,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
-import { Separator } from '@/components/ui/separator';
-import { Toggle } from '@/components/ui/toggle';
-import { Button } from '@/components/ui/button';
+import { Separator } from '@giveaway/ui-primitives/separator';
+import { Toggle } from '@giveaway/ui-primitives/toggle';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   Bold,
   Italic,

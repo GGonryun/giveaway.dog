@@ -5,7 +5,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { findUserSweepstakes } from './shared';
 import { findUserTeam } from '@/procedures/teams/find-user-team';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@prisma/client';
 
 const deleteSweepstakes = procedure()

@@ -7,15 +7,19 @@ import {
   FormItem,
   FormControl,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import { InfoIcon } from 'lucide-react';
 
 export const YouTubeSubscriptionConfirmationFormField: React.FC = () => {

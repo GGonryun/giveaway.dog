@@ -1,6 +1,6 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
+import { Input } from '@giveaway/ui-primitives/input';
 import { SettingsCard } from '../settings-card';
 import { Lock } from 'lucide-react';
 

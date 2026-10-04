@@ -1,4 +1,4 @@
-import { SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { SheetHeader, SheetTitle } from '@giveaway/ui-primitives/sheet';
 import Link from 'next/link';
 import { EmojiLogo } from '../emoji-logo';
 

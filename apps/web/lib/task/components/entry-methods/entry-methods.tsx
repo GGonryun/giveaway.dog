@@ -29,7 +29,7 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { nanoid } from 'nanoid';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
 import { uniq } from 'lodash';

@@ -7,9 +7,9 @@ import {
   FormLabel,
   FormControl,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Button } from '@giveaway/ui-primitives/button';
 import { PlusIcon, TrashIcon } from 'lucide-react';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import { useEffect } from 'react';

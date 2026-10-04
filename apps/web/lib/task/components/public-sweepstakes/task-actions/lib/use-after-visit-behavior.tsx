@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Progress } from '@/components/ui/progress';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Progress } from '@giveaway/ui-primitives/progress';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Label } from '@giveaway/ui-primitives/label';
 import pluralize from 'pluralize';
 import type { AfterVisitSchema } from '@/lib/task/schemas';
 

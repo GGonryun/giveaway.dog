@@ -9,8 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { toast } from 'sonner';
 import { downloadQRCode, openQRCodeInNewTab, shareQRCode } from '@/lib/qr';
 

@@ -9,9 +9,9 @@ import { FacebookVisitPageTaskSchema } from '@/lib/task/schemas';
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '@/lib/task/components/theme';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import { FacebookDisclaimer } from './disclaimer';
 
 export const FacebookVisitPageTaskActionForm: React.FC<

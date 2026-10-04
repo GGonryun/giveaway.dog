@@ -1,4 +1,4 @@
-import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
+import { DEFAULT_TEAM_LOGO } from '@giveaway/team-model/team/data';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { nanoid } from 'nanoid';
 

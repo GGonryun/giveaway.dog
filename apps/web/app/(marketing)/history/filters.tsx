@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Grid3x3, Trophy } from 'lucide-react';
 import React from 'react';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   Pagination,
   PaginationContent,
@@ -13,7 +13,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious
-} from '@/components/ui/pagination';
+} from '@giveaway/ui-primitives/pagination';
 import { AllGiveawaysSearch } from '@/components/sweepstakes-browse/components/all-giveaways-search';
 
 export const HistoryFilters: React.FC<{

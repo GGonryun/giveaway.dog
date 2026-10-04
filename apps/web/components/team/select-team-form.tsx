@@ -1,9 +1,9 @@
 import { useProcedure } from '@/lib/mrpc/hook';
 import { Label } from 'recharts';
 import selectTeam from '@/procedures/teams/select-team';
-import { Button } from '../ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { PlusIcon } from 'lucide-react';
-import { Badge } from '../ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { LoadingState } from './loading-state';
 import { MAX_USER_TEAMS } from '@giveaway/app-config/settings';
 import { TeamLogo } from '@/components/team/team-logo';

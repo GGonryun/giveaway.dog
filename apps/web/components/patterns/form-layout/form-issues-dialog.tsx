@@ -6,9 +6,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '../../ui/dialog';
+} from '@giveaway/ui-primitives/dialog';
 import { AlertTriangleIcon, SquareArrowOutUpRightIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { useUnifiedFormLayout } from './use-unified-form-layout';
 import { ErrorMessage } from './use-form-issues';
 import pluralize from 'pluralize';

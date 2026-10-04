@@ -1,17 +1,17 @@
-import { Button, ButtonProps } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
+import { Button, ButtonProps } from '@giveaway/ui-primitives/button';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
-} from '@/components/ui/tooltip';
+} from '@giveaway/ui-primitives/tooltip';
 import { Failure } from '@giveaway/rpc-model/types';
 import { cn } from '@giveaway/ui-utils/utils';
 import { CheckIcon, LucideIcon, SaveIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { TaskSchema } from '../../../schemas';
 import { useTaskTheme } from '../../theme';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 import { OptionalFields } from '@giveaway/util-types/types';
 

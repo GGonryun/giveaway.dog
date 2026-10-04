@@ -11,7 +11,7 @@ import {
 } from '../bot/scopes';
 import { getTwitchUser } from '../api/get-user';
 import { createEventSubSubscriptionsForFeatures } from '../api/create-eventsub-subscription';
-import { TwitchIntegrationSettings } from '../integration/schemas';
+import { TwitchIntegrationSettings } from '@giveaway/twitch-model/integration';
 import { twitchStateSchema } from '../schemas';
 
 export type TwitchStateSchema = z.infer<typeof twitchStateSchema>;

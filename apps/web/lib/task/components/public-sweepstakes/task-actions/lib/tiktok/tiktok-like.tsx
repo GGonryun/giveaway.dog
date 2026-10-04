@@ -3,9 +3,9 @@ import { useState, useEffect, useRef } from 'react';
 import { WithProviderConnection } from '../provider-connection';
 import { TiktokLikeTaskSchema } from '@/lib/task/schemas';
 import { AlertCircle, Heart, ExternalLink } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 
 const EMBED_TIMEOUT = 5000;
 

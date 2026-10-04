@@ -7,8 +7,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
 import { assertNever } from '@giveaway/util-errors';
 import { TaskType } from '../../schemas';
 

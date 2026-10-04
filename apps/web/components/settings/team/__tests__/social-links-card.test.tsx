@@ -6,7 +6,7 @@ import updateTeamLinks from '@/procedures/teams/update-team-links';
 import {
   SUPPORTED_SOCIAL_PLATFORMS,
   type SocialLink
-} from '@/schemas/social-links';
+} from '@giveaway/team-model/social-links';
 import { SocialLinksCard } from '../social-links-card';
 
 vi.mock('@/procedures/teams/update-team-links', () => ({ default: vi.fn() }));

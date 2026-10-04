@@ -1,4 +1,4 @@
-import { Badge, BadgeVariants } from '@/components/ui/badge';
+import { Badge, BadgeVariants } from '@giveaway/ui-primitives/badge';
 import { assertNever } from '@giveaway/util-errors';
 
 import { UserSource } from '@prisma/client';

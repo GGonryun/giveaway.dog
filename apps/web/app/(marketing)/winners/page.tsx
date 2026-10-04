@@ -3,8 +3,8 @@ import { WINNERS_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { WinnersLeaderboard } from '@/components/winners/winners-leaderboard';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@giveaway/ui-primitives/skeleton';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 
 export const revalidate = 60;
 

@@ -1,4 +1,4 @@
-import { Typography } from '../ui/typography';
+import { Typography } from '@giveaway/ui-primitives/typography';
 
 export const MarketingPageHeader: React.FC<{
   title: React.ReactNode;

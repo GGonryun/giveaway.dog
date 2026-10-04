@@ -1,6 +1,6 @@
 import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import {
@@ -23,7 +23,7 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 
 import { nanoid } from 'nanoid';
 import {

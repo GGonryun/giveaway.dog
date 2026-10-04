@@ -6,7 +6,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import {
   twitterV2PickerSchema,
   calculateTwitterV2PickerStats
-} from '../schemas/details';
+} from '@giveaway/x-picker-model/schemas/details';
 
 export const getTwitterV2Picker = procedure()
   .authorization({

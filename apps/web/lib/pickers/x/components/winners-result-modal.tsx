@@ -5,9 +5,13 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from '@giveaway/ui-primitives/avatar';
 import { ExternalLink, Share2, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';

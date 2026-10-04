@@ -2,7 +2,7 @@
 
 import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
 import { GiveawayItem } from './giveaway-item';
-import { Typography } from '@/components/ui/typography';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import pluralize from 'pluralize';
 import { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas';
 

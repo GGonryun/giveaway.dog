@@ -8,10 +8,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
+import { Label } from '@giveaway/ui-primitives/label';
 import { AlertTriangle } from 'lucide-react';
 
 interface DisqualifyWinnerModalProps {

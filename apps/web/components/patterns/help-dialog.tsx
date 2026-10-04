@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '../ui/dialog';
+} from '@giveaway/ui-primitives/dialog';
 export type HelpDialogProps = {
   title: string;
   description?: string;

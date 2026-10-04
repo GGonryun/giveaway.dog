@@ -4,7 +4,7 @@ import {
   detailedUserTeamSchema,
   GET_TEAM_SELECT,
   toDetailedUserTeam
-} from '@/schemas/teams';
+} from '@giveaway/team-model/teams';
 import { procedure } from '@/lib/mrpc/procedures';
 import { TeamRole } from '@prisma/client';
 

@@ -1,4 +1,4 @@
-import { Badge } from '../ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { differenceInDays, isAfter, isBefore } from 'date-fns';
 import {
   ENDING_SOON_SWEEPSTAKE_THRESHOLD,

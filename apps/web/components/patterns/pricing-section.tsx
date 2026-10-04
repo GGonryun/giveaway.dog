@@ -1,9 +1,9 @@
 'use client';
 
-import { Button, ButtonVariant } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Typography } from '@/components/ui/typography';
-import { Badge } from '@/components/ui/badge';
+import { Button, ButtonVariant } from '@giveaway/ui-primitives/button';
+import { Card, CardContent, CardHeader } from '@giveaway/ui-primitives/card';
+import { Typography } from '@giveaway/ui-primitives/typography';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { ArrowRightIcon, Check } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';

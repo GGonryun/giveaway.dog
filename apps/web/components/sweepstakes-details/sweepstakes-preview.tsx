@@ -26,15 +26,15 @@ import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-st
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
 import { useBrowseSweepstakesPage } from '../sweepstakes/use-browse-sweepstakes-page';
 import { useSweepstakesDetailsPage } from '../sweepstakes/use-sweepstakes-details-page';
-import { Card, CardContent } from '../ui/card';
-import { Button } from '../ui/button';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '../ui/select';
+} from '@giveaway/ui-primitives/select';
 import { toBackgroundStyle } from '@/schemas/color';
 import { useProcedure } from '@/lib/mrpc/hook';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';

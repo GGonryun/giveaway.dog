@@ -8,9 +8,9 @@ import {
   FormControl,
   FormMessage,
   FormDescription
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
 
 export const AskQuestionFormFields: React.FC = () => {
   const index = useArrayContext();

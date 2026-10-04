@@ -2,7 +2,11 @@
 
 import React from 'react';
 import { Hourglass } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 
 export const WinnersPending: React.FC = () => {
   return (

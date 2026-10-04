@@ -1,5 +1,5 @@
 import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@giveaway/ui-primitives/toaster';
 
 import { Analytics } from '@vercel/analytics/react';
 import { SessionProvider } from '@/components/context/auth-session-provider';

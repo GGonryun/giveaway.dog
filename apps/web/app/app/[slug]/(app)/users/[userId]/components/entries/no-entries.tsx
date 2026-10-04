@@ -1,4 +1,4 @@
-import { EmptyState } from '@/components/ui/empty-state';
+import { EmptyState } from '@giveaway/ui-primitives/empty-state';
 import { Clock, ListChecks, Trophy } from 'lucide-react';
 
 export function NoEntries() {

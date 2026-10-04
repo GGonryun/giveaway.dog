@@ -14,10 +14,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 
 export const BlueskyConnectForm: React.FC<{
   onConnect: () => void;

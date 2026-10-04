@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';

@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { describe, expect, it } from 'vitest';
-import { Form, FormField, FormItem } from '@/components/ui/form';
+import { Form, FormField, FormItem } from '@giveaway/ui-primitives/form';
 import { SwitchBox, SwitchFormHeader } from '../switch-form-header';
 
 type FieldHarnessProps = {

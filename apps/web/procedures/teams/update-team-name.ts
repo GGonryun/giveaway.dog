@@ -3,7 +3,10 @@
 import { z } from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
-import { requireMembershipPermission, TeamPermission } from '@/lib/permissions';
+import {
+  requireMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
 
 const updateTeamName = procedure()
   .authorization({ required: true })

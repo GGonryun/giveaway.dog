@@ -7,7 +7,7 @@ import React, { useCallback, useState } from 'react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-import { MobileSuspense } from '@/components/ui/mobile-suspense';
+import { MobileSuspense } from '@giveaway/ui-primitives/mobile-suspense';
 import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 import { UnifiedFormLayoutContextProvider } from '@/components/patterns/form-layout/use-unified-form-layout';
 import {
@@ -23,12 +23,12 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import {
   DEFAULT_TWITTER_V2_PICKER_FORM,
   DEFAULT_TWITTER_V2_PICKER_NAME
-} from '../data/defaults';
+} from '@giveaway/x-picker-model/defaults';
 import {
   TwitterV2PickerFormSchema,
   twitterV2PickerFormSchema,
   TwitterV2PickerUnvalidatedFormSchema
-} from '../schemas/form';
+} from '@giveaway/x-picker-model/schemas/form';
 import { useTwitterV2PickersPage } from '../hooks/use-twitter-v2-pickers-page';
 import { TwitterV2CancelConfirmationModal } from './twitter-v2-cancel-confirmation-modal';
 import { TwitterV2PublishConfirmationModal } from './twitter-v2-publish-confirmation-modal';

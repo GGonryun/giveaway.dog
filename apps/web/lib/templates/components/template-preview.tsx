@@ -16,7 +16,7 @@ import {
 } from '@/schemas/giveaway/defaults';
 import { VisibilityType } from '@prisma/client';
 import * as dates from 'date-fns';
-import { timezone } from '@/lib/time';
+import { timezone } from '@giveaway/util-time/time';
 import { DeepPartial } from '@giveaway/util-types/types';
 
 export const TemplatePreview: React.FC = () => {

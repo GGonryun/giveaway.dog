@@ -7,8 +7,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { useEffect, useState } from 'react';
 import { Clock, Zap, CheckCircle2, Gem } from 'lucide-react';
 import Link from 'next/link';

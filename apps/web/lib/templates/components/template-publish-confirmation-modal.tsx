@@ -7,14 +7,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { CheckIcon, SaveIcon, AlertTriangleIcon } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { useFormContext } from 'react-hook-form';
 import { TemplateFormSchema } from '../schemas/template';
 import { useMemo } from 'react';
-import { Spinner } from '@/components/ui/spinner';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
 
 interface TemplatePublishConfirmationModalProps {

@@ -1,13 +1,18 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import { Button } from '@giveaway/ui-primitives/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@giveaway/ui-primitives/card';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@/components/ui/collapsible';
+} from '@giveaway/ui-primitives/collapsible';
 import {
   Dialog,
   DialogContent,
@@ -15,9 +20,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+} from '@giveaway/ui-primitives/dialog';
+import { Label } from '@giveaway/ui-primitives/label';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import { cn } from '@giveaway/ui-utils/utils';
 import {
   ChevronDown,
@@ -29,7 +34,7 @@ import {
 import pluralize from 'pluralize';
 import { useState } from 'react';
 import { TwitterV2ParticipantsTable } from './twitter-v2-participants-table';
-import { TwitterV2PickerUserSchema } from '../schemas/details';
+import { TwitterV2PickerUserSchema } from '@giveaway/x-picker-model/schemas/details';
 import Link from 'next/link';
 
 const PAGE_SIZE = 10;

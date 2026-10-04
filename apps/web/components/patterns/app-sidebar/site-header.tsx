@@ -5,9 +5,9 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+} from '@giveaway/ui-primitives/breadcrumb';
+import { Separator } from '@giveaway/ui-primitives/separator';
+import { SidebarTrigger } from '@giveaway/ui-primitives/sidebar';
 import { cn } from '@giveaway/ui-utils/utils';
 import React from 'react';
 

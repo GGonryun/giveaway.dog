@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { Building, AlertTriangle, ArrowLeft, Info } from 'lucide-react';
 import {
   Dialog,
@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/ui/dialog';
+} from '@giveaway/ui-primitives/dialog';
 import { FileUpload } from '@/components/ui/file-upload';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import { useForm } from 'react-hook-form';
@@ -23,9 +23,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import createTeam from '@/procedures/teams/create-team';
-import { createTeamInputSchema, type CreateTeamInput } from '@/schemas/teams';
+import {
+  createTeamInputSchema,
+  type CreateTeamInput
+} from '@giveaway/team-model/teams';
 import { toast } from 'sonner';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { LoadingState } from './loading-state';

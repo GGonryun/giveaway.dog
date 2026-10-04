@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -9,8 +9,8 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
-import { TablePagination } from '@/components/ui/table-pagination';
+} from '@giveaway/ui-primitives/table';
+import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
 import {
   ParticipationHistory,
   ParticipationHistoryItem
@@ -26,16 +26,16 @@ import {
 import Link from 'next/link';
 import { SweepstakesStatusBadge } from '../sweepstakes/status-badge';
 import { toEngagementTheme } from '@/lib/participant/util';
-import { datetime } from '@/lib/date';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
+import { datetime } from '@giveaway/util-time/date';
+import { Label } from '@giveaway/ui-primitives/label';
+import { Switch } from '@giveaway/ui-primitives/switch';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import { WithdrawParticipationDialog } from './withdraw-participation-dialog';
 import { useRouter } from 'next/navigation';
 import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';

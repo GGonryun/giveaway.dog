@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import db from '@giveaway/db-client/prisma';
-import { twitchRevocationSchema } from './schema';
+import { twitchRevocationSchema } from '@giveaway/twitch-model/schema';
 
 export const handleRevocation = async (body: unknown) => {
   const data = twitchRevocationSchema.parse(body);

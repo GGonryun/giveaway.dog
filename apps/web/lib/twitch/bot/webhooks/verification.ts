@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import {
   TwitchSubscriptionVerification,
   twitchSubscriptionVerificationSchema
-} from './schema';
+} from '@giveaway/twitch-model/schema';
 
 export const handleSubscriptionVerification = (body: unknown) => {
   const data = twitchSubscriptionVerificationSchema.parse(

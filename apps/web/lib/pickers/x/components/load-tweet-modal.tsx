@@ -5,8 +5,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Progress } from '@/components/ui/progress';
+} from '@giveaway/ui-primitives/dialog';
+import { Progress } from '@giveaway/ui-primitives/progress';
 import { useEffect, useState } from 'react';
 
 interface LoadTweetModalProps {

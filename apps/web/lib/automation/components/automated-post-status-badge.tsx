@@ -1,4 +1,4 @@
-import { Badge, BadgeVariants } from '@/components/ui/badge';
+import { Badge, BadgeVariants } from '@giveaway/ui-primitives/badge';
 import { AutomatedPostJobStatus } from '@prisma/client';
 import {
   CheckCircleIcon,

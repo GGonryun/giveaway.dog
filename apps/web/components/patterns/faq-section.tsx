@@ -5,7 +5,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger
-} from '@/components/ui/accordion';
+} from '@giveaway/ui-primitives/accordion';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 
 const faqs = [

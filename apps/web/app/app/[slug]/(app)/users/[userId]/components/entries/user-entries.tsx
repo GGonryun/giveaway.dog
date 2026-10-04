@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card } from '@/components/ui/card';
+import { Card } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -10,12 +10,12 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
-import { TablePagination } from '@/components/ui/table-pagination';
+} from '@giveaway/ui-primitives/table';
+import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 
 import { TASK_LABEL } from '@/lib/task/schemas';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';

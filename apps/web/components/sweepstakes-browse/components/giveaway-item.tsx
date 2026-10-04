@@ -1,11 +1,11 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Typography } from '@/components/ui/typography';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import { formatDistanceToNowStrict, isBefore } from 'date-fns';
 import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
 import React from 'react';
 import Link from 'next/link';
-import { date } from '@/lib/date';
+import { date } from '@giveaway/util-time/date';
 import { cn } from '@giveaway/ui-utils/utils';
 import { SweepstakesStatusSummaryBadge } from '@/components/sweepstakes/status-badge';
 import { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas';

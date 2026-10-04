@@ -7,8 +7,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
 import { ReactNode } from 'react';
 import { cn } from '@giveaway/ui-utils/utils';
 

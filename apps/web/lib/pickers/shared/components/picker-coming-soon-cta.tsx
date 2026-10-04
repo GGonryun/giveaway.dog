@@ -1,7 +1,7 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
 import { Bell } from 'lucide-react';
 import Link from 'next/link';
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';

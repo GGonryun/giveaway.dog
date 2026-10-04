@@ -2,7 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import { twitterV2PickerUnvalidatedFormSchema } from '../schemas/form';
+import { twitterV2PickerUnvalidatedFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { ApplicationError } from '@giveaway/util-errors';
 
 export const getTwitterV2PickerForm = procedure()

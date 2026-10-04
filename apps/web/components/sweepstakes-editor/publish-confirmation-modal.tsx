@@ -7,15 +7,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { InfoIcon, CheckIcon, SaveIcon } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { formatDistance } from 'date-fns';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useMemo } from 'react';
-import { Spinner } from '../ui/spinner';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import Link from 'next/link';
 import { UnifiedFormAction } from '../patterns/form-layout/types';
 

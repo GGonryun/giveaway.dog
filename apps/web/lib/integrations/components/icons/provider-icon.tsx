@@ -20,7 +20,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
-} from '@/components/ui/tooltip';
+} from '@giveaway/ui-primitives/tooltip';
 import { SocialVeloraIcon } from './velora-icon';
 import { SocialLinkedInIcon } from './linked-in-icon';
 

@@ -5,8 +5,8 @@ import {
   FormLabel,
   FormControl,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
 import { BLUESKY_PROFILE_URL } from '@giveaway/app-config/settings';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';

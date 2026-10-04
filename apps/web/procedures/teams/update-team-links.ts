@@ -3,8 +3,11 @@
 import { z } from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
-import { requireMembershipPermission, TeamPermission } from '@/lib/permissions';
-import { socialLinksSchema } from '@/schemas/social-links';
+import {
+  requireMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
+import { socialLinksSchema } from '@giveaway/team-model/social-links';
 
 const updateTeamLinks = procedure()
   .authorization({ required: true })

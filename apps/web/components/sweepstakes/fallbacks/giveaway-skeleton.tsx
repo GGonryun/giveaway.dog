@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '@giveaway/ui-primitives/card';
+import { Skeleton } from '@giveaway/ui-primitives/skeleton';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { Clock } from 'lucide-react';
 
 export const GiveawayHeaderSkeleton: React.FC = () => {

@@ -6,7 +6,7 @@ import {
 } from '@/lib/task/schemas';
 import { PrismaClient, TaskJobStatus } from '@prisma/client';
 import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import { ApplicationError } from '@giveaway/util-errors';
 import { takeUntil } from '@giveaway/util-collections/arrays';
 import { Tx } from '@giveaway/db-client/prisma';

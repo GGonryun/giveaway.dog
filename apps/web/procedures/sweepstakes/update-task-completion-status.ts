@@ -5,7 +5,7 @@ import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { CompletionStatus, TeamTier } from '@prisma/client';
 import { findUserSweepstakes, findUserSweepstakesQuery } from './shared';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 
 export const updateTaskCompletionStatus = procedure()
   .authorization({ required: true })

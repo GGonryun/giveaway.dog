@@ -5,14 +5,17 @@ import {
   FormItem,
   FormMessage,
   FormMessageParagraph
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { useMemo } from 'react';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import {
+  Collapsible,
+  CollapsibleContent
+} from '@giveaway/ui-primitives/collapsible';
 import { RegionalRestrictionFilterField } from './regional-restriction-filter';
 import { RegionalRestrictionRegions } from './regional-restriction-regions';
 import { RegionalRestrictionFilter } from '@prisma/client';

@@ -1,6 +1,6 @@
 'use client';
 
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import {
   TaskActionProps,
   TaskContent,
@@ -8,8 +8,12 @@ import {
 } from '../../building-blocks';
 import { useState } from 'react';
 import { SubmitMediaTaskSchema, TaskInput } from '@/lib/task/schemas';
-import { Typography } from '@/components/ui/typography';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Typography } from '@giveaway/ui-primitives/typography';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import { AlertCircleIcon, ImageIcon } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 import { AcceptedFileTypes, FileSize } from '@giveaway/util-media/files';

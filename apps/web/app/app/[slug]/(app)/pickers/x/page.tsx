@@ -4,13 +4,13 @@ import { TeamPageProps } from '@/schemas/pages';
 import {
   ListPickersV2FilterSchema,
   toPickersV2Filter
-} from '@/lib/pickers/x/schemas/list';
+} from '@giveaway/x-picker-model/schemas/list';
 import { CreatePickerV2Button } from '@/lib/pickers/x/components/create-picker-v2-button';
 import { PickersV2Table } from '@/lib/pickers/x/components/pickers-v2-table';
 import { PickersV2Tabs } from '@/lib/pickers/x/components/pickers-v2-tabs';
 import { getPickersV2List } from '@/lib/pickers/x/procedures/get-pickers-v2-list';
 import { XPickersUpgradeCTA } from '@/lib/pickers/x/components/x-pickers-upgrade-cta';
-import { hasMinimumTeamTier } from '@/lib/team/util';
+import { hasMinimumTeamTier } from '@giveaway/team-model/team/util';
 import { TeamTier } from '@prisma/client';
 import db from '@giveaway/db-client/prisma';
 import { auth } from '@/lib/auth/config';

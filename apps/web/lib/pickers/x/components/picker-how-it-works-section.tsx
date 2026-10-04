@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 import { Link2, Filter, Sparkles, Trophy } from 'lucide-react';
 

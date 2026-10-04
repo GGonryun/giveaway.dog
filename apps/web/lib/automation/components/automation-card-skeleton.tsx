@@ -4,8 +4,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+} from '@giveaway/ui-primitives/card';
+import { Skeleton } from '@giveaway/ui-primitives/skeleton';
 
 export function AutomationCardSkeleton() {
   return (

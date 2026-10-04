@@ -1,4 +1,4 @@
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import {
   TaskActionProps,
   TaskContent,
@@ -7,7 +7,7 @@ import {
 import { useState } from 'react';
 import { YoutubeVisitTaskSchema } from '@/lib/task/schemas';
 import { useTaskTheme } from '@/lib/task/components/theme';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { cn } from '@giveaway/ui-utils/utils';
 import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
 

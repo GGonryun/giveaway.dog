@@ -7,15 +7,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import React from 'react';
 import {
   stringifyTerms,
   SweepstakesTermOptions
 } from '@/components/sweepstakes-editor/form/terms';
 import { useGiveawayParticipation } from './giveaway-participation-context';
-import { date } from '@/lib/date';
+import { date } from '@giveaway/util-time/date';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { MinimalTipTapPreview } from '../ui/minimal-tiptap-preview';
 

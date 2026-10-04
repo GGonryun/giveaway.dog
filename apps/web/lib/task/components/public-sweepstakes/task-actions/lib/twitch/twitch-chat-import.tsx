@@ -2,7 +2,7 @@ import { TaskActionProps } from '../../building-blocks';
 import { WithProviderConnection } from '../provider-connection';
 import { ErrorDisplay } from '../error-display';
 import { TwitchChatImportTaskSchema } from '@/lib/task/schemas';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
 import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
 

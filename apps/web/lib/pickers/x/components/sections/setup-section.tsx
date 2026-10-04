@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormContext, useFieldArray } from 'react-hook-form';
-import { TwitterV2PickerFormSchema } from '../../schemas/form';
+import { TwitterV2PickerFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { MAX_TWITTER_V2_PICKER_POSTS } from '@giveaway/app-config/settings';
 import {
   FormControl,
@@ -9,15 +9,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
 import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import {
+  Collapsible,
+  CollapsibleContent
+} from '@giveaway/ui-primitives/collapsible';
 import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import { DateTimePicker } from '@/components/ui/date-time-picker';
 import {
   Select,
@@ -25,15 +28,15 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
-import { timezone } from '@/lib/time';
+} from '@giveaway/ui-primitives/select';
+import { timezone } from '@giveaway/util-time/time';
 import { memo, useMemo } from 'react';
-import { datetime } from '@/lib/date';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { datetime } from '@giveaway/util-time/date';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { Gem, Trash2, Plus } from 'lucide-react';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
-import { hasMinimumTeamTier } from '@/lib/team/util';
+import { hasMinimumTeamTier } from '@giveaway/team-model/team/util';
 import { TeamTier } from '@prisma/client';
 
 export const TwitterV2SetupSection: React.FC = () => {

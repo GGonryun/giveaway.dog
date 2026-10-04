@@ -2,7 +2,7 @@
 
 import { AllGiveawaysSearch } from '@/components/sweepstakes-browse/components/all-giveaways-search';
 import { GiveawayFiltersSheet } from '@/components/sweepstakes-browse/components/giveaway-filters-sheet';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   Pagination,
   PaginationContent,
@@ -10,7 +10,7 @@ import {
   PaginationPrevious,
   PaginationLink,
   PaginationNext
-} from '@/components/ui/pagination';
+} from '@giveaway/ui-primitives/pagination';
 import { HistoryIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';

@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { SidebarProvider, useSidebar } from '@/components/ui/sidebar';
+import { SidebarProvider, useSidebar } from '@giveaway/ui-primitives/sidebar';
 import {
   SiteHeader,
   SiteHeaderContent,

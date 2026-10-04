@@ -2,7 +2,7 @@
 
 import { OrbitingPlatformsSection } from '../marketing/orbiting-platforms';
 import { UnifiedPlatformSection } from '../marketing/unified-platform-visual';
-import { getServerTheme } from '../theme/get-server-theme';
+import { getServerTheme } from '@giveaway/theme-server/get-server-theme';
 import { BotCarouselSection } from '../marketing/bot-carousel';
 import { EntryMethodsCarouselSection } from '../marketing/entry-methods-carousel';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';

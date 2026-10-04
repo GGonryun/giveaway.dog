@@ -1,6 +1,6 @@
-import { Typography } from '@/components/ui/typography';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Typography } from '@giveaway/ui-primitives/typography';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Mail, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { DISCORD_INVITE_LINK } from '@giveaway/app-config/settings';

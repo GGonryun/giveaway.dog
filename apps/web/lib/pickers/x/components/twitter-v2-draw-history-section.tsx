@@ -1,15 +1,20 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import { Button } from '@giveaway/ui-primitives/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@giveaway/ui-primitives/card';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@/components/ui/collapsible';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+} from '@giveaway/ui-primitives/collapsible';
+import { Label } from '@giveaway/ui-primitives/label';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import { cn } from '@giveaway/ui-utils/utils';
 import { ChevronDown, Trophy } from 'lucide-react';
 import pluralize from 'pluralize';
@@ -18,7 +23,7 @@ import { TwitterV2DrawHistoryTable } from './twitter-v2-draw-history-table';
 import {
   TwitterV2PickerDrawSchema,
   TwitterV2PickerUserSchema
-} from '../schemas/details';
+} from '@giveaway/x-picker-model/schemas/details';
 
 interface TwitterV2DrawHistorySectionProps {
   draws: TwitterV2PickerDrawSchema[];

@@ -1,6 +1,6 @@
 import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import { DateTimePicker } from '@/components/ui/date-time-picker';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import React, { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';

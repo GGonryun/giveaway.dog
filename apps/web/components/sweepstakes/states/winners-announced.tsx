@@ -10,18 +10,22 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@/components/ui/collapsible';
+} from '@giveaway/ui-primitives/collapsible';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { PrizeDrawResult } from '@prisma/client';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { DisqualificationDialog } from '@/components/sweepstakes-details/disqualification-dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 
 export const WinnersAnnounced: React.FC = () => {
   const { prizes, participant } = useGiveawayParticipation();

@@ -2,18 +2,21 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import { ClockIcon, CalendarIcon, FileCheck } from 'lucide-react';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { TermsModal } from './terms-modal';
 import { DeviceType, GiveawayState } from '@/schemas/giveaway/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
-import { date } from '@/lib/date';
+import { date } from '@giveaway/util-time/date';
 import { getSweepstakesTimingDescription } from '@/schemas/sweepstakes';
 import { MinimalTipTapPreview } from '@/components/ui/minimal-tiptap-preview';
 import { PLATFORM_ICONS } from '@/components/social-links/social-link-icon';
-import { parseSocialLinks, type SocialLink } from '@/schemas/social-links';
+import {
+  parseSocialLinks,
+  type SocialLink
+} from '@giveaway/team-model/social-links';
 
 const SWEEPSTAKE_PARTICIPATION_CARD_THEME: Record<GiveawayState, string> = {
   'not-logged-in': '',

@@ -4,7 +4,10 @@ import {
 } from '@/schemas/giveaway/schemas';
 import { assertNever } from '@giveaway/util-errors';
 import { RequiredFields } from '@giveaway/util-types/types';
-import { expandCountries, includesCountryCode } from './countries';
+import {
+  expandCountries,
+  includesCountryCode
+} from '@giveaway/util-geo/countries';
 import { isFormFilled } from '@/schemas/giveaway/participant';
 import { SweepstakesParticipantSchema } from './participant/schemas';
 

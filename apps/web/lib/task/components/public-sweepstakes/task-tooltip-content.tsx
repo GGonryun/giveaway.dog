@@ -1,4 +1,4 @@
-import { TooltipContent } from '@/components/ui/tooltip';
+import { TooltipContent } from '@giveaway/ui-primitives/tooltip';
 import { useTaskTheme } from '../theme';
 import { cn } from '@giveaway/ui-utils/utils';
 import { TaskLock } from './task-lock';

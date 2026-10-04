@@ -1,7 +1,7 @@
 'use server';
 
 import db from '@giveaway/db-client/prisma';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import {
   COMPLETION_THRESHOLD_DAYS,
   IP_ADDRESS_THRESHOLD_DAYS,

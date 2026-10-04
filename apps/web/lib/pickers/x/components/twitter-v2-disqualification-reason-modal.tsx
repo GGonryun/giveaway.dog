@@ -6,7 +6,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
+} from '@giveaway/ui-primitives/dialog';
 import { Ban } from 'lucide-react';
 
 interface DisqualificationReasonModalProps {

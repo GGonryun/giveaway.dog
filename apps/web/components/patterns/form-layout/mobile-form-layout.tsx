@@ -1,9 +1,9 @@
 'use client';
 
 import { SiteHeader } from '@/components/patterns/app-sidebar/site-header';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@giveaway/ui-primitives/badge';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Tabs, TabsList, TabsTrigger } from '@giveaway/ui-primitives/tabs';
 import { XIcon, SaveIcon, EyeIcon, EditIcon } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { FormLayoutProps } from './types';

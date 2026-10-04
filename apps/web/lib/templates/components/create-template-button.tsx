@@ -1,7 +1,7 @@
 'use client';
 
 import { useCreateTemplate } from '@/components/templates/use-create-template';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { Plus } from 'lucide-react';
 
 export const CreateTemplateButton = () => {

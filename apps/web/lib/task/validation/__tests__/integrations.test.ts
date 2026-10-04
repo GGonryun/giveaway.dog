@@ -39,7 +39,7 @@ vi.mock('@/lib/integrations/utils/refresh-twitch-token', () => ({
   refreshTwitchToken: external.refreshTwitchToken
 }));
 
-vi.mock('@/lib/integrations/utils/refresh-velora-token', () => ({
+vi.mock('@giveaway/velora-api/refresh-velora-token', () => ({
   refreshVeloraToken: external.refreshVeloraToken
 }));
 

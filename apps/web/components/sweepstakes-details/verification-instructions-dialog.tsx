@@ -8,11 +8,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
+import { Label } from '@giveaway/ui-primitives/label';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { ExternalLink, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import { TASK_VERIFICATION_REQUIREMENT, TaskSchema } from '@/lib/task/schemas';
 import {

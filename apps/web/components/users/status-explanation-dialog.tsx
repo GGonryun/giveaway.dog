@@ -8,7 +8,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog';
+} from '@giveaway/ui-primitives/alert-dialog';
 import { CheckCircle, UserX } from 'lucide-react';
 
 interface StatusExplanationDialogProps {

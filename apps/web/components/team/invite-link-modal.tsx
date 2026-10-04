@@ -7,10 +7,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/dialog';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
 import { useTeamInviteLink } from '@/lib/invites/context/team-invite-link-context';
 import { toast } from 'sonner';
 import { Copy, RefreshCw, Info, AlertTriangle } from 'lucide-react';

@@ -5,7 +5,7 @@ import z from 'zod';
 import {
   pickersV2ListSchema,
   listPickersV2FilterSchema
-} from '../schemas/list';
+} from '@giveaway/x-picker-model/schemas/list';
 
 export const getPickersV2List = procedure()
   .authorization({

@@ -3,7 +3,7 @@
 import { ArrowRight } from 'lucide-react';
 import { ScrollingTemplatesAnimation } from '../marketing/scrolling-templates-animation';
 import { MarketingHeader } from '@/components/patterns/shared';
-import { getServerTheme } from '../theme/get-server-theme';
+import { getServerTheme } from '@giveaway/theme-server/get-server-theme';
 import { SupportedIntegrations } from './supported-integrations';
 
 export const IntegrationsSection = async () => {

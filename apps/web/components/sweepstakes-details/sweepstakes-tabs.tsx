@@ -1,6 +1,6 @@
 'use client';
 
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@giveaway/ui-primitives/tabs';
 import React, { useEffect, useState } from 'react';
 
 import { widetype } from '@giveaway/util-types/widetype';

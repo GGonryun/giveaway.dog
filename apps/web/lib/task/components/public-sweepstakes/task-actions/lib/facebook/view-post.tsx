@@ -6,7 +6,7 @@ import {
 import { FacebookViewPostTaskSchema } from '@/lib/task/schemas';
 import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
 import { FacebookDisclaimer } from './disclaimer';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 
 export const FacebookViewPostTaskActionForm: React.FC<
   TaskActionProps<FacebookViewPostTaskSchema>

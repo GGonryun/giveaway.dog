@@ -1,9 +1,14 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import {
   Table,
   TableBody,
@@ -11,7 +16,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import {
   Shuffle,
   Info,
@@ -23,7 +28,7 @@ import {
   BanIcon
 } from 'lucide-react';
 import { useTeams } from '@/components/context/team-provider';
-import { Label } from '@/components/ui/label';
+import { Label } from '@giveaway/ui-primitives/label';
 import {
   SweepstakesPrizeSchema,
   SweepstakesWinnerCriteriaSchema
@@ -34,9 +39,13 @@ import pluralize from 'pluralize';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteria';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   Dialog,
   DialogContent,
@@ -44,14 +53,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter
-} from '@/components/ui/dialog';
+} from '@giveaway/ui-primitives/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Textarea } from '@/components/ui/textarea';
+} from '@giveaway/ui-primitives/dropdown-menu';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
 import { CompleteSweepstakesAlert } from '../sweepstakes-editor/complete-sweepstakes-alert';
 import { BotEnforcementField } from '@/lib/user-quality/bot-enforcement-field';
 import {

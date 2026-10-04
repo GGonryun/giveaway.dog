@@ -1,14 +1,14 @@
 import { QRCodeModal } from '@/components/patterns/qr-code-modal';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@giveaway/ui-primitives/card';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Label } from '@giveaway/ui-primitives/label';
 import { CheckCircleIcon, CopyIcon, QrCodeIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'sonner';

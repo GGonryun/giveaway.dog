@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   Sheet,
   SheetContent,
@@ -6,14 +6,19 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger
-} from '@/components/ui/sheet';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@giveaway/ui-primitives/sheet';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@giveaway/ui-primitives/tabs';
 import React from 'react';
-import { Typography } from '@/components/ui/typography';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import { cn } from '@giveaway/ui-utils/utils';
 import { widetype } from '@giveaway/util-types/widetype';
 import { PlusIcon, ChevronRight } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 
 import {
   TASK_LABEL,

@@ -8,7 +8,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail
-} from '@/components/ui/sidebar';
+} from '@giveaway/ui-primitives/sidebar';
 import { NavGroups } from './nav-projects';
 import { NavUser } from './nav-user';
 import { TeamSwitcher } from './team-switcher';

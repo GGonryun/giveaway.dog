@@ -3,9 +3,13 @@
 import { MenuIcon } from 'lucide-react';
 import { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Separator } from '@/components/ui/separator';
+import { Button } from '@giveaway/ui-primitives/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger
+} from '@giveaway/ui-primitives/sheet';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import Link from 'next/link';
 import { ThemeToggleButton } from '@/components/theme/theme-toggle-button';
 import { NavigationHeader } from './navigation-header';

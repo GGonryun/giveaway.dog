@@ -1,6 +1,6 @@
 'use client';
 
-import { DetailedUserTeam } from '@/schemas/teams';
+import { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { createContext, useContext } from 'react';
 
 type TeamsContextType = {

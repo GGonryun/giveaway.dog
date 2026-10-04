@@ -1,11 +1,11 @@
 'use client';
 
 import { useFormContext, useWatch } from 'react-hook-form';
-import { TwitterV2PickerFormSchema } from '../schemas/form';
+import { TwitterV2PickerFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { useEffect, useState, memo } from 'react';
 import { Loader2, AlertCircle, LucideIcon } from 'lucide-react';
 import type { TwitterEmbedData } from '@/lib/integrations/procedures/get-twitter-oembed';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { useProcedureAsync } from '@/lib/mrpc/hook';
 import getTwitterOEmbed from '@/lib/integrations/procedures/get-twitter-oembed';
 import { xStatusRefineUrl } from '@giveaway/x-model/twitter';

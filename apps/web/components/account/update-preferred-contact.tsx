@@ -7,7 +7,7 @@ import updateProfile from '@/procedures/user/update-profile';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { SettingsCard } from '../settings/settings-card';
-import { Alert, AlertDescription } from '../ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { AlertCircleIcon } from 'lucide-react';
 import {
   Select,
@@ -15,7 +15,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import {
   IDENTITY_PROVIDER_LABEL,
   IdentityProviderSchema,

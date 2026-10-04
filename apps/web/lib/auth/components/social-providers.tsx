@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
 import { CircleAlertIcon, Plus, UnlinkIcon, UnplugIcon } from 'lucide-react';
 import { useUser } from '@/components/context/user-provider';
@@ -16,8 +16,12 @@ import {
   IDENTITY_PROVIDER_LABEL,
   SOCIAL_PROVIDERS
 } from '@giveaway/integration-model/providers';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Spinner } from '@/components/ui/spinner';
+import {
+  Alert,
+  AlertTitle,
+  AlertDescription
+} from '@giveaway/ui-primitives/alert';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import login from '../procedures/login';
 import { SettingsCard } from '@/components/settings/settings-card';
 import { useState } from 'react';

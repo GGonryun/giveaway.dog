@@ -1,7 +1,7 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 import { findUserTeam } from '@/procedures/teams/find-user-team';
 import { IntegrationProvider, TeamTier } from '@prisma/client';
 import z from 'zod';

@@ -8,12 +8,15 @@ import {
   AlertDialogDescription,
   AlertDialogCancel,
   AlertDialogAction
-} from '@/components/ui/alert-dialog';
-import { AlertDialogHeader, AlertDialogFooter } from '../ui/alert-dialog';
-import { Card, CardContent } from '../ui/card';
+} from '@giveaway/ui-primitives/alert-dialog';
+import {
+  AlertDialogHeader,
+  AlertDialogFooter
+} from '@giveaway/ui-primitives/alert-dialog';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import Link from 'next/link';
-import { Button } from '../ui/button';
-import { Label } from '../ui/label';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Label } from '@giveaway/ui-primitives/label';
 import { CheckCircle2, PlusCircle } from 'lucide-react';
 import {
   DEFAULT_USER_FEATURE_FLAGS,

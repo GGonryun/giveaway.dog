@@ -1,7 +1,7 @@
 'use client';
 
 import { TeamsProvider } from '@/components/context/team-provider';
-import { DetailedUserTeam } from '@/schemas/teams';
+import { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { TeamRole, TeamTier } from '@prisma/client';
 
 const MOCK_TEAM: DetailedUserTeam = {

@@ -5,7 +5,7 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { TeamTier, VisibilityType } from '@prisma/client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { findUserSweepstakes } from './shared';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 
 const toggleVisibilityInput = z.object({
   sweepstakesId: z.string(),

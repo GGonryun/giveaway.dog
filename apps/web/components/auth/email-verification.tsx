@@ -1,11 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Label } from '@giveaway/ui-primitives/label';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import {
   Mail,
   AlertTriangle,
@@ -21,7 +25,7 @@ import { useProcedure } from '@/lib/mrpc/hook';
 import sendEmailVerification from '@/procedures/user/send-email-verification';
 import updateEmail from '@/procedures/user/update-email';
 import { toast } from 'sonner';
-import { Spinner } from '../ui/spinner';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { UserProfileSchema } from '@/schemas/user';
 import { useRouter } from 'next/navigation';
 import { SettingsCard } from '../settings/settings-card';

@@ -1,6 +1,6 @@
 import { getCookie, setCookie } from 'cookies-next';
 import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
-import { timezone } from './time';
+import { timezone } from '@giveaway/util-time/time';
 
 export interface UserMetrics {
   userAgent: string;

@@ -8,14 +8,14 @@ import {
   FormControl,
   FormMessage,
   FormDescription
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 

@@ -1,7 +1,10 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { detailedUserTeamSchema, toDetailedUserTeam } from '@/schemas/teams';
+import {
+  detailedUserTeamSchema,
+  toDetailedUserTeam
+} from '@giveaway/team-model/teams';
 import { TeamRole } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import z from 'zod';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@giveaway/ui-primitives/tabs';
 import {
   ListSweepstakesFilters,
   SWEEPSTAKES_FILTER_STATUS_OPTIONS

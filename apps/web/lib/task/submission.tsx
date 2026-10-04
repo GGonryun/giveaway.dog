@@ -1,4 +1,4 @@
-import { ButtonVariant } from '@/components/ui/button';
+import { ButtonVariant } from '@giveaway/ui-primitives/button';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 import { CompletionStatus } from '@prisma/client';
 import {

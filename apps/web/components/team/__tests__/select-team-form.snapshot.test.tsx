@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
 import getUserTeams from '@/procedures/teams/get-user-teams';
 import selectTeam from '@/procedures/teams/select-team';
-import type { DetailedUserTeam } from '@/schemas/teams';
+import type { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { SelectTeamForm } from '../select-team-form';
 
 const navigation = vi.hoisted(() => ({

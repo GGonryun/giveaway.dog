@@ -8,15 +8,15 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle
-} from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/sheet';
+import { Button } from '@giveaway/ui-primitives/button';
 import { GiveawaySchema } from '@/schemas/giveaway/schemas';
 import {
   IntegrationsSchema,
   hasFeature
 } from '@giveaway/integration-model/schemas';
 import { AlertCircleIcon, SendIcon } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import { AutomatedPostIntegrationStep } from './steps/integration-step';
 import { BlueskyContentStep } from './steps/bluesky-content-step';
 import { DiscordContentStep } from './steps/discord-content-step';
@@ -30,12 +30,16 @@ import {
   postToDiscordRequestSchema,
   PostToDiscordRequestSchema
 } from '../schemas';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import { AutomatedPostJobType } from '@prisma/client';
 import { scheduleAutomatedPostJob } from '../procedures/schedule-automated-post-job';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';
-import { Spinner } from '@/components/ui/spinner';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { useRouter } from 'next/navigation';
 
 interface PostBuilderSheetProps {

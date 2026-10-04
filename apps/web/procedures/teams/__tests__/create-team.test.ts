@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import createTeam from '../create-team';
-import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
+import { DEFAULT_TEAM_LOGO } from '@giveaway/team-model/team/data';
 import { MAX_USER_TEAMS } from '@giveaway/app-config/settings';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';

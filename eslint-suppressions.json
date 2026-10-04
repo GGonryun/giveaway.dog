@@ -89,24 +89,6 @@
       "count": 1
     }
   },
-  "apps/web/components/ui/flex.tsx": {
-    "react/display-name": {
-      "count": 1
-    }
-  },
-  "apps/web/components/ui/sidebar.tsx": {
-    "react-hooks/purity": {
-      "count": 1
-    }
-  },
-  "apps/web/components/ui/typography.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
-    },
-    "react/display-name": {
-      "count": 2
-    }
-  },
   "apps/web/lib/auth/config-middleware.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 4

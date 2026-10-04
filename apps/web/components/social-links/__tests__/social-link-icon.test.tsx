@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   SUPPORTED_SOCIAL_PLATFORMS,
   type SocialPlatform
-} from '@/schemas/social-links';
+} from '@giveaway/team-model/social-links';
 import { PLATFORM_ICONS, SocialLinkIcon } from '../social-link-icon';
 
 const expectedLabels: Record<SocialPlatform, string> = {

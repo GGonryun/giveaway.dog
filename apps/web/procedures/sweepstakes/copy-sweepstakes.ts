@@ -8,7 +8,7 @@ import { findUserSweepstakesQuery } from './shared';
 import { findUserTeam } from '@/procedures/teams/find-user-team';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { Prisma, TeamTier } from '@prisma/client';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 
 const copySweepstakes = procedure()
   .authorization({ required: true })

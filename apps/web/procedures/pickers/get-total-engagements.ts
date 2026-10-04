@@ -6,7 +6,7 @@ import {
   X_PICKER_RETWEETS_KEY,
   X_PICKER_REPLIES_KEY,
   X_PICKER_QUOTES_KEY
-} from '@/lib/pickers/x/constants';
+} from '@giveaway/x-picker-model/constants';
 import { z } from 'zod';
 
 const engagementsSchema = z.object({

@@ -2,13 +2,13 @@
 
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 
 export function ThemeToggleButton() {
   const { theme, setTheme } = useTheme();

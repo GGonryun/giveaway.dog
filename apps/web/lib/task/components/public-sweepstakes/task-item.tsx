@@ -4,7 +4,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@/components/ui/collapsible';
+} from '@giveaway/ui-primitives/collapsible';
 
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -18,7 +18,7 @@ import { TaskButton } from './task-button';
 import { TaskTooltipContent } from './task-tooltip-content';
 import { TaskAction } from './task-action';
 import { TaskIcon } from './task-icon';
-import { Tooltip } from '@/components/ui/tooltip';
+import { Tooltip } from '@giveaway/ui-primitives/tooltip';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 import { toTaskStatus } from '../../submission';
 import { toCompletionValue } from '../../entries';

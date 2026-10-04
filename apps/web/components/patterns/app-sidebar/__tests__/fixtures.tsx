@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@giveaway/ui-primitives/sidebar';
 import { TeamsProvider } from '@/components/context/team-provider';
 import { UserProvider } from '@/components/context/user-provider';
-import { DetailedUserTeam } from '@/schemas/teams';
+import { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { UserSchema } from '@/schemas/user';
 
 export const acmeTeam: DetailedUserTeam = {

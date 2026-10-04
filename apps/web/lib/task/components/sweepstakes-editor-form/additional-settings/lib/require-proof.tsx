@@ -3,8 +3,8 @@ import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
-import { FormField, FormItem, FormControl } from '@/components/ui/form';
-import { Switch } from '@/components/ui/switch';
+import { FormField, FormItem, FormControl } from '@giveaway/ui-primitives/form';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useFormContext } from 'react-hook-form';
 

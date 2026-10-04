@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { useState } from 'react';
-import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
+import { DEFAULT_TEAM_LOGO } from '@giveaway/team-model/team/data';
 
 interface EasterEggLogoProps {
   size?: number;

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Settings } from 'lucide-react';
 
 export const IncompleteGiveawaySetup: React.FC = () => {

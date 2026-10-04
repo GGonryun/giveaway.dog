@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Typography } from '../ui/typography';
+import { Typography } from '@giveaway/ui-primitives/typography';
 
 export const ComingSoon = () => {
   return (

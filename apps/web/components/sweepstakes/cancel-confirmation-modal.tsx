@@ -7,11 +7,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { InfoIcon, SaveIcon, TrashIcon } from 'lucide-react';
 import { useMemo } from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 

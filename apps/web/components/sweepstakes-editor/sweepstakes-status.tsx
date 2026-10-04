@@ -2,18 +2,27 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { CopyLinkInput } from '@/components/ui/copy-link-input';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Separator } from '@giveaway/ui-primitives/separator';
+import { CopyLinkInput } from '@giveaway/ui-primitives/copy-link-input';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import {
   CalendarIcon,
   ClockIcon,
@@ -26,7 +35,7 @@ import {
 } from 'lucide-react';
 import { VisibilityType } from '@prisma/client';
 import { cn } from '@giveaway/ui-utils/utils';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import {
   SweepstakesStatusBadge,
   SweepstakesStatusDescription

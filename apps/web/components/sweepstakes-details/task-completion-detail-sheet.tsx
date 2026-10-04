@@ -8,16 +8,16 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle
-} from '../ui/sheet';
+} from '@giveaway/ui-primitives/sheet';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle
-} from '../ui/dialog';
-import { Button } from '../ui/button';
-import { Alert, AlertDescription } from '../ui/alert';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import {
   Globe,
   CheckCircle,
@@ -39,7 +39,7 @@ import { TaskPlatformIcon } from '@/lib/task/components/task-platform-icon';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
 import { size } from 'lodash';
-import { ObfuscatedEmail } from '../ui/obfuscated-email';
+import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 
 export const TaskCompletionDetailSheetContent: React.FC<{

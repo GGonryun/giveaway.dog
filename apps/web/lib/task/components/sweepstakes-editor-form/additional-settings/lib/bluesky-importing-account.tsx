@@ -2,16 +2,16 @@ import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import { SwitchFormHeader } from '@/components/patterns/form-layout/switch-form-header';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 import { SweepstakeStep } from '@/components/sweepstakes-editor/data/steps';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { FormField, FormItem, FormControl } from '@/components/ui/form';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
+import { Button } from '@giveaway/ui-primitives/button';
+import { FormField, FormItem, FormControl } from '@giveaway/ui-primitives/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import {
   hasFeature,

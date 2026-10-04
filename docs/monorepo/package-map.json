@@ -2194,11 +2194,7 @@
       "layer": 1,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "lib/twitch/api/schemas.ts",
-        "lib/twitch/bot/webhooks/schema.ts",
-        "lib/twitch/integration/schemas.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": ["zod"]
     },
@@ -2307,9 +2303,9 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/utils/refresh-velora-token.ts"],
-      "dependsOn": ["@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-errors"],
+      "npm": []
     },
     {
       "name": "@giveaway/velora-auth",
@@ -3259,21 +3255,15 @@
       "layer": 1,
       "sourceFiles": 9,
       "testFiles": 9,
-      "sources": [
-        "lib/pickers/x/constants.ts",
-        "lib/pickers/x/data/defaults.ts",
-        "lib/pickers/x/schemas/",
-        "lib/pickers/x/utils/calculate-api-calls.ts",
-        "lib/pickers/x/utils/extract-tweet-id.ts",
-        "lib/pickers/x/utils/picker-utils.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/picker-model",
         "@giveaway/util-types",
         "@giveaway/x-model"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/x-picker-public",
@@ -3431,11 +3421,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": [
-        "lib/continents.json",
-        "lib/countries.json",
-        "lib/countries.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": []
     },
@@ -3495,7 +3481,7 @@
       "layer": 1,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/date.ts", "lib/time.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": ["@vvo/tzdb", "date-fns"]
     },
@@ -4973,9 +4959,9 @@
       "layer": 1,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": ["lib/team/", "schemas/social-links.ts", "schemas/teams.ts"],
-      "dependsOn": ["@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model", "cookies-next", "next", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-errors"],
+      "npm": ["cookies-next", "next", "zod"]
     },
     {
       "name": "@giveaway/team-permissions",
@@ -4985,9 +4971,9 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/permissions/"],
-      "dependsOn": ["@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-errors"],
+      "npm": []
     },
     {
       "name": "@giveaway/team-picker",
@@ -5381,7 +5367,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/theme/get-server-theme.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/theme-model"],
       "npm": ["next"]
     },
@@ -5425,7 +5411,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/ui/chart.tsx"],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-utils"],
       "npm": ["react", "recharts"]
     },
@@ -5530,51 +5516,7 @@
       "layer": 1,
       "sourceFiles": 43,
       "testFiles": 86,
-      "sources": [
-        "components/ui/accordion.tsx",
-        "components/ui/alert-dialog.tsx",
-        "components/ui/alert.tsx",
-        "components/ui/avatar.tsx",
-        "components/ui/badge.tsx",
-        "components/ui/breadcrumb.tsx",
-        "components/ui/button.tsx",
-        "components/ui/card.tsx",
-        "components/ui/checkbox.tsx",
-        "components/ui/collapsible.tsx",
-        "components/ui/copy-link-input.tsx",
-        "components/ui/dialog.tsx",
-        "components/ui/dropdown-menu.tsx",
-        "components/ui/empty-state.tsx",
-        "components/ui/flex.tsx",
-        "components/ui/form.tsx",
-        "components/ui/input.tsx",
-        "components/ui/label.tsx",
-        "components/ui/mobile-suspense.tsx",
-        "components/ui/navigation-menu.tsx",
-        "components/ui/obfuscated-email.tsx",
-        "components/ui/pagination.tsx",
-        "components/ui/popover.tsx",
-        "components/ui/progress.tsx",
-        "components/ui/radio-group.tsx",
-        "components/ui/resizable.tsx",
-        "components/ui/scroll-area.tsx",
-        "components/ui/select.tsx",
-        "components/ui/separator.tsx",
-        "components/ui/sheet.tsx",
-        "components/ui/sidebar.tsx",
-        "components/ui/skeleton.tsx",
-        "components/ui/spinner.tsx",
-        "components/ui/switch.tsx",
-        "components/ui/table-pagination.tsx",
-        "components/ui/table.tsx",
-        "components/ui/tabs.tsx",
-        "components/ui/textarea.tsx",
-        "components/ui/toaster.tsx",
-        "components/ui/toggle-group.tsx",
-        "components/ui/toggle.tsx",
-        "components/ui/tooltip.tsx",
-        "components/ui/typography.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/ui-hooks",
         "@giveaway/ui-utils",

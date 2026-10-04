@@ -1,9 +1,9 @@
 'use client';
 
-import { TablePagination } from '@/components/ui/table-pagination';
+import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Card } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -11,14 +11,14 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import {
   Eye,
   Edit,
@@ -52,7 +52,7 @@ import {
   DEFAULT_SWEEPSTAKES_NAME
 } from '@giveaway/app-config/settings';
 import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepstakes-details-page';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { DerivedStatusIcon } from '@/lib/sweepstake-status';
 import { useCreateSweepstakesPage } from '@/components/sweepstakes/use-create-sweepstakes-page';
 import { cn } from '@giveaway/ui-utils/utils';

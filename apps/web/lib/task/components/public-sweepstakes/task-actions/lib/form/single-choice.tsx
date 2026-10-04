@@ -1,4 +1,4 @@
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import {
   TaskActionProps,
   TaskContent,
@@ -6,11 +6,18 @@ import {
 } from '../../building-blocks';
 import { useState } from 'react';
 import { SingleChoiceTaskSchema, TaskInput } from '@/lib/task/schemas';
-import { Typography } from '@/components/ui/typography';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Typography } from '@giveaway/ui-primitives/typography';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import { AlertCircleIcon } from 'lucide-react';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import {
+  RadioGroup,
+  RadioGroupItem
+} from '@giveaway/ui-primitives/radio-group';
+import { Label } from '@giveaway/ui-primitives/label';
 
 export const SingleChoiceTaskActionForm: React.FC<
   TaskActionProps<SingleChoiceTaskSchema>

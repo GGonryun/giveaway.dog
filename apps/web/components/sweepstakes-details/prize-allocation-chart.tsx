@@ -7,9 +7,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '../ui/card';
+} from '@giveaway/ui-primitives/card';
 import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent
+} from '@giveaway/ui-charts/chart';
 import { Pie, PieChart, Cell, Legend } from 'recharts';
 
 const CHART_COLORS = [

@@ -8,7 +8,7 @@ import {
   getPlatformLabel,
   type PlatformId
 } from '@giveaway/platform-catalog/platform-icons';
-import type { ResolvedTheme } from '@/lib/theme/get-server-theme';
+import type { ResolvedTheme } from '@giveaway/theme-server/get-server-theme';
 
 const PLATFORM_BADGES: Partial<
   Record<

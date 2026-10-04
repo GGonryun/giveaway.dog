@@ -6,9 +6,13 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   BotIcon,
   ExternalLink,
@@ -22,7 +26,7 @@ import { getDiscordInstallUrl } from '@giveaway/discord-model/install';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { disconnectDiscord } from '../procedures/disconnect-discord';
 import { useRouter } from 'next/navigation';
-import { Spinner } from '@/components/ui/spinner';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { verifyDiscordInstall } from '../procedures/verify-discord-install';
 import { DiscordConnectInstructions } from './discord-connect-instructions';
 

@@ -8,8 +8,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dropdown-menu';
+import { Button } from '@giveaway/ui-primitives/button';
 import { usePreviewState } from './contexts/preview-state-context';
 
 export const SweepstakesPreviewFooter: React.FC = () => {

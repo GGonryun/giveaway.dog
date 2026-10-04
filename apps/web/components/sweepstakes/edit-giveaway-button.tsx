@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '../ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { EditIcon } from 'lucide-react';
 import { useEditSweepstakesPage } from './use-edit-sweepstakes-page';
 import Link from 'next/link';

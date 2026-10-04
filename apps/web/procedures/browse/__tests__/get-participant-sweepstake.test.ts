@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import getParticipantSweepstake from '../get-participant-sweepstake';
 import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY } from '@/lib/task/queries';
-import { DEFAULT_TEAM_LOGO } from '@/lib/team/data';
+import { DEFAULT_TEAM_LOGO } from '@giveaway/team-model/team/data';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';

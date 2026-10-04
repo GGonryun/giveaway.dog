@@ -1,15 +1,15 @@
 'use client';
 
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import { FileUpload } from '@/components/ui/file-upload';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
   SwitchFormHeader
@@ -24,7 +24,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useState } from 'react';
 import { BlueskyPostPermissionBanner } from '../bluesky-post-permission-banner';

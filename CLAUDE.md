@@ -31,7 +31,7 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 - **Workspace packages**: Shared code goes in pnpm workspace packages under `packages/` (see Workspace Packages). Today the tooling packages are in `packages/tooling/`, and the packages that moved out of the app are in `packages/shared/`, `packages/infra/`, `packages/integrations/`, `packages/participants/`, `packages/pickers/` and `packages/tasks/`
 - **Auth pages**: Located in `app/(auth)/` directory
 - **Shared components**: Place reusable components in `components/` directory
-- **UI components**: Use existing shadcn/ui components in `components/ui/`
+- **UI components**: Use existing shadcn/ui components from `@giveaway/ui-primitives` (`packages/ui/ui-primitives/src/`)
 - **Auth components**: Create shared auth components in `components/auth/`
 
 ### Authentication
@@ -211,7 +211,7 @@ vitest.config.ts (lists the Vitest projects of every package)
 - **Libraries**: Use `@testing-library/react` with role queries (`screen.getByRole`) and `@testing-library/user-event` for interactions. Use `renderHook` for hooks
 - **Snapshots**: Use `toMatchSnapshot()` for representative states, only in `.snapshot.test.tsx` files. ESLint rejects snapshot assertions in other test files. Keep snapshots deterministic: freeze time with `vi.setSystemTime`, mock `Math.random` and id generators, and do not snapshot Radix-generated ids
 - **Mocks**: Mock `next/navigation`, `next/link`, `next/image`, `next-auth/react` and server actions with `vi.mock` in the test file
-- **Pattern**: See `components/ui/__tests__/button.test.tsx` and `components/ui/__tests__/button.snapshot.test.tsx`
+- **Pattern**: See `packages/ui/ui-primitives/src/__tests__/button.test.tsx` and `packages/ui/ui-primitives/src/__tests__/button.snapshot.test.tsx`
 
 ### Continuous Integration
 
@@ -230,7 +230,7 @@ vitest.config.ts (lists the Vitest projects of every package)
 
 - **What they do**: Each visual test renders a component in a real Chromium browser (Vitest browser mode with Playwright), takes a screenshot and compares it with a reference PNG pixel by pixel. A change to a component, a Tailwind class or a theme token that changes how it looks fails the `Visual tests` check
 - **Location**: Put visual tests in a `__tests__/` folder next to the code, named `<name>.visual.test.tsx`. The references go in `__tests__/__screenshots__/<name>.visual.test.tsx/`. Each project with visual tests has a `vitest.visual.config.ts` that uses `visualTestConfig` from `@giveaway/testing-visual/config`, and `test:visual` scripts. The root `test:visual*` scripts run them in every project. `pnpm run test:run` does not run visual tests
-- **Writing a test**: Use `renderVisual` and `THEMES` from `@giveaway/testing-visual/render`. Render each test in the light and the dark theme. Then call `await expect.element(root).toMatchScreenshot()`. For a component in a portal (a dialog, a popover), take the screenshot of the portal element, for example `page.getByRole('dialog')`. See `components/ui/__tests__/button.visual.test.tsx`
+- **Writing a test**: Use `renderVisual` and `THEMES` from `@giveaway/testing-visual/render`. Render each test in the light and the dark theme. Then call `await expect.element(root).toMatchScreenshot()`. For a component in a portal (a dialog, a popover), take the screenshot of the portal element, for example `page.getByRole('dialog')`. See `packages/ui/ui-primitives/src/__tests__/button.visual.test.tsx`
 - **Keep them deterministic**: Use fixed data. Do not use the current date, random values or images from the network. `@giveaway/testing-visual/setup` loads the Figtree font and turns off animations and transitions. `visualTestConfig` also loads `apps/web/app/globals.css` as a setup file, for the theme, and runs Tailwind with `apps/web` as its base, so every project gets the CSS of the app
 - **The references come from the Playwright Docker image**: The pixels depend on the browser version and the fonts of the operating system, so a screenshot from your own browser does not match. The `Visual tests` job runs in `mcr.microsoft.com/playwright` for the Playwright version in `pnpm-lock.yaml`. Only commit references that were made in that image, in one of these ways:
   - `pnpm run test:visual:docker:update` runs the tests in the same image on your machine and writes the new references. Use `pnpm run test:visual:docker` to only compare. These scripts need Docker on Linux, because they use your `node_modules`. In a Claude Code cloud session, start Docker first with `dockerd > /tmp/dockerd.log 2>&1 &`

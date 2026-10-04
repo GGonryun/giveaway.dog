@@ -5,7 +5,7 @@ import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { TeamTier } from '@prisma/client';
 import { findUserSweepstakes } from './shared';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 
 export const deleteTaskCompletion = procedure()
   .authorization({ required: true })

@@ -9,7 +9,7 @@ import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-part
 import { TaskItem } from './task-item';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 import { computeTaskStatus } from '../../validation/status';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import pluralize from 'pluralize';
 
 export const TaskList: React.FC<{

@@ -7,7 +7,7 @@ import { UseTemplateModal } from './use-template-modal';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { useRouter } from 'next/navigation';
-import { timezone } from '@/lib/time';
+import { timezone } from '@giveaway/util-time/time';
 import { useCreateTemplate } from '@/components/templates/use-create-template';
 
 export const TemplatesGrid: React.FC<{

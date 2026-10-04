@@ -7,13 +7,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/form';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
 import { Settings2, Square, SquareCheckBig } from 'lucide-react';
 import { useMemo, useState, useCallback, useRef } from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import { Typography } from '@/components/ui/typography';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import { widetype } from '@giveaway/util-types/widetype';
 
 import { stringifyTerms } from '../terms';
@@ -24,7 +24,7 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle
-} from '@/components/ui/sheet';
+} from '@giveaway/ui-primitives/sheet';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,7 +34,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog';
+} from '@giveaway/ui-primitives/alert-dialog';
 import { GiveawayFormSchema, GiveawayTerms } from '@/schemas/giveaway/schemas';
 import { SweepstakesTermsType } from '@prisma/client';
 import { toBrowsePageUrl } from '@/components/sweepstakes/util';
@@ -44,7 +44,7 @@ import {
   DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
   DEFAULT_CLAIM_DEADLINE_DAYS
 } from '@/schemas/giveaway/defaults';
-import { date } from '@/lib/date';
+import { date } from '@giveaway/util-time/date';
 import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
 import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';
 

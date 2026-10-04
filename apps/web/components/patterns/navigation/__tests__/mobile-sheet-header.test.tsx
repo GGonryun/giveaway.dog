@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent } from '@giveaway/ui-primitives/sheet';
 import { MobileSheetHeader } from '../mobile-sheet-header';
 
 const renderInOpenSheet = (onLogoClick = vi.fn()) => {

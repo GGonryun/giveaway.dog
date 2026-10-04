@@ -1,15 +1,15 @@
 'use client';
 
 import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import { ListSweepstakesFilters } from '@/schemas/sweepstakes';
 import { CalendarIcon, SearchIcon, XIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';

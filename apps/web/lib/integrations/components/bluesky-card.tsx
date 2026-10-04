@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { ExternalLink } from 'lucide-react';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { disconnectBluesky } from '@/lib/integrations/procedures/disconnect-bluesky';

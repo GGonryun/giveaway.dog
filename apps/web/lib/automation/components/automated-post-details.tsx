@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { Trash2, ExternalLink, Calendar, Search } from 'lucide-react';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import React, { useState } from 'react';
 import {
@@ -15,14 +15,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog';
+} from '@giveaway/ui-primitives/alert-dialog';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
+} from '@giveaway/ui-primitives/dialog';
 import { AutomatedPostJobSchema } from '../schemas';
 import { AutomatedPostStatusBadge } from './automated-post-status-badge';
 import { useProcedure } from '@/lib/mrpc/hook';

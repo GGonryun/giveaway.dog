@@ -18,19 +18,19 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@/components/ui/collapsible';
-import { Typography } from '@/components/ui/typography';
+} from '@giveaway/ui-primitives/collapsible';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import {
   FormControl,
   FormField as RHFFormField,
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 import { SweepstakesFormFieldType } from '@prisma/client';
-import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
+import { Switch } from '@giveaway/ui-primitives/switch';
+import { Input } from '@giveaway/ui-primitives/input';
 import { assertNever } from '@giveaway/util-errors';
 import { strings } from '@giveaway/util-strings/strings';
 import { FIELD_TYPE_LABELS } from '@giveaway/custom-fields-model/schemas';

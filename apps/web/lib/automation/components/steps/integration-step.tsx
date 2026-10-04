@@ -1,10 +1,14 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
 import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
 import { AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 
 interface AutomatedPostIntegrationStep {
   isSweepstakesLive: boolean;

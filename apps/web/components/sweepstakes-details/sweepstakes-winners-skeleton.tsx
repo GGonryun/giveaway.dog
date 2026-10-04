@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader } from '@giveaway/ui-primitives/card';
+import { Skeleton } from '@giveaway/ui-primitives/skeleton';
 import {
   Table,
   TableBody,
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 
 export function SweepstakesWinnersSkeleton() {
   return (

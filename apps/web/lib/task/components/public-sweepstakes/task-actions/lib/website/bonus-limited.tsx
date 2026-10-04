@@ -1,5 +1,5 @@
 import { TaskActionProps, TaskContent } from '../../building-blocks';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { BonusLimitedTaskSchema } from '@/lib/task/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';
@@ -9,7 +9,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
-} from '@/components/ui/tooltip';
+} from '@giveaway/ui-primitives/tooltip';
 
 export const BonusLimitedActionForm: React.FC<
   TaskActionProps<BonusLimitedTaskSchema>

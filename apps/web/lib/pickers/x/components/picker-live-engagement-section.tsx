@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import getTotalEngagements from '@/procedures/pickers/get-total-engagements';
 import { Heart, Repeat2, MessageCircle, Quote } from 'lucide-react';
 

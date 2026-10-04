@@ -3,7 +3,11 @@
 import { cn } from '@giveaway/ui-utils/utils';
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle2Icon } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import { LoginOptions } from '@/components/auth/login-options';
 import { AuthFooter } from '@/components/auth/auth-footer';
 import {
@@ -12,7 +16,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
+} from '@giveaway/ui-primitives/card';
 import { LOGIN_PROVIDERS } from '@giveaway/integration-model/providers';
 
 export function LoginForm({

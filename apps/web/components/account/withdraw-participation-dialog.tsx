@@ -9,11 +9,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog';
+} from '@giveaway/ui-primitives/alert-dialog';
 import { useProcedure } from '@/lib/mrpc/hook';
 import withdrawParticipation from '@/procedures/user/withdraw-participation';
 import { toast } from 'sonner';
-import { Alert, AlertDescription } from '../ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { TriangleAlertIcon } from 'lucide-react';
 
 interface WithdrawParticipationDialogProps {

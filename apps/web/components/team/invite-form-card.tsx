@@ -10,16 +10,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/select';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Button } from '@giveaway/ui-primitives/button';
 import { useProcedure } from '@/lib/mrpc/hook';
 import inviteMembers from '@/procedures/teams/invite-members';
 import { toast } from 'sonner';

@@ -4,7 +4,10 @@ import { z } from 'zod';
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import { TeamRole } from '@prisma/client';
-import { requireMembershipPermission, TeamPermission } from '@/lib/permissions';
+import {
+  requireMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
 
 const updateMemberRole = procedure()
   .authorization({ required: true })

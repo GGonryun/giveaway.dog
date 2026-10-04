@@ -12,7 +12,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@/components/ui/collapsible';
+} from '@giveaway/ui-primitives/collapsible';
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -24,7 +24,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar
-} from '@/components/ui/sidebar';
+} from '@giveaway/ui-primitives/sidebar';
 import { usePathname, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useTeams } from '@/components/context/team-provider';

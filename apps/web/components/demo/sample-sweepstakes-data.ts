@@ -1,7 +1,7 @@
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { nanoid } from 'nanoid';
 import { toDefaultValues } from '@/lib/task/defaults';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import {
   BLUESKY_PROFILE_URL,
   DEFAULT_ALLOWED_IDENTITIES,
@@ -19,7 +19,7 @@ import {
   YOUTUBE_CHANNEL_NAME,
   YOUTUBE_CHANNEL_URL
 } from '@giveaway/app-config/settings';
-import { timezone } from '@/lib/time';
+import { timezone } from '@giveaway/util-time/time';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
   DEFAULT_ALLOW_USER_SELECTION,

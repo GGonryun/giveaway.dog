@@ -1,6 +1,6 @@
 'use server';
 
-import { date } from '@/lib/date';
+import { date } from '@giveaway/util-time/date';
 import { procedure } from '@/lib/mrpc/procedures';
 import { DEFAULT_TIME_SERIES_DURATION } from '@giveaway/app-config/settings';
 import { timeSeriesDataSchema } from '@/schemas/giveaway/schemas';

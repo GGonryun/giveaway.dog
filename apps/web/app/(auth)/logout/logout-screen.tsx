@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '@giveaway/ui-primitives/progress';
 
 export const LogoutScreen: React.FC<{ onDoneAction: () => Promise<void> }> = ({
   onDoneAction

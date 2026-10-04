@@ -1,8 +1,11 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@giveaway/ui-primitives/label';
+import {
+  RadioGroup,
+  RadioGroupItem
+} from '@giveaway/ui-primitives/radio-group';
 import { SettingsCard } from '../settings/settings-card';
 
 export function ThemeToggle() {

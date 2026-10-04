@@ -1,7 +1,7 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card } from '@giveaway/ui-primitives/card';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
 import { ChevronRight, GemIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';

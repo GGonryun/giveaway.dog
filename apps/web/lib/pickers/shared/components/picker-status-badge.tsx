@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { PickerStatus } from '@giveaway/picker-model/schemas/status';
 import { cn } from '@giveaway/ui-utils/utils';
 import {

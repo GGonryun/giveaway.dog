@@ -5,7 +5,7 @@ import { getUserCached } from '@/lib/scrapebadger/procedures/get-user-cached';
 import {
   calculateApiCalls,
   estimateDuration
-} from '@/lib/pickers/x/utils/calculate-api-calls';
+} from '@giveaway/x-picker-model/calculate-api-calls';
 import type { Tweet } from 'scrapebadger';
 import { ApplicationError } from '@giveaway/util-errors';
 import { checkAndConsumeCredits } from '@/lib/scrapebadger/credits';
@@ -16,7 +16,7 @@ import {
   X_PICKER_RETWEETS_KEY,
   X_PICKER_REPLIES_KEY,
   X_PICKER_QUOTES_KEY
-} from '@/lib/pickers/x/constants';
+} from '@giveaway/x-picker-model/constants';
 
 const loadTweetSchema = z.object({
   postUrl: z

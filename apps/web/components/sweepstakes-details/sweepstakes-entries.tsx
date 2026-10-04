@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card } from '@/components/ui/card';
+import { Card } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -10,12 +10,12 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import { Globe, MoreVertical, CheckCircle, Trash2 } from 'lucide-react';
-import { TablePagination } from '@/components/ui/table-pagination';
+import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { UserSchema } from '@/schemas/user';
-import { Button } from '../ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 
 import { TASK_LABEL, UserEntriesSchema } from '@/lib/task/schemas';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
@@ -26,7 +26,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import { VerificationInstructionsDialog } from './verification-instructions-dialog';
 import { DeleteEntryDialog } from './delete-entry-dialog';
 

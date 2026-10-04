@@ -1,12 +1,16 @@
 import { TaskActionProps } from '../../building-blocks';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertTitle,
+  AlertDescription
+} from '@giveaway/ui-primitives/alert';
 import { AlertCircleIcon } from 'lucide-react';
 import Image from 'next/image';
 import {
@@ -15,7 +19,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
+} from '@giveaway/ui-primitives/dialog';
 import { ErrorDisplay } from '../error-display';
 import { PRIVATE_STEAM_WISHLIST_ERROR } from '@/lib/task/validation/steam-errors';
 import { SteamWishlistTaskSchema } from '@/lib/task/schemas';

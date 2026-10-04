@@ -6,8 +6,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';

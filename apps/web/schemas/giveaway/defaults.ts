@@ -1,4 +1,4 @@
-import { timezone } from '@/lib/time';
+import { timezone } from '@giveaway/util-time/time';
 import { Prisma, SweepstakesTermsType, VisibilityType } from '@prisma/client';
 import * as dates from 'date-fns';
 import {

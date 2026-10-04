@@ -1,4 +1,4 @@
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@giveaway/ui-primitives/separator';
 import {
   TaskActionProps,
   TaskContent,
@@ -6,7 +6,7 @@ import {
 } from '../../building-blocks';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { ExternalLinkIcon } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../../../../theme';

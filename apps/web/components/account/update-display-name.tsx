@@ -7,8 +7,8 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
 import { useUser } from '@/components/context/user-provider';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateProfile from '@/procedures/user/update-profile';
@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { updateUserProfileSchema, UpdateUserProfile } from '@/schemas/user';
 import { useRouter } from 'next/navigation';
 import { SettingsCard } from '../settings/settings-card';
-import { Alert, AlertDescription } from '../ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { AlertCircleIcon } from 'lucide-react';
 
 export const UpdateDisplayName = () => {

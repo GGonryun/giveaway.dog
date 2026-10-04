@@ -32,7 +32,7 @@ import { AskQuestionFormFields } from './lib/ask-question';
 import { SingleChoiceFormFields } from './lib/single-choice';
 import { MultipleChoiceFormFields } from './lib/multiple-choice';
 import { SubmitMediaFormFields } from './lib/submit-media';
-import { Typography } from '@/components/ui/typography';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import { AlertCircle } from 'lucide-react';
 import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
@@ -40,7 +40,11 @@ import { VeloraFollowFormField } from './lib/velora-follow';
 import { LinkedInFollowFormField } from './lib/linkedin-follow';
 import { MaximumReferralsField } from './lib/maximum-referrals';
 import { SteamDeveloperFormField } from './lib/steam-developer';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import Link from 'next/link';
 import { TaskType } from '@/lib/task/schemas';
 import { TwitchImportingAccountField } from './lib/twitch-importing-account';

@@ -1,9 +1,9 @@
 'use client';
 
-import { TablePagination } from '@/components/ui/table-pagination';
+import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Card } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -11,24 +11,27 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import { Eye, Edit, Trash2, MoreHorizontal, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
 import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
-import { PickersV2ListItemSchema, PickersV2ListSchema } from '../schemas/list';
+import {
+  PickersV2ListItemSchema,
+  PickersV2ListSchema
+} from '@giveaway/x-picker-model/schemas/list';
 import { usePickersV2Navigation } from '../hooks/use-pickers-v2-navigation';
 import { CreatePickerV2Button } from './create-picker-v2-button';
 import { EDITABLE_PICKER_STATUS } from '@giveaway/picker-model/schemas/status';
 import { PickerStatusBadge } from '@/lib/pickers/shared/components/picker-status-badge';
-import { datetime } from '@/lib/date';
+import { datetime } from '@giveaway/util-time/date';
 import { PickerTypeLogo } from '@/lib/pickers/shared/components/picker-type-logo';
 import { DeletePickerV2Modal } from './delete-picker-v2-modal';
 

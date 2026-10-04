@@ -3,14 +3,17 @@ import {
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
 import { HelpDialogProps } from '@/components/patterns/help-dialog';
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import {
+  Collapsible,
+  CollapsibleContent
+} from '@giveaway/ui-primitives/collapsible';
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage
-} from '@/components/ui/form';
-import { Switch } from '@/components/ui/switch';
+} from '@giveaway/ui-primitives/form';
+import { Switch } from '@giveaway/ui-primitives/switch';
 import React from 'react';
 import {
   ControllerRenderProps,

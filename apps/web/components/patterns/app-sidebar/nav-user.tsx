@@ -12,7 +12,11 @@ import {
   Sun
 } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from '@giveaway/ui-primitives/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,13 +28,13 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@giveaway/ui-primitives/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar
-} from '@/components/ui/sidebar';
+} from '@giveaway/ui-primitives/sidebar';
 import { useUser } from '@/components/context/user-provider';
 import Link from 'next/link';
 import { useAccountPage } from '@/components/account/use-account-page';

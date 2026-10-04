@@ -7,8 +7,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import { Button } from '@giveaway/ui-primitives/button';
 import { SaveIcon, TrashIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';

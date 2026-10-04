@@ -1,4 +1,4 @@
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { AlertCircleIcon } from 'lucide-react';
 import { AccountStatus } from '@prisma/client';
 

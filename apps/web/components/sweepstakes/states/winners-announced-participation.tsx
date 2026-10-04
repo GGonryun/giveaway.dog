@@ -5,13 +5,22 @@ import { Plus } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
 import { UserInfoSection } from '../user-info-section';
-import { Typography } from '@/components/ui/typography';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import { useSearchParams } from 'next/navigation';
 import { browser } from '@giveaway/util-browser/browser';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@giveaway/ui-primitives/tabs';
 import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';
 import { toParticipantEntries } from '@/lib/task/entries';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
 import { WinnersAnnounced } from './winners-announced';
 
 export const WinnersAnnouncedParticipation: React.FC = () => {

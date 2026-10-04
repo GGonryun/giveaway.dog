@@ -1,5 +1,5 @@
 import { GiveawaySchema } from '@/schemas/giveaway/schemas';
-import { date } from '../date';
+import { date } from '@giveaway/util-time/date';
 
 export const generateSkeetText = ({
   sweepstakes,

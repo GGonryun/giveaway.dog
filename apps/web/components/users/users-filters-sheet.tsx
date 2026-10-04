@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { SlidersHorizontal, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   Sheet,
   SheetContent,
@@ -11,12 +11,12 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger
-} from '@/components/ui/sheet';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
+} from '@giveaway/ui-primitives/sheet';
+import { Label } from '@giveaway/ui-primitives/label';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Checkbox } from '@giveaway/ui-primitives/checkbox';
 import { UserSource } from '@prisma/client';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@giveaway/ui-primitives/scroll-area';
 
 interface UsersFilters {
   sources?: UserSource[];

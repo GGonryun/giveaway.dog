@@ -16,7 +16,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => mocks.searchParams
 }));
 
-vi.mock('@/lib/team/cookies', () => ({
+vi.mock('@giveaway/team-model/team/cookies', () => ({
   setLastTeamSlugCookie: mocks.setLastTeamSlug
 }));
 

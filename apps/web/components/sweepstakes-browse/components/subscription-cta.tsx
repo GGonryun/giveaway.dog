@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Typography } from '@/components/ui/typography';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import { Check, Mail } from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import subscribeEmail from '@/procedures/marketing/subscribe-email';
@@ -21,7 +21,7 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 
 export function SubscriptionCTA() {
   const [isSubscribed, setIsSubscribed] = useState(false);

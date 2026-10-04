@@ -14,15 +14,15 @@ import {
   FormControl,
   FormMessage,
   FormDescription
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import { HelpDialog } from '@/components/patterns/help-dialog';
 import Link from 'next/link';
 import { debounce } from '@giveaway/ui-utils/utils';
@@ -33,8 +33,11 @@ import {
   SwitchBox,
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
-import { Switch } from '@/components/ui/switch';
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import { Switch } from '@giveaway/ui-primitives/switch';
+import {
+  Collapsible,
+  CollapsibleContent
+} from '@giveaway/ui-primitives/collapsible';
 import { VisibilityType } from '@prisma/client';
 
 export const VisibilityTypeField = <

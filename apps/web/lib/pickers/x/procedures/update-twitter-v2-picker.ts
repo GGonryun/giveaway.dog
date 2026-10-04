@@ -2,10 +2,10 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
-import { twitterV2PickerFormSchema } from '../schemas/form';
+import { twitterV2PickerFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { ApplicationError } from '@giveaway/util-errors';
 import { findUserTeam } from '@/procedures/teams/find-user-team';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@prisma/client';
 
 export const updateTwitterV2Picker = procedure()

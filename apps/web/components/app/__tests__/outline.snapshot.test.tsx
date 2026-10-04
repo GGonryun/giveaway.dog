@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, it } from 'vitest';
-import { SidebarProvider, useSidebar } from '@/components/ui/sidebar';
+import { SidebarProvider, useSidebar } from '@giveaway/ui-primitives/sidebar';
 import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
 import { Outline } from '../outline';
 

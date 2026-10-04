@@ -7,7 +7,7 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { useUser } from '@/components/context/user-provider';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateProfile from '@/procedures/user/update-profile';

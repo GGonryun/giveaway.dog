@@ -1,8 +1,11 @@
 'use client';
 
 import React from 'react';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  ToggleGroup,
+  ToggleGroupItem
+} from '@giveaway/ui-primitives/toggle-group';
+import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import {
   ENFORCEMENT_LEVELS,
   VALID_ENFORCEMENT_VALUES,

@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
+} from '@giveaway/ui-primitives/card';
 import { AuthFooter } from '@/components/auth/auth-footer';
 import { AccountTypeStep } from './account-type-step';
 import { ProfileStep } from './profile-step';

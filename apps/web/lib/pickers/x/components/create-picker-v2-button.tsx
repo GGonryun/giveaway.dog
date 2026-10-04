@@ -3,7 +3,7 @@
 import { PlusIcon } from 'lucide-react';
 
 import { useTeams } from '@/components/context/team-provider';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { useRouter } from 'next/navigation';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { createTwitterPicker } from '../procedures/create-twitter-v2-picker';

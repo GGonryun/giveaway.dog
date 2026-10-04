@@ -19,18 +19,18 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
-} from '@/components/ui/collapsible';
-import { Typography } from '@/components/ui/typography';
+} from '@giveaway/ui-primitives/collapsible';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import { useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
-import { Input } from '@/components/ui/input';
+import { Input } from '@giveaway/ui-primitives/input';
 
 export const Prize: React.FC<{
   id: string;

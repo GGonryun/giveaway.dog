@@ -15,8 +15,11 @@ import {
 } from '@prisma/client';
 import { User } from 'next-auth';
 import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
-import { assertMembershipPermission, TeamPermission } from '@/lib/permissions';
-import { assertMinimumTeamTier } from '@/lib/team/util';
+import {
+  assertMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
+import { assertMinimumTeamTier } from '@giveaway/team-model/team/util';
 
 export const findUserSweepstakesQuery = ({
   userId,

@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { LucideIcon } from 'lucide-react';
 import { useCallback } from 'react';
 

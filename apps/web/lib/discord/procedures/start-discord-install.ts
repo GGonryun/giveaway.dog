@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { findUserTeam } from '@/procedures/teams/find-user-team';
-import { TeamPermission } from '@/lib/permissions';
+import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@prisma/client';
 
 export const startDiscordInstall = procedure()

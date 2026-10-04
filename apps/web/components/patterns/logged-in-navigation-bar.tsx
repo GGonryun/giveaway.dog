@@ -3,10 +3,18 @@
 import { MenuIcon, UserIcon, Home, User, History, Gift } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Separator } from '@/components/ui/separator';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@giveaway/ui-primitives/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger
+} from '@giveaway/ui-primitives/sheet';
+import { Separator } from '@giveaway/ui-primitives/separator';
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback
+} from '@giveaway/ui-primitives/avatar';
 import Link from 'next/link';
 import { UserSchema } from '@/schemas/user';
 import { NavigationHeader } from './navigation-header';

@@ -1,10 +1,10 @@
-import { Button, buttonVariants } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button, buttonVariants } from '@giveaway/ui-primitives/button';
+import { Input } from '@giveaway/ui-primitives/input';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
-} from '@/components/ui/popover';
+} from '@giveaway/ui-primitives/popover';
 import { cn } from '@giveaway/ui-utils/utils';
 import { add, format } from 'date-fns';
 import { type Locale, enUS } from 'date-fns/locale';
@@ -23,7 +23,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import { DayPicker, DayPickerProps } from 'react-day-picker';
 
 // ---------- utils start ----------

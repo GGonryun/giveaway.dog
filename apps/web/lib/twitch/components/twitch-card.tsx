@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { ExternalLink } from 'lucide-react';
 import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
@@ -11,7 +11,7 @@ import { IntegrationSchema } from '@giveaway/integration-model/schemas';
 import { IntegrationStatusAlert } from '@/lib/integrations/components/integration-status-alert';
 import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';
 import { IntegrationCardHeader } from '@/lib/integrations/components/integration-card-header';
-import { TwitchIntegrationSettings } from '../integration/schemas';
+import { TwitchIntegrationSettings } from '@giveaway/twitch-model/integration';
 import {
   TWITCH_FEATURE_LABEL,
   TwitchFeatureSchema

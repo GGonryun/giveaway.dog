@@ -4,7 +4,7 @@ import {
   TASK_CATEGORY_LABEL,
   TaskType
 } from '@/lib/task/schemas';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@giveaway/ui-primitives/badge';
 
 export const TaskCategoryBadge: React.FC<{ type: TaskType }> = ({ type }) => {
   const category = TASK_CATEGORY[type];

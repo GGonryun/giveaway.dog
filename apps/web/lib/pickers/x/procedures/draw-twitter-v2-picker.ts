@@ -3,11 +3,11 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
-import { twitterV2PickerDrawSchema } from '../schemas/details';
+import { twitterV2PickerDrawSchema } from '@giveaway/x-picker-model/schemas/details';
 import {
   getDisqualificationReason,
   selectRandomUnique
-} from '../utils/picker-utils';
+} from '@giveaway/x-picker-model/picker-utils';
 
 export const drawTwitterV2Picker = procedure()
   .authorization({

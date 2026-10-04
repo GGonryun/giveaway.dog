@@ -8,22 +8,26 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@giveaway/ui-primitives/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+} from '@giveaway/ui-primitives/dropdown-menu';
+import { Button } from '@giveaway/ui-primitives/button';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from '@giveaway/ui-primitives/avatar';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { MoreHorizontal, Trash2, Edit } from 'lucide-react';
 import { RemoveMemberDialog } from './remove-member-dialog';
 import { EditMemberDialog } from './edit-member-dialog';
 import { TeamRole } from '@prisma/client';
 import { formatDistance } from 'date-fns';
-import { ObfuscatedEmail } from '@/components/ui/obfuscated-email';
+import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 
 interface Member {
   id: string;

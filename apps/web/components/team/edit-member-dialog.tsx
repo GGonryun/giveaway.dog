@@ -7,16 +7,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog';
+} from '@giveaway/ui-primitives/dialog';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+} from '@giveaway/ui-primitives/select';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Label } from '@giveaway/ui-primitives/label';
 import { useProcedure } from '@/lib/mrpc/hook';
 import updateMemberRole from '@/procedures/teams/update-member-role';
 import { toast } from 'sonner';

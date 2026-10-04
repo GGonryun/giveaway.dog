@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { setLastTeamSlugCookie } from '@/lib/team/cookies';
+import { setLastTeamSlugCookie } from '@giveaway/team-model/team/cookies';
 
 const base = '/app';
 

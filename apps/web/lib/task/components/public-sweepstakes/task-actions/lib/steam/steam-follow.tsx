@@ -3,7 +3,7 @@
 import { TaskActionProps } from '../../building-blocks';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import { UserPlus, ExternalLink, ImageIcon } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';

@@ -4,14 +4,14 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from '@/components/ui/form';
+} from '@giveaway/ui-primitives/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@giveaway/ui-primitives/select';
 import { widetype } from '@giveaway/util-types/widetype';
 import { RegionalRestrictionFilter } from '@prisma/client';
 

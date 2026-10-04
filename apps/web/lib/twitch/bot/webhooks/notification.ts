@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { twitchEventSubNotificationSchema } from './schema';
+import { twitchEventSubNotificationSchema } from '@giveaway/twitch-model/schema';
 import { processChatMessage } from './chat-message';
 
 export const handleNotification = async (body: unknown) => {

@@ -7,9 +7,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter
-} from '@/components/ui/dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/dialog';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@giveaway/ui-primitives/alert';
+import { Button } from '@giveaway/ui-primitives/button';
 import { ShieldCheck, Copy, Check, Plug } from 'lucide-react';
 import { useProcedure } from '@/lib/mrpc/hook';
 import { connectTwitch } from '../procedures/connect-twitch';

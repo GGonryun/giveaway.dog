@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import updateTeamLinks from '@/procedures/teams/update-team-links';
-import { type SocialLink } from '@/schemas/social-links';
+import { type SocialLink } from '@giveaway/team-model/social-links';
 import { SocialLinksCard } from '../social-links-card';
 
 vi.mock('@/procedures/teams/update-team-links', () => ({ default: vi.fn() }));

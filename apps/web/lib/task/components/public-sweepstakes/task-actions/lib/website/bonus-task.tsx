@@ -1,5 +1,5 @@
 import { TaskActionProps, TaskContent } from '../../building-blocks';
-import { Button } from '@/components/ui/button';
+import { Button } from '@giveaway/ui-primitives/button';
 import {
   BonusTaskSchema,
   BonusCompleteProfileTaskSchema

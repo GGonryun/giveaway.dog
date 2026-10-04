@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 

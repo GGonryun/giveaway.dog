@@ -7,8 +7,8 @@ import {
   FormControl,
   FormMessage,
   FormDescription
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
 import { SwitchFormHeader } from '@/components/patterns/form-layout/switch-form-header';
 import { useParams } from 'next/navigation';
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';

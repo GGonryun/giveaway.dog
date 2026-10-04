@@ -9,8 +9,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Spinner } from '@/components/ui/spinner';
+} from '@giveaway/ui-primitives/card';
+import { Spinner } from '@giveaway/ui-primitives/spinner';
 import createProfile from '@/procedures/user/create-profile';
 import verifyEmail from '@/procedures/user/verify-email';
 import { toast } from 'sonner';

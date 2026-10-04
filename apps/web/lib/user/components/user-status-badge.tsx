@@ -1,4 +1,4 @@
-import { Badge, BadgeVariants } from '@/components/ui/badge';
+import { Badge, BadgeVariants } from '@giveaway/ui-primitives/badge';
 import { StatusExplanationDialog } from '@/components/users/status-explanation-dialog';
 import { cn } from '@giveaway/ui-utils/utils';
 import { UserStatusSchema } from '@/schemas/giveaway/participant';

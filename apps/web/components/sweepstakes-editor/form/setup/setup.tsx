@@ -7,8 +7,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
 import React, { memo, useMemo } from 'react';
@@ -21,8 +21,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
-import { timezone } from '@/lib/time';
+} from '@giveaway/ui-primitives/select';
+import { timezone } from '@giveaway/util-time/time';
 
 import { FileUpload } from '@/components/ui/file-upload';
 import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';

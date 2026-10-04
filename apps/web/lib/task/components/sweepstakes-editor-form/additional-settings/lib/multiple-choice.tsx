@@ -8,10 +8,10 @@ import {
   FormControl,
   FormMessage,
   FormDescription
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
+import { Textarea } from '@giveaway/ui-primitives/textarea';
+import { Button } from '@giveaway/ui-primitives/button';
 import { PlusIcon, TrashIcon } from 'lucide-react';
 
 export const MultipleChoiceFormFields: React.FC = () => {

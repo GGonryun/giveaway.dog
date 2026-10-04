@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { SidebarProvider, useSidebar } from '@/components/ui/sidebar';
+import { SidebarProvider, useSidebar } from '@giveaway/ui-primitives/sidebar';
 import { Outline } from '../outline';
 
 const SidebarState = () => {

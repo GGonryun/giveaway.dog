@@ -1,6 +1,11 @@
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@giveaway/ui-primitives/card';
+import { Button } from '@giveaway/ui-primitives/button';
 import { ShieldCheck, Users, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 

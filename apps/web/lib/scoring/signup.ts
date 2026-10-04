@@ -23,7 +23,7 @@ import {
 } from '@giveaway/scoring-model/user-scoring';
 import { QualityType } from '@giveaway/user-quality-model/quality';
 import { Prisma } from '@prisma/client';
-import { datetime } from '../date';
+import { datetime } from '@giveaway/util-time/date';
 import { Tx } from '@giveaway/db-client/prisma';
 import { clamp } from 'lodash';
 
