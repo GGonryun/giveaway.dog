@@ -1,4 +1,4 @@
-import { UserSettings } from '@/components/account/user-profile';
+import { UserSettings } from '@giveaway/account-profile/user-profile';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';

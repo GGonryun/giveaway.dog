@@ -1,0 +1,70 @@
+{
+  "name": "@giveaway/twitch-task-editor",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:integrations",
+      "platform:twitch"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/twitch/twitch-task-editor --suppressions-location packages/integrations/twitch/twitch-task-editor/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./twitch-channel-url-display": "./src/twitch-channel-url-display.tsx",
+    "./twitch-chat-command": "./src/twitch-chat-command.tsx",
+    "./twitch-follow": "./src/twitch-follow.tsx",
+    "./twitch-importing-account": "./src/twitch-importing-account.tsx",
+    "./twitch-rate-limit": "./src/twitch-rate-limit.tsx",
+    "./use-twitch-trigger-validation": "./src/use-twitch-trigger-validation.ts",
+    "./verify-twitch-trigger": "./src/verify-twitch-trigger.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-editor-core": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
+    "@giveaway/team-server": "workspace:*",
+    "@giveaway/ui-hooks": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "lucide-react": "catalog:",
+    "react-hook-form": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -21,9 +21,9 @@ import { formatDistance } from 'date-fns';
 import { TwitterV2PickerSchema } from '@giveaway/x-picker-model/schemas/details';
 import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
-import { TwitterV2ParticipantsSection } from './twitter-v2-participants-section';
-import { TwitterV2DrawHistorySection } from './twitter-v2-draw-history-section';
-import { DisqualificationReasonModal } from './twitter-v2-disqualification-reason-modal';
+import { TwitterV2ParticipantsSection } from '@giveaway/x-picker-results/twitter-v2-participants-section';
+import { TwitterV2DrawHistorySection } from '@giveaway/x-picker-results/twitter-v2-draw-history-section';
+import { DisqualificationReasonModal } from '@giveaway/x-picker-results/twitter-v2-disqualification-reason-modal';
 import { TwitterScrapeProgressMonitor } from '@giveaway/x-picker-editor/twitter-scrape-progress-monitor';
 import { HostCTA } from '@giveaway/browse-list/components/host-cta';
 import {

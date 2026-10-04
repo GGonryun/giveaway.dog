@@ -8,7 +8,7 @@ import {
   findUserSweepstakes,
   findUserSweepstakesQuery
 } from '@giveaway/sweepstakes-access/shared';
-import { validateTask } from '@/lib/task/validation/integrations';
+import { validateTask } from '@giveaway/task-validation/integrations';
 import { supportsAutomatedReverification } from '@giveaway/task-model/verification/utils';
 import { toTaskSchema } from '@giveaway/task-model/schemas';
 import { TeamPermission } from '@giveaway/team-permissions';

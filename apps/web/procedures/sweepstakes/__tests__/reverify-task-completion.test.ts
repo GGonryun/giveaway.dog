@@ -17,7 +17,7 @@ import {
 
 const mocks = vi.hoisted(() => ({ validateTask: vi.fn() }));
 
-vi.mock('@/lib/task/validation/integrations', () => ({
+vi.mock('@giveaway/task-validation/integrations', () => ({
   validateTask: mocks.validateTask
 }));
 

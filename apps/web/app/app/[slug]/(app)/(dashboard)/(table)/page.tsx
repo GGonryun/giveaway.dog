@@ -1,6 +1,6 @@
 'use server';
 
-import { SweepstakesTable } from './components/sweepstakes-table';
+import { SweepstakesTable } from '@giveaway/sweepstakes-dashboard/sweepstakes-table';
 import { Suspense } from 'react';
 import { Skeleton } from '@giveaway/ui-primitives/skeleton';
 import { Card } from '@giveaway/ui-primitives/card';
@@ -17,8 +17,8 @@ import {
   ListSweepstakesFilters,
   toSweepstakesFilter
 } from '@giveaway/sweepstakes-model/sweepstakes';
-import { SweepstakesFilterBar } from './components/sweepstakes-filter-bar';
-import { SweepstakesTabs } from './components/sweepstakes-tabs';
+import { SweepstakesFilterBar } from '@giveaway/sweepstakes-dashboard/sweepstakes-filter-bar';
+import { SweepstakesTabs } from '@giveaway/sweepstakes-dashboard/sweepstakes-tabs';
 import { Outline } from '@/components/app/outline';
 import { CreateGiveawayButton } from '@giveaway/sweepstakes-actions-ui/create-giveaway-button';
 import type { Metadata } from 'next';

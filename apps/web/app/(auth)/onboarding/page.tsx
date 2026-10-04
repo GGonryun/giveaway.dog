@@ -1,5 +1,5 @@
 import { EmojiLogo } from '@giveaway/ui-brand/emoji-logo';
-import { OnboardingForm } from '@/components/onboarding/onboarding-form';
+import { OnboardingForm } from '@giveaway/onboarding/onboarding-form';
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 

@@ -281,13 +281,7 @@
       "layer": 8,
       "sourceFiles": 5,
       "testFiles": 7,
-      "sources": [
-        "components/account/update-display-name.tsx",
-        "components/account/update-preferred-contact.tsx",
-        "components/account/update-profile-image.tsx",
-        "components/account/user-profile.tsx",
-        "lib/auth/components/social-providers.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-context",
         "@giveaway/account-email",
@@ -362,10 +356,11 @@
       "layer": 8,
       "sourceFiles": 5,
       "testFiles": 9,
-      "sources": ["components/onboarding/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-server",
         "@giveaway/auth-login-ui",
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/ui-file-upload",
         "@giveaway/ui-primitives",
@@ -373,7 +368,6 @@
         "@giveaway/user-model"
       ],
       "npm": [
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "lucide-react",
         "next",
@@ -668,10 +662,11 @@
       "layer": 10,
       "sourceFiles": 10,
       "testFiles": 0,
-      "sources": ["lib/automation/components/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/automation-model",
         "@giveaway/automation-server",
+        "@giveaway/db-model",
         "@giveaway/discord-connect",
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
@@ -686,7 +681,6 @@
         "@giveaway/util-time"
       ],
       "npm": [
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "lucide-react",
         "next",
@@ -1979,16 +1973,9 @@
       "layer": 9,
       "sourceFiles": 7,
       "testFiles": 1,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-channel-url-display.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-chat-command.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-follow.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-importing-account.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-rate-limit.tsx",
-        "lib/task/hooks/use-twitch-trigger-validation.ts",
-        "procedures/sweepstakes/verify-twitch-trigger.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
@@ -2003,14 +1990,7 @@
         "@giveaway/ui-primitives",
         "@giveaway/ui-utils"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "next",
-        "react",
-        "react-hook-form",
-        "zod"
-      ]
+      "npm": ["lucide-react", "next", "react", "react-hook-form", "zod"]
     },
     {
       "name": "@giveaway/twitch-task-entry",
@@ -2279,12 +2259,7 @@
       "layer": 9,
       "sourceFiles": 4,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/tweet-id.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitter-importing-account.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitter-username.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitter-verified-bonus.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
@@ -3030,16 +3005,7 @@
       "layer": 9,
       "sourceFiles": 8,
       "testFiles": 0,
-      "sources": [
-        "lib/pickers/x/components/twitter-v2-disqualification-reason-modal.tsx",
-        "lib/pickers/x/components/twitter-v2-disqualify-winner-modal.tsx",
-        "lib/pickers/x/components/twitter-v2-draw-extra-winner-modal.tsx",
-        "lib/pickers/x/components/twitter-v2-draw-history-section.tsx",
-        "lib/pickers/x/components/twitter-v2-draw-history-table.tsx",
-        "lib/pickers/x/components/twitter-v2-participants-section.tsx",
-        "lib/pickers/x/components/twitter-v2-participants-table.tsx",
-        "lib/pickers/x/components/twitter-v2-picker-overview.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/picker-model",
@@ -3336,7 +3302,7 @@
       "layer": 9,
       "sourceFiles": 3,
       "testFiles": 0,
-      "sources": ["app/app/[slug]/(app)/(dashboard)/(table)/components/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/sweepstakes-actions-ui",
@@ -3612,9 +3578,10 @@
       "layer": 10,
       "sourceFiles": 8,
       "testFiles": 16,
-      "sources": ["components/sweepstakes-editor/form/audience/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/custom-fields-ui",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/sweepstakes-editor-server",
         "@giveaway/sweepstakes-model",
@@ -3626,14 +3593,7 @@
         "@giveaway/util-geo",
         "@giveaway/util-types"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "nanoid",
-        "next",
-        "react",
-        "react-hook-form"
-      ]
+      "npm": ["lucide-react", "nanoid", "next", "react", "react-hook-form"]
     },
     {
       "name": "@giveaway/sweepstakes-editor-core",
@@ -3712,7 +3672,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": ["components/sweepstakes-editor/form/prizes/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-editor-core",
         "@giveaway/sweepstakes-model",
@@ -4378,9 +4338,10 @@
       "layer": 9,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/integrations.ts"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-task-validation",
+        "@giveaway/db-model",
         "@giveaway/discord-task-validation",
         "@giveaway/steam-task-validation",
         "@giveaway/task-model",
@@ -4389,7 +4350,7 @@
         "@giveaway/util-errors",
         "@giveaway/velora-task-validation"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/task-validation-core",

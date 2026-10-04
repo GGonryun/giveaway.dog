@@ -1,0 +1,69 @@
+{
+  "name": "@giveaway/onboarding",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:account"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/account/onboarding",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./account-type-step": "./src/account-type-step.tsx",
+    "./loading-state": "./src/loading-state.tsx",
+    "./onboarding-form": "./src/onboarding-form.tsx",
+    "./profile-step": "./src/profile-step.tsx",
+    "./use-onboarding-page": "./src/use-onboarding-page.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/account-server": "workspace:*",
+    "@giveaway/auth-login-ui": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/ui-file-upload": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "lucide-react": "catalog:",
+    "react-hook-form": "catalog:",
+    "sonner": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "next-auth": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/rpc-model": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

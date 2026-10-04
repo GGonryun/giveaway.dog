@@ -14,16 +14,6 @@
       "count": 1
     }
   },
-  "apps/web/components/sweepstakes-editor/form/audience/regional-restriction.tsx": {
-    "react-hooks/rules-of-hooks": {
-      "count": 1
-    }
-  },
-  "apps/web/components/sweepstakes-editor/form/audience/sweepstakes-visibility.tsx": {
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
   "apps/web/components/sweepstakes-editor/sweepstakes-editor-preview.tsx": {
     "react-hooks/purity": {
       "count": 1
@@ -80,11 +70,6 @@
   "apps/web/lib/task/components/public-sweepstakes/task-actions/lib/twitter/verified-bonus-badge.tsx": {
     "react-hooks/static-components": {
       "count": 2
-    }
-  },
-  "apps/web/lib/task/hooks/use-twitch-trigger-validation.ts": {
-    "react-hooks/refs": {
-      "count": 1
     }
   },
   "apps/web/lib/templates/components/template-preview.tsx": {

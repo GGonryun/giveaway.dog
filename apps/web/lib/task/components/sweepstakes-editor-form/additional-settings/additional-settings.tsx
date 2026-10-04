@@ -11,11 +11,11 @@ import { KickFollowFormField } from '@giveaway/kick-task-editor/kick-follow';
 import { LabelFormField } from '@giveaway/task-editor-fields/label';
 import { SecretCodeFormField } from '@giveaway/task-editor-fields/secret-code';
 import { SecretCodesFormField } from '@giveaway/task-editor-fields/secret-codes';
-import { TweetIdFormField } from './lib/tweet-id';
-import { TwitchFollowFormField } from './lib/twitch-follow';
-import { TwitchChatImportFormField } from './lib/twitch-chat-command';
-import { TwitchChannelUrlDisplay } from './lib/twitch-channel-url-display';
-import { TwitterUsernameFormField } from './lib/twitter-username';
+import { TweetIdFormField } from '@giveaway/x-task-editor/tweet-id';
+import { TwitchFollowFormField } from '@giveaway/twitch-task-editor/twitch-follow';
+import { TwitchChatImportFormField } from '@giveaway/twitch-task-editor/twitch-chat-command';
+import { TwitchChannelUrlDisplay } from '@giveaway/twitch-task-editor/twitch-channel-url-display';
+import { TwitterUsernameFormField } from '@giveaway/x-task-editor/twitter-username';
 import { SecretHintFormField } from '@giveaway/task-editor-fields/secret-hint';
 import { SteamAppIdFormField } from '@giveaway/steam-task-editor/steam-app-id';
 import { MaxEntrantsField } from '@giveaway/task-editor-fields/max-entrants';
@@ -23,7 +23,7 @@ import { LoyaltyRequiredField } from '@giveaway/task-editor-fields/bonus-loyalty
 import {
   TwitterImportingAccountField,
   ImportingTweetIdValidation
-} from './lib/twitter-importing-account';
+} from '@giveaway/x-task-editor/twitter-importing-account';
 import { BlueskyImportingAccountField } from '@giveaway/bluesky-task-editor/bluesky-importing-account';
 import {
   InstagramProfileUrl,
@@ -56,8 +56,8 @@ import {
 } from '@giveaway/ui-primitives/alert';
 import Link from 'next/link';
 import { TaskType } from '@giveaway/task-model/schemas';
-import { TwitchImportingAccountField } from './lib/twitch-importing-account';
-import { TwitchRateLimitField } from './lib/twitch-rate-limit';
+import { TwitchImportingAccountField } from '@giveaway/twitch-task-editor/twitch-importing-account';
+import { TwitchRateLimitField } from '@giveaway/twitch-task-editor/twitch-rate-limit';
 
 export const AdditionalSettings: React.FC<{
   type: TaskType;

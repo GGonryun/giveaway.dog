@@ -2,7 +2,7 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { validateTask } from '@/lib/task/validation/integrations';
+import { validateTask } from '@giveaway/task-validation/integrations';
 import { validateMandatoryTasks } from '@giveaway/task-validation-core/mandatory';
 import { validateRequiredTasks } from '@giveaway/task-validation-core/required';
 import { z } from 'zod';

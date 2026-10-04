@@ -1,0 +1,72 @@
+{
+  "name": "@giveaway/automation-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:automation"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/automation/automation-ui",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./automated-post-details": "./src/automated-post-details.tsx",
+    "./automated-post-status-badge": "./src/automated-post-status-badge.tsx",
+    "./automation-card": "./src/automation-card.tsx",
+    "./automation-card-skeleton": "./src/automation-card-skeleton.tsx",
+    "./bluesky-post-permission-banner": "./src/bluesky-post-permission-banner.tsx",
+    "./discord-post-permission-banner": "./src/discord-post-permission-banner.tsx",
+    "./post-builder-sheet": "./src/post-builder-sheet.tsx",
+    "./steps/bluesky-content-step": "./src/steps/bluesky-content-step.tsx",
+    "./steps/discord-content-step": "./src/steps/discord-content-step.tsx",
+    "./steps/integration-step": "./src/steps/integration-step.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/automation-model": "workspace:*",
+    "@giveaway/automation-server": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/discord-connect": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/sweepstakes-routes": "workspace:*",
+    "@giveaway/ui-file-upload": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-media": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "lucide-react": "catalog:",
+    "react-hook-form": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "packages/integrations/twitch/twitch-task-editor/src/use-twitch-trigger-validation.ts": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  }
+}

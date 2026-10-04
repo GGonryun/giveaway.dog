@@ -2,16 +2,16 @@
 
 import React from 'react';
 import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
-import { AllowedIdentities } from '@/components/sweepstakes-editor/form/audience/allowed-identities';
-import { RequirePreEntryLogin } from '@/components/sweepstakes-editor/form/audience/require-pre-entry-login';
+import { AllowedIdentities } from '@giveaway/sweepstakes-editor-audience/allowed-identities';
+import { RequirePreEntryLogin } from '@giveaway/sweepstakes-editor-audience/require-pre-entry-login';
 import { CustomFormFields } from '@giveaway/custom-fields-ui/custom-form-fields';
-import { RegionalRestriction } from '@/components/sweepstakes-editor/form/audience/regional-restriction';
+import { RegionalRestriction } from '@giveaway/sweepstakes-editor-audience/regional-restriction';
 import { useFormContext } from 'react-hook-form';
 import { TemplateFormSchema } from '@giveaway/templates-model/schemas/template';
 import {
   VisibilityTypeField,
   UrlSlugField
-} from '@/components/sweepstakes-editor/form/audience/sweepstakes-visibility';
+} from '@giveaway/sweepstakes-editor-audience/sweepstakes-visibility';
 
 export const TemplateAudience = () => {
   const form = useFormContext<TemplateFormSchema>();

@@ -1,0 +1,36 @@
+import { RegionalRestrictionFilter } from '@giveaway/db-model';
+import { describe, expect, it } from 'vitest';
+import {
+  buildFormValues,
+  renderWithForm
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
+import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
+import { RegionalRestrictionFilterField } from '../regional-restriction-filter';
+
+const renderFilter = (filter: RegionalRestrictionFilter) => {
+  const values = buildFormValues();
+  return renderWithForm(
+    (form) => (
+      <RegionalRestrictionFilterField
+        form={form}
+        fieldPath="audience.regionalRestriction.filter"
+      />
+    ),
+    {
+      values: {
+        ...values,
+        audience: {
+          ...values.audience,
+          regionalRestriction: { regions: ['country:US'], filter }
+        }
+      }
+    }
+  );
+};
+
+describe('RegionalRestrictionFilterField', () => {
+  it('matches the snapshot', () => {
+    const { container } = renderFilter('INCLUDE');
+    expect(stabilizeIds(container)).toMatchSnapshot();
+  });
+});

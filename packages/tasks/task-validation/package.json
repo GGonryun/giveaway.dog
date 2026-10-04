@@ -1,0 +1,55 @@
+{
+  "name": "@giveaway/task-validation",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-validation",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./integrations": "./src/integrations.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/bluesky-task-validation": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/discord-task-validation": "workspace:*",
+    "@giveaway/steam-task-validation": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/task-validation-core": "workspace:*",
+    "@giveaway/twitch-task-validation": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/velora-task-validation": "workspace:*",
+    "server-only": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/bluesky-api": "workspace:*",
+    "@giveaway/discord-api": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/twitch-api": "workspace:*",
+    "@giveaway/velora-api": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

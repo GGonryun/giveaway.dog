@@ -25,7 +25,7 @@ import {
 } from '@giveaway/ui-primitives/radio-group';
 import { Label } from '@giveaway/ui-primitives/label';
 import { SecretCodeCaseSensitiveFormField } from '@giveaway/task-editor-fields/secret-code-case-sensitive';
-import { TwitterVerifiedBonusField } from './additional-settings/lib/twitter-verified-bonus';
+import { TwitterVerifiedBonusField } from '@giveaway/x-task-editor/twitter-verified-bonus';
 import { RequireProofField } from '@giveaway/task-editor-fields/require-proof';
 import { TaskType } from '@giveaway/task-model/schemas';
 

@@ -19,7 +19,7 @@ import {
   SortableContext,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
-import { Prize } from '@/components/sweepstakes-editor/form/prizes/prize';
+import { Prize } from '@giveaway/sweepstakes-editor-prizes/prize';
 import {
   FormControl,
   FormField,

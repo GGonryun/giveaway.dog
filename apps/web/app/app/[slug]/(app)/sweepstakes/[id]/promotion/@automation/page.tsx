@@ -1,5 +1,5 @@
-import { AutomationCard } from '@/lib/automation/components/automation-card';
-import { AutomationCardSkeleton } from '@/lib/automation/components/automation-card-skeleton';
+import { AutomationCard } from '@giveaway/automation-ui/automation-card';
+import { AutomationCardSkeleton } from '@giveaway/automation-ui/automation-card-skeleton';
 import { getAutomatedPostJobs } from '@giveaway/automation-server/get-automated-post-jobs';
 import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
 import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
