@@ -20,7 +20,7 @@ env:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-slim
     timeout-minutes: 10
     steps:
       - name: Check out the code
@@ -47,7 +47,7 @@ jobs:
 
   type-check:
     name: Type check
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-slim
     timeout-minutes: 10
     steps:
       - name: Check out the code
@@ -142,7 +142,7 @@ jobs:
   coverage:
     name: Coverage
     needs: [server, frontend]
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-slim
     timeout-minutes: 10
     outputs:
       coverage: ${{ steps.coverage.outputs.lines }}
