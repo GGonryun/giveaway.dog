@@ -27,7 +27,7 @@ vi.mock('next/navigation', () => ({
   usePathname: () => '/browse/summer-giveaway'
 }));
 
-vi.mock('@/lib/auth/procedures/logout', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/auth-actions/logout', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 

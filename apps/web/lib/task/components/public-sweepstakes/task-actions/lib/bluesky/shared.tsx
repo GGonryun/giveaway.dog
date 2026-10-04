@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState, useMemo, memo } from 'react';
 import { useProcedureAsync } from '@giveaway/rpc-client/hook';
-import getBlueskyOEmbed from '@/lib/integrations/procedures/get-bluesky-oembed';
-import type { BlueskyEmbedData } from '@/lib/integrations/procedures/get-bluesky-oembed';
+import getBlueskyOEmbed from '@giveaway/bluesky-api/get-bluesky-oembed';
+import type { BlueskyEmbedData } from '@giveaway/bluesky-api/get-bluesky-oembed';
 import { Loader2 } from 'lucide-react';
 import { BLUESKY_EMBED_SCRIPT_URL } from '@giveaway/bluesky-model/embed';
 

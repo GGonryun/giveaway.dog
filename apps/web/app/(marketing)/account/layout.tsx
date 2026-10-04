@@ -1,6 +1,6 @@
 import { UserProvider } from '@giveaway/account-context/user-provider';
 import { redirect } from 'next/navigation';
-import getUser from '@/procedures/user/get-user';
+import getUser from '@giveaway/account-server/get-user';
 import { AccountTabs } from '@/components/account/account-tabs';
 import { LogoutButton } from '@/lib/auth/components/logout-button';
 

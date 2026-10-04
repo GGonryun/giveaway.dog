@@ -2,7 +2,7 @@
 
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
-import logout from '../procedures/logout';
+import logout from '@giveaway/auth-actions/logout';
 
 export const useLogout = () => {
   const logoutProcedure = useProcedure({

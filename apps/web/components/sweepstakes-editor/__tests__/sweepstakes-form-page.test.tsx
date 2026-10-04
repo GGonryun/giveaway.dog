@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { notFound } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
+import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
 import { getPublishedSweepstakes } from '@/procedures/sweepstakes/get-published-sweepstakes';
 import getSweepstakesForm from '@/procedures/sweepstakes/get-sweepstakes-form';
 import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
@@ -25,7 +25,7 @@ vi.mock('@/procedures/sweepstakes/get-sweepstakes-status', () => ({
   default: vi.fn()
 }));
 
-vi.mock('@/lib/integrations/procedures/get-team-integrations', () => ({
+vi.mock('@giveaway/integration-server/get-team-integrations', () => ({
   getTeamIntegrations: vi.fn()
 }));
 

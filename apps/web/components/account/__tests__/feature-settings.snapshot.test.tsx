@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserAccountType } from '@prisma/client';
 import type { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
-import updateAccountType from '@/procedures/user/update-account-type';
+import updateAccountType from '@giveaway/account-server/update-account-type';
 import { FeatureSettings } from '../feature-settings';
 
 const navigation = vi.hoisted(() => ({
@@ -16,7 +16,7 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('next-auth/react', () => ({ useSession: vi.fn() }));
 
-vi.mock('@/procedures/user/update-account-type', () => ({
+vi.mock('@giveaway/account-server/update-account-type', () => ({
   default: vi.fn()
 }));
 

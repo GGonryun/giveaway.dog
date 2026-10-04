@@ -25,15 +25,15 @@ const bluesky = vi.hoisted(() => ({
   isUserRepostingPost: vi.fn()
 }));
 
-vi.mock('@/lib/bluesky/is-user-following-target', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/is-user-following-target', () => ({
   isUserFollowingTarget: bluesky.isUserFollowingTarget
 }));
 
-vi.mock('@/lib/bluesky/is-user-liking-post', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/is-user-liking-post', () => ({
   isUserLikingPost: bluesky.isUserLikingPost
 }));
 
-vi.mock('@/lib/bluesky/is-user-reposting-post', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/is-user-reposting-post', () => ({
   isUserRepostingPost: bluesky.isUserRepostingPost
 }));
 

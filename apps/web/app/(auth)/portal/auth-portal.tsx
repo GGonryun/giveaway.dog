@@ -11,8 +11,8 @@ import {
   CardTitle
 } from '@giveaway/ui-primitives/card';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
-import createProfile from '@/procedures/user/create-profile';
-import verifyEmail from '@/procedures/user/verify-email';
+import createProfile from '@giveaway/account-server/create-profile';
+import verifyEmail from '@giveaway/account-server/verify-email';
 import { toast } from 'sonner';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { useAccountPage } from '@/components/account/use-account-page';

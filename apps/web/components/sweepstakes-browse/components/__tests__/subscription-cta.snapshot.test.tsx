@@ -2,10 +2,10 @@ import { render } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { withStableIds } from '@/components/sweepstakes/__tests__/fixtures';
-import subscribeEmail from '@/procedures/marketing/subscribe-email';
+import subscribeEmail from '@giveaway/marketing-server/subscribe-email';
 import { SubscriptionCTA } from '../subscription-cta';
 
-vi.mock('@/procedures/marketing/subscribe-email', () => ({
+vi.mock('@giveaway/marketing-server/subscribe-email', () => ({
   default: vi.fn()
 }));
 

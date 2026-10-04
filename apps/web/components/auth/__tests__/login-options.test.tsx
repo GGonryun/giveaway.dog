@@ -45,7 +45,7 @@ const connectFormStub = vi.hoisted(
     }
 );
 
-vi.mock('@/lib/auth/procedures/login', () => ({ default: mocks.login }));
+vi.mock('@giveaway/auth-actions/login', () => ({ default: mocks.login }));
 
 vi.mock('@giveaway/auth-model/cookies', () => ({
   getLastLoginProviderCookie: mocks.getLastLoginProvider,

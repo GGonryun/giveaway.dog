@@ -1,6 +1,6 @@
 import { PrismaClient, UserSource } from '@prisma/client';
 import { nanoid } from 'nanoid';
-import { BlueskyUserSchema } from '../integrations/procedures/get-bluesky-likes';
+import { BlueskyUserSchema } from '@giveaway/bluesky-api/get-bluesky-likes';
 
 export interface ImportBlueskyParticipantsInput {
   sweepstakesId: string;

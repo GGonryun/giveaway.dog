@@ -1,6 +1,6 @@
 import { BlueskyLikeImportTaskSchema } from '@/lib/task/schemas';
 import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
-import { getBlueskyLikes } from '@/lib/integrations/procedures/get-bluesky-likes';
+import { getBlueskyLikes } from '@giveaway/bluesky-api/get-bluesky-likes';
 import { processBlueskyTaskJob } from './process-bluesky-task-job';
 import { PrismaClient } from '@prisma/client';
 

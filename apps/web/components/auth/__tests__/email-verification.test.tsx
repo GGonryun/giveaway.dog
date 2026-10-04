@@ -12,11 +12,11 @@ const mocks = vi.hoisted(() => ({
   toastError: vi.fn()
 }));
 
-vi.mock('@/procedures/user/send-email-verification', () => ({
+vi.mock('@giveaway/account-server/send-email-verification', () => ({
   default: mocks.sendEmailVerification
 }));
 
-vi.mock('@/procedures/user/update-email', () => ({
+vi.mock('@giveaway/account-server/update-email', () => ({
   default: mocks.updateEmail
 }));
 

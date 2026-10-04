@@ -10,9 +10,9 @@ import {
 import { ValidateTaskInput } from './types';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@giveaway/integration-model/providers';
 import { ApplicationError } from '@giveaway/util-errors';
-import { isUserFollowingTarget } from '@/lib/bluesky/is-user-following-target';
-import { isUserLikingPost } from '@/lib/bluesky/is-user-liking-post';
-import { isUserRepostingPost } from '@/lib/bluesky/is-user-reposting-post';
+import { isUserFollowingTarget } from '@giveaway/bluesky-api/bluesky/is-user-following-target';
+import { isUserLikingPost } from '@giveaway/bluesky-api/bluesky/is-user-liking-post';
+import { isUserRepostingPost } from '@giveaway/bluesky-api/bluesky/is-user-reposting-post';
 
 export const checkBlueskyConnect = async (
   db: PrismaClient,

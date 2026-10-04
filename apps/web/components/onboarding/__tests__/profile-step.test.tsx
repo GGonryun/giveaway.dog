@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserAccountType } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
-import completeOnboarding from '@/procedures/user/complete-onboarding';
+import completeOnboarding from '@giveaway/account-server/complete-onboarding';
 import type { Result } from '@giveaway/rpc-model/types';
 import { ProfileStep } from '../profile-step';
 
@@ -18,7 +18,7 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('next-auth/react', () => ({ useSession: vi.fn() }));
 
-vi.mock('@/procedures/user/complete-onboarding', () => ({
+vi.mock('@giveaway/account-server/complete-onboarding', () => ({
   default: vi.fn()
 }));
 

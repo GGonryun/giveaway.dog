@@ -1,0 +1,62 @@
+{
+  "name": "@giveaway/account-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:account"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/account/account-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./complete-onboarding": "./src/complete-onboarding.ts",
+    "./create-profile": "./src/create-profile.ts",
+    "./delete-user": "./src/delete-user.ts",
+    "./disconnect-account": "./src/disconnect-account.ts",
+    "./get-user": "./src/get-user.ts",
+    "./send-email-verification": "./src/send-email-verification.ts",
+    "./shared": "./src/shared.ts",
+    "./update-account-type": "./src/update-account-type.ts",
+    "./update-email": "./src/update-email.ts",
+    "./update-profile": "./src/update-profile.ts",
+    "./verify-email": "./src/verify-email.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/auth-server": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/email": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "date-fns": "catalog:",
+    "server-only": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "inboundemail": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserAccountType } from '@prisma/client';
 import { useSession } from 'next-auth/react';
-import completeOnboarding from '@/procedures/user/complete-onboarding';
+import completeOnboarding from '@giveaway/account-server/complete-onboarding';
 import { ProfileStep } from '../profile-step';
 
 const navigation = vi.hoisted(() => ({
@@ -15,7 +15,7 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('next-auth/react', () => ({ useSession: vi.fn() }));
 
-vi.mock('@/procedures/user/complete-onboarding', () => ({
+vi.mock('@giveaway/account-server/complete-onboarding', () => ({
   default: vi.fn()
 }));
 

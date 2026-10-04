@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { getCookie } from 'cookies-next/client';
 import { TURNSTILE_COOKIE_NAME } from '@giveaway/turnstile-model/consts';
-import verifyTurnstile from './verify';
+import verifyTurnstile from '@giveaway/turnstile-server/verify';
 import { useProcedure, useProcedureAsync } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
 

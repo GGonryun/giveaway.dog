@@ -7,7 +7,7 @@ import { Input } from '@giveaway/ui-primitives/input';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { Check, Mail } from 'lucide-react';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import subscribeEmail from '@/procedures/marketing/subscribe-email';
+import subscribeEmail from '@giveaway/marketing-server/subscribe-email';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { TemplatePageProps } from '@/schemas/pages';
-import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
+import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
 import { getTemplateForm } from '../procedures/get-template-form';
 import { TemplateForm } from './template-form';
 

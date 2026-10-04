@@ -3,7 +3,7 @@ import getParticipantSweepstake from '@/procedures/browse/get-participant-sweeps
 import { getOrCreateSweepstakesParticipant } from '@/procedures/browse/get-sweepstake-participant';
 import { getUserHostRelationship } from '@/procedures/browse/get-user-host-relationship';
 import { getSweepstakesPrivacy } from '@/procedures/browse/get-sweepstakes-privacy';
-import { getUserReferral } from '@/lib/referrals/procedures/get-user-referral';
+import { getUserReferral } from '@giveaway/referrals-server/get-user-referral';
 import { AuthenticatedSweepstakesContent } from '@/components/sweepstakes-browse/authenticated-sweepstakes-content';
 import { Suspense } from 'react';
 import { ReferralCodeHandler } from '@/components/sweepstakes-browse/referral-code-handler';

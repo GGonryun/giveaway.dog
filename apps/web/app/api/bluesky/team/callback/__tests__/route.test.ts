@@ -26,7 +26,7 @@ vi.mock('@giveaway/auth-server/config', () => ({
   handlers: { GET: vi.fn(), POST: vi.fn() }
 }));
 
-vi.mock('@/lib/bluesky/team-bluesky-client', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/team-bluesky-client', () => ({
   getTeamBlueskyClient: m.getTeamBlueskyClient
 }));
 

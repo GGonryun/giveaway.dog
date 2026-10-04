@@ -7,7 +7,7 @@ import { useUser } from '@giveaway/account-context/user-provider';
 import { toast } from 'sonner';
 
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import disconnectAccount from '@/procedures/user/disconnect-account';
+import disconnectAccount from '@giveaway/account-server/disconnect-account';
 import { useRouter } from 'next/navigation';
 import {
   ENABLED_IDENTITY_PROVIDERS,
@@ -22,7 +22,7 @@ import {
   AlertDescription
 } from '@giveaway/ui-primitives/alert';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
-import login from '../procedures/login';
+import login from '@giveaway/auth-actions/login';
 import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 import { useState } from 'react';
 import { BlueskyConnectForm } from './bluesky-connect-form';

@@ -17,7 +17,7 @@ vi.mock('@/lib/integrations/procedures/create-tweet', () => ({
   createTweet: mocks.createTweet
 }));
 
-vi.mock('@/lib/integrations/procedures/create-skeet', () => ({
+vi.mock('@giveaway/bluesky-api/create-skeet', () => ({
   createSkeet: mocks.createSkeet
 }));
 

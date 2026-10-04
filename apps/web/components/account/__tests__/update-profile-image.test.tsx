@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserAccountType, UserSource } from '@prisma/client';
 import { toast } from 'sonner';
-import updateProfile from '@/procedures/user/update-profile';
+import updateProfile from '@giveaway/account-server/update-profile';
 import { UserProvider } from '@giveaway/account-context/user-provider';
 import type { UserSchema } from '@giveaway/user-model/user';
 import { UpdateProfileImage } from '../update-profile-image';
@@ -16,7 +16,9 @@ vi.mock('next/navigation', () => ({
   useRouter: () => navigation.router
 }));
 
-vi.mock('@/procedures/user/update-profile', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/account-server/update-profile', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

@@ -12,7 +12,7 @@ import {
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { allocatePrize } from '@/lib/allocation/procedures/allocate-prize';
 import { submitParticipantForm } from '@/lib/custom-fields/procedures/submit-form';
-import createReferralCode from '@/lib/referrals/procedures/create-referral-code';
+import createReferralCode from '@giveaway/referrals-server/create-referral-code';
 import submitTask from '@/lib/task/procedures/submit-tasks';
 import updateTask from '@/lib/task/procedures/update-task';
 import {
@@ -39,7 +39,7 @@ vi.mock('@/lib/task/procedures/update-task', () => ({ default: vi.fn() }));
 vi.mock('@/lib/custom-fields/procedures/submit-form', () => ({
   submitParticipantForm: vi.fn()
 }));
-vi.mock('@/lib/referrals/procedures/create-referral-code', () => ({
+vi.mock('@giveaway/referrals-server/create-referral-code', () => ({
   default: vi.fn()
 }));
 vi.mock('@/lib/allocation/procedures/allocate-prize', () => ({

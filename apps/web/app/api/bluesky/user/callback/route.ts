@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getBlueskyClient } from '@/lib/bluesky/bluesky-client';
+import { getBlueskyClient } from '@giveaway/bluesky-api/bluesky/bluesky-client';
 import prisma from '@giveaway/db-client/prisma';
 import { createId } from '@paralleldrive/cuid2';
 import { Agent } from '@atproto/api';

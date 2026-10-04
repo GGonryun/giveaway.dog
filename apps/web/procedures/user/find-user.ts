@@ -2,7 +2,7 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { userSchema } from '@giveaway/user-model/user';
-import { getUserQuery } from './shared';
+import { getUserQuery } from '@giveaway/account-server/shared';
 import { z } from 'zod';
 
 const findUser = procedure()

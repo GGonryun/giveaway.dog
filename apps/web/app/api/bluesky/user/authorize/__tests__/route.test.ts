@@ -7,7 +7,7 @@ const m = vi.hoisted(() => ({
   authorize: vi.fn()
 }));
 
-vi.mock('@/lib/bluesky/bluesky-client', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/bluesky-client', () => ({
   getBlueskyClient: m.getBlueskyClient
 }));
 

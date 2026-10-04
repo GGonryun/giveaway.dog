@@ -1,0 +1,62 @@
+{
+  "name": "@giveaway/bluesky-api",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:bluesky"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/bluesky/bluesky-api --suppressions-location packages/integrations/bluesky/bluesky-api/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./bluesky/bluesky-client": "./src/bluesky/bluesky-client.ts",
+    "./bluesky/get-latest-bluesky-agent": "./src/bluesky/get-latest-bluesky-agent.ts",
+    "./bluesky/get-latest-team-bluesky-agent": "./src/bluesky/get-latest-team-bluesky-agent.ts",
+    "./bluesky/is-user-following-target": "./src/bluesky/is-user-following-target.ts",
+    "./bluesky/is-user-liking-post": "./src/bluesky/is-user-liking-post.ts",
+    "./bluesky/is-user-reposting-post": "./src/bluesky/is-user-reposting-post.ts",
+    "./bluesky/team-bluesky-client": "./src/bluesky/team-bluesky-client.ts",
+    "./create-skeet": "./src/create-skeet.ts",
+    "./get-bluesky-likes": "./src/get-bluesky-likes.ts",
+    "./get-bluesky-oembed": "./src/get-bluesky-oembed.ts",
+    "./get-bluesky-reposts": "./src/get-bluesky-reposts.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@atproto/api": "catalog:",
+    "@atproto/jwk-jose": "catalog:",
+    "@atproto/oauth-client-node": "catalog:",
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/bluesky-model": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

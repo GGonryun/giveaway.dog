@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getTeamBlueskyClient } from '@/lib/bluesky/team-bluesky-client';
+import { getTeamBlueskyClient } from '@giveaway/bluesky-api/bluesky/team-bluesky-client';
 import { ApplicationError } from '@giveaway/util-errors';
 
 export async function GET(req: NextRequest) {

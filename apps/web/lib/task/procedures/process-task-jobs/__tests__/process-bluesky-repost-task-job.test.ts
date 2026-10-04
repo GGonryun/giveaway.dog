@@ -13,11 +13,11 @@ const m = vi.hoisted(() => ({
   importBlueskyUsers: vi.fn()
 }));
 
-vi.mock('@/lib/integrations/procedures/get-bluesky-reposts', () => ({
+vi.mock('@giveaway/bluesky-api/get-bluesky-reposts', () => ({
   getBlueskyReposts: m.getBlueskyReposts
 }));
 
-vi.mock('@/lib/bluesky/get-latest-team-bluesky-agent', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/get-latest-team-bluesky-agent', () => ({
   getLatestTeamBlueskyCredentials: m.getLatestTeamBlueskyCredentials
 }));
 

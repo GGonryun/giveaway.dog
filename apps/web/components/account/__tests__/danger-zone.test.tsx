@@ -2,10 +2,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { toast } from 'sonner';
-import deleteUser from '@/procedures/user/delete-user';
+import deleteUser from '@giveaway/account-server/delete-user';
 import { DangerZone } from '../danger-zone';
 
-vi.mock('@/procedures/user/delete-user', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/account-server/delete-user', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

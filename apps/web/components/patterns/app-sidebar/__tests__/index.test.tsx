@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { AppSidebar } from '../index';
 import { renderInSidebar } from './fixtures';
 
-vi.mock('@/lib/auth/procedures/logout', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/auth-actions/logout', () => ({ default: vi.fn() }));
 
 vi.mock('next/navigation', () => ({
   usePathname: () => '/app/acme',

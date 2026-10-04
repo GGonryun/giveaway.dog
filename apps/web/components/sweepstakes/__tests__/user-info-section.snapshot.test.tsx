@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import logout from '@/lib/auth/procedures/logout';
+import logout from '@giveaway/auth-actions/logout';
 import { UserInfoSection } from '../user-info-section';
 import { buildParticipant, buildProvider, buildUser } from './fixtures';
 import { renderWithParticipation } from './participation-fixtures';
@@ -12,7 +12,7 @@ vi.mock('next/navigation', () => ({
   usePathname: () => navigation.pathname
 }));
 
-vi.mock('@/lib/auth/procedures/logout', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/auth-actions/logout', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 

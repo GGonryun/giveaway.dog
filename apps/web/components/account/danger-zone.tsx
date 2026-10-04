@@ -1,6 +1,6 @@
 'use client';
 
-import deleteUser from '@/procedures/user/delete-user';
+import deleteUser from '@giveaway/account-server/delete-user';
 import {
   AlertDialog,
   AlertDialogAction,

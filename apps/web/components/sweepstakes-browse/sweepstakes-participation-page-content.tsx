@@ -12,7 +12,7 @@ import { toSweepstakesState } from '@/lib/sweepstakes';
 import { submitParticipantForm } from '@/lib/custom-fields/procedures/submit-form';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import createReferralCode from '@/lib/referrals/procedures/create-referral-code';
+import createReferralCode from '@giveaway/referrals-server/create-referral-code';
 import {
   CreateReferralSchema,
   UserReferralSchema

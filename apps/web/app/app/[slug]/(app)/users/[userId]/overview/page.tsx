@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { UserDetailsOverview } from '../components/overview/user-details-overview';
 import { UserDetailsOverviewSkeleton } from '../components/overview/user-details-overview-skeleton';
 import { UserParams } from '../params';
-import getUser from '@/procedures/user/get-user';
+import getUser from '@giveaway/account-server/get-user';
 import { getTeamParticipant } from '@/lib/participant/procedures/get-team-participant';
 import { getTeamTasks } from '@/lib/participant/procedures/get-team-tasks';
 import { getUserSignals } from '@/procedures/user/get-user-signals';

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@giveaway/db-client/prisma';
-import { getTeamBlueskyClient } from '@/lib/bluesky/team-bluesky-client';
+import { getTeamBlueskyClient } from '@giveaway/bluesky-api/bluesky/team-bluesky-client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import { Agent } from '@atproto/api';

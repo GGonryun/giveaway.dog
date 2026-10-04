@@ -19,15 +19,15 @@ const external = vi.hoisted(() => ({
   refreshVeloraToken: vi.fn()
 }));
 
-vi.mock('@/lib/bluesky/is-user-following-target', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/is-user-following-target', () => ({
   isUserFollowingTarget: external.isUserFollowingTarget
 }));
 
-vi.mock('@/lib/bluesky/is-user-liking-post', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/is-user-liking-post', () => ({
   isUserLikingPost: external.isUserLikingPost
 }));
 
-vi.mock('@/lib/bluesky/is-user-reposting-post', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/is-user-reposting-post', () => ({
   isUserRepostingPost: external.isUserRepostingPost
 }));
 

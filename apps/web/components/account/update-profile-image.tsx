@@ -10,7 +10,7 @@ import {
 } from '@giveaway/ui-primitives/form';
 import { useUser } from '@giveaway/account-context/user-provider';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import updateProfile from '@/procedures/user/update-profile';
+import updateProfile from '@giveaway/account-server/update-profile';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

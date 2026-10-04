@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
 import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
 import { SweepstakesPageProps } from '@/schemas/pages';
-import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
+import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
 import { getPublishedSweepstakes } from '@/procedures/sweepstakes/get-published-sweepstakes';
 
 export const SweepstakeFormPage = async ({

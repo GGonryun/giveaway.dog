@@ -15,7 +15,7 @@ import {
   toAutomatedPostJobSchema
 } from '../schemas';
 import { createTweet } from '@/lib/integrations/procedures/create-tweet';
-import { createSkeet } from '@/lib/integrations/procedures/create-skeet';
+import { createSkeet } from '@giveaway/bluesky-api/create-skeet';
 import { toDefaultValues } from '@/lib/task/defaults';
 import { nanoid } from 'nanoid';
 import {

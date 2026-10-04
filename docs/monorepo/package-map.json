@@ -386,28 +386,17 @@
       "layer": 4,
       "sourceFiles": 11,
       "testFiles": 11,
-      "sources": [
-        "procedures/user/complete-onboarding.ts",
-        "procedures/user/create-profile.ts",
-        "procedures/user/delete-user.ts",
-        "procedures/user/disconnect-account.ts",
-        "procedures/user/get-user.ts",
-        "procedures/user/send-email-verification.ts",
-        "procedures/user/shared.ts",
-        "procedures/user/update-account-type.ts",
-        "procedures/user/update-email.ts",
-        "procedures/user/update-profile.ts",
-        "procedures/user/verify-email.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-server",
+        "@giveaway/db-model",
         "@giveaway/email",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
         "@giveaway/user-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "date-fns", "zod"]
+      "npm": ["date-fns", "zod"]
     },
     {
       "name": "@giveaway/account-settings",
@@ -589,16 +578,17 @@
       "layer": 4,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/auth/procedures/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-server",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/meta-model",
         "@giveaway/rpc-server",
         "@giveaway/user-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "next", "next-auth", "zod"]
+      "npm": ["next", "next-auth", "zod"]
     },
     {
       "name": "@giveaway/auth-core",
@@ -1126,12 +1116,7 @@
       "layer": 4,
       "sourceFiles": 4,
       "testFiles": 4,
-      "sources": [
-        "lib/turnstile/check-status.ts",
-        "lib/turnstile/cookies.ts",
-        "lib/turnstile/server.ts",
-        "lib/turnstile/verify.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/rpc-server", "@giveaway/turnstile-model"],
       "npm": ["next", "zod"]
     },
@@ -1171,15 +1156,10 @@
       "layer": 4,
       "sourceFiles": 11,
       "testFiles": 12,
-      "sources": [
-        "lib/bluesky/",
-        "lib/integrations/procedures/create-skeet.ts",
-        "lib/integrations/procedures/get-bluesky-likes.ts",
-        "lib/integrations/procedures/get-bluesky-oembed.ts",
-        "lib/integrations/procedures/get-bluesky-reposts.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
         "@giveaway/util-errors"
@@ -1188,7 +1168,6 @@
         "@atproto/api",
         "@atproto/jwk-jose",
         "@atproto/oauth-client-node",
-        "@giveaway/db-model",
         "zod"
       ]
     },
@@ -1437,7 +1416,7 @@
       "layer": 4,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/procedures/get-team-integrations.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
@@ -2690,7 +2669,7 @@
       "layer": 4,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["procedures/marketing/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/rpc-server",
         "@giveaway/user-model",
@@ -2953,14 +2932,15 @@
       "layer": 4,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": ["lib/referrals/procedures/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/referrals-model",
         "@giveaway/rpc-server",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "nanoid"]
+      "npm": ["nanoid"]
     },
     {
       "name": "@giveaway/scoring-model",
@@ -3300,9 +3280,13 @@
       "layer": 3,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": ["lib/pickers/x/workflows/"],
-      "dependsOn": ["@giveaway/db-client", "@giveaway/x-scraper"],
-      "npm": ["@giveaway/db-model", "workflow"]
+      "sources": [],
+      "dependsOn": [
+        "@giveaway/db-client",
+        "@giveaway/db-model",
+        "@giveaway/x-scraper"
+      ],
+      "npm": ["workflow"]
     },
     {
       "name": "@giveaway/util-browser",
@@ -3432,7 +3416,7 @@
       "layer": 3,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/patterns/footer.tsx"],
+      "sources": [],
       "dependsOn": ["@giveaway/app-config", "@giveaway/integration-icons"],
       "npm": ["next", "react"]
     },
@@ -5505,7 +5489,7 @@
       "layer": 3,
       "sourceFiles": 3,
       "testFiles": 4,
-      "sources": ["components/theme/"],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-layouts", "@giveaway/ui-primitives"],
       "npm": ["lucide-react", "next-themes", "react"]
     },

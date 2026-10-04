@@ -11,7 +11,7 @@ import {
 } from '@giveaway/ui-primitives/sheet';
 import { Separator } from '@giveaway/ui-primitives/separator';
 import Link from 'next/link';
-import { ThemeToggleButton } from '@/components/theme/theme-toggle-button';
+import { ThemeToggleButton } from '@giveaway/ui-theme/theme-toggle-button';
 import { NavigationHeader } from './navigation-header';
 import { DesktopNavMenu } from './navigation/desktop-nav-menu';
 import { MobileNavLinks } from './navigation/mobile-nav-links';

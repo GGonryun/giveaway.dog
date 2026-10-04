@@ -10,9 +10,9 @@ import { datetime } from '@giveaway/util-time/date';
 import { ApplicationError } from '@giveaway/util-errors';
 import { takeUntil } from '@giveaway/util-collections/arrays';
 import { Tx } from '@giveaway/db-client/prisma';
-import { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-likes';
+import { BlueskyUserSchema } from '@giveaway/bluesky-api/get-bluesky-likes';
 const BLUESKY_API_RATE_LIMIT_MINUTES = 15;
-import { getLatestTeamBlueskyCredentials } from '@/lib/bluesky/get-latest-team-bluesky-agent';
+import { getLatestTeamBlueskyCredentials } from '@giveaway/bluesky-api/bluesky/get-latest-team-bluesky-agent';
 import { Agent } from '@atproto/api';
 import { scheduleRandomlyAssignPrizesJob } from '@giveaway/jobs/util';
 

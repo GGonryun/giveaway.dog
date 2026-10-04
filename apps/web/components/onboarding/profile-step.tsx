@@ -20,7 +20,7 @@ import { toast } from 'sonner';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { LoadingState } from './loading-state';
 import { UserAccountType } from '@prisma/client';
-import completeOnboarding from '@/procedures/user/complete-onboarding';
+import completeOnboarding from '@giveaway/account-server/complete-onboarding';
 import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';

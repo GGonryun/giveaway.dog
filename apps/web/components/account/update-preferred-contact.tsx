@@ -3,7 +3,7 @@
 import React from 'react';
 import { useUser } from '@giveaway/account-context/user-provider';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import updateProfile from '@/procedures/user/update-profile';
+import updateProfile from '@giveaway/account-server/update-profile';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { SettingsCard } from '@giveaway/ui-layouts/settings-card';

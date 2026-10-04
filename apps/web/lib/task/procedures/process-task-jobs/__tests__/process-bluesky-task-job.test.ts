@@ -3,7 +3,7 @@ import { ZodError } from 'zod';
 import { processBlueskyTaskJob } from '../process-bluesky-task-job';
 import { ApplicationError } from '@giveaway/util-errors';
 import type { Prisma } from '@prisma/client';
-import type { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-likes';
+import type { BlueskyUserSchema } from '@giveaway/bluesky-api/get-bluesky-likes';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   buildTaskJob,
@@ -15,7 +15,7 @@ const m = vi.hoisted(() => ({
   importBlueskyUsers: vi.fn()
 }));
 
-vi.mock('@/lib/bluesky/get-latest-team-bluesky-agent', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/get-latest-team-bluesky-agent', () => ({
   getLatestTeamBlueskyCredentials: m.getLatestTeamBlueskyCredentials
 }));
 

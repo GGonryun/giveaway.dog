@@ -22,8 +22,8 @@ import {
   UnlinkIcon
 } from 'lucide-react';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import sendEmailVerification from '@/procedures/user/send-email-verification';
-import updateEmail from '@/procedures/user/update-email';
+import sendEmailVerification from '@giveaway/account-server/send-email-verification';
+import updateEmail from '@giveaway/account-server/update-email';
 import { toast } from 'sonner';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { UserProfileSchema } from '@giveaway/user-model/user';

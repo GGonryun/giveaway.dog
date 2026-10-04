@@ -4,7 +4,7 @@ import { Toaster } from '@giveaway/ui-primitives/toaster';
 import { Analytics } from '@vercel/analytics/react';
 import { SessionProvider } from '@/components/context/auth-session-provider';
 import { Metadata } from 'next';
-import { ThemeProvider } from '@/components/theme/theme-provider';
+import { ThemeProvider } from '@giveaway/ui-theme/theme-provider';
 
 import { Figtree } from 'next/font/google';
 import { UserMetricsCollector } from '@/components/user-metrics-collector';

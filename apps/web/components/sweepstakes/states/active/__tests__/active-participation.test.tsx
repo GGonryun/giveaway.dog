@@ -25,7 +25,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => navigation.searchParams
 }));
 
-vi.mock('@/lib/auth/procedures/logout', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/auth-actions/logout', () => ({ default: vi.fn() }));
 
 vi.mock('@/components/auth/login-options', () => ({
   LoginOptions: () => <div data-testid="login-options" />

@@ -1,4 +1,4 @@
-import getUser from '@/procedures/user/get-user';
+import getUser from '@giveaway/account-server/get-user';
 import { UserProvider } from '@giveaway/account-context/user-provider';
 import { redirect } from 'next/navigation';
 

@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import deleteUser from '@/procedures/user/delete-user';
+import deleteUser from '@giveaway/account-server/delete-user';
 import { DangerZone } from '../danger-zone';
 
-vi.mock('@/procedures/user/delete-user', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/account-server/delete-user', () => ({ default: vi.fn() }));
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

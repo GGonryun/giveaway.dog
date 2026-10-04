@@ -18,7 +18,7 @@ import { useProcedure } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { Flex } from '@giveaway/ui-primitives/flex';
-import login from '@/lib/auth/procedures/login';
+import login from '@giveaway/auth-actions/login';
 import {
   getLastLoginProviderCookie,
   setLastLoginProviderCookie

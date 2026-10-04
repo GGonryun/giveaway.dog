@@ -21,7 +21,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => navigation.searchParams
 }));
 
-vi.mock('@/lib/auth/procedures/logout', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/auth-actions/logout', () => ({ default: vi.fn() }));
 
 vi.mock('@/lib/task/components/public-sweepstakes/task-list', () => ({
   TaskList: ({

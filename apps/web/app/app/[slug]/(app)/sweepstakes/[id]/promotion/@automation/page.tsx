@@ -1,7 +1,7 @@
 import { AutomationCard } from '@/lib/automation/components/automation-card';
 import { AutomationCardSkeleton } from '@/lib/automation/components/automation-card-skeleton';
 import { getAutomatedPostJobs } from '@/lib/automation/procedures/get-automated-post-jobs';
-import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
+import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import { SweepstakesPageProps } from '@/schemas/pages';
 import React, { Suspense } from 'react';

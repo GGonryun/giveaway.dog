@@ -11,7 +11,7 @@ const mocks = vi.hoisted(() => ({
   toastSuccess: vi.fn()
 }));
 
-vi.mock('@/lib/auth/procedures/logout', () => ({ default: mocks.logout }));
+vi.mock('@giveaway/auth-actions/logout', () => ({ default: mocks.logout }));
 
 vi.mock('next-themes', () => ({
   useTheme: () => ({ theme: mocks.theme, setTheme: mocks.setTheme })

@@ -1,0 +1,7 @@
+{
+  "packages/participants/referrals-server/src/get-user-referral.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  }
+}

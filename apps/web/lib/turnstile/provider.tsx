@@ -1,5 +1,5 @@
 import { TurnstileProvider as TurnstileContextProvider } from './context';
-import { getLastTurnstileCheck } from './check-status';
+import { getLastTurnstileCheck } from '@giveaway/turnstile-server/check-status';
 
 interface TurnstileProviderProps {
   children: React.ReactNode;
