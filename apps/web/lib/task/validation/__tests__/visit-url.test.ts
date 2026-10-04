@@ -1,7 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { checkVisitUrl } from '../visit-url';
 import { VisitUrlTaskSchema } from '../../schemas';
-import { BASE_TASK, IDS, applicationError } from './fixtures-task-validation';
+import {
+  BASE_TASK,
+  IDS,
+  applicationError
+} from '@giveaway/testing-server/fixtures-task-validation';
 
 const buildTask = (
   afterVisit?: VisitUrlTaskSchema['afterVisit']

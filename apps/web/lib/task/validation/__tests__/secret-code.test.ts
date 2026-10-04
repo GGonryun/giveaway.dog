@@ -12,7 +12,7 @@ import {
   applicationError,
   db,
   taskCompletion
-} from './fixtures-task-validation';
+} from '@giveaway/testing-server/fixtures-task-validation';
 
 const buildTask = (
   overrides: Partial<SecretCodeTaskSchema> = {}

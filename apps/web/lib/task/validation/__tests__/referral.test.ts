@@ -10,7 +10,7 @@ import {
   db,
   storedTask,
   taskCompletion
-} from './fixtures-task-validation';
+} from '@giveaway/testing-server/fixtures-task-validation';
 
 const runtime = vi.hoisted(() => ({
   cookies: vi.fn(),

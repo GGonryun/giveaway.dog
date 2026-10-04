@@ -17,7 +17,7 @@ import {
   IDS,
   applicationError,
   db
-} from './fixtures-task-validation';
+} from '@giveaway/testing-server/fixtures-task-validation';
 
 const bluesky = vi.hoisted(() => ({
   isUserFollowingTarget: vi.fn(),

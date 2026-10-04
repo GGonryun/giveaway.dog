@@ -13,7 +13,7 @@ import {
   db,
   jsonResponse,
   textResponse
-} from './fixtures-task-validation';
+} from '@giveaway/testing-server/fixtures-task-validation';
 
 const fetchMock = vi.fn<typeof fetch>();
 

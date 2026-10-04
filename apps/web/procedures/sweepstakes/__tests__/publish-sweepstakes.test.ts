@@ -16,7 +16,7 @@ import {
   buildTeam,
   buildTeamSweepstakes,
   stubSweepstakesRewrite
-} from './fixtures-procedures-sweepstakes-b';
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-b';
 
 type Input = Parameters<typeof publishSweepstakes>[0];
 

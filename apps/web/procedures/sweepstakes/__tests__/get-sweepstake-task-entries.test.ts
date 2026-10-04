@@ -11,7 +11,7 @@ import {
   expectedBonusTask,
   expectedUserSchema,
   SWEEPSTAKES_ID
-} from './fixtures-procedures-sweepstakes-a';
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 
 const input = { sweepstakesId: SWEEPSTAKES_ID, taskId: 'task-1' };
 

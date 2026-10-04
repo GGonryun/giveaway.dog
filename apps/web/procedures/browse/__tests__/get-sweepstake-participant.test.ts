@@ -5,7 +5,7 @@ import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { buildSelectedUser } from './fixtures-procedures-browse-marketing-pickers';
+import { buildSelectedUser } from '@giveaway/testing-server/fixtures-procedures-browse-marketing-pickers';
 
 type Input = Parameters<typeof getOrCreateSweepstakesParticipant>[0];
 

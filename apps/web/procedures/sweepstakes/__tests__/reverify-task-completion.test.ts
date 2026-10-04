@@ -13,7 +13,7 @@ import {
   buildMembership,
   buildTeam,
   buildTeamSweepstakes
-} from './fixtures-procedures-sweepstakes-b';
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-b';
 
 const mocks = vi.hoisted(() => ({ validateTask: vi.fn() }));
 

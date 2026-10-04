@@ -5,7 +5,7 @@ import {
   UserAccountType,
   UserSource
 } from '@prisma/client';
-import { TEST_USER } from '@giveaway/testing-server/session';
+import { TEST_USER } from './session';
 
 export const TEAM_ID = 'team-1';
 export const TEAM_SLUG = 'acme';

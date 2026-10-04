@@ -13,7 +13,7 @@ import {
   expectedUserSchema,
   SWEEPSTAKES_ID,
   TEAM_SLUG
-} from './fixtures-procedures-sweepstakes-a';
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 
 const input = { sweepstakesId: SWEEPSTAKES_ID, slug: TEAM_SLUG };
 

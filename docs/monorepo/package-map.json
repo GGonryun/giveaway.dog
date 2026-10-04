@@ -21,10 +21,6 @@
       "package": "@giveaway/sweepstakes-editor-setup",
       "split": false
     },
-    "components/sweepstakes-editor/__tests__/stable-dom.ts": {
-      "package": "@giveaway/testing-dom",
-      "split": false
-    },
     "components/sweepstakes/__tests__/fixtures.tsx": {
       "package": "@giveaway/sweepstakes-ui-testing",
       "split": false
@@ -57,24 +53,8 @@
       "package": "@giveaway/task-model",
       "split": false
     },
-    "lib/task/validation/__tests__/fixtures-task-validation.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
     "lib/winners/__tests__/fixtures-sweepstakes-winners-email.ts": {
       "package": "@giveaway/winners-server",
-      "split": false
-    },
-    "procedures/browse/__tests__/fixtures-procedures-browse-marketing-pickers.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
-    "procedures/sweepstakes/__tests__/fixtures-procedures-sweepstakes-a.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
-    "procedures/sweepstakes/__tests__/fixtures-procedures-sweepstakes-b.ts": {
-      "package": "@giveaway/testing-server",
       "split": false
     },
     "procedures/teams/__tests__/fixtures-procedures-teams.ts": {
@@ -1474,7 +1454,6 @@
         "lib/discord/api/util.ts",
         "lib/discord/embeds.ts",
         "lib/discord/integration/",
-        "lib/integrations/notifications/",
         "lib/integrations/utils/refresh-discord-token.ts"
       ],
       "dependsOn": [
@@ -4102,7 +4081,6 @@
         "components/sweepstakes-editor/form/terms.ts",
         "components/sweepstakes/util.ts",
         "lib/filters/",
-        "lib/sweepstakes/schemas/",
         "lib/sweepstakes/util.ts",
         "lib/task/jobs.ts",
         "lib/task/validation/form.ts",
@@ -4318,6 +4296,19 @@
         "@giveaway/util-types"
       ],
       "npm": ["date-fns", "lucide-react", "next", "react", "react-hook-form"]
+    },
+    {
+      "name": "@giveaway/sweepstakes-ui-testing",
+      "path": "packages/sweepstakes/sweepstakes-ui-testing",
+      "type": "config",
+      "tags": ["type:config", "runtime:isomorphic", "scope:sweepstakes"],
+      "layer": 7,
+      "sourceFiles": 0,
+      "testFiles": 0,
+      "sources": [],
+      "dependsOn": [],
+      "npm": [],
+      "note": "Test fixtures that the sweepstakes UI packages share."
     },
     {
       "name": "@giveaway/task-actions",
@@ -5041,6 +5032,19 @@
       ]
     },
     {
+      "name": "@giveaway/team-testing",
+      "path": "packages/team/team-testing",
+      "type": "config",
+      "tags": ["type:config", "runtime:isomorphic", "scope:team"],
+      "layer": 2,
+      "sourceFiles": 0,
+      "testFiles": 0,
+      "sources": [],
+      "dependsOn": [],
+      "npm": [],
+      "note": "Test fixtures that the team server packages share."
+    },
+    {
       "name": "@giveaway/templates-editor",
       "path": "packages/templates/templates-editor",
       "type": "feature",
@@ -5207,7 +5211,7 @@
       "sourceFiles": 6,
       "testFiles": 0,
       "sources": [],
-      "dependsOn": [],
+      "dependsOn": ["@giveaway/util-errors"],
       "npm": ["@prisma/client", "next", "vitest"],
       "note": "Vitest setup for every package: the Prisma, session and next/cache mocks."
     },

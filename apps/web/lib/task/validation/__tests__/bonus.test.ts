@@ -20,7 +20,7 @@ import {
   IDS,
   applicationError,
   db
-} from './fixtures-task-validation';
+} from '@giveaway/testing-server/fixtures-task-validation';
 
 const input = <T>(task: T) => ({
   task,

@@ -4,7 +4,7 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
+import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 import { RegionalRestriction } from '../regional-restriction';
 
 vi.mock('@giveaway/util-geo/countries', async (importOriginal) => {

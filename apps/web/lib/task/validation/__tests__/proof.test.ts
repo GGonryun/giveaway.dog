@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 import { ZodError } from 'zod';
 import { saveTaskProof } from '../proof';
 import { TaskSchema, TaskType } from '../../schemas';
-import { BASE_TASK } from './fixtures-task-validation';
+import { BASE_TASK } from '@giveaway/testing-server/fixtures-task-validation';
 
 const taskOf = (task: Record<string, unknown> & { type: string }) =>
   ({ ...BASE_TASK, id: `task-${task.type}`, ...task }) as unknown as TaskSchema;

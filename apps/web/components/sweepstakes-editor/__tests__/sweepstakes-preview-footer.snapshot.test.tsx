@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayState } from '@/schemas/giveaway/schemas';
 import { PreviewStateContext } from '../contexts/preview-state-context';
 import { SweepstakesPreviewFooter } from '../sweepstakes-preview-footer';
-import { stabilizeIds } from './stable-dom';
+import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 
 const StatefulFooter = ({
   initialState,

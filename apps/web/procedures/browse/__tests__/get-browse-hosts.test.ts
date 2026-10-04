@@ -7,7 +7,7 @@ import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   FIXED_NOW,
   daysFromFixedNow
-} from './fixtures-procedures-browse-marketing-pickers';
+} from '@giveaway/testing-server/fixtures-procedures-browse-marketing-pickers';
 
 type TeamFixture = { id: string; name: string | null; slug: string | null };
 

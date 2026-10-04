@@ -11,7 +11,7 @@ import {
   FIXED_NOW,
   buildSelectedUser,
   daysFromFixedNow
-} from './fixtures-procedures-browse-marketing-pickers';
+} from '@giveaway/testing-server/fixtures-procedures-browse-marketing-pickers';
 
 type Input = Parameters<typeof getParticipantSweepstake>[0];
 

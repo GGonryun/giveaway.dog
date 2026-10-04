@@ -12,7 +12,7 @@ import {
   buildMembership,
   buildTeam,
   buildTeamSweepstakes
-} from './fixtures-procedures-sweepstakes-b';
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-b';
 
 type Input = Parameters<typeof updateWinnerCriteria>[0];
 

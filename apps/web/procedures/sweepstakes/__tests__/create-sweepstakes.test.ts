@@ -21,7 +21,7 @@ import {
   buildTeam,
   TEAM_ID,
   TEAM_SLUG
-} from './fixtures-procedures-sweepstakes-a';
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 
 const ids = vi.hoisted(() => {
   const state = { prefix: 'static', count: 0 };

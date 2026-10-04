@@ -3,7 +3,7 @@ import z from 'zod';
 import { refineSweepstakeTasks } from '../form';
 import { TaskSchema, TaskType } from '../../schemas';
 import type { BaseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
-import { BASE_TASK } from './fixtures-task-validation';
+import { BASE_TASK } from '@giveaway/testing-server/fixtures-task-validation';
 
 const FORM_START = new Date('2024-05-01T00:00:00.000Z');
 const FORM_END = new Date('2024-05-31T00:00:00.000Z');

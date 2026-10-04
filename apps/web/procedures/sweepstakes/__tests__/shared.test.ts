@@ -23,7 +23,7 @@ import {
   buildTeam,
   buildTeamSweepstakes,
   stubSweepstakesRewrite
-} from './fixtures-procedures-sweepstakes-b';
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-b';
 
 const NOW = new Date('2025-06-15T12:00:00.000Z');
 const START = new Date('2025-06-20T00:00:00.000Z');

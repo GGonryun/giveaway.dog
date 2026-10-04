@@ -3,7 +3,7 @@ import {
   buildFormValues,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
+import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 import { RequirePreEntryLogin } from '../require-pre-entry-login';
 
 const renderField = (requirePreEntryLogin: boolean) => {

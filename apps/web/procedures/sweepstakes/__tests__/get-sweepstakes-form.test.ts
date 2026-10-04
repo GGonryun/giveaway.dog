@@ -9,7 +9,7 @@ import {
   bonusTaskConfig,
   SWEEPSTAKES_ID,
   TEAM_ID
-} from './fixtures-procedures-sweepstakes-a';
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 
 const NOW = new Date(2026, 9, 1, 15, 30, 0);
 const START = new Date('2026-11-01T00:00:00.000Z');

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { CompletionStatus } from '@prisma/client';
 import { computeTaskStatus } from '../status';
 import { TASK_LABEL, TaskSchema, TaskType } from '../../schemas';
-import { BASE_TASK } from './fixtures-task-validation';
+import { BASE_TASK } from '@giveaway/testing-server/fixtures-task-validation';
 
 const COMPLETED_TYPES: TaskType[] = [
   'BONUS_TASK',

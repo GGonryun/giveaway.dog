@@ -7,7 +7,7 @@ import {
   buildTeam,
   TEAM_ID,
   TEAM_SLUG
-} from './fixtures-procedures-sweepstakes-a';
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 
 describe('getPublishedSweepstakes', () => {
   describe('when the input is invalid', () => {

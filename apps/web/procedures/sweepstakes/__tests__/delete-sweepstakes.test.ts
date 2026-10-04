@@ -11,7 +11,7 @@ import {
   buildTeamSweepstakes,
   SWEEPSTAKES_ID,
   TEAM_SLUG
-} from './fixtures-procedures-sweepstakes-a';
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 
 const withRole = (role: TeamRole) =>
   buildTeamSweepstakes({

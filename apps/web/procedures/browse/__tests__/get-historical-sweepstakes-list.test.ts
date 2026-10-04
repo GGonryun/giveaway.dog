@@ -9,7 +9,7 @@ import {
   FIXED_NOW,
   buildPublicSweepstakes,
   daysFromFixedNow
-} from './fixtures-procedures-browse-marketing-pickers';
+} from '@giveaway/testing-server/fixtures-procedures-browse-marketing-pickers';
 
 type Input = Parameters<typeof getHistoricalSweepstakesList>[0];
 

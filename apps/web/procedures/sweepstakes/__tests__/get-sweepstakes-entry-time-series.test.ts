@@ -4,7 +4,7 @@ import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
-import { SWEEPSTAKES_ID } from './fixtures-procedures-sweepstakes-a';
+import { SWEEPSTAKES_ID } from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 
 const NOW = new Date(2026, 9, 1, 12, 0, 0);
 

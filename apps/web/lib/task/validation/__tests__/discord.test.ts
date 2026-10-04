@@ -8,7 +8,7 @@ import {
   db,
   jsonResponse,
   textResponse
-} from './fixtures-task-validation';
+} from '@giveaway/testing-server/fixtures-task-validation';
 
 const tokens = vi.hoisted(() => ({ refreshDiscordToken: vi.fn() }));
 

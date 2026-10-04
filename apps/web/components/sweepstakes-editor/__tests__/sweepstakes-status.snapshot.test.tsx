@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import toggleVisibility from '@/procedures/sweepstakes/toggle-visibility';
 import { SweepstakesStatusComponent } from '../sweepstakes-status';
 import { FIXED_NOW } from './form-harness';
-import { stabilizeIds } from './stable-dom';
+import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 
 vi.hoisted(() => {
   process.env.TZ = 'UTC';

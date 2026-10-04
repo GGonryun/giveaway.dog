@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { SweepstakesStatus } from '@prisma/client';
 import { validateSweepstakesState } from '../task-state';
-import { applicationError, storedTask } from './fixtures-task-validation';
+import {
+  applicationError,
+  storedTask
+} from '@giveaway/testing-server/fixtures-task-validation';
 
 type StateTask = Parameters<typeof validateSweepstakesState>[0];
 

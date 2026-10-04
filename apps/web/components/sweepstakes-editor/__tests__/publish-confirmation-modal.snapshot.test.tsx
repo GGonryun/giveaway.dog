@@ -3,7 +3,7 @@ import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PublishConfirmationModal } from '../publish-confirmation-modal';
 import { buildFormValues, FIXED_NOW, renderWithForm } from './form-harness';
-import { stabilizeIds } from './stable-dom';
+import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 
 vi.mock('next/link', () => ({
   default: ({

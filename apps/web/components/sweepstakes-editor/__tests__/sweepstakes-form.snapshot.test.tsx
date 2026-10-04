@@ -9,7 +9,7 @@ import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { SweepstakesForm } from '../sweepstakes-form';
 import { buildFormValues, FIXED_NOW } from './form-harness';
-import { stabilizeIds } from './stable-dom';
+import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 
 vi.hoisted(() => {
   process.env.TZ = 'UTC';

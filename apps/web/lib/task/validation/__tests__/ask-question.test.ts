@@ -8,7 +8,7 @@ import {
   applicationError,
   db,
   taskCompletion
-} from './fixtures-task-validation';
+} from '@giveaway/testing-server/fixtures-task-validation';
 
 const task: AskQuestionTaskSchema = {
   ...BASE_TASK,

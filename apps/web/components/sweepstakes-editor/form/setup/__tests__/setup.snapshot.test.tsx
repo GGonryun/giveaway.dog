@@ -5,7 +5,7 @@ import {
   LayoutValue,
   renderWithForm
 } from '@/components/sweepstakes-editor/__tests__/form-harness';
-import { stabilizeIds } from '@/components/sweepstakes-editor/__tests__/stable-dom';
+import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 import { Setup } from '../setup';
 
 vi.hoisted(() => {

@@ -5,7 +5,7 @@ import {
   applicationError,
   storedTask,
   taskCompletion
-} from './fixtures-task-validation';
+} from '@giveaway/testing-server/fixtures-task-validation';
 
 const bonusTask = (id: string, mandatory: boolean) =>
   storedTask(id, { ...BASE_TASK, type: 'BONUS_TASK', mandatory });
