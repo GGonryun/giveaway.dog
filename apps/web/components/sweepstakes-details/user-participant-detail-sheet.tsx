@@ -31,7 +31,7 @@ import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
 import { UserProviders } from '@/lib/integrations/components/user-providers';
 import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toSweepstakesEngagement, toTwitterLink } from '@/lib/participant/db';
 import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';

@@ -4,9 +4,9 @@ import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import { TeamPermission, requireMembershipPermission } from '@/lib/permissions';
 import { TeamRole } from '@prisma/client';
-import { newEmailClient, NO_REPLY_EMAIL } from '@/lib/email/client';
-import { getTeamInviteEmailContent } from '@/lib/email/templates';
-import { environment } from '@/lib/environment';
+import { newEmailClient, NO_REPLY_EMAIL } from '@giveaway/email/client';
+import { getTeamInviteEmailContent } from '@giveaway/email/templates';
+import { environment } from '@giveaway/app-config/environment';
 import z from 'zod';
 
 const inviteMembersSchema = z.object({

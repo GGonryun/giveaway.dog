@@ -1,5 +1,5 @@
 import { IMPORTED_BASE_SCORE } from './schemas/imported';
-import { Tx } from '../prisma';
+import { Tx } from '@giveaway/db-client/prisma';
 
 export const computeImportedUserScore = async (tx: Tx, userId: string) => {
   await tx.userQuality.create({

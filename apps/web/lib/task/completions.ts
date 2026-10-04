@@ -1,7 +1,7 @@
 import { CompletionStatus, Prisma } from '@prisma/client';
 import z from 'zod';
 import { taskSchema, toTaskSchemaSafe } from './schemas';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 
 export const taskCompletionSchema = z.object({
   id: z.string(),

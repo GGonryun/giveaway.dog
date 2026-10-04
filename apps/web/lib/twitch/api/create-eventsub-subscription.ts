@@ -10,7 +10,7 @@ import {
   TwitchFeatureSchema,
   getEventSubTypesForTwitchFeatures
 } from '@/lib/integrations/scopes';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import { EventSubSubscription } from '@prisma/client';
 
 export const createEventSubSubscriptionsForFeatures = async ({

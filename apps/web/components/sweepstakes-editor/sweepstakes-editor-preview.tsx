@@ -44,7 +44,7 @@ import {
   DEFAULT_ALLOWED_IDENTITIES,
   DEFAULT_SWEEPSTAKES_NAME,
   TWITTER_PROFILE_URL
-} from '@/lib/settings';
+} from '@giveaway/app-config/settings';
 import { DeepNil, DeepPartial } from '@giveaway/util-types/types';
 import { isDefined } from '@giveaway/util-types/widetype';
 import { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';

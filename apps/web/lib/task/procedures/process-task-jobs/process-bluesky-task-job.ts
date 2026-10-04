@@ -9,12 +9,12 @@ import { TaskJobWithRelations } from './types';
 import { datetime } from '@/lib/date';
 import { ApplicationError } from '@giveaway/util-errors';
 import { takeUntil } from '@/lib/arrays';
-import { Tx } from '@/lib/prisma';
+import { Tx } from '@giveaway/db-client/prisma';
 import { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-likes';
 const BLUESKY_API_RATE_LIMIT_MINUTES = 15;
 import { getLatestTeamBlueskyCredentials } from '@/lib/bluesky/get-latest-team-bluesky-agent';
 import { Agent } from '@atproto/api';
-import { scheduleRandomlyAssignPrizesJob } from '@/lib/jobs/util';
+import { scheduleRandomlyAssignPrizesJob } from '@giveaway/jobs/util';
 
 export const processBlueskyTaskJob = async <
   T extends BlueskyLikeImportTaskSchema | BlueskyRepostImportTaskSchema

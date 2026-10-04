@@ -1,5 +1,5 @@
 import { ApplicationError } from '@giveaway/util-errors';
-import { Tx } from '@/lib/prisma';
+import { Tx } from '@giveaway/db-client/prisma';
 import { twitterApiRequest } from '../utils/twitter-api-request';
 import { uploadMediaResponseSchema } from '../schemas/api';
 

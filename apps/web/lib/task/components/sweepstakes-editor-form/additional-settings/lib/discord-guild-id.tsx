@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { HelpDialog } from '@/components/patterns/help-dialog';
-import { DISCORD_PUBLIC_CHANNEL_URL } from '@/lib/settings';
+import { DISCORD_PUBLIC_CHANNEL_URL } from '@giveaway/app-config/settings';
 import Link from 'next/link';
 import Image from 'next/image';
 

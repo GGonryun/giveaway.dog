@@ -6,7 +6,7 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DEFAULT_TIME_SERIES_DURATION } from '@/lib/settings';
+import { DEFAULT_TIME_SERIES_DURATION } from '@giveaway/app-config/settings';
 
 const TimelineChartSkeleton = () => (
   <Card>

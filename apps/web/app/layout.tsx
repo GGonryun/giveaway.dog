@@ -8,7 +8,7 @@ import { ThemeProvider } from '@/components/theme/theme-provider';
 
 import { Figtree } from 'next/font/google';
 import { UserMetricsCollector } from '@/components/user-metrics-collector';
-import { environment } from '@/lib/environment';
+import { environment } from '@giveaway/app-config/environment';
 import { BLUESKY_EMBED_SCRIPT_URL } from '@/lib/bluesky/embed';
 import { TurnstileProvider } from '@/lib/turnstile/provider';
 import { THEME_STORAGE_KEY, DEFAULT_THEME } from '@/lib/theme/constants';

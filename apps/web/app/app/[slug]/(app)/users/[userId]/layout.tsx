@@ -5,7 +5,7 @@ import { Outline } from '@/components/app/outline';
 import { UserDetailsTabs } from '@/components/users/user-details-tabs';
 import { UserParams } from './params';
 import getUser from '@/procedures/user/get-user';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 
 interface UserDetailPageProps {
   params: Promise<UserParams>;

@@ -1,4 +1,4 @@
-import { redis } from '@/lib/redis';
+import { redis } from '@giveaway/cache/redis';
 import { getTweet } from './get-tweet';
 import type { Tweet } from 'scrapebadger';
 

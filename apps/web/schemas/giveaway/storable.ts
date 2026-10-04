@@ -19,7 +19,7 @@ import {
 } from './defaults';
 
 import { createJobsForTask } from '@/lib/task/jobs';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { TaskSchema } from '@/lib/task/schemas';
 
 const toStorableDetails = (setup: SweepstakesInputSchema['setup']) => {

@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import { getTweet } from '@/lib/scrapebadger/procedures/get-tweet';
 import { FatalError } from 'workflow';
 import { toTwitterPost } from '../shared';

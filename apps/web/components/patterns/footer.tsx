@@ -5,7 +5,7 @@ import {
   BLUESKY_PROFILE_URL,
   FACEBOOK_PROFILE_URL,
   TWITTER_PROFILE_URL
-} from '@/lib/settings';
+} from '@giveaway/app-config/settings';
 
 import Link from 'next/link';
 import React from 'react';

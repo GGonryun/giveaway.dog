@@ -3,9 +3,12 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
 import { cookies } from 'next/headers';
-import { TURNSTILE_COOKIE_NAME, TURNSTILE_DB_DAYS } from './consts';
+import {
+  TURNSTILE_COOKIE_NAME,
+  TURNSTILE_DB_DAYS
+} from '@giveaway/turnstile-model/consts';
 import { verifyTurnstileToken } from './server';
-import { turnstileStatusSchema } from './schemas';
+import { turnstileStatusSchema } from '@giveaway/turnstile-model/schemas';
 
 export const getLastTurnstileCheck = procedure()
   .authorization({

@@ -16,7 +16,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 
 import Link from 'next/link';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import { UnifiedFormAction } from '../patterns/form-layout/types';
 
 interface CancelConfirmationModalProps {

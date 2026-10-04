@@ -8,7 +8,7 @@ import {
   ReactNode
 } from 'react';
 import { getCookie } from 'cookies-next/client';
-import { TURNSTILE_COOKIE_NAME } from './consts';
+import { TURNSTILE_COOKIE_NAME } from '@giveaway/turnstile-model/consts';
 import verifyTurnstile from './verify';
 import { useProcedure, useProcedureAsync } from '@/lib/mrpc/hook';
 import { toast } from 'sonner';

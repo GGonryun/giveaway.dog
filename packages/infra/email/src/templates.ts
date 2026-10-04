@@ -1,3 +1,5 @@
+import 'server-only';
+
 export interface VerificationEmailOptions {
   url: string;
   name?: string;

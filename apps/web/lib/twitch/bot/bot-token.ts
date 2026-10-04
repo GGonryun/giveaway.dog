@@ -1,4 +1,4 @@
-import { redis } from '@/lib/redis';
+import { redis } from '@giveaway/cache/redis';
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from './scopes';
 
 const BOT_TOKEN_CACHE_KEY = 'twitch:bot:access_token';

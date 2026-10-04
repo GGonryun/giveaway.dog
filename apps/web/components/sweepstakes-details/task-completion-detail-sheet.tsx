@@ -40,7 +40,7 @@ import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
 import { size } from 'lodash';
 import { ObfuscatedEmail } from '../ui/obfuscated-email';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 
 export const TaskCompletionDetailSheetContent: React.FC<{
   entries: UserEntriesSchema[];

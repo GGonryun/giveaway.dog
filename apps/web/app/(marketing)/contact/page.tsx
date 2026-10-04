@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Mail, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
-import { DISCORD_INVITE_LINK } from '@/lib/settings';
+import { DISCORD_INVITE_LINK } from '@giveaway/app-config/settings';
 import type { Metadata } from 'next';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 

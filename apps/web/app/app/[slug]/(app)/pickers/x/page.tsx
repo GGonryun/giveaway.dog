@@ -12,7 +12,7 @@ import { getPickersV2List } from '@/lib/pickers/x/procedures/get-pickers-v2-list
 import { XPickersUpgradeCTA } from '@/lib/pickers/x/components/x-pickers-upgrade-cta';
 import { hasMinimumTeamTier } from '@/lib/team/util';
 import { TeamTier } from '@prisma/client';
-import db from '@/lib/prisma';
+import db from '@giveaway/db-client/prisma';
 import { auth } from '@/lib/auth/config';
 
 type XPickersPageProps = {

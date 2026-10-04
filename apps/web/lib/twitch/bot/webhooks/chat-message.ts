@@ -1,5 +1,5 @@
-import db from '@/lib/prisma';
-import { redis } from '@/lib/redis';
+import db from '@giveaway/db-client/prisma';
+import { redis } from '@giveaway/cache/redis';
 import { newVersionedRateLimiter } from '@/lib/ratelimit';
 import { twitchChatMessageEventSchema } from './schema';
 import { toTaskSchema } from '@/lib/task/schemas';

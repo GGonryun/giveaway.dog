@@ -1,6 +1,6 @@
 'use server';
 
-import { Tx } from '@/lib/prisma';
+import { Tx } from '@giveaway/db-client/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
 import { getLatestTeamBlueskyCredentials } from '@/lib/bluesky/get-latest-team-bluesky-agent';
 import { RichText } from '@atproto/api';

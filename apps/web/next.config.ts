@@ -4,6 +4,16 @@ import { withWorkflow } from 'workflow/next';
 const nextConfig: NextConfig = {
   allowedDevOrigins: ['*.ngrok-free.app'],
   transpilePackages: [
+    '@giveaway/app-config',
+    '@giveaway/cache',
+    '@giveaway/content-moderation',
+    '@giveaway/db-client',
+    '@giveaway/db-model',
+    '@giveaway/db-schema',
+    '@giveaway/email',
+    '@giveaway/jobs',
+    '@giveaway/kick-auth',
+    '@giveaway/turnstile-model',
     '@giveaway/util-errors',
     '@giveaway/util-strings',
     '@giveaway/util-types'

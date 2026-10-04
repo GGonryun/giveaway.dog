@@ -2,7 +2,7 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { participationHistorySchema } from '@/schemas/participation-history';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import z from 'zod';
 import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 

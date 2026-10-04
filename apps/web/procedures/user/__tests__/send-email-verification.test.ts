@@ -3,8 +3,8 @@ import { createHash } from 'crypto';
 import sendEmailVerificationDefault, {
   sendEmailVerification
 } from '../send-email-verification';
-import { NO_REPLY_EMAIL } from '@/lib/email/client';
-import { getVerificationEmailContent } from '@/lib/email/templates';
+import { NO_REPLY_EMAIL } from '@giveaway/email/client';
+import { getVerificationEmailContent } from '@giveaway/email/templates';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';

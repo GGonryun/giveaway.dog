@@ -24,7 +24,7 @@ import {
 import { QualityType } from '@/schemas/quality';
 import { Prisma } from '@prisma/client';
 import { datetime } from '../date';
-import { Tx } from '../prisma';
+import { Tx } from '@giveaway/db-client/prisma';
 import { clamp } from 'lodash';
 
 const SELECT_USER_FINGERPRINT_QUERY = {

@@ -963,9 +963,9 @@
       "layer": 0,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/environment.ts", "lib/settings.ts"],
-      "dependsOn": [],
-      "npm": ["@giveaway/db-model"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model"],
+      "npm": []
     },
     {
       "name": "@giveaway/cache",
@@ -975,7 +975,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/redis.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["@upstash/redis"]
     },
@@ -987,7 +987,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/content-moderation.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["@google-cloud/vision"]
     },
@@ -999,7 +999,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["lib/prisma.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["@prisma/client"]
     },
@@ -1024,7 +1024,7 @@
       "layer": 0,
       "sourceFiles": 0,
       "testFiles": 0,
-      "sources": ["prisma/schema.prisma", "prisma/migrations/"],
+      "sources": [],
       "dependsOn": [],
       "npm": [],
       "note": "Owns the prisma generate and migrate targets."
@@ -1037,7 +1037,7 @@
       "layer": 0,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/email/"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["inboundemail"]
     },
@@ -1061,9 +1061,9 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/jobs/"],
-      "dependsOn": [],
-      "npm": ["@giveaway/db-model", "next"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model"],
+      "npm": ["next"]
     },
     {
       "name": "@giveaway/ratelimit",
@@ -1162,7 +1162,7 @@
       "layer": 0,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/turnstile/consts.ts", "lib/turnstile/schemas.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },
@@ -1757,7 +1757,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/auth/providers/kick.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["next-auth"]
     },

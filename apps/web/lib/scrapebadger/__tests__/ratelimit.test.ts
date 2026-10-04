@@ -29,7 +29,7 @@ vi.mock('@upstash/ratelimit', () => ({
 
 import { scrapeBadgerCredits } from '../ratelimit';
 import { SCRAPEBADGER_CREDIT_LIMIT } from '../settings';
-import { redis } from '@/lib/redis';
+import { redis } from '@giveaway/cache/redis';
 
 const configOf = (limiter: unknown) =>
   (limiter as { config: Record<string, unknown> }).config;

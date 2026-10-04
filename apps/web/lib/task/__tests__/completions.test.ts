@@ -7,7 +7,7 @@ import {
   toTaskCompletion,
   type TaskCompletionSchema
 } from '../completions';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import {
   storedTask,
   toStoredConfig,

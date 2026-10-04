@@ -1,6 +1,6 @@
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import { isValidCronSecret } from '@/lib/jobs/util';
+import { isValidCronSecret } from '@giveaway/jobs/util';
 import { PickerStatus } from '@prisma/client';
 import { start } from 'workflow/api';
 import { twitterScrapeRequest } from '@/lib/pickers/x/schemas/workflow';

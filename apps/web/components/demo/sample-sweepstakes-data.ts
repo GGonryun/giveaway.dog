@@ -18,7 +18,7 @@ import {
   VELORA_CHANNEL_URL,
   YOUTUBE_CHANNEL_NAME,
   YOUTUBE_CHANNEL_URL
-} from '@/lib/settings';
+} from '@giveaway/app-config/settings';
 import { timezone } from '@/lib/time';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,

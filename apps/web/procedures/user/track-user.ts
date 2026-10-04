@@ -11,7 +11,7 @@ import {
   UNKNOWN_TIMEZONE,
   UNKNOWN_USER_AGENT,
   UNKNOWN_USER_COUNTRY_CODE
-} from '@/lib/settings';
+} from '@giveaway/app-config/settings';
 import { userFingerprintSchema } from '@/schemas/fingerprint';
 import { getUserMetricsFromServerCookies } from '@/lib/user-metrics';
 import z from 'zod';

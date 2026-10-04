@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { strings } from '@giveaway/util-strings/strings';
-import { UNKNOWN_EMAIL } from '@/lib/settings';
+import { UNKNOWN_EMAIL } from '@giveaway/app-config/settings';
 
 interface DisqualificationDialogProps {
   open: boolean;

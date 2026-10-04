@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from 'crypto';
 import { addSeconds } from 'date-fns';
 import { Prisma } from '@prisma/client';
-import prisma from '@/lib/prisma';
+import prisma from '@giveaway/db-client/prisma';
 
 export const BLUESKY_LOGIN_TOKEN_PREFIX = 'bluesky-direct:';
 export const BLUESKY_LOGIN_TOKEN_TTL_SECONDS = 60;

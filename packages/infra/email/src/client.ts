@@ -1,3 +1,5 @@
+import 'server-only';
+
 import Inbound from 'inboundemail';
 
 export const newEmailClient = ({ secret }: { secret?: string }) => {

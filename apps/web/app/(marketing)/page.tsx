@@ -1,4 +1,4 @@
-import { environment } from '@/lib/environment';
+import { environment } from '@giveaway/app-config/environment';
 import { Metadata } from 'next';
 import { HomePage } from '@/lib/home/page';
 import { auth } from '@/lib/auth/config';

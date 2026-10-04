@@ -18,7 +18,6 @@
     }
   },
   "scripts": {
-    "postinstall": "prisma generate",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -60,6 +59,16 @@
     "@dnd-kit/core": "catalog:",
     "@dnd-kit/sortable": "catalog:",
     "@dnd-kit/utilities": "catalog:",
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/cache": "workspace:*",
+    "@giveaway/content-moderation": "workspace:*",
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/db-schema": "workspace:*",
+    "@giveaway/email": "workspace:*",
+    "@giveaway/jobs": "workspace:*",
+    "@giveaway/kick-auth": "workspace:*",
+    "@giveaway/turnstile-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-strings": "workspace:*",
     "@giveaway/util-types": "workspace:*",
@@ -194,5 +203,8 @@
     "dotenv-cli": "catalog:",
     "prisma": "catalog:",
     "tsx": "catalog:"
+  },
+  "prisma": {
+    "schema": "../../packages/infra/db-schema/src/schema.prisma"
   }
 }

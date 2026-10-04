@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { UserSchema } from '@/schemas/user';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { UserAccountType } from '@prisma/client';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {

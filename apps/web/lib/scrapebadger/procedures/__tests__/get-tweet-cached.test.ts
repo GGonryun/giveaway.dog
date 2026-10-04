@@ -7,7 +7,7 @@ const m = vi.hoisted(() => ({
   ScrapeBadger: vi.fn()
 }));
 
-vi.mock('@/lib/redis', () => ({
+vi.mock('@giveaway/cache/redis', () => ({
   redis: m.redis
 }));
 

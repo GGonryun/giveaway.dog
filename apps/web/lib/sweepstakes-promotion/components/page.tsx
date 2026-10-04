@@ -2,7 +2,7 @@
 
 import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
 import { SocialSharingCard } from './social-sharing-card';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import { ShareLinksCard } from './share-links-card';
 import { useLiveSweepstakesUrl } from '@/components/sweepstakes/use-live-sweepstakes-url';
 

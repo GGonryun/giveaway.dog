@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
 import { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
 import { MockTeamProvider } from '@/components/demo/mock-team-provider';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { DeepPartial } from '@giveaway/util-types/types';
 import {
   GiveawayFormSchema,

@@ -69,7 +69,7 @@ import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
 import { rollPrize } from '@/lib/winners/procedures/roll-prize';
 import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';
 import { disqualifyDraw } from '@/lib/winners/procedures/disqualify-draw';
-import { UNKNOWN_EMAIL } from '@/lib/settings';
+import { UNKNOWN_EMAIL } from '@giveaway/app-config/settings';
 import { strings } from '@giveaway/util-strings/strings';
 
 interface GroupedPrize {

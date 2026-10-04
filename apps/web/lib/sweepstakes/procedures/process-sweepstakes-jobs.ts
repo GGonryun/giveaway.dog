@@ -3,7 +3,7 @@
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { html } from '@/lib/html';
 import { DEFAULT_TEAM_NAME } from '@/lib/team/data';
-import { DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import {
   Prisma,
   PrismaClient,
@@ -11,7 +11,7 @@ import {
   VisibilityType
 } from '@prisma/client';
 import { toSweepstakesUrl } from '../util';
-import db from '@/lib/prisma';
+import db from '@giveaway/db-client/prisma';
 import { updateDiscordMessage } from '@/lib/discord/api/update-discord-message';
 import { toPostToDiscordResponseSchema } from '@/lib/automation/schemas';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';

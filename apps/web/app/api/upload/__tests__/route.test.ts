@@ -3,7 +3,7 @@ import type { HandleUploadOptions } from '@vercel/blob/client';
 import { POST } from '../route';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { createSession } from '@giveaway/testing-server/session';
-import { isImageSafe } from '@/lib/content-moderation';
+import { isImageSafe } from '@giveaway/content-moderation/content-moderation';
 
 type Limiter = {
   limit: (identifier: string) => Promise<{ success: boolean; reset: number }>;
@@ -36,11 +36,16 @@ vi.mock('@google-cloud/vision', () => ({
   }
 }));
 
-vi.mock('@/lib/content-moderation', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@/lib/content-moderation')>();
-  return { ...actual, isImageSafe: vi.fn(actual.isImageSafe) };
-});
+vi.mock(
+  '@giveaway/content-moderation/content-moderation',
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import('@giveaway/content-moderation/content-moderation')
+      >();
+    return { ...actual, isImageSafe: vi.fn(actual.isImageSafe) };
+  }
+);
 
 const NOW = new Date('2026-06-01T00:00:00.000Z');
 

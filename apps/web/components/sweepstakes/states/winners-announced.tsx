@@ -16,7 +16,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '@/components/ui/collapsible';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { PrizeDrawResult } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

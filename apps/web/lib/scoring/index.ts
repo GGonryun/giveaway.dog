@@ -1,5 +1,5 @@
 import { UserSource } from '@prisma/client';
-import { Tx } from '../prisma';
+import { Tx } from '@giveaway/db-client/prisma';
 import { computeSignupUserScore } from './signup';
 import { computeImportedUserScore } from './imported';
 import { assertNever } from '@giveaway/util-errors';

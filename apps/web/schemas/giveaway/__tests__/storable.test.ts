@@ -17,7 +17,7 @@ import type {
   SweepstakesInputTaskSchema,
   TeamSweepstakesGetPayload
 } from '../db';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 
 type Input = Omit<SweepstakesInputSchema, 'id'>;
 

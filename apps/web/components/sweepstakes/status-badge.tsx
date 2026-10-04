@@ -4,7 +4,7 @@ import {
   ENDING_SOON_SWEEPSTAKE_THRESHOLD,
   NEW_SWEEPSTAKE_THRESHOLD,
   STARTING_SOON_SWEEPSTAKE_THRESHOLD
-} from '@/lib/settings';
+} from '@giveaway/app-config/settings';
 import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
 import { assertNever } from '@giveaway/util-errors';
 

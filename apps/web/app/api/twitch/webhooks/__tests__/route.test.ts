@@ -12,7 +12,7 @@ const m = vi.hoisted(() => ({
   newVersionedRateLimiter: vi.fn()
 }));
 
-vi.mock('@/lib/redis', () => ({
+vi.mock('@giveaway/cache/redis', () => ({
   redis: { get: m.redisGet, set: m.redisSet }
 }));
 

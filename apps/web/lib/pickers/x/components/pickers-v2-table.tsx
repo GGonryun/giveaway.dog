@@ -22,7 +22,7 @@ import {
 import { Eye, Edit, Trash2, MoreHorizontal, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
-import { DEFAULT_PAGE_SIZE } from '@/lib/settings';
+import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
 import { PickersV2ListItemSchema, PickersV2ListSchema } from '../schemas/list';
 import { usePickersV2Navigation } from '../hooks/use-pickers-v2-navigation';
 import { CreatePickerV2Button } from './create-picker-v2-button';

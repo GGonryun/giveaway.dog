@@ -33,7 +33,7 @@ vi.mock('@upstash/ratelimit', () => ({
 }));
 
 import { fileUpload, newVersionedRateLimiter } from '../ratelimit';
-import { redis } from '../redis';
+import { redis } from '@giveaway/cache/redis';
 
 const configOf = (limiter: unknown) =>
   (limiter as { config: Record<string, unknown> }).config;

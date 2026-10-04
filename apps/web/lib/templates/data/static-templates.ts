@@ -6,7 +6,7 @@ import {
   DEFAULT_ALLOWED_IDENTITIES,
   TWITTER_POST_URL,
   TWITTER_PROFILE_URL
-} from '@/lib/settings';
+} from '@giveaway/app-config/settings';
 import {
   DEFAULT_SPONSOR_NAME,
   DEFAULT_WINNER_SELECTION_METHOD,

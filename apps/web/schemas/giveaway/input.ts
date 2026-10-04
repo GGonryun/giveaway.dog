@@ -17,7 +17,7 @@ import {
   DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND
 } from './defaults';
 import { parseUserSourceSchema } from '@/lib/user-source/schemas';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@/lib/settings';
+import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { parseAspectRatio } from '@/lib/aspect-ratio/data';
 import { Prisma } from '@prisma/client';
 

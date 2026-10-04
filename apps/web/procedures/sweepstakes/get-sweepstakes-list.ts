@@ -9,7 +9,10 @@ import {
   listSweepstakesFiltersSchema,
   toDerivedSweepstakeStatus
 } from '@/schemas/sweepstakes';
-import { DEFAULT_PAGE_SIZE, DEFAULT_SWEEPSTAKES_NAME } from '@/lib/settings';
+import {
+  DEFAULT_PAGE_SIZE,
+  DEFAULT_SWEEPSTAKES_NAME
+} from '@giveaway/app-config/settings';
 import { Prisma } from '@prisma/client';
 
 const getSweepstakesList = procedure()

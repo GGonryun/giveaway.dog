@@ -15,7 +15,7 @@ import {
 } from '@/components/sweepstakes/__tests__/fixtures';
 import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import type { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import { UNKNOWN_USER_NAME } from '@/lib/settings';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import {
   ParticipatingUserSheet,
   UserDetailSheet,
