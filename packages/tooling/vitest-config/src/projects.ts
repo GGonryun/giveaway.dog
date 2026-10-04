@@ -71,7 +71,12 @@ export const packageTestConfig = ({
         provider: 'v8',
         reporter: ['text-summary', 'json-summary'],
         include: coverageInclude,
-        exclude: ['**/__tests__/**', '**/*.d.ts', ...coverageExclude]
+        exclude: [
+          '**/__tests__/**',
+          '**/src/testing/**',
+          '**/*.d.ts',
+          ...coverageExclude
+        ]
       }
     }
   };

@@ -15,6 +15,7 @@ export default defineConfig({
       ],
       exclude: [
         '**/__tests__/**',
+        '**/src/testing/**',
         '**/*.d.ts',
         'apps/web/app/.well-known/**',
         'packages/tooling/**'
