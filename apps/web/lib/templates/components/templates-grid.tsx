@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { TemplateListItemSchema } from '../schemas/template';
+import { TemplateListItemSchema } from '@giveaway/templates-model/schemas/template';
 import { TemplateCard } from './template-card';
 import { UseTemplateModal } from './use-template-modal';
 import { useProcedure } from '@giveaway/rpc-client/hook';

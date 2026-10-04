@@ -9,8 +9,8 @@ import {
   CardTitle
 } from '@giveaway/ui-primitives/card';
 import { ArrowRight } from 'lucide-react';
-import { STATIC_TEMPLATES } from '@/lib/templates/data/static-templates';
-import { getTemplatePlatforms } from '@/lib/templates/utils/get-template-platforms';
+import { STATIC_TEMPLATES } from '@giveaway/templates-model/data/static-templates';
+import { getTemplatePlatforms } from '@giveaway/templates-model/utils/get-template-platforms';
 import { TemplatePlatformIcons } from '@/lib/templates/components/template-platform-icons';
 
 export function TemplatesShowcase() {

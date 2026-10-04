@@ -14,7 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '@giveaway/ui-primitives/pagination';
-import { AllGiveawaysSearch } from '@/components/sweepstakes-browse/components/all-giveaways-search';
+import { AllGiveawaysSearch } from '@giveaway/browse-list/components/all-giveaways-search';
 
 export const HistoryFilters: React.FC<{
   children: React.ReactNode;

@@ -14,7 +14,7 @@ import {
   DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
 } from '@giveaway/sweepstakes-model/defaults';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
-import { getTemplateById } from '@/lib/templates/data/static-templates';
+import { getTemplateById } from '@giveaway/templates-model/data/static-templates';
 import {
   bonusTaskConfig,
   buildMember,

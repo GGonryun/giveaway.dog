@@ -1,0 +1,54 @@
+{
+  "name": "@giveaway/participant-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:participants"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/participants/participant-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./get-public-sweepstakes-participation": "./src/get-public-sweepstakes-participation.ts",
+    "./get-sweepstake-participant": "./src/get-sweepstake-participant.ts",
+    "./get-sweepstakes-participants": "./src/get-sweepstakes-participants.ts",
+    "./get-task-completions": "./src/get-task-completions.ts",
+    "./get-team-participant": "./src/get-team-participant.ts",
+    "./get-team-participants": "./src/get-team-participants.ts",
+    "./get-team-tasks": "./src/get-team-tasks.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "server-only": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

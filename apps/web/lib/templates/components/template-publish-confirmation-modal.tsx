@@ -12,7 +12,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { CheckIcon, SaveIcon, AlertTriangleIcon } from 'lucide-react';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { useFormContext } from 'react-hook-form';
-import { TemplateFormSchema } from '../schemas/template';
+import { TemplateFormSchema } from '@giveaway/templates-model/schemas/template';
 import { useMemo } from 'react';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';

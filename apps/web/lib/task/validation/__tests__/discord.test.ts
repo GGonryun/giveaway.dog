@@ -12,7 +12,7 @@ import {
 
 const tokens = vi.hoisted(() => ({ refreshDiscordToken: vi.fn() }));
 
-vi.mock('@/lib/integrations/utils/refresh-discord-token', () => ({
+vi.mock('@giveaway/discord-api/refresh-discord-token', () => ({
   refreshDiscordToken: tokens.refreshDiscordToken
 }));
 

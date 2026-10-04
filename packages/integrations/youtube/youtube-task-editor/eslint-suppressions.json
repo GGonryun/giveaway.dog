@@ -1,0 +1,7 @@
+{
+  "packages/integrations/youtube/youtube-task-editor/src/use-youtube-channel-validation.ts": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  }
+}

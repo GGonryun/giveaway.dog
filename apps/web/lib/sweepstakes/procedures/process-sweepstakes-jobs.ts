@@ -12,11 +12,11 @@ import {
 } from '@prisma/client';
 import { toSweepstakesUrl } from '@giveaway/sweepstakes-model/util';
 import db from '@giveaway/db-client/prisma';
-import { updateDiscordMessage } from '@/lib/discord/api/update-discord-message';
+import { updateDiscordMessage } from '@giveaway/discord-api/update-discord-message';
 import { toPostToDiscordResponseSchema } from '@giveaway/automation-model/schemas';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
-import { toSweepstakesEmbed } from '@/lib/discord/embeds';
-import { toExpiredSweepstakeComponents } from '@/lib/discord/api/util';
+import { toSweepstakesEmbed } from '@giveaway/discord-api/embeds';
+import { toExpiredSweepstakeComponents } from '@giveaway/discord-api/util';
 
 const MAX_JOBS_PER_RUN = 5;
 

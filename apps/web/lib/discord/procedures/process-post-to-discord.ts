@@ -8,9 +8,9 @@ import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { toStorableTask } from '@giveaway/sweepstakes-model/storable';
 import { PrismaClient, SweepstakesStatus } from '@prisma/client';
 import { nanoid } from 'nanoid';
-import { toActiveSweepstakeComponents } from '../api/util';
-import { postDiscordMessage } from '../api/post-discord-message';
-import { toSweepstakesEmbed } from '../embeds';
+import { toActiveSweepstakeComponents } from '@giveaway/discord-api/util';
+import { postDiscordMessage } from '@giveaway/discord-api/post-discord-message';
+import { toSweepstakesEmbed } from '@giveaway/discord-api/embeds';
 
 export const processPostToDiscord = async ({
   db,

@@ -6,7 +6,10 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { findUserSweepstakesQuery } from '@giveaway/sweepstakes-access/shared';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { toSweepstakesInput } from '@giveaway/sweepstakes-model/input';
-import { DEFAULT_TEMPLATE_IMAGE, DEFAULT_TEMPLATE_NAME } from '../defaults';
+import {
+  DEFAULT_TEMPLATE_IMAGE,
+  DEFAULT_TEMPLATE_NAME
+} from '@giveaway/templates-model/defaults';
 
 export const convertSweepstakesToTemplate = procedure()
   .authorization({ required: true })

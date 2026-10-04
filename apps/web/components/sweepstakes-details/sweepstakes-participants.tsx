@@ -27,7 +27,7 @@ import {
 } from '@giveaway/ui-primitives/dropdown-menu';
 import { MoreVertical, Eye, UserX, Users, Ban } from 'lucide-react';
 import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
-import { StatusExplanationDialog } from '../users/status-explanation-dialog';
+import { StatusExplanationDialog } from '@giveaway/audience-user-details/status-explanation-dialog';
 import { Textarea } from '@giveaway/ui-primitives/textarea';
 import { Label } from '@giveaway/ui-primitives/label';
 import {

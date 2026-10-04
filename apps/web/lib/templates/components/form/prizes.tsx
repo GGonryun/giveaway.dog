@@ -4,7 +4,7 @@ import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '@giveaway/ui-primitives/button';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { TemplateFormSchema } from '../../schemas/template';
+import { TemplateFormSchema } from '@giveaway/templates-model/schemas/template';
 import {
   closestCenter,
   DndContext,

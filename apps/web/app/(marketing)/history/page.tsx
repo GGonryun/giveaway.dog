@@ -1,11 +1,11 @@
-import { SweepstakesPageSkeleton } from '@/components/sweepstakes-browse/sweepstakes-page-skeleton';
-import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
+import { SweepstakesPageSkeleton } from '@giveaway/browse-list/sweepstakes-page-skeleton';
+import { getPublicSweepstakesParticipation } from '@giveaway/participant-server/get-public-sweepstakes-participation';
 import getHistoricalSweepstakesList from '@giveaway/browse-server/get-historical-sweepstakes-list';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { GiveawayFilters } from '@giveaway/sweepstakes-model/filters/giveaway-filters';
 import { HistoryFilters } from './filters';
-import { AllGiveawaysGrid } from '@/components/sweepstakes-browse/components/all-giveaways-grid';
+import { AllGiveawaysGrid } from '@giveaway/browse-list/components/all-giveaways-grid';
 
 export const revalidate = 60;
 

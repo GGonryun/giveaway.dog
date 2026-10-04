@@ -1,0 +1,84 @@
+{
+  "name": "@giveaway/audience-user-details",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:audience"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/audience/audience-user-details --suppressions-location packages/audience/audience-user-details/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./components/entries/no-entries": "./src/components/entries/no-entries.tsx",
+    "./components/entries/user-entries": "./src/components/entries/user-entries.tsx",
+    "./components/entries/user-entries-skeleton": "./src/components/entries/user-entries-skeleton.tsx",
+    "./components/overview/account-signals-card": "./src/components/overview/account-signals-card.tsx",
+    "./components/overview/profile-information-card": "./src/components/overview/profile-information-card.tsx",
+    "./components/overview/user-actions": "./src/components/overview/user-actions.tsx",
+    "./components/overview/user-details-overview": "./src/components/overview/user-details-overview.tsx",
+    "./components/overview/user-details-overview-skeleton": "./src/components/overview/user-details-overview-skeleton.tsx",
+    "./feature-in-development-dialog": "./src/feature-in-development-dialog.tsx",
+    "./params": "./src/params.ts",
+    "./status-explanation-dialog": "./src/status-explanation-dialog.tsx",
+    "./use-user-details-page": "./src/use-user-details-page.ts",
+    "./user-details-tabs": "./src/user-details-tabs.tsx",
+    "./user/components/user-status-badge": "./src/user/components/user-status-badge.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/audience-server": "workspace:*",
+    "@giveaway/integration-ui": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/scoring-ui": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/task-ui": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/user-quality-model": "workspace:*",
+    "@giveaway/user-quality-ui": "workspace:*",
+    "@giveaway/util-browser": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "date-fns": "catalog:",
+    "lucide-react": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -7,7 +7,7 @@ import { RequirePreEntryLogin } from '@/components/sweepstakes-editor/form/audie
 import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fields';
 import { RegionalRestriction } from '@/components/sweepstakes-editor/form/audience/regional-restriction';
 import { useFormContext } from 'react-hook-form';
-import { TemplateFormSchema } from '../../schemas/template';
+import { TemplateFormSchema } from '@giveaway/templates-model/schemas/template';
 import {
   VisibilityTypeField,
   UrlSlugField

@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger
 } from '@giveaway/ui-primitives/dropdown-menu';
 import { ArrowRight, MoreVertical, Edit, Trash2 } from 'lucide-react';
-import { TemplateListItemSchema } from '../schemas/template';
+import { TemplateListItemSchema } from '@giveaway/templates-model/schemas/template';
 import { useRouter } from 'next/navigation';
 
 interface TemplateCardProps {

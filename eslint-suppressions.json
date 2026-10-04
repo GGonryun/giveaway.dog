@@ -4,11 +4,6 @@
       "count": 1
     }
   },
-  "apps/web/app/app/[slug]/(app)/users/[userId]/components/entries/user-entries.tsx": {
-    "react-hooks/purity": {
-      "count": 1
-    }
-  },
   "apps/web/app/app/[slug]/(app)/users/components/users-table.tsx": {
     "react-hooks/static-components": {
       "count": 2
@@ -127,11 +122,6 @@
       "count": 1
     }
   },
-  "apps/web/lib/task/hooks/use-youtube-channel-validation.ts": {
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
   "apps/web/lib/templates/components/template-preview.tsx": {
     "react-hooks/purity": {
       "count": 2
@@ -139,11 +129,6 @@
   },
   "apps/web/lib/templates/components/use-template-modal.tsx": {
     "react-hooks/purity": {
-      "count": 2
-    }
-  },
-  "apps/web/lib/templates/schemas/template.ts": {
-    "@typescript-eslint/no-explicit-any": {
       "count": 2
     }
   },

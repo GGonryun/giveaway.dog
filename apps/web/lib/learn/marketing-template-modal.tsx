@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { UseTemplateModal } from '@/lib/templates/components/use-template-modal';
-import { TemplateDetailsSchema } from '@/lib/templates/schemas/template';
-import { TemplateListItemSchema } from '@/lib/templates/schemas/template';
+import { TemplateDetailsSchema } from '@giveaway/templates-model/schemas/template';
+import { TemplateListItemSchema } from '@giveaway/templates-model/schemas/template';
 
 interface MarketingTemplateModalProps {
   template: TemplateDetailsSchema;

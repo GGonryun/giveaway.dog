@@ -2,8 +2,8 @@ import { assertNever } from '@giveaway/util-errors';
 import { useCallback } from 'react';
 import { StartDateField } from '@giveaway/task-editor-fields/start-date';
 import { EndDateField } from '@giveaway/task-editor-fields/end-date';
-import { YouTubeChannelUrlFormField } from './lib/youtube-channel-url';
-import { YouTubeSubscriptionConfirmationFormField } from './lib/youtube-subscription-confirmation';
+import { YouTubeChannelUrlFormField } from '@giveaway/youtube-task-editor/youtube-channel-url';
+import { YouTubeSubscriptionConfirmationFormField } from '@giveaway/youtube-task-editor/youtube-subscription-confirmation';
 import { DiscordGuildIdFormField } from '@giveaway/discord-task-editor/discord-guild-id';
 import { DiscordInviteLinkFormField } from '@giveaway/discord-task-editor/discord-invite-link';
 import { HrefFormField } from '@giveaway/task-editor-fields/href';
@@ -33,7 +33,10 @@ import {
   FacebookPageUrl,
   FacebookPostUrl
 } from '@giveaway/meta-task-editor/facebook';
-import { TikTokProfileUrl, TikTokPostUrl } from './lib/tiktok';
+import {
+  TikTokProfileUrl,
+  TikTokPostUrl
+} from '@giveaway/tiktok-task-editor/tiktok';
 import { AskQuestionFormFields } from '@giveaway/task-editor-fields/ask-question';
 import { SingleChoiceFormFields } from '@giveaway/task-editor-fields/single-choice';
 import { MultipleChoiceFormFields } from '@giveaway/task-editor-fields/multiple-choice';
@@ -42,7 +45,7 @@ import { Typography } from '@giveaway/ui-primitives/typography';
 import { AlertCircle } from 'lucide-react';
 import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
-import { VeloraFollowFormField } from './lib/velora-follow';
+import { VeloraFollowFormField } from '@giveaway/velora-task-editor/velora-follow';
 import { LinkedInFollowFormField } from '@giveaway/linkedin-task-editor/linkedin-follow';
 import { MaximumReferralsField } from '@giveaway/task-editor-fields/maximum-referrals';
 import { SteamDeveloperFormField } from '@giveaway/steam-task-editor/steam-developer';

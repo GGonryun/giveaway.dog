@@ -1,12 +1,12 @@
 'use server';
 
 import { Suspense } from 'react';
-import { UserDetailsOverview } from '../components/overview/user-details-overview';
-import { UserDetailsOverviewSkeleton } from '../components/overview/user-details-overview-skeleton';
-import { UserParams } from '../params';
+import { UserDetailsOverview } from '@giveaway/audience-user-details/components/overview/user-details-overview';
+import { UserDetailsOverviewSkeleton } from '@giveaway/audience-user-details/components/overview/user-details-overview-skeleton';
+import { UserParams } from '@giveaway/audience-user-details/params';
 import getUser from '@giveaway/account-server/get-user';
-import { getTeamParticipant } from '@/lib/participant/procedures/get-team-participant';
-import { getTeamTasks } from '@/lib/participant/procedures/get-team-tasks';
+import { getTeamParticipant } from '@giveaway/participant-server/get-team-participant';
+import { getTeamTasks } from '@giveaway/participant-server/get-team-tasks';
 import { getUserSignals } from '@giveaway/audience-server/get-user-signals';
 import type { UserSignals } from '@giveaway/audience-server/get-user-signals';
 

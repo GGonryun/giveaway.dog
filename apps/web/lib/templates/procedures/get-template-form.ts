@@ -5,9 +5,9 @@ import z from 'zod';
 import {
   templateInputSchema,
   toTemplateInputSchema
-} from '../schemas/template';
+} from '@giveaway/templates-model/schemas/template';
 import { ApplicationError } from '@giveaway/util-errors';
-import { STATIC_TEMPLATES } from '../data/static-templates';
+import { STATIC_TEMPLATES } from '@giveaway/templates-model/data/static-templates';
 
 export const getTemplateForm = procedure()
   .authorization({

@@ -8,7 +8,7 @@ import { TemplateTasks } from './form/tasks';
 import { TemplateDesign } from './form/design';
 import { TemplateSelection } from './form/selection';
 import { TemplatePrizes } from './form/prizes';
-import { TemplateStep } from '../data/steps';
+import { TemplateStep } from '@giveaway/templates-model/data/steps';
 
 export const TemplateFormContent: React.FC = () => {
   const { currentStep } = useUnifiedFormLayout<TemplateStep>();

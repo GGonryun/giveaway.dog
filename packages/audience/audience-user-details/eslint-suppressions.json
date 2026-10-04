@@ -1,0 +1,7 @@
+{
+  "packages/audience/audience-user-details/src/components/entries/user-entries.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  }
+}

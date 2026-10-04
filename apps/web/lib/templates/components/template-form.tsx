@@ -12,7 +12,7 @@ import {
   templateFormSchema,
   TemplateFormSchema,
   TemplateInputSchema
-} from '../schemas/template';
+} from '@giveaway/templates-model/schemas/template';
 import React, { useCallback, useState } from 'react';
 import {
   useParams,
@@ -30,7 +30,7 @@ import {
   TEMPLATE_STEP_LABELS,
   TEMPLATE_STEP_ORDER,
   TemplateStep
-} from '../data/steps';
+} from '@giveaway/templates-model/data/steps';
 import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { TemplateFormContent } from './template-form-content';
 import { TemplatePreview } from './template-preview';

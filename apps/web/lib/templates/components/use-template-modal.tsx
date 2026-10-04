@@ -10,7 +10,7 @@ import {
 } from '@giveaway/ui-primitives/dialog';
 import { Button } from '@giveaway/ui-primitives/button';
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
-import { TemplateListItemSchema } from '../schemas/template';
+import { TemplateListItemSchema } from '@giveaway/templates-model/schemas/template';
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
 import {
   mockAllocation,

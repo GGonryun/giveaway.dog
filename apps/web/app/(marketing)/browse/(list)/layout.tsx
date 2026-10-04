@@ -1,6 +1,6 @@
 import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
-import { HostCTA } from '@/components/sweepstakes-browse/components/host-cta';
-import { SubscriptionCTA } from '@/components/sweepstakes-browse/components/subscription-cta';
+import { HostCTA } from '@giveaway/browse-list/components/host-cta';
+import { SubscriptionCTA } from '@giveaway/browse-list/components/subscription-cta';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

@@ -8,10 +8,10 @@ import {
   toStorableTemplateSchema,
   TemplateInputSchema,
   toTemplateInputSchema
-} from '../schemas/template';
-import { DEFAULT_TEMPLATE_CONTENT } from '../defaults';
+} from '@giveaway/templates-model/schemas/template';
+import { DEFAULT_TEMPLATE_CONTENT } from '@giveaway/templates-model/defaults';
 import { replaceIdsDeep } from '@giveaway/util-collections/object';
-import { getTemplateById } from '../data/static-templates';
+import { getTemplateById } from '@giveaway/templates-model/data/static-templates';
 import { PrismaClient } from '@prisma/client';
 
 const toTemplate = async ({

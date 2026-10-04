@@ -19,7 +19,7 @@ import {
 import { toast } from 'sonner';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { deleteTemplate } from '../procedures/delete-template';
-import { DEFAULT_TEMPLATE_NAME } from '../defaults';
+import { DEFAULT_TEMPLATE_NAME } from '@giveaway/templates-model/defaults';
 import { useRouter } from 'next/navigation';
 
 interface DeleteTemplateModalProps {

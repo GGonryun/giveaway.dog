@@ -1,5 +1,5 @@
-import { SweepstakesPageSkeleton } from '@/components/sweepstakes-browse/sweepstakes-page-skeleton';
-import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
+import { SweepstakesPageSkeleton } from '@giveaway/browse-list/sweepstakes-page-skeleton';
+import { getPublicSweepstakesParticipation } from '@giveaway/participant-server/get-public-sweepstakes-participation';
 import getPublicSweepstakesList from '@giveaway/browse-server/get-public-sweepstakes-list';
 import getBrowseHosts from '@giveaway/browse-server/get-browse-hosts';
 import { Metadata } from 'next';
@@ -8,8 +8,8 @@ import {
   BrowseStatus,
   GiveawayFilters
 } from '@giveaway/sweepstakes-model/filters/giveaway-filters';
-import { BrowsePageFilters } from './filters';
-import { AllGiveawaysGrid } from '@/components/sweepstakes-browse/components/all-giveaways-grid';
+import { BrowsePageFilters } from '@giveaway/browse-list/filters';
+import { AllGiveawaysGrid } from '@giveaway/browse-list/components/all-giveaways-grid';
 
 export const revalidate = 60; // 1 minute in seconds
 

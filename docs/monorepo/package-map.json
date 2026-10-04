@@ -25,10 +25,6 @@
       "package": "@giveaway/discord-bot",
       "split": false
     },
-    "lib/discord/__tests__/fixtures-discord-core.ts": {
-      "package": "@giveaway/discord-api",
-      "split": false
-    },
     "lib/pickers/x/procedures/__tests__/fixtures-pickers.ts": {
       "package": "@giveaway/x-picker-server",
       "split": false
@@ -483,15 +479,7 @@
       "layer": 7,
       "sourceFiles": 14,
       "testFiles": 7,
-      "sources": [
-        "app/app/[slug]/(app)/users/[userId]/components/",
-        "app/app/[slug]/(app)/users/[userId]/params.ts",
-        "components/users/feature-in-development-dialog.tsx",
-        "components/users/status-explanation-dialog.tsx",
-        "components/users/use-user-details-page.ts",
-        "components/users/user-details-tabs.tsx",
-        "lib/user/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/audience-server",
@@ -778,11 +766,7 @@
       "layer": 7,
       "sourceFiles": 8,
       "testFiles": 14,
-      "sources": [
-        "app/(marketing)/browse/(list)/filters.tsx",
-        "components/sweepstakes-browse/components/",
-        "components/sweepstakes-browse/sweepstakes-page-skeleton.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/marketing-server",
         "@giveaway/marketing-ui",
@@ -1114,13 +1098,14 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/procedures/disconnect-bluesky.ts"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/team-permissions",
         "@giveaway/team-server"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/bluesky-connect-ui",
@@ -1395,25 +1380,18 @@
       "layer": 7,
       "sourceFiles": 7,
       "testFiles": 7,
-      "sources": [
-        "lib/discord/api/get-discord-guild-name.ts",
-        "lib/discord/api/post-discord-message.ts",
-        "lib/discord/api/update-discord-message.ts",
-        "lib/discord/api/util.ts",
-        "lib/discord/embeds.ts",
-        "lib/discord/integration/",
-        "lib/integrations/utils/refresh-discord-token.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/automation-model",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/discord-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/task-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/discord-bot",
@@ -1877,9 +1855,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/tiktok.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -2171,9 +2147,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/velora-follow.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -2452,12 +2426,7 @@
       "layer": 6,
       "sourceFiles": 4,
       "testFiles": 1,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/youtube-channel-url.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/youtube-subscription-confirmation.tsx",
-        "lib/task/hooks/use-youtube-channel-validation.ts",
-        "procedures/sweepstakes/verify-youtube-channel.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
@@ -2742,14 +2711,15 @@
       "layer": 7,
       "sourceFiles": 7,
       "testFiles": 7,
-      "sources": ["lib/participant/procedures/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/participant-model",
         "@giveaway/rpc-server",
         "@giveaway/task-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/participation-history-model",
@@ -4799,11 +4769,7 @@
       "layer": 6,
       "sourceFiles": 3,
       "testFiles": 4,
-      "sources": [
-        "components/settings/team/social-links-card.tsx",
-        "components/social-links/",
-        "lib/settings/components/socials-page.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/rpc-client",
@@ -4934,21 +4900,17 @@
       "layer": 6,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": [
-        "lib/templates/data/",
-        "lib/templates/defaults.ts",
-        "lib/templates/schemas/",
-        "lib/templates/utils/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/task-model",
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "zod"]
+      "npm": ["nanoid", "zod"]
     },
     {
       "name": "@giveaway/templates-server",

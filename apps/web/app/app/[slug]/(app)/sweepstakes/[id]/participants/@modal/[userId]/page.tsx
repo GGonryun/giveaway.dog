@@ -4,7 +4,7 @@ import {
   ParticipatingUserSheet,
   UserParticipantSheetContent
 } from '@/components/sweepstakes-details/user-participant-detail-sheet';
-import { getSweepstakesParticipant } from '@/lib/participant/procedures/get-sweepstake-participant';
+import { getSweepstakesParticipant } from '@giveaway/participant-server/get-sweepstake-participant';
 import { getSweepstakesFormFields } from '@/procedures/browse/get-sweepstake-form-field';
 import { getSweepstakesTasks } from '@/procedures/browse/get-sweepstake-tasks';
 

@@ -9,7 +9,7 @@ import {
   FormMessage
 } from '@giveaway/ui-primitives/form';
 import { Input } from '@giveaway/ui-primitives/input';
-import { TemplateFormSchema } from '../../schemas/template';
+import { TemplateFormSchema } from '@giveaway/templates-model/schemas/template';
 import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 import { MinimalTiptap } from '@giveaway/ui-rich-text/minimal-tiptap-editor';

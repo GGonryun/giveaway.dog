@@ -4,7 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import {
   toStorableTemplateSchema,
   templateInputSchema
-} from '../schemas/template';
+} from '@giveaway/templates-model/schemas/template';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 

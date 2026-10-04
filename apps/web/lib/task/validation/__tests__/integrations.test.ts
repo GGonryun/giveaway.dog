@@ -31,7 +31,7 @@ vi.mock('@giveaway/bluesky-api/bluesky/is-user-reposting-post', () => ({
   isUserRepostingPost: external.isUserRepostingPost
 }));
 
-vi.mock('@/lib/integrations/utils/refresh-discord-token', () => ({
+vi.mock('@giveaway/discord-api/refresh-discord-token', () => ({
   refreshDiscordToken: external.refreshDiscordToken
 }));
 

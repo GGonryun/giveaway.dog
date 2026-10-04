@@ -25,7 +25,7 @@ import { TwitterV2ParticipantsSection } from './twitter-v2-participants-section'
 import { TwitterV2DrawHistorySection } from './twitter-v2-draw-history-section';
 import { DisqualificationReasonModal } from './twitter-v2-disqualification-reason-modal';
 import { TwitterScrapeProgressMonitor } from './twitter-scrape-progress-monitor';
-import { HostCTA } from '@/components/sweepstakes-browse/components/host-cta';
+import { HostCTA } from '@giveaway/browse-list/components/host-cta';
 import {
   Dialog,
   DialogContent,

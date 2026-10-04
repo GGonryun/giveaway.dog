@@ -1,6 +1,6 @@
 import { UsersTable } from './users-table';
-import { getTeamParticipants } from '@/lib/participant/procedures/get-team-participants';
-import { getTeamTasks } from '@/lib/participant/procedures/get-team-tasks';
+import { getTeamParticipants } from '@giveaway/participant-server/get-team-participants';
+import { getTeamTasks } from '@giveaway/participant-server/get-team-tasks';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import { ParsedUsersParams } from '../lib/parse-search-params';
 

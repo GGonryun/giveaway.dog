@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Outline } from '@/components/app/outline';
-import { UserDetailsTabs } from '@/components/users/user-details-tabs';
-import { UserParams } from './params';
+import { UserDetailsTabs } from '@giveaway/audience-user-details/user-details-tabs';
+import { UserParams } from '@giveaway/audience-user-details/params';
 import getUser from '@giveaway/account-server/get-user';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 

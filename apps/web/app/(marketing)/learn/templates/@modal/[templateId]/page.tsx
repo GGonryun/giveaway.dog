@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { MarketingTemplateModal } from '@/lib/learn/marketing-template-modal';
-import { getTemplateById } from '@/lib/templates/data/static-templates';
+import { getTemplateById } from '@giveaway/templates-model/data/static-templates';
 
 interface TemplateModalPageProps {
   params: Promise<{

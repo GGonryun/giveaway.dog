@@ -17,7 +17,7 @@ import {
   DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
 } from '@giveaway/sweepstakes-model/defaults';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
-import { getTemplateById } from '@/lib/templates/data/static-templates';
+import { getTemplateById } from '@giveaway/templates-model/data/static-templates';
 import {
   Prisma,
   PrismaClient,
@@ -29,7 +29,7 @@ import { isUndefined, omitBy } from 'lodash';
 import {
   TemplateInputSchema,
   toTemplateInputSchema
-} from '@/lib/templates/schemas/template';
+} from '@giveaway/templates-model/schemas/template';
 import { replaceIdsDeep } from '@giveaway/util-collections/object';
 import { TeamPermission } from '@giveaway/team-permissions';
 

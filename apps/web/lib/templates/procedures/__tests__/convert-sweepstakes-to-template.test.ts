@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { convertSweepstakesToTemplate } from '../convert-sweepstakes-to-template';
-import { DEFAULT_TEMPLATE_IMAGE, DEFAULT_TEMPLATE_NAME } from '../../defaults';
+import {
+  DEFAULT_TEMPLATE_IMAGE,
+  DEFAULT_TEMPLATE_NAME
+} from '@giveaway/templates-model/defaults';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';

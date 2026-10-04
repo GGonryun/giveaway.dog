@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormContext, useWatch } from 'react-hook-form';
-import { TemplateFormSchema } from '../schemas/template';
+import { TemplateFormSchema } from '@giveaway/templates-model/schemas/template';
 import { SweepstakesSharedFormPreview } from '@/components/sweepstakes-editor/sweepstakes-editor-preview';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import {

@@ -1,9 +1,9 @@
 import { IntegrationStatus } from '@prisma/client';
 import prisma from '@giveaway/db-client/prisma';
 import type { DiscordApplicationCommandInteractionSchema } from '@giveaway/discord-model/schema';
-import { toDiscordIntegrationSettings } from '@/lib/discord/integration/schemas';
+import { toDiscordIntegrationSettings } from '@giveaway/discord-api/integration/schemas';
 import { INTEGRATIONS_SETUP_URL } from '../../../bot/util';
-import { getDiscordGuildInfo } from '../../../api/get-discord-guild-name';
+import { getDiscordGuildInfo } from '@giveaway/discord-api/get-discord-guild-name';
 import type { DiscordFollowupMessage } from '../../discord-interaction/steps/patch-discord-webhook';
 
 export type ProcessConnectResult = DiscordFollowupMessage & {

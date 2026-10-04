@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { createTemplate } from '../create-template';
-import { getTemplateById } from '../../data/static-templates';
+import { getTemplateById } from '@giveaway/templates-model/data/static-templates';
 import {
   DEFAULT_TEMPLATE_CONTENT,
   DEFAULT_TEMPLATE_DESCRIPTION,
   DEFAULT_TEMPLATE_IMAGE,
   DEFAULT_TEMPLATE_NAME
-} from '../../defaults';
-import { toStorableTemplateSchema } from '../../schemas/template';
+} from '@giveaway/templates-model/defaults';
+import { toStorableTemplateSchema } from '@giveaway/templates-model/schemas/template';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';

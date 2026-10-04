@@ -3,7 +3,7 @@ import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-
 import { PickerHowItWorksSection } from '@/lib/pickers/x/components/picker-how-it-works-section';
 import { PickerBenefitsSection } from '@/lib/pickers/x/components/picker-benefits-section';
 import { PickerFaqSection } from '@/lib/pickers/x/components/picker-faq-section';
-import { HostCTA } from '@/components/sweepstakes-browse/components/host-cta';
+import { HostCTA } from '@giveaway/browse-list/components/host-cta';
 import { PickerLiveEngagementSection } from '@/lib/pickers/x/components/picker-live-engagement-section';
 import { environment } from '@giveaway/app-config/environment';
 import type { Metadata } from 'next';

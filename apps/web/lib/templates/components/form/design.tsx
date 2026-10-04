@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormContext } from 'react-hook-form';
-import { TemplateFormSchema } from '../../schemas/template';
+import { TemplateFormSchema } from '@giveaway/templates-model/schemas/template';
 import {
   DisplayNameField,
   DisplayDescriptionField,

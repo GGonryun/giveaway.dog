@@ -2,7 +2,7 @@
 
 import { EntryMethods } from '@/lib/task/components/entry-methods/entry-methods';
 import { useFormContext } from 'react-hook-form';
-import { TemplateFormSchema } from '../../schemas/template';
+import { TemplateFormSchema } from '@giveaway/templates-model/schemas/template';
 
 export const TemplateTasks = () => {
   const form = useFormContext<TemplateFormSchema>();

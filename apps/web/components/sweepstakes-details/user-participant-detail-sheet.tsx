@@ -22,7 +22,7 @@ import {
 } from '@giveaway/ui-primitives/sheet';
 import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
-import { StatusExplanationDialog } from '../users/status-explanation-dialog';
+import { StatusExplanationDialog } from '@giveaway/audience-user-details/status-explanation-dialog';
 import { Separator } from '@giveaway/ui-primitives/separator';
 import { datetime } from '@giveaway/util-time/date';
 import { cn } from '@giveaway/ui-utils/utils';
@@ -32,7 +32,7 @@ import {
 } from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
 import { UserProviders } from '@giveaway/integration-ui/user-providers';
-import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
+import { UserStatusBadge } from '@giveaway/audience-user-details/user/components/user-status-badge';
 import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { toMostRecentCompletion } from '@giveaway/task-model/completions';

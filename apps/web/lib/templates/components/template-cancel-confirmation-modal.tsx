@@ -12,7 +12,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { SaveIcon, TrashIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { TemplateFormSchema } from '../schemas/template';
+import { TemplateFormSchema } from '@giveaway/templates-model/schemas/template';
 import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 
 interface TemplateCancelConfirmationModalProps {

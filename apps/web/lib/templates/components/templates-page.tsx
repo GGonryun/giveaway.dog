@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 
 import { Input } from '@giveaway/ui-primitives/input';
 import { Search } from 'lucide-react';
-import { TemplateListItemSchema } from '../schemas/template';
+import { TemplateListItemSchema } from '@giveaway/templates-model/schemas/template';
 import { TemplateCard } from './template-card';
 import { UseTemplateModal } from './use-template-modal';
 import { SweepstakesGridSkeleton } from './templates-grid-skeleton';

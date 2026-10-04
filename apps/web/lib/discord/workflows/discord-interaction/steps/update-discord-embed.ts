@@ -1,7 +1,7 @@
 import db from '@giveaway/db-client/prisma';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
-import { updateDiscordMessage } from '../../../api/update-discord-message';
-import { toSweepstakesEmbed } from '../../../embeds';
+import { updateDiscordMessage } from '@giveaway/discord-api/update-discord-message';
+import { toSweepstakesEmbed } from '@giveaway/discord-api/embeds';
 
 export async function updateDiscordEmbed({
   channelId,

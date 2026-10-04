@@ -12,7 +12,7 @@ import { cn } from '@giveaway/ui-utils/utils';
 import { date } from '@giveaway/util-time/date';
 import { getSweepstakesTimingDescription } from '@giveaway/sweepstakes-model/sweepstakes';
 import { MinimalTipTapPreview } from '@giveaway/ui-rich-text/minimal-tiptap-preview';
-import { PLATFORM_ICONS } from '@/components/social-links/social-link-icon';
+import { PLATFORM_ICONS } from '@giveaway/team-settings-socials/social-links/social-link-icon';
 import {
   parseSocialLinks,
   type SocialLink
