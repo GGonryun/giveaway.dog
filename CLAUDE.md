@@ -28,7 +28,7 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 
 - **App location**: The Next.js app is in `apps/web`. Paths in this file are relative to `apps/web` unless they start with `apps/`, `.github/` or name a root file
 - **Environment files**: Put `.env.local` and `.env.prod` in `apps/web`. Next.js, Prisma and the `prisma:*` scripts read them from there
-- **Workspace packages**: Shared code goes in pnpm workspace packages under `packages/` (see Workspace Packages). Today the tooling packages are in `packages/tooling/`, and the packages that moved out of the app are in `packages/shared/`, `packages/infra/`, `packages/integrations/`, `packages/participants/`, `packages/pickers/` and `packages/tasks/`
+- **Workspace packages**: Shared code goes in pnpm workspace packages under `packages/` (see Workspace Packages). Today the tooling packages are in `packages/tooling/`, and the packages that moved out of the app are in the other folders of `packages/` (see Directory Structure)
 - **Auth pages**: Located in `app/(auth)/` directory
 - **Shared components**: Place reusable components in `components/` directory
 - **UI components**: Use existing shadcn/ui components from `@giveaway/ui-primitives` (`packages/ui/ui-primitives/src/`)
@@ -89,7 +89,6 @@ apps/
 │   │   └── app/ (main app for hosts)
 │   ├── components/
 │   │   ├── auth/ (shared auth components)
-│   │   ├── ui/ (shadcn/ui components)
 │   │   └── patterns/ (reusable patterns)
 │   ├── lib/
 │   ├── prisma/ (seed.ts)
@@ -100,38 +99,32 @@ apps/
 └── web-e2e/ (Playwright tests)
     ├── src/
     └── playwright.config.ts
-packages/
-├── infra/
-│   ├── app-config/ (@giveaway/app-config: environment and settings)
-│   ├── cache/ (@giveaway/cache: the Redis client)
-│   ├── content-moderation/ (@giveaway/content-moderation: image moderation)
-│   ├── db-client/ (@giveaway/db-client: the Prisma client)
-│   ├── db-model/ (@giveaway/db-model: the Prisma enums and types)
-│   ├── db-schema/ (@giveaway/db-schema: schema.prisma, the migrations and prisma generate)
-│   ├── email/ (@giveaway/email: the email client and templates)
-│   ├── jobs/ (@giveaway/jobs: cron secret check and job scheduling)
-│   └── turnstile-model/ (@giveaway/turnstile-model: Turnstile constants and schemas)
+packages/ (each folder is a package named @giveaway/<folder>; docs/monorepo/package-graph.md describes them)
+├── account/ (account-context, account-server, user-model)
+├── auth/ (auth-actions, auth-core, auth-model, auth-provider-e2e, auth-provider-inbound, auth-server)
+├── infra/ (app-config, cache, content-moderation, db-client, db-model, db-schema, email, feature-flags, jobs, ratelimit, request-context-model, request-context-server, rpc-client, rpc-model, rpc-server, turnstile-model, turnstile-server)
 ├── integrations/
-│   ├── kick/kick-auth/ (@giveaway/kick-auth: the Kick login provider)
-│   ├── meta/meta-model/ (@giveaway/meta-model: Facebook and Instagram profile URL schemas)
-│   └── steam/steam-auth/ (@giveaway/steam-auth: the Steam login provider)
-├── participants/
-│   ├── allocation-model/ (@giveaway/allocation-model: prize allocation statistics schemas)
-│   └── referrals-model/ (@giveaway/referrals-model: referral cookies and schemas)
-├── pickers/
-│   └── picker-model/ (@giveaway/picker-model: picker type and status schemas and helpers)
-├── shared/
-│   ├── util-browser/ (@giveaway/util-browser: URL and history helpers)
-│   ├── util-collections/ (@giveaway/util-collections: array, object, JSON and pagination helpers)
-│   ├── util-errors/ (@giveaway/util-errors: ApplicationError and assertNever)
-│   ├── util-html/ (@giveaway/util-html: HTML to Markdown)
-│   ├── util-media/ (@giveaway/util-media: aspect ratios, file types and file sizes)
-│   ├── util-strings/ (@giveaway/util-strings: string and email helpers)
-│   └── util-types/ (@giveaway/util-types: utility types and widetype)
-├── tasks/
-│   └── task-jobs-core/ (@giveaway/task-jobs-core: the task job Prisma include and types)
+│   ├── bluesky/ (bluesky-api, bluesky-model)
+│   ├── core/ (integration-icons, integration-model, integration-server, integration-ui, platform-catalog)
+│   ├── discord/ (discord-model)
+│   ├── kick/ (kick-auth)
+│   ├── meta/ (meta-model)
+│   ├── steam/ (steam-auth)
+│   ├── twitch/ (twitch-api, twitch-model)
+│   ├── velora/ (velora-api, velora-auth)
+│   ├── x/ (x-import, x-model, x-scraper)
+│   └── youtube/ (youtube-model)
+├── marketing/ (marketing-animations, marketing-server, marketing-ui)
+├── participants/ (allocation-model, custom-fields-model, referrals-model, referrals-server, scoring-model, scoring-server, user-quality-model, user-quality-ui, user-source-model, user-source-ui)
+├── pickers/ (picker-model, x-picker-model, x-picker-workflow)
+├── shared/ (util-browser, util-collections, util-errors, util-geo, util-html, util-media, util-random, util-strings, util-time, util-types)
+├── shell/ (shell-footer)
+├── tasks/ (task-jobs-core)
+├── team/ (team-model, team-permissions, team-settings-shell)
+├── ui/ (theme-model, theme-server, ui-brand, ui-carousel, ui-charts, ui-command, ui-date, ui-file-upload, ui-hooks, ui-layouts, ui-primitives, ui-qr, ui-rich-text, ui-theme, ui-utils)
+├── winners/ (leaderboard-model, winners-model)
 └── tooling/
-    ├── tsconfig/ (@giveaway/tsconfig: tsconfig presets)
+    ├── tsconfig/ (@giveaway/tsconfig: tsconfig presets and shared type declarations)
     ├── eslint-config/ (@giveaway/eslint-config: ESLint presets)
     ├── vitest-config/ (@giveaway/vitest-config: Vitest projects)
     ├── testing-server/ (@giveaway/testing-server: Vitest setup and mocks)
@@ -192,13 +185,13 @@ vitest.config.ts (lists the Vitest projects of every package)
 - **Location and names**: A package is in `packages/<group>/<name>` and is named `@giveaway/<name>`. `pnpm-workspace.yaml` lists `apps/*`, `packages/**` and `tools/*`
 - **Shape**: A package ships TypeScript source, with no build step. `exports` in its `package.json` lists each module, for example `"./button": "./src/button.tsx"`. Do not add barrel `index.ts` files. Its tags go in `"nx": { "tags": [...] }`, with the tags from `docs/monorepo/package-map.json`
 - **Tooling packages**: `packages/tooling/` has the packages that configure the others:
-  - `@giveaway/tsconfig`: the `base`, `library`, `react-library` and `nextjs` presets. A `tsconfig.json` extends one of them, for example `"extends": "@giveaway/tsconfig/library.json"`
+  - `@giveaway/tsconfig`: the `base`, `library`, `react-library` and `nextjs` presets. A `tsconfig.json` extends one of them, for example `"extends": "@giveaway/tsconfig/library.json"`. The presets list shared type declarations in `files`, so every project that extends them sees them: `react.d.ts` (`React.PC`, in `react-library` and `nextjs`) and `scrapebadger.d.ts` (the types of the scrapebadger package, whose `package.json` points to a file it does not ship, in `library`, `react-library` and `nextjs`)
   - `@giveaway/eslint-config`: `base` has the rules and the snapshot-assertion rule. `boundaries` has `@nx/enforce-module-boundaries` (a warning for now), with the `depConstraints` that `dependencyRules` in `docs/monorepo/package-map.json` defines, and `@nx/dependency-checks` for each `package.json` under `packages/`. Tests, the shared test fixtures in a package's `src/testing/` and package config files (`vitest.config.ts`, `eslint.config.mjs`) may also import `type:config` packages, and `@nx/dependency-checks` ignores their imports. The root `eslint.config.mjs` uses both. The rules need the Nx project graph, which `pnpm run lint` builds when it runs the targets through Nx
   - `@giveaway/vitest-config`: `projects` defines the `server`, `frontend` and `snapshot` projects of a package (`packageTestConfig`). It also sets `TZ=UTC` and replaces `server-only` with an empty module. `workspace` finds the `vitest.config.ts` of each package for the root config
   - `@giveaway/testing-server`: the setup file of every project (the Prisma, session and `next/cache` mocks) and the helpers that tests import: `@giveaway/testing-server/prisma`, `/session`, `/result` and `/next-cache`
   - `@giveaway/testing-dom`: the jsdom setup of the `frontend` and `snapshot` projects
   - `@giveaway/testing-visual`: the Vitest config (`/config`), the browser setup (`/setup`) and the `renderVisual` helpers (`/render`) of the visual tests, and `visual-docker`, which runs the visual tests of the package it is called from in the Playwright Docker image
-- **Moved packages**: `packages/shared/`, `packages/infra/`, `packages/integrations/`, `packages/participants/`, `packages/pickers/` and `packages/tasks/` have the packages that moved out of the app. Import them by package name, for example `@giveaway/util-errors` or `@giveaway/db-client/prisma`, never with a path into `packages/`. Each one is in `transpilePackages` in `apps/web/next.config.ts` and is a `workspace:*` dependency in `apps/web/package.json`. `apps/web/app/globals.css` has `@source '../../../packages'`, so Tailwind finds the classes that packages use. The migration plan in `docs/monorepo/migration-plan.md` lists what a move changes
+- **Moved packages**: The folders of `packages/` other than `tooling/` have the packages that moved out of the app. Import them by package name, for example `@giveaway/util-errors` or `@giveaway/db-client/prisma`, never with a path into `packages/`. Each one is in `transpilePackages` in `apps/web/next.config.ts` and is a `workspace:*` dependency in `apps/web/package.json`. `apps/web/app/globals.css` has `@source '../../../packages'`, so Tailwind finds the classes that packages use. The migration plan in `docs/monorepo/migration-plan.md` lists what a move changes
 - **Prisma**: `@giveaway/db-schema` has `schema.prisma` and the migrations in `packages/infra/db-schema/src/`. Its `postinstall` runs `prisma generate`, and `pnpm --filter @giveaway/db-schema run generate` runs it again. The `prisma:*` scripts in `apps/web/package.json` find the schema through `prisma.schema` in that file, and read the env files in `apps/web`. Import the Prisma client from `@giveaway/db-client/prisma`. In a package, import the Prisma enums and types from `@giveaway/db-model`, not from `@prisma/client` (the move codemod rewrites these imports; the app still imports `@prisma/client`). `@giveaway/db-model` re-exports every type of `@prisma/client`, and the enums and `Prisma` as named values, because Vite cannot re-export the values of a CommonJS module with `export *` and the visual tests run in Vite. When you add an enum to the schema, add it to `packages/infra/db-model/src/index.ts`. Its test fails until you do `@giveaway/db-client` and `@giveaway/db-model` have an implicit Nx dependency on `@giveaway/db-schema`, so a schema change affects every project that uses the generated client
 - **Moving a package**: Run `pnpm run move-packages <package>...` from the root, with the package names from `docs/monorepo/package-map.json`. The codemod in `tools/codemods` moves the package's `sources` with `git mv` into `packages/<path>/src/` and writes the package files. It rewrites every import of a moved file, puts the package in `transpilePackages` and the app's dependencies, moves its ESLint suppressions, empties its `sources` in the map and runs Prettier and `pnpm install`. It changes nothing when it finds a problem, for example two sources with the same module name (pass `--rename <source>=<name>`) or an import of a file that stays in the app. Run it with `--dry-run` first. To fix a conflict with `main`, run it again on the new `main` instead of merging by hand. See "The move codemod" in `docs/monorepo/migration-plan.md`
 - **Vitest config of a package**: `vitest.config.ts` exports `defineConfig(packageTestConfig())`. The root `vitest.config.ts` adds the three projects of each package that has one, named `<package>:server`, `<package>:frontend` and `<package>:snapshot`. A package with tests has `test:*` scripts for the projects it uses, so Nx and CI run them
@@ -244,7 +237,7 @@ vitest.config.ts (lists the Vitest projects of every package)
 
 - **Location**: Put Playwright tests in `apps/web-e2e/src/`, named `<name>.spec.ts`. They run in Chromium. Vitest does not run them
 - **Run locally**: Start the app with `pnpm dev`, then run `pnpm run test:e2e:local`. It reads `apps/web/.env.local`. Run `pnpm --filter web-e2e exec playwright install chromium` one time first. The tests use `http://localhost:3000`. Set `E2E_BASE_URL` to test another deployment
-- **Login**: The login test signs in through the `e2e` credentials provider in `lib/auth/providers/e2e.ts`. The app adds this provider only when `E2E_LOGIN_SECRET` has at least 32 characters, and only on Vercel preview deployments (`VERCEL_ENV=preview`) and the local development server (`next dev`). The provider signs in one host user, `e2e-host@example.com`. Without `E2E_LOGIN_SECRET`, the login test is skipped
+- **Login**: The login test signs in through the `e2e` credentials provider in `packages/auth/auth-provider-e2e/src/e2e.ts`. The app adds this provider only when `E2E_LOGIN_SECRET` has at least 32 characters, and only on Vercel preview deployments (`VERCEL_ENV=preview`) and the local development server (`next dev`). The provider signs in one host user, `e2e-host@example.com`. Without `E2E_LOGIN_SECRET`, the login test is skipped
 - **Protected deployments**: `apps/web-e2e/src/vercel.setup.ts` sends `VERCEL_AUTOMATION_BYPASS_SECRET` one time to get the Vercel bypass cookie. The other tests use that cookie, so the secret goes only to the deployment
 - **CI**: `.github/workflows/e2e.yml` runs after each successful Vercel preview deployment (the `vercel.deployment.success` repository dispatch event). It tests the commit of the deployment against the preview URL and sets the `E2E tests` status on that commit. To test a deployment by hand, run the workflow from the Actions tab with the deployment URL
 - **Secrets**: The workflow needs the `VERCEL_AUTOMATION_BYPASS_SECRET` and `E2E_LOGIN_SECRET` GitHub Actions secrets. Set the same `E2E_LOGIN_SECRET` in Vercel for the Preview environment only. Never set it for Production
