@@ -197,9 +197,14 @@ const placeFiles = (
     usedRenames.add(key);
     return renames[key];
   };
+  const renameFile = (key: string) => {
+    const renamed = rename(key);
+    if (renamed === null || posix.extname(renamed)) return renamed;
+    return renamed + posix.extname(key);
+  };
 
   const placeSource = (logical: string, source: string) => {
-    if (!source.endsWith('/')) return rename(source) ?? defaultName(source);
+    if (!source.endsWith('/')) return renameFile(source) ?? defaultName(source);
     const renamed = rename(source);
     const prefix =
       renamed !== null
@@ -215,7 +220,7 @@ const placeFiles = (
     if (kind === 'fixture') {
       targets.set(
         logical,
-        rename(logical) ?? `testing/${posix.basename(logical)}`
+        renameFile(logical) ?? `testing/${posix.basename(logical)}`
       );
       continue;
     }

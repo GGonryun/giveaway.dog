@@ -559,6 +559,22 @@ describe('movePackages checks', { timeout: 60_000 }, () => {
     }
   });
 
+  it('keeps the extension of the source when --rename has none', async () => {
+    const renamed = createFixtureRepo();
+    try {
+      await move(renamed, ['@giveaway/owl-types'], {
+        'types/owl/index.ts': 'night'
+      });
+
+      expect(
+        renamed.readJson<Manifest>('packages/birds/owl-types/package.json')
+          .exports
+      ).toEqual({ './night': './src/night.ts', './owl': './src/owl.ts' });
+    } finally {
+      renamed.remove();
+    }
+  });
+
   it('stops on a package that has already moved', async () => {
     const moved = createFixtureRepo();
     try {

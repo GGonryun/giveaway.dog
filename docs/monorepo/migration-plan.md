@@ -74,7 +74,7 @@ pnpm run move-packages --dry-run @giveaway/cache @giveaway/email
 pnpm run move-packages @giveaway/cache @giveaway/email
 ```
 
-`--dry-run` prints the files that would move and changes nothing. `--rename <source>=<name>` gives a source another name in `src/`, `--skip-install` skips `pnpm install` and `--root <dir>` sets the repository root.
+`--dry-run` prints the files that would move and changes nothing. `--rename <source>=<name>` gives a source another name in `src/` (a file keeps its extension when `<name>` has none), `--skip-install` skips `pnpm install` and `--root <dir>` sets the repository root.
 
 ### What it does
 
