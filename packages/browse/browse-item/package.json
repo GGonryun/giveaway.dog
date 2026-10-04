@@ -1,0 +1,66 @@
+{
+  "name": "@giveaway/browse-item",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:browse"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/browse/browse-item",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./authenticated-sweepstakes-content": "./src/authenticated-sweepstakes-content.tsx",
+    "./public-sweepstakes-content": "./src/public-sweepstakes-content.tsx",
+    "./referral-code-handler": "./src/referral-code-handler.tsx",
+    "./sweepstakes-participation-page-content": "./src/sweepstakes-participation-page-content.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend"
+  },
+  "dependencies": {
+    "@giveaway/allocation-model": "workspace:*",
+    "@giveaway/allocation-server": "workspace:*",
+    "@giveaway/custom-fields-server": "workspace:*",
+    "@giveaway/loyalty-model": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/referrals-model": "workspace:*",
+    "@giveaway/referrals-server": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/sweepstakes-participation": "workspace:*",
+    "@giveaway/task-actions": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-types": "workspace:*"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/sweepstakes-participation-core": "workspace:*",
+    "@giveaway/sweepstakes-ui-testing": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

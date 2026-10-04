@@ -1,6 +1,6 @@
 'use server';
 
-import { SweepstakesPreview } from '@/components/sweepstakes-details/sweepstakes-preview';
+import { SweepstakesPreview } from '@giveaway/sweepstakes-details-preview/sweepstakes-preview';
 import { SweepstakesLoadingSkeleton } from '@giveaway/sweepstakes-details-shell/sweepstakes-loading-skeleton';
 import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import React, { Suspense } from 'react';

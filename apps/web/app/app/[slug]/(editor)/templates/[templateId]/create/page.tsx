@@ -1,4 +1,4 @@
-import { TemplateFormPage } from '@/lib/templates/components/templates-form-page';
+import { TemplateFormPage } from '@giveaway/templates-editor/templates-form-page';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {

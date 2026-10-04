@@ -1,4 +1,4 @@
-import { TemplateForm } from '@/lib/templates/components/template-form';
+import { TemplateForm } from '@giveaway/templates-editor/template-form';
 import { getTemplateForm } from '@giveaway/templates-server/get-template-form';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';

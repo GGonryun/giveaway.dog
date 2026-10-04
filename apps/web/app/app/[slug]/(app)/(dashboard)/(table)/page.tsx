@@ -23,10 +23,10 @@ import { Outline } from '@giveaway/shell-sidebar/app/outline';
 import { CreateGiveawayButton } from '@giveaway/sweepstakes-actions-ui/create-giveaway-button';
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
-import { TemplatesGrid } from '@/lib/templates/components/templates-grid';
+import { TemplatesGrid } from '@giveaway/templates-gallery/templates-grid';
 import { getTemplates } from '@giveaway/templates-server/get-templates';
-import { TemplatesGridHeader } from '@/lib/templates/components/templates-grid-header';
-import { SweepstakesGridSkeleton } from '@/lib/templates/components/templates-grid-skeleton';
+import { TemplatesGridHeader } from '@giveaway/templates-gallery/templates-grid-header';
+import { SweepstakesGridSkeleton } from '@giveaway/templates-gallery/templates-grid-skeleton';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

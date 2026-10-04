@@ -1,6 +1,6 @@
 'use server';
 
-import { TemplatesPage } from '@/lib/templates/components/templates-page';
+import { TemplatesPage } from '@giveaway/templates-gallery/templates-page';
 import { getTemplates } from '@giveaway/templates-server/get-templates';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 

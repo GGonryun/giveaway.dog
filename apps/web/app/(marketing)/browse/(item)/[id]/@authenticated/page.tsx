@@ -4,9 +4,9 @@ import { getOrCreateSweepstakesParticipant } from '@giveaway/participation-serve
 import { getUserHostRelationship } from '@giveaway/participation-server/get-user-host-relationship';
 import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
 import { getUserReferral } from '@giveaway/referrals-server/get-user-referral';
-import { AuthenticatedSweepstakesContent } from '@/components/sweepstakes-browse/authenticated-sweepstakes-content';
+import { AuthenticatedSweepstakesContent } from '@giveaway/browse-item/authenticated-sweepstakes-content';
 import { Suspense } from 'react';
-import { ReferralCodeHandler } from '@/components/sweepstakes-browse/referral-code-handler';
+import { ReferralCodeHandler } from '@giveaway/browse-item/referral-code-handler';
 import { getSweepstakesAllocations } from '@giveaway/allocation-server/get-sweepstakes-allocations';
 
 interface PageProps {

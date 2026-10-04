@@ -1,6 +1,6 @@
 import { environment } from '@giveaway/app-config/environment';
 import { Metadata } from 'next';
-import { HomePage } from '@/lib/home/page';
+import { HomePage } from '@giveaway/marketing-home/home/page';
 import { auth } from '@giveaway/auth-server/config';
 import { UserAccountType } from '@prisma/client';
 import { redirect } from 'next/navigation';

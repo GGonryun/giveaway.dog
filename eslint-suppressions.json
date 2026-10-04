@@ -3,30 +3,5 @@
     "@next/next/no-html-link-for-pages": {
       "count": 1
     }
-  },
-  "apps/web/components/sweepstakes-editor/sweepstakes-editor-preview.tsx": {
-    "react-hooks/purity": {
-      "count": 1
-    }
-  },
-  "apps/web/components/sweepstakes-editor/sweepstakes-form.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/home/supported-integrations.tsx": {
-    "@next/next/no-html-link-for-pages": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/templates/components/template-preview.tsx": {
-    "react-hooks/purity": {
-      "count": 2
-    }
-  },
-  "apps/web/lib/templates/components/use-template-modal.tsx": {
-    "react-hooks/purity": {
-      "count": 2
-    }
   }
 }

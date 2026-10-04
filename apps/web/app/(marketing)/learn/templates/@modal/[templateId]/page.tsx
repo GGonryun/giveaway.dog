@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { MarketingTemplateModal } from '@/lib/learn/marketing-template-modal';
+import { MarketingTemplateModal } from '@giveaway/marketing-learn/learn/marketing-template-modal';
 import { getTemplateById } from '@giveaway/templates-model/data/static-templates';
 
 interface TemplateModalPageProps {

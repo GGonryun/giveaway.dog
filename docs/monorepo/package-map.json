@@ -685,12 +685,7 @@
       "layer": 14,
       "sourceFiles": 4,
       "testFiles": 3,
-      "sources": [
-        "components/sweepstakes-browse/authenticated-sweepstakes-content.tsx",
-        "components/sweepstakes-browse/public-sweepstakes-content.tsx",
-        "components/sweepstakes-browse/referral-code-handler.tsx",
-        "components/sweepstakes-browse/sweepstakes-participation-page-content.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/allocation-model",
         "@giveaway/allocation-server",
@@ -2387,11 +2382,7 @@
       "layer": 14,
       "sourceFiles": 7,
       "testFiles": 3,
-      "sources": [
-        "components/patterns/hero-sweepstakes-preview.tsx",
-        "components/patterns/hero.tsx",
-        "lib/home/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/marketing-animations",
         "@giveaway/marketing-ui",
@@ -2413,10 +2404,7 @@
       "layer": 15,
       "sourceFiles": 4,
       "testFiles": 0,
-      "sources": [
-        "lib/integrations/integration-landing-page.tsx",
-        "lib/learn/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/marketing-home",
         "@giveaway/marketing-ui",
@@ -3353,8 +3341,9 @@
       "layer": 15,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/sweepstakes-details/sweepstakes-preview.tsx"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/sweepstakes-demo",
         "@giveaway/sweepstakes-editor-core",
@@ -3369,7 +3358,7 @@
         "@giveaway/ui-qr",
         "@giveaway/ui-utils"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "next", "react"]
+      "npm": ["lucide-react", "next", "react"]
     },
     {
       "name": "@giveaway/sweepstakes-details-promotion",
@@ -3454,11 +3443,7 @@
       "layer": 15,
       "sourceFiles": 3,
       "testFiles": 4,
-      "sources": [
-        "components/sweepstakes-editor/sweepstake-form-content.tsx",
-        "components/sweepstakes-editor/sweepstakes-form-page.tsx",
-        "components/sweepstakes-editor/sweepstakes-form.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-model",
         "@giveaway/integration-server",
@@ -3559,13 +3544,11 @@
       "layer": 14,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": [
-        "components/sweepstakes-editor/sweepstakes-editor-preview.tsx",
-        "components/sweepstakes-editor/sweepstakes-preview-footer.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/participant-model",
         "@giveaway/sweepstakes-demo",
         "@giveaway/sweepstakes-editor-core",
@@ -3578,7 +3561,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "react", "react-hook-form"]
+      "npm": ["lucide-react", "react", "react-hook-form"]
     },
     {
       "name": "@giveaway/sweepstakes-editor-prizes",
@@ -3768,10 +3751,7 @@
       "layer": 13,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": [
-        "components/sweepstakes/giveaway-participation-card.tsx",
-        "components/sweepstakes/giveaway-participation.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/sweepstakes-participation-core",
@@ -4524,18 +4504,10 @@
       "layer": 15,
       "sourceFiles": 14,
       "testFiles": 0,
-      "sources": [
-        "lib/templates/components/form/",
-        "lib/templates/components/template-cancel-confirmation-modal.tsx",
-        "lib/templates/components/template-form-content.tsx",
-        "lib/templates/components/template-form.tsx",
-        "lib/templates/components/template-preview-footer.tsx",
-        "lib/templates/components/template-preview.tsx",
-        "lib/templates/components/template-publish-confirmation-modal.tsx",
-        "lib/templates/components/templates-form-page.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/custom-fields-ui",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/integration-server",
         "@giveaway/rpc-client",
@@ -4558,7 +4530,6 @@
       "npm": [
         "@dnd-kit/core",
         "@dnd-kit/sortable",
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "date-fns",
         "lucide-react",
@@ -4577,17 +4548,7 @@
       "layer": 14,
       "sourceFiles": 9,
       "testFiles": 0,
-      "sources": [
-        "lib/templates/components/create-template-button.tsx",
-        "lib/templates/components/delete-template-modal.tsx",
-        "lib/templates/components/template-card.tsx",
-        "lib/templates/components/template-platform-icons.tsx",
-        "lib/templates/components/templates-grid-header.tsx",
-        "lib/templates/components/templates-grid-skeleton.tsx",
-        "lib/templates/components/templates-grid.tsx",
-        "lib/templates/components/templates-page.tsx",
-        "lib/templates/components/use-template-modal.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/rpc-client",

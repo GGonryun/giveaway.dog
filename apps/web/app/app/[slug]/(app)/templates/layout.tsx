@@ -1,7 +1,7 @@
 'use server';
 
 import { Outline } from '@giveaway/shell-sidebar/app/outline';
-import { CreateTemplateButton } from '@/lib/templates/components/create-template-button';
+import { CreateTemplateButton } from '@giveaway/templates-gallery/create-template-button';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 
 type Props = {

@@ -1,0 +1,7 @@
+{
+  "packages/templates/templates-editor/src/template-preview.tsx": {
+    "react-hooks/purity": {
+      "count": 2
+    }
+  }
+}

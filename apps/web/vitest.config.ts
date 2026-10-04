@@ -4,13 +4,7 @@ import path from 'path';
 
 export default mergeConfig(
   packageTestConfig({
-    coverageInclude: [
-      'app/**/*.{ts,tsx}',
-      'components/**/*.{ts,tsx}',
-      'lib/**/*.{ts,tsx}',
-      'procedures/**/*.{ts,tsx}',
-      'schemas/**/*.{ts,tsx}'
-    ],
+    coverageInclude: ['app/**/*.{ts,tsx}'],
     coverageExclude: ['app/.well-known/**']
   }),
   defineConfig({
