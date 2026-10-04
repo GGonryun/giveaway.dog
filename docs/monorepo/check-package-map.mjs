@@ -153,6 +153,24 @@ const resolve = (from, specifier) => {
   return null;
 };
 
+const manifests = new Map();
+const exportedFile = (specifier) => {
+  const name = specifier.split('/').slice(0, 2).join('/');
+  const pkg = byName.get(name);
+  if (!manifests.has(name)) {
+    const file = path.join(root, pkg.path, 'package.json');
+    manifests.set(
+      name,
+      fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {}
+    );
+  }
+  const target =
+    manifests.get(name).exports?.['.' + specifier.slice(name.length)];
+  if (typeof target !== 'string') return null;
+  const file = path.posix.join(pkg.path, target);
+  return fileSet.has(file) ? file : null;
+};
+
 const IMPORT_PATTERNS = [
   /(?:^|[\n;])\s*(?:import|export)\s+(?:type\s+)?[^'";]*?\s*from\s*['"]([^'"]+)['"]/g,
   /(?:^|[\n;])\s*import\s*['"]([^'"]+)['"]/g,
@@ -328,15 +346,19 @@ while (queue.length) {
     for (const [, , typeKeyword, clause, specifier] of text.matchAll(pattern)) {
       if (isTypeOnly(typeKeyword, clause)) continue;
       const target = resolve(file, specifier);
-      const next = target?.file ?? target?.pkg;
+      const moduleFile =
+        target?.file ?? (target?.pkg && exportedFile(specifier));
+      const next = moduleFile || target?.pkg;
       if (!next || reachedFrom.has(next)) continue;
       const owner = target.pkg ?? ownerOf(target.file);
       if (!owner || owner === DEAD || isTest(next)) continue;
       reachedFrom.set(next, file);
-      if (target.file && hasDirective(readSource(next), 'use server')) continue;
+      if (moduleFile && hasDirective(readSource(moduleFile), 'use server')) {
+        continue;
+      }
       if (runtimeOf(owner) === 'server') {
         serverReached.push(next);
-      } else if (target.file) {
+      } else if (moduleFile) {
         queue.push(next);
       }
     }
