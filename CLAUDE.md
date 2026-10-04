@@ -26,13 +26,13 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 
 ### File Structure & Conventions
 
-- **App location**: The Next.js app is in `apps/web`. Paths in this file are relative to `apps/web` unless they start with `apps/`, `.github/` or name a root file
+- **App location**: The Next.js app is in `apps/web`. Paths in this file are relative to `apps/web` unless they start with `apps/`, `packages/`, `tools/`, `docs/`, `.github/` or name a root file
 - **Environment files**: Put `.env.local` and `.env.prod` in `apps/web`. Next.js, Prisma and the `prisma:*` scripts read them from there
-- **Workspace packages**: Shared code goes in pnpm workspace packages under `packages/` (see Workspace Packages). Today the tooling packages are in `packages/tooling/`, and the packages that moved out of the app are in the other folders of `packages/` (see Directory Structure)
+- **Workspace packages**: All code other than the routes goes in pnpm workspace packages under `packages/` (see Workspace Packages). The tooling packages are in `packages/tooling/`, and the packages that moved out of the app are in the other folders of `packages/` (see Directory Structure). The app keeps only the route files in `app/`, `middleware.ts`, `public/`, `prisma/seed.ts` and its configs
 - **Auth pages**: Located in `app/(auth)/` directory
-- **Shared components**: Place reusable components in `components/` directory
+- **Shared components**: Put a reusable component in the package of its feature, or in a design system package in `packages/ui/`. `docs/monorepo/package-graph.md` describes what each package holds
 - **UI components**: Use existing shadcn/ui components from `@giveaway/ui-primitives` (`packages/ui/ui-primitives/src/`)
-- **Auth components**: Create shared auth components in `components/auth/`
+- **Auth components**: Put shared auth components in `packages/auth/`: `@giveaway/auth-login-ui` has the login and logout screens and the provider buttons, and `@giveaway/auth-session-ui` has the session provider and the logout button
 
 ### Authentication
 
@@ -87,11 +87,9 @@ apps/
 │   │   │   ├── browse/ (for participants)
 │   │   │   └── other public pages
 │   │   └── app/ (main app for hosts)
-│   ├── components/
-│   │   ├── auth/ (shared auth components)
-│   │   └── patterns/ (reusable patterns)
-│   ├── lib/
+│   ├── middleware.ts
 │   ├── prisma/ (seed.ts)
+│   ├── public/
 │   ├── package.json (app dependencies and scripts)
 │   ├── tsconfig.json
 │   ├── vercel.json
@@ -100,29 +98,36 @@ apps/
     ├── src/
     └── playwright.config.ts
 packages/ (each folder is a package named @giveaway/<folder>; docs/monorepo/package-graph.md describes them)
-├── account/ (account-context, account-server, user-model)
-├── auth/ (auth-actions, auth-core, auth-model, auth-provider-e2e, auth-provider-inbound, auth-server)
-├── infra/ (app-config, cache, content-moderation, db-client, db-model, db-schema, email, feature-flags, jobs, ratelimit, request-context-model, request-context-server, rpc-client, rpc-model, rpc-server, turnstile-model, turnstile-server)
+├── account/ (account-context, account-email, account-history, account-profile, account-server, account-settings, onboarding, user-model)
+├── audience/ (audience-server, audience-table, audience-user-details)
+├── auth/ (auth-actions, auth-core, auth-login-ui, auth-model, auth-provider-e2e, auth-provider-inbound, auth-server, auth-session-ui)
+├── automation/ (automation-model, automation-server, automation-ui)
+├── browse/ (browse-item, browse-list, browse-server)
+├── infra/ (app-config, cache, content-moderation, db-client, db-model, db-schema, email, feature-flags, jobs, ratelimit, request-context-model, request-context-server, rpc-client, rpc-model, rpc-server, turnstile-model, turnstile-server, turnstile-ui)
 ├── integrations/
-│   ├── bluesky/ (bluesky-api, bluesky-model)
+│   ├── bluesky/ (bluesky-api, bluesky-connect, bluesky-connect-ui, bluesky-import, bluesky-model, bluesky-task-editor, bluesky-task-entry, bluesky-task-jobs, bluesky-task-validation)
 │   ├── core/ (integration-icons, integration-model, integration-server, integration-ui, platform-catalog)
-│   ├── discord/ (discord-model)
-│   ├── kick/ (kick-auth)
-│   ├── meta/ (meta-model)
-│   ├── steam/ (steam-auth)
-│   ├── twitch/ (twitch-api, twitch-model)
-│   ├── velora/ (velora-api, velora-auth)
-│   ├── x/ (x-import, x-model, x-scraper)
-│   └── youtube/ (youtube-model)
-├── marketing/ (marketing-animations, marketing-server, marketing-ui)
-├── participants/ (allocation-model, custom-fields-model, referrals-model, referrals-server, scoring-model, scoring-server, user-quality-model, user-quality-ui, user-source-model, user-source-ui)
-├── pickers/ (picker-model, x-picker-model, x-picker-workflow)
+│   ├── discord/ (discord-api, discord-bot, discord-connect, discord-connect-ui, discord-model, discord-task-editor, discord-task-entry, discord-task-validation)
+│   ├── kick/ (kick-auth, kick-task-editor, kick-task-entry)
+│   ├── linkedin/ (linkedin-task-editor, linkedin-task-entry)
+│   ├── meta/ (meta-connect-ui, meta-model, meta-task-editor, meta-task-entry)
+│   ├── steam/ (steam-auth, steam-task-editor, steam-task-entry, steam-task-validation)
+│   ├── tiktok/ (tiktok-task-editor, tiktok-task-entry)
+│   ├── twitch/ (twitch-api, twitch-bot, twitch-connect, twitch-connect-ui, twitch-model, twitch-task-editor, twitch-task-entry, twitch-task-validation)
+│   ├── velora/ (velora-api, velora-auth, velora-task-editor, velora-task-entry, velora-task-validation)
+│   ├── x/ (x-api, x-connect, x-import, x-model, x-scraper, x-task-editor, x-task-entry, x-task-jobs)
+│   └── youtube/ (youtube-model, youtube-task-editor, youtube-task-entry)
+├── marketing/ (marketing-animations, marketing-home, marketing-learn, marketing-server, marketing-ui)
+├── participants/ (allocation-model, allocation-server, custom-fields-model, custom-fields-server, custom-fields-ui, loyalty-model, participant-model, participant-server, participation-history-model, participation-history-server, participation-server, referrals-model, referrals-server, scoring-model, scoring-server, scoring-ui, user-quality-model, user-quality-ui, user-source-model, user-source-ui)
+├── pickers/ (picker-model, picker-ui, x-picker-dashboard, x-picker-editor, x-picker-model, x-picker-public, x-picker-results, x-picker-server, x-picker-workflow)
 ├── shared/ (util-browser, util-collections, util-errors, util-geo, util-html, util-media, util-random, util-strings, util-time, util-types)
-├── shell/ (shell-footer)
-├── tasks/ (task-jobs-core)
-├── team/ (team-model, team-permissions, team-settings-shell)
+├── shell/ (shell-footer, shell-metrics, shell-navigation, shell-sidebar)
+├── sweepstakes/ (sweepstakes-access, sweepstakes-actions-ui, sweepstakes-dashboard, sweepstakes-demo, sweepstakes-details-analytics, sweepstakes-details-entries, sweepstakes-details-participants, sweepstakes-details-preview, sweepstakes-details-promotion, sweepstakes-details-shell, sweepstakes-details-winners, sweepstakes-editor, sweepstakes-editor-audience, sweepstakes-editor-core, sweepstakes-editor-design, sweepstakes-editor-preview, sweepstakes-editor-prizes, sweepstakes-editor-selection, sweepstakes-editor-server, sweepstakes-editor-setup, sweepstakes-insights-server, sweepstakes-jobs, sweepstakes-model, sweepstakes-moderation-server, sweepstakes-participation, sweepstakes-participation-core, sweepstakes-participation-states, sweepstakes-routes, sweepstakes-ui, sweepstakes-ui-testing)
+├── tasks/ (task-actions, task-editor, task-editor-fields, task-entry, task-entry-core, task-entry-form, task-entry-referral, task-entry-website, task-jobs, task-jobs-core, task-model, task-ui, task-validation, task-validation-core)
+├── team/ (team-context, team-invite-acceptance, team-invites-server, team-members-server, team-members-ui, team-model, team-permissions, team-picker, team-server, team-settings-integrations, team-settings-profile, team-settings-shell, team-settings-socials, team-testing)
+├── templates/ (templates-editor, templates-gallery, templates-model, templates-server)
 ├── ui/ (theme-model, theme-server, ui-brand, ui-carousel, ui-charts, ui-command, ui-date, ui-file-upload, ui-hooks, ui-layouts, ui-primitives, ui-qr, ui-rich-text, ui-theme, ui-utils)
-├── winners/ (leaderboard-model, winners-model)
+├── winners/ (leaderboard-model, leaderboard-server, leaderboard-ui, winners-model, winners-server)
 └── tooling/
     ├── tsconfig/ (@giveaway/tsconfig: tsconfig presets and shared type declarations)
     ├── eslint-config/ (@giveaway/eslint-config: ESLint presets)
@@ -188,11 +193,11 @@ vitest.config.ts (lists the Vitest projects of every package)
   - `@giveaway/tsconfig`: the `base`, `library`, `react-library` and `nextjs` presets. A `tsconfig.json` extends one of them, for example `"extends": "@giveaway/tsconfig/library.json"`. The presets list shared type declarations in `files`, so every project that extends them sees them: `react.d.ts` (`React.PC`, in `react-library` and `nextjs`) and `scrapebadger.d.ts` (the types of the scrapebadger package, whose `package.json` points to a file it does not ship, in `library`, `react-library` and `nextjs`)
   - `@giveaway/eslint-config`: `base` has the rules and the snapshot-assertion rule. `boundaries` has `@nx/enforce-module-boundaries` (a warning for now), with the `depConstraints` that `dependencyRules` in `docs/monorepo/package-map.json` defines, and `@nx/dependency-checks` for each `package.json` under `packages/`. Tests, the shared test fixtures in a package's `src/testing/` and package config files (`vitest.config.ts`, `eslint.config.mjs`) may also import `type:config` packages, and `@nx/dependency-checks` ignores their imports. The root `eslint.config.mjs` uses both. The rules need the Nx project graph, which `pnpm run lint` builds when it runs the targets through Nx
   - `@giveaway/vitest-config`: `projects` defines the `server`, `frontend` and `snapshot` projects of a package (`packageTestConfig`). It also sets `TZ=UTC` and replaces `server-only` with an empty module. `workspace` finds the `vitest.config.ts` of each package for the root config
-  - `@giveaway/testing-server`: the setup file of every project (the Prisma, session and `next/cache` mocks) and the helpers that tests import: `@giveaway/testing-server/prisma`, `/session`, `/result` and `/next-cache`
-  - `@giveaway/testing-dom`: the jsdom setup of the `frontend` and `snapshot` projects
+  - `@giveaway/testing-server`: the setup file of every project (the Prisma, session and `next/cache` mocks), the helpers that tests import (`@giveaway/testing-server/prisma`, `/session`, `/result` and `/next-cache`) and the fixtures that tests of several packages share (`/fixtures-*`)
+  - `@giveaway/testing-dom`: the jsdom setup of the `frontend` and `snapshot` projects, and the `/test-utils` and `/stable-dom` helpers
   - `@giveaway/testing-visual`: the Vitest config (`/config`), the browser setup (`/setup`) and the `renderVisual` helpers (`/render`) of the visual tests, and `visual-docker`, which runs the visual tests of the package it is called from in the Playwright Docker image
 - **Moved packages**: The folders of `packages/` other than `tooling/` have the packages that moved out of the app. Import them by package name, for example `@giveaway/util-errors` or `@giveaway/db-client/prisma`, never with a path into `packages/`. Each one is in `transpilePackages` in `apps/web/next.config.ts` and is a `workspace:*` dependency in `apps/web/package.json`. `apps/web/app/globals.css` has `@source '../../../packages'`, so Tailwind finds the classes that packages use. The migration plan in `docs/monorepo/migration-plan.md` lists what a move changes
-- **Prisma**: `@giveaway/db-schema` has `schema.prisma` and the migrations in `packages/infra/db-schema/src/`. Its `postinstall` runs `prisma generate`, and `pnpm --filter @giveaway/db-schema run generate` runs it again. The `prisma:*` scripts in `apps/web/package.json` find the schema through `prisma.schema` in that file, and read the env files in `apps/web`. Import the Prisma client from `@giveaway/db-client/prisma`. In a package, import the Prisma enums and types from `@giveaway/db-model`, not from `@prisma/client` (the move codemod rewrites these imports; the app still imports `@prisma/client`). `@giveaway/db-model` re-exports every type of `@prisma/client`, and the enums and `Prisma` as named values, because Vite cannot re-export the values of a CommonJS module with `export *` and the visual tests run in Vite. When you add an enum to the schema, add it to `packages/infra/db-model/src/index.ts`. Its test fails until you do `@giveaway/db-client` and `@giveaway/db-model` have an implicit Nx dependency on `@giveaway/db-schema`, so a schema change affects every project that uses the generated client
+- **Prisma**: `@giveaway/db-schema` has `schema.prisma` and the migrations in `packages/infra/db-schema/src/`. Its `postinstall` runs `prisma generate`, and `pnpm --filter @giveaway/db-schema run generate` runs it again. The `prisma:*` scripts in `apps/web/package.json` find the schema through `prisma.schema` in that file, and read the env files in `apps/web`. Import the Prisma client from `@giveaway/db-client/prisma`. In a package, import the Prisma enums and types from `@giveaway/db-model`, not from `@prisma/client` (the move codemod rewrites these imports; the app still imports `@prisma/client`). `@giveaway/db-model` re-exports every type of `@prisma/client`, and the enums and `Prisma` as named values, because Vite cannot re-export the values of a CommonJS module with `export *` and the visual tests run in Vite. When you add an enum to the schema, add it to `packages/infra/db-model/src/index.ts`. Its test fails until you do. `@giveaway/db-client` and `@giveaway/db-model` have an implicit Nx dependency on `@giveaway/db-schema`, so a schema change affects every project that uses the generated client
 - **Moving a package**: Run `pnpm run move-packages <package>...` from the root, with the package names from `docs/monorepo/package-map.json`. The codemod in `tools/codemods` moves the package's `sources` with `git mv` into `packages/<path>/src/` and writes the package files. It rewrites every import of a moved file, puts the package in `transpilePackages` and the app's dependencies, moves its ESLint suppressions, empties its `sources` in the map and runs Prettier and `pnpm install`. It changes nothing when it finds a problem, for example two sources with the same module name (pass `--rename <source>=<name>`) or an import of a file that stays in the app. Run it with `--dry-run` first. To fix a conflict with `main`, run it again on the new `main` instead of merging by hand. See "The move codemod" in `docs/monorepo/migration-plan.md`
 - **Vitest config of a package**: `vitest.config.ts` exports `defineConfig(packageTestConfig())`. The root `vitest.config.ts` adds the three projects of each package that has one, named `<package>:server`, `<package>:frontend` and `<package>:snapshot`. A package with tests has `test:*` scripts for the projects it uses, so Nx and CI run them
 

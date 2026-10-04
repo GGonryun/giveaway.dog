@@ -71,8 +71,7 @@
         "middleware.ts",
         "next.config.ts",
         "postcss.config.js",
-        "vitest.config.ts",
-        "vitest.visual.config.ts"
+        "vitest.config.ts"
       ],
       "dependsOn": [
         "@giveaway/account-context",
@@ -156,7 +155,6 @@
         "@giveaway/templates-model",
         "@giveaway/templates-server",
         "@giveaway/testing-server",
-        "@giveaway/testing-visual",
         "@giveaway/theme-model",
         "@giveaway/theme-server",
         "@giveaway/turnstile-ui",
