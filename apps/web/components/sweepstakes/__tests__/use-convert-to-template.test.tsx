@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { convertSweepstakesToTemplate } from '@/lib/templates/procedures/convert-sweepstakes-to-template';
+import { convertSweepstakesToTemplate } from '@giveaway/templates-server/convert-sweepstakes-to-template';
 import { useConvertToTemplate } from '../use-convert-to-template';
 
 const navigation = vi.hoisted(() => ({
@@ -15,7 +15,7 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
-vi.mock('@/lib/templates/procedures/convert-sweepstakes-to-template', () => ({
+vi.mock('@giveaway/templates-server/convert-sweepstakes-to-template', () => ({
   convertSweepstakesToTemplate: vi.fn()
 }));
 

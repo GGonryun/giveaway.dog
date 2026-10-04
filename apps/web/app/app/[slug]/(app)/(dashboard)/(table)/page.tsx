@@ -24,7 +24,7 @@ import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-b
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import { TemplatesGrid } from '@/lib/templates/components/templates-grid';
-import { getTemplates } from '@/lib/templates/procedures/get-templates';
+import { getTemplates } from '@giveaway/templates-server/get-templates';
 import { TemplatesGridHeader } from '@/lib/templates/components/templates-grid-header';
 import { SweepstakesGridSkeleton } from '@/lib/templates/components/templates-grid-skeleton';
 

@@ -1,5 +1,5 @@
 import { TemplateForm } from '@/lib/templates/components/template-form';
-import { getTemplateForm } from '@/lib/templates/procedures/get-template-form';
+import { getTemplateForm } from '@giveaway/templates-server/get-template-form';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import TemplateFormPage from '../create/page';

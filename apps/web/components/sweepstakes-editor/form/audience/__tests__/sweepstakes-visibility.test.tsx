@@ -3,14 +3,16 @@ import userEvent from '@testing-library/user-event';
 import { VisibilityType } from '@prisma/client';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import verifySlug from '@/procedures/sweepstakes/verify-slug';
+import verifySlug from '@giveaway/sweepstakes-editor-server/verify-slug';
 import {
   buildFormValues,
   renderWithForm
 } from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { UrlSlugField, VisibilityTypeField } from '../sweepstakes-visibility';
 
-vi.mock('@/procedures/sweepstakes/verify-slug', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/sweepstakes-editor-server/verify-slug', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('next/link', () => ({
   default: ({

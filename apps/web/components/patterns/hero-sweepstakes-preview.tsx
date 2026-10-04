@@ -18,7 +18,7 @@ import {
   onFakeLogin,
   onFakeTaskComplete,
   onFakeTaskUpdate
-} from '../sweepstakes-editor/data/mocks';
+} from '@giveaway/sweepstakes-demo/mocks';
 
 export const HeroSweepstakesPreview: React.FC = () => {
   const state = toSweepstakesState({

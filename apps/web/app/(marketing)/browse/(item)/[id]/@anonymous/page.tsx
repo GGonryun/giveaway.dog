@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import { getSweepstakesPrivacy } from '@/procedures/browse/get-sweepstakes-privacy';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
 import { PublicSweepstakesContent } from '@/components/sweepstakes-browse/public-sweepstakes-content';
 import { Suspense } from 'react';
 import { ReferralCodeHandler } from '@/components/sweepstakes-browse/referral-code-handler';

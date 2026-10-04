@@ -1,8 +1,8 @@
 'use server';
 
 import { SweepstakesPreview } from '@/components/sweepstakes-details/sweepstakes-preview';
-import { SweepstakesLoadingSkeleton } from '@/components/sweepstakes-details/sweepstakes-loading-skeleton';
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
+import { SweepstakesLoadingSkeleton } from '@giveaway/sweepstakes-details-shell/sweepstakes-loading-skeleton';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';

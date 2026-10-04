@@ -3,7 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
-import { createTemplate } from '@/lib/templates/procedures/create-template';
+import { createTemplate } from '@giveaway/templates-server/create-template';
 
 export function useCreateTemplate() {
   const router = useRouter();

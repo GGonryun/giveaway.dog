@@ -1,12 +1,12 @@
 'use server';
 
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import React, { Suspense } from 'react';
 
 import type { Metadata } from 'next';
 import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
-import { SweepstakesPromotionPageSkeleton } from '@/lib/sweepstakes-promotion/components/skeleton';
-import { SweepstakesPromotionPage } from '@/lib/sweepstakes-promotion/components/page';
+import { SweepstakesPromotionPageSkeleton } from '@giveaway/sweepstakes-details-promotion/components/skeleton';
+import { SweepstakesPromotionPage } from '@giveaway/sweepstakes-details-promotion/components/page';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

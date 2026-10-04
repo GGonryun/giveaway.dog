@@ -1,15 +1,15 @@
 'use server';
 
 import { Suspense } from 'react';
-import getSweepstakesForm from '@/procedures/sweepstakes/get-sweepstakes-form';
+import getSweepstakesForm from '@giveaway/sweepstakes-editor-server/get-sweepstakes-form';
 import { SweepstakesForm } from '@/components/sweepstakes-editor/sweepstakes-form';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { notFound } from 'next/navigation';
-import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
+import getSweepstakesStatus from '@giveaway/sweepstakes-editor-server/get-sweepstakes-status';
 import { EDITABLE_DERIVED_STATUS } from '@giveaway/sweepstakes-model/sweepstakes';
 import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
 import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
-import { getPublishedSweepstakes } from '@/procedures/sweepstakes/get-published-sweepstakes';
+import { getPublishedSweepstakes } from '@giveaway/sweepstakes-editor-server/get-published-sweepstakes';
 
 export const SweepstakeFormPage = async ({
   params

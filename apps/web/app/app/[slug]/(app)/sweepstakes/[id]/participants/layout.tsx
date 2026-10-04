@@ -3,7 +3,7 @@
 import { SweepstakesParticipants } from '@/components/sweepstakes-details/sweepstakes-participants';
 import { SweepstakesParticipantsSkeleton } from '@/components/sweepstakes-details/sweepstakes-participants-skeleton';
 import { getSweepstakesParticipants } from '@giveaway/participant-server/get-sweepstakes-participants';
-import { getSweepstakesTasks } from '@/procedures/browse/get-sweepstake-tasks';
+import { getSweepstakesTasks } from '@giveaway/participation-server/get-sweepstake-tasks';
 
 import React, { Suspense } from 'react';
 

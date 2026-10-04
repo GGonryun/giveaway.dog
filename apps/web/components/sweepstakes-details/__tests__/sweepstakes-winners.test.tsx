@@ -25,7 +25,7 @@ import { disqualifyDraw } from '@/lib/winners/procedures/disqualify-draw';
 import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';
 import { rollPrize } from '@/lib/winners/procedures/roll-prize';
 import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
-import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
+import completeSweepstakes from '@giveaway/sweepstakes-editor-server/complete-sweepstakes';
 import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteria';
 import { SweepstakesWinners } from '../sweepstakes-winners';
 
@@ -47,7 +47,7 @@ vi.mock('@/lib/winners/procedures/reroll-draw', () => ({
 vi.mock('@/lib/winners/procedures/disqualify-draw', () => ({
   disqualifyDraw: vi.fn()
 }));
-vi.mock('@/procedures/sweepstakes/complete-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/complete-sweepstakes', () => ({
   default: vi.fn()
 }));
 vi.mock('@/procedures/sweepstakes/update-winner-criteria', () => ({

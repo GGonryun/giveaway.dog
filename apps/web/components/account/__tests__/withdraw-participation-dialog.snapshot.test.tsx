@@ -1,11 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import withdrawParticipation from '@/procedures/user/withdraw-participation';
+import withdrawParticipation from '@giveaway/participation-history-server/withdraw-participation';
 import { WithdrawParticipationDialog } from '../withdraw-participation-dialog';
 
-vi.mock('@/procedures/user/withdraw-participation', () => ({
-  default: vi.fn()
-}));
+vi.mock(
+  '@giveaway/participation-history-server/withdraw-participation',
+  () => ({
+    default: vi.fn()
+  })
+);
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

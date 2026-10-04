@@ -6,7 +6,7 @@ import { useGiveawayParticipation } from '../giveaway-participation-context';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@giveaway/ui-primitives/button';
 import { useProcedureAsync } from '@giveaway/rpc-client/hook';
-import refreshSweepstakes from '@/procedures/browse/refresh-sweepstakes';
+import refreshSweepstakes from '@giveaway/participation-server/refresh-sweepstakes';
 import { useRouter } from 'next/navigation';
 
 export const Pending: React.FC = () => {

@@ -1,0 +1,65 @@
+{
+  "name": "@giveaway/sweepstakes-editor-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-editor-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./complete-sweepstakes": "./src/complete-sweepstakes.ts",
+    "./copy-sweepstakes": "./src/copy-sweepstakes.ts",
+    "./create-sweepstakes": "./src/create-sweepstakes.ts",
+    "./delete-sweepstakes": "./src/delete-sweepstakes.ts",
+    "./get-published-sweepstakes": "./src/get-published-sweepstakes.ts",
+    "./get-sweepstakes-form": "./src/get-sweepstakes-form.ts",
+    "./get-sweepstakes-status": "./src/get-sweepstakes-status.ts",
+    "./publish-sweepstakes": "./src/publish-sweepstakes.ts",
+    "./toggle-visibility": "./src/toggle-visibility.ts",
+    "./update-sweepstakes": "./src/update-sweepstakes.ts",
+    "./verify-slug": "./src/verify-slug.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-access": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
+    "@giveaway/team-server": "workspace:*",
+    "@giveaway/templates-model": "workspace:*",
+    "@giveaway/util-collections": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "lodash": "catalog:",
+    "nanoid": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

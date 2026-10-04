@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import withdrawParticipation from '@/procedures/user/withdraw-participation';
+import withdrawParticipation from '@giveaway/participation-history-server/withdraw-participation';
 import type { ParticipationHistoryItem } from '@giveaway/participation-history-model/participation-history';
 import { ParticipationHistoryTable } from '../participation-history-table';
 
@@ -12,9 +12,12 @@ vi.mock('next/navigation', () => ({
   useRouter: () => navigation.router
 }));
 
-vi.mock('@/procedures/user/withdraw-participation', () => ({
-  default: vi.fn()
-}));
+vi.mock(
+  '@giveaway/participation-history-server/withdraw-participation',
+  () => ({
+    default: vi.fn()
+  })
+);
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

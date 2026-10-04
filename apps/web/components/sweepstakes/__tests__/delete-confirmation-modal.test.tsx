@@ -2,11 +2,11 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
+import deleteSweepstakes from '@giveaway/sweepstakes-editor-server/delete-sweepstakes';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import { DeleteConfirmationModal } from '../delete-confirmation-modal';
 
-vi.mock('@/procedures/sweepstakes/delete-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/delete-sweepstakes', () => ({
   default: vi.fn()
 }));
 

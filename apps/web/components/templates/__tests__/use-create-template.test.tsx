@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createTemplate } from '@/lib/templates/procedures/create-template';
+import { createTemplate } from '@giveaway/templates-server/create-template';
 import { useCreateTemplate } from '../use-create-template';
 
 const router = vi.hoisted(() => ({ push: vi.fn() }));
@@ -11,7 +11,7 @@ vi.mock('next/navigation', () => ({
   useParams: () => ({ slug: 'acme' })
 }));
 
-vi.mock('@/lib/templates/procedures/create-template', () => ({
+vi.mock('@giveaway/templates-server/create-template', () => ({
   createTemplate: vi.fn()
 }));
 

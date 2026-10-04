@@ -28,7 +28,7 @@ vi.mock('next/navigation', () => ({ useRouter: () => navigation.router }));
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
-vi.mock('@/procedures/sweepstakes/complete-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/complete-sweepstakes', () => ({
   default: vi.fn()
 }));
 

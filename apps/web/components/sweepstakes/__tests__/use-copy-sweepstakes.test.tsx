@@ -1,12 +1,12 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import copySweepstakes from '@/procedures/sweepstakes/copy-sweepstakes';
+import copySweepstakes from '@giveaway/sweepstakes-editor-server/copy-sweepstakes';
 import { useCopySweepstakes } from '../use-copy-sweepstakes';
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
-vi.mock('@/procedures/sweepstakes/copy-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/copy-sweepstakes', () => ({
   default: vi.fn()
 }));
 

@@ -2,9 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { notFound } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
-import { getPublishedSweepstakes } from '@/procedures/sweepstakes/get-published-sweepstakes';
-import getSweepstakesForm from '@/procedures/sweepstakes/get-sweepstakes-form';
-import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
+import { getPublishedSweepstakes } from '@giveaway/sweepstakes-editor-server/get-published-sweepstakes';
+import getSweepstakesForm from '@giveaway/sweepstakes-editor-server/get-sweepstakes-form';
+import getSweepstakesStatus from '@giveaway/sweepstakes-editor-server/get-sweepstakes-status';
 import { SweepstakesForm } from '@/components/sweepstakes-editor/sweepstakes-form';
 import { DerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 import { ApplicationErrorCode } from '@giveaway/util-errors';
@@ -17,11 +17,11 @@ vi.mock('next/navigation', () => ({
   })
 }));
 
-vi.mock('@/procedures/sweepstakes/get-sweepstakes-form', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/get-sweepstakes-form', () => ({
   default: vi.fn()
 }));
 
-vi.mock('@/procedures/sweepstakes/get-sweepstakes-status', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/get-sweepstakes-status', () => ({
   default: vi.fn()
 }));
 
@@ -29,9 +29,12 @@ vi.mock('@giveaway/integration-server/get-team-integrations', () => ({
   getTeamIntegrations: vi.fn()
 }));
 
-vi.mock('@/procedures/sweepstakes/get-published-sweepstakes', () => ({
-  getPublishedSweepstakes: vi.fn()
-}));
+vi.mock(
+  '@giveaway/sweepstakes-editor-server/get-published-sweepstakes',
+  () => ({
+    getPublishedSweepstakes: vi.fn()
+  })
+);
 
 vi.mock('@/components/sweepstakes-editor/sweepstakes-form', () => ({
   SweepstakesForm: vi.fn(() => <div>Sweepstakes form</div>)

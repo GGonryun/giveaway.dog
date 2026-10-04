@@ -1,12 +1,12 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
+import deleteSweepstakes from '@giveaway/sweepstakes-editor-server/delete-sweepstakes';
 import { useDeleteSweepstakes } from '../use-delete-sweepstakes';
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
-vi.mock('@/procedures/sweepstakes/delete-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/delete-sweepstakes', () => ({
   default: vi.fn()
 }));
 

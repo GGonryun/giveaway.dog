@@ -4,17 +4,20 @@ import { checkSteamWishlist } from '@giveaway/steam-task-validation/steam';
 import { checkDiscordJoin } from './discord';
 import { TaskSchema } from '@giveaway/task-model/schemas';
 import { checkTwitchFollow } from '@giveaway/twitch-task-validation/twitch';
-import { checkSecretCode, checkSecretCodeV2 } from './secret-code';
+import {
+  checkSecretCode,
+  checkSecretCodeV2
+} from '@giveaway/task-validation-core/secret-code';
 import {
   checkBonusCompleteProfile,
   checkBonusLimited,
   checkBonusLoyalty,
   checkBonusTimed
-} from './bonus';
-import { checkVisitUrl } from './visit-url';
-import { checkAskQuestion } from './ask-question';
-import { checkSingleChoice } from './single-choice';
-import { checkMultipleChoice } from './multiple-choice';
+} from '@giveaway/task-validation-core/bonus';
+import { checkVisitUrl } from '@giveaway/task-validation-core/visit-url';
+import { checkAskQuestion } from '@giveaway/task-validation-core/ask-question';
+import { checkSingleChoice } from '@giveaway/task-validation-core/single-choice';
+import { checkMultipleChoice } from '@giveaway/task-validation-core/multiple-choice';
 import {
   checkBlueskyConnect,
   checkBlueskyFollow,

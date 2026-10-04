@@ -25,7 +25,7 @@ import {
   onFakeLogin,
   onFakeTaskComplete,
   onFakeTaskUpdate
-} from '../data/mocks';
+} from '@giveaway/sweepstakes-demo/mocks';
 import {
   getPreviewParticipant,
   getPreviewRelationship,

@@ -10,7 +10,7 @@ import { UseTemplateModal } from './use-template-modal';
 import { SweepstakesGridSkeleton } from './templates-grid-skeleton';
 import { DeleteTemplateModal } from './delete-template-modal';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
+import { createSweepstakes } from '@giveaway/sweepstakes-editor-server/create-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { timezone } from '@giveaway/util-time/time';
 import { useCreateTemplate } from '@/components/templates/use-create-template';

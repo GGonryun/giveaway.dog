@@ -1,5 +1,5 @@
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
+import deleteSweepstakes from '@giveaway/sweepstakes-editor-server/delete-sweepstakes';
 import { toast } from 'sonner';
 
 export const useDeleteSweepstakes = (onSuccess: () => void) => {

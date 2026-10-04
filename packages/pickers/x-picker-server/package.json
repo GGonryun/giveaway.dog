@@ -1,0 +1,66 @@
+{
+  "name": "@giveaway/x-picker-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:pickers"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/pickers/x-picker-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./fetch-retweeters-with-coverage": "./src/fetch-retweeters-with-coverage.ts",
+    "./pickers/get-total-engagements": "./src/pickers/get-total-engagements.ts",
+    "./procedures/create-twitter-v2-picker": "./src/procedures/create-twitter-v2-picker.ts",
+    "./procedures/delete-twitter-v2-picker": "./src/procedures/delete-twitter-v2-picker.ts",
+    "./procedures/delete-twitter-v2-picker-from-list": "./src/procedures/delete-twitter-v2-picker-from-list.ts",
+    "./procedures/disqualify-twitter-v2-winner": "./src/procedures/disqualify-twitter-v2-winner.ts",
+    "./procedures/draw-twitter-v2-picker": "./src/procedures/draw-twitter-v2-picker.ts",
+    "./procedures/get-pickers-v2-list": "./src/procedures/get-pickers-v2-list.ts",
+    "./procedures/get-twitter-v2-picker": "./src/procedures/get-twitter-v2-picker.ts",
+    "./procedures/get-twitter-v2-picker-form": "./src/procedures/get-twitter-v2-picker-form.ts",
+    "./procedures/get-twitter-v2-public-picker": "./src/procedures/get-twitter-v2-public-picker.ts",
+    "./procedures/publish-twitter-v2-picker": "./src/procedures/publish-twitter-v2-picker.ts",
+    "./procedures/update-twitter-v2-picker": "./src/procedures/update-twitter-v2-picker.ts",
+    "./testing/fixtures-pickers": "./src/testing/fixtures-pickers.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
+    "@giveaway/team-server": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/x-picker-model": "workspace:*",
+    "@giveaway/x-scraper": "workspace:*",
+    "nanoid": "catalog:",
+    "server-only": "catalog:",
+    "workflow": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "scrapebadger": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

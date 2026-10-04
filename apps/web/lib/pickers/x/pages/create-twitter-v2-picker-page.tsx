@@ -1,7 +1,7 @@
 'use server';
 
 import { TwitterV2PickerForm } from '../components/twitter-v2-picker-form';
-import { getTwitterV2PickerForm } from '../procedures/get-twitter-v2-picker-form';
+import { getTwitterV2PickerForm } from '@giveaway/x-picker-server/procedures/get-twitter-v2-picker-form';
 
 interface CreateTwitterV2PickerPageProps {
   params: Promise<{ pickerId: string; slug: string }>;

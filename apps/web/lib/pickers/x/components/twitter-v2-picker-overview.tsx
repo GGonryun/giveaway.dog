@@ -61,9 +61,9 @@ import { TwitterV2DeleteConfirmationModal } from './twitter-v2-delete-confirmati
 import { DrawExtraWinnerModal } from './twitter-v2-draw-extra-winner-modal';
 import { DisqualifyWinnerModal } from './twitter-v2-disqualify-winner-modal';
 import { DisqualificationReasonModal } from './twitter-v2-disqualification-reason-modal';
-import { deleteTwitterV2Picker } from '../procedures/delete-twitter-v2-picker';
-import { drawTwitterV2Picker } from '../procedures/draw-twitter-v2-picker';
-import { disqualifyTwitterV2Winner } from '../procedures/disqualify-twitter-v2-winner';
+import { deleteTwitterV2Picker } from '@giveaway/x-picker-server/procedures/delete-twitter-v2-picker';
+import { drawTwitterV2Picker } from '@giveaway/x-picker-server/procedures/draw-twitter-v2-picker';
+import { disqualifyTwitterV2Winner } from '@giveaway/x-picker-server/procedures/disqualify-twitter-v2-winner';
 
 import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { TwitterV2ParticipantsSection } from './twitter-v2-participants-section';

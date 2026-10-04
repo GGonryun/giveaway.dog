@@ -1,7 +1,7 @@
 'use server';
 
 import { TemplatesPage } from '@/lib/templates/components/templates-page';
-import { getTemplates } from '@/lib/templates/procedures/get-templates';
+import { getTemplates } from '@giveaway/templates-server/get-templates';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 
 export default async function Page({

@@ -38,7 +38,7 @@ import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteria';
-import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
+import completeSweepstakes from '@giveaway/sweepstakes-editor-server/complete-sweepstakes';
 import {
   Alert,
   AlertDescription,

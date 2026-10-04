@@ -2,13 +2,16 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { toast } from 'sonner';
-import withdrawParticipation from '@/procedures/user/withdraw-participation';
+import withdrawParticipation from '@giveaway/participation-history-server/withdraw-participation';
 import type { Result } from '@giveaway/rpc-model/types';
 import { WithdrawParticipationDialog } from '../withdraw-participation-dialog';
 
-vi.mock('@/procedures/user/withdraw-participation', () => ({
-  default: vi.fn()
-}));
+vi.mock(
+  '@giveaway/participation-history-server/withdraw-participation',
+  () => ({
+    default: vi.fn()
+  })
+);
 
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }

@@ -3,8 +3,8 @@
 import React from 'react';
 import { Outline } from '@/components/app/outline';
 import { EditGiveawayButton } from '@/components/sweepstakes/edit-giveaway-button';
-import { SweepstakesDetailsTabs } from '@/components/sweepstakes-details/sweepstakes-tabs';
-import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
+import { SweepstakesDetailsTabs } from '@giveaway/sweepstakes-details-shell/sweepstakes-tabs';
+import getSweepstakesStatus from '@giveaway/sweepstakes-editor-server/get-sweepstakes-status';
 import { EDITABLE_DERIVED_STATUS } from '@giveaway/sweepstakes-model/sweepstakes';
 import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
 

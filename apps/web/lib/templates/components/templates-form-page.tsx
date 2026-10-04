@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { TemplatePageProps } from '@giveaway/sweepstakes-model/pages';
 import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
-import { getTemplateForm } from '../procedures/get-template-form';
+import { getTemplateForm } from '@giveaway/templates-server/get-template-form';
 import { TemplateForm } from './template-form';
 
 export const TemplateFormPage = async ({

@@ -1,6 +1,6 @@
 import { act, fireEvent, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import refreshSweepstakes from '@/procedures/browse/refresh-sweepstakes';
+import refreshSweepstakes from '@giveaway/participation-server/refresh-sweepstakes';
 import {
   NOW,
   buildSweepstakes
@@ -16,7 +16,7 @@ vi.mock('next/navigation', () => ({
   useRouter: () => navigation.router
 }));
 
-vi.mock('@/procedures/browse/refresh-sweepstakes', () => ({
+vi.mock('@giveaway/participation-server/refresh-sweepstakes', () => ({
   default: vi.fn()
 }));
 

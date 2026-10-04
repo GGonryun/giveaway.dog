@@ -21,7 +21,7 @@ import {
   mockUserReferral,
   onFakeTaskUpdate,
   onFakeAllocate
-} from '../sweepstakes-editor/data/mocks';
+} from '@giveaway/sweepstakes-demo/mocks';
 import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
 import { useBrowseSweepstakesPage } from '@giveaway/sweepstakes-routes/use-browse-sweepstakes-page';
@@ -37,7 +37,7 @@ import {
 } from '@giveaway/ui-primitives/select';
 import { toBackgroundStyle } from '@giveaway/sweepstakes-model/color';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
+import completeSweepstakes from '@giveaway/sweepstakes-editor-server/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { useTeams } from '@giveaway/team-context/team-provider';
 import { PrizeDrawResult } from '@prisma/client';

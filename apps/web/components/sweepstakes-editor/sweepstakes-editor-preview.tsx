@@ -35,7 +35,7 @@ import {
   onFakeTaskUpdate,
   onFakeAllocate,
   mockAllocation
-} from './data/mocks';
+} from '@giveaway/sweepstakes-demo/mocks';
 import { TaskSchema } from '@giveaway/task-model/schemas';
 import { useTeams } from '@giveaway/team-context/team-provider';
 import { toSweepstakesHost } from '@giveaway/participant-model/participant';

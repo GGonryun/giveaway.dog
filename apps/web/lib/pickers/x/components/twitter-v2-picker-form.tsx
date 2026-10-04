@@ -18,7 +18,7 @@ import {
 } from '../data/steps';
 import { TwitterV2SetupSection } from './sections/setup-section';
 import { TwitterV2FiltersSection } from './sections/filters-section';
-import { deleteTwitterV2Picker } from '../procedures/delete-twitter-v2-picker';
+import { deleteTwitterV2Picker } from '@giveaway/x-picker-server/procedures/delete-twitter-v2-picker';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import {
   DEFAULT_TWITTER_V2_PICKER_FORM,
@@ -33,8 +33,8 @@ import { useTwitterV2PickersPage } from '../hooks/use-twitter-v2-pickers-page';
 import { TwitterV2CancelConfirmationModal } from './twitter-v2-cancel-confirmation-modal';
 import { TwitterV2PublishConfirmationModal } from './twitter-v2-publish-confirmation-modal';
 import { TwitterV2PickerPreview } from './twitter-v2-picker-preview';
-import { updateTwitterV2Picker } from '../procedures/update-twitter-v2-picker';
-import { publishTwitterV2Picker } from '../procedures/publish-twitter-v2-picker';
+import { updateTwitterV2Picker } from '@giveaway/x-picker-server/procedures/update-twitter-v2-picker';
+import { publishTwitterV2Picker } from '@giveaway/x-picker-server/procedures/publish-twitter-v2-picker';
 import { useActiveTeam } from '@giveaway/team-context/use-active-team-page';
 
 export interface TwitterV2PickerFormProps {

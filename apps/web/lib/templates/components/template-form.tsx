@@ -21,7 +21,7 @@ import {
   useSearchParams
 } from 'next/navigation';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import { updateTemplate } from '../procedures/update-template';
+import { updateTemplate } from '@giveaway/templates-server/update-template';
 import { UnifiedFormLayoutContextProvider } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import {
   TEMPLATE_FIELD_TO_STEP_MAP,
@@ -40,7 +40,7 @@ import { GiveawayState } from '@giveaway/sweepstakes-model/schemas';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { TemplatePublishConfirmationModal } from './template-publish-confirmation-modal';
 import { TemplateCancelConfirmationModal } from './template-cancel-confirmation-modal';
-import { deleteTemplate } from '../procedures/delete-template';
+import { deleteTemplate } from '@giveaway/templates-server/delete-template';
 
 const ACTION_BANNER_TITLES: Record<UnifiedFormAction, string> = {
   create: 'Creating Template',

@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import { getOrCreateSweepstakesParticipant } from '@/procedures/browse/get-sweepstake-participant';
-import { getUserHostRelationship } from '@/procedures/browse/get-user-host-relationship';
-import { getSweepstakesPrivacy } from '@/procedures/browse/get-sweepstakes-privacy';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import { getOrCreateSweepstakesParticipant } from '@giveaway/participation-server/get-sweepstake-participant';
+import { getUserHostRelationship } from '@giveaway/participation-server/get-user-host-relationship';
+import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
 import { getUserReferral } from '@giveaway/referrals-server/get-user-referral';
 import { AuthenticatedSweepstakesContent } from '@/components/sweepstakes-browse/authenticated-sweepstakes-content';
 import { Suspense } from 'react';

@@ -4,8 +4,8 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { toTaskSchema } from '@giveaway/task-model/schemas';
-import { saveTaskProof } from '../validation/proof';
-import { validateSweepstakesState } from '../validation/task-state';
+import { saveTaskProof } from '@giveaway/task-validation-core/proof';
+import { validateSweepstakesState } from '@giveaway/task-validation-core/task-state';
 
 const submitTask = procedure()
   .authorization({ required: true })

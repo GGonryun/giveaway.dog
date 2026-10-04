@@ -10,9 +10,9 @@ import React from 'react';
 import { toast } from 'sonner';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MockTeamProvider } from '@giveaway/team-context/mock-team-provider';
-import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
-import publishSweepstakes from '@/procedures/sweepstakes/publish-sweepstakes';
-import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
+import deleteSweepstakes from '@giveaway/sweepstakes-editor-server/delete-sweepstakes';
+import publishSweepstakes from '@giveaway/sweepstakes-editor-server/publish-sweepstakes';
+import updateSweepstakes from '@giveaway/sweepstakes-editor-server/update-sweepstakes';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesForm } from '../sweepstakes-form';
 import {
@@ -81,19 +81,21 @@ vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() }
 }));
 
-vi.mock('@/procedures/sweepstakes/update-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/update-sweepstakes', () => ({
   default: vi.fn()
 }));
 
-vi.mock('@/procedures/sweepstakes/publish-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/publish-sweepstakes', () => ({
   default: vi.fn()
 }));
 
-vi.mock('@/procedures/sweepstakes/delete-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/delete-sweepstakes', () => ({
   default: vi.fn()
 }));
 
-vi.mock('@/procedures/sweepstakes/verify-slug', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/sweepstakes-editor-server/verify-slug', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('@/components/sweepstakes/giveaway-participation', () => ({
   GiveawayParticipation: () => <div>Giveaway preview</div>

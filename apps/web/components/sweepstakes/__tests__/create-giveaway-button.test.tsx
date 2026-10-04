@@ -3,9 +3,9 @@ import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamsProvider } from '@giveaway/team-context/team-provider';
-import { createTemplate } from '@/lib/templates/procedures/create-template';
+import { createTemplate } from '@giveaway/templates-server/create-template';
 import { timezone } from '@giveaway/util-time/time';
-import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
+import { createSweepstakes } from '@giveaway/sweepstakes-editor-server/create-sweepstakes';
 import { CreateGiveawayButton } from '../create-giveaway-button';
 import { buildTeam } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 
@@ -18,11 +18,11 @@ vi.mock('next/navigation', () => ({
   useParams: () => ({ slug: 'acme' })
 }));
 
-vi.mock('@/procedures/sweepstakes/create-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/create-sweepstakes', () => ({
   createSweepstakes: vi.fn()
 }));
 
-vi.mock('@/lib/templates/procedures/create-template', () => ({
+vi.mock('@giveaway/templates-server/create-template', () => ({
   createTemplate: vi.fn()
 }));
 

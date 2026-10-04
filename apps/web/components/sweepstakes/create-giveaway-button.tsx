@@ -8,7 +8,7 @@ import {
   Sparkles,
   FilePlus
 } from 'lucide-react';
-import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
+import { createSweepstakes } from '@giveaway/sweepstakes-editor-server/create-sweepstakes';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import {
   DropdownMenu,

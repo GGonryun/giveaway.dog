@@ -18,7 +18,7 @@ import {
 } from '@giveaway/ui-primitives/alert';
 import { toast } from 'sonner';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import { deleteTemplate } from '../procedures/delete-template';
+import { deleteTemplate } from '@giveaway/templates-server/delete-template';
 import { DEFAULT_TEMPLATE_NAME } from '@giveaway/templates-model/defaults';
 import { useRouter } from 'next/navigation';
 

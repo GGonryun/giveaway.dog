@@ -12,7 +12,7 @@ import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { PickersV2ListItemSchema } from '@giveaway/x-picker-model/schemas/list';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import { deleteTwitterV2PickerFromList } from '../procedures/delete-twitter-v2-picker-from-list';
+import { deleteTwitterV2PickerFromList } from '@giveaway/x-picker-server/procedures/delete-twitter-v2-picker-from-list';
 import { useRouter } from 'next/navigation';
 
 interface DeletePickerV2ModalProps {

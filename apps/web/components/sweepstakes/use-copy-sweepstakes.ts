@@ -1,5 +1,5 @@
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import copySweepstakes from '@/procedures/sweepstakes/copy-sweepstakes';
+import copySweepstakes from '@giveaway/sweepstakes-editor-server/copy-sweepstakes';
 import { toast } from 'sonner';
 
 export const useCopySweepstakes = (

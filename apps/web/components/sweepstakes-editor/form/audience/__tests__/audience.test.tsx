@@ -11,7 +11,9 @@ import { Audience } from '../audience';
 
 vi.mock('nanoid', () => ({ nanoid: vi.fn() }));
 
-vi.mock('@/procedures/sweepstakes/verify-slug', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/sweepstakes-editor-server/verify-slug', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('next/link', () => ({
   default: ({

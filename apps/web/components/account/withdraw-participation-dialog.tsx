@@ -11,7 +11,7 @@ import {
   AlertDialogTitle
 } from '@giveaway/ui-primitives/alert-dialog';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import withdrawParticipation from '@/procedures/user/withdraw-participation';
+import withdrawParticipation from '@giveaway/participation-history-server/withdraw-participation';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { TriangleAlertIcon } from 'lucide-react';

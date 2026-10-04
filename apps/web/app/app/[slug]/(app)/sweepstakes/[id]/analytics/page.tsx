@@ -3,7 +3,7 @@
 import { SweepstakesAnalytics } from '@giveaway/sweepstakes-details-analytics/sweepstakes-analytics';
 import { SweepstakesAnalyticsSkeleton } from '@giveaway/sweepstakes-details-analytics/sweepstakes-analytics-skeleton';
 import getSweepstakesEntryTimeSeries from '@giveaway/sweepstakes-insights-server/get-sweepstakes-entry-time-series';
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getSweepstakesAllocations } from '@giveaway/allocation-server/get-sweepstakes-allocations';

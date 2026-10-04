@@ -11,7 +11,7 @@ import {
 import { Button } from '@giveaway/ui-primitives/button';
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
 import { TemplateListItemSchema } from '@giveaway/templates-model/schemas/template';
-import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
+import { SAMPLE_SWEEPSTAKES_DATA } from '@giveaway/sweepstakes-demo/sample-sweepstakes-data';
 import {
   mockAllocation,
   mockHost,
@@ -26,7 +26,7 @@ import {
   onFakeLogin,
   onFakeTaskComplete,
   onFakeTaskUpdate
-} from '@/components/sweepstakes-editor/data/mocks';
+} from '@giveaway/sweepstakes-demo/mocks';
 import { SparklesIcon, Edit, Loader2, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { GiveawaySchema } from '@giveaway/sweepstakes-model/schemas';

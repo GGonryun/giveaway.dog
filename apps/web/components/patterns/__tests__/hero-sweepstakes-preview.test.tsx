@@ -16,7 +16,7 @@ import {
   onFakeLogin,
   onFakeTaskComplete,
   onFakeTaskUpdate
-} from '@/components/sweepstakes-editor/data/mocks';
+} from '@giveaway/sweepstakes-demo/mocks';
 import { HeroSweepstakesPreview } from '../hero-sweepstakes-preview';
 
 const participation = vi.hoisted(() => ({

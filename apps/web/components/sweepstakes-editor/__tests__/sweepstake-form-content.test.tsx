@@ -44,7 +44,9 @@ vi.mock('@giveaway/ui-file-upload/file-upload', () => ({
   FileUpload: () => <div>Banner upload</div>
 }));
 
-vi.mock('@/procedures/sweepstakes/verify-slug', () => ({ default: vi.fn() }));
+vi.mock('@giveaway/sweepstakes-editor-server/verify-slug', () => ({
+  default: vi.fn()
+}));
 
 vi.mock('next/link', () => ({
   default: ({

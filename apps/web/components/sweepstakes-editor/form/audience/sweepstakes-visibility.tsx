@@ -26,7 +26,7 @@ import {
 import { HelpDialog } from '@giveaway/ui-layouts/help-dialog';
 import Link from 'next/link';
 import { debounce } from '@giveaway/ui-utils/utils';
-import verifySlug from '@/procedures/sweepstakes/verify-slug';
+import verifySlug from '@giveaway/sweepstakes-editor-server/verify-slug';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import {

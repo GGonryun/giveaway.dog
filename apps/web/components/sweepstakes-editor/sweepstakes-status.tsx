@@ -41,7 +41,7 @@ import {
   SweepstakesStatusDescription
 } from '@giveaway/sweepstakes-ui/status-badge';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import toggleVisibility from '@/procedures/sweepstakes/toggle-visibility';
+import toggleVisibility from '@giveaway/sweepstakes-editor-server/toggle-visibility';
 import { useRouter } from 'next/navigation';
 
 import { CompleteSweepstakesAlert } from './complete-sweepstakes-alert';

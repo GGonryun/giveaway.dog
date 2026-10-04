@@ -7,7 +7,7 @@ import { QRCodeModal } from '@giveaway/ui-qr/qr-code-modal';
 import {
   mockParticipation,
   mockUserReferral
-} from '@/components/sweepstakes-editor/data/mocks';
+} from '@giveaway/sweepstakes-demo/mocks';
 import {
   getPreviewParticipant,
   getPreviewRelationship
@@ -24,7 +24,7 @@ import {
   buildSweepstakes,
   buildTeam
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
-import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
+import completeSweepstakes from '@giveaway/sweepstakes-editor-server/complete-sweepstakes';
 import { DEFAULT_DESIGN_DATA } from '@giveaway/sweepstakes-model/defaults';
 import type { GiveawayPrizeSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesPreview } from '../sweepstakes-preview';
@@ -37,7 +37,7 @@ vi.mock('next/navigation', () => ({ useRouter: () => navigation.router }));
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
-vi.mock('@/procedures/sweepstakes/complete-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/complete-sweepstakes', () => ({
   default: vi.fn()
 }));
 

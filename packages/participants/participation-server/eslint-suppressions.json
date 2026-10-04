@@ -1,0 +1,12 @@
+{
+  "packages/participants/participation-server/src/get-sweepstakes-privacy.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "packages/participants/participation-server/src/get-user-host-relationship.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  }
+}

@@ -20,8 +20,8 @@ import { useSweepstakesPage } from '@giveaway/sweepstakes-routes/use-sweepstakes
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { useDeleteSweepstakes } from '../sweepstakes/use-delete-sweepstakes';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
-import publishSweepstakes from '@/procedures/sweepstakes/publish-sweepstakes';
+import updateSweepstakes from '@giveaway/sweepstakes-editor-server/update-sweepstakes';
+import publishSweepstakes from '@giveaway/sweepstakes-editor-server/publish-sweepstakes';
 import { PreviewStateContext } from './contexts/preview-state-context';
 
 import { UnifiedFormLayoutContextProvider } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';

@@ -2,7 +2,7 @@
 
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getTwitterV2PublicPicker } from '@/lib/pickers/x/procedures/get-twitter-v2-public-picker';
+import { getTwitterV2PublicPicker } from '@giveaway/x-picker-server/procedures/get-twitter-v2-public-picker';
 import { TwitterV2PublicView } from '@/lib/pickers/x/components/twitter-v2-public-view';
 import { environment } from '@giveaway/app-config/environment';
 

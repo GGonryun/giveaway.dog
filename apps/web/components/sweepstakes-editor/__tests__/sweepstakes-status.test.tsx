@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { toast } from 'sonner';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import toggleVisibility from '@/procedures/sweepstakes/toggle-visibility';
+import toggleVisibility from '@giveaway/sweepstakes-editor-server/toggle-visibility';
 import { SweepstakesStatusComponent } from '../sweepstakes-status';
 import { FIXED_NOW } from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 
@@ -15,7 +15,7 @@ const router = vi.hoisted(() => ({ refresh: vi.fn(), push: vi.fn() }));
 
 vi.mock('next/navigation', () => ({ useRouter: () => router }));
 
-vi.mock('@/procedures/sweepstakes/toggle-visibility', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/toggle-visibility', () => ({
   default: vi.fn()
 }));
 

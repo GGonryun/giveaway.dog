@@ -35,7 +35,7 @@ vi.mock('@/lib/winners/procedures/reroll-draw', () => ({
 vi.mock('@/lib/winners/procedures/disqualify-draw', () => ({
   disqualifyDraw: vi.fn()
 }));
-vi.mock('@/procedures/sweepstakes/complete-sweepstakes', () => ({
+vi.mock('@giveaway/sweepstakes-editor-server/complete-sweepstakes', () => ({
   default: vi.fn()
 }));
 vi.mock('@/procedures/sweepstakes/update-winner-criteria', () => ({

@@ -1,0 +1,65 @@
+{
+  "name": "@giveaway/task-validation-core",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-validation-core",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./ask-question": "./src/ask-question.ts",
+    "./bonus": "./src/bonus.ts",
+    "./mandatory": "./src/mandatory.ts",
+    "./multiple-choice": "./src/multiple-choice.ts",
+    "./proof": "./src/proof.ts",
+    "./referral": "./src/referral.ts",
+    "./required": "./src/required.ts",
+    "./secret-code": "./src/secret-code.ts",
+    "./single-choice": "./src/single-choice.ts",
+    "./task-state": "./src/task-state.ts",
+    "./visit-url": "./src/visit-url.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/loyalty-model": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/referrals-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "server-only": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "cookies-next": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "zod": "catalog:"
+  }
+}

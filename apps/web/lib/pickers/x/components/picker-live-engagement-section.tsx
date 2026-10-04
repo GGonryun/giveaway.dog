@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@giveaway/ui-primitives/card';
-import getTotalEngagements from '@/procedures/pickers/get-total-engagements';
+import getTotalEngagements from '@giveaway/x-picker-server/pickers/get-total-engagements';
 import { Heart, Repeat2, MessageCircle, Quote } from 'lucide-react';
 
 export async function PickerLiveEngagementSection() {
