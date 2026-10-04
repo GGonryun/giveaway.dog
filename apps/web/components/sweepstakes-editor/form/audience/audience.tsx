@@ -6,7 +6,7 @@ import { RegionalRestriction } from './regional-restriction';
 import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 import { AllowedIdentities } from './allowed-identities';
 import { RequirePreEntryLogin } from './require-pre-entry-login';
-import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fields';
+import { CustomFormFields } from '@giveaway/custom-fields-ui/custom-form-fields';
 import { EnableAutomaticProfileEntry } from './enable-automatic-profile-entry';
 import { useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';

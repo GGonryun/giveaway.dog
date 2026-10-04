@@ -61,7 +61,7 @@ import {
   DropdownMenuTrigger
 } from '@giveaway/ui-primitives/dropdown-menu';
 import { Textarea } from '@giveaway/ui-primitives/textarea';
-import { CompleteSweepstakesAlert } from '../sweepstakes-editor/complete-sweepstakes-alert';
+import { CompleteSweepstakesAlert } from '@giveaway/sweepstakes-editor-core/complete-sweepstakes-alert';
 import { BotEnforcementField } from '@giveaway/user-quality-ui/bot-enforcement-field';
 import {
   DerivedSweepstakeStatus,

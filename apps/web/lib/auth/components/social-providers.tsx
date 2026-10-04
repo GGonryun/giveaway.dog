@@ -28,7 +28,7 @@ import { useState } from 'react';
 import { BlueskyConnectForm } from '@giveaway/bluesky-connect-ui/bluesky-connect-form';
 import { InstagramConnectForm } from '@giveaway/meta-connect-ui/instagram-connect-form';
 import { FacebookConnectForm } from '@giveaway/meta-connect-ui/facebook-connect-form';
-import { AccountStatusAlert } from '@/components/auth/account-status-alert';
+import { AccountStatusAlert } from '@giveaway/auth-login-ui/account-status-alert';
 
 export const SocialProviders = () => {
   const router = useRouter();

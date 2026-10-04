@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle
 } from '@giveaway/ui-primitives/card';
-import { AuthFooter } from '@/components/auth/auth-footer';
+import { AuthFooter } from '@giveaway/auth-login-ui/auth-footer';
 import { AccountTypeStep } from './account-type-step';
 import { ProfileStep } from './profile-step';
 import { useOnboardingPage } from './use-onboarding-page';

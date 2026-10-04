@@ -1,0 +1,7 @@
+{
+  "packages/integrations/twitch/twitch-connect-ui/src/twitch-card.tsx": {
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
+    }
+  }
+}

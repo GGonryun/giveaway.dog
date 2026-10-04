@@ -22,7 +22,7 @@ import {
   onFakeTaskUpdate,
   onFakeAllocate
 } from '@giveaway/sweepstakes-demo/mocks';
-import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
+import { SweepstakesStatusComponent } from '@giveaway/sweepstakes-editor-core/sweepstakes-status';
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
 import { useBrowseSweepstakesPage } from '@giveaway/sweepstakes-routes/use-browse-sweepstakes-page';
 import { useSweepstakesDetailsPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-details-page';

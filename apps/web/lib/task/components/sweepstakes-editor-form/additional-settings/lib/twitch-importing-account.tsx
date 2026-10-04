@@ -1,7 +1,7 @@
 import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import { SwitchFormHeader } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
-import { SweepstakeStep } from '@/components/sweepstakes-editor/data/steps';
+import { SweepstakeStep } from '@giveaway/sweepstakes-editor-core/steps';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { Button } from '@giveaway/ui-primitives/button';
 import { FormField, FormItem, FormControl } from '@giveaway/ui-primitives/form';

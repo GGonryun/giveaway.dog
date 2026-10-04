@@ -25,8 +25,8 @@ import {
   TASK_REQUIRED_SCOPES,
   TASK_IDENTITY_PROVIDER
 } from '@giveaway/task-model/schemas';
-import { LoginOptions } from '@/components/auth/login-options';
-import { AccountStatusAlert } from '@/components/auth/account-status-alert';
+import { LoginOptions } from '@giveaway/auth-login-ui/login-options';
+import { AccountStatusAlert } from '@giveaway/auth-login-ui/account-status-alert';
 
 const useProviderConnection = ({ task }: { task: TaskSchema }) => {
   const { providers } = useTaskEntry();

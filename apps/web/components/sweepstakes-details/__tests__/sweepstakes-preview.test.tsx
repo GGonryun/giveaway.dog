@@ -12,7 +12,7 @@ import {
   getPreviewParticipant,
   getPreviewRelationship
 } from '@/components/sweepstakes-editor/sweepstakes-editor-preview';
-import { SweepstakesStatusComponent } from '@/components/sweepstakes-editor/sweepstakes-status';
+import { SweepstakesStatusComponent } from '@giveaway/sweepstakes-editor-core/sweepstakes-status';
 import GiveawayParticipation from '@/components/sweepstakes/giveaway-participation';
 import {
   buildGiveawayPrize,
@@ -41,7 +41,7 @@ vi.mock('@giveaway/sweepstakes-editor-server/complete-sweepstakes', () => ({
   default: vi.fn()
 }));
 
-vi.mock('@/components/sweepstakes-editor/sweepstakes-status', () => ({
+vi.mock('@giveaway/sweepstakes-editor-core/sweepstakes-status', () => ({
   SweepstakesStatusComponent: vi.fn(() => <div>status panel</div>)
 }));
 

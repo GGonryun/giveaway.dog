@@ -1,6 +1,6 @@
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useGiveawayParticipation } from './giveaway-participation-context';
-import { LoginOptions } from '../auth/login-options';
+import { LoginOptions } from '@giveaway/auth-login-ui/login-options';
 import { useMemo } from 'react';
 
 export const SweepstakesLoginOptions: React.FC = () => {

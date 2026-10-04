@@ -23,7 +23,7 @@
     "./create-tweet": "./src/create-tweet.ts",
     "./get-latest-twitter-access-token": "./src/get-latest-twitter-access-token.ts",
     "./get-twitter-oembed": "./src/get-twitter-oembed.ts",
-    "./twitter-api-request": "./src/twitter-api-request.tsx",
+    "./twitter-api-request": "./src/twitter-api-request.ts",
     "./upload-image": "./src/upload-image.ts"
   },
   "scripts": {
@@ -47,8 +47,6 @@
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "catalog:",
-    "react": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

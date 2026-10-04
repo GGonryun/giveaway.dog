@@ -14,7 +14,7 @@ import {
   GiveawayState,
   Prize
 } from '@giveaway/sweepstakes-model/schemas';
-import { usePreviewState } from './contexts/preview-state-context';
+import { usePreviewState } from '@giveaway/sweepstakes-editor-core/contexts/preview-state-context';
 import {
   SweepstakesFormFieldType,
   RegionalRestrictionFilter,

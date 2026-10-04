@@ -1,0 +1,7 @@
+{
+  "packages/sweepstakes/sweepstakes-editor-core/src/publish-confirmation-modal.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  }
+}

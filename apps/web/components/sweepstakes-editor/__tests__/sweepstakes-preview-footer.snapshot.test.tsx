@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayState } from '@giveaway/sweepstakes-model/schemas';
-import { PreviewStateContext } from '../contexts/preview-state-context';
+import { PreviewStateContext } from '@giveaway/sweepstakes-editor-core/contexts/preview-state-context';
 import { SweepstakesPreviewFooter } from '../sweepstakes-preview-footer';
 import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 

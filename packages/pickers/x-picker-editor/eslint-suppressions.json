@@ -1,0 +1,12 @@
+{
+  "packages/pickers/x-picker-editor/src/sections/setup-section.tsx": {
+    "react/display-name": {
+      "count": 1
+    }
+  },
+  "packages/pickers/x-picker-editor/src/twitter-v2-picker-preview.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  }
+}

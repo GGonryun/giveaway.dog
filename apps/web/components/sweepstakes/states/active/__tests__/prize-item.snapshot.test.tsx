@@ -13,7 +13,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams()
 }));
 
-vi.mock('@/components/auth/login-options', () => ({
+vi.mock('@giveaway/auth-login-ui/login-options', () => ({
   LoginOptions: ({ label }: { label: string }) => (
     <div data-testid="login-options">{label}</div>
   )

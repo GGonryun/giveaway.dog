@@ -24,11 +24,6 @@
       "count": 1
     }
   },
-  "apps/web/components/sweepstakes-editor/publish-confirmation-modal.tsx": {
-    "react-hooks/purity": {
-      "count": 1
-    }
-  },
   "apps/web/components/sweepstakes-editor/sweepstakes-editor-preview.tsx": {
     "react-hooks/purity": {
       "count": 1
@@ -49,29 +44,9 @@
       "count": 2
     }
   },
-  "apps/web/lib/custom-fields/components/custom-form-fields.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 5
-    }
-  },
-  "apps/web/lib/custom-fields/components/form-field.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "apps/web/lib/home/supported-integrations.tsx": {
     "@next/next/no-html-link-for-pages": {
       "count": 1
-    }
-  },
-  "apps/web/lib/pickers/x/components/sections/setup-section.tsx": {
-    "react/display-name": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/pickers/x/components/twitter-v2-picker-preview.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
     }
   },
   "apps/web/lib/task/components/entry-methods/entry-methods.tsx": {
@@ -120,11 +95,6 @@
   "apps/web/lib/templates/components/use-template-modal.tsx": {
     "react-hooks/purity": {
       "count": 2
-    }
-  },
-  "apps/web/lib/twitch/components/twitch-card.tsx": {
-    "react-hooks/preserve-manual-memoization": {
-      "count": 1
     }
   },
   "apps/web/procedures/sweepstakes/reverify-task-completion.ts": {

@@ -24,7 +24,7 @@ import {
   TwitterImportingAccountField,
   ImportingTweetIdValidation
 } from './lib/twitter-importing-account';
-import { BlueskyImportingAccountField } from './lib/bluesky-importing-account';
+import { BlueskyImportingAccountField } from '@giveaway/bluesky-task-editor/bluesky-importing-account';
 import {
   InstagramProfileUrl,
   InstagramPostUrl
@@ -43,8 +43,8 @@ import { MultipleChoiceFormFields } from '@giveaway/task-editor-fields/multiple-
 import { SubmitMediaFormFields } from '@giveaway/task-editor-fields/submit-media';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { AlertCircle } from 'lucide-react';
-import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
-import { BlueskyPostUrlField } from './lib/bluesky-post-url';
+import { BlueskyProfileUrlField } from '@giveaway/bluesky-task-editor/bluesky-profile-url';
+import { BlueskyPostUrlField } from '@giveaway/bluesky-task-editor/bluesky-post-url';
 import { VeloraFollowFormField } from '@giveaway/velora-task-editor/velora-follow';
 import { LinkedInFollowFormField } from '@giveaway/linkedin-task-editor/linkedin-follow';
 import { MaximumReferralsField } from '@giveaway/task-editor-fields/maximum-referrals';

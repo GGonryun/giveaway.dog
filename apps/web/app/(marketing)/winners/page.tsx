@@ -2,7 +2,7 @@ import getWinnersLeaderboard from '@giveaway/leaderboard-server/get-winners-lead
 import { WINNERS_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { WinnersLeaderboard } from '@/components/winners/winners-leaderboard';
+import { WinnersLeaderboard } from '@giveaway/leaderboard-ui/winners-leaderboard';
 import { Skeleton } from '@giveaway/ui-primitives/skeleton';
 import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import {

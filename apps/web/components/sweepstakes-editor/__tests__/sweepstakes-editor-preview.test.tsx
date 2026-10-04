@@ -12,7 +12,7 @@ import {
   GiveawayState,
   PREVIEW_GIVEAWAY_STATES
 } from '@giveaway/sweepstakes-model/schemas';
-import { PreviewStateContext } from '../contexts/preview-state-context';
+import { PreviewStateContext } from '@giveaway/sweepstakes-editor-core/contexts/preview-state-context';
 import {
   mockParticipant,
   mockParticipation,

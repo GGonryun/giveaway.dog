@@ -35,7 +35,7 @@ import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { TemplateFormContent } from './template-form-content';
 import { TemplatePreview } from './template-preview';
 import { TemplatePreviewFooter } from './template-preview-footer';
-import { PreviewStateContext } from '@/components/sweepstakes-editor/contexts/preview-state-context';
+import { PreviewStateContext } from '@giveaway/sweepstakes-editor-core/contexts/preview-state-context';
 import { GiveawayState } from '@giveaway/sweepstakes-model/schemas';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { TemplatePublishConfirmationModal } from './template-publish-confirmation-modal';

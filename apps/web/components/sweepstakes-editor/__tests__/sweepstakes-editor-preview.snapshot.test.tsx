@@ -9,7 +9,7 @@ import {
   GiveawayFormSchema,
   GiveawayState
 } from '@giveaway/sweepstakes-model/schemas';
-import { PreviewStateContext } from '../contexts/preview-state-context';
+import { PreviewStateContext } from '@giveaway/sweepstakes-editor-core/contexts/preview-state-context';
 import { SweepstakesSharedFormPreview } from '../sweepstakes-editor-preview';
 import { FIXED_NOW } from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 

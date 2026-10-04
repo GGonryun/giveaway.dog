@@ -1,4 +1,4 @@
-import { AuthPortal, PortalLayout } from './auth-portal';
+import { AuthPortal, PortalLayout } from '@giveaway/auth-login-ui/auth-portal';
 import { redirect } from 'next/navigation';
 import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
 import trackUser from '@giveaway/audience-server/track-user';

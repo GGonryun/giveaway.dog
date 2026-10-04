@@ -22,7 +22,7 @@ import { useDeleteSweepstakes } from '@giveaway/sweepstakes-actions-ui/use-delet
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateSweepstakes from '@giveaway/sweepstakes-editor-server/update-sweepstakes';
 import publishSweepstakes from '@giveaway/sweepstakes-editor-server/publish-sweepstakes';
-import { PreviewStateContext } from './contexts/preview-state-context';
+import { PreviewStateContext } from '@giveaway/sweepstakes-editor-core/contexts/preview-state-context';
 
 import { UnifiedFormLayoutContextProvider } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
@@ -33,12 +33,12 @@ import {
   SWEEPSTAKE_STEP_LABELS,
   SWEEPSTAKE_STEP_ORDER,
   SweepstakeStep
-} from './data/steps';
+} from '@giveaway/sweepstakes-editor-core/steps';
 import { SweepstakesPreviewFooter } from './sweepstakes-preview-footer';
 import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { SweepstakeFormContent } from './sweepstake-form-content';
 import { CancelConfirmationModal } from '@giveaway/sweepstakes-ui/cancel-confirmation-modal';
-import { PublishConfirmationModal } from './publish-confirmation-modal';
+import { PublishConfirmationModal } from '@giveaway/sweepstakes-editor-core/publish-confirmation-modal';
 import { useSweepstakesDetailsPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-details-page';
 
 export const SweepstakesForm: React.FC<{

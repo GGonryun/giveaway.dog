@@ -4,7 +4,7 @@ import React from 'react';
 import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 import { AllowedIdentities } from '@/components/sweepstakes-editor/form/audience/allowed-identities';
 import { RequirePreEntryLogin } from '@/components/sweepstakes-editor/form/audience/require-pre-entry-login';
-import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fields';
+import { CustomFormFields } from '@giveaway/custom-fields-ui/custom-form-fields';
 import { RegionalRestriction } from '@/components/sweepstakes-editor/form/audience/regional-restriction';
 import { useFormContext } from 'react-hook-form';
 import { TemplateFormSchema } from '@giveaway/templates-model/schemas/template';

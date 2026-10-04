@@ -21,7 +21,7 @@ import { ArrayContext } from '@giveaway/ui-hooks/use-array-context';
 
 import { FieldError, useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
-import { IconButton } from '@/components/sweepstakes-editor/form/icon-button';
+import { IconButton } from '@giveaway/sweepstakes-editor-core/icon-button';
 import { EntryMethodBadge } from './entry-method-badge';
 import { BaseSettings } from '../sweepstakes-editor-form/base-settings';
 import { AdditionalSettings } from '../sweepstakes-editor-form/additional-settings/additional-settings';

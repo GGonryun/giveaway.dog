@@ -45,7 +45,7 @@ import {
   PICKER_STATUS_DESCRIPTIONS
 } from '@giveaway/picker-model/schemas/status';
 import { TwitterV2PickerSchema } from '@giveaway/x-picker-model/schemas/details';
-import { TwitterScrapeProgressMonitor } from './twitter-scrape-progress-monitor';
+import { TwitterScrapeProgressMonitor } from '@giveaway/x-picker-editor/twitter-scrape-progress-monitor';
 import { Separator } from '@giveaway/ui-primitives/separator';
 import { cn } from '@giveaway/ui-utils/utils';
 import { STATUS_COLORS, STATUS_ICONS } from '@giveaway/picker-ui/themes/status';
@@ -57,7 +57,7 @@ import {
   AvatarFallback,
   AvatarImage
 } from '@giveaway/ui-primitives/avatar';
-import { TwitterV2DeleteConfirmationModal } from './twitter-v2-delete-confirmation-modal';
+import { TwitterV2DeleteConfirmationModal } from '@giveaway/x-picker-editor/twitter-v2-delete-confirmation-modal';
 import { DrawExtraWinnerModal } from './twitter-v2-draw-extra-winner-modal';
 import { DisqualifyWinnerModal } from './twitter-v2-disqualify-winner-modal';
 import { DisqualificationReasonModal } from './twitter-v2-disqualification-reason-modal';

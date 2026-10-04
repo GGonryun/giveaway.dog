@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { LoginOptions } from '@/components/auth/login-options';
+import { LoginOptions } from '@giveaway/auth-login-ui/login-options';
 import { SweepstakesLoginOptions } from '../sweepstakes-login-options';
 import {
   buildAudience,
@@ -18,7 +18,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => navigation.searchParams
 }));
 
-vi.mock('@/components/auth/login-options', () => ({
+vi.mock('@giveaway/auth-login-ui/login-options', () => ({
   LoginOptions: vi.fn(() => <div data-testid="login-options" />)
 }));
 

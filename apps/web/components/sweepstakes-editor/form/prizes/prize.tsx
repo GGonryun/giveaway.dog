@@ -14,7 +14,7 @@ import {
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@giveaway/ui-utils/utils';
-import { IconButton } from '../icon-button';
+import { IconButton } from '@giveaway/sweepstakes-editor-core/icon-button';
 import {
   Collapsible,
   CollapsibleContent,

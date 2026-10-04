@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@giveaway/ui-primitives/dropdown-menu';
 import { Button } from '@giveaway/ui-primitives/button';
-import { usePreviewState } from './contexts/preview-state-context';
+import { usePreviewState } from '@giveaway/sweepstakes-editor-core/contexts/preview-state-context';
 
 export const SweepstakesPreviewFooter: React.FC = () => {
   return (

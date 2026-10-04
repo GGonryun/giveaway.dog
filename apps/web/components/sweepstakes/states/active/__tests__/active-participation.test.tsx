@@ -27,7 +27,7 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@giveaway/auth-actions/logout', () => ({ default: vi.fn() }));
 
-vi.mock('@/components/auth/login-options', () => ({
+vi.mock('@giveaway/auth-login-ui/login-options', () => ({
   LoginOptions: () => <div data-testid="login-options" />
 }));
 

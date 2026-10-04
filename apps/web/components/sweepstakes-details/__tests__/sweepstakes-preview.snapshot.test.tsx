@@ -32,7 +32,7 @@ vi.mock('@giveaway/sweepstakes-editor-server/complete-sweepstakes', () => ({
   default: vi.fn()
 }));
 
-vi.mock('@/components/sweepstakes-editor/sweepstakes-status', () => ({
+vi.mock('@giveaway/sweepstakes-editor-core/sweepstakes-status', () => ({
   SweepstakesStatusComponent: vi.fn(() => <div>status panel</div>)
 }));
 

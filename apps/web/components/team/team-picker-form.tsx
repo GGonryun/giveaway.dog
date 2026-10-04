@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle
 } from '@giveaway/ui-primitives/card';
-import { AuthFooter } from '@/components/auth/auth-footer';
+import { AuthFooter } from '@giveaway/auth-login-ui/auth-footer';
 import { SelectTeamForm } from './select-team-form';
 import { CreateTeamForm } from './create-team-form';
 import { useTeamsPage } from '@giveaway/team-context/use-teams-page';
