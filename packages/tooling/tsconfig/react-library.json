@@ -6,7 +6,7 @@
     "jsx": "react-jsx",
     "types": ["node"]
   },
-  "files": ["./react.d.ts"],
+  "files": ["./react.d.ts", "./scrapebadger.d.ts"],
   "include": ["${configDir}/**/*.ts", "${configDir}/**/*.tsx"],
   "exclude": ["${configDir}/node_modules"]
 }

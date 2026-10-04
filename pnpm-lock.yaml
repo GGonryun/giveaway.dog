@@ -3175,6 +3175,9 @@ importers:
       react:
         specifier: 'catalog:'
         version: 19.2.4
+      scrapebadger:
+        specifier: 'catalog:'
+        version: 0.1.7
     devDependencies:
       '@giveaway/eslint-config':
         specifier: workspace:*

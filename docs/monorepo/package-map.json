@@ -2450,7 +2450,7 @@
       "layer": 2,
       "sourceFiles": 12,
       "testFiles": 11,
-      "sources": ["lib/scrapebadger/", "types/scrapebadger.d.ts"],
+      "sources": ["lib/scrapebadger/"],
       "dependsOn": [
         "@giveaway/cache",
         "@giveaway/integration-model",

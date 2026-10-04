@@ -4,6 +4,7 @@
   "compilerOptions": {
     "types": ["node"]
   },
+  "files": ["./scrapebadger.d.ts"],
   "include": ["${configDir}/**/*.ts"],
   "exclude": ["${configDir}/node_modules"]
 }
