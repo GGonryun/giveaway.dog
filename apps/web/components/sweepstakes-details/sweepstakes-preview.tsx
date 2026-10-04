@@ -24,8 +24,8 @@ import {
 } from '../sweepstakes-editor/data/mocks';
 import { SweepstakesStatusComponent } from '../sweepstakes-editor/sweepstakes-status';
 import GiveawayParticipation from '../sweepstakes/giveaway-participation';
-import { useBrowseSweepstakesPage } from '../sweepstakes/use-browse-sweepstakes-page';
-import { useSweepstakesDetailsPage } from '../sweepstakes/use-sweepstakes-details-page';
+import { useBrowseSweepstakesPage } from '@giveaway/sweepstakes-routes/use-browse-sweepstakes-page';
+import { useSweepstakesDetailsPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-details-page';
 import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Button } from '@giveaway/ui-primitives/button';
 import {

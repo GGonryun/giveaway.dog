@@ -5,7 +5,7 @@ import {
   buildCompletion,
   buildParticipant,
   buildUser
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { disqualifyParticipant } from '@/procedures/sweepstakes/disqualify-participant';
 import { SweepstakesParticipants } from '../sweepstakes-participants';
 

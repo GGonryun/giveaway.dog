@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildFormValues,
   renderWithForm
-} from '@/components/sweepstakes-editor/__tests__/form-harness';
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 import { RegionalRestrictionFilterField } from '../regional-restriction-filter';
 

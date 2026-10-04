@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { withStableIds } from '@/components/sweepstakes/__tests__/fixtures';
+import { withStableIds } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import subscribeEmail from '@giveaway/marketing-server/subscribe-email';
 import { SubscriptionCTA } from '../subscription-cta';
 

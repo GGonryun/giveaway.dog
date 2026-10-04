@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import { EditGiveawayButton } from '../edit-giveaway-button';
-import { buildTeam } from './fixtures';
+import { buildTeam } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() })

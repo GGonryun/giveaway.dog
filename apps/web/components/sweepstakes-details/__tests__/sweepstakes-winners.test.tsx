@@ -20,7 +20,7 @@ import {
   buildTeam,
   buildUser,
   buildUserProfile
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { disqualifyDraw } from '@/lib/winners/procedures/disqualify-draw';
 import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';
 import { rollPrize } from '@/lib/winners/procedures/roll-prize';

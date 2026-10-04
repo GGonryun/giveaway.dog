@@ -17,7 +17,7 @@ import { PostBuilderSheet } from './post-builder-sheet';
 import { AutomatedPostDetails } from './automated-post-details';
 import { AutomatedPostJobSchema } from '@giveaway/automation-model/schemas';
 
-import { useLiveSweepstakesUrl } from '@/components/sweepstakes/use-live-sweepstakes-url';
+import { useLiveSweepstakesUrl } from '@giveaway/sweepstakes-routes/use-live-sweepstakes-url';
 type AutomationCardProps = ParticipantSweepstakeSchema & {
   integrations: IntegrationsSchema;
   slug: string;

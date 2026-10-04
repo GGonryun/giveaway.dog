@@ -68,7 +68,7 @@ import {
   EDITABLE_DERIVED_STATUS
 } from '@giveaway/sweepstakes-model/sweepstakes';
 import { PrizeDrawResult, UserSource } from '@prisma/client';
-import { DisqualificationDialog } from './disqualification-dialog';
+import { DisqualificationDialog } from '@giveaway/sweepstakes-ui/disqualification-dialog';
 import { TASK_LABEL } from '@giveaway/task-model/schemas';
 import { USER_SOURCE_LABEL } from '@giveaway/user-source-model/data';
 import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';

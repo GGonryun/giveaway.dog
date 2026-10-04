@@ -2,7 +2,7 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
-import { findUserSweepstakesQuery } from './shared';
+import { findUserSweepstakesQuery } from '@giveaway/sweepstakes-access/shared';
 import { ApplicationError } from '@giveaway/util-errors';
 
 import {

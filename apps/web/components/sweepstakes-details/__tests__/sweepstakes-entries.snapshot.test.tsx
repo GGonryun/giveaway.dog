@@ -6,7 +6,7 @@ import {
   buildUser,
   buildUserEntry,
   withStableIds
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { SweepstakesEntries } from '../sweepstakes-entries';
 
 const navigation = vi.hoisted(() => ({

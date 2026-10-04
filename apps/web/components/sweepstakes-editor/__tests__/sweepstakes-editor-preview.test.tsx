@@ -32,7 +32,11 @@ import {
   SweepstakesFormPreview,
   SweepstakesSharedFormPreview
 } from '../sweepstakes-editor-preview';
-import { buildFormValues, FIXED_NOW, renderWithForm } from './form-harness';
+import {
+  buildFormValues,
+  FIXED_NOW,
+  renderWithForm
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 
 vi.mock('@/components/sweepstakes/giveaway-participation', () => ({
   GiveawayParticipation: vi.fn(() => <div>Giveaway participation</div>)

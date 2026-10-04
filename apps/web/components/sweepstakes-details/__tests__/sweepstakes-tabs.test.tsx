@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamsProvider } from '@giveaway/team-context/team-provider';
-import { buildTeam } from '@/components/sweepstakes/__tests__/fixtures';
+import { buildTeam } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { SweepstakesDetailsTabs } from '../sweepstakes-tabs';
 
 const navigation = vi.hoisted(() => ({

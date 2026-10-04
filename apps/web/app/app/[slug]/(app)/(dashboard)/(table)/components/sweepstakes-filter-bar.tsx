@@ -1,6 +1,6 @@
 'use client';
 
-import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
+import { useSweepstakesPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-page';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Input } from '@giveaway/ui-primitives/input';
 import {

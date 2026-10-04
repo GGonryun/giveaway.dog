@@ -3,7 +3,11 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PublishConfirmationModal } from '../publish-confirmation-modal';
-import { buildFormValues, FIXED_NOW, renderWithForm } from './form-harness';
+import {
+  buildFormValues,
+  FIXED_NOW,
+  renderWithForm
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 
 vi.mock('next/link', () => ({
   default: ({

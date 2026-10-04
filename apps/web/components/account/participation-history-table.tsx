@@ -24,7 +24,7 @@ import {
   Trophy
 } from 'lucide-react';
 import Link from 'next/link';
-import { SweepstakesStatusBadge } from '../sweepstakes/status-badge';
+import { SweepstakesStatusBadge } from '@giveaway/sweepstakes-ui/status-badge';
 import { toEngagementTheme } from '@giveaway/participant-model/util';
 import { datetime } from '@giveaway/util-time/date';
 import { Label } from '@giveaway/ui-primitives/label';

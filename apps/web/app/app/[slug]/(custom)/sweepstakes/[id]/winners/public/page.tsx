@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { PublicWinnerDraw } from '@/components/sweepstakes-details/public-winner-draw';
 import { getSweepstakesParticipants } from '@/lib/participant/procedures/get-sweepstakes-participants';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import getSweepstakePrizes from '@/procedures/sweepstakes/get-sweepstake-prizes';
+import getSweepstakePrizes from '@giveaway/sweepstakes-insights-server/get-sweepstake-prizes';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

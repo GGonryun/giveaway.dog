@@ -14,7 +14,7 @@ import {
   buildUser,
   buildUserProfile,
   withStableIds
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { SweepstakesWinners } from '../sweepstakes-winners';
 
 const navigation = vi.hoisted(() => ({

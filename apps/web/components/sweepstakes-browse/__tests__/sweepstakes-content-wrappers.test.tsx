@@ -7,7 +7,7 @@ import {
   buildParticipant,
   buildParticipation,
   buildSweepstakes
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { AuthenticatedSweepstakesContent } from '../authenticated-sweepstakes-content';
 import { PublicSweepstakesContent } from '../public-sweepstakes-content';
 import { SweepstakesParticipationPage } from '../sweepstakes-participation-page-content';

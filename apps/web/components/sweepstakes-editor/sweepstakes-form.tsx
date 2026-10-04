@@ -16,7 +16,7 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { SweepstakesFormPreview } from './sweepstakes-editor-preview';
-import { useSweepstakesPage } from '../sweepstakes/use-sweepstakes-page';
+import { useSweepstakesPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-page';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { useDeleteSweepstakes } from '../sweepstakes/use-delete-sweepstakes';
 import { useProcedure } from '@giveaway/rpc-client/hook';
@@ -37,9 +37,9 @@ import {
 import { SweepstakesPreviewFooter } from './sweepstakes-preview-footer';
 import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { SweepstakeFormContent } from './sweepstake-form-content';
-import { CancelConfirmationModal } from '../sweepstakes/cancel-confirmation-modal';
+import { CancelConfirmationModal } from '@giveaway/sweepstakes-ui/cancel-confirmation-modal';
 import { PublishConfirmationModal } from './publish-confirmation-modal';
-import { useSweepstakesDetailsPage } from '../sweepstakes/use-sweepstakes-details-page';
+import { useSweepstakesDetailsPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-details-page';
 
 export const SweepstakesForm: React.FC<{
   sweepstakes: GiveawayFormSchema;

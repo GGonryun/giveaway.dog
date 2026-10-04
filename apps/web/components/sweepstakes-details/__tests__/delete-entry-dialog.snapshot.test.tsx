@@ -5,7 +5,7 @@ import {
   buildUser,
   buildUserEntry,
   withStableIds
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { deleteTaskCompletion } from '@/procedures/sweepstakes/delete-task-completion';
 import { DeleteEntryDialog } from '../delete-entry-dialog';
 

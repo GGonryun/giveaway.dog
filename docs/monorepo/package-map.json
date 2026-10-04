@@ -17,14 +17,6 @@
       "package": "@giveaway/shell-sidebar",
       "split": false
     },
-    "components/sweepstakes-editor/__tests__/form-harness.tsx": {
-      "package": "@giveaway/sweepstakes-editor-setup",
-      "split": false
-    },
-    "components/sweepstakes/__tests__/fixtures.tsx": {
-      "package": "@giveaway/sweepstakes-ui-testing",
-      "split": false
-    },
     "components/sweepstakes/__tests__/participation-fixtures.tsx": {
       "package": "@giveaway/sweepstakes-participation-core",
       "split": false
@@ -3402,15 +3394,16 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["procedures/sweepstakes/shared.ts"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/team-model",
         "@giveaway/team-permissions",
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "next-auth"]
+      "npm": ["next-auth"]
     },
     {
       "name": "@giveaway/sweepstakes-actions-ui",
@@ -3495,12 +3488,7 @@
       "layer": 6,
       "sourceFiles": 4,
       "testFiles": 5,
-      "sources": [
-        "components/sweepstakes-details/daily-entries-timeline.tsx",
-        "components/sweepstakes-details/prize-allocation-chart.tsx",
-        "components/sweepstakes-details/sweepstakes-analytics-skeleton.tsx",
-        "components/sweepstakes-details/sweepstakes-analytics.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/allocation-model",
         "@giveaway/app-config",
@@ -3803,7 +3791,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/sweepstakes-editor/form/design/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-layouts",
@@ -3876,7 +3864,7 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": ["components/sweepstakes-editor/form/selection/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-layouts",
@@ -3926,8 +3914,9 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": ["components/sweepstakes-editor/form/setup/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-date",
         "@giveaway/ui-file-upload",
@@ -3937,7 +3926,7 @@
         "@giveaway/util-time",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "react", "react-hook-form"]
+      "npm": ["lucide-react", "react", "react-hook-form"]
     },
     {
       "name": "@giveaway/sweepstakes-insights-server",
@@ -3947,15 +3936,10 @@
       "layer": 6,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": [
-        "procedures/sweepstakes/get-sweepstake-entries.ts",
-        "procedures/sweepstakes/get-sweepstake-prizes.ts",
-        "procedures/sweepstakes/get-sweepstake-task-entries.ts",
-        "procedures/sweepstakes/get-sweepstakes-entry-time-series.ts",
-        "procedures/sweepstakes/get-sweepstakes-list.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
         "@giveaway/task-model",
@@ -3964,7 +3948,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "date-fns", "lodash", "zod"]
+      "npm": ["date-fns", "lodash", "zod"]
     },
     {
       "name": "@giveaway/sweepstakes-jobs",
@@ -4154,14 +4138,7 @@
       "layer": 6,
       "sourceFiles": 6,
       "testFiles": 3,
-      "sources": [
-        "components/sweepstakes/use-browse-sweepstakes-page.ts",
-        "components/sweepstakes/use-create-sweepstakes-page.ts",
-        "components/sweepstakes/use-edit-sweepstakes-page.ts",
-        "components/sweepstakes/use-live-sweepstakes-url.tsx",
-        "components/sweepstakes/use-sweepstakes-details-page.ts",
-        "components/sweepstakes/use-sweepstakes-page.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/team-context",
@@ -4178,13 +4155,7 @@
       "layer": 6,
       "sourceFiles": 6,
       "testFiles": 10,
-      "sources": [
-        "components/sweepstakes-details/disqualification-dialog.tsx",
-        "components/sweepstakes/cancel-confirmation-modal.tsx",
-        "components/sweepstakes/fallbacks/",
-        "components/sweepstakes/status-badge.tsx",
-        "lib/sweepstake-status.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/sweepstakes-model",
@@ -4294,25 +4265,7 @@
       "layer": 6,
       "sourceFiles": 17,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/ask-question.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/bonus-loyalty.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/end-date.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/href.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/label.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/max-entrants.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/maximum-referrals.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/multiple-choice.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/require-proof.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/secret-code-case-sensitive.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/secret-code.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/secret-codes.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/secret-hint.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/single-choice.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/start-date.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/submit-media.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/switch-box-form-field.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-date",
@@ -4815,13 +4768,7 @@
       "layer": 6,
       "sourceFiles": 5,
       "testFiles": 6,
-      "sources": [
-        "components/settings/team/team-logo-card.tsx",
-        "components/settings/team/team-name-card.tsx",
-        "components/settings/team/team-slug-card.tsx",
-        "lib/settings/components/basic-information-section.tsx",
-        "lib/settings/components/profile-page.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/rpc-client",
         "@giveaway/team-context",

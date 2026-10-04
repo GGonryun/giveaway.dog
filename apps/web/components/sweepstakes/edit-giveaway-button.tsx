@@ -2,7 +2,7 @@
 
 import { Button } from '@giveaway/ui-primitives/button';
 import { EditIcon } from 'lucide-react';
-import { useEditSweepstakesPage } from './use-edit-sweepstakes-page';
+import { useEditSweepstakesPage } from '@giveaway/sweepstakes-routes/use-edit-sweepstakes-page';
 import Link from 'next/link';
 
 export const EditGiveawayButton: React.FC<{

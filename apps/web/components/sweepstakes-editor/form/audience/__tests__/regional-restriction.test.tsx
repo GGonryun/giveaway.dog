@@ -5,7 +5,7 @@ import { RegionalRestrictionSchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   buildFormValues,
   renderWithForm
-} from '@/components/sweepstakes-editor/__tests__/form-harness';
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { RegionalRestriction } from '../regional-restriction';
 
 vi.mock('@giveaway/util-geo/countries', async (importOriginal) => {

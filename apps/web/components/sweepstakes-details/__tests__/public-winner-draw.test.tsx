@@ -11,7 +11,7 @@ import {
   buildSweepstakesPrizeDraw,
   buildUser,
   buildUserProfile
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
 import { PublicWinnerDraw } from '../public-winner-draw';
 

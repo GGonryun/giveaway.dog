@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   buildFormValues,
   renderWithForm
-} from '@/components/sweepstakes-editor/__tests__/form-harness';
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { Prize } from '../prize';
 
 const values = buildFormValues({

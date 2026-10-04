@@ -1,8 +1,8 @@
 'use server';
 
-import { SweepstakesAnalytics } from '@/components/sweepstakes-details/sweepstakes-analytics';
-import { SweepstakesAnalyticsSkeleton } from '@/components/sweepstakes-details/sweepstakes-analytics-skeleton';
-import getSweepstakesEntryTimeSeries from '@/procedures/sweepstakes/get-sweepstakes-entry-time-series';
+import { SweepstakesAnalytics } from '@giveaway/sweepstakes-details-analytics/sweepstakes-analytics';
+import { SweepstakesAnalyticsSkeleton } from '@giveaway/sweepstakes-details-analytics/sweepstakes-analytics-skeleton';
+import getSweepstakesEntryTimeSeries from '@giveaway/sweepstakes-insights-server/get-sweepstakes-entry-time-series';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';

@@ -3,7 +3,10 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayParticipation } from '../giveaway-participation';
 import type { GiveawayParticipationProps } from '../giveaway-participation-context';
-import { NOW, withStableIds } from './fixtures';
+import {
+  NOW,
+  withStableIds
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { buildParticipationProps } from './participation-fixtures';
 
 vi.mock('@/lib/turnstile/gate', () => ({

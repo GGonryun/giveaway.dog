@@ -45,16 +45,16 @@ import {
 
 import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
 import { DeleteConfirmationModal } from '@/components/sweepstakes/delete-confirmation-modal';
-import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
-import { useEditSweepstakesPage } from '@/components/sweepstakes/use-edit-sweepstakes-page';
+import { useSweepstakesPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-page';
+import { useEditSweepstakesPage } from '@giveaway/sweepstakes-routes/use-edit-sweepstakes-page';
 import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_SWEEPSTAKES_NAME
 } from '@giveaway/app-config/settings';
-import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepstakes-details-page';
+import { useSweepstakesDetailsPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-details-page';
 import { Badge } from '@giveaway/ui-primitives/badge';
-import { DerivedStatusIcon } from '@/lib/sweepstake-status';
-import { useCreateSweepstakesPage } from '@/components/sweepstakes/use-create-sweepstakes-page';
+import { DerivedStatusIcon } from '@giveaway/sweepstakes-ui/sweepstake-status';
+import { useCreateSweepstakesPage } from '@giveaway/sweepstakes-routes/use-create-sweepstakes-page';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useCopySweepstakes } from '@/components/sweepstakes/use-copy-sweepstakes';
 import { useConvertToTemplate } from '@/components/sweepstakes/use-convert-to-template';

@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   buildProvider,
   withStableIds
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import type { TaskSchema } from '@giveaway/task-model/schemas';
 import { VerificationInstructionsDialog } from '../verification-instructions-dialog';
 

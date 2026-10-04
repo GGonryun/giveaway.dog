@@ -1,0 +1,68 @@
+{
+  "name": "@giveaway/task-editor-fields",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:ui",
+      "runtime:react",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-editor-fields --suppressions-location packages/tasks/task-editor-fields/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./ask-question": "./src/ask-question.tsx",
+    "./bonus-loyalty": "./src/bonus-loyalty.tsx",
+    "./end-date": "./src/end-date.tsx",
+    "./href": "./src/href.tsx",
+    "./label": "./src/label.tsx",
+    "./max-entrants": "./src/max-entrants.tsx",
+    "./maximum-referrals": "./src/maximum-referrals.tsx",
+    "./multiple-choice": "./src/multiple-choice.tsx",
+    "./require-proof": "./src/require-proof.tsx",
+    "./secret-code": "./src/secret-code.tsx",
+    "./secret-code-case-sensitive": "./src/secret-code-case-sensitive.tsx",
+    "./secret-codes": "./src/secret-codes.tsx",
+    "./secret-hint": "./src/secret-hint.tsx",
+    "./single-choice": "./src/single-choice.tsx",
+    "./start-date": "./src/start-date.tsx",
+    "./submit-media": "./src/submit-media.tsx",
+    "./switch-box-form-field": "./src/switch-box-form-field.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/ui-date": "workspace:*",
+    "@giveaway/ui-hooks": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-rich-text": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "lucide-react": "catalog:",
+    "react-hook-form": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow
 } from '@giveaway/ui-primitives/table';
-import getSweepstakesList from '@/procedures/sweepstakes/get-sweepstakes-list';
+import getSweepstakesList from '@giveaway/sweepstakes-insights-server/get-sweepstakes-list';
 import {
   ListSweepstakesFilters,
   toSweepstakesFilter

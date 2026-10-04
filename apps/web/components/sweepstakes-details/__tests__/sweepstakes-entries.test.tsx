@@ -6,7 +6,7 @@ import {
   buildTask,
   buildUser,
   buildUserEntry
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { DeleteEntryDialog } from '../delete-entry-dialog';
 import { SweepstakesEntries } from '../sweepstakes-entries';
 import { VerificationInstructionsDialog } from '../verification-instructions-dialog';

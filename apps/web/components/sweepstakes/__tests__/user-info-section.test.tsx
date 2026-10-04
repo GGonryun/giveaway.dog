@@ -4,7 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import logout from '@giveaway/auth-actions/logout';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { UserInfoSection } from '../user-info-section';
-import { buildParticipant, buildProvider, buildUser } from './fixtures';
+import {
+  buildParticipant,
+  buildProvider,
+  buildUser
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { renderWithParticipation } from './participation-fixtures';
 import type { ProviderSchema } from '@giveaway/integration-model/providers';
 

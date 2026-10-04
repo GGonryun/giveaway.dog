@@ -8,7 +8,7 @@ import {
   buildAudience,
   buildPrize,
   buildSweepstakes
-} from './fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { renderWithParticipation } from './participation-fixtures';
 import type { GiveawayFormAudience } from '@giveaway/sweepstakes-model/schemas';
 

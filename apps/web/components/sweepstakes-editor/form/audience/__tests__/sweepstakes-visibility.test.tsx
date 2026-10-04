@@ -7,7 +7,7 @@ import verifySlug from '@/procedures/sweepstakes/verify-slug';
 import {
   buildFormValues,
   renderWithForm
-} from '@/components/sweepstakes-editor/__tests__/form-harness';
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { UrlSlugField, VisibilityTypeField } from '../sweepstakes-visibility';
 
 vi.mock('@/procedures/sweepstakes/verify-slug', () => ({ default: vi.fn() }));

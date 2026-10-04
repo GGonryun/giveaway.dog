@@ -3,7 +3,7 @@ import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import type { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { SweepstakeFormContent } from '../sweepstake-form-content';
-import { renderWithForm } from './form-harness';
+import { renderWithForm } from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 
 vi.mock('@/lib/task/components/entry-methods/entry-methods', () => ({
   EntryMethods: ({

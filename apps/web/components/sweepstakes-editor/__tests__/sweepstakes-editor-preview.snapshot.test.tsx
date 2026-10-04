@@ -11,7 +11,7 @@ import {
 } from '@giveaway/sweepstakes-model/schemas';
 import { PreviewStateContext } from '../contexts/preview-state-context';
 import { SweepstakesSharedFormPreview } from '../sweepstakes-editor-preview';
-import { FIXED_NOW } from './form-harness';
+import { FIXED_NOW } from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 
 vi.mock('@/components/sweepstakes/giveaway-participation', () => ({
   GiveawayParticipation: vi.fn(() => <div>Giveaway participation</div>)

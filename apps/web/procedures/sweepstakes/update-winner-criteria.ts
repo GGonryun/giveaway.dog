@@ -13,7 +13,7 @@ import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
   DEFAULT_ALLOW_USER_SELECTION
 } from '@giveaway/sweepstakes-model/defaults';
-import { findUserSweepstakes } from './shared';
+import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 
 const updateWinnerCriteriaInput = z.object({

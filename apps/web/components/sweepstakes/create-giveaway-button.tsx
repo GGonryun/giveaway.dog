@@ -19,7 +19,7 @@ import {
 } from '@giveaway/ui-primitives/dropdown-menu';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { useTeams } from '@giveaway/team-context/team-provider';
-import { useCreateSweepstakesPage } from './use-create-sweepstakes-page';
+import { useCreateSweepstakesPage } from '@giveaway/sweepstakes-routes/use-create-sweepstakes-page';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useRouter } from 'next/navigation';
 import { useCreateTemplate } from '../templates/use-create-template';

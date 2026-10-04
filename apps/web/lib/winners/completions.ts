@@ -5,7 +5,7 @@ import {
 } from '@giveaway/task-model/queries';
 import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
 import { User } from 'next-auth';
-import { findUserSweepstakes } from '@/procedures/sweepstakes/shared';
+import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { ApplicationError } from '@giveaway/util-errors';
 
 import { SweepstakesCriteriaSchema } from '@giveaway/winners-model/criteria';

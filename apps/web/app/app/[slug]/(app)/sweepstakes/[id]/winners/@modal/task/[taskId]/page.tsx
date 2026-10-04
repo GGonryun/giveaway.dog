@@ -4,7 +4,7 @@ import {
   TaskCompletionDetailSheet,
   TaskCompletionDetailSheetContent
 } from '@/components/sweepstakes-details/task-completion-detail-sheet';
-import getSweepstakeEntry from '@/procedures/sweepstakes/get-sweepstake-task-entries';
+import getSweepstakeEntry from '@giveaway/sweepstakes-insights-server/get-sweepstake-task-entries';
 import { Suspense } from 'react';
 
 const Page: React.FC<{

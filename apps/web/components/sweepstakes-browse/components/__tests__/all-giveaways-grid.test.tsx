@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   NOW,
   buildPublicSweepstakes
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { AllGiveawaysGrid } from '../all-giveaways-grid';
 
 const summer = buildPublicSweepstakes();

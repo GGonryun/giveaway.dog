@@ -6,7 +6,7 @@ import { Prize } from '@giveaway/sweepstakes-model/schemas';
 import {
   buildFormValues,
   renderWithForm
-} from '@/components/sweepstakes-editor/__tests__/form-harness';
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 import { Prizes } from '../prizes';
 

@@ -4,7 +4,7 @@ import refreshSweepstakes from '@/procedures/browse/refresh-sweepstakes';
 import {
   NOW,
   buildSweepstakes
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import { Pending } from '../pending';
 

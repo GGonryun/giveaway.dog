@@ -39,7 +39,7 @@ import { datetime } from '@giveaway/util-time/date';
 import {
   SweepstakesStatusBadge,
   SweepstakesStatusDescription
-} from '../sweepstakes/status-badge';
+} from '@giveaway/sweepstakes-ui/status-badge';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import toggleVisibility from '@/procedures/sweepstakes/toggle-visibility';
 import { useRouter } from 'next/navigation';

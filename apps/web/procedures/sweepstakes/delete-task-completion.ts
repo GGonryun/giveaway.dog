@@ -4,7 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { TeamTier } from '@prisma/client';
-import { findUserSweepstakes } from './shared';
+import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 
 export const deleteTaskCompletion = procedure()

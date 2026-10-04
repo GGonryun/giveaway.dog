@@ -8,7 +8,10 @@ import publishSweepstakes from '@/procedures/sweepstakes/publish-sweepstakes';
 import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesForm } from '../sweepstakes-form';
-import { buildFormValues, FIXED_NOW } from './form-harness';
+import {
+  buildFormValues,
+  FIXED_NOW
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 
 vi.hoisted(() => {

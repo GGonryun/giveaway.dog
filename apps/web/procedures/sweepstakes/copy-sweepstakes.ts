@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
-import { findUserSweepstakesQuery } from './shared';
+import { findUserSweepstakesQuery } from '@giveaway/sweepstakes-access/shared';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { Prisma, TeamTier } from '@prisma/client';

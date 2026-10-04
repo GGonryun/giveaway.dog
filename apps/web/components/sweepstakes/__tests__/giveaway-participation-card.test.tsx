@@ -8,7 +8,7 @@ import {
   buildHost,
   buildParticipation,
   buildSweepstakes
-} from './fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { renderWithParticipation } from './participation-fixtures';
 import { DEFAULT_DESIGN_DATA } from '@giveaway/sweepstakes-model/defaults';
 import type { DeviceType } from '@giveaway/sweepstakes-model/schemas';

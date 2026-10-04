@@ -3,8 +3,8 @@
 import React, { useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
-import { GiveawayParticipationSkeleton } from '@/components/sweepstakes/fallbacks/giveaway-skeleton';
-import { IncompleteGiveawaySetup } from '@/components/sweepstakes/fallbacks/empty-states';
+import { GiveawayParticipationSkeleton } from '@giveaway/sweepstakes-ui/fallbacks/giveaway-skeleton';
+import { IncompleteGiveawaySetup } from '@giveaway/sweepstakes-ui/fallbacks/empty-states';
 
 import {
   GiveawayDesignBackgroundSchema,

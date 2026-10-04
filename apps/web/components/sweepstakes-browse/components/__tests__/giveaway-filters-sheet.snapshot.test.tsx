@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { withStableIds } from '@/components/sweepstakes/__tests__/fixtures';
+import { withStableIds } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { GiveawayFiltersSheet } from '../giveaway-filters-sheet';
 
 const navigation = vi.hoisted(() => ({

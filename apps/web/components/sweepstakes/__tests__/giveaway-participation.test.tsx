@@ -10,7 +10,11 @@ import GiveawayParticipationDefault, {
   GiveawayParticipation
 } from '../giveaway-participation';
 import type { GiveawayParticipationProps } from '../giveaway-participation-context';
-import { NOW, buildAudience, buildSweepstakes } from './fixtures';
+import {
+  NOW,
+  buildAudience,
+  buildSweepstakes
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { buildParticipationProps } from './participation-fixtures';
 
 vi.mock('@/lib/turnstile/gate', () => ({

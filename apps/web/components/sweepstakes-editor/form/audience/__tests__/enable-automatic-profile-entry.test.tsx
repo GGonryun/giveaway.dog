@@ -7,7 +7,7 @@ import { TaskSchema } from '@giveaway/task-model/schemas';
 import {
   buildFormValues,
   renderWithForm
-} from '@/components/sweepstakes-editor/__tests__/form-harness';
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { EnableAutomaticProfileEntry } from '../enable-automatic-profile-entry';
 
 vi.mock('nanoid', () => ({ nanoid: vi.fn() }));

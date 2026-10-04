@@ -7,7 +7,7 @@ import {
   buildPrizeDraw,
   buildUser,
   buildUserProfile
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import type { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';

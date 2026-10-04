@@ -1,6 +1,6 @@
 'use client';
 
-import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-page';
+import { useSweepstakesPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-page';
 import { Tabs, TabsList, TabsTrigger } from '@giveaway/ui-primitives/tabs';
 import { useState } from 'react';
 import { ListPickersV2FilterSchema } from '@giveaway/x-picker-model/schemas/list';

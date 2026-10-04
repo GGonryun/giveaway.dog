@@ -4,7 +4,10 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { CompletionStatus, TeamTier } from '@prisma/client';
-import { findUserSweepstakes, findUserSweepstakesQuery } from './shared';
+import {
+  findUserSweepstakes,
+  findUserSweepstakesQuery
+} from '@giveaway/sweepstakes-access/shared';
 import { validateTask } from '@/lib/task/validation/integrations';
 import { supportsAutomatedReverification } from '@giveaway/task-model/verification/utils';
 import { toTaskSchema } from '@giveaway/task-model/schemas';

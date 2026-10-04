@@ -1,7 +1,7 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { applySweepstakesChanges } from './shared';
+import { applySweepstakesChanges } from '@giveaway/sweepstakes-access/shared';
 import z from 'zod';
 import { sweepstakesInputSchema } from '@giveaway/sweepstakes-model/db';
 

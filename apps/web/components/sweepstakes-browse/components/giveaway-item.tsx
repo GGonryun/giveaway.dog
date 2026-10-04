@@ -7,7 +7,7 @@ import React from 'react';
 import Link from 'next/link';
 import { date } from '@giveaway/util-time/date';
 import { cn } from '@giveaway/ui-utils/utils';
-import { SweepstakesStatusSummaryBadge } from '@/components/sweepstakes/status-badge';
+import { SweepstakesStatusSummaryBadge } from '@giveaway/sweepstakes-ui/status-badge';
 import { PublicSweepstakesParticipationSchema } from '@giveaway/participant-model/schemas';
 import { Check } from 'lucide-react';
 

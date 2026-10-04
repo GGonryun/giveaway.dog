@@ -9,7 +9,7 @@ import {
   buildParticipant,
   buildParticipation,
   buildSweepstakes
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { allocatePrize } from '@giveaway/allocation-server/allocate-prize';
 import { submitParticipantForm } from '@giveaway/custom-fields-server/submit-form';
 import createReferralCode from '@giveaway/referrals-server/create-referral-code';

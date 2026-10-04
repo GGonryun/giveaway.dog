@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   NOW,
   buildPublicSweepstakes
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import type { PublicSweepstakesParticipationSchema } from '@giveaway/participant-model/schemas';
 import type { PublicSweepstakeSchema } from '@giveaway/sweepstakes-model/public';
 import { GiveawayItem } from '../giveaway-item';

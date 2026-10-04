@@ -5,7 +5,10 @@ import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import { createTemplate } from '@/lib/templates/procedures/create-template';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { CreateGiveawayButton } from '../create-giveaway-button';
-import { buildTeam, withStableIds } from './fixtures';
+import {
+  buildTeam,
+  withStableIds
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 
 const navigation = vi.hoisted(() => ({
   router: { push: vi.fn(), refresh: vi.fn() }

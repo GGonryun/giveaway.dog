@@ -2,7 +2,10 @@ import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LoginOptions } from '@/components/auth/login-options';
 import { SweepstakesLoginOptions } from '../sweepstakes-login-options';
-import { buildAudience, buildSweepstakes } from './fixtures';
+import {
+  buildAudience,
+  buildSweepstakes
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { renderWithParticipation } from './participation-fixtures';
 
 const navigation = vi.hoisted(() => ({

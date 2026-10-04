@@ -5,7 +5,7 @@ import { IdentityProviderSchema } from '@giveaway/integration-model/providers';
 import {
   buildFormValues,
   renderWithForm
-} from '@/components/sweepstakes-editor/__tests__/form-harness';
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { AllowedIdentities } from '../allowed-identities';
 
 const renderField = (

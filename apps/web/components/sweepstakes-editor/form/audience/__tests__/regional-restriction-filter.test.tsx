@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildFormValues,
   renderWithForm
-} from '@/components/sweepstakes-editor/__tests__/form-harness';
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { RegionalRestrictionFilterField } from '../regional-restriction-filter';
 
 const renderFilter = (filter: RegionalRestrictionFilter) => {

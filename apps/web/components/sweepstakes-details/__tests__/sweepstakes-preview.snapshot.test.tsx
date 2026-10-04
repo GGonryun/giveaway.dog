@@ -16,7 +16,7 @@ import {
   buildSweepstakes,
   buildTeam,
   withStableIds
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import type { GiveawayPrizeSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesPreview } from '../sweepstakes-preview';
 

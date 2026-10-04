@@ -3,7 +3,7 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
-import { findUserSweepstakes } from './shared';
+import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@prisma/client';

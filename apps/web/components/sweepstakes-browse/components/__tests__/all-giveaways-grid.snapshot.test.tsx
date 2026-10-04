@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { NOW } from '@/components/sweepstakes/__tests__/fixtures';
+import { NOW } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { AllGiveawaysGrid } from '../all-giveaways-grid';
 
 describe('AllGiveawaysGrid', () => {

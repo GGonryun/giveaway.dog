@@ -14,11 +14,6 @@
       "count": 2
     }
   },
-  "apps/web/components/sweepstakes-details/sweepstakes-analytics-skeleton.tsx": {
-    "react-hooks/purity": {
-      "count": 1
-    }
-  },
   "apps/web/components/sweepstakes-details/verification-instructions-dialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -31,16 +26,6 @@
   },
   "apps/web/components/sweepstakes-editor/form/audience/sweepstakes-visibility.tsx": {
     "react-hooks/refs": {
-      "count": 1
-    }
-  },
-  "apps/web/components/sweepstakes-editor/form/design/design.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
-  "apps/web/components/sweepstakes-editor/form/setup/setup.tsx": {
-    "react/display-name": {
       "count": 1
     }
   },
@@ -135,37 +120,6 @@
   "apps/web/lib/task/components/public-sweepstakes/task-actions/lib/twitter/verified-bonus-badge.tsx": {
     "react-hooks/static-components": {
       "count": 2
-    }
-  },
-  "apps/web/lib/task/components/sweepstakes-editor-form/additional-settings/lib/end-date.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "react/display-name": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/task/components/sweepstakes-editor-form/additional-settings/lib/multiple-choice.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/task/components/sweepstakes-editor-form/additional-settings/lib/secret-codes.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 7
-    }
-  },
-  "apps/web/lib/task/components/sweepstakes-editor-form/additional-settings/lib/single-choice.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/task/components/sweepstakes-editor-form/additional-settings/lib/start-date.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "react/display-name": {
-      "count": 1
     }
   },
   "apps/web/lib/task/hooks/use-twitch-trigger-validation.ts": {

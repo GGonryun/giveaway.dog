@@ -20,7 +20,7 @@ import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { PrizeDrawResult } from '@prisma/client';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Badge } from '@giveaway/ui-primitives/badge';
-import { DisqualificationDialog } from '@/components/sweepstakes-details/disqualification-dialog';
+import { DisqualificationDialog } from '@giveaway/sweepstakes-ui/disqualification-dialog';
 import {
   Alert,
   AlertDescription,

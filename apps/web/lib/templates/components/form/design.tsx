@@ -8,7 +8,7 @@ import {
   AspectRatioField,
   BackgroundColor,
   BackgroundFields
-} from '@/components/sweepstakes-editor/form/design/design';
+} from '@giveaway/sweepstakes-editor-design/design';
 import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 
 export const TemplateDesign = () => {

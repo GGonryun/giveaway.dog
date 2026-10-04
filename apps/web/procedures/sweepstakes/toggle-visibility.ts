@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { TeamTier, VisibilityType } from '@prisma/client';
 import { ApplicationError } from '@giveaway/util-errors';
-import { findUserSweepstakes } from './shared';
+import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 
 const toggleVisibilityInput = z.object({

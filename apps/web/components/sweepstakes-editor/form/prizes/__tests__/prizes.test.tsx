@@ -13,7 +13,7 @@ import { Prize } from '@giveaway/sweepstakes-model/schemas';
 import {
   buildFormValues,
   renderWithForm
-} from '@/components/sweepstakes-editor/__tests__/form-harness';
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { Prizes } from '../prizes';
 
 const dnd = vi.hoisted(() => ({

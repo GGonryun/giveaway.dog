@@ -5,7 +5,11 @@ import {
   GiveawayParticipationProvider,
   type GiveawayParticipationProps
 } from '@/components/sweepstakes/giveaway-participation-context';
-import { buildHost, buildParticipation, buildSweepstakes } from './fixtures';
+import {
+  buildHost,
+  buildParticipation,
+  buildSweepstakes
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 
 export const buildParticipationProps = (
   overrides: Partial<GiveawayParticipationProps> = {}

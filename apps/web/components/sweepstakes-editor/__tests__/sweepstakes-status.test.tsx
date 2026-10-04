@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import toggleVisibility from '@/procedures/sweepstakes/toggle-visibility';
 import { SweepstakesStatusComponent } from '../sweepstakes-status';
-import { FIXED_NOW } from './form-harness';
+import { FIXED_NOW } from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 
 vi.hoisted(() => {
   process.env.TZ = 'UTC';

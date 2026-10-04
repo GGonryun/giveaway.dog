@@ -23,7 +23,7 @@ import {
   buildPrizeDraw,
   buildSweepstakes,
   buildTeam
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { DEFAULT_DESIGN_DATA } from '@giveaway/sweepstakes-model/defaults';
 import type { GiveawayPrizeSchema } from '@giveaway/sweepstakes-model/schemas';

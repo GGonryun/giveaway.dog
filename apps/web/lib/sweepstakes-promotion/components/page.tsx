@@ -4,7 +4,7 @@ import { ParticipantSweepstakeSchema } from '@giveaway/sweepstakes-model/schemas
 import { SocialSharingCard } from './social-sharing-card';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import { ShareLinksCard } from './share-links-card';
-import { useLiveSweepstakesUrl } from '@/components/sweepstakes/use-live-sweepstakes-url';
+import { useLiveSweepstakesUrl } from '@giveaway/sweepstakes-routes/use-live-sweepstakes-url';
 
 export const SweepstakesPromotionPage: React.FC<
   ParticipantSweepstakeSchema

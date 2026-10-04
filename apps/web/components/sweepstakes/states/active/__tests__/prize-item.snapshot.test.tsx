@@ -4,7 +4,7 @@ import {
   buildAllocations,
   buildPrize,
   withStableIds
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
 import { PrizeItem } from '../prize-item';
 

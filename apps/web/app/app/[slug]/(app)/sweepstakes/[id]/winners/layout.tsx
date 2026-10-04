@@ -2,7 +2,7 @@ import { SweepstakesWinners } from '@/components/sweepstakes-details/sweepstakes
 import { SweepstakesWinnersSkeleton } from '@/components/sweepstakes-details/sweepstakes-winners-skeleton';
 import { getSweepstakesParticipants } from '@/lib/participant/procedures/get-sweepstakes-participants';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import getSweepstakePrizes from '@/procedures/sweepstakes/get-sweepstake-prizes';
+import getSweepstakePrizes from '@giveaway/sweepstakes-insights-server/get-sweepstake-prizes';
 
 import { Suspense } from 'react';
 

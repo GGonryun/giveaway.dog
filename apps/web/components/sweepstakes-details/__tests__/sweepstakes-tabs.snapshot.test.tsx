@@ -4,7 +4,7 @@ import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import {
   buildTeam,
   withStableIds
-} from '@/components/sweepstakes/__tests__/fixtures';
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import { SweepstakesDetailsTabs } from '../sweepstakes-tabs';
 
 const navigation = vi.hoisted(() => ({

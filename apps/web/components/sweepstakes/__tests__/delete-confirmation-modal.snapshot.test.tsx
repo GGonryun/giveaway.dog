@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import deleteSweepstakes from '@/procedures/sweepstakes/delete-sweepstakes';
 import { DeleteConfirmationModal } from '../delete-confirmation-modal';
-import { withStableIds } from './fixtures';
+import { withStableIds } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 
 vi.mock('@/procedures/sweepstakes/delete-sweepstakes', () => ({
   default: vi.fn()

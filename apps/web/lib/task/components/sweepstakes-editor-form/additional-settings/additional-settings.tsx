@@ -1,25 +1,25 @@
 import { assertNever } from '@giveaway/util-errors';
 import { useCallback } from 'react';
-import { StartDateField } from './lib/start-date';
-import { EndDateField } from './lib/end-date';
+import { StartDateField } from '@giveaway/task-editor-fields/start-date';
+import { EndDateField } from '@giveaway/task-editor-fields/end-date';
 import { YouTubeChannelUrlFormField } from './lib/youtube-channel-url';
 import { YouTubeSubscriptionConfirmationFormField } from './lib/youtube-subscription-confirmation';
 import { DiscordGuildIdFormField } from '@giveaway/discord-task-editor/discord-guild-id';
 import { DiscordInviteLinkFormField } from '@giveaway/discord-task-editor/discord-invite-link';
-import { HrefFormField } from './lib/href';
+import { HrefFormField } from '@giveaway/task-editor-fields/href';
 import { KickFollowFormField } from '@giveaway/kick-task-editor/kick-follow';
-import { LabelFormField } from './lib/label';
-import { SecretCodeFormField } from './lib/secret-code';
-import { SecretCodesFormField } from './lib/secret-codes';
+import { LabelFormField } from '@giveaway/task-editor-fields/label';
+import { SecretCodeFormField } from '@giveaway/task-editor-fields/secret-code';
+import { SecretCodesFormField } from '@giveaway/task-editor-fields/secret-codes';
 import { TweetIdFormField } from './lib/tweet-id';
 import { TwitchFollowFormField } from './lib/twitch-follow';
 import { TwitchChatImportFormField } from './lib/twitch-chat-command';
 import { TwitchChannelUrlDisplay } from './lib/twitch-channel-url-display';
 import { TwitterUsernameFormField } from './lib/twitter-username';
-import { SecretHintFormField } from './lib/secret-hint';
+import { SecretHintFormField } from '@giveaway/task-editor-fields/secret-hint';
 import { SteamAppIdFormField } from '@giveaway/steam-task-editor/steam-app-id';
-import { MaxEntrantsField } from './lib/max-entrants';
-import { LoyaltyRequiredField } from './lib/bonus-loyalty';
+import { MaxEntrantsField } from '@giveaway/task-editor-fields/max-entrants';
+import { LoyaltyRequiredField } from '@giveaway/task-editor-fields/bonus-loyalty';
 import {
   TwitterImportingAccountField,
   ImportingTweetIdValidation
@@ -34,17 +34,17 @@ import {
   FacebookPostUrl
 } from '@giveaway/meta-task-editor/facebook';
 import { TikTokProfileUrl, TikTokPostUrl } from './lib/tiktok';
-import { AskQuestionFormFields } from './lib/ask-question';
-import { SingleChoiceFormFields } from './lib/single-choice';
-import { MultipleChoiceFormFields } from './lib/multiple-choice';
-import { SubmitMediaFormFields } from './lib/submit-media';
+import { AskQuestionFormFields } from '@giveaway/task-editor-fields/ask-question';
+import { SingleChoiceFormFields } from '@giveaway/task-editor-fields/single-choice';
+import { MultipleChoiceFormFields } from '@giveaway/task-editor-fields/multiple-choice';
+import { SubmitMediaFormFields } from '@giveaway/task-editor-fields/submit-media';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { AlertCircle } from 'lucide-react';
 import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
 import { VeloraFollowFormField } from './lib/velora-follow';
 import { LinkedInFollowFormField } from '@giveaway/linkedin-task-editor/linkedin-follow';
-import { MaximumReferralsField } from './lib/maximum-referrals';
+import { MaximumReferralsField } from '@giveaway/task-editor-fields/maximum-referrals';
 import { SteamDeveloperFormField } from '@giveaway/steam-task-editor/steam-developer';
 import {
   Alert,

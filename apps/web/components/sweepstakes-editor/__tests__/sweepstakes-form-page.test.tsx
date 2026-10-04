@@ -9,7 +9,7 @@ import { SweepstakesForm } from '@/components/sweepstakes-editor/sweepstakes-for
 import { DerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 import { ApplicationErrorCode } from '@giveaway/util-errors';
 import { SweepstakeFormPage } from '../sweepstakes-form-page';
-import { buildFormValues } from './form-harness';
+import { buildFormValues } from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(() => {

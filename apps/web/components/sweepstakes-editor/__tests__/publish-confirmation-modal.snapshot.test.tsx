@@ -2,7 +2,11 @@ import { screen } from '@testing-library/react';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PublishConfirmationModal } from '../publish-confirmation-modal';
-import { buildFormValues, FIXED_NOW, renderWithForm } from './form-harness';
+import {
+  buildFormValues,
+  FIXED_NOW,
+  renderWithForm
+} from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 import { stabilizeIds } from '@giveaway/testing-dom/stable-dom';
 
 vi.mock('next/link', () => ({

@@ -3,7 +3,7 @@
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
-import { TeamProfileSettings } from '@/lib/settings/components/profile-page';
+import { TeamProfileSettings } from '@giveaway/team-settings-profile/profile-page';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
