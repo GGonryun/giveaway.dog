@@ -43,8 +43,8 @@ import {
   EDITABLE_DERIVED_STATUS
 } from '@giveaway/sweepstakes-model/sweepstakes';
 
-import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
-import { DeleteConfirmationModal } from '@/components/sweepstakes/delete-confirmation-modal';
+import { CreateGiveawayButton } from '@giveaway/sweepstakes-actions-ui/create-giveaway-button';
+import { DeleteConfirmationModal } from '@giveaway/sweepstakes-actions-ui/delete-confirmation-modal';
 import { useSweepstakesPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-page';
 import { useEditSweepstakesPage } from '@giveaway/sweepstakes-routes/use-edit-sweepstakes-page';
 import {
@@ -56,8 +56,8 @@ import { Badge } from '@giveaway/ui-primitives/badge';
 import { DerivedStatusIcon } from '@giveaway/sweepstakes-ui/sweepstake-status';
 import { useCreateSweepstakesPage } from '@giveaway/sweepstakes-routes/use-create-sweepstakes-page';
 import { cn } from '@giveaway/ui-utils/utils';
-import { useCopySweepstakes } from '@/components/sweepstakes/use-copy-sweepstakes';
-import { useConvertToTemplate } from '@/components/sweepstakes/use-convert-to-template';
+import { useCopySweepstakes } from '@giveaway/sweepstakes-actions-ui/use-copy-sweepstakes';
+import { useConvertToTemplate } from '@giveaway/sweepstakes-actions-ui/use-convert-to-template';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 

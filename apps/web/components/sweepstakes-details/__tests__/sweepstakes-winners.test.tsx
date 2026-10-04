@@ -21,10 +21,10 @@ import {
   buildUser,
   buildUserProfile
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
-import { disqualifyDraw } from '@/lib/winners/procedures/disqualify-draw';
-import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';
-import { rollPrize } from '@/lib/winners/procedures/roll-prize';
-import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
+import { disqualifyDraw } from '@giveaway/winners-server/procedures/disqualify-draw';
+import { rerollDraw } from '@giveaway/winners-server/procedures/reroll-draw';
+import { rollPrize } from '@giveaway/winners-server/procedures/roll-prize';
+import { rollPrizes } from '@giveaway/winners-server/procedures/roll-prizes';
 import completeSweepstakes from '@giveaway/sweepstakes-editor-server/complete-sweepstakes';
 import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteria';
 import { SweepstakesWinners } from '../sweepstakes-winners';
@@ -37,14 +37,16 @@ vi.mock('next/navigation', () => ({ useRouter: () => navigation.router }));
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
-vi.mock('@/lib/winners/procedures/roll-prizes', () => ({
+vi.mock('@giveaway/winners-server/procedures/roll-prizes', () => ({
   rollPrizes: vi.fn()
 }));
-vi.mock('@/lib/winners/procedures/roll-prize', () => ({ rollPrize: vi.fn() }));
-vi.mock('@/lib/winners/procedures/reroll-draw', () => ({
+vi.mock('@giveaway/winners-server/procedures/roll-prize', () => ({
+  rollPrize: vi.fn()
+}));
+vi.mock('@giveaway/winners-server/procedures/reroll-draw', () => ({
   rerollDraw: vi.fn()
 }));
-vi.mock('@/lib/winners/procedures/disqualify-draw', () => ({
+vi.mock('@giveaway/winners-server/procedures/disqualify-draw', () => ({
   disqualifyDraw: vi.fn()
 }));
 vi.mock('@giveaway/sweepstakes-editor-server/complete-sweepstakes', () => ({

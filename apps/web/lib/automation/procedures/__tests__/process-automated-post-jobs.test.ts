@@ -21,7 +21,7 @@ vi.mock('@giveaway/bluesky-api/create-skeet', () => ({
   createSkeet: mocks.createSkeet
 }));
 
-vi.mock('@/lib/discord/procedures/process-post-to-discord', () => ({
+vi.mock('@giveaway/discord-connect/process-post-to-discord', () => ({
   processPostToDiscord: mocks.processPostToDiscord
 }));
 

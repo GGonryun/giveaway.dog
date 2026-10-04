@@ -1,6 +1,6 @@
 'use client';
 
-import { useCreateTemplate } from '@/components/templates/use-create-template';
+import { useCreateTemplate } from '@giveaway/sweepstakes-actions-ui/templates/use-create-template';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Plus } from 'lucide-react';
 

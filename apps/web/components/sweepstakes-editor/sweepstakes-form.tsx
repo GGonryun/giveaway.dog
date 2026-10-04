@@ -18,7 +18,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { SweepstakesFormPreview } from './sweepstakes-editor-preview';
 import { useSweepstakesPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-page';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
-import { useDeleteSweepstakes } from '../sweepstakes/use-delete-sweepstakes';
+import { useDeleteSweepstakes } from '@giveaway/sweepstakes-actions-ui/use-delete-sweepstakes';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateSweepstakes from '@giveaway/sweepstakes-editor-server/update-sweepstakes';
 import publishSweepstakes from '@giveaway/sweepstakes-editor-server/publish-sweepstakes';

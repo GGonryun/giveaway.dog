@@ -29,7 +29,7 @@ import {
   twitterV2PickerFormSchema,
   TwitterV2PickerUnvalidatedFormSchema
 } from '@giveaway/x-picker-model/schemas/form';
-import { useTwitterV2PickersPage } from '../hooks/use-twitter-v2-pickers-page';
+import { useTwitterV2PickersPage } from '@giveaway/x-picker-dashboard/hooks/use-twitter-v2-pickers-page';
 import { TwitterV2CancelConfirmationModal } from './twitter-v2-cancel-confirmation-modal';
 import { TwitterV2PublishConfirmationModal } from './twitter-v2-publish-confirmation-modal';
 import { TwitterV2PickerPreview } from './twitter-v2-picker-preview';

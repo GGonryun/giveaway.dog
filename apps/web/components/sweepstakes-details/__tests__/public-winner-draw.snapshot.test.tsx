@@ -33,7 +33,7 @@ vi.mock('framer-motion', () => ({
   }
 }));
 
-vi.mock('@/lib/winners/procedures/roll-prizes', () => ({
+vi.mock('@giveaway/winners-server/procedures/roll-prizes', () => ({
   rollPrizes: vi.fn()
 }));
 

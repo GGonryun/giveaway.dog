@@ -20,14 +20,6 @@
     "components/sweepstakes/__tests__/participation-fixtures.tsx": {
       "package": "@giveaway/sweepstakes-participation-core",
       "split": false
-    },
-    "lib/discord/__tests__/fixtures-discord-bot.ts": {
-      "package": "@giveaway/discord-bot",
-      "split": false
-    },
-    "lib/winners/__tests__/fixtures-sweepstakes-winners-email.ts": {
-      "package": "@giveaway/winners-server",
-      "split": false
     }
   },
   "deadFiles": [],
@@ -267,12 +259,7 @@
       "layer": 8,
       "sourceFiles": 4,
       "testFiles": 6,
-      "sources": [
-        "app/(marketing)/history/filters.tsx",
-        "components/account/participation-history-skeleton.tsx",
-        "components/account/participation-history-table.tsx",
-        "components/account/withdraw-participation-dialog.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/browse-list",
         "@giveaway/participant-model",
@@ -1116,12 +1103,7 @@
       "layer": 6,
       "sourceFiles": 4,
       "testFiles": 0,
-      "sources": [
-        "lib/auth/components/bluesky-connect-form.tsx",
-        "lib/integrations/components/bluesky-card.tsx",
-        "lib/integrations/components/bluesky-connect-dialog.tsx",
-        "lib/integrations/components/bluesky-disconnect-dialog.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-actions",
         "@giveaway/bluesky-connect",
@@ -1402,23 +1384,18 @@
       "layer": 8,
       "sourceFiles": 16,
       "testFiles": 16,
-      "sources": [
-        "lib/discord/bot/commands/",
-        "lib/discord/bot/messages.ts",
-        "lib/discord/bot/util.ts",
-        "lib/discord/bot/verify.ts",
-        "lib/discord/workflows/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/automation-model",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/discord-api",
         "@giveaway/discord-model",
         "@giveaway/jobs",
         "@giveaway/task-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "next", "tweetnacl", "workflow"]
+      "npm": ["next", "tweetnacl", "workflow"]
     },
     {
       "name": "@giveaway/discord-connect",
@@ -1433,9 +1410,10 @@
       "layer": 8,
       "sourceFiles": 6,
       "testFiles": 6,
-      "sources": ["lib/discord/procedures/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/automation-model",
+        "@giveaway/db-model",
         "@giveaway/discord-api",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
@@ -1444,7 +1422,7 @@
         "@giveaway/team-server",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "zod"]
+      "npm": ["nanoid", "zod"]
     },
     {
       "name": "@giveaway/discord-connect-ui",
@@ -1549,13 +1527,14 @@
       "layer": 8,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/discord.ts"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/discord-api",
         "@giveaway/task-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/kick-auth",
@@ -1948,8 +1927,9 @@
       "layer": 5,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": ["lib/twitch/procedures/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
         "@giveaway/team-server",
@@ -1958,7 +1938,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/twitch-connect-ui",
@@ -2235,8 +2215,9 @@
       "layer": 7,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/procedures/twitter-oauth-callback.tsx"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-access",
@@ -2244,7 +2225,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/x-import",
@@ -2937,13 +2918,7 @@
       "layer": 7,
       "sourceFiles": 6,
       "testFiles": 0,
-      "sources": [
-        "lib/pickers/x/components/create-picker-v2-button.tsx",
-        "lib/pickers/x/components/delete-picker-v2-modal.tsx",
-        "lib/pickers/x/components/pickers-v2-table.tsx",
-        "lib/pickers/x/components/pickers-v2-tabs.tsx",
-        "lib/pickers/x/hooks/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/picker-model",
@@ -3366,15 +3341,7 @@
       "layer": 8,
       "sourceFiles": 7,
       "testFiles": 9,
-      "sources": [
-        "components/sweepstakes/create-giveaway-button.tsx",
-        "components/sweepstakes/delete-confirmation-modal.tsx",
-        "components/sweepstakes/edit-giveaway-button.tsx",
-        "components/sweepstakes/use-convert-to-template.ts",
-        "components/sweepstakes/use-copy-sweepstakes.ts",
-        "components/sweepstakes/use-delete-sweepstakes.ts",
-        "components/templates/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/rpc-client",
@@ -5288,12 +5255,9 @@
       "layer": 7,
       "sourceFiles": 6,
       "testFiles": 6,
-      "sources": [
-        "lib/winners/completions.ts",
-        "lib/winners/procedures/",
-        "lib/winners/selection.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-access",
         "@giveaway/task-model",
@@ -5302,7 +5266,7 @@
         "@giveaway/util-types",
         "@giveaway/winners-model"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "next-auth", "zod"]
+      "npm": ["nanoid", "next-auth", "zod"]
     },
     {
       "name": "@giveaway/codemods",

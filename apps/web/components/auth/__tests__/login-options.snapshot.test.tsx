@@ -60,7 +60,7 @@ vi.mock('sonner', () => ({
   toast: { success: mocks.toastSuccess, error: vi.fn() }
 }));
 
-vi.mock('@/lib/auth/components/bluesky-connect-form', () => ({
+vi.mock('@giveaway/bluesky-connect-ui/bluesky-connect-form', () => ({
   BlueskyConnectForm: connectFormStub('Bluesky')
 }));
 

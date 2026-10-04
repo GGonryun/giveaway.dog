@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { assertNever } from '@giveaway/util-errors';
 import { checkSteamWishlist } from '@giveaway/steam-task-validation/steam';
-import { checkDiscordJoin } from './discord';
+import { checkDiscordJoin } from '@giveaway/discord-task-validation/discord';
 import { TaskSchema } from '@giveaway/task-model/schemas';
 import { checkTwitchFollow } from '@giveaway/twitch-task-validation/twitch';
 import {

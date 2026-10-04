@@ -4,7 +4,7 @@ import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { BlueskyCard } from '@/lib/integrations/components/bluesky-card';
+import { BlueskyCard } from '@giveaway/bluesky-connect-ui/bluesky-card';
 import { DiscordCard } from '@/lib/discord/components/discord-card';
 import { TwitchCard } from '@/lib/twitch/components/twitch-card';
 import { PlaceholderCard } from '@giveaway/integration-ui/placeholder-card';

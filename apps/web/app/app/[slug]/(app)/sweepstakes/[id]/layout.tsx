@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Outline } from '@/components/app/outline';
-import { EditGiveawayButton } from '@/components/sweepstakes/edit-giveaway-button';
+import { EditGiveawayButton } from '@giveaway/sweepstakes-actions-ui/edit-giveaway-button';
 import { SweepstakesDetailsTabs } from '@giveaway/sweepstakes-details-shell/sweepstakes-tabs';
 import getSweepstakesStatus from '@giveaway/sweepstakes-editor-server/get-sweepstakes-status';
 import { EDITABLE_DERIVED_STATUS } from '@giveaway/sweepstakes-model/sweepstakes';

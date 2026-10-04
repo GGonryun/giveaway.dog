@@ -1,0 +1,60 @@
+{
+  "name": "@giveaway/discord-connect",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:discord"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/discord/discord-connect --suppressions-location packages/integrations/discord/discord-connect/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./disconnect-discord": "./src/disconnect-discord.ts",
+    "./get-discord-channels": "./src/get-discord-channels.ts",
+    "./get-discord-roles": "./src/get-discord-roles.ts",
+    "./process-post-to-discord": "./src/process-post-to-discord.ts",
+    "./start-discord-install": "./src/start-discord-install.ts",
+    "./verify-discord-install": "./src/verify-discord-install.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/automation-model": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/discord-api": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
+    "@giveaway/team-server": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "nanoid": "catalog:",
+    "server-only": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/discord-model": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

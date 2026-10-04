@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import nacl from 'tweetnacl';
 import { POST } from '../route';
-import { POST as handlerPOST } from '@/lib/discord/bot/commands/handler';
-import { discordConnectWorkflow } from '@/lib/discord/workflows/discord-connect/workflow';
-import { discordInteractionWorkflow } from '@/lib/discord/workflows/discord-interaction/workflow';
+import { POST as handlerPOST } from '@giveaway/discord-bot/commands/handler';
+import { discordConnectWorkflow } from '@giveaway/discord-bot/workflows/discord-connect/workflow';
+import { discordInteractionWorkflow } from '@giveaway/discord-bot/workflows/discord-interaction/workflow';
 import { ApplicationError } from '@giveaway/util-errors';
 
 const m = vi.hoisted(() => ({ start: vi.fn() }));

@@ -1,5 +1,5 @@
-import { ParticipationHistoryTable } from '@/components/account/participation-history-table';
-import { ParticipationHistorySkeleton } from '@/components/account/participation-history-skeleton';
+import { ParticipationHistoryTable } from '@giveaway/account-history/participation-history-table';
+import { ParticipationHistorySkeleton } from '@giveaway/account-history/participation-history-skeleton';
 import getParticipationHistory from '@giveaway/participation-history-server/get-participation-history';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';

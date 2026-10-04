@@ -25,14 +25,16 @@ vi.mock('next/navigation', () => ({ useRouter: () => navigation.router }));
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
-vi.mock('@/lib/winners/procedures/roll-prizes', () => ({
+vi.mock('@giveaway/winners-server/procedures/roll-prizes', () => ({
   rollPrizes: vi.fn()
 }));
-vi.mock('@/lib/winners/procedures/roll-prize', () => ({ rollPrize: vi.fn() }));
-vi.mock('@/lib/winners/procedures/reroll-draw', () => ({
+vi.mock('@giveaway/winners-server/procedures/roll-prize', () => ({
+  rollPrize: vi.fn()
+}));
+vi.mock('@giveaway/winners-server/procedures/reroll-draw', () => ({
   rerollDraw: vi.fn()
 }));
-vi.mock('@/lib/winners/procedures/disqualify-draw', () => ({
+vi.mock('@giveaway/winners-server/procedures/disqualify-draw', () => ({
   disqualifyDraw: vi.fn()
 }));
 vi.mock('@giveaway/sweepstakes-editor-server/complete-sweepstakes', () => ({

@@ -27,8 +27,8 @@ import {
 } from '@giveaway/ui-primitives/form';
 import { DiscordPostPermissionBanner } from '../discord-post-permission-banner';
 import { useState, useEffect } from 'react';
-import { getDiscordRoles } from '@/lib/discord/procedures/get-discord-roles';
-import { getDiscordChannels } from '@/lib/discord/procedures/get-discord-channels';
+import { getDiscordRoles } from '@giveaway/discord-connect/get-discord-roles';
+import { getDiscordChannels } from '@giveaway/discord-connect/get-discord-channels';
 
 interface Role {
   id: string;

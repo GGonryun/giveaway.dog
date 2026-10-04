@@ -77,10 +77,10 @@ import {
   QUALITY_LABELS
 } from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
-import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
-import { rollPrize } from '@/lib/winners/procedures/roll-prize';
-import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';
-import { disqualifyDraw } from '@/lib/winners/procedures/disqualify-draw';
+import { rollPrizes } from '@giveaway/winners-server/procedures/roll-prizes';
+import { rollPrize } from '@giveaway/winners-server/procedures/roll-prize';
+import { rerollDraw } from '@giveaway/winners-server/procedures/reroll-draw';
+import { disqualifyDraw } from '@giveaway/winners-server/procedures/disqualify-draw';
 import { UNKNOWN_EMAIL } from '@giveaway/app-config/settings';
 import { strings } from '@giveaway/util-strings/strings';
 

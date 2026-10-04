@@ -17,7 +17,7 @@ import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schema
 import { PrizeDrawResult } from '@prisma/client';
 import { NavigationHeader } from '@giveaway/shell-navigation/navigation-header';
 import Link from 'next/link';
-import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
+import { rollPrizes } from '@giveaway/winners-server/procedures/roll-prizes';
 
 interface PublicWinnerDrawProps {
   sweepstakesName: string;

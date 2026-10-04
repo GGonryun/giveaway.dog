@@ -13,7 +13,7 @@ import { useProcedure } from '@giveaway/rpc-client/hook';
 import { createSweepstakes } from '@giveaway/sweepstakes-editor-server/create-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { timezone } from '@giveaway/util-time/time';
-import { useCreateTemplate } from '@/components/templates/use-create-template';
+import { useCreateTemplate } from '@giveaway/sweepstakes-actions-ui/templates/use-create-template';
 
 export const TemplatesPage: React.FC<{
   slug: string;

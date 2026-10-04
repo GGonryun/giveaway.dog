@@ -23,7 +23,7 @@ import {
   toStorableTask
 } from '@giveaway/sweepstakes-model/storable';
 
-import { processPostToDiscord } from '@/lib/discord/procedures/process-post-to-discord';
+import { processPostToDiscord } from '@giveaway/discord-connect/process-post-to-discord';
 
 const MAX_JOBS_PER_RUN = 5;
 

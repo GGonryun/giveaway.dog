@@ -24,10 +24,10 @@ import { toast } from 'sonner';
 import { IntegrationSchema } from '@giveaway/integration-model/schemas';
 import { getDiscordInstallUrl } from '@giveaway/discord-model/install';
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import { disconnectDiscord } from '../procedures/disconnect-discord';
+import { disconnectDiscord } from '@giveaway/discord-connect/disconnect-discord';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
-import { verifyDiscordInstall } from '../procedures/verify-discord-install';
+import { verifyDiscordInstall } from '@giveaway/discord-connect/verify-discord-install';
 import { DiscordConnectInstructions } from './discord-connect-instructions';
 
 interface DiscordRegistrationDialogProps {

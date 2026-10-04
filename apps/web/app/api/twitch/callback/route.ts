@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@giveaway/db-client/prisma';
 import z from 'zod';
 
-import { twitchOAuthCallback } from '@/lib/twitch/procedures/twitch-oauth-callback';
+import { twitchOAuthCallback } from '@giveaway/twitch-connect/twitch-oauth-callback';
 import { ApplicationError } from '@giveaway/util-errors';
 import { twitchStateSchema } from '@giveaway/twitch-api/schemas';
 

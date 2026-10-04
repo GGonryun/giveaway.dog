@@ -4,7 +4,7 @@ import getHistoricalSweepstakesList from '@giveaway/browse-server/get-historical
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { GiveawayFilters } from '@giveaway/sweepstakes-model/filters/giveaway-filters';
-import { HistoryFilters } from './filters';
+import { HistoryFilters } from '@giveaway/account-history/filters';
 import { AllGiveawaysGrid } from '@giveaway/browse-list/components/all-giveaways-grid';
 
 export const revalidate = 60;

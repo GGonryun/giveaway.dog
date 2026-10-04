@@ -29,7 +29,7 @@ import { useSearchParams } from 'next/navigation';
 import { IdentityProvider } from '@prisma/client';
 import { assertNever } from '@giveaway/util-errors';
 import { Separator } from '@giveaway/ui-primitives/separator';
-import { BlueskyConnectForm } from '@/lib/auth/components/bluesky-connect-form';
+import { BlueskyConnectForm } from '@giveaway/bluesky-connect-ui/bluesky-connect-form';
 import { InstagramConnectForm } from '@giveaway/meta-connect-ui/instagram-connect-form';
 import { FacebookConnectForm } from '@giveaway/meta-connect-ui/facebook-connect-form';
 import { ProviderSchema } from '@giveaway/integration-model/providers';

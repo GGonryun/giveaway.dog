@@ -12,7 +12,7 @@ import {
   buildUser,
   buildUserProfile
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
-import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
+import { rollPrizes } from '@giveaway/winners-server/procedures/roll-prizes';
 import { PublicWinnerDraw } from '../public-winner-draw';
 
 const navigation = vi.hoisted(() => ({
@@ -35,7 +35,7 @@ vi.mock('framer-motion', () => ({
   }
 }));
 
-vi.mock('@/lib/winners/procedures/roll-prizes', () => ({
+vi.mock('@giveaway/winners-server/procedures/roll-prizes', () => ({
   rollPrizes: vi.fn()
 }));
 

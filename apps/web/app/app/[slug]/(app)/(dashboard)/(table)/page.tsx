@@ -20,7 +20,7 @@ import {
 import { SweepstakesFilterBar } from './components/sweepstakes-filter-bar';
 import { SweepstakesTabs } from './components/sweepstakes-tabs';
 import { Outline } from '@/components/app/outline';
-import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
+import { CreateGiveawayButton } from '@giveaway/sweepstakes-actions-ui/create-giveaway-button';
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import { TemplatesGrid } from '@/lib/templates/components/templates-grid';
