@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client';
-import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '../automation/db';
+import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
 import { toSweepstakesUrl } from '@giveaway/sweepstakes-model/util';
 import {
   DiscordActionRow,
@@ -21,7 +21,7 @@ import {
   toExpiredSweepstakeComponents
 } from './api/util';
 import { toTaskSchema } from '@giveaway/task-model/schemas';
-import { PostToDiscordJobSchema } from '../automation/schemas';
+import { PostToDiscordJobSchema } from '@giveaway/automation-model/schemas';
 
 export const getSweepstakesActivity = async ({
   db,

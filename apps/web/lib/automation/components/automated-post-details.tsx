@@ -23,7 +23,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@giveaway/ui-primitives/dialog';
-import { AutomatedPostJobSchema } from '../schemas';
+import { AutomatedPostJobSchema } from '@giveaway/automation-model/schemas';
 import { AutomatedPostStatusBadge } from './automated-post-status-badge';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { deleteAutomatedPostJob } from '../procedures/delete-automated-post-job';

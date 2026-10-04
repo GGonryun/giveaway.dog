@@ -1,1 +1,1 @@
-export { POST } from '@/lib/twitch/bot/webhooks/handler';
+export { POST } from '@giveaway/twitch-bot/handler';

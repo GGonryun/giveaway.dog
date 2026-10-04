@@ -13,7 +13,7 @@ import {
   PostToTwitterJobSchema,
   PostToBlueskyJobSchema,
   toAutomatedPostJobSchema
-} from '../schemas';
+} from '@giveaway/automation-model/schemas';
 import { createTweet } from '@giveaway/x-api/create-tweet';
 import { createSkeet } from '@giveaway/bluesky-api/create-skeet';
 import { toDefaultValues } from '@giveaway/task-model/defaults';

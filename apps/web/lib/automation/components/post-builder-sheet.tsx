@@ -23,13 +23,13 @@ import { DiscordContentStep } from './steps/discord-content-step';
 import { useForm, FormProvider, FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { generateSkeetText } from '../util';
+import { generateSkeetText } from '@giveaway/automation-model/util';
 import {
   postToBlueskyRequestSchema,
   PostToBlueskyRequestSchema,
   postToDiscordRequestSchema,
   PostToDiscordRequestSchema
-} from '../schemas';
+} from '@giveaway/automation-model/schemas';
 import {
   Alert,
   AlertDescription,

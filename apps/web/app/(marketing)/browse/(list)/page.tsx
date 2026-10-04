@@ -1,7 +1,7 @@
 import { SweepstakesPageSkeleton } from '@/components/sweepstakes-browse/sweepstakes-page-skeleton';
 import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
-import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes-list';
-import getBrowseHosts from '@/procedures/browse/get-browse-hosts';
+import getPublicSweepstakesList from '@giveaway/browse-server/get-public-sweepstakes-list';
+import getBrowseHosts from '@giveaway/browse-server/get-browse-hosts';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import {

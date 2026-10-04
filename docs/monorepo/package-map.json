@@ -685,18 +685,14 @@
       "layer": 6,
       "sourceFiles": 4,
       "testFiles": 4,
-      "sources": [
-        "lib/automation/db.ts",
-        "lib/automation/schemas.ts",
-        "lib/automation/util.ts",
-        "lib/automation/validation.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/automation-server",
@@ -832,11 +828,7 @@
       "layer": 6,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "procedures/browse/get-browse-hosts.ts",
-        "procedures/browse/get-historical-sweepstakes-list.ts",
-        "procedures/browse/get-public-sweepstakes-list.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
@@ -1286,15 +1278,12 @@
       "layer": 6,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "lib/task/procedures/process-task-jobs/process-bluesky-like-task-job.ts",
-        "lib/task/procedures/process-task-jobs/process-bluesky-repost-task-job.ts",
-        "lib/task/procedures/process-task-jobs/process-bluesky-task-job.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-api",
         "@giveaway/bluesky-import",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/jobs",
         "@giveaway/task-jobs-core",
         "@giveaway/task-model",
@@ -1302,7 +1291,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@atproto/api", "@giveaway/db-model"]
+      "npm": ["@atproto/api"]
     },
     {
       "name": "@giveaway/bluesky-task-validation",
@@ -1551,10 +1540,7 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/discord-guild-id.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/discord-invite-link.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/sweepstakes-model",
@@ -1639,9 +1625,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/kick-follow.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -1986,24 +1970,18 @@
       "layer": 5,
       "sourceFiles": 6,
       "testFiles": 6,
-      "sources": [
-        "lib/twitch/bot/webhooks/chat-message.ts",
-        "lib/twitch/bot/webhooks/handler.ts",
-        "lib/twitch/bot/webhooks/notification.ts",
-        "lib/twitch/bot/webhooks/revocation.ts",
-        "lib/twitch/bot/webhooks/verification.ts",
-        "lib/twitch/bot/webhooks/verify.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/cache",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/ratelimit",
         "@giveaway/task-model",
         "@giveaway/twitch-api",
         "@giveaway/twitch-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "next"]
+      "npm": ["next"]
     },
     {
       "name": "@giveaway/twitch-connect",
@@ -2157,13 +2135,14 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/twitch.ts"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/task-model",
         "@giveaway/twitch-api",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/velora-api",
@@ -2259,14 +2238,15 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/velora.ts"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/task-model",
         "@giveaway/util-errors",
         "@giveaway/velora-api"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/x-api",
@@ -2445,11 +2425,10 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": [
-        "lib/task/procedures/process-task-jobs/process-retweet-v2-task-job.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/jobs",
         "@giveaway/task-jobs-core",
@@ -2461,7 +2440,7 @@
         "@giveaway/x-import",
         "@giveaway/x-scraper"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/youtube-model",
@@ -4737,17 +4716,9 @@
       "layer": 5,
       "sourceFiles": 8,
       "testFiles": 12,
-      "sources": [
-        "components/team/edit-member-dialog.tsx",
-        "components/team/invite-form-card.tsx",
-        "components/team/invite-link-modal.tsx",
-        "components/team/members-table.tsx",
-        "components/team/pending-invitations-table.tsx",
-        "components/team/remove-member-dialog.tsx",
-        "lib/invites/",
-        "lib/settings/components/team-roles.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/team-invites-server",
         "@giveaway/team-members-server",
@@ -4755,7 +4726,6 @@
         "@giveaway/ui-primitives"
       ],
       "npm": [
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "date-fns",
         "lucide-react",

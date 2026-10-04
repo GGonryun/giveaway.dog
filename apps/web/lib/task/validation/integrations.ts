@@ -3,7 +3,7 @@ import { assertNever } from '@giveaway/util-errors';
 import { checkSteamWishlist } from '@giveaway/steam-task-validation/steam';
 import { checkDiscordJoin } from './discord';
 import { TaskSchema } from '@giveaway/task-model/schemas';
-import { checkTwitchFollow } from './twitch';
+import { checkTwitchFollow } from '@giveaway/twitch-task-validation/twitch';
 import { checkSecretCode, checkSecretCodeV2 } from './secret-code';
 import {
   checkBonusCompleteProfile,
@@ -21,7 +21,10 @@ import {
   checkBlueskyLike,
   checkBlueskyRepost
 } from '@giveaway/bluesky-task-validation/bluesky';
-import { checkVeloraConnect, checkVeloraFollow } from './velora';
+import {
+  checkVeloraConnect,
+  checkVeloraFollow
+} from '@giveaway/velora-task-validation/velora';
 import { ValidateTaskInput } from '@giveaway/task-model/types';
 
 export const validateTask = async <T extends TaskSchema>(

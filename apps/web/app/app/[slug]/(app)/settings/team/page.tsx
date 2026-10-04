@@ -3,7 +3,7 @@
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
-import { TeamRoles } from '@/lib/settings/components/team-roles';
+import { TeamRoles } from '@giveaway/team-members-ui/team-roles';
 import getTeamMembers from '@giveaway/team-members-server/get-team-members';
 import getTeamInvitations from '@giveaway/team-invites-server/get-team-invitations';
 import getInviteLink from '@giveaway/team-invites-server/get-invite-link';

@@ -1,8 +1,8 @@
-import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
+import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
 import {
   asPostToDiscordResponseSchema,
   PostToDiscordJobSchema
-} from '@/lib/automation/schemas';
+} from '@giveaway/automation-model/schemas';
 import { ApplicationError } from '@giveaway/util-errors';
 import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { toStorableTask } from '@giveaway/sweepstakes-model/storable';

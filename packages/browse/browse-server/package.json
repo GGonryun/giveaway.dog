@@ -1,0 +1,50 @@
+{
+  "name": "@giveaway/browse-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:browse"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/browse/browse-server --suppressions-location packages/browse/browse-server/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./get-browse-hosts": "./src/get-browse-hosts.ts",
+    "./get-historical-sweepstakes-list": "./src/get-historical-sweepstakes-list.ts",
+    "./get-public-sweepstakes-list": "./src/get-public-sweepstakes-list.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/util-collections": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "lodash": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

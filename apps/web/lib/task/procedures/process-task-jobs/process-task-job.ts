@@ -2,9 +2,9 @@ import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { toTaskSchema } from '@giveaway/task-model/schemas';
 import { PrismaClient, TaskJobStatus } from '@prisma/client';
 import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
-import { processBlueskyLikeTaskJob } from './process-bluesky-like-task-job';
-import { processBlueskyRepostTaskJob } from './process-bluesky-repost-task-job';
-import { processRetweetV2TaskJob } from './process-retweet-v2-task-job';
+import { processBlueskyLikeTaskJob } from '@giveaway/bluesky-task-jobs/process-bluesky-like-task-job';
+import { processBlueskyRepostTaskJob } from '@giveaway/bluesky-task-jobs/process-bluesky-repost-task-job';
+import { processRetweetV2TaskJob } from '@giveaway/x-task-jobs/process-retweet-v2-task-job';
 
 const END_DATE_BUFFER_MINUTES = 15;
 

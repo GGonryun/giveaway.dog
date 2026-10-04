@@ -1,4 +1,4 @@
-import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
+import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
 import { Prisma } from '@prisma/client';
 import { toSweepstakesUrl } from '@giveaway/sweepstakes-model/util';
 import { DiscordActionRow } from '@giveaway/discord-model/schemas';

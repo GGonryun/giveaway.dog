@@ -5,8 +5,8 @@ import { ApplicationError } from '@giveaway/util-errors';
 import {
   scheduleAutomatedPostSchema,
   toAutomatedPostJobCreateInput
-} from '../schemas';
-import { validateAutomatedPostRequest } from '../validation';
+} from '@giveaway/automation-model/schemas';
+import { validateAutomatedPostRequest } from '@giveaway/automation-model/validation';
 
 export const scheduleAutomatedPostJob = procedure()
   .authorization({ required: true })

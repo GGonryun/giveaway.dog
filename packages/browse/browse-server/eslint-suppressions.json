@@ -1,0 +1,12 @@
+{
+  "packages/browse/browse-server/src/get-historical-sweepstakes-list.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "packages/browse/browse-server/src/get-public-sweepstakes-list.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  }
+}

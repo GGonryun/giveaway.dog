@@ -198,24 +198,9 @@
       "count": 2
     }
   },
-  "apps/web/lib/twitch/bot/webhooks/chat-message.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "apps/web/lib/twitch/components/twitch-card.tsx": {
     "react-hooks/preserve-manual-memoization": {
       "count": 1
-    }
-  },
-  "apps/web/procedures/browse/get-historical-sweepstakes-list.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "apps/web/procedures/browse/get-public-sweepstakes-list.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
     }
   },
   "apps/web/procedures/browse/get-sweepstakes-privacy.ts": {

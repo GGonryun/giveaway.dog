@@ -16,7 +16,7 @@ import {
 import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { PostToDiscordRequestSchema } from '../../schemas';
+import { PostToDiscordRequestSchema } from '@giveaway/automation-model/schemas';
 import {
   FormField,
   FormItem,

@@ -1,0 +1,7 @@
+{
+  "packages/integrations/twitch/twitch-bot/src/chat-message.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  }
+}

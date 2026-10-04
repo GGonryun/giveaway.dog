@@ -1,6 +1,6 @@
 import { SweepstakesPageSkeleton } from '@/components/sweepstakes-browse/sweepstakes-page-skeleton';
 import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/get-public-sweepstakes-participation';
-import getHistoricalSweepstakesList from '@/procedures/browse/get-historical-sweepstakes-list';
+import getHistoricalSweepstakesList from '@giveaway/browse-server/get-historical-sweepstakes-list';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { GiveawayFilters } from '@giveaway/sweepstakes-model/filters/giveaway-filters';

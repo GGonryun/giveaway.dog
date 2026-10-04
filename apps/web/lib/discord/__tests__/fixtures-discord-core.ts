@@ -1,5 +1,5 @@
 import type { Prisma, Task } from '@prisma/client';
-import type { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
+import type { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
 
 export type DiscordPostSweepstakes = Prisma.SweepstakesGetPayload<{
   select: typeof SWEEPSTAKES_DISCORD_POST_SELECT_QUERY;

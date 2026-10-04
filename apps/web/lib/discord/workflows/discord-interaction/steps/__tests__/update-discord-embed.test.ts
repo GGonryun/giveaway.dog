@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { updateDiscordEmbed } from '../update-discord-embed';
 import { prismaMock } from '@giveaway/testing-server/prisma';
-import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
+import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
 import {
   discordInteractionTaskConfig,
   discordPostSweepstakes,

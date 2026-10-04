@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { processPostToDiscord } from '../process-post-to-discord';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
-import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
-import type { PostToDiscordJobSchema } from '@/lib/automation/schemas';
+import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
+import type { PostToDiscordJobSchema } from '@giveaway/automation-model/schemas';
 import {
   bonusTaskConfig,
   discordPostSweepstakes,

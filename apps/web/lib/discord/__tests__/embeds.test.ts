@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
-import type { PostToDiscordJobSchema } from '@/lib/automation/schemas';
+import type { PostToDiscordJobSchema } from '@giveaway/automation-model/schemas';
 import { getSweepstakesActivity, toSweepstakesEmbed } from '../embeds';
 import {
   type DiscordPostSweepstakes,

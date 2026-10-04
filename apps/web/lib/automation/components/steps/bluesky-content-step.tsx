@@ -17,7 +17,7 @@ import {
 import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { useFormContext } from 'react-hook-form';
-import { PostToBlueskyRequestSchema } from '../../schemas';
+import { PostToBlueskyRequestSchema } from '@giveaway/automation-model/schemas';
 import {
   FormField,
   FormItem,

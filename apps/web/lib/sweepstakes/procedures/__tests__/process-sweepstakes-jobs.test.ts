@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { processSweepstakesJobs } from '../process-sweepstakes-jobs';
 import { prismaMock } from '@giveaway/testing-server/prisma';
-import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@/lib/automation/db';
+import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
 
 const NOW = new Date('2026-03-01T12:00:00.000Z');
 const WEBHOOK_URL = 'https://discord.com/api/webhooks/1/secret';
