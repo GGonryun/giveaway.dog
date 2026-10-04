@@ -2,7 +2,7 @@ import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '@giveaway/ui-primitives/button';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   closestCenter,
   DndContext,
@@ -29,7 +29,7 @@ import { nanoid } from 'nanoid';
 import {
   DEFAULT_SWEEPSTAKES_PRIZE_NAME,
   DEFAULT_SWEEPSTAKES_PRIZE_QUOTA
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 
 type ActivePrize = { id: string; index: number };

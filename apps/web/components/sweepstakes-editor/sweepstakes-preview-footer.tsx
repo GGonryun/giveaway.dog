@@ -2,7 +2,7 @@ import { ChevronDownIcon } from 'lucide-react';
 import {
   getStateDisplayLabel,
   PREVIEW_GIVEAWAY_STATES
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import {
   DropdownMenu,
   DropdownMenuContent,

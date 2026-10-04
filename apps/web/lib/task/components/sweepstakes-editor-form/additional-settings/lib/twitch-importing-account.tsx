@@ -17,7 +17,7 @@ import {
   hasFeature,
   type IntegrationSchema
 } from '@giveaway/integration-model/schemas';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';

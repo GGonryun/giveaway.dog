@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SweepstakesWinnerCriteriaSchema } from '@/schemas/giveaway/schemas';
+import { SweepstakesWinnerCriteriaSchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   buildFormValues,
   renderWithForm

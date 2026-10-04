@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from '@giveaway/ui-primitives/tabs';
 import {
   ListSweepstakesFilters,
   SWEEPSTAKES_FILTER_STATUS_OPTIONS
-} from '@/schemas/sweepstakes';
+} from '@giveaway/sweepstakes-model/sweepstakes';
 import { useState } from 'react';
 
 export const SweepstakesTabs: React.PC<{

@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import type { ComponentProps } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { TeamsProvider } from '@/components/context/team-provider';
+import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import { createTemplate } from '@/lib/templates/procedures/create-template';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { CreateGiveawayButton } from '../create-giveaway-button';

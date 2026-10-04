@@ -19,8 +19,8 @@ import {
   DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
   DEFAULT_SPONSOR_NAME,
   DEFAULT_WINNER_SELECTION_METHOD
-} from '@/schemas/giveaway/defaults';
-import type { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
+} from '@giveaway/sweepstakes-model/defaults';
+import type { PublicSweepstakeSchema } from '@giveaway/sweepstakes-model/public';
 import type {
   GiveawayFormAudience,
   GiveawayHostSchema,
@@ -30,7 +30,7 @@ import type {
   Prize,
   SweepstakesPrizeSchema,
   SweepstakesWinnerCriteriaSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import type { DetailedUserTeam } from '@giveaway/team-model/teams';
 import type { UserProfileSchema, UserSchema } from '@giveaway/user-model/user';
 

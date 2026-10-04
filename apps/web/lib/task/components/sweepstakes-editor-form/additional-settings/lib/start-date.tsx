@@ -1,7 +1,7 @@
 import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import { DateTimePicker } from '@giveaway/ui-date/date-time-picker';
 import { datetime } from '@giveaway/util-time/date';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import React, { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { SwitchBoxFormField } from './switch-box-form-field';

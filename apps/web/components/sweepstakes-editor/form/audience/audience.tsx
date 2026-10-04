@@ -9,7 +9,7 @@ import { RequirePreEntryLogin } from './require-pre-entry-login';
 import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fields';
 import { EnableAutomaticProfileEntry } from './enable-automatic-profile-entry';
 import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { UrlSlugField, VisibilityTypeField } from './sweepstakes-visibility';
 
 export const Audience = () => {

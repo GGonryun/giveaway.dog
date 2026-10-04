@@ -5,7 +5,7 @@ import {
   buildPublicSweepstakes
 } from '@/components/sweepstakes/__tests__/fixtures';
 import type { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas';
-import type { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
+import type { PublicSweepstakeSchema } from '@giveaway/sweepstakes-model/public';
 import { GiveawayItem } from '../giveaway-item';
 
 const DAY = 24 * 60 * 60 * 1000;

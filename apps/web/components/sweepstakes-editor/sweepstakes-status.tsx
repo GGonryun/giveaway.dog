@@ -49,7 +49,7 @@ import {
   DerivedSweepstakeStatus,
   EDITABLE_DERIVED_STATUS,
   getSweepstakesTimingDescription
-} from '@/schemas/sweepstakes';
+} from '@giveaway/sweepstakes-model/sweepstakes';
 
 interface SweepstakesStatusProps {
   sweepstakesId: string;

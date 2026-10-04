@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { TeamsProvider } from '@/components/context/team-provider';
+import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import { useCreateSweepstakesPage } from '../use-create-sweepstakes-page';
 import { useEditSweepstakesPage } from '../use-edit-sweepstakes-page';
 import { useSweepstakesDetailsPage } from '../use-sweepstakes-details-page';

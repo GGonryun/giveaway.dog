@@ -17,7 +17,7 @@ import {
   DEFAULT_GOVERNING_LAW_COUNTRY_CODE,
   DEFAULT_DESIGN_DATA,
   DEFAULT_ALLOW_USER_SELECTION
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import { SweepstakesTermsType } from '@prisma/client';
 
 export const DEFAULT_TEMPLATE_NAME = 'My Custom Template';

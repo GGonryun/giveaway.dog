@@ -3,9 +3,12 @@ import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
 import { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
-import { MockTeamProvider } from '@/components/demo/mock-team-provider';
+import { MockTeamProvider } from '@giveaway/team-context/mock-team-provider';
 import { DeepPartial } from '@giveaway/util-types/types';
-import { GiveawayFormSchema, GiveawayState } from '@/schemas/giveaway/schemas';
+import {
+  GiveawayFormSchema,
+  GiveawayState
+} from '@giveaway/sweepstakes-model/schemas';
 import { PreviewStateContext } from '../contexts/preview-state-context';
 import { SweepstakesSharedFormPreview } from '../sweepstakes-editor-preview';
 import { FIXED_NOW } from './form-harness';

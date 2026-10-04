@@ -1,4 +1,4 @@
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { nanoid } from 'nanoid';
 import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { datetime } from '@giveaway/util-time/date';
@@ -25,7 +25,7 @@ import {
   DEFAULT_ALLOW_USER_SELECTION,
   DEFAULT_MIN_QUALITY_SCORE,
   DEFAULT_MIN_TASK_COMPLETED
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 
 export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   setup: {

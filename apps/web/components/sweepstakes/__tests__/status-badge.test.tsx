@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+import type { DerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 import {
   SweepstakesStatusBadge,
   SweepstakesStatusDescription,

@@ -6,7 +6,7 @@ import { Setup } from './form/setup/setup';
 import { Selection } from './form/selection/selection';
 import { EntryMethods } from '@/lib/task/components/entry-methods/entry-methods';
 import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 
 export const SweepstakeFormContent: React.FC = () => {
   const { currentStep, action } = useUnifiedFormLayout();

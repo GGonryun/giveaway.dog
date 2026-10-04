@@ -1,4 +1,4 @@
-import { GiveawaySchema } from '@/schemas/giveaway/schemas';
+import { GiveawaySchema } from '@giveaway/sweepstakes-model/schemas';
 import { useBrowseSweepstakesPage } from './use-browse-sweepstakes-page';
 
 export const useLiveSweepstakesUrl = (sweepstakes: GiveawaySchema) => {

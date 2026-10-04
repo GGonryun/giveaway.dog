@@ -5,7 +5,7 @@ import {
   NEW_SWEEPSTAKE_THRESHOLD,
   STARTING_SOON_SWEEPSTAKE_THRESHOLD
 } from '@giveaway/app-config/settings';
-import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+import { DerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 import { assertNever } from '@giveaway/util-errors';
 
 const getStatusConfig = ({ status }: SweepstakeStatusBadgeProps) => {

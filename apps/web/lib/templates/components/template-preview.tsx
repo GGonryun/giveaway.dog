@@ -3,7 +3,7 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { TemplateFormSchema } from '../schemas/template';
 import { SweepstakesSharedFormPreview } from '@/components/sweepstakes-editor/sweepstakes-editor-preview';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   DEFAULT_MIN_QUALITY_SCORE,
   DEFAULT_MIN_TASK_COMPLETED,
@@ -13,7 +13,7 @@ import {
   DEFAULT_CLAIM_DEADLINE_DAYS,
   DEFAULT_GOVERNING_LAW_COUNTRY_CODE,
   DEFAULT_SPONSOR_NAME
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import { VisibilityType } from '@prisma/client';
 import * as dates from 'date-fns';
 import { timezone } from '@giveaway/util-time/time';

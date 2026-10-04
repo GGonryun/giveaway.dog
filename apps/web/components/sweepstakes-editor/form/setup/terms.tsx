@@ -16,7 +16,7 @@ import { Textarea } from '@giveaway/ui-primitives/textarea';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { widetype } from '@giveaway/util-types/widetype';
 
-import { stringifyTerms } from '../terms';
+import { stringifyTerms } from '@giveaway/sweepstakes-model/terms';
 import {
   Sheet,
   SheetContent,
@@ -35,15 +35,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@giveaway/ui-primitives/alert-dialog';
-import { GiveawayFormSchema, GiveawayTerms } from '@/schemas/giveaway/schemas';
+import {
+  GiveawayFormSchema,
+  GiveawayTerms
+} from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesTermsType } from '@prisma/client';
-import { toBrowsePageUrl } from '@/components/sweepstakes/util';
+import { toBrowsePageUrl } from '@giveaway/sweepstakes-model/browse-url';
 
 import {
   DEFAULT_WINNER_SELECTION_METHOD,
   DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
   DEFAULT_CLAIM_DEADLINE_DAYS
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import { date } from '@giveaway/util-time/date';
 import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import { MinimalTiptap } from '@giveaway/ui-rich-text/minimal-tiptap-editor';

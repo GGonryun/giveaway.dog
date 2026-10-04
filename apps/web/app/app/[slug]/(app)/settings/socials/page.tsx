@@ -1,6 +1,6 @@
 'use server';
 
-import { TeamPageProps } from '@/schemas/pages';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import { SocialsSettings } from '@/lib/settings/components/socials-page';
 
 interface SocialsSettingsPageProps {

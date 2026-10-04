@@ -1,4 +1,4 @@
-import { GiveawaySchema } from '@/schemas/giveaway/schemas';
+import { GiveawaySchema } from '@giveaway/sweepstakes-model/schemas';
 import { date } from '@giveaway/util-time/date';
 
 export const generateSkeetText = ({

@@ -25,7 +25,7 @@ import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
 import { Input } from '@giveaway/ui-primitives/input';
 import { Search } from 'lucide-react';
 
-import { useTeams } from '@/components/context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { UserDetailSheet } from '@/components/sweepstakes-details/user-participant-detail-sheet';
 import { UserSourceBadge } from '@giveaway/user-source-ui/user-source-badge';
 import { datetime } from '@giveaway/util-time/date';

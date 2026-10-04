@@ -1,14 +1,14 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
-import { sweepstakesPrizeSchema } from '@/schemas/giveaway/schemas';
+import { sweepstakesPrizeSchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   PRIZE_WINNERS_INCLUDE_QUERY,
   toSweepstakesPrizes
-} from '@/schemas/prizes';
+} from '@giveaway/sweepstakes-model/prizes';
 
 const getSweepstakesPrizes = procedure()
   .authorization({

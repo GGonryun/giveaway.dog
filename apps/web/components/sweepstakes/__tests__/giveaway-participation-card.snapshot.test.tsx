@@ -3,7 +3,7 @@ import type { GiveawayParticipationProps } from '../giveaway-participation-conte
 import { GiveawayParticipationCard } from '../giveaway-participation-card';
 import { NOW, buildHost, withStableIds } from './fixtures';
 import { renderWithParticipation } from './participation-fixtures';
-import type { DeviceType } from '@/schemas/giveaway/schemas';
+import type { DeviceType } from '@giveaway/sweepstakes-model/schemas';
 
 const socialHost = buildHost({
   links: [

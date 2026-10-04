@@ -1,4 +1,4 @@
-import { useTeams } from '../context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 
 import { useRouter } from 'next/navigation';
 

@@ -1,4 +1,4 @@
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import { useFormContext, useWatch } from 'react-hook-form';
 import {
@@ -14,7 +14,7 @@ import { useParams } from 'next/navigation';
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useTwitchTriggerValidation } from '@/lib/task/hooks/use-twitch-trigger-validation';
 import Link from 'next/link';
-import { useTeams } from '@/components/context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 
 export const TwitchChatImportFormField: React.FC = () => {
   const index = useArrayContext();

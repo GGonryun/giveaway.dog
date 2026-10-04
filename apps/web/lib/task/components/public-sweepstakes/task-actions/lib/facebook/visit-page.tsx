@@ -8,7 +8,7 @@ import { FacebookVisitPageTaskSchema } from '@giveaway/task-model/schemas';
 
 import { SocialFacebookIcon } from '@giveaway/integration-icons/facebook-icon';
 import { cn } from '@giveaway/ui-utils/utils';
-import { useTaskTheme } from '@/lib/task/components/theme';
+import { useTaskTheme } from '@giveaway/task-ui/theme';
 import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
 import { Separator } from '@giveaway/ui-primitives/separator';

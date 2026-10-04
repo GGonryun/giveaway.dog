@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { TeamsProvider } from '@/components/context/team-provider';
+import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import { Sheet, SheetContent } from '@giveaway/ui-primitives/sheet';
 import {
   buildCompletion,

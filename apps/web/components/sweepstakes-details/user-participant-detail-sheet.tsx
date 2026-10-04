@@ -11,7 +11,7 @@ import {
   Award
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useTeams } from '../context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import {
   Sheet,

@@ -6,7 +6,7 @@ import {
   DeviceType,
   GiveawayState,
   getStateDisplayLabel
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { Eye, Smartphone, Monitor } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import { useIsMobile } from '@giveaway/ui-hooks/use-mobile';
@@ -35,11 +35,11 @@ import {
   SelectTrigger,
   SelectValue
 } from '@giveaway/ui-primitives/select';
-import { toBackgroundStyle } from '@/schemas/color';
+import { toBackgroundStyle } from '@giveaway/sweepstakes-model/color';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
-import { useTeams } from '../context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { PrizeDrawResult } from '@prisma/client';
 import {
   getPreviewParticipant,

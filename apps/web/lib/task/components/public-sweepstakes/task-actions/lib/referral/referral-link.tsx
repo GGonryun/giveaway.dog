@@ -4,7 +4,7 @@ import { TaskActionProps, TaskContent } from '../../building-blocks';
 import { Button } from '@giveaway/ui-primitives/button';
 import { ReferralLinkTaskSchema } from '@giveaway/task-model/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
-import { useTaskTheme } from '../../../../theme';
+import { useTaskTheme } from '@giveaway/task-ui/theme';
 import React, { useEffect, useState } from 'react';
 import { Copy, Share2, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';

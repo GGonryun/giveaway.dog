@@ -6,7 +6,7 @@ import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { findUserSweepstakesQuery } from './shared';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
-import { FORM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { FORM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { Prisma, TeamTier } from '@prisma/client';
 import { TeamPermission } from '@giveaway/team-permissions';
 

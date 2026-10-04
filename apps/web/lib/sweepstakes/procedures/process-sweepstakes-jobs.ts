@@ -10,7 +10,7 @@ import {
   SweepstakesJobStatus,
   VisibilityType
 } from '@prisma/client';
-import { toSweepstakesUrl } from '../util';
+import { toSweepstakesUrl } from '@giveaway/sweepstakes-model/util';
 import db from '@giveaway/db-client/prisma';
 import { updateDiscordMessage } from '@/lib/discord/api/update-discord-message';
 import { toPostToDiscordResponseSchema } from '@/lib/automation/schemas';

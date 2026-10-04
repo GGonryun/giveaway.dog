@@ -1,6 +1,6 @@
 'use client';
 
-import { useTeams } from '@/components/context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { SocialLinksCard } from '@/components/settings/team/social-links-card';
 import { useRouter } from 'next/navigation';
 import { socialLinksSchema } from '@giveaway/team-model/social-links';

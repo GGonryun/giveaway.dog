@@ -1,6 +1,6 @@
 'use client';
 
-import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
+import { PublicSweepstakeSchema } from '@giveaway/sweepstakes-model/public';
 import { GiveawayItem } from './giveaway-item';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import pluralize from 'pluralize';

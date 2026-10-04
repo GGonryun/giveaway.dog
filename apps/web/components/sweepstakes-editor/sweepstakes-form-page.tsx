@@ -3,11 +3,11 @@
 import { Suspense } from 'react';
 import getSweepstakesForm from '@/procedures/sweepstakes/get-sweepstakes-form';
 import { SweepstakesForm } from '@/components/sweepstakes-editor/sweepstakes-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { notFound } from 'next/navigation';
 import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
-import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
-import { SweepstakesPageProps } from '@/schemas/pages';
+import { EDITABLE_DERIVED_STATUS } from '@giveaway/sweepstakes-model/sweepstakes';
+import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
 import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
 import { getPublishedSweepstakes } from '@/procedures/sweepstakes/get-published-sweepstakes';
 

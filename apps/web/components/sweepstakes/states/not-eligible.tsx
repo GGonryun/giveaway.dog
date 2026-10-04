@@ -4,7 +4,7 @@ import React from 'react';
 import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
-import { toRegionalRestrictionDescription } from '@/schemas/giveaway/schemas';
+import { toRegionalRestrictionDescription } from '@giveaway/sweepstakes-model/schemas';
 
 export const NotEligible: React.FC = () => {
   const { sweepstakes } = useGiveawayParticipation();

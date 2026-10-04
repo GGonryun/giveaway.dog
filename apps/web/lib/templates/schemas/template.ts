@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { baseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { baseGiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { Prisma } from '@prisma/client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { DeepPartial, Nil } from '@giveaway/util-types/types';

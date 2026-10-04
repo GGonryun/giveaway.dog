@@ -8,7 +8,7 @@ import {
   buildUsernameField
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { renderWithParticipation } from '@/components/sweepstakes/__tests__/participation-fixtures';
-import type { GiveawayFormAudience } from '@/schemas/giveaway/schemas';
+import type { GiveawayFormAudience } from '@giveaway/sweepstakes-model/schemas';
 
 const renderNotEligible = (audience: Partial<GiveawayFormAudience>) =>
   renderWithParticipation(<NotEligible />, {

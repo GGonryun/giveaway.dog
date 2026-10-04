@@ -3,7 +3,7 @@ import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
 import { GiveawayParticipationProps } from '@/components/sweepstakes/giveaway-participation-context';
-import { MockTeamProvider } from '@/components/demo/mock-team-provider';
+import { MockTeamProvider } from '@giveaway/team-context/mock-team-provider';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { DeepPartial } from '@giveaway/util-types/types';
 import {
@@ -11,7 +11,7 @@ import {
   GiveawaySchema,
   GiveawayState,
   PREVIEW_GIVEAWAY_STATES
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { PreviewStateContext } from '../contexts/preview-state-context';
 import {
   mockParticipant,

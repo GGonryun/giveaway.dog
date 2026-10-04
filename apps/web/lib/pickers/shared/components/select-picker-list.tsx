@@ -7,7 +7,7 @@ import { ChevronRight, GemIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
 import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
-import { useTeams } from '@/components/context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 
 interface SelectPickerListProps {
   slug: string;

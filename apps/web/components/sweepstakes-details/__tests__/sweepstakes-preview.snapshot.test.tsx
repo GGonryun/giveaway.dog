@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import type { ComponentProps } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TeamsProvider } from '@/components/context/team-provider';
+import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import {
   getPreviewParticipant,
   getPreviewRelationship
@@ -17,7 +17,7 @@ import {
   buildTeam,
   withStableIds
 } from '@/components/sweepstakes/__tests__/fixtures';
-import type { GiveawayPrizeSchema } from '@/schemas/giveaway/schemas';
+import type { GiveawayPrizeSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesPreview } from '../sweepstakes-preview';
 
 const navigation = vi.hoisted(() => ({

@@ -27,12 +27,12 @@ import {
   Eye,
   BanIcon
 } from 'lucide-react';
-import { useTeams } from '@/components/context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { Label } from '@giveaway/ui-primitives/label';
 import {
   SweepstakesPrizeSchema,
   SweepstakesWinnerCriteriaSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { DiceIcon } from './dice-icon';
 import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
@@ -66,7 +66,7 @@ import { BotEnforcementField } from '@giveaway/user-quality-ui/bot-enforcement-f
 import {
   DerivedSweepstakeStatus,
   EDITABLE_DERIVED_STATUS
-} from '@/schemas/sweepstakes';
+} from '@giveaway/sweepstakes-model/sweepstakes';
 import { PrizeDrawResult, UserSource } from '@prisma/client';
 import { DisqualificationDialog } from './disqualification-dialog';
 import { TASK_LABEL } from '@giveaway/task-model/schemas';

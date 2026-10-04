@@ -2,7 +2,7 @@ import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { formatDistanceToNowStrict, isBefore } from 'date-fns';
-import { PublicSweepstakeSchema } from '@/schemas/giveaway/public';
+import { PublicSweepstakeSchema } from '@giveaway/sweepstakes-model/public';
 import React from 'react';
 import Link from 'next/link';
 import { date } from '@giveaway/util-time/date';

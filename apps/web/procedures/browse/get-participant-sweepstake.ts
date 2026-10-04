@@ -1,20 +1,20 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
-import { toSweepstakesInput } from '@/schemas/giveaway/input';
+import { toSweepstakesInput } from '@giveaway/sweepstakes-model/input';
 import {
   ParticipantSweepstakeSchema,
   participantSweepstakeSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import {
   toSweepstakesHost,
   toSweepstakesPrizes
 } from '@/schemas/giveaway/participant';
 import { DeepNullable, DeepPartial } from '@giveaway/util-types/types';
-import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+import { toDerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 import { Prisma } from '@prisma/client';
 import { toCompletionValue } from '@giveaway/task-model/entries';
 import { ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY } from '@giveaway/task-model/queries';

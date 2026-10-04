@@ -1,5 +1,5 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { DEFAULT_SWEEPSTAKES_PRIZE_NAME } from '@/schemas/giveaway/defaults';
+import { DEFAULT_SWEEPSTAKES_PRIZE_NAME } from '@giveaway/sweepstakes-model/defaults';
 import z from 'zod';
 import { allocationStatisticsSchema as allocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 

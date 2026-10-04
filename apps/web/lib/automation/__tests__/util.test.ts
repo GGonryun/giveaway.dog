@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { GiveawaySchema } from '@/schemas/giveaway/schemas';
+import type { GiveawaySchema } from '@giveaway/sweepstakes-model/schemas';
 import { generateSkeetText } from '../util';
 
 const LIVE_URL = 'https://giveaway.dog/browse/sweep-1';

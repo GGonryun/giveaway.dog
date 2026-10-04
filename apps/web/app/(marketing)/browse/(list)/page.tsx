@@ -4,7 +4,10 @@ import getPublicSweepstakesList from '@/procedures/browse/get-public-sweepstakes
 import getBrowseHosts from '@/procedures/browse/get-browse-hosts';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { BrowseStatus, GiveawayFilters } from '@/lib/filters/giveaway-filters';
+import {
+  BrowseStatus,
+  GiveawayFilters
+} from '@giveaway/sweepstakes-model/filters/giveaway-filters';
 import { BrowsePageFilters } from './filters';
 import { AllGiveawaysGrid } from '@/components/sweepstakes-browse/components/all-giveaways-grid';
 

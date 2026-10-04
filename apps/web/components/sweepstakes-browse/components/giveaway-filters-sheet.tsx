@@ -26,7 +26,7 @@ import {
   BrowseStatus,
   BROWSE_STATUS_LABELS,
   GiveawayFilters
-} from '@/lib/filters/giveaway-filters';
+} from '@giveaway/sweepstakes-model/filters/giveaway-filters';
 import { Checkbox } from '@giveaway/ui-primitives/checkbox';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import {

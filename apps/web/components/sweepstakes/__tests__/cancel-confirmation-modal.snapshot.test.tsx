@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { describe, expect, it, vi } from 'vitest';
 import type { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
-import type { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import type { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { CancelConfirmationModal } from '../cancel-confirmation-modal';
 import { withStableIds } from './fixtures';
 

@@ -4,12 +4,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   DEFAULT_GRADIENT_DESIGN_BACKGROUND,
   DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import {
   GiveawayDesignBackgroundSchema,
   GiveawayDesignSchema,
   GradientBackgroundSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import {
   buildFormValues,
   renderWithForm

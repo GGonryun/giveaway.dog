@@ -5,7 +5,7 @@ import {
 } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { FormControl, FormField, FormItem } from '@giveaway/ui-primitives/form';
 import { Switch } from '@giveaway/ui-primitives/switch';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { useFormContext } from 'react-hook-form';
 
 export const SecretCodeCaseSensitiveFormField: React.FC = () => {

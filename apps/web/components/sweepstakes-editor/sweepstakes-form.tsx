@@ -12,7 +12,7 @@ import {
   GiveawayFormSchema,
   giveawayFormSchema,
   GiveawayState
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { SweepstakesFormPreview } from './sweepstakes-editor-preview';

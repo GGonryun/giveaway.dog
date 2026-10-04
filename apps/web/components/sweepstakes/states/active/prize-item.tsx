@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import pluralize from 'pluralize';
-import { Prize } from '@/schemas/giveaway/schemas';
+import { Prize } from '@giveaway/sweepstakes-model/schemas';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { SweepstakesLoginOptions } from '../../sweepstakes-login-options';

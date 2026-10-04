@@ -3,7 +3,7 @@ import getSweepstakesForm from '../get-sweepstakes-form';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { FORM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { FORM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import {
   bonusTaskConfig,

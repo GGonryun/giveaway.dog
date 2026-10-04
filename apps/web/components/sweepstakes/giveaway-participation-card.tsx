@@ -7,10 +7,10 @@ import { Separator } from '@giveaway/ui-primitives/separator';
 import { ClockIcon, CalendarIcon, FileCheck } from 'lucide-react';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { TermsModal } from './terms-modal';
-import { DeviceType, GiveawayState } from '@/schemas/giveaway/schemas';
+import { DeviceType, GiveawayState } from '@giveaway/sweepstakes-model/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
 import { date } from '@giveaway/util-time/date';
-import { getSweepstakesTimingDescription } from '@/schemas/sweepstakes';
+import { getSweepstakesTimingDescription } from '@giveaway/sweepstakes-model/sweepstakes';
 import { MinimalTipTapPreview } from '@giveaway/ui-rich-text/minimal-tiptap-preview';
 import { PLATFORM_ICONS } from '@/components/social-links/social-link-icon';
 import {

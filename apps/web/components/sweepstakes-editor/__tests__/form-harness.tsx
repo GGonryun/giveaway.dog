@@ -16,12 +16,12 @@ import {
   DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND,
   DEFAULT_SPONSOR_NAME,
   DEFAULT_WINNER_SELECTION_METHOD
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import {
   giveawayFormSchema,
   GiveawayFormSchema,
   GiveawayTerms
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
   DEFAULT_REQUIRED_PRE_ENTRY_LOGIN

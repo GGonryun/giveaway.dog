@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { baseGiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { baseGiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   isSweepstakeStepKey,
   SWEEPSTAKE_FIELD_TO_STEP_MAP,

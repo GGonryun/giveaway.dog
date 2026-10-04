@@ -13,15 +13,15 @@ import {
   GiveawaySchema,
   GiveawayState,
   Prize
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { usePreviewState } from './contexts/preview-state-context';
 import {
   SweepstakesFormFieldType,
   RegionalRestrictionFilter,
   SweepstakesTermsType
 } from '@prisma/client';
-import { defaultTermInputOptions } from './form/terms';
-import { DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND } from '@/schemas/giveaway/defaults';
+import { defaultTermInputOptions } from '@giveaway/sweepstakes-model/terms';
+import { DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND } from '@giveaway/sweepstakes-model/defaults';
 import {
   mockParticipation,
   mockUserHostRelationship,
@@ -37,7 +37,7 @@ import {
   mockAllocation
 } from './data/mocks';
 import { TaskSchema } from '@giveaway/task-model/schemas';
-import { useTeams } from '../context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { toSweepstakesHost } from '@/schemas/giveaway/participant';
 import { assertNever } from '@giveaway/util-errors';
 import {

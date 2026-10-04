@@ -6,7 +6,7 @@ import {
 } from '../../building-blocks';
 import { useState } from 'react';
 import { YoutubeVisitTaskSchema } from '@giveaway/task-model/schemas';
-import { useTaskTheme } from '@/lib/task/components/theme';
+import { useTaskTheme } from '@giveaway/task-ui/theme';
 import { Button } from '@giveaway/ui-primitives/button';
 import { cn } from '@giveaway/ui-utils/utils';
 import { SocialYouTubeIcon } from '@giveaway/integration-icons/youtube';

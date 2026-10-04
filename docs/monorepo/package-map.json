@@ -1194,9 +1194,9 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/sweepstakes/bluesky-import.ts"],
-      "dependsOn": ["@giveaway/bluesky-api"],
-      "npm": ["@giveaway/db-model", "nanoid"]
+      "sources": [],
+      "dependsOn": ["@giveaway/bluesky-api", "@giveaway/db-model"],
+      "npm": ["nanoid"]
     },
     {
       "name": "@giveaway/bluesky-model",
@@ -1317,14 +1317,15 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/bluesky.ts"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-api",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/task-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/integration-icons",
@@ -1732,10 +1733,7 @@
       "layer": 5,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/auth/components/facebook-connect-form.tsx",
-        "lib/auth/components/instagram-connect-form.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-actions",
         "@giveaway/meta-model",
@@ -1894,9 +1892,13 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/steam.ts"],
-      "dependsOn": ["@giveaway/task-model", "@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model"]
+      "sources": [],
+      "dependsOn": [
+        "@giveaway/db-model",
+        "@giveaway/task-model",
+        "@giveaway/util-errors"
+      ],
+      "npm": []
     },
     {
       "name": "@giveaway/tiktok-task-editor",
@@ -2695,15 +2697,16 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/custom-fields/procedures/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/task-model",
         "@giveaway/util-errors",
         "@giveaway/util-types",
         "@giveaway/x-model"
       ],
-      "npm": ["@giveaway/db-model", "next-auth", "zod"]
+      "npm": ["next-auth", "zod"]
     },
     {
       "name": "@giveaway/custom-fields-ui",
@@ -2745,9 +2748,9 @@
       "layer": 5,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": ["lib/loyalty/"],
-      "dependsOn": ["@giveaway/task-model"],
-      "npm": ["@giveaway/db-model", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/task-model"],
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/participant-model",
@@ -4042,29 +4045,11 @@
       "layer": 5,
       "sourceFiles": 18,
       "testFiles": 18,
-      "sources": [
-        "components/sweepstakes-editor/form/terms.ts",
-        "components/sweepstakes/util.ts",
-        "lib/filters/",
-        "lib/sweepstakes/util.ts",
-        "lib/task/jobs.ts",
-        "lib/task/validation/form.ts",
-        "schemas/color.ts",
-        "schemas/giveaway/db.ts",
-        "schemas/giveaway/defaults.ts",
-        "schemas/giveaway/input.ts",
-        "schemas/giveaway/is.ts",
-        "schemas/giveaway/public.ts",
-        "schemas/giveaway/schemas.ts",
-        "schemas/giveaway/storable.ts",
-        "schemas/pages.ts",
-        "schemas/prizes.ts",
-        "schemas/sweepstakes.ts",
-        "schemas/timing.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/task-model",
         "@giveaway/user-model",
@@ -4076,7 +4061,7 @@
         "@giveaway/util-time",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "date-fns", "lodash", "pluralize", "zod"]
+      "npm": ["date-fns", "lodash", "pluralize", "zod"]
     },
     {
       "name": "@giveaway/sweepstakes-moderation-server",
@@ -4609,21 +4594,15 @@
       "layer": 5,
       "sourceFiles": 11,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/badges/",
-        "lib/task/components/task-category-badge.tsx",
-        "lib/task/components/task-platform-icon.tsx",
-        "lib/task/components/task-status-badge.tsx",
-        "lib/task/components/task-status-icon.tsx",
-        "lib/task/components/theme.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/task-model",
         "@giveaway/ui-primitives",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "pluralize", "react"]
+      "npm": ["lucide-react", "pluralize", "react"]
     },
     {
       "name": "@giveaway/task-validation",
@@ -4686,20 +4665,14 @@
       "layer": 5,
       "sourceFiles": 6,
       "testFiles": 7,
-      "sources": [
-        "components/context/team-provider.tsx",
-        "components/demo/mock-team-provider.tsx",
-        "components/hooks/use-user-teams.tsx",
-        "components/team/use-active-team-page.tsx",
-        "components/team/use-team-page.tsx",
-        "components/team/use-teams-page.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/team-model",
         "@giveaway/team-server"
       ],
-      "npm": ["@giveaway/db-model", "next", "react"]
+      "npm": ["next", "react"]
     },
     {
       "name": "@giveaway/team-invite-acceptance",
@@ -4709,22 +4682,16 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["app/(isolated)/invites/[code]/invite-acceptance.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/team-invites-server",
         "@giveaway/ui-brand",
         "@giveaway/ui-primitives"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "next",
-        "next-auth",
-        "react",
-        "sonner"
-      ]
+      "npm": ["lucide-react", "next", "next-auth", "react", "sonner"]
     },
     {
       "name": "@giveaway/team-invites-server",

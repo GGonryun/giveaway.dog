@@ -42,7 +42,7 @@ vi.mock('@giveaway/x-import/twitter-import', () => ({
   importTwitterUsers: m.importTwitterUsers
 }));
 
-vi.mock('@/lib/sweepstakes/bluesky-import', () => ({
+vi.mock('@giveaway/bluesky-import/bluesky-import', () => ({
   importBlueskyUsers: m.importBlueskyUsers
 }));
 

@@ -9,7 +9,7 @@ import { TaskLock } from './task-lock';
 
 import { doesUserHaveAllowedIdentity } from '@giveaway/integration-model/providers';
 import { SweepstakesLoginOptions } from '@/components/sweepstakes/sweepstakes-login-options';
-import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';
 
 export const TaskAction: React.FC<{
   submission: UserTaskSubmissionSchema | undefined;

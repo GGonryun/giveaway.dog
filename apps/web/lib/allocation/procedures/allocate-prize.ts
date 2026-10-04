@@ -1,7 +1,7 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { allocatePrizeRequestSchema } from '@/schemas/giveaway/schemas';
+import { allocatePrizeRequestSchema } from '@giveaway/sweepstakes-model/schemas';
 import z from 'zod';
 
 export const allocatePrize = procedure()

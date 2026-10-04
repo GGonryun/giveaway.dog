@@ -28,7 +28,7 @@ import {
   TaskType,
   TASK_IS_DEPRECATED
 } from '@giveaway/task-model/schemas';
-import { toTaskTheme } from '../theme';
+import { toTaskTheme } from '@giveaway/task-ui/theme';
 import { EntryMethodBadge } from '../entry-methods/entry-method-badge';
 
 export const SelectTaskDialog: React.FC<{

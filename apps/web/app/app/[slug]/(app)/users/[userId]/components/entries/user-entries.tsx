@@ -18,8 +18,8 @@ import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
 import { Button } from '@giveaway/ui-primitives/button';
 
 import { TASK_LABEL } from '@giveaway/task-model/schemas';
-import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
-import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
+import { TaskStatusBadge } from '@giveaway/task-ui/task-status-badge';
+import { TaskStatusIcon } from '@giveaway/task-ui/task-status-icon';
 import { TaskCompletionSchema } from '@giveaway/task-model/completions';
 
 interface UserEntriesProps {

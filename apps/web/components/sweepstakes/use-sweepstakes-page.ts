@@ -1,5 +1,5 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useTeams } from '../context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { useMemo } from 'react';
 import { useUpdateParams } from '@giveaway/ui-hooks/use-update-params';
 

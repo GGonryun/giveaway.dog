@@ -26,8 +26,8 @@ import login from '@giveaway/auth-actions/login';
 import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 import { useState } from 'react';
 import { BlueskyConnectForm } from './bluesky-connect-form';
-import { InstagramConnectForm } from './instagram-connect-form';
-import { FacebookConnectForm } from './facebook-connect-form';
+import { InstagramConnectForm } from '@giveaway/meta-connect-ui/instagram-connect-form';
+import { FacebookConnectForm } from '@giveaway/meta-connect-ui/facebook-connect-form';
 import { AccountStatusAlert } from '@/components/auth/account-status-alert';
 
 export const SocialProviders = () => {

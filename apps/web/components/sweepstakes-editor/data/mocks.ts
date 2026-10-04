@@ -1,6 +1,6 @@
 import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
 import { PROVIDER_REQUIRED_SCOPES } from '@giveaway/integration-model/providers';
-import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
+import { UserHostRelationshipSchema } from '@giveaway/loyalty-model/schemas';
 import { TWITTER_PROFILE_URL } from '@giveaway/app-config/settings';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import {
@@ -9,7 +9,7 @@ import {
   GiveawayPrizeSchema,
   GiveawayHostSchema,
   SweepstakesAllocationSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { UserSchema } from '@giveaway/user-model/user';
 import { IdentityProvider } from '@prisma/client';
 import { toast } from 'sonner';

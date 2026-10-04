@@ -10,7 +10,7 @@ import {
 import type {
   GiveawayParticipationSchema,
   TimeSeriesDataSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { DailyEntriesTimeline } from '../daily-entries-timeline';
 
 vi.mock('recharts', async (importOriginal) => {

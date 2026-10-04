@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { DEFAULT_SETTINGS_TAB } from '@giveaway/team-settings-shell/schemas/tabs';
-import { TeamPageProps } from '@/schemas/pages';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

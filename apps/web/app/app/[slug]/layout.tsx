@@ -1,10 +1,10 @@
 import getUser from '@giveaway/account-server/get-user';
 import getUserTeam from '@giveaway/team-server/get-user-team';
 import getUserTeams from '@giveaway/team-server/get-user-teams';
-import { TeamsProvider } from '@/components/context/team-provider';
+import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import { UserProvider } from '@giveaway/account-context/user-provider';
 import { redirect } from 'next/navigation';
-import { TeamPageProps } from '@/schemas/pages';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 
 export default async function Layout({
   children,

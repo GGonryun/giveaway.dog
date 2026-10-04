@@ -16,13 +16,13 @@ import getSweepstakesList from '@/procedures/sweepstakes/get-sweepstakes-list';
 import {
   ListSweepstakesFilters,
   toSweepstakesFilter
-} from '@/schemas/sweepstakes';
+} from '@giveaway/sweepstakes-model/sweepstakes';
 import { SweepstakesFilterBar } from './components/sweepstakes-filter-bar';
 import { SweepstakesTabs } from './components/sweepstakes-tabs';
 import { Outline } from '@/components/app/outline';
 import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
 import type { Metadata } from 'next';
-import { TeamPageProps } from '@/schemas/pages';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import { TemplatesGrid } from '@/lib/templates/components/templates-grid';
 import { getTemplates } from '@/lib/templates/procedures/get-templates';
 import { TemplatesGridHeader } from '@/lib/templates/components/templates-grid-header';

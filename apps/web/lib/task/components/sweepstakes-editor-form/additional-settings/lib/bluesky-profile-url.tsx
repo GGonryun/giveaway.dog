@@ -8,7 +8,7 @@ import {
 } from '@giveaway/ui-primitives/form';
 import { Input } from '@giveaway/ui-primitives/input';
 import { BLUESKY_PROFILE_URL } from '@giveaway/app-config/settings';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 
 export const BlueskyProfileUrlField = () => {

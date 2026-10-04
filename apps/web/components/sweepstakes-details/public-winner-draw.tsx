@@ -12,7 +12,7 @@ import { useProcedure } from '@giveaway/rpc-client/hook';
 import {
   SweepstakesPrizeSchema,
   SweepstakesWinnerCriteriaSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { PrizeDrawResult } from '@prisma/client';
 import { NavigationHeader } from '@/components/patterns/navigation-header';

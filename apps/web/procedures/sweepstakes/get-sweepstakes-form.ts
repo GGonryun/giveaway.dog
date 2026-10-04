@@ -4,11 +4,11 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { findUserSweepstakesQuery } from './shared';
 import { ApplicationError } from '@giveaway/util-errors';
-import { toSweepstakesInput } from '@/schemas/giveaway/input';
+import { toSweepstakesInput } from '@giveaway/sweepstakes-model/input';
 import {
   FORM_SWEEPSTAKES_PAYLOAD,
   sweepstakesInputSchema
-} from '@/schemas/giveaway/db';
+} from '@giveaway/sweepstakes-model/db';
 
 const getSweepstakesForm = procedure()
   .authorization({ required: true })

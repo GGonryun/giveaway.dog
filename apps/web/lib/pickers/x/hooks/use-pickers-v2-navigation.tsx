@@ -1,4 +1,4 @@
-import { useTeams } from '@/components/context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { useUpdateParams } from '@giveaway/ui-hooks/use-update-params';
 import { useRouter } from 'next/navigation';
 

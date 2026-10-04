@@ -21,7 +21,7 @@ import { nanoid } from 'nanoid';
 import {
   StorableTaskSchema,
   toStorableTask
-} from '@/schemas/giveaway/storable';
+} from '@giveaway/sweepstakes-model/storable';
 
 import { processPostToDiscord } from '@/lib/discord/procedures/process-post-to-discord';
 

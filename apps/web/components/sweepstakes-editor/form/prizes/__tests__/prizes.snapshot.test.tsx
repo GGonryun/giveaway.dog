@@ -2,7 +2,7 @@ import type { DndContextProps } from '@dnd-kit/core';
 import type { SortableContextProps } from '@dnd-kit/sortable';
 import { nanoid } from 'nanoid';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Prize } from '@/schemas/giveaway/schemas';
+import { Prize } from '@giveaway/sweepstakes-model/schemas';
 import {
   buildFormValues,
   renderWithForm

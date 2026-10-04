@@ -5,7 +5,7 @@ import {
   BonusCompleteProfileTaskSchema
 } from '@giveaway/task-model/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
-import { useTaskTheme } from '../../../../theme';
+import { useTaskTheme } from '@giveaway/task-ui/theme';
 import React from 'react';
 
 export const BonusTaskActionForm: React.FC<

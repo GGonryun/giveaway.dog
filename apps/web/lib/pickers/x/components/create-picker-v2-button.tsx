@@ -2,7 +2,7 @@
 
 import { PlusIcon } from 'lucide-react';
 
-import { useTeams } from '@/components/context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { Button } from '@giveaway/ui-primitives/button';
 import { useRouter } from 'next/navigation';
 import { useProcedure } from '@giveaway/rpc-client/hook';

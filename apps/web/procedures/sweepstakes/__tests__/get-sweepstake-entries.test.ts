@@ -3,7 +3,7 @@ import getSweepstakeEntries from '../get-sweepstake-entries';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { USER_SCHEMA_SELECT_QUERY } from '@giveaway/user-model/user';
 import {
   buildTaskRecord,

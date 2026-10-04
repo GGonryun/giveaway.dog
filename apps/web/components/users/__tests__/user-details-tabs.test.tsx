@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole, TeamTier } from '@prisma/client';
-import { TeamsProvider } from '@/components/context/team-provider';
+import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import type { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { UserDetailsTabs } from '../user-details-tabs';
 

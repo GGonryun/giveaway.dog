@@ -29,7 +29,7 @@ import {
 import {
   DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND,
   DEFAULT_GRADIENT_DESIGN_BACKGROUND
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import { Input } from '@giveaway/ui-primitives/input';
 import { assertNever } from '@giveaway/util-errors';
 import { Button } from '@giveaway/ui-primitives/button';
@@ -39,12 +39,12 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@giveaway/ui-primitives/popover';
-import { toGradient } from '@/schemas/color';
+import { toGradient } from '@giveaway/sweepstakes-model/color';
 import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 import {
   GiveawayFormSchema,
   GradientBackgroundSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 
 export const Design = () => {
   const form = useFormContext<GiveawayFormSchema>();

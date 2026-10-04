@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { useTeams } from '../context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { UserDetailsTabSchema } from '@giveaway/user-model/user';
 import { browser } from '@giveaway/util-browser/browser';
 

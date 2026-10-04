@@ -4,13 +4,13 @@ import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-partici
 import {
   ParticipantSweepstakeSchema,
   SweepstakesAllocationSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { usePathname, useRouter } from 'next/navigation';
 import { useProcedureAsync } from '@giveaway/rpc-client/hook';
 import submitTask from '@/lib/task/procedures/submit-tasks';
 import { toSweepstakesState } from '@/lib/sweepstakes';
-import { submitParticipantForm } from '@/lib/custom-fields/procedures/submit-form';
-import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
+import { submitParticipantForm } from '@giveaway/custom-fields-server/submit-form';
+import { UserHostRelationshipSchema } from '@giveaway/loyalty-model/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import createReferralCode from '@giveaway/referrals-server/create-referral-code';
 import {

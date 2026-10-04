@@ -18,7 +18,7 @@ import {
   type IntegrationSchema
 } from '@giveaway/integration-model/schemas';
 import { extractUsernameFromTweetUrl } from '@giveaway/x-model/twitter';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { AlertCircle, RefreshCw, Info } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';

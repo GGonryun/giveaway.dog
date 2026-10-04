@@ -10,8 +10,8 @@ import {
   buildSweepstakes
 } from './fixtures';
 import { renderWithParticipation } from './participation-fixtures';
-import { DEFAULT_DESIGN_DATA } from '@/schemas/giveaway/defaults';
-import type { DeviceType } from '@/schemas/giveaway/schemas';
+import { DEFAULT_DESIGN_DATA } from '@giveaway/sweepstakes-model/defaults';
+import type { DeviceType } from '@giveaway/sweepstakes-model/schemas';
 
 const socialHost = buildHost({
   links: [

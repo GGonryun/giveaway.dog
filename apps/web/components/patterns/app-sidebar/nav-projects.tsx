@@ -27,7 +27,7 @@ import {
 } from '@giveaway/ui-primitives/sidebar';
 import { usePathname, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import { useTeams } from '@/components/context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import Link from 'next/link';
 
 const groups = ({ slug }: { slug: string }) => {

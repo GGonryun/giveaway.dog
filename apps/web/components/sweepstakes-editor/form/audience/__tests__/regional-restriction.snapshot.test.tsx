@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { RegionalRestrictionSchema } from '@/schemas/giveaway/schemas';
+import { RegionalRestrictionSchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   buildFormValues,
   renderWithForm

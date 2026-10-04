@@ -9,7 +9,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { FailureData, isFailureData } from '@giveaway/rpc-model/types';
-import { TaskThemeProvider } from '@/lib/task/components/theme';
+import { TaskThemeProvider } from '@giveaway/task-ui/theme';
 import { TaskSchema } from '@giveaway/task-model/schemas';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
 import { getTaskLock } from './task-lock';
@@ -19,7 +19,7 @@ import { TaskTooltipContent } from './task-tooltip-content';
 import { TaskAction } from './task-action';
 import { TaskIcon } from './task-icon';
 import { Tooltip } from '@giveaway/ui-primitives/tooltip';
-import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';
 import { toTaskStatus } from '../../submission';
 import { toCompletionValue } from '@giveaway/task-model/entries';
 

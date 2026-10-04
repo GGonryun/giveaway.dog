@@ -2,7 +2,7 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
-import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+import { toDerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 import z from 'zod';
 
 const withdrawParticipation = procedure()

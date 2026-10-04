@@ -11,7 +11,7 @@ import {
 import { AuthFooter } from '@/components/auth/auth-footer';
 import { SelectTeamForm } from './select-team-form';
 import { CreateTeamForm } from './create-team-form';
-import { useTeamsPage } from './use-teams-page';
+import { useTeamsPage } from '@giveaway/team-context/use-teams-page';
 
 export function TeamPickerForm({
   className,

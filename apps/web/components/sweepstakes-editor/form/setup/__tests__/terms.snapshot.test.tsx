@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { GiveawayTerms } from '@/schemas/giveaway/schemas';
+import { GiveawayTerms } from '@giveaway/sweepstakes-model/schemas';
 import {
   buildFormValues,
   buildTemplateTerms,

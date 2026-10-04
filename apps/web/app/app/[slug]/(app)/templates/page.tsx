@@ -2,7 +2,7 @@
 
 import { TemplatesPage } from '@/lib/templates/components/templates-page';
 import { getTemplates } from '@/lib/templates/procedures/get-templates';
-import { TeamPageProps } from '@/schemas/pages';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 
 export default async function Page({
   params

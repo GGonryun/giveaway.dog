@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { TeamsProvider } from '@/components/context/team-provider';
+import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import { buildTeam } from '@/components/sweepstakes/__tests__/fixtures';
 import { SweepstakesDetailsTabs } from '../sweepstakes-tabs';
 

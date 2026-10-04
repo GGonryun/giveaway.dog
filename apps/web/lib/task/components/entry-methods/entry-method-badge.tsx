@@ -1,9 +1,9 @@
 import { assertNever } from '@giveaway/util-errors';
-import { ImportBadge } from '../badges/import-badge';
-import { InstantBadge } from '../badges/instant-badge';
-import { VerificationBadge } from '../badges/verification-badge';
-import { ErrorCountBadge } from '../badges/error-count-badge';
-import { MaxOfOneBadge } from '../badges/max-of-one-badge';
+import { ImportBadge } from '@giveaway/task-ui/badges/import-badge';
+import { InstantBadge } from '@giveaway/task-ui/badges/instant-badge';
+import { VerificationBadge } from '@giveaway/task-ui/badges/verification-badge';
+import { ErrorCountBadge } from '@giveaway/task-ui/badges/error-count-badge';
+import { MaxOfOneBadge } from '@giveaway/task-ui/badges/max-of-one-badge';
 import { TaskType } from '@giveaway/task-model/schemas';
 
 export const EntryMethodBadge: React.FC<{

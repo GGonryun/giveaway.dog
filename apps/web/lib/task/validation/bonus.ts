@@ -7,8 +7,8 @@ import {
 } from '@giveaway/task-model/schemas';
 import { PrismaClient } from '@prisma/client';
 import { ValidateTaskInput } from '@giveaway/task-model/types';
-import { getLoyalty } from '@/lib/loyalty/db';
-import { isLoyal } from '@/lib/loyalty/validation';
+import { getLoyalty } from '@giveaway/loyalty-model/db';
+import { isLoyal } from '@giveaway/loyalty-model/validation';
 import {
   isProfileComplete,
   toParticipantFormFields

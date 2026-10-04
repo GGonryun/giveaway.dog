@@ -13,7 +13,7 @@ import { InfoIcon, CheckIcon, SaveIcon } from 'lucide-react';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { formatDistance } from 'date-fns';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { useMemo } from 'react';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import Link from 'next/link';

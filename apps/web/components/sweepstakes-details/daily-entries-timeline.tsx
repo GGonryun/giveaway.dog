@@ -11,7 +11,7 @@ import {
 import {
   ParticipantSweepstakeSchema,
   TimeSeriesDataSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { DEFAULT_TIME_SERIES_DURATION } from '@giveaway/app-config/settings';
 import {
   ChartContainer,

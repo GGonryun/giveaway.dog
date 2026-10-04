@@ -1,6 +1,6 @@
 'use client';
 
-import { useTeams } from '@/components/context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { BasicInformationSection } from './basic-information-section';
 
 export const TeamProfileSettings: React.FC = () => {

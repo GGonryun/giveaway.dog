@@ -13,7 +13,7 @@ import {
   findUserSweepstakesQuery
 } from '../shared';
 import { TeamPermission } from '@giveaway/team-permissions';
-import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { TEAM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { TEST_USER } from '@giveaway/testing-server/session';
 import {

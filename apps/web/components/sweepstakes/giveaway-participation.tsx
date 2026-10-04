@@ -16,7 +16,7 @@ import { Error } from './states/error';
 import { Pending } from './states/pending';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { assertNever } from '@giveaway/util-errors';
-import { toBackgroundStyle } from '@/schemas/color';
+import { toBackgroundStyle } from '@giveaway/sweepstakes-model/color';
 import { cn } from '@giveaway/ui-utils/utils';
 import { SweepstakesLoginOptions } from './sweepstakes-login-options';
 import { UserDetailsForm } from './states/user-details-form';

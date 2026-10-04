@@ -9,8 +9,8 @@ import pluralize from 'pluralize';
 import { formatDistance } from 'date-fns';
 import { BanIcon, ClockIcon, LockIcon, LucideIcon } from 'lucide-react';
 import { assertNever } from '@giveaway/util-errors';
-import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
-import { isLoyal } from '@/lib/loyalty/validation';
+import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';
+import { isLoyal } from '@giveaway/loyalty-model/validation';
 
 export const lockStateSchema = z.enum([
   'MISSING_REQUIREMENTS',

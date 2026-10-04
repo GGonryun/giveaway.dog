@@ -1,4 +1,4 @@
-import { importBlueskyUsers } from '@/lib/sweepstakes/bluesky-import';
+import { importBlueskyUsers } from '@giveaway/bluesky-import/bluesky-import';
 import {
   TASK_JOB_DATA_SCHEMA,
   BlueskyLikeImportTaskSchema,

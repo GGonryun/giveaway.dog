@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Prisma, TeamRole, UserSource } from '@prisma/client';
 import updateWinnerCriteria from '../update-winner-criteria';
-import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { TEAM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';

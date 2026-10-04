@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import {
   FormControl,

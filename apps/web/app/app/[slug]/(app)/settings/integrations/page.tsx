@@ -1,7 +1,7 @@
 'use server';
 
 import { Suspense } from 'react';
-import { TeamPageProps } from '@/schemas/pages';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
 import { TeamIntegrationSettings } from '@/lib/settings/components/integrations';
 

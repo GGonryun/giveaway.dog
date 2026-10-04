@@ -4,8 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   DEFAULT_DESIGN_DATA,
   DEFAULT_GRADIENT_DESIGN_BACKGROUND
-} from '@/schemas/giveaway/defaults';
-import type { GiveawayState } from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/defaults';
+import type { GiveawayState } from '@giveaway/sweepstakes-model/schemas';
 import GiveawayParticipationDefault, {
   GiveawayParticipation
 } from '../giveaway-participation';

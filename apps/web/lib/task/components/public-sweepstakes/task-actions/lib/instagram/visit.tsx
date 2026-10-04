@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { InstagramVisitTaskSchema } from '@giveaway/task-model/schemas';
 import { SocialInstagramIcon } from '@giveaway/integration-icons/instagram';
 import { cn } from '@giveaway/ui-utils/utils';
-import { useTaskTheme } from '@/lib/task/components/theme';
+import { useTaskTheme } from '@giveaway/task-ui/theme';
 import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
 import { Separator } from '@giveaway/ui-primitives/separator';

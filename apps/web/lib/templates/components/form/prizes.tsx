@@ -30,7 +30,7 @@ import { nanoid } from 'nanoid';
 import {
   DEFAULT_SWEEPSTAKES_PRIZE_NAME,
   DEFAULT_SWEEPSTAKES_PRIZE_QUOTA
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 
 type ActivePrize = { id: string; index: number };

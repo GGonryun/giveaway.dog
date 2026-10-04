@@ -9,7 +9,7 @@ import {
   SWEEPSTAKES_TAB_OPTIONS,
   SweepstakesTabSchema,
   DEFAULT_SWEEPSTAKES_DETAILS_TAB
-} from '@/schemas/sweepstakes';
+} from '@giveaway/sweepstakes-model/sweepstakes';
 import { useSweepstakesDetailsPage } from '@/components/sweepstakes/use-sweepstakes-details-page';
 import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';

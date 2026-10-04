@@ -19,7 +19,7 @@ import {
   DEFAULT_NOTIFICATION_TIMEFRAME_DAYS,
   DEFAULT_SPONSOR_NAME,
   DEFAULT_WINNER_SELECTION_METHOD
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 
 const byId = (id: string) => {
   const template = STATIC_TEMPLATES.find((t) => t.id === id);

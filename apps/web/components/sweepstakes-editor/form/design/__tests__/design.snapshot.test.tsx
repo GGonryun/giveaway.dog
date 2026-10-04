@@ -5,7 +5,7 @@ import {
   GiveawayDesignBackgroundSchema,
   GiveawayDesignSchema,
   GradientBackgroundSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import {
   buildFormValues,
   renderWithForm

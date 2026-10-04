@@ -1,0 +1,12 @@
+{
+  "packages/sweepstakes/sweepstakes-model/src/db.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "packages/sweepstakes/sweepstakes-model/src/input.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  }
+}

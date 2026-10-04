@@ -41,7 +41,7 @@ import {
   SortField,
   SweepstakesDataSchema,
   EDITABLE_DERIVED_STATUS
-} from '@/schemas/sweepstakes';
+} from '@giveaway/sweepstakes-model/sweepstakes';
 
 import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
 import { DeleteConfirmationModal } from '@/components/sweepstakes/delete-confirmation-modal';

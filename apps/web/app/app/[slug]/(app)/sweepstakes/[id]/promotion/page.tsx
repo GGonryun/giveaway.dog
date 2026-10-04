@@ -4,7 +4,7 @@ import getParticipantSweepstake from '@/procedures/browse/get-participant-sweeps
 import React, { Suspense } from 'react';
 
 import type { Metadata } from 'next';
-import { SweepstakesPageProps } from '@/schemas/pages';
+import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
 import { SweepstakesPromotionPageSkeleton } from '@/lib/sweepstakes-promotion/components/skeleton';
 import { SweepstakesPromotionPage } from '@/lib/sweepstakes-promotion/components/page';
 

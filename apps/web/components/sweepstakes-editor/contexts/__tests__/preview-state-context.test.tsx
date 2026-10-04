@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import React, { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { GiveawayState } from '@/schemas/giveaway/schemas';
+import { GiveawayState } from '@giveaway/sweepstakes-model/schemas';
 import { PreviewStateContext, usePreviewState } from '../preview-state-context';
 
 const StatefulProvider = ({ children }: { children: React.ReactNode }) => {

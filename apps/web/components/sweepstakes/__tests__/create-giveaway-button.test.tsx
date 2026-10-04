@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { TeamsProvider } from '@/components/context/team-provider';
+import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import { createTemplate } from '@/lib/templates/procedures/create-template';
 import { timezone } from '@giveaway/util-time/time';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';

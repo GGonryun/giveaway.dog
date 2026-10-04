@@ -4,7 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { participationHistorySchema } from '@/schemas/participation-history';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import z from 'zod';
-import { toDerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+import { toDerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 
 const getParticipationHistory = procedure()
   .authorization({ required: true })

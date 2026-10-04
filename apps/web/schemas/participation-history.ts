@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { derivedSweepstakesStatusSchema } from './sweepstakes';
+import { derivedSweepstakesStatusSchema } from '@giveaway/sweepstakes-model/sweepstakes';
 
 export const participationHistoryItemSchema = z.object({
   sweepstakesId: z.string(),

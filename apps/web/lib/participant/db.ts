@@ -22,7 +22,7 @@ import {
 } from '@/schemas/giveaway/participant';
 import { ApplicationError } from '@giveaway/util-errors';
 import { toTaskSchema } from '@giveaway/task-model/schemas';
-import { SweepstakesAllocationSchema } from '@/schemas/giveaway/schemas';
+import { SweepstakesAllocationSchema } from '@giveaway/sweepstakes-model/schemas';
 
 const PRIZE_ALLOCATION_SELECT_QUERY = {
   prize: {

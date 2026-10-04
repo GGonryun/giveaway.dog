@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { Button } from '@giveaway/ui-primitives/button';
 import { ExternalLinkIcon } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
-import { useTaskTheme } from '../../../../theme';
+import { useTaskTheme } from '@giveaway/task-ui/theme';
 import { VisitUrlTaskSchema } from '@giveaway/task-model/schemas';
 import { useAfterVisitBehavior } from '../use-after-visit-behavior';
 

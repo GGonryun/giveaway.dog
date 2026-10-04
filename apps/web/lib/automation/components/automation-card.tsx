@@ -11,7 +11,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
+import { ParticipantSweepstakeSchema } from '@giveaway/sweepstakes-model/schemas';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { PostBuilderSheet } from './post-builder-sheet';
 import { AutomatedPostDetails } from './automated-post-details';

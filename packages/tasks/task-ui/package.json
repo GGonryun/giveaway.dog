@@ -1,0 +1,61 @@
+{
+  "name": "@giveaway/task-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:ui",
+      "runtime:react",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-ui",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./badges/error-count-badge": "./src/badges/error-count-badge.tsx",
+    "./badges/import-badge": "./src/badges/import-badge.tsx",
+    "./badges/instant-badge": "./src/badges/instant-badge.tsx",
+    "./badges/max-of-one-badge": "./src/badges/max-of-one-badge.tsx",
+    "./badges/select-task-badge": "./src/badges/select-task-badge.tsx",
+    "./badges/verification-badge": "./src/badges/verification-badge.tsx",
+    "./task-category-badge": "./src/task-category-badge.tsx",
+    "./task-platform-icon": "./src/task-platform-icon.tsx",
+    "./task-status-badge": "./src/task-status-badge.tsx",
+    "./task-status-icon": "./src/task-status-icon.tsx",
+    "./theme": "./src/theme.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "lucide-react": "catalog:",
+    "pluralize": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pluralize": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

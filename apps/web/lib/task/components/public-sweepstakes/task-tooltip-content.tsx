@@ -1,5 +1,5 @@
 import { TooltipContent } from '@giveaway/ui-primitives/tooltip';
-import { useTaskTheme } from '../theme';
+import { useTaskTheme } from '@giveaway/task-ui/theme';
 import { cn } from '@giveaway/ui-utils/utils';
 import { TaskLock } from './task-lock';
 import { CompletionStatus } from '@prisma/client';

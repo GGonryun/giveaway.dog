@@ -2,7 +2,7 @@ import { TaskActionProps, TaskContent } from '../../building-blocks';
 import { Button } from '@giveaway/ui-primitives/button';
 import { BonusLimitedTaskSchema } from '@giveaway/task-model/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
-import { useTaskTheme } from '../../../../theme';
+import { useTaskTheme } from '@giveaway/task-ui/theme';
 import React, { useState } from 'react';
 import pluralize from 'pluralize';
 import {

@@ -8,7 +8,7 @@ import {
   listSweepstakesDataSchema,
   listSweepstakesFiltersSchema,
   toDerivedSweepstakeStatus
-} from '@/schemas/sweepstakes';
+} from '@giveaway/sweepstakes-model/sweepstakes';
 import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_SWEEPSTAKES_NAME

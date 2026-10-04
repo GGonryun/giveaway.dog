@@ -13,7 +13,7 @@ import { InfoIcon, SaveIcon, TrashIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 
 import Link from 'next/link';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';

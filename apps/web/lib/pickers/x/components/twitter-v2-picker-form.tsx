@@ -35,7 +35,7 @@ import { TwitterV2PublishConfirmationModal } from './twitter-v2-publish-confirma
 import { TwitterV2PickerPreview } from './twitter-v2-picker-preview';
 import { updateTwitterV2Picker } from '../procedures/update-twitter-v2-picker';
 import { publishTwitterV2Picker } from '../procedures/publish-twitter-v2-picker';
-import { useActiveTeam } from '@/components/team/use-active-team-page';
+import { useActiveTeam } from '@giveaway/team-context/use-active-team-page';
 
 export interface TwitterV2PickerFormProps {
   picker: Omit<TwitterV2PickerUnvalidatedFormSchema, 'id'>;

@@ -29,8 +29,8 @@ import {
 } from '@/components/sweepstakes-editor/data/mocks';
 import { SparklesIcon, Edit, Loader2, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
-import { GiveawaySchema } from '@/schemas/giveaway/schemas';
-import { DEFAULT_DESIGN_DATA } from '@/schemas/giveaway/defaults';
+import { GiveawaySchema } from '@giveaway/sweepstakes-model/schemas';
+import { DEFAULT_DESIGN_DATA } from '@giveaway/sweepstakes-model/defaults';
 
 interface UseTemplateModalProps {
   open: boolean;

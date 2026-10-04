@@ -21,7 +21,7 @@ vi.mock('@giveaway/bluesky-api/bluesky/get-latest-team-bluesky-agent', () => ({
   getLatestTeamBlueskyCredentials: m.getLatestTeamBlueskyCredentials
 }));
 
-vi.mock('@/lib/sweepstakes/bluesky-import', () => ({
+vi.mock('@giveaway/bluesky-import/bluesky-import', () => ({
   importBlueskyUsers: m.importBlueskyUsers
 }));
 

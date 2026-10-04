@@ -1,6 +1,6 @@
 'use client';
 
-import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
+import { ParticipantSweepstakeSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesParticipationPage } from './sweepstakes-participation-page-content';
 
 export const PublicSweepstakesContent: React.FC<

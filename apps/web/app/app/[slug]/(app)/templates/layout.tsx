@@ -2,7 +2,7 @@
 
 import { Outline } from '@/components/app/outline';
 import { CreateTemplateButton } from '@/lib/templates/components/create-template-button';
-import { TeamPageProps } from '@/schemas/pages';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 
 type Props = {
   children: React.ReactNode;

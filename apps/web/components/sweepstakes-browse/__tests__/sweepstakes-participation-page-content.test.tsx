@@ -11,7 +11,7 @@ import {
   buildSweepstakes
 } from '@/components/sweepstakes/__tests__/fixtures';
 import { allocatePrize } from '@/lib/allocation/procedures/allocate-prize';
-import { submitParticipantForm } from '@/lib/custom-fields/procedures/submit-form';
+import { submitParticipantForm } from '@giveaway/custom-fields-server/submit-form';
 import createReferralCode from '@giveaway/referrals-server/create-referral-code';
 import submitTask from '@/lib/task/procedures/submit-tasks';
 import updateTask from '@/lib/task/procedures/update-task';
@@ -36,7 +36,7 @@ vi.mock('@/components/sweepstakes/giveaway-participation', () => ({
 
 vi.mock('@/lib/task/procedures/submit-tasks', () => ({ default: vi.fn() }));
 vi.mock('@/lib/task/procedures/update-task', () => ({ default: vi.fn() }));
-vi.mock('@/lib/custom-fields/procedures/submit-form', () => ({
+vi.mock('@giveaway/custom-fields-server/submit-form', () => ({
   submitParticipantForm: vi.fn()
 }));
 vi.mock('@giveaway/referrals-server/create-referral-code', () => ({

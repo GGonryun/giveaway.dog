@@ -13,7 +13,7 @@ import React from 'react';
 import {
   stringifyTerms,
   SweepstakesTermOptions
-} from '@/components/sweepstakes-editor/form/terms';
+} from '@giveaway/sweepstakes-model/terms';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { date } from '@giveaway/util-time/date';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';

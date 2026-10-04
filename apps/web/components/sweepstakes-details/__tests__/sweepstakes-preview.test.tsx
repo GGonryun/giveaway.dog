@@ -2,7 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TeamsProvider } from '@/components/context/team-provider';
+import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import { QRCodeModal } from '@giveaway/ui-qr/qr-code-modal';
 import {
   mockParticipation,
@@ -25,8 +25,8 @@ import {
   buildTeam
 } from '@/components/sweepstakes/__tests__/fixtures';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
-import { DEFAULT_DESIGN_DATA } from '@/schemas/giveaway/defaults';
-import type { GiveawayPrizeSchema } from '@/schemas/giveaway/schemas';
+import { DEFAULT_DESIGN_DATA } from '@giveaway/sweepstakes-model/defaults';
+import type { GiveawayPrizeSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesPreview } from '../sweepstakes-preview';
 
 const navigation = vi.hoisted(() => ({

@@ -11,7 +11,7 @@ import {
 } from '@giveaway/ui-primitives/form';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import { Input } from '@giveaway/ui-primitives/input';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { useFormContext, useWatch } from 'react-hook-form';
 import pluralize from 'pluralize';
 

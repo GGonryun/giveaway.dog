@@ -15,7 +15,7 @@ import {
   DEFAULT_SWEEPSTAKES_TIMING,
   DEFAULT_SWEEPSTAKES_VISIBILITY,
   DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { getTemplateById } from '@/lib/templates/data/static-templates';
 import {
@@ -24,7 +24,7 @@ import {
   SweepstakesStatus,
   TeamTier
 } from '@prisma/client';
-import { toStorableSweepstakesUpdate } from '@/schemas/giveaway/storable';
+import { toStorableSweepstakesUpdate } from '@giveaway/sweepstakes-model/storable';
 import { isUndefined, omitBy } from 'lodash';
 import {
   TemplateInputSchema,

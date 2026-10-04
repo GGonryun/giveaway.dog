@@ -1,7 +1,7 @@
 import {
   GiveawayState,
   ParticipantSweepstakeSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { assertNever } from '@giveaway/util-errors';
 import { RequiredFields } from '@giveaway/util-types/types';
 import {

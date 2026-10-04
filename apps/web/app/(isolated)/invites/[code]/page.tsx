@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { InviteAcceptance } from './invite-acceptance';
+import { InviteAcceptance } from '@giveaway/team-invite-acceptance/invite-acceptance';
 import getInviteDetails from '@giveaway/team-invites-server/get-invite-details';
 import { notFound } from 'next/navigation';
 

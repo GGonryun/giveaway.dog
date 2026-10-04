@@ -10,7 +10,7 @@ import {
 } from '@giveaway/ui-primitives/form';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { assertNever } from '@giveaway/util-errors';
-import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import {

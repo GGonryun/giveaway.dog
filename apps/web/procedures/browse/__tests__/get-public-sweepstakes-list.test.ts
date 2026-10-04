@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import getPublicSweepstakesList from '../get-public-sweepstakes-list';
-import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';

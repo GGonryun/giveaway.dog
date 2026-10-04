@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { GiveawayTerms } from '@/schemas/giveaway/schemas';
+import { GiveawayTerms } from '@giveaway/sweepstakes-model/schemas';
 import {
   buildFormValues,
   buildTemplateTerms,

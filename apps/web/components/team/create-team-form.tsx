@@ -32,8 +32,8 @@ import {
 import { toast } from 'sonner';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { LoadingState } from './loading-state';
-import { useTeamsPage } from './use-teams-page';
-import { useTeamPage } from './use-team-page';
+import { useTeamsPage } from '@giveaway/team-context/use-teams-page';
+import { useTeamPage } from '@giveaway/team-context/use-team-page';
 
 export const CreateTeamForm: React.FC = () => {
   const { navigateToSelect } = useTeamsPage();

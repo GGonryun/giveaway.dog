@@ -3,7 +3,7 @@ import z from 'zod';
 
 import { taskCompletionSchema } from '@giveaway/task-model/completions';
 import { SweepstakesFormFieldType } from '@prisma/client';
-import { sweepstakesAllocationSchema } from '@/schemas/giveaway/schemas';
+import { sweepstakesAllocationSchema } from '@giveaway/sweepstakes-model/schemas';
 
 export const sweepstakesParticipantSchema = z.object({
   id: z.string(),

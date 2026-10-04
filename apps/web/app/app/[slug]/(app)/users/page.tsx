@@ -4,7 +4,7 @@ import { UsersTableWrapper } from './components/users-table-wrapper';
 import { UsersTableSkeleton } from './components/users-table-skeleton';
 
 import type { Metadata } from 'next';
-import { TeamPageProps } from '@/schemas/pages';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import {
   parseUsersSearchParams,
   type UsersSearchParams

@@ -1,5 +1,5 @@
 import { ButtonVariant } from '@giveaway/ui-primitives/button';
-import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';
 import { CompletionStatus } from '@prisma/client';
 import {
   CheckIcon,

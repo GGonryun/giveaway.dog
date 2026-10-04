@@ -5,7 +5,7 @@ import {
 } from '@/lib/automation/schemas';
 import { ApplicationError } from '@giveaway/util-errors';
 import { toDefaultValues } from '@giveaway/task-model/defaults';
-import { toStorableTask } from '@/schemas/giveaway/storable';
+import { toStorableTask } from '@giveaway/sweepstakes-model/storable';
 import { PrismaClient, SweepstakesStatus } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { toActiveSweepstakeComponents } from '../api/util';

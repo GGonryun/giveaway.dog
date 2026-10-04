@@ -8,9 +8,9 @@ import { LoadingState } from './loading-state';
 import { MAX_USER_TEAMS } from '@giveaway/app-config/settings';
 import { TeamLogo } from '@/components/team/team-logo';
 
-import { useUserTeams } from '../hooks/use-user-teams';
-import { useTeamsPage } from './use-teams-page';
-import { useTeamPage } from './use-team-page';
+import { useUserTeams } from '@giveaway/team-context/use-user-teams';
+import { useTeamsPage } from '@giveaway/team-context/use-teams-page';
+import { useTeamPage } from '@giveaway/team-context/use-team-page';
 import { toast } from 'sonner';
 
 export const SelectTeamForm: React.FC = () => {

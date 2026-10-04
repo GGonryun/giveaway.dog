@@ -1,4 +1,4 @@
-import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+import { DerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 import {
   Circle,
   CircleAlert,

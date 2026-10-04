@@ -20,9 +20,9 @@ import {
 } from '@giveaway/ui-primitives/sidebar';
 import { toast } from 'sonner';
 import { DetailedUserTeam } from '@giveaway/team-model/teams';
-import { useTeamsPage } from '@/components/team/use-teams-page';
-import { useTeamPage } from '@/components/team/use-team-page';
-import { useTeams } from '@/components/context/team-provider';
+import { useTeamsPage } from '@giveaway/team-context/use-teams-page';
+import { useTeamPage } from '@giveaway/team-context/use-team-page';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { TeamLogo } from '@/components/team/team-logo';
 
 export function TeamSwitcher() {

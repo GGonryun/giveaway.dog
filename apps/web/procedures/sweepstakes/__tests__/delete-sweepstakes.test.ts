@@ -4,7 +4,7 @@ import deleteSweepstakes from '../delete-sweepstakes';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { TEAM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import {
   buildMember,
   buildTeam,

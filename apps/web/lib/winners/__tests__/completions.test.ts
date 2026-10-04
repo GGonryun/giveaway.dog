@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
 import { ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY } from '@giveaway/task-model/queries';
-import { TEAM_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { TEAM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import {
   expandCompletionsByValue,
   getEligibleCompletions,

@@ -28,16 +28,16 @@ import {
   FileCheck,
   Shield
 } from 'lucide-react';
-import { useTeams } from '@/components/context/team-provider';
+import { useTeams } from '@giveaway/team-context/team-provider';
 import { VerificationInstructionsDialog } from './verification-instructions-dialog';
 
 import { formatDistanceToNowStrict } from 'date-fns';
 import Link from 'next/link';
 import { UserEntriesSchema } from '@giveaway/task-model/schemas';
-import { TaskCategoryBadge } from '@/lib/task/components/task-category-badge';
-import { TaskPlatformIcon } from '@/lib/task/components/task-platform-icon';
-import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
-import { TaskStatusIcon } from '@/lib/task/components/task-status-icon';
+import { TaskCategoryBadge } from '@giveaway/task-ui/task-category-badge';
+import { TaskPlatformIcon } from '@giveaway/task-ui/task-platform-icon';
+import { TaskStatusBadge } from '@giveaway/task-ui/task-status-badge';
+import { TaskStatusIcon } from '@giveaway/task-ui/task-status-icon';
 import { size } from 'lodash';
 import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';

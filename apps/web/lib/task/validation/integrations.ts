@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { assertNever } from '@giveaway/util-errors';
-import { checkSteamWishlist } from './steam';
+import { checkSteamWishlist } from '@giveaway/steam-task-validation/steam';
 import { checkDiscordJoin } from './discord';
 import { TaskSchema } from '@giveaway/task-model/schemas';
 import { checkTwitchFollow } from './twitch';
@@ -20,7 +20,7 @@ import {
   checkBlueskyFollow,
   checkBlueskyLike,
   checkBlueskyRepost
-} from './bluesky';
+} from '@giveaway/bluesky-task-validation/bluesky';
 import { checkVeloraConnect, checkVeloraFollow } from './velora';
 import { ValidateTaskInput } from '@giveaway/task-model/types';
 

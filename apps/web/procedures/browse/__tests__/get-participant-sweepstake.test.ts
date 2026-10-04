@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import getParticipantSweepstake from '../get-participant-sweepstake';
-import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY } from '@giveaway/task-model/queries';
 import { DEFAULT_TEAM_LOGO } from '@giveaway/team-model/team/data';
 import { prismaMock } from '@giveaway/testing-server/prisma';

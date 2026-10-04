@@ -4,7 +4,7 @@ import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
-import { DEFAULT_SWEEPSTAKES_PRIZE_NAME } from '@/schemas/giveaway/defaults';
+import { DEFAULT_SWEEPSTAKES_PRIZE_NAME } from '@giveaway/sweepstakes-model/defaults';
 
 const group = (prizeId: string, count: number) => ({
   prizeId,

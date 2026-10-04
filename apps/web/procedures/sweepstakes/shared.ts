@@ -2,8 +2,8 @@ import { ApplicationError } from '@giveaway/util-errors';
 import {
   SweepstakesInputSchema,
   TEAM_SWEEPSTAKES_PAYLOAD
-} from '@/schemas/giveaway/db';
-import { toStorableSweepstakes } from '@/schemas/giveaway/storable';
+} from '@giveaway/sweepstakes-model/db';
+import { toStorableSweepstakes } from '@giveaway/sweepstakes-model/storable';
 import {
   Prisma,
   PrismaClient,

@@ -5,8 +5,8 @@ import { Outline } from '@/components/app/outline';
 import { EditGiveawayButton } from '@/components/sweepstakes/edit-giveaway-button';
 import { SweepstakesDetailsTabs } from '@/components/sweepstakes-details/sweepstakes-tabs';
 import getSweepstakesStatus from '@/procedures/sweepstakes/get-sweepstakes-status';
-import { EDITABLE_DERIVED_STATUS } from '@/schemas/sweepstakes';
-import { SweepstakesPageProps } from '@/schemas/pages';
+import { EDITABLE_DERIVED_STATUS } from '@giveaway/sweepstakes-model/sweepstakes';
+import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
 
 interface SweepstakesDetailPageProps {
   params: Promise<SweepstakesPageProps>;

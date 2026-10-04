@@ -4,11 +4,11 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import {
   publicSweepstakesSchema,
   tryToPublicSweepstakes
-} from '@/schemas/giveaway/public';
-import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
+} from '@giveaway/sweepstakes-model/public';
+import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { compact } from 'lodash';
 import { datetime } from '@giveaway/util-time/date';
-import { giveawayFiltersSchema } from '@/lib/filters/giveaway-filters';
+import { giveawayFiltersSchema } from '@giveaway/sweepstakes-model/filters/giveaway-filters';
 import { HISTORY_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { z } from 'zod';
 

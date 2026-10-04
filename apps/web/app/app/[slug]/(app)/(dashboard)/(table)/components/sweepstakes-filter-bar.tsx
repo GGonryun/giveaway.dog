@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@giveaway/ui-primitives/select';
-import { ListSweepstakesFilters } from '@/schemas/sweepstakes';
+import { ListSweepstakesFilters } from '@giveaway/sweepstakes-model/sweepstakes';
 import { CalendarIcon, SearchIcon, XIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 

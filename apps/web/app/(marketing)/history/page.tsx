@@ -3,7 +3,7 @@ import { getPublicSweepstakesParticipation } from '@/lib/participant/procedures/
 import getHistoricalSweepstakesList from '@/procedures/browse/get-historical-sweepstakes-list';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { GiveawayFilters } from '@/lib/filters/giveaway-filters';
+import { GiveawayFilters } from '@giveaway/sweepstakes-model/filters/giveaway-filters';
 import { HistoryFilters } from './filters';
 import { AllGiveawaysGrid } from '@/components/sweepstakes-browse/components/all-giveaways-grid';
 

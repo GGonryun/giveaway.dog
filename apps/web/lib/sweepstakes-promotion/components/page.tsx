@@ -1,6 +1,6 @@
 'use client';
 
-import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
+import { ParticipantSweepstakeSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SocialSharingCard } from './social-sharing-card';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import { ShareLinksCard } from './share-links-card';

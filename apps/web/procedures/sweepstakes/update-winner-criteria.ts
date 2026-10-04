@@ -8,11 +8,11 @@ import {
   parseUserSourceSchema
 } from '@giveaway/user-source-model/schemas';
 import { Prisma, TeamTier } from '@prisma/client';
-import { sweepstakesWinnerCriteriaSchema } from '@/schemas/giveaway/schemas';
+import { sweepstakesWinnerCriteriaSchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
   DEFAULT_ALLOW_USER_SELECTION
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import { findUserSweepstakes } from './shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 

@@ -8,7 +8,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import {
   derivedSweepstakesStatusSchema,
   toDerivedSweepstakeStatus
-} from '@/schemas/sweepstakes';
+} from '@giveaway/sweepstakes-model/sweepstakes';
 
 const getSweepstakesStatus = procedure()
   .authorization({ required: true })

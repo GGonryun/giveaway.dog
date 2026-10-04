@@ -30,8 +30,8 @@ import { IdentityProvider } from '@prisma/client';
 import { assertNever } from '@giveaway/util-errors';
 import { Separator } from '@giveaway/ui-primitives/separator';
 import { BlueskyConnectForm } from '@/lib/auth/components/bluesky-connect-form';
-import { InstagramConnectForm } from '@/lib/auth/components/instagram-connect-form';
-import { FacebookConnectForm } from '@/lib/auth/components/facebook-connect-form';
+import { InstagramConnectForm } from '@giveaway/meta-connect-ui/instagram-connect-form';
+import { FacebookConnectForm } from '@giveaway/meta-connect-ui/facebook-connect-form';
 import { ProviderSchema } from '@giveaway/integration-model/providers';
 
 type LoginButtonType = 'pill' | 'buttons' | 'icons' | 'dots';

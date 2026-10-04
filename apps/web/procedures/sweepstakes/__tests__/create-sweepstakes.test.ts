@@ -12,7 +12,7 @@ import {
   DEFAULT_SWEEPSTAKES_TIMING,
   DEFAULT_SWEEPSTAKES_VISIBILITY,
   DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { getTemplateById } from '@/lib/templates/data/static-templates';
 import {

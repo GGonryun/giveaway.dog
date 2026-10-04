@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
-import { useTeams } from '../context/team-provider';
-import { SweepstakesTabSchema } from '@/schemas/sweepstakes';
+import { useTeams } from '@giveaway/team-context/team-provider';
+import { SweepstakesTabSchema } from '@giveaway/sweepstakes-model/sweepstakes';
 
 export const useSweepstakesDetailsPage = () => {
   const { activeTeam } = useTeams();

@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import type { GiveawayTerms } from '@/schemas/giveaway/schemas';
+import type { GiveawayTerms } from '@giveaway/sweepstakes-model/schemas';
 import { TermsModal } from '../terms-modal';
 import {
   buildAgeField,
@@ -10,7 +10,7 @@ import {
   buildSweepstakes
 } from './fixtures';
 import { renderWithParticipation } from './participation-fixtures';
-import type { GiveawayFormAudience } from '@/schemas/giveaway/schemas';
+import type { GiveawayFormAudience } from '@giveaway/sweepstakes-model/schemas';
 
 const renderTerms = ({
   terms,

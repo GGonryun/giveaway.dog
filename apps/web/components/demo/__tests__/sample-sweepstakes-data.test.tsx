@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
-import { giveawayFormSchema } from '@/schemas/giveaway/schemas';
+import { giveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SAMPLE_SWEEPSTAKES_DATA } from '../sample-sweepstakes-data';
 
 vi.hoisted(() => {

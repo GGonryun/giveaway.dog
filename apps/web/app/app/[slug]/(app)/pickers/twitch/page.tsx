@@ -1,4 +1,4 @@
-import { TeamPageProps } from '@/schemas/pages';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import { PickerComingSoonCTA } from '@/lib/pickers/shared/components/picker-coming-soon-cta';
 
 type TwitchPickersPageProps = {

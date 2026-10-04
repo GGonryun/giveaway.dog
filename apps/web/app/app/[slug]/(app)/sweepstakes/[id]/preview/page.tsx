@@ -5,7 +5,7 @@ import { SweepstakesLoadingSkeleton } from '@/components/sweepstakes-details/swe
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { SweepstakesPageProps } from '@/schemas/pages';
+import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

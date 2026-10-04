@@ -11,7 +11,7 @@ import { disconnectDiscord } from '@/lib/discord/procedures/disconnect-discord';
 import { useRouter } from 'next/navigation';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
-import { useActiveTeam } from '@/components/team/use-active-team-page';
+import { useActiveTeam } from '@giveaway/team-context/use-active-team-page';
 import { IntegrationSchema } from '@giveaway/integration-model/schemas';
 import { IntegrationStatusAlert } from '@giveaway/integration-ui/integration-status-alert';
 import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';

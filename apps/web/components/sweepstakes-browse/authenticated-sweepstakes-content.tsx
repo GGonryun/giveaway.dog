@@ -1,8 +1,8 @@
 'use client';
 
-import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
+import { ParticipantSweepstakeSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
+import { UserHostRelationshipSchema } from '@giveaway/loyalty-model/schemas';
 import { UserReferralSchema } from '@giveaway/referrals-model/schemas';
 import { SweepstakesParticipationPage } from './sweepstakes-participation-page-content';
 import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';

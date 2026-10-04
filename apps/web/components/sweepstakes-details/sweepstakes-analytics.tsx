@@ -4,7 +4,7 @@ import React from 'react';
 import {
   ParticipantSweepstakeSchema,
   TimeSeriesDataSchema
-} from '@/schemas/giveaway/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
 import { DailyEntriesTimeline } from './daily-entries-timeline';
 import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 import { PrizeAllocationChart } from './prize-allocation-chart';

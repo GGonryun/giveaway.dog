@@ -1,7 +1,7 @@
 'use server';
 
-import { getLoyalty } from '@/lib/loyalty/db';
-import { userHostRelationshipSchema } from '@/lib/loyalty/schemas';
+import { getLoyalty } from '@giveaway/loyalty-model/db';
+import { userHostRelationshipSchema } from '@giveaway/loyalty-model/schemas';
 import { procedure } from '@giveaway/rpc-server/procedures';
 
 import z from 'zod';

@@ -3,7 +3,7 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { applySweepstakesChanges } from './shared';
 import z from 'zod';
-import { sweepstakesInputSchema } from '@/schemas/giveaway/db';
+import { sweepstakesInputSchema } from '@giveaway/sweepstakes-model/db';
 
 const updateSweepstakes = procedure()
   .authorization({ required: true })

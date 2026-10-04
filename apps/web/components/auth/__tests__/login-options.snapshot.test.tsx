@@ -64,11 +64,11 @@ vi.mock('@/lib/auth/components/bluesky-connect-form', () => ({
   BlueskyConnectForm: connectFormStub('Bluesky')
 }));
 
-vi.mock('@/lib/auth/components/instagram-connect-form', () => ({
+vi.mock('@giveaway/meta-connect-ui/instagram-connect-form', () => ({
   InstagramConnectForm: connectFormStub('Instagram')
 }));
 
-vi.mock('@/lib/auth/components/facebook-connect-form', () => ({
+vi.mock('@giveaway/meta-connect-ui/facebook-connect-form', () => ({
   FacebookConnectForm: connectFormStub('Facebook')
 }));
 

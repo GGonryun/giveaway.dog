@@ -10,7 +10,7 @@ import {
   SheetTitle
 } from '@giveaway/ui-primitives/sheet';
 import { Button } from '@giveaway/ui-primitives/button';
-import { GiveawaySchema } from '@/schemas/giveaway/schemas';
+import { GiveawaySchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   IntegrationsSchema,
   hasFeature

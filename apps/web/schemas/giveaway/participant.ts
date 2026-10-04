@@ -1,9 +1,9 @@
 import { DeepNullable } from '@giveaway/util-types/types';
-import { ParticipantSweepstakesGetPayload } from './db';
-import { GiveawayPrizeSchema } from './schemas';
+import { ParticipantSweepstakesGetPayload } from '@giveaway/sweepstakes-model/db';
+import { GiveawayPrizeSchema } from '@giveaway/sweepstakes-model/schemas';
 import z from 'zod';
 import { toUserSchema, UserSchema } from '@giveaway/user-model/user';
-import { toTaskInput } from './input';
+import { toTaskInput } from '@giveaway/sweepstakes-model/input';
 import { Prisma } from '@prisma/client';
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { taskSchema } from '@giveaway/task-model/schemas';

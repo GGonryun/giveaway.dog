@@ -3,7 +3,7 @@ import { AutomationCardSkeleton } from '@/lib/automation/components/automation-c
 import { getAutomatedPostJobs } from '@/lib/automation/procedures/get-automated-post-jobs';
 import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import { SweepstakesPageProps } from '@/schemas/pages';
+import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
 import React, { Suspense } from 'react';
 
 interface PageProps {

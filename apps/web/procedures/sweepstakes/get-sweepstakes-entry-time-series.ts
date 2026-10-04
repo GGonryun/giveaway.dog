@@ -3,7 +3,7 @@
 import { date } from '@giveaway/util-time/date';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { DEFAULT_TIME_SERIES_DURATION } from '@giveaway/app-config/settings';
-import { timeSeriesDataSchema } from '@/schemas/giveaway/schemas';
+import { timeSeriesDataSchema } from '@giveaway/sweepstakes-model/schemas';
 import { subDays } from 'date-fns';
 import { groupBy, map } from 'lodash';
 import z from 'zod';

@@ -35,7 +35,7 @@ import { datetime } from '@giveaway/util-time/date';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import { Gem, Trash2, Plus } from 'lucide-react';
-import { useActiveTeam } from '@/components/team/use-active-team-page';
+import { useActiveTeam } from '@giveaway/team-context/use-active-team-page';
 import { hasMinimumTeamTier } from '@giveaway/team-model/team/util';
 import { TeamTier } from '@prisma/client';
 

@@ -9,8 +9,8 @@ import {
   GiveawaySchema,
   DeviceType,
   SweepstakesAllocationSchema
-} from '@/schemas/giveaway/schemas';
-import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
+} from '@giveaway/sweepstakes-model/schemas';
+import { UserHostRelationshipSchema } from '@giveaway/loyalty-model/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import {
   CreateReferralSchema,

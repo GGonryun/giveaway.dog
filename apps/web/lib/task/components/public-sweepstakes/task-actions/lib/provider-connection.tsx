@@ -19,7 +19,7 @@ import {
   ProviderSchema,
   isMissingScopes
 } from '@giveaway/integration-model/providers';
-import { TaskTheme, useTaskTheme } from '@/lib/task/components/theme';
+import { TaskTheme, useTaskTheme } from '@giveaway/task-ui/theme';
 import {
   TaskSchema,
   TASK_REQUIRED_SCOPES,

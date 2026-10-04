@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Outline } from '@/components/app/outline';
-import { TeamPageProps } from '@/schemas/pages';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import { SettingsTabs } from '@giveaway/team-settings-shell/settings-tabs';
 
 interface PickerDetailLayoutProps {

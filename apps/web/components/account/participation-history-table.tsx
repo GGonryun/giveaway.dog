@@ -38,7 +38,7 @@ import {
 } from '@giveaway/ui-primitives/dropdown-menu';
 import { WithdrawParticipationDialog } from './withdraw-participation-dialog';
 import { useRouter } from 'next/navigation';
-import { DerivedSweepstakeStatus } from '@/schemas/sweepstakes';
+import { DerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 
 const DEFAULT_PAGE_SIZE = 50;
 

@@ -15,7 +15,7 @@ import {
   DEFAULT_GOVERNING_LAW_COUNTRY_CODE,
   DEFAULT_ALLOW_USER_SELECTION,
   DEFAULT_ALLOW_MULTIPLE_WINS
-} from '@/schemas/giveaway/defaults';
+} from '@giveaway/sweepstakes-model/defaults';
 import { IdentityProvider } from '@prisma/client';
 
 const BASIC_TEMPLATE: TemplateDetailsSchema = {

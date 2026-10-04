@@ -10,9 +10,9 @@ import { cn } from '@giveaway/ui-utils/utils';
 import { CheckIcon, LucideIcon, SaveIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { TaskSchema } from '@giveaway/task-model/schemas';
-import { useTaskTheme } from '../../theme';
+import { useTaskTheme } from '@giveaway/task-ui/theme';
 import { Separator } from '@giveaway/ui-primitives/separator';
-import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
+import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';
 import { OptionalFields } from '@giveaway/util-types/types';
 
 export type TaskActionHandlers = {
