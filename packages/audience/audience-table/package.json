@@ -1,0 +1,69 @@
+{
+  "name": "@giveaway/audience-table",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:audience"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/audience/audience-table --suppressions-location packages/audience/audience-table/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./components/export-sheet": "./src/components/export-sheet.tsx",
+    "./components/users-table": "./src/components/users-table.tsx",
+    "./components/users-table-skeleton": "./src/components/users-table-skeleton.tsx",
+    "./components/users-table-wrapper": "./src/components/users-table-wrapper.tsx",
+    "./lib/parse-search-params": "./src/lib/parse-search-params.ts",
+    "./users-filters-sheet": "./src/users-filters-sheet.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server --project frontend",
+    "test:server": "vitest run --project server",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/participant-server": "workspace:*",
+    "@giveaway/sweepstakes-details-participants": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/user-quality-model": "workspace:*",
+    "@giveaway/user-quality-ui": "workspace:*",
+    "@giveaway/user-source-ui": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "lucide-react": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -4,11 +4,6 @@
       "count": 1
     }
   },
-  "apps/web/app/app/[slug]/(app)/users/components/users-table.tsx": {
-    "react-hooks/static-components": {
-      "count": 2
-    }
-  },
   "apps/web/components/sweepstakes-editor/sweepstakes-editor-preview.tsx": {
     "react-hooks/purity": {
       "count": 1
@@ -19,29 +14,9 @@
       "count": 1
     }
   },
-  "apps/web/components/sweepstakes/states/user-details-form.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "apps/web/lib/home/supported-integrations.tsx": {
     "@next/next/no-html-link-for-pages": {
       "count": 1
-    }
-  },
-  "apps/web/lib/task/components/public-sweepstakes/task-actions/lib/referral/referral-link.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/task/components/public-sweepstakes/task-actions/lib/twitter/shared.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "apps/web/lib/task/components/public-sweepstakes/task-actions/lib/twitter/verified-bonus-badge.tsx": {
-    "react-hooks/static-components": {
-      "count": 2
     }
   },
   "apps/web/lib/templates/components/template-preview.tsx": {

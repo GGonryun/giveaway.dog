@@ -1,14 +1,14 @@
 import { Suspense } from 'react';
 import { Outline } from '@giveaway/shell-sidebar/app/outline';
-import { UsersTableWrapper } from './components/users-table-wrapper';
-import { UsersTableSkeleton } from './components/users-table-skeleton';
+import { UsersTableWrapper } from '@giveaway/audience-table/components/users-table-wrapper';
+import { UsersTableSkeleton } from '@giveaway/audience-table/components/users-table-skeleton';
 
 import type { Metadata } from 'next';
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import {
   parseUsersSearchParams,
   type UsersSearchParams
-} from './lib/parse-search-params';
+} from '@giveaway/audience-table/lib/parse-search-params';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

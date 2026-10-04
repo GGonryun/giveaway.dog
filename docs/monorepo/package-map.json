@@ -419,12 +419,9 @@
       "layer": 12,
       "sourceFiles": 6,
       "testFiles": 3,
-      "sources": [
-        "app/app/[slug]/(app)/users/components/",
-        "app/app/[slug]/(app)/users/lib/",
-        "components/users/users-filters-sheet.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/participant-model",
         "@giveaway/participant-server",
         "@giveaway/sweepstakes-details-participants",
@@ -437,7 +434,7 @@
         "@giveaway/user-source-ui",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "next", "react"]
+      "npm": ["lucide-react", "next", "react"]
     },
     {
       "name": "@giveaway/audience-user-details",
@@ -1799,9 +1796,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/tiktok/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/task-entry-core",
@@ -1977,9 +1972,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/twitch/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/task-entry-core",
@@ -2079,9 +2072,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/velora/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/task-entry-core",
         "@giveaway/task-model",
@@ -2257,9 +2248,7 @@
       "layer": 9,
       "sourceFiles": 6,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/twitter/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/rpc-client",
@@ -2359,9 +2348,7 @@
       "layer": 9,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/youtube/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/task-entry-core",
@@ -3838,12 +3825,13 @@
       "layer": 12,
       "sourceFiles": 11,
       "testFiles": 22,
-      "sources": ["components/sweepstakes/states/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-email",
         "@giveaway/allocation-model",
         "@giveaway/app-config",
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/participant-model",
         "@giveaway/participation-server",
@@ -3862,7 +3850,6 @@
         "@giveaway/x-model"
       ],
       "npm": [
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "date-fns",
         "lucide-react",
@@ -4020,19 +4007,10 @@
       "layer": 11,
       "sourceFiles": 9,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-action.tsx",
-        "lib/task/components/public-sweepstakes/task-actions/form.tsx",
-        "lib/task/components/public-sweepstakes/task-badge.tsx",
-        "lib/task/components/public-sweepstakes/task-button.tsx",
-        "lib/task/components/public-sweepstakes/task-icon.tsx",
-        "lib/task/components/public-sweepstakes/task-item.tsx",
-        "lib/task/components/public-sweepstakes/task-list.tsx",
-        "lib/task/components/public-sweepstakes/task-lock.tsx",
-        "lib/task/components/public-sweepstakes/task-tooltip-content.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-task-entry",
+        "@giveaway/db-model",
         "@giveaway/discord-task-entry",
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
@@ -4063,7 +4041,6 @@
         "@giveaway/youtube-task-entry"
       ],
       "npm": [
-        "@giveaway/db-model",
         "date-fns",
         "lodash",
         "lucide-react",
@@ -4125,9 +4102,7 @@
       "layer": 10,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/referral/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/referrals-model",
         "@giveaway/sweepstakes-participation-core",
@@ -4147,9 +4122,7 @@
       "layer": 9,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/website/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/task-entry-core",
         "@giveaway/task-model",

@@ -23,24 +23,36 @@ vi.mock('@giveaway/turnstile-ui/gate', () => ({
   )
 }));
 
-vi.mock('../states/active/active-participation', () => ({
-  ActiveParticipation: () => <div>active participation</div>
+vi.mock(
+  '@giveaway/sweepstakes-participation-states/active/active-participation',
+  () => ({
+    ActiveParticipation: () => <div>active participation</div>
+  })
+);
+vi.mock('@giveaway/sweepstakes-participation-states/pending', () => ({
+  Pending: () => <div>pending</div>
 }));
-vi.mock('../states/pending', () => ({ Pending: () => <div>pending</div> }));
-vi.mock('../states/user-details-form', () => ({
+vi.mock('@giveaway/sweepstakes-participation-states/user-details-form', () => ({
   UserDetailsForm: () => <div>user details form</div>
 }));
-vi.mock('../states/not-eligible', () => ({
+vi.mock('@giveaway/sweepstakes-participation-states/not-eligible', () => ({
   NotEligible: () => <div>not eligible</div>
 }));
-vi.mock('../states/winners-announced-participation', () => ({
-  WinnersAnnouncedParticipation: () => <div>winners announced</div>
-}));
-vi.mock('../states/cancelled', () => ({
+vi.mock(
+  '@giveaway/sweepstakes-participation-states/winners-announced-participation',
+  () => ({
+    WinnersAnnouncedParticipation: () => <div>winners announced</div>
+  })
+);
+vi.mock('@giveaway/sweepstakes-participation-states/cancelled', () => ({
   Cancelled: () => <div>cancelled</div>
 }));
-vi.mock('../states/closed', () => ({ Closed: () => <div>closed</div> }));
-vi.mock('../states/error', () => ({ Error: () => <div>error</div> }));
+vi.mock('@giveaway/sweepstakes-participation-states/closed', () => ({
+  Closed: () => <div>closed</div>
+}));
+vi.mock('@giveaway/sweepstakes-participation-states/error', () => ({
+  Error: () => <div>error</div>
+}));
 vi.mock(
   '@giveaway/sweepstakes-participation-core/sweepstakes-login-options',
   () => ({

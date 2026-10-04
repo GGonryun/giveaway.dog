@@ -1,0 +1,91 @@
+{
+  "name": "@giveaway/sweepstakes-participation-states",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-participation-states --suppressions-location packages/sweepstakes/sweepstakes-participation-states/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./active/active-participation": "./src/active/active-participation.tsx",
+    "./active/prize-item": "./src/active/prize-item.tsx",
+    "./cancelled": "./src/cancelled.tsx",
+    "./closed": "./src/closed.tsx",
+    "./error": "./src/error.tsx",
+    "./not-eligible": "./src/not-eligible.tsx",
+    "./pending": "./src/pending.tsx",
+    "./user-details-form": "./src/user-details-form.tsx",
+    "./winners-announced": "./src/winners-announced.tsx",
+    "./winners-announced-participation": "./src/winners-announced-participation.tsx",
+    "./winners-pending": "./src/winners-pending.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/allocation-model": "workspace:*",
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/custom-fields-model": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/participation-server": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/rpc-model": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/sweepstakes-participation-core": "workspace:*",
+    "@giveaway/sweepstakes-ui": "workspace:*",
+    "@giveaway/task-entry": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-browser": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/x-model": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "date-fns": "catalog:",
+    "lucide-react": "catalog:",
+    "pluralize": "catalog:",
+    "react-hook-form": "catalog:",
+    "sonner": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/auth-actions": "workspace:*",
+    "@giveaway/auth-login-ui": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/sweepstakes-ui-testing": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/pluralize": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
