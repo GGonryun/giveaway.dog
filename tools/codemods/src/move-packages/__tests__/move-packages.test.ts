@@ -519,6 +519,11 @@ describe('movePackages checks', { timeout: 60_000 }, () => {
       expect(manifest.devDependencies).not.toHaveProperty(
         '@giveaway/testing-dom'
       );
+      expect(manifest.peerDependencies).toBeUndefined();
+      expect(manifest.devDependencies).toMatchObject({
+        '@types/react': 'catalog:',
+        react: 'catalog:'
+      });
     } finally {
       visual.remove();
     }

@@ -671,6 +671,7 @@ const planPackage = (
   }
   if (visual) VISUAL_DEV_DEPENDENCIES.forEach((name) => dev.add(name));
   if (inputs.serverOnly) dependencies.add(SERVER_ONLY);
+  if (react) dev.add('react');
   for (const usage of inputs.usages) {
     if (usage.name === entry.name) continue;
     const production = usage.kind === 'source' && !usage.mockOnly;
