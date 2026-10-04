@@ -1,0 +1,328 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`sweepstakes details skeletons > SweepstakesAnalyticsSkeleton > matches the snapshot with the allocation chart 1`] = `
+<div
+  class="grid grid-cols-1 xl:grid-cols-2 gap-6"
+>
+  <div
+    class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+    data-slot="card"
+  >
+    <div
+      class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4"
+      data-slot="card-header"
+    >
+      <div
+        class="leading-none font-semibold"
+        data-slot="card-title"
+      >
+        Daily Entries Timeline
+      </div>
+      <div
+        class="text-muted-foreground text-sm"
+        data-slot="card-description"
+      >
+        Total entry volume over the last 
+        7
+         days
+      </div>
+      <div
+        class="flex items-center space-x-6 pt-2"
+      >
+        <div
+          class="text-sm text-muted-foreground"
+        >
+          Total Entries: 
+          <div
+            class="bg-accent animate-pulse rounded-md inline-block h-4 w-16"
+            data-slot="skeleton"
+          />
+        </div>
+        <div
+          class="text-sm text-muted-foreground"
+        >
+          Unique Users: 
+          <div
+            class="bg-accent animate-pulse rounded-md inline-block h-4 w-16"
+            data-slot="skeleton"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="px-4 pt-2"
+      data-slot="card-content"
+    >
+      <div
+        class="space-y-4"
+      >
+        <div
+          class="h-[300px] bg-accent rounded-lg animate-pulse flex items-end justify-around p-4 gap-1"
+        >
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+          <div
+            class="bg-muted rounded-t w-full"
+            style="height: 70%; opacity: 0.6;"
+          />
+        </div>
+        <div
+          class="flex justify-between px-2"
+        >
+          <div
+            class="bg-accent animate-pulse rounded-md h-3 w-12"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-3 w-12"
+            data-slot="skeleton"
+          />
+          <div
+            class="bg-accent animate-pulse rounded-md h-3 w-12"
+            data-slot="skeleton"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+    data-slot="card"
+  >
+    <div
+      class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4"
+      data-slot="card-header"
+    >
+      <div
+        class="leading-none font-semibold"
+        data-slot="card-title"
+      >
+        Prize Allocation Distribution
+      </div>
+      <div
+        class="text-muted-foreground text-sm"
+        data-slot="card-description"
+      >
+        Breakdown of user prize selections across all available prizes
+      </div>
+      <div
+        class="flex items-center space-x-6 pt-2"
+      >
+        <div
+          class="text-sm text-muted-foreground"
+        >
+          Total Selections: 
+          <div
+            class="bg-accent animate-pulse rounded-md inline-block h-4 w-16"
+            data-slot="skeleton"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="px-4 pt-2"
+      data-slot="card-content"
+    >
+      <div
+        class="flex items-center justify-center h-[350px]"
+      >
+        <div
+          class="relative w-[200px] h-[200px]"
+        >
+          <div
+            class="bg-accent animate-pulse absolute inset-0 rounded-full"
+            data-slot="skeleton"
+          />
+          <div
+            class="absolute inset-[25%] bg-background rounded-full"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`sweepstakes details skeletons > SweepstakesAnalyticsSkeleton > matches the snapshot without the allocation chart 1`] = `
+<div
+  class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md"
+  data-slot="card"
+>
+  <div
+    class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start px-4 space-y-0.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4"
+    data-slot="card-header"
+  >
+    <div
+      class="leading-none font-semibold"
+      data-slot="card-title"
+    >
+      Daily Entries Timeline
+    </div>
+    <div
+      class="text-muted-foreground text-sm"
+      data-slot="card-description"
+    >
+      Total entry volume over the last 
+      7
+       days
+    </div>
+    <div
+      class="flex items-center space-x-6 pt-2"
+    >
+      <div
+        class="text-sm text-muted-foreground"
+      >
+        Total Entries: 
+        <div
+          class="bg-accent animate-pulse rounded-md inline-block h-4 w-16"
+          data-slot="skeleton"
+        />
+      </div>
+      <div
+        class="text-sm text-muted-foreground"
+      >
+        Unique Users: 
+        <div
+          class="bg-accent animate-pulse rounded-md inline-block h-4 w-16"
+          data-slot="skeleton"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="px-4 pt-2"
+    data-slot="card-content"
+  >
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="h-[300px] bg-accent rounded-lg animate-pulse flex items-end justify-around p-4 gap-1"
+      >
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+        <div
+          class="bg-muted rounded-t w-full"
+          style="height: 70%; opacity: 0.6;"
+        />
+      </div>
+      <div
+        class="flex justify-between px-2"
+      >
+        <div
+          class="bg-accent animate-pulse rounded-md h-3 w-12"
+          data-slot="skeleton"
+        />
+        <div
+          class="bg-accent animate-pulse rounded-md h-3 w-12"
+          data-slot="skeleton"
+        />
+        <div
+          class="bg-accent animate-pulse rounded-md h-3 w-12"
+          data-slot="skeleton"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
