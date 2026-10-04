@@ -5,10 +5,10 @@ import {
   BlueskyRepostImportTaskSchema
 } from '@/lib/task/schemas';
 import { PrismaClient, TaskJobStatus } from '@prisma/client';
-import { TaskJobWithRelations } from './types';
+import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
 import { datetime } from '@/lib/date';
 import { ApplicationError } from '@giveaway/util-errors';
-import { takeUntil } from '@/lib/arrays';
+import { takeUntil } from '@giveaway/util-collections/arrays';
 import { Tx } from '@giveaway/db-client/prisma';
 import { BlueskyUserSchema } from '@/lib/integrations/procedures/get-bluesky-likes';
 const BLUESKY_API_RATE_LIMIT_MINUTES = 15;

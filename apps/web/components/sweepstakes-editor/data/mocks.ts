@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 import {
   CreateReferralSchema,
   UserReferralSchema
-} from '@/lib/referrals/schemas';
+} from '@giveaway/referrals-model/schemas';
 
 export const mockHost: GiveawayHostSchema = {
   id: 'giveaway-dog-id',

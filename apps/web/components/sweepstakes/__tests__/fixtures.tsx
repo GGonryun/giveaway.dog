@@ -1,4 +1,4 @@
-import type { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
+import type { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 import type { SweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '@/lib/custom-fields/defaults';
 import type { ProviderSchema } from '@/lib/integrations/schemas/providers';

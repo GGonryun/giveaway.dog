@@ -7,7 +7,7 @@ import {
   TwitterRetweetV2TaskSchema
 } from '@/lib/task/schemas';
 import { PrismaClient } from '@prisma/client';
-import { TaskJobWithRelations } from './types';
+import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
 import { datetime } from '@/lib/date';
 import { ApplicationError } from '@giveaway/util-errors';
 import { scheduleRandomlyAssignPrizesJob } from '@giveaway/jobs/util';

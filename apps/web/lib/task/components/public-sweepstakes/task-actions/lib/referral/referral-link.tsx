@@ -15,7 +15,7 @@ import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-part
 import {
   DEFAULT_USER_REFERRAL,
   UserReferralSchema
-} from '@/lib/referrals/schemas';
+} from '@giveaway/referrals-model/schemas';
 import {
   Collapsible,
   CollapsibleContent,

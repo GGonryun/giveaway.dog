@@ -1,7 +1,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { DEFAULT_SWEEPSTAKES_PRIZE_NAME } from '@/schemas/giveaway/defaults';
 import z from 'zod';
-import { allocationStatisticsSchema as allocationStatisticsSchema } from '../schemas';
+import { allocationStatisticsSchema as allocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 
 export const getSweepstakesAllocations = procedure()
   .authorization({

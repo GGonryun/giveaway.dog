@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
-import { AcceptedFileTypes, FileSize } from '@/lib/files';
+import { AcceptedFileTypes, FileSize } from '@giveaway/util-media/files';
 
 export interface FileUploadProps {
   onUpload?: (url: string) => void;

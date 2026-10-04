@@ -11,7 +11,7 @@ import {
   BannerConfig
 } from './types';
 import { useFormErrors } from './use-form-issues';
-import { browser } from '@/lib/browser';
+import { browser } from '@giveaway/util-browser/browser';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'sonner';
 import { IntegrationsSchema } from '@/lib/integrations/schemas';

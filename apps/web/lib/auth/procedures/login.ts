@@ -13,12 +13,12 @@ import {
   instagramProfileUrlSchema,
   extractInstagramUsername,
   normalizeInstagramUrl
-} from '../schemas/instagram';
+} from '@giveaway/meta-model/instagram';
 import {
   facebookProfileUrlSchema,
   extractFacebookIdentifier,
   normalizeFacebookUrl
-} from '../schemas/facebook';
+} from '@giveaway/meta-model/facebook';
 
 const login = procedure()
   .authorization({

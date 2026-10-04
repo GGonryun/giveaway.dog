@@ -1,4 +1,4 @@
-import { PickerStatus } from '@prisma/client';
+import { PickerStatus } from '@giveaway/db-model';
 
 export const shouldShowProgress = (status: PickerStatus): boolean => {
   return (

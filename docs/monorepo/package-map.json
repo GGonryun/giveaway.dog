@@ -1893,10 +1893,7 @@
       "layer": 0,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": [
-        "lib/auth/schemas/facebook.ts",
-        "lib/auth/schemas/instagram.ts"
-      ],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },
@@ -1965,7 +1962,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/auth/providers/steam.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["next-auth", "openid"]
     },
@@ -2825,7 +2822,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/allocation/schemas.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },
@@ -3037,7 +3034,7 @@
       "layer": 0,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/referrals/cookies.ts", "lib/referrals/schemas.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["cookies-next", "next", "zod"]
     },
@@ -3172,9 +3169,9 @@
       "layer": 0,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": ["lib/pickers/shared/schemas/", "lib/pickers/shared/utils/"],
-      "dependsOn": [],
-      "npm": ["@giveaway/db-model", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model"],
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/picker-ui",
@@ -3422,7 +3419,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["lib/browser.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": []
     },
@@ -3434,14 +3431,9 @@
       "layer": 0,
       "sourceFiles": 4,
       "testFiles": 4,
-      "sources": [
-        "lib/arrays.ts",
-        "lib/json.ts",
-        "lib/object.ts",
-        "lib/pagination.ts"
-      ],
+      "sources": [],
       "dependsOn": [],
-      "npm": ["@giveaway/db-model", "lodash"]
+      "npm": ["lodash"]
     },
     {
       "name": "@giveaway/util-errors",
@@ -3479,7 +3471,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/html.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["turndown"]
     },
@@ -3491,7 +3483,7 @@
       "layer": 0,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/aspect-ratio/", "lib/files.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },
@@ -4755,9 +4747,9 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["lib/task/procedures/process-task-jobs/types.ts"],
-      "dependsOn": [],
-      "npm": ["@giveaway/db-model"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model"],
+      "npm": []
     },
     {
       "name": "@giveaway/task-model",

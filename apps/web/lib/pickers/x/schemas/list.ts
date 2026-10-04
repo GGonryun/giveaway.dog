@@ -3,11 +3,11 @@ import {
   pickerFilterStatusSchema,
   PickerFilterStatus,
   pickerStatusSchema
-} from '@/lib/pickers/shared/schemas/status';
+} from '@giveaway/picker-model/schemas/status';
 import {
   pickerTypeSchema,
   PickerTypeSchema
-} from '@/lib/pickers/shared/schemas/list';
+} from '@giveaway/picker-model/schemas/list';
 
 export const pickersV2ListItemSchema = z.object({
   pickerId: z.string(),

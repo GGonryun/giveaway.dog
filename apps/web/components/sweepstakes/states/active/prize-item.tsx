@@ -21,7 +21,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '@/components/ui/collapsible';
-import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
+import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 import { Progress } from '@/components/ui/progress';
 
 export const PrizeItem: React.FC<{

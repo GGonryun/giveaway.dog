@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { setReferralCodeCookie } from '@/lib/referrals/cookies';
+import { setReferralCodeCookie } from '@giveaway/referrals-model/cookies';
 import { ReferralCodeHandler } from '../referral-code-handler';
 
 const navigation = vi.hoisted(() => ({ searchParams: new URLSearchParams() }));
@@ -9,7 +9,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => navigation.searchParams
 }));
 
-vi.mock('@/lib/referrals/cookies', () => ({
+vi.mock('@giveaway/referrals-model/cookies', () => ({
   setReferralCodeCookie: vi.fn()
 }));
 

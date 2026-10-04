@@ -1,0 +1,7 @@
+{
+  "packages/integrations/steam/steam-auth/src/steam.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  }
+}

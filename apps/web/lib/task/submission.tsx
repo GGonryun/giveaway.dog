@@ -9,7 +9,7 @@ import {
   XIcon
 } from 'lucide-react';
 import { assertNever } from '@giveaway/util-errors';
-import { UserReferralSchema } from '../referrals/schemas';
+import { UserReferralSchema } from '@giveaway/referrals-model/schemas';
 import { TaskSchema } from './schemas';
 import pluralize from 'pluralize';
 

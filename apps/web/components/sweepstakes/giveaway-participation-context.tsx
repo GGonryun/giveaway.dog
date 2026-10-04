@@ -15,9 +15,9 @@ import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import {
   CreateReferralSchema,
   UserReferralSchema
-} from '@/lib/referrals/schemas';
+} from '@giveaway/referrals-model/schemas';
 import { TurnstileStatus } from '@giveaway/turnstile-model/schemas';
-import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
+import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 import { TaskEntryProvider } from '@/lib/task/components/public-sweepstakes/task-actions/lib/task-entry-context';
 
 export interface GiveawayParticipationProps {

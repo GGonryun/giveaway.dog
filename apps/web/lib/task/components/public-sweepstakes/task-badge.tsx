@@ -23,7 +23,7 @@ import { assertNever } from '@giveaway/util-errors';
 import { SocialXBlueCheckmarkIcon } from '@/lib/integrations/components/icons/x-icon';
 import pluralize from 'pluralize';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
-import { UserReferralSchema } from '@/lib/referrals/schemas';
+import { UserReferralSchema } from '@giveaway/referrals-model/schemas';
 import { toTaskStatus } from '../../submission';
 import { CompletionStatus } from '@prisma/client';
 

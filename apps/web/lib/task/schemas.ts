@@ -9,7 +9,7 @@ import {
 } from '@/lib/integrations/schemas/twitter';
 import { userSchema } from '@/schemas/user';
 import { ApplicationError } from '@giveaway/util-errors';
-import { toJsonObject } from '../json';
+import { toJsonObject } from '@giveaway/util-collections/json';
 import {
   identityProviderSchema,
   PROVIDER_REQUIRED_SCOPES

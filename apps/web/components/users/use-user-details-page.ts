@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { useTeams } from '../context/team-provider';
 import { UserDetailsTabSchema } from '@/schemas/user';
-import { browser } from '@/lib/browser';
+import { browser } from '@giveaway/util-browser/browser';
 
 export const useUserDetailsPage = () => {
   const { activeTeam } = useTeams();

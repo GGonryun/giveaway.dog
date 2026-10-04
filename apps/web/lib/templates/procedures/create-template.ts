@@ -10,7 +10,7 @@ import {
   toTemplateInputSchema
 } from '../schemas/template';
 import { DEFAULT_TEMPLATE_CONTENT } from '../defaults';
-import { replaceIdsDeep } from '@/lib/object';
+import { replaceIdsDeep } from '@giveaway/util-collections/object';
 import { getTemplateById } from '../data/static-templates';
 import { PrismaClient } from '@prisma/client';
 

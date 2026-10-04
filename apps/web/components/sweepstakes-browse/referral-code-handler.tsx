@@ -1,6 +1,6 @@
 'use client';
 
-import { setReferralCodeCookie } from '@/lib/referrals/cookies';
+import { setReferralCodeCookie } from '@giveaway/referrals-model/cookies';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 

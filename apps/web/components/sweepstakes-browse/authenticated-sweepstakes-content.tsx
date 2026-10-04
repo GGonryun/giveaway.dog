@@ -3,9 +3,9 @@
 import { ParticipantSweepstakeSchema } from '@/schemas/giveaway/schemas';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { UserHostRelationshipSchema } from '@/lib/loyalty/schemas';
-import { UserReferralSchema } from '@/lib/referrals/schemas';
+import { UserReferralSchema } from '@giveaway/referrals-model/schemas';
 import { SweepstakesParticipationPage } from './sweepstakes-participation-page-content';
-import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
+import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 
 interface AuthenticatedSweepstakesContentProps extends ParticipantSweepstakeSchema {
   participant?: SweepstakesParticipantSchema;

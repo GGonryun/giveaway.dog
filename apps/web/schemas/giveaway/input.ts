@@ -8,7 +8,7 @@ import {
   SweepstakesInputTaskSchema
 } from './db';
 import { compact } from 'lodash';
-import { toJsonObject } from '@/lib/json';
+import { toJsonObject } from '@giveaway/util-collections/json';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
   DEFAULT_ALLOW_USER_SELECTION,
@@ -18,7 +18,7 @@ import {
 } from './defaults';
 import { parseUserSourceSchema } from '@/lib/user-source/schemas';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
-import { parseAspectRatio } from '@/lib/aspect-ratio/data';
+import { parseAspectRatio } from '@giveaway/util-media/aspect-ratio/data';
 import { Prisma } from '@prisma/client';
 
 const toSetup = (

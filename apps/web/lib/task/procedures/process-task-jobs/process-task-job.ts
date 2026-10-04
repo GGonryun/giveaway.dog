@@ -1,7 +1,7 @@
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { toTaskSchema } from '@/lib/task/schemas';
 import { PrismaClient, TaskJobStatus } from '@prisma/client';
-import { TaskJobWithRelations } from './types';
+import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
 import { processBlueskyLikeTaskJob } from './process-bluesky-like-task-job';
 import { processBlueskyRepostTaskJob } from './process-bluesky-repost-task-job';
 import { processRetweetV2TaskJob } from './process-retweet-v2-task-job';

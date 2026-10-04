@@ -12,7 +12,7 @@ import LinkedInProvider from 'next-auth/providers/linkedin';
 import TikTokProvider from 'next-auth/providers/tiktok';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-import { SteamProvider } from './providers/steam';
+import { SteamProvider } from '@giveaway/steam-auth/steam';
 import { InboundEmailProvider } from './providers/inbound';
 import { KickProvider } from '@giveaway/kick-auth/kick';
 import { VeloraProvider } from './providers/velora';

@@ -9,7 +9,7 @@ import { PUBLIC_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { compact } from 'lodash';
 import { datetime } from '@/lib/date';
 import { giveawayFiltersSchema } from '@/lib/filters/giveaway-filters';
-import { HISTORY_PAGE_SIZE } from '@/lib/pagination';
+import { HISTORY_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { z } from 'zod';
 
 const getHistoricalSweepstakesList = procedure()

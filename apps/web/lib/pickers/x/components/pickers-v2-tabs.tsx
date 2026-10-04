@@ -4,8 +4,8 @@ import { useSweepstakesPage } from '@/components/sweepstakes/use-sweepstakes-pag
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useState } from 'react';
 import { ListPickersV2FilterSchema } from '../schemas/list';
-import { PICKER_FILTER_STATUS_OPTIONS } from '@/lib/pickers/shared/schemas/status';
-import { PickerFilterStatus } from '@/lib/pickers/shared/schemas/status';
+import { PICKER_FILTER_STATUS_OPTIONS } from '@giveaway/picker-model/schemas/status';
+import { PickerFilterStatus } from '@giveaway/picker-model/schemas/status';
 
 export const PickersV2Tabs: React.PC<{
   filters: ListPickersV2FilterSchema;

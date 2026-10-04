@@ -2,7 +2,10 @@
 
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
-import { createReferralSchema, userReferralSchema } from '../schemas';
+import {
+  createReferralSchema,
+  userReferralSchema
+} from '@giveaway/referrals-model/schemas';
 import { getOrCreateReferral, toUserReferral } from './shared';
 
 const createReferralCode = procedure()

@@ -12,7 +12,7 @@ import { Typography } from '@/components/ui/typography';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircleIcon, ImageIcon } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
-import { AcceptedFileTypes, FileSize } from '@/lib/files';
+import { AcceptedFileTypes, FileSize } from '@giveaway/util-media/files';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
 import { MinimalTipTapPreview } from '@/components/ui/minimal-tiptap-preview';
 

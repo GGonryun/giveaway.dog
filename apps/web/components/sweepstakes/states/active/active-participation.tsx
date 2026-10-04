@@ -7,7 +7,7 @@ import { useGiveawayParticipation } from '../../giveaway-participation-context';
 import { UserInfoSection } from '../../user-info-section';
 import { Typography } from '@/components/ui/typography';
 import { useSearchParams } from 'next/navigation';
-import { browser } from '@/lib/browser';
+import { browser } from '@giveaway/util-browser/browser';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PrizeItem } from './prize-item';
 import { TaskList } from '@/lib/task/components/public-sweepstakes/task-list';

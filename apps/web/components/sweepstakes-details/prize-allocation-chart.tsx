@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle
 } from '../ui/card';
-import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
+import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
 import { Pie, PieChart, Cell, Legend } from 'recharts';
 

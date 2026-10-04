@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { WithProviderConnection } from '../provider-connection';
 import { SteamFollowTaskSchema, TaskInput } from '@/lib/task/schemas';
 import { FileUpload } from '@/components/ui/file-upload';
-import { AcceptedFileTypes, FileSize } from '@/lib/files';
+import { AcceptedFileTypes, FileSize } from '@giveaway/util-media/files';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
 
 export const SteamFollowTaskActionForm: React.FC<

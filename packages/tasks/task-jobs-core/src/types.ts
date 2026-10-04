@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@giveaway/db-model';
 
 export const taskJobInclude = {
   task: {

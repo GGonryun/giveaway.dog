@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { z } from 'zod';
 import { processTaskJob } from './process-task-job';
-import { taskJobInclude } from './types';
+import { taskJobInclude } from '@giveaway/task-jobs-core/types';
 import { TaskJobStatus } from '@prisma/client';
 import { isRetryableApplicationError } from '@giveaway/util-errors';
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PickerStatus } from '@prisma/client';
+import { PickerStatus } from '@giveaway/db-model';
 import { shouldShowProgress } from '../status';
 
 describe('shouldShowProgress', () => {

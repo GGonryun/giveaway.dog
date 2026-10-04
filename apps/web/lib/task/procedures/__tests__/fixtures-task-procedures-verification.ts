@@ -6,7 +6,7 @@ import type {
   TaskJob
 } from '@prisma/client';
 import type { TaskOf, TaskType } from '@/lib/task/schemas';
-import type { TaskJobWithRelations } from '@/lib/task/procedures/process-task-jobs/types';
+import type { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
 
 export const TWEET_URL = 'https://x.com/giveawaydog/status/1234567890';
 export const BLUESKY_POST_URL =

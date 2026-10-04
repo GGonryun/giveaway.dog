@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   facebookLoginFormSchema,
   FacebookLoginFormSchema
-} from '../schemas/facebook';
+} from '@giveaway/meta-model/facebook';
 import {
   Form,
   FormControl,

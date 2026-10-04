@@ -14,7 +14,7 @@ import { taskSchema, baseTaskSchema } from '@/lib/task/schemas';
 import { allowedUserSourcesSchema } from '@/lib/user-source/schemas';
 import { refineSweepstakeTasks } from '@/lib/task/validation/form';
 import { identityProviderSchema } from '@/lib/integrations/schemas/providers';
-import { aspectRatioSchema } from '@/lib/aspect-ratio/data';
+import { aspectRatioSchema } from '@giveaway/util-media/aspect-ratio/data';
 import { sweepstakesFormFieldSchema } from '@/lib/custom-fields/schemas';
 import { DEFAULT_MINIMUM_AGE } from '@/lib/custom-fields/defaults';
 import { taskCompletionSchema } from '@/lib/task/completions';

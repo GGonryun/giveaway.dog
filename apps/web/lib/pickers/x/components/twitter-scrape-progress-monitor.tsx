@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, CheckCircle2, AlertCircle, AlarmClock } from 'lucide-react';
 import { PickerStatus } from '@prisma/client';
-import { shouldShowProgress } from '@/lib/pickers/shared/utils/status';
+import { shouldShowProgress } from '@giveaway/picker-model/utils/status';
 
 interface TwitterScrapeProgressMonitorProps {
   pickerId: string;

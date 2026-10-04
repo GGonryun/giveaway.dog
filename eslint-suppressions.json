@@ -122,11 +122,6 @@
       "count": 6
     }
   },
-  "apps/web/lib/auth/providers/steam.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "apps/web/lib/bluesky/bluesky-client.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -177,11 +172,6 @@
       "count": 1
     }
   },
-  "apps/web/lib/json.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "apps/web/lib/marketing/orbiting-platforms.tsx": {
     "react-hooks/purity": {
       "count": 1
@@ -200,11 +190,6 @@
   "apps/web/lib/mrpc/procedures.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 16
-    }
-  },
-  "apps/web/lib/object.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
     }
   },
   "apps/web/lib/participant/db.ts": {

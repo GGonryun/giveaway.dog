@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { OAuthConfig, OAuthUserConfig } from 'next-auth/providers';
 import { RelyingParty } from 'openid';
 

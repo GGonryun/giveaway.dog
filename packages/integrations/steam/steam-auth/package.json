@@ -1,0 +1,48 @@
+{
+  "name": "@giveaway/steam-auth",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:steam"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/steam/steam-auth --suppressions-location packages/integrations/steam/steam-auth/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./steam": "./src/steam.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "openid": "catalog:",
+    "server-only": "catalog:"
+  },
+  "peerDependencies": {
+    "next-auth": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/openid": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

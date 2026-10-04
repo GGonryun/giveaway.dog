@@ -26,7 +26,7 @@ import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
 import { PickersV2ListItemSchema, PickersV2ListSchema } from '../schemas/list';
 import { usePickersV2Navigation } from '../hooks/use-pickers-v2-navigation';
 import { CreatePickerV2Button } from './create-picker-v2-button';
-import { EDITABLE_PICKER_STATUS } from '@/lib/pickers/shared/schemas/status';
+import { EDITABLE_PICKER_STATUS } from '@giveaway/picker-model/schemas/status';
 import { PickerStatusBadge } from '@/lib/pickers/shared/components/picker-status-badge';
 import { datetime } from '@/lib/date';
 import { PickerTypeLogo } from '@/lib/pickers/shared/components/picker-type-logo';

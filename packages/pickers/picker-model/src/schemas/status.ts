@@ -1,4 +1,4 @@
-import { PickerStatus as DbPickerStatus } from '@prisma/client';
+import { PickerStatus as DbPickerStatus } from '@giveaway/db-model';
 import z from 'zod';
 
 export const pickerStatusSchema = z.nativeEnum(DbPickerStatus);

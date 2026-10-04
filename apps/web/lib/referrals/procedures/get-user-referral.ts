@@ -1,7 +1,10 @@
 'use server';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { createReferralSchema, userReferralSchema } from '../schemas';
+import {
+  createReferralSchema,
+  userReferralSchema
+} from '@giveaway/referrals-model/schemas';
 import { REFERRAL_USER_INCLUDE, toUserReferral } from './shared';
 import { ApplicationError } from '@giveaway/util-errors';
 

@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   instagramLoginFormSchema,
   InstagramLoginFormSchema
-} from '../schemas/instagram';
+} from '@giveaway/meta-model/instagram';
 import {
   Form,
   FormControl,

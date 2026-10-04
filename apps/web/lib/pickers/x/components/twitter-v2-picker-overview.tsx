@@ -38,7 +38,7 @@ import { formatDistance, format, isFuture } from 'date-fns';
 import {
   PICKER_STATUS_LABELS,
   PICKER_STATUS_DESCRIPTIONS
-} from '@/lib/pickers/shared/schemas/status';
+} from '@giveaway/picker-model/schemas/status';
 import { TwitterV2PickerSchema } from '../schemas/details';
 import { TwitterScrapeProgressMonitor } from './twitter-scrape-progress-monitor';
 import { Separator } from '@/components/ui/separator';
@@ -47,7 +47,7 @@ import {
   STATUS_COLORS,
   STATUS_ICONS
 } from '@/lib/pickers/shared/themes/status';
-import { shouldShowProgress } from '@/lib/pickers/shared/utils/status';
+import { shouldShowProgress } from '@giveaway/picker-model/utils/status';
 import Link from 'next/link';
 import { extractTweetId } from '../utils/extract-tweet-id';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

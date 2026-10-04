@@ -5,7 +5,7 @@ import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 
-import { toJsonObject } from '@/lib/json';
+import { toJsonObject } from '@giveaway/util-collections/json';
 import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
 import { userEntriesSchema, toTaskSchema } from '@/lib/task/schemas';
 

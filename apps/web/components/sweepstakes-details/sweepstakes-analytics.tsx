@@ -6,7 +6,7 @@ import {
   TimeSeriesDataSchema
 } from '@/schemas/giveaway/schemas';
 import { DailyEntriesTimeline } from './daily-entries-timeline';
-import { AllocationStatisticsSchema } from '@/lib/allocation/schemas';
+import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 import { PrizeAllocationChart } from './prize-allocation-chart';
 
 export const SweepstakesAnalytics: React.FC<

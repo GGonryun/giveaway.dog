@@ -1,5 +1,5 @@
 import { BlueskyRepostImportTaskSchema } from '@/lib/task/schemas';
-import { TaskJobWithRelations } from './types';
+import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
 import { getBlueskyReposts } from '@/lib/integrations/procedures/get-bluesky-reposts';
 import { processBlueskyTaskJob } from './process-bluesky-task-job';
 import { PrismaClient } from '@prisma/client';

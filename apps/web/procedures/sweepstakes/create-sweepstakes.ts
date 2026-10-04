@@ -30,7 +30,7 @@ import {
   TemplateInputSchema,
   toTemplateInputSchema
 } from '@/lib/templates/schemas/template';
-import { replaceIdsDeep } from '@/lib/object';
+import { replaceIdsDeep } from '@giveaway/util-collections/object';
 import { TeamPermission } from '@/lib/permissions';
 
 const SWEEPSTAKE_ID_SIZE = 6;

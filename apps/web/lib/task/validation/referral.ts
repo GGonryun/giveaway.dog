@@ -3,7 +3,7 @@
 import {
   clearReferralCodeCookie,
   getReferralCodeFromServerCookies
-} from '@/lib/referrals/cookies';
+} from '@giveaway/referrals-model/cookies';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { cookies } from 'next/headers';
 import { toTaskSchema } from '../schemas';

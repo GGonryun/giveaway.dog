@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { PickerStatus } from '../schemas/status';
+import { PickerStatus } from '@giveaway/picker-model/schemas/status';
 import { cn } from '@/lib/utils';
 import {
   STATUS_ICONS,
