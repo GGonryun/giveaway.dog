@@ -1,5 +1,5 @@
 import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
-import { PickerComingSoonCTA } from '@/lib/pickers/shared/components/picker-coming-soon-cta';
+import { PickerComingSoonCTA } from '@giveaway/picker-ui/components/picker-coming-soon-cta';
 
 type DiscordPickersPageProps = {
   params: Promise<TeamPageProps>;

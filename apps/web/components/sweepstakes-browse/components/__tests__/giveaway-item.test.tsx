@@ -4,7 +4,7 @@ import {
   NOW,
   buildPublicSweepstakes
 } from '@/components/sweepstakes/__tests__/fixtures';
-import type { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas';
+import type { PublicSweepstakesParticipationSchema } from '@giveaway/participant-model/schemas';
 import type { PublicSweepstakeSchema } from '@giveaway/sweepstakes-model/public';
 import { GiveawayItem } from '../giveaway-item';
 

@@ -6,7 +6,7 @@ import getSweepstakesEntryTimeSeries from '@/procedures/sweepstakes/get-sweepsta
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { getSweepstakesAllocations } from '@/lib/allocation/procedures/get-sweepstakes-allocations';
+import { getSweepstakesAllocations } from '@giveaway/allocation-server/get-sweepstakes-allocations';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

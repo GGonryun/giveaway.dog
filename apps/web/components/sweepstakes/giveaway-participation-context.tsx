@@ -11,7 +11,7 @@ import {
   SweepstakesAllocationSchema
 } from '@giveaway/sweepstakes-model/schemas';
 import { UserHostRelationshipSchema } from '@giveaway/loyalty-model/schemas';
-import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 import {
   CreateReferralSchema,
   UserReferralSchema

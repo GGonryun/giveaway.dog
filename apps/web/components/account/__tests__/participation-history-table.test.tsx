@@ -2,7 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import withdrawParticipation from '@/procedures/user/withdraw-participation';
-import type { ParticipationHistoryItem } from '@/schemas/participation-history';
+import type { ParticipationHistoryItem } from '@giveaway/participation-history-model/participation-history';
 import { ParticipationHistoryTable } from '../participation-history-table';
 
 const navigation = vi.hoisted(() => ({

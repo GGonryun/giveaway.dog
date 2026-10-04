@@ -7,7 +7,7 @@ import { getUserReferral } from '@giveaway/referrals-server/get-user-referral';
 import { AuthenticatedSweepstakesContent } from '@/components/sweepstakes-browse/authenticated-sweepstakes-content';
 import { Suspense } from 'react';
 import { ReferralCodeHandler } from '@/components/sweepstakes-browse/referral-code-handler';
-import { getSweepstakesAllocations } from '@/lib/allocation/procedures/get-sweepstakes-allocations';
+import { getSweepstakesAllocations } from '@giveaway/allocation-server/get-sweepstakes-allocations';
 
 interface PageProps {
   params: Promise<{ id: string }>;

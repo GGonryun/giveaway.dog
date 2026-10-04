@@ -48,10 +48,7 @@ import { TwitterV2PickerSchema } from '@giveaway/x-picker-model/schemas/details'
 import { TwitterScrapeProgressMonitor } from './twitter-scrape-progress-monitor';
 import { Separator } from '@giveaway/ui-primitives/separator';
 import { cn } from '@giveaway/ui-utils/utils';
-import {
-  STATUS_COLORS,
-  STATUS_ICONS
-} from '@/lib/pickers/shared/themes/status';
+import { STATUS_COLORS, STATUS_ICONS } from '@giveaway/picker-ui/themes/status';
 import { shouldShowProgress } from '@giveaway/picker-model/utils/status';
 import Link from 'next/link';
 import { extractTweetId } from '@giveaway/x-picker-model/extract-tweet-id';

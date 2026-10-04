@@ -1,7 +1,7 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { participationHistorySchema } from '@/schemas/participation-history';
+import { participationHistorySchema } from '@giveaway/participation-history-model/participation-history';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import z from 'zod';
 import { toDerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';

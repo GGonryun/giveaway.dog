@@ -33,10 +33,13 @@ import {
 import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
 import { UserProviders } from '@giveaway/integration-ui/user-providers';
 import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
-import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { toMostRecentCompletion } from '@giveaway/task-model/completions';
-import { toSweepstakesEngagement, toTwitterLink } from '@/lib/participant/db';
+import {
+  toSweepstakesEngagement,
+  toTwitterLink
+} from '@giveaway/participant-model/db';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';

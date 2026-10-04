@@ -1,7 +1,7 @@
 'use client';
 
 import { GiveawayParticipation } from '@/components/sweepstakes/giveaway-participation';
-import { toSweepstakesState } from '@/lib/sweepstakes';
+import { toSweepstakesState } from '@giveaway/participant-model/sweepstakes';
 import {
   mockAllocation,
   mockHost,

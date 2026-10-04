@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 import { ThemeProvider } from '@giveaway/ui-theme/theme-provider';
 
 import { Figtree } from 'next/font/google';
-import { UserMetricsCollector } from '@/components/user-metrics-collector';
+import { UserMetricsCollector } from '@giveaway/shell-metrics/user-metrics-collector';
 import { environment } from '@giveaway/app-config/environment';
 import { BLUESKY_EMBED_SCRIPT_URL } from '@giveaway/bluesky-model/embed';
 import { TurnstileProvider } from '@/lib/turnstile/provider';

@@ -1,6 +1,6 @@
 import findUser from '@giveaway/audience-server/find-user';
 import { Footer } from '@giveaway/shell-footer/footer';
-import { NavigationBar } from '@/components/patterns/navigation-bar';
+import { NavigationBar } from '@giveaway/shell-navigation/navigation-bar';
 
 export default async function RootLayout({
   children

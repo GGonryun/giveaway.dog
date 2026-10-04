@@ -8,7 +8,7 @@ import {
   buildCompletion,
   buildCompletionRow,
   daysAfterBase
-} from '../../__tests__/fixtures-participant-referrals-automation';
+} from '@giveaway/participant-model/testing/fixtures-participant-referrals-automation';
 
 describe('getTaskCompletions', () => {
   describe('when the caller is not signed in', () => {

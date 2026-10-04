@@ -26,7 +26,7 @@ import { assertNever } from '@giveaway/util-errors';
 import { ArrowRight } from 'lucide-react';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { UserInfoSection } from '../user-info-section';
-import { toParticipantForm } from '@/schemas/giveaway/participant';
+import { toParticipantForm } from '@giveaway/participant-model/participant';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useState } from 'react';
 import { toast } from 'sonner';

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getSweepstakesParticipants } from '../get-sweepstakes-participants';
-import { SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY } from '../../db';
+import { SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY } from '@giveaway/participant-model/db';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
@@ -8,7 +8,7 @@ import {
   buildCompletionRow,
   buildParticipantRow,
   daysAfterBase
-} from '../../__tests__/fixtures-participant-referrals-automation';
+} from '@giveaway/participant-model/testing/fixtures-participant-referrals-automation';
 
 const input = { slug: 'acme', sweepstakesId: 'sweep-1' };
 

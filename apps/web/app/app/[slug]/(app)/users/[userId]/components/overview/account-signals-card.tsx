@@ -12,7 +12,7 @@ import {
   SIGNAL_ICON,
   SIGNAL_MAX,
   SIGNAL_QUALITY_KEYS
-} from '@/lib/scoring/signal-display';
+} from '@giveaway/scoring-ui/signal-display';
 import { toQualityType } from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
 import { cn } from '@giveaway/ui-utils/utils';

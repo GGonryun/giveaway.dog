@@ -1,7 +1,7 @@
 import { Badge, BadgeVariants } from '@giveaway/ui-primitives/badge';
 import { StatusExplanationDialog } from '@/components/users/status-explanation-dialog';
 import { cn } from '@giveaway/ui-utils/utils';
-import { UserStatusSchema } from '@/schemas/giveaway/participant';
+import { UserStatusSchema } from '@giveaway/participant-model/participant';
 import { useState } from 'react';
 
 type StatusConfig = {

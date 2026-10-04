@@ -2,7 +2,7 @@ import type { AllocationStatisticsSchema } from '@giveaway/allocation-model/sche
 import type { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '@giveaway/custom-fields-model/defaults';
 import type { ProviderSchema } from '@giveaway/integration-model/providers';
-import type { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import type { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import type { TaskCompletionSchema } from '@giveaway/task-model/completions';
 import type {

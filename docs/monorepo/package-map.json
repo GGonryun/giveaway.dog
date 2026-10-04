@@ -37,10 +37,6 @@
       "package": "@giveaway/discord-api",
       "split": false
     },
-    "lib/participant/__tests__/fixtures-participant-referrals-automation.ts": {
-      "package": "@giveaway/participant-model",
-      "split": false
-    },
     "lib/pickers/x/procedures/__tests__/fixtures-pickers.ts": {
       "package": "@giveaway/x-picker-server",
       "split": false
@@ -1670,9 +1666,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/linkedin-follow.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -1756,10 +1750,7 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/facebook.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/instagram.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -1825,10 +1816,7 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/steam-app-id.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/steam-developer.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -2648,7 +2636,7 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/allocation/procedures/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/allocation-model",
         "@giveaway/rpc-server",
@@ -2739,15 +2727,10 @@
       "layer": 6,
       "sourceFiles": 5,
       "testFiles": 6,
-      "sources": [
-        "lib/participant/db.ts",
-        "lib/participant/schemas.ts",
-        "lib/participant/util.ts",
-        "lib/sweepstakes.ts",
-        "schemas/giveaway/participant.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/task-model",
         "@giveaway/team-model",
@@ -2757,7 +2740,7 @@
         "@giveaway/util-time",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "lodash", "zod"]
+      "npm": ["lodash", "zod"]
     },
     {
       "name": "@giveaway/participant-server",
@@ -2784,7 +2767,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["schemas/participation-history.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/sweepstakes-model"],
       "npm": ["zod"]
     },
@@ -2907,7 +2890,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/scoring/signal-display.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/audience-server", "@giveaway/scoring-model"],
       "npm": ["lucide-react"]
     },
@@ -2986,11 +2969,9 @@
       "layer": 6,
       "sourceFiles": 6,
       "testFiles": 0,
-      "sources": [
-        "lib/pickers/shared/components/",
-        "lib/pickers/shared/themes/"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/picker-model",
         "@giveaway/team-context",
@@ -2998,7 +2979,7 @@
         "@giveaway/ui-utils",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "next"]
+      "npm": ["lucide-react", "next"]
     },
     {
       "name": "@giveaway/x-picker-dashboard",
@@ -3354,13 +3335,14 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["components/user-metrics-collector.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/audience-server",
+        "@giveaway/db-model",
         "@giveaway/request-context-model",
         "@giveaway/rpc-client"
       ],
-      "npm": ["@giveaway/db-model", "next-auth", "react"]
+      "npm": ["next-auth", "react"]
     },
     {
       "name": "@giveaway/shell-navigation",
@@ -3370,29 +3352,18 @@
       "layer": 6,
       "sourceFiles": 10,
       "testFiles": 14,
-      "sources": [
-        "components/patterns/logged-in-navigation-bar.tsx",
-        "components/patterns/logged-out-navigation-bar.tsx",
-        "components/patterns/navigation-bar.tsx",
-        "components/patterns/navigation-header.tsx",
-        "components/patterns/navigation/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/auth-session-ui",
+        "@giveaway/db-model",
         "@giveaway/ui-brand",
         "@giveaway/ui-primitives",
         "@giveaway/ui-theme",
         "@giveaway/ui-utils",
         "@giveaway/user-model"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "next",
-        "next-themes",
-        "react"
-      ]
+      "npm": ["lucide-react", "next", "next-themes", "react"]
     },
     {
       "name": "@giveaway/shell-sidebar",

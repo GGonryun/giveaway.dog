@@ -14,7 +14,7 @@ import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
 import {
   ParticipationHistory,
   ParticipationHistoryItem
-} from '@/schemas/participation-history';
+} from '@giveaway/participation-history-model/participation-history';
 import {
   Clock,
   Eye,
@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { SweepstakesStatusBadge } from '../sweepstakes/status-badge';
-import { toEngagementTheme } from '@/lib/participant/util';
+import { toEngagementTheme } from '@giveaway/participant-model/util';
 import { datetime } from '@giveaway/util-time/date';
 import { Label } from '@giveaway/ui-primitives/label';
 import { Switch } from '@giveaway/ui-primitives/switch';

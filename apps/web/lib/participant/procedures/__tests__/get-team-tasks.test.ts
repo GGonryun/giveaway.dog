@@ -6,7 +6,7 @@ import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   bonusConfig,
   buildTaskRow
-} from '../../__tests__/fixtures-participant-referrals-automation';
+} from '@giveaway/participant-model/testing/fixtures-participant-referrals-automation';
 
 describe('getTeamTasks', () => {
   describe('when the caller is not signed in', () => {

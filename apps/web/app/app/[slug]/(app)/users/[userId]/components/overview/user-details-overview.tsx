@@ -3,8 +3,8 @@
 import { toMostRecentCompletion } from '@giveaway/task-model/completions';
 import { ProfileInformationCard } from './profile-information-card';
 import { UserProviders } from '@giveaway/integration-ui/user-providers';
-import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import { toSweepstakesEngagement } from '@/lib/participant/db';
+import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
+import { toSweepstakesEngagement } from '@giveaway/participant-model/db';
 import type { UserSignals } from '@giveaway/audience-server/get-user-signals';
 import { AccountSignalsCard } from './account-signals-card';
 

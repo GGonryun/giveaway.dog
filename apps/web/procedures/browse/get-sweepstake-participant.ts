@@ -1,8 +1,8 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { findOrCreateSweepstakesParticipant } from '@/lib/participant/db';
-import { sweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { findOrCreateSweepstakesParticipant } from '@giveaway/participant-model/db';
+import { sweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 
 import z from 'zod';
 

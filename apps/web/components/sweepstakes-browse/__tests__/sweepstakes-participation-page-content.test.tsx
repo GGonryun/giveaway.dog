@@ -10,7 +10,7 @@ import {
   buildParticipation,
   buildSweepstakes
 } from '@/components/sweepstakes/__tests__/fixtures';
-import { allocatePrize } from '@/lib/allocation/procedures/allocate-prize';
+import { allocatePrize } from '@giveaway/allocation-server/allocate-prize';
 import { submitParticipantForm } from '@giveaway/custom-fields-server/submit-form';
 import createReferralCode from '@giveaway/referrals-server/create-referral-code';
 import submitTask from '@/lib/task/procedures/submit-tasks';
@@ -42,7 +42,7 @@ vi.mock('@giveaway/custom-fields-server/submit-form', () => ({
 vi.mock('@giveaway/referrals-server/create-referral-code', () => ({
   default: vi.fn()
 }));
-vi.mock('@/lib/allocation/procedures/allocate-prize', () => ({
+vi.mock('@giveaway/allocation-server/allocate-prize', () => ({
   allocatePrize: vi.fn()
 }));
 

@@ -12,7 +12,7 @@ import {
 import {
   toSweepstakesHost,
   toSweepstakesPrizes
-} from '@/schemas/giveaway/participant';
+} from '@giveaway/participant-model/participant';
 import { DeepNullable, DeepPartial } from '@giveaway/util-types/types';
 import { toDerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 import { Prisma } from '@prisma/client';

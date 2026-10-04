@@ -71,7 +71,7 @@ import { PrizeDrawResult, UserSource } from '@prisma/client';
 import { DisqualificationDialog } from './disqualification-dialog';
 import { TASK_LABEL } from '@giveaway/task-model/schemas';
 import { USER_SOURCE_LABEL } from '@giveaway/user-source-model/data';
-import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 import {
   toQualityType,
   QUALITY_LABELS

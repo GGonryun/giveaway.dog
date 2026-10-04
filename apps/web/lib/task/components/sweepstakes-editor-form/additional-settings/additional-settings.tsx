@@ -17,7 +17,7 @@ import { TwitchChatImportFormField } from './lib/twitch-chat-command';
 import { TwitchChannelUrlDisplay } from './lib/twitch-channel-url-display';
 import { TwitterUsernameFormField } from './lib/twitter-username';
 import { SecretHintFormField } from './lib/secret-hint';
-import { SteamAppIdFormField } from './lib/steam-app-id';
+import { SteamAppIdFormField } from '@giveaway/steam-task-editor/steam-app-id';
 import { MaxEntrantsField } from './lib/max-entrants';
 import { LoyaltyRequiredField } from './lib/bonus-loyalty';
 import {
@@ -25,8 +25,14 @@ import {
   ImportingTweetIdValidation
 } from './lib/twitter-importing-account';
 import { BlueskyImportingAccountField } from './lib/bluesky-importing-account';
-import { InstagramProfileUrl, InstagramPostUrl } from './lib/instagram';
-import { FacebookPageUrl, FacebookPostUrl } from './lib/facebook';
+import {
+  InstagramProfileUrl,
+  InstagramPostUrl
+} from '@giveaway/meta-task-editor/instagram';
+import {
+  FacebookPageUrl,
+  FacebookPostUrl
+} from '@giveaway/meta-task-editor/facebook';
 import { TikTokProfileUrl, TikTokPostUrl } from './lib/tiktok';
 import { AskQuestionFormFields } from './lib/ask-question';
 import { SingleChoiceFormFields } from './lib/single-choice';
@@ -37,9 +43,9 @@ import { AlertCircle } from 'lucide-react';
 import { BlueskyProfileUrlField } from './lib/bluesky-profile-url';
 import { BlueskyPostUrlField } from './lib/bluesky-post-url';
 import { VeloraFollowFormField } from './lib/velora-follow';
-import { LinkedInFollowFormField } from './lib/linkedin-follow';
+import { LinkedInFollowFormField } from '@giveaway/linkedin-task-editor/linkedin-follow';
 import { MaximumReferralsField } from './lib/maximum-referrals';
-import { SteamDeveloperFormField } from './lib/steam-developer';
+import { SteamDeveloperFormField } from '@giveaway/steam-task-editor/steam-developer';
 import {
   Alert,
   AlertDescription,

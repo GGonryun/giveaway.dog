@@ -1,0 +1,89 @@
+import {
+  GiveawayState,
+  ParticipantSweepstakeSchema
+} from '@giveaway/sweepstakes-model/schemas';
+import { assertNever } from '@giveaway/util-errors';
+import { RequiredFields } from '@giveaway/util-types/types';
+import {
+  expandCountries,
+  includesCountryCode
+} from '@giveaway/util-geo/countries';
+import { isFormFilled } from './participant';
+import { SweepstakesParticipantSchema } from './schemas';
+
+type ComputeStateOptions = Pick<
+  ParticipantSweepstakeSchema,
+  'prizes' | 'sweepstakes'
+> & {
+  participant?: SweepstakesParticipantSchema;
+};
+
+export const toSweepstakesState = (
+  args: ComputeStateOptions
+): GiveawayState => {
+  const { sweepstakes, participant } = args;
+
+  switch (sweepstakes.status) {
+    case 'DRAFT':
+      return 'closed';
+    case 'COMPLETED':
+      return 'winners-announced';
+    case 'EXPIRED':
+      return 'winners-pending';
+    case 'ERROR':
+      return 'error';
+    case 'SCHEDULED': {
+      // double check the sweepstakes start date:
+      if (new Date(sweepstakes.timing.startDate) > new Date()) {
+        return 'pending';
+      }
+      return 'active';
+    }
+    case 'RUNNING': {
+      if (!participant) return 'not-logged-in';
+      if (
+        !isFormFilled(
+          sweepstakes.audience.formFields,
+          participant.user,
+          participant.formValues
+        )
+      )
+        return 'profile-incomplete';
+      if (!isEligible({ ...args, participant })) return 'not-eligible';
+      // double check the sweepstakes end date:
+      if (new Date(sweepstakes.timing.endDate) < new Date()) {
+        return 'winners-pending';
+      }
+      return 'active';
+    }
+    default:
+      throw assertNever(sweepstakes.status);
+  }
+};
+
+const isEligible = ({
+  sweepstakes,
+  participant
+}: RequiredFields<ComputeStateOptions, 'participant'>) => {
+  if (sweepstakes.audience.regionalRestriction) {
+    if (!participant.user.countryCode) return false;
+
+    const countries = expandCountries(
+      sweepstakes.audience.regionalRestriction.regions
+    );
+    const hasRegion = includesCountryCode(
+      countries,
+      participant.user.countryCode
+    );
+
+    switch (sweepstakes.audience.regionalRestriction.filter) {
+      case 'INCLUDE':
+        return hasRegion;
+      case 'EXCLUDE':
+        return !hasRegion;
+      default:
+        throw assertNever(sweepstakes.audience.regionalRestriction.filter);
+    }
+  }
+  return true;
+};

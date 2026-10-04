@@ -12,7 +12,7 @@ import { isLoyal } from '@giveaway/loyalty-model/validation';
 import {
   isProfileComplete,
   toParticipantFormFields
-} from '@/schemas/giveaway/participant';
+} from '@giveaway/participant-model/participant';
 import {
   toUserSchema,
   USER_SCHEMA_SELECT_QUERY

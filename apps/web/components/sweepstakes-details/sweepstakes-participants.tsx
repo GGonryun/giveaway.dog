@@ -44,10 +44,10 @@ import { datetime } from '@giveaway/util-time/date';
 
 import { UserSourceBadge } from '@giveaway/user-source-ui/user-source-badge';
 import { UserSourceCaption } from '@giveaway/user-source-ui/user-source-caption';
-import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
-import { toSweepstakesEngagement } from '@/lib/participant/db';
+import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
+import { toSweepstakesEngagement } from '@giveaway/participant-model/db';
 import { toMostRecentCompletion } from '@giveaway/task-model/completions';
-import { toEngagementTheme } from '@/lib/participant/util';
+import { toEngagementTheme } from '@giveaway/participant-model/util';
 import {
   toQualityType,
   QUALITY_LABELS

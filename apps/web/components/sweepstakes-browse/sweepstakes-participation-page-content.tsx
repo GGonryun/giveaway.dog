@@ -8,17 +8,17 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { useProcedureAsync } from '@giveaway/rpc-client/hook';
 import submitTask from '@/lib/task/procedures/submit-tasks';
-import { toSweepstakesState } from '@/lib/sweepstakes';
+import { toSweepstakesState } from '@giveaway/participant-model/sweepstakes';
 import { submitParticipantForm } from '@giveaway/custom-fields-server/submit-form';
 import { UserHostRelationshipSchema } from '@giveaway/loyalty-model/schemas';
-import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 import createReferralCode from '@giveaway/referrals-server/create-referral-code';
 import {
   CreateReferralSchema,
   UserReferralSchema
 } from '@giveaway/referrals-model/schemas';
 import updateTask from '@/lib/task/procedures/update-task';
-import { allocatePrize } from '@/lib/allocation/procedures/allocate-prize';
+import { allocatePrize } from '@giveaway/allocation-server/allocate-prize';
 import { ApplicationError } from '@giveaway/util-errors';
 import { useMemo, useState } from 'react';
 import { Nil } from '@giveaway/util-types/types';

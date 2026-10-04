@@ -1,5 +1,5 @@
 import { Outline } from '@/components/app/outline';
-import { SelectPickerList } from '@/lib/pickers/shared/components/select-picker-list';
+import { SelectPickerList } from '@giveaway/picker-ui/components/select-picker-list';
 
 interface PickersPageProps {
   params: Promise<{ slug: string }>;

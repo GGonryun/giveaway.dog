@@ -4,7 +4,7 @@ import { PublicSweepstakeSchema } from '@giveaway/sweepstakes-model/public';
 import { GiveawayItem } from './giveaway-item';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import pluralize from 'pluralize';
-import { PublicSweepstakesParticipationSchema } from '@/lib/participant/schemas';
+import { PublicSweepstakesParticipationSchema } from '@giveaway/participant-model/schemas';
 
 interface AllGiveawaysGridProps {
   sweepstakes: PublicSweepstakeSchema[];

@@ -5,11 +5,11 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 
 import z from 'zod';
 
-import { sweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { sweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 import {
   TEAM_PARTICIPANT_USER_SELECT_QUERY,
   toTeamParticipant
-} from '@/lib/participant/db';
+} from '@giveaway/participant-model/db';
 
 export const getTeamParticipant = procedure()
   .authorization({

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getTeamParticipants } from '../get-team-participants';
-import { TEAM_PARTICIPANT_USER_SELECT_QUERY } from '../../db';
+import { TEAM_PARTICIPANT_USER_SELECT_QUERY } from '@giveaway/participant-model/db';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
@@ -9,7 +9,7 @@ import {
   buildCompletionRow,
   buildUserRow,
   buildUserSchema
-} from '../../__tests__/fixtures-participant-referrals-automation';
+} from '@giveaway/participant-model/testing/fixtures-participant-referrals-automation';
 
 type Input = Parameters<typeof getTeamParticipants>[0];
 

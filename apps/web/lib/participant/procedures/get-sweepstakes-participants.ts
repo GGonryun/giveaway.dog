@@ -7,8 +7,8 @@ import {
   listSweepstakesParticipants,
   onlyParticipantsWithCompletions,
   sortParticipantsByMostRecentCompletion
-} from '../db';
-import { sweepstakesParticipantSchema } from '../schemas';
+} from '@giveaway/participant-model/db';
+import { sweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 
 export const getSweepstakesParticipants = procedure()
   .authorization({

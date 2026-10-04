@@ -94,11 +94,6 @@
       "count": 1
     }
   },
-  "apps/web/lib/participant/db.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "apps/web/lib/pickers/x/components/sections/setup-section.tsx": {
     "react/display-name": {
       "count": 1

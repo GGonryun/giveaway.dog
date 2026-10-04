@@ -3,7 +3,7 @@ import z from 'zod';
 import {
   PublicSweepstakesParticipationSchema,
   publicSweepstakesParticipationSchema
-} from '../schemas';
+} from '@giveaway/participant-model/schemas';
 
 export const getPublicSweepstakesParticipation = procedure()
   .authorization({

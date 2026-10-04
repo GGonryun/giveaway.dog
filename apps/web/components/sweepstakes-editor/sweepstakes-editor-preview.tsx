@@ -38,7 +38,7 @@ import {
 } from './data/mocks';
 import { TaskSchema } from '@giveaway/task-model/schemas';
 import { useTeams } from '@giveaway/team-context/team-provider';
-import { toSweepstakesHost } from '@/schemas/giveaway/participant';
+import { toSweepstakesHost } from '@giveaway/participant-model/participant';
 import { assertNever } from '@giveaway/util-errors';
 import {
   DEFAULT_ALLOWED_IDENTITIES,
@@ -49,7 +49,7 @@ import { DeepNil, DeepPartial } from '@giveaway/util-types/types';
 import { isDefined } from '@giveaway/util-types/widetype';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { DEFAULT_MINIMUM_AGE } from '@giveaway/custom-fields-model/defaults';
-import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
+import { SweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 
 export const SweepstakesFormPreview: React.FC = () => {
   const { control } = useFormContext<GiveawayFormSchema>();
