@@ -20,8 +20,8 @@ env:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-slim
-    timeout-minutes: 10
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -47,8 +47,8 @@ jobs:
 
   type-check:
     name: Type check
-    runs-on: ubuntu-slim
-    timeout-minutes: 10
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
