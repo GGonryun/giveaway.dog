@@ -11,6 +11,23 @@ const VITEST_CONFIG = [
   ''
 ].join('\n');
 
+const VISUAL_CONFIG_MODULE = '@giveaway/testing-visual/config';
+
+const VISUAL_CONFIG = [
+  "import { defineConfig } from 'vitest/config';",
+  `import { visualTestConfig } from '${VISUAL_CONFIG_MODULE}';`,
+  '',
+  'export default defineConfig(visualTestConfig());',
+  ''
+].join('\n');
+
+const VISUAL_SCRIPTS = {
+  'test:visual': 'vitest run --config vitest.visual.config.ts',
+  'test:visual:update': 'vitest run --config vitest.visual.config.ts --update',
+  'test:visual:docker': 'visual-docker',
+  'test:visual:docker:update': 'visual-docker --update'
+};
+
 const json = (value: unknown) => JSON.stringify(value, null, 2) + '\n';
 
 const nonEmpty = (record: Record<string, string>) =>
@@ -37,6 +54,7 @@ const scripts = (plan: PackagePlan) => {
   for (const project of testProjects) {
     result[`test:${project}`] = `vitest run --project ${project}`;
   }
+  if (plan.visual) Object.assign(result, VISUAL_SCRIPTS);
   return result;
 };
 
@@ -71,6 +89,8 @@ export const tsconfigJson = (plan: PackagePlan) =>
 
 export const vitestConfig = () => VITEST_CONFIG;
 
+export const visualConfig = () => VISUAL_CONFIG;
+
 export const suppressionsJson = (plan: PackagePlan) =>
   JSON.stringify(plan.suppressions, null, 2);
 
@@ -80,6 +100,7 @@ export const packageFiles = (plan: PackagePlan): Record<string, string> => {
     'tsconfig.json': tsconfigJson(plan),
     'vitest.config.ts': vitestConfig()
   };
+  if (plan.visual) files['vitest.visual.config.ts'] = visualConfig();
   if (Object.keys(plan.suppressions).length) {
     files[SUPPRESSIONS] = suppressionsJson(plan);
   }

@@ -260,7 +260,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: visual-changes
-          path: apps/web/.vitest-attachments/
+          path: |
+            apps/*/.vitest-attachments/
+            packages/*/*/.vitest-attachments/
+            packages/*/*/*/.vitest-attachments/
           include-hidden-files: true
           retention-days: 14
 
@@ -272,7 +275,7 @@ jobs:
             echo
             echo "These screenshots do not match their references:"
             echo
-            find apps/web/.vitest-attachments -name '*-actual-*.png' | sort | sed -e 's|^apps/web/\.vitest-attachments/|- |' -e 's|-actual-|-|'
+            find apps packages -name node_modules -prune -o -path '*/.vitest-attachments/*' -name '*-actual-*.png' -print | sort | sed -e 's|/\.vitest-attachments/|/|' -e 's|^|- |' -e 's|-actual-|-|'
             echo
             echo "The \`visual-changes\` artifact of this run has the actual screenshot and a diff image for each one. The diff image shows the changed pixels in red."
             echo

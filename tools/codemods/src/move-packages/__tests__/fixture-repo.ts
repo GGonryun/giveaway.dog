@@ -306,6 +306,8 @@ export const FILES: Record<string, string> = {
     '  Card();',
     '});'
   ),
+  'apps/web/components/finch/__tests__/__screenshots__/card.visual.test.tsx/renders-1.png':
+    'png',
   'apps/web/lib/owl.ts': lines('export type Owl = { name: string };'),
   'apps/web/types/owl/index.ts': lines('export type Night = { owls: number };'),
   'apps/web/lib/consumer.ts': lines(

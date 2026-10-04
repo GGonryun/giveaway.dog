@@ -68,6 +68,7 @@ const boundaries = [
             '{projectRoot}/src/testing/**',
             '{projectRoot}/**/*.test.{ts,tsx}',
             '{projectRoot}/vitest.config.ts',
+            '{projectRoot}/vitest.visual.config.ts',
             '{projectRoot}/eslint.config.mjs'
           ]
         }
