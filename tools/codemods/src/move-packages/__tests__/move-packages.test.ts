@@ -281,6 +281,18 @@ describe('movePackages', { timeout: 60_000 }, () => {
       });
     });
 
+    it('declares the imports of shared test fixtures as devDependencies', () => {
+      const manifest = repo.readJson<Manifest>(`${KESTREL}/package.json`);
+
+      expect(repo.read(`${KESTREL}/src/testing/fixtures.ts`)).toContain(
+        "import type { User } from '@giveaway/db-model';"
+      );
+      expect(manifest.dependencies).toBeUndefined();
+      expect(manifest.devDependencies).toMatchObject({
+        '@giveaway/db-model': 'workspace:*'
+      });
+    });
+
     it('writes the server and snapshot scripts for a package with both', () => {
       expect(
         repo.readJson<Manifest>(`${KESTREL}/package.json`).scripts

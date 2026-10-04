@@ -87,7 +87,7 @@ const dead = new Set(map.deadFiles);
 
 const DEAD = Symbol('dead');
 const isTest = (file) =>
-  /(^|\/)__tests__\/|\.(test|spec)\.|^test\/|^e2e\/|(^|\/)(vitest(\.visual)?|eslint)\.config\.[cm]?[jt]s$/.test(
+  /(^|\/)__tests__\/|(^|\/)src\/testing\/|\.(test|spec)\.|^test\/|^e2e\/|(^|\/)(vitest(\.visual)?|eslint)\.config\.[cm]?[jt]s$/.test(
     file
   );
 

@@ -211,7 +211,11 @@ export const FILES: Record<string, string> = {
     '});'
   ),
   'apps/web/lib/kestrel/__tests__/fixtures.ts': lines(
-    "export const sample = 'hello';"
+    "import type { User } from '@prisma/client';",
+    '',
+    "export const sample = 'hello';",
+    '',
+    "export const sampleUser = { id: 'user-1' } as User;"
   ),
   'apps/web/lib/kestrel/__tests__/text.snapshot.test.tsx': lines(
     "import { expect, it } from 'vitest';",

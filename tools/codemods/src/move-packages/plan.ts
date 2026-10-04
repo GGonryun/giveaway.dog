@@ -670,8 +670,7 @@ const planPackage = (
   if (inputs.serverOnly) dependencies.add(SERVER_ONLY);
   for (const usage of inputs.usages) {
     if (usage.name === entry.name) continue;
-    const production =
-      (usage.kind === 'source' || usage.kind === 'fixture') && !usage.mockOnly;
+    const production = usage.kind === 'source' && !usage.mockOnly;
     if (!production) dev.add(usage.name);
     else if (PEER_DEPENDENCIES.has(usage.name)) peers.add(usage.name);
     else dependencies.add(usage.name);
