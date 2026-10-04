@@ -15,7 +15,7 @@ import {
 import { Button } from '@giveaway/ui-primitives/button';
 
 import { toast } from 'sonner';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { SettingsCard } from '../settings/settings-card';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { AlertTriangleIcon } from 'lucide-react';

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useUser } from '@/components/context/user-provider';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateProfile from '@/procedures/user/update-profile';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';

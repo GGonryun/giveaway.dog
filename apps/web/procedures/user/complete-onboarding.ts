@@ -2,7 +2,7 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import { completeOnboardingSchema } from '@/schemas/onboarding';
+import { completeOnboardingSchema } from '@giveaway/user-model/onboarding';
 import z from 'zod';
 
 const completeOnboarding = procedure()

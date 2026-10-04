@@ -1,4 +1,7 @@
-import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
+import {
+  toUserSchema,
+  USER_SCHEMA_SELECT_QUERY
+} from '@giveaway/user-model/user';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
   ResolvedFormFieldSchema,

@@ -14,16 +14,16 @@ import {
   ZapIcon,
   ClockIcon
 } from 'lucide-react';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
-import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
-import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
-import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
-import { SocialBlueskyIcon } from '../integrations/components/icons/bluesky-icon';
-import { SocialFacebookIcon } from '../integrations/components/icons/facebook-icon';
-import { SocialTwitchIcon } from '../integrations/components/icons/twitch-icon';
-import { SocialKickIcon } from '../integrations/components/icons/kick-icon';
-import { SocialSteamIcon } from '../integrations/components/icons/steam-icon';
-import { SocialTikTokIcon } from '../integrations/components/icons/tiktok-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
+import { SocialYouTubeIcon } from '@giveaway/integration-icons/youtube';
+import { SocialInstagramIcon } from '@giveaway/integration-icons/instagram';
+import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
+import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
+import { SocialFacebookIcon } from '@giveaway/integration-icons/facebook-icon';
+import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
+import { SocialKickIcon } from '@giveaway/integration-icons/kick-icon';
+import { SocialSteamIcon } from '@giveaway/integration-icons/steam-icon';
+import { SocialTikTokIcon } from '@giveaway/integration-icons/tiktok-icon';
 
 interface EntryMethod {
   id: string;

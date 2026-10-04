@@ -1,7 +1,7 @@
 import { render, renderHook, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserAccountType, UserSource } from '@prisma/client';
-import type { UserSchema } from '@/schemas/user';
+import type { UserSchema } from '@giveaway/user-model/user';
 import { UserProvider, useUser } from '../user-provider';
 
 const user: UserSchema = {

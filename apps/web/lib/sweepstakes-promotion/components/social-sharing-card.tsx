@@ -6,9 +6,9 @@ import {
   CardHeader,
   CardTitle
 } from '@giveaway/ui-primitives/card';
-import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
-import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialFacebookIcon } from '@giveaway/integration-icons/facebook-icon';
+import { SocialInstagramIcon } from '@giveaway/integration-icons/instagram';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import React from 'react';
 
 const socialPlatforms = [

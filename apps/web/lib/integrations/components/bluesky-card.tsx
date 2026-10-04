@@ -5,10 +5,10 @@ import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import { ExternalLink } from 'lucide-react';
-import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
+import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 import { disconnectBluesky } from '@/lib/integrations/procedures/disconnect-bluesky';
 import { useRouter } from 'next/navigation';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
 import {

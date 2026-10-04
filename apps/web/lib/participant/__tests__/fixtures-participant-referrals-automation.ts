@@ -4,7 +4,10 @@ import type {
   SweepstakesFormValue,
   Task
 } from '@prisma/client';
-import type { USER_SCHEMA_SELECT_QUERY, UserSchema } from '@/schemas/user';
+import type {
+  USER_SCHEMA_SELECT_QUERY,
+  UserSchema
+} from '@giveaway/user-model/user';
 import type {
   TASK_COMPLETIONS_SELECT_QUERY,
   TaskCompletionSchema

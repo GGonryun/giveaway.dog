@@ -12,7 +12,7 @@ import {
   mappedUser,
   userRow,
   userSelectArgs
-} from './fixtures-procedures-user';
+} from '@giveaway/user-model/testing/fixtures-procedures-user';
 
 type FindUserInput = Parameters<typeof findUser>[0];
 

@@ -5,7 +5,7 @@ import { Clock, RefreshCw } from 'lucide-react';
 import { useGiveawayParticipation } from '../giveaway-participation-context';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@giveaway/ui-primitives/button';
-import { useProcedureAsync } from '@/lib/mrpc/hook';
+import { useProcedureAsync } from '@giveaway/rpc-client/hook';
 import refreshSweepstakes from '@/procedures/browse/refresh-sweepstakes';
 import { useRouter } from 'next/navigation';
 

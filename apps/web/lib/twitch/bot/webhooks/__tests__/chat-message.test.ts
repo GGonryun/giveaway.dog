@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
 import { processChatMessage } from '../chat-message';
-import { sendChatMessage } from '@/lib/twitch/api/send-chat-message';
+import { sendChatMessage } from '@giveaway/twitch-api/send-chat-message';
 import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { chatMessageEvent } from '@giveaway/testing-server/fixtures-twitch';
@@ -50,7 +50,7 @@ vi.mock('@upstash/ratelimit', () => {
   return { Ratelimit };
 });
 
-vi.mock('@/lib/twitch/api/send-chat-message', () => ({
+vi.mock('@giveaway/twitch-api/send-chat-message', () => ({
   sendChatMessage: vi.fn()
 }));
 

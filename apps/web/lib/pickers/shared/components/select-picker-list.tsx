@@ -2,11 +2,11 @@
 
 import { Card } from '@giveaway/ui-primitives/card';
 import { Badge } from '@giveaway/ui-primitives/badge';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { ChevronRight, GemIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
-import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
+import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
+import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
 import { useTeams } from '@/components/context/team-provider';
 
 interface SelectPickerListProps {

@@ -32,7 +32,7 @@ import type {
   SweepstakesWinnerCriteriaSchema
 } from '@/schemas/giveaway/schemas';
 import type { DetailedUserTeam } from '@giveaway/team-model/teams';
-import type { UserProfileSchema, UserSchema } from '@/schemas/user';
+import type { UserProfileSchema, UserSchema } from '@giveaway/user-model/user';
 
 export const NOW = new Date(2026, 9, 1, 12, 0, 0);
 export const START_DATE = new Date(2026, 8, 24, 12, 0, 0);

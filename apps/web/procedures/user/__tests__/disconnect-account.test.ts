@@ -4,7 +4,10 @@ import disconnectAccount, { updateEmail } from '../disconnect-account';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { dbUser, PRISMA_NOT_FOUND_MESSAGE } from './fixtures-procedures-user';
+import {
+  dbUser,
+  PRISMA_NOT_FOUND_MESSAGE
+} from '@giveaway/user-model/testing/fixtures-procedures-user';
 
 type DisconnectInput = Parameters<typeof disconnectAccount>[0];
 

@@ -8,11 +8,11 @@ import {
   TWITCH_CLIENT_ID,
   TWITCH_CLIENT_SECRET,
   TWITCH_REDIRECT_URI
-} from '../bot/scopes';
-import { getTwitchUser } from '../api/get-user';
-import { createEventSubSubscriptionsForFeatures } from '../api/create-eventsub-subscription';
+} from '@giveaway/twitch-api/scopes';
+import { getTwitchUser } from '@giveaway/twitch-api/get-user';
+import { createEventSubSubscriptionsForFeatures } from '@giveaway/twitch-api/create-eventsub-subscription';
 import { TwitchIntegrationSettings } from '@giveaway/twitch-model/integration';
-import { twitchStateSchema } from '../schemas';
+import { twitchStateSchema } from '@giveaway/twitch-api/schemas';
 
 export type TwitchStateSchema = z.infer<typeof twitchStateSchema>;
 

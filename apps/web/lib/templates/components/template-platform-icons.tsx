@@ -1,19 +1,19 @@
 import { TaskPlatformSchema } from '@/lib/task/schemas';
 import { assertNever } from '@giveaway/util-errors';
-import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
-import { SocialGoogleIcon } from '@/lib/integrations/components/icons/google-icon';
-import { SocialSteamIcon } from '@/lib/integrations/components/icons/steam-icon';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
-import { SocialKickIcon } from '@/lib/integrations/components/icons/kick-icon';
-import { SocialYouTubeIcon } from '@/lib/integrations/components/icons/youtube';
-import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
-import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
-import { SocialTikTokIcon } from '@/lib/integrations/components/icons/tiktok-icon';
-import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
-import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
+import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
+import { SocialGoogleIcon } from '@giveaway/integration-icons/google-icon';
+import { SocialSteamIcon } from '@giveaway/integration-icons/steam-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
+import { SocialKickIcon } from '@giveaway/integration-icons/kick-icon';
+import { SocialYouTubeIcon } from '@giveaway/integration-icons/youtube';
+import { SocialInstagramIcon } from '@giveaway/integration-icons/instagram';
+import { SocialFacebookIcon } from '@giveaway/integration-icons/facebook-icon';
+import { SocialTikTokIcon } from '@giveaway/integration-icons/tiktok-icon';
+import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
+import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
 import { Globe2Icon } from 'lucide-react';
-import { SocialVeloraIcon } from '@/lib/integrations/components/icons/velora-icon';
-import { SocialLinkedInIcon } from '@/lib/integrations/components/icons/linked-in-icon';
+import { SocialVeloraIcon } from '@giveaway/integration-icons/velora-icon';
+import { SocialLinkedInIcon } from '@giveaway/integration-icons/linked-in-icon';
 
 interface PlatformIconProps {
   platform: TaskPlatformSchema;

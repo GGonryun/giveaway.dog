@@ -9,7 +9,7 @@ import {
   TWITCH_CLIENT_ID,
   TWITCH_INTEGRATION_SCOPES,
   TWITCH_REDIRECT_URI
-} from '../bot/scopes';
+} from '@giveaway/twitch-api/scopes';
 import { twitchFeatureSchema } from '@giveaway/integration-model/scopes';
 
 export const connectTwitch = procedure()

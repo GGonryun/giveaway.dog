@@ -13,7 +13,7 @@ import {
   winnerSchema
 } from '../participant';
 import type { ParticipantSweepstakesGetPayload } from '../db';
-import type { UserSchema } from '../../user';
+import type { UserSchema } from '@giveaway/user-model/user';
 import type { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import { ApplicationError } from '@giveaway/util-errors';
 import { DEFAULT_TEAM_LOGO } from '@giveaway/team-model/team/data';

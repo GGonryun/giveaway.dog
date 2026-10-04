@@ -17,11 +17,11 @@ import {
   FormMessage
 } from '@giveaway/ui-primitives/form';
 import { toast } from 'sonner';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { LoadingState } from './loading-state';
 import { UserAccountType } from '@prisma/client';
 import completeOnboarding from '@/procedures/user/complete-onboarding';
-import { getUserAuthRedirect } from '@/lib/redirect';
+import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import z from 'zod';

@@ -1,4 +1,4 @@
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { Label } from 'recharts';
 import selectTeam from '@/procedures/teams/select-team';
 import { Button } from '@giveaway/ui-primitives/button';

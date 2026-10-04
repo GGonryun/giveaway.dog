@@ -8,7 +8,7 @@ import {
   ACCOUNT_TAB_OPTIONS,
   AccountTabSchema,
   DEFAULT_ACCOUNT_TAB
-} from '@/schemas/account';
+} from '@giveaway/user-model/account';
 import { useAccountPage } from './use-account-page';
 import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';

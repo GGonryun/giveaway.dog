@@ -13,7 +13,7 @@ import {
   Gift
 } from 'lucide-react';
 import Link from 'next/link';
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { UserAccountType } from '@prisma/client';
 import {

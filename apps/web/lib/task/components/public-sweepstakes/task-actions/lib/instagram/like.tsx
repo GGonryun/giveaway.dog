@@ -1,7 +1,7 @@
 import { TaskActionProps } from '../../building-blocks';
 import { useState } from 'react';
 import { InstagramLikeTaskSchema } from '@/lib/task/schemas';
-import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
+import { SocialInstagramIcon } from '@giveaway/integration-icons/instagram';
 import { cn } from '@giveaway/ui-utils/utils';
 import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';

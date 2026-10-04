@@ -28,7 +28,7 @@ import {
 import { Button } from '@giveaway/ui-primitives/button';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import { MoreHorizontal, Trash2 } from 'lucide-react';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import revokeInvitation from '@/procedures/teams/revoke-invitation';
 import { toast } from 'sonner';
 import { TeamRole } from '@prisma/client';

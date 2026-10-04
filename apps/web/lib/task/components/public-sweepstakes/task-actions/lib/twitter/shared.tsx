@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useMemo, memo } from 'react';
-import { useProcedureAsync } from '@/lib/mrpc/hook';
+import { useProcedureAsync } from '@giveaway/rpc-client/hook';
 import getTwitterOEmbed from '@/lib/integrations/procedures/get-twitter-oembed';
 import type { TwitterEmbedData } from '@/lib/integrations/procedures/get-twitter-oembed';
 import { Loader2 } from 'lucide-react';

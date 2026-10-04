@@ -6,11 +6,11 @@ import { useEffect, useState, memo } from 'react';
 import { Loader2, AlertCircle, LucideIcon } from 'lucide-react';
 import type { TwitterEmbedData } from '@/lib/integrations/procedures/get-twitter-oembed';
 import { Card, CardContent } from '@giveaway/ui-primitives/card';
-import { useProcedureAsync } from '@/lib/mrpc/hook';
+import { useProcedureAsync } from '@giveaway/rpc-client/hook';
 import getTwitterOEmbed from '@/lib/integrations/procedures/get-twitter-oembed';
 import { xStatusRefineUrl } from '@giveaway/x-model/twitter';
 import { FailureData } from '@giveaway/rpc-model/types';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTheme } from 'next-themes';
 

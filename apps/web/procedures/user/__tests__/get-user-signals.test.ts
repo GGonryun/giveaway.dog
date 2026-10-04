@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { AccountStatus, type Account } from '@prisma/client';
 import { getUserSignals, type UserSignals } from '../get-user-signals';
 import { prismaMock } from '@giveaway/testing-server/prisma';
-import { dbUser } from './fixtures-procedures-user';
+import { dbUser } from '@giveaway/user-model/testing/fixtures-procedures-user';
 
 const USER_ID = 'user-7';
 const NOW = new Date('2026-10-01T12:00:00.000Z');

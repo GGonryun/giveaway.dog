@@ -1,4 +1,4 @@
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import copySweepstakes from '@/procedures/sweepstakes/copy-sweepstakes';
 import { toast } from 'sonner';
 

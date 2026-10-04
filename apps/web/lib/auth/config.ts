@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { createAuthConfig } from './config-runtime';
+import { createAuthConfig } from '@giveaway/auth-core/config-runtime';
 import { createId } from '@paralleldrive/cuid2';
 
 import NextAuth from 'next-auth';

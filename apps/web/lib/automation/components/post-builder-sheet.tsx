@@ -37,7 +37,7 @@ import {
 } from '@giveaway/ui-primitives/alert';
 import { AutomatedPostJobType } from '@prisma/client';
 import { scheduleAutomatedPostJob } from '../procedures/schedule-automated-post-job';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { useRouter } from 'next/navigation';

@@ -9,7 +9,7 @@ import {
   BlueskyLikeImportTaskSchema
 } from '@/lib/task/schemas';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
-import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
+import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 import { BlueskyEmbed } from './shared';
 import { blueskyPostRefineUrl } from '@/lib/integrations/schemas/bluesky-helpers';
 import { cn } from '@giveaway/ui-utils/utils';

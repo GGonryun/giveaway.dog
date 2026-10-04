@@ -6,7 +6,7 @@ import {
 } from '@prisma/client';
 import { assertNever } from '@giveaway/util-errors';
 import z from 'zod';
-import { userProfileSchema, userSchema } from '../user';
+import { userProfileSchema, userSchema } from '@giveaway/user-model/user';
 import { derivedSweepstakesStatusSchema } from '../sweepstakes';
 import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@giveaway/app-config/settings';
 import { timingSchema } from '../timing';

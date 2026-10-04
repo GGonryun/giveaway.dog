@@ -35,7 +35,7 @@ vi.mock('@/lib/integrations/utils/refresh-discord-token', () => ({
   refreshDiscordToken: external.refreshDiscordToken
 }));
 
-vi.mock('@/lib/integrations/utils/refresh-twitch-token', () => ({
+vi.mock('@giveaway/twitch-api/refresh-twitch-token', () => ({
   refreshTwitchToken: external.refreshTwitchToken
 }));
 

@@ -19,13 +19,13 @@ import {
   SquareArrowOutUpRight
 } from 'lucide-react';
 import { datetime } from '@giveaway/util-time/date';
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 import {
   toQualityType,
   QUALITY_LABELS
 } from '@giveaway/user-quality-model/quality';
-import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
+import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
 
 export const ProfileInformationCard: React.FC<{
   user: UserSchema;

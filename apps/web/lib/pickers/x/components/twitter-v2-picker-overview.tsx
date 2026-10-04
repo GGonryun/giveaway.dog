@@ -68,7 +68,7 @@ import { deleteTwitterV2Picker } from '../procedures/delete-twitter-v2-picker';
 import { drawTwitterV2Picker } from '../procedures/draw-twitter-v2-picker';
 import { disqualifyTwitterV2Winner } from '../procedures/disqualify-twitter-v2-winner';
 
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { TwitterV2ParticipantsSection } from './twitter-v2-participants-section';
 
 interface TwitterV2PickerOverviewProps {

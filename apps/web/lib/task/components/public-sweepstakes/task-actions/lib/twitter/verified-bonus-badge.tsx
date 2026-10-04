@@ -1,5 +1,5 @@
 import { Badge } from '@giveaway/ui-primitives/badge';
-import { SocialXBlueCheckmarkIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXBlueCheckmarkIcon } from '@giveaway/integration-icons/x-icon';
 import {
   TwitterRetweetImportTaskSchema,
   TwitterRetweetV2TaskSchema,

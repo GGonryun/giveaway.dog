@@ -30,7 +30,7 @@ import {
   toQualityType,
   QUALITY_LABELS
 } from '@giveaway/user-quality-model/quality';
-import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
+import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
 import { UserProviders } from '@/lib/integrations/components/user-providers';
 import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
@@ -38,7 +38,7 @@ import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toSweepstakesEngagement, toTwitterLink } from '@/lib/participant/db';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 
 export const UserParticipantSheetContent: React.FC<{

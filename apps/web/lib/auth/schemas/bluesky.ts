@@ -1,4 +1,4 @@
-import { blueskyHandleSchema } from '@/schemas/user';
+import { blueskyHandleSchema } from '@giveaway/user-model/user';
 import z from 'zod';
 
 export const blueskyLoginFormSchema = z.object({

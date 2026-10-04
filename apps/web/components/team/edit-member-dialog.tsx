@@ -17,7 +17,7 @@ import {
 } from '@giveaway/ui-primitives/select';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Label } from '@giveaway/ui-primitives/label';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateMemberRole from '@/procedures/teams/update-member-role';
 import { toast } from 'sonner';
 import { TeamRole } from '@prisma/client';

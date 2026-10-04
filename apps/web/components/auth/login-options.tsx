@@ -14,7 +14,7 @@ import {
 } from '@/components/auth/provider-buttons';
 import { AuthError } from '@/components/auth/auth-error';
 import { AlertCircle, ArrowDown, ArrowLeftIcon } from 'lucide-react';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { Flex } from '@giveaway/ui-primitives/flex';

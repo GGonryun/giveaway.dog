@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@giveaway/ui-primitives/select';
-import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
+import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
 import {
   hasFeature,
   type IntegrationSchema

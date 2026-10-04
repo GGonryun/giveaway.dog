@@ -15,7 +15,7 @@ import {
 } from '@giveaway/ui-primitives/alert';
 import { Button } from '@giveaway/ui-primitives/button';
 import { ShieldCheck, Copy, Check, Plug } from 'lucide-react';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { connectTwitch } from '../procedures/connect-twitch';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';

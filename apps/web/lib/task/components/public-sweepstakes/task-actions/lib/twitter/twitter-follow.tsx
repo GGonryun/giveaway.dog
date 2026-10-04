@@ -6,7 +6,7 @@ import { UserPlus } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 import { TwitterFollowTaskSchema } from '@/lib/task/schemas';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 
 export const TwitterFollowTaskActionForm: React.FC<
   TaskActionProps<TwitterFollowTaskSchema>

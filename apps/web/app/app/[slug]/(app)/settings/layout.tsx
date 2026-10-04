@@ -3,7 +3,7 @@
 import React from 'react';
 import { Outline } from '@/components/app/outline';
 import { TeamPageProps } from '@/schemas/pages';
-import { SettingsTabs } from '@/lib/settings/components/settings-tabs';
+import { SettingsTabs } from '@giveaway/team-settings-shell/settings-tabs';
 
 interface PickerDetailLayoutProps {
   params: Promise<TeamPageProps>;

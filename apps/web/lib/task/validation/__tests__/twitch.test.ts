@@ -12,7 +12,7 @@ import {
 
 const tokens = vi.hoisted(() => ({ refreshTwitchToken: vi.fn() }));
 
-vi.mock('@/lib/integrations/utils/refresh-twitch-token', () => ({
+vi.mock('@giveaway/twitch-api/refresh-twitch-token', () => ({
   refreshTwitchToken: tokens.refreshTwitchToken
 }));
 

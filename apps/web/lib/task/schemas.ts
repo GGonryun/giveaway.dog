@@ -7,7 +7,7 @@ import {
   xStatusRefineError,
   xStatusRefineUrl
 } from '@giveaway/x-model/twitter';
-import { userSchema } from '@/schemas/user';
+import { userSchema } from '@giveaway/user-model/user';
 import { ApplicationError } from '@giveaway/util-errors';
 import { toJsonObject } from '@giveaway/util-collections/json';
 import {

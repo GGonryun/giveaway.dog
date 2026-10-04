@@ -4,7 +4,7 @@ import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
-import { dbUser } from './fixtures-procedures-user';
+import { dbUser } from '@giveaway/user-model/testing/fixtures-procedures-user';
 
 type UpdateEmailInput = Parameters<typeof updateEmail>[0];
 

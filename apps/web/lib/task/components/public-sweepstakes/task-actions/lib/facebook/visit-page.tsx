@@ -6,7 +6,7 @@ import {
 import { useState } from 'react';
 import { FacebookVisitPageTaskSchema } from '@/lib/task/schemas';
 
-import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
+import { SocialFacebookIcon } from '@giveaway/integration-icons/facebook-icon';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '@/lib/task/components/theme';
 import { Button } from '@giveaway/ui-primitives/button';

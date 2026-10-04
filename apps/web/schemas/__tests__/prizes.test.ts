@@ -1,13 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import type { Prisma } from '@prisma/client';
 import { PRIZE_WINNERS_INCLUDE_QUERY, toSweepstakesPrizes } from '../prizes';
-import { USER_SCHEMA_SELECT_QUERY, toUserSchema } from '../user';
+import {
+  USER_SCHEMA_SELECT_QUERY,
+  toUserSchema
+} from '@giveaway/user-model/user';
 import { TASK_COMPLETIONS_SELECT_QUERY } from '@/lib/task/completions';
 import { ApplicationError } from '@giveaway/util-errors';
 import {
   buildUserPayload,
   FIXED_CREATED_AT
-} from './fixtures-schemas-core-and-scoring';
+} from '@giveaway/user-model/testing/fixtures-schemas-core-and-scoring';
 
 type PrizePayload = Prisma.PrizeGetPayload<{
   include: typeof PRIZE_WINNERS_INCLUDE_QUERY;

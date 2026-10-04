@@ -4,7 +4,7 @@ import {
   PROVIDER_THEME,
   ProviderIcon,
   ThemedProviderIcon
-} from '@/lib/integrations/components/icons/provider-icon';
+} from '@giveaway/integration-icons/provider-icon';
 import {
   IDENTITY_PROVIDER_LABEL,
   ENABLED_IDENTITY_PROVIDERS,

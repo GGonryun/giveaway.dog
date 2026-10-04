@@ -24,10 +24,10 @@ import {
   getProviderLabel
 } from '@/lib/task/verification/utils';
 import { CompletionStatus } from '@prisma/client';
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
 import { useRouter } from 'next/navigation';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { updateTaskCompletionStatus } from '@/procedures/sweepstakes/update-task-completion-status';
 import { toast } from 'sonner';
 import { reverifyTaskCompletion } from '@/procedures/sweepstakes/reverify-task-completion';

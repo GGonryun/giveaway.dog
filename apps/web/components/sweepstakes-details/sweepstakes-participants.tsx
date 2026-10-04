@@ -52,8 +52,8 @@ import {
   toQualityType,
   QUALITY_LABELS
 } from '@giveaway/user-quality-model/quality';
-import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { disqualifyParticipant } from '@/procedures/sweepstakes/disqualify-participant';
 
 const useDisqualifyParticipant = () => {

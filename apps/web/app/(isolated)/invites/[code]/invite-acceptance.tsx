@@ -13,7 +13,7 @@ import {
 import { Button } from '@giveaway/ui-primitives/button';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { Badge } from '@giveaway/ui-primitives/badge';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import acceptInvite from '@/procedures/teams/accept-invite';
 import { EasterEggLogo } from '@/components/patterns/easter-egg-logo';
 import { toast } from 'sonner';

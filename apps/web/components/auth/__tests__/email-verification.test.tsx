@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { UserProfileSchema } from '@/schemas/user';
+import { UserProfileSchema } from '@giveaway/user-model/user';
 import { EmailVerification } from '../email-verification';
 
 const mocks = vi.hoisted(() => ({

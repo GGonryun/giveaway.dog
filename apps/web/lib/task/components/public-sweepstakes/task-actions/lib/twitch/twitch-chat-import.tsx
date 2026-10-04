@@ -4,7 +4,7 @@ import { ErrorDisplay } from '../error-display';
 import { TwitchChatImportTaskSchema } from '@/lib/task/schemas';
 import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
-import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
+import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
 
 export const TwitchChatImportTaskActionForm: React.FC<
   TaskActionProps<TwitchChatImportTaskSchema>

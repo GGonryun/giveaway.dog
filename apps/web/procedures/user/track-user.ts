@@ -12,8 +12,8 @@ import {
   UNKNOWN_USER_AGENT,
   UNKNOWN_USER_COUNTRY_CODE
 } from '@giveaway/app-config/settings';
-import { userFingerprintSchema } from '@/schemas/fingerprint';
-import { getUserMetricsFromServerCookies } from '@/lib/user-metrics';
+import { userFingerprintSchema } from '@giveaway/request-context-model/fingerprint';
+import { getUserMetricsFromServerCookies } from '@giveaway/request-context-model/user-metrics';
 import z from 'zod';
 
 const trackUser = procedure()

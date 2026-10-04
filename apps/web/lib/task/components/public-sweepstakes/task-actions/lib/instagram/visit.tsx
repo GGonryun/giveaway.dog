@@ -5,7 +5,7 @@ import {
 } from '../../building-blocks';
 import { useState, useEffect } from 'react';
 import { InstagramVisitTaskSchema } from '@/lib/task/schemas';
-import { SocialInstagramIcon } from '@/lib/integrations/components/icons/instagram';
+import { SocialInstagramIcon } from '@giveaway/integration-icons/instagram';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '@/lib/task/components/theme';
 import { Button } from '@giveaway/ui-primitives/button';

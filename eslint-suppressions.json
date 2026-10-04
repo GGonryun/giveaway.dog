@@ -89,19 +89,9 @@
       "count": 1
     }
   },
-  "apps/web/lib/auth/config-middleware.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 4
-    }
-  },
   "apps/web/lib/auth/config.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "apps/web/lib/auth/get-account-data.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
     }
   },
   "apps/web/lib/bluesky/bluesky-client.ts": {
@@ -162,11 +152,6 @@
   "apps/web/lib/mrpc/errors.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
-    }
-  },
-  "apps/web/lib/mrpc/hook.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 5
     }
   },
   "apps/web/lib/mrpc/procedures.ts": {

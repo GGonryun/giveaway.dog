@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { SweepstakesFormFieldType } from '@prisma/client';
 import { UserIcon, BalloonIcon, MailIcon } from 'lucide-react';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { FIELD_TYPE_ICON } from '../field-icons';
 
 describe('FIELD_TYPE_ICON', () => {

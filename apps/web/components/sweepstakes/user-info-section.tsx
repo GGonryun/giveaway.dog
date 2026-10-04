@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
+import { ProviderIcon } from '@giveaway/integration-icons/provider-icon';
 import { useLogout } from '@/lib/auth/hooks/use-logout';
 import { cn } from '@giveaway/ui-utils/utils';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';

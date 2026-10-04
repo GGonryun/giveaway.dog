@@ -14,7 +14,7 @@ import {
 import { Globe, MoreVertical, CheckCircle, Trash2 } from 'lucide-react';
 import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
 import { formatDistanceToNowStrict } from 'date-fns';
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { Button } from '@giveaway/ui-primitives/button';
 
 import { TASK_LABEL, UserEntriesSchema } from '@/lib/task/schemas';

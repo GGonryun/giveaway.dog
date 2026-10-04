@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { convertSweepstakesToTemplate } from '@/lib/templates/procedures/convert-sweepstakes-to-template';
 import { toast } from 'sonner';
 

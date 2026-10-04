@@ -1,6 +1,6 @@
 'use client';
 
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
 import logout from '../procedures/logout';
 

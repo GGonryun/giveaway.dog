@@ -8,7 +8,7 @@ import {
   USER_DETAILS_TAB_OPTIONS,
   UserDetailsTabSchema,
   DEFAULT_USER_DETAILS_TAB
-} from '@/schemas/user';
+} from '@giveaway/user-model/user';
 import { useUserDetailsPage } from '@/components/users/use-user-details-page';
 import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';

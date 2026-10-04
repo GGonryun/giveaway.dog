@@ -15,7 +15,7 @@ import {
 import {
   QUALITY_BADGE_VARIANT,
   QUALITY_ICON
-} from '@/lib/user-quality/display';
+} from '@giveaway/user-quality-ui/display';
 
 interface BotUser {
   avatar: string;

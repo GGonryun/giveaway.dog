@@ -5,7 +5,7 @@ import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import { ExternalLink } from 'lucide-react';
-import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
+import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
 import { IntegrationSchema } from '@giveaway/integration-model/schemas';
 import { IntegrationStatusAlert } from '@/lib/integrations/components/integration-status-alert';
@@ -20,7 +20,7 @@ import { EventSubSubscription } from '@prisma/client';
 import { TwitchRegistrationDialog } from './twitch-registration-dialog';
 import { TwitchDisconnectDialog } from './twitch-disconnect-dialog';
 import { disconnectTwitch } from '../procedures/disconnect-twitch';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 

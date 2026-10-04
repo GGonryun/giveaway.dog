@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useTeams } from '../context/team-provider';
-import { UserDetailsTabSchema } from '@/schemas/user';
+import { UserDetailsTabSchema } from '@giveaway/user-model/user';
 import { browser } from '@giveaway/util-browser/browser';
 
 export const useUserDetailsPage = () => {

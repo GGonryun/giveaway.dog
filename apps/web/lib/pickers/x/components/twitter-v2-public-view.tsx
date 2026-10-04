@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { formatDistance } from 'date-fns';
 import { TwitterV2PickerSchema } from '@giveaway/x-picker-model/schemas/details';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
 import { TwitterV2ParticipantsSection } from './twitter-v2-participants-section';
 import { TwitterV2DrawHistorySection } from './twitter-v2-draw-history-section';

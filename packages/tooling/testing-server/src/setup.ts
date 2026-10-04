@@ -8,7 +8,7 @@ vi.mock('@giveaway/db-client/prisma', async () => {
   return { default: prismaMock };
 });
 
-vi.mock('@/lib/auth/config-no-providers', async () => {
+vi.mock('@giveaway/auth-core/config-no-providers', async () => {
   const { authMock } = await import('./session');
   return { noProviderAuth: { auth: authMock } };
 });

@@ -9,12 +9,15 @@ import {
   FormMessage
 } from '@giveaway/ui-primitives/form';
 import { useUser } from '@/components/context/user-provider';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateProfile from '@/procedures/user/update-profile';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateUserProfileSchema, UpdateUserProfile } from '@/schemas/user';
+import {
+  updateUserProfileSchema,
+  UpdateUserProfile
+} from '@giveaway/user-model/user';
 import { useRouter } from 'next/navigation';
 import { SettingsCard } from '../settings/settings-card';
 import { FileUpload } from '../ui/file-upload';

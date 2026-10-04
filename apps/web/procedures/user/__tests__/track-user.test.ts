@@ -3,7 +3,7 @@ import { UserEventType } from '@prisma/client';
 import trackUser from '../track-user';
 import { ip } from '@/lib/ip';
 import { ApplicationError } from '@giveaway/util-errors';
-import { DEVELOPMENT_GEO } from '@/schemas/fingerprint';
+import { DEVELOPMENT_GEO } from '@giveaway/request-context-model/fingerprint';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';

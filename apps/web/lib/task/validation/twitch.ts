@@ -1,7 +1,7 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import { PrismaClient } from '@prisma/client';
 import { TwitchFollowTaskSchema } from '../schemas';
-import { refreshTwitchToken } from '@/lib/integrations/utils/refresh-twitch-token';
+import { refreshTwitchToken } from '@giveaway/twitch-api/refresh-twitch-token';
 
 export const checkTwitchFollow = async (
   db: PrismaClient,

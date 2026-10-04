@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useMemo, memo } from 'react';
-import { useProcedureAsync } from '@/lib/mrpc/hook';
+import { useProcedureAsync } from '@giveaway/rpc-client/hook';
 import getBlueskyOEmbed from '@/lib/integrations/procedures/get-bluesky-oembed';
 import type { BlueskyEmbedData } from '@/lib/integrations/procedures/get-bluesky-oembed';
 import { Loader2 } from 'lucide-react';

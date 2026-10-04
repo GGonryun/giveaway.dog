@@ -14,7 +14,7 @@ import {
   SIGNAL_QUALITY_KEYS
 } from '@/lib/scoring/signal-display';
 import { toQualityType } from '@giveaway/user-quality-model/quality';
-import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
+import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
 import { cn } from '@giveaway/ui-utils/utils';
 
 const OVERVIEW_SIGNALS = SIGNAL_QUALITY_KEYS.filter((k) =>

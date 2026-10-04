@@ -1,12 +1,12 @@
 'use client';
 
 import { Button } from '@giveaway/ui-primitives/button';
-import { ProviderIcon } from '@/lib/integrations/components/icons/provider-icon';
+import { ProviderIcon } from '@giveaway/integration-icons/provider-icon';
 import { CircleAlertIcon, Plus, UnlinkIcon, UnplugIcon } from 'lucide-react';
 import { useUser } from '@/components/context/user-provider';
 import { toast } from 'sonner';
 
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import disconnectAccount from '@/procedures/user/disconnect-account';
 import { useRouter } from 'next/navigation';
 import {

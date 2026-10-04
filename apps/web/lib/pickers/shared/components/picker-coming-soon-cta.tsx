@@ -4,8 +4,8 @@ import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Bell } from 'lucide-react';
 import Link from 'next/link';
-import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
-import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
+import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
+import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
 
 interface PickerComingSoonCTAProps {
   slug: string;

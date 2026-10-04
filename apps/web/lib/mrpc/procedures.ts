@@ -1,13 +1,13 @@
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
-import { noProviderAuth } from '../auth/config-no-providers';
+import { noProviderAuth } from '@giveaway/auth-core/config-no-providers';
 import { Session, User } from 'next-auth';
 import { Result, Success, isNextRedirect } from '@giveaway/rpc-model/types';
 import prisma from '@giveaway/db-client/prisma';
 import { PrismaClient } from '@prisma/client';
 import { isPrismaError, prismaErrorBoundary } from './errors';
 import { environment } from '@giveaway/app-config/environment';
-import { simulateNetworkDelay } from '../simulate';
+import { simulateNetworkDelay } from '@giveaway/util-random/simulate';
 import { unstable_cache, revalidateTag } from 'next/cache';
 import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
 

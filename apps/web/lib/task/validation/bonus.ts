@@ -13,7 +13,10 @@ import {
   isProfileComplete,
   toParticipantFormFields
 } from '@/schemas/giveaway/participant';
-import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
+import {
+  toUserSchema,
+  USER_SCHEMA_SELECT_QUERY
+} from '@giveaway/user-model/user';
 
 export const checkBonusTimed = async (task: BonusTimedTaskSchema) => {
   // check to see if the current time is within the task's time window

@@ -2,7 +2,7 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import { createUserProfileSchema } from '@/schemas/user';
+import { createUserProfileSchema } from '@giveaway/user-model/user';
 import z from 'zod';
 
 const createProfile = procedure()

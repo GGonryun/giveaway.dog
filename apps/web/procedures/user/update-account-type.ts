@@ -2,7 +2,7 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@/lib/mrpc/procedures';
-import { updateAccountTypeSchema } from '@/schemas/onboarding';
+import { updateAccountTypeSchema } from '@giveaway/user-model/onboarding';
 import z from 'zod';
 
 const updateAccountType = procedure()

@@ -1,7 +1,7 @@
 // app/team-context.tsx
 'use client';
 
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { createContext, useContext } from 'react';
 
 type UserContextType = UserSchema;

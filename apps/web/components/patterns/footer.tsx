@@ -1,6 +1,6 @@
-import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
-import { SocialFacebookIcon } from '@/lib/integrations/components/icons/facebook-icon';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
+import { SocialFacebookIcon } from '@giveaway/integration-icons/facebook-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import {
   BLUESKY_PROFILE_URL,
   FACEBOOK_PROFILE_URL,

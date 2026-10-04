@@ -4,7 +4,7 @@ import { WithProviderConnection } from '../provider-connection';
 import { Button } from '@giveaway/ui-primitives/button';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useState } from 'react';
-import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
+import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 import Link from 'next/link';
 
 export const BlueskyFollowTaskActionForm: React.FC<

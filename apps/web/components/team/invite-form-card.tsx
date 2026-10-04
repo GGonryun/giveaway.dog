@@ -20,7 +20,7 @@ import {
 } from '@giveaway/ui-primitives/select';
 import { Input } from '@giveaway/ui-primitives/input';
 import { Button } from '@giveaway/ui-primitives/button';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import inviteMembers from '@/procedures/teams/invite-members';
 import { toast } from 'sonner';
 import { Plus, Trash2, Link2 } from 'lucide-react';

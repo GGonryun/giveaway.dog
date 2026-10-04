@@ -9,7 +9,7 @@ import { TemplateCard } from './template-card';
 import { UseTemplateModal } from './use-template-modal';
 import { SweepstakesGridSkeleton } from './templates-grid-skeleton';
 import { DeleteTemplateModal } from './delete-template-modal';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { createSweepstakes } from '@/procedures/sweepstakes/create-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { timezone } from '@giveaway/util-time/time';

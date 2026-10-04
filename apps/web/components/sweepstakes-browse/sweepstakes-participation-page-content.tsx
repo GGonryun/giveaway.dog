@@ -6,7 +6,7 @@ import {
   SweepstakesAllocationSchema
 } from '@/schemas/giveaway/schemas';
 import { usePathname, useRouter } from 'next/navigation';
-import { useProcedureAsync } from '@/lib/mrpc/hook';
+import { useProcedureAsync } from '@giveaway/rpc-client/hook';
 import submitTask from '@/lib/task/procedures/submit-tasks';
 import { toSweepstakesState } from '@/lib/sweepstakes';
 import { submitParticipantForm } from '@/lib/custom-fields/procedures/submit-form';

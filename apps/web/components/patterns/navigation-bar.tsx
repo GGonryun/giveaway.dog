@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { LoggedInNavigationBar } from './logged-in-navigation-bar';
 import { LoggedOutNavigationBar } from './logged-out-navigation-bar';
 

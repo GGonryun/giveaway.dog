@@ -9,7 +9,7 @@ import {
   DialogTitle
 } from '@giveaway/ui-primitives/dialog';
 import { Button } from '@giveaway/ui-primitives/button';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { deleteTaskCompletion } from '@/procedures/sweepstakes/delete-task-completion';
 import { UserEntriesSchema } from '@/lib/task/schemas';
 

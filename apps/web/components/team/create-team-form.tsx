@@ -30,7 +30,7 @@ import {
   type CreateTeamInput
 } from '@giveaway/team-model/teams';
 import { toast } from 'sonner';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { LoadingState } from './loading-state';
 import { useTeamsPage } from './use-teams-page';
 import { useTeamPage } from './use-team-page';

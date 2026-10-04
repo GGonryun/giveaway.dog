@@ -28,7 +28,7 @@ import {
 import { widetype } from '@giveaway/util-types/widetype';
 import { useSession } from 'next-auth/react';
 import { UserAccountType } from '@prisma/client';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateAccountType from '@/procedures/user/update-account-type';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';

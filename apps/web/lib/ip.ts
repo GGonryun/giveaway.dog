@@ -1,6 +1,6 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
-import { DEVELOPMENT_GEO } from '@/schemas/fingerprint';
+import { DEVELOPMENT_GEO } from '@giveaway/request-context-model/fingerprint';
 import { Prisma } from '@prisma/client';
 import { Nil } from '@giveaway/util-types/types';
 import https from 'https';

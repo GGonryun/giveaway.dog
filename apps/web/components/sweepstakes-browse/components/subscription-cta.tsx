@@ -6,7 +6,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { Input } from '@giveaway/ui-primitives/input';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { Check, Mail } from 'lucide-react';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import subscribeEmail from '@/procedures/marketing/subscribe-email';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   emailSubscriptionSchema,
   type EmailSubscriptionInput
-} from '@/schemas/email-subscription';
+} from '@giveaway/user-model/email-subscription';
 import {
   Form,
   FormControl,

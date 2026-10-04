@@ -36,7 +36,7 @@ import {
   SelectValue
 } from '@giveaway/ui-primitives/select';
 import { toBackgroundStyle } from '@/schemas/color';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
 import { useTeams } from '../context/team-provider';

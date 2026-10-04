@@ -19,7 +19,7 @@ import { SweepstakesFormPreview } from './sweepstakes-editor-preview';
 import { useSweepstakesPage } from '../sweepstakes/use-sweepstakes-page';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { useDeleteSweepstakes } from '../sweepstakes/use-delete-sweepstakes';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
 import publishSweepstakes from '@/procedures/sweepstakes/publish-sweepstakes';
 import { PreviewStateContext } from './contexts/preview-state-context';

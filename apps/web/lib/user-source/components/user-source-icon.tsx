@@ -1,6 +1,6 @@
-import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
-import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
+import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
+import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 import { cn } from '@giveaway/ui-utils/utils';
 import { UserSource } from '@prisma/client';
 import {
@@ -9,7 +9,7 @@ import {
   LucideIcon,
   VerifiedIcon
 } from 'lucide-react';
-import { SocialTwitchIcon } from '@/lib/integrations/components/icons/twitch-icon';
+import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
 
 export const USER_SOURCE_ICON: Record<UserSource, LucideIcon> = {
   TWITTER_IMPORT: SocialXIcon,

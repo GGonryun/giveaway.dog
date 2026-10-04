@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Input } from '@giveaway/ui-primitives/input';
 import { SettingsCard } from '../settings-card';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateTeamName from '@/procedures/teams/update-team-name';
 import { toast } from 'sonner';
 

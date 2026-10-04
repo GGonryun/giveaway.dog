@@ -11,7 +11,7 @@ import {
 } from '@/lib/task/schemas';
 import { useTheme } from 'next-themes';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { TwitterEmbed } from './shared';
 import { VerifiedBonusBadge } from './verified-bonus-badge';
 import { cn } from '@giveaway/ui-utils/utils';

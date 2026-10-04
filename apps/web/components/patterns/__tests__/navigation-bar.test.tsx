@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { NavigationBar } from '../navigation-bar';
 
 vi.mock('../logged-in-navigation-bar', () => ({

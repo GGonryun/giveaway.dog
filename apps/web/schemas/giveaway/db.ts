@@ -2,7 +2,7 @@ import { DeepPartial } from '@giveaway/util-types/types';
 import { GiveawayFormSchema as SweepstakesFormSchema } from './schemas';
 import z from 'zod';
 import { Prisma } from '@prisma/client';
-import { USER_SCHEMA_SELECT_QUERY } from '../user';
+import { USER_SCHEMA_SELECT_QUERY } from '@giveaway/user-model/user';
 
 export const FORM_SWEEPSTAKES_PAYLOAD = {
   tasks: true,

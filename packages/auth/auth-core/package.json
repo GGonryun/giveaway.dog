@@ -1,0 +1,57 @@
+{
+  "name": "@giveaway/auth-core",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:auth"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/auth/auth-core --suppressions-location packages/auth/auth-core/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./auto-merge": "./src/auto-merge.ts",
+    "./config-middleware": "./src/config-middleware.ts",
+    "./config-no-providers": "./src/config-no-providers.ts",
+    "./config-runtime": "./src/config-runtime.ts",
+    "./dogs": "./src/dogs.ts",
+    "./get-account-data": "./src/get-account-data.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "catalog:",
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/util-collections": "workspace:*",
+    "server-only": "catalog:"
+  },
+  "peerDependencies": {
+    "next-auth": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "next": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

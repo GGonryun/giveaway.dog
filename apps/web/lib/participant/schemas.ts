@@ -1,4 +1,4 @@
-import { userSchema } from '@/schemas/user';
+import { userSchema } from '@giveaway/user-model/user';
 import z from 'zod';
 
 import { taskCompletionSchema } from '../task/completions';

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { userAgent, devices } from '../devices';
-import { DEVELOPMENT_GEO } from '@/schemas/fingerprint';
+import { DEVELOPMENT_GEO } from '@giveaway/request-context-model/fingerprint';
 
 const UA = {
   iphoneSafari:

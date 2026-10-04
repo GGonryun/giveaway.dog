@@ -10,7 +10,7 @@ import {
   GiveawayHostSchema,
   SweepstakesAllocationSchema
 } from '@/schemas/giveaway/schemas';
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { IdentityProvider } from '@prisma/client';
 import { toast } from 'sonner';
 import {

@@ -11,7 +11,7 @@ import {
   mappedUser,
   userRow,
   userSelectArgs
-} from './fixtures-procedures-user';
+} from '@giveaway/user-model/testing/fixtures-procedures-user';
 
 describe('getUserQuery', () => {
   describe('when the user does not exist', () => {

@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { auth, handlers, signIn, signOut } from '../config';
-import { createAuthConfig, type GetSession } from '../config-runtime';
+import {
+  createAuthConfig,
+  type GetSession
+} from '@giveaway/auth-core/config-runtime';
 import { createHash } from 'crypto';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 
@@ -49,8 +52,9 @@ const mocks = vi.hoisted(() => {
 
 vi.mock('next-auth', () => ({ default: mocks.NextAuth }));
 
-vi.mock('../config-runtime', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config-runtime')>();
+vi.mock('@giveaway/auth-core/config-runtime', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@giveaway/auth-core/config-runtime')>();
   return { ...actual, createAuthConfig: vi.fn(actual.createAuthConfig) };
 });
 

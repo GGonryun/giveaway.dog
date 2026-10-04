@@ -29,7 +29,7 @@ import {
   type SocialLink,
   socialLinksSchema
 } from '@giveaway/team-model/social-links';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateTeamLinks from '@/procedures/teams/update-team-links';
 import { toast } from 'sonner';
 

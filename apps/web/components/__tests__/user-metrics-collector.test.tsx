@@ -8,13 +8,13 @@ import {
   getUserMetricsCookie,
   setUserMetricsCookie,
   type UserMetrics
-} from '@/lib/user-metrics';
+} from '@giveaway/request-context-model/user-metrics';
 import trackUser from '@/procedures/user/track-user';
 import { UserMetricsCollector } from '../user-metrics-collector';
 
 vi.mock('next-auth/react', () => ({ useSession: vi.fn() }));
 
-vi.mock('@/lib/user-metrics', () => ({
+vi.mock('@giveaway/request-context-model/user-metrics', () => ({
   collectUserMetrics: vi.fn(),
   getUserMetricsCookie: vi.fn(),
   setUserMetricsCookie: vi.fn()

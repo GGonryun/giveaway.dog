@@ -16,7 +16,7 @@ import {
   AvatarFallback
 } from '@giveaway/ui-primitives/avatar';
 import Link from 'next/link';
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { NavigationHeader } from './navigation-header';
 import { DesktopNavMenu } from './navigation/desktop-nav-menu';
 import { MobileThemeToggle } from './navigation/mobile-theme-toggle';

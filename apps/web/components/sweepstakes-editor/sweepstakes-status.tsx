@@ -40,7 +40,7 @@ import {
   SweepstakesStatusBadge,
   SweepstakesStatusDescription
 } from '../sweepstakes/status-badge';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import toggleVisibility from '@/procedures/sweepstakes/toggle-visibility';
 import { useRouter } from 'next/navigation';
 

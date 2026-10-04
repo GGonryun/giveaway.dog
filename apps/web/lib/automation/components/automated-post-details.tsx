@@ -4,7 +4,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import { Trash2, ExternalLink, Calendar, Search } from 'lucide-react';
 import { datetime } from '@giveaway/util-time/date';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import React, { useState } from 'react';
 import {
   AlertDialog,
@@ -25,13 +25,13 @@ import {
 } from '@giveaway/ui-primitives/dialog';
 import { AutomatedPostJobSchema } from '../schemas';
 import { AutomatedPostStatusBadge } from './automated-post-status-badge';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { deleteAutomatedPostJob } from '../procedures/delete-automated-post-job';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { AutomatedPostJobType } from '@prisma/client';
-import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
-import { SocialDiscordIcon } from '@/lib/integrations/components/icons/discord-icon';
+import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
+import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
 
 interface AutomatedPostDetailsProps {
   job: AutomatedPostJobSchema;

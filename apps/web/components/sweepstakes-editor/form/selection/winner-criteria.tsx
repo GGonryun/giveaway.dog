@@ -17,7 +17,7 @@ import {
   SwitchFormHeader
 } from '@/components/patterns/form-layout/switch-form-header';
 import { HelpDialog } from '@/components/patterns/help-dialog';
-import { BotEnforcementField } from '@/lib/user-quality/bot-enforcement-field';
+import { BotEnforcementField } from '@giveaway/user-quality-ui/bot-enforcement-field';
 
 const MinTasksCompletedField = () => {
   const form = useFormContext<GiveawayFormSchema>();

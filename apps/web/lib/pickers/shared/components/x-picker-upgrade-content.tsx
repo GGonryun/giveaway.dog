@@ -10,7 +10,7 @@ import {
   LucideIcon,
   ArrowRight
 } from 'lucide-react';
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 
 interface UpgradeBenefit {
   icon: LucideIcon;

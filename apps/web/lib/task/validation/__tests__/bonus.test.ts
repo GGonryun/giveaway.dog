@@ -12,7 +12,7 @@ import {
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema
 } from '../../schemas';
-import { USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
+import { USER_SCHEMA_SELECT_QUERY } from '@giveaway/user-model/user';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BASE_TASK,

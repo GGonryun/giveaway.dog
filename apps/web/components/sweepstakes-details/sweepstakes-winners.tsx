@@ -36,7 +36,7 @@ import {
 import { DiceIcon } from './dice-icon';
 import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateWinnerCriteria from '@/procedures/sweepstakes/update-winner-criteria';
 import completeSweepstakes from '@/procedures/sweepstakes/complete-sweepstakes';
 import {
@@ -62,7 +62,7 @@ import {
 } from '@giveaway/ui-primitives/dropdown-menu';
 import { Textarea } from '@giveaway/ui-primitives/textarea';
 import { CompleteSweepstakesAlert } from '../sweepstakes-editor/complete-sweepstakes-alert';
-import { BotEnforcementField } from '@/lib/user-quality/bot-enforcement-field';
+import { BotEnforcementField } from '@giveaway/user-quality-ui/bot-enforcement-field';
 import {
   DerivedSweepstakeStatus,
   EDITABLE_DERIVED_STATUS
@@ -76,7 +76,7 @@ import {
   toQualityType,
   QUALITY_LABELS
 } from '@giveaway/user-quality-model/quality';
-import { QUALITY_BADGE_VARIANT } from '@/lib/user-quality/display';
+import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
 import { rollPrizes } from '@/lib/winners/procedures/roll-prizes';
 import { rollPrize } from '@/lib/winners/procedures/roll-prize';
 import { rerollDraw } from '@/lib/winners/procedures/reroll-draw';

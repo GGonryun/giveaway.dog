@@ -7,7 +7,10 @@ import {
   TASK_COMPLETIONS_SELECT_QUERY,
   toTaskCompletion
 } from '@/lib/task/completions';
-import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from './user';
+import {
+  toUserSchema,
+  USER_SCHEMA_SELECT_QUERY
+} from '@giveaway/user-model/user';
 
 export const PRIZE_WINNERS_INCLUDE_QUERY = {
   draws: {

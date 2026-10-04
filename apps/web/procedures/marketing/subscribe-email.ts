@@ -3,7 +3,7 @@
 import { procedure } from '@/lib/mrpc/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import { isValidEmail } from '@giveaway/util-strings/email-validation';
-import { emailSubscriptionSchema } from '@/schemas/email-subscription';
+import { emailSubscriptionSchema } from '@giveaway/user-model/email-subscription';
 import z from 'zod';
 
 const subscribeEmail = procedure()

@@ -20,7 +20,7 @@ import {
   useRouter,
   useSearchParams
 } from 'next/navigation';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { updateTemplate } from '../procedures/update-template';
 import { UnifiedFormLayoutContextProvider } from '@/components/patterns/form-layout/use-unified-form-layout';
 import {

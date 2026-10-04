@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { AccountTabSchema } from '@/schemas/account';
+import { AccountTabSchema } from '@giveaway/user-model/account';
 
 const base = '/account';
 

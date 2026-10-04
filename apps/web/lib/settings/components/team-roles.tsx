@@ -18,7 +18,7 @@ import { InviteFormCard } from '@/components/team/invite-form-card';
 import { MembersTable } from '@/components/team/members-table';
 import { PendingInvitationsTable } from '@/components/team/pending-invitations-table';
 import { TeamInviteLinkProvider } from '@/lib/invites/context/team-invite-link-context';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import regenerateInviteLink from '@/procedures/teams/regenerate-invite-link';
 import { toast } from 'sonner';
 import { TeamRole } from '@prisma/client';

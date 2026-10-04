@@ -19,7 +19,7 @@ import {
 import { TwitterV2SetupSection } from './sections/setup-section';
 import { TwitterV2FiltersSection } from './sections/filters-section';
 import { deleteTwitterV2Picker } from '../procedures/delete-twitter-v2-picker';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import {
   DEFAULT_TWITTER_V2_PICKER_FORM,
   DEFAULT_TWITTER_V2_PICKER_NAME

@@ -1,6 +1,6 @@
 import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 import { assertNever } from '@giveaway/util-errors';
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 
 export const UserSourceCaption: React.FC<{
   user: Pick<UserSchema, 'email' | 'source' | 'providers'>;

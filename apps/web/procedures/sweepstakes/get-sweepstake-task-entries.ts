@@ -6,7 +6,10 @@ import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 
 import { toJsonObject } from '@giveaway/util-collections/json';
-import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
+import {
+  toUserSchema,
+  USER_SCHEMA_SELECT_QUERY
+} from '@giveaway/user-model/user';
 import { userEntriesSchema, toTaskSchema } from '@/lib/task/schemas';
 
 const getSweepstakeTaskEntries = procedure()

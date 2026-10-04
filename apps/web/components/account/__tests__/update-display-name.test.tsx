@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import updateProfile from '@/procedures/user/update-profile';
 import { UserProvider } from '@/components/context/user-provider';
 import type { Result } from '@giveaway/rpc-model/types';
-import type { UserSchema } from '@/schemas/user';
+import type { UserSchema } from '@giveaway/user-model/user';
 import { UpdateDisplayName } from '../update-display-name';
 
 const navigation = vi.hoisted(() => ({

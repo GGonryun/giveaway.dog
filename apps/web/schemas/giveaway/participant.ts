@@ -2,7 +2,7 @@ import { DeepNullable } from '@giveaway/util-types/types';
 import { ParticipantSweepstakesGetPayload } from './db';
 import { GiveawayPrizeSchema } from './schemas';
 import z from 'zod';
-import { toUserSchema, UserSchema } from '../user';
+import { toUserSchema, UserSchema } from '@giveaway/user-model/user';
 import { toTaskInput } from './input';
 import { Prisma } from '@prisma/client';
 import { ApplicationError, assertNever } from '@giveaway/util-errors';

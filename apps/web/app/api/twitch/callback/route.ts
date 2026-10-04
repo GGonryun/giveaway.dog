@@ -4,7 +4,7 @@ import z from 'zod';
 
 import { twitchOAuthCallback } from '@/lib/twitch/procedures/twitch-oauth-callback';
 import { ApplicationError } from '@giveaway/util-errors';
-import { twitchStateSchema } from '@/lib/twitch/schemas';
+import { twitchStateSchema } from '@giveaway/twitch-api/schemas';
 
 const twitchCallbackResultSchema = z.object({
   success: z.literal(true),

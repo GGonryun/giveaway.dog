@@ -5,7 +5,7 @@ import { UserAccountType, UserSource } from '@prisma/client';
 import { toast } from 'sonner';
 import updateProfile from '@/procedures/user/update-profile';
 import { UserProvider } from '@/components/context/user-provider';
-import type { UserSchema } from '@/schemas/user';
+import type { UserSchema } from '@giveaway/user-model/user';
 import { UpdateProfileImage } from '../update-profile-image';
 
 const navigation = vi.hoisted(() => ({

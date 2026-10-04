@@ -20,7 +20,7 @@ import { Badge } from '@giveaway/ui-primitives/badge';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useTaskTheme } from '../theme';
 import { assertNever } from '@giveaway/util-errors';
-import { SocialXBlueCheckmarkIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXBlueCheckmarkIcon } from '@giveaway/integration-icons/x-icon';
 import pluralize from 'pluralize';
 import { UserTaskSubmissionSchema } from '@/schemas/giveaway/schemas';
 import { UserReferralSchema } from '@giveaway/referrals-model/schemas';

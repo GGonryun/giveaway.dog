@@ -1,4 +1,7 @@
-import { toUserSchema, USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
+import {
+  toUserSchema,
+  USER_SCHEMA_SELECT_QUERY
+} from '@giveaway/user-model/user';
 import { PrismaClient } from '@prisma/client';
 
 export const getUserQuery = async (db: PrismaClient, userId: string) => {

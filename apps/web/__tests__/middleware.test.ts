@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import middleware, { config } from '../middleware';
-import { authConfigMiddleware } from '@/lib/auth/config-middleware';
+import { authConfigMiddleware } from '@giveaway/auth-core/config-middleware';
 
 const m = vi.hoisted(() => {
   const auth = vi.fn();

@@ -7,7 +7,7 @@ import {
   TEAM_SWEEPSTAKES_PAYLOAD,
   sweepstakesInputSchema
 } from '../db';
-import { USER_SCHEMA_SELECT_QUERY } from '../../user';
+import { USER_SCHEMA_SELECT_QUERY } from '@giveaway/user-model/user';
 
 const AUDIENCE_WITH_FORM_FIELDS = {
   include: {

@@ -3,7 +3,7 @@ import { SidebarProvider } from '@giveaway/ui-primitives/sidebar';
 import { TeamsProvider } from '@/components/context/team-provider';
 import { UserProvider } from '@/components/context/user-provider';
 import { DetailedUserTeam } from '@giveaway/team-model/teams';
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 
 export const acmeTeam: DetailedUserTeam = {
   id: 'team-acme',

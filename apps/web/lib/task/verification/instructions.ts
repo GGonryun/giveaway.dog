@@ -1,4 +1,4 @@
-import { UserSchema } from '@/schemas/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { TaskSchema, TaskType } from '../schemas';
 import { assertNever } from '@giveaway/util-errors';
 import { getProviderByTask, getProviderLabel, getProviderLink } from './utils';

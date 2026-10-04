@@ -14,9 +14,9 @@ import { Spinner } from '@giveaway/ui-primitives/spinner';
 import createProfile from '@/procedures/user/create-profile';
 import verifyEmail from '@/procedures/user/verify-email';
 import { toast } from 'sonner';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { useAccountPage } from '@/components/account/use-account-page';
-import { getUserAuthRedirect } from '@/lib/redirect';
+import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
 import { CheckCircle } from 'lucide-react';
 import { UserAccountType } from '@prisma/client';
 

@@ -10,7 +10,7 @@ import {
 import { getCookie } from 'cookies-next/client';
 import { TURNSTILE_COOKIE_NAME } from '@giveaway/turnstile-model/consts';
 import verifyTurnstile from './verify';
-import { useProcedure, useProcedureAsync } from '@/lib/mrpc/hook';
+import { useProcedure, useProcedureAsync } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
 
 interface TurnstileContextValue {

@@ -88,14 +88,6 @@
     "procedures/teams/__tests__/fixtures-procedures-teams.ts": {
       "package": "@giveaway/team-testing",
       "split": false
-    },
-    "procedures/user/__tests__/fixtures-procedures-user.ts": {
-      "package": "@giveaway/user-model",
-      "split": false
-    },
-    "schemas/__tests__/fixtures-schemas-core-and-scoring.ts": {
-      "package": "@giveaway/user-model",
-      "split": false
     }
   },
   "deadFiles": [],
@@ -156,8 +148,6 @@
         "middleware.ts",
         "next.config.ts",
         "postcss.config.js",
-        "types/next-auth.d.ts",
-        "types/react.d.ts",
         "vitest.config.ts",
         "vitest.visual.config.ts"
       ],
@@ -497,21 +487,16 @@
       "layer": 2,
       "sourceFiles": 5,
       "testFiles": 7,
-      "sources": [
-        "lib/redirect.ts",
-        "schemas/account.ts",
-        "schemas/email-subscription.ts",
-        "schemas/onboarding.ts",
-        "schemas/user.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/util-errors",
         "@giveaway/util-strings",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "lodash", "zod"]
+      "npm": ["lodash", "zod"]
     },
     {
       "name": "@giveaway/audience-server",
@@ -631,25 +616,14 @@
       "layer": 2,
       "sourceFiles": 6,
       "testFiles": 6,
-      "sources": [
-        "lib/auth/auto-merge.ts",
-        "lib/auth/config-middleware.ts",
-        "lib/auth/config-no-providers.ts",
-        "lib/auth/config-runtime.ts",
-        "lib/auth/get-account-data.ts",
-        "lib/dogs.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/util-collections"
       ],
-      "npm": [
-        "@auth/prisma-adapter",
-        "@giveaway/db-model",
-        "next-auth",
-        "server-only"
-      ]
+      "npm": ["@auth/prisma-adapter", "next-auth", "server-only"]
     },
     {
       "name": "@giveaway/auth-login-ui",
@@ -1073,13 +1047,13 @@
       "layer": 2,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "lib/user-metrics.ts",
-        "schemas/fingerprint.ts",
-        "schemas/user-agent.ts"
+      "sources": [],
+      "dependsOn": [
+        "@giveaway/app-config",
+        "@giveaway/db-model",
+        "@giveaway/util-time"
       ],
-      "dependsOn": ["@giveaway/app-config", "@giveaway/util-time"],
-      "npm": ["@giveaway/db-model", "cookies-next", "next", "zod"]
+      "npm": ["cookies-next", "next", "zod"]
     },
     {
       "name": "@giveaway/request-context-server",
@@ -1106,7 +1080,7 @@
       "layer": 2,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["lib/mrpc/hook.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/rpc-model"],
       "npm": ["react", "sonner"]
     },
@@ -1445,7 +1419,7 @@
       "layer": 2,
       "sourceFiles": 15,
       "testFiles": 0,
-      "sources": ["lib/integrations/components/icons/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-model",
         "@giveaway/ui-primitives",
@@ -2078,25 +2052,16 @@
       "layer": 2,
       "sourceFiles": 9,
       "testFiles": 9,
-      "sources": [
-        "lib/integrations/utils/refresh-twitch-token.ts",
-        "lib/twitch/api/create-eventsub-subscription.ts",
-        "lib/twitch/api/delete-eventsub-subscription.ts",
-        "lib/twitch/api/get-app-access-token.ts",
-        "lib/twitch/api/get-user.ts",
-        "lib/twitch/api/send-chat-message.ts",
-        "lib/twitch/bot/bot-token.ts",
-        "lib/twitch/bot/scopes.ts",
-        "lib/twitch/schemas.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/cache",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/twitch-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/twitch-bot",
@@ -3050,19 +3015,16 @@
       "layer": 2,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "lib/scoring/imported.ts",
-        "lib/scoring/index.ts",
-        "lib/scoring/signup.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/scoring-model",
         "@giveaway/user-quality-model",
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "lodash"]
+      "npm": ["lodash"]
     },
     {
       "name": "@giveaway/scoring-ui",
@@ -3096,10 +3058,7 @@
       "layer": 2,
       "sourceFiles": 2,
       "testFiles": 1,
-      "sources": [
-        "lib/user-quality/bot-enforcement-field.tsx",
-        "lib/user-quality/display.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/user-quality-model"],
       "npm": ["lucide-react", "react"]
     },
@@ -3457,7 +3416,7 @@
       "layer": 2,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/rng.ts", "lib/simulate.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/util-time"],
       "npm": []
     },
@@ -5092,10 +5051,7 @@
       "layer": 2,
       "sourceFiles": 2,
       "testFiles": 1,
-      "sources": [
-        "lib/settings/components/settings-tabs.tsx",
-        "lib/settings/schemas/"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/util-types"],
       "npm": ["lucide-react", "next", "react", "sonner", "zod"]
     },

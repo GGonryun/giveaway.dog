@@ -2,7 +2,7 @@ import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { AlertCircle } from 'lucide-react';
 import { Button } from '@giveaway/ui-primitives/button';
 import Link from 'next/link';
-import { SocialBlueskyIcon } from '@/lib/integrations/components/icons/bluesky-icon';
+import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 
 interface BlueskyPostPermissionBannerProps {
   hasBlueskyIntegration: boolean;

@@ -3,7 +3,7 @@ import createProfile from '../create-profile';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { dbUser } from './fixtures-procedures-user';
+import { dbUser } from '@giveaway/user-model/testing/fixtures-procedures-user';
 
 type CreateProfileInput = Parameters<typeof createProfile>[0];
 

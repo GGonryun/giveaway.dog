@@ -1,4 +1,7 @@
-import { UserAgentSchema, DeviceTypeSchema } from '@/schemas/user-agent';
+import {
+  UserAgentSchema,
+  DeviceTypeSchema
+} from '@giveaway/request-context-model/user-agent';
 import { UserEvent } from '@prisma/client';
 import {
   UNKNOWN_ACCEPTED_LANGUAGE as UNKNOWN_ACCEPT_LANGUAGE,

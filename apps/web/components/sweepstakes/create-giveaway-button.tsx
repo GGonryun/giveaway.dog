@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from '@giveaway/ui-primitives/dropdown-menu';
-import { useProcedure } from '@/lib/mrpc/hook';
+import { useProcedure } from '@giveaway/rpc-client/hook';
 import { useTeams } from '../context/team-provider';
 import { useCreateSweepstakesPage } from './use-create-sweepstakes-page';
 import { cn } from '@giveaway/ui-utils/utils';

@@ -3,8 +3,8 @@ import { redis } from '@giveaway/cache/redis';
 import { newVersionedRateLimiter } from '@giveaway/ratelimit/ratelimit';
 import { twitchChatMessageEventSchema } from '@giveaway/twitch-model/schema';
 import { toTaskSchema } from '@/lib/task/schemas';
-import { sendChatMessage } from '@/lib/twitch/api/send-chat-message';
-import { TWITCH_BOT_USER_ID } from '@/lib/twitch/bot/scopes';
+import { sendChatMessage } from '@giveaway/twitch-api/send-chat-message';
+import { TWITCH_BOT_USER_ID } from '@giveaway/twitch-api/scopes';
 import { Task, Sweepstakes, SweepstakesTiming } from '@prisma/client';
 
 const TASK_CACHE_TTL = 60 * 30; // 5 minutes

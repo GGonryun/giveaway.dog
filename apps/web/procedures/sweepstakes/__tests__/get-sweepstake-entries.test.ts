@@ -4,7 +4,7 @@ import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@/schemas/giveaway/db';
-import { USER_SCHEMA_SELECT_QUERY } from '@/schemas/user';
+import { USER_SCHEMA_SELECT_QUERY } from '@giveaway/user-model/user';
 import {
   buildTaskRecord,
   buildTeam,

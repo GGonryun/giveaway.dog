@@ -1,4 +1,4 @@
-import { SocialXIcon } from '@/lib/integrations/components/icons/x-icon';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { SweepstakesFormFieldType } from '@prisma/client';
 import { LucideIcon, UserIcon, BalloonIcon, MailIcon } from 'lucide-react';
 

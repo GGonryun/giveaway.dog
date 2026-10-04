@@ -38,6 +38,7 @@
     "vitest": "catalog:"
   },
   "devDependencies": {
+    "@giveaway/auth-core": "workspace:*",
     "@giveaway/db-client": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
