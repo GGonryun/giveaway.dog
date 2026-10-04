@@ -22,7 +22,7 @@ jobs:
   e2e:
     name: E2E tests
     if: github.event_name == 'workflow_dispatch' || github.event.client_payload.environment != 'production'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
     env:
       SHA: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.client_payload.git.sha }}
