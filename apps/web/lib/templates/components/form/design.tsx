@@ -9,7 +9,7 @@ import {
   BackgroundColor,
   BackgroundFields
 } from '@/components/sweepstakes-editor/form/design/design';
-import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 
 export const TemplateDesign = () => {
   const form = useFormContext<TemplateFormSchema>();

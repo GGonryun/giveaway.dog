@@ -13,7 +13,7 @@ import { SaveIcon, TrashIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { TemplateFormSchema } from '../schemas/template';
-import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
+import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 
 interface TemplateCancelConfirmationModalProps {
   onClose: () => void;

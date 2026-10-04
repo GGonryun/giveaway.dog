@@ -2,7 +2,7 @@ import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
 import {
   SwitchBox,
   SwitchFormHeader
-} from '@/components/patterns/form-layout/switch-form-header';
+} from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { FormControl, FormField, FormItem } from '@giveaway/ui-primitives/form';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';

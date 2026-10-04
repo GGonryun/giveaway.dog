@@ -1,7 +1,7 @@
 import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 import { FormControl, FormField, FormItem } from '@giveaway/ui-primitives/form';
 
-import { isValidOption, MultiSelect } from '@/components/ui/multi-select';
+import { isValidOption, MultiSelect } from '@giveaway/ui-command/multi-select';
 import { useMemo } from 'react';
 import { countryOptions, continentOptions } from '@giveaway/util-geo/countries';
 

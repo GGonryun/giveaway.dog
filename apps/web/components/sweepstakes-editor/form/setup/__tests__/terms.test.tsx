@@ -13,7 +13,7 @@ vi.hoisted(() => {
   process.env.TZ = 'UTC';
 });
 
-vi.mock('@/components/ui/minimal-tiptap-editor', () => ({
+vi.mock('@giveaway/ui-rich-text/minimal-tiptap-editor', () => ({
   MinimalTiptap: ({
     content,
     onChange,

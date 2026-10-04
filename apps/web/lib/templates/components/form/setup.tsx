@@ -10,10 +10,10 @@ import {
 } from '@giveaway/ui-primitives/form';
 import { Input } from '@giveaway/ui-primitives/input';
 import { TemplateFormSchema } from '../../schemas/template';
-import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
-import { FileUpload } from '@/components/ui/file-upload';
-import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';
-import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
+import { MinimalTiptap } from '@giveaway/ui-rich-text/minimal-tiptap-editor';
+import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 
 export const TemplateSetup = () => {
   const form = useFormContext<TemplateFormSchema>();

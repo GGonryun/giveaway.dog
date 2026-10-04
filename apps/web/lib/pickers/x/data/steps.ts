@@ -1,4 +1,4 @@
-import { FieldKey } from '@/components/patterns/form-layout/types';
+import { FieldKey } from '@giveaway/ui-layouts/form-layout/types';
 import { Nil } from '@giveaway/util-types/types';
 
 export type TwitterV2PickerStep = 'setup';

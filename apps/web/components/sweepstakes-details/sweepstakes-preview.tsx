@@ -10,7 +10,7 @@ import {
 import { Eye, Smartphone, Monitor } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import { useIsMobile } from '@giveaway/ui-hooks/use-mobile';
-import { QRCodeModal } from '../patterns/qr-code-modal';
+import { QRCodeModal } from '@giveaway/ui-qr/qr-code-modal';
 import {
   mockParticipation,
   onFakeLogin,

@@ -29,7 +29,10 @@ import {
 } from '@/lib/filters/giveaway-filters';
 import { Checkbox } from '@giveaway/ui-primitives/checkbox';
 import { Switch } from '@giveaway/ui-primitives/switch';
-import { MultiSelect, MultiSelectOption } from '@/components/ui/multi-select';
+import {
+  MultiSelect,
+  MultiSelectOption
+} from '@giveaway/ui-command/multi-select';
 import { useMemo } from 'react';
 
 type BrowseHost = {

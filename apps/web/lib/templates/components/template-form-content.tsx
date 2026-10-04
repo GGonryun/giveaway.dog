@@ -1,6 +1,6 @@
 'use client';
 
-import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
+import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import { TemplateDetails } from './form/template';
 import { TemplateSetup } from './form/setup';
 import { TemplateAudience } from './form/audience';

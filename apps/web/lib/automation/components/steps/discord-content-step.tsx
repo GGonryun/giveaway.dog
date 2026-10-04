@@ -12,7 +12,7 @@ import { Checkbox } from '@giveaway/ui-primitives/checkbox';
 import {
   SwitchBox,
   SwitchFormHeader
-} from '@/components/patterns/form-layout/switch-form-header';
+} from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { useFormContext, useWatch } from 'react-hook-form';

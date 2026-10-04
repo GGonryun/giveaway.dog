@@ -4,7 +4,7 @@ import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
   SwitchFormHeader
-} from '@/components/patterns/form-layout/switch-form-header';
+} from '@giveaway/ui-layouts/form-layout/switch-form-header';
 
 export const RequirePreEntryLogin = <
   TFieldValues extends FieldValues,

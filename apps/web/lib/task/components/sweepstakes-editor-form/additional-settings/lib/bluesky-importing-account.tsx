@@ -1,6 +1,6 @@
 import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
-import { SwitchFormHeader } from '@/components/patterns/form-layout/switch-form-header';
-import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
+import { SwitchFormHeader } from '@giveaway/ui-layouts/form-layout/switch-form-header';
+import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import { SweepstakeStep } from '@/components/sweepstakes-editor/data/steps';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { Button } from '@giveaway/ui-primitives/button';

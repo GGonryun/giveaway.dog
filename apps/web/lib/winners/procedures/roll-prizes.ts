@@ -3,13 +3,13 @@
 import z from 'zod';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { getSweepstakesCriteria } from '../criteria';
+import { getSweepstakesCriteria } from '@giveaway/winners-model/criteria';
 import { getEligibleCompletions } from '../completions';
 import {
   getDrawsInfo,
   getEmptyPrizeSlots,
   getPrizeAllocations
-} from '../slots';
+} from '@giveaway/winners-model/slots';
 import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
 
 export const rollPrizes = procedure()

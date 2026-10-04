@@ -6,7 +6,7 @@ import {
   RadioGroup,
   RadioGroupItem
 } from '@giveaway/ui-primitives/radio-group';
-import { SettingsCard } from '../settings/settings-card';
+import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();

@@ -1,7 +1,7 @@
 'use client';
 
 import { Input } from '@giveaway/ui-primitives/input';
-import { SettingsCard } from '../settings-card';
+import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 import { Lock } from 'lucide-react';
 
 interface TeamSlugCardProps {

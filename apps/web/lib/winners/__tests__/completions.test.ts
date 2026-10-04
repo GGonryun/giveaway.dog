@@ -8,7 +8,7 @@ import {
   isEligibleTaskCompletion,
   toUserCompletionCounts
 } from '../completions';
-import type { SweepstakesCriteriaSchema } from '../criteria';
+import type { SweepstakesCriteriaSchema } from '@giveaway/winners-model/criteria';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { TEST_USER } from '@giveaway/testing-server/session';
 import {

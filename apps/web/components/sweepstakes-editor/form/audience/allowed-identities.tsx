@@ -1,11 +1,14 @@
-import { SwitchFormHeader } from '@/components/patterns/form-layout/switch-form-header';
+import { SwitchFormHeader } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage
 } from '@giveaway/ui-primitives/form';
-import { MultiSelect, MultiSelectOption } from '@/components/ui/multi-select';
+import {
+  MultiSelect,
+  MultiSelectOption
+} from '@giveaway/ui-command/multi-select';
 import {
   ENABLED_IDENTITY_PROVIDERS,
   IDENTITY_PROVIDER_LABEL

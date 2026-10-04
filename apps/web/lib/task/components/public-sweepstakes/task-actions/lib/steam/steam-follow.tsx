@@ -8,7 +8,7 @@ import { UserPlus, ExternalLink, ImageIcon } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { WithProviderConnection } from '../provider-connection';
 import { SteamFollowTaskSchema, TaskInput } from '@/lib/task/schemas';
-import { FileUpload } from '@/components/ui/file-upload';
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 import { AcceptedFileTypes, FileSize } from '@giveaway/util-media/files';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
 

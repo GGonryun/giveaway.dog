@@ -12,7 +12,7 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem
-} from '@/components/ui/carousel';
+} from '@giveaway/ui-carousel/carousel';
 import AutoScroll from 'embla-carousel-auto-scroll';
 import {
   getPlatformIcon,

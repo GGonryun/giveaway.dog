@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import type { UnifiedFormAction } from '@/components/patterns/form-layout/types';
+import type { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { SweepstakeFormContent } from '../sweepstake-form-content';
 import { renderWithForm } from './form-harness';
 
@@ -34,13 +34,13 @@ vi.mock('@giveaway/util-time/time', async (importOriginal) => {
   };
 });
 
-vi.mock('@/components/ui/minimal-tiptap-editor', () => ({
+vi.mock('@giveaway/ui-rich-text/minimal-tiptap-editor', () => ({
   MinimalTiptap: ({ placeholder }: { placeholder?: string }) => (
     <textarea aria-label={placeholder} />
   )
 }));
 
-vi.mock('@/components/ui/file-upload', () => ({
+vi.mock('@giveaway/ui-file-upload/file-upload', () => ({
   FileUpload: () => <div>Banner upload</div>
 }));
 

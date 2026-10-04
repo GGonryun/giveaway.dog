@@ -24,7 +24,7 @@ vi.mock('@/lib/scrapebadger/procedures/get-retweeters', () => ({
   getAllRetweeters: vi.fn()
 }));
 
-vi.mock('@/lib/sweepstakes/twitter-import', () => ({
+vi.mock('@giveaway/x-import/twitter-import', () => ({
   importTwitterUsers: m.importTwitterUsers
 }));
 

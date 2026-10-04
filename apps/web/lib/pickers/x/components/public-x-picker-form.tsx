@@ -37,7 +37,7 @@ import { UpgradeModal } from './upgrade-modal';
 import {
   SwitchBox,
   SwitchFormHeader
-} from '@/components/patterns/form-layout/switch-form-header';
+} from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { LoadTweetModal } from './load-tweet-modal';
 import { ProgressModal } from './progress-modal';
 import { WinnersResultModal } from './winners-result-modal';

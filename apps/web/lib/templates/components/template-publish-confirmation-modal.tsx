@@ -15,7 +15,7 @@ import { useFormContext } from 'react-hook-form';
 import { TemplateFormSchema } from '../schemas/template';
 import { useMemo } from 'react';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
-import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
+import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 
 interface TemplatePublishConfirmationModalProps {
   open: boolean;

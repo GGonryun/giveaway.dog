@@ -17,10 +17,6 @@
       "package": "@giveaway/shell-sidebar",
       "split": false
     },
-    "components/patterns/form-layout/__tests__/layout-context.tsx": {
-      "package": "@giveaway/ui-layouts",
-      "split": false
-    },
     "components/sweepstakes-editor/__tests__/form-harness.tsx": {
       "package": "@giveaway/sweepstakes-editor-setup",
       "split": false
@@ -67,10 +63,6 @@
     },
     "lib/winners/__tests__/fixtures-sweepstakes-winners-email.ts": {
       "package": "@giveaway/winners-server",
-      "split": false
-    },
-    "lib/winners/__tests__/fixtures-winners-model.ts": {
-      "package": "@giveaway/winners-model",
       "split": false
     },
     "procedures/browse/__tests__/fixtures-procedures-browse-marketing-pickers.ts": {
@@ -2424,9 +2416,9 @@
       "layer": 2,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/sweepstakes/twitter-import.ts"],
-      "dependsOn": ["@giveaway/integration-model"],
-      "npm": ["@giveaway/db-model", "nanoid"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/integration-model"],
+      "npm": ["nanoid"]
     },
     {
       "name": "@giveaway/x-model",
@@ -5335,11 +5327,7 @@
       "layer": 2,
       "sourceFiles": 3,
       "testFiles": 6,
-      "sources": [
-        "components/patterns/avatar-group-easter-egg.tsx",
-        "components/patterns/easter-egg-logo.tsx",
-        "components/patterns/emoji-logo.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/team-model",
         "@giveaway/ui-primitives",
@@ -5355,7 +5343,7 @@
       "layer": 2,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/ui/carousel.tsx"],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/ui-utils"],
       "npm": ["embla-carousel-react", "lucide-react", "react"]
     },
@@ -5379,10 +5367,7 @@
       "layer": 2,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": [
-        "components/ui/command.tsx",
-        "components/ui/multi-select.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/ui-primitives",
         "@giveaway/ui-utils",
@@ -5399,7 +5384,7 @@
       "layer": 2,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/ui/date-time-picker.tsx"],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/ui-utils"],
       "npm": ["date-fns", "lucide-react", "react", "react-day-picker"]
     },
@@ -5411,7 +5396,7 @@
       "layer": 2,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/ui/file-upload.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/ui-hooks",
         "@giveaway/ui-primitives",
@@ -5440,13 +5425,7 @@
       "layer": 2,
       "sourceFiles": 16,
       "testFiles": 22,
-      "sources": [
-        "components/patterns/app-sidebar/site-header.tsx",
-        "components/patterns/form-layout/",
-        "components/patterns/help-dialog.tsx",
-        "components/patterns/links.tsx",
-        "components/settings/settings-card.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-model",
         "@giveaway/ui-hooks",
@@ -5519,7 +5498,7 @@
       "layer": 2,
       "sourceFiles": 2,
       "testFiles": 1,
-      "sources": ["components/patterns/qr-code-modal.tsx", "lib/qr.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives"],
       "npm": ["lucide-react", "qrcode.react", "react", "sonner"]
     },
@@ -5531,11 +5510,7 @@
       "layer": 2,
       "sourceFiles": 3,
       "testFiles": 5,
-      "sources": [
-        "components/ui/minimal-tiptap-editor.tsx",
-        "components/ui/minimal-tiptap-preview.tsx",
-        "lib/rich-text-styles.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/ui-utils"],
       "npm": [
         "@tiptap/extension-link",
@@ -5623,13 +5598,13 @@
       "layer": 2,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "lib/winners/criteria.ts",
-        "lib/winners/slots.ts",
-        "lib/winners/weighted-rolls.ts"
+      "sources": [],
+      "dependsOn": [
+        "@giveaway/db-model",
+        "@giveaway/user-source-model",
+        "@giveaway/util-errors"
       ],
-      "dependsOn": ["@giveaway/user-source-model", "@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/winners-server",

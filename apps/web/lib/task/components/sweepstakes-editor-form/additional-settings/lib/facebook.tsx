@@ -9,7 +9,7 @@ import {
   FormMessage
 } from '@giveaway/ui-primitives/form';
 import { Input } from '@giveaway/ui-primitives/input';
-import { HelpDialog } from '@/components/patterns/help-dialog';
+import { HelpDialog } from '@giveaway/ui-layouts/help-dialog';
 import Image from 'next/image';
 
 export const FacebookPageUrl: React.FC = () => {

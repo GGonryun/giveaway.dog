@@ -3,9 +3,12 @@
 import z from 'zod';
 
 import { procedure } from '@/lib/mrpc/procedures';
-import { getSweepstakesCriteria } from '../criteria';
+import { getSweepstakesCriteria } from '@giveaway/winners-model/criteria';
 import { getEligibleCompletions } from '../completions';
-import { getDrawsInfo, getPrizeAllocations } from '../slots';
+import {
+  getDrawsInfo,
+  getPrizeAllocations
+} from '@giveaway/winners-model/slots';
 import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
 import { PrizeDrawResult } from '@prisma/client';
 import { ApplicationError } from '@giveaway/util-errors';

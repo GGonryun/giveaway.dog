@@ -4,7 +4,7 @@ import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
-import { buildCriteriaRow } from '../../__tests__/fixtures-winners-model';
+import { buildCriteriaRow } from '@giveaway/winners-model/testing/fixtures-winners-model';
 import {
   givenSweepstakesLookups,
   inputIssuePaths,

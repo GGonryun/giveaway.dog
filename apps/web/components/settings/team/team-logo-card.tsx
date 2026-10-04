@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SettingsCard } from '../settings-card';
+import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateTeamLogo from '@/procedures/teams/update-team-logo';
 import { toast } from 'sonner';
-import { FileUpload } from '@/components/ui/file-upload';
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 
 interface TeamLogoCardProps {
   slug: string;

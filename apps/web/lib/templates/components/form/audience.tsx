@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 import { AllowedIdentities } from '@/components/sweepstakes-editor/form/audience/allowed-identities';
 import { RequirePreEntryLogin } from '@/components/sweepstakes-editor/form/audience/require-pre-entry-login';
 import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fields';

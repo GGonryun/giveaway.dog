@@ -1,4 +1,4 @@
-import { EmojiLogo } from '@/components/patterns/emoji-logo';
+import { EmojiLogo } from '@giveaway/ui-brand/emoji-logo';
 import { OnboardingForm } from '@/components/onboarding/onboarding-form';
 import { Suspense } from 'react';
 import type { Metadata } from 'next';

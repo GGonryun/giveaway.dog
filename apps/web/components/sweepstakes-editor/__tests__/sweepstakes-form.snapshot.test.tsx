@@ -90,13 +90,13 @@ vi.mock('@/components/sweepstakes/giveaway-participation', () => ({
   GiveawayParticipation: () => <div>Giveaway preview</div>
 }));
 
-vi.mock('@/components/ui/minimal-tiptap-editor', () => ({
+vi.mock('@giveaway/ui-rich-text/minimal-tiptap-editor', () => ({
   MinimalTiptap: ({ placeholder }: { placeholder?: string }) => (
     <textarea aria-label={placeholder} />
   )
 }));
 
-vi.mock('@/components/ui/file-upload', () => ({
+vi.mock('@giveaway/ui-file-upload/file-upload', () => ({
   FileUpload: () => <div>Banner upload</div>
 }));
 

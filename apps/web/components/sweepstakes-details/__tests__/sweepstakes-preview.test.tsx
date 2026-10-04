@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamsProvider } from '@/components/context/team-provider';
-import { QRCodeModal } from '@/components/patterns/qr-code-modal';
+import { QRCodeModal } from '@giveaway/ui-qr/qr-code-modal';
 import {
   mockParticipation,
   mockUserReferral
@@ -49,7 +49,7 @@ vi.mock('@/components/sweepstakes/giveaway-participation', () => ({
   default: vi.fn(() => <div>giveaway preview</div>)
 }));
 
-vi.mock('@/components/patterns/qr-code-modal', () => ({
+vi.mock('@giveaway/ui-qr/qr-code-modal', () => ({
   QRCodeModal: vi.fn(({ isOpen }: { isOpen: boolean }) =>
     isOpen ? <div>qr code modal</div> : null
   )

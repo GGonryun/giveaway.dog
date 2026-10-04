@@ -10,9 +10,9 @@ import {
 } from '@giveaway/ui-primitives/form';
 import { Input } from '@giveaway/ui-primitives/input';
 import { TemplateFormSchema } from '../../schemas/template';
-import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
-import { FileUpload } from '@/components/ui/file-upload';
-import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
+import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import { Textarea } from '@giveaway/ui-primitives/textarea';
 
 export const TemplateDetails = () => {

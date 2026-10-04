@@ -20,7 +20,7 @@ import {
   UpdateUserProfile
 } from '@giveaway/user-model/user';
 import { useRouter } from 'next/navigation';
-import { SettingsCard } from '../settings/settings-card';
+import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { AlertCircleIcon } from 'lucide-react';
 

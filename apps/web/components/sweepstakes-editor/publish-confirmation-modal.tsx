@@ -17,7 +17,7 @@ import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { useMemo } from 'react';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import Link from 'next/link';
-import { UnifiedFormAction } from '../patterns/form-layout/types';
+import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 
 interface PublishConfirmationModalProps {
   open: boolean;

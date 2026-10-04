@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { describe, expect, it, vi } from 'vitest';
-import type { UnifiedFormAction } from '@/components/patterns/form-layout/types';
+import type { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import type { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import { CancelConfirmationModal } from '../cancel-confirmation-modal';

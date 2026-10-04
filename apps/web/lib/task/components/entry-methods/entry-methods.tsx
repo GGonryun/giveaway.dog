@@ -31,10 +31,10 @@ import {
   FormMessage
 } from '@giveaway/ui-primitives/form';
 import { nanoid } from 'nanoid';
-import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 import { uniq } from 'lodash';
 import { TaskSchema, TaskType } from '@/lib/task/schemas';
-import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
+import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 
 type ActiveEntry = { id: string; type: TaskType; index: number };
 

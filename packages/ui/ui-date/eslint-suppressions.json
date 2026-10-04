@@ -1,0 +1,7 @@
+{
+  "packages/ui/ui-date/src/date-time-picker.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  }
+}

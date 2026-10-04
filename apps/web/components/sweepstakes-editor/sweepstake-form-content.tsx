@@ -1,4 +1,4 @@
-import { useUnifiedFormLayout } from '../patterns/form-layout/use-unified-form-layout';
+import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import { Audience } from './form/audience/audience';
 import { Design } from './form/design/design';
 import { Prizes } from './form/prizes/prizes';

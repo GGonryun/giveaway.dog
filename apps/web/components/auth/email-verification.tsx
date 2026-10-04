@@ -28,7 +28,7 @@ import { toast } from 'sonner';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { UserProfileSchema } from '@giveaway/user-model/user';
 import { useRouter } from 'next/navigation';
-import { SettingsCard } from '../settings/settings-card';
+import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 
 interface EmailVerificationProps {
   title?: string;

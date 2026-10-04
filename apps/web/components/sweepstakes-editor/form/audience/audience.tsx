@@ -3,7 +3,7 @@
 import React from 'react';
 import { RegionalRestriction } from './regional-restriction';
 
-import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 import { AllowedIdentities } from './allowed-identities';
 import { RequirePreEntryLogin } from './require-pre-entry-login';
 import { CustomFormFields } from '@/lib/custom-fields/components/custom-form-fields';

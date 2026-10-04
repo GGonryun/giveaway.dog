@@ -22,7 +22,7 @@ vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() }
 }));
 
-vi.mock('@/components/ui/file-upload', () => ({
+vi.mock('@giveaway/ui-file-upload/file-upload', () => ({
   FileUpload: ({
     initialUrl,
     onUpload

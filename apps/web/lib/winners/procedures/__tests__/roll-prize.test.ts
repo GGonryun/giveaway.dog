@@ -7,7 +7,7 @@ import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import {
   buildAllocation,
   buildCriteriaRow
-} from '../../__tests__/fixtures-winners-model';
+} from '@giveaway/winners-model/testing/fixtures-winners-model';
 import {
   buildCompletion,
   buildTeamSweepstakes,

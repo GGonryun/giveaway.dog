@@ -1,5 +1,5 @@
 import { useArrayContext } from '@giveaway/ui-hooks/use-array-context';
-import { HelpDialog } from '@/components/patterns/help-dialog';
+import { HelpDialog } from '@giveaway/ui-layouts/help-dialog';
 import {
   FormControl,
   FormField,

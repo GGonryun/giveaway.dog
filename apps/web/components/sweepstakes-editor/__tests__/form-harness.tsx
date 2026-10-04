@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { VisibilityType } from '@prisma/client';
 import React, { useEffect } from 'react';
 import { FormProvider, useForm, UseFormReturn } from 'react-hook-form';
-import { UnifiedFormLayoutContext } from '@/components/patterns/form-layout/use-unified-form-layout';
+import { UnifiedFormLayoutContext } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
   DEFAULT_ALLOW_USER_SELECTION,

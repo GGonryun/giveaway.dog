@@ -16,7 +16,7 @@ import {
 import {
   SwitchBox,
   SwitchFormHeader
-} from '@/components/patterns/form-layout/switch-form-header';
+} from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   Select,
@@ -40,7 +40,7 @@ import {
   PopoverTrigger
 } from '@giveaway/ui-primitives/popover';
 import { toGradient } from '@/schemas/color';
-import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 import {
   GiveawayFormSchema,
   GradientBackgroundSchema

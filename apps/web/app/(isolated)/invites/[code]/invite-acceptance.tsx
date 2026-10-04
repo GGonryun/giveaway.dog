@@ -15,7 +15,7 @@ import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import acceptInvite from '@/procedures/teams/accept-invite';
-import { EasterEggLogo } from '@/components/patterns/easter-egg-logo';
+import { EasterEggLogo } from '@giveaway/ui-brand/easter-egg-logo';
 import { toast } from 'sonner';
 import { CheckCircle } from 'lucide-react';
 import { TeamRole } from '@prisma/client';

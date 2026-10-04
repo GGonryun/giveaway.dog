@@ -30,7 +30,7 @@ import {
   DEFAULT_SWEEPSTAKES_PRIZE_NAME,
   DEFAULT_SWEEPSTAKES_PRIZE_QUOTA
 } from '@/schemas/giveaway/defaults';
-import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 
 type ActivePrize = { id: string; index: number };
 

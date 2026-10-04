@@ -1,6 +1,6 @@
 import { SheetHeader, SheetTitle } from '@giveaway/ui-primitives/sheet';
 import Link from 'next/link';
-import { EmojiLogo } from '../emoji-logo';
+import { EmojiLogo } from '@giveaway/ui-brand/emoji-logo';
 
 export const MobileSheetHeader: React.FC<{ onLogoClick: () => void }> = ({
   onLogoClick

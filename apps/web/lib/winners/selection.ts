@@ -1,14 +1,14 @@
 import { Prisma, PrizeDrawResult } from '@prisma/client';
 import { ExpandedEligibleTaskCompletion } from './completions';
-import { DrawInfo, PrizeSlot } from './slots';
+import { DrawInfo, PrizeSlot } from '@giveaway/winners-model/slots';
 import {
   pickManyWeighted,
   pickUniqueWeighted,
   WeightedItem
-} from './weighted-rolls';
+} from '@giveaway/winners-model/weighted-rolls';
 import { ApplicationError } from '@giveaway/util-errors';
 import { nanoid } from 'nanoid';
-import { SweepstakesCriteriaSchema } from './criteria';
+import { SweepstakesCriteriaSchema } from '@giveaway/winners-model/criteria';
 
 export type PrizeDrawProps = {
   slots: PrizeSlot[];

@@ -1,4 +1,4 @@
-import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 import { WinnerCriteria } from './winner-criteria';
 
 export const Selection = () => (

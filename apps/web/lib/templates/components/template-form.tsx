@@ -22,7 +22,7 @@ import {
 } from 'next/navigation';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { updateTemplate } from '../procedures/update-template';
-import { UnifiedFormLayoutContextProvider } from '@/components/patterns/form-layout/use-unified-form-layout';
+import { UnifiedFormLayoutContextProvider } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import {
   TEMPLATE_FIELD_TO_STEP_MAP,
   isTemplateStepKey,
@@ -31,7 +31,7 @@ import {
   TEMPLATE_STEP_ORDER,
   TemplateStep
 } from '../data/steps';
-import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
+import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { TemplateFormContent } from './template-form-content';
 import { TemplatePreview } from './template-preview';
 import { TemplatePreviewFooter } from './template-preview-footer';

@@ -38,7 +38,7 @@ vi.mock('@/lib/integrations/procedures/get-bluesky-reposts', () => ({
   getBlueskyReposts: m.getBlueskyReposts
 }));
 
-vi.mock('@/lib/sweepstakes/twitter-import', () => ({
+vi.mock('@giveaway/x-import/twitter-import', () => ({
   importTwitterUsers: m.importTwitterUsers
 }));
 

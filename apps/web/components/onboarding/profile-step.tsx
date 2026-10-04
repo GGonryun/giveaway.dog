@@ -4,7 +4,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { Input } from '@giveaway/ui-primitives/input';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { ArrowLeft, User, AlertTriangle } from 'lucide-react';
-import { FileUpload } from '@/components/ui/file-upload';
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {

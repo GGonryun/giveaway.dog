@@ -11,7 +11,7 @@ import {
 import { Input } from '@giveaway/ui-primitives/input';
 import { Button } from '@giveaway/ui-primitives/button';
 import { PlusIcon, TrashIcon } from 'lucide-react';
-import { HelpDialog } from '@/components/patterns/help-dialog';
+import { HelpDialog } from '@giveaway/ui-layouts/help-dialog';
 import { useEffect } from 'react';
 
 const MAX_CODES = 10;

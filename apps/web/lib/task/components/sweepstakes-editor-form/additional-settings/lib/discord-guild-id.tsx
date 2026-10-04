@@ -9,7 +9,7 @@ import {
   FormMessage
 } from '@giveaway/ui-primitives/form';
 import { Input } from '@giveaway/ui-primitives/input';
-import { HelpDialog } from '@/components/patterns/help-dialog';
+import { HelpDialog } from '@giveaway/ui-layouts/help-dialog';
 import { DISCORD_PUBLIC_CHANNEL_URL } from '@giveaway/app-config/settings';
 import Link from 'next/link';
 import Image from 'next/image';

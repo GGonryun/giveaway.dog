@@ -19,8 +19,8 @@ import {
   UpdateUserProfile
 } from '@giveaway/user-model/user';
 import { useRouter } from 'next/navigation';
-import { SettingsCard } from '../settings/settings-card';
-import { FileUpload } from '../ui/file-upload';
+import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 
 export const UpdateProfileImage = () => {
   const user = useUser();

@@ -1,8 +1,8 @@
 import {
   SwitchBox,
   SwitchFormHeader
-} from '@/components/patterns/form-layout/switch-form-header';
-import { HelpDialogProps } from '@/components/patterns/help-dialog';
+} from '@giveaway/ui-layouts/form-layout/switch-form-header';
+import { HelpDialogProps } from '@giveaway/ui-layouts/help-dialog';
 import {
   Collapsible,
   CollapsibleContent

@@ -8,8 +8,8 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { MobileSuspense } from '@giveaway/ui-primitives/mobile-suspense';
-import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
-import { UnifiedFormLayoutContextProvider } from '@/components/patterns/form-layout/use-unified-form-layout';
+import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
+import { UnifiedFormLayoutContextProvider } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import {
   TWITTER_V2_PICKER_STEP_LABELS,
   TWITTER_V2_PICKER_STEP_ORDER,

@@ -22,7 +22,7 @@ import { useProcedure } from '@giveaway/rpc-client/hook';
 import regenerateInviteLink from '@/procedures/teams/regenerate-invite-link';
 import { toast } from 'sonner';
 import { TeamRole } from '@prisma/client';
-import { SettingsCard } from '@/components/settings/settings-card';
+import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 

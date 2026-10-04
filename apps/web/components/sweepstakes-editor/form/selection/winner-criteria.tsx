@@ -15,8 +15,8 @@ import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
   SwitchFormHeader
-} from '@/components/patterns/form-layout/switch-form-header';
-import { HelpDialog } from '@/components/patterns/help-dialog';
+} from '@giveaway/ui-layouts/form-layout/switch-form-header';
+import { HelpDialog } from '@giveaway/ui-layouts/help-dialog';
 import { BotEnforcementField } from '@giveaway/user-quality-ui/bot-enforcement-field';
 
 const MinTasksCompletedField = () => {

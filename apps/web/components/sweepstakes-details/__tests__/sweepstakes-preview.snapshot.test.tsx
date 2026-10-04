@@ -40,7 +40,7 @@ vi.mock('@/components/sweepstakes/giveaway-participation', () => ({
   default: vi.fn(() => <div>giveaway preview</div>)
 }));
 
-vi.mock('@/components/patterns/qr-code-modal', () => ({
+vi.mock('@giveaway/ui-qr/qr-code-modal', () => ({
   QRCodeModal: vi.fn(({ isOpen }: { isOpen: boolean }) =>
     isOpen ? <div>qr code modal</div> : null
   )

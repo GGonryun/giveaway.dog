@@ -8,7 +8,7 @@ import { User } from 'next-auth';
 import { findUserSweepstakes } from '@/procedures/sweepstakes/shared';
 import { ApplicationError } from '@giveaway/util-errors';
 
-import { SweepstakesCriteriaSchema } from './criteria';
+import { SweepstakesCriteriaSchema } from '@giveaway/winners-model/criteria';
 import { toCompletionValue } from '../task/entries';
 import { toTaskSchema } from '../task/schemas';
 import { TeamPermission } from '@giveaway/team-permissions';

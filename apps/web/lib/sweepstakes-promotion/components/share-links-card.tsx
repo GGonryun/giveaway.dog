@@ -1,4 +1,4 @@
-import { QRCodeModal } from '@/components/patterns/qr-code-modal';
+import { QRCodeModal } from '@giveaway/ui-qr/qr-code-modal';
 import { Button } from '@giveaway/ui-primitives/button';
 import {
   Card,

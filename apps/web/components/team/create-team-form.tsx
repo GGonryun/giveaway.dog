@@ -11,8 +11,8 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@giveaway/ui-primitives/dialog';
-import { FileUpload } from '@/components/ui/file-upload';
-import { HelpDialog } from '@/components/patterns/help-dialog';
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
+import { HelpDialog } from '@giveaway/ui-layouts/help-dialog';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {

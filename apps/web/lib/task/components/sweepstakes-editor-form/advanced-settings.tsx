@@ -16,7 +16,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import {
   SwitchBox,
   SwitchFormHeader
-} from '@/components/patterns/form-layout/switch-form-header';
+} from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import { Input } from '@giveaway/ui-primitives/input';
 import {

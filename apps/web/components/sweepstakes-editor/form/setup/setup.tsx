@@ -14,7 +14,7 @@ import { GiveawayFormSchema } from '@/schemas/giveaway/schemas';
 import React, { memo, useMemo } from 'react';
 
 import { TermsAndConditions } from './terms';
-import { DateTimePicker } from '@/components/ui/date-time-picker';
+import { DateTimePicker } from '@giveaway/ui-date/date-time-picker';
 import {
   Select,
   SelectContent,
@@ -24,10 +24,10 @@ import {
 } from '@giveaway/ui-primitives/select';
 import { timezone } from '@giveaway/util-time/time';
 
-import { FileUpload } from '@/components/ui/file-upload';
-import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';
-import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
-import { UnifiedSectionHeader } from '@/components/patterns/form-layout/section-header';
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
+import { MinimalTiptap } from '@giveaway/ui-rich-text/minimal-tiptap-editor';
+import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
 
 export const Setup = () => {
   const form = useFormContext<GiveawayFormSchema>();

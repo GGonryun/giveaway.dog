@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import { SocialPlatformsCarousel } from './social-platforms-carousel';
 import { MarketingHeader } from './shared';
 import { getServerTheme } from '@giveaway/theme-server/get-server-theme';
-import { AvatarGroupEasterEgg } from './avatar-group-easter-egg';
+import { AvatarGroupEasterEgg } from '@giveaway/ui-brand/avatar-group-easter-egg';
 
 const HOST_COUNT = 'over 30';
 const HOSTS = [

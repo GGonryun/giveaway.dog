@@ -45,8 +45,8 @@ import {
   DEFAULT_CLAIM_DEADLINE_DAYS
 } from '@/schemas/giveaway/defaults';
 import { date } from '@giveaway/util-time/date';
-import { useUnifiedFormLayout } from '@/components/patterns/form-layout/use-unified-form-layout';
-import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';
+import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
+import { MinimalTiptap } from '@giveaway/ui-rich-text/minimal-tiptap-editor';
 
 const OPTIONS: Record<SweepstakesTermsType, string> = {
   [SweepstakesTermsType.TEMPLATE]: 'Default',

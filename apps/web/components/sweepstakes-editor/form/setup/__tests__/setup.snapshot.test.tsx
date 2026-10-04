@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { FileUploadProps } from '@/components/ui/file-upload';
+import type { FileUploadProps } from '@giveaway/ui-file-upload/file-upload';
 import {
   buildFormValues,
   LayoutValue,
@@ -27,7 +27,7 @@ vi.mock('@giveaway/util-time/time', async (importOriginal) => {
   };
 });
 
-vi.mock('@/components/ui/minimal-tiptap-editor', () => ({
+vi.mock('@giveaway/ui-rich-text/minimal-tiptap-editor', () => ({
   MinimalTiptap: ({
     content,
     onChange,
@@ -45,7 +45,7 @@ vi.mock('@/components/ui/minimal-tiptap-editor', () => ({
   )
 }));
 
-vi.mock('@/components/ui/file-upload', () => ({
+vi.mock('@giveaway/ui-file-upload/file-upload', () => ({
   FileUpload: ({ initialUrl, isDemo, onUpload }: FileUploadProps) => (
     <div role="group" aria-label="Banner upload">
       <span>{isDemo ? 'Demo uploads' : 'Live uploads'}</span>

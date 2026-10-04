@@ -16,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@giveaway/ui-primitives/select';
-import { MinimalTiptap } from '@/components/ui/minimal-tiptap-editor';
-import { HelpDialog } from '@/components/patterns/help-dialog';
+import { MinimalTiptap } from '@giveaway/ui-rich-text/minimal-tiptap-editor';
+import { HelpDialog } from '@giveaway/ui-layouts/help-dialog';
 
 export const SubmitMediaFormFields: React.FC = () => {
   const index = useArrayContext();

@@ -8,12 +8,12 @@ import {
   SelectTrigger,
   SelectValue
 } from '@giveaway/ui-primitives/select';
-import { FileUpload } from '@/components/ui/file-upload';
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
   SwitchFormHeader
-} from '@/components/patterns/form-layout/switch-form-header';
+} from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { useFormContext } from 'react-hook-form';

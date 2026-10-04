@@ -17,7 +17,7 @@ import {
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { date } from '@giveaway/util-time/date';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
-import { MinimalTipTapPreview } from '../ui/minimal-tiptap-preview';
+import { MinimalTipTapPreview } from '@giveaway/ui-rich-text/minimal-tiptap-preview';
 
 interface TermsModalProps {
   children: React.ReactNode;

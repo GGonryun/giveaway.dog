@@ -1,7 +1,7 @@
 import {
   SiteHeaderWithTrigger,
   SiteHeaderProps
-} from '@/components/patterns/app-sidebar/site-header';
+} from '@giveaway/ui-layouts/site-header';
 import { cn } from '@giveaway/ui-utils/utils';
 
 export const Outline: React.PC<

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { SettingsCard } from '@/components/settings/settings-card';
+import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Input } from '@giveaway/ui-primitives/input';
 import {

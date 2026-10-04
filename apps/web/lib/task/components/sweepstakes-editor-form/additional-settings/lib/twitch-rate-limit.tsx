@@ -18,7 +18,7 @@ import {
 import {
   SwitchBox,
   SwitchFormHeader
-} from '@/components/patterns/form-layout/switch-form-header';
+} from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import { TwitchChatImportTaskSchema } from '@/lib/task/schemas';
 

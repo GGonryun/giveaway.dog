@@ -17,7 +17,7 @@ import {
 } from '@giveaway/ui-primitives/alert';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import Link from 'next/link';
-import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
+import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 
 interface TwitterV2PublishConfirmationModalProps {
   open: boolean;

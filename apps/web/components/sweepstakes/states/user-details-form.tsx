@@ -21,7 +21,7 @@ import {
   xProfileRefineError,
   xProfileRefineUrl
 } from '@giveaway/x-model/twitter';
-import { HelpDialog } from '@/components/patterns/help-dialog';
+import { HelpDialog } from '@giveaway/ui-layouts/help-dialog';
 import { assertNever } from '@giveaway/util-errors';
 import { ArrowRight } from 'lucide-react';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';

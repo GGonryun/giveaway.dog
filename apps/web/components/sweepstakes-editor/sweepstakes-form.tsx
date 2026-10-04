@@ -24,7 +24,7 @@ import updateSweepstakes from '@/procedures/sweepstakes/update-sweepstakes';
 import publishSweepstakes from '@/procedures/sweepstakes/publish-sweepstakes';
 import { PreviewStateContext } from './contexts/preview-state-context';
 
-import { UnifiedFormLayoutContextProvider } from '../patterns/form-layout/use-unified-form-layout';
+import { UnifiedFormLayoutContextProvider } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import {
   SWEEPSTAKE_FIELD_TO_STEP_MAP,
@@ -35,7 +35,7 @@ import {
   SweepstakeStep
 } from './data/steps';
 import { SweepstakesPreviewFooter } from './sweepstakes-preview-footer';
-import { UnifiedFormAction } from '../patterns/form-layout/types';
+import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { SweepstakeFormContent } from './sweepstake-form-content';
 import { CancelConfirmationModal } from '../sweepstakes/cancel-confirmation-modal';
 import { PublishConfirmationModal } from './publish-confirmation-modal';

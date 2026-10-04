@@ -15,10 +15,10 @@ import {
   AlertTitle
 } from '@giveaway/ui-primitives/alert';
 import { AlertCircleIcon, ImageIcon } from 'lucide-react';
-import { FileUpload } from '@/components/ui/file-upload';
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 import { AcceptedFileTypes, FileSize } from '@giveaway/util-media/files';
 import { useGiveawayParticipation } from '@/components/sweepstakes/giveaway-participation-context';
-import { MinimalTipTapPreview } from '@/components/ui/minimal-tiptap-preview';
+import { MinimalTipTapPreview } from '@giveaway/ui-rich-text/minimal-tiptap-preview';
 
 export const SubmitMediaTaskActionForm: React.FC<
   TaskActionProps<SubmitMediaTaskSchema>

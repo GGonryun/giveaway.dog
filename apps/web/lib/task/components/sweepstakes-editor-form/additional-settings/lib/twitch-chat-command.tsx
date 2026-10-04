@@ -9,7 +9,7 @@ import {
   FormDescription
 } from '@giveaway/ui-primitives/form';
 import { Input } from '@giveaway/ui-primitives/input';
-import { SwitchFormHeader } from '@/components/patterns/form-layout/switch-form-header';
+import { SwitchFormHeader } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { useParams } from 'next/navigation';
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useTwitchTriggerValidation } from '@/lib/task/hooks/use-twitch-trigger-validation';

@@ -6,7 +6,7 @@ import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   buildAllocation,
   buildCriteriaRow
-} from '../../__tests__/fixtures-winners-model';
+} from '@giveaway/winners-model/testing/fixtures-winners-model';
 import {
   buildCompletion,
   buildTeamSweepstakes,

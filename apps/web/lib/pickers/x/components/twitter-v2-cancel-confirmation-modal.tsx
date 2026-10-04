@@ -12,7 +12,7 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { InfoIcon, SaveIcon, TrashIcon } from 'lucide-react';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import Link from 'next/link';
-import { UnifiedFormAction } from '@/components/patterns/form-layout/types';
+import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 import { DEFAULT_TWITTER_V2_PICKER_NAME } from '@giveaway/x-picker-model/defaults';
 
 interface TwitterV2CancelConfirmationModalProps {

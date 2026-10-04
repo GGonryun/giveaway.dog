@@ -23,7 +23,7 @@ import {
 } from '@giveaway/ui-primitives/alert';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import login from '../procedures/login';
-import { SettingsCard } from '@/components/settings/settings-card';
+import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 import { useState } from 'react';
 import { BlueskyConnectForm } from './bluesky-connect-form';
 import { InstagramConnectForm } from './instagram-connect-form';

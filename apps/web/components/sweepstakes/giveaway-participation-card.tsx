@@ -11,7 +11,7 @@ import { DeviceType, GiveawayState } from '@/schemas/giveaway/schemas';
 import { cn } from '@giveaway/ui-utils/utils';
 import { date } from '@giveaway/util-time/date';
 import { getSweepstakesTimingDescription } from '@/schemas/sweepstakes';
-import { MinimalTipTapPreview } from '@/components/ui/minimal-tiptap-preview';
+import { MinimalTipTapPreview } from '@giveaway/ui-rich-text/minimal-tiptap-preview';
 import { PLATFORM_ICONS } from '@/components/social-links/social-link-icon';
 import {
   parseSocialLinks,

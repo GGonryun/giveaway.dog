@@ -27,7 +27,7 @@ import { Plus, Trash2, Link2 } from 'lucide-react';
 import { InviteLinkModal } from './invite-link-modal';
 import { TeamRole } from '@prisma/client';
 import z from 'zod';
-import { SettingsCard } from '../settings/settings-card';
+import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
 
 const inviteFormSchema = z.object({
   invitations: z.array(
