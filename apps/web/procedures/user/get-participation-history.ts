@@ -1,6 +1,6 @@
 'use server';
 
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { participationHistorySchema } from '@/schemas/participation-history';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import z from 'zod';

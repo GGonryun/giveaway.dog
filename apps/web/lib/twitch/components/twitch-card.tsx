@@ -8,9 +8,9 @@ import { ExternalLink } from 'lucide-react';
 import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
 import { IntegrationSchema } from '@giveaway/integration-model/schemas';
-import { IntegrationStatusAlert } from '@/lib/integrations/components/integration-status-alert';
+import { IntegrationStatusAlert } from '@giveaway/integration-ui/integration-status-alert';
 import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';
-import { IntegrationCardHeader } from '@/lib/integrations/components/integration-card-header';
+import { IntegrationCardHeader } from '@giveaway/integration-ui/integration-card-header';
 import { TwitchIntegrationSettings } from '@giveaway/twitch-model/integration';
 import {
   TWITCH_FEATURE_LABEL,

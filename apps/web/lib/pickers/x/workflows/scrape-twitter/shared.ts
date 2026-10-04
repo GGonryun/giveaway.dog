@@ -1,1 +1,1 @@
-export { toTwitterPickerUsers, toTwitterPost } from '@/lib/scrapebadger/utils';
+export { toTwitterPickerUsers, toTwitterPost } from '@giveaway/x-scraper/utils';

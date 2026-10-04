@@ -20,7 +20,7 @@ const m = vi.hoisted(() => ({
   tokenOptions: [] as unknown[]
 }));
 
-vi.mock('@/lib/auth/config', () => ({ auth: m.auth }));
+vi.mock('@giveaway/auth-server/config', () => ({ auth: m.auth }));
 
 vi.mock('@vercel/blob/client', () => ({ handleUpload: m.handleUpload }));
 

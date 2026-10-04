@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth/config';
+import { auth } from '@giveaway/auth-server/config';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { del } from '@vercel/blob';
 import { NextResponse } from 'next/server';

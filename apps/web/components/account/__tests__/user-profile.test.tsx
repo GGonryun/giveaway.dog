@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserAccountType, UserSource } from '@prisma/client';
-import { UserProvider } from '@/components/context/user-provider';
+import { UserProvider } from '@giveaway/account-context/user-provider';
 import type { UserSchema } from '@giveaway/user-model/user';
 import { UserSettings } from '../user-profile';
 

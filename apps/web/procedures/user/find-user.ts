@@ -1,6 +1,6 @@
 'use server';
 
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { userSchema } from '@giveaway/user-model/user';
 import { getUserQuery } from './shared';
 import { z } from 'zod';

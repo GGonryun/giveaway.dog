@@ -1,11 +1,11 @@
 'use server';
 
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { parseProvider, blueskyHandleSchema } from '@giveaway/user-model/user';
 import { AuthError } from 'next-auth';
 import z from 'zod';
-import { signIn } from '../config';
+import { signIn } from '@giveaway/auth-server/config';
 import { IdentityProvider } from '@prisma/client';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@giveaway/integration-model/providers';
 import { redirect } from 'next/navigation';

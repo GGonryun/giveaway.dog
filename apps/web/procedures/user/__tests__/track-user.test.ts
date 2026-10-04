@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { UserEventType } from '@prisma/client';
 import trackUser from '../track-user';
-import { ip } from '@/lib/ip';
+import { ip } from '@giveaway/request-context-server/ip';
 import { ApplicationError } from '@giveaway/util-errors';
 import { DEVELOPMENT_GEO } from '@giveaway/request-context-model/fingerprint';
 import { prismaMock } from '@giveaway/testing-server/prisma';

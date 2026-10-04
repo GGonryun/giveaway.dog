@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { IdentityProvider, UserAccountType, UserSource } from '@prisma/client';
 import { toast } from 'sonner';
 import updateProfile from '@/procedures/user/update-profile';
-import { UserProvider } from '@/components/context/user-provider';
+import { UserProvider } from '@giveaway/account-context/user-provider';
 import type { UserSchema } from '@giveaway/user-model/user';
 import { UpdatePreferredContact } from '../update-preferred-contact';
 

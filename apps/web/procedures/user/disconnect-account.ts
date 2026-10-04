@@ -5,7 +5,7 @@ import {
   IDENTITY_PROVIDER_TO_AUTH_PROVIDER,
   identityProviderSchema
 } from '@giveaway/integration-model/providers';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 
 export const updateEmail = procedure()

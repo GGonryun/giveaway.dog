@@ -16,7 +16,7 @@ const mocks = vi.hoisted(() => {
 
 vi.mock('workflow', () => ({ FatalError: mocks.FatalError }));
 
-vi.mock('@/lib/scrapebadger/procedures/get-tweet', () => ({
+vi.mock('@giveaway/x-scraper/procedures/get-tweet', () => ({
   getTweet: mocks.getTweet
 }));
 

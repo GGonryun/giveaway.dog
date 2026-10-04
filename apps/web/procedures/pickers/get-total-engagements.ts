@@ -1,6 +1,6 @@
 'use server';
 
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import {
   X_PICKER_LIKES_KEY,
   X_PICKER_RETWEETS_KEY,

@@ -2,7 +2,7 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { listChannelSnippetSchema } from '@giveaway/youtube-model/youtube';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 
 interface YouTubeChannelParams {

@@ -1,11 +1,11 @@
 'use server';
 
-import { OrbitingPlatformsSection } from '../marketing/orbiting-platforms';
-import { UnifiedPlatformSection } from '../marketing/unified-platform-visual';
+import { OrbitingPlatformsSection } from '@giveaway/marketing-animations/orbiting-platforms';
+import { UnifiedPlatformSection } from '@giveaway/marketing-animations/unified-platform-visual';
 import { getServerTheme } from '@giveaway/theme-server/get-server-theme';
-import { BotCarouselSection } from '../marketing/bot-carousel';
-import { EntryMethodsCarouselSection } from '../marketing/entry-methods-carousel';
-import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
+import { BotCarouselSection } from '@giveaway/marketing-animations/bot-carousel';
+import { EntryMethodsCarouselSection } from '@giveaway/marketing-animations/entry-methods-carousel';
+import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
 
 export const FeaturesSection = async () => {
   const theme = await getServerTheme();

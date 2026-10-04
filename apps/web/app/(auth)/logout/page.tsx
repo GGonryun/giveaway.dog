@@ -1,6 +1,6 @@
 'use server';
 
-import { auth, signOut } from '@/lib/auth/config';
+import { auth, signOut } from '@giveaway/auth-server/config';
 import { LogoutScreen } from './logout-screen';
 import { Metadata } from 'next';
 

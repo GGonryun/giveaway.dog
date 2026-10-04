@@ -5,7 +5,7 @@ import {
   GET_TEAM_SELECT,
   toDetailedUserTeam
 } from '@giveaway/team-model/teams';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { TeamRole } from '@prisma/client';
 
 const getUserTeams = procedure()

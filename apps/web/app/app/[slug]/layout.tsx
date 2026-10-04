@@ -2,7 +2,7 @@ import getUser from '@/procedures/user/get-user';
 import getUserTeam from '@/procedures/teams/get-user-team';
 import getUserTeams from '@/procedures/teams/get-user-teams';
 import { TeamsProvider } from '@/components/context/team-provider';
-import { UserProvider } from '@/components/context/user-provider';
+import { UserProvider } from '@giveaway/account-context/user-provider';
 import { redirect } from 'next/navigation';
 import { TeamPageProps } from '@/schemas/pages';
 

@@ -5,7 +5,7 @@ import { Mail, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { DISCORD_INVITE_LINK } from '@giveaway/app-config/settings';
 import type { Metadata } from 'next';
-import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
+import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
 
 export const metadata: Metadata = {
   title: 'Support & Help Center | Giveaway.dog',

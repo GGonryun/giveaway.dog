@@ -25,11 +25,11 @@ vi.mock('workflow', () => ({
   sleep: mocks.sleep
 }));
 
-vi.mock('@/lib/scrapebadger/procedures/get-tweet', () => ({
+vi.mock('@giveaway/x-scraper/procedures/get-tweet', () => ({
   getTweet: mocks.getTweet
 }));
 
-vi.mock('@/lib/scrapebadger/procedures/get-retweeters', () => ({
+vi.mock('@giveaway/x-scraper/procedures/get-retweeters', () => ({
   getRetweeters: mocks.getRetweeters,
   getRetweetersUntil: mocks.getRetweetersUntil
 }));

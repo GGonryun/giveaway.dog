@@ -2,7 +2,7 @@
 
 import { getLoyalty } from '@/lib/loyalty/db';
 import { userHostRelationshipSchema } from '@/lib/loyalty/schemas';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 
 import z from 'zod';
 

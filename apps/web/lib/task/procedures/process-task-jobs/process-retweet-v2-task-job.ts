@@ -1,5 +1,5 @@
-import { getRetweetersUntilUser } from '@/lib/scrapebadger/procedures/get-retweeters';
-import { extractTweetId, toTwitterUserSchema } from '@/lib/scrapebadger/utils';
+import { getRetweetersUntilUser } from '@giveaway/x-scraper/procedures/get-retweeters';
+import { extractTweetId, toTwitterUserSchema } from '@giveaway/x-scraper/utils';
 import { importTwitterUsers } from '@giveaway/x-import/twitter-import';
 import {
   TASK_JOB_DATA_SCHEMA,

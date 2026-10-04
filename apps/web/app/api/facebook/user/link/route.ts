@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import prisma from '@giveaway/db-client/prisma';
-import { auth } from '@/lib/auth/config';
+import { auth } from '@giveaway/auth-server/config';
 import { redirect } from 'next/navigation';
 
 export async function GET(req: NextRequest) {

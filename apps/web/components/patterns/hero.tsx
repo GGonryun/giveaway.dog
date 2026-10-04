@@ -3,8 +3,8 @@
 import { HeroSweepstakesPreview } from './hero-sweepstakes-preview';
 import { Suspense } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { SocialPlatformsCarousel } from './social-platforms-carousel';
-import { MarketingHeader } from './shared';
+import { SocialPlatformsCarousel } from '@giveaway/marketing-ui/social-platforms-carousel';
+import { MarketingHeader } from '@giveaway/marketing-ui/shared';
 import { getServerTheme } from '@giveaway/theme-server/get-server-theme';
 import { AvatarGroupEasterEgg } from '@giveaway/ui-brand/avatar-group-easter-egg';
 

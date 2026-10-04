@@ -11,7 +11,7 @@ import {
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 import { BlueskyEmbed } from './shared';
-import { blueskyPostRefineUrl } from '@/lib/integrations/schemas/bluesky-helpers';
+import { blueskyPostRefineUrl } from '@giveaway/bluesky-model/bluesky-helpers';
 import { cn } from '@giveaway/ui-utils/utils';
 
 export const BlueskyRepostTaskActionForm: React.FC<

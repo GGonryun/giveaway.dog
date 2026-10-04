@@ -35,7 +35,7 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@giveaway/ui-primitives/sidebar';
-import { useUser } from '@/components/context/user-provider';
+import { useUser } from '@giveaway/account-context/user-provider';
 import Link from 'next/link';
 import { useAccountPage } from '@/components/account/use-account-page';
 import { useLogout } from '@/lib/auth/hooks/use-logout';

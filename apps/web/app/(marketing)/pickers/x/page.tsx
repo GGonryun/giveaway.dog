@@ -1,5 +1,5 @@
 import { PublicXPickerForm } from '@/lib/pickers/x/components/public-x-picker-form';
-import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
+import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
 import { PickerHowItWorksSection } from '@/lib/pickers/x/components/picker-how-it-works-section';
 import { PickerBenefitsSection } from '@/lib/pickers/x/components/picker-benefits-section';
 import { PickerFaqSection } from '@/lib/pickers/x/components/picker-faq-section';

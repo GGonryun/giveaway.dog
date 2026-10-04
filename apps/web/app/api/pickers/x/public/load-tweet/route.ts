@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getTweetCached } from '@/lib/scrapebadger/procedures/get-tweet-cached';
-import { getUserCached } from '@/lib/scrapebadger/procedures/get-user-cached';
+import { getTweetCached } from '@giveaway/x-scraper/procedures/get-tweet-cached';
+import { getUserCached } from '@giveaway/x-scraper/procedures/get-user-cached';
 import {
   calculateApiCalls,
   estimateDuration
 } from '@giveaway/x-picker-model/calculate-api-calls';
 import type { Tweet } from 'scrapebadger';
 import { ApplicationError } from '@giveaway/util-errors';
-import { checkAndConsumeCredits } from '@/lib/scrapebadger/credits';
-import { CREDIT_COSTS } from '@/lib/scrapebadger/settings';
+import { checkAndConsumeCredits } from '@giveaway/x-scraper/credits';
+import { CREDIT_COSTS } from '@giveaway/x-scraper/settings';
 import prisma from '@giveaway/db-client/prisma';
 import {
   X_PICKER_LIKES_KEY,

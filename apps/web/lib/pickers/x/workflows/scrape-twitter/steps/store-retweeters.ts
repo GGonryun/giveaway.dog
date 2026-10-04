@@ -2,7 +2,7 @@ import prisma from '@giveaway/db-client/prisma';
 import {
   getRetweeters,
   getRetweetersUntil
-} from '@/lib/scrapebadger/procedures/get-retweeters';
+} from '@giveaway/x-scraper/procedures/get-retweeters';
 import { FatalError } from 'workflow';
 import { toTwitterPickerUsers } from '../shared';
 

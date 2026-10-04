@@ -17,7 +17,7 @@ const m = vi.hoisted(() => ({
   importTwitterUsers: vi.fn()
 }));
 
-vi.mock('@/lib/scrapebadger/procedures/get-retweeters', () => ({
+vi.mock('@giveaway/x-scraper/procedures/get-retweeters', () => ({
   getRetweeters: vi.fn(),
   getRetweetersUntil: vi.fn(),
   getRetweetersUntilUser: m.getRetweetersUntilUser,

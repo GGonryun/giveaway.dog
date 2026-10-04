@@ -5,8 +5,8 @@ import { createId } from '@paralleldrive/cuid2';
 import { Agent } from '@atproto/api';
 import { REQUIRED_BLUESKY_SCOPES } from '@giveaway/integration-model/scopes';
 import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
-import { auth, signIn } from '@/lib/auth/config';
-import { createBlueskyLoginToken } from '@/lib/auth/bluesky-login-token';
+import { auth, signIn } from '@giveaway/auth-server/config';
+import { createBlueskyLoginToken } from '@giveaway/auth-server/bluesky-login-token';
 import { redirect } from 'next/navigation';
 import { UserSource } from '@prisma/client';
 

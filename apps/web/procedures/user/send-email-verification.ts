@@ -3,7 +3,7 @@
 import { newEmailClient, NO_REPLY_EMAIL } from '@giveaway/email/client';
 import { getVerificationEmailContent } from '@giveaway/email/templates';
 import { ApplicationError } from '@giveaway/util-errors';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { createHash, randomBytes } from 'crypto';
 import { addMinutes } from 'date-fns';
 import z from 'zod';

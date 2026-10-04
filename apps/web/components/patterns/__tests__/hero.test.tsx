@@ -10,7 +10,7 @@ vi.mock('@giveaway/theme-server/get-server-theme', () => ({
   getServerTheme: mocks.getServerTheme
 }));
 
-vi.mock('../social-platforms-carousel', () => ({
+vi.mock('@giveaway/marketing-ui/social-platforms-carousel', () => ({
   SocialPlatformsCarousel: ({ initialTheme }: { initialTheme: string }) => (
     <div>Platforms carousel ({initialTheme})</div>
   )

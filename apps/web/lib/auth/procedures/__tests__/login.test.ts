@@ -37,7 +37,7 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('@/lib/auth/config', () => ({
+vi.mock('@giveaway/auth-server/config', () => ({
   signIn: mocks.signIn,
   signOut: vi.fn(),
   auth: vi.fn(),

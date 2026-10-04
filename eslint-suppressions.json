@@ -19,11 +19,6 @@
       "count": 2
     }
   },
-  "apps/web/components/patterns/pricing-section.tsx": {
-    "react/jsx-key": {
-      "count": 2
-    }
-  },
   "apps/web/components/sweepstakes-details/sweepstakes-analytics-skeleton.tsx": {
     "react-hooks/purity": {
       "count": 1
@@ -79,11 +74,6 @@
       "count": 2
     }
   },
-  "apps/web/lib/auth/config.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "apps/web/lib/bluesky/bluesky-client.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -132,21 +122,6 @@
   "apps/web/lib/integrations/procedures/create-skeet.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "apps/web/lib/marketing/orbiting-platforms.tsx": {
-    "react-hooks/purity": {
-      "count": 1
-    }
-  },
-  "apps/web/lib/mrpc/errors.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
-  "apps/web/lib/mrpc/procedures.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 16
     }
   },
   "apps/web/lib/participant/db.ts": {

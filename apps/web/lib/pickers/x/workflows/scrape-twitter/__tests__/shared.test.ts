@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import type { Tweet, User } from 'scrapebadger';
 import { toTwitterPickerUsers, toTwitterPost } from '../shared';
-import * as scrapebadgerUtils from '@/lib/scrapebadger/utils';
+import * as scrapebadgerUtils from '@giveaway/x-scraper/utils';
 
 const NOW = new Date('2025-06-15T12:00:00.000Z');
 

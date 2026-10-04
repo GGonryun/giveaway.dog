@@ -5,7 +5,7 @@ import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const mocks = vi.hoisted(() => ({ signOut: vi.fn() }));
 
-vi.mock('@/lib/auth/config', () => ({
+vi.mock('@giveaway/auth-server/config', () => ({
   signIn: vi.fn(),
   signOut: mocks.signOut,
   auth: vi.fn(),

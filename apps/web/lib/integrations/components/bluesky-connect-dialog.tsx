@@ -20,7 +20,7 @@ import { useForm } from 'react-hook-form';
 import {
   blueskyProfileRefineUrl,
   blueskyProfileRefineError
-} from '../schemas/bluesky-helpers';
+} from '@giveaway/bluesky-model/bluesky-helpers';
 
 interface BlueskyConnectDialogProps<T extends string> {
   open: boolean;

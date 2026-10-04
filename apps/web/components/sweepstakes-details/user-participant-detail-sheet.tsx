@@ -31,7 +31,7 @@ import {
   QUALITY_LABELS
 } from '@giveaway/user-quality-model/quality';
 import { QUALITY_BADGE_VARIANT } from '@giveaway/user-quality-ui/display';
-import { UserProviders } from '@/lib/integrations/components/user-providers';
+import { UserProviders } from '@giveaway/integration-ui/user-providers';
 import { UserStatusBadge } from '@/lib/user/components/user-status-badge';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';

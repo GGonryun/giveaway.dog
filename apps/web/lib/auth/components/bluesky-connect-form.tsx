@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   blueskyLoginFormSchema,
   BlueskyLoginFormSchema
-} from '../schemas/bluesky';
+} from '@giveaway/bluesky-model/bluesky';
 import {
   Form,
   FormControl,

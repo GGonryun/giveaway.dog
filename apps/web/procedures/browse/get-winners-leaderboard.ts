@@ -1,6 +1,6 @@
 'use server';
 
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { WINNERS_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { winnerLeaderboardSchema } from '@giveaway/leaderboard-model/winners';

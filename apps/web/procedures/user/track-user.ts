@@ -2,8 +2,8 @@
 
 import { headers, cookies } from 'next/headers';
 
-import { procedure } from '@/lib/mrpc/procedures';
-import { ip } from '@/lib/ip';
+import { procedure } from '@giveaway/rpc-server/procedures';
+import { ip } from '@giveaway/request-context-server/ip';
 import { UserEventType } from '@prisma/client';
 import {
   UNKNOWN_ACCEPTED_LANGUAGE,

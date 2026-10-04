@@ -9,7 +9,7 @@ import {
   FormMessage
 } from '@giveaway/ui-primitives/form';
 import { Input } from '@giveaway/ui-primitives/input';
-import { useUser } from '@/components/context/user-provider';
+import { useUser } from '@giveaway/account-context/user-provider';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateProfile from '@/procedures/user/update-profile';
 import { toast } from 'sonner';

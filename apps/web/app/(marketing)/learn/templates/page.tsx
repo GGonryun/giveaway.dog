@@ -1,5 +1,5 @@
-import { MarketingHeader } from '@/components/patterns/shared';
-import { CallToAction } from '@/components/patterns/pricing-cta';
+import { MarketingHeader } from '@giveaway/marketing-ui/shared';
+import { CallToAction } from '@giveaway/marketing-ui/pricing-cta';
 import { TemplatesShowcase } from '@/lib/learn/templates-showcase';
 
 export default function TemplatesPage() {

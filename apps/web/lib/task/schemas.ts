@@ -19,7 +19,7 @@ import {
   blueskyPostRefineUrl,
   blueskyProfileRefineError,
   blueskyProfileRefineUrl
-} from '../integrations/schemas/bluesky-helpers';
+} from '@giveaway/bluesky-model/bluesky-helpers';
 import { profile } from 'console';
 
 export const baseTaskSchema = z.object({

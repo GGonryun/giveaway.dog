@@ -1,7 +1,7 @@
 'use server';
 
 import getUserTeams from './get-user-teams';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 

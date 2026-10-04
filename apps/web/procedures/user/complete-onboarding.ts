@@ -1,7 +1,7 @@
 'use server';
 
 import { ApplicationError } from '@giveaway/util-errors';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { completeOnboardingSchema } from '@giveaway/user-model/onboarding';
 import z from 'zod';
 

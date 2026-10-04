@@ -7,7 +7,7 @@ const m = vi.hoisted(() => ({
   POST: vi.fn()
 }));
 
-vi.mock('@/lib/auth/config', () => ({
+vi.mock('@giveaway/auth-server/config', () => ({
   handlers: { GET: m.GET, POST: m.POST },
   auth: vi.fn(),
   signIn: vi.fn(),

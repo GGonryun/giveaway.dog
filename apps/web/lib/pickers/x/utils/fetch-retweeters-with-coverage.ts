@@ -1,5 +1,5 @@
-import { getTweetCached } from '@/lib/scrapebadger/procedures/get-tweet-cached';
-import { getRetweetersUntilCached } from '@/lib/scrapebadger/procedures/get-retweeters-cached';
+import { getTweetCached } from '@giveaway/x-scraper/procedures/get-tweet-cached';
+import { getRetweetersUntilCached } from '@giveaway/x-scraper/procedures/get-retweeters-cached';
 import { calculateApiCalls } from '@giveaway/x-picker-model/calculate-api-calls';
 
 interface FetchRetweetersResult {

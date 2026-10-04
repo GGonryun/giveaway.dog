@@ -2,7 +2,7 @@
 
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { ProfileInformationCard } from './profile-information-card';
-import { UserProviders } from '@/lib/integrations/components/user-providers';
+import { UserProviders } from '@giveaway/integration-ui/user-providers';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
 import type { UserSignals } from '@/procedures/user/get-user-signals';

@@ -15,7 +15,7 @@ import {
   IntegrationSchema,
   hasFeature
 } from '@giveaway/integration-model/schemas';
-import { IntegrationStatusAlert } from './integration-status-alert';
+import { IntegrationStatusAlert } from '@giveaway/integration-ui/integration-status-alert';
 import { BlueskyDisconnectDialog } from './bluesky-disconnect-dialog';
 import { BlueskyConnectDialog } from './bluesky-connect-dialog';
 import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';
@@ -24,7 +24,7 @@ import {
   toBlueskyScope,
   type BlueskyFeatureSchema
 } from '@giveaway/integration-model/scopes';
-import { IntegrationCardHeader } from './integration-card-header';
+import { IntegrationCardHeader } from '@giveaway/integration-ui/integration-card-header';
 
 interface BlueskyCardProps {
   integration?: IntegrationSchema;

@@ -1,4 +1,4 @@
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import {
   TASK_COMPLETIONS_SELECT_QUERY,
   taskCompletionSchema,

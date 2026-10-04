@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useUser } from '@/components/context/user-provider';
+import { useUser } from '@giveaway/account-context/user-provider';
 import { EmailVerification } from '../auth/email-verification';
 import { SocialProviders } from '@/lib/auth/components/social-providers';
 import { UpdateProfileImage } from './update-profile-image';

@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { SidebarProvider } from '@giveaway/ui-primitives/sidebar';
 import { TeamsProvider } from '@/components/context/team-provider';
-import { UserProvider } from '@/components/context/user-provider';
+import { UserProvider } from '@giveaway/account-context/user-provider';
 import { DetailedUserTeam } from '@giveaway/team-model/teams';
 import { UserSchema } from '@giveaway/user-model/user';
 

@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth/config';
+import { auth } from '@giveaway/auth-server/config';
 import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
 import { Metadata } from 'next';
 import { date } from '@giveaway/util-time/date';

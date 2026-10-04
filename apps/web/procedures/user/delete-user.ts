@@ -1,7 +1,7 @@
 'use server';
 
-import { signOut } from '@/lib/auth/config';
-import { procedure } from '@/lib/mrpc/procedures';
+import { signOut } from '@giveaway/auth-server/config';
+import { procedure } from '@giveaway/rpc-server/procedures';
 
 const deleteUser = procedure()
   .authorization({ required: true })

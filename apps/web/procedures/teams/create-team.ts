@@ -1,7 +1,7 @@
 'use server';
 
 import { createTeamInputSchema } from '@giveaway/team-model/teams';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
 

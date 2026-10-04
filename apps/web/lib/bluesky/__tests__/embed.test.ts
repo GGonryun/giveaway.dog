@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { BLUESKY_EMBED_SCRIPT_URL } from '../embed';
+import { BLUESKY_EMBED_SCRIPT_URL } from '@giveaway/bluesky-model/embed';
 
 describe('BLUESKY_EMBED_SCRIPT_URL', () => {
   it('points at the official bluesky embed script', () => {

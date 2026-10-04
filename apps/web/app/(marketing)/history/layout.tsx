@@ -1,4 +1,4 @@
-import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
+import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@giveaway/ui-primitives/card';
-import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
+import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
 import { Shield, Zap, Sliders, DollarSign, Users } from 'lucide-react';
 const benefits = [
   {

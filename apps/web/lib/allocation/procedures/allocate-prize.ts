@@ -1,6 +1,6 @@
 'use server';
 
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { allocatePrizeRequestSchema } from '@/schemas/giveaway/schemas';
 import z from 'zod';
 

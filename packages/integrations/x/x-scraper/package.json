@@ -1,0 +1,62 @@
+{
+  "name": "@giveaway/x-scraper",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:x"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/x/x-scraper",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./client": "./src/client.ts",
+    "./credits": "./src/credits.ts",
+    "./procedures/get-retweeters": "./src/procedures/get-retweeters.ts",
+    "./procedures/get-retweeters-cached": "./src/procedures/get-retweeters-cached.ts",
+    "./procedures/get-tweet": "./src/procedures/get-tweet.ts",
+    "./procedures/get-tweet-cached": "./src/procedures/get-tweet-cached.ts",
+    "./procedures/get-user": "./src/procedures/get-user.ts",
+    "./procedures/get-user-cached": "./src/procedures/get-user-cached.ts",
+    "./ratelimit": "./src/ratelimit.ts",
+    "./settings": "./src/settings.ts",
+    "./utils": "./src/utils.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/cache": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@upstash/ratelimit": "catalog:",
+    "lodash": "catalog:",
+    "scrapebadger": "catalog:",
+    "server-only": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "@upstash/redis": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -7,11 +7,11 @@ const mocks = vi.hoisted(() => ({
   getRetweetersUntilCached: vi.fn()
 }));
 
-vi.mock('@/lib/scrapebadger/procedures/get-tweet-cached', () => ({
+vi.mock('@giveaway/x-scraper/procedures/get-tweet-cached', () => ({
   getTweetCached: mocks.getTweetCached
 }));
 
-vi.mock('@/lib/scrapebadger/procedures/get-retweeters-cached', () => ({
+vi.mock('@giveaway/x-scraper/procedures/get-retweeters-cached', () => ({
   getRetweetersUntilCached: mocks.getRetweetersUntilCached
 }));
 

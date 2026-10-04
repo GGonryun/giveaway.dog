@@ -1,6 +1,6 @@
 'use server';
 
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { processTaskJob } from './process-task-job';
 import { taskJobInclude } from '@giveaway/task-jobs-core/types';

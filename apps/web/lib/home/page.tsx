@@ -1,12 +1,12 @@
 'use server';
 
 import { Hero } from '@/components/patterns/hero';
-import { CallToAction } from '@/components/patterns/pricing-cta';
-import { PricingSection } from '@/components/patterns/pricing-section';
+import { CallToAction } from '@giveaway/marketing-ui/pricing-cta';
+import { PricingSection } from '@giveaway/marketing-ui/pricing-section';
 import { IntegrationsSection } from './integrations-section';
 import { FeaturesSection } from './features-section';
 import { UsageSection } from './usage-section';
-import { FaqSection } from '@/components/patterns/faq-section';
+import { FaqSection } from '@giveaway/marketing-ui/faq-section';
 
 export const HomePage = async () => {
   return (

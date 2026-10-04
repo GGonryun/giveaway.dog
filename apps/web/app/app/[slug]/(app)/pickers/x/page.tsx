@@ -13,7 +13,7 @@ import { XPickersUpgradeCTA } from '@/lib/pickers/x/components/x-pickers-upgrade
 import { hasMinimumTeamTier } from '@giveaway/team-model/team/util';
 import { TeamTier } from '@prisma/client';
 import db from '@giveaway/db-client/prisma';
-import { auth } from '@/lib/auth/config';
+import { auth } from '@giveaway/auth-server/config';
 
 type XPickersPageProps = {
   params: Promise<TeamPageProps>;

@@ -13,11 +13,11 @@ import { useProcedure } from '@giveaway/rpc-client/hook';
 import { toast } from 'sonner';
 import { useActiveTeam } from '@/components/team/use-active-team-page';
 import { IntegrationSchema } from '@giveaway/integration-model/schemas';
-import { IntegrationStatusAlert } from '../../integrations/components/integration-status-alert';
+import { IntegrationStatusAlert } from '@giveaway/integration-ui/integration-status-alert';
 import { IDENTITY_PROVIDER_LABEL } from '@giveaway/integration-model/providers';
 import { DiscordRegistrationDialog } from './discord-registration-dialog';
 import { DiscordDisconnectDialog } from './discord-disconnect-dialog';
-import { IntegrationCardHeader } from '@/lib/integrations/components/integration-card-header';
+import { IntegrationCardHeader } from '@giveaway/integration-ui/integration-card-header';
 
 interface DiscordCardProps {
   integration?: IntegrationSchema;

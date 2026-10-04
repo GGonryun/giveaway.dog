@@ -1,6 +1,6 @@
 'use server';
 
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { twitterV2PickerUnvalidatedFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { ApplicationError } from '@giveaway/util-errors';

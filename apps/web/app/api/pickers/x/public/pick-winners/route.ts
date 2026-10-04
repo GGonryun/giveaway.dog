@@ -4,7 +4,7 @@ import {
   extractTweetId,
   toTwitterPickerUsers,
   toTwitterPost
-} from '@/lib/scrapebadger/utils';
+} from '@giveaway/x-scraper/utils';
 import {
   getDisqualificationReason,
   selectRandomUnique
@@ -12,8 +12,8 @@ import {
 import { createId } from '@paralleldrive/cuid2';
 import { fetchRetweetersWithCoverage } from '@/lib/pickers/x/utils/fetch-retweeters-with-coverage';
 import { ApplicationError } from '@giveaway/util-errors';
-import { checkAndConsumeCredits } from '@/lib/scrapebadger/credits';
-import { CREDIT_COSTS } from '@/lib/scrapebadger/settings';
+import { checkAndConsumeCredits } from '@giveaway/x-scraper/credits';
+import { CREDIT_COSTS } from '@giveaway/x-scraper/settings';
 
 export async function POST(request: NextRequest) {
   try {

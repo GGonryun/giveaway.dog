@@ -1,7 +1,7 @@
 'use server';
 
 import { z } from 'zod';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import {
   requireMembershipPermission,

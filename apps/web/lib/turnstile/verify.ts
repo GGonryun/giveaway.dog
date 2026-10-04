@@ -1,6 +1,6 @@
 'use server';
 
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { verifyTurnstileToken } from './server';
 import { setTurnstileToken } from './cookies';

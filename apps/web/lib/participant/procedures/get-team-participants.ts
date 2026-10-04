@@ -1,6 +1,6 @@
 'use server';
 
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@/lib/task/queries';
 
 import z from 'zod';

@@ -510,6 +510,9 @@ importers:
       '@dnd-kit/utilities':
         specifier: 'catalog:'
         version: 3.2.2(react@19.2.4)
+      '@giveaway/account-context':
+        specifier: workspace:*
+        version: link:../../packages/account/account-context
       '@giveaway/allocation-model':
         specifier: workspace:*
         version: link:../../packages/participants/allocation-model
@@ -528,6 +531,12 @@ importers:
       '@giveaway/auth-provider-inbound':
         specifier: workspace:*
         version: link:../../packages/auth/auth-provider-inbound
+      '@giveaway/auth-server':
+        specifier: workspace:*
+        version: link:../../packages/auth/auth-server
+      '@giveaway/bluesky-model':
+        specifier: workspace:*
+        version: link:../../packages/integrations/bluesky/bluesky-model
       '@giveaway/cache':
         specifier: workspace:*
         version: link:../../packages/infra/cache
@@ -561,6 +570,9 @@ importers:
       '@giveaway/integration-model':
         specifier: workspace:*
         version: link:../../packages/integrations/core/integration-model
+      '@giveaway/integration-ui':
+        specifier: workspace:*
+        version: link:../../packages/integrations/core/integration-ui
       '@giveaway/jobs':
         specifier: workspace:*
         version: link:../../packages/infra/jobs
@@ -570,6 +582,12 @@ importers:
       '@giveaway/leaderboard-model':
         specifier: workspace:*
         version: link:../../packages/winners/leaderboard-model
+      '@giveaway/marketing-animations':
+        specifier: workspace:*
+        version: link:../../packages/marketing/marketing-animations
+      '@giveaway/marketing-ui':
+        specifier: workspace:*
+        version: link:../../packages/marketing/marketing-ui
       '@giveaway/meta-model':
         specifier: workspace:*
         version: link:../../packages/integrations/meta/meta-model
@@ -588,12 +606,18 @@ importers:
       '@giveaway/request-context-model':
         specifier: workspace:*
         version: link:../../packages/infra/request-context-model
+      '@giveaway/request-context-server':
+        specifier: workspace:*
+        version: link:../../packages/infra/request-context-server
       '@giveaway/rpc-client':
         specifier: workspace:*
         version: link:../../packages/infra/rpc-client
       '@giveaway/rpc-model':
         specifier: workspace:*
         version: link:../../packages/infra/rpc-model
+      '@giveaway/rpc-server':
+        specifier: workspace:*
+        version: link:../../packages/infra/rpc-server
       '@giveaway/scoring-model':
         specifier: workspace:*
         version: link:../../packages/participants/scoring-model
@@ -678,6 +702,9 @@ importers:
       '@giveaway/user-source-model':
         specifier: workspace:*
         version: link:../../packages/participants/user-source-model
+      '@giveaway/user-source-ui':
+        specifier: workspace:*
+        version: link:../../packages/participants/user-source-ui
       '@giveaway/util-browser':
         specifier: workspace:*
         version: link:../../packages/shared/util-browser
@@ -726,6 +753,9 @@ importers:
       '@giveaway/x-picker-model':
         specifier: workspace:*
         version: link:../../packages/pickers/x-picker-model
+      '@giveaway/x-scraper':
+        specifier: workspace:*
+        version: link:../../packages/integrations/x/x-scraper
       '@giveaway/youtube-model':
         specifier: workspace:*
         version: link:../../packages/integrations/youtube/youtube-model
@@ -1139,6 +1169,49 @@ importers:
         specifier: 'catalog:'
         version: 5.7.2
 
+  packages/account/account-context:
+    dependencies:
+      '@giveaway/user-model':
+        specifier: workspace:*
+        version: link:../user-model
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+    devDependencies:
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../../infra/db-model
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-dom':
+        specifier: workspace:*
+        version: link:../../tooling/testing-dom
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
   packages/account/user-model:
     dependencies:
       '@giveaway/app-config':
@@ -1319,6 +1392,73 @@ importers:
       '@giveaway/email':
         specifier: workspace:*
         version: link:../../infra/email
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      inboundemail:
+        specifier: 'catalog:'
+        version: 0.20.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/auth/auth-server:
+    dependencies:
+      '@giveaway/auth-core':
+        specifier: workspace:*
+        version: link:../auth-core
+      '@giveaway/auth-provider-e2e':
+        specifier: workspace:*
+        version: link:../auth-provider-e2e
+      '@giveaway/auth-provider-inbound':
+        specifier: workspace:*
+        version: link:../auth-provider-inbound
+      '@giveaway/db-client':
+        specifier: workspace:*
+        version: link:../../infra/db-client
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../../infra/db-model
+      '@giveaway/integration-model':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-model
+      '@giveaway/kick-auth':
+        specifier: workspace:*
+        version: link:../../integrations/kick/kick-auth
+      '@giveaway/steam-auth':
+        specifier: workspace:*
+        version: link:../../integrations/steam/steam-auth
+      '@giveaway/velora-auth':
+        specifier: workspace:*
+        version: link:../../integrations/velora/velora-auth
+      '@paralleldrive/cuid2':
+        specifier: 'catalog:'
+        version: 3.3.0
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.1.0
+      next-auth:
+        specifier: 'catalog:'
+        version: 5.0.0-beta.26(next@16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
@@ -1696,6 +1836,52 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
 
+  packages/infra/request-context-server:
+    dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../app-config
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../db-model
+      '@giveaway/request-context-model':
+        specifier: workspace:*
+        version: link:../request-context-model
+      '@giveaway/util-errors':
+        specifier: workspace:*
+        version: link:../../shared/util-errors
+      '@giveaway/util-types':
+        specifier: workspace:*
+        version: link:../../shared/util-types
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
   packages/infra/rpc-client:
     dependencies:
       '@giveaway/rpc-model':
@@ -1761,6 +1947,70 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
 
+  packages/infra/rpc-server:
+    dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../app-config
+      '@giveaway/auth-core':
+        specifier: workspace:*
+        version: link:../../auth/auth-core
+      '@giveaway/db-client':
+        specifier: workspace:*
+        version: link:../db-client
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../db-model
+      '@giveaway/rpc-model':
+        specifier: workspace:*
+        version: link:../rpc-model
+      '@giveaway/util-errors':
+        specifier: workspace:*
+        version: link:../../shared/util-errors
+      '@giveaway/util-random':
+        specifier: workspace:*
+        version: link:../../shared/util-random
+      '@giveaway/util-types':
+        specifier: workspace:*
+        version: link:../../shared/util-types
+      nanoid:
+        specifier: 'catalog:'
+        version: 5.1.6
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      next-auth:
+        specifier: 'catalog:'
+        version: 5.0.0-beta.26(next@16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
   packages/infra/turnstile-model:
     dependencies:
       zod:
@@ -1779,6 +2029,37 @@ importers:
       '@giveaway/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/integrations/bluesky/bluesky-model:
+    dependencies:
+      '@giveaway/user-model':
+        specifier: workspace:*
+        version: link:../../../account/user-model
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../../tooling/vitest-config
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
@@ -1862,6 +2143,58 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/integrations/core/integration-ui:
+    dependencies:
+      '@giveaway/integration-icons':
+        specifier: workspace:*
+        version: link:../integration-icons
+      '@giveaway/integration-model':
+        specifier: workspace:*
+        version: link:../integration-model
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../../ui/ui-primitives
+      '@giveaway/util-errors':
+        specifier: workspace:*
+        version: link:../../../shared/util-errors
+      '@giveaway/util-strings':
+        specifier: workspace:*
+        version: link:../../../shared/util-strings
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
       typescript:
         specifier: 'catalog:'
         version: 5.7.2
@@ -2236,6 +2569,61 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
 
+  packages/integrations/x/x-scraper:
+    dependencies:
+      '@giveaway/cache':
+        specifier: workspace:*
+        version: link:../../../infra/cache
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../../../infra/db-model
+      '@giveaway/integration-model':
+        specifier: workspace:*
+        version: link:../../core/integration-model
+      '@giveaway/util-errors':
+        specifier: workspace:*
+        version: link:../../../shared/util-errors
+      '@upstash/ratelimit':
+        specifier: 'catalog:'
+        version: 2.0.8(@upstash/redis@1.36.2)
+      lodash:
+        specifier: 'catalog:'
+        version: 4.17.23
+      scrapebadger:
+        specifier: 'catalog:'
+        version: 0.1.7
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../../tooling/vitest-config
+      '@types/lodash':
+        specifier: 'catalog:'
+        version: 4.17.23
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@upstash/redis':
+        specifier: 'catalog:'
+        version: 1.36.2
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
   packages/integrations/youtube/youtube-model:
     dependencies:
       zod:
@@ -2257,6 +2645,137 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/marketing/marketing-animations:
+    dependencies:
+      '@giveaway/integration-icons':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-icons
+      '@giveaway/platform-catalog':
+        specifier: workspace:*
+        version: link:../../integrations/core/platform-catalog
+      '@giveaway/theme-server':
+        specifier: workspace:*
+        version: link:../../ui/theme-server
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/ui-primitives
+      '@giveaway/ui-utils':
+        specifier: workspace:*
+        version: link:../../ui/ui-utils
+      '@giveaway/user-quality-model':
+        specifier: workspace:*
+        version: link:../../participants/user-quality-model
+      '@giveaway/user-quality-ui':
+        specifier: workspace:*
+        version: link:../../participants/user-quality-ui
+      framer-motion:
+        specifier: 'catalog:'
+        version: 12.30.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      next-themes:
+        specifier: 'catalog:'
+        version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/marketing/marketing-ui:
+    dependencies:
+      '@giveaway/platform-catalog':
+        specifier: workspace:*
+        version: link:../../integrations/core/platform-catalog
+      '@giveaway/theme-server':
+        specifier: workspace:*
+        version: link:../../ui/theme-server
+      '@giveaway/ui-carousel':
+        specifier: workspace:*
+        version: link:../../ui/ui-carousel
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/ui-primitives
+      '@giveaway/ui-utils':
+        specifier: workspace:*
+        version: link:../../ui/ui-utils
+      embla-carousel-auto-scroll:
+        specifier: 'catalog:'
+        version: 8.6.0(embla-carousel@8.6.0)
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      next-themes:
+        specifier: 'catalog:'
+        version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-dom':
+        specifier: workspace:*
+        version: link:../../tooling/testing-dom
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@testing-library/user-event':
+        specifier: 'catalog:'
+        version: 14.6.7(@testing-library/dom@10.4.2)
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
       typescript:
         specifier: 'catalog:'
         version: 5.7.2
@@ -2550,6 +3069,58 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/participants/user-source-ui:
+    dependencies:
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../../infra/db-model
+      '@giveaway/integration-icons':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-icons
+      '@giveaway/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/ui-primitives
+      '@giveaway/ui-utils':
+        specifier: workspace:*
+        version: link:../../ui/ui-utils
+      '@giveaway/user-model':
+        specifier: workspace:*
+        version: link:../../account/user-model
+      '@giveaway/util-errors':
+        specifier: workspace:*
+        version: link:../../shared/util-errors
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.559.0(react@19.2.4)
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@types/react':
+        specifier: 19.2.10
+        version: 19.2.10
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
       typescript:
         specifier: 'catalog:'
         version: 5.7.2
@@ -16362,7 +16933,7 @@ snapshots:
       eslint: 9.39.5(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.10
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.6.1))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.5(jiti@2.6.1))
       eslint-plugin-react: 7.37.5(eslint@9.39.5(jiti@2.6.1))
       eslint-plugin-react-hooks: 7.1.1(eslint@9.39.5(jiti@2.6.1))
@@ -16395,7 +16966,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.12.2
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -16410,7 +16981,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.6.1)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.2.0

@@ -1,8 +1,8 @@
 'use server';
 
 import { ArrowRight } from 'lucide-react';
-import { ScrollingTemplatesAnimation } from '../marketing/scrolling-templates-animation';
-import { MarketingHeader } from '@/components/patterns/shared';
+import { ScrollingTemplatesAnimation } from '@giveaway/marketing-animations/scrolling-templates-animation';
+import { MarketingHeader } from '@giveaway/marketing-ui/shared';
 import { getServerTheme } from '@giveaway/theme-server/get-server-theme';
 import { SupportedIntegrations } from './supported-integrations';
 

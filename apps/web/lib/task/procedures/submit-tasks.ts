@@ -1,7 +1,7 @@
 'use server';
 
 import { ApplicationError } from '@giveaway/util-errors';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { validateTask } from '@/lib/task/validation/integrations';
 import { validateMandatoryTasks } from '@/lib/task/validation/mandatory';
 import { validateRequiredTasks } from '@/lib/task/validation/required';

@@ -3,7 +3,7 @@
 import { Button } from '@giveaway/ui-primitives/button';
 import { ProviderIcon } from '@giveaway/integration-icons/provider-icon';
 import { CircleAlertIcon, Plus, UnlinkIcon, UnplugIcon } from 'lucide-react';
-import { useUser } from '@/components/context/user-provider';
+import { useUser } from '@giveaway/account-context/user-provider';
 import { toast } from 'sonner';
 
 import { useProcedure } from '@giveaway/rpc-client/hook';

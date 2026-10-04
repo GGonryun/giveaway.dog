@@ -11,7 +11,7 @@ const nextAuth = vi.hoisted(() => ({
   handlers: { GET: vi.fn(), POST: vi.fn() }
 }));
 
-vi.mock('@/lib/auth/config', () => nextAuth);
+vi.mock('@giveaway/auth-server/config', () => nextAuth);
 
 const redirectError = () =>
   Object.assign(new Error('NEXT_REDIRECT'), {

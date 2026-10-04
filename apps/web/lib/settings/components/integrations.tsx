@@ -7,7 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { BlueskyCard } from '@/lib/integrations/components/bluesky-card';
 import { DiscordCard } from '@/lib/discord/components/discord-card';
 import { TwitchCard } from '@/lib/twitch/components/twitch-card';
-import { PlaceholderCard } from '@/lib/integrations/components/placeholder-card';
+import { PlaceholderCard } from '@giveaway/integration-ui/placeholder-card';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { IntegrationProvider } from '@prisma/client';
 

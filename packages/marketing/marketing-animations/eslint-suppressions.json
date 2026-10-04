@@ -1,0 +1,7 @@
+{
+  "packages/marketing/marketing-animations/src/orbiting-platforms.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  }
+}

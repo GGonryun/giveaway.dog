@@ -4,7 +4,7 @@ import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
 import trackUser from '@/procedures/user/track-user';
 import { Metadata } from 'next';
 import { UserEventType } from '@prisma/client';
-import { auth } from '@/lib/auth/config';
+import { auth } from '@giveaway/auth-server/config';
 
 export const metadata: Metadata = {
   title: 'Portal | Giveaway.dog',

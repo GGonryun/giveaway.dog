@@ -1,6 +1,6 @@
 'use server';
 import { getWorld } from 'workflow/runtime';
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 
 export const deleteTwitterV2Picker = procedure()

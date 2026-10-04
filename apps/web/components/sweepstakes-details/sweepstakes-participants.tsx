@@ -42,8 +42,8 @@ import {
 import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
 import { datetime } from '@giveaway/util-time/date';
 
-import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
-import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
+import { UserSourceBadge } from '@giveaway/user-source-ui/user-source-badge';
+import { UserSourceCaption } from '@giveaway/user-source-ui/user-source-caption';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toSweepstakesEngagement } from '@/lib/participant/db';
 import { toMostRecentCompletion } from '@/lib/task/completions';

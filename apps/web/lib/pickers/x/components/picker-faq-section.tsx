@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@giveaway/ui-primitives/accordion';
-import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
+import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
 const faqs = [
   {
     question: 'How are winners selected from X retweets?',

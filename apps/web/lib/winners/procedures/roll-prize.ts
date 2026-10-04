@@ -2,7 +2,7 @@
 
 import z from 'zod';
 
-import { procedure } from '@/lib/mrpc/procedures';
+import { procedure } from '@giveaway/rpc-server/procedures';
 import { getSweepstakesCriteria } from '@giveaway/winners-model/criteria';
 import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
 import {

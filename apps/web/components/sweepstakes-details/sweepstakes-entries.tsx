@@ -19,8 +19,8 @@ import { Button } from '@giveaway/ui-primitives/button';
 
 import { TASK_LABEL, UserEntriesSchema } from '@/lib/task/schemas';
 import { TaskStatusBadge } from '@/lib/task/components/task-status-badge';
-import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
-import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
+import { UserSourceBadge } from '@giveaway/user-source-ui/user-source-badge';
+import { UserSourceCaption } from '@giveaway/user-source-ui/user-source-caption';
 import {
   DropdownMenu,
   DropdownMenuContent,

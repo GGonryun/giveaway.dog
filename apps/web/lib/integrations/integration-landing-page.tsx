@@ -10,7 +10,7 @@ import {
 } from '@giveaway/platform-catalog/platform-icons';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
+import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
 import { cn } from '@giveaway/ui-utils/utils';
 
 interface IntegrationLandingPageProps {

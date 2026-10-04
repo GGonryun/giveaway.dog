@@ -27,9 +27,9 @@ import { Search } from 'lucide-react';
 
 import { useTeams } from '@/components/context/team-provider';
 import { UserDetailSheet } from '@/components/sweepstakes-details/user-participant-detail-sheet';
-import { UserSourceBadge } from '@/lib/user-source/components/user-source-badge';
+import { UserSourceBadge } from '@giveaway/user-source-ui/user-source-badge';
 import { datetime } from '@giveaway/util-time/date';
-import { UserSourceCaption } from '@/lib/user-source/components/user-source-caption';
+import { UserSourceCaption } from '@giveaway/user-source-ui/user-source-caption';
 import { SweepstakesParticipantSchema } from '@/lib/participant/schemas';
 import { toMostRecentCompletion } from '@/lib/task/completions';
 import { toSweepstakesEngagement } from '@/lib/participant/db';

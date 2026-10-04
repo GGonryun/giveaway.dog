@@ -1,5 +1,5 @@
-import { MarketingHeader } from '@/components/patterns/shared';
-import { CallToAction } from '@/components/patterns/pricing-cta';
+import { MarketingHeader } from '@giveaway/marketing-ui/shared';
+import { CallToAction } from '@giveaway/marketing-ui/pricing-cta';
 import { IntegrationsShowcase } from '@/lib/learn/integrations-showcase';
 import { getServerTheme } from '@giveaway/theme-server/get-server-theme';
 

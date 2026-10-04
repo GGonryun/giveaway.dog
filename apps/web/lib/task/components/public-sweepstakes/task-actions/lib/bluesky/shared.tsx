@@ -5,7 +5,7 @@ import { useProcedureAsync } from '@giveaway/rpc-client/hook';
 import getBlueskyOEmbed from '@/lib/integrations/procedures/get-bluesky-oembed';
 import type { BlueskyEmbedData } from '@/lib/integrations/procedures/get-bluesky-oembed';
 import { Loader2 } from 'lucide-react';
-import { BLUESKY_EMBED_SCRIPT_URL } from '@/lib/bluesky/embed';
+import { BLUESKY_EMBED_SCRIPT_URL } from '@giveaway/bluesky-model/embed';
 
 type BlueskyEmbedProps = {
   postUrl: string;
