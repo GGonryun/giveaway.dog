@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   emailSubscriptionSchema,
   type EmailSubscriptionInput
-} from '@giveaway/user-model/email-subscription';
+} from '@giveaway/marketing-model/email-subscription';
 import {
   Form,
   FormControl,

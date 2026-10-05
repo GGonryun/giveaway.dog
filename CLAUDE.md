@@ -117,7 +117,7 @@ packages/ (each folder is a package named @giveaway/<folder>; docs/monorepo/pack
 │   ├── velora/ (velora-api, velora-auth, velora-task-editor, velora-task-entry, velora-task-validation)
 │   ├── x/ (x-api, x-connect, x-import, x-model, x-scraper, x-task-editor, x-task-entry, x-task-jobs)
 │   └── youtube/ (youtube-model, youtube-task-editor, youtube-task-entry)
-├── marketing/ (marketing-animations, marketing-home, marketing-learn, marketing-server, marketing-ui)
+├── marketing/ (marketing-animations, marketing-home, marketing-learn, marketing-model, marketing-server, marketing-ui)
 ├── participants/ (allocation-model, allocation-server, custom-fields-model, custom-fields-server, custom-fields-ui, loyalty-model, participant-model, participant-server, participation-history-model, participation-history-server, participation-server, referrals-model, referrals-server, scoring-model, scoring-server, scoring-ui, user-quality-model, user-quality-ui, user-source-model, user-source-ui)
 ├── pickers/ (picker-model, picker-ui, x-picker-dashboard, x-picker-editor, x-picker-model, x-picker-public, x-picker-results, x-picker-server, x-picker-workflow)
 ├── shared/ (util-browser, util-collections, util-errors, util-geo, util-html, util-media, util-random, util-strings, util-time, util-types)

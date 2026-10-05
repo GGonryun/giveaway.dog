@@ -12,7 +12,7 @@ The graph comes from the code, not from a whiteboard. A script read every import
 
 ## Summary
 
-- **238 packages** in 20 groups, plus `apps/web`, `apps/web-e2e`, `tools/db-seed` and `tools/codemods`.
+- **239 packages** in 20 groups, plus `apps/web`, `apps/web-e2e`, `tools/db-seed` and `tools/generators`.
 - **No dependency cycles and no boundary violations**, after 8 small refactors ([R1 to R8](#refactors-that-make-the-graph-valid)). Mapped onto these packages as it is today, the code has 4 dependency cycles and 4 imports that break the type rules.
 - **Small packages.** The median package has 3 source files, 4 internal dependencies and 2 npm dependencies. Today every CI job installs all 143 npm packages that the root `package.json` lists.
 - **Small blast radius.** A change to one package affects a median of 8 packages and a mean of 25, out of 240. Today every change affects the whole app.
@@ -55,7 +55,7 @@ Each package has three tags. Nx's `@nx/enforce-module-boundaries` ESLint rule en
 | Type      | Contents                                                     | May import                | Count |
 | --------- | ------------------------------------------------------------ | ------------------------- | ----: |
 | `util`    | Helpers with no React and no server code                     | `util`                    |    11 |
-| `model`   | Zod schemas, types, constants and pure functions             | `model`, `util`           |    37 |
+| `model`   | Zod schemas, types, constants and pure functions             | `model`, `util`           |    38 |
 | `server`  | Server actions, queries, API clients, jobs, webhooks         | `server`, `model`, `util` |    69 |
 | `ui`      | Presentational components and hooks that call no server code | `ui`, `model`, `util`     |    35 |
 | `feature` | Pages and components that call server actions                | everything above          |    80 |
@@ -68,7 +68,7 @@ flowchart TB
   app["app: route files"] --> feature["feature: 80"]
   feature --> ui["ui: 35"]
   feature --> server["server: 69"]
-  ui --> model["model: 37"]
+  ui --> model["model: 38"]
   server --> model
   model --> util["util: 11"]
 ```
@@ -486,7 +486,7 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 | `@giveaway/account-server`   | server  | 11 / 11 | `procedures/user/complete-onboarding.ts`<br>`procedures/user/create-profile.ts`<br>`procedures/user/delete-user.ts`<br>`procedures/user/disconnect-account.ts`<br>and 7 more                                       |
 | `@giveaway/account-settings` | feature | 4 / 7   | `components/account/account-tabs.tsx`<br>`components/account/danger-zone.tsx`<br>`components/account/feature-settings.tsx`<br>`components/account/use-account-page.ts`                                             |
 | `@giveaway/onboarding`       | feature | 5 / 9   | `components/onboarding/`                                                                                                                                                                                           |
-| `@giveaway/user-model`       | model   | 5 / 7   | `lib/redirect.ts`<br>`schemas/account.ts`<br>`schemas/email-subscription.ts`<br>`schemas/onboarding.ts`<br>and 1 more                                                                                              |
+| `@giveaway/user-model`       | model   | 4 / 6   | `lib/redirect.ts`<br>`schemas/account.ts`<br>`schemas/onboarding.ts`<br>`schemas/user.ts`                                                                                                                          |
 
 ### Team
 
@@ -738,13 +738,14 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 ### Marketing
 
-5 packages, 25 source files, 18 test files.
+6 packages, 25 source files, 18 test files.
 
 | Package                          | Type    | Files  | Moves from                                                                                                                                                       |
 | -------------------------------- | ------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@giveaway/marketing-animations` | feature | 5 / 0  | `lib/marketing/`                                                                                                                                                 |
 | `@giveaway/marketing-home`       | feature | 7 / 3  | `components/patterns/hero-sweepstakes-preview.tsx`<br>`components/patterns/hero.tsx`<br>`lib/home/`                                                              |
 | `@giveaway/marketing-learn`      | feature | 4 / 0  | `lib/integrations/integration-landing-page.tsx`<br>`lib/learn/`                                                                                                  |
+| `@giveaway/marketing-model`      | model   | 1 / 1  | `schemas/email-subscription.ts`                                                                                                                                  |
 | `@giveaway/marketing-server`     | server  | 1 / 1  | `procedures/marketing/`                                                                                                                                          |
 | `@giveaway/marketing-ui`         | feature | 7 / 13 | `components/marketing/`<br>`components/patterns/coming-soon.tsx`<br>`components/patterns/faq-section.tsx`<br>`components/patterns/pricing-cta.tsx`<br>and 3 more |
 
