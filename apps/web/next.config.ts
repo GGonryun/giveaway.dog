@@ -74,6 +74,7 @@ const nextConfig: NextConfig = {
     '@giveaway/marketing-animations',
     '@giveaway/marketing-home',
     '@giveaway/marketing-learn',
+    '@giveaway/marketing-model',
     '@giveaway/marketing-server',
     '@giveaway/marketing-ui',
     '@giveaway/meta-connect-ui',

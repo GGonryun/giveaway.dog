@@ -2150,9 +2150,6 @@ importers:
       '@giveaway/util-errors':
         specifier: workspace:*
         version: link:../../shared/util-errors
-      '@giveaway/util-strings':
-        specifier: workspace:*
-        version: link:../../shared/util-strings
       '@giveaway/util-types':
         specifier: workspace:*
         version: link:../../shared/util-types
@@ -3153,6 +3150,9 @@ importers:
 
   packages/browse/browse-list:
     dependencies:
+      '@giveaway/marketing-model':
+        specifier: workspace:*
+        version: link:../../marketing/marketing-model
       '@giveaway/marketing-server':
         specifier: workspace:*
         version: link:../../marketing/marketing-server
@@ -3177,9 +3177,6 @@ importers:
       '@giveaway/ui-utils':
         specifier: workspace:*
         version: link:../../ui/ui-utils
-      '@giveaway/user-model':
-        specifier: workspace:*
-        version: link:../../account/user-model
       '@giveaway/util-time':
         specifier: workspace:*
         version: link:../../shared/util-time
@@ -7063,14 +7060,45 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
 
+  packages/marketing/marketing-model:
+    dependencies:
+      '@giveaway/util-strings':
+        specifier: workspace:*
+        version: link:../../shared/util-strings
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
   packages/marketing/marketing-server:
     dependencies:
+      '@giveaway/marketing-model':
+        specifier: workspace:*
+        version: link:../marketing-model
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../infra/rpc-server
-      '@giveaway/user-model':
-        specifier: workspace:*
-        version: link:../../account/user-model
       '@giveaway/util-errors':
         specifier: workspace:*
         version: link:../../shared/util-errors

@@ -1,16 +1,16 @@
 {
-  "name": "@giveaway/user-model",
+  "name": "@giveaway/marketing-model",
   "private": true,
   "type": "module",
   "nx": {
     "tags": [
       "type:model",
       "runtime:isomorphic",
-      "scope:account"
+      "scope:marketing"
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/account/user-model",
+        "command": "eslint packages/marketing/marketing-model",
         "options": {
           "cwd": "{workspaceRoot}"
         },
@@ -19,12 +19,7 @@
     }
   },
   "exports": {
-    "./account": "./src/account.ts",
-    "./onboarding": "./src/onboarding.ts",
-    "./redirect": "./src/redirect.ts",
-    "./testing/fixtures-procedures-user": "./src/testing/fixtures-procedures-user.ts",
-    "./testing/fixtures-schemas-core-and-scoring": "./src/testing/fixtures-schemas-core-and-scoring.ts",
-    "./user": "./src/user.ts"
+    "./email-subscription": "./src/email-subscription.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
@@ -33,12 +28,7 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
-    "@giveaway/app-config": "workspace:*",
-    "@giveaway/db-model": "workspace:*",
-    "@giveaway/integration-model": "workspace:*",
-    "@giveaway/util-errors": "workspace:*",
-    "@giveaway/util-types": "workspace:*",
-    "lodash": "catalog:",
+    "@giveaway/util-strings": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -46,7 +36,6 @@
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
-    "@types/lodash": "catalog:",
     "@types/node": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

@@ -28,8 +28,8 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "@giveaway/marketing-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
-    "@giveaway/user-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-strings": "workspace:*",
     "zod": "catalog:"

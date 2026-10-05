@@ -36,6 +36,7 @@
     "test:snapshot": "vitest run --project snapshot"
   },
   "dependencies": {
+    "@giveaway/marketing-model": "workspace:*",
     "@giveaway/marketing-server": "workspace:*",
     "@giveaway/participant-model": "workspace:*",
     "@giveaway/rpc-client": "workspace:*",
@@ -44,7 +45,6 @@
     "@giveaway/ui-command": "workspace:*",
     "@giveaway/ui-primitives": "workspace:*",
     "@giveaway/ui-utils": "workspace:*",
-    "@giveaway/user-model": "workspace:*",
     "@giveaway/util-time": "workspace:*",
     "@hookform/resolvers": "catalog:",
     "date-fns": "catalog:",
