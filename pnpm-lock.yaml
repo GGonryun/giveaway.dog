@@ -42,6 +42,9 @@ catalogs:
     '@marsidev/react-turnstile':
       specifier: ^1.4.1
       version: 1.4.1
+    '@nx/devkit':
+      specifier: 23.2.1
+      version: 23.2.1
     '@nx/eslint-plugin':
       specifier: 23.2.1
       version: 23.2.1
@@ -228,6 +231,9 @@ catalogs:
     '@types/turndown':
       specifier: ^5.0.6
       version: 5.0.6
+    '@typescript-eslint/parser':
+      specifier: 8.71.0
+      version: 8.71.0
     '@upstash/ratelimit':
       specifier: ^2.0.8
       version: 2.0.8
@@ -447,6 +453,9 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:packages/tooling/eslint-config
+      '@giveaway/generators':
+        specifier: workspace:*
+        version: link:tools/generators
       '@giveaway/vitest-config':
         specifier: workspace:*
         version: link:packages/tooling/vitest-config
@@ -2522,9 +2531,9 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/testing-server':
+      '@giveaway/testing-mocks':
         specifier: workspace:*
-        version: link:../../tooling/testing-server
+        version: link:../../tooling/testing-mocks
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/tsconfig
@@ -3390,9 +3399,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/testing-server':
-        specifier: workspace:*
-        version: link:../../tooling/testing-server
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/tsconfig
@@ -3418,9 +3424,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/testing-server':
-        specifier: workspace:*
-        version: link:../../tooling/testing-server
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/tsconfig
@@ -3442,9 +3445,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/testing-server':
-        specifier: workspace:*
-        version: link:../../tooling/testing-server
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/tsconfig
@@ -4454,9 +4454,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../../tooling/eslint-config
-      '@giveaway/testing-server':
-        specifier: workspace:*
-        version: link:../../../tooling/testing-server
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../../../tooling/tsconfig
@@ -8660,9 +8657,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/testing-server':
-        specifier: workspace:*
-        version: link:../../tooling/testing-server
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/tsconfig
@@ -8691,9 +8685,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/testing-server':
-        specifier: workspace:*
-        version: link:../../tooling/testing-server
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/tsconfig
@@ -8888,9 +8879,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/testing-server':
-        specifier: workspace:*
-        version: link:../../tooling/testing-server
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/tsconfig
@@ -11438,15 +11426,9 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/sweepstakes-routes':
-        specifier: workspace:*
-        version: link:../sweepstakes-routes
       '@giveaway/sweepstakes-ui-testing':
         specifier: workspace:*
         version: link:../sweepstakes-ui-testing
-      '@giveaway/team-context':
-        specifier: workspace:*
-        version: link:../../team/team-context
       '@giveaway/testing-dom':
         specifier: workspace:*
         version: link:../../tooling/testing-dom
@@ -13653,6 +13635,16 @@ importers:
       jsonc-eslint-parser:
         specifier: 'catalog:'
         version: 2.4.2
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      '@typescript-eslint/parser':
+        specifier: 'catalog:'
+        version: 8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2)
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
 
   packages/tooling/testing-dom:
     dependencies:
@@ -13679,17 +13671,39 @@ importers:
         specifier: 'catalog:'
         version: 5.7.2
 
-  packages/tooling/testing-server:
+  packages/tooling/testing-mocks:
     dependencies:
-      '@giveaway/util-errors':
-        specifier: workspace:*
-        version: link:../../shared/util-errors
       '@prisma/client':
         specifier: 'catalog:'
         version: 6.19.2(prisma@6.19.2(typescript@5.7.2))(typescript@5.7.2)
       next:
         specifier: 'catalog:'
         version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+
+  packages/tooling/testing-server:
+    dependencies:
+      '@giveaway/testing-mocks':
+        specifier: workspace:*
+        version: link:../testing-mocks
+      '@prisma/client':
+        specifier: 'catalog:'
+        version: 6.19.2(prisma@6.19.2(typescript@5.7.2))(typescript@5.7.2)
       vitest:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
@@ -13778,9 +13792,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@giveaway/testing-server':
-        specifier: workspace:*
-        version: link:../testing-server
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
@@ -14887,6 +14898,37 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  tools/generators:
+    dependencies:
+      '@nx/devkit':
+        specifier: 'catalog:'
+        version: 23.2.1(nx@23.2.1)
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../packages/tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      nx:
+        specifier: 'catalog:'
+        version: 23.2.1
       typescript:
         specifier: 'catalog:'
         version: 5.7.2

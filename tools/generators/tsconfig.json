@@ -1,0 +1,6 @@
+{
+  "extends": "@giveaway/tsconfig/library.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true
+  }
+}

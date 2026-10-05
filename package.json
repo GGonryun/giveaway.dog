@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/generators": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",

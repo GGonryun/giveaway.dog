@@ -35,11 +35,10 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/testing-mocks": "workspace:*",
     "@prisma/client": "catalog:"
   },
   "peerDependencies": {
-    "next": "catalog:",
     "vitest": "catalog:"
   },
   "devDependencies": {

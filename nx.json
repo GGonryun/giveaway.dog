@@ -30,11 +30,7 @@
     },
     "lint": {
       "cache": true,
-      "inputs": [
-        "default",
-        "^production",
-        "{workspaceRoot}/docs/monorepo/package-map.json"
-      ],
+      "inputs": ["default", "^production"],
       "outputs": []
     },
     "type-check": {

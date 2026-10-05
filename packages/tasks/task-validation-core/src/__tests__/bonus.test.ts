@@ -18,9 +18,9 @@ import {
   BASE_TASK,
   FIXED_DATE,
   IDS,
-  applicationError,
   db
 } from '@giveaway/testing-server/fixtures-task-validation';
+import { applicationError } from '@giveaway/util-errors/testing/application-error';
 
 const input = <T>(task: T) => ({
   task,

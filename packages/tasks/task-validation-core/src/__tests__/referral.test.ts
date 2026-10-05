@@ -6,11 +6,11 @@ import {
   BASE_TASK,
   FIXED_DATE,
   IDS,
-  applicationError,
   db,
   storedTask,
   taskCompletion
 } from '@giveaway/testing-server/fixtures-task-validation';
+import { applicationError } from '@giveaway/util-errors/testing/application-error';
 
 const runtime = vi.hoisted(() => ({
   cookies: vi.fn(),

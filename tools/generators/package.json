@@ -1,0 +1,41 @@
+{
+  "name": "@giveaway/generators",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:tool",
+      "runtime:isomorphic",
+      "scope:tools"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint tools/generators",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "generators": "./generators.json",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@nx/devkit": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "nx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

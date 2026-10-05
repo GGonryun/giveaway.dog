@@ -8,10 +8,10 @@ import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
   BASE_TASK,
   IDS,
-  applicationError,
   db,
   taskCompletion
 } from '@giveaway/testing-server/fixtures-task-validation';
+import { applicationError } from '@giveaway/util-errors/testing/application-error';
 
 const task: AskQuestionTaskSchema = {
   ...BASE_TASK,

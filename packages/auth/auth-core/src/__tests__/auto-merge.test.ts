@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Account, Profile, Session } from 'next-auth';
 import { UserSource } from '@giveaway/db-model';
 import { tryAutoMerge } from '../auto-merge';
-import { prismaMock } from '@giveaway/testing-server/prisma';
-import { createSession } from '@giveaway/testing-server/session';
+import { prismaMock } from '@giveaway/testing-mocks/prisma';
+import { createSession } from '@giveaway/testing-mocks/session';
 
 type Args = Parameters<typeof tryAutoMerge>[0];
 

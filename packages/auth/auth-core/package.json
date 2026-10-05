@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
-    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/testing-mocks": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",

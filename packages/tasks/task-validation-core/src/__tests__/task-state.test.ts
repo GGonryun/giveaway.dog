@@ -1,10 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { SweepstakesStatus } from '@giveaway/db-model';
 import { validateSweepstakesState } from '../task-state';
-import {
-  applicationError,
-  storedTask
-} from '@giveaway/testing-server/fixtures-task-validation';
+import { storedTask } from '@giveaway/testing-server/fixtures-task-validation';
+import { applicationError } from '@giveaway/util-errors/testing/application-error';
 
 type StateTask = Parameters<typeof validateSweepstakesState>[0];
 

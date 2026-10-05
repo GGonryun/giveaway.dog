@@ -1,6 +1,4 @@
-import { expect } from 'vitest';
 import type { Prisma, Task, TaskCompletion } from '@prisma/client';
-import { ApplicationError } from '@giveaway/util-errors';
 import { asPrismaClient } from './prisma';
 
 export const db = asPrismaClient();
@@ -45,25 +43,6 @@ export const taskCompletion = (
   status: 'COMPLETED',
   ...overrides
 });
-
-export const caught = async (
-  action: Promise<unknown> | (() => unknown)
-): Promise<unknown> => {
-  try {
-    await (typeof action === 'function' ? action() : action);
-  } catch (error) {
-    return error;
-  }
-  throw new Error('Expected the action to throw');
-};
-
-export const applicationError = async (
-  action: Promise<unknown> | (() => unknown)
-): Promise<ApplicationError> => {
-  const error = await caught(action);
-  expect(error).toBeInstanceOf(ApplicationError);
-  return error as ApplicationError;
-};
 
 export const jsonResponse = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {

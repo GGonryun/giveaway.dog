@@ -4,11 +4,11 @@ import { TwitchFollowTaskSchema } from '@giveaway/task-model/schemas';
 import {
   BASE_TASK,
   IDS,
-  applicationError,
   db,
   jsonResponse,
   textResponse
 } from '@giveaway/testing-server/fixtures-task-validation';
+import { applicationError } from '@giveaway/util-errors/testing/application-error';
 
 const tokens = vi.hoisted(() => ({ refreshTwitchToken: vi.fn() }));
 

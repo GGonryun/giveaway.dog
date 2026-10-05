@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "giveaway-platform-slot",
+  "title": "Create a platform plugin slot package",
+  "type": "object",
+  "properties": {
+    "platform": {
+      "type": "string",
+      "description": "The platform, for example \"x\" or \"bluesky\". The package goes in packages/integrations/<platform>.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "Which platform?"
+    },
+    "slot": {
+      "type": "string",
+      "description": "The plugin slot. It sets the package type.",
+      "enum": [
+        "model",
+        "api",
+        "auth",
+        "connect",
+        "connect-ui",
+        "bot",
+        "import",
+        "scraper",
+        "task-validation",
+        "task-jobs",
+        "task-entry",
+        "task-editor"
+      ],
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      },
+      "x-prompt": {
+        "message": "Which slot?",
+        "type": "list",
+        "items": [
+          "model",
+          "api",
+          "auth",
+          "connect",
+          "connect-ui",
+          "bot",
+          "import",
+          "scraper",
+          "task-validation",
+          "task-jobs",
+          "task-entry",
+          "task-editor"
+        ]
+      }
+    },
+    "module": {
+      "type": "string",
+      "description": "The name of the first module in src/. Defaults to the package name."
+    },
+    "skipFormat": {
+      "type": "boolean",
+      "description": "Do not run Prettier on the new files.",
+      "default": false
+    },
+    "skipInstall": {
+      "type": "boolean",
+      "description": "Do not run pnpm install.",
+      "default": false
+    }
+  },
+  "required": ["platform", "slot"]
+}

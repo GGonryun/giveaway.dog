@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { validateMandatoryTasks } from '../mandatory';
 import {
   BASE_TASK,
-  applicationError,
   storedTask,
   taskCompletion
 } from '@giveaway/testing-server/fixtures-task-validation';
+import { applicationError } from '@giveaway/util-errors/testing/application-error';
 
 const bonusTask = (id: string, mandatory: boolean) =>
   storedTask(id, { ...BASE_TASK, type: 'BONUS_TASK', mandatory });
