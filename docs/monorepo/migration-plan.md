@@ -11,6 +11,8 @@ The work is tracked in [GGonryun/giveaway.dog#137](https://github.com/GGonryun/g
 5. **Move the packages a few at a time** (Phase 3): 23 batches of up to 10 packages each.
 6. **Lock in the boundaries** (Phase 6).
 
+The migration is done. After Phase 6, the package map, its checker (`docs/monorepo/check-package-map.mjs`) and the move codemod (`tools/codemods`) were deleted, because every package had moved. This plan still describes them as they were. The last commit on `main` that has them is `f2ecbaf`, where [package-map.json](https://github.com/GGonryun/giveaway.dog/blob/f2ecbaf/docs/monorepo/package-map.json) is.
+
 Paths in `package-map.json` and in this plan are relative to the app root: the repository root before the app moves, and `apps/web/` after. The checker handles both layouts.
 
 ## Goals
@@ -280,7 +282,8 @@ This phase now runs second, right after Nx is introduced. See [GGonryun/giveaway
   - 4 imports of a `ui` package test reached a `feature` package: `use-team-routes.test.tsx` tested the hooks of `@giveaway/sweepstakes-routes` from `@giveaway/sweepstakes-ui`. It moved to `@giveaway/sweepstakes-routes`.
 - **The dependency rules moved** from `package-map.json` to `dependencyRules` in `packages/tooling/eslint-config/src/boundaries.mjs`, so `lint` no longer hashes the map.
 - **`checkDynamicDependenciesExceptions: ['@giveaway/**']`stays, for all files.** The check reports a static import of a project that the same project also imports with`import()`. It is meant for lazy-loaded Angular routes. Only tests and test setup files import a workspace package with `import()`, after `vi.resetModules()`, and no code uses `next/dynamic`with a package, so no Next.js code split depends on it. It cannot apply to source files only: the project graph has one edge per pair of projects, and one`import()`in a test makes that edge dynamic, so without the exception the static imports of`@giveaway/util-errors`in the source of`x-api`and`twitch-api` fail.
-- **The checker is gone**, with its CI step. The Nx project graph replaces the unmapped files report (every file is in a project), and the lint rule reports cycles and boundary violations. The walk from `'use client'` modules to `runtime:server` modules is now the `@giveaway/no-server-in-client` ESLint rule in `@giveaway/eslint-config`, with tests. It reads the `runtime:` tag from each package's `package.json` and resolves workspace imports through `node_modules` and the package's `exports`. On the code at the time of the change it reports nothing, like the checker. `package-map.json` stays as the record of the migration and the input of the move codemod.
+- **The checker is gone**, with its CI step. The Nx project graph replaces the unmapped files report (every file is in a project), and the lint rule reports cycles and boundary violations. The walk from `'use client'` modules to `runtime:server` modules is now the `@giveaway/no-server-in-client` ESLint rule in `@giveaway/eslint-config`, with tests. It reads the `runtime:` tag from each package's `package.json` and resolves workspace imports through `node_modules` and the package's `exports`. On the code at the time of the change it reports nothing, like the checker.
+- **The package map and the move codemod are gone too.** Every package had moved, so nothing read `package-map.json` but the codemod, and the codemod had nothing left to move. `ts-morph` left the catalog with it.
 - **Generators**: `tools/generators` (`@giveaway/generators`) is a local Nx plugin with the `util`, `model`, `server`, `ui`, `feature` and `platform-slot` generators. See "Adding a package" in `CLAUDE.md`.
 
 ## Effort
