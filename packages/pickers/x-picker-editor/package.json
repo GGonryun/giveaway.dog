@@ -1,0 +1,80 @@
+{
+  "name": "@giveaway/x-picker-editor",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:pickers"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/pickers/x-picker-editor --suppressions-location packages/pickers/x-picker-editor/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./pages/create-twitter-v2-picker-page": "./src/pages/create-twitter-v2-picker-page.tsx",
+    "./pages/edit-twitter-v2-picker-page": "./src/pages/edit-twitter-v2-picker-page.tsx",
+    "./sections/filters-section": "./src/sections/filters-section.tsx",
+    "./sections/setup-section": "./src/sections/setup-section.tsx",
+    "./steps": "./src/steps.ts",
+    "./twitter-scrape-progress-monitor": "./src/twitter-scrape-progress-monitor.tsx",
+    "./twitter-v2-cancel-confirmation-modal": "./src/twitter-v2-cancel-confirmation-modal.tsx",
+    "./twitter-v2-delete-confirmation-modal": "./src/twitter-v2-delete-confirmation-modal.tsx",
+    "./twitter-v2-picker-form": "./src/twitter-v2-picker-form.tsx",
+    "./twitter-v2-picker-preview": "./src/twitter-v2-picker-preview.tsx",
+    "./twitter-v2-publish-confirmation-modal": "./src/twitter-v2-publish-confirmation-modal.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/picker-model": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/rpc-model": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
+    "@giveaway/ui-date": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "@giveaway/x-api": "workspace:*",
+    "@giveaway/x-model": "workspace:*",
+    "@giveaway/x-picker-dashboard": "workspace:*",
+    "@giveaway/x-picker-model": "workspace:*",
+    "@giveaway/x-picker-server": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "lucide-react": "catalog:",
+    "next-themes": "catalog:",
+    "react-hook-form": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

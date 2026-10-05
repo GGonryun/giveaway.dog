@@ -1,0 +1,49 @@
+{
+  "name": "@giveaway/meta-connect-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:integrations",
+      "platform:meta"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/meta/meta-connect-ui",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./facebook-connect-form": "./src/facebook-connect-form.tsx",
+    "./instagram-connect-form": "./src/instagram-connect-form.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/auth-actions": "workspace:*",
+    "@giveaway/meta-model": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "react-hook-form": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

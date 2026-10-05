@@ -1,0 +1,7 @@
+{
+  "packages/audience/audience-table/src/components/users-table.tsx": {
+    "react-hooks/static-components": {
+      "count": 2
+    }
+  }
+}

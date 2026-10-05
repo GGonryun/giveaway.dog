@@ -1,0 +1,7 @@
+{
+  "packages/sweepstakes/sweepstakes-editor/src/sweepstakes-form.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  }
+}

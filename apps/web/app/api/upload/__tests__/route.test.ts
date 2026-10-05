@@ -20,13 +20,13 @@ const m = vi.hoisted(() => ({
   tokenOptions: [] as unknown[]
 }));
 
-vi.mock('@/lib/auth/config', () => ({ auth: m.auth }));
+vi.mock('@giveaway/auth-server/config', () => ({ auth: m.auth }));
 
 vi.mock('@vercel/blob/client', () => ({ handleUpload: m.handleUpload }));
 
 vi.mock('@vercel/blob', () => ({ del: m.del }));
 
-vi.mock('@/lib/ratelimit', () => ({ fileUpload: m.fileUpload }));
+vi.mock('@giveaway/ratelimit/ratelimit', () => ({ fileUpload: m.fileUpload }));
 
 vi.mock('@google-cloud/vision', () => ({
   default: {

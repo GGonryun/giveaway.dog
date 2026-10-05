@@ -1,0 +1,12 @@
+{
+  "packages/sweepstakes/sweepstakes-moderation-server/src/reverify-task-completion.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "packages/sweepstakes/sweepstakes-moderation-server/src/update-task-completion-status.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  }
+}

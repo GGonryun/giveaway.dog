@@ -1,10 +1,10 @@
 import prisma, { Tx } from '@giveaway/db-client/prisma';
-import { devices, userAgent } from '@/lib/devices';
+import { devices, userAgent } from '@giveaway/request-context-server/devices';
 import { NextRequest, NextResponse } from 'next/server';
-import { ip } from '@/lib/ip';
-import { UserAgentSchema } from '@/schemas/user-agent';
+import { ip } from '@giveaway/request-context-server/ip';
+import { UserAgentSchema } from '@giveaway/request-context-model/user-agent';
 import { Nil } from '@giveaway/util-types/types';
-import { MAX_TRACKING_REQUESTS_PER_RUN } from '@/schemas/user-scoring';
+import { MAX_TRACKING_REQUESTS_PER_RUN } from '@giveaway/scoring-model/user-scoring';
 import { isValidCronSecret } from '@giveaway/jobs/util';
 
 export async function GET(request: NextRequest) {

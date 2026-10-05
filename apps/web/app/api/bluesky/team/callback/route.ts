@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@giveaway/db-client/prisma';
-import { getTeamBlueskyClient } from '@/lib/bluesky/team-bluesky-client';
+import { getTeamBlueskyClient } from '@giveaway/bluesky-api/bluesky/team-bluesky-client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import { Agent } from '@atproto/api';
-import { auth } from '@/lib/auth/config';
+import { auth } from '@giveaway/auth-server/config';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;

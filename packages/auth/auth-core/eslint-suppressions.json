@@ -1,0 +1,12 @@
+{
+  "packages/auth/auth-core/src/config-middleware.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "packages/auth/auth-core/src/get-account-data.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    }
+  }
+}

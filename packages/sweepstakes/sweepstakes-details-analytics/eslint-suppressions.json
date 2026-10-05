@@ -1,0 +1,7 @@
+{
+  "packages/sweepstakes/sweepstakes-details-analytics/src/sweepstakes-analytics-skeleton.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  }
+}

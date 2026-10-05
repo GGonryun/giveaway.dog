@@ -1,7 +1,7 @@
 'use server';
 
-import { auth, signOut } from '@/lib/auth/config';
-import { LogoutScreen } from './logout-screen';
+import { auth, signOut } from '@giveaway/auth-server/config';
+import { LogoutScreen } from '@giveaway/auth-login-ui/logout-screen';
 import { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {

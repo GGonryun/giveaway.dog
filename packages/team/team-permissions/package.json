@@ -1,0 +1,43 @@
+{
+  "name": "@giveaway/team-permissions",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:model",
+      "runtime:isomorphic",
+      "scope:team"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/team/team-permissions",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

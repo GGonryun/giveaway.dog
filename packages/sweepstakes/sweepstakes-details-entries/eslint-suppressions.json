@@ -1,0 +1,7 @@
+{
+  "packages/sweepstakes/sweepstakes-details-entries/src/verification-instructions-dialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  }
+}

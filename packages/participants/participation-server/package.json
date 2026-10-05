@@ -1,0 +1,58 @@
+{
+  "name": "@giveaway/participation-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:participants"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/participants/participation-server --suppressions-location packages/participants/participation-server/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./get-participant-sweepstake": "./src/get-participant-sweepstake.ts",
+    "./get-sweepstake-form-field": "./src/get-sweepstake-form-field.ts",
+    "./get-sweepstake-participant": "./src/get-sweepstake-participant.ts",
+    "./get-sweepstake-tasks": "./src/get-sweepstake-tasks.ts",
+    "./get-sweepstakes-privacy": "./src/get-sweepstakes-privacy.ts",
+    "./get-user-host-relationship": "./src/get-user-host-relationship.ts",
+    "./refresh-sweepstakes": "./src/refresh-sweepstakes.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/custom-fields-model": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/loyalty-model": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

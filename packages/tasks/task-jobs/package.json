@@ -1,0 +1,55 @@
+{
+  "name": "@giveaway/task-jobs",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-jobs",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./process-task-job": "./src/process-task-job.ts",
+    "./process-task-jobs": "./src/process-task-jobs.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/bluesky-task-jobs": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/task-jobs-core": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/x-task-jobs": "workspace:*",
+    "server-only": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/bluesky-api": "workspace:*",
+    "@giveaway/bluesky-import": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@giveaway/x-import": "workspace:*",
+    "@giveaway/x-scraper": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

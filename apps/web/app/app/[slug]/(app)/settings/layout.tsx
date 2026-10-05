@@ -1,9 +1,9 @@
 'use server';
 
 import React from 'react';
-import { Outline } from '@/components/app/outline';
-import { TeamPageProps } from '@/schemas/pages';
-import { SettingsTabs } from '@/lib/settings/components/settings-tabs';
+import { Outline } from '@giveaway/shell-sidebar/app/outline';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
+import { SettingsTabs } from '@giveaway/team-settings-shell/settings-tabs';
 
 interface PickerDetailLayoutProps {
   params: Promise<TeamPageProps>;

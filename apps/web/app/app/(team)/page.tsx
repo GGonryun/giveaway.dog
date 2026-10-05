@@ -1,11 +1,11 @@
-import { EmojiLogo } from '@/components/patterns/emoji-logo';
-import { TeamPickerForm } from '@/components/team/team-picker-form';
+import { EmojiLogo } from '@giveaway/ui-brand/emoji-logo';
+import { TeamPickerForm } from '@giveaway/team-picker/team-picker-form';
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import getUserTeams from '@/procedures/teams/get-user-teams';
-import { getLastTeamSlugFromServerCookies } from '@/lib/team/cookies';
+import getUserTeams from '@giveaway/team-server/get-user-teams';
+import { getLastTeamSlugFromServerCookies } from '@giveaway/team-model/team/cookies';
 
 export const metadata: Metadata = {
   title: 'Dashboard | Giveaway.dog',

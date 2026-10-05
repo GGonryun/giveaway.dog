@@ -1,0 +1,7 @@
+{
+  "packages/templates/templates-gallery/src/use-template-modal.tsx": {
+    "react-hooks/purity": {
+      "count": 2
+    }
+  }
+}

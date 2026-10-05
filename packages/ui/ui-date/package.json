@@ -1,0 +1,54 @@
+{
+  "name": "@giveaway/ui-date",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:ui",
+      "runtime:react",
+      "scope:ui"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/ui/ui-date --suppressions-location packages/ui/ui-date/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./date-time-picker": "./src/date-time-picker.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "date-fns": "catalog:",
+    "lucide-react": "catalog:",
+    "react-day-picker": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "name": "@giveaway/sweepstakes-participation-core",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-participation-core --suppressions-location packages/sweepstakes/sweepstakes-participation-core/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./giveaway-participation-context": "./src/giveaway-participation-context.tsx",
+    "./sweepstakes-login-options": "./src/sweepstakes-login-options.tsx",
+    "./terms-modal": "./src/terms-modal.tsx",
+    "./testing/participation-fixtures": "./src/testing/participation-fixtures.tsx",
+    "./user-info-section": "./src/user-info-section.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/allocation-model": "workspace:*",
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/auth-login-ui": "workspace:*",
+    "@giveaway/auth-session-ui": "workspace:*",
+    "@giveaway/custom-fields-model": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/loyalty-model": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/referrals-model": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-entry-core": "workspace:*",
+    "@giveaway/turnstile-model": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-rich-text": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-time": "workspace:*"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/auth-actions": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/sweepstakes-ui-testing": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "sonner": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

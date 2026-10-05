@@ -25,6 +25,7 @@ const devDepConstraints = depConstraints.map((constraint) => ({
 
 const DEV_FILES = [
   '**/__tests__/**',
+  '**/src/testing/**',
   '**/*.test.{ts,tsx}',
   '**/{vitest,vitest.visual}.config.ts',
   '**/eslint.config.mjs'
@@ -64,8 +65,10 @@ const boundaries = [
           buildTargets: ['lint'],
           ignoredFiles: [
             '{projectRoot}/**/__tests__/**',
+            '{projectRoot}/src/testing/**',
             '{projectRoot}/**/*.test.{ts,tsx}',
             '{projectRoot}/vitest.config.ts',
+            '{projectRoot}/vitest.visual.config.ts',
             '{projectRoot}/eslint.config.mjs'
           ]
         }

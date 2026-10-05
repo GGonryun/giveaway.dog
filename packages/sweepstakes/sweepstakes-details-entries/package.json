@@ -1,0 +1,70 @@
+{
+  "name": "@giveaway/sweepstakes-details-entries",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-details-entries --suppressions-location packages/sweepstakes/sweepstakes-details-entries/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./delete-entry-dialog": "./src/delete-entry-dialog.tsx",
+    "./sweepstakes-entries": "./src/sweepstakes-entries.tsx",
+    "./sweepstakes-entries-skeleton": "./src/sweepstakes-entries-skeleton.tsx",
+    "./task-completion-detail-sheet": "./src/task-completion-detail-sheet.tsx",
+    "./verification-instructions-dialog": "./src/verification-instructions-dialog.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/sweepstakes-moderation-server": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/task-ui": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/user-source-ui": "workspace:*",
+    "date-fns": "catalog:",
+    "lodash": "catalog:",
+    "lucide-react": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/sweepstakes-ui-testing": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "name": "@giveaway/auth-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:auth"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/auth/auth-server --suppressions-location packages/auth/auth-server/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./bluesky-login-token": "./src/bluesky-login-token.ts",
+    "./config": "./src/config.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/auth-core": "workspace:*",
+    "@giveaway/auth-provider-e2e": "workspace:*",
+    "@giveaway/auth-provider-inbound": "workspace:*",
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/kick-auth": "workspace:*",
+    "@giveaway/steam-auth": "workspace:*",
+    "@giveaway/velora-auth": "workspace:*",
+    "@paralleldrive/cuid2": "catalog:",
+    "date-fns": "catalog:",
+    "server-only": "catalog:"
+  },
+  "peerDependencies": {
+    "next-auth": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "inboundemail": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

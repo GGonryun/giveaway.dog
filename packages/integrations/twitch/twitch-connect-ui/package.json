@@ -1,0 +1,58 @@
+{
+  "name": "@giveaway/twitch-connect-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:integrations",
+      "platform:twitch"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/twitch/twitch-connect-ui --suppressions-location packages/integrations/twitch/twitch-connect-ui/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./twitch-card": "./src/twitch-card.tsx",
+    "./twitch-disconnect-dialog": "./src/twitch-disconnect-dialog.tsx",
+    "./twitch-registration-dialog": "./src/twitch-registration-dialog.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/integration-ui": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/twitch-connect": "workspace:*",
+    "@giveaway/twitch-model": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "lucide-react": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

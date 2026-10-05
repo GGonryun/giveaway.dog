@@ -1,0 +1,70 @@
+{
+  "name": "@giveaway/team-members-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:team"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/team/team-members-ui",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./edit-member-dialog": "./src/edit-member-dialog.tsx",
+    "./invite-form-card": "./src/invite-form-card.tsx",
+    "./invite-link-modal": "./src/invite-link-modal.tsx",
+    "./invites/context/team-invite-link-context": "./src/invites/context/team-invite-link-context.tsx",
+    "./members-table": "./src/members-table.tsx",
+    "./pending-invitations-table": "./src/pending-invitations-table.tsx",
+    "./remove-member-dialog": "./src/remove-member-dialog.tsx",
+    "./team-roles": "./src/team-roles.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/team-invites-server": "workspace:*",
+    "@giveaway/team-members-server": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "date-fns": "catalog:",
+    "lucide-react": "catalog:",
+    "react-hook-form": "catalog:",
+    "sonner": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/rpc-model": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

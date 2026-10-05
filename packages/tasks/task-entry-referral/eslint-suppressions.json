@@ -1,0 +1,7 @@
+{
+  "packages/tasks/task-entry-referral/src/referral-link.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  }
+}

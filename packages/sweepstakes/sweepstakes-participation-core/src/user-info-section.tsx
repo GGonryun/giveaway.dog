@@ -1,0 +1,101 @@
+'use client';
+
+import React, { useMemo } from 'react';
+import { useGiveawayParticipation } from './giveaway-participation-context';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ProviderIcon } from '@giveaway/integration-icons/provider-icon';
+import { useLogout } from '@giveaway/auth-session-ui/hooks/use-logout';
+import { cn } from '@giveaway/ui-utils/utils';
+import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
+
+export const UserInfoSection: React.FC<{ className?: string }> = ({
+  className
+}) => {
+  const { participant } = useGiveawayParticipation();
+  const logout = useLogout();
+  const pathname = usePathname();
+
+  const loginPath = useMemo(() => {
+    const path = '/login';
+    const params = new URLSearchParams();
+    params.append('redirectTo', pathname);
+    return `${path}?${params.toString()}`;
+  }, [pathname]);
+
+  const { visibleProviders, remainingCount } = useMemo(() => {
+    if (!participant?.user.providers)
+      return { visibleProviders: [], remainingCount: 0 };
+
+    const providers = [...participant.user.providers];
+    const hasEmail = participant.user.email && participant.user.emailVerified;
+    const totalCount = providers.length + (hasEmail ? 1 : 0);
+
+    const MAX_VISIBLE = 5;
+    const visible = providers.slice(0, MAX_VISIBLE);
+    const remaining = Math.max(0, totalCount - MAX_VISIBLE);
+
+    return {
+      visibleProviders: visible,
+      remainingCount: remaining,
+      showEmail: hasEmail && providers.length < MAX_VISIBLE
+    };
+  }, [participant]);
+
+  return (
+    <div className={cn('text-xs text-muted-foreground', className)}>
+      {participant ? (
+        <div className="flex justify-between">
+          <div className="flex items-center gap-1 flex-wrap">
+            <span className="hidden sm:inline">Signed in as</span>
+            <Link href="/account" className="font-semibold">
+              {participant.user.name || UNKNOWN_USER_NAME}
+            </Link>
+            <div className="flex items-center gap-1 ">
+              {/* Social provider icons (max 5) */}
+              {visibleProviders.map((provider) => (
+                <div
+                  key={provider.type}
+                  className="w-4 h-4 rounded bg-background border border-border flex items-center justify-center"
+                >
+                  <ProviderIcon
+                    type={provider.type}
+                    className="w-2.5 h-2.5 text-foreground"
+                  />
+                </div>
+              ))}
+              {/* Remaining providers count */}
+              {remainingCount > 0 && (
+                <div className="w-4 h-4 rounded bg-background border border-border flex items-center justify-center">
+                  <span className="text-[8px] font-medium text-foreground">
+                    +{remainingCount}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="gap-1.5 flex">
+            <Link href="/account" className="hover:underline">
+              Edit
+            </Link>
+            <span
+              className="cursor-pointer hover:underline"
+              onClick={() => {
+                logout.run(pathname);
+              }}
+            >
+              Logout
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div className="flex justify-between">
+          <div>Not signed in</div>
+          <Link href={loginPath} className="hover:underline">
+            Sign In
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+};

@@ -1,0 +1,61 @@
+{
+  "name": "@giveaway/youtube-task-editor",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:integrations",
+      "platform:youtube"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/youtube/youtube-task-editor --suppressions-location packages/integrations/youtube/youtube-task-editor/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./use-youtube-channel-validation": "./src/use-youtube-channel-validation.ts",
+    "./verify-youtube-channel": "./src/verify-youtube-channel.ts",
+    "./youtube-channel-url": "./src/youtube-channel-url.tsx",
+    "./youtube-subscription-confirmation": "./src/youtube-subscription-confirmation.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/ui-hooks": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/youtube-model": "workspace:*",
+    "lucide-react": "catalog:",
+    "react-hook-form": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

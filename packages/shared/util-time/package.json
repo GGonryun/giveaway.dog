@@ -1,0 +1,45 @@
+{
+  "name": "@giveaway/util-time",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:util",
+      "runtime:isomorphic",
+      "scope:shared"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/shared/util-time",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./date": "./src/date.ts",
+    "./time": "./src/time.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/util-errors": "workspace:*",
+    "@vvo/tzdb": "catalog:",
+    "date-fns": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

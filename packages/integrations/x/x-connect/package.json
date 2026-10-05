@@ -1,0 +1,49 @@
+{
+  "name": "@giveaway/x-connect",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:x"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/x/x-connect",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./twitter-oauth-callback": "./src/twitter-oauth-callback.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

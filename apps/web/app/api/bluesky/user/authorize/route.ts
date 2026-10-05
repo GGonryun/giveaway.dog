@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getBlueskyClient } from '@/lib/bluesky/bluesky-client';
+import { getBlueskyClient } from '@giveaway/bluesky-api/bluesky/bluesky-client';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);

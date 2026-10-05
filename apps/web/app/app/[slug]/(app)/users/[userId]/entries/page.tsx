@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
-import { UserParams } from '../params';
-import { UserEntries } from '../components/entries/user-entries';
-import { UserEntriesSkeleton } from '../components/entries/user-entries-skeleton';
-import { NoEntries } from '../components/entries/no-entries';
-import { getTaskCompletions } from '@/lib/participant/procedures/get-task-completions';
+import { UserParams } from '@giveaway/audience-user-details/params';
+import { UserEntries } from '@giveaway/audience-user-details/components/entries/user-entries';
+import { UserEntriesSkeleton } from '@giveaway/audience-user-details/components/entries/user-entries-skeleton';
+import { NoEntries } from '@giveaway/audience-user-details/components/entries/no-entries';
+import { getTaskCompletions } from '@giveaway/participant-server/get-task-completions';
 
 interface UserDetailEntriesPageProps {
   params: Promise<UserParams>;

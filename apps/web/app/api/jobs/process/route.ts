@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { processTaskJobs } from '@/lib/task/procedures/process-task-jobs';
-import { processSweepstakesJobs } from '@/lib/sweepstakes/procedures/process-sweepstakes-jobs';
-import { processAutomatedPostJobs } from '@/lib/automation/procedures/process-automated-post-jobs';
+import { processTaskJobs } from '@giveaway/task-jobs/process-task-jobs';
+import { processSweepstakesJobs } from '@giveaway/sweepstakes-jobs/process-sweepstakes-jobs';
+import { processAutomatedPostJobs } from '@giveaway/automation-server/process-automated-post-jobs';
 import { isValidCronSecret } from '@giveaway/jobs/util';
 
 export async function GET(request: NextRequest) {

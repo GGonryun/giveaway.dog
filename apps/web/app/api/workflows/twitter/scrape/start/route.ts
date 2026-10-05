@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isValidCronSecret } from '@giveaway/jobs/util';
 import { PickerStatus } from '@prisma/client';
 import { start } from 'workflow/api';
-import { twitterScrapeRequest } from '@/lib/pickers/x/schemas/workflow';
-import { scrapeTwitterWorkflow } from '@/lib/pickers/x/workflows/scrape-twitter/workflow';
-import { extractTweetId } from '@/lib/integrations/schemas/twitter';
+import { twitterScrapeRequest } from '@giveaway/x-picker-model/schemas/workflow';
+import { scrapeTwitterWorkflow } from '@giveaway/x-picker-workflow/scrape-twitter/workflow';
+import { extractTweetId } from '@giveaway/x-model/twitter';
 import { getWorld } from 'workflow/runtime';
 
 export async function POST(request: NextRequest) {

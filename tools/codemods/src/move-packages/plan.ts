@@ -39,6 +39,8 @@ const BASE_DEV_DEPENDENCIES = [
 
 const DOM_DEV_DEPENDENCIES = ['@giveaway/testing-dom'];
 
+const VISUAL_DEV_DEPENDENCIES = ['@giveaway/testing-visual'];
+
 const SERVER_ONLY = 'server-only';
 
 const BUILTINS = new Set(builtinModules);
@@ -64,6 +66,7 @@ export type PackagePlan = {
   peerDependencies: Record<string, string>;
   devDependencies: Record<string, string>;
   testProjects: TestProject[];
+  visual: boolean;
   react: boolean;
   suppressions: Suppressions;
 };
@@ -194,9 +197,14 @@ const placeFiles = (
     usedRenames.add(key);
     return renames[key];
   };
+  const renameFile = (key: string) => {
+    const renamed = rename(key);
+    if (renamed === null || posix.extname(renamed)) return renamed;
+    return renamed + posix.extname(key);
+  };
 
   const placeSource = (logical: string, source: string) => {
-    if (!source.endsWith('/')) return rename(source) ?? defaultName(source);
+    if (!source.endsWith('/')) return renameFile(source) ?? defaultName(source);
     const renamed = rename(source);
     const prefix =
       renamed !== null
@@ -212,7 +220,7 @@ const placeFiles = (
     if (kind === 'fixture') {
       targets.set(
         logical,
-        rename(logical) ?? `testing/${posix.basename(logical)}`
+        renameFile(logical) ?? `testing/${posix.basename(logical)}`
       );
       continue;
     }
@@ -326,13 +334,6 @@ export const planMove = (ws: Workspace, options: PlanOptions): Plan => {
         source.endsWith('/') ? file.startsWith(source) : file === source
       );
       if (!found) warnings.push(`${name}: source ${source} has no files`);
-    }
-    for (const file of files) {
-      if (/\.visual\.test\.tsx$/.test(file)) {
-        problems.push(
-          `${name}: ${file} is a visual test, which the codemod cannot move yet`
-        );
-      }
     }
     const placement = placeFiles(ws, entry, files, renames, usedRenames);
     problems.push(...placement.problems);
@@ -653,12 +654,13 @@ const planPackage = (
   const testProjects: TestProject[] = [];
   if (tests.some((file) => file.endsWith('.test.ts')))
     testProjects.push('server');
-  if (tests.some((file) => /(?<!\.snapshot)\.test\.tsx$/.test(file))) {
+  if (tests.some((file) => /(?<!\.snapshot|\.visual)\.test\.tsx$/.test(file))) {
     testProjects.push('frontend');
   }
   if (tests.some((file) => file.endsWith('.snapshot.test.tsx'))) {
     testProjects.push('snapshot');
   }
+  const visual = tests.some((file) => file.endsWith('.visual.test.tsx'));
   const react = moves.some((move) => move.to.endsWith('.tsx'));
 
   const dependencies = new Set<string>();
@@ -667,11 +669,12 @@ const planPackage = (
   if (testProjects.includes('frontend') || testProjects.includes('snapshot')) {
     DOM_DEV_DEPENDENCIES.forEach((name) => dev.add(name));
   }
+  if (visual) VISUAL_DEV_DEPENDENCIES.forEach((name) => dev.add(name));
   if (inputs.serverOnly) dependencies.add(SERVER_ONLY);
+  if (react) dev.add('react');
   for (const usage of inputs.usages) {
     if (usage.name === entry.name) continue;
-    const production =
-      (usage.kind === 'source' || usage.kind === 'fixture') && !usage.mockOnly;
+    const production = usage.kind === 'source' && !usage.mockOnly;
     if (!production) dev.add(usage.name);
     else if (PEER_DEPENDENCIES.has(usage.name)) peers.add(usage.name);
     else dependencies.add(usage.name);
@@ -710,6 +713,7 @@ const planPackage = (
     peerDependencies: versions(peers),
     devDependencies: versions(dev),
     testProjects,
+    visual,
     react,
     suppressions: sortKeys(suppressions)
   };

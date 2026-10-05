@@ -1,6 +1,6 @@
-import { EasterEggLogo } from '@/components/patterns/easter-egg-logo';
-import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
+import { EasterEggLogo } from '@giveaway/ui-brand/easter-egg-logo';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import Link from 'next/link';
 
 export default function NotFound() {

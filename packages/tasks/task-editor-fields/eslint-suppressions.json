@@ -1,0 +1,33 @@
+{
+  "packages/tasks/task-editor-fields/src/end-date.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "react/display-name": {
+      "count": 1
+    }
+  },
+  "packages/tasks/task-editor-fields/src/multiple-choice.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "packages/tasks/task-editor-fields/src/secret-codes.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 7
+    }
+  },
+  "packages/tasks/task-editor-fields/src/single-choice.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "packages/tasks/task-editor-fields/src/start-date.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "react/display-name": {
+      "count": 1
+    }
+  }
+}

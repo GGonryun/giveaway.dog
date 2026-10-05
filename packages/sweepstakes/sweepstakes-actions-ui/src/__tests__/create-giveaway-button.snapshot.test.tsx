@@ -1,0 +1,54 @@
+import { render } from '@testing-library/react';
+import type { ComponentProps } from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { TeamsProvider } from '@giveaway/team-context/team-provider';
+import { createTemplate } from '@giveaway/templates-server/create-template';
+import { createSweepstakes } from '@giveaway/sweepstakes-editor-server/create-sweepstakes';
+import { CreateGiveawayButton } from '../create-giveaway-button';
+import {
+  buildTeam,
+  withStableIds
+} from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
+
+const navigation = vi.hoisted(() => ({
+  router: { push: vi.fn(), refresh: vi.fn() }
+}));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => navigation.router,
+  useParams: () => ({ slug: 'acme' })
+}));
+
+vi.mock('@giveaway/sweepstakes-editor-server/create-sweepstakes', () => ({
+  createSweepstakes: vi.fn()
+}));
+
+vi.mock('@giveaway/templates-server/create-template', () => ({
+  createTemplate: vi.fn()
+}));
+
+vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+
+const team = buildTeam();
+
+const renderButton = (
+  props: ComponentProps<typeof CreateGiveawayButton> = {}
+) =>
+  render(
+    <TeamsProvider value={{ activeTeam: team, teams: [team] }}>
+      <CreateGiveawayButton {...props} />
+    </TeamsProvider>
+  );
+
+describe('CreateGiveawayButton', () => {
+  beforeEach(() => {
+    vi.mocked(createSweepstakes).mockReset();
+    vi.mocked(createTemplate).mockReset();
+    navigation.router.push.mockReset();
+  });
+
+  it('matches the snapshot', () => {
+    const { container } = renderButton();
+    expect(withStableIds(container)).toMatchSnapshot();
+  });
+});

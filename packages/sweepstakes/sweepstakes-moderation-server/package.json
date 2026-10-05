@@ -1,0 +1,55 @@
+{
+  "name": "@giveaway/sweepstakes-moderation-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-moderation-server --suppressions-location packages/sweepstakes/sweepstakes-moderation-server/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./delete-task-completion": "./src/delete-task-completion.ts",
+    "./disqualify-participant": "./src/disqualify-participant.ts",
+    "./reverify-task-completion": "./src/reverify-task-completion.ts",
+    "./update-task-completion-status": "./src/update-task-completion-status.ts",
+    "./update-winner-criteria": "./src/update-winner-criteria.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-access": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/task-validation": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
+    "@giveaway/user-source-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

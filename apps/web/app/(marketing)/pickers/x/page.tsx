@@ -1,10 +1,10 @@
-import { PublicXPickerForm } from '@/lib/pickers/x/components/public-x-picker-form';
-import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
-import { PickerHowItWorksSection } from '@/lib/pickers/x/components/picker-how-it-works-section';
-import { PickerBenefitsSection } from '@/lib/pickers/x/components/picker-benefits-section';
-import { PickerFaqSection } from '@/lib/pickers/x/components/picker-faq-section';
-import { HostCTA } from '@/components/sweepstakes-browse/components/host-cta';
-import { PickerLiveEngagementSection } from '@/lib/pickers/x/components/picker-live-engagement-section';
+import { PublicXPickerForm } from '@giveaway/x-picker-public/public-x-picker-form';
+import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
+import { PickerHowItWorksSection } from '@giveaway/x-picker-public/picker-how-it-works-section';
+import { PickerBenefitsSection } from '@giveaway/x-picker-public/picker-benefits-section';
+import { PickerFaqSection } from '@giveaway/x-picker-public/picker-faq-section';
+import { HostCTA } from '@giveaway/browse-list/components/host-cta';
+import { PickerLiveEngagementSection } from '@giveaway/x-picker-public/picker-live-engagement-section';
 import { environment } from '@giveaway/app-config/environment';
 import type { Metadata } from 'next';
 

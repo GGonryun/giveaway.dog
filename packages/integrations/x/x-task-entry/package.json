@@ -1,0 +1,63 @@
+{
+  "name": "@giveaway/x-task-entry",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:integrations",
+      "platform:x"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/x/x-task-entry --suppressions-location packages/integrations/x/x-task-entry/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./shared": "./src/shared.tsx",
+    "./twitter-connect": "./src/twitter-connect.tsx",
+    "./twitter-follow": "./src/twitter-follow.tsx",
+    "./twitter-like": "./src/twitter-like.tsx",
+    "./twitter-retweet": "./src/twitter-retweet.tsx",
+    "./verified-bonus-badge": "./src/verified-bonus-badge.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-entry-core": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/x-api": "workspace:*",
+    "@giveaway/x-model": "workspace:*",
+    "lucide-react": "catalog:",
+    "next-themes": "catalog:",
+    "pluralize": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pluralize": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

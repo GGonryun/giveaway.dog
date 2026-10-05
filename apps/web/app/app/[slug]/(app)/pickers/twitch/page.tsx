@@ -1,5 +1,5 @@
-import { TeamPageProps } from '@/schemas/pages';
-import { PickerComingSoonCTA } from '@/lib/pickers/shared/components/picker-coming-soon-cta';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
+import { PickerComingSoonCTA } from '@giveaway/picker-ui/components/picker-coming-soon-cta';
 
 type TwitchPickersPageProps = {
   params: Promise<TeamPageProps>;

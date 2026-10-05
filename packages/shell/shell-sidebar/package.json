@@ -1,0 +1,69 @@
+{
+  "name": "@giveaway/shell-sidebar",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:shell"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/shell/shell-sidebar",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./app-sidebar": "./src/app-sidebar.tsx",
+    "./app/outline": "./src/app/outline.tsx",
+    "./nav-projects": "./src/nav-projects.tsx",
+    "./nav-user": "./src/nav-user.tsx",
+    "./team-switcher": "./src/team-switcher.tsx",
+    "./testing/fixtures": "./src/testing/fixtures.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/account-context": "workspace:*",
+    "@giveaway/account-settings": "workspace:*",
+    "@giveaway/auth-session-ui": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
+    "@giveaway/team-picker": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "lucide-react": "catalog:",
+    "next-themes": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/auth-actions": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

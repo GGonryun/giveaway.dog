@@ -1,0 +1,54 @@
+{
+  "name": "@giveaway/integration-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:ui",
+      "runtime:react",
+      "scope:integrations"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/core/integration-ui",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./integration-card-header": "./src/integration-card-header.tsx",
+    "./integration-status-alert": "./src/integration-status-alert.tsx",
+    "./integration-status-badge": "./src/integration-status-badge.tsx",
+    "./placeholder-card": "./src/placeholder-card.tsx",
+    "./user-providers": "./src/user-providers.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-strings": "workspace:*",
+    "lucide-react": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,7 +1,7 @@
-import { auth } from '@/lib/auth/config';
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
+import { auth } from '@giveaway/auth-server/config';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import { Metadata } from 'next';
-import { date } from '@/lib/date';
+import { date } from '@giveaway/util-time/date';
 
 interface LayoutProps {
   children: React.ReactNode;

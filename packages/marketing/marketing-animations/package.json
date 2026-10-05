@@ -1,0 +1,58 @@
+{
+  "name": "@giveaway/marketing-animations",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:marketing"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/marketing/marketing-animations --suppressions-location packages/marketing/marketing-animations/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./bot-carousel": "./src/bot-carousel.tsx",
+    "./entry-methods-carousel": "./src/entry-methods-carousel.tsx",
+    "./orbiting-platforms": "./src/orbiting-platforms.tsx",
+    "./scrolling-templates-animation": "./src/scrolling-templates-animation.tsx",
+    "./unified-platform-visual": "./src/unified-platform-visual.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/platform-catalog": "workspace:*",
+    "@giveaway/theme-server": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/user-quality-model": "workspace:*",
+    "@giveaway/user-quality-ui": "workspace:*",
+    "framer-motion": "catalog:",
+    "lucide-react": "catalog:",
+    "next-themes": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

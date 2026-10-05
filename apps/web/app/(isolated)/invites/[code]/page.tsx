@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { InviteAcceptance } from './invite-acceptance';
-import getInviteDetails from '@/procedures/teams/get-invite-details';
+import { InviteAcceptance } from '@giveaway/team-invite-acceptance/invite-acceptance';
+import getInviteDetails from '@giveaway/team-invites-server/get-invite-details';
 import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';

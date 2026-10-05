@@ -1,9 +1,9 @@
-import { AutomationCard } from '@/lib/automation/components/automation-card';
-import { AutomationCardSkeleton } from '@/lib/automation/components/automation-card-skeleton';
-import { getAutomatedPostJobs } from '@/lib/automation/procedures/get-automated-post-jobs';
-import { getTeamIntegrations } from '@/lib/integrations/procedures/get-team-integrations';
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import { SweepstakesPageProps } from '@/schemas/pages';
+import { AutomationCard } from '@giveaway/automation-ui/automation-card';
+import { AutomationCardSkeleton } from '@giveaway/automation-ui/automation-card-skeleton';
+import { getAutomatedPostJobs } from '@giveaway/automation-server/get-automated-post-jobs';
+import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
 import React, { Suspense } from 'react';
 
 interface PageProps {

@@ -1,0 +1,48 @@
+{
+  "name": "@giveaway/winners-model",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:model",
+      "runtime:isomorphic",
+      "scope:winners"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/winners/winners-model",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./criteria": "./src/criteria.ts",
+    "./slots": "./src/slots.ts",
+    "./testing/fixtures-winners-model": "./src/testing/fixtures-winners-model.ts",
+    "./weighted-rolls": "./src/weighted-rolls.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/user-source-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

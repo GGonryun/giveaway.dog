@@ -1,0 +1,80 @@
+{
+  "name": "@giveaway/ui-layouts",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:ui",
+      "runtime:react",
+      "scope:ui"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/ui/ui-layouts --suppressions-location packages/ui/ui-layouts/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./form-layout/demo-banner": "./src/form-layout/demo-banner.tsx",
+    "./form-layout/desktop-form-layout": "./src/form-layout/desktop-form-layout.tsx",
+    "./form-layout/form-issues-dialog": "./src/form-layout/form-issues-dialog.tsx",
+    "./form-layout/mobile-form-layout": "./src/form-layout/mobile-form-layout.tsx",
+    "./form-layout/section-header": "./src/form-layout/section-header.tsx",
+    "./form-layout/switch-form-header": "./src/form-layout/switch-form-header.tsx",
+    "./form-layout/types": "./src/form-layout/types.ts",
+    "./form-layout/unified-form-footer": "./src/form-layout/unified-form-footer.tsx",
+    "./form-layout/unified-form-layout": "./src/form-layout/unified-form-layout.tsx",
+    "./form-layout/use-form-footer-navigation": "./src/form-layout/use-form-footer-navigation.tsx",
+    "./form-layout/use-form-issues": "./src/form-layout/use-form-issues.tsx",
+    "./form-layout/use-unified-form-layout": "./src/form-layout/use-unified-form-layout.tsx",
+    "./help-dialog": "./src/help-dialog.tsx",
+    "./links": "./src/links.tsx",
+    "./settings-card": "./src/settings-card.tsx",
+    "./site-header": "./src/site-header.tsx",
+    "./testing/layout-context": "./src/testing/layout-context.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/ui-hooks": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-browser": "workspace:*",
+    "lodash": "catalog:",
+    "lucide-react": "catalog:",
+    "pluralize": "catalog:",
+    "react-hook-form": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "@types/pluralize": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "zod": "catalog:"
+  }
+}

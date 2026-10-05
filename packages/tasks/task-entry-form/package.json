@@ -1,0 +1,55 @@
+{
+  "name": "@giveaway/task-entry-form",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-entry-form",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./ask-question": "./src/ask-question.tsx",
+    "./multiple-choice": "./src/multiple-choice.tsx",
+    "./secret-code": "./src/secret-code.tsx",
+    "./single-choice": "./src/single-choice.tsx",
+    "./submit-media": "./src/submit-media.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/sweepstakes-participation-core": "workspace:*",
+    "@giveaway/task-entry-core": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/ui-file-upload": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-rich-text": "workspace:*",
+    "@giveaway/util-media": "workspace:*",
+    "lucide-react": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

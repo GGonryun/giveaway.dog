@@ -1,0 +1,65 @@
+{
+  "name": "@giveaway/account-history",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:account"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/account/account-history",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./filters": "./src/filters.tsx",
+    "./participation-history-skeleton": "./src/participation-history-skeleton.tsx",
+    "./participation-history-table": "./src/participation-history-table.tsx",
+    "./withdraw-participation-dialog": "./src/withdraw-participation-dialog.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/browse-list": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/participation-history-model": "workspace:*",
+    "@giveaway/participation-history-server": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/sweepstakes-ui": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "lucide-react": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/rpc-model": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

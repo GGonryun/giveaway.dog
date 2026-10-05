@@ -1,0 +1,71 @@
+{
+  "name": "@giveaway/shell-navigation",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:shell"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/shell/shell-navigation",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./logged-in-navigation-bar": "./src/logged-in-navigation-bar.tsx",
+    "./logged-out-navigation-bar": "./src/logged-out-navigation-bar.tsx",
+    "./navigation-bar": "./src/navigation-bar.tsx",
+    "./navigation-header": "./src/navigation-header.tsx",
+    "./navigation/desktop-nav-menu": "./src/navigation/desktop-nav-menu.tsx",
+    "./navigation/mobile-nav-links": "./src/navigation/mobile-nav-links.tsx",
+    "./navigation/mobile-sheet-header": "./src/navigation/mobile-sheet-header.tsx",
+    "./navigation/mobile-theme-toggle": "./src/navigation/mobile-theme-toggle.tsx",
+    "./navigation/nav-logo": "./src/navigation/nav-logo.tsx",
+    "./navigation/user-dropdown-menu": "./src/navigation/user-dropdown-menu.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/auth-session-ui": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/ui-brand": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-theme": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "lucide-react": "catalog:",
+    "next-themes": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/auth-actions": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "sonner": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

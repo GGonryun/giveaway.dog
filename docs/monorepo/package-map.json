@@ -12,104 +12,7 @@
     "config": ["config", "model", "util"]
   },
   "refactors": [],
-  "testFixtures": {
-    "components/patterns/app-sidebar/__tests__/fixtures.tsx": {
-      "package": "@giveaway/shell-sidebar",
-      "split": false
-    },
-    "components/patterns/form-layout/__tests__/layout-context.tsx": {
-      "package": "@giveaway/ui-layouts",
-      "split": false
-    },
-    "components/sweepstakes-editor/__tests__/form-harness.tsx": {
-      "package": "@giveaway/ui-layouts",
-      "split": false
-    },
-    "components/sweepstakes-editor/__tests__/stable-dom.ts": {
-      "package": "@giveaway/testing-dom",
-      "split": false
-    },
-    "components/sweepstakes/__tests__/fixtures.tsx": {
-      "package": "@giveaway/sweepstakes-ui-testing",
-      "split": false
-    },
-    "components/sweepstakes/__tests__/participation-fixtures.tsx": {
-      "package": "@giveaway/sweepstakes-participation-core",
-      "split": false
-    },
-    "components/ui/__tests__/test-utils.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
-    "lib/discord/__tests__/fixtures-discord-core.ts": {
-      "package": "@giveaway/discord-model",
-      "split": false
-    },
-    "lib/discord/__tests__/fixtures-discord-procedures-workflows.ts": {
-      "package": "@giveaway/discord-model",
-      "split": false
-    },
-    "lib/integrations/utils/__tests__/fixtures-integrations-utils.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
-    "lib/participant/__tests__/fixtures-participant-referrals-automation.ts": {
-      "package": "@giveaway/participant-model",
-      "split": false
-    },
-    "lib/pickers/x/procedures/__tests__/fixtures-pickers.ts": {
-      "package": "@giveaway/x-picker-server",
-      "split": false
-    },
-    "lib/task/__tests__/fixtures-task-schemas.ts": {
-      "package": "@giveaway/task-model",
-      "split": false
-    },
-    "lib/task/procedures/__tests__/fixtures-task-procedures-verification.ts": {
-      "package": "@giveaway/task-model",
-      "split": false
-    },
-    "lib/task/validation/__tests__/fixtures-task-validation.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
-    "lib/twitch/__tests__/fixtures-twitch.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
-    "lib/winners/__tests__/fixtures-sweepstakes-winners-email.ts": {
-      "package": "@giveaway/winners-server",
-      "split": false
-    },
-    "lib/winners/__tests__/fixtures-winners-model.ts": {
-      "package": "@giveaway/winners-model",
-      "split": false
-    },
-    "procedures/browse/__tests__/fixtures-procedures-browse-marketing-pickers.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
-    "procedures/sweepstakes/__tests__/fixtures-procedures-sweepstakes-a.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
-    "procedures/sweepstakes/__tests__/fixtures-procedures-sweepstakes-b.ts": {
-      "package": "@giveaway/testing-server",
-      "split": false
-    },
-    "procedures/teams/__tests__/fixtures-procedures-teams.ts": {
-      "package": "@giveaway/team-testing",
-      "split": false
-    },
-    "procedures/user/__tests__/fixtures-procedures-user.ts": {
-      "package": "@giveaway/user-model",
-      "split": false
-    },
-    "schemas/__tests__/fixtures-schemas-core-and-scoring.ts": {
-      "package": "@giveaway/user-model",
-      "split": false
-    }
-  },
+  "testFixtures": {},
   "deadFiles": [],
   "packages": [
     {
@@ -168,10 +71,7 @@
         "middleware.ts",
         "next.config.ts",
         "postcss.config.js",
-        "types/next-auth.d.ts",
-        "types/react.d.ts",
-        "vitest.config.ts",
-        "vitest.visual.config.ts"
+        "vitest.config.ts"
       ],
       "dependsOn": [
         "@giveaway/account-context",
@@ -255,7 +155,6 @@
         "@giveaway/templates-model",
         "@giveaway/templates-server",
         "@giveaway/testing-server",
-        "@giveaway/testing-visual",
         "@giveaway/theme-model",
         "@giveaway/theme-server",
         "@giveaway/turnstile-ui",
@@ -319,7 +218,7 @@
       "layer": 3,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["components/context/user-provider.tsx"],
+      "sources": [],
       "dependsOn": ["@giveaway/user-model"],
       "npm": ["react"]
     },
@@ -331,7 +230,7 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/auth/email-verification.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-server",
         "@giveaway/rpc-client",
@@ -349,12 +248,7 @@
       "layer": 8,
       "sourceFiles": 4,
       "testFiles": 6,
-      "sources": [
-        "app/(marketing)/history/filters.tsx",
-        "components/account/participation-history-skeleton.tsx",
-        "components/account/participation-history-table.tsx",
-        "components/account/withdraw-participation-dialog.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/browse-list",
         "@giveaway/participant-model",
@@ -376,13 +270,7 @@
       "layer": 8,
       "sourceFiles": 5,
       "testFiles": 7,
-      "sources": [
-        "components/account/update-display-name.tsx",
-        "components/account/update-preferred-contact.tsx",
-        "components/account/update-profile-image.tsx",
-        "components/account/user-profile.tsx",
-        "lib/auth/components/social-providers.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-context",
         "@giveaway/account-email",
@@ -416,28 +304,17 @@
       "layer": 4,
       "sourceFiles": 11,
       "testFiles": 11,
-      "sources": [
-        "procedures/user/complete-onboarding.ts",
-        "procedures/user/create-profile.ts",
-        "procedures/user/delete-user.ts",
-        "procedures/user/disconnect-account.ts",
-        "procedures/user/get-user.ts",
-        "procedures/user/send-email-verification.ts",
-        "procedures/user/shared.ts",
-        "procedures/user/update-account-type.ts",
-        "procedures/user/update-email.ts",
-        "procedures/user/update-profile.ts",
-        "procedures/user/verify-email.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-server",
+        "@giveaway/db-model",
         "@giveaway/email",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
         "@giveaway/user-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "date-fns", "zod"]
+      "npm": ["date-fns", "zod"]
     },
     {
       "name": "@giveaway/account-settings",
@@ -447,14 +324,10 @@
       "layer": 5,
       "sourceFiles": 4,
       "testFiles": 7,
-      "sources": [
-        "components/account/account-tabs.tsx",
-        "components/account/danger-zone.tsx",
-        "components/account/feature-settings.tsx",
-        "components/account/use-account-page.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-server",
+        "@giveaway/db-model",
         "@giveaway/feature-flags",
         "@giveaway/rpc-client",
         "@giveaway/ui-layouts",
@@ -462,14 +335,7 @@
         "@giveaway/user-model",
         "@giveaway/util-types"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "next",
-        "next-auth",
-        "react",
-        "sonner"
-      ]
+      "npm": ["lucide-react", "next", "next-auth", "react", "sonner"]
     },
     {
       "name": "@giveaway/onboarding",
@@ -479,10 +345,11 @@
       "layer": 8,
       "sourceFiles": 5,
       "testFiles": 9,
-      "sources": ["components/onboarding/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-server",
         "@giveaway/auth-login-ui",
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/ui-file-upload",
         "@giveaway/ui-primitives",
@@ -490,7 +357,6 @@
         "@giveaway/user-model"
       ],
       "npm": [
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "lucide-react",
         "next",
@@ -509,21 +375,16 @@
       "layer": 2,
       "sourceFiles": 5,
       "testFiles": 7,
-      "sources": [
-        "lib/redirect.ts",
-        "schemas/account.ts",
-        "schemas/email-subscription.ts",
-        "schemas/onboarding.ts",
-        "schemas/user.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/util-errors",
         "@giveaway/util-strings",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "lodash", "zod"]
+      "npm": ["lodash", "zod"]
     },
     {
       "name": "@giveaway/audience-server",
@@ -533,15 +394,12 @@
       "layer": 5,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "procedures/user/find-user.ts",
-        "procedures/user/get-user-signals.ts",
-        "procedures/user/track-user.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-server",
         "@giveaway/app-config",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/request-context-model",
         "@giveaway/request-context-server",
         "@giveaway/rpc-server",
@@ -549,7 +407,7 @@
         "@giveaway/user-model",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "lodash", "next", "zod"]
+      "npm": ["lodash", "next", "zod"]
     },
     {
       "name": "@giveaway/audience-table",
@@ -559,12 +417,9 @@
       "layer": 12,
       "sourceFiles": 6,
       "testFiles": 3,
-      "sources": [
-        "app/app/[slug]/(app)/users/components/",
-        "app/app/[slug]/(app)/users/lib/",
-        "components/users/users-filters-sheet.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/participant-model",
         "@giveaway/participant-server",
         "@giveaway/sweepstakes-details-participants",
@@ -577,7 +432,7 @@
         "@giveaway/user-source-ui",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "next", "react"]
+      "npm": ["lucide-react", "next", "react"]
     },
     {
       "name": "@giveaway/audience-user-details",
@@ -587,15 +442,7 @@
       "layer": 7,
       "sourceFiles": 14,
       "testFiles": 7,
-      "sources": [
-        "app/app/[slug]/(app)/users/[userId]/components/",
-        "app/app/[slug]/(app)/users/[userId]/params.ts",
-        "components/users/feature-in-development-dialog.tsx",
-        "components/users/status-explanation-dialog.tsx",
-        "components/users/use-user-details-page.ts",
-        "components/users/user-details-tabs.tsx",
-        "lib/user/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/audience-server",
@@ -624,16 +471,17 @@
       "layer": 4,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/auth/procedures/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-server",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/meta-model",
         "@giveaway/rpc-server",
         "@giveaway/user-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "next", "next-auth", "zod"]
+      "npm": ["next", "next-auth", "zod"]
     },
     {
       "name": "@giveaway/auth-core",
@@ -643,25 +491,14 @@
       "layer": 2,
       "sourceFiles": 6,
       "testFiles": 6,
-      "sources": [
-        "lib/auth/auto-merge.ts",
-        "lib/auth/config-middleware.ts",
-        "lib/auth/config-no-providers.ts",
-        "lib/auth/config-runtime.ts",
-        "lib/auth/get-account-data.ts",
-        "lib/dogs.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/util-collections"
       ],
-      "npm": [
-        "@auth/prisma-adapter",
-        "@giveaway/db-model",
-        "next-auth",
-        "server-only"
-      ]
+      "npm": ["@auth/prisma-adapter", "next-auth", "server-only"]
     },
     {
       "name": "@giveaway/auth-login-ui",
@@ -671,22 +508,14 @@
       "layer": 7,
       "sourceFiles": 8,
       "testFiles": 10,
-      "sources": [
-        "app/(auth)/login/login-form.tsx",
-        "app/(auth)/logout/logout-screen.tsx",
-        "app/(auth)/portal/auth-portal.tsx",
-        "components/auth/account-status-alert.tsx",
-        "components/auth/auth-error.tsx",
-        "components/auth/auth-footer.tsx",
-        "components/auth/login-options.tsx",
-        "components/auth/provider-buttons.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-server",
         "@giveaway/account-settings",
         "@giveaway/auth-actions",
         "@giveaway/auth-model",
         "@giveaway/bluesky-connect-ui",
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
         "@giveaway/meta-connect-ui",
@@ -696,14 +525,7 @@
         "@giveaway/user-model",
         "@giveaway/util-errors"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "next",
-        "next-auth",
-        "react",
-        "sonner"
-      ]
+      "npm": ["lucide-react", "next", "next-auth", "react", "sonner"]
     },
     {
       "name": "@giveaway/auth-model",
@@ -713,9 +535,9 @@
       "layer": 1,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/auth/cookies.ts", "lib/auth/util.ts"],
-      "dependsOn": ["@giveaway/util-types"],
-      "npm": ["@giveaway/db-model", "cookies-next"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-types"],
+      "npm": ["cookies-next"]
     },
     {
       "name": "@giveaway/auth-provider-e2e",
@@ -725,9 +547,9 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/auth/providers/e2e.ts"],
-      "dependsOn": ["@giveaway/db-client"],
-      "npm": ["@giveaway/db-model", "next-auth"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-client", "@giveaway/db-model"],
+      "npm": ["next-auth"]
     },
     {
       "name": "@giveaway/auth-provider-inbound",
@@ -737,7 +559,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/auth/providers/inbound.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/email"],
       "npm": []
     },
@@ -749,23 +571,19 @@
       "layer": 3,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/auth/bluesky-login-token.ts", "lib/auth/config.ts"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-core",
         "@giveaway/auth-provider-e2e",
         "@giveaway/auth-provider-inbound",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/kick-auth",
         "@giveaway/steam-auth",
         "@giveaway/velora-auth"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "@paralleldrive/cuid2",
-        "date-fns",
-        "next-auth"
-      ]
+      "npm": ["@paralleldrive/cuid2", "date-fns", "next-auth"]
     },
     {
       "name": "@giveaway/auth-session-ui",
@@ -775,11 +593,7 @@
       "layer": 5,
       "sourceFiles": 3,
       "testFiles": 1,
-      "sources": [
-        "components/context/auth-session-provider.tsx",
-        "lib/auth/components/logout-button.tsx",
-        "lib/auth/hooks/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-actions",
         "@giveaway/rpc-client",
@@ -795,18 +609,14 @@
       "layer": 6,
       "sourceFiles": 4,
       "testFiles": 4,
-      "sources": [
-        "lib/automation/db.ts",
-        "lib/automation/schemas.ts",
-        "lib/automation/util.ts",
-        "lib/automation/validation.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/automation-server",
@@ -816,10 +626,11 @@
       "layer": 9,
       "sourceFiles": 4,
       "testFiles": 4,
-      "sources": ["lib/automation/procedures/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/automation-model",
         "@giveaway/bluesky-api",
+        "@giveaway/db-model",
         "@giveaway/discord-connect",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
@@ -827,7 +638,7 @@
         "@giveaway/util-errors",
         "@giveaway/x-api"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "zod"]
+      "npm": ["nanoid", "zod"]
     },
     {
       "name": "@giveaway/automation-ui",
@@ -837,10 +648,11 @@
       "layer": 10,
       "sourceFiles": 10,
       "testFiles": 0,
-      "sources": ["lib/automation/components/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/automation-model",
         "@giveaway/automation-server",
+        "@giveaway/db-model",
         "@giveaway/discord-connect",
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
@@ -855,7 +667,6 @@
         "@giveaway/util-time"
       ],
       "npm": [
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "lucide-react",
         "next",
@@ -872,12 +683,7 @@
       "layer": 14,
       "sourceFiles": 4,
       "testFiles": 3,
-      "sources": [
-        "components/sweepstakes-browse/authenticated-sweepstakes-content.tsx",
-        "components/sweepstakes-browse/public-sweepstakes-content.tsx",
-        "components/sweepstakes-browse/referral-code-handler.tsx",
-        "components/sweepstakes-browse/sweepstakes-participation-page-content.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/allocation-model",
         "@giveaway/allocation-server",
@@ -904,11 +710,7 @@
       "layer": 7,
       "sourceFiles": 8,
       "testFiles": 14,
-      "sources": [
-        "app/(marketing)/browse/(list)/filters.tsx",
-        "components/sweepstakes-browse/components/",
-        "components/sweepstakes-browse/sweepstakes-page-skeleton.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/marketing-server",
         "@giveaway/marketing-ui",
@@ -942,11 +744,7 @@
       "layer": 6,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "procedures/browse/get-browse-hosts.ts",
-        "procedures/browse/get-historical-sweepstakes-list.ts",
-        "procedures/browse/get-public-sweepstakes-list.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
@@ -1049,7 +847,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["schemas/feature-flags.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/util-types"],
       "npm": ["@giveaway/db-model"]
     },
@@ -1073,7 +871,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/ratelimit.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/cache"],
       "npm": ["@upstash/ratelimit"]
     },
@@ -1085,13 +883,13 @@
       "layer": 2,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "lib/user-metrics.ts",
-        "schemas/fingerprint.ts",
-        "schemas/user-agent.ts"
+      "sources": [],
+      "dependsOn": [
+        "@giveaway/app-config",
+        "@giveaway/db-model",
+        "@giveaway/util-time"
       ],
-      "dependsOn": ["@giveaway/app-config", "@giveaway/util-time"],
-      "npm": ["@giveaway/db-model", "cookies-next", "next", "zod"]
+      "npm": ["cookies-next", "next", "zod"]
     },
     {
       "name": "@giveaway/request-context-server",
@@ -1101,14 +899,15 @@
       "layer": 3,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/devices.ts", "lib/ip.ts"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/request-context-model",
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/rpc-client",
@@ -1118,7 +917,7 @@
       "layer": 2,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["lib/mrpc/hook.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/rpc-model"],
       "npm": ["react", "sonner"]
     },
@@ -1130,7 +929,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/mrpc/types.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": []
     },
@@ -1142,17 +941,18 @@
       "layer": 3,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/mrpc/errors.ts", "lib/mrpc/procedures.ts"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/auth-core",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/rpc-model",
         "@giveaway/util-errors",
         "@giveaway/util-random",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "next", "next-auth", "zod"]
+      "npm": ["nanoid", "next", "next-auth", "zod"]
     },
     {
       "name": "@giveaway/turnstile-model",
@@ -1174,12 +974,7 @@
       "layer": 4,
       "sourceFiles": 4,
       "testFiles": 4,
-      "sources": [
-        "lib/turnstile/check-status.ts",
-        "lib/turnstile/cookies.ts",
-        "lib/turnstile/server.ts",
-        "lib/turnstile/verify.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/rpc-server", "@giveaway/turnstile-model"],
       "npm": ["next", "zod"]
     },
@@ -1191,13 +986,7 @@
       "layer": 10,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/turnstile/context.tsx",
-        "lib/turnstile/gate.tsx",
-        "lib/turnstile/provider.tsx",
-        "lib/turnstile/use-turnstile.tsx",
-        "lib/turnstile/widget.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/rpc-client",
         "@giveaway/sweepstakes-participation-core",
@@ -1219,15 +1008,10 @@
       "layer": 4,
       "sourceFiles": 11,
       "testFiles": 12,
-      "sources": [
-        "lib/bluesky/",
-        "lib/integrations/procedures/create-skeet.ts",
-        "lib/integrations/procedures/get-bluesky-likes.ts",
-        "lib/integrations/procedures/get-bluesky-oembed.ts",
-        "lib/integrations/procedures/get-bluesky-reposts.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
         "@giveaway/util-errors"
@@ -1236,7 +1020,6 @@
         "@atproto/api",
         "@atproto/jwk-jose",
         "@atproto/oauth-client-node",
-        "@giveaway/db-model",
         "zod"
       ]
     },
@@ -1253,13 +1036,14 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/procedures/disconnect-bluesky.ts"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/team-permissions",
         "@giveaway/team-server"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/bluesky-connect-ui",
@@ -1274,12 +1058,7 @@
       "layer": 6,
       "sourceFiles": 4,
       "testFiles": 0,
-      "sources": [
-        "lib/auth/components/bluesky-connect-form.tsx",
-        "lib/integrations/components/bluesky-card.tsx",
-        "lib/integrations/components/bluesky-connect-dialog.tsx",
-        "lib/integrations/components/bluesky-disconnect-dialog.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-actions",
         "@giveaway/bluesky-connect",
@@ -1313,9 +1092,9 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/sweepstakes/bluesky-import.ts"],
-      "dependsOn": ["@giveaway/bluesky-api"],
-      "npm": ["@giveaway/db-model", "nanoid"]
+      "sources": [],
+      "dependsOn": ["@giveaway/bluesky-api", "@giveaway/db-model"],
+      "npm": ["nanoid"]
     },
     {
       "name": "@giveaway/bluesky-model",
@@ -1330,11 +1109,7 @@
       "layer": 3,
       "sourceFiles": 3,
       "testFiles": 2,
-      "sources": [
-        "lib/auth/schemas/bluesky.ts",
-        "lib/bluesky/embed.ts",
-        "lib/integrations/schemas/bluesky-helpers.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/user-model", "@giveaway/util-errors"],
       "npm": ["zod"]
     },
@@ -1351,11 +1126,7 @@
       "layer": 9,
       "sourceFiles": 3,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/bluesky-importing-account.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/bluesky-post-url.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/bluesky-profile-url.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/integration-icons",
@@ -1381,9 +1152,7 @@
       "layer": 9,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/bluesky/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-api",
         "@giveaway/bluesky-model",
@@ -1409,15 +1178,12 @@
       "layer": 6,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "lib/task/procedures/process-task-jobs/process-bluesky-like-task-job.ts",
-        "lib/task/procedures/process-task-jobs/process-bluesky-repost-task-job.ts",
-        "lib/task/procedures/process-task-jobs/process-bluesky-task-job.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-api",
         "@giveaway/bluesky-import",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/jobs",
         "@giveaway/task-jobs-core",
         "@giveaway/task-model",
@@ -1425,7 +1191,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@atproto/api", "@giveaway/db-model"]
+      "npm": ["@atproto/api"]
     },
     {
       "name": "@giveaway/bluesky-task-validation",
@@ -1440,14 +1206,15 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/bluesky.ts"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-api",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/task-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/integration-icons",
@@ -1457,7 +1224,7 @@
       "layer": 2,
       "sourceFiles": 15,
       "testFiles": 0,
-      "sources": ["lib/integrations/components/icons/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-model",
         "@giveaway/ui-primitives",
@@ -1473,15 +1240,13 @@
       "layer": 1,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": [
-        "lib/integrations/schemas/api.ts",
-        "lib/integrations/schemas/index.ts",
-        "lib/integrations/schemas/providers.ts",
-        "lib/integrations/scopes.ts",
-        "lib/integrations/utils/to-provider-url.tsx"
+      "sources": [],
+      "dependsOn": [
+        "@giveaway/db-model",
+        "@giveaway/util-errors",
+        "@giveaway/util-types"
       ],
-      "dependsOn": ["@giveaway/util-errors", "@giveaway/util-types"],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/integration-server",
@@ -1491,7 +1256,7 @@
       "layer": 4,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/procedures/get-team-integrations.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
@@ -1507,13 +1272,7 @@
       "layer": 3,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/integrations/components/integration-card-header.tsx",
-        "lib/integrations/components/integration-status-alert.tsx",
-        "lib/integrations/components/integration-status-badge.tsx",
-        "lib/integrations/components/placeholder-card.tsx",
-        "lib/integrations/components/user-providers.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
@@ -1531,7 +1290,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/platform-icons.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/util-types"],
       "npm": []
     },
@@ -1548,26 +1307,18 @@
       "layer": 7,
       "sourceFiles": 7,
       "testFiles": 7,
-      "sources": [
-        "lib/discord/api/get-discord-guild-name.ts",
-        "lib/discord/api/post-discord-message.ts",
-        "lib/discord/api/update-discord-message.ts",
-        "lib/discord/api/util.ts",
-        "lib/discord/embeds.ts",
-        "lib/discord/integration/",
-        "lib/integrations/notifications/",
-        "lib/integrations/utils/refresh-discord-token.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/automation-model",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/discord-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/task-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/discord-bot",
@@ -1582,23 +1333,18 @@
       "layer": 8,
       "sourceFiles": 16,
       "testFiles": 16,
-      "sources": [
-        "lib/discord/bot/commands/",
-        "lib/discord/bot/messages.ts",
-        "lib/discord/bot/util.ts",
-        "lib/discord/bot/verify.ts",
-        "lib/discord/workflows/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/automation-model",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/discord-api",
         "@giveaway/discord-model",
         "@giveaway/jobs",
         "@giveaway/task-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "next", "tweetnacl", "workflow"]
+      "npm": ["next", "tweetnacl", "workflow"]
     },
     {
       "name": "@giveaway/discord-connect",
@@ -1613,9 +1359,10 @@
       "layer": 8,
       "sourceFiles": 6,
       "testFiles": 6,
-      "sources": ["lib/discord/procedures/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/automation-model",
+        "@giveaway/db-model",
         "@giveaway/discord-api",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
@@ -1624,7 +1371,7 @@
         "@giveaway/team-server",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "zod"]
+      "npm": ["nanoid", "zod"]
     },
     {
       "name": "@giveaway/discord-connect-ui",
@@ -1639,7 +1386,7 @@
       "layer": 9,
       "sourceFiles": 4,
       "testFiles": 0,
-      "sources": ["lib/discord/components/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/discord-connect",
         "@giveaway/discord-model",
@@ -1665,11 +1412,7 @@
       "layer": 1,
       "sourceFiles": 3,
       "testFiles": 5,
-      "sources": [
-        "lib/discord/api/schemas.ts",
-        "lib/discord/bot/install.ts",
-        "lib/discord/bot/schema.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": ["zod"]
     },
@@ -1686,10 +1429,7 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/discord-guild-id.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/discord-invite-link.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/sweepstakes-model",
@@ -1712,9 +1452,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/discord/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/task-entry-core",
         "@giveaway/task-model",
@@ -1736,13 +1474,14 @@
       "layer": 8,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/discord.ts"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/discord-api",
         "@giveaway/task-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/kick-auth",
@@ -1774,9 +1513,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/kick-follow.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -1797,9 +1534,7 @@
       "layer": 9,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/kick/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/task-entry-core",
         "@giveaway/task-model",
@@ -1821,9 +1556,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/linkedin-follow.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -1844,9 +1577,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/linkedin/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/task-entry-core",
         "@giveaway/task-model",
@@ -1868,10 +1599,7 @@
       "layer": 5,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/auth/components/facebook-connect-form.tsx",
-        "lib/auth/components/instagram-connect-form.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-actions",
         "@giveaway/meta-model",
@@ -1893,10 +1621,7 @@
       "layer": 0,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": [
-        "lib/auth/schemas/facebook.ts",
-        "lib/auth/schemas/instagram.ts"
-      ],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },
@@ -1913,10 +1638,7 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/facebook.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/instagram.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -1938,10 +1660,7 @@
       "layer": 9,
       "sourceFiles": 8,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/facebook/",
-        "lib/task/components/public-sweepstakes/task-actions/lib/instagram/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/task-entry-core",
@@ -1965,7 +1684,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/auth/providers/steam.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["next-auth", "openid"]
     },
@@ -1982,10 +1701,7 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/steam-app-id.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/steam-developer.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -2006,9 +1722,7 @@
       "layer": 10,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/steam/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-participation-core",
         "@giveaway/task-entry-core",
@@ -2033,9 +1747,13 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/steam.ts"],
-      "dependsOn": ["@giveaway/task-model", "@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model"]
+      "sources": [],
+      "dependsOn": [
+        "@giveaway/db-model",
+        "@giveaway/task-model",
+        "@giveaway/util-errors"
+      ],
+      "npm": []
     },
     {
       "name": "@giveaway/tiktok-task-editor",
@@ -2050,9 +1768,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/tiktok.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -2073,9 +1789,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/tiktok/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/task-entry-core",
@@ -2099,25 +1813,16 @@
       "layer": 2,
       "sourceFiles": 9,
       "testFiles": 9,
-      "sources": [
-        "lib/integrations/utils/refresh-twitch-token.ts",
-        "lib/twitch/api/create-eventsub-subscription.ts",
-        "lib/twitch/api/delete-eventsub-subscription.ts",
-        "lib/twitch/api/get-app-access-token.ts",
-        "lib/twitch/api/get-user.ts",
-        "lib/twitch/api/send-chat-message.ts",
-        "lib/twitch/bot/bot-token.ts",
-        "lib/twitch/bot/scopes.ts",
-        "lib/twitch/schemas.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/cache",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/twitch-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/twitch-bot",
@@ -2132,24 +1837,18 @@
       "layer": 5,
       "sourceFiles": 6,
       "testFiles": 6,
-      "sources": [
-        "lib/twitch/bot/webhooks/chat-message.ts",
-        "lib/twitch/bot/webhooks/handler.ts",
-        "lib/twitch/bot/webhooks/notification.ts",
-        "lib/twitch/bot/webhooks/revocation.ts",
-        "lib/twitch/bot/webhooks/verification.ts",
-        "lib/twitch/bot/webhooks/verify.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/cache",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/ratelimit",
         "@giveaway/task-model",
         "@giveaway/twitch-api",
         "@giveaway/twitch-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "next"]
+      "npm": ["next"]
     },
     {
       "name": "@giveaway/twitch-connect",
@@ -2164,8 +1863,9 @@
       "layer": 5,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": ["lib/twitch/procedures/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
         "@giveaway/team-server",
@@ -2174,7 +1874,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/twitch-connect-ui",
@@ -2189,8 +1889,9 @@
       "layer": 6,
       "sourceFiles": 3,
       "testFiles": 0,
-      "sources": ["lib/twitch/components/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
         "@giveaway/integration-ui",
@@ -2200,7 +1901,7 @@
         "@giveaway/twitch-model",
         "@giveaway/ui-primitives"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "next", "react", "sonner"]
+      "npm": ["lucide-react", "next", "react", "sonner"]
     },
     {
       "name": "@giveaway/twitch-model",
@@ -2215,11 +1916,7 @@
       "layer": 1,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "lib/twitch/api/schemas.ts",
-        "lib/twitch/bot/webhooks/schema.ts",
-        "lib/twitch/integration/schemas.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": ["zod"]
     },
@@ -2236,16 +1933,9 @@
       "layer": 9,
       "sourceFiles": 7,
       "testFiles": 1,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-channel-url-display.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-chat-command.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-follow.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-importing-account.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitch-rate-limit.tsx",
-        "lib/task/hooks/use-twitch-trigger-validation.ts",
-        "procedures/sweepstakes/verify-twitch-trigger.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
@@ -2260,14 +1950,7 @@
         "@giveaway/ui-primitives",
         "@giveaway/ui-utils"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "next",
-        "react",
-        "react-hook-form",
-        "zod"
-      ]
+      "npm": ["lucide-react", "next", "react", "react-hook-form", "zod"]
     },
     {
       "name": "@giveaway/twitch-task-entry",
@@ -2282,9 +1965,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/twitch/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/task-entry-core",
@@ -2307,13 +1988,14 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/twitch.ts"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/task-model",
         "@giveaway/twitch-api",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/velora-api",
@@ -2328,9 +2010,9 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/utils/refresh-velora-token.ts"],
-      "dependsOn": ["@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-errors"],
+      "npm": []
     },
     {
       "name": "@giveaway/velora-auth",
@@ -2345,7 +2027,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/auth/providers/velora.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["next-auth", "zod"]
     },
@@ -2362,9 +2044,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/velora-follow.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-hooks",
@@ -2385,9 +2065,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/velora/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/task-entry-core",
         "@giveaway/task-model",
@@ -2409,14 +2087,15 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/velora.ts"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/task-model",
         "@giveaway/util-errors",
         "@giveaway/velora-api"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/x-api",
@@ -2431,21 +2110,16 @@
       "layer": 4,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": [
-        "lib/integrations/procedures/create-tweet.ts",
-        "lib/integrations/procedures/get-twitter-oembed.ts",
-        "lib/integrations/procedures/upload-image.ts",
-        "lib/integrations/utils/get-latest-twitter-access-token.ts",
-        "lib/integrations/utils/twitter-api-request.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
         "@giveaway/util-errors",
         "@giveaway/x-model"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/x-connect",
@@ -2460,8 +2134,9 @@
       "layer": 7,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/procedures/twitter-oauth-callback.tsx"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-access",
@@ -2469,7 +2144,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/x-import",
@@ -2484,9 +2159,9 @@
       "layer": 2,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/sweepstakes/twitter-import.ts"],
-      "dependsOn": ["@giveaway/integration-model"],
-      "npm": ["@giveaway/db-model", "nanoid"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/integration-model"],
+      "npm": ["nanoid"]
     },
     {
       "name": "@giveaway/x-model",
@@ -2501,7 +2176,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/schemas/twitter.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": []
     },
@@ -2518,19 +2193,14 @@
       "layer": 2,
       "sourceFiles": 12,
       "testFiles": 11,
-      "sources": ["lib/scrapebadger/", "types/scrapebadger.d.ts"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/cache",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/util-errors"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "@upstash/ratelimit",
-        "lodash",
-        "scrapebadger",
-        "zod"
-      ]
+      "npm": ["@upstash/ratelimit", "lodash", "scrapebadger", "zod"]
     },
     {
       "name": "@giveaway/x-task-editor",
@@ -2545,12 +2215,7 @@
       "layer": 9,
       "sourceFiles": 4,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/tweet-id.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitter-importing-account.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitter-username.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/twitter-verified-bonus.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
@@ -2576,9 +2241,7 @@
       "layer": 9,
       "sourceFiles": 6,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/twitter/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/rpc-client",
@@ -2605,11 +2268,10 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": [
-        "lib/task/procedures/process-task-jobs/process-retweet-v2-task-job.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/jobs",
         "@giveaway/task-jobs-core",
@@ -2621,7 +2283,7 @@
         "@giveaway/x-import",
         "@giveaway/x-scraper"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/youtube-model",
@@ -2636,7 +2298,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/integrations/schemas/youtube.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },
@@ -2653,12 +2315,7 @@
       "layer": 6,
       "sourceFiles": 4,
       "testFiles": 1,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/youtube-channel-url.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/youtube-subscription-confirmation.tsx",
-        "lib/task/hooks/use-youtube-channel-validation.ts",
-        "procedures/sweepstakes/verify-youtube-channel.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
@@ -2684,9 +2341,7 @@
       "layer": 9,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/youtube/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/task-entry-core",
@@ -2705,7 +2360,7 @@
       "layer": 3,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": ["lib/marketing/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/platform-catalog",
@@ -2725,11 +2380,7 @@
       "layer": 14,
       "sourceFiles": 7,
       "testFiles": 3,
-      "sources": [
-        "components/patterns/hero-sweepstakes-preview.tsx",
-        "components/patterns/hero.tsx",
-        "lib/home/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/marketing-animations",
         "@giveaway/marketing-ui",
@@ -2751,10 +2402,7 @@
       "layer": 15,
       "sourceFiles": 4,
       "testFiles": 0,
-      "sources": [
-        "lib/integrations/integration-landing-page.tsx",
-        "lib/learn/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/marketing-home",
         "@giveaway/marketing-ui",
@@ -2775,7 +2423,7 @@
       "layer": 4,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["procedures/marketing/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/rpc-server",
         "@giveaway/user-model",
@@ -2793,15 +2441,7 @@
       "layer": 3,
       "sourceFiles": 7,
       "testFiles": 13,
-      "sources": [
-        "components/marketing/",
-        "components/patterns/coming-soon.tsx",
-        "components/patterns/faq-section.tsx",
-        "components/patterns/pricing-cta.tsx",
-        "components/patterns/pricing-section.tsx",
-        "components/patterns/shared.tsx",
-        "components/patterns/social-platforms-carousel.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/platform-catalog",
         "@giveaway/theme-server",
@@ -2825,7 +2465,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/allocation/schemas.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },
@@ -2837,7 +2477,7 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/allocation/procedures/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/allocation-model",
         "@giveaway/rpc-server",
@@ -2853,12 +2493,9 @@
       "layer": 1,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": [
-        "lib/custom-fields/defaults.ts",
-        "lib/custom-fields/schemas.ts"
-      ],
-      "dependsOn": ["@giveaway/util-types"],
-      "npm": ["@giveaway/db-model", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-types"],
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/custom-fields-server",
@@ -2868,15 +2505,16 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/custom-fields/procedures/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/task-model",
         "@giveaway/util-errors",
         "@giveaway/util-types",
         "@giveaway/x-model"
       ],
-      "npm": ["@giveaway/db-model", "next-auth", "zod"]
+      "npm": ["next-auth", "zod"]
     },
     {
       "name": "@giveaway/custom-fields-ui",
@@ -2886,10 +2524,11 @@
       "layer": 9,
       "sourceFiles": 3,
       "testFiles": 1,
-      "sources": ["lib/custom-fields/components/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/sweepstakes-editor-core",
         "@giveaway/ui-hooks",
@@ -2903,7 +2542,6 @@
         "@dnd-kit/core",
         "@dnd-kit/sortable",
         "@dnd-kit/utilities",
-        "@giveaway/db-model",
         "lucide-react",
         "nanoid",
         "react",
@@ -2918,9 +2556,9 @@
       "layer": 5,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": ["lib/loyalty/"],
-      "dependsOn": ["@giveaway/task-model"],
-      "npm": ["@giveaway/db-model", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/task-model"],
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/participant-model",
@@ -2930,15 +2568,10 @@
       "layer": 6,
       "sourceFiles": 5,
       "testFiles": 6,
-      "sources": [
-        "lib/participant/db.ts",
-        "lib/participant/schemas.ts",
-        "lib/participant/util.ts",
-        "lib/sweepstakes.ts",
-        "schemas/giveaway/participant.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/task-model",
         "@giveaway/team-model",
@@ -2948,7 +2581,7 @@
         "@giveaway/util-time",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "lodash", "zod"]
+      "npm": ["lodash", "zod"]
     },
     {
       "name": "@giveaway/participant-server",
@@ -2958,14 +2591,15 @@
       "layer": 7,
       "sourceFiles": 7,
       "testFiles": 7,
-      "sources": ["lib/participant/procedures/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/participant-model",
         "@giveaway/rpc-server",
         "@giveaway/task-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/participation-history-model",
@@ -2975,7 +2609,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["schemas/participation-history.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/sweepstakes-model"],
       "npm": ["zod"]
     },
@@ -2987,10 +2621,7 @@
       "layer": 7,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": [
-        "procedures/user/get-participation-history.ts",
-        "procedures/user/withdraw-participation.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/participation-history-model",
@@ -3008,17 +2639,10 @@
       "layer": 7,
       "sourceFiles": 7,
       "testFiles": 7,
-      "sources": [
-        "procedures/browse/get-participant-sweepstake.ts",
-        "procedures/browse/get-sweepstake-form-field.ts",
-        "procedures/browse/get-sweepstake-participant.ts",
-        "procedures/browse/get-sweepstake-tasks.ts",
-        "procedures/browse/get-sweepstakes-privacy.ts",
-        "procedures/browse/get-user-host-relationship.ts",
-        "procedures/browse/refresh-sweepstakes.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/loyalty-model",
         "@giveaway/participant-model",
         "@giveaway/rpc-server",
@@ -3027,7 +2651,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/referrals-model",
@@ -3037,7 +2661,7 @@
       "layer": 0,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/referrals/cookies.ts", "lib/referrals/schemas.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["cookies-next", "next", "zod"]
     },
@@ -3049,14 +2673,15 @@
       "layer": 4,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": ["lib/referrals/procedures/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/referrals-model",
         "@giveaway/rpc-server",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "nanoid"]
+      "npm": ["nanoid"]
     },
     {
       "name": "@giveaway/scoring-model",
@@ -3066,9 +2691,9 @@
       "layer": 1,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": ["lib/scoring/schemas/", "schemas/user-scoring.ts"],
-      "dependsOn": ["@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model", "lodash", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-errors"],
+      "npm": ["lodash", "zod"]
     },
     {
       "name": "@giveaway/scoring-server",
@@ -3078,19 +2703,16 @@
       "layer": 2,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "lib/scoring/imported.ts",
-        "lib/scoring/index.ts",
-        "lib/scoring/signup.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/scoring-model",
         "@giveaway/user-quality-model",
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "lodash"]
+      "npm": ["lodash"]
     },
     {
       "name": "@giveaway/scoring-ui",
@@ -3100,7 +2722,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/scoring/signal-display.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/audience-server", "@giveaway/scoring-model"],
       "npm": ["lucide-react"]
     },
@@ -3112,10 +2734,7 @@
       "layer": 1,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": [
-        "lib/user-quality/enforcement-levels.ts",
-        "schemas/quality.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/util-types"],
       "npm": ["zod"]
     },
@@ -3127,10 +2746,7 @@
       "layer": 2,
       "sourceFiles": 2,
       "testFiles": 1,
-      "sources": [
-        "lib/user-quality/bot-enforcement-field.tsx",
-        "lib/user-quality/display.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/user-quality-model"],
       "npm": ["lucide-react", "react"]
     },
@@ -3142,9 +2758,9 @@
       "layer": 1,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/user-source/data.ts", "lib/user-source/schemas.ts"],
-      "dependsOn": ["@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-errors"],
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/user-source-ui",
@@ -3154,15 +2770,16 @@
       "layer": 3,
       "sourceFiles": 3,
       "testFiles": 0,
-      "sources": ["lib/user-source/components/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/ui-primitives",
         "@giveaway/ui-utils",
         "@giveaway/user-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react"]
+      "npm": ["lucide-react"]
     },
     {
       "name": "@giveaway/picker-model",
@@ -3172,9 +2789,9 @@
       "layer": 0,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": ["lib/pickers/shared/schemas/", "lib/pickers/shared/utils/"],
-      "dependsOn": [],
-      "npm": ["@giveaway/db-model", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model"],
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/picker-ui",
@@ -3184,11 +2801,9 @@
       "layer": 6,
       "sourceFiles": 6,
       "testFiles": 0,
-      "sources": [
-        "lib/pickers/shared/components/",
-        "lib/pickers/shared/themes/"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/picker-model",
         "@giveaway/team-context",
@@ -3196,7 +2811,7 @@
         "@giveaway/ui-utils",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "next"]
+      "npm": ["lucide-react", "next"]
     },
     {
       "name": "@giveaway/x-picker-dashboard",
@@ -3206,13 +2821,7 @@
       "layer": 7,
       "sourceFiles": 6,
       "testFiles": 0,
-      "sources": [
-        "lib/pickers/x/components/create-picker-v2-button.tsx",
-        "lib/pickers/x/components/delete-picker-v2-modal.tsx",
-        "lib/pickers/x/components/pickers-v2-table.tsx",
-        "lib/pickers/x/components/pickers-v2-tabs.tsx",
-        "lib/pickers/x/hooks/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/picker-model",
@@ -3236,19 +2845,10 @@
       "layer": 8,
       "sourceFiles": 11,
       "testFiles": 1,
-      "sources": [
-        "lib/pickers/x/components/sections/",
-        "lib/pickers/x/components/twitter-scrape-progress-monitor.tsx",
-        "lib/pickers/x/components/twitter-v2-cancel-confirmation-modal.tsx",
-        "lib/pickers/x/components/twitter-v2-delete-confirmation-modal.tsx",
-        "lib/pickers/x/components/twitter-v2-picker-form.tsx",
-        "lib/pickers/x/components/twitter-v2-picker-preview.tsx",
-        "lib/pickers/x/components/twitter-v2-publish-confirmation-modal.tsx",
-        "lib/pickers/x/data/steps.ts",
-        "lib/pickers/x/pages/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/picker-model",
         "@giveaway/rpc-client",
@@ -3268,7 +2868,6 @@
         "@giveaway/x-picker-server"
       ],
       "npm": [
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "lucide-react",
         "next",
@@ -3286,21 +2885,15 @@
       "layer": 1,
       "sourceFiles": 9,
       "testFiles": 9,
-      "sources": [
-        "lib/pickers/x/constants.ts",
-        "lib/pickers/x/data/defaults.ts",
-        "lib/pickers/x/schemas/",
-        "lib/pickers/x/utils/calculate-api-calls.ts",
-        "lib/pickers/x/utils/extract-tweet-id.ts",
-        "lib/pickers/x/utils/picker-utils.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/picker-model",
         "@giveaway/util-types",
         "@giveaway/x-model"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/x-picker-public",
@@ -3310,22 +2903,7 @@
       "layer": 10,
       "sourceFiles": 14,
       "testFiles": 0,
-      "sources": [
-        "lib/pickers/x/components/load-tweet-modal.tsx",
-        "lib/pickers/x/components/pick-winners-error-modal.tsx",
-        "lib/pickers/x/components/picker-benefits-section.tsx",
-        "lib/pickers/x/components/picker-faq-section.tsx",
-        "lib/pickers/x/components/picker-how-it-works-section.tsx",
-        "lib/pickers/x/components/picker-live-engagement-section.tsx",
-        "lib/pickers/x/components/progress-modal.tsx",
-        "lib/pickers/x/components/public-x-picker-form.tsx",
-        "lib/pickers/x/components/rate-limit-modal.tsx",
-        "lib/pickers/x/components/tweet-preview-card.tsx",
-        "lib/pickers/x/components/twitter-v2-public-view.tsx",
-        "lib/pickers/x/components/upgrade-modal.tsx",
-        "lib/pickers/x/components/winners-result-modal.tsx",
-        "lib/pickers/x/components/x-pickers-upgrade-cta.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/browse-list",
         "@giveaway/integration-icons",
@@ -3357,16 +2935,7 @@
       "layer": 9,
       "sourceFiles": 8,
       "testFiles": 0,
-      "sources": [
-        "lib/pickers/x/components/twitter-v2-disqualification-reason-modal.tsx",
-        "lib/pickers/x/components/twitter-v2-disqualify-winner-modal.tsx",
-        "lib/pickers/x/components/twitter-v2-draw-extra-winner-modal.tsx",
-        "lib/pickers/x/components/twitter-v2-draw-history-section.tsx",
-        "lib/pickers/x/components/twitter-v2-draw-history-table.tsx",
-        "lib/pickers/x/components/twitter-v2-participants-section.tsx",
-        "lib/pickers/x/components/twitter-v2-participants-table.tsx",
-        "lib/pickers/x/components/twitter-v2-picker-overview.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/picker-model",
@@ -3387,12 +2956,9 @@
       "layer": 5,
       "sourceFiles": 13,
       "testFiles": 14,
-      "sources": [
-        "lib/pickers/x/procedures/",
-        "lib/pickers/x/utils/fetch-retweeters-with-coverage.ts",
-        "procedures/pickers/"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/team-permissions",
         "@giveaway/team-server",
@@ -3400,7 +2966,7 @@
         "@giveaway/x-picker-model",
         "@giveaway/x-scraper"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "workflow", "zod"]
+      "npm": ["nanoid", "workflow", "zod"]
     },
     {
       "name": "@giveaway/x-picker-workflow",
@@ -3410,9 +2976,13 @@
       "layer": 3,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": ["lib/pickers/x/workflows/"],
-      "dependsOn": ["@giveaway/db-client", "@giveaway/x-scraper"],
-      "npm": ["@giveaway/db-model", "workflow"]
+      "sources": [],
+      "dependsOn": [
+        "@giveaway/db-client",
+        "@giveaway/db-model",
+        "@giveaway/x-scraper"
+      ],
+      "npm": ["workflow"]
     },
     {
       "name": "@giveaway/util-browser",
@@ -3422,7 +2992,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["lib/browser.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": []
     },
@@ -3434,14 +3004,9 @@
       "layer": 0,
       "sourceFiles": 4,
       "testFiles": 4,
-      "sources": [
-        "lib/arrays.ts",
-        "lib/json.ts",
-        "lib/object.ts",
-        "lib/pagination.ts"
-      ],
+      "sources": [],
       "dependsOn": [],
-      "npm": ["@giveaway/db-model", "lodash"]
+      "npm": ["lodash"]
     },
     {
       "name": "@giveaway/util-errors",
@@ -3463,11 +3028,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": [
-        "lib/continents.json",
-        "lib/countries.json",
-        "lib/countries.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": []
     },
@@ -3479,7 +3040,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/html.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["turndown"]
     },
@@ -3491,7 +3052,7 @@
       "layer": 0,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/aspect-ratio/", "lib/files.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },
@@ -3503,7 +3064,7 @@
       "layer": 2,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/rng.ts", "lib/simulate.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/util-time"],
       "npm": []
     },
@@ -3527,7 +3088,7 @@
       "layer": 1,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": ["lib/date.ts", "lib/time.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/util-errors"],
       "npm": ["@vvo/tzdb", "date-fns"]
     },
@@ -3551,7 +3112,7 @@
       "layer": 3,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/patterns/footer.tsx"],
+      "sources": [],
       "dependsOn": ["@giveaway/app-config", "@giveaway/integration-icons"],
       "npm": ["next", "react"]
     },
@@ -3563,13 +3124,14 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["components/user-metrics-collector.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/audience-server",
+        "@giveaway/db-model",
         "@giveaway/request-context-model",
         "@giveaway/rpc-client"
       ],
-      "npm": ["@giveaway/db-model", "next-auth", "react"]
+      "npm": ["next-auth", "react"]
     },
     {
       "name": "@giveaway/shell-navigation",
@@ -3579,29 +3141,18 @@
       "layer": 6,
       "sourceFiles": 10,
       "testFiles": 14,
-      "sources": [
-        "components/patterns/logged-in-navigation-bar.tsx",
-        "components/patterns/logged-out-navigation-bar.tsx",
-        "components/patterns/navigation-bar.tsx",
-        "components/patterns/navigation-header.tsx",
-        "components/patterns/navigation/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/auth-session-ui",
+        "@giveaway/db-model",
         "@giveaway/ui-brand",
         "@giveaway/ui-primitives",
         "@giveaway/ui-theme",
         "@giveaway/ui-utils",
         "@giveaway/user-model"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "next",
-        "next-themes",
-        "react"
-      ]
+      "npm": ["lucide-react", "next", "next-themes", "react"]
     },
     {
       "name": "@giveaway/shell-sidebar",
@@ -3611,13 +3162,7 @@
       "layer": 9,
       "sourceFiles": 5,
       "testFiles": 8,
-      "sources": [
-        "components/app/",
-        "components/patterns/app-sidebar/index.tsx",
-        "components/patterns/app-sidebar/nav-projects.tsx",
-        "components/patterns/app-sidebar/nav-user.tsx",
-        "components/patterns/app-sidebar/team-switcher.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-context",
         "@giveaway/account-settings",
@@ -3640,15 +3185,16 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["procedures/sweepstakes/shared.ts"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/team-model",
         "@giveaway/team-permissions",
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "next-auth"]
+      "npm": ["next-auth"]
     },
     {
       "name": "@giveaway/sweepstakes-actions-ui",
@@ -3658,15 +3204,7 @@
       "layer": 8,
       "sourceFiles": 7,
       "testFiles": 9,
-      "sources": [
-        "components/sweepstakes/create-giveaway-button.tsx",
-        "components/sweepstakes/delete-confirmation-modal.tsx",
-        "components/sweepstakes/edit-giveaway-button.tsx",
-        "components/sweepstakes/use-convert-to-template.ts",
-        "components/sweepstakes/use-copy-sweepstakes.ts",
-        "components/sweepstakes/use-delete-sweepstakes.ts",
-        "components/templates/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/rpc-client",
@@ -3688,7 +3226,7 @@
       "layer": 9,
       "sourceFiles": 3,
       "testFiles": 0,
-      "sources": ["app/app/[slug]/(app)/(dashboard)/(table)/components/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/sweepstakes-actions-ui",
@@ -3708,12 +3246,10 @@
       "layer": 7,
       "sourceFiles": 2,
       "testFiles": 3,
-      "sources": [
-        "components/demo/sample-sweepstakes-data.ts",
-        "components/sweepstakes-editor/data/mocks.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/loyalty-model",
         "@giveaway/participant-model",
@@ -3723,7 +3259,7 @@
         "@giveaway/user-model",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "sonner"]
+      "npm": ["nanoid", "sonner"]
     },
     {
       "name": "@giveaway/sweepstakes-details-analytics",
@@ -3733,12 +3269,7 @@
       "layer": 6,
       "sourceFiles": 4,
       "testFiles": 5,
-      "sources": [
-        "components/sweepstakes-details/daily-entries-timeline.tsx",
-        "components/sweepstakes-details/prize-allocation-chart.tsx",
-        "components/sweepstakes-details/sweepstakes-analytics-skeleton.tsx",
-        "components/sweepstakes-details/sweepstakes-analytics.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/allocation-model",
         "@giveaway/app-config",
@@ -3756,15 +3287,10 @@
       "layer": 11,
       "sourceFiles": 5,
       "testFiles": 10,
-      "sources": [
-        "components/sweepstakes-details/delete-entry-dialog.tsx",
-        "components/sweepstakes-details/sweepstakes-entries-skeleton.tsx",
-        "components/sweepstakes-details/sweepstakes-entries.tsx",
-        "components/sweepstakes-details/task-completion-detail-sheet.tsx",
-        "components/sweepstakes-details/verification-instructions-dialog.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/sweepstakes-moderation-server",
         "@giveaway/task-model",
@@ -3774,15 +3300,7 @@
         "@giveaway/user-model",
         "@giveaway/user-source-ui"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "date-fns",
-        "lodash",
-        "lucide-react",
-        "next",
-        "react",
-        "sonner"
-      ]
+      "npm": ["date-fns", "lodash", "lucide-react", "next", "react", "sonner"]
     },
     {
       "name": "@giveaway/sweepstakes-details-participants",
@@ -3792,11 +3310,7 @@
       "layer": 11,
       "sourceFiles": 3,
       "testFiles": 4,
-      "sources": [
-        "components/sweepstakes-details/sweepstakes-participants-skeleton.tsx",
-        "components/sweepstakes-details/sweepstakes-participants.tsx",
-        "components/sweepstakes-details/user-participant-detail-sheet.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/audience-user-details",
@@ -3825,8 +3339,9 @@
       "layer": 15,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/sweepstakes-details/sweepstakes-preview.tsx"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/sweepstakes-demo",
         "@giveaway/sweepstakes-editor-core",
@@ -3841,7 +3356,7 @@
         "@giveaway/ui-qr",
         "@giveaway/ui-utils"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "next", "react"]
+      "npm": ["lucide-react", "next", "react"]
     },
     {
       "name": "@giveaway/sweepstakes-details-promotion",
@@ -3851,7 +3366,7 @@
       "layer": 7,
       "sourceFiles": 4,
       "testFiles": 0,
-      "sources": ["lib/sweepstakes-promotion/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/integration-icons",
@@ -3870,10 +3385,7 @@
       "layer": 7,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": [
-        "components/sweepstakes-details/sweepstakes-loading-skeleton.tsx",
-        "components/sweepstakes-details/sweepstakes-tabs.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/sweepstakes-routes",
@@ -3890,14 +3402,10 @@
       "layer": 11,
       "sourceFiles": 4,
       "testFiles": 6,
-      "sources": [
-        "components/sweepstakes-details/dice-icon.tsx",
-        "components/sweepstakes-details/public-winner-draw.tsx",
-        "components/sweepstakes-details/sweepstakes-winners-skeleton.tsx",
-        "components/sweepstakes-details/sweepstakes-winners.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/participant-model",
         "@giveaway/rpc-client",
         "@giveaway/shell-navigation",
@@ -3917,7 +3425,6 @@
         "@giveaway/winners-server"
       ],
       "npm": [
-        "@giveaway/db-model",
         "canvas-confetti",
         "framer-motion",
         "lucide-react",
@@ -3934,11 +3441,7 @@
       "layer": 15,
       "sourceFiles": 3,
       "testFiles": 4,
-      "sources": [
-        "components/sweepstakes-editor/sweepstake-form-content.tsx",
-        "components/sweepstakes-editor/sweepstakes-form-page.tsx",
-        "components/sweepstakes-editor/sweepstakes-form.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-model",
         "@giveaway/integration-server",
@@ -3974,9 +3477,10 @@
       "layer": 10,
       "sourceFiles": 8,
       "testFiles": 16,
-      "sources": ["components/sweepstakes-editor/form/audience/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/custom-fields-ui",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/sweepstakes-editor-server",
         "@giveaway/sweepstakes-model",
@@ -3988,14 +3492,7 @@
         "@giveaway/util-geo",
         "@giveaway/util-types"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "nanoid",
-        "next",
-        "react",
-        "react-hook-form"
-      ]
+      "npm": ["lucide-react", "nanoid", "next", "react", "react-hook-form"]
     },
     {
       "name": "@giveaway/sweepstakes-editor-core",
@@ -4005,15 +3502,9 @@
       "layer": 8,
       "sourceFiles": 6,
       "testFiles": 11,
-      "sources": [
-        "components/sweepstakes-editor/complete-sweepstakes-alert.tsx",
-        "components/sweepstakes-editor/contexts/",
-        "components/sweepstakes-editor/data/steps.ts",
-        "components/sweepstakes-editor/form/icon-button.tsx",
-        "components/sweepstakes-editor/publish-confirmation-modal.tsx",
-        "components/sweepstakes-editor/sweepstakes-status.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/sweepstakes-editor-server",
         "@giveaway/sweepstakes-model",
@@ -4024,14 +3515,7 @@
         "@giveaway/util-time",
         "@giveaway/util-types"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "date-fns",
-        "lucide-react",
-        "next",
-        "react",
-        "react-hook-form"
-      ]
+      "npm": ["date-fns", "lucide-react", "next", "react", "react-hook-form"]
     },
     {
       "name": "@giveaway/sweepstakes-editor-design",
@@ -4041,7 +3525,7 @@
       "layer": 6,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/sweepstakes-editor/form/design/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-layouts",
@@ -4058,13 +3542,11 @@
       "layer": 14,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": [
-        "components/sweepstakes-editor/sweepstakes-editor-preview.tsx",
-        "components/sweepstakes-editor/sweepstakes-preview-footer.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/participant-model",
         "@giveaway/sweepstakes-demo",
         "@giveaway/sweepstakes-editor-core",
@@ -4077,7 +3559,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "react", "react-hook-form"]
+      "npm": ["lucide-react", "react", "react-hook-form"]
     },
     {
       "name": "@giveaway/sweepstakes-editor-prizes",
@@ -4087,7 +3569,7 @@
       "layer": 9,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": ["components/sweepstakes-editor/form/prizes/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-editor-core",
         "@giveaway/sweepstakes-model",
@@ -4114,7 +3596,7 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": ["components/sweepstakes-editor/form/selection/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-layouts",
@@ -4131,20 +3613,9 @@
       "layer": 7,
       "sourceFiles": 11,
       "testFiles": 11,
-      "sources": [
-        "procedures/sweepstakes/complete-sweepstakes.ts",
-        "procedures/sweepstakes/copy-sweepstakes.ts",
-        "procedures/sweepstakes/create-sweepstakes.ts",
-        "procedures/sweepstakes/delete-sweepstakes.ts",
-        "procedures/sweepstakes/get-published-sweepstakes.ts",
-        "procedures/sweepstakes/get-sweepstakes-form.ts",
-        "procedures/sweepstakes/get-sweepstakes-status.ts",
-        "procedures/sweepstakes/publish-sweepstakes.ts",
-        "procedures/sweepstakes/toggle-visibility.ts",
-        "procedures/sweepstakes/update-sweepstakes.ts",
-        "procedures/sweepstakes/verify-slug.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-access",
         "@giveaway/sweepstakes-model",
@@ -4154,7 +3625,7 @@
         "@giveaway/util-collections",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "lodash", "nanoid", "zod"]
+      "npm": ["lodash", "nanoid", "zod"]
     },
     {
       "name": "@giveaway/sweepstakes-editor-setup",
@@ -4164,8 +3635,9 @@
       "layer": 6,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": ["components/sweepstakes-editor/form/setup/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-date",
         "@giveaway/ui-file-upload",
@@ -4175,7 +3647,7 @@
         "@giveaway/util-time",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "react", "react-hook-form"]
+      "npm": ["lucide-react", "react", "react-hook-form"]
     },
     {
       "name": "@giveaway/sweepstakes-insights-server",
@@ -4185,15 +3657,10 @@
       "layer": 6,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": [
-        "procedures/sweepstakes/get-sweepstake-entries.ts",
-        "procedures/sweepstakes/get-sweepstake-prizes.ts",
-        "procedures/sweepstakes/get-sweepstake-task-entries.ts",
-        "procedures/sweepstakes/get-sweepstakes-entry-time-series.ts",
-        "procedures/sweepstakes/get-sweepstakes-list.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
         "@giveaway/task-model",
@@ -4202,7 +3669,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-time"
       ],
-      "npm": ["@giveaway/db-model", "date-fns", "lodash", "zod"]
+      "npm": ["date-fns", "lodash", "zod"]
     },
     {
       "name": "@giveaway/sweepstakes-jobs",
@@ -4212,18 +3679,19 @@
       "layer": 8,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/sweepstakes/procedures/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/automation-model",
         "@giveaway/db-client",
+        "@giveaway/db-model",
         "@giveaway/discord-api",
         "@giveaway/sweepstakes-model",
         "@giveaway/team-model",
         "@giveaway/util-errors",
         "@giveaway/util-html"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/sweepstakes-model",
@@ -4233,30 +3701,11 @@
       "layer": 5,
       "sourceFiles": 18,
       "testFiles": 18,
-      "sources": [
-        "components/sweepstakes-editor/form/terms.ts",
-        "components/sweepstakes/util.ts",
-        "lib/filters/",
-        "lib/sweepstakes/schemas/",
-        "lib/sweepstakes/util.ts",
-        "lib/task/jobs.ts",
-        "lib/task/validation/form.ts",
-        "schemas/color.ts",
-        "schemas/giveaway/db.ts",
-        "schemas/giveaway/defaults.ts",
-        "schemas/giveaway/input.ts",
-        "schemas/giveaway/is.ts",
-        "schemas/giveaway/public.ts",
-        "schemas/giveaway/schemas.ts",
-        "schemas/giveaway/storable.ts",
-        "schemas/pages.ts",
-        "schemas/prizes.ts",
-        "schemas/sweepstakes.ts",
-        "schemas/timing.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/task-model",
         "@giveaway/user-model",
@@ -4268,7 +3717,7 @@
         "@giveaway/util-time",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "date-fns", "lodash", "pluralize", "zod"]
+      "npm": ["date-fns", "lodash", "pluralize", "zod"]
     },
     {
       "name": "@giveaway/sweepstakes-moderation-server",
@@ -4278,14 +3727,9 @@
       "layer": 10,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": [
-        "procedures/sweepstakes/delete-task-completion.ts",
-        "procedures/sweepstakes/disqualify-participant.ts",
-        "procedures/sweepstakes/reverify-task-completion.ts",
-        "procedures/sweepstakes/update-task-completion-status.ts",
-        "procedures/sweepstakes/update-winner-criteria.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-access",
         "@giveaway/sweepstakes-model",
@@ -4295,7 +3739,7 @@
         "@giveaway/user-source-model",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/sweepstakes-participation",
@@ -4305,10 +3749,7 @@
       "layer": 13,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": [
-        "components/sweepstakes/giveaway-participation-card.tsx",
-        "components/sweepstakes/giveaway-participation.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/sweepstakes-participation-core",
@@ -4333,12 +3774,7 @@
       "layer": 9,
       "sourceFiles": 4,
       "testFiles": 6,
-      "sources": [
-        "components/sweepstakes/giveaway-participation-context.tsx",
-        "components/sweepstakes/sweepstakes-login-options.tsx",
-        "components/sweepstakes/terms-modal.tsx",
-        "components/sweepstakes/user-info-section.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/allocation-model",
         "@giveaway/app-config",
@@ -4367,12 +3803,13 @@
       "layer": 12,
       "sourceFiles": 11,
       "testFiles": 22,
-      "sources": ["components/sweepstakes/states/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/account-email",
         "@giveaway/allocation-model",
         "@giveaway/app-config",
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/participant-model",
         "@giveaway/participation-server",
@@ -4391,7 +3828,6 @@
         "@giveaway/x-model"
       ],
       "npm": [
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "date-fns",
         "lucide-react",
@@ -4411,14 +3847,7 @@
       "layer": 6,
       "sourceFiles": 6,
       "testFiles": 3,
-      "sources": [
-        "components/sweepstakes/use-browse-sweepstakes-page.ts",
-        "components/sweepstakes/use-create-sweepstakes-page.ts",
-        "components/sweepstakes/use-edit-sweepstakes-page.ts",
-        "components/sweepstakes/use-live-sweepstakes-url.tsx",
-        "components/sweepstakes/use-sweepstakes-details-page.ts",
-        "components/sweepstakes/use-sweepstakes-page.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/team-context",
@@ -4435,13 +3864,7 @@
       "layer": 6,
       "sourceFiles": 6,
       "testFiles": 10,
-      "sources": [
-        "components/sweepstakes-details/disqualification-dialog.tsx",
-        "components/sweepstakes/cancel-confirmation-modal.tsx",
-        "components/sweepstakes/fallbacks/",
-        "components/sweepstakes/status-badge.tsx",
-        "lib/sweepstake-status.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/sweepstakes-model",
@@ -4455,6 +3878,19 @@
       "npm": ["date-fns", "lucide-react", "next", "react", "react-hook-form"]
     },
     {
+      "name": "@giveaway/sweepstakes-ui-testing",
+      "path": "packages/sweepstakes/sweepstakes-ui-testing",
+      "type": "config",
+      "tags": ["type:config", "runtime:isomorphic", "scope:sweepstakes"],
+      "layer": 7,
+      "sourceFiles": 0,
+      "testFiles": 0,
+      "sources": [],
+      "dependsOn": [],
+      "npm": [],
+      "note": "Test fixtures that the sweepstakes UI packages share."
+    },
+    {
       "name": "@giveaway/task-actions",
       "path": "packages/tasks/task-actions",
       "type": "feature",
@@ -4462,12 +3898,9 @@
       "layer": 10,
       "sourceFiles": 3,
       "testFiles": 2,
-      "sources": [
-        "lib/task/procedures/submit-tasks.ts",
-        "lib/task/procedures/update-task.ts",
-        "lib/task/submission.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/referrals-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-model",
@@ -4477,7 +3910,7 @@
         "@giveaway/ui-primitives",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "pluralize", "zod"]
+      "npm": ["lucide-react", "pluralize", "zod"]
     },
     {
       "name": "@giveaway/task-editor",
@@ -4487,13 +3920,7 @@
       "layer": 10,
       "sourceFiles": 8,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/entry-methods/",
-        "lib/task/components/select-dialog/",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/additional-settings.tsx",
-        "lib/task/components/sweepstakes-editor-form/advanced-settings.tsx",
-        "lib/task/components/sweepstakes-editor-form/base-settings.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-task-editor",
         "@giveaway/discord-task-editor",
@@ -4538,25 +3965,7 @@
       "layer": 6,
       "sourceFiles": 17,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/ask-question.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/bonus-loyalty.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/end-date.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/href.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/label.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/max-entrants.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/maximum-referrals.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/multiple-choice.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/require-proof.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/secret-code-case-sensitive.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/secret-code.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/secret-codes.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/secret-hint.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/single-choice.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/start-date.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/submit-media.tsx",
-        "lib/task/components/sweepstakes-editor-form/additional-settings/lib/switch-box-form-field.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-model",
         "@giveaway/ui-date",
@@ -4576,19 +3985,10 @@
       "layer": 11,
       "sourceFiles": 9,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-action.tsx",
-        "lib/task/components/public-sweepstakes/task-actions/form.tsx",
-        "lib/task/components/public-sweepstakes/task-badge.tsx",
-        "lib/task/components/public-sweepstakes/task-button.tsx",
-        "lib/task/components/public-sweepstakes/task-icon.tsx",
-        "lib/task/components/public-sweepstakes/task-item.tsx",
-        "lib/task/components/public-sweepstakes/task-list.tsx",
-        "lib/task/components/public-sweepstakes/task-lock.tsx",
-        "lib/task/components/public-sweepstakes/task-tooltip-content.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-task-entry",
+        "@giveaway/db-model",
         "@giveaway/discord-task-entry",
         "@giveaway/integration-icons",
         "@giveaway/integration-model",
@@ -4619,7 +4019,6 @@
         "@giveaway/youtube-task-entry"
       ],
       "npm": [
-        "@giveaway/db-model",
         "date-fns",
         "lodash",
         "lucide-react",
@@ -4639,13 +4038,7 @@
       "layer": 8,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/building-blocks.tsx",
-        "lib/task/components/public-sweepstakes/task-actions/lib/error-display.tsx",
-        "lib/task/components/public-sweepstakes/task-actions/lib/provider-connection.tsx",
-        "lib/task/components/public-sweepstakes/task-actions/lib/task-entry-context.tsx",
-        "lib/task/components/public-sweepstakes/task-actions/lib/use-after-visit-behavior.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/auth-login-ui",
         "@giveaway/integration-model",
@@ -4667,9 +4060,7 @@
       "layer": 10,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/form/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/sweepstakes-participation-core",
         "@giveaway/task-entry-core",
@@ -4689,9 +4080,7 @@
       "layer": 10,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/referral/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/referrals-model",
         "@giveaway/sweepstakes-participation-core",
@@ -4711,9 +4100,7 @@
       "layer": 9,
       "sourceFiles": 5,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/public-sweepstakes/task-actions/lib/website/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/task-entry-core",
         "@giveaway/task-model",
@@ -4733,19 +4120,17 @@
       "layer": 7,
       "sourceFiles": 2,
       "testFiles": 2,
-      "sources": [
-        "lib/task/procedures/process-task-jobs/index.ts",
-        "lib/task/procedures/process-task-jobs/process-task-job.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-task-jobs",
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/task-jobs-core",
         "@giveaway/task-model",
         "@giveaway/util-errors",
         "@giveaway/x-task-jobs"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/task-jobs-core",
@@ -4755,9 +4140,9 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["lib/task/procedures/process-task-jobs/types.ts"],
-      "dependsOn": [],
-      "npm": ["@giveaway/db-model"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model"],
+      "npm": []
     },
     {
       "name": "@giveaway/task-model",
@@ -4767,27 +4152,18 @@
       "layer": 4,
       "sourceFiles": 10,
       "testFiles": 11,
-      "sources": [
-        "lib/task/completions.ts",
-        "lib/task/defaults.ts",
-        "lib/task/entries.ts",
-        "lib/task/queries.ts",
-        "lib/task/schemas.ts",
-        "lib/task/validation/status.ts",
-        "lib/task/validation/steam-errors.ts",
-        "lib/task/validation/types.ts",
-        "lib/task/verification/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/bluesky-model",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/user-model",
         "@giveaway/util-collections",
         "@giveaway/util-errors",
         "@giveaway/x-model"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/task-ui",
@@ -4797,21 +4173,15 @@
       "layer": 5,
       "sourceFiles": 11,
       "testFiles": 0,
-      "sources": [
-        "lib/task/components/badges/",
-        "lib/task/components/task-category-badge.tsx",
-        "lib/task/components/task-platform-icon.tsx",
-        "lib/task/components/task-status-badge.tsx",
-        "lib/task/components/task-status-icon.tsx",
-        "lib/task/components/theme.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/integration-icons",
         "@giveaway/task-model",
         "@giveaway/ui-primitives",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "pluralize", "react"]
+      "npm": ["lucide-react", "pluralize", "react"]
     },
     {
       "name": "@giveaway/task-validation",
@@ -4821,9 +4191,10 @@
       "layer": 9,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/task/validation/integrations.ts"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-task-validation",
+        "@giveaway/db-model",
         "@giveaway/discord-task-validation",
         "@giveaway/steam-task-validation",
         "@giveaway/task-model",
@@ -4832,7 +4203,7 @@
         "@giveaway/util-errors",
         "@giveaway/velora-task-validation"
       ],
-      "npm": ["@giveaway/db-model"]
+      "npm": []
     },
     {
       "name": "@giveaway/task-validation-core",
@@ -4842,20 +4213,9 @@
       "layer": 7,
       "sourceFiles": 11,
       "testFiles": 11,
-      "sources": [
-        "lib/task/validation/ask-question.ts",
-        "lib/task/validation/bonus.ts",
-        "lib/task/validation/mandatory.ts",
-        "lib/task/validation/multiple-choice.ts",
-        "lib/task/validation/proof.ts",
-        "lib/task/validation/referral.ts",
-        "lib/task/validation/required.ts",
-        "lib/task/validation/secret-code.ts",
-        "lib/task/validation/single-choice.ts",
-        "lib/task/validation/task-state.ts",
-        "lib/task/validation/visit-url.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/loyalty-model",
         "@giveaway/participant-model",
         "@giveaway/referrals-model",
@@ -4864,7 +4224,7 @@
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "next"]
+      "npm": ["next"]
     },
     {
       "name": "@giveaway/team-context",
@@ -4874,20 +4234,14 @@
       "layer": 5,
       "sourceFiles": 6,
       "testFiles": 7,
-      "sources": [
-        "components/context/team-provider.tsx",
-        "components/demo/mock-team-provider.tsx",
-        "components/hooks/use-user-teams.tsx",
-        "components/team/use-active-team-page.tsx",
-        "components/team/use-team-page.tsx",
-        "components/team/use-teams-page.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/team-model",
         "@giveaway/team-server"
       ],
-      "npm": ["@giveaway/db-model", "next", "react"]
+      "npm": ["next", "react"]
     },
     {
       "name": "@giveaway/team-invite-acceptance",
@@ -4897,22 +4251,16 @@
       "layer": 5,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["app/(isolated)/invites/[code]/invite-acceptance.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/team-invites-server",
         "@giveaway/ui-brand",
         "@giveaway/ui-primitives"
       ],
-      "npm": [
-        "@giveaway/db-model",
-        "lucide-react",
-        "next",
-        "next-auth",
-        "react",
-        "sonner"
-      ]
+      "npm": ["lucide-react", "next", "next-auth", "react", "sonner"]
     },
     {
       "name": "@giveaway/team-invites-server",
@@ -4922,23 +4270,16 @@
       "layer": 4,
       "sourceFiles": 7,
       "testFiles": 7,
-      "sources": [
-        "procedures/teams/accept-invite.ts",
-        "procedures/teams/get-invite-details.ts",
-        "procedures/teams/get-invite-link.ts",
-        "procedures/teams/get-team-invitations.ts",
-        "procedures/teams/invite-members.ts",
-        "procedures/teams/regenerate-invite-link.ts",
-        "procedures/teams/revoke-invitation.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/email",
         "@giveaway/rpc-server",
         "@giveaway/team-permissions",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/team-members-server",
@@ -4948,17 +4289,14 @@
       "layer": 4,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "procedures/teams/get-team-members.ts",
-        "procedures/teams/remove-member.ts",
-        "procedures/teams/update-member-role.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/team-permissions",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/team-members-ui",
@@ -4968,17 +4306,9 @@
       "layer": 5,
       "sourceFiles": 8,
       "testFiles": 12,
-      "sources": [
-        "components/team/edit-member-dialog.tsx",
-        "components/team/invite-form-card.tsx",
-        "components/team/invite-link-modal.tsx",
-        "components/team/members-table.tsx",
-        "components/team/pending-invitations-table.tsx",
-        "components/team/remove-member-dialog.tsx",
-        "lib/invites/",
-        "lib/settings/components/team-roles.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-client",
         "@giveaway/team-invites-server",
         "@giveaway/team-members-server",
@@ -4986,7 +4316,6 @@
         "@giveaway/ui-primitives"
       ],
       "npm": [
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "date-fns",
         "lucide-react",
@@ -5005,9 +4334,9 @@
       "layer": 1,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": ["lib/team/", "schemas/social-links.ts", "schemas/teams.ts"],
-      "dependsOn": ["@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model", "cookies-next", "next", "zod"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-errors"],
+      "npm": ["cookies-next", "next", "zod"]
     },
     {
       "name": "@giveaway/team-permissions",
@@ -5017,9 +4346,9 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/permissions/"],
-      "dependsOn": ["@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model"]
+      "sources": [],
+      "dependsOn": ["@giveaway/db-model", "@giveaway/util-errors"],
+      "npm": []
     },
     {
       "name": "@giveaway/team-picker",
@@ -5029,13 +4358,7 @@
       "layer": 8,
       "sourceFiles": 5,
       "testFiles": 10,
-      "sources": [
-        "components/team/create-team-form.tsx",
-        "components/team/loading-state.tsx",
-        "components/team/select-team-form.tsx",
-        "components/team/team-logo.tsx",
-        "components/team/team-picker-form.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/auth-login-ui",
@@ -5066,25 +4389,17 @@
       "layer": 4,
       "sourceFiles": 8,
       "testFiles": 8,
-      "sources": [
-        "procedures/teams/create-team.ts",
-        "procedures/teams/find-user-team.ts",
-        "procedures/teams/get-user-team.ts",
-        "procedures/teams/get-user-teams.ts",
-        "procedures/teams/select-team.ts",
-        "procedures/teams/update-team-links.ts",
-        "procedures/teams/update-team-logo.ts",
-        "procedures/teams/update-team-name.ts"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/team-model",
         "@giveaway/team-permissions",
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "next", "zod"]
+      "npm": ["next", "zod"]
     },
     {
       "name": "@giveaway/team-settings-integrations",
@@ -5094,16 +4409,17 @@
       "layer": 10,
       "sourceFiles": 1,
       "testFiles": 0,
-      "sources": ["lib/settings/components/integrations.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/bluesky-connect-ui",
+        "@giveaway/db-model",
         "@giveaway/discord-connect-ui",
         "@giveaway/integration-model",
         "@giveaway/integration-ui",
         "@giveaway/twitch-connect-ui",
         "@giveaway/ui-primitives"
       ],
-      "npm": ["@giveaway/db-model", "lucide-react", "next", "react"]
+      "npm": ["lucide-react", "next", "react"]
     },
     {
       "name": "@giveaway/team-settings-profile",
@@ -5113,13 +4429,7 @@
       "layer": 6,
       "sourceFiles": 5,
       "testFiles": 6,
-      "sources": [
-        "components/settings/team/team-logo-card.tsx",
-        "components/settings/team/team-name-card.tsx",
-        "components/settings/team/team-slug-card.tsx",
-        "lib/settings/components/basic-information-section.tsx",
-        "lib/settings/components/profile-page.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/rpc-client",
         "@giveaway/team-context",
@@ -5138,10 +4448,7 @@
       "layer": 2,
       "sourceFiles": 2,
       "testFiles": 1,
-      "sources": [
-        "lib/settings/components/settings-tabs.tsx",
-        "lib/settings/schemas/"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/util-types"],
       "npm": ["lucide-react", "next", "react", "sonner", "zod"]
     },
@@ -5153,11 +4460,7 @@
       "layer": 6,
       "sourceFiles": 3,
       "testFiles": 4,
-      "sources": [
-        "components/settings/team/social-links-card.tsx",
-        "components/social-links/",
-        "lib/settings/components/socials-page.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/rpc-client",
@@ -5179,6 +4482,19 @@
       ]
     },
     {
+      "name": "@giveaway/team-testing",
+      "path": "packages/team/team-testing",
+      "type": "config",
+      "tags": ["type:config", "runtime:isomorphic", "scope:team"],
+      "layer": 2,
+      "sourceFiles": 0,
+      "testFiles": 0,
+      "sources": [],
+      "dependsOn": [],
+      "npm": [],
+      "note": "Test fixtures that the team server packages share."
+    },
+    {
       "name": "@giveaway/templates-editor",
       "path": "packages/templates/templates-editor",
       "type": "feature",
@@ -5186,18 +4502,10 @@
       "layer": 15,
       "sourceFiles": 14,
       "testFiles": 0,
-      "sources": [
-        "lib/templates/components/form/",
-        "lib/templates/components/template-cancel-confirmation-modal.tsx",
-        "lib/templates/components/template-form-content.tsx",
-        "lib/templates/components/template-form.tsx",
-        "lib/templates/components/template-preview-footer.tsx",
-        "lib/templates/components/template-preview.tsx",
-        "lib/templates/components/template-publish-confirmation-modal.tsx",
-        "lib/templates/components/templates-form-page.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/custom-fields-ui",
+        "@giveaway/db-model",
         "@giveaway/integration-model",
         "@giveaway/integration-server",
         "@giveaway/rpc-client",
@@ -5220,7 +4528,6 @@
       "npm": [
         "@dnd-kit/core",
         "@dnd-kit/sortable",
-        "@giveaway/db-model",
         "@hookform/resolvers",
         "date-fns",
         "lucide-react",
@@ -5239,17 +4546,7 @@
       "layer": 14,
       "sourceFiles": 9,
       "testFiles": 0,
-      "sources": [
-        "lib/templates/components/create-template-button.tsx",
-        "lib/templates/components/delete-template-modal.tsx",
-        "lib/templates/components/template-card.tsx",
-        "lib/templates/components/template-platform-icons.tsx",
-        "lib/templates/components/templates-grid-header.tsx",
-        "lib/templates/components/templates-grid-skeleton.tsx",
-        "lib/templates/components/templates-grid.tsx",
-        "lib/templates/components/templates-page.tsx",
-        "lib/templates/components/use-template-modal.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-icons",
         "@giveaway/rpc-client",
@@ -5275,21 +4572,17 @@
       "layer": 6,
       "sourceFiles": 5,
       "testFiles": 5,
-      "sources": [
-        "lib/templates/data/",
-        "lib/templates/defaults.ts",
-        "lib/templates/schemas/",
-        "lib/templates/utils/"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/app-config",
         "@giveaway/custom-fields-model",
+        "@giveaway/db-model",
         "@giveaway/sweepstakes-model",
         "@giveaway/task-model",
         "@giveaway/util-errors",
         "@giveaway/util-types"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "zod"]
+      "npm": ["nanoid", "zod"]
     },
     {
       "name": "@giveaway/templates-server",
@@ -5299,8 +4592,9 @@
       "layer": 7,
       "sourceFiles": 6,
       "testFiles": 6,
-      "sources": ["lib/templates/procedures/"],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-access",
         "@giveaway/sweepstakes-model",
@@ -5308,7 +4602,7 @@
         "@giveaway/util-collections",
         "@giveaway/util-errors"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "zod"]
+      "npm": ["nanoid", "zod"]
     },
     {
       "name": "@giveaway/eslint-config",
@@ -5345,7 +4639,7 @@
       "sourceFiles": 6,
       "testFiles": 0,
       "sources": [],
-      "dependsOn": [],
+      "dependsOn": ["@giveaway/util-errors"],
       "npm": ["@prisma/client", "next", "vitest"],
       "note": "Vitest setup for every package: the Prisma, session and next/cache mocks."
     },
@@ -5401,7 +4695,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/theme/constants.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": []
     },
@@ -5413,7 +4707,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["lib/theme/get-server-theme.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/theme-model"],
       "npm": ["next"]
     },
@@ -5425,11 +4719,7 @@
       "layer": 2,
       "sourceFiles": 3,
       "testFiles": 6,
-      "sources": [
-        "components/patterns/avatar-group-easter-egg.tsx",
-        "components/patterns/easter-egg-logo.tsx",
-        "components/patterns/emoji-logo.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/team-model",
         "@giveaway/ui-primitives",
@@ -5445,7 +4735,7 @@
       "layer": 2,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/ui/carousel.tsx"],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/ui-utils"],
       "npm": ["embla-carousel-react", "lucide-react", "react"]
     },
@@ -5457,7 +4747,7 @@
       "layer": 1,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/ui/chart.tsx"],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-utils"],
       "npm": ["react", "recharts"]
     },
@@ -5469,10 +4759,7 @@
       "layer": 2,
       "sourceFiles": 2,
       "testFiles": 4,
-      "sources": [
-        "components/ui/command.tsx",
-        "components/ui/multi-select.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/ui-primitives",
         "@giveaway/ui-utils",
@@ -5489,7 +4776,7 @@
       "layer": 2,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/ui/date-time-picker.tsx"],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/ui-utils"],
       "npm": ["date-fns", "lucide-react", "react", "react-day-picker"]
     },
@@ -5501,7 +4788,7 @@
       "layer": 2,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/ui/file-upload.tsx"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/ui-hooks",
         "@giveaway/ui-primitives",
@@ -5518,15 +4805,7 @@
       "layer": 0,
       "sourceFiles": 7,
       "testFiles": 7,
-      "sources": [
-        "components/hooks/use-array-context.tsx",
-        "components/hooks/use-file-provider.ts",
-        "components/hooks/use-interval.tsx",
-        "components/hooks/use-mobile.tsx",
-        "components/hooks/use-tablet.tsx",
-        "components/hooks/use-update-params.tsx",
-        "components/hooks/use-url.ts"
-      ],
+      "sources": [],
       "dependsOn": [],
       "npm": ["@vercel/blob", "next", "react"]
     },
@@ -5538,13 +4817,7 @@
       "layer": 2,
       "sourceFiles": 16,
       "testFiles": 22,
-      "sources": [
-        "components/patterns/app-sidebar/site-header.tsx",
-        "components/patterns/form-layout/",
-        "components/patterns/help-dialog.tsx",
-        "components/patterns/links.tsx",
-        "components/settings/settings-card.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/integration-model",
         "@giveaway/ui-hooks",
@@ -5570,51 +4843,7 @@
       "layer": 1,
       "sourceFiles": 43,
       "testFiles": 86,
-      "sources": [
-        "components/ui/accordion.tsx",
-        "components/ui/alert-dialog.tsx",
-        "components/ui/alert.tsx",
-        "components/ui/avatar.tsx",
-        "components/ui/badge.tsx",
-        "components/ui/breadcrumb.tsx",
-        "components/ui/button.tsx",
-        "components/ui/card.tsx",
-        "components/ui/checkbox.tsx",
-        "components/ui/collapsible.tsx",
-        "components/ui/copy-link-input.tsx",
-        "components/ui/dialog.tsx",
-        "components/ui/dropdown-menu.tsx",
-        "components/ui/empty-state.tsx",
-        "components/ui/flex.tsx",
-        "components/ui/form.tsx",
-        "components/ui/input.tsx",
-        "components/ui/label.tsx",
-        "components/ui/mobile-suspense.tsx",
-        "components/ui/navigation-menu.tsx",
-        "components/ui/obfuscated-email.tsx",
-        "components/ui/pagination.tsx",
-        "components/ui/popover.tsx",
-        "components/ui/progress.tsx",
-        "components/ui/radio-group.tsx",
-        "components/ui/resizable.tsx",
-        "components/ui/scroll-area.tsx",
-        "components/ui/select.tsx",
-        "components/ui/separator.tsx",
-        "components/ui/sheet.tsx",
-        "components/ui/sidebar.tsx",
-        "components/ui/skeleton.tsx",
-        "components/ui/spinner.tsx",
-        "components/ui/switch.tsx",
-        "components/ui/table-pagination.tsx",
-        "components/ui/table.tsx",
-        "components/ui/tabs.tsx",
-        "components/ui/textarea.tsx",
-        "components/ui/toaster.tsx",
-        "components/ui/toggle-group.tsx",
-        "components/ui/toggle.tsx",
-        "components/ui/tooltip.tsx",
-        "components/ui/typography.tsx"
-      ],
+      "sources": [],
       "dependsOn": [
         "@giveaway/ui-hooks",
         "@giveaway/ui-utils",
@@ -5661,7 +4890,7 @@
       "layer": 2,
       "sourceFiles": 2,
       "testFiles": 1,
-      "sources": ["components/patterns/qr-code-modal.tsx", "lib/qr.ts"],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives"],
       "npm": ["lucide-react", "qrcode.react", "react", "sonner"]
     },
@@ -5673,11 +4902,7 @@
       "layer": 2,
       "sourceFiles": 3,
       "testFiles": 5,
-      "sources": [
-        "components/ui/minimal-tiptap-editor.tsx",
-        "components/ui/minimal-tiptap-preview.tsx",
-        "lib/rich-text-styles.ts"
-      ],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-primitives", "@giveaway/ui-utils"],
       "npm": [
         "@tiptap/extension-link",
@@ -5696,7 +4921,7 @@
       "layer": 3,
       "sourceFiles": 3,
       "testFiles": 4,
-      "sources": ["components/theme/"],
+      "sources": [],
       "dependsOn": ["@giveaway/ui-layouts", "@giveaway/ui-primitives"],
       "npm": ["lucide-react", "next-themes", "react"]
     },
@@ -5708,7 +4933,7 @@
       "layer": 0,
       "sourceFiles": 3,
       "testFiles": 5,
-      "sources": ["components/foundations/", "lib/utils.ts", "lib/utils/"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["clsx", "tailwind-merge"]
     },
@@ -5720,7 +4945,7 @@
       "layer": 0,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["schemas/giveaway/winners.ts"],
+      "sources": [],
       "dependsOn": [],
       "npm": ["zod"]
     },
@@ -5732,7 +4957,7 @@
       "layer": 4,
       "sourceFiles": 1,
       "testFiles": 1,
-      "sources": ["procedures/browse/get-winners-leaderboard.ts"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/leaderboard-model",
         "@giveaway/rpc-server",
@@ -5748,7 +4973,7 @@
       "layer": 8,
       "sourceFiles": 1,
       "testFiles": 2,
-      "sources": ["components/winners/"],
+      "sources": [],
       "dependsOn": [
         "@giveaway/browse-list",
         "@giveaway/leaderboard-model",
@@ -5765,13 +4990,13 @@
       "layer": 2,
       "sourceFiles": 3,
       "testFiles": 3,
-      "sources": [
-        "lib/winners/criteria.ts",
-        "lib/winners/slots.ts",
-        "lib/winners/weighted-rolls.ts"
+      "sources": [],
+      "dependsOn": [
+        "@giveaway/db-model",
+        "@giveaway/user-source-model",
+        "@giveaway/util-errors"
       ],
-      "dependsOn": ["@giveaway/user-source-model", "@giveaway/util-errors"],
-      "npm": ["@giveaway/db-model", "zod"]
+      "npm": ["zod"]
     },
     {
       "name": "@giveaway/winners-server",
@@ -5781,12 +5006,9 @@
       "layer": 7,
       "sourceFiles": 6,
       "testFiles": 6,
-      "sources": [
-        "lib/winners/completions.ts",
-        "lib/winners/procedures/",
-        "lib/winners/selection.ts"
-      ],
+      "sources": [],
       "dependsOn": [
+        "@giveaway/db-model",
         "@giveaway/rpc-server",
         "@giveaway/sweepstakes-access",
         "@giveaway/task-model",
@@ -5795,7 +5017,7 @@
         "@giveaway/util-types",
         "@giveaway/winners-model"
       ],
-      "npm": ["@giveaway/db-model", "nanoid", "next-auth", "zod"]
+      "npm": ["nanoid", "next-auth", "zod"]
     },
     {
       "name": "@giveaway/codemods",

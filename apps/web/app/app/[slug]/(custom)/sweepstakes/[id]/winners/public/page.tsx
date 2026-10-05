@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { PublicWinnerDraw } from '@/components/sweepstakes-details/public-winner-draw';
-import { getSweepstakesParticipants } from '@/lib/participant/procedures/get-sweepstakes-participants';
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import getSweepstakePrizes from '@/procedures/sweepstakes/get-sweepstake-prizes';
+import { PublicWinnerDraw } from '@giveaway/sweepstakes-details-winners/public-winner-draw';
+import { getSweepstakesParticipants } from '@giveaway/participant-server/get-sweepstakes-participants';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import getSweepstakePrizes from '@giveaway/sweepstakes-insights-server/get-sweepstake-prizes';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

@@ -1,0 +1,58 @@
+{
+  "name": "@giveaway/discord-api",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:discord"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/discord/discord-api",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./embeds": "./src/embeds.ts",
+    "./get-discord-guild-name": "./src/get-discord-guild-name.ts",
+    "./integration/schemas": "./src/integration/schemas.ts",
+    "./post-discord-message": "./src/post-discord-message.ts",
+    "./refresh-discord-token": "./src/refresh-discord-token.ts",
+    "./testing/fixtures-discord-core": "./src/testing/fixtures-discord-core.ts",
+    "./update-discord-message": "./src/update-discord-message.ts",
+    "./util": "./src/util.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/automation-model": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/discord-model": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "server-only": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

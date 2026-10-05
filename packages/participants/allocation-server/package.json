@@ -1,0 +1,47 @@
+{
+  "name": "@giveaway/allocation-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:participants"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/participants/allocation-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./allocate-prize": "./src/allocate-prize.ts",
+    "./get-sweepstakes-allocations": "./src/get-sweepstakes-allocations.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/allocation-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "server-only": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

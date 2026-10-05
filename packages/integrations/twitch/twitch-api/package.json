@@ -1,0 +1,58 @@
+{
+  "name": "@giveaway/twitch-api",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:twitch"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/twitch/twitch-api",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./bot-token": "./src/bot-token.ts",
+    "./create-eventsub-subscription": "./src/create-eventsub-subscription.ts",
+    "./delete-eventsub-subscription": "./src/delete-eventsub-subscription.ts",
+    "./get-app-access-token": "./src/get-app-access-token.ts",
+    "./get-user": "./src/get-user.ts",
+    "./refresh-twitch-token": "./src/refresh-twitch-token.ts",
+    "./schemas": "./src/schemas.ts",
+    "./scopes": "./src/scopes.ts",
+    "./send-chat-message": "./src/send-chat-message.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/cache": "workspace:*",
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/twitch-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "server-only": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "name": "@giveaway/discord-bot",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:discord"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/discord/discord-bot",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./commands/application": "./src/commands/application.ts",
+    "./commands/button": "./src/commands/button.ts",
+    "./commands/handler": "./src/commands/handler.ts",
+    "./commands/ping": "./src/commands/ping.ts",
+    "./messages": "./src/messages.ts",
+    "./testing/fixtures-discord-bot": "./src/testing/fixtures-discord-bot.ts",
+    "./util": "./src/util.ts",
+    "./verify": "./src/verify.ts",
+    "./workflows/discord-connect/steps/process-connect": "./src/workflows/discord-connect/steps/process-connect.ts",
+    "./workflows/discord-connect/workflow": "./src/workflows/discord-connect/workflow.ts",
+    "./workflows/discord-interaction/steps/commit-entry": "./src/workflows/discord-interaction/steps/commit-entry.ts",
+    "./workflows/discord-interaction/steps/fetch-task": "./src/workflows/discord-interaction/steps/fetch-task.ts",
+    "./workflows/discord-interaction/steps/patch-discord-webhook": "./src/workflows/discord-interaction/steps/patch-discord-webhook.ts",
+    "./workflows/discord-interaction/steps/schedule-rewards": "./src/workflows/discord-interaction/steps/schedule-rewards.ts",
+    "./workflows/discord-interaction/steps/update-discord-embed": "./src/workflows/discord-interaction/steps/update-discord-embed.ts",
+    "./workflows/discord-interaction/steps/validate-entry": "./src/workflows/discord-interaction/steps/validate-entry.ts",
+    "./workflows/discord-interaction/workflow": "./src/workflows/discord-interaction/workflow.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/automation-model": "workspace:*",
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/discord-api": "workspace:*",
+    "@giveaway/discord-model": "workspace:*",
+    "@giveaway/jobs": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "server-only": "catalog:",
+    "tweetnacl": "catalog:",
+    "workflow": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "zod": "catalog:"
+  }
+}

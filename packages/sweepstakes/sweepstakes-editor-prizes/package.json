@@ -1,0 +1,63 @@
+{
+  "name": "@giveaway/sweepstakes-editor-prizes",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-editor-prizes",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./prize": "./src/prize.tsx",
+    "./prizes": "./src/prizes.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "catalog:",
+    "@dnd-kit/sortable": "catalog:",
+    "@dnd-kit/utilities": "catalog:",
+    "@giveaway/sweepstakes-editor-core": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/ui-hooks": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "lucide-react": "catalog:",
+    "nanoid": "catalog:",
+    "react-hook-form": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/sweepstakes-editor-setup": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

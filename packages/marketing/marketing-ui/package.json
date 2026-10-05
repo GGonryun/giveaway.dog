@@ -1,0 +1,64 @@
+{
+  "name": "@giveaway/marketing-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:marketing"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/marketing/marketing-ui --suppressions-location packages/marketing/marketing-ui/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./coming-soon": "./src/coming-soon.tsx",
+    "./faq-section": "./src/faq-section.tsx",
+    "./marketing/marketing-page-header": "./src/marketing/marketing-page-header.tsx",
+    "./pricing-cta": "./src/pricing-cta.tsx",
+    "./pricing-section": "./src/pricing-section.tsx",
+    "./shared": "./src/shared.tsx",
+    "./social-platforms-carousel": "./src/social-platforms-carousel.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/platform-catalog": "workspace:*",
+    "@giveaway/theme-server": "workspace:*",
+    "@giveaway/ui-carousel": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "embla-carousel-auto-scroll": "catalog:",
+    "lucide-react": "catalog:",
+    "next-themes": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

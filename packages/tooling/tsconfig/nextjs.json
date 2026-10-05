@@ -7,5 +7,6 @@
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [{ "name": "next" }]
-  }
+  },
+  "files": ["./react.d.ts", "./scrapebadger.d.ts"]
 }

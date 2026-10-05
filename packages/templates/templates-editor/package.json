@@ -1,0 +1,85 @@
+{
+  "name": "@giveaway/templates-editor",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:templates"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/templates/templates-editor --suppressions-location packages/templates/templates-editor/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./form/audience": "./src/form/audience.tsx",
+    "./form/design": "./src/form/design.tsx",
+    "./form/prizes": "./src/form/prizes.tsx",
+    "./form/selection": "./src/form/selection.tsx",
+    "./form/setup": "./src/form/setup.tsx",
+    "./form/tasks": "./src/form/tasks.tsx",
+    "./form/template": "./src/form/template.tsx",
+    "./template-cancel-confirmation-modal": "./src/template-cancel-confirmation-modal.tsx",
+    "./template-form": "./src/template-form.tsx",
+    "./template-form-content": "./src/template-form-content.tsx",
+    "./template-preview": "./src/template-preview.tsx",
+    "./template-preview-footer": "./src/template-preview-footer.tsx",
+    "./template-publish-confirmation-modal": "./src/template-publish-confirmation-modal.tsx",
+    "./templates-form-page": "./src/templates-form-page.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "catalog:",
+    "@dnd-kit/sortable": "catalog:",
+    "@giveaway/custom-fields-ui": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/integration-server": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/sweepstakes-editor-audience": "workspace:*",
+    "@giveaway/sweepstakes-editor-core": "workspace:*",
+    "@giveaway/sweepstakes-editor-design": "workspace:*",
+    "@giveaway/sweepstakes-editor-preview": "workspace:*",
+    "@giveaway/sweepstakes-editor-prizes": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-editor": "workspace:*",
+    "@giveaway/templates-model": "workspace:*",
+    "@giveaway/templates-server": "workspace:*",
+    "@giveaway/ui-file-upload": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-rich-text": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "date-fns": "catalog:",
+    "lucide-react": "catalog:",
+    "nanoid": "catalog:",
+    "react-hook-form": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

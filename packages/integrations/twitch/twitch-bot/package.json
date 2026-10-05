@@ -1,0 +1,61 @@
+{
+  "name": "@giveaway/twitch-bot",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:twitch"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/twitch/twitch-bot --suppressions-location packages/integrations/twitch/twitch-bot/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./chat-message": "./src/chat-message.ts",
+    "./handler": "./src/handler.ts",
+    "./notification": "./src/notification.ts",
+    "./revocation": "./src/revocation.ts",
+    "./verification": "./src/verification.ts",
+    "./verify": "./src/verify.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/cache": "workspace:*",
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/ratelimit": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/twitch-api": "workspace:*",
+    "@giveaway/twitch-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "server-only": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@upstash/ratelimit": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "zod": "catalog:"
+  }
+}

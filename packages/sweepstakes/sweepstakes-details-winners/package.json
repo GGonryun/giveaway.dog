@@ -1,0 +1,80 @@
+{
+  "name": "@giveaway/sweepstakes-details-winners",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-details-winners",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./dice-icon": "./src/dice-icon.tsx",
+    "./public-winner-draw": "./src/public-winner-draw.tsx",
+    "./sweepstakes-winners": "./src/sweepstakes-winners.tsx",
+    "./sweepstakes-winners-skeleton": "./src/sweepstakes-winners-skeleton.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/shell-navigation": "workspace:*",
+    "@giveaway/sweepstakes-editor-core": "workspace:*",
+    "@giveaway/sweepstakes-editor-server": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/sweepstakes-moderation-server": "workspace:*",
+    "@giveaway/sweepstakes-ui": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/user-quality-model": "workspace:*",
+    "@giveaway/user-quality-ui": "workspace:*",
+    "@giveaway/user-source-model": "workspace:*",
+    "@giveaway/util-strings": "workspace:*",
+    "@giveaway/winners-server": "workspace:*",
+    "canvas-confetti": "catalog:",
+    "framer-motion": "catalog:",
+    "lucide-react": "catalog:",
+    "pluralize": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/sweepstakes-ui-testing": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/canvas-confetti": "catalog:",
+    "@types/node": "catalog:",
+    "@types/pluralize": "catalog:",
+    "@types/react": "catalog:",
+    "sonner": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

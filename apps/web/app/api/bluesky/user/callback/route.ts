@@ -1,12 +1,12 @@
 import { NextRequest } from 'next/server';
-import { getBlueskyClient } from '@/lib/bluesky/bluesky-client';
+import { getBlueskyClient } from '@giveaway/bluesky-api/bluesky/bluesky-client';
 import prisma from '@giveaway/db-client/prisma';
 import { createId } from '@paralleldrive/cuid2';
 import { Agent } from '@atproto/api';
-import { REQUIRED_BLUESKY_SCOPES } from '@/lib/integrations/scopes';
-import { getUserAuthRedirect } from '@/lib/redirect';
-import { auth, signIn } from '@/lib/auth/config';
-import { createBlueskyLoginToken } from '@/lib/auth/bluesky-login-token';
+import { REQUIRED_BLUESKY_SCOPES } from '@giveaway/integration-model/scopes';
+import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
+import { auth, signIn } from '@giveaway/auth-server/config';
+import { createBlueskyLoginToken } from '@giveaway/auth-server/bluesky-login-token';
 import { redirect } from 'next/navigation';
 import { UserSource } from '@prisma/client';
 

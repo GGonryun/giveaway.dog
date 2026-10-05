@@ -1,6 +1,6 @@
 import { environment } from '@giveaway/app-config/environment';
 import { Metadata } from 'next';
-import { HomePage } from '@/lib/home/page';
+import { HomePage } from '@giveaway/marketing-home/home/page';
 
 const appUrl = environment.appUrl();
 

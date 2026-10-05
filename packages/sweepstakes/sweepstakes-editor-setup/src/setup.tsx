@@ -1,0 +1,152 @@
+'use client';
+
+import { useFormContext } from 'react-hook-form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@giveaway/ui-primitives/form';
+import { Input } from '@giveaway/ui-primitives/input';
+import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
+
+import React, { memo, useMemo } from 'react';
+
+import { TermsAndConditions } from './terms';
+import { DateTimePicker } from '@giveaway/ui-date/date-time-picker';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@giveaway/ui-primitives/select';
+import { timezone } from '@giveaway/util-time/time';
+
+import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
+import { MinimalTiptap } from '@giveaway/ui-rich-text/minimal-tiptap-editor';
+import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
+import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
+
+export const Setup = () => {
+  const form = useFormContext<GiveawayFormSchema>();
+  const { action } = useUnifiedFormLayout();
+
+  return (
+    <UnifiedSectionHeader
+      label="Setup"
+      description="Choose the details of your giveaway"
+    >
+      <FormField
+        control={form.control}
+        name="setup.name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Name</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter a name" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="setup.banner"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Banner Image</FormLabel>
+            <FormControl>
+              <FileUpload
+                className="items-start"
+                isDemo={action === 'demo'}
+                initialUrl={field.value ?? undefined}
+                onUpload={(url) => field.onChange(url || null)}
+                size="wide"
+                fillPreview
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="setup.description"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl>
+              <MinimalTiptap
+                content={field.value}
+                onChange={field.onChange}
+                placeholder="Enter a description"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="timing.startDate"
+        render={({ field }) => (
+          <FormItem className="grow">
+            <FormLabel>Start Date</FormLabel>
+            <FormControl>
+              <DateTimePicker hourCycle={12} {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="timing.endDate"
+        render={({ field }) => (
+          <FormItem className="grow">
+            <FormLabel>End Date</FormLabel>
+            <FormControl>
+              <DateTimePicker hourCycle={12} {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="timing.timeZone"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Timezone</FormLabel>
+            <FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a timezone" />
+                  <MemoTimezone />
+                </SelectTrigger>
+              </Select>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <TermsAndConditions />
+    </UnifiedSectionHeader>
+  );
+};
+
+const MemoTimezone = memo(() => {
+  const options = useMemo(() => timezone.options, []);
+
+  return (
+    <SelectContent>
+      {options.map(({ zone, label }) => (
+        <SelectItem key={zone} value={zone}>
+          {label}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  );
+});

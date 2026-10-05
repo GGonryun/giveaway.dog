@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@giveaway/db-client/prisma';
 import z from 'zod';
 
-import { twitterOAuthCallback } from '@/lib/integrations/procedures/twitter-oauth-callback';
-import { twitterStateSchema } from '@/lib/integrations/schemas';
+import { twitterOAuthCallback } from '@giveaway/x-connect/twitter-oauth-callback';
+import { twitterStateSchema } from '@giveaway/integration-model/schemas';
 import { ApplicationError } from '@giveaway/util-errors';
 
 const twitterCallbackResultSchema = z.object({

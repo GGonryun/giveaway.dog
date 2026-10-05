@@ -1,9 +1,9 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { DEFAULT_SWEEPSTAKES_DETAILS_TAB } from '@/schemas/sweepstakes';
+import { DEFAULT_SWEEPSTAKES_DETAILS_TAB } from '@giveaway/sweepstakes-model/sweepstakes';
 import type { Metadata } from 'next';
-import { SweepstakesPageProps } from '@/schemas/pages';
+import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

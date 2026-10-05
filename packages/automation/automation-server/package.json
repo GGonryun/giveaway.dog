@@ -1,0 +1,55 @@
+{
+  "name": "@giveaway/automation-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:automation"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/automation/automation-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./delete-automated-post-job": "./src/delete-automated-post-job.ts",
+    "./get-automated-post-jobs": "./src/get-automated-post-jobs.ts",
+    "./process-automated-post-jobs": "./src/process-automated-post-jobs.ts",
+    "./schedule-automated-post-job": "./src/schedule-automated-post-job.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/automation-model": "workspace:*",
+    "@giveaway/bluesky-api": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/discord-connect": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/x-api": "workspace:*",
+    "nanoid": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

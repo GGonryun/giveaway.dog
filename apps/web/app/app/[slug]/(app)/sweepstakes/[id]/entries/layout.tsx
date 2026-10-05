@@ -1,6 +1,6 @@
-import { SweepstakesEntries } from '@/components/sweepstakes-details/sweepstakes-entries';
-import { SweepstakesEntriesSkeleton } from '@/components/sweepstakes-details/sweepstakes-entries-skeleton';
-import getSweepstakeEntries from '@/procedures/sweepstakes/get-sweepstake-entries';
+import { SweepstakesEntries } from '@giveaway/sweepstakes-details-entries/sweepstakes-entries';
+import { SweepstakesEntriesSkeleton } from '@giveaway/sweepstakes-details-entries/sweepstakes-entries-skeleton';
+import getSweepstakeEntries from '@giveaway/sweepstakes-insights-server/get-sweepstake-entries';
 import { Suspense } from 'react';
 
 type Params = { slug: string; id: string };

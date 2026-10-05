@@ -1,0 +1,61 @@
+{
+  "name": "@giveaway/integration-icons",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:ui",
+      "runtime:react",
+      "scope:integrations"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/core/integration-icons",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./bluesky-icon": "./src/bluesky-icon.tsx",
+    "./discord-icon": "./src/discord-icon.tsx",
+    "./facebook-icon": "./src/facebook-icon.tsx",
+    "./google-icon": "./src/google-icon.tsx",
+    "./instagram": "./src/instagram.tsx",
+    "./kick-icon": "./src/kick-icon.tsx",
+    "./linked-in-icon": "./src/linked-in-icon.tsx",
+    "./provider-icon": "./src/provider-icon.tsx",
+    "./reddit-icon": "./src/reddit-icon.tsx",
+    "./steam-icon": "./src/steam-icon.tsx",
+    "./tiktok-icon": "./src/tiktok-icon.tsx",
+    "./twitch-icon": "./src/twitch-icon.tsx",
+    "./velora-icon": "./src/velora-icon.tsx",
+    "./x-icon": "./src/x-icon.tsx",
+    "./youtube": "./src/youtube.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "lucide-react": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

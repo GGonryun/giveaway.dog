@@ -24,7 +24,12 @@
     "./react-library.json": "./react-library.json",
     "./nextjs.json": "./nextjs.json"
   },
+  "peerDependencies": {
+    "react": "catalog:",
+    "scrapebadger": "catalog:"
+  },
   "devDependencies": {
-    "@giveaway/eslint-config": "workspace:*"
+    "@giveaway/eslint-config": "workspace:*",
+    "@types/react": "catalog:"
   }
 }

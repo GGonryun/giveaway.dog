@@ -1,0 +1,43 @@
+{
+  "name": "@giveaway/util-media",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:util",
+      "runtime:isomorphic",
+      "scope:shared"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/shared/util-media",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./aspect-ratio/data": "./src/aspect-ratio/data.ts",
+    "./files": "./src/files.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

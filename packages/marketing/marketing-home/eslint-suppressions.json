@@ -1,0 +1,7 @@
+{
+  "packages/marketing/marketing-home/src/home/supported-integrations.tsx": {
+    "@next/next/no-html-link-for-pages": {
+      "count": 1
+    }
+  }
+}

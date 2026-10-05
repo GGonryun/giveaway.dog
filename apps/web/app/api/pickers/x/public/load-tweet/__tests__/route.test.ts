@@ -7,7 +7,7 @@ import {
   X_PICKER_QUOTES_KEY,
   X_PICKER_REPLIES_KEY,
   X_PICKER_RETWEETS_KEY
-} from '@/lib/pickers/x/constants';
+} from '@giveaway/x-picker-model/constants';
 
 const m = vi.hoisted(() => ({
   creditsLimit: vi.fn(),
@@ -17,7 +17,7 @@ const m = vi.hoisted(() => ({
   getByUsername: vi.fn()
 }));
 
-vi.mock('@/lib/scrapebadger/ratelimit', () => ({
+vi.mock('@giveaway/x-scraper/ratelimit', () => ({
   scrapeBadgerCredits: { limit: m.creditsLimit }
 }));
 

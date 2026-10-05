@@ -47,7 +47,7 @@ export const isCode = (file: string) =>
   CODE_EXTENSIONS.includes(path.posix.extname(file));
 
 export const isTest = (file: string) =>
-  /(^|\/)__tests__\/|\.(test|spec)\.|^test\/|^e2e\/|(^|\/)(vitest(\.visual)?|eslint)\.config\.[cm]?[jt]s$/.test(
+  /(^|\/)__tests__\/|(^|\/)src\/testing\/|\.(test|spec)\.|^test\/|^e2e\/|(^|\/)(vitest(\.visual)?|eslint)\.config\.[cm]?[jt]s$/.test(
     file
   );
 

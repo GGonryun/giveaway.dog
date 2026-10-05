@@ -1,0 +1,7 @@
+{
+  "packages/templates/templates-model/src/schemas/template.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  }
+}

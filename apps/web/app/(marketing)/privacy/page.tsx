@@ -1,4 +1,4 @@
-import { Typography } from '@/components/ui/typography';
+import { Typography } from '@giveaway/ui-primitives/typography';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

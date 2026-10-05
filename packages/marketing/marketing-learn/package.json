@@ -1,0 +1,57 @@
+{
+  "name": "@giveaway/marketing-learn",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:marketing"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/marketing/marketing-learn",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./integration-landing-page": "./src/integration-landing-page.tsx",
+    "./learn/integrations-showcase": "./src/learn/integrations-showcase.tsx",
+    "./learn/marketing-template-modal": "./src/learn/marketing-template-modal.tsx",
+    "./learn/templates-showcase": "./src/learn/templates-showcase.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/marketing-home": "workspace:*",
+    "@giveaway/marketing-ui": "workspace:*",
+    "@giveaway/platform-catalog": "workspace:*",
+    "@giveaway/templates-gallery": "workspace:*",
+    "@giveaway/templates-model": "workspace:*",
+    "@giveaway/theme-server": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "lucide-react": "catalog:",
+    "next-themes": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

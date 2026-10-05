@@ -1,17 +1,20 @@
 import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@giveaway/ui-primitives/toaster';
 
 import { Analytics } from '@vercel/analytics/react';
-import { SessionProvider } from '@/components/context/auth-session-provider';
+import { SessionProvider } from '@giveaway/auth-session-ui/auth-session-provider';
 import { Metadata } from 'next';
-import { ThemeProvider } from '@/components/theme/theme-provider';
+import { ThemeProvider } from '@giveaway/ui-theme/theme-provider';
 
 import { Figtree } from 'next/font/google';
-import { UserMetricsCollector } from '@/components/user-metrics-collector';
+import { UserMetricsCollector } from '@giveaway/shell-metrics/user-metrics-collector';
 import { environment } from '@giveaway/app-config/environment';
-import { BLUESKY_EMBED_SCRIPT_URL } from '@/lib/bluesky/embed';
-import { TurnstileProvider } from '@/lib/turnstile/provider';
-import { THEME_STORAGE_KEY, DEFAULT_THEME } from '@/lib/theme/constants';
+import { BLUESKY_EMBED_SCRIPT_URL } from '@giveaway/bluesky-model/embed';
+import { TurnstileProvider } from '@giveaway/turnstile-ui/provider';
+import {
+  THEME_STORAGE_KEY,
+  DEFAULT_THEME
+} from '@giveaway/theme-model/constants';
 
 const figtree = Figtree({
   subsets: ['latin'],

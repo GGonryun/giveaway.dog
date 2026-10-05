@@ -1,0 +1,73 @@
+{
+  "name": "@giveaway/x-picker-public",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:pickers"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/pickers/x-picker-public",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./load-tweet-modal": "./src/load-tweet-modal.tsx",
+    "./pick-winners-error-modal": "./src/pick-winners-error-modal.tsx",
+    "./picker-benefits-section": "./src/picker-benefits-section.tsx",
+    "./picker-faq-section": "./src/picker-faq-section.tsx",
+    "./picker-how-it-works-section": "./src/picker-how-it-works-section.tsx",
+    "./picker-live-engagement-section": "./src/picker-live-engagement-section.tsx",
+    "./progress-modal": "./src/progress-modal.tsx",
+    "./public-x-picker-form": "./src/public-x-picker-form.tsx",
+    "./rate-limit-modal": "./src/rate-limit-modal.tsx",
+    "./tweet-preview-card": "./src/tweet-preview-card.tsx",
+    "./twitter-v2-public-view": "./src/twitter-v2-public-view.tsx",
+    "./upgrade-modal": "./src/upgrade-modal.tsx",
+    "./winners-result-modal": "./src/winners-result-modal.tsx",
+    "./x-pickers-upgrade-cta": "./src/x-pickers-upgrade-cta.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/browse-list": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/marketing-ui": "workspace:*",
+    "@giveaway/picker-ui": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/x-picker-editor": "workspace:*",
+    "@giveaway/x-picker-model": "workspace:*",
+    "@giveaway/x-picker-results": "workspace:*",
+    "@giveaway/x-picker-server": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "date-fns": "catalog:",
+    "lucide-react": "catalog:",
+    "react-hook-form": "catalog:",
+    "sonner": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "@giveaway/x-api",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:x"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/x/x-api",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./create-tweet": "./src/create-tweet.ts",
+    "./get-latest-twitter-access-token": "./src/get-latest-twitter-access-token.ts",
+    "./get-twitter-oembed": "./src/get-twitter-oembed.ts",
+    "./twitter-api-request": "./src/twitter-api-request.ts",
+    "./upload-image": "./src/upload-image.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "server-only": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "@giveaway/turnstile-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:infra"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/infra/turnstile-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./check-status": "./src/check-status.ts",
+    "./cookies": "./src/cookies.ts",
+    "./server": "./src/server.ts",
+    "./verify": "./src/verify.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/turnstile-model": "workspace:*",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

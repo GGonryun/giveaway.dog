@@ -1,0 +1,53 @@
+{
+  "name": "@giveaway/ui-qr",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:ui",
+      "runtime:react",
+      "scope:ui"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/ui/ui-qr",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./qr": "./src/qr.ts",
+    "./qr-code-modal": "./src/qr-code-modal.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend"
+  },
+  "dependencies": {
+    "@giveaway/ui-primitives": "workspace:*",
+    "lucide-react": "catalog:",
+    "qrcode.react": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

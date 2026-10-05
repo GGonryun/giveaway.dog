@@ -1,0 +1,56 @@
+{
+  "name": "@giveaway/user-model",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:model",
+      "runtime:isomorphic",
+      "scope:account"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/account/user-model",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./account": "./src/account.ts",
+    "./email-subscription": "./src/email-subscription.ts",
+    "./onboarding": "./src/onboarding.ts",
+    "./redirect": "./src/redirect.ts",
+    "./testing/fixtures-procedures-user": "./src/testing/fixtures-procedures-user.ts",
+    "./testing/fixtures-schemas-core-and-scoring": "./src/testing/fixtures-schemas-core-and-scoring.ts",
+    "./user": "./src/user.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-strings": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "lodash": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

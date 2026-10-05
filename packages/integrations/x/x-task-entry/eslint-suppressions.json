@@ -1,0 +1,12 @@
+{
+  "packages/integrations/x/x-task-entry/src/shared.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "packages/integrations/x/x-task-entry/src/verified-bonus-badge.tsx": {
+    "react-hooks/static-components": {
+      "count": 2
+    }
+  }
+}

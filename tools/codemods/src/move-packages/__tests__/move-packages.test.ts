@@ -281,6 +281,18 @@ describe('movePackages', { timeout: 60_000 }, () => {
       });
     });
 
+    it('declares the imports of shared test fixtures as devDependencies', () => {
+      const manifest = repo.readJson<Manifest>(`${KESTREL}/package.json`);
+
+      expect(repo.read(`${KESTREL}/src/testing/fixtures.ts`)).toContain(
+        "import type { User } from '@giveaway/db-model';"
+      );
+      expect(manifest.dependencies).toBeUndefined();
+      expect(manifest.devDependencies).toMatchObject({
+        '@giveaway/db-model': 'workspace:*'
+      });
+    });
+
     it('writes the server and snapshot scripts for a package with both', () => {
       expect(
         repo.readJson<Manifest>(`${KESTREL}/package.json`).scripts
@@ -468,10 +480,53 @@ describe('movePackages checks', { timeout: 60_000 }, () => {
     ]);
   });
 
-  it('stops on visual tests', async () => {
-    expect(await problemsOf(move(repo, ['@giveaway/finch-ui']))).toEqual([
-      '@giveaway/finch-ui: components/finch/__tests__/card.visual.test.tsx is a visual test, which the codemod cannot move yet'
-    ]);
+  it('moves visual tests with their screenshots and writes the visual config', async () => {
+    const visual = createFixtureRepo();
+    const FINCH = 'packages/birds/finch-ui';
+    try {
+      await move(visual, ['@giveaway/finch-ui']);
+
+      expect(
+        visual.read(`${FINCH}/src/__tests__/card.visual.test.tsx`)
+      ).toContain("{ Card } from '../card'");
+      expect(
+        visual.exists(
+          `${FINCH}/src/__tests__/__screenshots__/card.visual.test.tsx/renders-1.png`
+        )
+      ).toBe(true);
+      expect(visual.read(`${FINCH}/vitest.visual.config.ts`)).toBe(
+        [
+          "import { defineConfig } from 'vitest/config';",
+          "import { visualTestConfig } from '@giveaway/testing-visual/config';",
+          '',
+          'export default defineConfig(visualTestConfig());',
+          ''
+        ].join('\n')
+      );
+      const manifest = visual.readJson<Manifest>(`${FINCH}/package.json`);
+      expect(manifest.scripts).toEqual({
+        'type-check': 'tsc --noEmit',
+        test: 'vitest run --passWithNoTests',
+        'test:visual': 'vitest run --config vitest.visual.config.ts',
+        'test:visual:update':
+          'vitest run --config vitest.visual.config.ts --update',
+        'test:visual:docker': 'visual-docker',
+        'test:visual:docker:update': 'visual-docker --update'
+      });
+      expect(manifest.devDependencies).toMatchObject({
+        '@giveaway/testing-visual': 'workspace:*'
+      });
+      expect(manifest.devDependencies).not.toHaveProperty(
+        '@giveaway/testing-dom'
+      );
+      expect(manifest.peerDependencies).toBeUndefined();
+      expect(manifest.devDependencies).toMatchObject({
+        '@types/react': 'catalog:',
+        react: 'catalog:'
+      });
+    } finally {
+      visual.remove();
+    }
   });
 
   it('stops on a package that is not in the map', async () => {
@@ -504,6 +559,22 @@ describe('movePackages checks', { timeout: 60_000 }, () => {
       expect(renamed.read('apps/web/lib/consumer.ts')).toContain(
         "export type { Owl } from '@giveaway/owl-types/owl';"
       );
+    } finally {
+      renamed.remove();
+    }
+  });
+
+  it('keeps the extension of the source when --rename has none', async () => {
+    const renamed = createFixtureRepo();
+    try {
+      await move(renamed, ['@giveaway/owl-types'], {
+        'types/owl/index.ts': 'night'
+      });
+
+      expect(
+        renamed.readJson<Manifest>('packages/birds/owl-types/package.json')
+          .exports
+      ).toEqual({ './night': './src/night.ts', './owl': './src/owl.ts' });
     } finally {
       renamed.remove();
     }

@@ -1,0 +1,28 @@
+'use client';
+
+import { ParticipantSweepstakeSchema } from '@giveaway/sweepstakes-model/schemas';
+import { SocialSharingCard } from './social-sharing-card';
+import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
+import { ShareLinksCard } from './share-links-card';
+import { useLiveSweepstakesUrl } from '@giveaway/sweepstakes-routes/use-live-sweepstakes-url';
+
+export const SweepstakesPromotionPage: React.FC<
+  ParticipantSweepstakeSchema
+> = ({ sweepstakes }) => {
+  const liveUrl = useLiveSweepstakesUrl(sweepstakes);
+
+  if (!sweepstakes) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <>
+      <SocialSharingCard
+        liveUrl={liveUrl}
+        sweepstakesName={sweepstakes.setup.name ?? DEFAULT_SWEEPSTAKES_NAME}
+      />
+
+      <ShareLinksCard liveUrl={liveUrl} />
+    </>
+  );
+};

@@ -3,8 +3,8 @@
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { Loader2 } from 'lucide-react';
-import { getTwitterV2Picker } from '@/lib/pickers/x/procedures/get-twitter-v2-picker';
-import { TwitterV2PickerOverview } from '@/lib/pickers/x/components/twitter-v2-picker-overview';
+import { getTwitterV2Picker } from '@giveaway/x-picker-server/procedures/get-twitter-v2-picker';
+import { TwitterV2PickerOverview } from '@giveaway/x-picker-results/twitter-v2-picker-overview';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

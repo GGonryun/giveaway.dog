@@ -1,0 +1,7 @@
+{
+  "packages/sweepstakes/sweepstakes-editor-preview/src/sweepstakes-editor-preview.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  }
+}

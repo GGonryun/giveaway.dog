@@ -1,0 +1,55 @@
+{
+  "name": "@giveaway/ui-hooks",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:ui",
+      "runtime:react",
+      "scope:ui"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/ui/ui-hooks",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./use-array-context": "./src/use-array-context.tsx",
+    "./use-file-provider": "./src/use-file-provider.ts",
+    "./use-interval": "./src/use-interval.tsx",
+    "./use-mobile": "./src/use-mobile.tsx",
+    "./use-tablet": "./src/use-tablet.tsx",
+    "./use-update-params": "./src/use-update-params.tsx",
+    "./use-url": "./src/use-url.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend"
+  },
+  "dependencies": {
+    "@vercel/blob": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

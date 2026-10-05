@@ -1,8 +1,8 @@
 'use server';
 
-import { Outline } from '@/components/app/outline';
-import { CreateTemplateButton } from '@/lib/templates/components/create-template-button';
-import { TeamPageProps } from '@/schemas/pages';
+import { Outline } from '@giveaway/shell-sidebar/app/outline';
+import { CreateTemplateButton } from '@giveaway/templates-gallery/create-template-button';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 
 type Props = {
   children: React.ReactNode;

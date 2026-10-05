@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import crypto from 'crypto';
 import { ZodError } from 'zod';
 import { POST } from '../route';
-import { POST as handlerPOST } from '@/lib/twitch/bot/webhooks/handler';
+import { POST as handlerPOST } from '@giveaway/twitch-bot/handler';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 
 const m = vi.hoisted(() => ({
@@ -16,7 +16,7 @@ vi.mock('@giveaway/cache/redis', () => ({
   redis: { get: m.redisGet, set: m.redisSet }
 }));
 
-vi.mock('@/lib/ratelimit', () => ({
+vi.mock('@giveaway/ratelimit/ratelimit', () => ({
   newVersionedRateLimiter: m.newVersionedRateLimiter
 }));
 

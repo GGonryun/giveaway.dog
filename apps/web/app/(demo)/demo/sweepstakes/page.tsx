@@ -1,8 +1,8 @@
 'use server';
 
-import { SweepstakesForm } from '@/components/sweepstakes-editor/sweepstakes-form';
-import { MockTeamProvider } from '@/components/demo/mock-team-provider';
-import { SAMPLE_SWEEPSTAKES_DATA } from '@/components/demo/sample-sweepstakes-data';
+import { SweepstakesForm } from '@giveaway/sweepstakes-editor/sweepstakes-form';
+import { MockTeamProvider } from '@giveaway/team-context/mock-team-provider';
+import { SAMPLE_SWEEPSTAKES_DATA } from '@giveaway/sweepstakes-demo/sample-sweepstakes-data';
 import { Suspense } from 'react';
 
 export default async function Page() {

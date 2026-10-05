@@ -1,0 +1,117 @@
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage
+} from '@giveaway/ui-primitives/breadcrumb';
+import { Separator } from '@giveaway/ui-primitives/separator';
+import { SidebarTrigger } from '@giveaway/ui-primitives/sidebar';
+import { cn } from '@giveaway/ui-utils/utils';
+import React from 'react';
+
+export type TitleData =
+  | string
+  | {
+      href?: string;
+      label: string;
+    }[];
+
+export type SiteHeaderProps = {
+  title: TitleData;
+  action?: React.ReactNode;
+  type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
+};
+export const SiteHeaderWithTrigger: React.FC<SiteHeaderProps> = ({
+  type,
+  title,
+  action
+}) => {
+  return (
+    <SiteHeaderContent
+      title={title}
+      action={action}
+      trigger={<SidebarTrigger className="-ml-1" type={type} />}
+    />
+  );
+};
+export type SiteHeaderContentProps = {
+  title: TitleData;
+  action?: React.ReactNode;
+  trigger?: React.ReactNode;
+};
+
+export const SiteHeaderContent: React.FC<SiteHeaderContentProps> = ({
+  title,
+  action,
+  trigger
+}) => {
+  return (
+    <SiteHeader>
+      {trigger}
+      {trigger && (
+        <Separator
+          orientation="vertical"
+          className="mx-2 data-[orientation=vertical]:h-4"
+        />
+      )}
+      <SiteHeaderTitle title={title} />
+      {action && (
+        <div className="ml-auto flex items-center gap-2">{action}</div>
+      )}
+    </SiteHeader>
+  );
+};
+
+export const SiteHeaderTitle: React.FC<{ title: TitleData }> = ({ title }) => {
+  if (typeof title === 'string') {
+    return <h1 className="text-base font-medium">{title}</h1>;
+  }
+
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        {title.map((item, index) => {
+          const isLast = index === title.length - 1;
+          const hasLink = !!item.href;
+          const Component = !hasLink ? BreadcrumbPage : BreadcrumbLink;
+          return (
+            <React.Fragment key={index}>
+              <>
+                <BreadcrumbItem>
+                  <Component href={item.href}>{item.label}</Component>
+                </BreadcrumbItem>
+                {isLast ? null : <BreadcrumbSeparator />}
+              </>
+            </React.Fragment>
+          );
+        })}
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+};
+
+export const SiteHeader: React.FC<{
+  children: React.ReactNode | React.ReactNode[];
+  container?: boolean;
+  className?: string;
+}> = ({ children, className, container = true }) => {
+  return (
+    <header
+      className={cn(
+        'flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b sticky top-0 z-50 bg-background',
+        className
+      )}
+    >
+      <div
+        className={cn(
+          'flex w-full items-center gap-1',
+          container ? 'container' : 'px-4'
+        )}
+      >
+        {children}
+      </div>
+    </header>
+  );
+};

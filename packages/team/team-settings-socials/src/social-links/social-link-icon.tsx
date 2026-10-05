@@ -1,0 +1,72 @@
+import { Globe, type LucideIcon } from 'lucide-react';
+import { type SocialPlatform } from '@giveaway/team-model/social-links';
+import { Button } from '@giveaway/ui-primitives/button';
+import { cn } from '@giveaway/ui-utils/utils';
+import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
+import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
+import { SocialFacebookIcon } from '@giveaway/integration-icons/facebook-icon';
+import { SocialInstagramIcon } from '@giveaway/integration-icons/instagram';
+import { SocialRedditIcon } from '@giveaway/integration-icons/reddit-icon';
+import { SocialYouTubeIcon } from '@giveaway/integration-icons/youtube';
+import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
+import { SocialTikTokIcon } from '@giveaway/integration-icons/tiktok-icon';
+import { SocialLinkedInIcon } from '@giveaway/integration-icons/linked-in-icon';
+
+export const PLATFORM_ICONS: Record<
+  SocialPlatform,
+  { icon: LucideIcon; label: string }
+> = {
+  x: { icon: SocialXIcon, label: 'X (Twitter)' },
+  facebook: { icon: SocialFacebookIcon, label: 'Facebook' },
+  instagram: { icon: SocialInstagramIcon, label: 'Instagram' },
+  discord: { icon: SocialDiscordIcon, label: 'Discord' },
+  reddit: { icon: SocialRedditIcon, label: 'Reddit' },
+  youtube: { icon: SocialYouTubeIcon, label: 'YouTube' },
+  twitch: { icon: SocialTwitchIcon, label: 'Twitch' },
+  tiktok: { icon: SocialTikTokIcon, label: 'TikTok' },
+  linkedin: { icon: SocialLinkedInIcon, label: 'LinkedIn' },
+  website: { icon: Globe, label: 'Website' }
+};
+
+interface SocialLinkIconProps {
+  platform: SocialPlatform;
+  url: string;
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'default' | 'ghost' | 'outline';
+  className?: string;
+}
+
+export const SocialLinkIcon: React.FC<SocialLinkIconProps> = ({
+  platform,
+  url,
+  size = 'md',
+  variant = 'ghost',
+  className
+}) => {
+  const platformData = PLATFORM_ICONS[platform];
+  const Icon = platformData.icon;
+
+  const sizeClasses = {
+    sm: 'h-4 w-4',
+    md: 'h-5 w-5',
+    lg: 'h-6 w-6'
+  };
+
+  return (
+    <Button
+      variant={variant}
+      size="icon"
+      className={cn('rounded-full', className)}
+      asChild
+    >
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={platformData.label}
+      >
+        <Icon className={sizeClasses[size]} />
+      </a>
+    </Button>
+  );
+};

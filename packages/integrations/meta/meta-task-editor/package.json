@@ -1,0 +1,51 @@
+{
+  "name": "@giveaway/meta-task-editor",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:ui",
+      "runtime:react",
+      "scope:integrations",
+      "platform:meta"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/meta/meta-task-editor",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./facebook": "./src/facebook.tsx",
+    "./instagram": "./src/instagram.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/ui-hooks": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "react-hook-form": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

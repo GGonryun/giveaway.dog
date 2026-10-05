@@ -26,13 +26,13 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 
 ### File Structure & Conventions
 
-- **App location**: The Next.js app is in `apps/web`. Paths in this file are relative to `apps/web` unless they start with `apps/`, `.github/` or name a root file
+- **App location**: The Next.js app is in `apps/web`. Paths in this file are relative to `apps/web` unless they start with `apps/`, `packages/`, `tools/`, `docs/`, `.github/` or name a root file
 - **Environment files**: Put `.env.local` and `.env.prod` in `apps/web`. Next.js, Prisma and the `prisma:*` scripts read them from there
-- **Workspace packages**: Shared code goes in pnpm workspace packages under `packages/` (see Workspace Packages). Today the tooling packages are in `packages/tooling/`, and the packages that moved out of the app are in `packages/shared/`, `packages/infra/` and `packages/integrations/`
+- **Workspace packages**: All code other than the routes goes in pnpm workspace packages under `packages/` (see Workspace Packages). The tooling packages are in `packages/tooling/`, and the packages that moved out of the app are in the other folders of `packages/` (see Directory Structure). The app keeps only the route files in `app/`, `middleware.ts`, `public/`, `prisma/seed.ts` and its configs
 - **Auth pages**: Located in `app/(auth)/` directory
-- **Shared components**: Place reusable components in `components/` directory
-- **UI components**: Use existing shadcn/ui components in `components/ui/`
-- **Auth components**: Create shared auth components in `components/auth/`
+- **Shared components**: Put a reusable component in the package of its feature, or in a design system package in `packages/ui/`. `docs/monorepo/package-graph.md` describes what each package holds
+- **UI components**: Use existing shadcn/ui components from `@giveaway/ui-primitives` (`packages/ui/ui-primitives/src/`)
+- **Auth components**: Put shared auth components in `packages/auth/`: `@giveaway/auth-login-ui` has the login and logout screens and the provider buttons, and `@giveaway/auth-session-ui` has the session provider and the logout button
 
 ### Authentication
 
@@ -87,12 +87,9 @@ apps/
 │   │   │   ├── browse/ (for participants)
 │   │   │   └── other public pages
 │   │   └── app/ (main app for hosts)
-│   ├── components/
-│   │   ├── auth/ (shared auth components)
-│   │   ├── ui/ (shadcn/ui components)
-│   │   └── patterns/ (reusable patterns)
-│   ├── lib/
+│   ├── middleware.ts
 │   ├── prisma/ (seed.ts)
+│   ├── public/
 │   ├── package.json (app dependencies and scripts)
 │   ├── tsconfig.json
 │   ├── vercel.json
@@ -100,25 +97,39 @@ apps/
 └── web-e2e/ (Playwright tests)
     ├── src/
     └── playwright.config.ts
-packages/
-├── infra/
-│   ├── app-config/ (@giveaway/app-config: environment and settings)
-│   ├── cache/ (@giveaway/cache: the Redis client)
-│   ├── content-moderation/ (@giveaway/content-moderation: image moderation)
-│   ├── db-client/ (@giveaway/db-client: the Prisma client)
-│   ├── db-model/ (@giveaway/db-model: the Prisma enums and types)
-│   ├── db-schema/ (@giveaway/db-schema: schema.prisma, the migrations and prisma generate)
-│   ├── email/ (@giveaway/email: the email client and templates)
-│   ├── jobs/ (@giveaway/jobs: cron secret check and job scheduling)
-│   └── turnstile-model/ (@giveaway/turnstile-model: Turnstile constants and schemas)
+packages/ (each folder is a package named @giveaway/<folder>; docs/monorepo/package-graph.md describes them)
+├── account/ (account-context, account-email, account-history, account-profile, account-server, account-settings, onboarding, user-model)
+├── audience/ (audience-server, audience-table, audience-user-details)
+├── auth/ (auth-actions, auth-core, auth-login-ui, auth-model, auth-provider-e2e, auth-provider-inbound, auth-server, auth-session-ui)
+├── automation/ (automation-model, automation-server, automation-ui)
+├── browse/ (browse-item, browse-list, browse-server)
+├── infra/ (app-config, cache, content-moderation, db-client, db-model, db-schema, email, feature-flags, jobs, ratelimit, request-context-model, request-context-server, rpc-client, rpc-model, rpc-server, turnstile-model, turnstile-server, turnstile-ui)
 ├── integrations/
-│   └── kick/kick-auth/ (@giveaway/kick-auth: the Kick login provider)
-├── shared/
-│   ├── util-errors/ (@giveaway/util-errors: ApplicationError and assertNever)
-│   ├── util-strings/ (@giveaway/util-strings: string and email helpers)
-│   └── util-types/ (@giveaway/util-types: utility types and widetype)
+│   ├── bluesky/ (bluesky-api, bluesky-connect, bluesky-connect-ui, bluesky-import, bluesky-model, bluesky-task-editor, bluesky-task-entry, bluesky-task-jobs, bluesky-task-validation)
+│   ├── core/ (integration-icons, integration-model, integration-server, integration-ui, platform-catalog)
+│   ├── discord/ (discord-api, discord-bot, discord-connect, discord-connect-ui, discord-model, discord-task-editor, discord-task-entry, discord-task-validation)
+│   ├── kick/ (kick-auth, kick-task-editor, kick-task-entry)
+│   ├── linkedin/ (linkedin-task-editor, linkedin-task-entry)
+│   ├── meta/ (meta-connect-ui, meta-model, meta-task-editor, meta-task-entry)
+│   ├── steam/ (steam-auth, steam-task-editor, steam-task-entry, steam-task-validation)
+│   ├── tiktok/ (tiktok-task-editor, tiktok-task-entry)
+│   ├── twitch/ (twitch-api, twitch-bot, twitch-connect, twitch-connect-ui, twitch-model, twitch-task-editor, twitch-task-entry, twitch-task-validation)
+│   ├── velora/ (velora-api, velora-auth, velora-task-editor, velora-task-entry, velora-task-validation)
+│   ├── x/ (x-api, x-connect, x-import, x-model, x-scraper, x-task-editor, x-task-entry, x-task-jobs)
+│   └── youtube/ (youtube-model, youtube-task-editor, youtube-task-entry)
+├── marketing/ (marketing-animations, marketing-home, marketing-learn, marketing-server, marketing-ui)
+├── participants/ (allocation-model, allocation-server, custom-fields-model, custom-fields-server, custom-fields-ui, loyalty-model, participant-model, participant-server, participation-history-model, participation-history-server, participation-server, referrals-model, referrals-server, scoring-model, scoring-server, scoring-ui, user-quality-model, user-quality-ui, user-source-model, user-source-ui)
+├── pickers/ (picker-model, picker-ui, x-picker-dashboard, x-picker-editor, x-picker-model, x-picker-public, x-picker-results, x-picker-server, x-picker-workflow)
+├── shared/ (util-browser, util-collections, util-errors, util-geo, util-html, util-media, util-random, util-strings, util-time, util-types)
+├── shell/ (shell-footer, shell-metrics, shell-navigation, shell-sidebar)
+├── sweepstakes/ (sweepstakes-access, sweepstakes-actions-ui, sweepstakes-dashboard, sweepstakes-demo, sweepstakes-details-analytics, sweepstakes-details-entries, sweepstakes-details-participants, sweepstakes-details-preview, sweepstakes-details-promotion, sweepstakes-details-shell, sweepstakes-details-winners, sweepstakes-editor, sweepstakes-editor-audience, sweepstakes-editor-core, sweepstakes-editor-design, sweepstakes-editor-preview, sweepstakes-editor-prizes, sweepstakes-editor-selection, sweepstakes-editor-server, sweepstakes-editor-setup, sweepstakes-insights-server, sweepstakes-jobs, sweepstakes-model, sweepstakes-moderation-server, sweepstakes-participation, sweepstakes-participation-core, sweepstakes-participation-states, sweepstakes-routes, sweepstakes-ui, sweepstakes-ui-testing)
+├── tasks/ (task-actions, task-editor, task-editor-fields, task-entry, task-entry-core, task-entry-form, task-entry-referral, task-entry-website, task-jobs, task-jobs-core, task-model, task-ui, task-validation, task-validation-core)
+├── team/ (team-context, team-invite-acceptance, team-invites-server, team-members-server, team-members-ui, team-model, team-permissions, team-picker, team-server, team-settings-integrations, team-settings-profile, team-settings-shell, team-settings-socials, team-testing)
+├── templates/ (templates-editor, templates-gallery, templates-model, templates-server)
+├── ui/ (theme-model, theme-server, ui-brand, ui-carousel, ui-charts, ui-command, ui-date, ui-file-upload, ui-hooks, ui-layouts, ui-primitives, ui-qr, ui-rich-text, ui-theme, ui-utils)
+├── winners/ (leaderboard-model, leaderboard-server, leaderboard-ui, winners-model, winners-server)
 └── tooling/
-    ├── tsconfig/ (@giveaway/tsconfig: tsconfig presets)
+    ├── tsconfig/ (@giveaway/tsconfig: tsconfig presets and shared type declarations)
     ├── eslint-config/ (@giveaway/eslint-config: ESLint presets)
     ├── vitest-config/ (@giveaway/vitest-config: Vitest projects)
     ├── testing-server/ (@giveaway/testing-server: Vitest setup and mocks)
@@ -179,14 +190,14 @@ vitest.config.ts (lists the Vitest projects of every package)
 - **Location and names**: A package is in `packages/<group>/<name>` and is named `@giveaway/<name>`. `pnpm-workspace.yaml` lists `apps/*`, `packages/**` and `tools/*`
 - **Shape**: A package ships TypeScript source, with no build step. `exports` in its `package.json` lists each module, for example `"./button": "./src/button.tsx"`. Do not add barrel `index.ts` files. Its tags go in `"nx": { "tags": [...] }`, with the tags from `docs/monorepo/package-map.json`
 - **Tooling packages**: `packages/tooling/` has the packages that configure the others:
-  - `@giveaway/tsconfig`: the `base`, `library`, `react-library` and `nextjs` presets. A `tsconfig.json` extends one of them, for example `"extends": "@giveaway/tsconfig/library.json"`
-  - `@giveaway/eslint-config`: `base` has the rules and the snapshot-assertion rule. `boundaries` has `@nx/enforce-module-boundaries` (a warning for now), with the `depConstraints` that `dependencyRules` in `docs/monorepo/package-map.json` defines, and `@nx/dependency-checks` for each `package.json` under `packages/`. Tests and package config files (`vitest.config.ts`, `eslint.config.mjs`) may also import `type:config` packages. The root `eslint.config.mjs` uses both. The rules need the Nx project graph, which `pnpm run lint` builds when it runs the targets through Nx
+  - `@giveaway/tsconfig`: the `base`, `library`, `react-library` and `nextjs` presets. A `tsconfig.json` extends one of them, for example `"extends": "@giveaway/tsconfig/library.json"`. The presets list shared type declarations in `files`, so every project that extends them sees them: `react.d.ts` (`React.PC`, in `react-library` and `nextjs`) and `scrapebadger.d.ts` (the types of the scrapebadger package, whose `package.json` points to a file it does not ship, in `library`, `react-library` and `nextjs`)
+  - `@giveaway/eslint-config`: `base` has the rules and the snapshot-assertion rule. `boundaries` has `@nx/enforce-module-boundaries` (a warning for now), with the `depConstraints` that `dependencyRules` in `docs/monorepo/package-map.json` defines, and `@nx/dependency-checks` for each `package.json` under `packages/`. Tests, the shared test fixtures in a package's `src/testing/` and package config files (`vitest.config.ts`, `eslint.config.mjs`) may also import `type:config` packages, and `@nx/dependency-checks` ignores their imports. The root `eslint.config.mjs` uses both. The rules need the Nx project graph, which `pnpm run lint` builds when it runs the targets through Nx
   - `@giveaway/vitest-config`: `projects` defines the `server`, `frontend` and `snapshot` projects of a package (`packageTestConfig`). It also sets `TZ=UTC` and replaces `server-only` with an empty module. `workspace` finds the `vitest.config.ts` of each package for the root config
-  - `@giveaway/testing-server`: the setup file of every project (the Prisma, session and `next/cache` mocks) and the helpers that tests import: `@giveaway/testing-server/prisma`, `/session`, `/result` and `/next-cache`
-  - `@giveaway/testing-dom`: the jsdom setup of the `frontend` and `snapshot` projects
-  - `@giveaway/testing-visual`: the browser setup (`/setup`) and the `renderVisual` helpers (`/render`) of the visual tests, and `visual-docker`, which runs the visual tests of the package it is called from in the Playwright Docker image
-- **Moved packages**: `packages/shared/`, `packages/infra/` and `packages/integrations/` have the packages that moved out of the app. Import them by package name, for example `@giveaway/util-errors` or `@giveaway/db-client/prisma`, never with a path into `packages/`. Each one is in `transpilePackages` in `apps/web/next.config.ts` and is a `workspace:*` dependency in `apps/web/package.json`. `apps/web/app/globals.css` has `@source '../../../packages'`, so Tailwind finds the classes that packages use. The migration plan in `docs/monorepo/migration-plan.md` lists what a move changes
-- **Prisma**: `@giveaway/db-schema` has `schema.prisma` and the migrations in `packages/infra/db-schema/src/`. Its `postinstall` runs `prisma generate`, and `pnpm --filter @giveaway/db-schema run generate` runs it again. The `prisma:*` scripts in `apps/web/package.json` find the schema through `prisma.schema` in that file, and read the env files in `apps/web`. Import the Prisma client from `@giveaway/db-client/prisma`. In a package, import the Prisma enums and types from `@giveaway/db-model`, not from `@prisma/client` (the move codemod rewrites these imports; the app still imports `@prisma/client`). `@giveaway/db-client` and `@giveaway/db-model` have an implicit Nx dependency on `@giveaway/db-schema`, so a schema change affects every project that uses the generated client
+  - `@giveaway/testing-server`: the setup file of every project (the Prisma, session and `next/cache` mocks), the helpers that tests import (`@giveaway/testing-server/prisma`, `/session`, `/result` and `/next-cache`) and the fixtures that tests of several packages share (`/fixtures-*`)
+  - `@giveaway/testing-dom`: the jsdom setup of the `frontend` and `snapshot` projects, and the `/test-utils` and `/stable-dom` helpers
+  - `@giveaway/testing-visual`: the Vitest config (`/config`), the browser setup (`/setup`) and the `renderVisual` helpers (`/render`) of the visual tests, and `visual-docker`, which runs the visual tests of the package it is called from in the Playwright Docker image
+- **Moved packages**: The folders of `packages/` other than `tooling/` have the packages that moved out of the app. Import them by package name, for example `@giveaway/util-errors` or `@giveaway/db-client/prisma`, never with a path into `packages/`. Each one is in `transpilePackages` in `apps/web/next.config.ts` and is a `workspace:*` dependency in `apps/web/package.json`. `apps/web/app/globals.css` has `@source '../../../packages'`, so Tailwind finds the classes that packages use. The migration plan in `docs/monorepo/migration-plan.md` lists what a move changes
+- **Prisma**: `@giveaway/db-schema` has `schema.prisma` and the migrations in `packages/infra/db-schema/src/`. Its `postinstall` runs `prisma generate`, and `pnpm --filter @giveaway/db-schema run generate` runs it again. The `prisma:*` scripts in `apps/web/package.json` find the schema through `prisma.schema` in that file, and read the env files in `apps/web`. Import the Prisma client from `@giveaway/db-client/prisma`. In a package, import the Prisma enums and types from `@giveaway/db-model`, not from `@prisma/client` (the move codemod rewrites these imports; the app still imports `@prisma/client`). `@giveaway/db-model` re-exports every type of `@prisma/client`, and the enums and `Prisma` as named values, because Vite cannot re-export the values of a CommonJS module with `export *` and the visual tests run in Vite. When you add an enum to the schema, add it to `packages/infra/db-model/src/index.ts`. Its test fails until you do. `@giveaway/db-client` and `@giveaway/db-model` have an implicit Nx dependency on `@giveaway/db-schema`, so a schema change affects every project that uses the generated client
 - **Moving a package**: Run `pnpm run move-packages <package>...` from the root, with the package names from `docs/monorepo/package-map.json`. The codemod in `tools/codemods` moves the package's `sources` with `git mv` into `packages/<path>/src/` and writes the package files. It rewrites every import of a moved file, puts the package in `transpilePackages` and the app's dependencies, moves its ESLint suppressions, empties its `sources` in the map and runs Prettier and `pnpm install`. It changes nothing when it finds a problem, for example two sources with the same module name (pass `--rename <source>=<name>`) or an import of a file that stays in the app. Run it with `--dry-run` first. To fix a conflict with `main`, run it again on the new `main` instead of merging by hand. See "The move codemod" in `docs/monorepo/migration-plan.md`
 - **Vitest config of a package**: `vitest.config.ts` exports `defineConfig(packageTestConfig())`. The root `vitest.config.ts` adds the three projects of each package that has one, named `<package>:server`, `<package>:frontend` and `<package>:snapshot`. A package with tests has `test:*` scripts for the projects it uses, so Nx and CI run them
 
@@ -198,7 +209,7 @@ vitest.config.ts (lists the Vitest projects of every package)
 - **Libraries**: Use `@testing-library/react` with role queries (`screen.getByRole`) and `@testing-library/user-event` for interactions. Use `renderHook` for hooks
 - **Snapshots**: Use `toMatchSnapshot()` for representative states, only in `.snapshot.test.tsx` files. ESLint rejects snapshot assertions in other test files. Keep snapshots deterministic: freeze time with `vi.setSystemTime`, mock `Math.random` and id generators, and do not snapshot Radix-generated ids
 - **Mocks**: Mock `next/navigation`, `next/link`, `next/image`, `next-auth/react` and server actions with `vi.mock` in the test file
-- **Pattern**: See `components/ui/__tests__/button.test.tsx` and `components/ui/__tests__/button.snapshot.test.tsx`
+- **Pattern**: See `packages/ui/ui-primitives/src/__tests__/button.test.tsx` and `packages/ui/ui-primitives/src/__tests__/button.snapshot.test.tsx`
 
 ### Continuous Integration
 
@@ -206,7 +217,7 @@ vitest.config.ts (lists the Vitest projects of every package)
 - **Checks**: `Lint` (ESLint and the package map checker), `Type check` (TypeScript), `Server tests` (Vitest server tests, with coverage), `Frontend tests` (Vitest component tests, with coverage), `Snapshot tests` (Vitest snapshot tests), `Visual tests` (screenshots in Chromium) and `Coverage` (merges the server and frontend coverage). Merge a pull request only when all the checks pass
 - **Nx in CI**: On a pull request, each job runs `pnpm nx affected -t <target>`, so a pull request that changes no project (for example, only Markdown files at the root) runs no tests. `nrwl/nx-set-shas` sets the base commit. On a push to `main` and on a manual run, each job runs `pnpm nx run-many -t <target>` for all the projects, so the `Coverage badge` job always has the full coverage
 - **Nx cache in CI**: `.github/actions/nx-cache` starts a small server (`server.mjs`) that gives the cache to Nx through the Nx remote cache API (`NX_SELF_HOSTED_REMOTE_CACHE_SERVER`). `actions/cache` keeps the files of the server in `.nx/ci-cache`, for each job and branch, with a fallback to `main`. The server deletes the entries that no run used for 7 days. Nx cannot use a copy of its own local cache folder, because its cache database is tied to the machine. A re-run on the same commit reads `lint`, `type-check` and the tests from the cache
-- **Paths in CI**: Each project writes its Vitest reports to `.vitest-reports` in its folder. `.github/scripts/collect-vitest-reports.mjs` copies them to `.vitest-reports` at the root, and the `Coverage` job merges them with the root `vitest.config.ts` into `coverage/coverage-summary.json` at the root. The merge uses only the coverage in the reports. It cannot match the test files to the root projects, because each package runs its tests under the project names `server` and `frontend` and the root config names them `<package>:server` and `<package>:frontend`, so it runs with `--passWithNoTests`. The `Server tests` and `Frontend tests` jobs report the test results. The visual test attachments are in `apps/web/.vitest-attachments`. The Playwright report is in `apps/web-e2e/playwright-report`
+- **Paths in CI**: Each project writes its Vitest reports to `.vitest-reports` in its folder. `.github/scripts/collect-vitest-reports.mjs` copies them to `.vitest-reports` at the root, and the `Coverage` job merges them with the root `vitest.config.ts` into `coverage/coverage-summary.json` at the root. The merge uses only the coverage in the reports. It cannot match the test files to the root projects, because each package runs its tests under the project names `server` and `frontend` and the root config names them `<package>:server` and `<package>:frontend`, so it runs with `--passWithNoTests`. The `Server tests` and `Frontend tests` jobs report the test results. The visual test attachments are in `.vitest-attachments` in the folder of each project that has visual tests. The Playwright report is in `apps/web-e2e/playwright-report`
 - **Coverage badge**: After each push to `main`, the `Coverage badge` job puts the merged line coverage in `coverage.svg` on the `badges` branch. The README shows this image. Do not edit the `badges` branch by hand
 - **Package manager in CI**: pnpm 10 with `--frozen-lockfile`, the same as the Vercel build. After a dependency change, commit `pnpm-lock.yaml`
 - **ESLint baseline**: `eslint-suppressions.json` (at the root, with paths relative to the root) records the errors that existed when ESLint was added. A package that moved with recorded errors has its own `eslint-suppressions.json`, also with paths relative to the root, and its `lint` command passes it with `--suppressions-location`. ESLint fails when that file does not exist, so pass the option only for a package that has the file. New errors fail the check. Do not add entries to these files to hide new errors
@@ -216,13 +227,13 @@ vitest.config.ts (lists the Vitest projects of every package)
 ### Visual Tests
 
 - **What they do**: Each visual test renders a component in a real Chromium browser (Vitest browser mode with Playwright), takes a screenshot and compares it with a reference PNG pixel by pixel. A change to a component, a Tailwind class or a theme token that changes how it looks fails the `Visual tests` check
-- **Location**: Put visual tests in a `__tests__/` folder next to the code, named `<name>.visual.test.tsx`. The references go in `__tests__/__screenshots__/<name>.visual.test.tsx/`. The config is `vitest.visual.config.ts`. `pnpm run test:run` does not run visual tests
-- **Writing a test**: Use `renderVisual` and `THEMES` from `@giveaway/testing-visual/render`. Render each test in the light and the dark theme. Then call `await expect.element(root).toMatchScreenshot()`. For a component in a portal (a dialog, a popover), take the screenshot of the portal element, for example `page.getByRole('dialog')`. See `components/ui/__tests__/button.visual.test.tsx`
-- **Keep them deterministic**: Use fixed data. Do not use the current date, random values or images from the network. `@giveaway/testing-visual/setup` loads the Figtree font and turns off animations and transitions. The visual config also loads `app/globals.css` as a setup file, for the theme
+- **Location**: Put visual tests in a `__tests__/` folder next to the code, named `<name>.visual.test.tsx`. The references go in `__tests__/__screenshots__/<name>.visual.test.tsx/`. Each project with visual tests has a `vitest.visual.config.ts` that uses `visualTestConfig` from `@giveaway/testing-visual/config`, and `test:visual` scripts. The root `test:visual*` scripts run them in every project. `pnpm run test:run` does not run visual tests
+- **Writing a test**: Use `renderVisual` and `THEMES` from `@giveaway/testing-visual/render`. Render each test in the light and the dark theme. Then call `await expect.element(root).toMatchScreenshot()`. For a component in a portal (a dialog, a popover), take the screenshot of the portal element, for example `page.getByRole('dialog')`. See `packages/ui/ui-primitives/src/__tests__/button.visual.test.tsx`
+- **Keep them deterministic**: Use fixed data. Do not use the current date, random values or images from the network. `@giveaway/testing-visual/setup` loads the Figtree font and turns off animations and transitions. `visualTestConfig` also loads `apps/web/app/globals.css` as a setup file, for the theme, and runs Tailwind with `apps/web` as its base, so every project gets the CSS of the app
 - **The references come from the Playwright Docker image**: The pixels depend on the browser version and the fonts of the operating system, so a screenshot from your own browser does not match. The `Visual tests` job runs in `mcr.microsoft.com/playwright` for the Playwright version in `pnpm-lock.yaml`. Only commit references that were made in that image, in one of these ways:
   - `pnpm run test:visual:docker:update` runs the tests in the same image on your machine and writes the new references. Use `pnpm run test:visual:docker` to only compare. These scripts need Docker on Linux, because they use your `node_modules`. In a Claude Code cloud session, start Docker first with `dockerd > /tmp/dockerd.log 2>&1 &`
   - The **Update visual references** workflow (Actions tab, or `workflow_dispatch` through the GitHub API, on your branch, not on `main`) takes new references in the same image, commits them to the branch and starts CI again on that commit
-- **When `Visual tests` fails**: The job log and the job summary list each screenshot that changed, with the number of pixels that differ. The `visual-changes` artifact has the actual screenshot and a diff image (changed pixels in red) for each one. To see them in a session, run `pnpm run test:visual:docker` and open the files in `apps/web/.vitest-attachments/`. Then decide if each change is intended:
+- **When `Visual tests` fails**: The job log and the job summary list each screenshot that changed, with the number of pixels that differ. The `visual-changes` artifact has the actual screenshot and a diff image (changed pixels in red) for each one. To see them in a session, run `pnpm run test:visual:docker` and open the files in the `.vitest-attachments/` folder of the project. Then decide if each change is intended:
   - Intended (you changed how the component looks on purpose, or you added a visual test): update the references (see above). Open the new PNG files and the old ones (`git show HEAD:<path>`) and confirm that they show only what you meant to change
   - Not intended (for example, a change to a shared component or a theme token changed a component you did not mean to change): fix the code. Do not update the references to make the check pass
 - **Run without Docker**: `pnpm run test:visual` uses the Chromium of your Playwright install. It is useful while you write a test, but expect small text differences against the committed references. When Chromium is not where Playwright expects it, set `VISUAL_CHROMIUM_PATH` to the Chromium binary (in Claude Code cloud sessions: `VISUAL_CHROMIUM_PATH=/opt/pw-browsers/chromium`)
@@ -231,7 +242,7 @@ vitest.config.ts (lists the Vitest projects of every package)
 
 - **Location**: Put Playwright tests in `apps/web-e2e/src/`, named `<name>.spec.ts`. They run in Chromium. Vitest does not run them
 - **Run locally**: Start the app with `pnpm dev`, then run `pnpm run test:e2e:local`. It reads `apps/web/.env.local`. Run `pnpm --filter web-e2e exec playwright install chromium` one time first. The tests use `http://localhost:3000`. Set `E2E_BASE_URL` to test another deployment
-- **Login**: The login test signs in through the `e2e` credentials provider in `lib/auth/providers/e2e.ts`. The app adds this provider only when `E2E_LOGIN_SECRET` has at least 32 characters, and only on Vercel preview deployments (`VERCEL_ENV=preview`) and the local development server (`next dev`). The provider signs in one host user, `e2e-host@example.com`. Without `E2E_LOGIN_SECRET`, the login test is skipped
+- **Login**: The login test signs in through the `e2e` credentials provider in `packages/auth/auth-provider-e2e/src/e2e.ts`. The app adds this provider only when `E2E_LOGIN_SECRET` has at least 32 characters, and only on Vercel preview deployments (`VERCEL_ENV=preview`) and the local development server (`next dev`). The provider signs in one host user, `e2e-host@example.com`. Without `E2E_LOGIN_SECRET`, the login test is skipped
 - **Protected deployments**: `apps/web-e2e/src/vercel.setup.ts` sends `VERCEL_AUTOMATION_BYPASS_SECRET` one time to get the Vercel bypass cookie. The other tests use that cookie, so the secret goes only to the deployment
 - **CI**: `.github/workflows/e2e.yml` runs after each successful Vercel preview deployment (the `vercel.deployment.success` repository dispatch event). It tests the commit of the deployment against the preview URL and sets the `E2E tests` status on that commit. To test a deployment by hand, run the workflow from the Actions tab with the deployment URL
 - **Secrets**: The workflow needs the `VERCEL_AUTOMATION_BYPASS_SECRET` and `E2E_LOGIN_SECRET` GitHub Actions secrets. Set the same `E2E_LOGIN_SECRET` in Vercel for the Preview environment only. Never set it for Production

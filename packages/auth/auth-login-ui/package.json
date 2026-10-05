@@ -1,0 +1,79 @@
+{
+  "name": "@giveaway/auth-login-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:auth"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/auth/auth-login-ui",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./account-status-alert": "./src/account-status-alert.tsx",
+    "./auth-error": "./src/auth-error.tsx",
+    "./auth-footer": "./src/auth-footer.tsx",
+    "./auth-portal": "./src/auth-portal.tsx",
+    "./login-form": "./src/login-form.tsx",
+    "./login-options": "./src/login-options.tsx",
+    "./logout-screen": "./src/logout-screen.tsx",
+    "./provider-buttons": "./src/provider-buttons.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot",
+    "test:visual": "vitest run --config vitest.visual.config.ts",
+    "test:visual:update": "vitest run --config vitest.visual.config.ts --update",
+    "test:visual:docker": "visual-docker",
+    "test:visual:docker:update": "visual-docker --update"
+  },
+  "dependencies": {
+    "@giveaway/account-server": "workspace:*",
+    "@giveaway/account-settings": "workspace:*",
+    "@giveaway/auth-actions": "workspace:*",
+    "@giveaway/auth-model": "workspace:*",
+    "@giveaway/bluesky-connect-ui": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/meta-connect-ui": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "lucide-react": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "next-auth": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/testing-visual": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

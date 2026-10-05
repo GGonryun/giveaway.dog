@@ -1,0 +1,54 @@
+{
+  "name": "@giveaway/templates-model",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:model",
+      "runtime:isomorphic",
+      "scope:templates"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/templates/templates-model --suppressions-location packages/templates/templates-model/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./data/static-templates": "./src/data/static-templates.ts",
+    "./data/steps": "./src/data/steps.ts",
+    "./defaults": "./src/defaults.ts",
+    "./schemas/template": "./src/schemas/template.ts",
+    "./utils/get-template-platforms": "./src/utils/get-template-platforms.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/custom-fields-model": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "nanoid": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "name": "@giveaway/team-context",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:team"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/team/team-context",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./mock-team-provider": "./src/mock-team-provider.tsx",
+    "./team-provider": "./src/team-provider.tsx",
+    "./use-active-team-page": "./src/use-active-team-page.tsx",
+    "./use-team-page": "./src/use-team-page.tsx",
+    "./use-teams-page": "./src/use-teams-page.tsx",
+    "./use-user-teams": "./src/use-user-teams.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
+    "@giveaway/team-server": "workspace:*"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/rpc-model": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "sonner": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

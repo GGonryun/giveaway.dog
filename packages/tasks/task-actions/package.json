@@ -1,0 +1,60 @@
+{
+  "name": "@giveaway/task-actions",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-actions",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./submission": "./src/submission.tsx",
+    "./submit-tasks": "./src/submit-tasks.ts",
+    "./update-task": "./src/update-task.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/referrals-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/task-validation": "workspace:*",
+    "@giveaway/task-validation-core": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "lucide-react": "catalog:",
+    "pluralize": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pluralize": "catalog:",
+    "@types/react": "catalog:",
+    "cookies-next": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

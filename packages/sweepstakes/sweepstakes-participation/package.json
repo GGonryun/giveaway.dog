@@ -1,0 +1,64 @@
+{
+  "name": "@giveaway/sweepstakes-participation",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-participation",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./giveaway-participation": "./src/giveaway-participation.tsx",
+    "./giveaway-participation-card": "./src/giveaway-participation-card.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/sweepstakes-participation-core": "workspace:*",
+    "@giveaway/sweepstakes-participation-states": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
+    "@giveaway/team-settings-socials": "workspace:*",
+    "@giveaway/turnstile-ui": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-rich-text": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "lucide-react": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/sweepstakes-ui-testing": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

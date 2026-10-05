@@ -1,5 +1,5 @@
-import getUser from '@/procedures/user/get-user';
-import { UserProvider } from '@/components/context/user-provider';
+import getUser from '@giveaway/account-server/get-user';
+import { UserProvider } from '@giveaway/account-context/user-provider';
 import { redirect } from 'next/navigation';
 
 export default async function Layout({

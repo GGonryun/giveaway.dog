@@ -1,0 +1,60 @@
+{
+  "name": "@giveaway/task-entry-core",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-entry-core --suppressions-location packages/tasks/task-entry-core/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./building-blocks": "./src/building-blocks.tsx",
+    "./error-display": "./src/error-display.tsx",
+    "./provider-connection": "./src/provider-connection.tsx",
+    "./task-entry-context": "./src/task-entry-context.tsx",
+    "./use-after-visit-behavior": "./src/use-after-visit-behavior.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/auth-login-ui": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/rpc-model": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/task-ui": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "lucide-react": "catalog:",
+    "pluralize": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pluralize": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "packages/participants/participant-model/src/db.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  }
+}

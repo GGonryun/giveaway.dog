@@ -1,6 +1,6 @@
 'use server';
 
-import { SweepstakeFormPage } from '@/components/sweepstakes-editor/sweepstakes-form-page';
+import { SweepstakeFormPage } from '@giveaway/sweepstakes-editor/sweepstakes-form-page';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {

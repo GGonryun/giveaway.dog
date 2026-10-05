@@ -1,0 +1,7 @@
+{
+  "packages/sweepstakes/sweepstakes-participation-states/src/user-details-form.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  }
+}

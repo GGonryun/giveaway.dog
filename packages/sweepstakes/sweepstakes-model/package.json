@@ -1,0 +1,82 @@
+{
+  "name": "@giveaway/sweepstakes-model",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:model",
+      "runtime:isomorphic",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-model --suppressions-location packages/sweepstakes/sweepstakes-model/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./browse-url": "./src/browse-url.ts",
+    "./color": "./src/color.ts",
+    "./db": "./src/db.ts",
+    "./defaults": "./src/defaults.ts",
+    "./filters/giveaway-filters": "./src/filters/giveaway-filters.ts",
+    "./form": "./src/form.ts",
+    "./input": "./src/input.ts",
+    "./is": "./src/is.ts",
+    "./jobs": "./src/jobs.ts",
+    "./pages": "./src/pages.ts",
+    "./prizes": "./src/prizes.ts",
+    "./public": "./src/public.ts",
+    "./schemas": "./src/schemas.ts",
+    "./storable": "./src/storable.ts",
+    "./sweepstakes": "./src/sweepstakes.ts",
+    "./terms": "./src/terms.ts",
+    "./timing": "./src/timing.ts",
+    "./util": "./src/util.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server --project frontend",
+    "test:server": "vitest run --project server",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/custom-fields-model": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/user-source-model": "workspace:*",
+    "@giveaway/util-collections": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-geo": "workspace:*",
+    "@giveaway/util-media": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "date-fns": "catalog:",
+    "lodash": "catalog:",
+    "pluralize": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "@types/pluralize": "catalog:",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

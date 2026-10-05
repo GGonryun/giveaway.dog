@@ -1,0 +1,53 @@
+{
+  "name": "@giveaway/twitch-connect",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:integrations",
+      "platform:twitch"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/twitch/twitch-connect",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./connect-twitch": "./src/connect-twitch.ts",
+    "./disconnect-twitch": "./src/disconnect-twitch.ts",
+    "./twitch-oauth-callback": "./src/twitch-oauth-callback.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/team-server": "workspace:*",
+    "@giveaway/twitch-api": "workspace:*",
+    "@giveaway/twitch-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

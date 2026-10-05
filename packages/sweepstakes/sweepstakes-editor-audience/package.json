@@ -1,0 +1,73 @@
+{
+  "name": "@giveaway/sweepstakes-editor-audience",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-editor-audience --suppressions-location packages/sweepstakes/sweepstakes-editor-audience/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./allowed-identities": "./src/allowed-identities.tsx",
+    "./audience": "./src/audience.tsx",
+    "./enable-automatic-profile-entry": "./src/enable-automatic-profile-entry.tsx",
+    "./regional-restriction": "./src/regional-restriction.tsx",
+    "./regional-restriction-filter": "./src/regional-restriction-filter.tsx",
+    "./regional-restriction-regions": "./src/regional-restriction-regions.tsx",
+    "./require-pre-entry-login": "./src/require-pre-entry-login.tsx",
+    "./sweepstakes-visibility": "./src/sweepstakes-visibility.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "@giveaway/custom-fields-ui": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/sweepstakes-editor-server": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/ui-command": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-geo": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "lucide-react": "catalog:",
+    "nanoid": "catalog:",
+    "react-hook-form": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/sweepstakes-editor-setup": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

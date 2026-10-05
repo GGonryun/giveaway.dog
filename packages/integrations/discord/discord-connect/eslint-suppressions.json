@@ -1,0 +1,12 @@
+{
+  "packages/integrations/discord/discord-connect/src/get-discord-channels.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "packages/integrations/discord/discord-connect/src/get-discord-roles.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  }
+}

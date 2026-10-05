@@ -19,7 +19,9 @@
     }
   },
   "exports": {
-    "./setup": "./src/setup.ts"
+    "./setup": "./src/setup.ts",
+    "./stable-dom": "./src/stable-dom.ts",
+    "./test-utils": "./src/test-utils.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit"

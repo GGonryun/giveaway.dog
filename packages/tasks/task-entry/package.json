@@ -1,0 +1,90 @@
+{
+  "name": "@giveaway/task-entry",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-entry",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./form": "./src/form.tsx",
+    "./task-action": "./src/task-action.tsx",
+    "./task-badge": "./src/task-badge.tsx",
+    "./task-button": "./src/task-button.tsx",
+    "./task-icon": "./src/task-icon.tsx",
+    "./task-item": "./src/task-item.tsx",
+    "./task-list": "./src/task-list.tsx",
+    "./task-lock": "./src/task-lock.tsx",
+    "./task-tooltip-content": "./src/task-tooltip-content.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/bluesky-task-entry": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/discord-task-entry": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/kick-task-entry": "workspace:*",
+    "@giveaway/linkedin-task-entry": "workspace:*",
+    "@giveaway/loyalty-model": "workspace:*",
+    "@giveaway/meta-task-entry": "workspace:*",
+    "@giveaway/referrals-model": "workspace:*",
+    "@giveaway/rpc-model": "workspace:*",
+    "@giveaway/steam-task-entry": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/sweepstakes-participation-core": "workspace:*",
+    "@giveaway/task-actions": "workspace:*",
+    "@giveaway/task-entry-core": "workspace:*",
+    "@giveaway/task-entry-form": "workspace:*",
+    "@giveaway/task-entry-referral": "workspace:*",
+    "@giveaway/task-entry-website": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/task-ui": "workspace:*",
+    "@giveaway/tiktok-task-entry": "workspace:*",
+    "@giveaway/twitch-task-entry": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/velora-task-entry": "workspace:*",
+    "@giveaway/x-task-entry": "workspace:*",
+    "@giveaway/youtube-task-entry": "workspace:*",
+    "date-fns": "catalog:",
+    "lodash": "catalog:",
+    "lucide-react": "catalog:",
+    "nanoid": "catalog:",
+    "pluralize": "catalog:",
+    "sonner": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "@types/pluralize": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

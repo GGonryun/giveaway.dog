@@ -1,0 +1,48 @@
+{
+  "name": "@giveaway/sweepstakes-ui-testing",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:config",
+      "runtime:isomorphic",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-ui-testing",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./testing/fixtures": "./src/testing/fixtures.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@giveaway/allocation-model": "workspace:*",
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/custom-fields-model": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/participant-model": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

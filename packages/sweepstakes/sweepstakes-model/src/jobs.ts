@@ -1,0 +1,72 @@
+import { SweepstakesInputTaskSchema } from './db';
+import { Prisma, SweepstakesStatus } from '@giveaway/db-model';
+import { assertNever } from '@giveaway/util-errors';
+import { RequiredFields } from '@giveaway/util-types/types';
+
+export const createJobsForTask = (
+  task: RequiredFields<SweepstakesInputTaskSchema, 'id'>,
+  status?: SweepstakesStatus
+): Prisma.TaskJobCreateWithoutTaskInput[] => {
+  if (status !== 'ACTIVE') {
+    return [];
+  }
+  if (!task?.type) return [];
+  switch (task.type) {
+    case 'VISIT_URL':
+    case 'BONUS_TASK':
+    case 'BONUS_COMPLETE_PROFILE':
+    case 'BONUS_TIMED':
+    case 'DISCORD_JOIN':
+    case 'DISCORD_INTERACTION_IMPORT':
+    case 'TWITCH_FOLLOW':
+    case 'TWITCH_CHAT_IMPORT':
+    case 'KICK_FOLLOW':
+    case 'SECRET_CODE':
+    case 'SECRET_CODE_V2':
+    case 'STEAM_WISHLIST':
+    case 'STEAM_FOLLOW':
+    case 'BONUS_LIMITED':
+    case 'TWITTER_FOLLOW':
+    case 'TWITTER_CONNECT':
+    case 'TWITTER_LIKE':
+    case 'YOUTUBE_VISIT':
+    case 'BONUS_LOYALTY':
+    case 'TWITTER_RETWEET':
+    case 'INSTAGRAM_VISIT':
+    case 'INSTAGRAM_LIKE':
+    case 'INSTAGRAM_COMMENT':
+    case 'FACEBOOK_VISIT_PAGE':
+    case 'FACEBOOK_VIEW_POST':
+    case 'TIKTOK_FOLLOW':
+    case 'TIKTOK_LIKE':
+    case 'BLUESKY_CONNECT':
+    case 'BLUESKY_FOLLOW':
+    case 'BLUESKY_LIKE':
+    case 'BLUESKY_REPOST':
+    case 'VELORA_CONNECT':
+    case 'VELORA_FOLLOW':
+    case 'LINKEDIN_CONNECT':
+    case 'LINKEDIN_FOLLOW':
+    case 'REFERRAL_LINK':
+    case 'ASK_QUESTION':
+    case 'SINGLE_CHOICE':
+    case 'MULTIPLE_CHOICE':
+    case 'SUBMIT_MEDIA':
+      return [];
+    case 'TWITTER_RETWEET_IMPORT':
+    case 'TWITTER_RETWEET_IMPORT_V2':
+    case 'TWITTER_LIKE_IMPORT':
+    case 'BLUESKY_LIKE_IMPORT':
+    case 'BLUESKY_REPOST_IMPORT':
+      return [
+        {
+          runAt: new Date(),
+          data: {
+            runs: 0
+          }
+        }
+      ];
+    default:
+      throw assertNever(task.type);
+  }
+};

@@ -1,0 +1,51 @@
+{
+  "name": "@giveaway/x-picker-workflow",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:pickers"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/pickers/x-picker-workflow",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./scrape-twitter/shared": "./src/scrape-twitter/shared.ts",
+    "./scrape-twitter/steps/store-retweeters": "./src/scrape-twitter/steps/store-retweeters.ts",
+    "./scrape-twitter/steps/store-tweet-data": "./src/scrape-twitter/steps/store-tweet-data.ts",
+    "./scrape-twitter/steps/update-picker-status": "./src/scrape-twitter/steps/update-picker-status.ts",
+    "./scrape-twitter/workflow": "./src/scrape-twitter/workflow.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/x-scraper": "workspace:*",
+    "server-only": "catalog:",
+    "workflow": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "scrapebadger": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -211,7 +211,11 @@ export const FILES: Record<string, string> = {
     '});'
   ),
   'apps/web/lib/kestrel/__tests__/fixtures.ts': lines(
-    "export const sample = 'hello';"
+    "import type { User } from '@prisma/client';",
+    '',
+    "export const sample = 'hello';",
+    '',
+    "export const sampleUser = { id: 'user-1' } as User;"
   ),
   'apps/web/lib/kestrel/__tests__/text.snapshot.test.tsx': lines(
     "import { expect, it } from 'vitest';",
@@ -302,6 +306,8 @@ export const FILES: Record<string, string> = {
     '  Card();',
     '});'
   ),
+  'apps/web/components/finch/__tests__/__screenshots__/card.visual.test.tsx/renders-1.png':
+    'png',
   'apps/web/lib/owl.ts': lines('export type Owl = { name: string };'),
   'apps/web/types/owl/index.ts': lines('export type Night = { owls: number };'),
   'apps/web/lib/consumer.ts': lines(

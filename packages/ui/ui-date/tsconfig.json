@@ -1,0 +1,3 @@
+{
+  "extends": "@giveaway/tsconfig/react-library.json"
+}

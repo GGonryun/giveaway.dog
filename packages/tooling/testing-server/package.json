@@ -19,6 +19,12 @@
     }
   },
   "exports": {
+    "./fixtures-integrations-utils": "./src/fixtures-integrations-utils.ts",
+    "./fixtures-procedures-browse-marketing-pickers": "./src/fixtures-procedures-browse-marketing-pickers.ts",
+    "./fixtures-procedures-sweepstakes-a": "./src/fixtures-procedures-sweepstakes-a.ts",
+    "./fixtures-procedures-sweepstakes-b": "./src/fixtures-procedures-sweepstakes-b.ts",
+    "./fixtures-task-validation": "./src/fixtures-task-validation.ts",
+    "./fixtures-twitch": "./src/fixtures-twitch.ts",
     "./next-cache": "./src/next-cache.ts",
     "./prisma": "./src/prisma.ts",
     "./result": "./src/result.ts",
@@ -29,6 +35,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@giveaway/util-errors": "workspace:*",
     "@prisma/client": "catalog:"
   },
   "peerDependencies": {
@@ -36,6 +43,7 @@
     "vitest": "catalog:"
   },
   "devDependencies": {
+    "@giveaway/auth-core": "workspace:*",
     "@giveaway/db-client": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",

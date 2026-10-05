@@ -20,14 +20,14 @@ const m = vi.hoisted(() => {
   };
 });
 
-vi.mock('@/lib/auth/config', () => ({
+vi.mock('@giveaway/auth-server/config', () => ({
   auth: m.auth,
   signIn: m.signIn,
   signOut: vi.fn(),
   handlers: { GET: vi.fn(), POST: vi.fn() }
 }));
 
-vi.mock('@/lib/bluesky/bluesky-client', () => ({
+vi.mock('@giveaway/bluesky-api/bluesky/bluesky-client', () => ({
   getBlueskyClient: m.getBlueskyClient
 }));
 

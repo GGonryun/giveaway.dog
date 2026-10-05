@@ -1,1 +1,1 @@
-export * from '@/lib/discord/bot/commands/handler';
+export * from '@giveaway/discord-bot/commands/handler';

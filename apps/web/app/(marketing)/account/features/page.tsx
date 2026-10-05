@@ -1,4 +1,4 @@
-import { FeatureSettings } from '@/components/account/feature-settings';
+import { FeatureSettings } from '@giveaway/account-settings/feature-settings';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';

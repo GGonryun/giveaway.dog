@@ -9,7 +9,7 @@ const m = vi.hoisted(() => ({
   twitchOAuthCallback: vi.fn()
 }));
 
-vi.mock('@/lib/twitch/procedures/twitch-oauth-callback', () => ({
+vi.mock('@giveaway/twitch-connect/twitch-oauth-callback', () => ({
   twitchOAuthCallback: m.twitchOAuthCallback
 }));
 

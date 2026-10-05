@@ -1,0 +1,52 @@
+{
+  "name": "@giveaway/team-settings-integrations",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:team"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/team/team-settings-integrations",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./integrations": "./src/integrations.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/bluesky-connect-ui": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/discord-connect-ui": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/integration-ui": "workspace:*",
+    "@giveaway/twitch-connect-ui": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "lucide-react": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

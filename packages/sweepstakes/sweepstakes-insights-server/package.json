@@ -1,0 +1,58 @@
+{
+  "name": "@giveaway/sweepstakes-insights-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:sweepstakes"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/sweepstakes/sweepstakes-insights-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./get-sweepstake-entries": "./src/get-sweepstake-entries.ts",
+    "./get-sweepstake-prizes": "./src/get-sweepstake-prizes.ts",
+    "./get-sweepstake-task-entries": "./src/get-sweepstake-task-entries.ts",
+    "./get-sweepstakes-entry-time-series": "./src/get-sweepstakes-entry-time-series.ts",
+    "./get-sweepstakes-list": "./src/get-sweepstakes-list.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
+    "@giveaway/util-collections": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "date-fns": "catalog:",
+    "lodash": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

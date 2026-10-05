@@ -1,0 +1,46 @@
+{
+  "name": "@giveaway/util-collections",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:util",
+      "runtime:isomorphic",
+      "scope:shared"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/shared/util-collections --suppressions-location packages/shared/util-collections/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./arrays": "./src/arrays.ts",
+    "./json": "./src/json.ts",
+    "./object": "./src/object.ts",
+    "./pagination": "./src/pagination.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "lodash": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "packages/sweepstakes/sweepstakes-editor-audience/src/regional-restriction.tsx": {
+    "react-hooks/rules-of-hooks": {
+      "count": 1
+    }
+  },
+  "packages/sweepstakes/sweepstakes-editor-audience/src/sweepstakes-visibility.tsx": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  }
+}

@@ -9,7 +9,7 @@ const m = vi.hoisted(() => ({
   twitterOAuthCallback: vi.fn()
 }));
 
-vi.mock('@/lib/integrations/procedures/twitter-oauth-callback', () => ({
+vi.mock('@giveaway/x-connect/twitter-oauth-callback', () => ({
   twitterOAuthCallback: m.twitterOAuthCallback
 }));
 

@@ -10,15 +10,12 @@ export default defineConfig({
       reporter: ['text-summary', 'json-summary'],
       include: [
         'apps/web/app/**/*.{ts,tsx}',
-        'apps/web/components/**/*.{ts,tsx}',
-        'apps/web/lib/**/*.{ts,tsx}',
-        'apps/web/procedures/**/*.{ts,tsx}',
-        'apps/web/schemas/**/*.{ts,tsx}',
         'packages/**/src/**/*.{ts,tsx}',
         'tools/**/src/**/*.{ts,tsx}'
       ],
       exclude: [
         '**/__tests__/**',
+        '**/src/testing/**',
         '**/*.d.ts',
         'apps/web/app/.well-known/**',
         'packages/tooling/**'

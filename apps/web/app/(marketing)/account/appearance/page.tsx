@@ -1,4 +1,4 @@
-import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { ThemeToggle } from '@giveaway/ui-theme/theme-toggle';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';

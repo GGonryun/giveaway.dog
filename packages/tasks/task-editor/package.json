@@ -1,0 +1,81 @@
+{
+  "name": "@giveaway/task-editor",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:tasks"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tasks/task-editor --suppressions-location packages/tasks/task-editor/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./additional-settings": "./src/additional-settings.tsx",
+    "./advanced-settings": "./src/advanced-settings.tsx",
+    "./base-settings": "./src/base-settings.tsx",
+    "./entry-methods/entry-method": "./src/entry-methods/entry-method.tsx",
+    "./entry-methods/entry-method-badge": "./src/entry-methods/entry-method-badge.tsx",
+    "./entry-methods/entry-methods": "./src/entry-methods/entry-methods.tsx",
+    "./entry-methods/verification-alert": "./src/entry-methods/verification-alert.tsx",
+    "./select-dialog/select-task-dialog": "./src/select-dialog/select-task-dialog.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "catalog:",
+    "@dnd-kit/sortable": "catalog:",
+    "@dnd-kit/utilities": "catalog:",
+    "@giveaway/bluesky-task-editor": "workspace:*",
+    "@giveaway/discord-task-editor": "workspace:*",
+    "@giveaway/kick-task-editor": "workspace:*",
+    "@giveaway/linkedin-task-editor": "workspace:*",
+    "@giveaway/meta-task-editor": "workspace:*",
+    "@giveaway/steam-task-editor": "workspace:*",
+    "@giveaway/sweepstakes-editor-core": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-editor-fields": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "@giveaway/task-ui": "workspace:*",
+    "@giveaway/tiktok-task-editor": "workspace:*",
+    "@giveaway/twitch-task-editor": "workspace:*",
+    "@giveaway/ui-hooks": "workspace:*",
+    "@giveaway/ui-layouts": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "@giveaway/velora-task-editor": "workspace:*",
+    "@giveaway/x-task-editor": "workspace:*",
+    "@giveaway/youtube-task-editor": "workspace:*",
+    "lodash": "catalog:",
+    "lucide-react": "catalog:",
+    "nanoid": "catalog:",
+    "react-hook-form": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

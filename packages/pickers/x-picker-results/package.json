@@ -1,0 +1,63 @@
+{
+  "name": "@giveaway/x-picker-results",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:pickers"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/pickers/x-picker-results",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./twitter-v2-disqualification-reason-modal": "./src/twitter-v2-disqualification-reason-modal.tsx",
+    "./twitter-v2-disqualify-winner-modal": "./src/twitter-v2-disqualify-winner-modal.tsx",
+    "./twitter-v2-draw-extra-winner-modal": "./src/twitter-v2-draw-extra-winner-modal.tsx",
+    "./twitter-v2-draw-history-section": "./src/twitter-v2-draw-history-section.tsx",
+    "./twitter-v2-draw-history-table": "./src/twitter-v2-draw-history-table.tsx",
+    "./twitter-v2-participants-section": "./src/twitter-v2-participants-section.tsx",
+    "./twitter-v2-participants-table": "./src/twitter-v2-participants-table.tsx",
+    "./twitter-v2-picker-overview": "./src/twitter-v2-picker-overview.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/picker-model": "workspace:*",
+    "@giveaway/picker-ui": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/x-picker-editor": "workspace:*",
+    "@giveaway/x-picker-model": "workspace:*",
+    "@giveaway/x-picker-server": "workspace:*",
+    "date-fns": "catalog:",
+    "lucide-react": "catalog:",
+    "pluralize": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pluralize": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

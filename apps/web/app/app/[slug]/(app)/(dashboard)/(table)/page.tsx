@@ -1,9 +1,9 @@
 'use server';
 
-import { SweepstakesTable } from './components/sweepstakes-table';
+import { SweepstakesTable } from '@giveaway/sweepstakes-dashboard/sweepstakes-table';
 import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card } from '@/components/ui/card';
+import { Skeleton } from '@giveaway/ui-primitives/skeleton';
+import { Card } from '@giveaway/ui-primitives/card';
 import {
   Table,
   TableBody,
@@ -11,22 +11,22 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
-import getSweepstakesList from '@/procedures/sweepstakes/get-sweepstakes-list';
+} from '@giveaway/ui-primitives/table';
+import getSweepstakesList from '@giveaway/sweepstakes-insights-server/get-sweepstakes-list';
 import {
   ListSweepstakesFilters,
   toSweepstakesFilter
-} from '@/schemas/sweepstakes';
-import { SweepstakesFilterBar } from './components/sweepstakes-filter-bar';
-import { SweepstakesTabs } from './components/sweepstakes-tabs';
-import { Outline } from '@/components/app/outline';
-import { CreateGiveawayButton } from '@/components/sweepstakes/create-giveaway-button';
+} from '@giveaway/sweepstakes-model/sweepstakes';
+import { SweepstakesFilterBar } from '@giveaway/sweepstakes-dashboard/sweepstakes-filter-bar';
+import { SweepstakesTabs } from '@giveaway/sweepstakes-dashboard/sweepstakes-tabs';
+import { Outline } from '@giveaway/shell-sidebar/app/outline';
+import { CreateGiveawayButton } from '@giveaway/sweepstakes-actions-ui/create-giveaway-button';
 import type { Metadata } from 'next';
-import { TeamPageProps } from '@/schemas/pages';
-import { TemplatesGrid } from '@/lib/templates/components/templates-grid';
-import { getTemplates } from '@/lib/templates/procedures/get-templates';
-import { TemplatesGridHeader } from '@/lib/templates/components/templates-grid-header';
-import { SweepstakesGridSkeleton } from '@/lib/templates/components/templates-grid-skeleton';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
+import { TemplatesGrid } from '@giveaway/templates-gallery/templates-grid';
+import { getTemplates } from '@giveaway/templates-server/get-templates';
+import { TemplatesGridHeader } from '@giveaway/templates-gallery/templates-grid-header';
+import { SweepstakesGridSkeleton } from '@giveaway/templates-gallery/templates-grid-skeleton';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

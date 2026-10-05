@@ -1,0 +1,61 @@
+{
+  "name": "@giveaway/bluesky-connect-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:integrations",
+      "platform:bluesky"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/bluesky/bluesky-connect-ui",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./bluesky-card": "./src/bluesky-card.tsx",
+    "./bluesky-connect-dialog": "./src/bluesky-connect-dialog.tsx",
+    "./bluesky-connect-form": "./src/bluesky-connect-form.tsx",
+    "./bluesky-disconnect-dialog": "./src/bluesky-disconnect-dialog.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/auth-actions": "workspace:*",
+    "@giveaway/bluesky-connect": "workspace:*",
+    "@giveaway/bluesky-model": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/integration-ui": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "lucide-react": "catalog:",
+    "react-hook-form": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

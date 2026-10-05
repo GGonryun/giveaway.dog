@@ -1,0 +1,7 @@
+{
+  "packages/ui/ui-layouts/src/form-layout/use-form-issues.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  }
+}

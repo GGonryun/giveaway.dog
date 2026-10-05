@@ -1,5 +1,5 @@
 import NextAuth from 'next-auth';
-import { authConfigMiddleware } from './lib/auth/config-middleware';
+import { authConfigMiddleware } from '@giveaway/auth-core/config-middleware';
 
 // Don't invoke Middleware on some paths
 export const config = {

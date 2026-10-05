@@ -1,0 +1,57 @@
+{
+  "name": "@giveaway/rpc-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:infra"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/infra/rpc-server --suppressions-location packages/infra/rpc-server/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./errors": "./src/errors.ts",
+    "./procedures": "./src/procedures.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/auth-core": "workspace:*",
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/rpc-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-random": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
+    "nanoid": "catalog:",
+    "server-only": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "next-auth": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,19 +1,19 @@
 import { Suspense } from 'react';
-import { Outline } from '@/components/app/outline';
-import { TeamPageProps } from '@/schemas/pages';
+import { Outline } from '@giveaway/shell-sidebar/app/outline';
+import { TeamPageProps } from '@giveaway/sweepstakes-model/pages';
 import {
   ListPickersV2FilterSchema,
   toPickersV2Filter
-} from '@/lib/pickers/x/schemas/list';
-import { CreatePickerV2Button } from '@/lib/pickers/x/components/create-picker-v2-button';
-import { PickersV2Table } from '@/lib/pickers/x/components/pickers-v2-table';
-import { PickersV2Tabs } from '@/lib/pickers/x/components/pickers-v2-tabs';
-import { getPickersV2List } from '@/lib/pickers/x/procedures/get-pickers-v2-list';
-import { XPickersUpgradeCTA } from '@/lib/pickers/x/components/x-pickers-upgrade-cta';
-import { hasMinimumTeamTier } from '@/lib/team/util';
+} from '@giveaway/x-picker-model/schemas/list';
+import { CreatePickerV2Button } from '@giveaway/x-picker-dashboard/create-picker-v2-button';
+import { PickersV2Table } from '@giveaway/x-picker-dashboard/pickers-v2-table';
+import { PickersV2Tabs } from '@giveaway/x-picker-dashboard/pickers-v2-tabs';
+import { getPickersV2List } from '@giveaway/x-picker-server/procedures/get-pickers-v2-list';
+import { XPickersUpgradeCTA } from '@giveaway/x-picker-public/x-pickers-upgrade-cta';
+import { hasMinimumTeamTier } from '@giveaway/team-model/team/util';
 import { TeamTier } from '@prisma/client';
 import db from '@giveaway/db-client/prisma';
-import { auth } from '@/lib/auth/config';
+import { auth } from '@giveaway/auth-server/config';
 
 type XPickersPageProps = {
   params: Promise<TeamPageProps>;

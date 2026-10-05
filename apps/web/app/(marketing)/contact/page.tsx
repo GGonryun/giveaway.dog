@@ -1,11 +1,11 @@
-import { Typography } from '@/components/ui/typography';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Typography } from '@giveaway/ui-primitives/typography';
+import { Button } from '@giveaway/ui-primitives/button';
+import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Mail, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { DISCORD_INVITE_LINK } from '@giveaway/app-config/settings';
 import type { Metadata } from 'next';
-import { MarketingPageHeader } from '@/components/marketing/marketing-page-header';
+import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
 
 export const metadata: Metadata = {
   title: 'Support & Help Center | Giveaway.dog',

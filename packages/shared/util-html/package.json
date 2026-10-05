@@ -1,0 +1,43 @@
+{
+  "name": "@giveaway/util-html",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:util",
+      "runtime:isomorphic",
+      "scope:shared"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/shared/util-html",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./html": "./src/html.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "turndown": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/turndown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

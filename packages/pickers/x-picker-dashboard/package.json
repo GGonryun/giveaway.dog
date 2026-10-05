@@ -1,0 +1,62 @@
+{
+  "name": "@giveaway/x-picker-dashboard",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:pickers"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/pickers/x-picker-dashboard",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./create-picker-v2-button": "./src/create-picker-v2-button.tsx",
+    "./delete-picker-v2-modal": "./src/delete-picker-v2-modal.tsx",
+    "./hooks/use-pickers-v2-navigation": "./src/hooks/use-pickers-v2-navigation.tsx",
+    "./hooks/use-twitter-v2-pickers-page": "./src/hooks/use-twitter-v2-pickers-page.tsx",
+    "./pickers-v2-table": "./src/pickers-v2-table.tsx",
+    "./pickers-v2-tabs": "./src/pickers-v2-tabs.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/picker-model": "workspace:*",
+    "@giveaway/picker-ui": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/sweepstakes-routes": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/ui-hooks": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
+    "@giveaway/x-picker-model": "workspace:*",
+    "@giveaway/x-picker-server": "workspace:*",
+    "lucide-react": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

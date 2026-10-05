@@ -1,0 +1,58 @@
+{
+  "name": "@giveaway/discord-connect-ui",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:feature",
+      "runtime:react",
+      "scope:integrations",
+      "platform:discord"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/integrations/discord/discord-connect-ui",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./discord-card": "./src/discord-card.tsx",
+    "./discord-connect-instructions": "./src/discord-connect-instructions.tsx",
+    "./discord-disconnect-dialog": "./src/discord-disconnect-dialog.tsx",
+    "./discord-registration-dialog": "./src/discord-registration-dialog.tsx"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@giveaway/discord-connect": "workspace:*",
+    "@giveaway/discord-model": "workspace:*",
+    "@giveaway/integration-icons": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
+    "@giveaway/integration-ui": "workspace:*",
+    "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/ui-primitives": "workspace:*",
+    "lucide-react": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

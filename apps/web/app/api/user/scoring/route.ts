@@ -2,8 +2,8 @@ import prisma from '@giveaway/db-client/prisma';
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { MAX_SCORING_REQUESTS_PER_RUN } from '@/schemas/user-scoring';
-import { computeUserQualityScore } from '@/lib/scoring';
+import { MAX_SCORING_REQUESTS_PER_RUN } from '@giveaway/scoring-model/user-scoring';
+import { computeUserQualityScore } from '@giveaway/scoring-server/scoring';
 import { isValidCronSecret } from '@giveaway/jobs/util';
 
 export async function GET(request: NextRequest) {

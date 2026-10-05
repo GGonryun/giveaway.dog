@@ -3,11 +3,11 @@
 import {
   ParticipatingUserSheet,
   UserParticipantSheetContent
-} from '@/components/sweepstakes-details/user-participant-detail-sheet';
-import { getSweepstakesParticipant } from '@/lib/participant/procedures/get-sweepstake-participant';
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import { getSweepstakesFormFields } from '@/procedures/browse/get-sweepstake-form-field';
-import { getSweepstakesTasks } from '@/procedures/browse/get-sweepstake-tasks';
+} from '@giveaway/sweepstakes-details-participants/user-participant-detail-sheet';
+import { getSweepstakesParticipant } from '@giveaway/participant-server/get-sweepstake-participant';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import { getSweepstakesFormFields } from '@giveaway/participation-server/get-sweepstake-form-field';
+import { getSweepstakesTasks } from '@giveaway/participation-server/get-sweepstake-tasks';
 import { Suspense } from 'react';
 
 const Page: React.FC<{

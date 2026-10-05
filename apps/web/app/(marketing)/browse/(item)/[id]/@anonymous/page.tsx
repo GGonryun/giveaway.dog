@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
-import getParticipantSweepstake from '@/procedures/browse/get-participant-sweepstake';
-import { getSweepstakesPrivacy } from '@/procedures/browse/get-sweepstakes-privacy';
-import { PublicSweepstakesContent } from '@/components/sweepstakes-browse/public-sweepstakes-content';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
+import { PublicSweepstakesContent } from '@giveaway/browse-item/public-sweepstakes-content';
 import { Suspense } from 'react';
-import { ReferralCodeHandler } from '@/components/sweepstakes-browse/referral-code-handler';
+import { ReferralCodeHandler } from '@giveaway/browse-item/referral-code-handler';
 
 interface PageProps {
   params: Promise<{ id: string }>;

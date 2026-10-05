@@ -362,6 +362,13 @@ Two fixture files created cycles in tests, so they were split:
 - `components/sweepstakes/__tests__/fixtures.tsx` served 14 packages, including one that it imported. Its participation-context part is now `components/sweepstakes/__tests__/participation-fixtures.tsx` (`sweepstakes-participation-core`). The rest becomes `@giveaway/sweepstakes-ui-testing`.
 - `lib/winners/__tests__/fixtures-sweepstakes-winners-email.ts` mixed fixtures for `winners-model` with fixtures that import `winners-server`. The `winners-model` part is now `lib/winners/__tests__/fixtures-winners-model.ts`. The rest stays in the original file, which only `winners-server` tests use, so it goes to `winners-server`.
 
+One more fixture file was split, and one changed package, because the package that the map gave them could not hold them:
+
+- `lib/discord/__tests__/fixtures-discord-core.ts` mixed the Discord schema builders for `discord-model` with sweepstakes post fixtures that import `automation-model` and request signing helpers that only `discord-bot` tests use. The schema builders are now `lib/discord/__tests__/fixtures-discord-model.ts` (`discord-model`) and the signing helpers are `lib/discord/__tests__/fixtures-discord-bot.ts` (`discord-bot`). The post fixtures stay in the original file, which only `discord-api` tests use, so it goes to `discord-api`.
+- `components/sweepstakes-editor/__tests__/form-harness.tsx` goes to `sweepstakes-editor-setup`, not `ui-layouts`. Only the editor form tests use it, and it imports `sweepstakes-model` and `task-model`, which `ui-layouts` cannot import.
+
+Two fixture files go to `config` packages that hold nothing else, which the catalog below does not list: `components/sweepstakes/__tests__/fixtures.tsx` (`@giveaway/sweepstakes-ui-testing`) and `procedures/teams/__tests__/fixtures-procedures-teams.ts` (`@giveaway/team-testing`). The fixtures of the tooling packages, which moved before the codemod existed, moved by hand: `stable-dom.ts` and `test-utils.ts` to `@giveaway/testing-dom`, and `fixtures-twitch.ts`, `fixtures-integrations-utils.ts`, `fixtures-task-validation.ts` and the `fixtures-procedures-*.ts` files of `procedures/` to `@giveaway/testing-server`.
+
 ## Dead code
 
 At commit `57d8059`, 76 source files were not imported by any route, by any other live source file, or by a workflow. Most of them were only imported by their own tests. They are deleted, with the 86 test files that tested only them ([#140](https://github.com/GGonryun/giveaway.dog/issues/140)), and `deadFiles` in `package-map.json` is empty.

@@ -1,0 +1,56 @@
+{
+  "name": "@giveaway/team-invites-server",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:team"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/team/team-invites-server",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./accept-invite": "./src/accept-invite.ts",
+    "./get-invite-details": "./src/get-invite-details.ts",
+    "./get-invite-link": "./src/get-invite-link.ts",
+    "./get-team-invitations": "./src/get-team-invitations.ts",
+    "./invite-members": "./src/invite-members.ts",
+    "./regenerate-invite-link": "./src/regenerate-invite-link.ts",
+    "./revoke-invitation": "./src/revoke-invitation.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/app-config": "workspace:*",
+    "@giveaway/db-model": "workspace:*",
+    "@giveaway/email": "workspace:*",
+    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/team-testing": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "inboundemail": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

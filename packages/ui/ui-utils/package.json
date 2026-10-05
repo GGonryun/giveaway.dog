@@ -1,0 +1,48 @@
+{
+  "name": "@giveaway/ui-utils",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:util",
+      "runtime:isomorphic",
+      "scope:ui"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/ui/ui-utils --suppressions-location packages/ui/ui-utils/eslint-suppressions.json",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./foundations/shapes": "./src/foundations/shapes.ts",
+    "./foundations/text": "./src/foundations/text.ts",
+    "./utils": "./src/utils.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project server --project frontend",
+    "test:server": "vitest run --project server",
+    "test:frontend": "vitest run --project frontend",
+    "test:snapshot": "vitest run --project snapshot"
+  },
+  "dependencies": {
+    "clsx": "catalog:",
+    "tailwind-merge": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
