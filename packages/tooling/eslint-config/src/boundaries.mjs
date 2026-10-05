@@ -1,15 +1,19 @@
-import fs from 'node:fs';
 import nx from '@nx/eslint-plugin';
 import jsoncParser from 'jsonc-eslint-parser';
+import noServerInClient from './rules/no-server-in-client.mjs';
 
-const packageMap = JSON.parse(
-  fs.readFileSync(
-    new URL('../../../../docs/monorepo/package-map.json', import.meta.url),
-    'utf8'
-  )
-);
+export const dependencyRules = {
+  util: ['util'],
+  model: ['model', 'util'],
+  server: ['server', 'model', 'util'],
+  ui: ['ui', 'model', 'util'],
+  feature: ['feature', 'ui', 'server', 'model', 'util'],
+  app: ['app', 'feature', 'ui', 'server', 'model', 'util', 'config'],
+  tool: ['server', 'model', 'util'],
+  config: ['config', 'model', 'util']
+};
 
-export const depConstraints = Object.entries(packageMap.dependencyRules).map(
+const depConstraints = Object.entries(dependencyRules).map(
   ([type, allowed]) => ({
     sourceTag: `type:${type}`,
     onlyDependOnLibsWithTags: allowed.map((target) => `type:${target}`)
@@ -32,7 +36,7 @@ const DEV_FILES = [
 ];
 
 const moduleBoundaries = (constraints) => [
-  'warn',
+  'error',
   {
     enforceBuildableLibDependency: false,
     allow: [],
@@ -45,14 +49,19 @@ const boundaries = [
   ...nx.configs['flat/base'],
   {
     files: ['**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}'],
+    plugins: {
+      '@giveaway': { rules: { 'no-server-in-client': noServerInClient } }
+    },
     rules: {
-      '@nx/enforce-module-boundaries': moduleBoundaries(depConstraints)
+      '@nx/enforce-module-boundaries': moduleBoundaries(depConstraints),
+      '@giveaway/no-server-in-client': 'error'
     }
   },
   {
     files: DEV_FILES,
     rules: {
-      '@nx/enforce-module-boundaries': moduleBoundaries(devDepConstraints)
+      '@nx/enforce-module-boundaries': moduleBoundaries(devDepConstraints),
+      '@giveaway/no-server-in-client': 'off'
     }
   },
   {

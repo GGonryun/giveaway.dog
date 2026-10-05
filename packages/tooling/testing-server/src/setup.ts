@@ -1,25 +1,12 @@
-import { beforeEach, vi } from 'vitest';
-import { prismaMock, resetPrismaMock } from './prisma';
-import { resetAuthMock } from './session';
-import { resetNextCacheMock } from './next-cache';
+import '@giveaway/testing-mocks/setup';
+import { vi } from 'vitest';
 
 vi.mock('@giveaway/db-client/prisma', async () => {
-  const { prismaMock } = await import('./prisma');
+  const { prismaMock } = await import('@giveaway/testing-mocks/prisma');
   return { default: prismaMock };
 });
 
 vi.mock('@giveaway/auth-core/config-no-providers', async () => {
-  const { authMock } = await import('./session');
+  const { authMock } = await import('@giveaway/testing-mocks/session');
   return { noProviderAuth: { auth: authMock } };
-});
-
-vi.mock('next/cache', async () => {
-  const { nextCacheMock } = await import('./next-cache');
-  return nextCacheMock;
-});
-
-beforeEach(() => {
-  resetPrismaMock(prismaMock);
-  resetAuthMock();
-  resetNextCacheMock();
 });

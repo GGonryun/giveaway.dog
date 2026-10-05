@@ -19,7 +19,8 @@
     }
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./testing/application-error": "./src/testing/application-error.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
@@ -32,7 +33,6 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
-    "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
     "@types/node": "catalog:",

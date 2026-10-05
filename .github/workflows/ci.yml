@@ -42,9 +42,6 @@ jobs:
       - name: ESLint
         run: pnpm nx $NX_RUN -t lint --output-style=static --quiet
 
-      - name: Package map
-        run: node docs/monorepo/check-package-map.mjs
-
   type-check:
     name: Type check
     runs-on: ubuntu-24.04-arm

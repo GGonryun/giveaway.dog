@@ -22,6 +22,11 @@
     "./base": "./src/base.mjs",
     "./boundaries": "./src/boundaries.mjs"
   },
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
   "dependencies": {
     "@nx/eslint-plugin": "catalog:",
     "eslint-config-next": "catalog:",
@@ -29,5 +34,10 @@
   },
   "peerDependencies": {
     "eslint": "catalog:"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "catalog:",
+    "@types/node": "catalog:",
+    "vitest": "catalog:"
   }
 }

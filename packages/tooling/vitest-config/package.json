@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
-    "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "catalog:"

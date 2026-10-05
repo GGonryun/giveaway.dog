@@ -35,7 +35,6 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
-    "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
     "@types/lodash": "catalog:",

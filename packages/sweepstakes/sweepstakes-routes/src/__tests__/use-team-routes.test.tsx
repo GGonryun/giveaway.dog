@@ -2,9 +2,9 @@ import { renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamsProvider } from '@giveaway/team-context/team-provider';
-import { useCreateSweepstakesPage } from '@giveaway/sweepstakes-routes/use-create-sweepstakes-page';
-import { useEditSweepstakesPage } from '@giveaway/sweepstakes-routes/use-edit-sweepstakes-page';
-import { useSweepstakesDetailsPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-details-page';
+import { useCreateSweepstakesPage } from '../use-create-sweepstakes-page';
+import { useEditSweepstakesPage } from '../use-edit-sweepstakes-page';
+import { useSweepstakesDetailsPage } from '../use-sweepstakes-details-page';
 import { buildTeam } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 
 const navigation = vi.hoisted(() => ({ router: { push: vi.fn() } }));

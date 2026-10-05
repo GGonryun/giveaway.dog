@@ -1,0 +1,34 @@
+{
+  "generators": {
+    "util": {
+      "factory": "./src/generators.ts#utilGenerator",
+      "schema": "./src/schema/util.json",
+      "description": "Create a util package: helpers with no React and no server code."
+    },
+    "model": {
+      "factory": "./src/generators.ts#modelGenerator",
+      "schema": "./src/schema/model.json",
+      "description": "Create a model package: Zod schemas, types, constants and pure functions."
+    },
+    "server": {
+      "factory": "./src/generators.ts#serverGenerator",
+      "schema": "./src/schema/server.json",
+      "description": "Create a server package: server actions, queries, API clients and jobs."
+    },
+    "ui": {
+      "factory": "./src/generators.ts#uiGenerator",
+      "schema": "./src/schema/ui.json",
+      "description": "Create a ui package: presentational components and hooks that call no server code."
+    },
+    "feature": {
+      "factory": "./src/generators.ts#featureGenerator",
+      "schema": "./src/schema/feature.json",
+      "description": "Create a feature package: pages and components that call server actions."
+    },
+    "platform-slot": {
+      "factory": "./src/generators.ts#platformSlotGenerator",
+      "schema": "./src/schema/platform-slot.json",
+      "description": "Create a platform plugin slot package in packages/integrations/<platform>."
+    }
+  }
+}

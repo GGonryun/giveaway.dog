@@ -1,5 +1,5 @@
 {
-  "name": "@giveaway/codemods",
+  "name": "@giveaway/generators",
   "private": true,
   "type": "module",
   "nx": {
@@ -10,7 +10,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint tools/codemods",
+        "command": "eslint tools/generators",
         "options": {
           "cwd": "{workspaceRoot}"
         },
@@ -18,19 +18,15 @@
       }
     }
   },
-  "bin": {
-    "move-packages": "./src/move-packages/cli.ts"
-  },
+  "generators": "./generators.json",
   "scripts": {
-    "move-packages": "node src/move-packages/cli.ts",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project server",
     "test:server": "vitest run --project server"
   },
   "dependencies": {
-    "prettier": "catalog:",
-    "ts-morph": "catalog:"
+    "@nx/devkit": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
@@ -38,6 +34,7 @@
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
     "@types/node": "catalog:",
+    "nx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

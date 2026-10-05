@@ -20,7 +20,6 @@
     "test:coverage": "vitest run --coverage --project '*:server' --project '*:frontend'",
     "test:e2e": "pnpm --filter web-e2e run test:e2e",
     "test:e2e:local": "pnpm --filter web-e2e run test:e2e:local",
-    "move-packages": "pnpm --filter @giveaway/codemods run move-packages",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "verify": "pnpm run lint && pnpm run format:check && pnpm run type-check && pnpm run test:run",
@@ -39,6 +38,7 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/generators": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",

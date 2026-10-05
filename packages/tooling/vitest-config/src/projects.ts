@@ -23,8 +23,7 @@ export const testProjects = (): (TestProjectInlineConfiguration & {
       name: 'server',
       environment: 'node',
       include: ['**/*.test.ts'],
-      exclude: EXCLUDE,
-      setupFiles: [SERVER_SETUP]
+      exclude: EXCLUDE
     }
   },
   {
@@ -34,7 +33,7 @@ export const testProjects = (): (TestProjectInlineConfiguration & {
       environment: 'jsdom',
       include: ['**/*.test.tsx'],
       exclude: [...EXCLUDE, '**/*.snapshot.test.tsx', '**/*.visual.test.tsx'],
-      setupFiles: [SERVER_SETUP, DOM_SETUP]
+      setupFiles: [DOM_SETUP]
     }
   },
   {
@@ -44,7 +43,7 @@ export const testProjects = (): (TestProjectInlineConfiguration & {
       environment: 'jsdom',
       include: ['**/*.snapshot.test.tsx'],
       exclude: EXCLUDE,
-      setupFiles: [SERVER_SETUP, DOM_SETUP]
+      setupFiles: [DOM_SETUP]
     }
   }
 ];
@@ -52,11 +51,13 @@ export const testProjects = (): (TestProjectInlineConfiguration & {
 export type PackageTestOptions = {
   coverageInclude?: string[];
   coverageExclude?: string[];
+  setupFiles?: string[];
 };
 
 export const packageTestConfig = ({
   coverageInclude = ['src/**/*.{ts,tsx}'],
-  coverageExclude = []
+  coverageExclude = [],
+  setupFiles = [SERVER_SETUP]
 }: PackageTestOptions = {}): ViteUserConfig => {
   process.env.TZ = 'UTC';
   return {
@@ -66,6 +67,7 @@ export const packageTestConfig = ({
     test: {
       globals: true,
       silent: 'passed-only',
+      setupFiles,
       projects: testProjects(),
       coverage: {
         provider: 'v8',

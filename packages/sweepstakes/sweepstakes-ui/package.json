@@ -51,9 +51,7 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
-    "@giveaway/sweepstakes-routes": "workspace:*",
     "@giveaway/sweepstakes-ui-testing": "workspace:*",
-    "@giveaway/team-context": "workspace:*",
     "@giveaway/testing-dom": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",

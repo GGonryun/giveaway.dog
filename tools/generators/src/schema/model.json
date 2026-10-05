@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "giveaway-model",
+  "title": "Create a model package",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The package name without the @giveaway/ scope, for example \"referrals-model\".",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What is the package name, without the @giveaway/ scope?"
+    },
+    "directory": {
+      "type": "string",
+      "description": "The folder of packages/ that holds the package, for example \"participants\" or \"integrations/x\". Its first segment is the scope tag.",
+      "x-prompt": "Which folder of packages/ holds the package?"
+    },
+    "module": {
+      "type": "string",
+      "description": "The name of the first module in src/. Defaults to the package name."
+    },
+    "skipFormat": {
+      "type": "boolean",
+      "description": "Do not run Prettier on the new files.",
+      "default": false
+    },
+    "skipInstall": {
+      "type": "boolean",
+      "description": "Do not run pnpm install.",
+      "default": false
+    }
+  },
+  "required": ["name", "directory"]
+}

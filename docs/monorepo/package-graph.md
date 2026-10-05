@@ -8,7 +8,7 @@ This document proposes how to split giveaway.dog into a pnpm workspace that Nx m
 
 [migration-plan.md](./migration-plan.md) describes how to get there.
 
-The graph comes from the code, not from a whiteboard. A script read every import in the 1,154 source files and 961 test files at commit `57d8059` and assigned each file to a package. The result is [package-map.json](./package-map.json). [check-package-map.mjs](./check-package-map.mjs) checks the code against the map. Run it with `node docs/monorepo/check-package-map.mjs`.
+The graph comes from the code, not from a whiteboard. A script read every import in the 1,154 source files and 961 test files at commit `57d8059` and assigned each file to a package. The result was [package-map.json](https://github.com/GGonryun/giveaway.dog/blob/f2ecbaf/docs/monorepo/package-map.json). A checker script compared the code with the map, and the move codemod in `tools/codemods` moved each package from it, until every package had moved. Then the map, the checker and the codemod were deleted; the last commit on `main` that has them is `f2ecbaf`. Now the ESLint rules in `@giveaway/eslint-config` enforce the graph (see Package types and dependency rules), and the generators in `tools/generators` create new packages.
 
 ## Summary
 
@@ -29,7 +29,7 @@ apps/
   web/                    Next.js routes only: page, layout, route and loading files
   web-e2e/                Playwright tests
 packages/
-  tooling/                tsconfig, eslint-config, vitest-config, testing-server, testing-dom, testing-visual
+  tooling/                tsconfig, eslint-config, vitest-config, testing-mocks, testing-server, testing-dom, testing-visual
   shared/                 util-*: helpers with no React and no server dependencies
   infra/                  db-*, cache, ratelimit, rpc-*, email, jobs, request-context-*, turnstile-*
   ui/                     ui-*: the design system, theme-*
@@ -40,7 +40,7 @@ packages/
     core/                 integration-model, integration-icons, integration-ui, integration-server, platform-catalog
     x/  bluesky/  discord/  twitch/  youtube/  steam/  meta/  tiktok/  linkedin/  kick/  velora/
 tools/
-  codemods/
+  generators/
   db-seed/
 ```
 
@@ -50,7 +50,7 @@ Every package is named `@giveaway/<folder name>`, for example `packages/sweepsta
 
 ## Package types and dependency rules
 
-Each package has three tags. Nx's `@nx/enforce-module-boundaries` ESLint rule enforces them.
+Each package has three tags. Nx's `@nx/enforce-module-boundaries` ESLint rule enforces them, as an error, with the rules in `dependencyRules` of `packages/tooling/eslint-config/src/boundaries.mjs`. It also fails on a dependency cycle between packages. Tests, the fixtures in `src/testing/` and package config files may also import `type:config` packages.
 
 | Type      | Contents                                                     | May import                | Count |
 | --------- | ------------------------------------------------------------ | ------------------------- | ----: |
@@ -61,7 +61,7 @@ Each package has three tags. Nx's `@nx/enforce-module-boundaries` ESLint rule en
 | `feature` | Pages and components that call server actions                | everything above          |    80 |
 | `config`  | tsconfig, ESLint and Vitest presets, test setup              | `config`, `model`, `util` |     6 |
 | `app`     | `apps/web` and `apps/web-e2e`                                | everything                |     2 |
-| `tool`    | `tools/db-seed` and `tools/codemods`                         | `server`, `model`, `util` |     2 |
+| `tool`    | `tools/db-seed` and `tools/generators`                       | `server`, `model`, `util` |     2 |
 
 ```mermaid
 flowchart TB
@@ -79,7 +79,7 @@ The other two tags:
 
 - `runtime:server`, `runtime:react` or `runtime:isomorphic`. In a `server` package, every module that is not a server action imports `server-only`. Today only `lib/prisma.ts`, `lib/auth/config.ts` and `lib/auth/config-no-providers.ts` do. A `model` or `util` package must not depend on React. That keeps icon libraries out of the server bundle and keeps the Prisma runtime out of the client bundle.
 
-  Client code must not reach a `runtime:server` package. The checker follows the imports of each non-test module that begins with `'use client'`, and the imports of the modules it reaches. It skips `import type` and `export type`, and an import whose names all have `type`. It stops at a module that begins with `'use server'`, because a client bundle gets only a reference to a server action. It reports each `runtime:server` module that it reaches, with the chain of imports from a `'use client'` module, and it fails on any. The rule works on files, not packages: a `runtime:react` package may still depend on a `runtime:server` package, for a Server Component or a server action. To fix a report, move the constant or schema to a `model` package, use `import type`, or assign the file to the right package in `package-map.json` when it is not server code. Imports of `@prisma/client` are fine, because Prisma has a browser build for its enums. The Prisma client is `lib/prisma.ts`, in a `runtime:server` package.
+  Client code must not reach a `runtime:server` package. The `@giveaway/no-server-in-client` ESLint rule (`packages/tooling/eslint-config/src/rules/no-server-in-client.mjs`) follows the imports of each non-test module that begins with `'use client'`, and the imports of the modules it reaches. It skips `import type` and `export type`, and an import whose names all have `type`. It stops at a module that begins with `'use server'`, because a client bundle gets only a reference to a server action. It reports the import that reaches a `runtime:server` module, with the chain of imports, and a `'use client'` module that is itself in a `runtime:server` package. The rule works on files, not packages: a `runtime:react` package may still depend on a `runtime:server` package, for a Server Component or a server action. To fix a report, move the constant or schema to a `model` package, use `import type`, or move the file to a package that is not `runtime:server` when it is not server code. Imports of `@prisma/client` are fine, because Prisma has a browser build for its enums. The Prisma client is `@giveaway/db-client/prisma`, in a `runtime:server` package.
 
 - `scope:<group>`, plus `platform:<name>` for platform plugins. Use them for ownership (`CODEOWNERS`) and to run one area with `nx run-many --projects=tag:platform:x`.
 
@@ -375,11 +375,11 @@ At commit `57d8059`, 76 source files were not imported by any route, by any othe
 
 Two planned packages would have contained nothing but dead code, so they are not in the graph: the X connect dialogs (`lib/integrations/components/twitter-*.tsx`) and the Kick token refresh (`lib/integrations/utils/refresh-kick-token.ts`).
 
-If you find another dead file, add it to `deadFiles` and the checker reports it until it is deleted. The analysis follows static imports, dynamic imports and `require`, so it misses a file that is only reached through a string path.
+The analysis follows static imports, dynamic imports and `require`, so it misses a file that is only reached through a string path.
 
 ## Package catalog
 
-"Files" is source files / test files. "Moves from" lists the current paths, with folders ending in `/`. The full lists are in `package-map.json`.
+"Files" is source files / test files. "Moves from" lists the current paths, with folders ending in `/`. The full lists are in [package-map.json](https://github.com/GGonryun/giveaway.dog/blob/f2ecbaf/docs/monorepo/package-map.json).
 
 ### Tooling
 
@@ -763,9 +763,9 @@ If you find another dead file, add it to `deadFiles` and the checker reports it 
 
 4 packages, 141 source files, 32 test files.
 
-| Package          | Type | Files    | Moves from                                                                                                                               |
-| ---------------- | ---- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `apps/web`       | app  | 132 / 24 | `__tests__/middleware.test.ts`<br>`app/(auth)/login/page.tsx`<br>`app/(auth)/logout/page.tsx`<br>`app/(auth)/onboarding/`<br>and 46 more |
-| `apps/web-e2e`   | app  | 1 / 4    | `e2e/`<br>`playwright.config.ts`                                                                                                         |
-| `tools/db-seed`  | tool | 1 / 0    | `prisma/seed.ts`                                                                                                                         |
-| `tools/codemods` | tool | 7 / 4    | New package: the move codemod                                                                                                            |
+| Package            | Type | Files    | Moves from                                                                                                                               |
+| ------------------ | ---- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/web`         | app  | 132 / 24 | `__tests__/middleware.test.ts`<br>`app/(auth)/login/page.tsx`<br>`app/(auth)/logout/page.tsx`<br>`app/(auth)/onboarding/`<br>and 46 more |
+| `apps/web-e2e`     | app  | 1 / 4    | `e2e/`<br>`playwright.config.ts`                                                                                                         |
+| `tools/db-seed`    | tool | 1 / 0    | `prisma/seed.ts`                                                                                                                         |
+| `tools/generators` | tool | 4 / 1    | New package: the Nx generators for new packages                                                                                          |

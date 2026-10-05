@@ -3,9 +3,9 @@ import { checkVisitUrl } from '../visit-url';
 import { VisitUrlTaskSchema } from '@giveaway/task-model/schemas';
 import {
   BASE_TASK,
-  IDS,
-  applicationError
+  IDS
 } from '@giveaway/testing-server/fixtures-task-validation';
+import { applicationError } from '@giveaway/util-errors/testing/application-error';
 
 const buildTask = (
   afterVisit?: VisitUrlTaskSchema['afterVisit']
