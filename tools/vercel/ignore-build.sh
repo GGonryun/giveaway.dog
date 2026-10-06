@@ -33,7 +33,7 @@ if [ -z "$changed" ]; then
   build "no file changed since $previous"
 fi
 
-unused='^[^/]+\.md$|^docs/|^\.github/|^\.claude/|(^|/)__tests__/|(^|/)__snapshots__/|(^|/)__screenshots__/|\.test\.[cm]?[jt]sx?$|(^|/)vitest(\.visual|\.integration)?\.config\.ts$'
+unused='^[^/]+\.md$|^property-coverage\.json$|^docs/|^\.github/|^\.claude/|(^|/)__tests__/|(^|/)__snapshots__/|(^|/)__screenshots__/|\.test\.[cm]?[jt]sx?$|(^|/)vitest(\.visual|\.integration)?\.config\.ts$'
 used=$(grep -Ev "$unused" <<<"$changed")
 if [ -n "$used" ]; then
   echo "Files that need a new preview since $previous:"
