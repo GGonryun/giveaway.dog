@@ -19,6 +19,12 @@ const positiveWeight = fc.integer({ min: 1, max: 20 });
 
 const weightOrZero = fc.oneof(fc.constant(0), positiveWeight);
 
+const weightOrNonPositive = fc.oneof(
+  fc.constant(0),
+  fc.integer({ min: -20, max: -1 }),
+  positiveWeight
+);
+
 const toItems = (weights: number[]): WeightedItem<number>[] =>
   weights.map((weight, item) => ({ item, weight }));
 
@@ -33,6 +39,11 @@ const itemsWithZeroBeforePositive = fc
     last: positiveWeight
   })
   .map(({ before, after, last }) => toItems([...before, 0, ...after, last]));
+
+const itemsWithNonPositiveWeights = fc
+  .array(weightOrNonPositive, { minLength: 1, maxLength: 12 })
+  .filter((weights) => weights.some((weight) => weight > 0))
+  .map(toItems);
 
 const totalWeight = (items: WeightedItem<number>[]) =>
   items.reduce((sum, { weight }) => sum + Math.max(weight, 0), 0);
@@ -73,20 +84,39 @@ const expectCloseToWeights = (
 };
 
 describe('weighted roll properties', () => {
-  it.fails(
-    '[DRAW-001] an item with a weight of 0 is never returned (fails until #134 is fixed)',
-    () => {
-      assertProperty(
-        fc.property(itemsWithZeroBeforePositive, (items) => {
-          for (const random of randomGrid(items)) {
-            for (const picked of singlePicks(items, random)) {
-              expect(items[picked].weight).toBeGreaterThan(0);
-            }
+  it('[DRAW-001] an item with a weight of 0 is never returned', () => {
+    assertProperty(
+      fc.property(itemsWithZeroBeforePositive, (items) => {
+        for (const random of randomGrid(items)) {
+          for (const picked of singlePicks(items, random)) {
+            expect(items[picked].weight).toBeGreaterThan(0);
           }
-        })
-      );
-    }
-  );
+        }
+      })
+    );
+  });
+
+  it('[DRAW-001] an item with a weight of 0 or less is never returned by any number of picks', () => {
+    assertProperty(
+      fc.property(
+        itemsWithNonPositiveWeights,
+        fc.integer({ min: 0, max: 20 }),
+        randomSeed,
+        (items, count, seed) => {
+          const rng = seededRandom(seed);
+
+          const picks = [
+            ...pickManyWeighted(items, count, rng),
+            ...pickUniqueWeighted(items, count, rng)
+          ];
+
+          for (const picked of picks) {
+            expect(items[picked].weight).toBeGreaterThan(0);
+          }
+        }
+      )
+    );
+  });
 
   it('[DRAW-008] every item can be returned when every weight is positive', () => {
     assertProperty(
@@ -96,16 +126,13 @@ describe('weighted roll properties', () => {
     );
   });
 
-  it.fails(
-    '[DRAW-008] every item with a positive weight can be returned wherever the zero weights are (fails until #134 is fixed)',
-    () => {
-      assertProperty(
-        fc.property(itemsWithZeroBeforePositive, (items) => {
-          expect(reachableItems(items)).toEqual(positiveItemIds(items));
-        })
-      );
-    }
-  );
+  it('[DRAW-008] every item with a positive weight can be returned wherever the zero weights are', () => {
+    assertProperty(
+      fc.property(itemsWithZeroBeforePositive, (items) => {
+        expect(reachableItems(items)).toEqual(positiveItemIds(items));
+      })
+    );
+  });
 
   it('[DRAW-005] every returned item is one of the input items', () => {
     assertProperty(
@@ -143,6 +170,38 @@ describe('weighted roll properties', () => {
           expect(picks).toHaveLength(Math.min(count, items.length));
         }
       )
+    );
+  });
+
+  it('[DRAW-006] pickUniqueWeighted returns min(count, items with a positive weight) results', () => {
+    assertProperty(
+      fc.property(
+        itemsWithNonPositiveWeights,
+        fc.integer({ min: 0, max: 15 }),
+        randomSeed,
+        (items, count, seed) => {
+          const picks = pickUniqueWeighted(items, count, seededRandom(seed));
+
+          expect(new Set(picks).size).toBe(picks.length);
+          expect(picks).toHaveLength(
+            Math.min(count, positiveItemIds(items).size)
+          );
+        }
+      )
+    );
+  });
+
+  it('[DRAW-008] pickUniqueWeighted returns every item with a positive weight when the count allows it', () => {
+    assertProperty(
+      fc.property(itemsWithNonPositiveWeights, randomSeed, (items, seed) => {
+        const picks = pickUniqueWeighted(
+          items,
+          items.length,
+          seededRandom(seed)
+        );
+
+        expect(new Set(picks)).toEqual(positiveItemIds(items));
+      })
     );
   });
 

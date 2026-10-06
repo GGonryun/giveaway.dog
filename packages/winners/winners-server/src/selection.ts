@@ -70,6 +70,10 @@ export const toUniquePrizeDraw = (
     const pickedWinners = pickUniqueWeighted(weightedCompletions, 1);
     const winner = pickedWinners[0];
 
+    if (!winner) {
+      continue;
+    }
+
     pickedUserIds.add(winner.participant.userId);
 
     winnersData.push({
