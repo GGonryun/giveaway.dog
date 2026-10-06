@@ -400,6 +400,36 @@ jobs:
           PROJECTS: ${{ steps.projects.outputs.projects }}
         run: pnpm nx run-many -t test:integration --projects="$PROJECTS" --output-style=static
 
+  mutation:
+    name: Mutation tests
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set the base and head commits for nx affected
+        if: env.NX_RUN == 'affected'
+        uses: nrwl/nx-set-shas@v5
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Stryker on the changed lines
+        run: pnpm run test:mutation:changed
+
+      - name: Upload the mutation reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-report
+          path: reports/mutation/
+          if-no-files-found: ignore
+          retention-days: 14
+
   checks:
     name: Checks
     needs:
@@ -410,6 +440,7 @@ jobs:
       - snapshot
       - visual
       - integration
+      - mutation
       - coverage
     if: ${{ always() }}
     runs-on: ubuntu-24.04-arm

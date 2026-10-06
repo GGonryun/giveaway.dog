@@ -1,0 +1,49 @@
+{
+  "name": "@giveaway/mutation-testing",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:config",
+      "runtime:isomorphic",
+      "scope:tooling"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tooling/mutation-testing",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./audit": "./src/audit.ts",
+    "./changed-lines": "./src/changed-lines.ts",
+    "./gate": "./src/gate.ts",
+    "./ignore-console": "./src/ignore-console.ts",
+    "./pick-packages": "./src/pick-packages.ts",
+    "./retry": "./src/retry.ts",
+    "./stryker-options": "./src/stryker-options.ts",
+    "./targets": "./src/targets.ts",
+    "./vitest-runner": "./src/vitest-runner.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@stryker-mutator/api": "catalog:",
+    "@stryker-mutator/core": "catalog:",
+    "@stryker-mutator/vitest-runner": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

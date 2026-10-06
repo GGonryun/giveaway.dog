@@ -1,0 +1,167 @@
+name: Mutation audit
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: Package names or folders to audit, separated by spaces. Leave empty to pick packages at random
+        required: false
+        default: ''
+      count:
+        description: How many packages to pick at random
+        required: false
+        default: '3'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mutation-audit
+  cancel-in-progress: false
+
+env:
+  NX_NO_CLOUD: true
+
+jobs:
+  pick:
+    name: Pick packages
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 5
+    outputs:
+      packages: ${{ steps.pick.outputs.packages }}
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Pick the packages to audit
+        id: pick
+        env:
+          INPUT_PACKAGES: ${{ inputs.packages }}
+          INPUT_COUNT: ${{ inputs.count || '3' }}
+        run: |
+          if [ -n "$INPUT_PACKAGES" ]; then
+            packages=$(node -e 'console.log(JSON.stringify(process.argv.slice(1)))' $INPUT_PACKAGES)
+          else
+            packages=$(node packages/tooling/mutation-testing/src/cli.ts pick --count "$INPUT_COUNT" --seed "$(date -u +%F)")
+          fi
+          echo "Packages to audit: $packages" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "packages=$packages" >> "$GITHUB_OUTPUT"
+
+  audit:
+    name: Audit ${{ matrix.package }}
+    needs: pick
+    if: needs.pick.outputs.packages != '[]'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      issues: write
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJSON(needs.pick.outputs.packages) }}
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Name the package
+        id: package
+        env:
+          PACKAGE: ${{ matrix.package }}
+        run: |
+          if [ -f "$PACKAGE/package.json" ]; then
+            name=$(node -p 'require(`./${process.env.PACKAGE}/package.json`).name')
+          else
+            name="@giveaway/${PACKAGE#@giveaway/}"
+          fi
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "folder=${name#@giveaway/}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore the Stryker incremental file
+        uses: actions/cache@v4
+        with:
+          path: reports/mutation/${{ steps.package.outputs.folder }}/stryker-incremental.json
+          key: mutation-incremental-${{ steps.package.outputs.folder }}-${{ github.run_id }}
+          restore-keys: mutation-incremental-${{ steps.package.outputs.folder }}-
+
+      - name: Stryker on the whole package
+        id: stryker
+        env:
+          NAME: ${{ steps.package.outputs.name }}
+        run: pnpm run test:mutation "$NAME" --incremental
+
+      - name: Upload the mutation report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-audit-${{ steps.package.outputs.folder }}
+          path: reports/mutation/${{ steps.package.outputs.folder }}/
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Open, update or close the audit issue
+        if: ${{ !cancelled() && steps.package.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          NAME: ${{ steps.package.outputs.name }}
+          FOLDER: ${{ steps.package.outputs.folder }}
+          STRYKER: ${{ steps.stryker.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Mutation audit: $NAME"
+          result="reports/mutation/$FOLDER/result.json"
+          report="reports/mutation/$FOLDER/report.md"
+
+          existing=$(gh issue list --state open --label test:mutation --limit 200 --json number,title \
+            --jq ".[] | select(.title == \"$title\") | .number" | head -n 1)
+
+          open_or_update() {
+            if [ -n "$existing" ]; then
+              gh issue edit "$existing" --body-file "$1"
+              echo "Updated issue #$existing" | tee -a "$GITHUB_STEP_SUMMARY"
+            else
+              label=$(jq -r '.[] | select(.name == "test:mutation")' .github/labels.json)
+              gh label create test:mutation --color "$(jq -r .color <<< "$label")" \
+                --description "$(jq -r .description <<< "$label")" 2> /dev/null || true
+              url=$(gh issue create --title "$title" --label test:mutation --body-file "$1")
+              echo "Opened $url" | tee -a "$GITHUB_STEP_SUMMARY"
+            fi
+          }
+
+          if [ "$STRYKER" != "success" ] || [ ! -f "$result" ]; then
+            {
+              echo "## $title"
+              echo
+              echo "Stryker could not run on this package in $RUN_URL."
+              echo
+              echo "### How to fix"
+              echo
+              echo "1. Open the log of the \`Audit\` job of this package in the run, and find the error in the \`Stryker on the whole package\` step."
+              echo "2. Reproduce it with \`pnpm run test:mutation $NAME\`. Most often the tests of the package fail without a mutant, or Stryker cannot load the Vitest config of the package."
+              echo "3. Fix the cause, and open a pull request that closes this issue."
+            } > failure.md
+            open_or_update failure.md
+            exit 0
+          fi
+
+          if [ "$(jq -r .survivors "$result")" -gt 0 ]; then
+            open_or_update "$report"
+          elif [ -n "$existing" ]; then
+            gh issue close "$existing" --comment "The mutation audit in $RUN_URL found no survivors."
+            echo "Closed issue #$existing" | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
