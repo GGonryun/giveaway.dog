@@ -25,6 +25,7 @@ import {
   REQUIRED_VELORA_SCOPES,
   REQUIRED_LINKEDIN_SCOPES
 } from '@giveaway/integration-model/scopes';
+import { environment } from '@giveaway/app-config/environment';
 import { UserSource } from '@giveaway/db-model';
 import prisma from '@giveaway/db-client/prisma';
 import { redeemBlueskyLoginToken } from './bluesky-login-token';
@@ -78,7 +79,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
     }),
     SteamProvider({
       request,
-      callbackUrl: `${process.env.NEXTAUTH_URL}/api/auth/steam-callback`,
+      callbackUrl: `${environment.authUrl()}/api/auth/steam-callback`,
       clientSecret: process.env.STEAM_SECRET!
     }),
     TwitterProvider({

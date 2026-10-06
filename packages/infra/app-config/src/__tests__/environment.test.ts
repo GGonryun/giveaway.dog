@@ -62,4 +62,46 @@ describe('environment', () => {
       expect(environment.appUrl()).toBe('http://localhost:3000');
     });
   });
+
+  describe('authUrl', () => {
+    it('returns NEXTAUTH_URL outside a preview', () => {
+      vi.stubEnv('VERCEL_ENV', 'production');
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc.vercel.app');
+      vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.dog');
+
+      expect(environment.authUrl()).toBe('https://giveaway.dog');
+    });
+
+    it('returns the deployment url on a preview', () => {
+      vi.stubEnv('VERCEL_ENV', 'preview');
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc.vercel.app');
+      vi.stubEnv('NEXTAUTH_URL', undefined);
+
+      expect(environment.authUrl()).toBe('https://giveaway-abc.vercel.app');
+    });
+
+    it('ignores NEXTAUTH_URL on a preview', () => {
+      vi.stubEnv('VERCEL_ENV', 'preview');
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc.vercel.app');
+      vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.dog');
+
+      expect(environment.authUrl()).toBe('https://giveaway-abc.vercel.app');
+    });
+
+    it('returns NEXTAUTH_URL on a preview without VERCEL_URL', () => {
+      vi.stubEnv('VERCEL_ENV', 'preview');
+      vi.stubEnv('VERCEL_URL', '');
+      vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.dog');
+
+      expect(environment.authUrl()).toBe('https://giveaway.dog');
+    });
+
+    it('returns undefined when no url is set', () => {
+      vi.stubEnv('VERCEL_ENV', undefined);
+      vi.stubEnv('VERCEL_URL', undefined);
+      vi.stubEnv('NEXTAUTH_URL', undefined);
+
+      expect(environment.authUrl()).toBeUndefined();
+    });
+  });
 });

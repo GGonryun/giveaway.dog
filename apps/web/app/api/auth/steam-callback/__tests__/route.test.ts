@@ -56,6 +56,18 @@ describe('steam-callback route', () => {
       );
     });
 
+    it('redirects to the deployment url on a preview', async () => {
+      vi.stubEnv('VERCEL_ENV', 'preview');
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc.vercel.app');
+      vi.stubEnv('NEXTAUTH_URL', undefined);
+
+      const res = await GET(request('?openid.mode=id_res'));
+
+      expect(res.headers.get('location')).toBe(
+        'https://giveaway-abc.vercel.app/api/auth/callback/steam?openid.mode=id_res&code=123'
+      );
+    });
+
     it('throws a malformed URL error when NEXTAUTH_URL is not configured', async () => {
       vi.stubEnv('NEXTAUTH_URL', undefined);
 

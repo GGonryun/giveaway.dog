@@ -487,6 +487,20 @@ describe('auth config', () => {
       });
     });
 
+    it('uses the deployment url on a preview', () => {
+      vi.stubEnv('VERCEL_ENV', 'preview');
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc.vercel.app');
+      vi.stubEnv('NEXTAUTH_URL', undefined);
+
+      expect(findProvider('steam').authorization).toMatchObject({
+        params: {
+          'openid.return_to':
+            'https://giveaway-abc.vercel.app/api/auth/steam-callback',
+          'openid.realm': 'https://giveaway-abc.vercel.app'
+        }
+      });
+    });
+
     it('verifies against the request passed to the factory', async () => {
       const steam = findProvider(
         'steam',

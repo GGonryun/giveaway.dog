@@ -2772,6 +2772,9 @@ importers:
 
   packages/auth/auth-server:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
       '@giveaway/auth-core':
         specifier: workspace:*
         version: link:../auth-core
