@@ -25,12 +25,14 @@ env:
   NX_SKIP_NX_CACHE: ${{ inputs.skip-cache && 'true' || 'false' }}
 
 jobs:
-  checks:
-    name: Checks
+  shard:
+    name: Checks ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    outputs:
-      coverage: ${{ steps.coverage.outputs.lines }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -47,67 +49,88 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
+        id: nx-cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: checks-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: ESLint
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm nx $NX_RUN -t lint --output-style=static --quiet
+        if: ${{ !cancelled() && steps.projects.outputs.lint }}
+        env:
+          PROJECTS: ${{ steps.projects.outputs.lint }}
+        run: pnpm nx run-many -t lint --projects="$PROJECTS" --output-style=static --quiet
 
       - name: ESLint (files outside the projects)
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && matrix.shard == 1 }}
         run: pnpm run lint:root --quiet
 
       - name: Prettier
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && matrix.shard == 1 }}
         run: pnpm run format:check
 
       - name: TypeScript
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm nx $NX_RUN -t type-check --output-style=static
+        if: ${{ !cancelled() && steps.projects.outputs.type-check }}
+        env:
+          PROJECTS: ${{ steps.projects.outputs.type-check }}
+        run: pnpm nx run-many -t type-check --projects="$PROJECTS" --output-style=static
 
       - name: Vitest server tests with coverage
         id: server
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm nx $NX_RUN -t test:server --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
+        if: ${{ !cancelled() && steps.projects.outputs.test-server }}
+        env:
+          PROJECTS: ${{ steps.projects.outputs.test-server }}
+        run: pnpm nx run-many -t test:server --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
 
       - name: Vitest frontend tests with coverage
         id: frontend
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm nx $NX_RUN -t test:frontend --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
+        if: ${{ !cancelled() && steps.projects.outputs.test-frontend }}
+        env:
+          PROJECTS: ${{ steps.projects.outputs.test-frontend }}
+        run: pnpm nx run-many -t test:frontend --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
 
       - name: Vitest snapshots
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm nx $NX_RUN -t test:snapshot --output-style=static
+        if: ${{ !cancelled() && steps.projects.outputs.test-snapshot }}
+        env:
+          PROJECTS: ${{ steps.projects.outputs.test-snapshot }}
+        run: pnpm nx run-many -t test:snapshot --projects="$PROJECTS" --output-style=static
 
       - name: Vitest visual tests in the Playwright image
         id: visual
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm nx $NX_RUN -t test:visual:docker --output-style=static
+        if: ${{ !cancelled() && steps.projects.outputs.test-visual-docker }}
+        env:
+          PROJECTS: ${{ steps.projects.outputs.test-visual-docker }}
+        run: pnpm nx run-many -t test:visual:docker --projects="$PROJECTS" --output-style=static
 
       - name: Vitest integration tests against Postgres in Docker
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm nx $NX_RUN -t test:integration --output-style=static
+        if: ${{ !cancelled() && steps.projects.outputs.test-integration }}
+        env:
+          PROJECTS: ${{ steps.projects.outputs.test-integration }}
+        run: pnpm nx run-many -t test:integration --projects="$PROJECTS" --output-style=static
 
-      - name: Merge the coverage
-        id: coverage
-        if: ${{ !cancelled() && steps.server.outcome == 'success' && steps.frontend.outcome == 'success' }}
+      - name: Collect the test reports
+        if: ${{ !cancelled() && (steps.server.outcome == 'success' || steps.frontend.outcome == 'success') }}
         run: |
           node .github/scripts/collect-vitest-reports.mjs server
           node .github/scripts/collect-vitest-reports.mjs frontend
-          if [ -z "$(ls -A .vitest-reports)" ]; then
-            echo "No project with tests is affected, so there is no coverage to merge." | tee -a "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
-          pnpm exec vitest run --merge-reports=.vitest-reports --coverage --passWithNoTests
-          lines=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
-          echo "lines=$lines" >> "$GITHUB_OUTPUT"
-          echo "Line coverage: ${lines}%" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the test reports
+        if: ${{ !cancelled() && (steps.server.outcome == 'success' || steps.frontend.outcome == 'success') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-reports-${{ matrix.shard }}
+          path: .vitest-reports/
+          include-hidden-files: true
+          retention-days: 1
 
       - name: Upload the screenshots that changed
         if: ${{ !cancelled() && steps.visual.outcome == 'failure' }}
         uses: actions/upload-artifact@v4
         with:
-          name: visual-changes
+          name: visual-changes-${{ matrix.shard }}
           path: |
             apps/*/.vitest-attachments/
             packages/*/*/.vitest-attachments/
@@ -117,6 +140,8 @@ jobs:
 
       - name: Explain how to review the changes
         if: ${{ !cancelled() && steps.visual.outcome == 'failure' }}
+        env:
+          ARTIFACT: visual-changes-${{ matrix.shard }}
         run: |
           {
             echo "## Visual changes"
@@ -125,11 +150,70 @@ jobs:
             echo
             find apps packages -name node_modules -prune -o -path '*/.vitest-attachments/*' -name '*-actual-*.png' -print | sort | sed -e 's|/\.vitest-attachments/|/|' -e 's|^|- |' -e 's|-actual-|-|'
             echo
-            echo "The \`visual-changes\` artifact of this run has the actual screenshot and a diff image for each one. The diff image shows the changed pixels in red."
+            echo "The \`$ARTIFACT\` artifact of this run has the actual screenshot and a diff image for each one. The diff image shows the changed pixels in red."
             echo
             echo "- If the change is intended, update the references: run the **Update visual references** workflow on this branch, or run \`pnpm run test:visual:docker:update\` and commit the result. Then review the new images in the pull request."
             echo "- If the change is not intended, fix the code."
           } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Save the Nx cache
+        if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .nx/ci-cache
+          key: ${{ steps.nx-cache.outputs.key }}
+
+  checks:
+    name: Checks
+    needs: shard
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-slim
+    timeout-minutes: 10
+    outputs:
+      coverage: ${{ steps.coverage.outputs.lines }}
+    steps:
+      - name: Check that every shard passed
+        env:
+          RESULT: ${{ needs.shard.result }}
+        run: |
+          if [ "$RESULT" != success ]; then
+            echo "::error::A shard did not pass (result: $RESULT). The log of each failed Checks job names the check that failed."
+            exit 1
+          fi
+
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Download the test reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vitest-reports-*
+          path: .vitest-reports
+          merge-multiple: true
+
+      - name: Check for test reports
+        id: reports
+        run: |
+          if [ -n "$(ls -A .vitest-reports 2>/dev/null)" ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No project with tests is affected, so there is no coverage to merge." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Set up the project
+        if: steps.reports.outputs.found == 'true'
+        uses: ./.github/actions/setup
+
+      - name: Merge the coverage
+        id: coverage
+        if: steps.reports.outputs.found == 'true'
+        run: |
+          pnpm exec vitest run --merge-reports=.vitest-reports --coverage --passWithNoTests
+          lines=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
+          echo "lines=$lines" >> "$GITHUB_OUTPUT"
+          echo "Line coverage: ${lines}%" >> "$GITHUB_STEP_SUMMARY"
 
   badge:
     name: Coverage badge
