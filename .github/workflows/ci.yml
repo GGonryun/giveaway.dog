@@ -43,6 +43,9 @@ jobs:
       - name: ESLint
         run: pnpm nx $NX_RUN -t lint --output-style=static --quiet
 
+      - name: ESLint (files outside the projects)
+        run: pnpm run lint:root --quiet
+
       - name: Prettier
         if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: pnpm run format:check
