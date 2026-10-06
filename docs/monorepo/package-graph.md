@@ -36,6 +36,7 @@ packages/
   auth/  account/  team/  audience/  participants/
   tasks/  sweepstakes/  winners/  templates/  automation/
   pickers/  browse/  marketing/  shell/
+  e2e/                    e2e-gate, e2e-model, e2e-server: the gate and the seed API of the end-to-end tests
   integrations/
     core/                 integration-model, integration-icons, integration-ui, integration-server, platform-catalog
     x/  bluesky/  discord/  twitch/  youtube/  steam/  meta/  tiktok/  linkedin/  kick/  velora/
@@ -761,6 +762,16 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 | `@giveaway/shell-metrics`    | feature | 1 / 1   | `components/user-metrics-collector.tsx`                                                                                                                                                                            |
 | `@giveaway/shell-navigation` | feature | 10 / 14 | `components/patterns/logged-in-navigation-bar.tsx`<br>`components/patterns/logged-out-navigation-bar.tsx`<br>`components/patterns/navigation-bar.tsx`<br>`components/patterns/navigation-header.tsx`<br>and 1 more |
 | `@giveaway/shell-sidebar`    | feature | 5 / 8   | `components/app/`<br>`components/patterns/app-sidebar/index.tsx`<br>`components/patterns/app-sidebar/nav-projects.tsx`<br>`components/patterns/app-sidebar/nav-user.tsx`<br>and 1 more                             |
+
+### E2E
+
+3 packages, 11 source files, 11 test files.
+
+| Package                | Type   | Files | Moves from                                                                                                      |
+| ---------------------- | ------ | ----- | --------------------------------------------------------------------------------------------------------------- |
+| `@giveaway/e2e-gate`   | server | 1 / 1 | New package: the environment and secret checks that the `e2e` provider and the seed API share                   |
+| `@giveaway/e2e-model`  | model  | 3 / 3 | New package: the personas, the namespaces and slugs, and the request schemas and limits of the seed API         |
+| `@giveaway/e2e-server` | server | 7 / 7 | New package: the seed API behind `app/api/e2e/[...path]/route.ts`: teams, giveaways, rows, run cleanup, janitor |
 
 ### Apps and tools
 

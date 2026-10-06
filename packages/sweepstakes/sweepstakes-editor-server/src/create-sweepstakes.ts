@@ -5,25 +5,9 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 
-import {
-  DEFAULT_SWEEPSTAKES_AUDIENCE,
-  DEFAULT_SWEEPSTAKES_DESIGN,
-  DEFAULT_SWEEPSTAKES_DETAILS,
-  DEFAULT_SWEEPSTAKES_PRIZES,
-  DEFAULT_SWEEPSTAKES_TASKS,
-  DEFAULT_SWEEPSTAKES_TERMS,
-  DEFAULT_SWEEPSTAKES_TIMING,
-  DEFAULT_SWEEPSTAKES_VISIBILITY,
-  DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
-} from '@giveaway/sweepstakes-model/defaults';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { getTemplateById } from '@giveaway/templates-model/data/static-templates';
-import {
-  Prisma,
-  PrismaClient,
-  SweepstakesStatus,
-  TeamTier
-} from '@giveaway/db-model';
+import { Prisma, PrismaClient, TeamTier } from '@giveaway/db-model';
 import { toStorableSweepstakesUpdate } from '@giveaway/sweepstakes-model/storable';
 import { isUndefined, omitBy } from 'lodash';
 import {
@@ -32,8 +16,7 @@ import {
 } from '@giveaway/templates-model/schemas/template';
 import { replaceIdsDeep } from '@giveaway/util-collections/object';
 import { TeamPermission } from '@giveaway/team-permissions';
-
-const SWEEPSTAKE_ID_SIZE = 6;
+import { SWEEPSTAKE_ID_SIZE, toNewSweepstakesData } from './lifecycle';
 
 export const createSweepstakes = procedure()
   .authorization({ required: true })
@@ -67,38 +50,11 @@ export const createSweepstakes = procedure()
       });
     }
 
-    const base = {
-      id: nanoid(SWEEPSTAKE_ID_SIZE),
+    const base = toNewSweepstakesData({
       teamId: team.id,
-      status: SweepstakesStatus.DRAFT,
-      details: {
-        create: DEFAULT_SWEEPSTAKES_DETAILS
-      },
-      timing: {
-        create: { ...DEFAULT_SWEEPSTAKES_TIMING, timeZone: input.timezone }
-      },
-      audience: {
-        create: DEFAULT_SWEEPSTAKES_AUDIENCE
-      },
-      terms: {
-        create: { ...DEFAULT_SWEEPSTAKES_TERMS, sponsorName: team.name }
-      },
-      prizes: {
-        createMany: { data: DEFAULT_SWEEPSTAKES_PRIZES }
-      },
-      tasks: {
-        createMany: { data: DEFAULT_SWEEPSTAKES_TASKS }
-      },
-      design: {
-        create: DEFAULT_SWEEPSTAKES_DESIGN
-      },
-      visibility: {
-        create: DEFAULT_SWEEPSTAKES_VISIBILITY
-      },
-      criteria: {
-        create: DEFAULT_SWEEPSTAKES_WINNER_CRITERIA
-      }
-    };
+      teamName: team.name,
+      timezone: input.timezone
+    });
 
     // Check for template (static or database)
     if (input.templateId) {

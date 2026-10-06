@@ -57,6 +57,12 @@ describe('newE2eProviders', () => {
       expect(newE2eProviders()).toEqual([]);
     });
 
+    it('adds no provider to a custom Vercel environment', () => {
+      vi.stubEnv('VERCEL_TARGET_ENV', 'staging');
+
+      expect(newE2eProviders()).toEqual([]);
+    });
+
     it('adds no provider when the environment is unknown', () => {
       vi.stubEnv('VERCEL_ENV', undefined);
 
