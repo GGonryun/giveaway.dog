@@ -57,6 +57,13 @@
       "cache": true,
       "inputs": ["default", "^production"],
       "outputs": []
+    },
+    "test:visual": {
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/apps/web/app/globals.css"
+      ]
     }
   }
 }
