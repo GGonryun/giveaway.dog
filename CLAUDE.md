@@ -41,7 +41,7 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 
 ### Environment Variables
 
-- **Sources**: Production reads the Vercel variables with the Production target, and every preview deployment reads the Vercel variables with the Preview target (Project, Settings, Environment Variables). Local development reads `apps/web/.env.local`, which starts as a copy of `apps/web/.env.example`. Vercel sets `VERCEL_ENV`, `VERCEL_URL` and `NEXT_PUBLIC_VERCEL_URL` itself
+- **Sources**: Production reads the Vercel variables with the Production target, and every preview deployment reads the Vercel variables with the Preview target (Project, Settings, Environment Variables). Local development reads `apps/web/.env.local`, which starts as a copy of `apps/web/.env.example`. Vercel sets `VERCEL_ENV`, `VERCEL_TARGET_ENV`, `VERCEL_URL` and `NEXT_PUBLIC_VERCEL_URL` itself
 - **One target for each value**: Give each Vercel variable one target. Never give Preview a production value: pull request code runs on Preview, and the end-to-end tests send their own requests to it. A change in Vercel takes effect only in new deployments. The build copies each `NEXT_PUBLIC_*` value into the client code
 - **What each environment uses**: "Not set" means that the variable has no value in that environment. The notes below the table give the reasons
 
@@ -54,6 +54,8 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
   | `BLOB_READ_WRITE_TOKEN`                                                        | The production Blob store       | Its own Blob store             | Optional                        |
   | `CRON_SECRET`                                                                  | The production secret           | Its own secret                 | Optional                        |
   | `E2E_LOGIN_SECRET`                                                             | Never set                       | The GitHub Actions secret      | Optional                        |
+  | `E2E_ALLOW_WRITES`                                                             | Never set                       | `1`                            | Optional                        |
+  | `E2E_ALLOW_PUBLIC`                                                             | Never set                       | Not set, or `1`                | Optional                        |
   | `NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY`, `CLOUDFLARE_TURNSTILE_SECRET_KEY` | The production widget           | The test keys                  | The test keys                   |
   | `BLUESKY_PRIVATE_KEY`, `TWITCH_EVENTSUB_SECRET`                                | The production keys             | Their own keys                 | Their own keys                  |
   | `DISCORD_WEBHOOK_URL`                                                          | The alerts channel              | Not set                        | Not set                         |
@@ -62,13 +64,14 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
   | Sign-in providers (see below)                                                  | The production apps             | Not set, or test apps          | Optional                        |
   | Team integrations (see below)                                                  | The production apps and bots    | Not set, or test apps and bots | Optional                        |
   | `TWITCH_EVENTSUB_URL`                                                          | Not set                         | Not set                        | Optional                        |
-  | `VERCEL_ENV`, `VERCEL_URL`, `NEXT_PUBLIC_VERCEL_URL`                           | Set by Vercel                   | Set by Vercel                  | Not set                         |
+  | `VERCEL_ENV`, `VERCEL_TARGET_ENV`, `VERCEL_URL`, `NEXT_PUBLIC_VERCEL_URL`      | Set by Vercel                   | Set by Vercel                  | Not set                         |
 
 - **App URLs**: Each preview deployment uses its own URL (see App URL)
 - **`AUTH_SECRET`**: Auth.js signs the sessions with it. With the production secret, a preview could make sessions that production accepts
 - **Databases and Blob store**: See Postgres and Redis. The preview Blob store is one that production does not use (#200). Uploads fail without `BLOB_READ_WRITE_TOKEN`
 - **`CRON_SECRET`**: The cron and workflow routes accept `Bearer <CRON_SECRET>`, and they refuse every request when it is not set. Locally, set it to call the cron routes by hand
-- **`E2E_LOGIN_SECRET`**: The same value as the GitHub Actions secret of the same name, 32 characters or more (see E2E Tests). Locally, the login test needs it
+- **`E2E_LOGIN_SECRET`**: The same value as the GitHub Actions secret of the same name, 32 characters or more (see E2E Tests). Locally, the login test and the seed API need it
+- **`E2E_ALLOW_WRITES`, `E2E_ALLOW_PUBLIC`**: The seed API writes only with `E2E_ALLOW_WRITES=1`, and makes PUBLIC giveaways only with `E2E_ALLOW_PUBLIC=1` too (see E2E Tests). PUBLIC giveaways appear on `/browse` of every preview, so set `E2E_ALLOW_PUBLIC` only while tests need them. Both have no effect where the e2e gate is closed
 - **Turnstile**: Cloudflare's always-pass test keys are `1x00000000000000000000AA` (site key) and `1x0000000000000000000000000000000AA` (secret key). With them, a headless browser passes the security check of the giveaway page
 - **`BLUESKY_PRIVATE_KEY`, `TWITCH_EVENTSUB_SECRET`**: The tests can hold the preview keys in CI. Bluesky OAuth also needs a public HTTPS `NEXT_PUBLIC_APP_URL`
 - **`DISCORD_WEBHOOK_URL`**: Without it, no preview posts to the internal alerts channel. The activation job only sends this post, and it fails for every giveaway until #204 adds a fake
@@ -403,7 +406,7 @@ vitest.config.ts (lists the Vitest projects of every package)
 - **Protected deployments**: `apps/web-e2e/src/vercel.setup.ts` sends `VERCEL_AUTOMATION_BYPASS_SECRET` one time to get the Vercel bypass cookie. The other tests use that cookie, so the secret goes only to the deployment
 - **Origin check**: `apps/web-e2e/src/vercel.setup.ts` also reads `/api/bluesky/client-metadata.json` and fails when its `client_id` is not on the origin of `E2E_BASE_URL`. A deployment that builds its URLs on production or on `localhost` then stops the run before the other tests (see App URL)
 - **CI**: `.github/workflows/e2e.yml` runs after each successful Vercel preview deployment (the `vercel.deployment.success` repository dispatch event). It tests the commit of the deployment against the preview URL and sets the `E2E tests` status on that commit. To test a deployment by hand, run the workflow from the Actions tab with the deployment URL
-- **Secrets**: The workflow needs the `VERCEL_AUTOMATION_BYPASS_SECRET` and `E2E_LOGIN_SECRET` GitHub Actions secrets. Set the same `E2E_LOGIN_SECRET` in Vercel for the Preview environment only. Never set it for Production. Set `E2E_ALLOW_WRITES=1` (and `E2E_ALLOW_PUBLIC=1` if the tests need PUBLIC giveaways) for the Preview environment only, and only while previews use their own database (see Postgres)
+- **Secrets**: The workflow needs the `VERCEL_AUTOMATION_BYPASS_SECRET` and `E2E_LOGIN_SECRET` GitHub Actions secrets. Set the same `E2E_LOGIN_SECRET` in Vercel for the Preview environment only. Never set it for Production. Set `E2E_ALLOW_WRITES` and `E2E_ALLOW_PUBLIC` as Environment Variables shows
 
 ### Authentication Flow
 
