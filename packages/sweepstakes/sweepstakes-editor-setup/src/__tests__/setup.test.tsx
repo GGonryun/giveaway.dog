@@ -1,6 +1,7 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import type { DateTimePickerProps } from '@giveaway/ui-date/date-time-picker';
 import type { FileUploadProps } from '@giveaway/ui-file-upload/file-upload';
 import {
   buildFormValues,
@@ -59,6 +60,21 @@ vi.mock('@giveaway/ui-file-upload/file-upload', () => ({
       </button>
       <button type="button" onClick={() => onUpload?.('')}>
         Remove banner
+      </button>
+    </div>
+  )
+}));
+
+vi.mock('@giveaway/ui-date/date-time-picker', () => ({
+  DateTimePicker: ({ value, onChange, hourCycle }: DateTimePickerProps) => (
+    <div role="group" aria-label="Date picker">
+      <span>{value?.toISOString() ?? 'No date'}</span>
+      <span>{hourCycle}-hour clock</span>
+      <button
+        type="button"
+        onClick={() => onChange?.(new Date('2026-07-10T12:00:00.000Z'))}
+      >
+        Pick July 10
       </button>
     </div>
   )
@@ -188,25 +204,31 @@ describe('Setup', () => {
     const getPicker = (label: string) => {
       const item = screen.getByText(label).parentElement;
       if (!item) throw new Error(`${label} not found`);
-      return within(item).getByRole('button');
+      return within(item).getByRole('group', { name: 'Date picker' });
     };
 
-    it('shows the start and end dates', () => {
+    it('passes the start and end dates to the pickers', () => {
       renderSetup();
-      expect(getPicker('Start Date')).toHaveTextContent('Jul 1, 2026');
-      expect(getPicker('End Date')).toHaveTextContent('Jul 15, 2026');
+      expect(getPicker('Start Date')).toHaveTextContent(
+        '2026-07-01T12:00:00.000Z'
+      );
+      expect(getPicker('End Date')).toHaveTextContent(
+        '2026-07-15T12:00:00.000Z'
+      );
     });
 
-    it.fails('labels the date pickers', () => {
+    it('shows the dates in 12-hour time', () => {
       renderSetup();
-      expect(screen.getByLabelText('Start Date')).toBeInTheDocument();
+      expect(getPicker('Start Date')).toHaveTextContent('12-hour clock');
+      expect(getPicker('End Date')).toHaveTextContent('12-hour clock');
     });
 
     it('stores the picked start date', async () => {
       const { form } = renderSetup();
-      await userEvent.click(getPicker('Start Date'));
       await userEvent.click(
-        screen.getByRole('button', { name: /July 10th, 2026/ })
+        within(getPicker('Start Date')).getByRole('button', {
+          name: 'Pick July 10'
+        })
       );
 
       const startDate = form.getValues('timing.startDate');
