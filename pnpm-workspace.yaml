@@ -162,6 +162,11 @@ overrides:
   '@types/react': 19.2.10
   '@types/react-dom': 19.2.3
 
+packageExtensions:
+  '@hookform/resolvers':
+    dependencies:
+      zod: ^3.24.1
+
 allowBuilds:
   '@prisma/client': true
   '@prisma/engines': true
