@@ -3,7 +3,7 @@ import TurndownService from 'turndown';
 
 const MAX_SANITIZE_PASSES = 5;
 
-const TEXT_ALIGN =[/^(left|right|center|justify)$/];
+const TEXT_ALIGN = [/^(left|right|center|justify)$/];
 
 const ALIGNABLE_TAGS = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
