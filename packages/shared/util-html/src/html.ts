@@ -59,10 +59,26 @@ const toMarkdownDestination = (href: string) =>
     .replace(/[\x00-\x20<>`\x7f]/g, encodeURIComponent)
     .replace(/[()\\]|&(?=#?[0-9a-z]+;)/gi, '\\$&');
 
+interface TreeNode {
+  nodeName: string;
+  nodeType: number;
+  getAttribute(name: string): string | null;
+  previousSibling: TreeNode | null;
+  nextSibling: TreeNode | null;
+  parentNode: TreeNode | null;
+}
+
+const asTreeNode = (node: unknown) => node as TreeNode;
+
 turndownService.addRule('inlineLink', {
-  filter: (node) => node.nodeName === 'A' && Boolean(node.getAttribute('href')),
+  filter: (node) => {
+    const element = asTreeNode(node);
+    return element.nodeName === 'A' && Boolean(element.getAttribute('href'));
+  },
   replacement: (content, node) => {
-    const destination = toMarkdownDestination(node.getAttribute('href') ?? '');
+    const destination = toMarkdownDestination(
+      asTreeNode(node).getAttribute('href') ?? ''
+    );
     return destination ? `[${content}](${destination})` : content;
   }
 });
@@ -84,13 +100,6 @@ const INLINE_BOUNDARIES = new Set([
   'X-TURNDOWN'
 ]);
 
-interface TreeNode {
-  nodeName: string;
-  nodeType: number;
-  nextSibling: TreeNode | null;
-  parentNode: TreeNode | null;
-}
-
 const isFollowedByElement = (node: TreeNode): boolean => {
   let current = node;
   while (
@@ -104,13 +113,17 @@ const isFollowedByElement = (node: TreeNode): boolean => {
 };
 
 turndownService.addRule('code', {
-  filter: (node) =>
-    node.nodeName === 'CODE' &&
-    !(
-      node.parentNode?.nodeName === 'PRE' &&
-      !node.previousSibling &&
-      !node.nextSibling
-    ),
+  filter: (node) => {
+    const element = asTreeNode(node);
+    return (
+      element.nodeName === 'CODE' &&
+      !(
+        element.parentNode?.nodeName === 'PRE' &&
+        !element.previousSibling &&
+        !element.nextSibling
+      )
+    );
+  },
   replacement: (content, node) => {
     if (!content) return '';
     const code = content.replace(/\r?\n|\r/g, ' ');
@@ -118,7 +131,7 @@ turndownService.addRule('code', {
     const runs: string[] = code.match(/`+/g) ?? [];
     let delimiter = '`';
     while (runs.includes(delimiter)) delimiter += '`';
-    const after = isFollowedByElement(node) ? ' ' : '';
+    const after = isFollowedByElement(asTreeNode(node)) ? ' ' : '';
     return `${delimiter}${extraSpace}${code}${extraSpace}${delimiter}${after}`;
   }
 });
