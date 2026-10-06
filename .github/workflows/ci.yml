@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2]
+        shard: [1, 2, 3]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -78,7 +78,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -165,7 +165,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2]
+        shard: [1, 2, 3]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -270,9 +270,13 @@ jobs:
           echo "Line coverage: ${lines}%" >> "$GITHUB_STEP_SUMMARY"
 
   snapshot:
-    name: Snapshot tests
+    name: Snapshot tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -289,14 +293,27 @@ jobs:
 
       - name: Set up the Nx cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: snapshot-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:snapshot ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest snapshots
-        run: pnpm nx $NX_RUN -t test:snapshot --output-style=static
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:snapshot --projects="$PROJECTS" --output-style=static
 
   visual:
-    name: Visual tests
+    name: Visual tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -311,14 +328,21 @@ jobs:
       - name: Set up the project
         uses: ./.github/actions/setup
 
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:visual:docker ${{ matrix.shard }} ${{ strategy.job-total }}
+
       - name: Vitest visual tests in the Playwright image
-        run: pnpm nx $NX_RUN -t test:visual:docker --output-style=static
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:visual:docker --projects="$PROJECTS" --output-style=static
 
       - name: Upload the screenshots that changed
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: visual-changes
+          name: visual-changes-${{ matrix.shard }}
           path: |
             apps/*/.vitest-attachments/
             packages/*/*/.vitest-attachments/
@@ -328,6 +352,8 @@ jobs:
 
       - name: Explain how to review the changes
         if: failure()
+        env:
+          ARTIFACT: visual-changes-${{ matrix.shard }}
         run: |
           {
             echo "## Visual changes"
@@ -336,16 +362,20 @@ jobs:
             echo
             find apps packages -name node_modules -prune -o -path '*/.vitest-attachments/*' -name '*-actual-*.png' -print | sort | sed -e 's|/\.vitest-attachments/|/|' -e 's|^|- |' -e 's|-actual-|-|'
             echo
-            echo "The \`visual-changes\` artifact of this run has the actual screenshot and a diff image for each one. The diff image shows the changed pixels in red."
+            echo "The \`$ARTIFACT\` artifact of this run has the actual screenshot and a diff image for each one. The diff image shows the changed pixels in red."
             echo
             echo "- If the change is intended, update the references: run the **Update visual references** workflow on this branch, or run \`pnpm run test:visual:docker:update\` and commit the result. Then review the new images in the pull request."
             echo "- If the change is not intended, fix the code."
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
   integration:
-    name: Integration tests
+    name: Integration tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -360,8 +390,45 @@ jobs:
       - name: Set up the project
         uses: ./.github/actions/setup
 
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:integration ${{ matrix.shard }} ${{ strategy.job-total }}
+
       - name: Vitest integration tests against Postgres in Docker
-        run: pnpm nx $NX_RUN -t test:integration --output-style=static
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:integration --projects="$PROJECTS" --output-style=static
+
+  checks:
+    name: Checks
+    needs:
+      - lint
+      - type-check
+      - server
+      - frontend
+      - snapshot
+      - visual
+      - integration
+      - coverage
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check that every job passed
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          {
+            echo "| Job | Result |"
+            echo "| --- | --- |"
+            jq -r 'to_entries[] | "| \(.key) | \(.value.result) |"' <<< "$RESULTS"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+          failed=$(jq -r '[to_entries[] | select(.value.result != "success") | .key] | join(", ")' <<< "$RESULTS")
+          if [ -n "$failed" ]; then
+            echo "::error::These jobs did not pass: $failed. The log of each failed shard names the check that failed."
+            exit 1
+          fi
 
   badge:
     name: Coverage badge
