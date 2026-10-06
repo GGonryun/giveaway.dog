@@ -34,6 +34,7 @@ jobs:
         uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
+        id: setup
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
@@ -41,6 +42,10 @@ jobs:
 
       - name: ESLint
         run: pnpm nx $NX_RUN -t lint --output-style=static --quiet
+
+      - name: Prettier
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: pnpm run format:check
 
   type-check:
     name: Type check
