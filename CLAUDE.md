@@ -67,6 +67,7 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 - **TypeScript**: Use proper typing, avoid `any`
 - **Server actions**: Use `'use server'` directive for server-side functions
 - **Always format code**: Ensure proper formatting when creating or modifying files
+- **date-fns**: Import each function from its own module, for example `import { format } from 'date-fns/format'`, and each locale from `date-fns/locale/<code>`. ESLint rejects imports from `date-fns` and `date-fns/locale`, except type imports: they load every function or every locale, which added up to 2.8 seconds to the import time of each test file that reached them
 
 ### UI/UX Patterns
 

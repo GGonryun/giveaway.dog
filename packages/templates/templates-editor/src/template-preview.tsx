@@ -15,7 +15,8 @@ import {
   DEFAULT_SPONSOR_NAME
 } from '@giveaway/sweepstakes-model/defaults';
 import { VisibilityType } from '@giveaway/db-model';
-import * as dates from 'date-fns';
+import { add } from 'date-fns/add';
+import { startOfDay } from 'date-fns/startOfDay';
 import { timezone } from '@giveaway/util-time/time';
 import { DeepPartial } from '@giveaway/util-types/types';
 
@@ -50,8 +51,8 @@ export const TemplatePreview: React.FC = () => {
     },
     // Fill in excluded fields with defaults (timing, terms, prizes, visibility)
     timing: {
-      startDate: dates.startOfDay(dates.add(Date.now(), { days: 1 })),
-      endDate: dates.startOfDay(dates.add(Date.now(), { days: 1, weeks: 1 })),
+      startDate: startOfDay(add(Date.now(), { days: 1 })),
+      endDate: startOfDay(add(Date.now(), { days: 1, weeks: 1 })),
       timeZone: timezone.current()
     },
     terms: {

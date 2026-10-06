@@ -1,4 +1,5 @@
-import { isBefore, format as fnsFormat } from 'date-fns';
+import { format as fnsFormat } from 'date-fns/format';
+import { isBefore } from 'date-fns/isBefore';
 import { assertNever } from '@giveaway/util-errors';
 
 export namespace date {

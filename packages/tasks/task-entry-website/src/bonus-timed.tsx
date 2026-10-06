@@ -9,7 +9,7 @@ import { useTaskTheme } from '@giveaway/task-ui/theme';
 import { datetime } from '@giveaway/util-time/date';
 import React, { useState } from 'react';
 import { useInterval } from '@giveaway/ui-hooks/use-interval';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import {
   Tooltip,
   TooltipContent,

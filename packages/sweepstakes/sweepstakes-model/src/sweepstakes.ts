@@ -1,7 +1,9 @@
 import { date } from '@giveaway/util-time/date';
 import { Nullable } from '@giveaway/util-types/types';
 import { Prisma, SweepstakesStatus } from '@giveaway/db-model';
-import { formatDistance, formatDistanceToNowStrict, isAfter } from 'date-fns';
+import { formatDistance } from 'date-fns/formatDistance';
+import { formatDistanceToNowStrict } from 'date-fns/formatDistanceToNowStrict';
+import { isAfter } from 'date-fns/isAfter';
 import z from 'zod';
 
 export const expectedSweepstakesStatusSchema = z.union([

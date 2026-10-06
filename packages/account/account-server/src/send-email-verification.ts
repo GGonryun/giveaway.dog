@@ -5,7 +5,7 @@ import { getVerificationEmailContent } from '@giveaway/email/templates';
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { createHash, randomBytes } from 'crypto';
-import { addMinutes } from 'date-fns';
+import { addMinutes } from 'date-fns/addMinutes';
 import z from 'zod';
 
 const emailVerificationSchema = z.object({

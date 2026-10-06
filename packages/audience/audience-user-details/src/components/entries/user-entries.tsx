@@ -12,7 +12,7 @@ import {
   TableRow
 } from '@giveaway/ui-primitives/table';
 import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
-import { formatDistanceToNowStrict } from 'date-fns';
+import { formatDistanceToNowStrict } from 'date-fns/formatDistanceToNowStrict';
 import { DEFAULT_PAGE_SIZE } from '@giveaway/app-config/settings';
 
 import { Button } from '@giveaway/ui-primitives/button';

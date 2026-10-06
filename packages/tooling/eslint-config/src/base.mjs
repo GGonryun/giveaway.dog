@@ -16,7 +16,26 @@ const base = [
         { allowObjectTypes: 'always' }
       ],
       'react/no-unescaped-entities': 'off',
-      'react-hooks/set-state-in-effect': 'warn'
+      'react-hooks/set-state-in-effect': 'warn',
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'date-fns',
+              allowTypeImports: true,
+              message:
+                "Import each function from its own module, for example 'date-fns/format'. 'date-fns' loads all of its 250 modules in each test file that reaches it."
+            },
+            {
+              name: 'date-fns/locale',
+              allowTypeImports: true,
+              message:
+                "Import each locale from its own module, for example 'date-fns/locale/en-US'. 'date-fns/locale' loads every locale."
+            }
+          ]
+        }
+      ]
     }
   },
   {

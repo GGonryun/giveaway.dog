@@ -31,7 +31,7 @@ import {
 import { useTeams } from '@giveaway/team-context/team-provider';
 import { VerificationInstructionsDialog } from './verification-instructions-dialog';
 
-import { formatDistanceToNowStrict } from 'date-fns';
+import { formatDistanceToNowStrict } from 'date-fns/formatDistanceToNowStrict';
 import Link from 'next/link';
 import { UserEntriesSchema } from '@giveaway/task-model/schemas';
 import { TaskCategoryBadge } from '@giveaway/task-ui/task-category-badge';

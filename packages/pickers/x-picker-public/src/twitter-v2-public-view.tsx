@@ -17,7 +17,7 @@ import {
   UserCheck,
   HelpCircle
 } from 'lucide-react';
-import { formatDistance } from 'date-fns';
+import { formatDistance } from 'date-fns/formatDistance';
 import { TwitterV2PickerSchema } from '@giveaway/x-picker-model/schemas/details';
 import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';

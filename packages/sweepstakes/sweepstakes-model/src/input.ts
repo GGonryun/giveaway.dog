@@ -1,5 +1,6 @@
 import { timezone } from '@giveaway/util-time/time';
-import * as dates from 'date-fns';
+import { add } from 'date-fns/add';
+import { startOfDay } from 'date-fns/startOfDay';
 import {
   FormSweepstakesGetPayload,
   SweepstakesInputDesignBackgroundSchema,
@@ -88,10 +89,10 @@ const toTimingInput = (
   return {
     startDate: data?.startDate
       ? new Date(data.startDate as Date)
-      : dates.startOfDay(dates.add(Date.now(), { days: 1 })),
+      : startOfDay(add(Date.now(), { days: 1 })),
     endDate: data?.endDate
       ? new Date(data.endDate as Date)
-      : dates.startOfDay(dates.add(Date.now(), { days: 1, weeks: 1 })),
+      : startOfDay(add(Date.now(), { days: 1, weeks: 1 })),
     timeZone: data?.timeZone || timezone.current()
   };
 };

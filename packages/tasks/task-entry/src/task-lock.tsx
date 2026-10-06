@@ -6,7 +6,7 @@ import {
   TaskSchema
 } from '@giveaway/task-model/schemas';
 import pluralize from 'pluralize';
-import { formatDistance } from 'date-fns';
+import { formatDistance } from 'date-fns/formatDistance';
 import { BanIcon, ClockIcon, LockIcon, LucideIcon } from 'lucide-react';
 import { assertNever } from '@giveaway/util-errors';
 import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';

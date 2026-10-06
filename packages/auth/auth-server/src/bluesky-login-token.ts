@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { createHash, randomBytes } from 'crypto';
-import { addSeconds } from 'date-fns';
+import { addSeconds } from 'date-fns/addSeconds';
 import { Prisma } from '@giveaway/db-model';
 import prisma from '@giveaway/db-client/prisma';
 
