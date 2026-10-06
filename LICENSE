@@ -1,0 +1,82 @@
+Giveaway Dog View-Only License
+
+Copyright (c) 2025-2026 Miguel Campos. All rights reserved.
+
+This repository, including its source code, documentation, designs, images,
+text, configuration, database schema and commit history (the "Software"), is
+published only so that people can read it. It is not open source, and it is
+not licensed for any other use.
+
+1. Every version
+
+   This license applies to every version of the Software: every commit,
+   branch and tag in the history of this repository, including the commits
+   made before this license was added, and every copy made from any of them.
+
+   Before this license was added, the Software had no license. The only
+   license file in its history, LICENSE.md, was in the repository from
+   27 July 2025 to 4 October 2025. It contained the MIT License of a starter
+   template under the notice "Copyright (c) 2025 Vercel, Inc.". That notice
+   covers only the work of Vercel, Inc., not the work of Miguel Campos. No
+   version of the work of Miguel Campos has ever been licensed for copying,
+   modification, distribution or any other use.
+
+2. What you may do
+
+   You may view the Software on GitHub. GitHub may display the Software and
+   let GitHub users fork it on GitHub, as GitHub's Terms of Service require.
+   These are the only rights granted.
+
+3. What you may not do
+
+   Unless the copyright holder gives you written permission first, you may
+   not, in whole or in part, in any form or medium:
+
+   a. copy, download, clone, reproduce or store the Software, other than the
+      temporary copies your browser makes to display it;
+   b. modify, translate or adapt the Software, or create derivative works of
+      it;
+   c. distribute, publish, sublicense, sell, rent, lend or otherwise make the
+      Software available to anyone;
+   d. use, run, deploy or host the Software for any purpose, commercial or
+      non-commercial, including to build or offer a similar product or
+      service;
+   e. use the Software to train, fine-tune or evaluate a machine learning
+      model, or include it in a dataset;
+   f. remove or change this license or any copyright notice.
+
+   A fork of this repository on GitHub gives you no other rights. You may use
+   it only to view the Software under this license.
+
+4. Third-party code
+
+   The Software depends on third-party open source packages, and some of its
+   files may contain code that came from third-party templates or component
+   libraries. That code is not part of the work this license covers, and it
+   stays under its own license. This license does not limit the rights that
+   those licenses give you.
+
+5. No other rights
+
+   No right or license is granted by implication, estoppel or otherwise,
+   other than the rights in section 2. The copyright holder reserves every
+   right that this license does not expressly grant. This license grants no
+   right to use the names "Giveaway Dog" or "giveaway.dog", or their logos.
+
+6. Termination
+
+   If you use the Software in a way this license does not allow, you lose
+   every right under it at once, and you may be infringing copyright.
+
+7. No warranty
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+   PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT
+   HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE.
+
+8. Permission
+
+   To ask for permission to use the Software, contact the copyright holder
+   through https://github.com/GGonryun.
