@@ -1,15 +1,4 @@
 #!/usr/bin/env bash
-# The preview database: one Postgres database that all preview deployments
-# share, and that production never uses (see Postgres in CLAUDE.md).
-#
-#   preview-database.sh build   Apply the pending migrations in a Vercel
-#                               preview build. Do nothing in other builds.
-#   preview-database.sh reset   Delete all the data, then apply all the
-#                               migrations again. Asks first.
-#
-# Both stop unless POSTGRES_URL and POSTGRES_URL_NON_POOLING point at a
-# database with the comment 'giveaway-preview'. The production database never
-# has this comment, so a wrong variable cannot migrate or reset production.
 set -euo pipefail
 
 root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)

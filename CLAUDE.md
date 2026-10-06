@@ -144,7 +144,7 @@ packages/ (each folder is a package named @giveaway/<folder>; docs/monorepo/pack
     └── testing-integration/ (@giveaway/testing-integration: the setup, database client and fixtures of the integration tests)
 tools/
 ├── generators/ (@giveaway/generators: the Nx generators for new packages)
-└── vercel/ (ignore-build.sh: the Vercel ignore step, see Continuous Integration)
+└── vercel/ (ignore-build.sh: the Vercel ignore step, see Continuous Integration; preview-database.sh: the preview migrations and reset, see Preview migrations)
 package.json (workspace tooling: Nx, ESLint, Prettier, Vitest)
 eslint.config.mjs
 eslint-suppressions.json
