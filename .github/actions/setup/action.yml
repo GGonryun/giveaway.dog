@@ -1,21 +1,37 @@
 name: Setup
-description: Install pnpm, Node.js, and the project dependencies
+description: Install pnpm, Node.js, and the project dependencies, or link the node_modules of the CI image when the job runs in it
 
 runs:
   using: composite
   steps:
+    - name: Check for the CI image
+      id: image
+      shell: bash
+      run: |
+        if [ -f /opt/ci/importers ]; then
+          echo "found=true" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Link the node_modules of the CI image
+      if: steps.image.outputs.found == 'true'
+      shell: bash
+      run: bash "$GITHUB_ACTION_PATH/link-ci-image.sh"
+
     - name: Install pnpm 10 (the version that Vercel builds with)
+      if: steps.image.outputs.found != 'true'
       uses: pnpm/action-setup@v6
       with:
         version: 10
 
     - name: Install Node.js
+      if: steps.image.outputs.found != 'true'
       uses: actions/setup-node@v7
       with:
         node-version-file: .nvmrc
         cache: pnpm
 
     - name: Restore node_modules
+      if: steps.image.outputs.found != 'true'
       id: node-modules
       uses: actions/cache@v4
       with:
@@ -28,6 +44,6 @@ runs:
         key: ${{ runner.os }}-${{ runner.arch }}-node-${{ hashFiles('.nvmrc') }}-modules-${{ hashFiles('pnpm-lock.yaml', 'pnpm-workspace.yaml', 'packages/infra/db-schema/src/schema.prisma') }}
 
     - name: Install dependencies
-      if: steps.node-modules.outputs.cache-hit != 'true'
+      if: steps.image.outputs.found != 'true' && steps.node-modules.outputs.cache-hit != 'true'
       shell: bash
       run: pnpm install --frozen-lockfile

@@ -1,0 +1,46 @@
+name: CI image
+description: Find the CI image for the current lockfile, Prisma schema and Node.js version, and check if GHCR has it
+
+inputs:
+  token:
+    description: A token that can read the packages of the repository
+    required: true
+
+outputs:
+  image:
+    description: The image, ghcr.io/<owner>/<repository>-ci:<hash of the files the image is built from>
+    value: ${{ steps.find.outputs.image }}
+  exists:
+    description: true when GHCR has the image
+    value: ${{ steps.find.outputs.exists }}
+
+runs:
+  using: composite
+  steps:
+    - name: Look for the image in GHCR
+      id: find
+      shell: bash
+      env:
+        TAG: ${{ hashFiles('.nvmrc', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'packages/infra/db-schema/src/schema.prisma', '.github/ci-image/**') }}
+        TOKEN: ${{ inputs.token }}
+      run: |
+        name="${GITHUB_REPOSITORY,,}-ci"
+        image="ghcr.io/$name:$TAG"
+        echo "image=$image" >> "$GITHUB_OUTPUT"
+        status=none
+        registry_token=$(curl --silent --fail --user "$GITHUB_ACTOR:$TOKEN" \
+          "https://ghcr.io/token?service=ghcr.io&scope=repository:$name:pull" \
+          | sed -n 's/.*"token":"\([^"]*\)".*/\1/p') || true
+        if [ -n "$registry_token" ]; then
+          status=$(curl --silent --head --output /dev/null --write-out '%{http_code}' \
+            --header "Authorization: Bearer $registry_token" \
+            --header 'Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.docker.distribution.manifest.v2+json' \
+            "https://ghcr.io/v2/$name/manifests/$TAG") || true
+        fi
+        if [ "$status" = 200 ]; then
+          echo "exists=true" >> "$GITHUB_OUTPUT"
+          echo "GHCR has $image." | tee -a "$GITHUB_STEP_SUMMARY"
+        else
+          echo "exists=false" >> "$GITHUB_OUTPUT"
+          echo "GHCR has no $image (status: $status)." | tee -a "$GITHUB_STEP_SUMMARY"
+        fi

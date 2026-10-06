@@ -1,0 +1,89 @@
+name: CI image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .nvmrc
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - packages/infra/db-schema/src/schema.prisma
+      - .github/ci-image/**
+      - .github/actions/ci-image/**
+      - .github/workflows/ci-image.yml
+  pull_request:
+    paths:
+      - .nvmrc
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - packages/infra/db-schema/src/schema.prisma
+      - .github/ci-image/**
+      - .github/actions/ci-image/**
+      - .github/workflows/ci-image.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build the CI image
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Look for the CI image
+        id: image
+        uses: ./.github/actions/ci-image
+        with:
+          token: ${{ github.token }}
+
+      - name: Prepare the build context
+        if: steps.image.outputs.exists != 'true'
+        run: |
+          context="$RUNNER_TEMP/ci-image"
+          mkdir -p "$context/workspace"
+          cp .github/ci-image/Dockerfile "$context/"
+          git ls-files -z -- pnpm-lock.yaml pnpm-workspace.yaml ':(glob)**/package.json' packages/infra/db-schema/src/schema.prisma \
+            | xargs -0 cp --parents --target-directory "$context/workspace"
+
+      - name: Log in to GHCR
+        if: steps.image.outputs.exists != 'true'
+        env:
+          TOKEN: ${{ github.token }}
+        run: echo "$TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+
+      - name: Build and push the image
+        if: steps.image.outputs.exists != 'true'
+        env:
+          IMAGE: ${{ steps.image.outputs.image }}
+        run: |
+          docker buildx create --use --driver docker-container
+          docker buildx build "$RUNNER_TEMP/ci-image" \
+            --platform linux/arm64 \
+            --build-arg NODE_VERSION="$(sed 's/^v//' .nvmrc)" \
+            --label "org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+            --provenance=false \
+            --tag "$IMAGE" \
+            --output type=registry,compression=zstd,force-compression=true,oci-mediatypes=true
+          echo "Pushed $IMAGE." | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Delete the old images
+        if: github.event_name == 'push'
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ github.event.repository.name }}-ci
+          package-type: container
+          min-versions-to-keep: 3

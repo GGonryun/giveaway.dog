@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,10 +19,38 @@ env:
   NX_RUN: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
 
 jobs:
+  ci-image:
+    name: CI image
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    outputs:
+      image: ${{ steps.image.outputs.exists == 'true' && steps.image.outputs.image || '' }}
+    steps:
+      - name: Check out the files that the image is built from
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .nvmrc
+            pnpm-lock.yaml
+            pnpm-workspace.yaml
+            packages/infra/db-schema/src/schema.prisma
+            .github/ci-image/
+            .github/actions/ci-image/
+          sparse-checkout-cone-mode: false
+
+      - name: Look for the CI image
+        id: image
+        uses: ./.github/actions/ci-image
+        with:
+          token: ${{ github.token }}
+
   lint:
     name: Lint
+    needs: ci-image
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    container: ${{ needs.ci-image.outputs.image != '' && fromJSON(format('{{"image":"{0}","credentials":{{"username":"{1}","password":"{2}"}}}}', needs.ci-image.outputs.image, github.actor, github.token)) || '' }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -52,8 +81,10 @@ jobs:
 
   type-check:
     name: Type check
+    needs: ci-image
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
+    container: ${{ needs.ci-image.outputs.image != '' && fromJSON(format('{{"image":"{0}","credentials":{{"username":"{1}","password":"{2}"}}}}', needs.ci-image.outputs.image, github.actor, github.token)) || '' }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -76,8 +107,10 @@ jobs:
 
   server:
     name: Server tests
+    needs: ci-image
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    container: ${{ needs.ci-image.outputs.image != '' && fromJSON(format('{{"image":"{0}","credentials":{{"username":"{1}","password":"{2}"}}}}', needs.ci-image.outputs.image, github.actor, github.token)) || '' }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -111,8 +144,10 @@ jobs:
 
   frontend:
     name: Frontend tests
+    needs: ci-image
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
+    container: ${{ needs.ci-image.outputs.image != '' && fromJSON(format('{{"image":"{0}","credentials":{{"username":"{1}","password":"{2}"}}}}', needs.ci-image.outputs.image, github.actor, github.token)) || '' }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -190,8 +225,10 @@ jobs:
 
   snapshot:
     name: Snapshot tests
+    needs: ci-image
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    container: ${{ needs.ci-image.outputs.image != '' && fromJSON(format('{{"image":"{0}","credentials":{{"username":"{1}","password":"{2}"}}}}', needs.ci-image.outputs.image, github.actor, github.token)) || '' }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
