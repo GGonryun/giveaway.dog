@@ -10,11 +10,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/marketing/marketing-ui --suppressions-location packages/marketing/marketing-ui/eslint-suppressions.json",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },

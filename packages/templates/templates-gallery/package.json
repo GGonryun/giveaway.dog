@@ -10,11 +10,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/templates/templates-gallery --suppressions-location packages/templates/templates-gallery/eslint-suppressions.json",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },

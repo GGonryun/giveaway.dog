@@ -11,11 +11,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/integrations/discord/discord-bot",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },

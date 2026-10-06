@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "title": "ESLint",
+  "description": "Run ESLint on the project folder, with the eslint-suppressions.json of the project when it has one. In a batch, lint every project in one process.",
+  "type": "object",
+  "properties": {}
+}

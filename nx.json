@@ -19,6 +19,7 @@
       "{workspaceRoot}/eslint-suppressions.json",
       "{workspaceRoot}/tsconfig.base.json",
       "{workspaceRoot}/packages/tooling/eslint-config/package.json",
+      "{workspaceRoot}/packages/tooling/eslint-config/executors.json",
       "{workspaceRoot}/packages/tooling/eslint-config/src/**/*",
       "!{workspaceRoot}/packages/tooling/eslint-config/src/**/__tests__/**"
     ]

@@ -10,11 +10,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/winners/leaderboard-ui",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },

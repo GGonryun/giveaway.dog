@@ -11,11 +11,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/integrations/discord/discord-connect --suppressions-location packages/integrations/discord/discord-connect/eslint-suppressions.json",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },

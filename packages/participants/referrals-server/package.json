@@ -10,11 +10,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/participants/referrals-server --suppressions-location packages/participants/referrals-server/eslint-suppressions.json",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },

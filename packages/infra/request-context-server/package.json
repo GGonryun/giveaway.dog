@@ -10,11 +10,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/infra/request-context-server",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },
