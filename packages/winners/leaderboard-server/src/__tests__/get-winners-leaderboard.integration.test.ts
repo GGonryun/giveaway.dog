@@ -165,16 +165,14 @@ describe('getWinnersLeaderboard', () => {
     expect(await leaderboard()).toEqual([]);
   });
 
-  it.fails(
-    'does not send the email addresses of the winners (fails until #262 is fixed)',
-    async () => {
-      await seed();
+  it('does not send the email addresses of the winners', async () => {
+    await seed();
 
-      const rows = await leaderboard();
+    const rows = await leaderboard();
 
-      for (const row of rows) {
-        expect(row).not.toHaveProperty('userEmail');
-      }
+    expect(rows).not.toHaveLength(0);
+    for (const row of rows) {
+      expect(row).not.toHaveProperty('userEmail');
     }
-  );
+  });
 });

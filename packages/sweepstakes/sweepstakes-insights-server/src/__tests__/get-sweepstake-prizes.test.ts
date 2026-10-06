@@ -173,6 +173,10 @@ describe('getSweepstakesPrizes', () => {
     });
 
     it('maps prizes and their draws', async () => {
+      const participant: Partial<ReturnType<typeof expectedUserSchema>> =
+        expectedUserSchema();
+      delete participant.createdAt;
+      delete participant.isAnonymous;
       prismaMock.prize.findMany.mockResolvedValue([
         prize({ draws: [draw()] }),
         prize({ id: 'prize-2', name: 'Silver', index: 1, quota: 3 })
@@ -201,7 +205,7 @@ describe('getSweepstakesPrizes', () => {
                 proof: { url: 'https://example.com/proof.png' },
                 sweepstake: { id: SWEEPSTAKES_ID, name: 'Summer Giveaway' }
               },
-              participant: expectedUserSchema()
+              participant
             }
           ]
         },

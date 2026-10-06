@@ -90,14 +90,14 @@ describe('createTwitterPicker', () => {
       expect(first).not.toBe(second);
     });
 
-    it('returns the created picker row', async () => {
+    it('returns only the id of the created picker', async () => {
       const created = buildPicker({ id: 'abcdefghij', status: 'DRAFT' });
       prismaMock.team.findUnique.mockResolvedValue(buildTeam());
       prismaMock.twitterPicker.create.mockResolvedValue(created);
 
       const result = await createTwitterPicker({ slug: 'acme' });
 
-      expect(expectOk(result)).toEqual(created);
+      expect(expectOk(result)).toStrictEqual({ id: 'abcdefghij' });
     });
 
     it.each([TeamTier.PRO, TeamTier.ELITE, TeamTier.ALPHA])(

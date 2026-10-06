@@ -314,7 +314,7 @@ describe('procedure', () => {
   });
 
   describe('output validation', () => {
-    it('returns the raw handler data with unknown keys preserved', async () => {
+    it('strips the keys that the output schema does not declare', async () => {
       const run = procedure()
         .authorization({ required: false })
         .output(z.object({ id: z.string() }))
@@ -324,10 +324,10 @@ describe('procedure', () => {
 
       const result = await run();
 
-      expect(expectOk(result)).toEqual({ id: '1', extra: true });
+      expect(expectOk(result)).toStrictEqual({ id: '1' });
     });
 
-    it('does not apply output schema transforms to the returned data', async () => {
+    it('applies output schema transforms to the returned data', async () => {
       const run = procedure()
         .authorization({ required: false })
         .output(z.object({ n: z.number().transform((n) => n * 2) }))
@@ -335,7 +335,18 @@ describe('procedure', () => {
 
       const result = await run();
 
-      expect(expectOk(result)).toEqual({ n: 2 });
+      expect(expectOk(result)).toStrictEqual({ n: 4 });
+    });
+
+    it('returns the handler data unchanged when no output schema is set', async () => {
+      const data = { id: '1', extra: true };
+      const run = procedure()
+        .authorization({ required: false })
+        .handler(async () => data);
+
+      const result = await run();
+
+      expect(expectOk(result)).toBe(data);
     });
 
     it('returns UNPROCESSABLE_CONTENT when the handler output does not match', async () => {
@@ -626,6 +637,24 @@ describe('procedure', () => {
         input: { id: 'abc' },
         output: { saved: true }
       });
+    });
+
+    it('passes the parsed output to the invalidate function', async () => {
+      const invalidate = vi.fn(async () => []);
+      const run = procedure()
+        .authorization({ required: false })
+        .output(z.object({ saved: z.boolean() }))
+        .invalidate(invalidate)
+        .handler(
+          async () =>
+            ({ saved: true, extra: 1 }) as unknown as { saved: boolean }
+        );
+
+      await run();
+
+      expect(invalidate).toHaveBeenCalledWith(
+        expect.objectContaining({ output: { saved: true } })
+      );
     });
 
     it('does not revalidate anything when no tags are returned', async () => {

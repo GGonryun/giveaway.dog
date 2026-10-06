@@ -169,14 +169,10 @@ describe('createSweepstakes', () => {
       });
     });
 
-    it('returns the created record as is', async () => {
+    it('returns only the id of the created record', async () => {
       const result = await createSweepstakes(input);
 
-      expect(expectOk(result)).toEqual({
-        id: 'created-1',
-        status: 'DRAFT',
-        teamId: TEAM_ID
-      });
+      expect(expectOk(result)).toStrictEqual({ id: 'created-1' });
     });
 
     it('creates a draft with default sections', async () => {

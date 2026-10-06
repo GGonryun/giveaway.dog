@@ -227,19 +227,14 @@ describe('createTemplate', () => {
       expect(createdArgs().data.name).toBe(DEFAULT_TEMPLATE_NAME);
     });
 
-    it('returns the full created record rather than only its id', async () => {
+    it('returns only the id of the created record', async () => {
       signIn();
       prismaMock.team.findUnique.mockResolvedValue(team);
       echoCreate();
 
       const data = expectOk(await createTemplate({ slug: 'acme' }));
 
-      expect(data).toEqual({
-        ...createdArgs().data,
-        type: 'SWEEPSTAKES',
-        createdAt: new Date('2024-01-01T00:00:00.000Z'),
-        updatedAt: new Date('2024-01-01T00:00:00.000Z')
-      });
+      expect(data).toStrictEqual({ id: createdArgs().data.id });
     });
 
     it('does not revalidate any cache tags', async () => {
@@ -313,7 +308,7 @@ describe('createTemplate', () => {
       });
     });
 
-    it('returns the full created record for a copy', async () => {
+    it('returns only the id of the created copy', async () => {
       signIn();
       prismaMock.team.findUnique.mockResolvedValue(team);
       echoCreate();
@@ -322,12 +317,7 @@ describe('createTemplate', () => {
         await createTemplate({ slug: 'acme', sourceTemplateId: 'x-giveaway' })
       );
 
-      expect(data).toEqual({
-        ...createdArgs().data,
-        type: 'SWEEPSTAKES',
-        createdAt: new Date('2024-01-01T00:00:00.000Z'),
-        updatedAt: new Date('2024-01-01T00:00:00.000Z')
-      });
+      expect(data).toStrictEqual({ id: createdArgs().data.id });
     });
 
     it('leaves the static template untouched', async () => {

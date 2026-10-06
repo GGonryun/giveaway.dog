@@ -284,7 +284,7 @@ describe('getTeamMembers', () => {
       });
     });
 
-    it('accepts membership timestamps serialized as ISO strings', async () => {
+    it('converts membership timestamps serialized as ISO strings to dates', async () => {
       prismaMock.team.findFirst.mockResolvedValue(
         teamWith([
           {
@@ -296,7 +296,9 @@ describe('getTeamMembers', () => {
 
       const result = await getTeamMembers({ slug: 'acme' });
 
-      expect(expectOk(result)[0].createdAt).toBe('2030-01-01T00:00:00.000Z');
+      expect(expectOk(result)[0].createdAt).toStrictEqual(
+        new Date('2030-01-01T00:00:00.000Z')
+      );
     });
   });
 });

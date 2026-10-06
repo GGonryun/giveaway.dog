@@ -216,6 +216,7 @@ class ProcedureBuilder<
               cause: parsed.error
             });
           }
+          data = parsed.data;
         }
 
         // --- Invalidate cache tags if configured ---

@@ -213,7 +213,7 @@ describe('getTeamIntegrations', () => {
       expect(mapped.scopes).toEqual(['a', '', 'b']);
     });
 
-    it('passes settings, state and subscriptions through unchanged', async () => {
+    it('passes settings, state and subscriptions through', async () => {
       const state = {
         id: 'state-1',
         value: { teamId: 'team-1', codeVerifier: 'v' },
@@ -231,7 +231,7 @@ describe('getTeamIntegrations', () => {
       const [mapped] = expectOk(await getTeamIntegrations({ slug: 'acme' }));
 
       expect(mapped.settings).toEqual({ command: '!enter' });
-      expect(mapped.state).toBe(state);
+      expect(mapped.state).toStrictEqual(state);
       expect(mapped.subscriptions).toEqual([subscription]);
     });
 

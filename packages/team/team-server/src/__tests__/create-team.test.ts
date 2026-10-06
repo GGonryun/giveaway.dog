@@ -148,10 +148,10 @@ describe('createTeam', () => {
       );
     });
 
-    it('returns the created team record', async () => {
+    it('returns only the slug of the created team', async () => {
       const result = await createTeam(validInput());
 
-      expect(expectOk(result)).toEqual(createdTeam());
+      expect(expectOk(result)).toStrictEqual({ slug: createdTeam().slug });
     });
 
     it('counts the memberships of the caller', async () => {
