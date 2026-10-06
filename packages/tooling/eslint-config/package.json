@@ -8,6 +8,9 @@
       "runtime:isomorphic",
       "scope:tooling"
     ],
+    "namedInputs": {
+      "runtime": []
+    },
     "targets": {
       "lint": {
         "command": "eslint packages/tooling/eslint-config",
