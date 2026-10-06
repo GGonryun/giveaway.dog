@@ -39,6 +39,9 @@ export const POST = async (request: NextRequest) => {
       if (error.code === 'UNAUTHORIZED') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
+      if (error.code === 'BAD_REQUEST') {
+        return NextResponse.json({ error: 'Bad request' }, { status: 400 });
+      }
     }
 
     return NextResponse.json(

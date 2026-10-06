@@ -58,14 +58,14 @@ describe('GET /api/jobs/process', () => {
       expect(prismaMock.automatedPostJob.findMany).not.toHaveBeenCalled();
     });
 
-    it('accepts the literal "Bearer undefined" when CRON_SECRET is not configured', async () => {
+    it('rejects the literal "Bearer undefined" when CRON_SECRET is not configured', async () => {
       vi.stubEnv('CRON_SECRET', undefined);
 
       const res = await GET(
         buildRequest({ authorization: 'Bearer undefined' })
       );
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(401);
     });
   });
 

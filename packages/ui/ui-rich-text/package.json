@@ -34,6 +34,7 @@
   "dependencies": {
     "@giveaway/ui-primitives": "workspace:*",
     "@giveaway/ui-utils": "workspace:*",
+    "@giveaway/util-html": "workspace:*",
     "@tiptap/extension-link": "catalog:",
     "@tiptap/extension-text-align": "catalog:",
     "@tiptap/react": "catalog:",

@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { timingSafeEqual } from 'crypto';
 import {
   PrismaClient,
   SweepstakesJobStatus,
@@ -8,11 +9,14 @@ import {
 import { NextRequest } from 'next/server';
 
 export const isValidCronSecret = (request: NextRequest) => {
+  const secret = process.env.CRON_SECRET;
   const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!secret || authHeader === null) {
     return false;
   }
-  return true;
+  const expected = Buffer.from(`Bearer ${secret}`);
+  const actual = Buffer.from(authHeader);
+  return actual.length === expected.length && timingSafeEqual(actual, expected);
 };
 
 export const scheduleRandomlyAssignPrizesJob = async ({

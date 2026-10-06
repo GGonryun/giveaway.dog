@@ -251,20 +251,29 @@ describe('verifyTwitchRequest', () => {
       });
     });
 
-    it('accepts a correctly signed timestamp that is not a date', async () => {
-      const result = await verifyTwitchRequest(
+    it('rejects a correctly signed timestamp that is not a date', async () => {
+      const error = await verifyError(
         buildRequest({ timestamp: 'not-a-date' })
       );
 
-      expect(result.body).toEqual({ challenge: 'abc', nested: { value: 1 } });
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'UNAUTHORIZED',
+        message: 'Invalid Twitch timestamp'
+      });
     });
   });
 
   describe('when the signed body is not JSON', () => {
-    it('throws a SyntaxError', async () => {
+    it('throws BAD_REQUEST', async () => {
       const error = await verifyError(buildRequest({ body: 'not json' }));
 
-      expect(error).toBeInstanceOf(SyntaxError);
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'Twitch message body is not valid JSON'
+      });
+      expect((error as ApplicationError).cause).toBeInstanceOf(SyntaxError);
     });
   });
 });

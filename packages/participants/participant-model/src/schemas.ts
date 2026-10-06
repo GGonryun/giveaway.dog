@@ -2,7 +2,7 @@ import { userSchema } from '@giveaway/user-model/user';
 import z from 'zod';
 
 import { taskCompletionSchema } from '@giveaway/task-model/completions';
-import { SweepstakesFormFieldType } from '@giveaway/db-model';
+import { SweepstakesFormFieldType, UserSource } from '@giveaway/db-model';
 import { sweepstakesAllocationSchema } from '@giveaway/sweepstakes-model/schemas';
 
 export const sweepstakesParticipantSchema = z.object({
@@ -37,3 +37,23 @@ export const publicSweepstakesParticipationSchema = z.record(
 export type PublicSweepstakesParticipationSchema = z.infer<
   typeof publicSweepstakesParticipationSchema
 >;
+
+export const teamParticipantsSortBySchema = z.enum([
+  'lastEntry',
+  'qualityScore',
+  'name'
+]);
+
+export const teamParticipantsSortDirectionSchema = z.enum(['asc', 'desc']);
+
+export const teamParticipantsQuerySchema = z.object({
+  slug: z.string(),
+  page: z.number().min(1).optional().default(1),
+  pageSize: z.number().min(1).max(100).optional().default(50),
+  search: z.string().optional(),
+  sources: z.array(z.nativeEnum(UserSource)).optional(),
+  minQualityScore: z.number().min(0).max(100).optional(),
+  maxQualityScore: z.number().min(0).max(100).optional(),
+  sortBy: teamParticipantsSortBySchema.optional().default('lastEntry'),
+  sortDirection: teamParticipantsSortDirectionSchema.optional().default('desc')
+});
