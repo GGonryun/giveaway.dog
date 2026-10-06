@@ -167,7 +167,7 @@ jobs:
     name: Checks
     needs: shard
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
       coverage: ${{ steps.coverage.outputs.lines }}
