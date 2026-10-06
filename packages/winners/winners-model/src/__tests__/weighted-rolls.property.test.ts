@@ -17,7 +17,10 @@ const DRAWS = 5000;
 
 const positiveWeight = fc.integer({ min: 1, max: 20 });
 
-const weightOrZero = fc.oneof(fc.constant(0), positiveWeight);
+const nonPositiveWeight = fc.oneof(
+  fc.constant(0),
+  fc.integer({ min: -20, max: -1 })
+);
 
 const weightOrNonPositive = fc.oneof(
   fc.constant(0),
@@ -32,13 +35,16 @@ const positiveItems = fc
   .array(positiveWeight, { minLength: 1, maxLength: 8 })
   .map(toItems);
 
-const itemsWithZeroBeforePositive = fc
+const itemsWithNonPositiveBeforePositive = fc
   .record({
-    before: fc.array(weightOrZero, { maxLength: 5 }),
-    after: fc.array(weightOrZero, { maxLength: 5 }),
+    before: fc.array(weightOrNonPositive, { maxLength: 5 }),
+    nonPositive: nonPositiveWeight,
+    after: fc.array(weightOrNonPositive, { maxLength: 5 }),
     last: positiveWeight
   })
-  .map(({ before, after, last }) => toItems([...before, 0, ...after, last]));
+  .map(({ before, nonPositive, after, last }) =>
+    toItems([...before, nonPositive, ...after, last])
+  );
 
 const itemsWithNonPositiveWeights = fc
   .array(weightOrNonPositive, { minLength: 1, maxLength: 12 })
@@ -74,7 +80,7 @@ const expectCloseToWeights = (
 ) => {
   const total = totalWeight(items);
   for (const { item, weight } of items) {
-    const p = weight / total;
+    const p = Math.max(weight, 0) / total;
     const observed = picks.filter((pick) => pick === item).length;
     const tolerance = 6 * Math.sqrt(picks.length * p * (1 - p)) + 1;
     expect(Math.abs(observed - picks.length * p)).toBeLessThanOrEqual(
@@ -84,9 +90,9 @@ const expectCloseToWeights = (
 };
 
 describe('weighted roll properties', () => {
-  it('[DRAW-001] an item with a weight of 0 is never returned', () => {
+  it('[DRAW-001] an item with a weight of 0 or less is never returned by a single pick', () => {
     assertProperty(
-      fc.property(itemsWithZeroBeforePositive, (items) => {
+      fc.property(itemsWithNonPositiveBeforePositive, (items) => {
         for (const random of randomGrid(items)) {
           for (const picked of singlePicks(items, random)) {
             expect(items[picked].weight).toBeGreaterThan(0);
@@ -126,9 +132,9 @@ describe('weighted roll properties', () => {
     );
   });
 
-  it('[DRAW-008] every item with a positive weight can be returned wherever the zero weights are', () => {
+  it('[DRAW-008] every item with a positive weight can be returned wherever the weights of 0 or less are', () => {
     assertProperty(
-      fc.property(itemsWithZeroBeforePositive, (items) => {
+      fc.property(itemsWithNonPositiveBeforePositive, (items) => {
         expect(reachableItems(items)).toEqual(positiveItemIds(items));
       })
     );
@@ -226,6 +232,27 @@ describe('weighted roll properties', () => {
 
         expectCloseToWeights(items, picks);
       })
+    );
+  });
+
+  it('[DRAW-007] pickManyWeighted and a single pickUniqueWeighted draw pick each item in proportion to its weight wherever the weights of 0 or less are', () => {
+    assertProperty(
+      fc.property(
+        itemsWithNonPositiveBeforePositive,
+        randomSeed,
+        (items, seed) => {
+          const rng = seededRandom(seed);
+
+          expectCloseToWeights(items, pickManyWeighted(items, DRAWS, rng));
+          expectCloseToWeights(
+            items,
+            Array.from(
+              { length: DRAWS },
+              () => pickUniqueWeighted(items, 1, rng)[0]
+            )
+          );
+        }
+      )
     );
   });
 });
