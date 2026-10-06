@@ -108,9 +108,145 @@ describe('html.toMarkdown', () => {
     });
   });
 
-  it('keeps the text content of script tags', () => {
-    expect(html.toMarkdown('<script>alert(1)</script><p>x</p>')).toBe(
-      'alert(1)\n\nx'
-    );
+  describe('unsafe content', () => {
+    it('drops script tags and their content', () => {
+      expect(html.toMarkdown('<script>alert(1)</script><p>x</p>')).toBe('x');
+    });
+
+    it('drops javascript links and keeps their text', () => {
+      expect(html.toMarkdown('<a href="javascript:alert(1)">Click</a>')).toBe(
+        'Click'
+      );
+    });
+
+    it('escapes text that would otherwise become raw HTML', () => {
+      expect(html.toMarkdown('<p>&lt;img src=x onerror=alert(1)&gt;</p>')).toBe(
+        '\\<img src=x onerror=alert(1)>'
+      );
+    });
+
+    it('escapes an entity in a link destination so it stays literal', () => {
+      expect(
+        html.toMarkdown('<a href="javascript&amp;colon;alert(1)">x</a>')
+      ).toBe('[x](javascript\\&colon;alert\\(1\\))');
+    });
+
+    it('percent-encodes spaces, angle brackets and backticks in a link destination', () => {
+      expect(
+        html.toMarkdown('<a href=" https://giveaway.dog/a b<c>`d ">x</a>')
+      ).toBe('[x](https://giveaway.dog/a%20b%3Cc%3E%60d)');
+    });
+
+    it('keeps the query string of a link unchanged', () => {
+      expect(
+        html.toMarkdown('<a href="https://giveaway.dog/?a=1&amp;b=2">x</a>')
+      ).toBe('[x](https://giveaway.dog/?a=1&b=2)');
+    });
+
+    it('separates adjacent code spans so their backticks do not merge', () => {
+      expect(
+        html.toMarkdown(
+          '<code>`&lt;img src=x onerror=alert(1)&gt;</code><code>x</code>'
+        )
+      ).toBe('`` `<img src=x onerror=alert(1)> `` `x`');
+    });
+
+    it('keeps inline code that is followed by text unchanged', () => {
+      expect(html.toMarkdown('<p>Run <code>pnpm i</code> first</p>')).toBe(
+        'Run `pnpm i` first'
+      );
+    });
+  });
+});
+
+describe('html.sanitize', () => {
+  describe('editor markup', () => {
+    it('keeps paragraphs, headings, lists and inline formatting', () => {
+      const markup =
+        '<h2>Prize</h2><p>Win a <strong>bike</strong>, <em>helmet</em>, <u>lock</u> and <s>car</s></p><ul><li><p>One</p></li></ul><ol><li><p>Two</p></li></ol>';
+      expect(html.sanitize(markup)).toBe(markup);
+    });
+
+    it('keeps the text alignment style', () => {
+      expect(
+        html.sanitize(
+          '<p style="text-align: center">Centered</p><h1 style="text-align: right">Right</h1>'
+        )
+      ).toBe(
+        '<p style="text-align:center">Centered</p><h1 style="text-align:right">Right</h1>'
+      );
+    });
+
+    it('keeps the attributes of editor links', () => {
+      const link =
+        '<a href="https://giveaway.dog" target="_blank" rel="noopener noreferrer nofollow" class="text-primary underline hover:text-primary/80">Site</a>';
+      expect(html.sanitize(link)).toBe(link);
+    });
+
+    it('keeps mailto and tel links and relative links', () => {
+      const links =
+        '<a href="mailto:host@giveaway.dog">Mail</a><a href="tel:+15550100">Call</a><a href="/browse">Browse</a>';
+      expect(html.sanitize(links)).toBe(links);
+    });
+
+    it('keeps code blocks with their language class and blockquotes', () => {
+      const markup =
+        '<pre><code class="language-js">a &lt; b</code></pre><blockquote><p>Quote</p></blockquote><p>a<br />b</p>';
+      expect(html.sanitize(markup)).toBe(markup);
+    });
+  });
+
+  describe('unsafe markup', () => {
+    it('drops script and style tags with their content', () => {
+      expect(
+        html.sanitize(
+          '<script>alert(1)</script><style>p{color:red}</style><p>x</p>'
+        )
+      ).toBe('<p>x</p>');
+    });
+
+    it('drops event handler attributes and tags outside the allow list', () => {
+      expect(
+        html.sanitize(
+          '<p onclick="alert(1)">x</p><img src="x.png" onerror="alert(1)"><iframe src="https://evil.example"></iframe>'
+        )
+      ).toBe('<p>x</p>');
+    });
+
+    it.each([
+      'javascript:alert(1)',
+      'JaVaScRiPt:alert(1)',
+      ' \tjavascript:alert(1)',
+      'jav&#x61;script:alert(1)',
+      'java&#x09;script:alert(1)',
+      '&#106;avascript:alert(1)',
+      'data:text/html,<script>alert(1)</script>',
+      'vbscript:msgbox(1)',
+      '//evil.example'
+    ])('drops the href %s', (href) => {
+      expect(html.sanitize(`<a href="${href}">x</a>`)).toBe('<a>x</a>');
+    });
+
+    it('drops styles other than the text alignment', () => {
+      expect(
+        html.sanitize(
+          '<p style="color: red; text-align: left; background: url(javascript:alert(1))">x</p>'
+        )
+      ).toBe('<p style="text-align:left">x</p>');
+    });
+
+    it('drops the style of tags that cannot be aligned', () => {
+      expect(
+        html.sanitize('<strong style="text-align: center">x</strong>')
+      ).toBe('<strong>x</strong>');
+    });
+
+    it('escapes stray angle brackets in text', () => {
+      expect(html.sanitize('<p>1 < 2 > 0</p>')).toBe('<p>1 &lt; 2 &gt; 0</p>');
+    });
+
+    it('returns an empty string for empty input', () => {
+      expect(html.sanitize('')).toBe('');
+    });
   });
 });
