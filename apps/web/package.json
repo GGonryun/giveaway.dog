@@ -19,7 +19,7 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "bash ../../tools/vercel/preview-database.sh build && next build",
     "start": "next start",
     "lint:unused-imports": "tsc --noUnusedLocals --noUnusedParameters --noEmit",
     "lint:unused-imports:list": "tsc --noUnusedLocals --noUnusedParameters --noEmit 2>&1 | grep -E 'is declared but|imported but' || true",
@@ -43,6 +43,7 @@
     "prisma:migrate:production": "dotenv -e .env.prod -- npx prisma migrate deploy",
     "prisma:push:production": "dotenv -e .env.prod -- npx prisma db push",
     "prisma:generate:production": "dotenv -e .env.prod -- npx prisma generate",
+    "prisma:reset:preview": "dotenv -e .env.preview -- bash ../../tools/vercel/preview-database.sh reset",
     "rollback": "dotenv -e .env.prod -- npx prisma migrate resolve --rolled-back \"20260306063523\""
   },
   "dependencies": {
