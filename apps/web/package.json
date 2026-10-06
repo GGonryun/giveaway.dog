@@ -416,6 +416,7 @@
     "@types/pluralize": "catalog:",
     "@types/turndown": "catalog:",
     "dotenv-cli": "catalog:",
+    "fast-check": "catalog:",
     "prisma": "catalog:",
     "tsx": "catalog:"
   },

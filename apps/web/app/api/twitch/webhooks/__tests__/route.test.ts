@@ -183,13 +183,13 @@ describe('POST /api/twitch/webhooks', () => {
       expect(res.status).toBe(200);
     });
 
-    it('returns 500 when the signed body is not JSON', async () => {
+    it('returns 400 when the signed body is not JSON', async () => {
       const res = await POST(
         twitchRequest({ payload: 'not-json', messageType: 'notification' })
       );
 
-      expect(res.status).toBe(500);
-      expect(await res.json()).toEqual({ error: 'Internal server error' });
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({ error: 'Bad request' });
     });
   });
 

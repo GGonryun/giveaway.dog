@@ -54,6 +54,7 @@
     "@giveaway/vitest-config": "workspace:*",
     "@types/node": "catalog:",
     "@upstash/ratelimit": "catalog:",
+    "fast-check": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",
     "zod": "catalog:"

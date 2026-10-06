@@ -43,12 +43,28 @@ describe('jobs util', () => {
       expect(isValidCronSecret(request())).toBe(false);
     });
 
-    it('accepts the literal "Bearer undefined" when CRON_SECRET is not set', () => {
+    it('rejects the literal "Bearer undefined" when CRON_SECRET is not set', () => {
       vi.stubEnv('CRON_SECRET', undefined);
 
       expect(
         isValidCronSecret(request({ authorization: 'Bearer undefined' }))
-      ).toBe(true);
+      ).toBe(false);
+    });
+
+    it('rejects "Bearer " when CRON_SECRET is empty', () => {
+      vi.stubEnv('CRON_SECRET', '');
+
+      expect(isValidCronSecret(request({ authorization: 'Bearer ' }))).toBe(
+        false
+      );
+    });
+
+    it('rejects a header that only starts with the expected value', () => {
+      vi.stubEnv('CRON_SECRET', 's3cret');
+
+      expect(
+        isValidCronSecret(request({ authorization: 'Bearer s3cret2' }))
+      ).toBe(false);
     });
   });
 

@@ -175,7 +175,7 @@ describe('POST discord interactions handler', () => {
       );
     });
 
-    it('returns the generic error message with status 200 for a malformed signature', async () => {
+    it('returns 401 for a malformed signature', async () => {
       const response = await POST(
         discordRequest({
           body: JSON.stringify(pingInteraction()),
@@ -183,8 +183,8 @@ describe('POST discord interactions handler', () => {
         })
       );
 
-      expect(response.status).toBe(200);
-      expect(await response.json()).toEqual(GENERIC_ERROR_RESPONSE);
+      expect(response.status).toBe(401);
+      expect(await response.json()).toEqual({ error: 'Unauthorized' });
     });
   });
 
@@ -212,12 +212,12 @@ describe('POST discord interactions handler', () => {
       expect(consoleError).toHaveBeenNthCalledWith(
         1,
         'Discord interaction error:',
-        expect.any(SyntaxError)
+        expect.objectContaining({ code: 'VALIDATION_ERROR' })
       );
       expect(consoleError).toHaveBeenNthCalledWith(
         2,
         'Failed to handle Discord interaction:',
-        expect.any(SyntaxError)
+        expect.objectContaining({ code: 'VALIDATION_ERROR' })
       );
     });
 

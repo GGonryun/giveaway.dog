@@ -10,6 +10,9 @@ import {
   toDiscordInteraction
 } from '@giveaway/discord-model/schema';
 
+const SIGNATURE_PATTERN = /^[0-9a-f]{128}$/i;
+const PUBLIC_KEY_PATTERN = /^[0-9a-f]{64}$/i;
+
 export const verifyDiscordRequest = async (
   request: NextRequest
 ): Promise<DiscordInteractionSchema> => {
@@ -40,6 +43,20 @@ export const verifyDiscordRequest = async (
     });
   }
 
+  if (!PUBLIC_KEY_PATTERN.test(PUBLIC_KEY)) {
+    throw new ApplicationError({
+      code: 'UNAUTHORIZED',
+      message: 'Discord public key is malformed'
+    });
+  }
+
+  if (!SIGNATURE_PATTERN.test(signature)) {
+    throw new ApplicationError({
+      code: 'UNAUTHORIZED',
+      message: 'invalid request signature'
+    });
+  }
+
   const body = await request.text(); // rawBody is expected to be a string, not raw bytes
 
   const isVerified = nacl.sign.detached.verify(
@@ -55,8 +72,17 @@ export const verifyDiscordRequest = async (
     });
   }
 
-  const raw = JSON.parse(body);
-  const data = toDiscordInteraction(raw);
+  return toDiscordInteraction(parseJsonBody(body));
+};
 
-  return data;
+const parseJsonBody = (body: string): unknown => {
+  try {
+    return JSON.parse(body);
+  } catch (error) {
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message: 'Discord request body is not valid JSON',
+      cause: error
+    });
+  }
 };

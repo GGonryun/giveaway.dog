@@ -260,6 +260,31 @@ describe('twitch webhook POST handler', () => {
       expect(response.status).toBe(401);
     });
 
+    it('responds 400 for a correctly signed body that is not JSON', async () => {
+      const raw = 'not json';
+      const timestamp = NOW.toISOString();
+      const response = await POST(
+        new NextRequest('http://localhost:3000/api/twitch/webhooks', {
+          method: 'POST',
+          headers: {
+            'Twitch-Eventsub-Message-Id': 'message-1',
+            'Twitch-Eventsub-Message-Timestamp': timestamp,
+            'Twitch-Eventsub-Message-Type': 'notification',
+            'Twitch-Eventsub-Message-Signature':
+              'sha256=' +
+              crypto
+                .createHmac('sha256', SECRET)
+                .update('message-1' + timestamp + raw)
+                .digest('hex')
+          },
+          body: raw
+        })
+      );
+
+      expect(response.status).toBe(400);
+      await expect(response.json()).resolves.toEqual({ error: 'Bad request' });
+    });
+
     it('responds 500 when the eventsub secret is not configured', async () => {
       vi.stubEnv('TWITCH_EVENTSUB_SECRET', undefined);
 

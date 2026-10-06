@@ -64,12 +64,17 @@ describe('verifyDiscordRequest', () => {
       expect((error as ApplicationError).cause).toBeInstanceOf(ZodError);
     });
 
-    it('throws a SyntaxError when the body is not json', async () => {
+    it('throws VALIDATION_ERROR when the body is not json', async () => {
       const error = await captureError(
         verifyDiscordRequest(discordRequest({ body: 'not json' }))
       );
 
-      expect(error).toBeInstanceOf(SyntaxError);
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'VALIDATION_ERROR',
+        message: 'Discord request body is not valid JSON'
+      });
+      expect((error as ApplicationError).cause).toBeInstanceOf(SyntaxError);
     });
   });
 
@@ -221,18 +226,39 @@ describe('verifyDiscordRequest', () => {
       });
     });
 
-    it('throws a plain Error when the signature has the wrong length', async () => {
+    it('rejects a signature with the wrong length', async () => {
       const body = JSON.stringify(pingInteraction());
 
       const error = await captureError(
         verifyDiscordRequest(discordRequest({ body, signature: 'abcd' }))
       );
 
-      expect(error).not.toBeInstanceOf(ApplicationError);
-      expect(error).toMatchObject({ message: 'bad signature size' });
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'UNAUTHORIZED',
+        message: 'invalid request signature'
+      });
     });
 
-    it('throws a plain Error when the public key has the wrong length', async () => {
+    it('rejects a signature that is not hex', async () => {
+      const body = JSON.stringify(pingInteraction());
+
+      const error = await captureError(
+        verifyDiscordRequest(
+          discordRequest({
+            body,
+            signature: signDiscordBody(body).slice(0, -1) + 'z'
+          })
+        )
+      );
+
+      expect(error).toMatchObject({
+        code: 'UNAUTHORIZED',
+        message: 'invalid request signature'
+      });
+    });
+
+    it('rejects every request when the public key has the wrong length', async () => {
       vi.stubEnv('DISCORD_BOT_PUBLIC_KEY', 'abcd');
       const body = JSON.stringify(pingInteraction());
 
@@ -240,8 +266,11 @@ describe('verifyDiscordRequest', () => {
         verifyDiscordRequest(discordRequest({ body }))
       );
 
-      expect(error).not.toBeInstanceOf(ApplicationError);
-      expect(error).toMatchObject({ message: 'bad public key size' });
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'UNAUTHORIZED',
+        message: 'Discord public key is malformed'
+      });
     });
   });
 });

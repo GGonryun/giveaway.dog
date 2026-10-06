@@ -5,33 +5,21 @@ import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@giveaway/task-model/queries';
 
 import z from 'zod';
 
-import { sweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
+import {
+  sweepstakesParticipantSchema,
+  teamParticipantsQuerySchema
+} from '@giveaway/participant-model/schemas';
 import {
   TEAM_PARTICIPANT_USER_SELECT_QUERY,
   toTeamParticipant
 } from '@giveaway/participant-model/db';
-import { Prisma, UserSource } from '@giveaway/db-model';
+import { Prisma } from '@giveaway/db-model';
 
 export const getTeamParticipants = procedure()
   .authorization({
     required: true
   })
-  .input(
-    z.object({
-      slug: z.string(),
-      page: z.number().min(1).optional().default(1),
-      pageSize: z.number().min(1).max(100).optional().default(50),
-      search: z.string().optional(),
-      sources: z.array(z.nativeEnum(UserSource)).optional(),
-      minQualityScore: z.number().min(0).max(100).optional(),
-      maxQualityScore: z.number().min(0).max(100).optional(),
-      sortBy: z
-        .enum(['lastEntry', 'qualityScore', 'name'])
-        .optional()
-        .default('lastEntry'),
-      sortDirection: z.enum(['asc', 'desc']).optional().default('desc')
-    })
-  )
+  .input(teamParticipantsQuerySchema)
   .output(
     z.object({
       participants: sweepstakesParticipantSchema.array(),

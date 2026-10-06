@@ -69,11 +69,16 @@ export const verifyTwitchRequest = async (
   const body = await request.text();
   const message = messageId + timestamp + body;
 
-  const expectedSignature =
+  const expectedSignature = Buffer.from(
     HMAC_PREFIX +
-    crypto.createHmac('sha256', secret).update(message).digest('hex');
+      crypto.createHmac('sha256', secret).update(message).digest('hex')
+  );
+  const actualSignature = Buffer.from(signature);
 
-  if (signature !== expectedSignature) {
+  if (
+    actualSignature.length !== expectedSignature.length ||
+    !crypto.timingSafeEqual(actualSignature, expectedSignature)
+  ) {
     throw new ApplicationError({
       code: 'UNAUTHORIZED',
       message: 'Invalid Twitch signature'
@@ -84,6 +89,13 @@ export const verifyTwitchRequest = async (
   const currentTime = Date.now();
   const TEN_MINUTES_MS = 10 * 60 * 1000;
 
+  if (Number.isNaN(messageTime)) {
+    throw new ApplicationError({
+      code: 'UNAUTHORIZED',
+      message: 'Invalid Twitch timestamp'
+    });
+  }
+
   if (Math.abs(currentTime - messageTime) > TEN_MINUTES_MS) {
     throw new ApplicationError({
       code: 'UNAUTHORIZED',
@@ -92,7 +104,19 @@ export const verifyTwitchRequest = async (
   }
 
   return {
-    body: JSON.parse(body),
+    body: parseJsonBody(body),
     messageType: messageType as TwitchMessageType
   };
+};
+
+const parseJsonBody = (body: string): unknown => {
+  try {
+    return JSON.parse(body);
+  } catch (error) {
+    throw new ApplicationError({
+      code: 'BAD_REQUEST',
+      message: 'Twitch message body is not valid JSON',
+      cause: error
+    });
+  }
 };

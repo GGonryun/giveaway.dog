@@ -1,5 +1,9 @@
+import { createHmac } from 'node:crypto';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { HandleUploadOptions } from '@vercel/blob/client';
+import {
+  getPayloadFromClientToken,
+  type HandleUploadOptions
+} from '@vercel/blob/client';
 import { POST } from '../route';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { createSession } from '@giveaway/testing-server/session';
@@ -17,12 +21,19 @@ const m = vi.hoisted(() => ({
   globalLimit: vi.fn(),
   userLimit: vi.fn(),
   fileUpload: {} as { global?: Limiter; user?: Limiter },
-  tokenOptions: [] as unknown[]
+  tokenOptions: [] as unknown[],
+  actualHandleUpload: undefined as unknown as (
+    options: HandleUploadOptions
+  ) => Promise<unknown>
 }));
 
 vi.mock('@giveaway/auth-server/config', () => ({ auth: m.auth }));
 
-vi.mock('@vercel/blob/client', () => ({ handleUpload: m.handleUpload }));
+vi.mock('@vercel/blob/client', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@vercel/blob/client')>();
+  m.actualHandleUpload = actual.handleUpload;
+  return { ...actual, handleUpload: m.handleUpload };
+});
 
 vi.mock('@vercel/blob', () => ({ del: m.del }));
 
@@ -49,6 +60,21 @@ vi.mock(
 
 const NOW = new Date('2026-06-01T00:00:00.000Z');
 
+const BLOB_TOKEN = 'vercel_blob_rw_store123_secret456';
+
+const ALLOWED_CONTENT_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'image/svg+xml',
+  'image/svg'
+];
+
+const MAX_UPLOAD_SIZE_BYTES = 5 * 1024 * 1024;
+
+const WELL_FORMED_SIGNATURE = 'a'.repeat(64);
+
 const BLOB = {
   url: 'https://blob.example.com/images/dog-abc.png',
   downloadUrl: 'https://blob.example.com/images/dog-abc.png?download=1',
@@ -72,12 +98,20 @@ const completedBody = (tokenPayload: string | null | undefined) => ({
   payload: { blob: BLOB, tokenPayload }
 });
 
-const buildRequest = (body: unknown) =>
+const buildRequest = (
+  body: unknown,
+  headers: Record<string, string> = {
+    'x-vercel-signature': WELL_FORMED_SIGNATURE
+  }
+) =>
   new Request('http://localhost:3000/api/upload', {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers: { 'content-type': 'application/json', ...headers },
     body: typeof body === 'string' ? body : JSON.stringify(body)
   });
+
+const sign = (body: string) =>
+  createHmac('sha256', BLOB_TOKEN).update(body).digest('hex');
 
 const fakeHandleUpload = async ({
   body,
@@ -169,9 +203,72 @@ describe('POST /api/upload', () => {
       });
     });
 
-    it('rejects when the body is not valid JSON', async () => {
-      await expect(POST(buildRequest('{'))).rejects.toThrow(SyntaxError);
+    it.each([
+      ['an unterminated object', '{'],
+      ['an empty body', ''],
+      ['plain text', 'not json']
+    ])('returns 400 when the body is %s', async (_, body) => {
+      const res = await POST(buildRequest(body));
+
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({
+        error: {
+          code: 'BAD_REQUEST',
+          message: 'Invalid request: body must be valid JSON'
+        }
+      });
       expect(m.handleUpload).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ['null', null],
+      ['a number', 42],
+      ['an array', [tokenRequestBody()]],
+      ['an unknown event type', { type: 'blob.delete', payload: {} }],
+      ['a missing type', { payload: tokenRequestBody().payload }],
+      ['a missing payload', { type: 'blob.generate-client-token' }],
+      [
+        'a non-string pathname',
+        {
+          type: 'blob.generate-client-token',
+          payload: { ...tokenRequestBody().payload, pathname: 42 }
+        }
+      ],
+      [
+        'a non-boolean multipart flag',
+        {
+          type: 'blob.generate-client-token',
+          payload: { ...tokenRequestBody().payload, multipart: 'yes' }
+        }
+      ],
+      [
+        'a completed upload without a blob',
+        { type: 'blob.upload-completed', payload: { tokenPayload: null } }
+      ],
+      ['a non-string token payload', completedBody(42 as unknown as string)]
+    ])('returns 400 for %s', async (_, body) => {
+      const res = await POST(buildRequest(body));
+
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({
+        error: {
+          code: 'BAD_REQUEST',
+          message: 'Invalid request: unsupported upload event'
+        }
+      });
+      expect(m.handleUpload).not.toHaveBeenCalled();
+      expect(m.auth).not.toHaveBeenCalled();
+    });
+
+    it('accepts a token request without the optional client fields', async () => {
+      const res = await POST(
+        buildRequest({
+          type: 'blob.generate-client-token',
+          payload: { pathname: 'images/dog.png' }
+        })
+      );
+
+      expect(res.status).toBe(200);
     });
 
     it('returns a generic 500 when the upload handler fails', async () => {
@@ -196,14 +293,8 @@ describe('POST /api/upload', () => {
       expect(res.status).toBe(200);
       expect(m.tokenOptions).toEqual([
         {
-          allowedContentTypes: [
-            'image/jpeg',
-            'image/png',
-            'image/webp',
-            'image/gif',
-            'image/svg+xml',
-            'image/svg'
-          ],
+          allowedContentTypes: ALLOWED_CONTENT_TYPES,
+          maximumSizeInBytes: MAX_UPLOAD_SIZE_BYTES,
           addRandomSuffix: true,
           tokenPayload: JSON.stringify({ userId: 'user-1' })
         }
@@ -220,16 +311,16 @@ describe('POST /api/upload', () => {
       );
     });
 
-    it('returns a generic 500 when there is no session', async () => {
+    it('returns 401 when there is no session', async () => {
       m.auth.mockResolvedValue(null);
 
       const res = await POST(buildRequest(tokenRequestBody()));
 
-      expect(res.status).toBe(500);
+      expect(res.status).toBe(401);
       expect(await res.json()).toEqual({
         error: {
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'An unexpected error occurred'
+          code: 'UNAUTHORIZED',
+          message: 'Unauthorized: No active session found'
         }
       });
       expect(m.globalLimit).not.toHaveBeenCalled();
@@ -447,6 +538,135 @@ describe('POST /api/upload', () => {
       expect(res.status).toBe(500);
       expect(await res.json()).toEqual(GENERIC_ERROR);
       expect(m.del).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('completing an upload with a malformed signature header', () => {
+    it.each([
+      ['no signature header', {}],
+      ['an empty signature', { 'x-vercel-signature': '' }],
+      ['an odd-length signature', { 'x-vercel-signature': 'abc' }],
+      ['a non-hex signature', { 'x-vercel-signature': 'z'.repeat(64) }],
+      ['a short signature', { 'x-vercel-signature': 'ab'.repeat(16) }]
+    ])('returns 401 for %s', async (_, headers) => {
+      const res = await POST(
+        buildRequest(
+          completedBody(JSON.stringify({ userId: 'user-1' })),
+          headers
+        )
+      );
+
+      expect(res.status).toBe(401);
+      expect(await res.json()).toEqual({
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Unauthorized: Invalid callback signature'
+        }
+      });
+      expect(m.handleUpload).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('with the Vercel Blob upload handler', () => {
+    beforeEach(() => {
+      vi.stubEnv('BLOB_READ_WRITE_TOKEN', BLOB_TOKEN);
+      m.handleUpload.mockImplementation(m.actualHandleUpload);
+    });
+
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('issues a client token for the store of the read-write token', async () => {
+      const res = await POST(buildRequest(tokenRequestBody()));
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.type).toBe('blob.generate-client-token');
+      expect(json.clientToken).toMatch(/^vercel_blob_client_store123_/);
+    });
+
+    it('restricts the client token to the allowed image types and the maximum size', async () => {
+      const res = await POST(buildRequest(tokenRequestBody()));
+
+      const { clientToken } = await res.json();
+      expect(getPayloadFromClientToken(clientToken)).toEqual({
+        allowedContentTypes: ALLOWED_CONTENT_TYPES,
+        maximumSizeInBytes: MAX_UPLOAD_SIZE_BYTES,
+        addRandomSuffix: true,
+        tokenPayload: JSON.stringify({ userId: 'user-1' }),
+        pathname: 'images/dog.png',
+        onUploadCompleted: {
+          callbackUrl: 'http://localhost:3000/api/upload',
+          tokenPayload: JSON.stringify({ userId: 'user-1' })
+        },
+        validUntil: NOW.getTime() + 60 * 60 * 1000
+      });
+    });
+
+    it('returns 401 without running the completion handler when the signature does not match', async () => {
+      const res = await POST(
+        buildRequest(completedBody(JSON.stringify({ userId: 'user-1' })))
+      );
+
+      expect(res.status).toBe(401);
+      expect(await res.json()).toEqual({
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Unauthorized: Invalid callback signature'
+        }
+      });
+      expect(m.safeSearchDetection).not.toHaveBeenCalled();
+      expect(prismaMock.imageMetadata.create).not.toHaveBeenCalled();
+    });
+
+    it('stores the image metadata when the signature matches the body', async () => {
+      const body = JSON.stringify(
+        completedBody(JSON.stringify({ userId: 'user-1' }))
+      );
+
+      const res = await POST(
+        buildRequest(body, { 'x-vercel-signature': sign(body) })
+      );
+
+      expect(res.status).toBe(200);
+      expect(await res.json()).toEqual({
+        type: 'blob.upload-completed',
+        response: 'ok'
+      });
+      expect(prismaMock.imageMetadata.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('verifies the signature against the body as sent, with extra fields in their original order', async () => {
+      const body = JSON.stringify({
+        type: 'blob.upload-completed',
+        payload: {
+          tokenPayload: JSON.stringify({ userId: 'user-1' }),
+          extra: 'field',
+          blob: {
+            contentDisposition: BLOB.contentDisposition,
+            contentType: BLOB.contentType,
+            pathname: BLOB.pathname,
+            downloadUrl: BLOB.downloadUrl,
+            url: BLOB.url
+          }
+        }
+      });
+
+      const res = await POST(
+        buildRequest(body, { 'x-vercel-signature': sign(body) })
+      );
+
+      expect(res.status).toBe(200);
+    });
+
+    it('returns a generic 500 when the read-write token is not configured', async () => {
+      vi.stubEnv('BLOB_READ_WRITE_TOKEN', '');
+
+      const res = await POST(buildRequest(tokenRequestBody()));
+
+      expect(res.status).toBe(500);
+      expect(await res.json()).toEqual(GENERIC_ERROR);
     });
   });
 });

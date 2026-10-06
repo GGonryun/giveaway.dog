@@ -28,6 +28,7 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "sanitize-html": "catalog:",
     "turndown": "catalog:"
   },
   "devDependencies": {
@@ -36,7 +37,9 @@
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
     "@types/node": "catalog:",
+    "@types/sanitize-html": "catalog:",
     "@types/turndown": "catalog:",
+    "fast-check": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
