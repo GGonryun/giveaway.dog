@@ -8,6 +8,11 @@
       "runtime:isomorphic",
       "scope:tooling"
     ],
+    "namedInputs": {
+      "lintable": [
+        "{projectRoot}/package.json"
+      ]
+    },
     "targets": {
       "lint": {
         "command": "eslint packages/tooling/vitest-config",

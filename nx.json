@@ -6,16 +6,21 @@
       "default",
       "!{projectRoot}/**/__tests__/**",
       "!{projectRoot}/**/*.test.*",
-      "!{projectRoot}/**/__snapshots__/**"
+      "!{projectRoot}/**/__snapshots__/**",
+      "!{projectRoot}/**/__screenshots__/**",
+      "!{projectRoot}/eslint-suppressions.json"
     ],
-    "sharedGlobals": [
-      "{workspaceRoot}/.nvmrc",
-      "{workspaceRoot}/package.json",
-      "{workspaceRoot}/tsconfig.base.json",
+    "source": ["default", "!{projectRoot}/eslint-suppressions.json"],
+    "runtime": ["production"],
+    "lintable": ["production"],
+    "sharedGlobals": ["{workspaceRoot}/.nvmrc", "{workspaceRoot}/package.json"],
+    "eslint": [
       "{workspaceRoot}/eslint.config.mjs",
       "{workspaceRoot}/eslint-suppressions.json",
-      "{workspaceRoot}/.github/workflows/ci.yml",
-      "{workspaceRoot}/.github/actions/**/*"
+      "{workspaceRoot}/tsconfig.base.json",
+      "{workspaceRoot}/packages/tooling/eslint-config/package.json",
+      "{workspaceRoot}/packages/tooling/eslint-config/src/**/*",
+      "!{workspaceRoot}/packages/tooling/eslint-config/src/**/__tests__/**"
     ]
   },
   "pluginsConfig": {
@@ -30,38 +35,38 @@
     },
     "lint": {
       "cache": true,
-      "inputs": ["default", "^production"],
+      "inputs": ["default", "^lintable", "eslint"],
       "outputs": []
     },
     "type-check": {
       "cache": true,
-      "inputs": ["default", "^production"],
+      "inputs": ["source", "^runtime"],
       "outputs": []
     },
     "test:unit": {
       "cache": true,
-      "inputs": ["default", "^production"],
+      "inputs": ["source", "^runtime"],
       "outputs": []
     },
     "test:server": {
       "cache": true,
-      "inputs": ["default", "^production"],
+      "inputs": ["source", "^runtime"],
       "outputs": ["{projectRoot}/.vitest-reports/server.json"]
     },
     "test:frontend": {
       "cache": true,
-      "inputs": ["default", "^production"],
+      "inputs": ["source", "^runtime"],
       "outputs": ["{projectRoot}/.vitest-reports/frontend.json"]
     },
     "test:snapshot": {
       "cache": true,
-      "inputs": ["default", "^production"],
+      "inputs": ["source", "^runtime"],
       "outputs": []
     },
     "test:visual": {
       "inputs": [
-        "default",
-        "^production",
+        "source",
+        "^runtime",
         "{workspaceRoot}/apps/web/app/globals.css"
       ]
     }
