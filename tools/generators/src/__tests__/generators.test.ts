@@ -44,7 +44,8 @@ describe('package generators', () => {
       scripts: {
         'type-check': 'tsc --noEmit',
         'test:unit': 'vitest run --project server',
-        'test:server': 'vitest run --project server'
+        'test:server': 'vitest run --project server',
+        'test:property': 'vitest run --project property --passWithNoTests'
       },
       dependencies: { zod: 'catalog:' }
     });
@@ -74,6 +75,20 @@ describe('package generators', () => {
     );
   });
 
+  it('gives util packages the property tests', async () => {
+    await utilGenerator(tree, {
+      ...options,
+      name: 'util-maths',
+      directory: 'shared'
+    });
+
+    expect(
+      readJson(tree, 'packages/shared/util-maths/package.json').scripts
+    ).toMatchObject({
+      'test:property': 'vitest run --project property --passWithNoTests'
+    });
+  });
+
   it('creates a server package whose module imports server-only', async () => {
     await serverGenerator(tree, {
       ...options,
@@ -83,11 +98,13 @@ describe('package generators', () => {
     });
 
     const root = 'packages/billing/billing-server';
-    expect(readJson(tree, `${root}/package.json`)).toMatchObject({
+    const manifest = readJson(tree, `${root}/package.json`);
+    expect(manifest).toMatchObject({
       nx: { tags: ['type:server', 'runtime:server', 'scope:billing'] },
       exports: { './invoices': './src/invoices.ts' },
       dependencies: { 'server-only': 'catalog:' }
     });
+    expect(manifest.scripts).not.toHaveProperty('test:property');
     expect(tree.read(`${root}/src/invoices.ts`, 'utf-8')).toMatch(
       /^import 'server-only';/
     );
@@ -112,6 +129,10 @@ describe('package generators', () => {
         '@testing-library/react': 'catalog:'
       }
     });
+    expect(ui.scripts).not.toHaveProperty('test:property');
+    expect(
+      readJson(tree, 'packages/billing/billing-page/package.json').scripts
+    ).not.toHaveProperty('test:property');
     expect(readJson(tree, 'packages/ui/ui-badge/tsconfig.json')).toEqual({
       extends: '@giveaway/tsconfig/react-library.json'
     });

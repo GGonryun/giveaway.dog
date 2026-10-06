@@ -394,7 +394,7 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 | `@giveaway/testing-server`      | config | 5 / 0 | `test/next-cache.ts`<br>`test/prisma.ts`<br>`test/result.ts`<br>`test/session.ts`<br>and 1 more                              |
 | `@giveaway/testing-visual`      | config | 3 / 0 | `test/visual/`                                                                                                               |
 | `@giveaway/tsconfig`            | config | 0 / 0 | Shared tsconfig presets (base, library, react-library, nextjs).                                                              |
-| `@giveaway/vitest-config`       | config | 0 / 0 | Helpers that define the server, frontend and snapshot projects for each package.                                             |
+| `@giveaway/vitest-config`       | config | 0 / 0 | Helpers that define the server, property, frontend and snapshot projects for each package.                                   |
 
 ### Shared utilities
 

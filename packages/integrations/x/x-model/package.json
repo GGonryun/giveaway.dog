@@ -26,7 +26,8 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project server",
-    "test:server": "vitest run --project server"
+    "test:server": "vitest run --project server",
+    "test:property": "vitest run --project property --passWithNoTests"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",

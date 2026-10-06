@@ -27,7 +27,7 @@ describe('workspaceProjects', () => {
     fs.rmSync(root, { recursive: true, force: true });
   });
 
-  it('defines the server, frontend and snapshot projects for each package', () => {
+  it('defines the server, property, frontend and snapshot projects for each package', () => {
     addPackage(path.join(root, 'apps/web'), 'web');
     addPackage(path.join(root, 'packages/ui/ui-button'), '@giveaway/ui-button');
 
@@ -35,9 +35,11 @@ describe('workspaceProjects', () => {
 
     expect(projects.map((project) => project.test?.name)).toEqual([
       'web:server',
+      'web:property',
       'web:frontend',
       'web:snapshot',
       '@giveaway/ui-button:server',
+      '@giveaway/ui-button:property',
       '@giveaway/ui-button:frontend',
       '@giveaway/ui-button:snapshot'
     ]);
@@ -60,12 +62,26 @@ describe('workspaceProjects', () => {
     });
   });
 
-  it('leaves the integration tests out of the server project', () => {
+  it('leaves the integration and property tests out of the server project', () => {
     addPackage(path.join(root, 'packages/ui/ui-button'), '@giveaway/ui-button');
 
     const [server] = workspaceProjects(root, ['packages']);
 
     expect(server.test?.exclude).toContain('**/*.integration.test.ts');
+    expect(server.test?.exclude).toContain('**/*.property.test.ts');
+  });
+
+  it('runs only the property tests in Node in the property project', () => {
+    addPackage(path.join(root, 'packages/ui/ui-button'), '@giveaway/ui-button');
+
+    const [, property] = workspaceProjects(root, ['packages']);
+
+    expect(property.test).toMatchObject({
+      name: '@giveaway/ui-button:property',
+      environment: 'node',
+      include: ['**/*.property.test.ts']
+    });
+    expect(property.test?.exclude).not.toContain('**/*.property.test.ts');
   });
 
   it('skips packages without a config file and node_modules folders', () => {

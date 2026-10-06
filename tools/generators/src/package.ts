@@ -79,6 +79,7 @@ const packageJson = (
 ) => {
   const react = options.type === 'ui' || options.type === 'feature';
   const project = react ? 'frontend' : 'server';
+  const pure = options.type === 'model' || options.type === 'util';
   return {
     name: `@giveaway/${options.name}`,
     private: true,
@@ -103,7 +104,10 @@ const packageJson = (
       'type-check': 'tsc --noEmit',
       test: 'vitest run',
       'test:unit': `vitest run --project ${project}`,
-      [`test:${project}`]: `vitest run --project ${project}`
+      [`test:${project}`]: `vitest run --project ${project}`,
+      ...(pure && {
+        'test:property': 'vitest run --project property --passWithNoTests'
+      })
     },
     ...(Object.keys(DEPENDENCIES[options.type]).length > 0 && {
       dependencies: DEPENDENCIES[options.type]

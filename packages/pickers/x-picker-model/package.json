@@ -32,8 +32,9 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "test:unit": "vitest run --project server",
-    "test:server": "vitest run --project server"
+    "test:unit": "vitest run --project server --project property",
+    "test:server": "vitest run --project server",
+    "test:property": "vitest run --project property --passWithNoTests"
   },
   "dependencies": {
     "@giveaway/app-config": "workspace:*",

@@ -1,0 +1,14 @@
+{
+  "@giveaway/audience-table": 12.89,
+  "@giveaway/discord-bot": 19.89,
+  "@giveaway/discord-model": 48.72,
+  "@giveaway/jobs": 90,
+  "@giveaway/task-model": 37.67,
+  "@giveaway/twitch-bot": 26.11,
+  "@giveaway/util-html": 73.33,
+  "@giveaway/util-random": 75,
+  "@giveaway/winners-model": 77.27,
+  "@giveaway/winners-server": 46.22,
+  "@giveaway/x-picker-model": 13.27,
+  "web": 3.21
+}

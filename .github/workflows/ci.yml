@@ -75,6 +75,16 @@ jobs:
         if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: pnpm nx $NX_RUN -t test:frontend --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
 
+      - name: Vitest property tests with coverage
+        id: property
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: pnpm nx $NX_RUN -t test:property --output-style=static -- --coverage --coverage.reportsDirectory=coverage/property --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/property.json
+
+      - name: Property coverage floors
+        id: property-coverage
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: node .github/scripts/property-coverage.mjs
+
       - name: Vitest snapshots
         if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: pnpm nx $NX_RUN -t test:snapshot --output-style=static
@@ -90,9 +100,10 @@ jobs:
 
       - name: Merge the coverage
         id: coverage
-        if: ${{ !cancelled() && steps.server.outcome == 'success' && steps.frontend.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.server.outcome == 'success' && steps.frontend.outcome == 'success' && steps.property.outcome == 'success' }}
         run: |
           node .github/scripts/collect-vitest-reports.mjs server
+          node .github/scripts/collect-vitest-reports.mjs property
           node .github/scripts/collect-vitest-reports.mjs frontend
           if [ -z "$(ls -A .vitest-reports)" ]; then
             echo "No project with tests is affected, so there is no coverage to merge." | tee -a "$GITHUB_STEP_SUMMARY"

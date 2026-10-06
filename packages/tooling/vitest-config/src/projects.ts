@@ -4,7 +4,7 @@ import type {
   ViteUserConfig
 } from 'vitest/config';
 
-export type TestProjectName = 'server' | 'frontend' | 'snapshot';
+export type TestProjectName = 'server' | 'property' | 'frontend' | 'snapshot';
 
 export const SERVER_SETUP = '@giveaway/testing-server/setup';
 
@@ -25,7 +25,16 @@ export const testProjects = (): (TestProjectInlineConfiguration & {
       name: 'server',
       environment: 'node',
       include: ['**/*.test.ts'],
-      exclude: [...EXCLUDE, '**/*.integration.test.ts']
+      exclude: [...EXCLUDE, '**/*.integration.test.ts', '**/*.property.test.ts']
+    }
+  },
+  {
+    extends: true,
+    test: {
+      name: 'property',
+      environment: 'node',
+      include: ['**/*.property.test.ts'],
+      exclude: EXCLUDE
     }
   },
   {
