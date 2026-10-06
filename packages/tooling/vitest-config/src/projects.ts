@@ -14,6 +14,10 @@ export const EMPTY_MODULE = fileURLToPath(
   new URL('./empty.ts', import.meta.url)
 );
 
+export const RESET_MODULES = fileURLToPath(
+  new URL('./reset-modules.ts', import.meta.url)
+);
+
 const EXCLUDE = ['**/node_modules/**', '**/.next/**'];
 
 export const testProjects = (): (TestProjectInlineConfiguration & {
@@ -24,6 +28,7 @@ export const testProjects = (): (TestProjectInlineConfiguration & {
     test: {
       name: 'server',
       environment: 'node',
+      isolate: true,
       include: ['**/*.test.ts'],
       exclude: [...EXCLUDE, '**/*.integration.test.ts']
     }
@@ -54,12 +59,14 @@ export type PackageTestOptions = {
   coverageInclude?: string[];
   coverageExclude?: string[];
   setupFiles?: string[];
+  isolate?: boolean;
 };
 
 export const packageTestConfig = ({
   coverageInclude = ['src/**/*.{ts,tsx}'],
   coverageExclude = [],
-  setupFiles = [SERVER_SETUP]
+  setupFiles = [SERVER_SETUP],
+  isolate = false
 }: PackageTestOptions = {}): ViteUserConfig => {
   process.env.TZ = 'UTC';
   return {
@@ -69,7 +76,8 @@ export const packageTestConfig = ({
     test: {
       globals: true,
       silent: 'passed-only',
-      setupFiles,
+      setupFiles: [RESET_MODULES, ...setupFiles],
+      isolate,
       projects: testProjects(),
       coverage: {
         provider: 'v8',

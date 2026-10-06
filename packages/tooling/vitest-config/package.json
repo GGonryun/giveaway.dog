@@ -26,6 +26,7 @@
   "exports": {
     "./empty": "./src/empty.ts",
     "./projects": "./src/projects.ts",
+    "./reset-modules": "./src/reset-modules.ts",
     "./workspace": "./src/workspace.ts"
   },
   "scripts": {
