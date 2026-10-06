@@ -26,9 +26,13 @@ env:
 
 jobs:
   lint:
-    name: Lint
+    name: Lint ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -46,22 +50,35 @@ jobs:
 
       - name: Set up the Nx cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: lint-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs lint ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: ESLint
-        run: pnpm nx $NX_RUN -t lint --output-style=static --quiet
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t lint --projects="$PROJECTS" --output-style=static --quiet
 
       - name: ESLint (files outside the projects)
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && matrix.shard == 1 }}
         run: pnpm run lint:root --quiet
 
       - name: Prettier
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && matrix.shard == 1 }}
         run: pnpm run format:check
 
   type-check:
-    name: Type check
+    name: Type check ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -78,14 +95,27 @@ jobs:
 
       - name: Set up the Nx cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: type-check-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs type-check ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: TypeScript
-        run: pnpm nx $NX_RUN -t type-check --output-style=static
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t type-check --projects="$PROJECTS" --output-style=static
 
   server:
-    name: Server tests
+    name: Server tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -102,25 +132,40 @@ jobs:
 
       - name: Set up the Nx cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: server-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:server ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest server tests with coverage
-        run: pnpm nx $NX_RUN -t test:server --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:server --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
 
       - name: Collect the test reports
+        if: steps.projects.outputs.projects
         run: node .github/scripts/collect-vitest-reports.mjs server
 
       - name: Upload the test reports
+        if: steps.projects.outputs.projects
         uses: actions/upload-artifact@v4
         with:
-          name: vitest-report-server
+          name: vitest-report-server-${{ matrix.shard }}
           path: .vitest-reports/
           include-hidden-files: true
           retention-days: 1
 
   frontend:
-    name: Frontend tests
+    name: Frontend tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -137,17 +182,28 @@ jobs:
 
       - name: Set up the Nx cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: frontend-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:frontend ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest frontend tests with coverage
-        run: pnpm nx $NX_RUN -t test:frontend --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:frontend --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
 
       - name: Collect the test reports
+        if: steps.projects.outputs.projects
         run: node .github/scripts/collect-vitest-reports.mjs frontend
 
       - name: Upload the test reports
+        if: steps.projects.outputs.projects
         uses: actions/upload-artifact@v4
         with:
-          name: vitest-report-frontend
+          name: vitest-report-frontend-${{ matrix.shard }}
           path: .vitest-reports/
           include-hidden-files: true
           retention-days: 1
@@ -155,7 +211,7 @@ jobs:
   coverage:
     name: Coverage
     needs: [server, frontend]
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
     outputs:
       coverage: ${{ steps.coverage.outputs.lines }}
@@ -164,9 +220,6 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
-
-      - name: Set up the project
-        uses: ./.github/actions/setup
 
       - name: Download the test reports
         uses: actions/download-artifact@v4
@@ -184,9 +237,29 @@ jobs:
             echo "No project with tests is affected, so there is no coverage to merge." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
+      - name: Install Node.js
+        if: steps.reports.outputs.found == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install only Vitest and its coverage provider
+        if: steps.reports.outputs.found == 'true'
+        run: |
+          vitest=$(sed -n -E 's/^  vitest@([0-9.]+):$/\1/p' pnpm-lock.yaml | head -n 1)
+          provider=$(sed -n -E "s/^  '@vitest\/coverage-v8@([0-9.]+)':$/\1/p" pnpm-lock.yaml | head -n 1)
+          if [ -z "$vitest" ] || [ -z "$provider" ]; then
+            echo "::error::Cannot read the versions of vitest and @vitest/coverage-v8 from pnpm-lock.yaml"
+            exit 1
+          fi
+          mkdir -p "$RUNNER_TEMP/coverage"
+          echo '{ "private": true }' > "$RUNNER_TEMP/coverage/package.json"
+          npm install --prefix "$RUNNER_TEMP/coverage" --no-audit --no-fund "vitest@$vitest" "@vitest/coverage-v8@$provider"
+          ln -s "$RUNNER_TEMP/coverage/node_modules" node_modules
+
       - name: Merge the coverage
         if: steps.reports.outputs.found == 'true'
-        run: pnpm exec vitest run --merge-reports=.vitest-reports --coverage --passWithNoTests
+        run: node node_modules/vitest/vitest.mjs run --config vitest.coverage.config.ts --merge-reports=.vitest-reports --coverage --passWithNoTests
 
       - name: Report the line coverage
         if: steps.reports.outputs.found == 'true'
@@ -197,9 +270,13 @@ jobs:
           echo "Line coverage: ${lines}%" >> "$GITHUB_STEP_SUMMARY"
 
   snapshot:
-    name: Snapshot tests
+    name: Snapshot tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -216,47 +293,33 @@ jobs:
 
       - name: Set up the Nx cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: snapshot-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:snapshot ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest snapshots
-        run: pnpm nx $NX_RUN -t test:snapshot --output-style=static
-
-  playwright:
-    name: Playwright version
-    runs-on: ubuntu-slim
-    timeout-minutes: 5
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-    steps:
-      - name: Check out the lockfile
-        uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-          sparse-checkout: pnpm-lock.yaml
-          sparse-checkout-cone-mode: false
-
-      - name: Read the Playwright version from the lockfile
-        id: version
-        run: |
-          version=$(grep -m1 -oP "^  playwright@\K[0-9.]+(?=:)" pnpm-lock.yaml)
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:snapshot --projects="$PROJECTS" --output-style=static
 
   visual:
-    name: Visual tests
-    needs: playwright
+    name: Visual tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    container:
-      image: mcr.microsoft.com/playwright:v${{ needs.playwright.outputs.version }}-noble
-      options: --ipc=host
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
         with:
           persist-credentials: false
           fetch-depth: 0
-
-      - name: Trust the checkout in the container
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Set the base and head commits for nx affected
         if: env.NX_RUN == 'affected'
@@ -265,14 +328,21 @@ jobs:
       - name: Set up the project
         uses: ./.github/actions/setup
 
-      - name: Vitest visual tests
-        run: pnpm nx $NX_RUN -t test:visual --output-style=static
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:visual:docker ${{ matrix.shard }} ${{ strategy.job-total }}
+
+      - name: Vitest visual tests in the Playwright image
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:visual:docker --projects="$PROJECTS" --output-style=static
 
       - name: Upload the screenshots that changed
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: visual-changes
+          name: visual-changes-${{ matrix.shard }}
           path: |
             apps/*/.vitest-attachments/
             packages/*/*/.vitest-attachments/
@@ -282,6 +352,8 @@ jobs:
 
       - name: Explain how to review the changes
         if: failure()
+        env:
+          ARTIFACT: visual-changes-${{ matrix.shard }}
         run: |
           {
             echo "## Visual changes"
@@ -290,16 +362,20 @@ jobs:
             echo
             find apps packages -name node_modules -prune -o -path '*/.vitest-attachments/*' -name '*-actual-*.png' -print | sort | sed -e 's|/\.vitest-attachments/|/|' -e 's|^|- |' -e 's|-actual-|-|'
             echo
-            echo "The \`visual-changes\` artifact of this run has the actual screenshot and a diff image for each one. The diff image shows the changed pixels in red."
+            echo "The \`$ARTIFACT\` artifact of this run has the actual screenshot and a diff image for each one. The diff image shows the changed pixels in red."
             echo
             echo "- If the change is intended, update the references: run the **Update visual references** workflow on this branch, or run \`pnpm run test:visual:docker:update\` and commit the result. Then review the new images in the pull request."
             echo "- If the change is not intended, fix the code."
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
   integration:
-    name: Integration tests
+    name: Integration tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -314,8 +390,45 @@ jobs:
       - name: Set up the project
         uses: ./.github/actions/setup
 
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:integration ${{ matrix.shard }} ${{ strategy.job-total }}
+
       - name: Vitest integration tests against Postgres in Docker
-        run: pnpm nx $NX_RUN -t test:integration --output-style=static
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:integration --projects="$PROJECTS" --output-style=static
+
+  checks:
+    name: Checks
+    needs:
+      - lint
+      - type-check
+      - server
+      - frontend
+      - snapshot
+      - visual
+      - integration
+      - coverage
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 5
+    steps:
+      - name: Check that every job passed
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          {
+            echo "| Job | Result |"
+            echo "| --- | --- |"
+            jq -r 'to_entries[] | "| \(.key) | \(.value.result) |"' <<< "$RESULTS"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+          failed=$(jq -r '[to_entries[] | select(.value.result != "success") | .key] | join(", ")' <<< "$RESULTS")
+          if [ -n "$failed" ]; then
+            echo "::error::These jobs did not pass: $failed. The log of each failed shard names the check that failed."
+            exit 1
+          fi
 
   badge:
     name: Coverage badge

@@ -1,6 +1,12 @@
 name: Nx cache
 description: Keep the Nx cache between CI runs. A local server gives the cache to Nx through the Nx remote cache API, and actions/cache keeps the files of the server
 
+inputs:
+  id:
+    description: The name of the cache, by default the job ID. Give each shard of a matrix job its own name, so that the shards do not overwrite each other's cache
+    required: false
+    default: ''
+
 runs:
   using: composite
   steps:
@@ -8,10 +14,10 @@ runs:
       uses: actions/cache@v4
       with:
         path: .nx/ci-cache
-        key: nx-${{ runner.os }}-${{ github.job }}-${{ github.head_ref || github.ref_name }}-${{ github.sha }}
+        key: nx-${{ runner.os }}-${{ inputs.id || github.job }}-${{ github.head_ref || github.ref_name }}-${{ github.sha }}
         restore-keys: |
-          nx-${{ runner.os }}-${{ github.job }}-${{ github.head_ref || github.ref_name }}-
-          nx-${{ runner.os }}-${{ github.job }}-main-
+          nx-${{ runner.os }}-${{ inputs.id || github.job }}-${{ github.head_ref || github.ref_name }}-
+          nx-${{ runner.os }}-${{ inputs.id || github.job }}-main-
 
     - name: Start the Nx cache server
       shell: bash
