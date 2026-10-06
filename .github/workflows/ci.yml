@@ -49,6 +49,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
+        id: nx-cache
         uses: ./.github/actions/nx-cache
         with:
           id: lint-${{ matrix.shard }}-of-${{ strategy.job-total }}
@@ -70,6 +71,13 @@ jobs:
       - name: Prettier
         if: ${{ !cancelled() && steps.setup.outcome == 'success' && matrix.shard == 1 }}
         run: pnpm run format:check
+
+      - name: Save the Nx cache
+        if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .nx/ci-cache
+          key: ${{ steps.nx-cache.outputs.key }}
 
   type-check:
     name: Type check ${{ matrix.shard }}/${{ strategy.job-total }}
@@ -94,6 +102,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
+        id: nx-cache
         uses: ./.github/actions/nx-cache
         with:
           id: type-check-${{ matrix.shard }}-of-${{ strategy.job-total }}
@@ -107,6 +116,13 @@ jobs:
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
         run: pnpm nx run-many -t type-check --projects="$PROJECTS" --output-style=static
+
+      - name: Save the Nx cache
+        if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .nx/ci-cache
+          key: ${{ steps.nx-cache.outputs.key }}
 
   server:
     name: Server tests ${{ matrix.shard }}/${{ strategy.job-total }}
@@ -131,6 +147,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
+        id: nx-cache
         uses: ./.github/actions/nx-cache
         with:
           id: server-${{ matrix.shard }}-of-${{ strategy.job-total }}
@@ -158,6 +175,13 @@ jobs:
           include-hidden-files: true
           retention-days: 1
 
+      - name: Save the Nx cache
+        if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .nx/ci-cache
+          key: ${{ steps.nx-cache.outputs.key }}
+
   frontend:
     name: Frontend tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
@@ -181,6 +205,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
+        id: nx-cache
         uses: ./.github/actions/nx-cache
         with:
           id: frontend-${{ matrix.shard }}-of-${{ strategy.job-total }}
@@ -207,6 +232,13 @@ jobs:
           path: .vitest-reports/
           include-hidden-files: true
           retention-days: 1
+
+      - name: Save the Nx cache
+        if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .nx/ci-cache
+          key: ${{ steps.nx-cache.outputs.key }}
 
   coverage:
     name: Coverage
@@ -292,6 +324,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
+        id: nx-cache
         uses: ./.github/actions/nx-cache
         with:
           id: snapshot-${{ matrix.shard }}-of-${{ strategy.job-total }}
@@ -305,6 +338,13 @@ jobs:
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
         run: pnpm nx run-many -t test:snapshot --projects="$PROJECTS" --output-style=static
+
+      - name: Save the Nx cache
+        if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .nx/ci-cache
+          key: ${{ steps.nx-cache.outputs.key }}
 
   visual:
     name: Visual tests ${{ matrix.shard }}/${{ strategy.job-total }}
