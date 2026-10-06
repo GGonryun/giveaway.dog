@@ -39,6 +39,46 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 - **UI components**: Use existing shadcn/ui components from `@giveaway/ui-primitives` (`packages/ui/ui-primitives/src/`)
 - **Auth components**: Put shared auth components in `packages/auth/`: `@giveaway/auth-login-ui` has the login and logout screens and the provider buttons, and `@giveaway/auth-session-ui` has the session provider and the logout button
 
+### Environment Variables
+
+- **Sources**: Production reads the Vercel variables with the Production target, and every preview deployment reads the Vercel variables with the Preview target (Project, Settings, Environment Variables). Local development reads `apps/web/.env.local`, which starts as a copy of `apps/web/.env.example`. Vercel sets `VERCEL_ENV`, `VERCEL_URL` and `NEXT_PUBLIC_VERCEL_URL` itself
+- **One target for each value**: Give each Vercel variable one target. Never give Preview a production value: pull request code runs on Preview, and the end-to-end tests send their own requests to it. A change in Vercel takes effect only in new deployments. The build copies each `NEXT_PUBLIC_*` value into the client code
+- **What each environment uses**: "Not set" means that the variable has no value in that environment. The notes below the table give the reasons
+
+  | Variables                                                                      | Production                      | Preview                        | Development                     |
+  | ------------------------------------------------------------------------------ | ------------------------------- | ------------------------------ | ------------------------------- |
+  | `NEXT_PUBLIC_APP_URL`, `NEXTAUTH_URL`                                          | `https://www.giveaway.dog`      | Not set                        | `http://localhost:3000`         |
+  | `AUTH_SECRET`                                                                  | The production secret           | Its own secret                 | Any value                       |
+  | `POSTGRES_URL`, `POSTGRES_URL_NON_POOLING`                                     | The production database         | The preview database           | The database in `.env.local`    |
+  | `REDIS_URL`                                                                    | The production Upstash database | The preview Upstash database   | The container in `compose.yaml` |
+  | `BLOB_READ_WRITE_TOKEN`                                                        | The production Blob store       | Its own Blob store             | Optional                        |
+  | `CRON_SECRET`                                                                  | The production secret           | Its own secret                 | Optional                        |
+  | `E2E_LOGIN_SECRET`                                                             | Never set                       | The GitHub Actions secret      | Optional                        |
+  | `NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY`, `CLOUDFLARE_TURNSTILE_SECRET_KEY` | The production widget           | The test keys                  | The test keys                   |
+  | `BLUESKY_PRIVATE_KEY`, `TWITCH_EVENTSUB_SECRET`                                | The production keys             | Their own keys                 | Their own keys                  |
+  | `DISCORD_WEBHOOK_URL`                                                          | The alerts channel              | Not set                        | Not set                         |
+  | `INBOUND_SECRET`                                                               | The production key              | Not set                        | Optional                        |
+  | `SCRAPEBADGER_API_KEY`, `GOOGLE_CLOUD_VISION_API_KEY`, `YOUTUBE_API_KEY`       | The production keys             | Not set                        | Optional                        |
+  | Sign-in providers (see below)                                                  | The production apps             | Not set, or test apps          | Optional                        |
+  | Team integrations (see below)                                                  | The production apps and bots    | Not set, or test apps and bots | Optional                        |
+  | `TWITCH_EVENTSUB_URL`                                                          | Not set                         | Not set                        | Optional                        |
+  | `VERCEL_ENV`, `VERCEL_URL`, `NEXT_PUBLIC_VERCEL_URL`                           | Set by Vercel                   | Set by Vercel                  | Not set                         |
+
+- **App URLs**: Each preview deployment uses its own URL (see App URL)
+- **`AUTH_SECRET`**: Auth.js signs the sessions with it. With the production secret, a preview could make sessions that production accepts
+- **Databases and Blob store**: See Postgres and Redis. The preview Blob store is one that production does not use (#200). Uploads fail without `BLOB_READ_WRITE_TOKEN`
+- **`CRON_SECRET`**: The cron and workflow routes accept `Bearer <CRON_SECRET>`, and they refuse every request when it is not set. Locally, set it to call the cron routes by hand
+- **`E2E_LOGIN_SECRET`**: The same value as the GitHub Actions secret of the same name, 32 characters or more (see E2E Tests). Locally, the login test needs it
+- **Turnstile**: Cloudflare's always-pass test keys are `1x00000000000000000000AA` (site key) and `1x0000000000000000000000000000000AA` (secret key). With them, a headless browser passes the security check of the giveaway page
+- **`BLUESKY_PRIVATE_KEY`, `TWITCH_EVENTSUB_SECRET`**: The tests can hold the preview keys in CI. Bluesky OAuth also needs a public HTTPS `NEXT_PUBLIC_APP_URL`
+- **`DISCORD_WEBHOOK_URL`**: Without it, no preview posts to the internal alerts channel. The activation job only sends this post, and it fails for every giveaway until #204 adds a fake
+- **`INBOUND_SECRET`**: Without it, a preview sends no real email. Email sign-in, email verification and invites fail until #204 adds a fake
+- **Paid services**: ScrapeBadger, Google Cloud Vision and the YouTube Data API cost money for each call. The features that use them fail on Preview until #204 adds fakes
+- **Sign-in providers**: `GOOGLE_ID`, `GOOGLE_SECRET`, `DISCORD_ID`, `DISCORD_SECRET`, `TWITTER_LOGIN_APP_CLIENT_ID`, `TWITTER_LOGIN_APP_CLIENT_SECRET`, `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`, `KICK_CLIENT_ID`, `KICK_CLIENT_SECRET`, `VELORA_CLIENT_ID`, `VELORA_CLIENT_SECRET`, `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET`, `TIKTOK_CLIENT_ID`, `TIKTOK_CLIENT_SECRET` and `STEAM_SECRET`. Real sign-in fails on a preview, because the providers accept only the callback URLs of production. The end-to-end tests sign in with the `e2e` provider. `STEAM_SECRET` must have a value in each environment: the Auth.js config throws without it. Locally, use apps with callback URLs on `http://localhost:3000`
+- **Team integrations**: `TWITTER_TEAM_APP_CLIENT_ID`, `TWITTER_TEAM_APP_CLIENT_SECRET`, `DISCORD_BOT_TOKEN`, `DISCORD_BOT_PUBLIC_KEY`, `NEXT_PUBLIC_DISCORD_BOT_ID`, `TWITCH_BOT_USER_ID`, `NEXT_PUBLIC_TWITCH_BOT_USERNAME` and `TWITCH_BOT_REFRESH_TOKEN`. With the production bot tokens, a preview posts to real Discord servers and Twitch chats
+- **`TWITCH_EVENTSUB_URL`**: The default is the app URL. Locally, set it to a public HTTPS tunnel to `/api/twitch/webhooks`
+- **Add a variable**: Add it to `apps/web/.env.example` and to this section, and set it in Vercel for each target that needs it
+
 ### Authentication
 
 - **Providers**: Supports X (Twitter), Google, Discord, and email (Inbound.new)
