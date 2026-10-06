@@ -14,7 +14,7 @@ import {
   TwitterLikeImportTaskSchema,
   TwitterRetweetImportTaskSchema
 } from '@giveaway/task-model/schemas';
-import { formatDistanceToNowStrict } from 'date-fns';
+import { formatDistanceToNowStrict } from 'date-fns/formatDistanceToNowStrict';
 import React from 'react';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import { cn } from '@giveaway/ui-utils/utils';

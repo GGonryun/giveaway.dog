@@ -26,7 +26,7 @@ import { MoreHorizontal, Trash2, Edit } from 'lucide-react';
 import { RemoveMemberDialog } from './remove-member-dialog';
 import { EditMemberDialog } from './edit-member-dialog';
 import { TeamRole } from '@giveaway/db-model';
-import { formatDistance } from 'date-fns';
+import { formatDistance } from 'date-fns/formatDistance';
 import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 
 interface Member {

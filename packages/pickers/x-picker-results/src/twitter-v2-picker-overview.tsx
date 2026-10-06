@@ -39,7 +39,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@giveaway/ui-primitives/dropdown-menu';
-import { formatDistance, format, isFuture } from 'date-fns';
+import { format } from 'date-fns/format';
+import { formatDistance } from 'date-fns/formatDistance';
+import { isFuture } from 'date-fns/isFuture';
 import {
   PICKER_STATUS_LABELS,
   PICKER_STATUS_DESCRIPTIONS

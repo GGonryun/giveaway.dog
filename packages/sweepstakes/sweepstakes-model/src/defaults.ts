@@ -4,7 +4,8 @@ import {
   SweepstakesTermsType,
   VisibilityType
 } from '@giveaway/db-model';
-import * as dates from 'date-fns';
+import { add } from 'date-fns/add';
+import { startOfDay } from 'date-fns/startOfDay';
 import {
   GiveawayDesignSchema,
   GradientBackgroundSchema,
@@ -43,8 +44,8 @@ export const DEFAULT_SWEEPSTAKES_DETAILS: Prisma.SweepstakesDetailsUncheckedCrea
 
 export const DEFAULT_SWEEPSTAKES_TIMING: Prisma.SweepstakesTimingUncheckedCreateWithoutSweepstakesInput =
   {
-    startDate: dates.startOfDay(dates.add(Date.now(), { days: 1 })),
-    endDate: dates.startOfDay(dates.add(Date.now(), { days: 1, weeks: 1 })),
+    startDate: startOfDay(add(Date.now(), { days: 1 })),
+    endDate: startOfDay(add(Date.now(), { days: 1, weeks: 1 })),
     timeZone: timezone.current()
   };
 

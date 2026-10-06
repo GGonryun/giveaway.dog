@@ -13,7 +13,7 @@ import {
 } from '@giveaway/ui-primitives/table';
 import { Globe, MoreVertical, CheckCircle, Trash2 } from 'lucide-react';
 import { TablePagination } from '@giveaway/ui-primitives/table-pagination';
-import { formatDistanceToNowStrict } from 'date-fns';
+import { formatDistanceToNowStrict } from 'date-fns/formatDistanceToNowStrict';
 import { UserSchema } from '@giveaway/user-model/user';
 import { Button } from '@giveaway/ui-primitives/button';
 

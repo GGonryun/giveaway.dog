@@ -32,7 +32,7 @@ import { useProcedure } from '@giveaway/rpc-client/hook';
 import revokeInvitation from '@giveaway/team-invites-server/revoke-invitation';
 import { toast } from 'sonner';
 import { TeamRole } from '@giveaway/db-model';
-import { formatDistance } from 'date-fns';
+import { formatDistance } from 'date-fns/formatDistance';
 
 interface Invitation {
   id: string;

@@ -6,8 +6,10 @@ import {
   PopoverTrigger
 } from '@giveaway/ui-primitives/popover';
 import { cn } from '@giveaway/ui-utils/utils';
-import { add, format } from 'date-fns';
-import { type Locale, enUS } from 'date-fns/locale';
+import { add } from 'date-fns/add';
+import { format } from 'date-fns/format';
+import type { Locale } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale/en-US';
 import {
   Calendar as CalendarIcon,
   ChevronLeft,
