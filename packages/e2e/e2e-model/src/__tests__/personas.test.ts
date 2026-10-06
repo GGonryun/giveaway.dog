@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  E2E_PERSONA_ATTRIBUTES,
   E2E_PERSONAS,
   E2E_SHARED_HOST_EMAIL,
   e2eNamespaceSchema,
@@ -137,5 +138,38 @@ describe('toE2ePersonaUpsert', () => {
       accountType: 'PARTICIPANT',
       onboarded: false
     });
+  });
+});
+
+describe('E2E_PERSONA_ATTRIBUTES', () => {
+  it('makes the team personas onboarded hosts, and only the newbie a new participant', () => {
+    const host = { accountType: 'HOST', onboarded: true };
+    const participant = { accountType: 'PARTICIPANT', onboarded: true };
+
+    expect(E2E_PERSONA_ATTRIBUTES).toEqual({
+      host,
+      host2: host,
+      admin: host,
+      member: host,
+      guest: host,
+      blocked: host,
+      participant,
+      participant2: participant,
+      newbie: { accountType: 'PARTICIPANT', onboarded: false }
+    });
+  });
+});
+
+describe('toE2eNamespaceOfEmail anchors', () => {
+  it.each([
+    'x-e2e-host-abc123@example.com',
+    'e2e-host-abc123@example.com.evil.dev',
+    'e2e-host-abc123@example.comx'
+  ])('finds no namespace in %s', (email) => {
+    expect(toE2eNamespaceOfEmail(email)).toBeUndefined();
+  });
+
+  it.each([null, undefined, ''])('finds no namespace in %j', (email) => {
+    expect(toE2eNamespaceOfEmail(email)).toBeUndefined();
   });
 });

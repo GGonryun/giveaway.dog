@@ -66,9 +66,43 @@ describe('findE2eTeam', () => {
     await expect(findE2eTeam(db, 'e2e-abc123-w0')).resolves.toEqual(teamRow());
   });
 
+  it('reads the team with its members', async () => {
+    prismaMock.team.findUnique.mockResolvedValue(teamRow());
+
+    await findE2eTeam(db, 'e2e-abc123-w0');
+
+    expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
+      where: { slug: 'e2e-abc123-w0' },
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        tier: true,
+        createdAt: true,
+        members: {
+          select: {
+            role: true,
+            user: {
+              select: {
+                id: true,
+                email: true,
+                name: true,
+                image: true,
+                username: true,
+                onboarded: true,
+                accountType: true
+              }
+            }
+          }
+        }
+      }
+    });
+  });
+
   it('does not look up a slug outside e2e', async () => {
     await expect(findE2eTeam(db, 'acme')).rejects.toMatchObject({
-      code: 'NOT_FOUND'
+      code: 'NOT_FOUND',
+      message: 'Team acme not found'
     });
     expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
   });
@@ -77,7 +111,8 @@ describe('findE2eTeam', () => {
     prismaMock.team.findUnique.mockResolvedValue(null);
 
     await expect(findE2eTeam(db, 'e2e-abc123-w0')).rejects.toMatchObject({
-      code: 'NOT_FOUND'
+      code: 'NOT_FOUND',
+      message: 'Team e2e-abc123-w0 not found'
     });
   });
 
@@ -91,7 +126,10 @@ describe('findE2eTeam', () => {
     );
 
     expect(error).toBeInstanceOf(ApplicationError);
-    expect(error).toMatchObject({ code: 'FORBIDDEN' });
+    expect(error).toMatchObject({
+      code: 'FORBIDDEN',
+      message: 'Team e2e-abc123-w0 has a member who is not an e2e user'
+    });
   });
 });
 
@@ -103,6 +141,18 @@ describe('findE2eSweepstakesId', () => {
     });
 
     await expect(findE2eSweepstakesId(db, 'sw-1')).resolves.toBe('sw-1');
+    expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
+      where: { id: 'sw-1' },
+      select: {
+        id: true,
+        team: {
+          select: {
+            slug: true,
+            members: { select: { user: { select: { email: true } } } }
+          }
+        }
+      }
+    });
   });
 
   it.each([
@@ -123,7 +173,8 @@ describe('findE2eSweepstakesId', () => {
     prismaMock.sweepstakes.findUnique.mockResolvedValue(row);
 
     await expect(findE2eSweepstakesId(db, 'sw-1')).rejects.toMatchObject({
-      code: 'NOT_FOUND'
+      code: 'NOT_FOUND',
+      message: 'Sweepstakes sw-1 not found'
     });
   });
 });

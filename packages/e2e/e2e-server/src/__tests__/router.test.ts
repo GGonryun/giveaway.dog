@@ -2,7 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
 import { E2E_MAX_BODY_BYTES, handleE2eRequest } from '../router';
+import { seedE2eSweepstakes } from '../sweepstakes';
 import { teamRow } from './fixtures';
+
+vi.mock('../sweepstakes', () => ({ seedE2eSweepstakes: vi.fn() }));
 
 const SECRET = 'e2e-secret-with-at-least-32-chars';
 
@@ -152,6 +155,8 @@ describe('handleE2eRequest', () => {
       ['POST', 'health'],
       ['DELETE', 'runs'],
       ['DELETE', 'runs/abc123/extra'],
+      ['DELETE', 'teams/abc123'],
+      ['DELETE', 'janitor/abc123'],
       ['GET', '']
     ])('returns a bare 404 for %s %s', async (method, path) => {
       const response = await call(method, path);
@@ -159,6 +164,63 @@ describe('handleE2eRequest', () => {
       expect(response.status).toBe(404);
       expect(await response.text()).toBe('');
     });
+  });
+
+  describe('routes', () => {
+    it('deletes the run that the path names', async () => {
+      const response = await call('DELETE', 'runs/abc123');
+
+      expect(response.status).toBe(200);
+      expect(await response.json()).toMatchObject({ runId: 'abc123' });
+      expect(prismaMock.team.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            AND: [
+              { slug: { startsWith: 'e2e-' } },
+              { slug: { startsWith: 'e2e-abc123' } }
+            ]
+          }
+        })
+      );
+    });
+
+    it('ignores a body on a DELETE', async () => {
+      const response = await call('DELETE', 'runs/abc123', { body: '{ns:' });
+
+      expect(response.status).toBe(200);
+    });
+
+    it.each([
+      ['off', undefined, false],
+      ['on', '1', true]
+    ])(
+      'passes the giveaway request and the public switch (%s) to the builder',
+      async (_, allowPublic, expected) => {
+        vi.stubEnv('E2E_ALLOW_PUBLIC', allowPublic);
+        vi.mocked(seedE2eSweepstakes)
+          .mockReset()
+          .mockResolvedValue({ id: 'sw-1' } as never);
+
+        const response = await call('POST', 'sweepstakes', {
+          body: JSON.stringify({ ns: 'abc123', team: 'e2e-abc123-w0' })
+        });
+
+        expect(response.status).toBe(200);
+        expect(await response.json()).toEqual({ id: 'sw-1' });
+        expect(seedE2eSweepstakes).toHaveBeenCalledWith({
+          db: prismaMock,
+          request: {
+            ns: 'abc123',
+            team: 'e2e-abc123-w0',
+            preset: 'running',
+            name: 'Giveaway',
+            visibility: 'UNLISTED'
+          },
+          now: expect.any(Date),
+          allowPublic: expected
+        });
+      }
+    );
   });
 
   describe('health', () => {
@@ -218,7 +280,30 @@ describe('handleE2eRequest', () => {
       const response = await call('POST', 'teams', { body });
 
       expect(response.status).toBe(413);
+      expect(await response.json()).toEqual({
+        error: `The body must have at most ${E2E_MAX_BODY_BYTES} bytes`,
+        code: 'PAYLOAD_TOO_LARGE'
+      });
       expectNothingTouched();
+    });
+
+    it('accepts a body of exactly the size limit', async () => {
+      const shell = JSON.stringify({ pad: '' });
+      const body = JSON.stringify({
+        pad: 'x'.repeat(E2E_MAX_BODY_BYTES - shell.length)
+      });
+
+      expect(body).toHaveLength(E2E_MAX_BODY_BYTES);
+      expect((await call('POST', 'janitor', { body })).status).toBe(200);
+    });
+
+    it('accepts a declared length of exactly the size limit', async () => {
+      const response = await call('POST', 'janitor', {
+        body: '{}',
+        headers: { 'content-length': String(E2E_MAX_BODY_BYTES) }
+      });
+
+      expect(response.status).toBe(200);
     });
 
     it('refuses a declared length above the size limit without reading the body', async () => {
@@ -258,6 +343,21 @@ describe('handleE2eRequest', () => {
       expectNothingTouched();
     });
 
+    it('names the path of a nested problem with dots', async () => {
+      const response = await call('POST', 'teams', {
+        body: JSON.stringify({
+          ns: 'abc123',
+          suffix: 'w0',
+          members: [{ persona: 'admin', role: 'OWNER' }]
+        })
+      });
+
+      const body = await response.json();
+      expect(body.issues.map((issue: { path: string }) => issue.path)).toEqual([
+        'members.0.role'
+      ]);
+    });
+
     it('refuses a bad run id', async () => {
       const response = await call('DELETE', 'runs/abc%25');
 
@@ -294,6 +394,22 @@ describe('handleE2eRequest', () => {
       });
 
       expect(response.status).toBe(409);
+      expect(await response.json()).toEqual({
+        error: 'A unique value is already taken',
+        code: 'CONFLICT'
+      });
+    });
+
+    it.each([
+      ['another Prisma error', knownRequestError('P2025')],
+      [
+        'an error that only looks like a unique constraint failure',
+        Object.assign(new Error('Unique'), { code: 'P2002' })
+      ]
+    ])('maps %s to 500', async (_, error) => {
+      prismaMock.team.findMany.mockRejectedValue(error);
+
+      expect((await call('POST', 'janitor')).status).toBe(500);
     });
 
     it('hides the details of an unexpected error', async () => {
@@ -304,7 +420,10 @@ describe('handleE2eRequest', () => {
       const response = await call('POST', 'janitor');
 
       expect(response.status).toBe(500);
-      expect(await response.text()).not.toContain('password');
+      expect(await response.json()).toEqual({
+        error: 'The request failed',
+        code: 'INTERNAL_SERVER_ERROR'
+      });
     });
 
     it('maps an application error without a known status to 400', async () => {

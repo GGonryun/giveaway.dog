@@ -269,3 +269,114 @@ describe('e2eRowsQuerySchema', () => {
     expect(e2eRowsQuerySchema.safeParse(query).success).toBe(false);
   });
 });
+
+const messagesOf = (result: { error?: { issues: { message: string }[] } }) =>
+  result.error?.issues.map((i) => i.message) ?? [];
+
+describe('e2eTeamRequestSchema details', () => {
+  const base = { ns: 'abc123', suffix: 'w0' };
+
+  it.each(['w0!', 'w0-', 'W0', ''])('rejects the suffix %j', (suffix) => {
+    expect(e2eTeamRequestSchema.safeParse({ ...base, suffix }).success).toBe(
+      false
+    );
+  });
+
+  it('trims the team name', () => {
+    expect(e2eTeamRequestSchema.parse({ ...base, name: '  Acme  ' }).name).toBe(
+      'Acme'
+    );
+  });
+
+  it.each([
+    ['3 characters', 'abc'],
+    ['20 characters', 'x'.repeat(20)]
+  ])('accepts a name of %s', (_, name) => {
+    expect(e2eTeamRequestSchema.parse({ ...base, name }).name).toBe(name);
+  });
+
+  it.each([
+    ['2 characters', 'ab'],
+    ['21 characters', 'x'.repeat(21)],
+    ['2 characters after trimming', '  ab  ']
+  ])('rejects a name of %s', (_, name) => {
+    expect(issuesOf(e2eTeamRequestSchema.safeParse({ ...base, name }))).toEqual(
+      ['name']
+    );
+  });
+
+  it('explains a slug that is too long', () => {
+    expect(
+      messagesOf(
+        e2eTeamRequestSchema.safeParse({ ns: 'abcdefghij', suffix: '123456' })
+      )
+    ).toEqual(['e2e-<ns>-<suffix> must have at most 20 characters']);
+  });
+
+  it('explains a persona that joins twice', () => {
+    expect(
+      messagesOf(
+        e2eTeamRequestSchema.safeParse({
+          ...base,
+          members: [{ persona: 'host', role: 'ADMIN' }]
+        })
+      )
+    ).toEqual(['Each persona joins the team at most once']);
+  });
+});
+
+describe('e2eSweepstakesRequestSchema details', () => {
+  const base = { ns: 'abc123', team: 'e2e-abc123-w0' };
+
+  it('accepts a completed giveaway that ends now', () => {
+    expect(
+      e2eSweepstakesRequestSchema.safeParse({
+        ...base,
+        preset: 'completed',
+        endsIn: 0
+      }).success
+    ).toBe(true);
+  });
+
+  it('rejects an end at the start, and explains it', () => {
+    const result = e2eSweepstakesRequestSchema.safeParse({
+      ...base,
+      preset: 'draft',
+      startsIn: HOUR,
+      endsIn: HOUR
+    });
+
+    expect(issuesOf(result)).toEqual(['endsIn']);
+    expect(messagesOf(result)).toEqual(['endsIn must be above startsIn']);
+  });
+
+  it('explains a slug outside the namespace', () => {
+    expect(
+      messagesOf(
+        e2eSweepstakesRequestSchema.safeParse({ ...base, slug: 'my-giveaway' })
+      )
+    ).toEqual(['The slug must start with e2e-abc123-']);
+  });
+
+  it.each(['e2e-abc123-a!b', 'e2e-abc123-a b', 'e2e-abc123-A'])(
+    'rejects the slug %s',
+    (slug) => {
+      expect(
+        issuesOf(e2eSweepstakesRequestSchema.safeParse({ ...base, slug }))
+      ).toEqual(['slug']);
+    }
+  );
+});
+
+describe('e2eRowsQuerySchema details', () => {
+  it.each([
+    { view: 'team', id: 'aB3_-x' },
+    { view: 'sweepstakes', slug: 'e2e-abc123-w0' },
+    { view: 'participants' },
+    { view: 'jobs' },
+    { id: 'aB3_-x' },
+    {}
+  ])('rejects %j', (query) => {
+    expect(e2eRowsQuerySchema.safeParse(query).success).toBe(false);
+  });
+});

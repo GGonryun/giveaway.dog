@@ -77,3 +77,18 @@ describe('toE2eGiveawayName', () => {
     expect(toE2eGiveawayName('abc123', 'Prize')).toBe('[e2e abc123] Prize');
   });
 });
+
+describe('toE2eRunTeamSlugPrefix', () => {
+  it('puts the run id after the e2e prefix', () => {
+    expect(toE2eRunTeamSlugPrefix('abc123')).toBe('e2e-abc123');
+  });
+});
+
+describe('e2eTeamSlugSchema anchors', () => {
+  it.each(['xe2e-abc123', 'ae2e-a', 'e2e-abc!'])(
+    'rejects %s, which only contains an e2e slug',
+    (slug) => {
+      expect(e2eTeamSlugSchema.safeParse(slug).success).toBe(false);
+    }
+  );
+});

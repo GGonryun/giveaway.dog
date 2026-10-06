@@ -67,6 +67,19 @@ describe('readE2eRows', () => {
     ).toEqual({
       sweepstakes: row
     });
+    expect(prismaMock.sweepstakes.findUniqueOrThrow).toHaveBeenCalledWith({
+      where: { id: 'sw-1' },
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        team: { select: { slug: true } },
+        details: { select: { name: true } },
+        timing: { select: { startDate: true, endDate: true, timeZone: true } },
+        visibility: { select: { visibility: true, slug: true } },
+        _count: { select: { participants: true, tasks: true, prizes: true } }
+      }
+    });
   });
 
   it.each(['sweepstakes', 'participants', 'jobs'] as const)(
@@ -128,9 +141,17 @@ describe('readE2eRows', () => {
         }
       ]
     });
-    expect(prismaMock.sweepstakesParticipant.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { sweepstakesId: 'sw-1' }, take: 500 })
-    );
+    expect(prismaMock.sweepstakesParticipant.findMany).toHaveBeenCalledWith({
+      where: { sweepstakesId: 'sw-1' },
+      select: {
+        id: true,
+        createdAt: true,
+        user: { select: { id: true, email: true } },
+        _count: { select: { taskCompletions: true } }
+      },
+      orderBy: { createdAt: 'asc' },
+      take: 500
+    });
   });
 
   it('reads the jobs of a giveaway', async () => {
@@ -143,8 +164,19 @@ describe('readE2eRows', () => {
     expect(
       await readE2eRows({ db, query: { view: 'jobs', id: 'sw-1' } })
     ).toEqual({ jobs });
-    expect(prismaMock.sweepstakesJob.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { sweepstakesId: 'sw-1' } })
-    );
+    expect(prismaMock.sweepstakesJob.findMany).toHaveBeenCalledWith({
+      where: { sweepstakesId: 'sw-1' },
+      select: { type: true, status: true, runAt: true },
+      orderBy: { type: 'asc' },
+      take: 500
+    });
+  });
+
+  it('refuses a view that does not exist', async () => {
+    expect(() =>
+      readE2eRows({ db, query: { view: 'users' } as never })
+    ).toThrow('Unexpected value');
+    expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
+    expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
   });
 });

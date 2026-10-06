@@ -3,6 +3,7 @@ import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { e2eSweepstakesRequestSchema } from '@giveaway/e2e-model/requests';
 import { applySweepstakesChanges } from '@giveaway/sweepstakes-access/shared';
+import { FORM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { seedE2eSweepstakes } from '../sweepstakes';
 import { e2eUser, NOW, realUser, teamRow } from './fixtures';
 
@@ -76,6 +77,15 @@ describe('seedE2eSweepstakes', () => {
     });
   });
 
+  it('reads the new giveaway back in the shape of the editor form', async () => {
+    await seed({});
+
+    expect(prismaMock.sweepstakes.findUniqueOrThrow).toHaveBeenCalledWith({
+      where: { id: ID },
+      include: FORM_SWEEPSTAKES_PAYLOAD
+    });
+  });
+
   it('applies the changes as the owner persona', async () => {
     await seed({});
 
@@ -94,6 +104,27 @@ describe('seedE2eSweepstakes', () => {
     });
   });
 
+  it('acts as the owner when another member comes first', async () => {
+    prismaMock.team.findUnique.mockResolvedValue(
+      teamRow({
+        members: [
+          { role: 'ADMIN', user: e2eUser('admin') },
+          { role: 'OWNER', user: { ...e2eUser('host'), name: null as never } }
+        ]
+      })
+    );
+
+    await seed({});
+
+    expect(vi.mocked(applySweepstakesChanges).mock.calls[0][0].user).toEqual(
+      expect.objectContaining({
+        id: 'user-host',
+        name: '',
+        email: 'e2e-host-abc123@example.com'
+      })
+    );
+  });
+
   it('names the giveaway after the namespace and keeps the other editor values', async () => {
     await seed({ name: 'Summer', description: '<img src=x onerror=alert(1)>' });
 
@@ -104,6 +135,12 @@ describe('seedE2eSweepstakes', () => {
     });
     expect(appliedInput().audience).toBeDefined();
     expect(appliedInput().criteria).toBeDefined();
+  });
+
+  it('uses an empty description when the request sends one', async () => {
+    await seed({ description: '' });
+
+    expect(appliedInput().setup?.description).toBe('');
   });
 
   it('keeps the default description when none is given', async () => {
@@ -189,14 +226,26 @@ describe('seedE2eSweepstakes', () => {
     });
 
     await expect(seed({ slug: 'e2e-abc123-xss' })).rejects.toMatchObject({
-      code: 'CONFLICT'
+      code: 'CONFLICT',
+      message: 'The giveaway slug e2e-abc123-xss is already taken'
+    });
+    expect(prismaMock.sweepstakesVisibility.findUnique).toHaveBeenCalledWith({
+      where: { slug: 'e2e-abc123-xss' },
+      select: { id: true }
     });
     expect(prismaMock.sweepstakes.create).not.toHaveBeenCalled();
   });
 
+  it('does not look up a slug when the request has none', async () => {
+    await seed({});
+
+    expect(prismaMock.sweepstakesVisibility.findUnique).not.toHaveBeenCalled();
+  });
+
   it('refuses a PUBLIC giveaway unless public giveaways are allowed', async () => {
     await expect(seed({ visibility: 'PUBLIC' })).rejects.toMatchObject({
-      code: 'FORBIDDEN'
+      code: 'FORBIDDEN',
+      message: 'A PUBLIC giveaway needs E2E_ALLOW_PUBLIC=1'
     });
     expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     expect(prismaMock.sweepstakes.create).not.toHaveBeenCalled();
@@ -231,7 +280,8 @@ describe('seedE2eSweepstakes', () => {
     );
 
     await expect(seed({})).rejects.toMatchObject({
-      code: 'PRECONDITION_FAILED'
+      code: 'PRECONDITION_FAILED',
+      message: 'Team e2e-abc123-w0 has no owner'
     });
     expect(prismaMock.sweepstakes.create).not.toHaveBeenCalled();
   });
@@ -239,28 +289,27 @@ describe('seedE2eSweepstakes', () => {
   it('expires the cache tags of the giveaway at once', async () => {
     await seed({});
 
-    const calls = nextCacheMock.revalidateTag.mock.calls;
-    expect(calls).toEqual(
-      expect.arrayContaining([
-        [`sweepstakes-${ID}`, { expire: 0 }],
-        [`sweepstakes-${ID}-privacy`, { expire: 0 }],
-        ['participant-sweepstake', { expire: 0 }],
-        ['winners-leaderboard', { expire: 0 }]
-      ])
-    );
-    expect(calls.every(([, profile]) => profile !== 'max')).toBe(true);
-    expect(calls.map(([tag]) => tag)).not.toContain('public-sweepstakes-list');
+    expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
+      [`sweepstakes-${ID}`, { expire: 0 }],
+      [`sweepstakes-${ID}-privacy`, { expire: 0 }],
+      ['participant-sweepstake', { expire: 0 }],
+      ['winners-leaderboard', { expire: 0 }]
+    ]);
   });
 
   it('also expires the browse lists for a PUBLIC giveaway', async () => {
     await seed({ visibility: 'PUBLIC' }, true);
 
-    expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
-      'public-sweepstakes-list',
-      {
-        expire: 0
-      }
-    );
+    expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
+      [`sweepstakes-${ID}`, { expire: 0 }],
+      [`sweepstakes-${ID}-privacy`, { expire: 0 }],
+      ['participant-sweepstake', { expire: 0 }],
+      ['winners-leaderboard', { expire: 0 }],
+      ['public-sweepstakes-list', { expire: 0 }],
+      ['historical-sweepstakes-list', { expire: 0 }],
+      ['browse-hosts', { expire: 0 }],
+      ['total-engagements', { expire: 0 }]
+    ]);
   });
 
   it('returns what the test needs', async () => {

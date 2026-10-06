@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { e2eTeamRequestSchema } from '@giveaway/e2e-model/requests';
+import { E2E_TEAM_SELECT } from '../ownership';
 import { seedE2eTeam } from '../teams';
 import { e2eUser, NOW, realUser, teamRow } from './fixtures';
 
@@ -52,6 +53,32 @@ describe('seedE2eTeam', () => {
     });
     expect(prismaMock.membership.count).not.toHaveBeenCalled();
     expect(result).toMatchObject({ created: true, team: TEAM });
+  });
+
+  it('looks for the team before it writes', async () => {
+    await seed({});
+
+    expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
+      where: { slug: 'e2e-abc123-w0' },
+      select: E2E_TEAM_SELECT
+    });
+  });
+
+  it('upserts each persona and reads back only its id and email', async () => {
+    await seed({});
+
+    expect(prismaMock.user.upsert).toHaveBeenCalledWith({
+      where: { email: 'e2e-host-abc123@example.com' },
+      update: { accountType: 'HOST', onboarded: true },
+      create: {
+        email: 'e2e-host-abc123@example.com',
+        emailVerified: NOW,
+        name: 'E2E host',
+        accountType: 'HOST',
+        onboarded: true
+      },
+      select: { id: true, email: true }
+    });
   });
 
   it('signs up each persona with its computed email and gives it its role', async () => {

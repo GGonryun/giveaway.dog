@@ -16,7 +16,7 @@ export const newE2eProviders = () => {
       name: 'E2E',
       credentials: { secret: { label: 'Secret', type: 'password' } },
       authorize: async (credentials) => {
-        if (!verifyE2eSecret(credentials?.secret)) return null;
+        if (!verifyE2eSecret(credentials.secret)) return null;
 
         return await prisma.user.upsert({
           where: { email: E2E_USER_EMAIL },

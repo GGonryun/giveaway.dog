@@ -32,12 +32,10 @@ export const toE2ePersonaEmail = (persona: E2ePersona, ns: string) =>
   `e2e-${persona}-${ns}@example.com`;
 
 export const isE2eEmail = (email: string | null | undefined) =>
-  typeof email === 'string' && E2E_EMAIL_PATTERN.test(email);
+  !!email?.match(E2E_EMAIL_PATTERN);
 
-export const toE2eNamespaceOfEmail = (email: string | null | undefined) => {
-  if (typeof email !== 'string') return undefined;
-  return E2E_PERSONA_EMAIL_PATTERN.exec(email)?.[2];
-};
+export const toE2eNamespaceOfEmail = (email: string | null | undefined) =>
+  email?.match(E2E_PERSONA_EMAIL_PATTERN)?.[2];
 
 type E2ePersonaAttributes = {
   accountType: UserAccountType;

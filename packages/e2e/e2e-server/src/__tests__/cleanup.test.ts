@@ -34,29 +34,38 @@ describe('deleteE2eRun', () => {
   it('looks only for the teams and users of the run', async () => {
     await deleteE2eRun({ db, runId: 'abc123' });
 
-    expect(prismaMock.team.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: {
-          AND: [
-            { slug: { startsWith: 'e2e-' } },
-            { slug: { startsWith: 'e2e-abc123' } }
-          ]
-        },
-        take: E2E_TEAM_BATCH + 1
-      })
-    );
-    expect(prismaMock.user.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: {
-          AND: [
-            { email: { startsWith: 'e2e-', endsWith: '@example.com' } },
-            { NOT: { email: 'e2e-host@example.com' } },
-            { email: { contains: '-abc123' } }
-          ]
-        },
-        take: E2E_USER_BATCH + 1
-      })
-    );
+    expect(prismaMock.team.findMany).toHaveBeenCalledWith({
+      where: {
+        AND: [
+          { slug: { startsWith: 'e2e-' } },
+          { slug: { startsWith: 'e2e-abc123' } }
+        ]
+      },
+      select: {
+        id: true,
+        slug: true,
+        members: { select: { user: { select: { email: true } } } },
+        sweepstakes: { select: { id: true } }
+      },
+      orderBy: { createdAt: 'asc' },
+      take: E2E_TEAM_BATCH + 1
+    });
+    expect(prismaMock.user.findMany).toHaveBeenCalledWith({
+      where: {
+        AND: [
+          { email: { startsWith: 'e2e-', endsWith: '@example.com' } },
+          { NOT: { email: 'e2e-host@example.com' } },
+          { email: { contains: '-abc123' } }
+        ]
+      },
+      select: {
+        id: true,
+        email: true,
+        teams: { select: { team: { select: { slug: true } } } }
+      },
+      orderBy: { createdAt: 'asc' },
+      take: E2E_USER_BATCH + 1
+    });
   });
 
   it('deletes the picker draws of the teams before the teams', async () => {
@@ -170,6 +179,41 @@ describe('deleteE2eRun', () => {
 
     expect(result.more).toBe(true);
     expect(result.teams.deleted).toHaveLength(E2E_TEAM_BATCH);
+  });
+
+  it('reports no more when a batch is exactly full', async () => {
+    prismaMock.team.findMany.mockResolvedValue(
+      Array.from({ length: E2E_TEAM_BATCH }, (_, i) => team(`e2e-abc123-${i}`))
+    );
+    prismaMock.user.findMany.mockResolvedValue(
+      Array.from({ length: E2E_USER_BATCH }, (_, i) =>
+        user(`e2e-host-abc123u${i}@example.com`)
+      )
+    );
+
+    const result = await deleteE2eRun({ db, runId: 'abc123' });
+
+    expect(result.more).toBe(false);
+    expect(result.teams.deleted).toHaveLength(E2E_TEAM_BATCH);
+    expect(result.users.deleted).toBe(E2E_USER_BATCH);
+  });
+
+  it('deletes one batch of users and reports more when more are left', async () => {
+    prismaMock.user.findMany.mockResolvedValue(
+      Array.from({ length: E2E_USER_BATCH + 1 }, (_, i) =>
+        user(`e2e-host-abc123u${i}@example.com`)
+      )
+    );
+
+    const result = await deleteE2eRun({ db, runId: 'abc123' });
+
+    expect(result.more).toBe(true);
+    expect(result.users.deleted).toBe(E2E_USER_BATCH);
+    const [{ where }] = prismaMock.user.deleteMany.mock.calls[0];
+    expect(where.id.in).toHaveLength(E2E_USER_BATCH);
+    expect(where.id.in).not.toContain(
+      `id-e2e-host-abc123u${E2E_USER_BATCH}@example.com`
+    );
   });
 
   it('expires the cache tags of the deleted giveaways', async () => {

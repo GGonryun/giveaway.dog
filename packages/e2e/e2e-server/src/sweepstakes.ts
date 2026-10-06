@@ -32,7 +32,7 @@ const toSessionUser = (
   const session = {
     id: user.id,
     name: user.name ?? '',
-    email: user.email ?? '',
+    email: user.email,
     image: user.image ?? '',
     username: user.username ?? '',
     onboarded: user.onboarded,
@@ -140,7 +140,9 @@ export const seedE2eSweepstakes = async ({
       setup: {
         ...input.setup,
         name,
-        description: request.description ?? input.setup?.description
+        ...(request.description !== undefined && {
+          description: request.description
+        })
       },
       timing: { ...timing, timeZone: E2E_TIME_ZONE },
       visibility: {

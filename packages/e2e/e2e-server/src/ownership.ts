@@ -29,27 +29,35 @@ export const E2E_TEAM_SELECT = {
   }
 } satisfies Prisma.TeamSelect;
 
-export type E2eTeam = Prisma.TeamGetPayload<{
-  select: typeof E2E_TEAM_SELECT;
-}>;
-
 type TeamMembers = {
   slug: string;
   members: { user: { email: string | null } }[];
 };
 
+type WithE2eEmails<T extends TeamMembers> = {
+  members: (T['members'][number] & { user: { email: string } })[];
+};
+
+type E2eTeamRow = Prisma.TeamGetPayload<{
+  select: typeof E2E_TEAM_SELECT;
+}>;
+
+export type E2eTeam = Omit<E2eTeamRow, 'members'> & WithE2eEmails<E2eTeamRow>;
+
 export const isE2eOnlyTeam = (team: TeamMembers) =>
   isE2eTeamSlug(team.slug) &&
   team.members.every((member) => isE2eEmail(member.user.email));
 
-export const assertE2eOnlyTeam = (team: TeamMembers) => {
+export function assertE2eOnlyTeam<T extends TeamMembers>(
+  team: T
+): asserts team is T & WithE2eEmails<T> {
   if (!isE2eOnlyTeam(team)) {
     throw new ApplicationError({
       code: 'FORBIDDEN',
       message: `Team ${team.slug} has a member who is not an e2e user`
     });
   }
-};
+}
 
 export const findE2eTeam = async (
   db: PrismaClient,
