@@ -1,0 +1,66 @@
+name: Labels
+
+on:
+  push:
+    paths:
+      - .github/labels.json
+      - .github/workflows/labels.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Sync labels
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    steps:
+      - name: Check out the label list
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/labels.json
+          sparse-checkout-cone-mode: false
+
+      - name: Create and update the labels
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('node:fs');
+            const wanted = JSON.parse(fs.readFileSync('.github/labels.json', 'utf8'));
+            const existing = await github.paginate(github.rest.issues.listLabelsForRepo, {
+              ...context.repo,
+              per_page: 100,
+            });
+            const byName = new Map(existing.map((label) => [label.name.toLowerCase(), label]));
+            for (const { name, color, description } of wanted) {
+              const current = byName.get(name.toLowerCase());
+              if (!current) {
+                await github.rest.issues.createLabel({ ...context.repo, name, color, description });
+                core.info(`Created ${name}`);
+              } else if (
+                current.name !== name ||
+                current.color.toLowerCase() !== color.toLowerCase() ||
+                (current.description ?? '') !== description
+              ) {
+                await github.rest.issues.updateLabel({
+                  ...context.repo,
+                  name: current.name,
+                  new_name: name,
+                  color,
+                  description,
+                });
+                core.info(`Updated ${name}`);
+              }
+            }
+            const names = new Set(wanted.map((label) => label.name.toLowerCase()));
+            const extra = existing.filter((label) => !names.has(label.name.toLowerCase()));
+            if (extra.length > 0) {
+              core.warning(`Labels not in .github/labels.json: ${extra.map((label) => label.name).join(', ')}`);
+            }
