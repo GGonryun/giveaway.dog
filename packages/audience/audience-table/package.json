@@ -29,8 +29,9 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "test:unit": "vitest run --project server --project frontend",
+    "test:unit": "vitest run --project server --project property --project frontend",
     "test:server": "vitest run --project server",
+    "test:property": "vitest run --project property --passWithNoTests",
     "test:frontend": "vitest run --project frontend",
     "test:snapshot": "vitest run --project snapshot"
   },

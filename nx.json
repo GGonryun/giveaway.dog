@@ -53,6 +53,14 @@
       "inputs": ["source", "^runtime"],
       "outputs": ["{projectRoot}/.vitest-reports/server.json"]
     },
+    "test:property": {
+      "cache": true,
+      "inputs": ["source", "^runtime"],
+      "outputs": [
+        "{projectRoot}/.vitest-reports/property.json",
+        "{projectRoot}/coverage/property"
+      ]
+    },
     "test:frontend": {
       "cache": true,
       "inputs": ["source", "^runtime"],

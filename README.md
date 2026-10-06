@@ -1,6 +1,7 @@
 # Giveaway Dog
 
-[![coverage](https://github.com/GGonryun/giveaway.dog/blob/badges/coverage.svg?raw=true)](https://github.com/GGonryun/giveaway.dog/actions/workflows/ci.yml)
+[![coverage](https://github.com/GGonryun/giveaway.dog/blob/badges/coverage.svg?raw=true)](https://github.com/GGonryun/giveaway.dog/blob/badges/coverage-history.csv)
+[![property coverage](https://github.com/GGonryun/giveaway.dog/blob/badges/property-coverage.svg?raw=true)](https://github.com/GGonryun/giveaway.dog/blob/badges/coverage-history.csv)
 
 ## License
 

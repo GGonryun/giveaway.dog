@@ -23,7 +23,8 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "test:property": "vitest run --project property --passWithNoTests"
   },
   "dependencies": {
     "@giveaway/db-model": "workspace:*"

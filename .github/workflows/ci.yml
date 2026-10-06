@@ -128,6 +128,8 @@ jobs:
     name: Server tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    env:
+      NX_RUN: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
     strategy:
       fail-fast: false
       matrix:
@@ -182,10 +184,80 @@ jobs:
           path: .nx/ci-cache
           key: ${{ steps.nx-cache.outputs.key }}
 
+  property:
+    name: Property tests ${{ matrix.shard }}/${{ strategy.job-total }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    env:
+      NX_RUN: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1]
+    outputs:
+      coverage: ${{ steps.coverage.outputs.lines }}
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set the base and head commits for nx affected
+        if: env.NX_RUN == 'affected'
+        uses: nrwl/nx-set-shas@v5
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Set up the Nx cache
+        id: nx-cache
+        uses: ./.github/actions/nx-cache
+        with:
+          id: property-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:property ${{ matrix.shard }} ${{ strategy.job-total }}
+
+      - name: Vitest property tests with coverage
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:property --projects="$PROJECTS" --output-style=static -- --coverage --coverage.reportsDirectory=coverage/property --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/property.json
+
+      - name: Collect the test reports
+        if: steps.projects.outputs.projects
+        run: node .github/scripts/collect-vitest-reports.mjs property
+
+      - name: Upload the test reports
+        if: steps.projects.outputs.projects
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-report-property-${{ matrix.shard }}
+          path: .vitest-reports/
+          include-hidden-files: true
+          retention-days: 1
+
+      - name: Report the property coverage
+        if: steps.projects.outputs.projects
+        id: coverage
+        continue-on-error: true
+        run: node .github/scripts/property-coverage.mjs
+
+      - name: Save the Nx cache
+        if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .nx/ci-cache
+          key: ${{ steps.nx-cache.outputs.key }}
+
   frontend:
     name: Frontend tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
+    env:
+      NX_RUN: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
     strategy:
       fail-fast: false
       matrix:
@@ -242,9 +314,10 @@ jobs:
 
   coverage:
     name: Coverage
-    needs: [server, frontend]
+    needs: [server, property, frontend]
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
+    continue-on-error: true
     outputs:
       coverage: ${{ steps.coverage.outputs.lines }}
     steps:
@@ -476,12 +549,12 @@ jobs:
       - lint
       - type-check
       - server
+      - property
       - frontend
       - snapshot
       - visual
       - integration
       - mutation
-      - coverage
     if: ${{ always() }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 5
@@ -503,30 +576,48 @@ jobs:
 
   badge:
     name: Coverage badge
-    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
-    needs: coverage
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: [coverage, property]
     runs-on: ubuntu-slim
     timeout-minutes: 5
+    continue-on-error: true
     permissions:
       contents: write
     steps:
-      - name: Publish the badge to the badges branch
+      - name: Publish the badges and the history to the badges branch
         env:
           COVERAGE: ${{ needs.coverage.outputs.coverage }}
+          PROPERTY_COVERAGE: ${{ needs.property.outputs.coverage }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          color=red
-          if awk "BEGIN { exit !($COVERAGE >= 50) }"; then color=yellow; fi
-          if awk "BEGIN { exit !($COVERAGE >= 80) }"; then color=brightgreen; fi
-          mkdir badges
+          badge() {
+            if [ -z "$3" ]; then
+              echo "::warning::No value for $1, so it keeps its last value."
+              return
+            fi
+            local color=red
+            if awk "BEGIN { exit !($3 >= 50) }"; then color=yellow; fi
+            if awk "BEGIN { exit !($3 >= 80) }"; then color=brightgreen; fi
+            curl --fail --silent --show-error --location --retry 3 \
+              --output "$1" \
+              "https://img.shields.io/badge/${2}-${3}%25-${color}"
+          }
+          git init --quiet --initial-branch badges badges
           cd badges
-          curl --fail --silent --show-error --location --retry 3 \
-            --output coverage.svg \
-            "https://img.shields.io/badge/coverage-${COVERAGE}%25-${color}"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads origin badges > /dev/null; then
+            git fetch --quiet origin badges
+            git checkout --quiet -B badges FETCH_HEAD
+          fi
+          badge coverage.svg coverage "$COVERAGE"
+          badge property-coverage.svg property%20coverage "$PROPERTY_COVERAGE"
           echo '{ "git": { "deploymentEnabled": false } }' > vercel.json
-          git init --quiet --initial-branch badges
-          git add coverage.svg vercel.json
+          if [ ! -f coverage-history.csv ]; then
+            echo 'date,commit,coverage,property_coverage,run' > coverage-history.csv
+          fi
+          echo "$(date -u +%Y-%m-%dT%H:%M:%SZ),${GITHUB_SHA},${COVERAGE},${PROPERTY_COVERAGE},${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >> coverage-history.csv
+          git add --all
           git -c user.name='github-actions[bot]' \
             -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-            commit --quiet --message 'update coverage badge'
-          git push --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" badges
+            commit --quiet --message "Coverage of ${GITHUB_SHA::7}"
+          git push --quiet origin badges
