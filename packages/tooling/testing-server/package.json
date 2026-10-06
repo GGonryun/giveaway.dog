@@ -27,6 +27,7 @@
     "./fixtures-twitch": "./src/fixtures-twitch.ts",
     "./next-cache": "./src/next-cache.ts",
     "./prisma": "./src/prisma.ts",
+    "./property": "./src/property.ts",
     "./result": "./src/result.ts",
     "./session": "./src/session.ts",
     "./setup": "./src/setup.ts"
@@ -36,7 +37,8 @@
   },
   "dependencies": {
     "@giveaway/testing-mocks": "workspace:*",
-    "@prisma/client": "catalog:"
+    "@prisma/client": "catalog:",
+    "fast-check": "catalog:"
   },
   "peerDependencies": {
     "vitest": "catalog:"
