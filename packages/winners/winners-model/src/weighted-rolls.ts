@@ -5,25 +5,30 @@ export type WeightedItem<T> = {
 
 export type WeightedIndex = {
   prefix: number[];
+  positions: number[];
   total: number;
 };
 
+const hasPositiveWeight = <T>(item: WeightedItem<T>) => item.weight > 0;
+
 export function buildWeightedIndex<T>(items: WeightedItem<T>[]): WeightedIndex {
   const prefix: number[] = [];
+  const positions: number[] = [];
   let total = 0;
 
-  for (const item of items) {
-    if (item.weight <= 0) continue;
+  items.forEach((item, position) => {
+    if (!hasPositiveWeight(item)) return;
 
     total += item.weight;
     prefix.push(total);
-  }
+    positions.push(position);
+  });
 
   if (total === 0) {
     throw new Error('Total weight must be greater than 0');
   }
 
-  return { prefix, total };
+  return { prefix, positions, total };
 }
 
 export function pickWeightedIndex(
@@ -41,7 +46,7 @@ export function pickWeightedIndex(
     else lo = mid + 1;
   }
 
-  return lo;
+  return index.positions[lo];
 }
 
 export function pickWeightedValue<T>(
@@ -79,7 +84,7 @@ export function pickUniqueWeighted<T>(
   count: number,
   rng?: () => number
 ): T[] {
-  const pool = [...items];
+  const pool = items.filter(hasPositiveWeight);
   const results: T[] = [];
 
   for (let i = 0; i < count && pool.length > 0; i++) {

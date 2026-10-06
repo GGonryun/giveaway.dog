@@ -84,6 +84,7 @@ describe('buildWeightedIndex', () => {
     const index = buildWeightedIndex(items);
 
     expect(index.prefix).toEqual([5, 8]);
+    expect(index.positions).toEqual([0, 3]);
     expect(index.total).toBe(8);
   });
 
@@ -136,7 +137,7 @@ describe('buildWeightedIndex', () => {
 
 describe('pickWeightedIndex', () => {
   it('should always return 0 for single item', () => {
-    const index = { prefix: [10], total: 10 };
+    const index = { prefix: [10], positions: [0], total: 10 };
 
     for (let i = 0; i < 10; i++) {
       expect(pickWeightedIndex(index)).toBe(0);
@@ -144,14 +145,14 @@ describe('pickWeightedIndex', () => {
   });
 
   it('should select first item when rng returns 0', () => {
-    const index = { prefix: [5, 8, 10], total: 10 };
+    const index = { prefix: [5, 8, 10], positions: [0, 1, 2], total: 10 };
     const rng = () => 0;
 
     expect(pickWeightedIndex(index, rng)).toBe(0);
   });
 
   it('should select items based on weight ranges', () => {
-    const index = { prefix: [5, 8, 10], total: 10 };
+    const index = { prefix: [5, 8, 10], positions: [0, 1, 2], total: 10 };
 
     expect(pickWeightedIndex(index, () => 0)).toBe(0);
     expect(pickWeightedIndex(index, () => 0.499)).toBe(0);
@@ -162,7 +163,7 @@ describe('pickWeightedIndex', () => {
   });
 
   it('should handle edge case at boundaries', () => {
-    const index = { prefix: [1, 2, 3], total: 3 };
+    const index = { prefix: [1, 2, 3], positions: [0, 1, 2], total: 3 };
 
     expect(pickWeightedIndex(index, () => 0.333)).toBe(0);
     expect(pickWeightedIndex(index, () => 0.334)).toBe(1);
@@ -171,7 +172,7 @@ describe('pickWeightedIndex', () => {
   });
 
   it('should select index 0 for weight [1,1,1] when rng < 0.33', () => {
-    const index = { prefix: [1, 2, 3], total: 3 };
+    const index = { prefix: [1, 2, 3], positions: [0, 1, 2], total: 3 };
     let count = 0;
 
     for (let i = 0; i < 100; i++) {
@@ -607,45 +608,102 @@ describe('custom rng', () => {
 });
 
 describe('zero weight index alignment', () => {
-  it('returns a zero weight item that precedes positive items', () => {
+  it('returns the position of the item, not of the prefix entry', () => {
+    const index = { prefix: [5, 7], positions: [0, 2], total: 7 };
+
+    expect(pickWeightedIndex(index, () => 0)).toBe(0);
+    expect(pickWeightedIndex(index, () => 0.9)).toBe(2);
+  });
+
+  it('never returns a zero weight item that precedes positive items', () => {
     const items: WeightedItem<string>[] = [
       { item: 'zero', weight: 0 },
       { item: 'one', weight: 1 }
     ];
+    const index = buildWeightedIndex(items);
 
-    expect(pickWeightedValue(items, buildWeightedIndex(items), () => 0)).toBe(
-      'zero'
-    );
+    expect(pickWeightedValue(items, index, () => 0)).toBe('one');
+    expect(pickWeightedValue(items, index, () => 0.99)).toBe('one');
   });
 
-  it('never returns an item positioned after the number of positive weights', () => {
+  it('returns the item after a zero weight item for its share of the range', () => {
     const items: WeightedItem<string>[] = [
+      { item: 'a', weight: 5 },
       { item: 'zero', weight: 0 },
-      { item: 'one', weight: 1 }
+      { item: 'c', weight: 2 }
+    ];
+    const index = buildWeightedIndex(items);
+
+    expect(pickWeightedValue(items, index, () => 0.7)).toBe('a');
+    expect(pickWeightedValue(items, index, () => 0.72)).toBe('c');
+    expect(pickWeightedValue(items, index, () => 0.99)).toBe('c');
+  });
+
+  it('skips negative weight items', () => {
+    const items: WeightedItem<string>[] = [
+      { item: 'negative', weight: -3 },
+      { item: 'a', weight: 1 },
+      { item: 'b', weight: 1 }
     ];
 
-    expect(pickManyWeighted(items, 3, () => 0.99)).toEqual([
-      'zero',
-      'zero',
-      'zero'
-    ]);
+    expect(pickManyWeighted(items, 2, sequence(0, 0.99))).toEqual(['a', 'b']);
   });
 
-  it('throws from pickUniqueWeighted once only zero weight items remain', () => {
+  it('matches the weights when a zero weight item sits between positive items', () => {
+    const items: WeightedItem<string>[] = [
+      { item: 'a', weight: 5 },
+      { item: 'zero', weight: 0 },
+      { item: 'c', weight: 2 }
+    ];
+    const counts: Record<string, number> = { a: 0, zero: 0, c: 0 };
+    const iterations = 7000;
+
+    for (const value of pickManyWeighted(items, iterations)) {
+      counts[value]++;
+    }
+
+    expect(counts.zero).toBe(0);
+    expect(counts.a).toBeGreaterThan(5000 - 200);
+    expect(counts.a).toBeLessThan(5000 + 200);
+    expect(counts.c).toBeGreaterThan(2000 - 200);
+    expect(counts.c).toBeLessThan(2000 + 200);
+  });
+
+  it('never returns a zero weight item from pickUniqueWeighted', () => {
+    const items: WeightedItem<string>[] = [
+      { item: 'a', weight: 5 },
+      { item: 'zero', weight: 0 },
+      { item: 'c', weight: 2 }
+    ];
+
+    expect(pickUniqueWeighted(items, 1, () => 0.99)).toEqual(['c']);
+    expect(pickUniqueWeighted(items, 3, () => 0)).toEqual(['a', 'c']);
+  });
+
+  it('stops pickUniqueWeighted once only zero weight items remain', () => {
     const items: WeightedItem<string>[] = [
       { item: 'a', weight: 1 },
       { item: 'b', weight: 0 }
     ];
 
-    expect(() => pickUniqueWeighted(items, 2, () => 0)).toThrow(
-      'Total weight must be greater than 0'
-    );
+    expect(pickUniqueWeighted(items, 2, () => 0)).toEqual(['a']);
+  });
+
+  it('returns nothing from pickUniqueWeighted when every weight is zero or negative', () => {
+    const items: WeightedItem<string>[] = [
+      { item: 'a', weight: 0 },
+      { item: 'b', weight: -1 }
+    ];
+
+    expect(pickUniqueWeighted(items, 2)).toEqual([]);
   });
 
   it('uses Math.random when no rng is provided', () => {
     vi.mocked(Math.random).mockReturnValue(0.9);
 
-    expect(pickWeightedIndex({ prefix: [1, 2], total: 2 })).toBe(1);
+    expect(
+      pickWeightedIndex({ prefix: [1, 2], positions: [0, 1], total: 2 })
+    ).toBe(1);
     expect(Math.random).toHaveBeenCalledTimes(1);
   });
 });

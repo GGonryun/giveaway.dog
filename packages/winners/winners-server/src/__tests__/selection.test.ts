@@ -857,8 +857,8 @@ describe('prize draw characterization', () => {
       expect(result).toHaveLength(1);
     });
 
-    it('throws when every remaining completion has zero value', () => {
-      expect(() =>
+    it('leaves the slot empty when every remaining completion has zero value', () => {
+      expect(
         toUniquePrizeDraw({
           slots: [{ prizeId: 'p-1' }],
           draws: [],
@@ -868,10 +868,10 @@ describe('prize draw characterization', () => {
           ],
           allocations: []
         })
-      ).toThrow('Total weight must be greater than 0');
+      ).toEqual([]);
     });
 
-    it('can pick a zero value completion that precedes a positive one', () => {
+    it('never picks a zero value completion that precedes a positive one', () => {
       vi.spyOn(Math, 'random').mockReturnValue(0);
       const zero = buildExpandedCompletion({
         id: 'c-zero',
@@ -892,7 +892,40 @@ describe('prize draw characterization', () => {
         allocations: []
       });
 
-      expect(result[0].taskCompletionId).toBe('c-zero');
+      expect(result).toHaveLength(1);
+      expect(result[0].taskCompletionId).toBe('c-positive');
+    });
+
+    it('picks the positive completion after a zero value one for its share of the range', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.99);
+      const first = buildExpandedCompletion({
+        id: 'c-first',
+        userId: 'u-first',
+        value: 1
+      });
+      const zero = buildExpandedCompletion({
+        id: 'c-zero',
+        userId: 'u-zero',
+        value: 0
+      });
+      const last = buildExpandedCompletion({
+        id: 'c-last',
+        userId: 'u-last',
+        value: 1
+      });
+
+      const result = toUniquePrizeDraw({
+        slots: [{ prizeId: 'p-1' }, { prizeId: 'p-2' }, { prizeId: 'p-3' }],
+        draws: [],
+        criteria: criteria(),
+        completions: [first, zero, last],
+        allocations: []
+      });
+
+      expect(result.map((draw) => draw.taskCompletionId)).toEqual([
+        'c-last',
+        'c-first'
+      ]);
     });
   });
 
@@ -1020,6 +1053,33 @@ describe('prize draw characterization', () => {
           allocations: []
         })
       ).toThrow('Total weight must be greater than 0');
+    });
+
+    it('never picks a zero value completion that precedes a positive one', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+      const zero = buildExpandedCompletion({
+        id: 'c-zero',
+        userId: 'u-zero',
+        value: 0
+      });
+      const positive = buildExpandedCompletion({
+        id: 'c-positive',
+        userId: 'u-positive',
+        value: 1
+      });
+
+      const result = toDuplicatePrizeDraw({
+        slots: [{ prizeId: 'p-1' }, { prizeId: 'p-2' }],
+        draws: [],
+        criteria: criteria({ allowMultipleWins: true }),
+        completions: [zero, positive],
+        allocations: []
+      });
+
+      expect(result.map((draw) => draw.taskCompletionId)).toEqual([
+        'c-positive',
+        'c-positive'
+      ]);
     });
   });
 });
