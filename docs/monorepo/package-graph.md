@@ -29,7 +29,7 @@ apps/
   web/                    Next.js routes only: page, layout, route and loading files
   web-e2e/                Playwright tests
 packages/
-  tooling/                tsconfig, eslint-config, vitest-config, testing-mocks, testing-server, testing-dom, testing-visual
+  tooling/                tsconfig, eslint-config, vitest-config, testing-mocks, testing-server, testing-dom, testing-visual, testing-postgres, testing-integration
   shared/                 util-*: helpers with no React and no server dependencies
   infra/                  db-*, cache, ratelimit, rpc-*, email, jobs, request-context-*, turnstile-*
   ui/                     ui-*: the design system, theme-*
@@ -383,16 +383,18 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 ### Tooling
 
-6 packages, 9 source files, 0 test files.
+8 packages, 15 source files, 0 test files.
 
-| Package                    | Type   | Files | Moves from                                                                                      |
-| -------------------------- | ------ | ----- | ----------------------------------------------------------------------------------------------- |
-| `@giveaway/eslint-config`  | config | 0 / 0 | Flat ESLint presets, the snapshot-assertion rule and the module boundary rules.                 |
-| `@giveaway/testing-dom`    | config | 1 / 0 | `test/setup-dom.ts`                                                                             |
-| `@giveaway/testing-server` | config | 5 / 0 | `test/next-cache.ts`<br>`test/prisma.ts`<br>`test/result.ts`<br>`test/session.ts`<br>and 1 more |
-| `@giveaway/testing-visual` | config | 3 / 0 | `test/visual/`                                                                                  |
-| `@giveaway/tsconfig`       | config | 0 / 0 | Shared tsconfig presets (base, library, react-library, nextjs).                                 |
-| `@giveaway/vitest-config`  | config | 0 / 0 | Helpers that define the server, frontend and snapshot projects for each package.                |
+| Package                         | Type   | Files | Moves from                                                                                                                   |
+| ------------------------------- | ------ | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `@giveaway/eslint-config`       | config | 0 / 0 | Flat ESLint presets, the snapshot-assertion rule and the module boundary rules.                                              |
+| `@giveaway/testing-dom`         | config | 1 / 0 | `test/setup-dom.ts`                                                                                                          |
+| `@giveaway/testing-integration` | config | 3 / 0 | New: the setup of the integration tests (one database per test file, the auth mock), the test database client and fixtures.  |
+| `@giveaway/testing-postgres`    | config | 3 / 0 | New: the Postgres container of the integration tests (Testcontainers), the migrated template database and the Vitest config. |
+| `@giveaway/testing-server`      | config | 5 / 0 | `test/next-cache.ts`<br>`test/prisma.ts`<br>`test/result.ts`<br>`test/session.ts`<br>and 1 more                              |
+| `@giveaway/testing-visual`      | config | 3 / 0 | `test/visual/`                                                                                                               |
+| `@giveaway/tsconfig`            | config | 0 / 0 | Shared tsconfig presets (base, library, react-library, nextjs).                                                              |
+| `@giveaway/vitest-config`       | config | 0 / 0 | Helpers that define the server, frontend and snapshot projects for each package.                                             |
 
 ### Shared utilities
 

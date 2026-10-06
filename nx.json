@@ -63,6 +63,9 @@
       "inputs": ["source", "^runtime"],
       "outputs": []
     },
+    "test:integration": {
+      "inputs": ["source", "^runtime"]
+    },
     "test:visual": {
       "inputs": [
         "source",

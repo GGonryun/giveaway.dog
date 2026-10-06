@@ -1,0 +1,44 @@
+{
+  "name": "@giveaway/testing-integration",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:config",
+      "runtime:isomorphic",
+      "scope:tooling"
+    ],
+    "targets": {
+      "lint": {
+        "command": "eslint packages/tooling/testing-integration",
+        "options": {
+          "cwd": "{workspaceRoot}"
+        },
+        "cache": true
+      }
+    }
+  },
+  "exports": {
+    "./database": "./src/database.ts",
+    "./fixtures": "./src/fixtures.ts",
+    "./setup": "./src/setup.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@giveaway/testing-mocks": "workspace:*",
+    "@giveaway/testing-postgres": "workspace:*",
+    "@prisma/client": "catalog:"
+  },
+  "peerDependencies": {
+    "vitest": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/auth-core": "workspace:*",
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

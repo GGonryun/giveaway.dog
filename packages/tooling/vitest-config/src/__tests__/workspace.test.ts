@@ -60,6 +60,14 @@ describe('workspaceProjects', () => {
     });
   });
 
+  it('leaves the integration tests out of the server project', () => {
+    addPackage(path.join(root, 'packages/ui/ui-button'), '@giveaway/ui-button');
+
+    const [server] = workspaceProjects(root, ['packages']);
+
+    expect(server.test?.exclude).toContain('**/*.integration.test.ts');
+  });
+
   it('skips packages without a config file and node_modules folders', () => {
     addPackage(path.join(root, 'packages/tooling/tsconfig'), 'tsconfig', false);
     addPackage(

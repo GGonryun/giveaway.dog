@@ -10,7 +10,9 @@ export const SERVER_SETUP = '@giveaway/testing-server/setup';
 
 export const DOM_SETUP = '@giveaway/testing-dom/setup';
 
-const EMPTY_MODULE = fileURLToPath(new URL('./empty.ts', import.meta.url));
+export const EMPTY_MODULE = fileURLToPath(
+  new URL('./empty.ts', import.meta.url)
+);
 
 const EXCLUDE = ['**/node_modules/**', '**/.next/**'];
 
@@ -23,7 +25,7 @@ export const testProjects = (): (TestProjectInlineConfiguration & {
       name: 'server',
       environment: 'node',
       include: ['**/*.test.ts'],
-      exclude: EXCLUDE
+      exclude: [...EXCLUDE, '**/*.integration.test.ts']
     }
   },
   {

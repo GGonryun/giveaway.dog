@@ -18,6 +18,7 @@
     "test:visual:docker": "pnpm --recursive --workspace-concurrency=1 --if-present run test:visual:docker",
     "test:visual:docker:update": "pnpm --recursive --workspace-concurrency=1 --if-present run test:visual:docker:update",
     "test:coverage": "vitest run --coverage --project '*:server' --project '*:frontend'",
+    "test:integration": "nx run-many -t test:integration --output-style=static",
     "test:e2e": "pnpm --filter web-e2e run test:e2e",
     "test:e2e:local": "pnpm --filter web-e2e run test:e2e:local",
     "format": "prettier --write .",
