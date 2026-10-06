@@ -1,7 +1,10 @@
 import fc from 'fast-check';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
-import { assertAsyncProperty } from '@giveaway/testing-server/property';
+import {
+  assertAsyncProperty,
+  propertyParameters
+} from '@giveaway/testing-server/property';
 import { verifyDiscordRequest } from '../verify';
 import {
   DISCORD_TEST_PUBLIC_KEY,
@@ -53,7 +56,9 @@ const expectUnauthorized = (error: unknown) => {
   expect(error).toMatchObject({ code: 'UNAUTHORIZED' });
 };
 
-describe('verifyDiscordRequest properties', () => {
+const timeout = (propertyParameters().numRuns ?? 100) * 200;
+
+describe('verifyDiscordRequest properties', { timeout }, () => {
   beforeEach(() => {
     vi.stubEnv('DISCORD_BOT_PUBLIC_KEY', DISCORD_TEST_PUBLIC_KEY);
   });
