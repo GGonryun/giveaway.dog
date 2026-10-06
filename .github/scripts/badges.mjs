@@ -157,10 +157,32 @@ if (e2e === 'success' || e2e === 'failure' || e2e === 'error') {
   });
 }
 
+// Every badge in the README. shields.io shows "resource not found" for a
+// badge whose file is missing, so each one gets a placeholder until its job
+// first reports.
+const README_BADGES = [
+  ['coverage', 'coverage'],
+  ['server-coverage', 'server coverage'],
+  ['frontend-coverage', 'frontend coverage'],
+  ['property-coverage', 'property coverage'],
+  ...TEST_KINDS.map((kind) => [`${kind}-tests`, `${kind} tests`]),
+  ['mutation-tests', 'mutation tests'],
+  ['e2e-tests', 'e2e tests']
+];
+
 fs.mkdirSync(outputDir, { recursive: true });
+const badgeFile = (id) => path.join(outputDir, `${id}.json`);
+for (const [id, label] of README_BADGES) {
+  if (
+    !badges.some((badge) => badge.id === id) &&
+    !fs.existsSync(badgeFile(id))
+  ) {
+    badges.push({ id, label, message: 'no result yet', color: 'lightgrey' });
+  }
+}
 for (const { id, label, message, color } of badges) {
   fs.writeFileSync(
-    path.join(outputDir, `${id}.json`),
+    badgeFile(id),
     `${JSON.stringify({ schemaVersion: 1, label, message, color }, null, 2)}\n`
   );
 }
