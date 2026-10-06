@@ -316,7 +316,6 @@ describe('getWinnersLeaderboard', () => {
         {
           userId: 'u-1',
           userName: 'Alice',
-          userEmail: 'alice@example.com',
           userImage: 'https://example.com/alice.png',
           winCount: 3,
           wins: ['sw-1', 'sw-2', 'sw-3'].map((id) => ({
@@ -331,7 +330,7 @@ describe('getWinnersLeaderboard', () => {
       ]);
     });
 
-    it('exposes the winner email even though the output schema omits it', async () => {
+    it('does not expose the winner email', async () => {
       prismaMock.$queryRaw.mockResolvedValue([
         aggregateRow('u-1', BigInt(1), { userEmail: 'private@example.com' })
       ]);
@@ -339,10 +338,7 @@ describe('getWinnersLeaderboard', () => {
 
       const result = await getWinnersLeaderboard(undefined);
 
-      expect(expectOk(result)[0]).toHaveProperty(
-        'userEmail',
-        'private@example.com'
-      );
+      expect(expectOk(result)[0]).not.toHaveProperty('userEmail');
     });
 
     it('flattens wins across several participations', async () => {
@@ -421,7 +417,6 @@ describe('getWinnersLeaderboard', () => {
         {
           userId: 'u-1',
           userName: 'Name u-1',
-          userEmail: 'u-1@example.com',
           userImage: null,
           winCount: 4,
           wins: []

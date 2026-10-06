@@ -191,7 +191,7 @@ describe('getTeamInvitations', () => {
       expectOutputFailure(result);
     });
 
-    it('accepts invitation timestamps serialized as ISO strings', async () => {
+    it('converts invitation timestamps serialized as ISO strings to dates', async () => {
       signIn();
       prismaMock.team.findFirst.mockResolvedValue(
         callerTeam(TeamRole.OWNER, {
@@ -213,7 +213,7 @@ describe('getTeamInvitations', () => {
           id: 'i-1',
           email: 'a@example.com',
           role: TeamRole.GUEST,
-          createdAt: '2030-01-01T00:00:00.000Z'
+          createdAt: new Date('2030-01-01T00:00:00.000Z')
         }
       ]);
     });

@@ -136,7 +136,7 @@ describe('getSweepstakeEntries', () => {
       expect(expectOk(result)).toEqual([]);
     });
 
-    it('maps a completion into an entry and keeps the raw completion fields', async () => {
+    it('maps a completion into an entry without the raw completion fields', async () => {
       const raw = completion('c-1', '2026-09-01T10:00:00.000Z', {
         proof: { url: 'https://example.com/proof.png' },
         reason: 'Looks good'
@@ -148,11 +148,8 @@ describe('getSweepstakeEntries', () => {
       expect(expectOk(result)).toEqual([
         {
           id: 'c-1',
-          participantId: 'participant-c-1',
-          taskId: 'task-1',
           status: 'COMPLETED',
           reason: 'Looks good',
-          participant: raw.participant,
           user: expectedUserSchema(),
           completedAt: Date.parse('2026-09-01T10:00:00.000Z'),
           proof: { url: 'https://example.com/proof.png' },

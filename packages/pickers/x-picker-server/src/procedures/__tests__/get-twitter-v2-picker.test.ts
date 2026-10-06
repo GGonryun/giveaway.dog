@@ -12,6 +12,11 @@ import {
   buildPost
 } from '../../testing/fixtures-pickers';
 
+const withoutKeys = (value: object, ...keys: string[]) =>
+  Object.fromEntries(
+    Object.entries(value).filter(([key]) => !keys.includes(key))
+  );
+
 const mockPicker = ({
   picker = {},
   users = [buildPickerUser()],
@@ -127,14 +132,21 @@ describe('getTwitterV2Picker', () => {
   });
 
   describe('response', () => {
-    it('returns the picker row with eligibility and stats', async () => {
+    it('returns the declared picker fields with eligibility and stats', async () => {
       const row = mockPicker();
 
       const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
 
       expect(expectOk(result)).toEqual({
-        ...row,
-        users: [{ ...buildPickerUser(), ineligible: undefined }],
+        ...withoutKeys(row, 'lastPostWithin'),
+        users: [
+          {
+            ...withoutKeys(buildPickerUser(), 'pickerId'),
+            ineligible: undefined
+          }
+        ],
+        draws: row.draws.map((draw) => withoutKeys(draw, 'pickerId')),
+        tweets: row.tweets.map((tweet) => withoutKeys(tweet, 'pickerId')),
         stats: {
           totalParticipants: 1,
           sampleSize: 1,

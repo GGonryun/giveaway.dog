@@ -108,13 +108,13 @@ describe('createProfile', () => {
       );
     });
 
-    it('returns the full updated user record rather than only the id', async () => {
+    it('returns only the id of the updated user', async () => {
       const updated = dbUser({ name: 'Jane' });
       prismaMock.user.update.mockResolvedValue(updated);
 
       const result = await createProfile({ name: 'Jane' });
 
-      expect(expectOk(result)).toEqual(updated);
+      expect(expectOk(result)).toStrictEqual({ id: updated.id });
     });
 
     it('logs the session user', async () => {

@@ -61,18 +61,12 @@ describe('selectTeam', () => {
       ]);
     });
 
-    it('returns the full details of the matching team', async () => {
+    it('returns only the name and slug of the matching team', async () => {
       const result = await selectTeam({ id: 'beta' });
 
-      expect(expectOk(result)).toEqual({
-        id: 'beta',
+      expect(expectOk(result)).toStrictEqual({
         name: 'Team beta',
-        slug: 'slug-beta',
-        logo: 'https://example.com/beta.png',
-        links: null,
-        tier: TeamTier.FREE,
-        memberCount: 1,
-        role: TeamRole.GUEST
+        slug: 'slug-beta'
       });
     });
 

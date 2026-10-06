@@ -12,6 +12,11 @@ import {
   daysBeforeNow
 } from '../../testing/fixtures-pickers';
 
+const withoutKeys = (value: object, ...keys: string[]) =>
+  Object.fromEntries(
+    Object.entries(value).filter(([key]) => !keys.includes(key))
+  );
+
 const users = (...ids: string[]) =>
   ids.map((id) => buildPickerUser({ id, userId: `x-${id}` }));
 
@@ -195,15 +200,17 @@ describe('drawTwitterV2Picker', () => {
         expect(prismaMock.$transaction.mock.calls[0][0]).toHaveLength(3);
       });
 
-      it('returns the created draws', async () => {
+      it('returns the created draws without the picker id', async () => {
         mockPicker({ winners: 2 });
 
         const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
 
-        expect(expectOk(result)).toEqual([
-          buildDraw({ id: 'draw-u1', userId: 'u1' }),
-          buildDraw({ id: 'draw-u2', userId: 'u2' })
-        ]);
+        expect(expectOk(result)).toEqual(
+          [
+            buildDraw({ id: 'draw-u1', userId: 'u1' }),
+            buildDraw({ id: 'draw-u2', userId: 'u2' })
+          ].map((draw) => withoutKeys(draw, 'pickerId'))
+        );
       });
 
       it('uses the requested count instead of the quota', async () => {
